@@ -1,9 +1,13 @@
-name: Build & release (Windows + Linux)
+name: Build & release (Windows + Linux + Android)
 
-# Compila Linux en la nube, toma las DLL de Windows del GodotLuau.zip ya
-# commiteado, arma el zip UNIFICADO (ambos binarios, para el auto-updater de
-# Windows y Linux) + dos zips por plataforma, commitea el zip y crea el Release
+# Compila Linux y Android (arm64) en la nube, toma las DLL de Windows del
+# GodotLuau.zip ya commiteado, arma el zip UNIFICADO (todos los binarios, para
+# el auto-updater) + un zip por editor (Windows / Linux, los dos con las
+# librerias de Android para exportar), commitea el zip y crea el Release
 # "GodotLuau <version>" con los assets etiquetados por plataforma.
+#
+# En un pull request solo se compila (Linux y Android) para comprobar que el
+# codigo compila: no se empaqueta, no se commitea nada y no se publica Release.
 
 on:
   workflow_dispatch:
@@ -14,6 +18,14 @@ on:
       - "addons/**"
       - "SConstruct"
       - "Version"
+      - "godot_luau.gdextension"
+      - "tools/generar_release.py"
+      - ".github/workflows/build-release.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "SConstruct"
+      - "godot_luau.gdextension"
       - "tools/generar_release.py"
       - ".github/workflows/build-release.yml"
 
@@ -40,8 +52,34 @@ jobs:
           name: linux-bin
           path: GodotLuau/bin/*.so
 
+  android:
+    # El exportador de Android de Godot 4 carga libgodot_luau.android.*.arm64.so
+    # (ver godot_luau.gdextension). Mismo NDK que usa godot-cpp por defecto.
+    runs-on: ubuntu-22.04
+    env:
+      NDK_VERSION: "23.2.8568313"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install SCons
+        run: pip install scons
+      - name: Install Android NDK ${{ env.NDK_VERSION }}
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;$NDK_VERSION" > /dev/null
+      - name: Build template_debug (arm64)
+        run: scons platform=android arch=arm64 target=template_debug ndk_version=$NDK_VERSION -j4
+      - name: Build template_release (arm64)
+        run: scons platform=android arch=arm64 target=template_release ndk_version=$NDK_VERSION -j4
+      - name: Upload Android binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-bin
+          path: GodotLuau/bin/*.so
+
   release:
-    needs: linux
+    needs: [linux, android]
+    # En los pull requests solo se compila; empaquetar y publicar solo desde main.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -59,6 +97,12 @@ jobs:
           name: linux-bin
           path: GodotLuau/bin
 
+      - name: Traer binarios de Android (recien compilados)
+        uses: actions/download-artifact@v4
+        with:
+          name: android-bin
+          path: GodotLuau/bin
+
       - name: Leer version
         id: ver
         run: |
@@ -73,12 +117,12 @@ jobs:
           python3 tools/generar_release.py --only windows --out "Windows GodotLuau ${{ steps.ver.outputs.ver }}.zip"
           python3 tools/generar_release.py --only linux   --out "Linux GodotLuau ${{ steps.ver.outputs.ver }}.zip"
 
-      - name: Commit GodotLuau.zip (auto-updater, Windows + Linux)
+      - name: Commit GodotLuau.zip (auto-updater, Windows + Linux + Android)
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add GodotLuau.zip GodotLuau.zip.sha256
-          git commit -m "CI: GodotLuau.zip con binarios Windows+Linux (${{ steps.ver.outputs.ver }}) [skip ci]" || echo "sin cambios en el zip"
+          git commit -m "CI: GodotLuau.zip con binarios Windows+Linux+Android (${{ steps.ver.outputs.ver }}) [skip ci]" || echo "sin cambios en el zip"
           git push
 
       - name: Publicar Release unificado
@@ -89,7 +133,7 @@ jobs:
           make_latest: true
           prerelease: false
           body: |
-            Extensión GodotLuau para Godot 4 (Windows + Linux).
+            Extensión GodotLuau para Godot 4 (Windows + Linux, y exportación a Android arm64).
             Instala/actualiza sola con el plugin **GodotLuauUpdater**.
             Descarga manual por plataforma abajo:
           files: |

@@ -29,11 +29,22 @@ EXTENSIONES_BIN = (".dll", ".so", ".dylib", ".lib", ".exp")
 EXTENSIONES_TEXTO = (".cfg", ".gd", ".gdextension", ".txt", ".md", ".json", ".lua", ".luau", ".uid")
 
 # Binarios por plataforma (para armar zips por plataforma en el release).
+# Linux y Android comparten la extension .so, asi que ademas se mira el nombre
+# de la plataforma dentro del archivo (godot_luau.<plataforma>.<target>...).
 BIN_POR_PLATAFORMA = {
     "windows": (".dll", ".lib", ".exp"),
     "linux":   (".so",),
     "macos":   (".dylib",),
 }
+
+
+def es_de_plataforma(archivo, only):
+    """True si el binario 'archivo' va en el zip de la plataforma 'only'.
+    Las librerias de Android van en todos: ningun editor las carga, se usan al
+    exportar el juego a Android desde Windows o Linux."""
+    if ".android." in archivo:
+        return True
+    return archivo.endswith(BIN_POR_PLATAFORMA.get(only, EXTENSIONES_BIN)) and f".{only}." in archivo
 
 
 def agregar_archivo(zf, ruta, arcname):
@@ -59,9 +70,6 @@ def empaquetar(nombre_zip=NOMBRE_ZIP, only=None):
           + (f" (solo {only})" if only else " (todas las plataformas)"))
     print("=" * 54)
 
-    # Qué binarios incluir en /bin: todos, o solo los de una plataforma.
-    bin_ok = BIN_POR_PLATAFORMA.get(only, EXTENSIONES_BIN) if only else EXTENSIONES_BIN
-
     with zipfile.ZipFile(nombre_zip, "w", zipfile.ZIP_DEFLATED) as zf:
         for archivo in ARCHIVOS_SUELTOS:
             if os.path.exists(archivo):
@@ -78,7 +86,7 @@ def empaquetar(nombre_zip=NOMBRE_ZIP, only=None):
                     if raiz_norm.endswith("/bin"):
                         if not archivo.endswith(EXTENSIONES_BIN):
                             continue
-                        if only and not archivo.endswith(bin_ok):
+                        if only and not es_de_plataforma(archivo, only):
                             continue   # binario de otra plataforma → fuera de este zip
                     ruta = os.path.join(raiz, archivo)
                     agregar_archivo(zf, ruta, ruta.replace("\\", "/"))

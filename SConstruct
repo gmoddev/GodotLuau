@@ -47,7 +47,10 @@ sources += Glob("luau/Common/src/*.cpp")
 # 4. Forzamos el nombre de la libreria para que Godot la detecte.
 #    Sin prefijo "lib" en Linux: godot_luau.gdextension espera
 #    godot_luau.linux.*.so (igual que la .dll de Windows).
-env["SHLIBPREFIX"] = ""
+#    En Android SI se deja "lib": al instalar el APK, Android solo copia las
+#    librerias nativas que se llaman lib*.so (libgodot_luau.android.*.so).
+if env["platform"] != "android":
+    env["SHLIBPREFIX"] = ""
 target_name = "GodotLuau/bin/godot_luau" + env["suffix"] + env["SHLIBSUFFIX"]
 
 library = env.SharedLibrary(target=target_name, source=sources)

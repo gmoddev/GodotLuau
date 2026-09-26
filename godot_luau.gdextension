@@ -7,6 +7,8 @@ windows.debug.x86_64 = "res://GodotLuau/bin/godot_luau.windows.template_debug.x8
 windows.release.x86_64 = "res://GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll"
 linux.debug.x86_64 = "res://GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so"
 linux.release.x86_64 = "res://GodotLuau/bin/godot_luau.linux.template_release.x86_64.so"
+android.debug.arm64 = "res://GodotLuau/bin/libgodot_luau.android.template_debug.arm64.so"
+android.release.arm64 = "res://GodotLuau/bin/libgodot_luau.android.template_release.arm64.so"
 
 [icons]
 RobloxTemplate = "res://GodotLuau/icons/RobloxDataModel.svg"

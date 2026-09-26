@@ -83,6 +83,7 @@ GodotLuau es una GDExtension en C++ que mete el intérprete [Luau](https://luau.
 
 - **Godot 4.3 o más nuevo** (`compatibility_minimum = "4.3"`; desarrollado contra Godot 4.6/4.7).
 - **Windows x86_64** o **Linux x86_64**. El paquete de release trae los binarios de los dos; cualquier otra plataforma necesita [compilar desde el fuente](#compilar-desde-el-código-fuente).
+- **Exportar a Android (arm64):** el paquete de release también trae `libgodot_luau.android.*.arm64.so` (debug y release), así que se puede exportar un proyecto a Android desde el editor de Windows o de Linux.
 - Python 3 solo si quieres usar el asistente de proyectos de `tools/`.
 
 **Opción A — el asistente (lo recomendado para un juego nuevo)**
@@ -589,9 +590,11 @@ Requisitos: Python 3, [SCons](https://scons.org/) (`pip install scons`) y un com
 scons platform=windows target=template_debug
 scons platform=windows target=template_release
 # o: scons platform=linux target=template_debug / template_release
+# Android (necesita el NDK de Android 23.2.8568313 y ANDROID_HOME):
+# scons platform=android arch=arm64 target=template_debug / template_release
 ```
 
-Las librerías salen en `GodotLuau/bin/`. Copia los `.so` resultantes al `GodotLuau/bin/` de tu proyecto en esa máquina Linux (junto a las `.dll`); `godot_luau.gdextension` ya apunta a los dos. Los binarios de Linux también los construye el workflow de GitHub Actions (`.github/workflows/build-linux.yml`) en cada push que toca `src/`.
+Las librerías salen en `GodotLuau/bin/`. Copia los `.so` resultantes al `GodotLuau/bin/` de tu proyecto en esa máquina Linux (junto a las `.dll`); `godot_luau.gdextension` ya apunta a los dos. Los binarios de Linux y de Android también los construye el workflow de GitHub Actions (`.github/workflows/build-release.yml`) en cada push que toca `src/`; en los pull requests solo los compila, para comprobar que el código compila.
 
 > El `SConstruct` reactiva las excepciones de C++ (`-fexceptions` / `/EHsc`) porque godot-cpp las desactiva por defecto y la VM de Luau las necesita. No hay que pasar nada extra.
 
@@ -638,7 +641,7 @@ godot-cpp/, luau/          Dependencias (submódulos)
 - **El coordinador es de una sola máquina:** los mundos son procesos locales descubiertos por archivos de latido en `user://`.
 - **`DataStoreService` son JSON locales**, no almacenamiento en la nube.
 - **Cantidades muy grandes de partes** (decenas de miles) funcionan pero todavía no se agrupan; el clustering/instancing automático de partes ancladas es la siguiente pieza grande.
-- **Plataformas:** los binarios precompilados son Windows x86_64 y Linux x86_64. macOS necesita compilar desde el fuente.
+- **Plataformas:** los binarios precompilados son Windows x86_64 y Linux x86_64, más Android arm64 para los juegos exportados. macOS necesita compilar desde el fuente.
 - **Los lugares `.rbxlx` (XML) no se leen**, y el contenido `rbxassetid://` no se puede descargar.
 
 ## Publicar una versión (mantenedor)

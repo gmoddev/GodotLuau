@@ -83,6 +83,7 @@ GodotLuau is a C++ GDExtension that embeds the [Luau](https://luau.org/) interpr
 
 - **Godot 4.3 or newer** (`compatibility_minimum = "4.3"`; developed against Godot 4.6/4.7).
 - **Windows x86_64** or **Linux x86_64**. Precompiled binaries for both ship in the release package; anything else needs [Building from source](#building-from-source).
+- **Exporting to Android (arm64):** the release package also ships `libgodot_luau.android.*.arm64.so` (debug and release), so a project can be exported to Android from the Windows or Linux editor.
 - Python 3 only if you want to use the project wizard in `tools/`.
 
 **Option A — the wizard (recommended for a brand new game)**
@@ -589,9 +590,11 @@ Requirements: Python 3, [SCons](https://scons.org/) (`pip install scons`) and a 
 scons platform=windows target=template_debug
 scons platform=windows target=template_release
 # or: scons platform=linux target=template_debug / template_release
+# Android (needs the Android NDK 23.2.8568313 and ANDROID_HOME):
+# scons platform=android arch=arm64 target=template_debug / template_release
 ```
 
-Libraries land in `GodotLuau/bin/`. Copy the resulting `.so` files into the `GodotLuau/bin/` of your project on that Linux machine (next to the `.dll`s); `godot_luau.gdextension` already points at both. Linux binaries are also built by the GitHub Actions workflow (`.github/workflows/build-linux.yml`) on every push touching `src/`.
+Libraries land in `GodotLuau/bin/`. Copy the resulting `.so` files into the `GodotLuau/bin/` of your project on that Linux machine (next to the `.dll`s); `godot_luau.gdextension` already points at both. Linux and Android binaries are also built by the GitHub Actions workflow (`.github/workflows/build-release.yml`) on every push touching `src/`; on pull requests it only compiles them, to check the code builds.
 
 > `SConstruct` re-enables C++ exceptions (`-fexceptions` / `/EHsc`) because godot-cpp disables them by default and the Luau VM needs them. Nothing extra to pass.
 
@@ -638,7 +641,7 @@ godot-cpp/, luau/          Dependencies (submodules)
 - **The coordinator is single-machine:** worlds are local processes discovered through `user://` heartbeat files.
 - **`DataStoreService` is local JSON**, not cloud storage.
 - **Very large part counts** (tens of thousands) work but are not batched yet; automatic clustering/instancing of anchored parts is the next big piece.
-- **Platforms:** precompiled binaries are Windows x86_64 and Linux x86_64. macOS needs a source build.
+- **Platforms:** precompiled binaries are Windows x86_64 and Linux x86_64, plus Android arm64 for exported games. macOS needs a source build.
 - **`.rbxlx` (XML) places are not read**, and `rbxassetid://` content cannot be downloaded.
 
 ## Publishing a release (maintainer)
