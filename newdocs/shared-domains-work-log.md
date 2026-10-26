@@ -404,3 +404,49 @@ GL-014 remains open. Other issue statuses are unchanged.
   raw logs are preserved under `/opt/codex/godotluau`. Existing Outline,
   PostgreSQL and Redis containers remained running and healthy. Windows builds
   completed without a persistent task service or global tool installation.
+
+## 2026-10-26: Authorized integration into main
+
+- Fetched origin and verified starting local/remote main
+  `8b163269cbe44cf7fcf7a9a0285620878a2345fd` and source
+  `9423fed4051bec2fba798d9a49eaec7dea6cca3b`. Neither advanced from its
+  expected baseline. Main is the merge base; four source commits and 55 changed
+  files are being integrated. An unrelated remote branch was left untouched.
+- The checkout was clean, only one local worktree existed, and CodexLock reported
+  no active claims. No unmerged files or concurrent checkout modifications were
+  present. Origin is the public `gmoddev/GodotLuau` fork; main is its default branch.
+- Created normal `--no-ff` merge `dd68cda850fb548aa7713242275ff73c183e813c`
+  on local main. No conflicts or resolutions; all four implementation/evidence
+  commits are preserved. Its complete tree is identical to the qualified source
+  tree `7b2185eef6afef8951afa7ad21d895244d654b0e`.
+- The inherited release workflow is active and matches runtime pushes to main.
+  The merge and publication documentation commits carry `[skip ci]`, GitHub's
+  supported push-workflow skip directive. No workflow configuration/state,
+  updater behavior, branch protection or release is changed. GitHub reports no
+  main protection/branch rules; no protection bypass is being used.
+- Native input fingerprints still match the qualified 65-file digest on local,
+  Windows and Linux. Linux build/fixture input digest matches the integrated
+  checkout. Windows has only the required build inputs in its worker tree;
+  native fixtures continue to run from the integrated local checkout.
+- Started bounded four-job incremental CMake builds and one core-suite run in
+  Debug/Release/ASan on both existing workers. Reusing prior immutable SCons,
+  native sanitizer stress, benchmark and package evidence only where the tree/
+  input identity is unchanged. No dependency installation or stress-matrix rerun.
+- Fresh integrated checks passed: one 36-case core suite in Debug, Release and
+  ASan on each platform, plus eight native process results per Windows/Linux
+  Debug/Release configuration (32 total). Linux Release remains byte-identical
+  to the benchmarked binary. Windows Debug Dedicated emitted one known GL-017
+  zero-channel diagnostic; it remains recorded and was not suppressed.
+- Updated the existing architecture, documentation entry points, test guidance
+  and GL-014 disposition to identify main as the shared-domain baseline. The ADR,
+  historical qualification reports and original raw evidence are preserved.
+  New integration hashes/counts live alongside that evidence. GL-017/018/019 and
+  unrelated limitations stay open; GL-019 cached-require profiling is recommended
+  as the next bounded task and was not implemented during integration.
+- Documentation link/JSON/diff checks pass. The integration follow-up contains
+  only Markdown and the compact evidence JSON; runtime/build/fixture code,
+  dependency pins, inherited workflow, updater and binaries are unchanged.
+  Stopped only the task-owned Linux container after confirming no build/test
+  process remained. Its caches/logs are retained and unrelated containers remain
+  healthy. Publishing main uses an ordinary non-force push with the CI skip
+  directive; the source branch is retained at its qualified revision.

@@ -1,6 +1,6 @@
 # GodotLuau
 
-> **Fork público:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), basado en el proyecto original de PimpoliDev. Consulta la [documentación del fork](newdocs/README.md), los [problemas validados](newdocs/issues.md) y la [política de contribuciones con IA](AGENTS.md). La migración a VMs compartidas Server/Client está implementada en `runtime/shared-domains`; consulta la [evidencia de validación](newdocs/shared-domains-validation.md). Los binarios heredados no son compilaciones verificadas del fork. El actualizador habilitado todavía descarga paquetes del repositorio original (GL-016).
+> **Fork público:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), basado en el proyecto original de PimpoliDev. Consulta la [documentación del fork](newdocs/README.md), los [problemas validados](newdocs/issues.md) y la [política de contribuciones con IA](AGENTS.md). `main` es la base de desarrollo con VMs compartidas Server/Client; consulta la [evidencia de integración y validación](newdocs/shared-domains-validation.md#main-integration-2026-10-26). Los binarios heredados no son compilaciones verificadas del fork. El actualizador habilitado todavía descarga paquetes del repositorio original (GL-016).
 
 **Escribe juegos estilo Roblox en Luau y córrelos en Godot 4.**
 
@@ -635,7 +635,7 @@ godot-cpp/, luau/          Dependencias (submódulos)
 
 ## Limitaciones conocidas
 
-- **Migración a dominios compartidos:** cambia la semántica de módulos/globales y cancelación; consulta la [compatibilidad y validación pendiente](newdocs/shared-domains-validation.md). No se afirma una mejora de rendimiento medida.
+- **Runtime de dominios compartidos:** cambia la semántica de módulos/globales y cancelación; consulta la [compatibilidad, mediciones controladas y límites de validación](newdocs/shared-domains-validation.md).
 - **La red la alojas tú:** no hay relay, ni NAT traversal, ni cuentas, ni lista oficial de servidores. Ver [Seguridad](#seguridad-léelo-antes-de-publicar).
 - **El coordinador es de una sola máquina:** los mundos son procesos locales descubiertos por archivos de latido en `user://`.
 - **`DataStoreService` son JSON locales**, no almacenamiento en la nube.

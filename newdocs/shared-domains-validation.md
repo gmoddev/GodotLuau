@@ -455,3 +455,170 @@ their own scope: public-network authority/input checks, persistence, script
 capabilities/quotas, updater, automated release gates and asset provenance remain
 unqualified. No full graphical editor, coordinator/world deployment or production
 scene qualification occurred. Do not publish production binaries on this report.
+
+## Main integration (2026-10-26)
+
+**INTEGRATED WITH QUALIFICATION LIMITATIONS.** Main is the canonical shared-domain
+development baseline. This section records source integration; the preceding
+qualification reports, ADR and measured/failed outcomes remain historical evidence.
+
+### Revision and merge record
+
+| Identity | Revision |
+| --- | --- |
+| Starting local and remote main | `8b163269cbe44cf7fcf7a9a0285620878a2345fd` |
+| Qualified source branch | `runtime/shared-domains` at `9423fed4051bec2fba798d9a49eaec7dea6cca3b` |
+| Integrated main merge | `dd68cda850fb548aa7713242275ff73c183e813c` |
+| Complete merge/source tree | `7b2185eef6afef8951afa7ad21d895244d654b0e` |
+
+Neither branch advanced before integration. Main was the source branch's merge
+base. `git merge --no-ff 9423fed4051bec2fba798d9a49eaec7dea6cca3b` used the
+normal ort strategy with **no conflicts**, preserving `521265c`, `0498efc`,
+`5f61bea` and `9423fed`. Fifty-five files changed relative to starting main;
+`git diff --name-status 8b163269 9423fed` reproduces the exact file list.
+No main functionality or source-branch commits were discarded. The source branch
+is retained unchanged. An unrelated remote branch was not merged or modified.
+
+Preflight found a clean working tree, one local worktree, no unmerged paths and
+no active CodexLock claims. Origin is the public `gmoddev/GodotLuau` fork and its
+default branch remains main. No upstream repository was modified.
+
+The complete tree at the merge equals the qualified source tree, established by
+matching Git tree IDs and an empty `git diff 9423fed dd68cda`. The follow-up
+integration evidence commit changes documentation only. Runtime, test code, build
+configuration and pinned dependencies remain identical to qualified source.
+The 65-file native fingerprint remains
+`6b9b752044b36b161a34868ad7d5b94258fdf831d0effb0d489403ce9735103c` on the
+integrated checkout and both workers. Windows core build inputs additionally
+match normalized digest
+`916e2375f4d1e8d68bf18cbd950310bdaf210ab83ceac5390e27ebcb2c1e1cb6`;
+Linux build/native-fixture inputs match
+`234320629dc8a7505d58bf33b9a68c622f77a5afa58587b484ec65cd11f5dc6c`.
+Windows native fixtures run from the integrated local checkout; those fixture
+files are not required in the Windows build-only mirror.
+
+### Fresh integrated checks
+
+Existing MSVC/GCC CMake/Ninja caches and the previously configured Linux task
+container were reused with four build jobs. No dependencies or toolchains were
+installed, no worker settings changed, and no expensive stress matrix reran.
+
+| Fresh gate | Actual result |
+| --- | --- |
+| Windows Debug core + native adapter incremental build | Exit 0; 36-case core suite passes once |
+| Windows Release core + native adapter incremental build | Exit 0; 36-case core suite passes once |
+| Windows ASan core build/test | Exit 0; 36-case core suite passes once |
+| Linux Debug core + native adapter incremental build | Exit 0; 36-case core suite passes once |
+| Linux Release core + native adapter incremental build | Exit 0; 36-case core suite passes once |
+| Linux ASan core build/test | Exit 0; 36-case core suite passes once |
+| Windows Debug native fixtures | Eight process results, all exit zero/PASS; known GL-017 diagnostic in dedicated server stderr |
+| Windows Release native fixtures | Eight process results, all exit zero/PASS |
+| Linux Debug native fixtures | Eight process results, all exit zero/PASS |
+| Linux Release native fixtures | Eight process results, all exit zero/PASS |
+
+Each native group runs single-player Integration, Listen, Dedicated with two
+clients, and headless Editor launch flags with two clients. `--teardown` requires
+RemoteFunction cancellation when NetworkService is destroyed. Existing assertions
+also cover shared module identity, Server/Client separation, script environments,
+script/coroutine ownership, owner cancellation, disable/reload/destroy, native
+Instance liveness, retained methods, service replacement and scene shutdown.
+The production core suite covers concurrent/yielding require, module errors/
+invalidation, reentrancy and lifecycle bounds. Source inspection still finds the
+single extension `luaL_newstate` call in GLExecutionDomain, with no executable-
+script VM allocation. No new runtime behavior or optimization was introduced.
+
+The Windows Debug dedicated-server stderr contained one `max channels: 0`
+diagnostic. Functional exits/assertions passed; this is **not** a clean transport
+claim. GL-017 remains independently reproduced and unresolved. No diagnostics
+were suppressed and no sanitizer settings/checks were weakened.
+
+Exact incremental commands, in the existing MSVC developer environment on
+`dockerbox` (the full CMake/CTest paths are in the build-environment section):
+
+```powershell
+foreach ($Config in @('debug', 'release')) {
+    $Build = "C:\Sandbox\Codex\Builds\GodotLuau\runtime-msvc-$Config"
+    cmake --build $Build --target ExecutionDomainTests GodotLuauAdapter --parallel 4
+    ctest --test-dir $Build --output-on-failure --timeout 30
+}
+$Build = 'C:\Sandbox\Codex\Builds\GodotLuau\runtime-msvc-asan'
+cmake --build $Build --target ExecutionDomainTests --parallel 4
+ctest --test-dir $Build --output-on-failure --timeout 30
+```
+
+Inside the existing `codex-godotluau-qualification` Linux container:
+
+```sh
+for Config in debug release; do
+    cmake --build /work/builds/linux-$Config \
+        --target ExecutionDomainTests GodotLuauAdapter --parallel 4
+    ctest --test-dir /work/builds/linux-$Config --output-on-failure --timeout 30
+done
+cmake --build /work/builds/linux-asan --target ExecutionDomainTests --parallel 4
+ctest --test-dir /work/builds/linux-asan --output-on-failure --timeout 30
+for Config in debug release; do
+    python3 /work/source/tests/runtime/RunQualification.py \
+        --godot /work/tools/Godot_v4.7.1-stable_linux.x86_64 \
+        --extension /work/builds/linux-$Config/godot_luau.so \
+        --output /work/artifacts/integration-main-dd68cda-$Config \
+        --teardown --timeout 45
+done
+```
+
+Windows adapters were copied from the two worker build directories, then tested
+headlessly from the integrated checkout:
+
+```powershell
+foreach ($Config in @('debug', 'release')) {
+    C:/Python312/python.exe tests/runtime/RunQualification.py `
+        --godot C:/Users/aiden/Downloads/Godot/Godot_v4.7.1-stable_win64.exe `
+        --extension ".runtime-tests/qualification/main-dd68cda-windows-$Config.dll" `
+        --output ".runtime-tests/qualification/main-dd68cda-windows-$Config" `
+        --teardown --timeout 45
+}
+```
+
+Fresh logs: Windows worker
+`C:\Sandbox\Codex\Logs\GodotLuau\integration-main-dd68cda-builds.log`;
+local `.runtime-tests/qualification/main-dd68cda-windows-{debug,release}`;
+Linux `/opt/codex/godotluau/logs/integration-main-dd68cda-{debug,release,asan}.log`
+and `/opt/codex/godotluau/artifacts/integration-main-dd68cda-{debug,release}`.
+Fresh native binary/result-file hashes are recorded in the
+[integration evidence](evidence/shared-domains-integration-2026-10-26.json).
+
+### Reused evidence, publication control and next baseline
+
+The source/tree identities justify reusing the prior Windows/Linux SCons
+Debug/Release builds and native fixtures, 20-repeat core suites, 80-process full
+Linux native ASan/LSan ordered-close stress, engine-only failure attribution,
+controlled benchmark and explicit-input local-package evidence. Those tests were
+not rerun or relabelled as new main executions. The recorded SCons libraries and
+test archive remain artifacts of runtime revision `5f61bea`; they are applicable
+to main's unchanged runtime content, not newly published main binaries. The fresh
+Linux Release adapter still has the exact benchmarked SHA256
+`8ea4e9c2faeb4218157059415e93aab6700eebce41283a1ab0b20106aff66ee9`.
+
+The inherited release workflow is active and its path filter matches this merge.
+The merge and integration-documentation commit messages include `[skip ci]`,
+using GitHub's documented
+[push-workflow skip directive](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs).
+Main had no branch protection or applicable branch rules; no protection was
+bypassed. Workflow state/configuration and updater behavior are unchanged.
+No workflow dispatch, GitHub Release, production binary publication or upstream
+communication is authorized by this integration. The prior qualification's
+no-merge restriction applied to that completed task; this task explicitly
+authorizes integrating and pushing main.
+
+GL-014 is integrated and remains source-qualified/closed within its established
+scope. GL-017 (engine teardown/leak), GL-018 (Windows full-native sanitizer host)
+and GL-019 (cached require/task overhead) remain open, alongside networking
+authority/input validation, persistence, script capabilities/quotas, updater and
+release provenance limitations. Integration resolves none of those issues.
+
+The smallest coherent next task is **GL-019 profiling of cached ModuleScript
+require**, starting with native source retrieval/path construction before the
+cache lookup in `GLDomainHost::GetDomain`/`GLExecutionDomain::BeginRequire`.
+Measure attributable costs before optimizing; preserve module revision
+invalidation and owner lifetime guarantees. Coroutine bookkeeping remains part
+of GL-019 but does not need to be bundled into the first profiling change.
+No GL-019 implementation was performed here.

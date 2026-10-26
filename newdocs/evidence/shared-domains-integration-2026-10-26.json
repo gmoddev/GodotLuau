@@ -1,0 +1,64 @@
+{
+  "Date": "2026-10-26",
+  "StartingMain": "8b163269cbe44cf7fcf7a9a0285620878a2345fd",
+  "QualifiedSource": "9423fed4051bec2fba798d9a49eaec7dea6cca3b",
+  "IntegrationMerge": "dd68cda850fb548aa7713242275ff73c183e813c",
+  "MergeAndQualifiedTree": "7b2185eef6afef8951afa7ad21d895244d654b0e",
+  "MergeMethod": "Normal --no-ff, ort, no conflicts",
+  "FreshCoreSuites": {
+    "Cases": 36,
+    "RunsPerConfiguration": 1,
+    "Configurations": [
+      "WindowsDebug",
+      "WindowsRelease",
+      "WindowsAsan",
+      "LinuxDebug",
+      "LinuxRelease",
+      "LinuxAsan"
+    ]
+  },
+  "FreshNativeRuns": {
+    "windows-debug": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "ResultsSHA256": "92e3003925d590f08de6284b67f831049e44403693747cbdeb6ea513fab19046",
+      "KnownZeroChannelDiagnosticLabels": [
+        "Dedicated-0-server"
+      ]
+    },
+    "windows-release": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+      "KnownZeroChannelDiagnosticLabels": []
+    },
+    "linux-debug": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+      "KnownZeroChannelDiagnosticLabels": []
+    },
+    "linux-release": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+      "KnownZeroChannelDiagnosticLabels": []
+    }
+  },
+  "FreshCMakeBinarySHA256": {
+    "WindowsDebug": "ec9237904329ca82522ed8ce8ea0aa08a12505fe45d18e1c52b7f4857fe789af",
+    "WindowsRelease": "4246a5d897f4a2f5032fcf93405b8ad4cb93a4a04905a92f235ae9a441d31bab",
+    "LinuxDebug": "65d0a78f511d7e24c82e7c2ee57074f37da7c89fdadd994d8ab616883c181ce5",
+    "LinuxRelease": "8ea4e9c2faeb4218157059415e93aab6700eebce41283a1ab0b20106aff66ee9"
+  },
+  "ReusedQualification": "shared-domains-qualification-2026-10-26.json",
+  "RuntimeAndBuildInputsUnchanged": true,
+  "PublicationWorkflowSkip": "[skip ci] on merge and documentation commits",
+  "RemainingIssues": [
+    "GL-017",
+    "GL-018",
+    "GL-019",
+    "Existing networking, persistence, capability and distribution issues"
+  ],
+  "Classification": "INTEGRATED WITH QUALIFICATION LIMITATIONS"
+}

@@ -12,6 +12,11 @@ records runtime/source identity, dependency pins, executed gate counts/raw-file
 digests, the four current binary hashes and local archive identity. It explicitly
 retains the unqualified gates alongside passing results.
 
+[`shared-domains-integration-2026-10-26.json`](shared-domains-integration-2026-10-26.json)
+records the main merge/source-tree identities and fresh integrated core/native
+checks. The [main integration record](../shared-domains-validation.md#main-integration-2026-10-26)
+distinguishes those runs from reused historical qualification evidence.
+
 Raw native logs and failure reports remain in ignored/task-owned artifact trees;
 they contain repeated expected-denial/physics diagnostics and are not silently
 reclassified by the summary. Exact reproduction commands live in

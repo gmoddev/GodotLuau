@@ -7,7 +7,10 @@ The initial source baseline is
 [`7044a11c1bcc2eac2a91155e829a5821d92ab66e`](https://github.com/Pimpoli/GodotLuau/tree/7044a11c1bcc2eac2a91155e829a5821d92ab66e),
 whose `Version` begins `v1.16.12`. Upstream `main` resolved to that same commit
 when checked on 2026-10-26. The initial fork commit was documentation only;
-`runtime/shared-domains` implements the subsequent Server/Client VM migration.
+`main` now contains the source-qualified Server/Client VM migration and is the
+canonical development baseline. `runtime/shared-domains` is retained at
+`9423fed4051bec2fba798d9a49eaec7dea6cca3b` as its historical source. See the
+[integration record](shared-domains-validation.md#main-integration-2026-10-26).
 
 ## Start here
 

@@ -1,6 +1,6 @@
 # GodotLuau
 
-> **Public fork:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), based on PimpoliDev's upstream project. Start with [fork documentation](newdocs/README.md), [validated issues](newdocs/issues.md), and the [AI contribution policy](AGENTS.md). The shared Server/Client VM migration is implemented on `runtime/shared-domains`; see [qualification evidence](newdocs/shared-domains-validation.md). Inherited binaries are not qualified fork builds. The enabled updater still downloads upstream packages (GL-016).
+> **Public fork:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), based on PimpoliDev's upstream project. Start with [fork documentation](newdocs/README.md), [validated issues](newdocs/issues.md), and the [AI contribution policy](AGENTS.md). `main` is the shared Server/Client VM development baseline; see [integration and qualification evidence](newdocs/shared-domains-validation.md#main-integration-2026-10-26). Inherited binaries are not qualified fork builds. The enabled updater still downloads upstream packages (GL-016).
 
 **Write Roblox-style games in Luau, run them on Godot 4.**
 
@@ -635,7 +635,7 @@ godot-cpp/, luau/          Dependencies (submodules)
 
 ## Known limitations
 
-- **Shared-domain migration:** module/global sharing and cancellation semantics changed; see [compatibility and remaining qualification gaps](newdocs/shared-domains-validation.md). No measured performance claim is made.
+- **Shared-domain runtime:** module/global sharing and cancellation semantics changed; see [compatibility, controlled measurements and remaining qualification gaps](newdocs/shared-domains-validation.md).
 - **Self-hosted networking only:** no relay, no NAT traversal, no accounts, no official server browser. See [Security](#security-read-this-before-you-publish).
 - **The coordinator is single-machine:** worlds are local processes discovered through `user://` heartbeat files.
 - **`DataStoreService` is local JSON**, not cloud storage.

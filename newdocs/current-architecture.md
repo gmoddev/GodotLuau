@@ -1,6 +1,10 @@
 # Current architecture
 
-Updated for the shared-domain migration on `runtime/shared-domains`, 2026-10-26.
+Current development baseline: `main`, following shared-domain integration on
+2026-10-26. Merge commit: `dd68cda850fb548aa7713242275ff73c183e813c`.
+The runtime tree is identical to qualified source branch `runtime/shared-domains`
+at `9423fed4051bec2fba798d9a49eaec7dea6cca3b`; see the
+[integration record](shared-domains-validation.md#main-integration-2026-10-26).
 Implemented source: `5f61bea0e273e7473260f351fa4fb321116090ee` (initial
 migration `521265c338fc890a0e30b9e8a556f6346baf7d00`, followed by qualification fixes).
 The initial runtime baseline was `7044a11c1bcc2eac2a91155e829a5821d92ab66e`;

@@ -3,7 +3,7 @@
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
 Historical evidence is preserved below. GL-001/GL-002 are resolved for their
-specific captures, and GL-014 is qualified for source integration. Other entries
+specific captures, and GL-014 is integrated into main and source-qualified. Other entries
 remain open. This file does not create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
@@ -33,7 +33,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
 | GL-012 | P2 | Verified history-loss behavior | Workflow attempts to delete older releases and tags |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
-| GL-014 | P2 | Source qualification complete | Conditionally ready; Windows/Linux builds, native Linux ASan and benchmarks |
+| GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Verified fork distribution gap | Enabled updater still downloads upstream packages |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
@@ -299,7 +299,7 @@ bug and does not justify a sweeping rewrite.
 ownership/interfaces, preserve behavior, and measure build impact when claimed.
 Avoid mixing mechanical movement with unrelated runtime changes.
 
-## GL-014: Shared execution domains — source qualification complete
+## GL-014: Shared execution domains — integrated and source-qualified
 
 **Evidence:** Per-executable-script `L_main` at `luau_script.h:960`; require's
 registry cache at `1806-1828`; README explicitly documents isolated module state.
@@ -349,6 +349,18 @@ Remaining independent engine, Windows sanitizer-host and performance follow-ups
 are GL-017/GL-018/GL-019; graphical editor/coordinator/production content remain
 unqualified. This closes neither production distribution nor unrelated issues,
 and does not authorize merging main or publishing binaries.
+
+**Authorized integration (2026-10-26): INTEGRATED WITH QUALIFICATION LIMITATIONS.**
+Normal merge `dd68cda850fb548aa7713242275ff73c183e813c` integrates source
+`9423fed4051bec2fba798d9a49eaec7dea6cca3b` into main, preserving all four
+source commits without conflicts. The merge tree is identical to that qualified
+source. Fresh Windows/Linux Debug/Release builds and native fixtures plus core
+ASan checks pass; exact scope and reused immutable evidence are in the
+[integration record](shared-domains-validation.md#main-integration-2026-10-26).
+GL-014 remains closed for its implementation/source-qualification scope and is
+now integrated. GL-017/GL-018/GL-019, production networking, persistence,
+capabilities and distribution limitations remain independently open. The
+integration does not publish production binaries or change updater behavior.
 
 ## GL-015: Establish asset-specific redistribution provenance
 
