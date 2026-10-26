@@ -32,13 +32,14 @@ struct LuauPendingResume {
     lua_State* thread;   // coroutine to resume
     lua_State* main_L;   // owning main state
     double     delta;    // dt argument to pass
-    Node*      node_arg; // optional node (WaitForChild result); nullptr if not used
+    uint64_t   NodeId = 0; // resolve at dispatch; native arguments may die between frames
     // Reanudar con args de red (RemoteEvent:Wait): si use_args, se decodifica
     // `args` con el nodo ctx (por ObjectID, sin puntero colgante entre frames)
     // y se pasan como N valores en vez de delta/node_arg.
     Array      args;
     uint64_t   ctx_id = 0;
     bool       use_args = false;
+    int        Guard = LUA_NOREF;
 };
 inline std::vector<LuauPendingResume>& get_pending_resumes() {
     static std::vector<LuauPendingResume> v;
@@ -94,13 +95,13 @@ public:
     void fire_changed() {
         std::vector<LuaCallback> snap = changed_cbs;
         for (auto& cb : snap) {
-            if (!cb.active || !gl_state_alive(cb.main_L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, th, 1);
                 _push_value(th);
-                gl_check_resume(th, lua_resume(th, nullptr, 1));
+                gl_check_resume(th, GLResume(th, nullptr, 1));
             } else lua_pop(cb.main_L, 1);
             lua_pop(cb.main_L, 1);
         }
@@ -147,7 +148,7 @@ public:
     std::vector<LuaCallback> char_added_cbs;
     std::vector<LuaCallback> char_removing_cbs;
     std::vector<LuaCallback> char_appearance_cbs;
-    struct LuaWait { lua_State* th; lua_State* main_L; };
+    struct LuaWait { lua_State* th; lua_State* main_L; int Guard = GLCaptureWait(th); };
     std::vector<LuaWait> char_added_waits;   // CharacterAdded:Wait()
     void add_char_added_wait(lua_State* th, lua_State* mL) { char_added_waits.push_back({ th, mL }); }
 
@@ -166,7 +167,7 @@ public:
     void _fire_char(std::vector<LuaCallback>& list, Node* character) {
         std::vector<LuaCallback> snap = list;
         for (auto& cb : snap) {
-            if (!cb.active || !gl_state_alive(cb.main_L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
@@ -176,9 +177,9 @@ public:
                     gow_set(w, character);
                     luaL_getmetatable(th, "GodotObject");
                     lua_setmetatable(th, -2);
-                    gl_check_resume(th, lua_resume(th, nullptr, 1));
+                    gl_check_resume(th, GLResume(th, nullptr, 1));
                 } else {
-                    gl_check_resume(th, lua_resume(th, nullptr, 0));
+                    gl_check_resume(th, GLResume(th, nullptr, 0));
                 }
             } else lua_pop(cb.main_L, 1);
             lua_pop(cb.main_L, 1);
@@ -205,9 +206,9 @@ public:
             d["p"] = c->is_inside_tree() ? String(c->get_path()) : String();
             a.push_back(d);
             for (auto& w : char_added_waits) {
-                if (!gl_state_alive(w.main_L)) continue;
+                if (!GLReferenceAlive(w.main_L, w.Guard)) continue;
                 LuauPendingResume pr;
-                pr.thread = w.th; pr.main_L = w.main_L; pr.delta = 0; pr.node_arg = nullptr;
+                pr.thread = w.th; pr.main_L = w.main_L; pr.delta = 0; pr.Guard = w.Guard;
                 pr.args = a; pr.ctx_id = (uint64_t)get_instance_id(); pr.use_args = true;
                 get_pending_resumes().push_back(pr);
             }
@@ -462,7 +463,7 @@ public:
     std::vector<LuaCallback> player_removing_cbs;
     // PlayerAdded:Wait() / PlayerRemoving:Wait() (1.14.10): el hilo cede y lo
     // reanuda _fire_player_event con el Player por la cola compartida.
-    struct LuaWait { lua_State* th; lua_State* main_L; };
+    struct LuaWait { lua_State* th; lua_State* main_L; int Guard = GLCaptureWait(th); };
     std::vector<LuaWait> player_added_waits;
     std::vector<LuaWait> player_removing_waits;
     int max_players = 50;
@@ -609,9 +610,10 @@ public:
         std::vector<LuaWait> snap = waits;
         waits.clear();   // vaciar ANTES: el hilo reanudado puede volver a esperar
         for (auto& w : snap) {
-            if (!gl_state_alive(w.main_L)) continue;
+            if (!GLReferenceAlive(w.main_L, w.Guard)) continue;
             LuauPendingResume pr;
-            pr.thread = w.th; pr.main_L = w.main_L; pr.delta = 0.0; pr.node_arg = player;
+            pr.thread = w.th; pr.main_L = w.main_L; pr.delta = 0.0; pr.Guard = w.Guard;
+            pr.NodeId = player ? static_cast<uint64_t>(player->get_instance_id()) : 0;
             get_pending_resumes().push_back(pr);
         }
     }
@@ -732,8 +734,8 @@ private:
     }
     void _fire_player_event(std::vector<LuaCallback>& list, Node* player) {
         for (int i = (int)list.size()-1; i >= 0; --i) {
-            auto& cb = list[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) { list.erase(list.begin()+i); continue; }
+            auto cb = list[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { list.erase(list.begin()+i); continue; }
             bool once = cb.once;
             lua_State* th = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
@@ -748,7 +750,7 @@ private:
                 } else {
                     lua_pushnil(th);
                 }
-                gl_check_resume(th, lua_resume(th, nullptr, 1));
+                gl_check_resume(th, GLResume(th, nullptr, 1));
             } else lua_pop(cb.main_L, 1);
             lua_pop(cb.main_L, 1);
         }
@@ -1467,8 +1469,8 @@ public:
     void gl_fire_message_received(const String& player, const String& text) {
         String full = player.is_empty() ? text : player + String(": ") + text;
         for (int i = (int)msg_received_cbs.size() - 1; i >= 0; --i) {
-            LuaCallback& cb = msg_received_cbs[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) {
+            LuaCallback cb = msg_received_cbs[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) {
                 msg_received_cbs.erase(msg_received_cbs.begin() + i);
                 continue;
             }
@@ -1477,7 +1479,7 @@ public:
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, th, 1);
                 lua_pushstring(th, full.utf8().get_data());
-                gl_check_resume(th, lua_resume(th, nullptr, 1));
+                gl_check_resume(th, GLResume(th, nullptr, 1));
             } else {
                 lua_pop(cb.main_L, 1);
             }
@@ -1510,6 +1512,7 @@ public:
     struct WaitCallback {
         lua_State* thread;
         lua_State* main_L;
+        int Guard = GLCaptureWait(thread);
     };
 
     std::vector<LuaCallback> heartbeat_cbs;
@@ -1548,31 +1551,40 @@ public:
         else if (strcmp(ev, "RenderStepped") == 0) deactivate(render_stepped_cbs);
         else if (strcmp(ev, "Stepped")       == 0) deactivate(stepped_cbs);
     }
+    void _gl_disconnect(int Reference) {
+        disconnect_by_ref("Heartbeat", Reference);
+        disconnect_by_ref("RenderStepped", Reference);
+        disconnect_by_ref("Stepped", Reference);
+        GLUnreference(nullptr, Reference);
+    }
 
 protected:
     void _notification(int p_what) {
         if (p_what == NOTIFICATION_ENTER_TREE) _enforce_game_parent(this);
     }
-    static void _bind_methods() {}
+    static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("_gl_disconnect", "ref"), &RunService::_gl_disconnect);
+    }
 
     static void fire_list(std::vector<LuaCallback>& list, double delta) {
         for (int i = (int)list.size() - 1; i >= 0; --i) {
-            auto& cb = list[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) {
+            auto cb = list[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) {
                 list.erase(list.begin() + i);
                 continue;
             }
-            if (cb.once) cb.active = false;
+            if (cb.once) list[i].active = false;
             lua_State* thread = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, thread, 1);
                 lua_pushnumber(thread, delta);
-                gl_check_resume(thread, lua_resume(thread, nullptr, 1));
+                gl_check_resume(thread, GLResume(thread, nullptr, 1));
             } else {
                 lua_pop(cb.main_L, 1);
             }
             lua_pop(cb.main_L, 1);
+            if (cb.once) GLUnreference(nullptr, cb.ref);
         }
     }
 
@@ -1580,8 +1592,11 @@ protected:
     static void fire_wait_list(std::vector<WaitCallback>& list, double delta) {
         for (int i = (int)list.size() - 1; i >= 0; --i) {
             auto& wc = list[i];
-            if (gl_state_alive(wc.main_L))
-                get_pending_resumes().push_back({wc.thread, wc.main_L, delta, nullptr});
+            if (GLReferenceAlive(wc.main_L, wc.Guard)) {
+                LuauPendingResume Resume{wc.thread, wc.main_L, delta, 0};
+                Resume.Guard = wc.Guard;
+                get_pending_resumes().push_back(Resume);
+            }
             list.erase(list.begin() + i);
         }
     }

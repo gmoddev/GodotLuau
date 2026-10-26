@@ -746,25 +746,19 @@ public:
         if (body && body != this && can_touch) emit_signal("TouchEnded", gl_touch_reported_node(body));
     }
 
-    void _on_luau_part_touched(Node* p_hit, int p_ref, int64_t ptr_L) {
-        lua_State* L = (lua_State*)ptr_L;
-        // El estado Luau puede haberse cerrado (script destruido/recargado): no usarlo.
-        if (!gl_state_alive(L) || !p_hit) return;
-        lua_getref(L, p_ref);
-        if (lua_isfunction(L, -1)) {
-            int fidx = lua_gettop(L);
-            lua_pushcfunction(L, gl_trace_handler, "errh");
-            lua_insert(L, fidx);   // handler debajo de la funcion (captura el stack)
-            GodotObjectWrapper* wrap = (GodotObjectWrapper*)lua_newuserdata(L, sizeof(GodotObjectWrapper));
-            gow_set(wrap, p_hit);
-            luaL_getmetatable(L, "GodotObject");
-            lua_setmetatable(L, -2);
-            if (lua_pcall(L, 1, 0, fidx) != LUA_OK) {
-                gl_report_script_error_with_trace(L, gl_pcall_trace());
-                lua_pop(L, 1);
-            }
-            lua_remove(L, fidx);
-        } else { lua_pop(L, 1); }
+    void _on_luau_part_touched(Node* p_hit, int p_ref, int64_t) {
+        lua_State* Anchor = GLReferenceState(p_ref);
+        if (!Anchor || !p_hit) return;
+        lua_State* Thread = lua_newthread(Anchor);
+        lua_rawgeti(Thread, LUA_REGISTRYINDEX, p_ref);
+        if (lua_isfunction(Thread, -1)) {
+            auto Handle = static_cast<GodotObjectWrapper*>(lua_newuserdata(Thread, sizeof(GodotObjectWrapper)));
+            gow_set(Handle, p_hit);
+            luaL_getmetatable(Thread, "GodotObject");
+            lua_setmetatable(Thread, -2);
+            GLResume(Thread, nullptr, 1);
+        }
+        lua_pop(Anchor, 1);
     }
 
     // ── Anchored ───────────────────────────────────────────────────

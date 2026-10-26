@@ -1,6 +1,6 @@
 # GodotLuau
 
-> **Fork público:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), basado en el proyecto original de PimpoliDev. Consulta la [documentación del fork](newdocs/README.md), los [problemas validados](newdocs/issues.md) y la [política de contribuciones con IA](AGENTS.md). Este cambio inicial solo modifica documentación; los binarios heredados no son compilaciones verificadas del fork. El actualizador habilitado todavía descarga paquetes del repositorio original (GL-016).
+> **Fork público:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), basado en el proyecto original de PimpoliDev. Consulta la [documentación del fork](newdocs/README.md), los [problemas validados](newdocs/issues.md) y la [política de contribuciones con IA](AGENTS.md). La migración a VMs compartidas Server/Client está implementada en `runtime/shared-domains`; consulta la [evidencia de validación](newdocs/shared-domains-validation.md). Los binarios heredados no son compilaciones verificadas del fork. El actualizador habilitado todavía descarga paquetes del repositorio original (GL-016).
 
 **Escribe juegos estilo Roblox en Luau y córrelos en Godot 4.**
 
@@ -138,7 +138,7 @@ Lo importante, sobre todo si vienes de GDScript:
 
 - **No hay `_ready` ni `_process`.** El cuerpo del `.lua` corre de arriba abajo. Para lógica continua usa `RunService.Heartbeat:Connect(...)` o un bucle con `task.wait()`.
 - **Propiedad `Enabled`**, como en Studio: un script desactivado no corre; si lo reactivas en runtime, corre en ese momento.
-- **Cada `LocalScript`/`ServerScript` tiene su propia VM de Luau.** Un `ModuleScript` requerido desde dos scripts **no** comparte estado entre ellos (esta es una diferencia real con Roblox).
+- **Una VM de Luau compartida por dominio Server/Client aplicable.** Cada script tiene su entorno y corrutinas. Los resultados de ModuleScript, `_G` y `shared` se comparten dentro del dominio; Server y Client permanecen separados. Consulta la [semántica](newdocs/adr-001-shared-execution-domains.md).
 - **Globales disponibles:** `game`, `workspace`, `script`, `require`, `shared`, las librerías estándar de Luau (`math`, `string`, `table`, `coroutine`, `os`, `utf8`, `bit32`…), `print`, `warn`, `task.*` y los clásicos `wait` / `spawn` / `delay` / `tick` / `time`.
 - **Los errores se leen como los de Roblox:**
 
@@ -149,7 +149,7 @@ Lo importante, sobre todo si vienes de GDScript:
   Stack End
   ```
 
-  Indexar algo que no existe lanza `X is not a valid member of …`; `WaitForChild` suspende la corrutina de verdad y avisa `Infinite yield possible on '…'` a los 5 segundos; `require` reproduce los mensajes exactos de Roblox. Ningún camino de callback falla en silencio.
+  Indexar algo que no existe lanza `X is not a valid member of …`; `WaitForChild` suspende la corrutina de verdad y avisa `Infinite yield possible on '…'` a los 5 segundos; `require` informa de errores y ciclos de módulos. [ADR-001](newdocs/adr-001-shared-execution-domains.md) documenta la semántica de módulos y callbacks.
 - **La identidad de los scripts es estable.** Cada nodo de script tiene un `script_id` inmutable (por ejemplo `ServerScript_ID_3`) que da nombre a su `.lua`. Borrar el nodo manda el archivo a `res://.luau_trash/` (**Ctrl+Z** restaura nodo y archivo juntos; la basura se purga sola a los 7 días).
 
 ## Importar lugares de Roblox (.rbxl)
@@ -531,7 +531,7 @@ Se accede con `game:GetService("Players")` o directamente (`game.Workspace`, `wo
 
 **3. El avatar R6.** Por defecto los jugadores nacen con el **rig R6**: seis partes colgadas de pivotes en las posiciones clásicas de las articulaciones, así que las animaciones por código (péndulo al caminar con brazos y piernas opuestos, respiración en idle, brazos arriba en el aire) rotan como el avatar clásico. Las partes conservan sus nombres de Roblox (`"Left Arm"`, `"Torso"`, `"HumanoidRootPart"`…). Si pones cualquier modelo llamado **`StarterCharacter`** dentro de `StarterPlayer`, ese pasa a ser el personaje de todos. El desvanecido por cercanía de cámara usa un shader de disolución (descarta píxeles, no mezcla alfa), y al rotar la cámara con clic derecho el ratón vuelve a donde estaba.
 
-**4. Vida de objetos y limitaciones conocidas.** Los userdata de instancias guardan un `ObjectID` y lo resuelven contra la base de objetos viva (`src/core/gl_runtime.h`). Algunos cierres nativos, incluidos `WaitForChild` y los métodos de NetworkService, todavía guardan punteros crudos (GL-001/GL-002). El registro de VMs vivas protege rutas de callbacks, pero no demuestra que todos los cierres y rutas de cierre sean seguros. Consulta los [problemas validados](newdocs/issues.md).
+**4. Vida de objetos y limitaciones conocidas.** Los userdata de instancias guardan un `ObjectID` y lo resuelven contra la base de objetos viva (`src/core/gl_runtime.h`). La migración resuelve identidades vivas en `WaitForChild` y NetworkService y asigna callbacks/esperas a su propietario. Pasaron regresiones específicas; la validación nativa más amplia sigue abierta (GL-001/GL-002). Consulta los [problemas validados](newdocs/issues.md).
 
 ## Catálogo de nodos y clases
 
@@ -635,7 +635,7 @@ godot-cpp/, luau/          Dependencias (submódulos)
 
 ## Limitaciones conocidas
 
-- **Una VM por script:** un `ModuleScript` requerido por dos scripts no comparte estado entre ellos.
+- **Migración a dominios compartidos:** cambia la semántica de módulos/globales y cancelación; consulta la [compatibilidad y validación pendiente](newdocs/shared-domains-validation.md). No se afirma una mejora de rendimiento medida.
 - **La red la alojas tú:** no hay relay, ni NAT traversal, ni cuentas, ni lista oficial de servidores. Ver [Seguridad](#seguridad-léelo-antes-de-publicar).
 - **El coordinador es de una sola máquina:** los mundos son procesos locales descubiertos por archivos de latido en `user://`.
 - **`DataStoreService` son JSON locales**, no almacenamiento en la nube.

@@ -4,17 +4,14 @@
 // ════════════════════════════════════════════════════════════════════
 //  Seguridad de vida para el puente Luau <-> Godot
 //  ----------------------------------------------------------------
-//  1) Registro de estados Luau vivos: cada ScriptNodeBase registra su
-//     lua_State principal al crearlo y lo da de baja ANTES de cerrarlo.
-//     Cualquier despacho de señal/callback comprueba gl_state_alive()
-//     para no invocar refs sobre una VM ya cerrada (use-after-free al
-//     destruir o recargar un script).
+//  1) Domain hosts own VMs; scripts own execution anchors. Callback dispatch
+//     validates a non-recycled reference and its owner before using Lua state.
+//     Root-state registration is for domain-wide property publication only.
 //
 //  2) Referencias a nodos por ObjectID: el wrapper de Lua guarda el
 //     ObjectID del nodo, NO un puntero crudo. gow_node() resuelve y
 //     valida contra ObjectDB, devolviendo nullptr si el nodo fue
-//     destruido (igual que Roblox: acceder a un objeto destruido es
-//     seguro y no crashea).
+//     destruido. Each native binding must still validate the resolved object.
 // ════════════════════════════════════════════════════════════════════
 
 #include <godot_cpp/classes/node.hpp>
@@ -30,6 +27,7 @@
 
 #include "lua.h"
 #include "lualib.h"
+#include "gl_execution_domain.h"
 
 #include <unordered_set>
 #include <vector>
@@ -111,18 +109,33 @@ static inline void gow_set(GodotObjectWrapper* w, Node* n) {
     if (w) w->obj_id = n ? (uint64_t)n->get_instance_id() : 0;
 }
 
+// Native compatibility bridges resolve execution identity from thread ownership,
+// never from a mutable, VM-wide registry slot.
+inline void GLPushScriptNode(lua_State* Thread) {
+    GLExecutionOwner* Owner = GLGetOwner(Thread);
+    Node* Script = Owner ? Object::cast_to<Node>(ObjectDB::get_instance(Owner->NativeId)) : nullptr;
+    lua_pushlightuserdata(Thread, Script);
+}
+inline void GLPushNodeHandle(lua_State* Thread, Node* Target) {
+    auto Handle = static_cast<GodotObjectWrapper*>(lua_newuserdata(Thread, sizeof(GodotObjectWrapper)));
+    gow_set(Handle, Target);
+}
+inline Node* GLNodeUpvalue(lua_State* Thread, int Index) {
+    return gow_node(static_cast<GodotObjectWrapper*>(lua_touserdata(Thread, lua_upvalueindex(Index))));
+}
+
 // ── Registro global de estados Luau vivos ────────────────────────────────────
-static inline std::unordered_set<lua_State*>& gl_alive_states() {
+inline std::unordered_set<lua_State*>& gl_alive_states() {
     static std::unordered_set<lua_State*> s;
     return s;
 }
 static inline void gl_register_state(lua_State* L)   { if (L) gl_alive_states().insert(L); }
 static inline void gl_unregister_state(lua_State* L) { if (L) gl_alive_states().erase(L); }
-static inline bool gl_state_alive(lua_State* L)      { return L && gl_alive_states().count(L) != 0; }
+static inline bool gl_state_alive(lua_State* L)      { return GLStateAlive(L); }
 
 // Normaliza cualquier hilo Luau a su estado principal (el que registramos).
 // SOLO debe llamarse mientras L sigue vivo (p.ej. al conectar el callback).
-static inline lua_State* gl_main_of(lua_State* L) { return L ? lua_mainthread(L) : nullptr; }
+static inline lua_State* gl_main_of(lua_State* L) { return GLGetOwnerState(L); }
 
 // Devuelve CUALQUIER estado Luau vivo (para operaciones que solo necesitan una VM
 // válida, como aplicar una propiedad replicada). nullptr si no hay ninguno.
@@ -411,34 +424,11 @@ static inline void gl_free_orphan_instances() {
 }
 
 // ── BindToClose: callbacks a ejecutar al cerrar el juego (guardar datos, etc.) ─
-//  game:BindToClose(fn) registra fn aquí junto a su VM (main_L). Cada script
-//  ejecuta SUS propios callbacks justo antes de cerrar su VM (EXIT_TREE), así
-//  corren sobre una VM viva y en orden correcto — igual que el BindToClose de
-//  Roblox al parar el servidor (best-effort: si el callback cede, no se reanuda).
-struct GLCloseCb { lua_State* main_L; int ref; };
-static inline std::vector<GLCloseCb>& gl_close_cbs() { static std::vector<GLCloseCb> v; return v; }
-static inline void gl_add_close_cb(lua_State* main_L, int ref) {
-    if (main_L) gl_close_cbs().push_back({ main_L, ref });
-}
-// Ejecuta y elimina los callbacks cuyo main_L coincide. Llamar ANTES de cerrar L.
-static inline void gl_run_close_cbs_for(lua_State* main_L) {
-    if (!main_L) return;
-    std::vector<GLCloseCb>& v = gl_close_cbs();
-    for (int i = 0; i < (int)v.size(); ) {
-        if (v[i].main_L == main_L) {
-            if (gl_state_alive(main_L)) {
-                lua_State* th = lua_newthread(main_L);
-                lua_rawgeti(main_L, LUA_REGISTRYINDEX, v[i].ref);
-                if (lua_isfunction(main_L, -1)) {
-                    lua_xmove(main_L, th, 1);
-                    lua_resume(th, nullptr, 0);   // síncrono; si cede, no se reanuda
-                } else lua_pop(main_L, 1);
-                lua_pop(main_L, 1);               // quita el hilo
-                lua_unref(main_L, v[i].ref);
-            }
-            v.erase(v.begin() + i);
-        } else ++i;
-    }
+//  Registration retains the execution owner. The domain dispatches a finite
+//  snapshot at game shutdown with admission closed; yielded hooks are cancelled.
+inline void gl_add_close_cb(lua_State* Anchor, int Reference) {
+    if (GLExecutionOwner* Owner = GLGetOwner(Anchor))
+        Owner->Domain->AddCloseCallback(Anchor, Reference);
 }
 
 #endif // GL_RUNTIME_H

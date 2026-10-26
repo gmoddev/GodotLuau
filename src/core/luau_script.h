@@ -62,8 +62,10 @@ static const char* LUAU_TEMPLATE_MODULE_OOP =
 #include "roblox_part.h"
 #include "humanoid.h"
 #include "luau_stdlib.h"
+#include "gl_domain_host.h"
 
 #include <godot_cpp/classes/script_extension.hpp>
+#include <godot_cpp/classes/script_language.hpp>
 #include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
@@ -449,7 +451,7 @@ protected:
 
 public:
     String _get_source_code() const override { return source_code; }
-    void _set_source_code(const String &p_code) override { source_code = p_code; }
+    void _set_source_code(const String &p_code) override { if (source_code != p_code) { source_code = p_code; emit_changed(); } }
     bool _is_tool() const override { return false; }
     bool _is_valid() const override { return true; }
     bool _has_source_code() const override { return true; }
@@ -471,158 +473,39 @@ public:
 class ScriptNodeBase : public Node {
     GDCLASS(ScriptNodeBase, Node);
 
-public:
-    // Luau thread spawned via task.spawn()
-    // timer == -1.0  →  suspended by external condition (WaitForChild, Signal:Wait)
-    //// Hilo de Luau spawneado via task.spawn()
-    //// timer == -1.0  →  suspendido por condición externa (WaitForChild, Signal:Wait)
-    struct SpawnedThread {
-        lua_State* L;
-        int        ref;
-        double     timer;
-        int        start_args = 0;     // args en la pila del hilo a pasar en el 1er resume (task.delay/defer)
-        bool       started    = true;  // false hasta el 1er resume (delay/defer aún no arrancados)
-        double     waited     = 0.0;   // tiempo REAL esperado (lo devuelve wait())
-    };
-
-    // Reloj de juego: es el segundo valor que devuelve wait() en Roblox
-    // (workspace.DistributedGameTime).
-    static double _gl_game_time() {
-        return (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
-    }
-
-    double main_waited = 0.0;   // tiempo esperado del hilo principal (lo devuelve wait())
-
-    // Coroutine waiting for a child to appear in the tree
-    //// Coroutina esperando a que aparezca un hijo en el árbol
-    struct WaitingChild {
-        lua_State* thread;
-        lua_State* main_L;
-        int        ref;
-        uint64_t   parent_id;   // ObjectID del padre (no Node* crudo: el padre puede morir mientras se espera)
-        String     child_name;
-        double     timeout;   // -1 = sin timeout
-        double     elapsed;
-        String     trace;          // stack en el momento de la llamada (para el warning)
-        bool       warned = false; // "Infinite yield possible" ya impreso
-    };
-
-    // Coroutina esperando la respuesta de un RemoteFunction:InvokeServer/Client por
-    // red. El call_id la casa con la respuesta que deposita el NetworkService en
-    // gl_net_responses(); _process la recoge, decodifica y reanuda el hilo.
-    struct WaitingInvoke {
-        lua_State* thread;
-        lua_State* main_L;
-        int        ref;
-        int64_t    call_id;
-        double     timeout;   // s antes de rendirse; <=0 = esperar siempre (como Roblox)
-        double     elapsed;
-        bool       warned = false;   // "Infinite yield possible" ya avisado
-    };
-
 private:
     Ref<LuauScript> codigo_luau;
-    lua_State* L_main   = nullptr;
-    lua_State* L_thread = nullptr;
-
-    double wait_timer      = 0.0;
-    bool   is_waiting      = false;
-    bool   is_external_wait = false;  // true = no auto-resume via timer
-    bool   script_finished = false;
+    lua_State* L_main = nullptr; // per-run owner anchor, never a separate VM
+    GLExecutionDomain* Domain = nullptr;
+    GLExecutionOwner* RunOwner = nullptr;
+    int RunGuard = LUA_NOREF;
 
 public:
-    std::vector<WaitingChild> waiting_children;
-    std::vector<SpawnedThread> spawned_threads;
-    std::vector<WaitingInvoke> waiting_invokes;
-
-    // Registrar un hilo que cede esperando la respuesta de un InvokeServer/Client
-    // por red (mismo mecanismo de suspensión que WaitForChild).
-    void add_waiting_invoke(lua_State* th, lua_State* mL, int ref, int64_t call_id, double timeout) {
-        waiting_invokes.push_back({th, mL, ref, call_id, timeout, 0.0, false});
-        if (th == L_thread) {
-            is_external_wait = true;
-        } else {
-            for (auto& st : spawned_threads)
-                if (st.L == th) { st.timer = -1.0; break; }
-        }
+    void StopRun() {
+        if (GLReferenceAlive(L_main, RunGuard) && RunOwner) RunOwner->Domain->CancelOwner(RunOwner);
+        GLUnreference(nullptr, RunGuard);
+        RunGuard = LUA_NOREF;
+        L_main = nullptr;
+        Domain = nullptr;
+        RunOwner = nullptr;
+        script_started = false;
     }
-
-    // Called by WaitForChild closures in luau_api.h (or the local __index override)
-    void add_waiting_child(lua_State* th, lua_State* mL, int ref,
-                           Node* parent, const String& name, double timeout) {
-        uint64_t pid = parent ? (uint64_t)parent->get_instance_id() : 0;
-        // El stack se captura AQUI (aun no cedimos): es el del caller de WaitForChild
-        waiting_children.push_back({th, mL, ref, pid, name, timeout, 0.0,
-                                    String::utf8(lua_debugtrace(th)), false});
-        // Suspend the coroutine so _process won't auto-resume it via timer
-        if (th == L_thread) {
-            is_external_wait = true;
-        } else {
-            for (auto& st : spawned_threads)
-                if (st.L == th) { st.timer = -1.0; return; }
-        }
+    void add_waiting_invoke(lua_State* Thread, lua_State*, int Reference, int64_t CallId, double Timeout) {
+        if (auto Host = GLGetDomainHost()) Host->WaitForInvoke(Thread, CallId, Timeout, Reference);
     }
-
-    // Resume a coroutine externally (Signal:Wait / WaitForChild resolved).
-    // Updates spawned_threads timer or main-thread flags based on new yield.
-    void resume_external_thread(lua_State* th, int nargs) {
-        // Mismo motivo que en _process: solo se reanuda si sigue SUSPENDIDA.
-        // Reanudar una corrutina ya terminada (o muerta por error) revienta
-        // dentro de luau_execute. Aqui llegan las que esperaban un hijo
-        // (WaitForChild) o una señal, y esas pueden haber muerto entretanto.
-        if (!th || !L_main || !gl_state_alive(L_main)) return;
-        if (lua_costatus(L_main, th) != LUA_COSUS) return;
-        _after_resume(th, lua_resume(th, nullptr, nargs));
+    void add_waiting_child(lua_State* Thread, lua_State*, int Reference, Node* Parent, const String& Name, double Timeout) {
+        if (auto Host = GLGetDomainHost()) Host->WaitForChild(Thread,
+            Parent ? static_cast<uint64_t>(Parent->get_instance_id()) : 0, Name, Timeout, Reference);
     }
-
-    // Reanudar un hilo LANZANDO un error dentro de él. Roblox re-lanza en el
-    // invocador el error del handler remoto de un RemoteFunction; antes aquí se
-    // devolvía nil y el mensaje se perdía.
-    void resume_external_thread_error(lua_State* th, const String& msg) {
-        lua_pushstring(th, msg.utf8().get_data());
-        _after_resume(th, lua_resumeerror(th, nullptr));
+    void resume_external_thread(lua_State* Thread, int Arguments) { GLResume(Thread, nullptr, Arguments); }
+    void resume_external_thread_error(lua_State* Thread, const String& Error) {
+        lua_pushstring(Thread, Error.utf8().get_data()); GLResumeError(Thread, nullptr);
     }
-
-    void _after_resume(lua_State* th, int status) {
-        bool is_main = (th == L_thread);
-
-        if (is_main) {
-            if (status == LUA_YIELD) {
-                is_external_wait = false;
-                if (lua_gettop(th) > 0 && lua_isnumber(th, -1)) {
-                    wait_timer = lua_tonumber(th, -1);
-                    lua_pop(th, 1);
-                } else {
-                    if (lua_gettop(th) > 0) lua_pop(th, 1);
-                    wait_timer = 1e9;  // another external wait set by the call
-                }
-                is_waiting = true;
-            } else {
-                is_waiting      = false;
-                is_external_wait = false;
-                if (status != LUA_OK) gl_report_script_error(th);
-                script_finished = true;
-            }
-        } else {
-            for (int i = (int)spawned_threads.size()-1; i >= 0; --i) {
-                auto& st = spawned_threads[i];
-                if (st.L != th) continue;
-                if (status == LUA_YIELD) {
-                    if (lua_gettop(th) > 0 && lua_isnumber(th, -1)) {
-                        st.timer = lua_tonumber(th, -1);
-                        lua_pop(th, 1);
-                    } else {
-                        if (lua_gettop(th) > 0) lua_pop(th, 1);
-                        // another external wait – remains at -1 (set by add_waiting_child)
-                    }
-                } else {
-                    if (status != LUA_OK) gl_report_script_error(th);
-                    if (L_main) lua_unref(L_main, st.ref);
-                    spawned_threads.erase(spawned_threads.begin() + i);
-                }
-                return;
-            }
-        }
+    void _gl_source_changed() {
+        if (Engine::get_singleton()->is_editor_hint()) return;
+        if (auto Host = GLGetDomainHost()) Host->InvalidateModule(static_cast<uint64_t>(get_instance_id()));
+        StopRun();
+        if (is_inside_tree() && script_enabled && get_class() != "ModuleScript") call_deferred("iniciar_corrutina");
     }
 
     // ID persistente e inmutable del script (ej. "ServerScript_ID_12").
@@ -661,7 +544,9 @@ public:
 
 public:
     void set_enabled(bool b) {
+        if (script_enabled == b) return;
         script_enabled = b;
+        if (!b) StopRun();
         if (script_enabled && !script_started && is_inside_tree()
             && !Engine::get_singleton()->is_editor_hint()) {
             call_deferred("iniciar_corrutina");
@@ -674,6 +559,7 @@ protected:
         ClassDB::bind_method(D_METHOD("set_codigo_luau", "s"), &ScriptNodeBase::set_codigo_luau);
         ClassDB::bind_method(D_METHOD("get_codigo_luau"), &ScriptNodeBase::get_codigo_luau);
         ClassDB::bind_method(D_METHOD("iniciar_corrutina"), &ScriptNodeBase::iniciar_corrutina);
+        ClassDB::bind_method(D_METHOD("_gl_source_changed"), &ScriptNodeBase::_gl_source_changed);
         ClassDB::bind_method(D_METHOD("set_script_id", "id"), &ScriptNodeBase::set_script_id);
         ClassDB::bind_method(D_METHOD("get_script_id"), &ScriptNodeBase::get_script_id);
         ClassDB::bind_method(D_METHOD("set_enabled", "b"), &ScriptNodeBase::set_enabled);
@@ -847,67 +733,27 @@ protected:
             // NOTA: el borrado/restauración del archivo al borrar el nodo (con soporte
             // de Ctrl+Z vía papelera res://.luau_trash/) lo gestiona el addon
             // GodotLuauUpdater, que puede distinguir un borrado real de un cierre de escena.
-        } else {
-            if (p_what == NOTIFICATION_EXIT_TREE) {
-                // OJO: al SALIR del arbol get_tree() ya puede ser nulo, y
-                // ->get_root() sobre nulo tira el proceso. Pasaba de verdad: en
-                // cuanto un script del juego destruia nodos con scripts dentro,
-                // GodotLuau se caia aqui (segfault tras "Parameter data.tree is null").
-                SceneTree* _st = get_tree();
-                if (L_main && _st && _st->get_root()) {
-                    Node* root = _st->get_root();
-                    // Clean RunService callbacks
-                    for (int _ri = 0; _ri < root->get_child_count(); _ri++) {
-                        Node* game = root->get_child(_ri);
-                        if (!game) continue;
-                        Node* rs_node = game->get_node_or_null("RunService");
-                        if (rs_node) {
-                            RunService* rs = Object::cast_to<RunService>(rs_node);
-                            if (rs) rs->remove_by_state(L_main);
-                        }
-                    }
-                    // Clean Remote* callbacks — traverse entire tree
-                    std::function<void(Node*)> cleanup_remotes = [&](Node* nd) {
-                        if (!nd) return;
-                        if (RemoteEventNode*    re = Object::cast_to<RemoteEventNode>(nd))    re->cleanup_state(L_main);
-                        if (RemoteFunctionNode* rf = Object::cast_to<RemoteFunctionNode>(nd)) rf->cleanup_state(L_main);
-                        if (BindableEventNode*  be = Object::cast_to<BindableEventNode>(nd))  be->cleanup_state(L_main);
-                        for (int _ci = 0; _ci < nd->get_child_count(); _ci++)
-                            cleanup_remotes(nd->get_child(_ci));
-                    };
-                    cleanup_remotes(root);
-                }
-
-                for (auto& st : spawned_threads) {
-                    if (L_main) lua_unref(L_main, st.ref);
-                }
-                spawned_threads.clear();
-
-                if (L_main) {
-                    gl_run_close_cbs_for(L_main);  // BindToClose: guardar datos antes de cerrar
-                    gl_unregister_state(L_main);   // baja del registro ANTES de cerrar la VM
-                    lua_close(L_main);
-                    L_main = nullptr;
-                    L_thread = nullptr;
-                }
-                script_finished = true;
-                is_waiting = false;
-            }
+        } else if (p_what == NOTIFICATION_EXIT_TREE) {
+            if (auto Host = GLGetDomainHost()) Host->InvalidateModule(static_cast<uint64_t>(get_instance_id()));
+            StopRun();
         }
     }
 
 public:
     ScriptNodeBase() {}
-    ~ScriptNodeBase() {
-        if (L_main) {
-            gl_run_close_cbs_for(L_main);   // por si no pasó por EXIT_TREE (ya vacío si sí)
-            gl_unregister_state(L_main);
-            lua_close(L_main);
-            L_main = nullptr;
-        }
-    }
+    ~ScriptNodeBase() { StopRun(); }
 
-    void set_codigo_luau(const Ref<LuauScript> &s) { codigo_luau = s; }
+    void set_codigo_luau(const Ref<LuauScript> &s) {
+        if (codigo_luau == s) return;
+        Callable Changed(this, "_gl_source_changed");
+        if (codigo_luau.is_valid() && codigo_luau->is_connected("changed", Changed))
+            codigo_luau->disconnect("changed", Changed);
+        StopRun();
+        codigo_luau = s;
+        if (codigo_luau.is_valid() && !codigo_luau->is_connected("changed", Changed))
+            codigo_luau->connect("changed", Changed);
+        _gl_source_changed();
+    }
     Ref<LuauScript> get_codigo_luau() const { return codigo_luau; }
 
     void set_script_id(const String &p_id) { script_id = p_id; }
@@ -916,6 +762,10 @@ public:
     void iniciar_corrutina() {
         if (Engine::get_singleton()->is_editor_hint()) return;
         if (get_class() == "ModuleScript") return;
+        const int RunContext = has_meta("RunContext") ? static_cast<int>(static_cast<int64_t>(get_meta("RunContext"))) : 0;
+        const bool IsClient = get_class() == "LocalScript" || RunContext == 2;
+        const GLDomainKind Kind = IsClient ? GLDomainKind::Client : GLDomainKind::Server;
+        if (!GLDomainAllowed(Kind)) return;
         // Plantillas (1.15): lo que vive dentro de un Starter* NO se ejecuta, solo
         // su clon. Sin esto corrían los dos: original + clon.
         if (gl_in_template_container(this)) {
@@ -931,7 +781,7 @@ public:
         // nunca es servidor no lo corre — recibe el mundo por replicación). En
         // single-player gl_startup_defer_server()==false → corre de inmediato. No
         // marca script_started para poder re-ejecutarlo al confirmarse el rol.
-        if (get_class() == "ServerScript" && gl_net_role() != 1 && gl_startup_defer_server()) {
+        if (!IsClient && gl_net_role() != 1 && gl_startup_defer_server()) {
             uint64_t oid = (uint64_t)get_instance_id();
             std::vector<uint64_t>& dl = gl_deferred_server_scripts();
             bool dup = false;
@@ -957,31 +807,25 @@ public:
             return;
         }
 
-        L_main = luaL_newstate();
-        gl_register_state(L_main);   // marca esta VM como viva (guard anti use-after-free)
-        luaL_openlibs(L_main);
+        auto Host = GLGetDomainHost(get_tree());
+        if (!Host) { script_started = false; return; }
+        Domain = &Host->GetDomain(Kind);
+        if (Host->ClaimInitialization(Kind)) InitializeDomain(*Domain);
+        RunOwner = Domain->CreateOwner(static_cast<uint64_t>(get_instance_id()));
+        if (!RunOwner) { script_started = false; return; }
+        L_main = RunOwner->Anchor;
+        lua_pushboolean(L_main, true);
+        RunGuard = GLReference(L_main, -1);
+        lua_pop(L_main, 1);
+        String ChunkName = String("=") + gl_instance_fullname(this);
+        Domain->Execute(RunOwner, codigo_luau->_get_source_code().utf8().get_data(), ChunkName.utf8().get_data());
+    }
 
-        // Guardar referencias al main state y al ScriptNodeBase en el registro
-        lua_pushlightuserdata(L_main, (void*)L_main);
-        lua_setfield(L_main, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
-        lua_pushlightuserdata(L_main, (void*)this);
-        lua_setfield(L_main, LUA_REGISTRYINDEX, "GODOTLUAU_SCRIPT_NODE");
-
-        // ── Contexto cliente/servidor ─────────────────────────────────────────
-        // LocalScript = cliente, ServerScript = servidor, ModuleScript = neutro
-        // RunContext de Roblox moderno: un Script con RunContext=Client corre como
-        // si fuera un LocalScript, este donde este (ReplicatedStorage, Workspace...).
-        // El importador lo deja como meta; sin esto esos scripts corrian como
-        // servidor y Players.LocalPlayer les salia nil.
-        // Enum.RunContext: Legacy=0, Server=1, Client=2, Plugin=3.
-        const int _run_ctx = has_meta("RunContext") ? (int)(int64_t)get_meta("RunContext") : 0;
-        const bool _is_client = (get_class() == "LocalScript") || _run_ctx == 2;
-        const bool _is_server = (get_class() == "ServerScript") && _run_ctx != 2;
-        lua_pushboolean(L_main, _is_client ? 1 : 0);
-        lua_setglobal(L_main, "__IS_CLIENT");
-        lua_pushboolean(L_main, _is_server ? 1 : 0);
-        lua_setglobal(L_main, "__IS_SERVER");
-
+    void InitializeDomain(GLExecutionDomain& Runtime) {
+        lua_State* L_main = Runtime.GetState();
+        const bool _is_client = Runtime.GetKind() == GLDomainKind::Client;
+        const bool _is_server = !_is_client;
+        gl_register_state(L_main);
         // ── Metatable: GodotObject ────────────────────────────────────────────
         luaL_newmetatable(L_main, "GodotObject");
 
@@ -1012,9 +856,9 @@ public:
                     return 1;
                 }
                 if (key == "WaitForChild") {
-                    lua_pushlightuserdata(L, (void*)node);
-                    lua_pushcclosure(L, [](lua_State* pL) -> int {
-                        Node* parent = (Node*)lua_touserdata(pL, lua_upvalueindex(1));
+                    lua_pushcfunction(L, [](lua_State* pL) -> int {
+                        auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(pL, 1));
+                        Node* parent = gow_node(Wrapper);
                         if (!parent) { lua_pushnil(pL); return 1; }
                         const char* cname = luaL_checkstring(pL, 2);
                         double timeout = lua_isnumber(pL, 3) ? lua_tonumber(pL, 3) : -1.0;
@@ -1024,21 +868,19 @@ public:
                             if (ch && ch->get_name() == StringName(cname)) { wrap_node(pL, ch); return 1; }
                         }
                         // Not found — register async wait
-                        lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_SCRIPT_NODE");
+                        GLPushScriptNode(pL);
                         ScriptNodeBase* sn = (ScriptNodeBase*)lua_touserdata(pL, -1);
                         lua_pop(pL, 1);
                         if (!sn) { lua_pushnil(pL); return 1; }
-                        lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                        GLPushOwnerState(pL);
                         lua_State* main_L = (lua_State*)lua_touserdata(pL, -1);
                         lua_pop(pL, 1);
                         if (!main_L) main_L = pL;
-                        lua_pushthread(pL);
-                        int ref = lua_ref(pL, -1);
-                        lua_pop(pL, 1);
+                        int ref = GLCaptureWait(pL);
                         sn->add_waiting_child(pL, main_L, ref, parent, String(cname), timeout);
                         lua_pushstring(pL, "__WAIT_CHILD__");
                         return lua_yield(pL, 1);
-                    }, "WaitForChild", 1);
+                    }, "WaitForChild");
                     return 1;
                 }
 
@@ -1159,7 +1001,7 @@ public:
         }
         wrap_node(L_main, game_node); lua_setglobal(L_main, "game");
         wrap_node(L_main, ws_node);   lua_setglobal(L_main, "workspace");
-        wrap_node(L_main, this);      lua_setglobal(L_main, "script");
+        lua_pushnil(L_main);         lua_setglobal(L_main, "script");
 
         // ── Instance ──────────────────────────────────────────────────────────
         lua_newtable(L_main);
@@ -1189,120 +1031,7 @@ public:
         lua_pushcfunction(L_main, godot_color3_from_rgb, "fromRGB"); lua_setfield(L_main, -2, "fromRGB");
         lua_setglobal(L_main, "Color3");
 
-        // ── task ─────────────────────────────────────────────────────────────
-        lua_newtable(L_main);
-
-        lua_pushcfunction(L_main, [](lua_State* L) -> int {
-            double sec = luaL_optnumber(L, 1, 0.0);
-            lua_pushnumber(L, sec);
-            return lua_yield(L, 1);   // Luau: hay que DEVOLVER lua_yield para que ceda de verdad
-        }, "wait");
-        lua_setfield(L_main, -2, "wait");
-
-        // task.spawn(f, ...) — corre f(...) YA en un hilo; devuelve el hilo (como Roblox)
-        lua_pushlightuserdata(L_main, (void*)this);
-        lua_pushcclosure(L_main, [](lua_State* L) -> int {
-            ScriptNodeBase* self = static_cast<ScriptNodeBase*>(lua_touserdata(L, lua_upvalueindex(1)));
-            if (!self || !lua_isfunction(L, 1)) return 0;
-
-            int base = lua_gettop(L);                 // [func(1), args(2..base)]
-            lua_State* NL = lua_newthread(L);          // NL en la cima
-            int nl_idx = lua_gettop(L);
-            lua_pushvalue(L, 1); lua_xmove(L, NL, 1);  // función → hilo
-            int n_args = base - 1;
-            for (int i = 2; i <= base; i++) lua_pushvalue(L, i);
-            if (n_args > 0) lua_xmove(L, NL, n_args);
-
-            int status = lua_resume(NL, nullptr, n_args);
-            int thread_ref = lua_ref(L, nl_idx);       // ref DESPUES del resume (sin sacarlo de la pila)
-
-            if (status == LUA_YIELD) {
-                double wait_time = 0.0;
-                if (lua_gettop(NL) > 0) {
-                    // Numero = task.wait(n); sentinel (__WAIT_CHILD__...) = espera
-                    // externa: timer -1 para que _process no lo re-resuma solo.
-                    wait_time = lua_isnumber(NL, -1) ? lua_tonumber(NL, -1) : -1.0;
-                    lua_pop(NL, 1);
-                }
-                SpawnedThread st; st.L = NL; st.ref = thread_ref; st.timer = wait_time; st.started = true;
-                self->spawned_threads.push_back(st);
-            } else {
-                if (status != LUA_OK) gl_report_script_error(NL);
-                if (self->L_main) lua_unref(self->L_main, thread_ref);
-            }
-            lua_settop(L, nl_idx);                     // devolver el hilo
-            return 1;
-        }, "spawn", 1);
-        lua_setfield(L_main, -2, "spawn");
-
-        // task.delay(n, f, ...) — corre f(...) tras n segundos; devuelve el hilo
-        lua_pushlightuserdata(L_main, (void*)this);
-        lua_pushcclosure(L_main, [](lua_State* L) -> int {
-            ScriptNodeBase* self = static_cast<ScriptNodeBase*>(lua_touserdata(L, lua_upvalueindex(1)));
-            if (!self) return 0;
-            double delay_time = luaL_checknumber(L, 1);
-            if (!lua_isfunction(L, 2)) return 0;
-
-            int base = lua_gettop(L);                 // [delay(1), func(2), args(3..base)]
-            lua_State* NL = lua_newthread(L);
-            int nl_idx = lua_gettop(L);
-            lua_pushvalue(L, 2); lua_xmove(L, NL, 1);  // función → hilo
-            int n_args = base - 2;
-            for (int i = 3; i <= base; i++) lua_pushvalue(L, i);
-            if (n_args > 0) lua_xmove(L, NL, n_args);
-
-            int thread_ref = lua_ref(L, nl_idx);
-            SpawnedThread st; st.L = NL; st.ref = thread_ref; st.timer = delay_time;
-            st.start_args = n_args; st.started = false;
-            self->spawned_threads.push_back(st);
-            lua_settop(L, nl_idx);
-            return 1;
-        }, "delay", 1);
-        lua_setfield(L_main, -2, "delay");
-
-        // task.defer(f, ...) — encola f(...) para el final del frame actual; devuelve el hilo
-        lua_pushlightuserdata(L_main, (void*)this);
-        lua_pushcclosure(L_main, [](lua_State* L) -> int {
-            ScriptNodeBase* self = static_cast<ScriptNodeBase*>(lua_touserdata(L, lua_upvalueindex(1)));
-            if (!self || !lua_isfunction(L, 1)) return 0;
-
-            int base = lua_gettop(L);                 // [func(1), args(2..base)]
-            lua_State* NL = lua_newthread(L);
-            int nl_idx = lua_gettop(L);
-            lua_pushvalue(L, 1); lua_xmove(L, NL, 1);
-            int n_args = base - 1;
-            for (int i = 2; i <= base; i++) lua_pushvalue(L, i);
-            if (n_args > 0) lua_xmove(L, NL, n_args);
-
-            int thread_ref = lua_ref(L, nl_idx);
-            SpawnedThread st; st.L = NL; st.ref = thread_ref; st.timer = 0.0;  // 0 → próximo _process
-            st.start_args = n_args; st.started = false;
-            self->spawned_threads.push_back(st);
-            lua_settop(L, nl_idx);
-            return 1;
-        }, "defer", 1);
-        lua_setfield(L_main, -2, "defer");
-
-        // task.cancel(thread) — cancela una corrutina spawneada
-        lua_pushlightuserdata(L_main, (void*)this);
-        lua_pushcclosure(L_main, [](lua_State* L) -> int {
-            ScriptNodeBase* self = static_cast<ScriptNodeBase*>(lua_touserdata(L, lua_upvalueindex(1)));
-            if (!self) return 0;
-            lua_State* target = nullptr;
-            if (lua_isthread(L, 1)) target = lua_tothread(L, 1);
-            if (!target) return 0;
-            for (int i = (int)self->spawned_threads.size()-1; i >= 0; --i) {
-                if (self->spawned_threads[i].L == target) {
-                    if (self->L_main) lua_unref(self->L_main, self->spawned_threads[i].ref);
-                    self->spawned_threads.erase(self->spawned_threads.begin() + i);
-                    return 0;
-                }
-            }
-            return 0;
-        }, "cancel", 1);
-        lua_setfield(L_main, -2, "cancel");
-
-        lua_setglobal(L_main, "task");
+        // task/require are installed once by GLExecutionDomain and resolve the current owner.
 
         // ── print / warn / error ──────────────────────────────────────────────
         // Visible por defecto; se desactiva con godot_luau/script_output = false
@@ -1383,12 +1112,8 @@ public:
         lua_setglobal(L_main, "error");
 
         // ── wait (alias global de task.wait) ─────────────────────────────────
-        lua_pushcfunction(L_main, [](lua_State* L) -> int {
-            double sec = luaL_optnumber(L, 1, 0.0);
-            lua_pushnumber(L, sec);
-            return lua_yield(L, 1);   // Luau: hay que DEVOLVER lua_yield para que ceda de verdad
-        }, "wait");
-        lua_setglobal(L_main, "wait");
+        lua_getglobal(L_main, "task"); lua_getfield(L_main, -1, "wait");
+        lua_setglobal(L_main, "wait"); lua_pop(L_main, 1);
 
         // ── tick — tiempo Unix actual (segundos) ──────────────────────────────
         lua_pushcfunction(L_main, [](lua_State* L) -> int {
@@ -1598,7 +1323,6 @@ public:
         lua_setglobal(L_main, "UserInputService");
 
         // ── require ───────────────────────────────────────────────────────────
-        setup_require_system(L_main);
         setup_remotefunction_system(L_main);
 
         // ── _FileAccess — I/O de archivos para DataStoreService ───────────────
@@ -1647,16 +1371,14 @@ public:
         // las ventanas del proyecto comparten `user://`, así que un cliente
         // escribiendo pisaría literalmente los archivos del servidor.
         lua_pushcfunction(L_main, [](lua_State* L) -> int {
-            lua_pushnumber(L, (double)gl_net_role());
+            lua_pushnumber(L, GLIsClient(L) ? 2.0 : (double)gl_net_role());
             return 1;
         }, "_GL_NET_ROLE");
         lua_setglobal(L_main, "_GL_NET_ROLE");
 
         // ── _GL_VM_ID — id único de esta VM dentro del proceso (1.14.16) ─────
-        // Cada script tiene su propia VM. El MessagingService le da a cada una su
-        // propio buzón: si dos scripts del MISMO servidor compartieran buzón,
-        // cada uno saltaría el suyo al leer y NINGUNO vería los mensajes del otro.
-        // El stdlib lo pide una sola vez al cargar.
+        // MessagingService owns one mailbox per domain VM. Local subscriptions
+        // share its service state; the stdlib asks once during domain bootstrap.
         lua_pushcfunction(L_main, [](lua_State* L) -> int {
             static int64_t ctr = 0;
             lua_pushnumber(L, (double)(++ctr));
@@ -1772,6 +1494,7 @@ public:
         lua_setglobal(L_main, "_InstanceNew");
 
         // ── Ejecutar stdlib (servicios Lua, class(), Enum, TweenInfo…) ────────
+        Runtime.ExposeBootstrapSpawner();
         {
             std::string sbc = Luau::compile(LUAU_STDLIB_CODE);
             if (luau_load(L_main, "__GodotLuauStdlib", sbc.data(), sbc.size(), 0) == 0) {
@@ -1784,136 +1507,7 @@ public:
                 lua_pop(L_main, 1);
             }
         }
-
-        // ── Compilar y ejecutar el script ─────────────────────────────────────
-        L_thread = lua_newthread(L_main);
-        String source = codigo_luau->_get_source_code();
-
-        std::string bytecode = Luau::compile(source.utf8().get_data());
-
-        // Chunkname = ruta completa estilo Roblox ("ServerScriptService.Server"):
-        // asi los errores salen como alla ("ServerScriptService.Server:5: ...").
-        // El prefijo '=' evita que Luau lo envuelva en [string "..."].
-        String chunkname = String("=") + gl_instance_fullname(this);
-        if (luau_load(L_thread, chunkname.utf8().get_data(), bytecode.data(), bytecode.size(), 0) == 0) {
-            resume();
-        } else {
-            // Error de sintaxis: linea roja identica a Roblox, sin stack.
-            gl_report_error_line(String::utf8(lua_tostring(L_thread, -1)));
-        }
-    }
-
-    void setup_require_system(lua_State* L) {
-        lua_pushcfunction(L, [](lua_State* L) -> int {
-            // Mensajes EXACTOS de Roblox en cada caso de require().
-            GodotObjectWrapper* wrapper = (GodotObjectWrapper*)lua_touserdata(L, 1);
-            if (!wrapper || !gow_node(wrapper)) {
-                luaL_error(L, "Attempted to call require with invalid argument(s).");
-                return 0;
-            }
-
-            Node* mod_node = gow_node(wrapper);
-            if (mod_node->get_class() != "ModuleScript") {
-                luaL_error(L, "Attempted to call require with invalid argument(s).");
-                return 0;
-            }
-
-            String cache_id = "CACHED_MOD_" + String::num(mod_node->get_instance_id());
-            lua_getfield(L, LUA_REGISTRYINDEX, cache_id.utf8().get_data());
-            if (!lua_isnil(L, -1)) { lua_pushboolean(L, 1); lua_insert(L, -2); return 2; }   // (true, valorCacheado)
-            lua_pop(L, 1);
-
-            ScriptNodeBase* mod_ptr = Object::cast_to<ScriptNodeBase>(mod_node);
-            if (!mod_ptr) { luaL_error(L, "Attempted to call require with invalid argument(s)."); return 0; }
-
-            Ref<LuauScript> res = mod_ptr->get_codigo_luau();
-            if (res.is_null()) {
-                // Modulo sin codigo = modulo que no devuelve nada (como en Roblox)
-                luaL_error(L, "Module code did not return exactly one value");
-                return 0;
-            }
-
-            std::string bc = Luau::compile(res->_get_source_code().utf8().get_data());
-            String mod_chunkname = String("=") + gl_instance_fullname(mod_node);
-            if (luau_load(L, mod_chunkname.utf8().get_data(), bc.data(), bc.size(), 0) != 0) {
-                // Como Roblox: se imprime el error de sintaxis del modulo (rojo) y
-                // el require lanza su error generico en la linea del caller.
-                gl_report_error_line(String::utf8(lua_tostring(L, -1)));
-                lua_pop(L, 1);
-                luaL_error(L, "Requested module experienced an error while loading");
-                return 0;
-            }
-
-            // La EJECUCIÓN del cuerpo del módulo la hace el wrapper Lua `require`
-            // con pcall (yieldable en Luau) — aquí solo devolvemos la función
-            // cargada. Correrla desde C con lua_pcall rompía cualquier yield
-            // interno (WaitForChild/task.wait) con "yield across C-call boundary".
-            // stack: [target, moduleFn]
-            lua_pushboolean(L, 0);                            // isCached = false
-            lua_insert(L, -2);                                // [target, false, moduleFn]
-            lua_pushstring(L, cache_id.utf8().get_data());    // cacheKey
-            wrap_node(L, mod_node);                           // modScript (para el 'script' del módulo)
-            return 4;                                         // (false, moduleFn, cacheKey, modScript)
-        }, "__gl_req_load");
-        lua_setglobal(L, "__gl_req_load");
-
-        // Guardar el valor devuelto por un módulo en la caché de la VM.
-        lua_pushcfunction(L, [](lua_State* L) -> int {
-            const char* key = luaL_checkstring(L, 1);
-            lua_pushvalue(L, 2);
-            lua_setfield(L, LUA_REGISTRYINDEX, key);
-            return 0;
-        }, "__gl_req_store");
-        lua_setglobal(L, "__gl_req_store");
-
-        // Reportar en rojo (como Roblox) el error de un módulo, con su ubicación.
-        lua_pushcfunction(L, [](lua_State* L) -> int {
-            gl_report_error_line(String::utf8(luaL_optstring(L, 1, "")));
-            return 0;
-        }, "__gl_req_err");
-        lua_setglobal(L, "__gl_req_err");
-
-        // `require` en LUA: corre el cuerpo del módulo con pcall (yieldable), así
-        // WaitForChild/task.wait DENTRO de un módulo ceden como corrutina normal.
-        // El `script` del módulo va en su ENTORNO, no en una global (1.14.15).
-        // Antes se ponía la global `script`, se corría el cuerpo y se restauraba:
-        // si el módulo CEDÍA (WaitForChild/task.wait dentro), otra corrutina la
-        // pisaba y el módulo despertaba con el `script` de OTRO.
-        // Y `_loading` arregla algo peor: un módulo que cede podía ser pedido a la
-        // vez por otra corrutina y, como la caché se escribe al TERMINAR, su cuerpo
-        // corría DOS veces → dos estados distintos del mismo módulo. Ahora el
-        // segundo espera al primero, y pedirse a sí mismo es error, como Roblox.
-        static const char* GL_REQUIRE_LUA =
-            "local _load, _store, _err = __gl_req_load, __gl_req_store, __gl_req_err\n"
-            "__gl_req_load, __gl_req_store, __gl_req_err = nil, nil, nil\n"
-            "local _loading = {}\n"
-            "function require(target)\n"
-            "  local cached, fn, key, mod = _load(target)\n"
-            "  if cached then return fn end\n"
-            "  local owner = _loading[key]\n"
-            "  if owner ~= nil then\n"
-            "    if owner == (coroutine.running() or 'main') then\n"
-            "      error('Requested module was required recursively', 0)\n"
-            "    end\n"
-            "    while _loading[key] ~= nil do task.wait() end\n"
-            "    local c2, f2 = _load(target)\n"
-            "    if c2 then return f2 end\n"
-            "    error('Requested module experienced an error while loading', 0)\n"
-            "  end\n"
-            "  _loading[key] = coroutine.running() or 'main'\n"
-            "  local g = getfenv(0)\n"
-            "  setfenv(fn, setmetatable({ script = mod }, { __index = g, __newindex = g }))\n"
-            "  local ok, result = pcall(fn)\n"
-            "  _loading[key] = nil\n"
-            "  if not ok then _err(tostring(result)) error('Requested module experienced an error while loading', 0) end\n"
-            "  if result == nil then error('Module code did not return exactly one value', 0) end\n"
-            "  _store(key, result)\n"
-            "  return result\n"
-            "end\n";
-        std::string _rbc = Luau::compile(GL_REQUIRE_LUA);
-        if (luau_load(L, "=__gl_require", _rbc.data(), _rbc.size(), 0) == 0) {
-            if (lua_pcall(L, 0, 0, 0) != LUA_OK) { UtilityFunctions::print("[GodotLuau require setup] ", lua_tostring(L, -1)); lua_pop(L, 1); }
-        } else { UtilityFunctions::print("[GodotLuau require syntax] ", lua_tostring(L, -1)); lua_pop(L, 1); }
+        lua_pushnil(L_main); lua_setglobal(L_main, "_GLDomainSpawn");
     }
 
     // RemoteFunction por red (1.14.6): corre el handler (OnServerInvoke/
@@ -1970,252 +1564,18 @@ public:
         } else { UtilityFunctions::print("[GodotLuau rf syntax] ", lua_tostring(L, -1)); lua_pop(L, 1); }
     }
 
-    void resume() {
-        if (!L_thread || !L_main || !gl_state_alive(L_main)) return;
-        // Igual que arriba: si el hilo principal del script ya no esta
-        // suspendido, reanudarlo casca dentro de la VM.
-        if (lua_costatus(L_main, L_thread) != LUA_COSUS) {
-            script_finished = true;
-            is_waiting = false;
-            return;
+    // Godot binds the immutable callback reference; module-owned connections use
+    // the same relay without borrowing an executable script's identity.
+    void _gl_child_event(Node* Child, int Reference) {
+        lua_State* Anchor = GLReferenceState(Reference);
+        if (!Anchor || !Child) return;
+        lua_State* Thread = lua_newthread(Anchor);
+        lua_rawgeti(Thread, LUA_REGISTRYINDEX, Reference);
+        if (lua_isfunction(Thread, -1)) {
+            wrap_node(Thread, Child);
+            GLResume(Thread, nullptr, 1);
         }
-        // wait() de Roblox devuelve (esperado, tiempoDeJuego).
-        int _nres = 0;
-        if (main_waited > 0.0) {
-            lua_pushnumber(L_thread, main_waited);
-            lua_pushnumber(L_thread, _gl_game_time());
-            _nres = 2;
-            main_waited = 0.0;
-        }
-        int status = lua_resume(L_thread, nullptr, _nres);
-        if (status == LUA_YIELD) {
-            if (lua_gettop(L_thread) > 0) {
-                if (lua_isnumber(L_thread, -1)) {
-                    wait_timer = lua_tonumber(L_thread, -1);
-                    is_external_wait = false;
-                } else {
-                    // Sentinel yield (__WAIT_CHILD__, __WAIT_SIGNAL__, etc.)
-                    // is_external_wait already set by add_waiting_child / Signal:Wait
-                    wait_timer = 1e9;
-                }
-                lua_pop(L_thread, 1);
-            } else {
-                wait_timer = 0.0;
-                is_external_wait = false;
-            }
-            is_waiting = true;
-        } else if (status != LUA_OK) {
-            gl_report_script_error(L_thread);
-            script_finished = true;
-        } else {
-            script_finished = true;
-        }
-    }
-
-    // Relay de ChildAdded/ChildRemoved. Godot lo conecta a child_entered_tree /
-    // child_exiting_tree del nodo objetivo y lo desconecta solo al liberar
-    // cualquiera de los dos extremos (sin fugas ni use-after-free). El ref es la
-    // función Luau conectada, guardada en el registro de esta VM.
-    void _gl_child_event(Node* child, int ref) {
-        if (!gl_state_alive(L_main) || !child) return;
-        lua_State* th = lua_newthread(L_main);
-        lua_rawgeti(L_main, LUA_REGISTRYINDEX, ref);
-        if (lua_isfunction(L_main, -1)) {
-            lua_xmove(L_main, th, 1);
-            wrap_node(th, child);
-            int status = lua_resume(th, nullptr, 1);
-            if (status != LUA_OK && status != LUA_YIELD) gl_report_script_error(th);
-        } else {
-            lua_pop(L_main, 1);
-        }
-        lua_pop(L_main, 1);
-    }
-
-    void _process(double delta) override {
-        // Si la VM de ESTE script ya se cerro (script destruido, recargado, o
-        // sacado del arbol), reanudar sus corrutinas es un use-after-free:
-        // lua_resume sobre un lua_State liberado casca DENTRO de la VM de Luau.
-        // Era la causa del segfault intermitente del place real: aparecia solo
-        // cuando algun script moria en ese frame (por error() o porque el juego
-        // destruia nodos), y por eso salia 1 de cada 3 veces.
-        // El resto del puente ya comprobaba gl_state_alive antes de invocar
-        // refs; este camino era el que faltaba.
-        if (!L_main || !gl_state_alive(L_main)) {
-            spawned_threads.clear();
-            return;
-        }
-
-        // ── 1. Main thread timer ────────────────────────────────────────
-        if (!script_finished && is_waiting && !is_external_wait) {
-            wait_timer -= delta;
-            main_waited += delta;
-            if (wait_timer <= 0.0) {
-                is_waiting = false;
-                resume();
-            }
-        }
-
-        // ── 2. Spawned threads ──────────────────────────────────────────
-        for (int i = (int)spawned_threads.size() - 1; i >= 0; i--) {
-            // La lista puede CRECER o ENCOGER mientras se recorre (ver abajo).
-            if (i >= (int)spawned_threads.size()) continue;
-            if (spawned_threads[i].timer < 0.0) continue;  // suspendida por condicion externa
-            spawned_threads[i].timer  -= delta;
-            spawned_threads[i].waited += delta;
-            if (spawned_threads[i].timer > 0.0) continue;
-
-            // ── Todo lo que se necesita se copia POR VALOR antes de reanudar ──
-            //
-            // ESTO ERA EL SEGFAULT INTERMITENTE del place real (1 de cada 3
-            // partidas). lua_resume EJECUTA codigo Lua, y ese codigo puede
-            // llamar a task.spawn / task.delay / task.defer, que hacen push_back
-            // en ESTE MISMO vector y lo REALOCAN. La version anterior guardaba
-            // una referencia (SpawnedThread& st) y despues de reanudar escribia
-            // en ella: memoria ya liberada. Se corrompia st.L y al frame
-            // siguiente lua_resume sobre ese puntero basura cascaba DENTRO de la
-            // VM de Luau (por eso el backtrace acababa en luau_execute y no
-            // señalaba a ningun sitio nuestro).
-            lua_State* thL      = spawned_threads[i].L;
-            const bool was_started = spawned_threads[i].started;
-            const int  start_args  = spawned_threads[i].start_args;
-            const double waited    = spawned_threads[i].waited;
-            spawned_threads[i].waited  = 0.0;
-            spawned_threads[i].started = true;
-
-            // 1er resume de task.delay/defer: pasar sus args; despues, los
-            // valores de retorno de wait() -> (esperado, tiempoDeJuego).
-            int na = was_started ? 0 : start_args;
-            if (was_started && waited > 0.0) {
-                lua_pushnumber(thL, waited);
-                lua_pushnumber(thL, _gl_game_time());
-                na = 2;
-            }
-            // SOLO se puede reanudar una corrutina SUSPENDIDA. Reanudar una que
-            // ya termino (o que murio por un error, o que esta corriendo) es
-            // comportamiento indefinido: Luau no lo valida y el proceso se cae
-            // DENTRO de luau_execute, sin apuntar a nada nuestro. Es lo que
-            // pasaba de forma intermitente en el place real.
-            const int co_st = lua_costatus(L_main, thL);
-            if (co_st != LUA_COSUS) {
-                if (L_main) lua_unref(L_main, spawned_threads[i].ref);
-                spawned_threads.erase(spawned_threads.begin() + i);
-                continue;
-            }
-            int status = lua_resume(thL, nullptr, na);
-
-            // Se vuelve a localizar la entrada POR PUNTERO de hilo: el indice
-            // puede haber cambiado si el Lua reanudado creo o cancelo corrutinas.
-            int idx = -1;
-            for (int k = 0; k < (int)spawned_threads.size(); k++)
-                if (spawned_threads[k].L == thL) { idx = k; break; }
-            if (idx < 0) continue;   // el propio script ya la quito (task.cancel)
-
-            if (status == LUA_YIELD) {
-                if (lua_gettop(thL) > 0) {
-                    if (lua_isnumber(thL, -1)) {
-                        spawned_threads[idx].timer = lua_tonumber(thL, -1);
-                    } else {
-                        // Yield centinela — queda suspendida (la gestiona otro)
-                        spawned_threads[idx].timer = -1.0;
-                    }
-                    lua_pop(thL, 1);
-                } else {
-                    spawned_threads[idx].timer = 0.0;
-                }
-            } else {
-                if (status != LUA_OK) gl_report_script_error(thL);
-                if (L_main) lua_unref(L_main, spawned_threads[idx].ref);
-                spawned_threads.erase(spawned_threads.begin() + idx);
-            }
-        }
-
-        // ── 3. Poll WaitForChild entries ────────────────────────────────
-        for (int i = (int)waiting_children.size()-1; i >= 0; --i) {
-            WaitingChild& wc = waiting_children[i];
-            wc.elapsed += delta;
-            Node* found = nullptr;
-            // Resolver el padre por ObjectID: nullptr si fue destruido (sin UAF).
-            Node* parent = Object::cast_to<Node>(ObjectDB::get_instance(wc.parent_id));
-            bool parent_gone = (wc.parent_id != 0 && parent == nullptr);
-            if (parent && parent->is_inside_tree()) {
-                for (int ci = 0; ci < parent->get_child_count(); ci++) {
-                    Node* ch = parent->get_child(ci);
-                    if (ch && ch->get_name() == StringName(wc.child_name)) { found = ch; break; }
-                }
-            }
-            // Warning de Roblox: WaitForChild sin timeout que lleva 5s sin
-            // resolverse — el clasico script colgado "en silencio".
-            if (!found && !parent_gone && wc.timeout <= 0 && !wc.warned && wc.elapsed >= 5.0) {
-                wc.warned = true;
-                String pname = parent ? gl_instance_fullname(parent) : String(get_name());
-                UtilityFunctions::print_rich(String("[color=") + GL_WARN_COLOR +
-                    "]Infinite yield possible on '" + pname + ":WaitForChild(\"" + wc.child_name + "\")'[/color]");
-                UtilityFunctions::print_rich(gl_format_roblox_stack(wc.trace));
-            }
-            // Si el padre desaparece, no dejamos la corrutina colgada para siempre.
-            bool timed_out = (wc.timeout > 0 && wc.elapsed >= wc.timeout) || parent_gone;
-            if (found || timed_out) {
-                if (found) { wrap_node(wc.thread, found); resume_external_thread(wc.thread, 1); }
-                else       { lua_pushnil(wc.thread);       resume_external_thread(wc.thread, 1); }
-                if (wc.main_L) lua_unref(wc.main_L, wc.ref);
-                waiting_children.erase(waiting_children.begin() + i);
-            }
-        }
-
-        // ── 4. Drain shared pending-resume queue (Signal:Wait etc.) ────
-        auto& pending = get_pending_resumes();
-        for (int i = (int)pending.size()-1; i >= 0; --i) {
-            LuauPendingResume& pr = pending[i];
-            // Only process entries that belong to this ScriptNode's main state
-            if (pr.main_L != L_main) continue;
-            if (pr.use_args) {   // RemoteEvent:Wait → devolver los args del evento
-                Node* ctx = pr.ctx_id ? Object::cast_to<Node>(ObjectDB::get_instance(pr.ctx_id)) : nullptr;
-                int n = gl_net_decode_args(pr.thread, pr.args, ctx);
-                resume_external_thread(pr.thread, n);
-            }
-            else if (pr.node_arg) { wrap_node(pr.thread, pr.node_arg); resume_external_thread(pr.thread, 1); }
-            else                  { lua_pushnumber(pr.thread, pr.delta); resume_external_thread(pr.thread, 1); }
-            pending.erase(pending.begin() + i);
-        }
-
-        // ── 5. Respuestas de RemoteFunction por red (InvokeServer/Client) ──
-        if (!waiting_invokes.empty()) {
-            auto& resp = gl_net_responses();
-            Node* nsctx = gl_net_service_id() ? Object::cast_to<Node>(ObjectDB::get_instance(gl_net_service_id())) : nullptr;
-            for (int i = (int)waiting_invokes.size()-1; i >= 0; --i) {
-                waiting_invokes[i].elapsed += delta;
-                auto it = resp.find(waiting_invokes[i].call_id);
-                bool ready = (it != resp.end() && it->second.ready);
-                bool timed = (waiting_invokes[i].timeout > 0 && waiting_invokes[i].elapsed >= waiting_invokes[i].timeout);
-                if (!ready && !timed) {
-                    // Roblox no tiene timeout: se espera indefinidamente y solo se
-                    // avisa. Si el receptor se cae, el NetworkService deposita el
-                    // fallo (no hace falta rendirse por tiempo).
-                    if (!waiting_invokes[i].warned && waiting_invokes[i].elapsed >= 10.0) {
-                        waiting_invokes[i].warned = true;
-                        UtilityFunctions::push_warning("Infinite yield possible on RemoteFunction invoke");
-                    }
-                    continue;
-                }
-                // Sacar el registro ANTES de reanudar: el hilo reanudado puede volver
-                // a invocar y hacer push_back, invalidando la referencia y el índice.
-                WaitingInvoke wi = waiting_invokes[i];
-                waiting_invokes.erase(waiting_invokes.begin() + i);
-                bool  ok = true;
-                Array rets;
-                if (ready) { ok = it->second.ok; rets = it->second.rets; resp.erase(it); }
-                else       { ok = false; rets.push_back(String("RemoteFunction invoke timed out")); }
-                if (wi.main_L) lua_unref(wi.main_L, wi.ref);
-                if (ok) {
-                    int n = gl_net_decode_args(wi.thread, rets, nsctx);
-                    resume_external_thread(wi.thread, n);
-                } else {
-                    // El error del handler remoto se RE-LANZA aquí (como Roblox).
-                    String msg = rets.size() > 0 ? String(rets[0]) : String("RemoteFunction invocation failed");
-                    resume_external_thread_error(wi.thread, msg);
-                }
-            }
-        }
+        lua_pop(Anchor, 1);
     }
 
     void _ready() override {

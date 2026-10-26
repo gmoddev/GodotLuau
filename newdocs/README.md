@@ -6,17 +6,21 @@ Upstream: [Pimpoli/GodotLuau](https://github.com/Pimpoli/GodotLuau).
 The initial source baseline is
 [`7044a11c1bcc2eac2a91155e829a5821d92ab66e`](https://github.com/Pimpoli/GodotLuau/tree/7044a11c1bcc2eac2a91155e829a5821d92ab66e),
 whose `Version` begins `v1.16.12`. Upstream `main` resolved to that same commit
-when checked on 2026-10-26. The initial fork changes documentation only.
+when checked on 2026-10-26. The initial fork commit was documentation only;
+`runtime/shared-domains` implements the subsequent Server/Client VM migration.
 
 ## Start here
 
 | Document | Purpose |
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
-| [Current architecture](current-architecture.md) | Source-verified baseline and subsystem entry points |
+| [Current architecture](current-architecture.md) | Implemented ownership and subsystem entry points |
 | [Invariants](invariants.md) | Required properties for new/touched behavior, with known baseline gaps |
 | [Issue ledger](issues.md) | Stable IDs, evidence, priorities, proof gaps, and closure criteria |
 | [Review validation](review-validation.md) | Claim-by-claim assessment of the supplied architecture review |
+| [Shared-domain decision](adr-001-shared-execution-domains.md) | Accepted GL-014 design and compatibility contract; implementation status is separate |
+| [Shared-domain work log](shared-domains-work-log.md) | Baseline, ongoing implementation checkpoints, and executed qualification evidence |
+| [Shared-domain validation](shared-domains-validation.md) | Reproduction commands, acceptance coverage and remaining gaps |
 
 ## Documentation authority
 
@@ -38,8 +42,9 @@ another:
 7. **Historical reviews:** evidence about their stated revision and methods.
 
 The supplied review is historical input. Its recommendations do not approve a
-shared-VM rewrite, SQLite, a separate network service, or an engine-neutral
-Instance system. Those choices require their own design and compatibility work.
+SQLite, a separate network service, or an engine-neutral Instance system.
+The shared-domain migration has its own explicit owner request and ADR-001;
+acceptance of the original review alone did not authorize it.
 
 ## Evidence and issue maintenance
 

@@ -25,9 +25,21 @@ the inherited runtime already satisfies them. Baseline gaps link to
   Lower-trust script support requires restricted globals, explicit capabilities,
   confined filesystem roots, bounded input/output, cancellation, and accountable
   execution/memory limits. Gaps: GL-003, GL-004, GL-005.
-- VM/model changes must specify require-cache identity, shared-state behavior,
-  task ownership, cancellation, and compatibility before migration. GL-014 is an
-  open design question, not approval for a shared VM.
+- One VM exists per applicable Server/Client domain in a running game process;
+  executable scripts must not allocate individual VMs or mix domain authority.
+  Script/module environments retain their own identity and ordinary globals;
+  `_G`, `shared`, services and require results share only within their domain.
+- Module identity survives names/path changes; pending callers join one
+  initializer. Cycles/errors, invalidation and existing returned values follow
+  [ADR-001](adr-001-shared-execution-domains.md). Executable destruction must not
+  evict unrelated modules or cancel their initialization.
+- Every task, callback and wait has a domain and owner. Retired owners cannot
+  resume; script disable/reload cancels old work before starting a fresh run.
+  Reentrant dispatch cannot invalidate scheduler iteration. Native resume
+  nesting is bounded; this does not substitute for execution/memory quotas.
+- Domain shutdown closes admission before finite close-hook dispatch and owner
+  invalidation. Actual VM close follows active native execution, never from
+  within a running callback. GL-014 remains open for outstanding qualification.
 
 ## Multiplayer authority
 

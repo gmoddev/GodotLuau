@@ -2,7 +2,8 @@
 
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
-All entries are open. This file does not create upstream or GitHub issues.
+All entries remain open; implementation progress and qualification gaps are
+recorded below. This file does not create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
 described implementation fact, not a reproduced crash/exploit. `Needs review`
@@ -18,8 +19,8 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
-| GL-001 | P1 | Verified lifetime hazard | WaitForChild closure retains raw Node pointer |
-| GL-002 | P1 | Verified lifetime hazard | NetworkService closures retain raw service pointers |
+| GL-001 | P1 | Fix implemented; qualification open | WaitForChild now resolves live receiver; focused regressions pass |
+| GL-002 | P1 | Fix implemented; qualification open | NetworkService closures now resolve ObjectIDs; focused regressions pass |
 | GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
 | GL-004 | P1 | Verified control gap; impact needs review | No explicit VM sandbox or execution/memory quotas found |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
@@ -31,7 +32,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
 | GL-012 | P2 | Verified history-loss behavior | Workflow attempts to delete older releases and tags |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
-| GL-014 | P2 | Design decision | Evaluate per-script versus per-domain VM ownership |
+| GL-014 | P2 | Implemented; qualification open | Shared Server/Client domains and module cache; Windows functional/ASan coverage |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Verified fork distribution gap | Enabled updater still downloads upstream packages |
 
@@ -54,6 +55,14 @@ freeing the target across a frame, then invoking it from a surviving VM. Also
 test valid lookup, pending wait, timeout, and script shutdown. Define the stale
 target result and prove no native crash or abandoned coroutine.
 
+**Migration update (2026-10-26):** WaitForChild now resolves its receiver's
+ObjectID at invocation and records guarded waits with the domain host. The
+headless native fixture passed valid/pending/timeout paths, destruction while
+waiting and retained invocation after target destruction (returns nil), plus
+scene replacement. See [validation](shared-domains-validation.md). Kept open:
+the Godot adapter/executable were not sanitizer-instrumented and this does not
+establish universal binding lifetime safety. Original evidence above is historical.
+
 ## GL-002: NetworkService method closures retain service pointers
 
 **Evidence:** `src/core/luau_api.h:2333-2353` captures `nsvc` and later calls
@@ -68,6 +77,13 @@ failure were not exercised; security triage is `needs_review`.
 type at invocation. Cover service destruction/replacement with a surviving script,
 stored getters and mutators, valid behavior, and pending callbacks. Review other
 captures separately rather than claiming this entry covers all bindings.
+
+**Migration update (2026-10-26):** NetworkService method closures now retain
+ObjectIDs and resolve the expected service type through GLNodeUpvalue. Native
+listen/network fixtures passed valid getters/mutators, retained GetPeerId and
+Disconnect after service destruction, yielding callbacks and cancellation of an
+outstanding response. Kept open for broader native adapter lifetime/sanitizer
+qualification; these focused results do not qualify every binding.
 
 ## GL-003: FileAccess global bypasses DataStore's role guard
 
@@ -253,19 +269,41 @@ bug and does not justify a sweeping rewrite.
 ownership/interfaces, preserve behavior, and measure build impact when claimed.
 Avoid mixing mechanical movement with unrelated runtime changes.
 
-## GL-014: Decide VM ownership using compatibility and measurements
+## GL-014: Shared execution domains — implementation delivered, qualification open
 
 **Evidence:** Per-executable-script `L_main` at `luau_script.h:960`; require's
 registry cache at `1806-1828`; README explicitly documents isolated module state.
 
-**Classification:** Design decision. The model is real; calling it inherently
-wrong or too slow is not established. VM-per-domain may change shared state,
-failure isolation, resource accounting, callback ownership, and require behavior.
+**Original classification:** Design decision. The baseline model was real;
+calling it inherently wrong or too slow was not established.
 
-**Closure:** Record requirements, compare per-script/domain/Actor-like isolation,
-measure representative script-count memory/startup/scheduler costs, and select a
-model with a migration plan and require/reload/cancellation tests. Do not mark
-this as fixed merely by choosing the review's preference.
+**Implemented:** The owner explicitly requested migration on 2026-10-26.
+[ADR-001](adr-001-shared-execution-domains.md) compares per-script, per-domain,
+universal and Actor-like ownership and records compatibility before runtime edits.
+GLExecutionDomain owns the VM/cache/scheduler and script/module identities;
+GLDomainHost owns applicable Server/Client domains for the running scene/process.
+No per-executable VM or permanent legacy scheduler remains. Environments,
+sticky module failures, invalidation, shared state, shutdown, role boundaries and
+native callback ownership are described in [current architecture](current-architecture.md).
+
+**Executed evidence:** 35 production-core regressions pass in Windows MSVC
+Debug and ASan, including deep require/spawn dispatch after an ASan-discovered
+stack overflow was fixed. Actual GDExtension fixtures pass single-player,
+listen-host, dedicated server plus two clients, and editor-style two-client
+launch flags. They exercise native signals/remotes, script/module lifecycle,
+Instance value replication, identity and wrong-role checks. See exact commands,
+limits and artifact identity in [validation](shared-domains-validation.md), and
+the investigation history in [work log](shared-domains-work-log.md).
+
+**Status: OPEN for qualification.** Implementation and exercised functional
+acceptance are delivered. Representative old/new startup/memory/scheduler costs
+have not been measured; no performance or scalability claim is made. Linux,
+release/SCons packaging, a full graphical editor session, coordinator deployment
+and sanitizer-instrumented Godot/native adapters were not qualified. ENet
+`max channels: 0` teardown diagnostics occurred in a passing multi-process run;
+baseline attribution remains unresolved. Close only with linked qualification
+evidence and an explicit disposition of these remaining acceptance/proof gaps.
+GL-003 through GL-009 and GL-016 remain independent issues.
 
 ## GL-015: Establish asset-specific redistribution provenance
 

@@ -138,28 +138,28 @@ public:
 
     static void fire_lua_died(std::vector<LuaCallback>& cbs) {
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
-            auto& cb = cbs[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) { cbs.erase(cbs.begin() + i); continue; }
+            auto cb = cbs[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
             lua_State* thread = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, thread, 1);
-                gl_check_resume(thread, lua_resume(thread, nullptr, 0));
+                gl_check_resume(thread, GLResume(thread, nullptr, 0));
             } else { lua_pop(cb.main_L, 1); }
             lua_pop(cb.main_L, 1);
         }
     }
     static void fire_lua_state_changed(std::vector<LuaCallback>& cbs, int new_state, int old_state) {
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
-            auto& cb = cbs[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) { cbs.erase(cbs.begin() + i); continue; }
+            auto cb = cbs[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
             lua_State* thread = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, thread, 1);
                 lua_pushnumber(thread, new_state);
                 lua_pushnumber(thread, old_state);
-                gl_check_resume(thread, lua_resume(thread, nullptr, 2));
+                gl_check_resume(thread, GLResume(thread, nullptr, 2));
             } else { lua_pop(cb.main_L, 1); }
             lua_pop(cb.main_L, 1);
         }
@@ -169,15 +169,15 @@ public:
     // Running, booleano para Jumping/Climbing/...).
     static void fire_lua_one(std::vector<LuaCallback>& cbs, const Variant& arg) {
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
-            auto& cb = cbs[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) { cbs.erase(cbs.begin() + i); continue; }
+            auto cb = cbs[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
             lua_State* thread = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, thread, 1);
                 if (arg.get_type() == Variant::BOOL) lua_pushboolean(thread, (bool)arg);
                 else                                 lua_pushnumber(thread, (double)arg);
-                gl_check_resume(thread, lua_resume(thread, nullptr, 1));
+                gl_check_resume(thread, GLResume(thread, nullptr, 1));
             } else { lua_pop(cb.main_L, 1); }
             lua_pop(cb.main_L, 1);
         }
@@ -185,15 +185,15 @@ public:
 
     static void fire_lua_health_changed(std::vector<LuaCallback>& cbs, float new_hp, float old_hp) {
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
-            auto& cb = cbs[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) { cbs.erase(cbs.begin() + i); continue; }
+            auto cb = cbs[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
             lua_State* thread = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, thread, 1);
                 lua_pushnumber(thread, new_hp);
                 lua_pushnumber(thread, old_hp);
-                gl_check_resume(thread, lua_resume(thread, nullptr, 2));
+                gl_check_resume(thread, GLResume(thread, nullptr, 2));
             } else { lua_pop(cb.main_L, 1); }
             lua_pop(cb.main_L, 1);
         }
