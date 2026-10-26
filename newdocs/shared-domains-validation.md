@@ -3,6 +3,10 @@
 Date: 2026-10-26. Starting revision:
 `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 Branch: `runtime/shared-domains` in the public `gmoddev/GodotLuau` fork.
+Tested implementation commit:
+[`521265c338fc890a0e30b9e8a556f6346baf7d00`](https://github.com/gmoddev/GodotLuau/commit/521265c338fc890a0e30b9e8a556f6346baf7d00).
+The follow-up qualification commit only records this immutable identity; runtime
+and fixture sources are unchanged from the exercised implementation.
 The decision precedes implementation in [ADR-001](adr-001-shared-execution-domains.md).
 [The work log](shared-domains-work-log.md) records investigation, failed checks
 and fixes as they occurred. This report distinguishes implemented behavior from

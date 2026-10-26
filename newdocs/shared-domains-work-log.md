@@ -238,3 +238,11 @@ GL-014 remains open. Other issue statuses are unchanged.
   GL-014 remains open for performance/platform/native-adapter qualification and
   transport diagnostic disposition. Other issues remain independently tracked.
   See [validation](shared-domains-validation.md) for the complete evidence/limits.
+
+## Commit checkpoint
+
+- Committed the qualified implementation, fixtures and maintained documentation
+  as `521265c338fc890a0e30b9e8a556f6346baf7d00` on `runtime/shared-domains`.
+- The following documentation-only checkpoint records that immutable source
+  identity. Publication targets `origin` (`gmoddev/GodotLuau`) on this branch;
+  inherited release automation triggers on main and is not dispatched here.

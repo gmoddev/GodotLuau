@@ -278,6 +278,8 @@ registry cache at `1806-1828`; README explicitly documents isolated module state
 calling it inherently wrong or too slow was not established.
 
 **Implemented:** The owner explicitly requested migration on 2026-10-26.
+Implementation commit:
+[`521265c338fc890a0e30b9e8a556f6346baf7d00`](https://github.com/gmoddev/GodotLuau/commit/521265c338fc890a0e30b9e8a556f6346baf7d00).
 [ADR-001](adr-001-shared-execution-domains.md) compares per-script, per-domain,
 universal and Actor-like ownership and records compatibility before runtime edits.
 GLExecutionDomain owns the VM/cache/scheduler and script/module identities;

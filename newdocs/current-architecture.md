@@ -1,6 +1,7 @@
 # Current architecture
 
 Updated for the shared-domain migration on `runtime/shared-domains`, 2026-10-26.
+Implemented source: `521265c338fc890a0e30b9e8a556f6346baf7d00`.
 The initial runtime baseline was `7044a11c1bcc2eac2a91155e829a5821d92ab66e`;
 the migration started at `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 [Qualification evidence](shared-domains-validation.md) distinguishes executed
