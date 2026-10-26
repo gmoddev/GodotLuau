@@ -450,3 +450,68 @@ GL-014 remains open. Other issue statuses are unchanged.
   process remained. Its caches/logs are retained and unrelated containers remain
   healthy. Publishing main uses an ordinary non-force push with the CI skip
   directive; the source branch is retained at its qualified revision.
+
+## 2026-10-26: GL-019 measured hot-path optimization
+
+- Verified clean local/remote main at `aa5400321b8f838a75de8d2b4005b0c5165dab34`;
+  created `perf/gl-019-hot-paths`. Main and the historical source branch remain
+  unchanged. Existing four-CPU/10-GiB Linux container/caches and Windows toolchain
+  are reused; no new tools/packages or worker settings are required.
+- Before runtime edits, reproduced the original/shared population benchmark with
+  five counterbalanced trials at 10/100/1,000 scripts. The pre-GL-019 Release
+  binary is still SHA256
+  `8ea4e9c2faeb4218157059415e93aab6700eebce41283a1ab0b20106aff66ee9`.
+  At 1,000 scripts, shared medians are 287.317 ms startup, 195.620 ms cached
+  requires, 20.140 ms create/cancel pairs and 57.191 MiB RSS growth, reproducing
+  the prior regression. Original baseline startup is 2,979.038 ms in this run.
+- Added a captured-module native require microbenchmark using existing bounded
+  runner helpers, and an optional production-core CPU/C++-allocation executable.
+  No runtime optimization was made before these measurements. C++ new counts
+  exclude Luau/Godot malloc; process CPU uses std::clock, not headless frame time.
+- Native Linux perf sampling is available without configuration changes. Scoped
+  it to the task container cgroup, with 16,463 user-cycle samples and zero lost
+  samples. Symbolized extension paths through a task-owned symbol root; the
+  official Godot executable is stripped. Inclusive samples: BeginRequire 67.63%,
+  native resolver 66.04%, String::utf8 30.98%, gl_instance_fullname 26.62%,
+  module cast 3.17%, registry result lookup 0.63%. These overlap and are not
+  additive. Expensive source/path work before the cache is measured, not assumed.
+- Core microbenchmarks at 1,000 operations show deferred creation at median
+  0.412 ms CPU with 2,000 C++ allocations (120,000 requested bytes), cancellation
+  0.040 ms/no new allocations, and reaping about 0.038 ms with 11 snapshot-vector
+  allocations. Resume/yield and resume/completion likewise allocate 11 times
+  per snapshot. This supports avoiding vector growth, while retaining shared_ptr
+  ownership; replacing safe task records with raw pointers/pools is not justified.
+- Proposed require correction: validate native module/resource identity and a
+  resource source-revision counter on every call; load source/chunk path only
+  on a cache miss. Increment revision before emitting resource changed signals,
+  so an earlier subscriber cannot observe a stale ready cache. Preserve explicit
+  invalidation, loading/cycle/sticky-error behavior and content-based core resolvers.
+  Proposed task corrections are limited to pre-sizing snapshot vectors and
+  avoiding shared_ptr copies while inspecting still-live records during reaping.
+- The require-only candidate reduced the captured-module hot loop from median
+  1,041.768 to 163.297 ms per million calls (seven counterbalanced trials).
+  Retained the change after the original core suite and native fixture passed.
+  Added three focused core cases for lazy load counts, resource identity/revision,
+  pending invalidation, metadata-path cycles/sticky errors and shutdown cache use.
+  Added a native changed-subscriber ordering check: updated source must be visible
+  before ModuleScript's later changed handler invalidates the cache. Suite: 39 cases.
+- Retained the small snapshot changes: reserve task/close-owner vectors and inspect
+  live records before taking a shared_ptr copy. At 1,000 tasks, snapshots request
+  16,000–16,016 bytes in one C++ allocation rather than 32,752 bytes in eleven.
+  Idle pending-task tick CPU median falls from 0.026 to 0.020 ms; a 10,000-task
+  sensitivity run gives 0.271 to 0.159 ms. Task creation/cancellation costs remain
+  broadly unchanged; their two per-task C++ allocations and strong ownership stay.
+- Final seven-trial population comparison at 1,000 scripts: cached requires
+  198.230 → 82.433 ms, startup 290.204 → 171.446 ms, RSS growth
+  57.203 → 56.230 MiB, create/cancel pairs 20.321 → 20.107 ms.
+  All spreads/raw records will be retained; frame pacing is not scheduler CPU proof.
+- Final native CPU profile, same 15 million calls/five processes: task-container
+  CPU 16,570.54 → 3,150.85 ms, cycles 92.553 → 16.905 billion, instructions
+  325.971 → 56.991 billion. These whole-container totals include startup/runner
+  overhead; they are not isolated function CPU times. No profiling hooks enter
+  production, no full source/path work remains on ready cache hits.
+- Windows and Linux Debug/Release/ASan core configurations each pass five runs
+  of all 39 cases. Normal native Debug/Release groups pass on both platforms;
+  the qualified full Linux engine/bindings/adapter/Luau ASan+LSan combination
+  passes 24 ordered-close process results across three repetitions. GL-017's
+  separate engine failure evidence and GL-018's Windows native limitation remain.

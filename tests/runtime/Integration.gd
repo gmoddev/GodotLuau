@@ -84,6 +84,23 @@ game:SetAttribute('%sB', true)
     for Key in ["ServerA", "ServerB", "ServerIdentity", "ServerCallback", "ClientA", "ClientB", "ClientIdentity", "ClientCallback"]:
         await Until(Key)
     print("[Runtime:Integration] Shared modules, per-domain caches, script identity and yielding callbacks checked")
+    # The observer precedes ModuleScript's changed handler. Revision validation
+    # must see new source even before that handler explicitly invalidates cache.
+    var RevisionResource: Script = ClassDB.instantiate("LuauScript")
+    RevisionResource.source_code = "return {Value = 1}"
+    RevisionResource.changed.connect(func():
+        var Observer := CreateScript("ServerScript", "RevisionObserver", "assert(require(game.ReplicatedStorage.RevisionCounter).Value == 2); game:SetAttribute('RevisionObserved', true)", Game)
+        Observer.call("iniciar_corrutina")
+        Check(Game.get_meta("RevisionObserved", false), "Earlier changed subscriber read a stale module revision")
+    )
+    var RevisionModule: Node = ClassDB.instantiate("ModuleScript")
+    RevisionModule.name = "RevisionCounter"
+    RevisionModule.call("set_codigo_luau", RevisionResource)
+    Storage.add_child(RevisionModule)
+    CreateScript("ServerScript", "RevisionWarmup", "assert(require(game.ReplicatedStorage.RevisionCounter).Value == 1); game:SetAttribute('RevisionWarmed', true)", Game)
+    await Until("RevisionWarmed")
+    RevisionResource.source_code = "return {Value = 2}"
+    await Until("RevisionObserved")
     var LocalFunction: Node = ClassDB.instantiate("RemoteFunctionNode")
     LocalFunction.name = "LocalFunction"
     Storage.add_child(LocalFunction)

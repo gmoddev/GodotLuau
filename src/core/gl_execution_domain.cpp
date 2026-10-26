@@ -312,8 +312,10 @@ bool GLExecutionDomain::RetainExternalWait(lua_State* Thread) {
 void GLExecutionDomain::ReleaseCancelled() {
     if (ResumeDepth) return;
     for (auto Iterator = Threads.begin(); Iterator != Threads.end();) {
+        // Inspect live records without an otherwise unused shared_ptr copy.
+        // Retain a strong local root before reset/unref can invoke Lua cleanup.
+        if (!Iterator->second->Cancelled && Iterator->second->Owner->Alive) { ++Iterator; continue; }
         auto Task = Iterator->second;
-        if (!Task->Cancelled && Task->Owner->Alive) { ++Iterator; continue; }
         lua_resetthread(Task->State);
         lua_unref(State, Task->Root);
         Iterator = Threads.erase(Iterator);
@@ -348,6 +350,7 @@ void GLExecutionDomain::Tick(double Delta) {
     ++TickNumber;
     Elapsed += Delta;
     std::vector<std::shared_ptr<GLThread>> Snapshot;
+    Snapshot.reserve(Threads.size());
     for (const auto& Entry : Threads) Snapshot.push_back(Entry.second);
     for (const auto& Task : Snapshot) {
         if (Task->Cancelled || !Task->Owner->Alive || Task->Running || Task->WakeTick > TickNumber) continue;
@@ -396,22 +399,31 @@ int GLExecutionDomain::BeginRequire(lua_State* Thread) {
     if (!ResolveModule || !ResolveModule(Thread, 1, Source) || !Source.Identity)
         luaL_error(Thread, "[Runtime:Require] Expected a live ModuleScript");
     auto Found = Modules.find(Source.Identity);
+    bool MatchingSource = Found != Modules.end() && (Source.ResourceIdentity
+        ? Found->second->ResourceIdentity == Source.ResourceIdentity && Found->second->Revision == Source.Revision
+        : Found->second->Source == Source.Source);
     if (IsClosing()) {
-        if (Found != Modules.end() && Found->second->Source == Source.Source && Found->second->Status == GLModuleStatus::Ready)
+        if (MatchingSource && Found->second->Status == GLModuleStatus::Ready)
             return PushModuleResult(Thread, Found->second);
         luaL_error(Thread, "[Runtime:Require] Cannot initialize modules during shutdown");
     }
-    if (Found != Modules.end() && Found->second->Source != Source.Source) {
+    if (Found != Modules.end() && !MatchingSource) {
         InvalidateModule(Source.Identity);
         Found = Modules.end();
     }
+    if (Found != Modules.end() && Found->second->Status == GLModuleStatus::Ready)
+        return PushModuleResult(Thread, Found->second);
     std::shared_ptr<GLModule> Module;
     if (Found != Modules.end()) Module = Found->second;
     else {
+        if (LoadModule && !LoadModule(Source))
+            luaL_error(Thread, "[Runtime:Require] Expected a live ModuleScript");
         Module = std::make_shared<GLModule>();
         Module->Token = NextToken++;
         Module->Identity = Source.Identity;
         Module->Source = Source.Source;
+        Module->ResourceIdentity = Source.ResourceIdentity;
+        Module->Revision = Source.Revision;
         Module->Owner = NewOwner(Source.Identity);
         Module->Owner->ModuleToken = Module->Token;
         Modules[Source.Identity] = Module;
@@ -635,6 +647,7 @@ void GLExecutionDomain::Shutdown() {
     }
     ClosingThread = nullptr;
     std::vector<GLExecutionOwner*> SnapshotOwners;
+    SnapshotOwners.reserve(Owners.size());
     for (const auto& Entry : Owners) SnapshotOwners.push_back(Entry.second.get());
     for (GLExecutionOwner* Owner : SnapshotOwners) CancelOwner(Owner);
 }

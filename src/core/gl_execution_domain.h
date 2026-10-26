@@ -28,6 +28,10 @@ struct GLModuleSource {
     uint64_t Identity = 0;
     std::string Source;
     std::string ChunkName;
+    // Nonzero resource identity enables metadata validation; zero preserves
+    // content-based resolvers. A loader supplies source/path only on misses.
+    uint64_t ResourceIdentity = 0;
+    uint64_t Revision = 0;
 };
 
 // The core has no Godot dependency so the production scheduler/cache can be
@@ -35,6 +39,7 @@ struct GLModuleSource {
 class GLExecutionDomain {
 public:
     using ModuleResolver = std::function<bool(lua_State*, int, GLModuleSource&)>;
+    using ModuleLoader = std::function<bool(GLModuleSource&)>;
     using EnvironmentHook = std::function<void(lua_State*, uint64_t)>;
     using InvalidationHook = std::function<void(lua_State*)>;
     using ErrorHandler = std::function<void(lua_State*, const std::string&)>;
@@ -49,6 +54,7 @@ public:
     bool IsClosing() const { return Closing || AdmissionClosed; }
     void StopAdmission() { AdmissionClosed = true; }
     void SetModuleResolver(ModuleResolver Resolver) { ResolveModule = std::move(Resolver); }
+    void SetModuleLoader(ModuleLoader Loader) { LoadModule = std::move(Loader); }
     void SetEnvironmentHook(EnvironmentHook Hook) { InitializeEnvironment = std::move(Hook); }
     void SetInvalidationHook(InvalidationHook Hook) { InvalidateNative = std::move(Hook); }
     void SetThreadInvalidationHook(InvalidationHook Hook) { InvalidateThread = std::move(Hook); }
@@ -95,6 +101,8 @@ private:
         uint64_t Token = 0;
         uint64_t Identity = 0;
         std::string Source;
+        uint64_t ResourceIdentity = 0;
+        uint64_t Revision = 0;
         GLModuleStatus Status = GLModuleStatus::Loading;
         GLExecutionOwner* Owner = nullptr;
         lua_State* Initializer = nullptr;
@@ -121,6 +129,7 @@ private:
     std::unordered_map<uint64_t, std::shared_ptr<GLModule>> ModuleTickets;
     std::vector<GLCloseCallback> CloseCallbacks;
     ModuleResolver ResolveModule;
+    ModuleLoader LoadModule;
     EnvironmentHook InitializeEnvironment;
     InvalidationHook InvalidateNative;
     InvalidationHook InvalidateThread;

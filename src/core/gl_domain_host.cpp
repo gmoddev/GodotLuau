@@ -56,9 +56,21 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
         Domains[Index]->SetModuleResolver([](lua_State* Thread, int Argument, GLModuleSource& Module) {
             auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(Thread, Argument));
             auto Script = Wrapper ? Object::cast_to<ModuleScript>(gow_node(Wrapper)) : nullptr;
-            if (!Script || !Script->is_inside_tree() || Script->get_codigo_luau().is_null()) return false;
+            if (!Script || !Script->is_inside_tree()) return false;
+            Ref<LuauScript> Resource = Script->get_codigo_luau();
+            if (Resource.is_null()) return false;
             Module.Identity = static_cast<uint64_t>(Script->get_instance_id());
-            Module.Source = Script->get_codigo_luau()->_get_source_code().utf8().get_data();
+            Module.ResourceIdentity = static_cast<uint64_t>(Resource->get_instance_id());
+            Module.Revision = Resource->GetSourceRevision();
+            return true;
+        });
+        Domains[Index]->SetModuleLoader([](GLModuleSource& Module) {
+            auto Script = Object::cast_to<ModuleScript>(ObjectDB::get_instance(Module.Identity));
+            if (!Script || !Script->is_inside_tree()) return false;
+            Ref<LuauScript> Resource = Script->get_codigo_luau();
+            if (Resource.is_null() || static_cast<uint64_t>(Resource->get_instance_id()) != Module.ResourceIdentity ||
+                Resource->GetSourceRevision() != Module.Revision) return false;
+            Module.Source = Resource->_get_source_code().utf8().get_data();
             Module.ChunkName = (String("=") + gl_instance_fullname(Script)).utf8().get_data();
             return true;
         });

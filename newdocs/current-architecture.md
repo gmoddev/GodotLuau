@@ -2,10 +2,10 @@
 
 Current development baseline: `main`, following shared-domain integration on
 2026-10-26. Merge commit: `dd68cda850fb548aa7713242275ff73c183e813c`.
-The runtime tree is identical to qualified source branch `runtime/shared-domains`
+That integrated runtime tree is identical to qualified source branch `runtime/shared-domains`
 at `9423fed4051bec2fba798d9a49eaec7dea6cca3b`; see the
 [integration record](shared-domains-validation.md#main-integration-2026-10-26).
-Implemented source: `5f61bea0e273e7473260f351fa4fb321116090ee` (initial
+Shared-domain implementation lineage: `5f61bea0e273e7473260f351fa4fb321116090ee` (initial
 migration `521265c338fc890a0e30b9e8a556f6346baf7d00`, followed by qualification fixes).
 The initial runtime baseline was `7044a11c1bcc2eac2a91155e829a5821d92ab66e`;
 the migration started at `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
@@ -13,6 +13,10 @@ the migration started at `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 Windows/Linux tests from remaining production/platform gaps. The continuation
 qualification records targeted network teardown, task cleanup and stack-guard
 corrections following the initial migration.
+On `perf/gl-019-hot-paths`, the GL-019 follow-up below adds metadata-based cache
+validation and smaller scheduler snapshot allocations. Main remains the base;
+this optimization branch is not merged. See the
+[GL-019 evidence](shared-domains-validation.md#gl-019-optimization-2026-10-26).
 
 ## Runtime and ownership
 
@@ -55,6 +59,15 @@ source changes, exit/destruction, or replacement invalidate that module's work
 and cache in both domains. Already returned Lua values remain ordinary values.
 An unrelated executable's destruction does not evict module entries.
 
+The native resolver validates the live ModuleScript and resource ObjectIDs plus
+the resource's monotonic source revision on each require. LuauScript increments
+that revision before emitting its changed signal; even an earlier subscriber
+must see the new revision. UTF-8 source and full chunk path are loaded only on
+cache misses. Replacing a resource with another at the same revision still
+invalidates identity. Explicit invalidation and loading/cycle/sticky-error paths
+remain in place. Core resolvers without resource metadata retain content-based
+comparison. The cache stores numeric identities, not persistent native pointers.
+
 `GodotObjectWrapper` stores a Godot ObjectID, resolved through ObjectDB on access.
 WaitForChild resolves its receiver wrapper at invocation; NetworkService method
 closures now retain ObjectIDs and resolve the expected type. Focused retained
@@ -88,6 +101,9 @@ was found in extension VM initialization or the searched extension source.
 Imported/community script isolation is not an established supported contract.
 
 The domain scheduler owns task roots and snapshots its work before dispatch.
+Snapshots reserve their current task count and keep shared_ptr ownership across
+reentrant resumes. Reaping inspects live entries before taking a temporary strong
+reference; cancelled records still retain that reference through reset/unref.
 Spawn runs immediately up to eight nested native resumes; deeper dispatch is
 deferred to a later tick. Defer/delay/timed waits, native signal waits, child
 waits, invoke responses and module waits retain their owning script or module.
