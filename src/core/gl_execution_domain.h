@@ -88,6 +88,7 @@ private:
         bool Running = false;
         bool Cancelled = false;
         bool RaiseOnWake = false;
+        bool NativeWait = false;
     };
     enum class GLModuleStatus { Loading, Ready, Failed, Invalidated };
     struct GLModule {

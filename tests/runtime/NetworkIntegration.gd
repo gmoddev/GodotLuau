@@ -4,12 +4,24 @@ var Game: Node
 var Role := "server"
 var Port := 0
 var Failed := false
+var CoordinatedClose := false
+var ClientIndex := 0
+var ClosedPeers := 0
+
+func PeerClosed(_Identity: int) -> void:
+    ClosedPeers += 1
+    var Marker := FileAccess.open("res://client" + str(ClosedPeers) + ".closed", FileAccess.WRITE)
+    Marker.store_string("transport poll completed")
+    Marker.close()
+    if ClosedPeers == 2: Game.set_meta("BothClosed", true)
 
 func _initialize() -> void:
     var Arguments := OS.get_cmdline_user_args()
     for Index in range(Arguments.size() - 1):
         if Arguments[Index] == "--fixture-role": Role = Arguments[Index + 1]
         if Arguments[Index] == "--fixture-port": Port = int(Arguments[Index + 1])
+        if Arguments[Index] == "--fixture-client-index": ClientIndex = int(Arguments[Index + 1])
+    CoordinatedClose = Arguments.has("--coordinated-close")
     call_deferred("Run")
 
 func Create(Type: String, Name: String, Parent: Node) -> Node:
@@ -55,6 +67,8 @@ func Run() -> void:
     CreateScript("ModuleScript", "Counter", "_G.Inits = (_G.Inits or 0) + 1; task.wait(0.02); return {Value = 0}", Storage)
     if Role == "client": CreateScript("LocalScript", "Prewarm", "assert(game:GetService('RunService'):IsClient()); game:SetAttribute('Prewarmed', true)", Game)
     var Network := Create("NetworkService", "NetworkService", Game)
+    if CoordinatedClose and Role == "server":
+        Game.get_multiplayer().peer_disconnected.connect(PeerClosed, CONNECT_DEFERRED)
     await process_frame
     if Role == "client":
         CreateScript("ServerScript", "ForbiddenServer", "game:SetAttribute('WrongRole', true)", Game)
@@ -86,6 +100,19 @@ game.ReplicatedStorage.Event:FireServer(32)
         for Key in ["EventDone", "FunctionDone", "CacheDone"]: await Until(Key)
         await create_timer(0.3).timeout
         if Game.has_meta("CancelledInvokeRan"): Failed = true
+        if CoordinatedClose and ClientIndex == 2:
+            while not FileAccess.file_exists("res://client1.closed"): await process_frame
+        if OS.get_cmdline_user_args().has("--fixture-teardown"):
+            CreateScript("LocalScript", "ServicePendingInvoke", """
+game:SetAttribute('ServiceInvokeWaiting', true)
+local Ok, Message = pcall(function() return game.ReplicatedStorage.Function:InvokeServer(-1) end)
+assert(not Ok and string.find(tostring(Message), 'left the game', 1, true))
+game:SetAttribute('ServiceInvokeCancelled', true)
+""", Game)
+            await Until("ServiceInvokeWaiting")
+            await process_frame
+            Network.queue_free()
+            await Until("ServiceInvokeCancelled")
     else:
         if Role == "server":
             CreateScript("LocalScript", "ForbiddenClient", "game:SetAttribute('WrongRole', true)", Game)
@@ -129,17 +156,23 @@ game:SetAttribute('ServiceRetained', true)
 task.wait(0.05)
 assert(Getter(Network) == 0)
 Disconnect(Network)
+while not game:GetAttribute('ReplacementReady') do task.wait() end
+assert(game:GetService('NetworkService'):GetPeerId() == 1)
 game:SetAttribute('ServiceReleasedSafely', true)
 """, Game)
             await Until("ServiceRetained")
             Network.queue_free()
+            await process_frame
+            Network = Create("NetworkService", "NetworkService", Game)
+            CreateScript("ServerScript", "ReplacementService", "assert(game:GetService('NetworkService'):StartServer(game:GetAttribute('Port'), 4)); game:SetAttribute('ReplacementReady', true)", Game)
             await Until("ServiceReleasedSafely")
         else:
             var Ready := FileAccess.open("res://server.ready", FileAccess.WRITE)
             Ready.store_string("ready")
             Ready.close()
             await Until("BothClients")
-            await create_timer(0.4).timeout
+            if CoordinatedClose: await Until("BothClosed")
+            else: await create_timer(0.4).timeout
     if Game.has_meta("WrongRole"): Failed = true
     print("[Runtime:NetworkTest] ", Role, " ", "FAIL" if Failed else "PASS")
     quit(1 if Failed else 0)

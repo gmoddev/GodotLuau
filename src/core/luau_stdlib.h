@@ -1803,7 +1803,8 @@ table.freeze = table.freeze or function(t)
     setmetatable(t, mt)
     return t
 end
-table.isfrozen = table.isfrozen or function(t)
+)LUAU"
+R"LUAU(table.isfrozen = table.isfrozen or function(t)
     local mt = getmetatable(t)
     return mt ~= nil and mt.__frozen == true
 end
@@ -1905,7 +1906,8 @@ function NumberSequenceKeypoint.new(t, v, envelope)
     return setmetatable({ Time=t, Value=v, Envelope=envelope or 0 }, NumberSequenceKeypoint)
 end
 
-NumberSequence = {}
+)LUAU"
+R"LUAU(NumberSequence = {}
 NumberSequence.__index = NumberSequence
 function NumberSequence.new(v)
     if type(v) == "number" then
@@ -2206,7 +2208,8 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
                 local raw = _FileAccess.read("user://" .. fname)
                 local ok, list = pcall(function() return _JSON and _JSON.decode(raw) end)
                 if ok and type(list) == "table" then
-                    local mark = topic .. "|" .. fname
+)LUAU"
+R"LUAU(                    local mark = topic .. "|" .. fname
                     -- Por SECUENCIA, no por indice: el buzon se recorta y los
                     -- indices se desplazarian (se perderian o repetirian mensajes).
                     local last = seen[mark]

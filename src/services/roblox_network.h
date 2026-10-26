@@ -607,7 +607,9 @@ class NetworkService : public Node {
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_null()) return;
         m->connect("peer_connected",      Callable(this, "_on_peer_connected"));
-        m->connect("peer_disconnected",   Callable(this, "_on_peer_disconnected"));
+        // ENet resets peers before completing the current poll. Application
+        // removal RPCs/callbacks must run after all queued disconnects are drained.
+        m->connect("peer_disconnected",   Callable(this, "_on_peer_disconnected"), Object::CONNECT_DEFERRED);
         m->connect("connected_to_server", Callable(this, "_on_connected_ok"));
         m->connect("connection_failed",   Callable(this, "_on_connect_failed"));
         m->connect("server_disconnected", Callable(this, "_on_server_disconnected"));
@@ -1069,7 +1071,14 @@ protected:
     }
 
     void _notification(int p_what) {
-        if (p_what == NOTIFICATION_EXIT_TREE) _clear_puppets();
+        if (p_what == NOTIFICATION_EXIT_TREE) {
+            if (gl_net_service_id() == static_cast<uint64_t>(get_instance_id())) {
+                // The SceneTree can outlive this service. Resolve pending
+                // callers before its response map and transport owner disappear.
+                disconnect_net();
+                gl_net_service_id() = 0;
+            } else _clear_puppets();
+        }
     }
 
 public:

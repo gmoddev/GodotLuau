@@ -264,7 +264,7 @@ int GLExecutionDomain::Resume(lua_State* Thread, lua_State* From, int Arguments,
 }
 void GLExecutionDomain::FinishThread(const std::shared_ptr<GLThread>& Task, int Status) {
     if (!Task) return;
-    GLClearWaitReferences(Task->State);
+    if (Task->NativeWait) GLClearWaitReferences(Task->State);
     auto ModuleFound = ModuleTickets.find(Task->Owner->ModuleToken);
     bool IsInitializer = ModuleFound != ModuleTickets.end() && ModuleFound->second->Initializer == Task->State;
     if (IsInitializer) {
@@ -288,8 +288,10 @@ void GLExecutionDomain::CancelThread(lua_State* Thread) {
     auto Found = Threads.find(Thread);
     if (Found == Threads.end() || Found->second->Cancelled) return;
     Found->second->Cancelled = true;
-    if (InvalidateThread) InvalidateThread(Thread);
-    GLClearWaitReferences(Thread);
+    if (Found->second->NativeWait) {
+        if (InvalidateThread) InvalidateThread(Thread);
+        GLClearWaitReferences(Thread);
+    }
     auto Module = ModuleTickets.find(Found->second->Owner->ModuleToken);
     if (Module != ModuleTickets.end() && Module->second->Initializer == Thread && Module->second->Status == GLModuleStatus::Loading)
         FailModule(Module->second, "Module initialization was cancelled");
@@ -303,6 +305,7 @@ bool GLExecutionDomain::RetainExternalWait(lua_State* Thread) {
     auto Task = TrackThread(Thread);
     if (!Task || Task->Cancelled || IsClosing()) return false;
     Task->Wait = GLWaitKind::External;
+    Task->NativeWait = true;
     Task->Started = true;
     return true;
 }

@@ -246,3 +246,141 @@ GL-014 remains open. Other issue statuses are unchanged.
 - The following documentation-only checkpoint records that immutable source
   identity. Publication targets `origin` (`gmoddev/GodotLuau`) on this branch;
   inherited release automation triggers on main and is not dispatched here.
+
+## 2026-10-26: Continuation qualification baseline
+
+- Started clean at `0498efca0c3da15b16fff6fb30aac9658975c50a` on
+  `runtime/shared-domains`; pinned dependencies are unchanged. Scope is targeted
+  corrections and qualification, with no main merge or release publication.
+- Windows `dockerbox` retains the earlier MSVC/CMake caches and about 18 GiB
+  available memory. Its Docker Desktop Linux daemon is unavailable; no daemon
+  restart or host-wide repair was attempted.
+- `linuxbox` is reachable (Ubuntu 24.04, x86_64, 32 logical CPUs, about 29 GiB
+  available memory and 75 GiB free storage). Native build tools are absent, but
+  Docker 29.1.3 is available. Existing Outline/PostgreSQL/Redis containers are
+  unrelated and protected. Linux tooling will run in a task-owned container;
+  no host packages or services will be changed.
+- Hypothesis under investigation: Godot's ENet server disconnect event emits
+  `peer_disconnected` before removing the disconnected peer from its transport
+  map. NetworkService synchronously broadcasts removal/ownership RPCs from that
+  signal. A reset peer can therefore still be selected for a send with zero
+  channels. This is a source hypothesis until a bounded reproduction confirms it.
+- A Godot-only probe with no extension/Luau and no application RPCs reproduced
+  the diagnostic: two client disconnect datagrams precede one server poll. Relay
+  enabled emitted the zero-channel error; relay disabled did not, with both
+  disconnects observed in each case. Source trace identifies Godot's internal
+  SceneMultiplayer relay notification to another already-reset peer. This
+  refines the initial application-callback hypothesis; deferring our callback
+  alone cannot fix the engine's own send. No diagnostic suppression or relay
+  policy change has been applied to production.
+- Linux qualification uses a task-owned Ubuntu 24.04 image/container under
+  `/opt/codex/godotluau`, limited to four CPUs and 10 GiB RAM. Build tools and
+  fontconfig were installed inside that container/image only. Downloaded the
+  official Godot 4.7.1 Linux binary, which reports `a13da4feb`, matching Windows.
+- Started Linux Debug native/core compilation and Windows Release plus full
+  ASan-adapter compilation using four jobs on each separate machine. Added a
+  CMake baseline-adapter option so inherited and candidate Release extensions
+  link the exact same pinned dependency builds for controlled benchmarks.
+- Added a platform-neutral bounded runner and benchmark fixture. Planned trials
+  compare 10/100/1,000 scripts with identical module/task workloads, alternating
+  baseline/candidate on the same host/compiler. Process RSS, startup, require,
+  coroutine creation/cancellation, scheduler frame intervals, destruction and
+  shutdown are measured separately. No results are claimed before execution.
+- Linux Debug extension/core build and all existing single-player, Listen,
+  Dedicated/two-client and Editor-flag fixtures passed (35 core cases).
+- New pending-invoke/service-destruction fixture failed against the starting
+  implementation: `ServiceInvokeCancelled` never arrived after NetworkService
+  was freed. EXIT_TREE only cleared puppets; the SceneTree retained the peer and
+  outstanding call state disappeared without waking the surviving caller.
+  Targeted correction calls the existing disconnect/fail-pending path on exit
+  for the active service, and clears its global native identity.
+- Peer-disconnect callbacks now use Godot deferred delivery so native cleanup,
+  removal RPCs and subscriber callbacks run after the transport poll drains all
+  queued disconnects. This prevents application sends to stale peers without
+  suppressing the independent engine relay diagnostic identified by the probe.
+- Engine-only probe matrix passed on Windows and Linux (five repetitions of
+  five cases per platform). Relay-on reproduces an engine send without any app
+  callback; relay-off plus synchronous app send reproduces another send; deferred
+  app callbacks with relay-off have no diagnostic. Relay-on still diagnoses the
+  engine's own notification with deferred app callbacks, as expected.
+- Linux full-adapter ASan initially cannot load under the stock executable:
+  Godot's `RTLD_DEEPBIND` loader flag is rejected by ASan. Started a matching
+  source-built Godot using its supported `use_asan=yes use_lsan=yes` options,
+  with two engine compilation jobs alongside the four-job extension build.
+- Windows full-adapter ASan required runtime DLLs beside the extension because
+  Godot's loader did not resolve them through PATH alone. The fixture then
+  reached PASS but its process did not exit within 60 seconds. This is a failed
+  sanitizer gate, not a successful run; a registration-only probe will determine
+  whether the hang requires shared domains or occurs without any game/VM.
+- Windows registration-only ASan probes reached their marker but timed out at
+  exit for both candidate and inherited baseline DLLs; neither probe created
+  a game, script, domain or network peer. The stock-executable/MSVC-ASan-DLL
+  combination is not qualified; this is not evidence of a shared-domain-only
+  shutdown regression. Normal Windows Debug/Release fixtures and 10-repeat
+  Debug stress passed, including the new pending-invoke teardown check.
+- Source-built Linux Godot ASan compiled successfully. Its first execution
+  rejected `--path` because export templates disable path overrides by default;
+  rebuilding with the supported `disable_path_overrides=no` option. No sanitizer
+  check or loader protection was disabled in the extension.
+- A contended 1,000-script benchmark pilot exposed cancellation amplification:
+  32,000 pure deferred task cancellations spent about 6,046 ms in the shared
+  runtime versus about 8 ms in the inherited runtime; pilot startup was 6,333 ms
+  versus 3,061 ms. These are diagnostic pilot figures, not final comparisons.
+  Trace: CancelThread always called GLDomainHost::InvalidateThread (full scene
+  traversal) and scanned global wait guards even when no native wait existed.
+  Added a per-task native-wait registration bit; only such tasks visit native
+  queues/guards on completion/cancellation. Real wait cancellation remains covered
+  by a guard-retention/cleanup regression, alongside pure deferred cancellation.
+- Luau's os.clock is monotonic elapsed time on these platforms, not CPU time.
+  Renamed benchmark fields to elapsed milliseconds before final measurement;
+  earlier pilot field names are preserved only in their historical raw logs.
+- Full Linux engine+adapter ASan execution exposed a legacy native stack-guard
+  false positive while assigning OnServerInvoke. The guard measured addresses
+  of locals, which ASan may place on a fake heap stack, against a guessed Linux
+  high-water mark. Corrected it to native frame/return-slot addresses, real Linux
+  pthread stack bounds and per-thread caches; Windows retains real OS limits.
+  Added a real-bounds/reserved-margin regression without inducing a process crash.
+  No sanitizer fake-stack detection was disabled. The suite now has 36 cases.
+- Full ASan/LSan caught a 54-byte (48+6) leak when the simultaneous-disconnect
+  diagnostic occurred. The matching fully instrumented engine-only probe also
+  leaks exactly 54 bytes with no GDExtension loaded, establishing engine scope.
+  The relay packet is six bytes; its failed send leaves an unused ENet packet.
+  No leak suppression was added and leak detection stays enabled.
+- Added an explicit ordered-close barrier for native sanitizer integration,
+  separating peer cleanup from the independently retained simultaneous-close
+  engine probe. The second client waits until the server's deferred disconnect
+  notification confirms the first transport poll completed. This does not
+  change production relay behavior or replace the adversarial probe result.
+- Final Linux engine/bindings/adapter/Luau ASan+LSan ordered-close stress passed
+  80 process results across ten repetitions, including pending invoke cancellation,
+  retained methods, service replacement, callback destruction and scene replacement.
+  The independent simultaneous-close engine leak remains a failed adversarial gate.
+- Idle-worker benchmark completed three counterbalanced trials at 10/100/1,000
+  scripts (90 phase records). At 1,000 scripts median startup is 2,988.325 ms
+  baseline versus 284.925 ms shared; process RSS growth is 1,056.836 versus
+  57.188 MiB. Cached require and coroutine creation/cancellation regressions remain
+  visible. Headless frame pacing masks scheduler-only overhead; TIME_PROCESS
+  monitor samples are stale/zero and must not be used as scheduler measurements.
+- The owner approved verified portable SCons 4.5.2 under the Windows task tools
+  directory. Its first MSVC build exposed C2026 in two embedded Lua literals;
+  CMake's default source encoding had not exposed the same UTF-8 byte limit.
+  Split the long raw literals into adjacent literals, preserving the exact
+  concatenated Lua bytes. The first split still left a 16,662-byte segment and
+  failed; a further split removes that remaining oversized segment. No Lua
+  behavior or dependency revision is changed by this build correction.
+- After resolving literal size, SCons/MSVC Debug reached COFF's section limit
+  (C1128). Enabled `/bigobj` for the extension, matching the existing CMake adapter
+  configuration. This is a demonstrated Windows distribution build correction;
+  godot-cpp and Luau pins remain unchanged.
+- Final native input fingerprints match on local, Windows and Linux checkouts:
+  65 files, LF-normalized SHA256
+  `6b9b752044b36b161a34868ad7d5b94258fdf831d0effb0d489403ce9735103c`.
+  Linux final CMake Debug/Release and both SCons native fixture runs each passed
+  eight process results. Benchmark raw records and a reproducible min/median/max
+  summarizer are retained in the repository; initial failures remain documented.
+- Windows SCons Debug and Release both compile/link successfully after the two
+  demonstrated build corrections. Each current SCons DLL passed all eight native
+  fixture process results. Final Linux SCons binaries were rebuilt with the exact
+  same native input fingerprint and each passed another eight process results.
+  No inherited ZIP DLL was used. Preparing an explicit four-binary local archive
+  with dependency/source identity, descriptor checks, CRC and SHA256 validation.

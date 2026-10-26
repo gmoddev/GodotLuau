@@ -5,7 +5,9 @@ Implemented source: `521265c338fc890a0e30b9e8a556f6346baf7d00`.
 The initial runtime baseline was `7044a11c1bcc2eac2a91155e829a5821d92ab66e`;
 the migration started at `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 [Qualification evidence](shared-domains-validation.md) distinguishes executed
-Windows tests from remaining production/platform gaps.
+Windows/Linux tests from remaining production/platform gaps. The continuation
+qualification records targeted network teardown, task cleanup and stack-guard
+corrections following the original implementation revision above.
 
 ## Runtime and ownership
 
@@ -51,10 +53,14 @@ An unrelated executable's destruction does not evict module entries.
 `GodotObjectWrapper` stores a Godot ObjectID, resolved through ObjectDB on access.
 WaitForChild resolves its receiver wrapper at invocation; NetworkService method
 closures now retain ObjectIDs and resolve the expected type. Focused retained
-method tests passed; GL-001/GL-002 remain open for broader lifetime qualification.
+method tests now pass native Linux ASan/LSan lifetime qualification, including
+destruction/replacement. GL-001/GL-002 are resolved for their specific captures;
+this does not establish universal binding safety.
 Callback references use non-recycled public IDs tied to a live owner, preventing
 stale native handles from aliasing a replacement VM/anchor. External waits also
 retain guards, including sources detached from the scene tree.
+Tasks record whether they registered a native wait; pure deferred tasks skip
+scene/guard scans when cancelled. Actual native waits retain their cleanup path.
 
 Many Instance-facing classes adapt Godot Nodes; for example `RobloxPart` derives
 from `RigidBody3D`. There are also Luau table-backed services and value datatypes.
@@ -95,12 +101,21 @@ snapshot, then invalidates owners; close hooks cannot initialize modules or
 schedule new work, and yielded close hooks are cancelled. A running non-yielding
 script/close hook has no instruction budget (GL-004). Local synchronous
 RemoteFunction fallback remains non-yielding; network handlers support yields.
+Native stack guards use per-thread OS bounds on Windows/Linux and real frame/
+return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
 
 ## Networking and persistence
 
 `NetworkService` combines connection setup, ENet RPCs, players, puppet state,
 replication, remote invocation, physics ownership, chat, and coordinator/world
 process support in `src/services/roblox_network.h`.
+
+Peer-disconnect application callbacks are deferred until the transport poll
+completes. Destroying the active service disconnects its transport, resolves
+outstanding invokes with the existing peer-left error and clears service identity
+before destruction. Retained ObjectID method closures cannot act on replacement
+services. Godot 4.7.1's independent simultaneous-disconnect relay send/leak remains
+reproducible without the extension (GL-017); production relay is still enabled.
 
 RPC dictionaries use `RPC_MODE_ANY_PEER` in `_bind_methods`, relying on individual
 handlers to enforce authority. Some do: structural replication checks sender 1,

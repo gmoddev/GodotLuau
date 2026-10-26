@@ -1,4 +1,5 @@
 #include "gl_execution_domain.h"
+#include "gl_stackguard.h"
 #include <cstdio>
 #include <functional>
 #include <stdexcept>
@@ -238,8 +239,14 @@ shared.Waited = true
         Fixture F;
         int Detached = 0;
         F.Domain.SetThreadInvalidationHook([&](lua_State*) { ++Detached; });
-        F.Run(1, "local Pending = task.spawn(function() coroutine.yield('__WAIT_SIGNAL__'); shared.Bad = true end); task.cancel(Pending); task.cancel(Pending)");
+        lua_pushcfunction(F.Domain.GetState(), [](lua_State* Thread) -> int {
+            GLCaptureWait(Thread);
+            lua_pushstring(Thread, "__WAIT_SIGNAL__");
+            return lua_yield(Thread, 1);
+        }, "NativeWait"); lua_setglobal(F.Domain.GetState(), "NativeWait");
+        F.Run(1, "for Index = 1, 32 do task.cancel(task.defer(function() end)) end; local Pending = task.spawn(function() NativeWait(); shared.Bad = true end); task.cancel(Pending); task.cancel(Pending)");
         F.Tick(3); Check(Detached == 1, "Native cancellation hook was missing or duplicated");
+        Check(F.Domain.GetReferenceCount() == 0, "Cancelled native wait retained its guard");
         F.Verify("assert(not shared.Bad)"); F.NoErrors();
     });
     Test("Close callbacks run once with admission closed and cached require available", [] {
@@ -345,6 +352,14 @@ shared.Waited = true
         F.Run(1, "local function Read() return Value end; local Environment = {Value = 42}; setfenv(Read, Environment); assert(getfenv(Read) == Environment and Read() == 42); Value = 12; shared.Environment = getfenv(1); shared.Read = Read");
         F.Run(2, "assert(Value == nil and shared.Read() == 42 and getfenv(1) ~= shared.Environment and shared.Environment.script == 1)");
         F.NoErrors();
+    });
+    Test("Native stack guard uses real thread bounds under sanitizer instrumentation", [] {
+        Check(!gl_stack_exhausted(GLStackPointer()), "Shallow native call was classified as stack exhaustion");
+#if defined(_WIN32) || defined(__linux__)
+        char* Floor = gl_stack_floor();
+        Check(Floor != nullptr, "OS stack bounds are unavailable");
+        Check(gl_stack_exhausted(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(Floor) + GL_STACK_MARGIN / 2)), "Guard did not reject the reserved stack margin");
+#endif
     });
     std::printf("[Runtime:Test] %d passed, %d failed\n", Passed, Failed);
     return Failed == 0 ? 0 : 1;

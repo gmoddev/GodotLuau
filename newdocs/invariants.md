@@ -10,7 +10,9 @@ the inherited runtime already satisfies them. Baseline gaps link to
 - Persistent script-visible references to Godot objects use stable ObjectIDs and
   resolve/check type and liveness immediately before use. A non-null raw pointer
   is not a liveness check. Closure lifetime must not exceed native owner lifetime
-  without a safe resolution/cancellation mechanism. Gaps: GL-001, GL-002.
+  without a safe resolution/cancellation mechanism. GL-001/GL-002 now have
+  capture-specific fixes and native sanitizer evidence; other bindings need
+  their own verification.
 - VM shutdown invalidates callbacks and pending work before freeing their state.
   Reload, destruction during callback execution, and pending yields require
   explicit ownership and regression coverage. Existing live-VM guards are useful
@@ -39,7 +41,8 @@ the inherited runtime already satisfies them. Baseline gaps link to
   nesting is bounded; this does not substitute for execution/memory quotas.
 - Domain shutdown closes admission before finite close-hook dispatch and owner
   invalidation. Actual VM close follows active native execution, never from
-  within a running callback. GL-014 remains open for outstanding qualification.
+  within a running callback. GL-014's source-qualification evidence is recorded;
+  bounded remaining platform/performance gaps are GL-017 through GL-019.
 
 ## Multiplayer authority
 
@@ -52,6 +55,9 @@ the inherited runtime already satisfies them. Baseline gaps link to
 - Match asynchronous replies to the expected request and peer; keep disconnect,
   timeout, and cancellation semantics explicit. Preserve existing checks when
   refactoring. A coordinator file/key is not connection/account authentication.
+- Service destruction resolves outstanding invokes before discarding response
+  state. Application peer-disconnect callbacks run after the transport poll;
+  a functional PASS never erases engine transport diagnostics or sanitizer leaks.
 
 ## Persistence and external operations
 
