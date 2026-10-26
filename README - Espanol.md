@@ -1,5 +1,7 @@
 # GodotLuau
 
+> **Fork público:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), basado en el proyecto original de PimpoliDev. Consulta la [documentación del fork](newdocs/README.md), los [problemas validados](newdocs/issues.md) y la [política de contribuciones con IA](AGENTS.md). Este cambio inicial solo modifica documentación; los binarios heredados no son compilaciones verificadas del fork. El actualizador habilitado todavía descarga paquetes del repositorio original (GL-016).
+
 **Escribe juegos estilo Roblox en Luau y córrelos en Godot 4.**
 
 GodotLuau es una GDExtension en C++ que mete el intérprete [Luau](https://luau.org/) dentro de Godot y reimplementa la arquitectura de Roblox encima: `game`, los servicios (`Workspace`, `Players`, `Lighting`, `ReplicatedStorage`…), `LocalScript` / `ServerScript` / `ModuleScript`, `Humanoid`, el avatar R6, los `RemoteEvent`, la librería `task`, la GUI estilo Roblox y red de verdad (LAN, internet y un coordinador de mundos estilo Roblox).
@@ -463,7 +465,7 @@ Sin adornos, porque esta es la parte con la que la gente se hace daño:
 - **La protección real hoy es la dirección que horneas.** Los clientes construidos con `gl_match.cfg` solo se conectan a *tu* coordinador, así que un desconocido no puede llevarse a tus jugadores a un servidor modificado solo por encender uno. Lo que no impide es que alguien corra su propio servidor para sus propios jugadores.
 - **En GodotLuau no hay login ni contraseñas en ninguna parte.** Nunca hagas un sistema que le pida a tus jugadores la contraseña de Roblox, ni ninguna contraseña, dentro de un juego: la extensión no tiene forma de guardarla ni de verificarla.
 - **Un servidor dedicado (`--glserver`) no pide ninguna llave.** Cualquiera que tenga tu juego exportado puede levantar uno.
-- **Confía en el servidor, no en el cliente.** Un cliente no ejecuta `ServerScript`s y no puede tocar `DataStore`, pero cualquier cliente puede mandar cualquier payload por `RemoteEvent`. Valida en el servidor, exactamente como harías en Roblox.
+- **Confía en el servidor, no en el cliente.** El runtime aplaza los `ServerScript`s hasta establecer el rol de servidor y el wrapper `DataStoreService` rechaza a los clientes de red. El global nativo `_FileAccess` sigue expuesto a los scripts (GL-003), y algunos receptores RPC de estado/eliminación no comprueban que el emisor sea el servidor (GL-006). Valida datos y autoridad en los límites nativos y del juego; estos wrappers no establecen un sandbox completo. Consulta los [problemas validados](newdocs/issues.md).
 
 ## Cuando no conecta (diagnóstico)
 
@@ -529,7 +531,7 @@ Se accede con `game:GetService("Players")` o directamente (`game.Workspace`, `wo
 
 **3. El avatar R6.** Por defecto los jugadores nacen con el **rig R6**: seis partes colgadas de pivotes en las posiciones clásicas de las articulaciones, así que las animaciones por código (péndulo al caminar con brazos y piernas opuestos, respiración en idle, brazos arriba en el aire) rotan como el avatar clásico. Las partes conservan sus nombres de Roblox (`"Left Arm"`, `"Torso"`, `"HumanoidRootPart"`…). Si pones cualquier modelo llamado **`StarterCharacter`** dentro de `StarterPlayer`, ese pasa a ser el personaje de todos. El desvanecido por cercanía de cámara usa un shader de disolución (descarta píxeles, no mezcla alfa), y al rotar la cámara con clic derecho el ratón vuelve a donde estaba.
 
-**4. Capa de seguridad de vida de objetos.** Los objetos de Luau nunca guardan punteros crudos a nodos: guardan el `ObjectID` y lo resuelven contra la base de objetos viva en cada uso, así que un nodo destruido da `nil` en vez de un crash. Un registro de VMs de Luau vivas garantiza que ningún callback corra sobre un intérprete cerrado (`src/core/gl_runtime.h`).
+**4. Vida de objetos y limitaciones conocidas.** Los userdata de instancias guardan un `ObjectID` y lo resuelven contra la base de objetos viva (`src/core/gl_runtime.h`). Algunos cierres nativos, incluidos `WaitForChild` y los métodos de NetworkService, todavía guardan punteros crudos (GL-001/GL-002). El registro de VMs vivas protege rutas de callbacks, pero no demuestra que todos los cierres y rutas de cierre sean seguros. Consulta los [problemas validados](newdocs/issues.md).
 
 ## Catálogo de nodos y clases
 
@@ -591,7 +593,7 @@ scons platform=windows target=template_release
 # o: scons platform=linux target=template_debug / template_release
 ```
 
-Las librerías salen en `GodotLuau/bin/`. Copia los `.so` resultantes al `GodotLuau/bin/` de tu proyecto en esa máquina Linux (junto a las `.dll`); `godot_luau.gdextension` ya apunta a los dos. Los binarios de Linux también los construye el workflow de GitHub Actions (`.github/workflows/build-linux.yml`) en cada push que toca `src/`.
+Las librerías salen en `GodotLuau/bin/`. Copia los `.so` resultantes al `GodotLuau/bin/` de tu proyecto en esa máquina Linux (junto a las `.dll`); `godot_luau.gdextension` ya apunta a los dos. Los binarios de Linux también los construye el workflow de GitHub Actions (`.github/workflows/build-release.yml`) en los pushes correspondientes que tocan `src/`; ese workflow reutiliza los binarios de Windows del ZIP versionado (GL-010).
 
 > El `SConstruct` reactiva las excepciones de C++ (`-fexceptions` / `/EHsc`) porque godot-cpp las desactiva por defecto y la VM de Luau las necesita. No hay que pasar nada extra.
 
