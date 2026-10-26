@@ -17,6 +17,24 @@ records the main merge/source-tree identities and fresh integrated core/native
 checks. The [main integration record](../shared-domains-validation.md#main-integration-2026-10-26)
 distinguishes those runs from reused historical qualification evidence.
 
+GL-019 records preserve all measurements instead of replacing earlier data:
+
+| File | Meaning |
+| --- | --- |
+| [Original/shared fresh baseline](gl019-original-shared-baseline-2026-10-26.json) | Five trials/count; Baseline = original per-script, Shared = pre-GL-019 |
+| [Population comparison](gl019-population-comparison-2026-10-26.json) | Seven trials/count; Baseline = pre-GL-019, Shared = optimized |
+| [Captured require comparison](gl019-require-comparison-2026-10-26.json) | Seven trials/mode; Before/Candidate, one million calls |
+| [Core microbenchmarks](gl019-core-microbenchmarks-2026-10-26.jsonl) | Eleven trials at 10/100/1,000; pre/post, CPU/wall/C++ allocations |
+| [Larger core sensitivity run](gl019-core-microbenchmarks-large-2026-10-26.jsonl) | Twenty-one trials at 10,000; same phase definitions |
+| [GL-019 qualification](gl019-qualification-2026-10-26.json) | Source/binary identities, native perf counters and actual gate results |
+
+The [GL-019 report](../shared-domains-validation.md#gl-019-optimization-2026-10-26)
+defines metric scopes, spreads, accepted/rejected changes and residual task costs.
+Native perf data remains under `/opt/codex/godotluau/artifacts/gl019` as
+`pre-require.perf`, `post-require.perf`, their `*-flat.txt` reports and
+`*-require-stat.txt` counters. Sampling is limited to the task container; the
+official engine is stripped and inclusive function costs overlap.
+
 Raw native logs and failure reports remain in ignored/task-owned artifact trees;
 they contain repeated expected-denial/physics diagnostics and are not silently
 reclassified by the summary. Exact reproduction commands live in

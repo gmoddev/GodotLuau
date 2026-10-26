@@ -622,3 +622,228 @@ Measure attributable costs before optimizing; preserve module revision
 invalidation and owner lifetime guarantees. Coroutine bookkeeping remains part
 of GL-019 but does not need to be bundled into the first profiling change.
 No GL-019 implementation was performed here.
+
+## GL-019 optimization (2026-10-26)
+
+**OPTIMIZED AND QUALIFIED** on `perf/gl-019-hot-paths`; not merged into main.
+Starting main: `aa5400321b8f838a75de8d2b4005b0c5165dab34`, verified clean and
+unchanged on origin. Measurement harness:
+`0427a3560ac01b191aa7dcc8b2c144f8eccda2dd` (production code unchanged from main).
+Runtime optimization: `1756cc2600e5a59ea948e69a684f5abd93e32229`.
+The following evidence commit changes documentation/data only. ADR-001 and the
+Server/Client ownership model are unchanged; previous results above are preserved.
+
+### Comparable baseline and attribution
+
+Reused the existing linuxbox Ubuntu 24.04 container, four-CPU/10-GiB limits,
+GCC 13.3/CMake Release `-O3 -DNDEBUG`, pinned vendors and official Godot 4.7.1.
+No tools/packages/settings changed. Builds were finished before timed/profiled
+runs. Source/native input identity is recorded in the
+[qualification manifest](evidence/gl019-qualification-2026-10-26.json).
+
+Fresh original/shared baseline: five counterbalanced trials at 10/100/1,000
+scripts using the **unchanged population benchmark**. At 1,000, original
+per-script startup is 2,979.038 ms, RSS growth 1,056.820 MiB, cached requires
+129.808 ms and create/cancel pairs 7.876 ms. Pre-GL-019 shared results are
+287.317 ms, 57.191 MiB, 195.620 ms and 20.140 ms, respectively. This reproduces
+the historical regression closely enough for direct pre/post comparison.
+
+Pre-GL-019 library SHA256:
+`8ea4e9c2faeb4218157059415e93aab6700eebce41283a1ab0b20106aff66ee9`.
+Final optimized Release library SHA256:
+`d9398aed311dab4e4493b022fc0df8e4ed81e569e778d562aeb3695248544883`.
+All 65 native input files match local/Windows/Linux, LF-normalized digest
+`40e2cbadfae3cef7fdc39e17d6b9feec94f635aa5e8926614bdcdb27c324045d`.
+The dependency pins remain exactly those recorded in the initial report.
+
+Added a captured-module workload using the existing bounded runner helpers.
+It removes `game.ReplicatedStorage.Counter` property/hierarchy lookup from the
+timed loop. Native perf sampled only the task container cgroup, not unrelated
+host services: 16,463 pre and 3,094 post user-cycle samples, zero lost samples.
+The extension is symbolized; the official Godot binary is stripped. Inclusive
+pre-profile costs overlap and must not be summed:
+
+| Native sampled path | Inclusive sampled cycles |
+| --- | --- |
+| GLExecutionDomain::BeginRequire | 67.63% |
+| Native module resolver | 66.04% |
+| String::utf8 (source/path conversions combined) | 30.98% |
+| gl_instance_fullname | 26.62% |
+| ModuleScript type cast | 3.17% |
+| Lua registry result access | 0.63% |
+
+The old path enters through the Luau require wrapper, resolves the ObjectID,
+checks Node/ModuleScript type and tree/resource liveness, retrieves/converts the
+entire source, constructs/converts the hierarchy chunk name, then looks up the
+numeric cache key and returns through registry/stack operations. Sampling
+establishes that pre-cache native work is a bottleneck. It does not separately
+time every Godot internal lock, individual allocation or source/path conversion;
+some of those functions are stripped/inlined.
+
+An optional executable links the **production core and pinned Luau**, recording
+monotonic elapsed time, process CPU (`std::clock`) and C++ new-call/requested-byte
+counts. Creation takes two C++ allocations per task (record/control block plus
+map node), with additional table growth when needed; cancellation takes none.
+Snapshot growth takes eleven allocations
+at 1,000 tasks. Luau/Godot malloc and peak/live bytes are not counted. The core
+benchmark is single-threaded; native Godot's allocator/shared_ptr atomic behavior
+can differ. It supports attribution, not an isolated native scheduler CPU claim.
+
+### Accepted changes and preserved behavior
+
+- `luau_script.h`: LuauScript stores a source revision, incremented on actual
+  source changes **before** changed-signal callbacks. Resource replacement is
+  distinguished by its Godot ObjectID even when revisions are equal.
+- `gl_domain_host.cpp`: the resolver performs live/type/tree/resource checks and
+  returns module/resource IDs plus revision. A separate miss loader retrieves
+  source and chunk path. No native pointer/resource is retained in a new cache.
+- `gl_execution_domain.h/.cpp`: compare metadata before source loading; ready
+  hits return the same registry value immediately. Resolvers without metadata
+  retain the original content comparison. Loading entries still join once;
+  cycle detection, sticky failure, invalidation, cancellation and shutdown
+  admission behavior remain. Old returned values survive source invalidation.
+- `gl_execution_domain.cpp`: reserve current snapshot/close-owner vector sizes;
+  avoid a temporary shared_ptr copy when merely inspecting a live task. Strong
+  snapshot roots and cancelled-task locals remain across resume/reset/unref.
+  The registered-native-wait cleanup bit remains unchanged.
+
+No public ModuleScript/task API, `_G`/shared behavior, environment, VM ownership,
+authority/capability, network/persistence path, updater or dependency changed.
+Native resource revision is internal metadata, not a new gameplay property.
+
+### Final before/after measurements
+
+Seven counterbalanced trials per count on the same idle worker/binaries. Values
+are medians, **pre-GL-019 → post-GL-019**. All times below are elapsed milliseconds;
+RSS is whole-process Startup-minus-Before growth. Generic runner labels in this
+file map `Baseline` to pre-GL-019 and `Shared` to post-GL-019.
+
+| Scripts | Cached require sum (100/script), ms | Startup ms | 32 create/cancel pairs/script, ms | RSS growth MiB |
+| --- | --- | --- | --- | --- |
+| 10 | 2.030 → 0.847 | 6.829 → 6.830 | 0.106 → 0.110 | 3.063 → 3.086 |
+| 100 | 20.152 → 8.362 | 31.713 → 19.897 | 1.641 → 1.639 | 7.063 → 7.016 |
+| 1,000 | 198.230 → 82.433 | 290.204 → 171.446 | 20.321 → 20.107 | 57.203 → 56.230 |
+
+At 1,000, cached sums span 195.386–209.731 → 80.347–85.378 ms; startup spans
+286.049–306.892 → 169.099–177.816 ms; task pairs span
+19.658–22.990 → 19.854–20.608 ms. RSS growth spans
+57.191–57.250 → 56.105–56.262 MiB. The small-count RSS/time ranges overlap;
+no material startup/memory regression is established. Original per-script VM
+costs remain a separately recorded comparison, not the primary optimization base.
+
+The final captured-module loop (one million calls, seven counterbalanced trials)
+measures **1,054.330 → 163.508 ms**, ranges 1,018.822–1,065.148 →
+159.992–173.674 ms. True first module initialization is **13.040 → 13.080 us**,
+ranges 11.800–14.910 → 12.190–14.050 us: no meaningful cold-path change is
+claimed. The earlier require-only trial and final binary give consistent gains.
+Population initial-require sums include one miss plus other scripts' cache hits;
+they are not separate VM-allocation timing.
+
+Domain/game shutdown medians at 10/100/1,000 scripts are
+13.743/13.767/13.683 → 13.716/13.765/13.598 ms. Script destruction with pending
+waits is 13.473/13.693/138.787 → 13.724/13.682/135.747 ms. Both include two
+frame boundaries. Frames remain near 6.9 ms; TIME_PROCESS remains excluded.
+No graphical frame-rate or scheduler CPU conclusion follows from those intervals.
+
+Core microbenchmarks use eleven counterbalanced trials at each count. CPU
+medians below are **process CPU ms per 1,000 operations**, not wall time; full
+wall/CPU trial values remain in the raw evidence for min/median/max calculation.
+
+| Core phase | CPU ms, pre → post | C++ allocation calls, pre → post |
+| --- | --- | --- |
+| Spawn + completion | 0.653 → 0.668 | 2,006 → 2,006 |
+| Defer creation | 0.406 → 0.415 | 2,000 → 2,000 |
+| Cancellation | 0.037 → 0.037 | 0 → 0 |
+| Cancelled reaping | 0.037 → 0.031 | 11 → 1 |
+| Defer/wait creation | 0.351 → 0.353 | 2,000 → 2,000 |
+| Resume + yield | 0.085 → 0.073 | 11 → 1 |
+| Resume + completion/reaping | 0.105 → 0.086 | 11 → 1 |
+| Delay creation | 0.553 → 0.571 | 2,000 → 2,000 |
+| Idle pending-task tick | 0.026 → 0.020 | 11 → 1 |
+| Owner cancellation/reaping | 0.051 → 0.048 | 11 → 1 |
+| Manual coroutine resume/completion | 0.557 → 0.590 | 0 → 0 |
+| Concurrent require start (includes compile/owner creation) | 3.818 → 3.908 | 36,054 → 36,054 |
+| Concurrent require finish | 0.155 → 0.151 | 22 → 2 |
+| Domain shutdown | 0.028 → 0.034 | 11 → 1 |
+
+These small timings contain noise; unchanged creation/manual-resume paths are
+not claimed faster. A 21-trial sensitivity run at 10,000 operations gives idle
+tick CPU median 0.271 → 0.159 ms (ranges 0.157–0.315 → 0.135–0.226), owner
+cancellation 0.647 → 0.550 ms, and shutdown 0.381 → 0.383 ms. Creation/complete
+results have broad overlapping spreads. Retention is justified by deterministic
+allocation reduction and measured tick improvement without a structural rewrite.
+At 1,000 tasks a snapshot requests 16,000–16,016 bytes once instead of 32,752
+bytes across eleven calls. Two-step concurrent completion requests 32,000 rather
+than 65,504 bytes. These are requested C++ bytes, not RSS or peak live allocation.
+
+Separate native perf stat captures execute the same fifteen million cached
+calls/five processes: accumulated task-container CPU **16,570.54 → 3,150.85 ms**,
+cycles **92.553 → 16.905 billion**, instructions **325.971 → 56.991 billion**.
+Capture windows are 25/15 seconds; idle capture time consumes no task CPU.
+Totals include runner/startup/shutdown and sampling overhead; they are not
+isolated function CPU times. Latency trials above ran without perf attached.
+
+### Rejected candidates and remaining costs
+
+- Removing shared_ptr roots or live ObjectID/type checks was rejected: those
+  protect reentrant callbacks, destruction and native lifetime. A ~3% sampled
+  type-cast contribution does not justify weakening validation.
+- A bounded record pool/map replacement was considered but not implemented.
+  Cancelled burst records remain rooted until a safe scheduler boundary, so
+  they cannot be recycled during the initial create/cancel burst. A pool also
+  needs correct snapshot/reference eligibility and extra retained storage.
+  No prototype speedup is claimed. Complexity is not justified by the measured
+  residual cost while simpler allocation reductions are available.
+- Replacing the Luau require wrapper/continuation protocol was rejected as
+  unnecessary after the measured native improvement; yielding/concurrent/error
+  behavior remains intact. No new custom allocator or VM model was introduced.
+
+Create/cancel bursts still cost ~20 ms at 1,000 scripts versus ~8 ms in the
+original per-script architecture. Task records, registry roots, owner checks,
+map/shared_ptr allocations and safe reaping are retained. This is an explicit
+measured tradeoff, not a claim that every original regression disappeared.
+Future task-creation work requires new profiling and lifetime evidence.
+
+### Correctness and qualification
+
+The original 36 core cases remain; three focused cases add lazy-source load
+counts, resource identity/revision replacement, pending revision invalidation,
+metadata-path cycles/sticky errors and cached require during shutdown. Native
+Integration adds an earlier changed-signal subscriber that requires new source
+before ModuleScript's later invalidation handler. This protects against an
+identity-only shortcut returning stale data. Existing native fixtures still
+exercise role/cache separation, source reload/destroy/replace, environments,
+callbacks, task cancellation, Instance liveness, remotes, service replacement
+and scene shutdown.
+
+| Final gate | Result |
+| --- | --- |
+| Windows MSVC Debug/Release/ASan core + adapter builds | Pass; 39-case core suite passes five repetitions in each configuration |
+| Linux GCC Debug/Release/ASan core + adapter builds | Pass; 39-case core suite passes five repetitions in each configuration |
+| Windows Debug/Release native fixtures | Eight process results/configuration, all exit zero/PASS |
+| Linux Debug/Release native fixtures | Eight process results/configuration, all exit zero/PASS |
+| Full Linux Godot + bindings + adapter + Luau ASan/LSan | Three ordered-close repetitions, 24 process results pass with detect_leaks=1 |
+
+Windows Debug Dedicated/Editor and Release Editor servers emitted the known
+GL-017 zero-channel diagnostic; logs remain intact. Ordered-close sanitizer
+stress still isolates the separately proven engine leak. GL-017 and GL-018
+remain open; Windows full-native sanitizer coverage is not claimed. SCons/release
+packaging was not rerun or republished for GL-019; CMake exercises actual native
+code in both build configurations. The inherited distribution issues retain
+their own scope. No historical stress matrix was repeated without need.
+
+Reproduction commands and metric limits are in
+[tests/runtime/README.md](../tests/runtime/README.md#gl-019-profiling-and-optimization-comparison).
+Raw records and metadata are indexed in [evidence](evidence/README.md). Worker logs:
+`linuxbox:/opt/codex/godotluau/logs/gl019-*.log`, raw perf/core/native artifacts
+under `/opt/codex/godotluau/artifacts/gl019`; Windows build log
+`dockerbox:C:\Sandbox\Codex\Logs\GodotLuau\gl019-builds.log`, native logs in
+local `.runtime-tests/qualification/gl019-windows-{debug,release}`.
+
+GL-019 is resolved for the requested profiling/optimization/qualification scope
+on this branch. No universal performance target or production readiness is
+implied. Main, upstream, dependency pins, updater and release automation remain
+unchanged. Networking authority, persistence, capability/quota and distribution
+limitations remain independently tracked. The next optional performance task is
+profiling steady-state task creation under a real gameplay workload, preserving
+the same ownership rules; it is not part of this completed change.

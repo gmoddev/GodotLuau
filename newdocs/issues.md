@@ -3,7 +3,8 @@
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
 Historical evidence is preserved below. GL-001/GL-002 are resolved for their
-specific captures, and GL-014 is integrated into main and source-qualified. Other entries
+specific captures, GL-014 is integrated into main and source-qualified, and GL-019
+has a qualified optimization branch. Other entries
 remain open. This file does not create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
@@ -38,7 +39,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-016 | P1 | Verified fork distribution gap | Enabled updater still downloads upstream packages |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
-| GL-019 | P2 | Measured performance regression | Cached require and task create/cancel overhead exceed baseline |
+| GL-019 | P2 | Optimized and qualified on its branch | Revision-aware cache and smaller snapshots; task creation tradeoff measured |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -424,7 +425,7 @@ bindings safe from Linux evidence, or suppress the failure.
 
 ## GL-019: Shared-domain cached require and task overhead regresses
 
-**Status: OPEN; measured P2 performance tradeoff.** Three counterbalanced Linux
+**Original status: OPEN; measured P2 performance tradeoff.** Three counterbalanced Linux
 Release trials at 1,000 scripts measure 100,000 cached requires at median
 129.327 ms baseline versus 194.723 ms shared, and 32,000 create/cancel pairs at
 7.803 versus 19.973 ms. Startup/RSS improve substantially in that workload.
@@ -442,3 +443,30 @@ preserving source invalidation/owner guarantees, and repeat the controlled
 benchmark/regressions. Add a scheduler-only CPU measurement if making a scheduler
 speed claim. [Raw data](evidence/shared-domains-benchmark-2026-10-26.json) and
 [method/limits](shared-domains-validation.md) are retained.
+
+**Resolution (2026-10-26): OPTIMIZED AND QUALIFIED on `perf/gl-019-hot-paths`; not
+merged into main.** Runtime commit `1756cc2600e5a59ea948e69a684f5abd93e32229`
+follows measured native perf sampling and controlled baseline reproduction.
+Native cache hits validate module/resource identity and source revision, loading
+source/path only on misses. Source revision increments before changed-signal
+delivery. Task snapshots preallocate and avoid unused live-record shared_ptr
+copies while preserving strong references during dispatch/cleanup.
+
+At 1,000 scripts, seven counterbalanced pre/post trials measure cached requires
+198.230 → 82.433 ms, startup 290.204 → 171.446 ms and RSS growth
+57.203 → 56.230 MiB. The captured-module loop falls from 1,054.330 to
+163.508 ms per million calls. Core snapshots allocate once rather than eleven
+times at 1,000 tasks. Create/cancel bursts remain about 20 ms versus the original
+per-script baseline's ~8 ms: strong task/owner records and their two C++ allocations
+are retained. Pools/raw-pointer records were not adopted; they do not remove the
+initial burst's lifetime requirements and add unjustified complexity/risk.
+
+The established 36 cases plus three focused metadata/revision cases pass five
+times in Windows/Linux Debug/Release/core ASan; normal native fixtures and full
+Linux native ASan/LSan also pass, including a changed-subscriber ordering check.
+This completes the measured optimization task under its stated acceptance
+criteria, not a claim that every task operation beats the old architecture.
+No public behavior, VM ownership, environments, pins or updater changed. Further
+task-creation work is an optional profiled follow-up; no additional evidence is
+required to retain these changes. See the [GL-019 report](shared-domains-validation.md#gl-019-optimization-2026-10-26)
+for all spreads, CPU/allocation limits, rejected candidates and raw records.

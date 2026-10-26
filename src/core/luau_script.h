@@ -448,10 +448,18 @@ class LuauScript : public ScriptExtension {
 protected:
     static void _bind_methods() {}
     String source_code;
+    uint64_t SourceRevision = 0;
 
 public:
     String _get_source_code() const override { return source_code; }
-    void _set_source_code(const String &p_code) override { if (source_code != p_code) { source_code = p_code; emit_changed(); } }
+    uint64_t GetSourceRevision() const { return SourceRevision; }
+    void _set_source_code(const String &p_code) override {
+        if (source_code != p_code) {
+            source_code = p_code;
+            ++SourceRevision; // visible before any changed-signal subscriber can require
+            emit_changed();
+        }
+    }
     bool _is_tool() const override { return false; }
     bool _is_valid() const override { return true; }
     bool _has_source_code() const override { return true; }

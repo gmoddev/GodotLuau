@@ -15,6 +15,8 @@ void Check(bool Condition, const char* Message) {
 struct Fixture {
     std::vector<std::string> Errors;
     std::unordered_map<uint64_t, std::string> Sources;
+    std::unordered_map<uint64_t, uint64_t> Resources, Revisions;
+    int SourceLoads = 0;
     GLExecutionDomain Domain;
     explicit Fixture(GLDomainKind Kind = GLDomainKind::Server) : Domain(Kind) {
         Domain.SetErrorHandler([this](lua_State*, const std::string& Error) { Errors.push_back(Error); });
@@ -35,6 +37,23 @@ struct Fixture {
         Check(Owner != nullptr, "CreateOwner failed");
         Check(Domain.Execute(Owner, Source, "=Script" + std::to_string(Identity)), "Script failed to start/execute");
         return Owner;
+    }
+    void UseRevisions() {
+        Domain.SetModuleResolver([this](lua_State* State, int Index, GLModuleSource& Module) {
+            if (!lua_isnumber(State, Index)) return false;
+            uint64_t Identity = static_cast<uint64_t>(lua_tonumber(State, Index));
+            if (Sources.find(Identity) == Sources.end()) return false;
+            Module.Identity = Identity;
+            Module.ResourceIdentity = Resources.count(Identity) ? Resources.at(Identity) : Identity + 1000;
+            Module.Revision = Revisions.count(Identity) ? Revisions.at(Identity) : 1;
+            return true;
+        });
+        Domain.SetModuleLoader([this](GLModuleSource& Module) {
+            ++SourceLoads;
+            Module.Source = Sources.at(Module.Identity);
+            Module.ChunkName = "=Module" + std::to_string(Module.Identity);
+            return true;
+        });
     }
     void Tick(int Count = 1) { for (int Index = 0; Index < Count; ++Index) Domain.Tick(0.02); }
     void Verify(const char* Source) {
@@ -130,6 +149,44 @@ int main() {
         F.Sources[100] = "task.wait(10); return {}";
         F.Run(1, "shared.Failed = not pcall(require, 100)");
         F.Domain.InvalidateModule(100); F.Tick(3); F.Verify("assert(shared.Failed)");
+    });
+    Test("Revision cache loads only on misses and distinguishes replacement resources", [] {
+        Fixture F; F.UseRevisions(); F.Sources[100] = "return {Value = 1}";
+        F.Run(1, "shared.Old = require(100); for Index = 1, 100 do assert(require(100) == shared.Old) end");
+        Check(F.SourceLoads == 1, "Cached require loaded source or path");
+        F.Sources[100] = "return {Value = 2}"; F.Revisions[100] = 2;
+        F.Run(2, "assert(require(100).Value == 2 and shared.Old.Value == 1)");
+        F.Sources[100] = "return {Value = 3}"; F.Resources[100] = 2000; F.Revisions[100] = 2;
+        F.Run(3, "assert(require(100).Value == 3)");
+        Check(F.SourceLoads == 3, "Source/resource revision change did not initialize once");
+        F.Domain.InvalidateModule(100);
+        F.Run(4, "assert(require(100).Value == 3)");
+        auto Owner = F.Run(5, "shared.Close = function() assert(require(100).Value == 3) end");
+        lua_getglobal(Owner->Anchor, "shared"); lua_getfield(Owner->Anchor, -1, "Close");
+        int Reference = GLReference(Owner->Anchor, -1); lua_pop(Owner->Anchor, 2);
+        F.Domain.AddCloseCallback(Owner->Anchor, Reference);
+        F.Domain.Shutdown(); F.NoErrors();
+        Check(F.SourceLoads == 4, "Shutdown reloaded a ready revision");
+    });
+    Test("Revision change cancels pending initialization and wakes all old waiters", [] {
+        Fixture F; F.UseRevisions(); F.Sources[100] = "task.wait(10); return {}";
+        F.Run(1, "shared.AFailed = not pcall(require, 100)");
+        F.Run(2, "shared.BFailed = not pcall(require, 100)");
+        Check(F.SourceLoads == 1, "Concurrent revision loaded twice");
+        F.Sources[100] = "return {Value = 2}"; F.Revisions[100] = 2;
+        F.Run(3, "shared.New = require(100)");
+        F.Tick(3); F.Verify("assert(shared.AFailed and shared.BFailed and shared.New.Value == 2)");
+        Check(F.SourceLoads == 2, "New revision did not load exactly once"); F.NoErrors();
+    });
+    Test("Revision loader preserves dependency cycles and sticky failures", [] {
+        Fixture F; F.UseRevisions();
+        F.Sources[100] = "return require(101)"; F.Sources[101] = "return require(100)";
+        F.Run(1, "shared.Failed = not pcall(require, 100)"); F.Tick(6);
+        F.Run(2, "assert(shared.Failed and not pcall(require, 100))");
+        Check(F.SourceLoads == 2, "Sticky failure loaded source again");
+        F.Sources[100] = "return false"; F.Revisions[100] = 2;
+        F.Run(3, "assert(require(100) == false)");
+        Check(F.SourceLoads == 3, "Recovery revision did not load once");
     });
     Test("Destroying first caller does not cancel shared initialization", [] {
         Fixture F;
