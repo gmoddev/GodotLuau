@@ -384,3 +384,23 @@ GL-014 remains open. Other issue statuses are unchanged.
   same native input fingerprint and each passed another eight process results.
   No inherited ZIP DLL was used. Preparing an explicit four-binary local archive
   with dependency/source identity, descriptor checks, CRC and SHA256 validation.
+- Runtime/build/fixture commit: `5f61bea0e273e7473260f351fa4fb321116090ee`.
+  Local four-binary package contains 129 files; CRC, every manifest hash and
+  descriptor-resource checks pass. Extracted-package descriptor registration
+  exits cleanly with no diagnostics on both Windows and Linux. Archive SHA256:
+  `31dc9ef586ad78bc03b12a8cf4f191f9afcc7790dad8876729fa8fa52089401e`.
+- Rebuilt Linux Release after the final literal segmentation: candidate binary
+  SHA256 is unchanged from the measured benchmark binary
+  (`8ea4e9c2faeb4218157059415e93aab6700eebce41283a1ab0b20106aff66ee9`).
+  No additional benchmark rerun is needed for identical executable bytes.
+- Final disposition: CONDITIONALLY READY for source integration; GL-001/GL-002
+  resolved within their capture-specific criteria, GL-014 source qualification
+  complete. GL-017/GL-018/GL-019 retain the engine leak, Windows full-native
+  sanitizer host gap and measured cache/task regressions. Production release,
+  graphical editor/coordinator deployment and unrelated security/storage/updater
+  issues remain unqualified. No main merge or release was performed.
+- Stopped only `codex-godotluau-qualification` after confirming no build/test
+  remained active. Task source, image/container filesystem, caches, binaries and
+  raw logs are preserved under `/opt/codex/godotluau`. Existing Outline,
+  PostgreSQL and Redis containers remained running and healthy. Windows builds
+  completed without a persistent task service or global tool installation.

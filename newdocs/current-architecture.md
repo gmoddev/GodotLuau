@@ -1,13 +1,14 @@
 # Current architecture
 
 Updated for the shared-domain migration on `runtime/shared-domains`, 2026-10-26.
-Implemented source: `521265c338fc890a0e30b9e8a556f6346baf7d00`.
+Implemented source: `5f61bea0e273e7473260f351fa4fb321116090ee` (initial
+migration `521265c338fc890a0e30b9e8a556f6346baf7d00`, followed by qualification fixes).
 The initial runtime baseline was `7044a11c1bcc2eac2a91155e829a5821d92ab66e`;
 the migration started at `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 [Qualification evidence](shared-domains-validation.md) distinguishes executed
 Windows/Linux tests from remaining production/platform gaps. The continuation
 qualification records targeted network teardown, task cleanup and stack-guard
-corrections following the original implementation revision above.
+corrections following the initial migration.
 
 ## Runtime and ownership
 
