@@ -4,7 +4,7 @@ Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
 Historical evidence is preserved below. GL-001/GL-002 are resolved for their
 specific captures, GL-014 is integrated into main and source-qualified, and GL-019
-has a qualified optimization branch. Other entries
+is optimized, qualified and integrated into main. Other entries
 remain open. This file does not create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
@@ -39,7 +39,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-016 | P1 | Verified fork distribution gap | Enabled updater still downloads upstream packages |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
-| GL-019 | P2 | Optimized and qualified on its branch | Revision-aware cache and smaller snapshots; task creation tradeoff measured |
+| GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -470,3 +470,13 @@ No public behavior, VM ownership, environments, pins or updater changed. Further
 task-creation work is an optional profiled follow-up; no additional evidence is
 required to retain these changes. See the [GL-019 report](shared-domains-validation.md#gl-019-optimization-2026-10-26)
 for all spreads, CPU/allocation limits, rejected candidates and raw records.
+
+**Integration (2026-10-26):** Main now preserves all three GL-019 commits through
+normal merge `6badbae4b467a5544ffd027a1c7d7bd505cd0d46`, with no conflicts.
+Its complete source tree equals qualified branch revision
+`ad200aa468be56edf4812bb3a03daeb31d5bbdd8`; runtime/build/test code equals
+`1756cc2600e5a59ea948e69a684f5abd93e32229`. The
+[integration record](shared-domains-validation.md#gl-019-main-integration-2026-10-26)
+distinguishes fresh checks from reused historical measurements. GL-019 stays
+resolved for its measured scope. GL-017/GL-018 and the independent capability,
+networking, persistence, asset and distribution issues remain open.

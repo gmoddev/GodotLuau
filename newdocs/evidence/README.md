@@ -27,6 +27,7 @@ GL-019 records preserve all measurements instead of replacing earlier data:
 | [Core microbenchmarks](gl019-core-microbenchmarks-2026-10-26.jsonl) | Eleven trials at 10/100/1,000; pre/post, CPU/wall/C++ allocations |
 | [Larger core sensitivity run](gl019-core-microbenchmarks-large-2026-10-26.jsonl) | Twenty-one trials at 10,000; same phase definitions |
 | [GL-019 qualification](gl019-qualification-2026-10-26.json) | Source/binary identities, native perf counters and actual gate results |
+| [GL-019 main integration](gl019-main-integration-2026-10-26.json) | Merge/source identity, fresh CMake/SCons/core/native checks and focused performance smoke; historical datasets unchanged |
 
 The [GL-019 report](../shared-domains-validation.md#gl-019-optimization-2026-10-26)
 defines metric scopes, spreads, accepted/rejected changes and residual task costs.

@@ -534,3 +534,60 @@ GL-014 remains open. Other issue statuses are unchanged.
   under `/opt/codex/godotluau`; unrelated containers remained healthy. Final
   publication targets only `perf/gl-019-hot-paths`, retaining main at its verified
   baseline and preserving the historical shared-domain branch.
+
+## 2026-10-26: GL-019 source integration into main
+
+- Verified local and remote main at `aa5400321b8f838a75de8d2b4005b0c5165dab34`
+  and local/remote `perf/gl-019-hot-paths` at qualified revision
+  `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`. One clean worktree, no active
+  file claims, no additional source commits or divergent main changes.
+- Reviewed the three commits: profiling infrastructure `0427a35`, runtime and
+  focused regressions `1756cc2`, documentation/raw evidence `ad200aa`.
+  Only four production files change; the optional benchmark CMake target is
+  off by default. Dependency pins, SConstruct, updater, release workflow,
+  generated assets and binaries are unchanged.
+- Normal `--no-ff` merge produced `6badbae4b467a5544ffd027a1c7d7bd505cd0d46`
+  without conflicts. Its complete tree equals the qualified branch, tree
+  `1d05c9a1bb39c20667ccfc1a555b7201321d7df9`. Runtime/build/test content
+  also equals implementation `1756cc2`; native fingerprint remains
+  `40e2cbadfae3cef7fdc39e17d6b9feec94f635aa5e8926614bdcdb27c324045d`.
+  Main publication is pending focused integration checks.
+- Existing Windows/Linux workers and caches are available; started only the
+  task-owned Linux container. Fresh checks will cover core Debug/Release/ASan,
+  native roles/lifecycle, SCons compatibility and a bounded performance smoke.
+  No new tools or worker settings are needed. Main has no branch protection
+  or rulesets; `[skip ci]` prevents the inherited release workflow on this
+  authorized source-only push. No workflow setting is changed.
+- Completed final incremental CMake core/adapter checks on both workers. All
+  39 cases pass once per Debug/Release/ASan configuration. Windows/Linux SCons
+  Debug/Release builds also pass. Native CMake groups pass 32 process results,
+  SCons groups another 32; one full Linux ASan/LSan ordered-close repetition
+  passes eight. Known GL-017 diagnostics remain recorded per group; Windows
+  full-native sanitizer coverage remains GL-018, not claimed as passing.
+- Windows native fixtures used the existing local official engine through the
+  hidden/headless bounded runner, as in previous qualification. Sustained builds
+  and Linux runtime/performance checks stayed remote. Compared 88 source/test/
+  build files on both mirrors; copied missing support files and platform-only
+  benchmark guards, then repeated final CMake/core checks. No production input
+  mismatch or runtime edit was needed.
+- After builds, the focused Linux smoke gives 196.077 -> 82.700 ms cached
+  requires and 287.051 -> 171.334 ms startup at 1,000 scripts (one paired trial).
+  Three-trial captured require medians are 1,049.181 -> 160.287 ms per million;
+  core idle-tick snapshots retain 11 -> 1 allocations. Whole-process RSS growth
+  is 57.188 -> 56.277 MiB; task create/cancel remains 19.895 -> 20.156 ms.
+  These are bounded smoke results, not a replacement full benchmark matrix.
+- Preserved the historical reports/raw evidence unchanged and added a compact
+  [integration manifest](evidence/gl019-main-integration-2026-10-26.json).
+  Updated canonical baseline markers and GL-019 disposition; ADR-001 and runtime
+  code remain unchanged. Outcome: **INTEGRATED WITH QUALIFICATION LIMITATIONS**.
+  Rechecked GL-006/GL-008 against unchanged networking code: authority checks
+  and server-derived chat identity remain the smallest next coherent task.
+  No networking fix is included in this integration.
+- Final review confirms unchanged runtime/build/tests and pins versus the
+  qualified implementation, preserved historical report prefixes/data, valid
+  new documentation links, and explicit documentation/JSON-only staging.
+  Stopped only the task-owned Linux container after checking no build/test/
+  profiler remained; unrelated services stayed healthy. Windows build/test
+  processes are finished. Caches and artifacts are retained. Publication targets
+  main on the user's fork with `[skip ci]`; the qualified source branch stays
+  at `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`.

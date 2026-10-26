@@ -1,6 +1,6 @@
 # GodotLuau
 
-> **Fork público:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), basado en el proyecto original de PimpoliDev. Consulta la [documentación del fork](newdocs/README.md), los [problemas validados](newdocs/issues.md) y la [política de contribuciones con IA](AGENTS.md). `main` es la base de desarrollo con VMs compartidas Server/Client; consulta la [evidencia de integración y validación](newdocs/shared-domains-validation.md#main-integration-2026-10-26). Los binarios heredados no son compilaciones verificadas del fork. El actualizador habilitado todavía descarga paquetes del repositorio original (GL-016).
+> **Fork público:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), basado en el proyecto original de PimpoliDev. Consulta la [documentación del fork](newdocs/README.md), los [problemas validados](newdocs/issues.md) y la [política de contribuciones con IA](AGENTS.md). `main` es la base de desarrollo optimizada con VMs compartidas Server/Client, incluida GL-019; consulta la [evidencia de integración y validación](newdocs/shared-domains-validation.md#gl-019-main-integration-2026-10-26). Los binarios heredados no son compilaciones verificadas del fork. El actualizador habilitado todavía descarga paquetes del repositorio original (GL-016).
 
 **Escribe juegos estilo Roblox en Luau y córrelos en Godot 4.**
 

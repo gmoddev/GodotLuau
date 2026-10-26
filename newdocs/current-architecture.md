@@ -1,10 +1,14 @@
 # Current architecture
 
-Current development baseline: `main`, following shared-domain integration on
-2026-10-26. Merge commit: `dd68cda850fb548aa7713242275ff73c183e813c`.
-That integrated runtime tree is identical to qualified source branch `runtime/shared-domains`
-at `9423fed4051bec2fba798d9a49eaec7dea6cca3b`; see the
-[integration record](shared-domains-validation.md#main-integration-2026-10-26).
+Current development baseline: optimized shared-domain `main`, following GL-019
+integration on 2026-10-26. Runtime merge:
+`6badbae4b467a5544ffd027a1c7d7bd505cd0d46`, identical to qualified source
+`perf/gl-019-hot-paths` at `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`.
+See the [GL-019 integration record](shared-domains-validation.md#gl-019-main-integration-2026-10-26).
+The earlier migration merge `dd68cda850fb548aa7713242275ff73c183e813c`
+and historical branch `runtime/shared-domains` at
+`9423fed4051bec2fba798d9a49eaec7dea6cca3b` retain their
+[original integration evidence](shared-domains-validation.md#main-integration-2026-10-26).
 Shared-domain implementation lineage: `5f61bea0e273e7473260f351fa4fb321116090ee` (initial
 migration `521265c338fc890a0e30b9e8a556f6346baf7d00`, followed by qualification fixes).
 The initial runtime baseline was `7044a11c1bcc2eac2a91155e829a5821d92ab66e`;
@@ -13,9 +17,9 @@ the migration started at `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 Windows/Linux tests from remaining production/platform gaps. The continuation
 qualification records targeted network teardown, task cleanup and stack-guard
 corrections following the initial migration.
-On `perf/gl-019-hot-paths`, the GL-019 follow-up below adds metadata-based cache
-validation and smaller scheduler snapshot allocations. Main remains the base;
-this optimization branch is not merged. See the
+GL-019 on main adds metadata-based cache validation and smaller scheduler
+snapshot allocations without changing Server/Client VM ownership. The source
+branch remains a historical reference. See the
 [GL-019 evidence](shared-domains-validation.md#gl-019-optimization-2026-10-26).
 
 ## Runtime and ownership

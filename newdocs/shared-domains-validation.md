@@ -847,3 +847,155 @@ unchanged. Networking authority, persistence, capability/quota and distribution
 limitations remain independently tracked. The next optional performance task is
 profiling steady-state task creation under a real gameplay workload, preserving
 the same ownership rules; it is not part of this completed change.
+
+## GL-019 main integration (2026-10-26)
+
+**INTEGRATED WITH QUALIFICATION LIMITATIONS.** The optimized shared-domain runtime
+is the canonical main development baseline. This source integration preserves
+the GL-019 architecture, public behavior and evidence; it is not a new full
+production qualification. The preceding optimization section describes the
+historical branch qualification before this merge.
+
+### Revisions, merge and implementation identity
+
+- Starting local/remote main: `aa5400321b8f838a75de8d2b4005b0c5165dab34`.
+- Qualified local/remote source: `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`
+  on `perf/gl-019-hot-paths`. Neither branch advanced before integration.
+- Integrated runtime main revision: `6badbae4b467a5544ffd027a1c7d7bd505cd0d46`.
+  Normal `git merge --no-ff`, no conflicts, preserving harness `0427a35`, runtime
+  `1756cc2` and evidence `ad200aa` in history. No squash/rebase/force push.
+- Its entire tree equals the qualified source tree:
+  `1d05c9a1bb39c20667ccfc1a555b7201321d7df9`. All subsequent integration edits
+  are documentation/compact evidence only. The publication tip is the
+  documentation commit immediately following this merge, identifiable in Git
+  history; the runtime revision above is immutable and independently testable.
+- Production/build/test code equals `1756cc2600e5a59ea948e69a684f5abd93e32229`
+  (test README excluded). All 65 normalized native inputs retain fingerprint
+  `40e2cbadfae3cef7fdc39e17d6b9feec94f635aa5e8926614bdcdb27c324045d`.
+  Worker comparison covers 88 source/build/test files, excluding only the test
+  README. Missing support files and benchmark Windows guards were synchronized;
+  final CMake/core checks were repeated. Production inputs already matched.
+- Pins, SConstruct, workflow/updater, generated assets and inherited binaries
+  remain unchanged. The only build addition from GL-019 is the optional,
+  default-off core benchmark target. ADR-001 is unchanged.
+
+Static comparison retains live module/resource identity plus source revision
+validation, revision increments before changed callbacks, lazy source/chunk-path
+loading on misses, cache invalidation/cycles/sticky errors and old returned
+values. Scheduler vectors reserve sizes while shared_ptr snapshots/cleanup
+locals retain strong coroutine roots. Native-wait cleanup, owner cancellation
+and shared Server/Client VM ownership are unchanged. No behavioral conflict
+resolution or extra runtime change was needed.
+
+### Fresh focused checks
+
+Reused the same Windows worker toolchain and Linux task container/caches, with
+four build jobs per worker. No installation, host setting or workflow change.
+Windows CMake/core and SCons compilation ran on dockerbox. Windows native groups
+used the existing official Godot 4.7.1 executable on the controlling PC, hidden
+and headless with two engine workers, crash UI suppression and 45-second bounds.
+Linux builds and all Linux execution ran inside the four-CPU/10-GiB task
+container on linuxbox. This retains the established test topology.
+
+| Gate | Fresh result |
+| --- | --- |
+| Windows CMake Debug/Release/ASan core + actual adapter | Incremental targets pass; all 39 cases pass once per final configuration |
+| Linux CMake Debug/Release/ASan core + actual adapter | Incremental targets pass; all 39 cases pass once per final configuration |
+| Windows/Linux SCons template_debug and template_release | Four incremental native builds pass with existing pinned dependencies |
+| CMake Windows/Linux normal Debug/Release native fixtures | Eight process results per platform/configuration, all exit zero/PASS: 32 results |
+| SCons Windows/Linux normal Debug/Release native fixtures | Same eight process results per platform/configuration, all exit zero/PASS: 32 results |
+| Linux full-native ASan/LSan | One ordered-close repetition, eight process results pass; detect_leaks=1, matching instrumented Godot/bindings/adapter/Luau |
+
+Each native group includes Singleplayer Integration, Listen, Dedicated with two
+clients and Editor-style flags with two clients. Existing assertions cover
+module sharing/revision invalidation, changed-subscriber ordering, domain
+separation, source/lifecycle replacement, callback/task/native-wait cancellation,
+retained methods, RemoteFunction service teardown and owner cleanup. No new
+test infrastructure or historical stress repetitions were added.
+
+Known GL-017 zero-channel diagnostics remain visible: CMake Windows Debug and
+Release Editor servers; CMake Linux Debug Editor and Release Dedicated/Editor
+servers; SCons Windows Debug Dedicated/Editor and Release Dedicated servers.
+SCons Linux normal groups and ordered-close Linux ASan emitted none. These
+functional passes do not resolve the separately reproduced engine diagnostic
+or leak. GL-018 still excludes Windows full-native sanitizer qualification.
+
+Commands use existing runners and build configurations:
+
+```text
+cmake --build <existing-runtime-config> --target ExecutionDomainTests GodotLuauAdapter --parallel 4
+ctest --test-dir <existing-runtime-config> --output-on-failure --timeout 30
+scons platform=linux target=template_debug -j4
+scons platform=linux target=template_release -j4
+```
+
+Windows SCons uses the approved controlled Python and `RunSConsPortable.py`
+with the existing portable SCons directory, `platform=windows` and those same
+targets/job bound. Native `RunQualification.py` commands use each explicit
+CMake/SCons library, `--teardown --timeout 45`; Linux full-native sanitizer uses
+the existing instrumented engine, `--coordinated-close --timeout 90`, and
+`ASAN_OPTIONS=detect_leaks=1:halt_on_error=1:log_path=<distinct-output>/asan-report`.
+All outputs are distinct from historical qualification directories.
+
+### Performance evidence disposition
+
+The historical seven-trial comparisons, profiler captures, allocation records
+and rejected alternatives remain unchanged and apply within their original
+scope by implementation/build-input identity. The CMake Release library remains
+SHA256 `d9398aed311dab4e4493b022fc0df8e4ed81e569e778d562aeb3695248544883`;
+Windows CMake Debug/Release hashes likewise match the qualified artifacts.
+Fresh smoke measurements ran after builds completed, on the same Linux worker,
+without profiling or concurrent task builds:
+
+| Smoke metric | Pre-GL-019 | Integrated |
+| --- | ---: | ---: |
+| 1,000-script cached require sum, elapsed ms | 196.077 | 82.700 |
+| Startup, elapsed ms | 287.051 | 171.334 |
+| Whole-process RSS growth, MiB | 57.188 | 56.277 |
+| Task create/cancel pairs, elapsed ms | 19.895 | 20.156 |
+| Captured million-call require, median elapsed ms | 1,049.181 | 160.287 |
+| Core idle tick, median process CPU ms / 1,000 tasks | 0.026 | 0.019 |
+| Core idle tick, C++ new calls / requested bytes | 11 / 32,752 | 1 / 16,016 |
+
+Population is one paired trial, not a new distribution or acceptance threshold.
+Captured require and core use three counterbalanced trials per mode. RSS is
+Startup-minus-Before for the whole process. C++ counters exclude Luau/Godot
+malloc; core process CPU is distinct from native wall time. No new perf CPU
+profile or exact numeric reproduction is claimed. The smoke is consistent
+with preserved optimizations and retained task-creation cost; no material
+regression requiring a new optimization phase appeared.
+
+Reproduction: existing `RunRequireBenchmark.py --repeat 3`,
+`RunQualification.py --counts 1000 --repeat 1 --timeout 120` with the pre-GL-019
+library supplied through `--baseline`, and `RunHotPathBenchmarks.py --counts 1000
+--repeat 3` using pre/current executables. Inputs, raw-result hashes, exact
+binary identities, diagnostics and worker locations are in the
+[integration manifest](evidence/gl019-main-integration-2026-10-26.json).
+Raw smoke datasets/logs stay under `/opt/codex/godotluau/artifacts/gl019-integration`
+and `logs/gl019-integration-*.log`; local Windows artifacts are ignored under
+`.runtime-tests/qualification/gl019-integration`. No binaries/logs/archives
+enter Git. Cached native artifacts do not establish release provenance.
+
+### Disposition and next task
+
+GL-019 is integrated and resolved for its measured optimization scope. Current
+architecture, documentation entry points and test instructions identify optimized
+main as canonical. Historical branches/evidence are retained. Main publication
+uses an ordinary non-force push to `gmoddev/GodotLuau` with `[skip ci]`, preserving
+the explicit prohibition on running the inherited release workflow. No branch
+protection or ruleset is bypassed; both were absent during preflight. No upstream
+write, PR, release, updater enablement or production binary publication occurs.
+
+GL-017/GL-018 remain independent limitations, as do GL-003/004/005 capabilities,
+sandbox/quotas/HTTP; GL-006/007/008 authority/input/identity; GL-009 persistence;
+GL-010/011/012/016 distribution/gates/retention/updater; and GL-015 assets.
+No graphical/editor/coordinator/production-content readiness is inferred.
+
+Rechecked `roblox_network.h` on the integrated source: GL-006's ANY_PEER state/
+removal receivers still lack transport-sender/receiver-role gates; GL-008's chat
+relay still displays the supplied name and its receiver lacks a server-sender
+guard. The smallest coherent next task is an authority-boundary patch to those
+receivers plus server-derived chat identity, with wrong-peer rejection/no-side-
+effect tests and valid server traffic in the existing multi-peer fixture.
+These fixes were not implemented during integration; numeric movement/input
+policy remains GL-007's separate scope.

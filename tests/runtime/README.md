@@ -2,9 +2,9 @@
 
 These tests exercise the production `GLExecutionDomain` implementation and the
 actual Godot adapters. They do not use a second scheduler/cache implementation.
-`main` is the current shared-domain development baseline; the historical source
-branch and reused qualification scope are recorded in the
-[integration record](../../newdocs/shared-domains-validation.md#main-integration-2026-10-26).
+`main` is the optimized shared-domain development baseline, including GL-019;
+historical source branches and reused qualification scope are recorded in the
+[integration record](../../newdocs/shared-domains-validation.md#gl-019-main-integration-2026-10-26).
 Initialize the pinned `luau` and `godot-cpp` submodules first. Native builds use
 the configured worker; keep compilation off the controlling gaming PC.
 

@@ -1,0 +1,201 @@
+{
+  "Date": "2026-10-26",
+  "StartingMain": "aa5400321b8f838a75de8d2b4005b0c5165dab34",
+  "QualifiedSource": "ad200aa468be56edf4812bb3a03daeb31d5bbdd8",
+  "RuntimeImplementation": "1756cc2600e5a59ea948e69a684f5abd93e32229",
+  "IntegratedRuntimeMerge": "6badbae4b467a5544ffd027a1c7d7bd505cd0d46",
+  "MergeStrategy": "Normal --no-ff; no conflicts; all three commits preserved",
+  "MergeTree": "1d05c9a1bb39c20667ccfc1a555b7201321d7df9",
+  "SourceIdentity": {
+    "MergeTreeEqualsQualifiedTree": true,
+    "ProductionBuildAndTestCodeEqualsRuntimeImplementation": true,
+    "NativeInputFiles": 65,
+    "NativeInputNewlines": "LF normalized",
+    "NativeInputSHA256": "40e2cbadfae3cef7fdc39e17d6b9feec94f635aa5e8926614bdcdb27c324045d",
+    "WorkerSourceAndTestFilesCompared": 88,
+    "ComparisonExcludes": "tests/runtime/README.md; documentation only",
+    "AfterMergeChanges": "Only integration documentation and this evidence record"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "FreshCore": {
+    "Cases": 39,
+    "ReportedRepetitionsPerConfiguration": 1,
+    "AllPassed": true,
+    "Configurations": [
+      "WindowsDebug",
+      "WindowsRelease",
+      "WindowsAsan",
+      "LinuxDebug",
+      "LinuxRelease",
+      "LinuxAsan"
+    ],
+    "CMakeCoreAndAdapterTargets": "All six incremental build checks pass; compatible cached artifacts reused"
+  },
+  "FreshSCons": {
+    "JobsPerWorker": 4,
+    "Targets": [
+      "WindowsTemplateDebug",
+      "WindowsTemplateRelease",
+      "LinuxTemplateDebug",
+      "LinuxTemplateRelease"
+    ],
+    "AllBuildsPassed": true,
+    "NoPackagingOrPublication": true
+  },
+  "FreshNative": {
+    "WindowsCMakeDebug": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "24df63dde85241b9d456beb2797e0c3dd8c96d04bcad7b074c00e81f4db3c1b5",
+      "KnownGL017Labels": [
+        "Editor-0-server"
+      ]
+    },
+    "WindowsCMakeRelease": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "24df63dde85241b9d456beb2797e0c3dd8c96d04bcad7b074c00e81f4db3c1b5",
+      "KnownGL017Labels": [
+        "Editor-0-server"
+      ]
+    },
+    "WindowsSConsDebug": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "1cab3964ad4423d22449c8c5585d28091e66ed63347eef927ead31ebc1bb3388",
+      "KnownGL017Labels": [
+        "Dedicated-0-server",
+        "Editor-0-server"
+      ]
+    },
+    "WindowsSConsRelease": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "92e3003925d590f08de6284b67f831049e44403693747cbdeb6ea513fab19046",
+      "KnownGL017Labels": [
+        "Dedicated-0-server"
+      ]
+    },
+    "LinuxCMakeDebug": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "9611327d27905debf22c113f7414b90e619afb3e5421051b7e4069cfd53b18b8",
+      "KnownGL017Labels": [
+        "Editor-0-server"
+      ]
+    },
+    "LinuxCMakeRelease": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "db2d1e86418286ee28a8be5e91512f3c12224f426fa4ac455a603c2451e8afcc",
+      "KnownGL017Labels": [
+        "Dedicated-0-server",
+        "Editor-0-server"
+      ]
+    },
+    "LinuxSConsDebug": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+      "KnownGL017Labels": []
+    },
+    "LinuxSConsRelease": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+      "KnownGL017Labels": []
+    },
+    "LinuxFullNativeAsanLsan": {
+      "Results": 8,
+      "AllExitsZeroAndPass": true,
+      "RawResultsSHA256": "dfaabcdd0f54f89450cd2615dc6ea7c35df624de2017f0af082a45c0d3a712ff",
+      "KnownGL017Labels": []
+    }
+  },
+  "LibrarySHA256": {
+    "WindowsCMakeDebug": "f0a9bc80beeb14f92424a599488c7fd01c3cc810ad93e46a8da80ca9e70de795",
+    "WindowsCMakeRelease": "876b90ea79025475901ad1adf0e15ad3853b86aeabe4ba849b90c1fc6a7dbbbd",
+    "WindowsSConsDebug": "a30dea615bcf772f63aba2c8b61cfa77887e63b64dbe71be994bc560d3957b27",
+    "WindowsSConsRelease": "36cf171390abfcda236ecfc0b85f3e18a2f7fd3f35b2eeb17393bd14a8f31a7a",
+    "LinuxCMakeDebug": "92641f291a73af6f625e67fafc3ad98cf77e51e7ae75fdd13e3ee52f00ea5bbf",
+    "LinuxCMakeRelease": "d9398aed311dab4e4493b022fc0df8e4ed81e569e778d562aeb3695248544883",
+    "LinuxCMakeAsan": "9bf1cf7948454b3c05ca5d1565c9917f49e5cd826d56541bb0db344bf8333dbf",
+    "LinuxSConsDebug": "8d6716d7e7c6b9db2ef7e9087ec2245b9b3a4391471223eeae8998f6f8b07530",
+    "LinuxSConsRelease": "b6d245d3bdf1eb5054351e7e157e0b9e8704f1a9099f8732d13756cd96170e3f"
+  },
+  "PerformanceSmoke": {
+    "Kind": "Focused smoke; historical seven-trial evidence remains authoritative within its original scope",
+    "PopulationTrialsPerMode": 1,
+    "Population1000": {
+      "Baseline": {
+        "StartupMs": 287.051,
+        "Hot100Ms": 196.077372413129,
+        "Coroutine32Ms": 19.8953724466264,
+        "WholeProcessRssGrowthMiB": 57.1875
+      },
+      "Shared": {
+        "StartupMs": 171.334,
+        "Hot100Ms": 82.6998366974294,
+        "Coroutine32Ms": 20.1562512665987,
+        "WholeProcessRssGrowthMiB": 56.27734375
+      }
+    },
+    "RequireTrialsPerMode": 3,
+    "RequireCalls": 1000000,
+    "CapturedRequireMedianHotMs": {
+      "Before": 1049.18096307665,
+      "Candidate": 160.286961123347
+    },
+    "CoreTrialsPerMode": 3,
+    "CoreOperations": 1000,
+    "IdlePendingTick": {
+      "pre": {
+        "CpuMs": 0.026,
+        "WallMs": 0.02624,
+        "CppAllocations": 11,
+        "CppAllocationBytes": 32752
+      },
+      "post": {
+        "CpuMs": 0.019,
+        "WallMs": 0.01933,
+        "CppAllocations": 1,
+        "CppAllocationBytes": 16016
+      }
+    },
+    "RawData": {
+      "Require": {
+        "Rows": 6,
+        "SHA256": "1bd2c2390d05bc6793ef72a266af24c42bd08a513c54c54d5009bf5c276fea15",
+        "WorkerPath": "require-smoke/results.json"
+      },
+      "Population": {
+        "Rows": 10,
+        "SHA256": "7540ceefa1613f1dc58039fe49e283843b7a52355cc9fbb1545b0399670857a6",
+        "WorkerPath": "population-smoke/results.json"
+      },
+      "Core": {
+        "Rows": 84,
+        "SHA256": "82d4de5f68170b5d5b4d69534ff825980f8623ed6bcaeb36f933168377ef4b3e",
+        "WorkerPath": "core-smoke.jsonl"
+      }
+    }
+  },
+  "ArtifactRoots": {
+    "Linux": "linuxbox:/opt/codex/godotluau/artifacts/gl019-integration",
+    "LinuxLogs": "linuxbox:/opt/codex/godotluau/logs/gl019-integration-*.log",
+    "WindowsBuildLog": "dockerbox:C:/Sandbox/Codex/Logs/GodotLuau/gl019-integration-final-builds.log",
+    "WindowsNative": "Local .runtime-tests/qualification/gl019-integration/{native,scons-native}-windows-{debug,release}"
+  },
+  "QualificationLimits": [
+    "GL-017 known engine teardown diagnostic/leak remains independent; no suppression",
+    "GL-018 Windows full-native sanitizer host remains unqualified",
+    "Linux full-native ASan/LSan uses matching minimal instrumented Godot host, detect_leaks=1 and ordered close",
+    "No new graphical editor, coordinator, production-content or distribution qualification",
+    "Capability, network authority/input/identity, persistence, asset and release/updater issues remain open",
+    "Historical full stress and profile matrices reused by source identity, not rerun or relabeled"
+  ],
+  "Classification": "INTEGRATED WITH QUALIFICATION LIMITATIONS"
+}

@@ -42,7 +42,8 @@ the inherited runtime already satisfies them. Baseline gaps link to
 - Domain shutdown closes admission before finite close-hook dispatch and owner
   invalidation. Actual VM close follows active native execution, never from
   within a running callback. GL-014's source-qualification evidence is recorded;
-  bounded remaining platform/performance gaps are GL-017 through GL-019.
+  bounded remaining platform gaps are GL-017/GL-018. GL-019's measured
+  optimizations are integrated; retained task-creation costs remain documented.
 
 ## Multiplayer authority
 
