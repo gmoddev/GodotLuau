@@ -310,13 +310,13 @@ static inline int gl_net_decode_args(lua_State* L, const Array& a, Node* ctx) {
 // ── Registro global de respuestas de RemoteFunction ───────────────────────
 // El invocador (cliente) genera un call_id, cede su hilo y espera; cuando la
 // respuesta llega por RPC, NetworkService la deposita aquí; el ScriptNodeBase
-// que esperaba la recoge en su _process, la decodifica y reanuda el hilo.
+// El host del dominio recoge la respuesta, la decodifica y reanuda el hilo dueño.
 struct GLNetResponse { Array rets; bool ok = true; bool ready = false; double age = 0.0; };
-static inline std::unordered_map<int64_t, GLNetResponse>& gl_net_responses() {
+inline std::unordered_map<int64_t, GLNetResponse>& gl_net_responses() {
     static std::unordered_map<int64_t, GLNetResponse> m;
     return m;
 }
-static inline int64_t gl_net_new_call_id() {
+inline int64_t gl_net_new_call_id() {
     static int64_t next = 1;
     return next++;
 }

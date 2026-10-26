@@ -100,6 +100,7 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
 
         // Scripts (color in editor: Blue / Naranja / Purple)
         //// Scripts (color en el editor: Azul / Naranja / Morado)
+        ClassDB::register_internal_class<GLDomainHost>();
         ClassDB::register_class<ScriptNodeBase>();
         ClassDB::register_class<LocalScript>();   // Blue / Azul
         ClassDB::register_class<ServerScript>();  // Orange / Naranja
@@ -311,6 +312,7 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
 
 void uninitialize_luau_module(ModuleInitializationLevel p_level) {
     if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+        if (auto Host = GLGetDomainHost()) Host->Shutdown();
         if (Engine::get_singleton()->has_meta("_godotluau_wm"))
             Engine::get_singleton()->remove_meta("_godotluau_wm");
         // Caches estaticos de materiales: se sueltan AQUI, mientras el

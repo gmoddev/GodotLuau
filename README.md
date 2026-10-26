@@ -1,6 +1,6 @@
 # GodotLuau
 
-> **Public fork:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), based on PimpoliDev's upstream project. Start with [fork documentation](newdocs/README.md), [validated issues](newdocs/issues.md), and the [AI contribution policy](AGENTS.md). This initial fork changes documentation only; inherited binaries are not qualified fork builds. The enabled updater still downloads upstream packages (GL-016).
+> **Public fork:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), based on PimpoliDev's upstream project. Start with [fork documentation](newdocs/README.md), [validated issues](newdocs/issues.md), and the [AI contribution policy](AGENTS.md). The shared Server/Client VM migration is implemented on `runtime/shared-domains`; see [qualification evidence](newdocs/shared-domains-validation.md). Inherited binaries are not qualified fork builds. The enabled updater still downloads upstream packages (GL-016).
 
 **Write Roblox-style games in Luau, run them on Godot 4.**
 
@@ -138,7 +138,7 @@ Key differences from GDScript, and things worth knowing:
 
 - **No `_ready` / `_process`.** The body of the `.lua` file runs top to bottom. For continuous logic use `RunService.Heartbeat:Connect(...)` or a loop with `task.wait()`.
 - **`Enabled` property**, like in Studio: a disabled script does not run; re-enabling it at runtime runs it then.
-- **Each `LocalScript`/`ServerScript` gets its own Luau VM.** A `ModuleScript` required from two different scripts does **not** share state between them (this is a real divergence from Roblox).
+- **One shared Luau VM per applicable Server/Client domain.** Scripts have independent environments/coroutines. ModuleScript results, `_G` and `shared` are shared within a domain; Server and Client stay separate. See [runtime semantics](newdocs/adr-001-shared-execution-domains.md).
 - **Available globals:** `game`, `workspace`, `script`, `require`, `shared`, plus the Luau standard libraries (`math`, `string`, `table`, `coroutine`, `os`, `utf8`, `bit32`…), `print`, `warn`, `task.*` and the classic `wait` / `spawn` / `delay` / `tick` / `time`.
 - **Errors read like Roblox errors:**
 
@@ -149,7 +149,7 @@ Key differences from GDScript, and things worth knowing:
   Stack End
   ```
 
-  Indexing something that does not exist raises `X is not a valid member of …`; `WaitForChild` really suspends the coroutine and warns `Infinite yield possible on '…'` after 5 seconds; `require` reproduces Roblox's exact messages. No callback path fails silently.
+  Indexing something that does not exist raises `X is not a valid member of …`; `WaitForChild` really suspends the coroutine and warns `Infinite yield possible on '…'` after 5 seconds; `require` reports module failures and cycles. Callback and module semantics are documented in [ADR-001](newdocs/adr-001-shared-execution-domains.md).
 - **Script identity is stable.** Every script node owns an immutable `script_id` (e.g. `ServerScript_ID_3`) that names its `.lua` file. Deleting the node moves the file to `res://.luau_trash/` (**Ctrl+Z** restores node and file together; the trash auto-purges after 7 days).
 
 ## Importing Roblox places (.rbxl)
@@ -531,7 +531,7 @@ Reach them with `game:GetService("Players")` or directly (`game.Workspace`, `wor
 
 **3. The R6 avatar.** By default players spawn as the **R6 rig**: six parts hung from pivots at the classic joint positions, so the code-driven animations (walk pendulum with opposite arms and legs, idle breathing, airborne arms-up) rotate like the classic avatar. Parts keep their Roblox names (`"Left Arm"`, `"Torso"`, `"HumanoidRootPart"`…). Drop any model named **`StarterCharacter`** under `StarterPlayer` and it becomes everyone's character instead. Camera-proximity fade uses a dissolve shader (pixels discarded, not alpha-blended), and right-click camera rotation restores the mouse to where it was.
 
-**4. Lifetime safety and known gaps.** Instance userdata stores an `ObjectID` and resolves it through the live object database (`src/core/gl_runtime.h`). Some native method closures, including `WaitForChild` and NetworkService bindings, still retain raw pointers (GL-001/GL-002). A live-VM registry guards callback paths, but these mechanisms do not prove every closure or shutdown path safe. See the [validated issue ledger](newdocs/issues.md).
+**4. Lifetime safety and known gaps.** Instance userdata stores an `ObjectID` and resolves it through the live object database (`src/core/gl_runtime.h`). The domain migration replaces retained `WaitForChild`/NetworkService pointers with live identity resolution and makes callback/wait references owner-specific. Focused regressions pass; broader native lifetime qualification remains open (GL-001/GL-002). See the [validated issue ledger](newdocs/issues.md).
 
 ## Node and class catalog
 
@@ -635,7 +635,7 @@ godot-cpp/, luau/          Dependencies (submodules)
 
 ## Known limitations
 
-- **One VM per script:** a `ModuleScript` required by two scripts does not share state between them.
+- **Shared-domain migration:** module/global sharing and cancellation semantics changed; see [compatibility and remaining qualification gaps](newdocs/shared-domains-validation.md). No measured performance claim is made.
 - **Self-hosted networking only:** no relay, no NAT traversal, no accounts, no official server browser. See [Security](#security-read-this-before-you-publish).
 - **The coordinator is single-machine:** worlds are local processes discovered through `user://` heartbeat files.
 - **`DataStoreService` is local JSON**, not cloud storage.

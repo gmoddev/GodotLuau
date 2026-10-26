@@ -2,7 +2,9 @@
 
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
-All entries are open. This file does not create upstream or GitHub issues.
+Historical evidence is preserved below. GL-001/GL-002 are resolved for their
+specific captures, and GL-014 is qualified for source integration. Other entries
+remain open. This file does not create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
 described implementation fact, not a reproduced crash/exploit. `Needs review`
@@ -18,8 +20,8 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
-| GL-001 | P1 | Verified lifetime hazard | WaitForChild closure retains raw Node pointer |
-| GL-002 | P1 | Verified lifetime hazard | NetworkService closures retain raw service pointers |
+| GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
+| GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
 | GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
 | GL-004 | P1 | Verified control gap; impact needs review | No explicit VM sandbox or execution/memory quotas found |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
@@ -31,9 +33,12 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
 | GL-012 | P2 | Verified history-loss behavior | Workflow attempts to delete older releases and tags |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
-| GL-014 | P2 | Design decision | Evaluate per-script versus per-domain VM ownership |
+| GL-014 | P2 | Source qualification complete | Conditionally ready; Windows/Linux builds, native Linux ASan and benchmarks |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Verified fork distribution gap | Enabled updater still downloads upstream packages |
+| GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
+| GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
+| GL-019 | P2 | Measured performance regression | Cached require and task create/cancel overhead exceed baseline |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -54,6 +59,22 @@ freeing the target across a frame, then invoking it from a surviving VM. Also
 test valid lookup, pending wait, timeout, and script shutdown. Define the stale
 target result and prove no native crash or abandoned coroutine.
 
+**Migration update (2026-10-26):** WaitForChild now resolves its receiver's
+ObjectID at invocation and records guarded waits with the domain host. The
+headless native fixture passed valid/pending/timeout paths, destruction while
+waiting and retained invocation after target destruction (returns nil), plus
+scene replacement. See [validation](shared-domains-validation.md). Kept open:
+the Godot adapter/executable were not sanitizer-instrumented and this does not
+establish universal binding lifetime safety. Original evidence above is historical.
+
+**Resolution (continuation qualification):** The full Linux engine, pinned
+bindings, adapter and Luau now run with ASan/LSan. Ten repetitions (80 native
+process results) cover the retained closure after target free, valid/pending/
+timeout cases, destruction while waiting, script cancellation and scene
+replacement. Windows Debug/Release pass the same native fixture. The stated
+capture's closure criteria are satisfied; GL-018 separately bounds Windows native
+sanitizer coverage. See [continuation evidence](shared-domains-validation.md#continuation-qualification-2026-10-26).
+
 ## GL-002: NetworkService method closures retain service pointers
 
 **Evidence:** `src/core/luau_api.h:2333-2353` captures `nsvc` and later calls
@@ -68,6 +89,21 @@ failure were not exercised; security triage is `needs_review`.
 type at invocation. Cover service destruction/replacement with a surviving script,
 stored getters and mutators, valid behavior, and pending callbacks. Review other
 captures separately rather than claiming this entry covers all bindings.
+
+**Migration update (2026-10-26):** NetworkService method closures now retain
+ObjectIDs and resolve the expected service type through GLNodeUpvalue. Native
+listen/network fixtures passed valid getters/mutators, retained GetPeerId and
+Disconnect after service destruction, yielding callbacks and cancellation of an
+outstanding response. Kept open for broader native adapter lifetime/sanitizer
+qualification; these focused results do not qualify every binding.
+
+**Resolution (continuation qualification):** Added live service replacement
+while a surviving script retains getters/mutators; stale methods cannot act on
+the replacement. A newly reproduced pending-invoke teardown failure is fixed by
+disconnecting/failing pending calls at active service exit. Windows Debug/Release
+and full Linux ASan/LSan lifecycle stress pass these paths. The stated capture's
+criteria are satisfied; this does not qualify every service binding. See
+[continuation evidence](shared-domains-validation.md#continuation-qualification-2026-10-26).
 
 ## GL-003: FileAccess global bypasses DataStore's role guard
 
@@ -209,6 +245,11 @@ revision and pinned dependencies; record compiler/configuration, source digest,
 binary hashes and required check results in release provenance. Remove committed
 archive reuse as a substitute for source builds.
 
+**Continuation:** Manual same-source Windows/Linux qualification builds and the
+explicit-input local package are recorded in the shared-domain validation report.
+The inherited release workflow still reuses its ZIP; GL-010 remains open for
+published release provenance and workflow correction.
+
 ## GL-011: Automated runtime qualification is missing from release gates
 
 **Evidence:** One tracked Actions workflow performs build/package/release steps
@@ -223,6 +264,11 @@ their absence was not proved. No runtime qualification was attempted here.
 bugs and supported configurations, including lifetime/reload, rejected RPCs,
 multiple peers/processes, and persistence failures. Add appropriate native
 sanitizer coverage and retain evidence. Keep docs-only checks lightweight.
+
+**Continuation:** Bounded cross-platform runtime runners, focused regressions and
+native Linux ASan/LSan evidence now exist under `tests/runtime`. They are manual
+qualification gates; the inherited release workflow still does not enforce them,
+so GL-011 remains open.
 
 ## GL-012: Release workflow deletes prior provenance references
 
@@ -253,19 +299,56 @@ bug and does not justify a sweeping rewrite.
 ownership/interfaces, preserve behavior, and measure build impact when claimed.
 Avoid mixing mechanical movement with unrelated runtime changes.
 
-## GL-014: Decide VM ownership using compatibility and measurements
+## GL-014: Shared execution domains — source qualification complete
 
 **Evidence:** Per-executable-script `L_main` at `luau_script.h:960`; require's
 registry cache at `1806-1828`; README explicitly documents isolated module state.
 
-**Classification:** Design decision. The model is real; calling it inherently
-wrong or too slow is not established. VM-per-domain may change shared state,
-failure isolation, resource accounting, callback ownership, and require behavior.
+**Original classification:** Design decision. The baseline model was real;
+calling it inherently wrong or too slow was not established.
 
-**Closure:** Record requirements, compare per-script/domain/Actor-like isolation,
-measure representative script-count memory/startup/scheduler costs, and select a
-model with a migration plan and require/reload/cancellation tests. Do not mark
-this as fixed merely by choosing the review's preference.
+**Implemented:** The owner explicitly requested migration on 2026-10-26.
+Implementation commit:
+[`521265c338fc890a0e30b9e8a556f6346baf7d00`](https://github.com/gmoddev/GodotLuau/commit/521265c338fc890a0e30b9e8a556f6346baf7d00).
+[ADR-001](adr-001-shared-execution-domains.md) compares per-script, per-domain,
+universal and Actor-like ownership and records compatibility before runtime edits.
+GLExecutionDomain owns the VM/cache/scheduler and script/module identities;
+GLDomainHost owns applicable Server/Client domains for the running scene/process.
+No per-executable VM or permanent legacy scheduler remains. Environments,
+sticky module failures, invalidation, shared state, shutdown, role boundaries and
+native callback ownership are described in [current architecture](current-architecture.md).
+
+**Executed evidence:** 35 production-core regressions pass in Windows MSVC
+Debug and ASan, including deep require/spawn dispatch after an ASan-discovered
+stack overflow was fixed. Actual GDExtension fixtures pass single-player,
+listen-host, dedicated server plus two clients, and editor-style two-client
+launch flags. They exercise native signals/remotes, script/module lifecycle,
+Instance value replication, identity and wrong-role checks. See exact commands,
+limits and artifact identity in [validation](shared-domains-validation.md), and
+the investigation history in [work log](shared-domains-work-log.md).
+
+**Status: OPEN for qualification.** Implementation and exercised functional
+acceptance are delivered. Representative old/new startup/memory/scheduler costs
+have not been measured; no performance or scalability claim is made. Linux,
+release/SCons packaging, a full graphical editor session, coordinator deployment
+and sanitizer-instrumented Godot/native adapters were not qualified. ENet
+`max channels: 0` teardown diagnostics occurred in a passing multi-process run;
+baseline attribution remains unresolved. Close only with linked qualification
+evidence and an explicit disposition of these remaining acceptance/proof gaps.
+GL-003 through GL-009 and GL-016 remain independent issues.
+
+**Continuation disposition (2026-10-26): CLOSED for the requested migration and
+source-qualification scope; CONDITIONALLY READY for source integration.** The
+historical open status above describes the initial report. Windows/Linux CMake
+and SCons Debug/Release, 36 core cases with repeated Debug/Release/
+ASan suites, and full Linux native ASan/LSan stress establish the exercised
+acceptance facts. Controlled old/new 10/100/1,000-script benchmarks show lower
+startup/RSS and slower cached require/task bookkeeping. The validation report
+records exact figures, build/package disposition, commands and limitations.
+Remaining independent engine, Windows sanitizer-host and performance follow-ups
+are GL-017/GL-018/GL-019; graphical editor/coordinator/production content remain
+unqualified. This closes neither production distribution nor unrelated issues,
+and does not authorize merging main or publishing binaries.
 
 ## GL-015: Establish asset-specific redistribution provenance
 
@@ -295,3 +378,55 @@ include disabling automatic updates or selecting verified, pinned fork releases.
 Cover all version/archive/hash/history/model endpoints as appropriate, preserve
 upstream attribution, verify failure paths, and distinguish inherited ZIPs from
 fork-built artifacts. A URL replacement alone does not establish provenance.
+
+## GL-017: Godot simultaneous-disconnect relay targets reset peers
+
+**Status: OPEN; reproduced external engine defect, P2 for source integration.**
+Godot 4.7.1 at `a13da4feb8d8aefc283c3763d33a2f170a18d541` reproduces
+zero-channel sends with two disconnects before a server poll, without loading
+GodotLuau. The full engine-only ASan/LSan probe also leaks 54 bytes (48+6).
+Relay-off isolates the engine notification; synchronous application sends add a
+second timing hazard, corrected here by deferred NetworkService callbacks.
+
+**Boundary:** Production engine relay remains enabled; diagnostics and failed
+leak gate remain visible. Ordered-close native stress isolates extension lifetime
+checks but does not fix this engine edge. No upstream issue/message was created.
+
+**Closure:** A separately reviewed Godot patch or verified engine version must
+pass the existing simultaneous-close probe with relay on, no diagnostics and
+ASan/LSan clean exit, then pass native two-client teardown. Preserve the exact
+engine/source reproduction in [validation](shared-domains-validation.md).
+
+## GL-018: Windows full-native sanitizer host remains unqualified
+
+**Status: OPEN; bounded qualification gap.** MSVC-instrumented adapter/bindings/
+Luau reaches functional PASS under stock Godot, then times out at exit. A
+registration-only inherited baseline and candidate both reproduce the timeout
+without any script/domain/network. Core ASan and normal Windows Debug/Release
+native fixtures pass; full native Linux ASan/LSan passes ordered lifecycle stress.
+
+**Closure:** Build a matching Windows Godot sanitizer host with compatible runtime
+and rerun registration plus native lifecycle fixtures with bounded clean exit.
+Do not label the current timeout as successful native coverage, infer all Windows
+bindings safe from Linux evidence, or suppress the failure.
+
+## GL-019: Shared-domain cached require and task overhead regresses
+
+**Status: OPEN; measured P2 performance tradeoff.** Three counterbalanced Linux
+Release trials at 1,000 scripts measure 100,000 cached requires at median
+129.327 ms baseline versus 194.723 ms shared, and 32,000 create/cancel pairs at
+7.803 versus 19.973 ms. Startup/RSS improve substantially in that workload.
+Source trace identifies source/path construction before the shared cache lookup,
+plus rooted owner/task records and deferred safe reaping. Exact cost fractions
+and isolated scheduler CPU time are not established.
+
+**Correction already made:** A much larger pilot cancellation regression came
+from unconditional native scene/guard scans; a registered-native-wait bit removes
+irrelevant scans while preserving actual wait cleanup. Final figures above are
+after that correction, not the failing pilot.
+
+**Closure:** Profile cache/task paths, optimize only demonstrated costs while
+preserving source invalidation/owner guarantees, and repeat the controlled
+benchmark/regressions. Add a scheduler-only CPU measurement if making a scheduler
+speed claim. [Raw data](evidence/shared-domains-benchmark-2026-10-26.json) and
+[method/limits](shared-domains-validation.md) are retained.

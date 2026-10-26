@@ -154,13 +154,13 @@ public:
         std::vector<LuaCB> snap = list;   // copia defensiva: un callback puede conectar/desconectar
         for (size_t i = 0; i < snap.size(); i++) {
             LuaCB& cb = snap[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
             if (cb.once) for (auto& o : list) if (o.ref == cb.ref) o.active = false;   // :Once antes de invocar
             lua_State* th = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
                 lua_xmove(cb.main_L, th, 1);
-                gl_check_resume(th, lua_resume(th, nullptr, 0));
+                gl_check_resume(th, GLResume(th, nullptr, 0));
             } else lua_pop(cb.main_L, 1);
             lua_pop(cb.main_L, 1);
         }
@@ -463,8 +463,8 @@ private:
     void _fire(std::vector<LuaCallback>& list, int type, int kc, int state,
                Vector3 pos, Vector3 delta, bool game_proc = false) {
         for (int i=(int)list.size()-1; i>=0; --i) {
-            auto& cb = list[i];
-            if (!cb.active || !gl_state_alive(cb.main_L)) { list.erase(list.begin()+i); continue; }
+            auto cb = list[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { list.erase(list.begin()+i); continue; }
             lua_State* th = lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.main_L, -1)) {
@@ -477,7 +477,7 @@ private:
                 uis_push_vec3(th, pos.x,   pos.y,   pos.z);   lua_setfield(th, -2, "Position");
                 uis_push_vec3(th, delta.x, delta.y, delta.z); lua_setfield(th, -2, "Delta");
                 lua_pushboolean(th, game_proc);  // 2do argumento: gameProcessed
-                gl_check_resume(th, lua_resume(th, nullptr, 2));
+                gl_check_resume(th, GLResume(th, nullptr, 2));
             } else lua_pop(cb.main_L, 1);
             lua_pop(cb.main_L, 1);
         }

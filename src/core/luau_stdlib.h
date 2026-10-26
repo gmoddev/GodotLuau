@@ -3,17 +3,21 @@
 
 // ════════════════════════════════════════════════════════════════════
 //  GodotLuau stdlib — services implemented in pure Lua.
-//  Runs at the start of each ScriptNodeBase before the user's script.
+//  Runs once per Server/Client execution domain before user scripts.
 //  Services are stored in _G["__SVC_ServiceName"] so that
 //  game:GetService() can find them without a C++ node.
 ////
 //  GodotLuau stdlib — servicios implementados en Lua puro.
-//  Se ejecuta al inicio de cada ScriptNodeBase antes del script del usuario.
+//  Se ejecuta una vez por dominio Server/Client antes de los scripts del usuario.
 //  Los servicios se guardan en _G["__SVC_NombreServicio"] para que
 //  game:GetService() los encuentre sin necesidad de un nodo C++.
 // ════════════════════════════════════════════════════════════════════
 
 static const char* LUAU_STDLIB_CODE = R"LUAU(
+
+-- Trusted bootstrap captures this hook before any gameplay environment exists.
+local DomainSpawn = _GLDomainSpawn
+_GLDomainSpawn = nil
 
 -- ══════════════════════════════════════════════════════════════════════
 --  class(base) — Roblox-style OOP inheritance with setmetatable
@@ -351,43 +355,48 @@ end
 -- `tween.Completed:Wait()` moria — es justo lo que hace la pantalla de carga de
 -- un place normal (234 errores en el place de prueba).
 function _gl_signal()
-    local cbs = {}
-    local sig = {}
-    local function add(fn, once)
-        if type(fn) ~= "function" then return { Connected = false, Disconnect = function() end } end
-        local entry = { fn = fn, once = once, alive = true }
-        table.insert(cbs, entry)
-        local conn = { Connected = true }
-        function conn:Disconnect()
-            self.Connected = false
-            entry.alive = false
+    local Entries = {}
+    local Signal = {}
+    local function Add(Fn, Once)
+        if type(Fn) ~= "function" then return {Connected = false, Disconnect = function() end} end
+        local Run, Release, IsAlive = _GLBindCallback(Fn)
+        local Entry = {Run = Run, Release = Release, IsAlive = IsAlive, Once = Once, Alive = true}
+        local Connection = {}
+        function Connection:Disconnect()
+            Entry.Alive = false
+            Release()
         end
-        conn.disconnect = conn.Disconnect
-        return conn
+        Connection.disconnect = Connection.Disconnect
+        setmetatable(Connection, {__index = function(_, Key)
+            if Key == "Connected" then return Entry.Alive and IsAlive() end
+        end})
+        table.insert(Entries, Entry)
+        return Connection
     end
-    function sig:Connect(fn) return add(fn, false) end
-    function sig:Once(fn)    return add(fn, true) end
-    function sig:Wait()
-        local done, out = false, nil
-        add(function(...) done = true; out = table.pack(...) end, true)
-        while not done do task.wait() end
-        return table.unpack(out, 1, out.n)
+    function Signal:Connect(Fn) return Add(Fn, false) end
+    function Signal:Once(Fn) return Add(Fn, true) end
+    function Signal:Wait()
+        local Done, Values = false, nil
+        Add(function(...) Done = true; Values = table.pack(...) end, true)
+        while not Done do task.wait() end
+        return table.unpack(Values, 1, Values.n)
     end
-    function sig:Fire(...)
-        for i = #cbs, 1, -1 do
-            local e = cbs[i]
-            if not e.alive then
-                table.remove(cbs, i)
-            else
-                if e.once then e.alive = false; table.remove(cbs, i) end
-                task.spawn(e.fn, ...)
+    function Signal:Fire(...)
+        local Snapshot = {}
+        for _, Entry in ipairs(Entries) do Snapshot[#Snapshot + 1] = Entry end
+        for _, Entry in ipairs(Snapshot) do
+            if Entry.Alive and Entry.IsAlive() then
+                if Entry.Once then Entry.Alive = false end
+                Entry.Run(...)
+                if Entry.Once then Entry.Release() end
             end
         end
+        for Index = #Entries, 1, -1 do
+            if not Entries[Index].Alive or not Entries[Index].IsAlive() then table.remove(Entries, Index) end
+        end
     end
-    sig.connect = sig.Connect
-    sig.once    = sig.Once
-    sig.wait    = sig.Wait
-    return sig
+    Signal.connect, Signal.once, Signal.wait = Signal.Connect, Signal.Once, Signal.Wait
+    return Signal
 end
 
 local TweenService = {}
@@ -546,7 +555,7 @@ function CollectionService:AddTag(instance, tag)
     if not _ccs_inst_tags[instance] then _ccs_inst_tags[instance] = {} end
     _ccs_inst_tags[instance][tag] = true
     if _ccs_listeners["InstanceTagged:" .. tag] then
-        for _, fn in ipairs(_ccs_listeners["InstanceTagged:" .. tag]) do pcall(fn, instance) end
+        _ccs_listeners["InstanceTagged:" .. tag]:Fire(instance)
     end
 end
 
@@ -555,7 +564,7 @@ function CollectionService:RemoveTag(instance, tag)
     if _ccs_tags[tag] then _ccs_tags[tag][instance] = nil end
     if _ccs_inst_tags[instance] then _ccs_inst_tags[instance][tag] = nil end
     if _ccs_listeners["InstanceUntagged:" .. tag] then
-        for _, fn in ipairs(_ccs_listeners["InstanceUntagged:" .. tag]) do pcall(fn, instance) end
+        _ccs_listeners["InstanceUntagged:" .. tag]:Fire(instance)
     end
 end
 
@@ -579,22 +588,15 @@ function CollectionService:GetTags(instance)
     return result
 end
 
-function CollectionService:GetInstanceAddedSignal(tag)
-    return {
-        Connect = function(_, fn)
-            _ccs_listeners["InstanceTagged:" .. tag] = _ccs_listeners["InstanceTagged:" .. tag] or {}
-            table.insert(_ccs_listeners["InstanceTagged:" .. tag], fn)
-        end
-    }
+local function GetTagSignal(Key)
+    if not _ccs_listeners[Key] then _ccs_listeners[Key] = _gl_signal() end
+    return _ccs_listeners[Key]
 end
-
+function CollectionService:GetInstanceAddedSignal(tag)
+    return GetTagSignal("InstanceTagged:" .. tag)
+end
 function CollectionService:GetInstanceRemovedSignal(tag)
-    return {
-        Connect = function(_, fn)
-            _ccs_listeners["InstanceUntagged:" .. tag] = _ccs_listeners["InstanceUntagged:" .. tag] or {}
-            table.insert(_ccs_listeners["InstanceUntagged:" .. tag], fn)
-        end
-    }
+    return GetTagSignal("InstanceUntagged:" .. tag)
 end
 
 _G["__SVC_CollectionService"] = CollectionService
@@ -845,15 +847,19 @@ ContextActionService.__index = ContextActionService
 local _cas_actions = {}
 
 function ContextActionService:BindAction(name, func, createButton, ...)
-    _cas_actions[name] = { func = func, keys = {...}, button = createButton }
+    self:UnbindAction(name)
+    local Run, Release, IsAlive = _GLBindCallback(func)
+    _cas_actions[name] = { func = func, keys = {...}, button = createButton, Run = Run, Release = Release, IsAlive = IsAlive }
 end
 
 function ContextActionService:UnbindAction(name)
+    if _cas_actions[name] then _cas_actions[name].Release() end
     _cas_actions[name] = nil
 end
 
 function ContextActionService:BindActionAtPriority(name, func, createButton, priority, ...)
-    _cas_actions[name] = { func = func, keys = {...}, button = createButton, priority = priority }
+    self:BindAction(name, func, createButton, ...)
+    _cas_actions[name].priority = priority
 end
 
 function ContextActionService:GetBoundActionInfo(name)
@@ -866,9 +872,9 @@ end
 
 function ContextActionService:CallFunction(name, state, inputObject)
     local action = _cas_actions[name]
-    if action and action.func then
-        pcall(action.func, name, state, inputObject)
-    end
+    if action and action.IsAlive() then
+        action.Run(name, state, inputObject)
+    elseif action then self:UnbindAction(name) end
 end
 
 function ContextActionService:SetTitle(name, title) end
@@ -991,18 +997,8 @@ local _ts_callbacks = {}
 -- que el coordinador ya escribia, asi que un mundo puede mandarte a otro sin
 -- hablar con nadie. placeId se acepta como PUERTO destino; si es nil o 0, va al
 -- mundo con menos gente que no sea este.
-local _ts_llegada = {}
-
 TeleportService.TeleportInitFailed = { Connect = function(_, fn) end }
-TeleportService.LocalPlayerArrivedFromTeleport = {
-    Connect = function(_, fn)
-        table.insert(_ts_llegada, fn)
-        return { Connected = true, Disconnect = function(self)
-            self.Connected = false
-            for i, f in ipairs(_ts_llegada) do if f == fn then table.remove(_ts_llegada, i) break end end
-        end }
-    end
-}
+TeleportService.LocalPlayerArrivedFromTeleport = _gl_signal()
 
 function TeleportService:Teleport(placeId, player, teleportData, customLoadingScreen)
     player = player or (game:GetService("Players").LocalPlayer)
@@ -1061,7 +1057,7 @@ task.spawn(function()
     while true do
         if _GL_NET and _GL_NET.call("net_teleport_arrived") then
             local d = TeleportService:GetLocalPlayerTeleportData()
-            for _, fn in ipairs(_ts_llegada) do task.spawn(fn, d) end
+            TeleportService.LocalPlayerArrivedFromTeleport:Fire(d)
         end
         task.wait(1)
     end
@@ -1807,7 +1803,8 @@ table.freeze = table.freeze or function(t)
     setmetatable(t, mt)
     return t
 end
-table.isfrozen = table.isfrozen or function(t)
+)LUAU"
+R"LUAU(table.isfrozen = table.isfrozen or function(t)
     local mt = getmetatable(t)
     return mt ~= nil and mt.__frozen == true
 end
@@ -1909,7 +1906,8 @@ function NumberSequenceKeypoint.new(t, v, envelope)
     return setmetatable({ Time=t, Value=v, Envelope=envelope or 0 }, NumberSequenceKeypoint)
 end
 
-NumberSequence = {}
+)LUAU"
+R"LUAU(NumberSequence = {}
 NumberSequence.__index = NumberSequence
 function NumberSequence.new(v)
     if type(v) == "number" then
@@ -2070,35 +2068,7 @@ R"LUAU(
 -- ══════════════════════════════════════════════════════════════════════
 
 -- ── RBXScriptSignal reutilizable (para respaldar servicios) ───────────
-local function _mkSignal()
-    local sig = { _h = {} }
-    function sig:Connect(fn)
-        local c = { Connected = true, _fn = fn }
-        function c:Disconnect()
-            c.Connected = false
-            for i, x in ipairs(sig._h) do if x == c then table.remove(sig._h, i) break end end
-        end
-        table.insert(sig._h, c)
-        return c
-    end
-    function sig:Once(fn)
-        local c
-        c = sig:Connect(function(...) c:Disconnect() fn(...) end)
-        return c
-    end
-    function sig:Wait()
-        local co = coroutine.running()
-        local c
-        c = sig:Connect(function(...) c:Disconnect() pcall(task.spawn, co, ...) end)
-        return coroutine.yield()
-    end
-    function sig:Fire(...)
-        local snap = {}
-        for _, c in ipairs(sig._h) do snap[#snap + 1] = c end
-        for _, c in ipairs(snap) do if c.Connected then task.spawn(c._fn, ...) end end
-    end
-    return sig
-end
+local function _mkSignal() return _gl_signal() end
 
 -- ── Datatypes que faltaban ────────────────────────────────────────────
 if not Ray then
@@ -2213,9 +2183,7 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
     local seen = {}        -- "topic|archivo" -> ultimo seq ya entregado
     local polling = false
     local S = {}
-    -- Un buzon por VM, no por proceso: cada script tiene su propia VM y al leer
-    -- salta el suyo, asi que dos scripts del mismo servidor con buzon compartido
-    -- no se verian entre ellos.
+    -- One mailbox per domain VM; local delivery shares its domain subscriptions.
     local _vmid = tostring((_GL_VM_ID and _GL_VM_ID()) or 0)
 
     local function _box(topic, who)
@@ -2228,9 +2196,7 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
     local function _deliver(topic, msg)
         local l = topics[topic]
         if not l then return end
-        local snap = {}
-        for _, c in ipairs(l) do snap[#snap + 1] = c end
-        for _, c in ipairs(snap) do if c.Connected then task.spawn(c._cb, msg) end end
+        l:Fire(msg)
     end
     -- Lee los buzones de las OTRAS instancias y entrega lo que no se haya visto.
     local function _poll()
@@ -2242,7 +2208,8 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
                 local raw = _FileAccess.read("user://" .. fname)
                 local ok, list = pcall(function() return _JSON and _JSON.decode(raw) end)
                 if ok and type(list) == "table" then
-                    local mark = topic .. "|" .. fname
+)LUAU"
+R"LUAU(                    local mark = topic .. "|" .. fname
                     -- Por SECUENCIA, no por indice: el buzon se recorta y los
                     -- indices se desplazarian (se perderian o repetirian mensajes).
                     local last = seen[mark]
@@ -2264,7 +2231,7 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
     local function _ensure_polling()
         if polling then return end
         polling = true
-        task.spawn(function()
+        DomainSpawn(function()
             while true do
                 task.wait(0.5)
                 pcall(_poll)
@@ -2273,16 +2240,10 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
     end
 
     function S:SubscribeAsync(topic, cb)
-        topics[topic] = topics[topic] or {}
-        local conn = { Connected = true, _cb = cb }
-        function conn:Disconnect()
-            conn.Connected = false
-            local l = topics[topic]
-            if l then for i, c in ipairs(l) do if c == conn then table.remove(l, i) break end end end
-        end
-        table.insert(topics[topic], conn)
+        if not topics[topic] then topics[topic] = _gl_signal() end
+        local Connection = topics[topic]:Connect(cb)
         _ensure_polling()
-        return conn
+        return Connection
     end
     function S:PublishAsync(topic, message)
         local msg = { Data = message, Sent = os.time() }
