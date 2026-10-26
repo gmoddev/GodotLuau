@@ -22,7 +22,7 @@ cmake --build $Build --target ExecutionDomainTests GodotLuauAdapter --parallel 4
 ctest --test-dir $Build --output-on-failure --timeout 30
 ```
 
-`ExecutionDomainTests` runs 36 cases and exits nonzero on any failure. Its fake
+`ExecutionDomainTests` runs 39 cases and exits nonzero on any failure. Its fake
 numeric module resolver isolates the actual core from Godot; native identity,
 role and wire behavior are covered by the separate integration fixtures.
 The optional adapter target builds all production core `.cpp` files and their
@@ -203,3 +203,76 @@ the descriptor, current GodotLuau runtime assets/licenses and supplied libraries
 excludes inherited binaries/updater, checks every descriptor resource is included,
 records SHA256s and the normalized native source fingerprint, then checks CRC and hashes.
 This is a local test archive, never an authorized release workflow invocation.
+
+## GL-019 profiling and optimization comparison
+
+The measurement-harness commit `0427a3560ac01b191aa7dcc8b2c144f8eccda2dd`
+has the same production runtime as pre-GL-019 main
+`aa5400321b8f838a75de8d2b4005b0c5165dab34`. Runtime optimization commit
+`1756cc2600e5a59ea948e69a684f5abd93e32229` contains the candidate. Build the
+harness revision first, preserve its binaries, then update to the candidate and
+incrementally build in the same Release tree. Both use the same pinned vendors.
+
+```sh
+cmake -S /work/source/tests/runtime -B /work/builds/linux-release \
+  -DGL_BUILD_HOT_PATH_BENCHMARKS=ON
+cmake --build /work/builds/linux-release \
+  --target GodotLuauAdapter HotPathBenchmarks --parallel 4
+# Before updating production source:
+cp /work/builds/linux-release/godot_luau.so /work/artifacts/gl019/pre-gl019.so
+cp /work/builds/linux-release/HotPathBenchmarks /work/artifacts/gl019/pre-hotpaths
+# Update to the candidate, rebuild the same targets, preserve post-gl019.so/post-hotpaths.
+python3 /work/source/tests/runtime/RunRequireBenchmark.py \
+  --godot /work/tools/Godot_v4.7.1-stable_linux.x86_64 \
+  --baseline /work/artifacts/gl019/pre-gl019.so \
+  --extension /work/artifacts/gl019/post-gl019.so \
+  --output /work/artifacts/gl019/require-final --repeat 7
+python3 /work/source/tests/runtime/RunHotPathBenchmarks.py \
+  --baseline /work/artifacts/gl019/pre-hotpaths \
+  --candidate /work/artifacts/gl019/post-hotpaths \
+  --output /work/artifacts/gl019/micro-comparison.jsonl --repeat 11
+# Sensitivity run: --counts 10000 --repeat 21, using a separate output file.
+python3 /work/source/tests/runtime/RunQualification.py \
+  --godot /work/tools/Godot_v4.7.1-stable_linux.x86_64 \
+  --baseline /work/artifacts/gl019/pre-gl019.so \
+  --extension /work/artifacts/gl019/post-gl019.so \
+  --output /work/artifacts/gl019/population-comparison --repeat 7 --timeout 120
+```
+
+RequireBenchmark captures the native module before timing one million cached
+calls, separating require from hierarchy lookup. Cold initialization is timed
+separately. The population fixture is unchanged. Its generic labels `Baseline`
+and `Shared` mean pre/post GL-019 in this comparison; in the separate fresh
+original/shared baseline file they mean per-script/shared architectures.
+
+HotPathBenchmarks links the production core and pinned Luau. It separately times
+defer/delay creation, cancellation, reaping, resume/yield/completion, idle pending
+ticks, owner cancellation, manual coroutines, concurrent require and shutdown.
+Concurrent start includes owner creation/compilation. It reports monotonic elapsed
+ms, process CPU ms (`std::clock`), C++ new-call counts and requested allocation
+bytes. These counters exclude Luau/Godot malloc, do not measure peak/live bytes,
+and exist only in the optional test executable. Native scheduler CPU can differ
+from this single-threaded core benchmark; headless frame pacing is not CPU proof.
+Both runners counterbalance trial order, preserve every row and bound children.
+
+Native perf sampling ran on linuxbox, scoped to only this task's container cgroup.
+No perf settings or packages changed. On the host, obtain the group's relative
+path from `/proc/<docker-inspect-State.Pid>/cgroup`, then run in parallel:
+
+```sh
+perf record -a -e cycles:u -G "$Group" -F 997 --call-graph dwarf \
+  -o "$Artifacts/pre-require.perf" -- sleep 25
+perf stat -a -e task-clock,cycles,instructions -G "$Group" \
+  -o "$Artifacts/pre-require-stat.txt" -- sleep 25
+# During that interval, docker exec the require runner with --calls 3000000 --repeat 5.
+# Repeat for the candidate with its own output paths and a 15-second capture.
+perf report -i "$Artifacts/pre-require.perf" --symfs "$Artifacts/symbols" \
+  --stdio --children --call-graph none --sort symbol,dso
+```
+
+The task-owned symbol root maps `symbols/work` to `/opt/codex/godotluau`, allowing
+host perf to resolve container `/work/...` extension paths. The official Godot
+binary is stripped; inclusive caller costs overlap. Profiled runs are separate
+from the unprofiled latency trials. Raw data, commands, identities, accepted/
+rejected candidates and qualification are in the
+[GL-019 report](../../newdocs/shared-domains-validation.md#gl-019-optimization-2026-10-26).

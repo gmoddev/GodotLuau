@@ -515,3 +515,22 @@ GL-014 remains open. Other issue statuses are unchanged.
   the qualified full Linux engine/bindings/adapter/Luau ASan+LSan combination
   passes 24 ordered-close process results across three repetitions. GL-017's
   separate engine failure evidence and GL-018's Windows native limitation remain.
+- Final captured-module validation uses the final runtime binary, not only the
+  intermediate require-only candidate: median 1,054.330 → 163.508 ms per million
+  calls, with first initialization unchanged at about 13 us. Runtime commit is
+  `1756cc2600e5a59ea948e69a684f5abd93e32229`; harness commit is
+  `0427a3560ac01b191aa7dcc8b2c144f8eccda2dd`. Final Release binary SHA256 is
+  `d9398aed311dab4e4493b022fc0df8e4ed81e569e778d562aeb3695248544883`.
+  Native source fingerprint matches all workers:
+  `40e2cbadfae3cef7fdc39e17d6b9feec94f635aa5e8926614bdcdb27c324045d`.
+- Preserved five new raw measurement sets and compact qualification metadata
+  alongside existing evidence. Native perf files remain task-owned worker
+  artifacts, not committed binaries/logs. GL-019 is resolved for the requested
+  measured optimization scope; retained task-creation costs are explicit, with
+  no universal speedup or Windows full-native sanitizer claim. No release or
+  main merge is part of this branch publication.
+- Stopped only the task-owned Linux container after confirming no active builds,
+  tests or profilers remained. Source, caches, binaries, perf data and logs remain
+  under `/opt/codex/godotluau`; unrelated containers remained healthy. Final
+  publication targets only `perf/gl-019-hot-paths`, retaining main at its verified
+  baseline and preserving the historical shared-domain branch.
