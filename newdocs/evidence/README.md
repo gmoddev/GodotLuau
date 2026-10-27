@@ -1,9 +1,16 @@
 # Shared-domain qualification evidence
 
 [`gl012-release-retention-2026-10-27.json`](gl012-release-retention-2026-10-27.json)
-records the unmerged retention branch's 12 mocked/read-only tests, parsed workflow
+records the retention branch's 12 mocked/read-only tests, parsed workflow
 settings, missing-token CLI rejection, source hashes and explicit publishing/
-provenance limitations. No real release/tag operation or workflow dispatch occurs.
+provenance limitations, plus separate fresh main integration checks. No real
+release/tag operation or workflow dispatch occurs.
+
+[`gl016-updater-isolation-2026-10-27.json`](gl016-updater-isolation-2026-10-27.json)
+records the updater-isolation branch: Windows/Linux actual headless
+editor initialization, 596 checks and 42 rejected operations per platform, sentinel
+file preservation, two localhost optional-data downloads and source/log hashes.
+It establishes a closed runtime channel, not a qualified enabled release channel.
 
 [`gl020-main-integration-2026-10-27.json`](gl020-main-integration-2026-10-27.json)
 records the normal GL-020 merge, complete qualified-tree identity, two fresh

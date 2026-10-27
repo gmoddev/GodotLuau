@@ -211,9 +211,13 @@ stack and future integration plans; it is not the active persistence authority.
 ## Editor and release path
 
 The updater plugin includes configuration, autocomplete/model management, import
-tools, and update/restart behavior. Its URLs still target `Pimpoli/GodotLuau`
-(`addons/GodotLuauUpdater/plugin.gd:4-39`), and `project.godot` enables the plugin.
-Fork source changes do not automatically change its distribution source.
+tools, and guarded update/restart code. Inherited URLs still name
+`Pimpoli/GodotLuau`, but `RuntimeUpdatesAllowed()` is literal false and every
+runtime replacement entry/completion and cleanup/rollback/restart path rejects
+before side effects. The enabled plugin retains editor tools and explicit
+optional JSON data downloads, with visible disabled-runtime controls. There is
+no qualified production channel or user-setting override. See the
+[fork updater policy](fork-updater-isolation.md).
 
 The inherited `.github/workflows/build-release.yml` is disabled during fork
 integration: only manual dispatch remains, both jobs have literal false admission

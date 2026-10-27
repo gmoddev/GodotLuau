@@ -466,6 +466,18 @@ Cover all version/archive/hash/history/model endpoints as appropriate, preserve
 upstream attribution, verify failure paths, and distinguish inherited ZIPs from
 fork-built artifacts. A URL replacement alone does not establish provenance.
 
+**Branch implementation (2026-10-27): IMPLEMENTED AND FUNCTIONALLY VERIFIED on
+`maintenance/gl-016-fork-updater`; NOT MERGED.** Runtime checks/download/apply,
+callbacks, history, unverified backup restore, staging/swap/restart and destructive
+startup cleanup fail closed before side effects. Enabled editor tools and explicit
+model/custom-autocomplete downloads remain available. Both Windows/Linux actual
+headless editor fixtures pass 596 assertions across 42 blocked operations and two
+localhost optional-data downloads, preserving installed files/backups/metadata.
+See [policy/recovery/limits](fork-updater-isolation.md) and
+[evidence](evidence/gl016-updater-isolation-2026-10-27.json). Main still requires
+separate authorized integration; no fork production update channel or distribution
+provenance is established. Original evidence and GL-010/011 remain independent.
+
 ## GL-017: Godot simultaneous-disconnect relay targets reset peers
 
 **Status: OPEN; reproduced external engine defect, P2 for source integration.**
