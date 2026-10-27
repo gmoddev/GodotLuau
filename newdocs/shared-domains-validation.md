@@ -44,9 +44,27 @@ build also passed 39 cases but is not substituted for MSVC evidence. Original
 attempt directories/logs are preserved; no failing production test was retried
 without a concrete harness correction.
 
-Hosted execution is pending the first branch push. Local equivalents establish
-only the configurations above, not hosted-runner success. Final observed hosted
-results and source/run identities will be appended here after execution.
+The first hosted push at implementation `2f1c8199e5b47c9cfad4304f21b785317796ed4d`
+completes successfully in [Actions run 40475254435](https://github.com/gmoddev/GodotLuau/actions/runs/40475254435),
+2026-10-27 08:41:22–08:42:31 UTC. Both jobs pass recursive pinned checkout,
+configuration, compilation, exact CTest discovery, all 39 cases and report
+validation. `Core (Windows, Debug)` uses MSVC 19.44.35229.0/Visual Studio 17 2022;
+`Core (Linux, Debug)` uses GCC 13.3.0/Ninja. This is actual hosted execution,
+separate from the equivalent worker runs. No hosted retry or workflow defect
+correction is needed. Diagnostic uploads succeed: Windows artifact 12721115200
+(9776 bytes), Linux artifact 12719944156 (11214 bytes); both expire after seven
+days. The [manifest](evidence/gl011-core-ci-2026-10-27.json) retains run/job IDs,
+artifact digests, source/report hashes and limits beyond that retention period.
+The subsequent evidence-only commit changes no workflow, checker, test, core
+source or dependency input; it does not claim another hosted run.
+
+Configuration semantics follow [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
+and [CTest's documented discovery, no-tests and JUnit options](https://cmake.org/cmake/help/latest/manual/ctest.1.html).
+All 65 normalized native inputs remain at fingerprint
+`a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd`, matching main
+and both workers. Read-only Actions queries observe zero push runs at both
+post-integration main checkpoints (`73634b7e41081d5f149012b0df055949c6180bbe` and
+`f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`); the publisher was never dispatched.
 
 GL-011 stays **OPEN; IMPLEMENTED — REVIEW PENDING** for this first milestone.
 Native Godot integration, multiplayer/lifecycle fixtures, security rejection,
@@ -57,6 +75,8 @@ qualification are not resolved or executed by this workflow.
 The smallest next task after review is to integrate this independent core gate
 without enabling distribution. Adding native fixture CI or a release provenance
 gate is a separate scope.
+
+## Original shared-domain qualification
 
 Date: 2026-10-26. Starting revision:
 `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.

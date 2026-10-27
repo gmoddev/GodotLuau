@@ -313,7 +313,7 @@ published release provenance and workflow correction.
 
 ## GL-011: Automated runtime qualification is missing from release gates
 
-**Evidence:** One tracked Actions workflow performs build/package/release steps
+**Original evidence:** One tracked Actions workflow performs build/package/release steps
 without runtime tests, multiplayer integration, or sanitizers. `test_chat/` has a
 small scene/script fixture; it is not executed by the workflow.
 
@@ -338,6 +338,9 @@ Recursive pinned checkout, bounded compilation and deadlines, explicit discovery
 and full completion checks reject missing/partial evidence. No new runtime or
 duplicate scheduler is introduced. Diagnostic artifacts exclude production
 binaries. See [commands, actual outcomes and limitations](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
+Hosted [run 40475254435](https://github.com/gmoddev/GodotLuau/actions/runs/40475254435)
+passes both Windows MSVC and Linux GCC Debug jobs, 39 cases each, including
+discovery/report checks and diagnostic uploads. The branch remains unmerged.
 The release workflow stays disabled. Native Godot, multiplayer/lifecycle/security
 fixtures, sanitizers, persistence failures and release enforcement remain manual
 or independently incomplete. This milestone does not close GL-011 or qualify
@@ -345,7 +348,7 @@ GL-020's deferred adversarial cases.
 
 ## GL-012: Release workflow deletes prior provenance references
 
-**Evidence:** The final release step lists up to 100 releases and attempts
+**Original evidence:** The final release step lists up to 100 releases and attempts
 `gh release delete --yes --cleanup-tag` on every tag except the current release.
 
 **Consequence/limits:** This can remove useful published assets and source tags,
@@ -464,7 +467,7 @@ asset whose redistribution rights cannot be established.
 
 ## GL-016: Fork updater still installs from upstream
 
-**Evidence:** `addons/GodotLuauUpdater/plugin.gd:4-39` hardcodes Pimpoli's
+**Original evidence:** `addons/GodotLuauUpdater/plugin.gd:4-39` hardcodes Pimpoli's
 version, ZIP, hash, tag/history and model URLs. `project.godot:18` enables the
 plugin. Creating the GitHub fork does not change those endpoints.
 
