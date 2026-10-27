@@ -50,7 +50,7 @@ the inherited runtime already satisfies them. Baseline gaps link to
 - Every inbound RPC checks allowed receiver role, actual transport sender, and
   target authority before mutating state or relaying. Do not trust a payload's
   `who`, name, role, or owner claim. GL-006/008's endpoint-specific corrections
-  are documented in the [authority record](network-authority-validation.md);
+  are integrated into main and documented in the [authority record](network-authority-validation.md);
   animation authority remains GL-020.
 - Validate finite values, legal ranges/transitions, size, and rate before
   accepting gameplay input. Define which state is authoritative versus visual.

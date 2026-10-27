@@ -1002,9 +1002,10 @@ policy remains GL-007's separate scope.
 
 ## GL-006 / GL-008 security follow-up (2026-10-27)
 
-The dedicated `security/gl-006-008-rpc-authority` branch now implements and
-qualifies the endpoint-specific authority and trusted chat identity correction.
-It has not merged into main. The [authority record](network-authority-validation.md)
+The dedicated `security/gl-006-008-rpc-authority` branch first implemented and
+qualified the endpoint-specific authority and trusted chat identity correction.
+At that source-qualification checkpoint it had not merged into main. The
+[authority record](network-authority-validation.md)
 and [evidence manifest](evidence/gl006-008-qualification-2026-10-27.json) record
 the real ENet baseline reproduction, final implementation identity, 39-case core
 suites across six configurations and 90 passing native process results (50 new
@@ -1012,3 +1013,10 @@ security-fixture processes plus 40 existing regressions). Windows Debug/Release
 and Linux Debug/Release/full-native ASan/LSan are exercised. GL-017/018 remain
 bounded limitations; GL-020 records the independent animation authority gap.
 Shared-domain and GL-019 implementation files remain unchanged.
+
+Main subsequently integrated that exact qualified source through normal merge
+`2e69d8ac703d3f968e42054871511111ab8471be` without conflicts. See the
+[main authority integration record](network-authority-validation.md#main-integration-2026-10-27)
+and [separate integration manifest](evidence/gl006-008-main-integration-2026-10-27.json)
+for the six fresh core checks and 90 fresh native process results. The corrected
+networking endpoints are the current main baseline; GL-007 and GL-020 remain open.

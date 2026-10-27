@@ -1,11 +1,14 @@
 # GL-006 / GL-008 native authority qualification
 
 Date: 2026-10-27. Base main: `78d9664d10cede4f4dc7e7d4a93ddf1785c97ea0`.
-Working branch: `security/gl-006-008-rpc-authority`. Reproduction fixtures:
+Qualified branch (retained as history): `security/gl-006-008-rpc-authority` at
+`462969bd967bd26fcbeccdca1bd6ae60335347f4`. Main now integrates that source;
+see the [integration record](#main-integration-2026-10-27). Reproduction fixtures:
 `2f563e079ac289d6bba54af0232ee100c71cb37d`. Implementation and final fixtures:
 `b839ea4a6d1ce46cceef9eb4eb58a7b210ea56c6`.
 
-This record covers the named state/removal and chat entry points. It does not
+The original qualification below and subsequent integration cover the named
+state/removal and chat entry points. This record does not
 establish general multiplayer security, authenticated accounts, or movement
 anti-cheat. Shared Server/Client execution domains and GL-019 code are unchanged.
 
@@ -131,8 +134,8 @@ Luau SetAttribute string conversion is not a faithful Unicode observation channe
 
 ## Qualification scope and retained evidence
 
-**SECURITY FIXES QUALIFIED** for GL-006/008's stated endpoints on the dedicated
-branch. The following final-source gates passed:
+**Historical branch qualification: SECURITY FIXES QUALIFIED** for GL-006/008's
+stated endpoints. The following source-qualification gates passed before integration:
 
 | Platform/configuration | Core | Existing native regression | Security native fixture |
 | --- | --- | --- | --- |
@@ -159,7 +162,8 @@ Final commands, binary/result/log hashes, diagnostics and worker paths are in
 the [evidence manifest](evidence/gl006-008-qualification-2026-10-27.json). Native builds
 use the existing Windows worker caches and four-job Linux task container.
 No dependency/toolchain upgrades, release/updater execution, binary publication,
-main merge or upstream writes are part of this task.
+main merge or upstream writes were part of that qualification phase. Main source
+integration is recorded separately below.
 
 GL-017's independent ENet teardown diagnostic/leak remains open. Normal logs
 retain engine diagnostics; Linux full-native ASan/LSan uses the existing matching
@@ -174,3 +178,106 @@ also identifies GL-020: ANY_PEER animation receive/relay paths can change anothe
 puppet's animation. It does not reach the corrected position/health/removal or
 chat sinks, so it is not a prerequisite to closing these endpoint-specific
 findings. It prevents a general claim that all remote presentation is protected.
+
+## Main integration (2026-10-27)
+
+Starting local and remote main: `78d9664d10cede4f4dc7e7d4a93ddf1785c97ea0`.
+Qualified local and remote source: `462969bd967bd26fcbeccdca1bd6ae60335347f4`.
+Neither advanced before integration. One clean worktree and no active edit claims
+were present; main was the exact common ancestor. Review confirmed the three
+commits separate regression fixtures (`2f563e0`), implementation/focused coverage
+(`b839ea4`) and qualification/documentation (`462969b`). No extra source changes
+or dependency/build/workflow/updater modifications were present.
+
+Normal `git merge --no-ff` produced runtime main revision
+`2e69d8ac703d3f968e42054871511111ab8471be` without conflicts, retaining all three
+commits. Its entire tree equals the qualified source tree:
+`3ddb481b04cd36a28f006b03736a43ae2d9cc83d`. Subsequent integration edits are
+documentation/evidence only; the publication tip is the documentation commit
+immediately following this merge, identifiable in Git history. No history rewrite,
+squash, force push or behavioral conflict resolution occurred.
+
+Runtime, security fixtures and build code equal the qualified branch. All 86
+runtime/build/test files compared with the worker mirrors match after LF
+normalization; all 65 native inputs retain fingerprint
+`3f4e64b4477d228e9ed3580d5c054a4cc1f3d6d32abf53de842cf25daf78fd37`.
+Shared-domain, module-cache, environment, owner/cancellation and GL-019 core files
+are unchanged from pre-integration main; dependency pins and SConstruct are
+unchanged. Static inspection retains connected role/sender/target guards and RPC
+configuration, active server-assigned relay senders, live PlayerObject/session
+identity, original Variant validation, the 256-scalar policy, five-token burst/
+one-token-per-second refill, and accepted server echo. RemoteFunction ownership
+and ObjectID revalidation paths are preserved.
+
+### Fresh integrated-revision checks
+
+**INTEGRATED WITH QUALIFICATION LIMITATIONS.** Existing Windows worker caches and
+the four-CPU/10-GiB Linux task container were reused. Six incremental CMake core/
+adapter checks report no work; their compatible library hashes exactly match the
+qualified artifacts. This is fresh execution with retained binaries by source/
+build identity, not a claim of six clean rebuilds or a new full qualification.
+
+| Configuration | Fresh core | Fresh existing regression | Fresh security fixture |
+| --- | --- | --- | --- |
+| Windows Debug | 39 cases pass | 8 processes pass | 10 processes pass |
+| Windows Release | 39 cases pass | 8 processes pass | 10 processes pass |
+| Windows core ASan | 39 cases pass | Not claimed | Not claimed |
+| Linux Debug | 39 cases pass | 8 processes pass | 10 processes pass |
+| Linux Release | 39 cases pass | 8 processes pass | 10 processes pass |
+| Linux full-native ASan/LSan | 39 cases pass | 8 processes pass | 10 processes pass |
+
+All 90 native process results exit zero with PASS, including 50 actual-ENet
+security-fixture processes and 40 existing regression processes. Security runs
+exercise default RPC filtering and deliberately relaxed filtering for native
+handler rejection, state/removal/chat attacks against server and victim, malformed/
+oversized text, rate limits/refill, accepted identity echo, normal local/listen/
+dedicated behavior, disconnect/reconnect and invalidated/replaced PlayerObjects.
+Existing regressions retain Editor-style flags, module/cache/domain separation,
+callback/task cancellation, late-join replication and RemoteFunction teardown.
+Each configuration runs once; no historical stress or performance matrix repeats.
+
+The original source-qualification manifest and baseline failure artifacts are
+unchanged. Its evidence remains applicable within the preceding scope and limits;
+the fresh results above are recorded separately in the
+[main integration manifest](evidence/gl006-008-main-integration-2026-10-27.json).
+It preserves commands, per-group results/log hashes and matching library/source
+identities. Windows output is under
+`dockerbox:C:/Sandbox/Codex/Builds/GodotLuau/gl006-008-integration-2e69d8a` and
+`C:/Sandbox/Codex/Logs/GodotLuau/gl006-008-integration-{debug,release,asan}.log`.
+Linux output is under
+`linuxbox:/opt/codex/godotluau/artifacts/gl006-008-integration-2e69d8a`.
+No raw logs, binaries or archives enter Git.
+
+Runs use the documented `RunQualification.py --security` and separate
+`--teardown --coordinated-close` commands with new output directories and
+60-second child deadlines. Linux full-native ASan/LSan uses the existing matching
+minimal instrumented engine, `detect_leaks=1:halt_on_error=1`, a distinct report
+path and 90-second deadlines. Windows stays hidden/headless with crash-UI
+suppression and uses the existing compiler runtime DLL path for core ASan.
+No sanitizer report or GL-017 zero-channel diagnostic appears in the fresh groups.
+This does not resolve GL-017's independent simultaneous-close leak/diagnostic or
+GL-018's Windows full-native host gap; ordered final close remains explicit.
+
+### Publication, remaining limits and next task
+
+The hardened endpoint implementation is now the canonical main source baseline.
+GL-006/008 remain resolved within their documented scope and their source branch
+is retained at `462969bd967bd26fcbeccdca1bd6ae60335347f4`. The publication target
+is only `gmoddev/GodotLuau` main, via ordinary non-force push after these gates.
+Both new commit messages include `[skip ci]` to prevent the inherited destructive
+release workflow. No workflow/updater configuration, upstream repository, binary
+publication or GitHub Release changes. Main was unprotected and repository
+rulesets were empty at preflight; no publication restriction is bypassed.
+
+GL-007, GL-020, GL-017/018 and all capability/sandbox/HTTP, persistence, release/
+provenance/updater and asset limitations remain open. No graphical/coordinator/
+production-content or SCons packaging qualification is added. Original limits on
+forced numeric peer-ID collision, mixed application versions and malformed UDP
+framing remain. No general claim that all multiplayer RPCs are secure is made.
+
+The next bounded task is GL-020: `_relay_anim`/`_recv_anim` still use ANY_PEER and
+lack the role/sender checks before animation-cache mutation/application/relay.
+Enforce those boundaries and test actual wrong-peer rejection plus valid play,
+stop and late-join behavior. GL-007 remains a separate gameplay-authority design
+and semantic validation effort for movement/health/speed. Neither is implemented
+during this integration.

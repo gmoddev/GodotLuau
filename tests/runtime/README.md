@@ -2,7 +2,9 @@
 
 ## Network authority and chat security
 
-The security branch adds `NetworkSecurity.gd` through the existing runner:
+Main includes the qualified GL-006/008 `NetworkSecurity.gd` fixtures through the
+existing runner. The [integration record](../../newdocs/network-authority-validation.md#main-integration-2026-10-27)
+distinguishes fresh integration checks from the retained source-branch evidence:
 
 ```text
 python tests/runtime/RunQualification.py --godot <existing-Godot-4.7.1> --extension <candidate-library> --output <new-isolated-directory> --security --timeout 60

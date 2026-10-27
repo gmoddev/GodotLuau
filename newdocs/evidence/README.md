@@ -1,5 +1,12 @@
 # Shared-domain qualification evidence
 
+[`gl006-008-main-integration-2026-10-27.json`](gl006-008-main-integration-2026-10-27.json)
+records the normal main merge, qualified-tree identity, 86 matching worker source/
+build/test files, six fresh core executions and 90 fresh native process results.
+Exact cached library hashes match the qualified artifacts. The
+[integration record](../network-authority-validation.md#main-integration-2026-10-27)
+keeps fresh checks distinct from the preserved source qualification below.
+
 [`gl006-008-qualification-2026-10-27.json`](gl006-008-qualification-2026-10-27.json)
 records the dedicated security branch's source identity, six passing 39-case
 core configurations, 90 passing native process results, binary/result/log hashes,

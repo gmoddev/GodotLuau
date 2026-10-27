@@ -4,8 +4,8 @@ Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
 Historical evidence is preserved below. GL-001/GL-002 are resolved for their
 specific captures, GL-014 is integrated into main and source-qualified, and GL-019
-is optimized, qualified and integrated into main. On the security branch,
-GL-006/GL-008 are resolved for their qualified endpoints; GL-020 records a
+is optimized, qualified and integrated into main. GL-006/GL-008 are also integrated
+into main and resolved for their qualified endpoints; GL-020 records a
 separate animation authority gap. Other entries remain open. This file does not
 create upstream or GitHub issues.
 
@@ -28,9 +28,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
 | GL-004 | P1 | Verified control gap; impact needs review | No explicit VM sandbox or execution/memory quotas found |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
-| GL-006 | P1 | Resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
+| GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
-| GL-008 | P2 | Resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
+| GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
@@ -162,8 +162,8 @@ requests, and continued frame/scheduler progress against explicit budgets.
 
 ## GL-006: Server-origin RPC receivers omit authority checks
 
-**Status (2026-10-27): RESOLVED for state/2D-state/removal endpoints on
-`security/gl-006-008-rpc-authority`; not merged into main.** Original static
+**Status (2026-10-27): INTEGRATED AND RESOLVED for state/2D-state/removal endpoints
+in main through `2e69d8ac703d3f968e42054871511111ab8471be`.** Original static
 evidence and counterevidence are preserved below. The unchanged main runtime's
 state/removal effects were subsequently reproduced over actual ENet.
 
@@ -206,6 +206,8 @@ full-native ASan/LSan pass. See the [authority report](network-authority-validat
 and [immutable qualification manifest](evidence/gl006-008-qualification-2026-10-27.json).
 GL-007 and GL-020 remain independent; this closes the named position/health/
 removal entry points, not all player presentation or networking authority.
+The [main integration record](network-authority-validation.md#main-integration-2026-10-27)
+distinguishes fresh integrated-revision checks from retained branch qualification.
 
 ## GL-007: Character relay trusts supplied movement and health
 
@@ -227,8 +229,8 @@ movement. Trace authoritative consumers before claiming a gameplay exploit.
 
 ## GL-008: Chat display identity is client supplied
 
-**Status (2026-10-27): RESOLVED within the qualified chat/session scope on
-`security/gl-006-008-rpc-authority`; not merged into main.** The original finding
+**Status (2026-10-27): INTEGRATED AND RESOLVED within the qualified chat/session
+scope in main through `2e69d8ac703d3f968e42054871511111ab8471be`.** The original finding
 is preserved below; baseline ENet tests subsequently reproduced name spoofing.
 
 **Evidence:** `src/services/roblox_network.h:1854-1862` reads the transport peer
@@ -268,6 +270,8 @@ GL-006; see the [report](network-authority-validation.md) and
 Session identities are not authenticated accounts. Deterministic numeric peer-ID
 collision, mixed historical-client versions and malformed UDP framing were not
 forced. GL-017/018 and unrelated capability/security findings remain open.
+The [main integration record](network-authority-validation.md#main-integration-2026-10-27)
+retains these limits and records fresh focused checks without a new security phase.
 
 ## GL-009: DataStore loses updates and has no crash-atomic write protocol
 

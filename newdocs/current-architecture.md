@@ -1,10 +1,14 @@
 # Current architecture
 
-Current development baseline: optimized shared-domain `main`, following GL-019
-integration on 2026-10-26. Runtime merge:
-`6badbae4b467a5544ffd027a1c7d7bd505cd0d46`, identical to qualified source
-`perf/gl-019-hot-paths` at `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`.
-See the [GL-019 integration record](shared-domains-validation.md#gl-019-main-integration-2026-10-26).
+Current development baseline: optimized shared-domain `main` with GL-006/008's
+qualified state/removal/chat authority corrections, integrated on 2026-10-27.
+Security runtime merge `2e69d8ac703d3f968e42054871511111ab8471be` equals qualified
+source `462969bd967bd26fcbeccdca1bd6ae60335347f4`. See the
+[security integration record](network-authority-validation.md#main-integration-2026-10-27).
+The preceding GL-019 merge `6badbae4b467a5544ffd027a1c7d7bd505cd0d46` matched
+`perf/gl-019-hot-paths` at `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`;
+its execution-domain and module-cache implementation remains unchanged. See the
+[GL-019 integration record](shared-domains-validation.md#gl-019-main-integration-2026-10-26).
 The earlier migration merge `dd68cda850fb548aa7713242275ff73c183e813c`
 and historical branch `runtime/shared-domains` at
 `9423fed4051bec2fba798d9a49eaec7dea6cca3b` retain their
@@ -142,7 +146,7 @@ before destruction. Retained ObjectID method closures cannot act on replacement
 services. Godot 4.7.1's independent simultaneous-disconnect relay send/leak remains
 reproducible without the extension (GL-017); production relay is still enabled.
 
-On the security branch, state/removal/chat receive RPCs use RPC_MODE_AUTHORITY
+On main, state/removal/chat receive RPCs use RPC_MODE_AUTHORITY
 plus connected Client-role/transport-sender-1 checks. Their client-origin state
 and chat relays require a connected Server role and active assigned remote peer.
 State relays derive the presentation index from the server's session UserId;
@@ -151,7 +155,7 @@ original string Variants, message bounds and a per-session token bucket.
 The sender waits for accepted server echo. Explicit local/system chat remains
 available, including scenes without a Players service. See the
 [authority qualification record](network-authority-validation.md) for exact
-rules, compatibility and transport evidence. This branch has not merged to main.
+rules, compatibility, source identity and fresh integration transport evidence.
 Structural replication, RemoteFunction reply and owned-physics checks are
 preserved. Client-supplied movement values remain GL-007; independent animation
 RPC authority gaps are GL-020. No general networking security claim is made.
