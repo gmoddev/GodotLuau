@@ -1,0 +1,129 @@
+{
+  "Date": "2026-10-27",
+  "Branch": "ci/gl-011-core-qualification",
+  "BaseMain": "f8681c32fc45c9a9f543fb09495768bf3ebfe8e6",
+  "Implementation": "2f1c8199e5b47c9cfad4304f21b785317796ed4d",
+  "Disposition": "IMPLEMENTED - REVIEW PENDING; NOT MERGED",
+  "Issue": "GL-011 OPEN; first independent production-core CI milestone",
+  "SourceHashesLFNormalized": {
+    ".github/workflows/runtime-core-ci.yml": "5e52f917bb7ef565100546ef46afc6d78b3260d190561ef8d4495fe7eaef60e6",
+    "tests/runtime/CheckCoreCI.py": "196cdf440ab1ad87c1453584e62f7acdf514a3156fd9c6d4cb72aae3634b4118",
+    "tests/runtime/CMakeLists.txt": "360a7c38cbb5030ca37eeea0ab4ebedb135345333669b7c4510547de3f55d5e1",
+    "tests/runtime/ExecutionDomainTests.cpp": "b0dd06abff3c6b449014547e0d4a162e735d39406934c5b758a0dd35cfb39632"
+  },
+  "NativeInputs": {
+    "Files": 65,
+    "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+    "Scope": "All SConstruct/native .h/.cpp inputs; unchanged versus main and both workers"
+  },
+  "Pins": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "Workflow": {
+    "Triggers": ["relevant push paths", "relevant pull_request paths", "workflow_dispatch"],
+    "Permissions": {"contents": "read"},
+    "Checkout": "recursive submodules, persist-credentials false",
+    "BuildParallelism": 2,
+    "JobTimeoutMinutes": 25,
+    "ConfigureBuildTestTimeoutMinutes": [5, 15, 2],
+    "TestDeadlineSeconds": 30,
+    "CTestEntry": "ExecutionDomains",
+    "ProductionCasesPerJob": 39,
+    "Retry": "none",
+    "Artifacts": "logs, CMake diagnostics, discovery JSON and JUnit only; seven days; no binaries",
+    "RepositoryWritesPublicationUpdaterDeployment": "none"
+  },
+  "Hosted": {
+    "Run": 40475254435,
+    "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/40475254435",
+    "Head": "2f1c8199e5b47c9cfad4304f21b785317796ed4d",
+    "Event": "push",
+    "StartedUTC": "2026-10-27T08:41:22Z",
+    "CompletedUTC": "2026-10-27T08:42:31Z",
+    "Status": "completed",
+    "Conclusion": "success",
+    "Windows": {
+      "Job": 122091787775,
+      "Name": "Core (Windows, Debug)",
+      "Runner": "windows-2022",
+      "Generator": "Visual Studio 17 2022",
+      "Compiler": "MSVC 19.44.35229.0",
+      "Conclusion": "success",
+      "CasesPassed": 39,
+      "Failed": 0,
+      "DiscoveryReportChecks": "both passed",
+      "Artifact": 12721115200,
+      "ArtifactName": "runtime-core-Windows-Debug",
+      "ArtifactBytes": 9776,
+      "ArtifactSHA256": "78b95c4913564704edaf01ce4aabe18f62148b3932a82176ba7061fb21d3d19a"
+    },
+    "Linux": {
+      "Job": 122091787652,
+      "Name": "Core (Linux, Debug)",
+      "Runner": "ubuntu-24.04",
+      "Generator": "Ninja",
+      "Compiler": "GNU 13.3.0",
+      "Conclusion": "success",
+      "CasesPassed": 39,
+      "Failed": 0,
+      "DiscoveryReportChecks": "both passed",
+      "Artifact": 12719944156,
+      "ArtifactName": "runtime-core-Linux-Debug",
+      "ArtifactBytes": 11214,
+      "ArtifactSHA256": "4175fcd89efed6c8c799de92e9de17b5ff42a5c6d674a57a10387113b2dac09c"
+    },
+    "EvidenceSource": "Read-only GitHub run/jobs/artifacts metadata and full job logs; both case summaries and checker PASS markers observed"
+  },
+  "EquivalentWorkers": {
+    "Windows": {
+      "Directory": "C:/Sandbox/Codex/Builds/GodotLuau/gl011-core-ci-msvc3",
+      "Compiler": "MSVC 19.51.36260.0",
+      "Generator": "Ninja",
+      "Configuration": "Debug",
+      "Passed": 39,
+      "JUnitSHA256LFNormalized": "ee3fe553401b3e7a05a9ef1adbfda70c029765d3d952aaf90711c4d37c22b078"
+    },
+    "Linux": {
+      "Directory": "/opt/codex/godotluau/builds/gl011-core-ci-2",
+      "Compiler": "GNU 13.3.0",
+      "Generator": "Ninja",
+      "Configuration": "Debug",
+      "Passed": 39,
+      "JUnitSHA256LFNormalized": "7a4a87214cfda041be4031865ae725906e90badd930398ddf8bed33647985174"
+    },
+    "CommandRecord": "Portable configure/build/CTest/checker commands and worker differences are in tests/runtime/README.md and newdocs/shared-domains-validation.md",
+    "NegativeEvidenceChecks": {
+      "Command": "python .runtime-tests/CheckCIValidation.py",
+      "Scope": "Actual Linux discovery/JUnit accepted; 16 controlled invalid/missing/failed/skipped/incomplete evidence cases rejected",
+      "Exit": 0
+    },
+    "InitialAttempts": [
+      "Linux gl011-core-ci: production cases pass; evidence checker rejects default 1024-byte JUnit truncation. Final CTest limits raised to 65536 bytes.",
+      "Windows gl011-core-ci: worker wrapper quoting fails before configuration.",
+      "Windows gl011-core-ci-2: unintended GNU 13.2/Ninja configuration also passes core39; not used instead of MSVC evidence.",
+      "Windows gl011-core-ci-msvc and gl011-core-ci-msvc2: wrapper PATH loss prevents compiler/SDK configuration; fixed by preserving existing vcvars environment. No production test failure hidden."
+    ],
+    "Cleanup": "Task-owned Linux container restored from running to its original exited state after tests; no host packages/configuration changes"
+  },
+  "IntegratedMaintenance": {
+    "StartingMain": "34edaa2adfe698d6527e5c5b9bc0159428b5db64",
+    "SafetyPrerequisite": "d637603cf2e2e1cacd07109cacc765c9c21f2775",
+    "GL012Merge": "3551bcce8f5f68ed2ee47c2ac41e2e85f74a4feb",
+    "GL012Checkpoint": "73634b7e41081d5f149012b0df055949c6180bbe",
+    "GL016Merge": "abf7776dfb1d7dfde1abfc7b7cb468047575f738",
+    "CanonicalMain": "f8681c32fc45c9a9f543fb09495768bf3ebfe8e6",
+    "PushRunsObservedAtBothMainCheckpoints": 0,
+    "Publication": "dispatch only, both jobs literal false, contents read, no persisted checkout credentials; never dispatched",
+    "SourceBranches": "Both original maintenance branches retained unchanged"
+  },
+  "Limits": [
+    "CI branch remains unmerged; evidence-only follow-up changes no tested input and claims no additional hosted run",
+    "Debug production core only; no Godot native adapter or multiplayer process qualification",
+    "No sanitizer, production release provenance or release-gate enforcement",
+    "GL-020 adversarial animation qualification remains pending and was not executed",
+    "GL-011 remains open; GL-010, GL-007, GL-017 and GL-018 are independent",
+    "GitHub artifact retention is seven days; no account/repository protection setting was changed"
+  ],
+  "NextSmallestTask": "Review and integrate this independent core workflow without enabling distribution"
+}

@@ -1,0 +1,99 @@
+name: Runtime core qualification
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "tests/runtime/**"
+      - "luau"
+      - "godot-cpp"
+      - ".gitmodules"
+      - ".github/workflows/runtime-core-ci.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/runtime/**"
+      - "luau"
+      - "godot-cpp"
+      - ".gitmodules"
+      - ".github/workflows/runtime-core-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  Core:
+    name: Core (${{ matrix.Platform }}, Debug)
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+            Generator: Visual Studio 17 2022
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Generator: Ninja
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Configure production core
+        timeout-minutes: 5
+        run: |
+          mkdir -p build/runtime-core
+          git submodule status --recursive | tee build/runtime-core/dependencies.log
+          if git submodule status --recursive | grep -E '^[-+U]'; then
+            echo '[Runtime:CI] Missing or mismatched pinned submodule.'
+            exit 1
+          fi
+          cmake -S tests/runtime -B build/runtime-core -G "${{ matrix.Generator }}" \
+            -DCMAKE_BUILD_TYPE=Debug -DGL_BUILD_CORE_TESTS=ON \
+            -DGL_BUILD_GODOT_ADAPTER=OFF -DGL_BUILD_HOT_PATH_BENCHMARKS=OFF \
+            2>&1 | tee build/runtime-core/configure.log
+
+      - name: Build ExecutionDomainTests
+        timeout-minutes: 15
+        run: |
+          cmake --build build/runtime-core --config Debug \
+            --target ExecutionDomainTests --parallel 2 \
+            2>&1 | tee build/runtime-core/build.log
+
+      - name: Require production regression discovery
+        timeout-minutes: 1
+        run: |
+          ctest --test-dir build/runtime-core -C Debug --show-only=json-v1 > build/runtime-core/discovery.json
+          python tests/runtime/CheckCoreCI.py discovery build/runtime-core/discovery.json
+
+      - name: Run production core through CTest
+        timeout-minutes: 2
+        run: |
+          ctest --test-dir build/runtime-core -C Debug -R '^ExecutionDomains$' \
+            --no-tests=error --timeout 30 --output-on-failure --verbose \
+            --test-output-size-passed 65536 --test-output-size-failed 65536 \
+            --output-junit "$PWD/build/runtime-core/core-results.xml" \
+            2>&1 | tee build/runtime-core/ctest.log
+          python tests/runtime/CheckCoreCI.py report build/runtime-core/core-results.xml
+
+      - name: Retain qualification diagnostics
+        if: ${{ always() }}
+        timeout-minutes: 2
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-core-${{ matrix.Platform }}-Debug
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            build/runtime-core/*.log
+            build/runtime-core/discovery.json
+            build/runtime-core/core-results.xml
+            build/runtime-core/CMakeFiles/CMakeConfigureLog.yaml
+            build/runtime-core/Testing/Temporary/*.log

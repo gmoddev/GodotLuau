@@ -1,5 +1,10 @@
 # Shared-domain qualification evidence
 
+[`gl011-core-ci-2026-10-27.json`](gl011-core-ci-2026-10-27.json) records the
+unmerged independent core workflow: actual successful Windows/Linux hosted jobs
+(39 cases each), equivalent worker configurations, discovery/report rejection
+checks, source/run/job/artifact identities and remaining GL-011 scope.
+
 [`gl012-release-retention-2026-10-27.json`](gl012-release-retention-2026-10-27.json)
 records the retention branch's 12 mocked/read-only tests, parsed workflow
 settings, missing-token CLI rejection, source hashes and explicit publishing/

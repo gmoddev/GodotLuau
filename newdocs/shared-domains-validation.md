@@ -1,5 +1,83 @@
 # Shared-domain implementation and qualification
 
+## GL-011 independent core CI (2026-10-27)
+
+Branch `ci/gl-011-core-qualification` starts at canonical main
+`f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`, after GL-012 and GL-016 integration.
+It remains unmerged. The independent workflow runs only the existing production
+`ExecutionDomainTests` target (one CTest entry, 39 internal regression cases).
+There is no runtime/native source, ownership, pin or wire-format change.
+The [test instructions](../tests/runtime/README.md#independent-core-ci-gl-011)
+give portable commands and all timeouts. The matrix selects hosted Windows 2022
+with Visual Studio 17 2022/MSVC and Ubuntu 24.04 with Ninja/GCC, using existing
+runner tools. No package installation or toolchain upgrade step is added.
+
+The workflow explicitly grants `contents: read`, checks out pinned submodules
+recursively without persisted credentials, and has no secrets, repository writes,
+release/deploy/updater operation or dependency on the disabled publisher. Relevant
+pushes/PRs and manual dispatch are declared. Bash error/pipefail handling preserves
+configuration, build and CTest failures while capturing logs. Missing/mismatched
+dependencies, zero/wrong CTest discovery, execution errors/timeouts and missing,
+partial, failed or skipped 39-case results fail qualification. JUnit, discovery,
+logs and CMake diagnostics are retained seven days, excluding binaries. No test
+retry is configured. This is an independent development signal; branch protection
+and release enforcement are not changed.
+
+Fresh equivalent worker checks pass on Linux GCC 13.3/Ninja and Windows MSVC
+19.51/Ninja, Debug, with two build jobs: configure, build, CTest discovery and all
+39 cases, followed by the same evidence checker. Windows uses its existing worker
+developer environment; these paths/generator are not copied into hosted CI.
+Outputs are `/opt/codex/godotluau/builds/gl011-core-ci-2` and
+`C:\Sandbox\Codex\Builds\GodotLuau\gl011-core-ci-msvc3`. Real Linux discovery/JUnit
+also drive 16 local negative evidence checks (zero/wrong/extra discovery, malformed
+JSON/XML, missing file/test, errors/failures/skips, wrong status/name and incomplete
+completion). Parsed YAML checks confirm matrix, triggers, read-only permissions,
+step/job deadlines and diagnostic-only upload. The inherited publisher remains
+dispatch-only with both jobs disabled and no persisted credentials.
+
+The first Linux run passed all cases but CTest truncated the JUnit passed output
+at 1024 bytes, which the checker correctly rejected. Both success/failure retained
+output limits are now 65536 bytes. Windows worker wrappers initially failed on
+shell quoting and lost compiler/SDK PATH state before configuration; the corrected
+wrapper preserves the existing developer environment. An intermediate GNU/Windows
+build also passed 39 cases but is not substituted for MSVC evidence. Original
+attempt directories/logs are preserved; no failing production test was retried
+without a concrete harness correction.
+
+The first hosted push at implementation `2f1c8199e5b47c9cfad4304f21b785317796ed4d`
+completes successfully in [Actions run 40475254435](https://github.com/gmoddev/GodotLuau/actions/runs/40475254435),
+2026-10-27 08:41:22–08:42:31 UTC. Both jobs pass recursive pinned checkout,
+configuration, compilation, exact CTest discovery, all 39 cases and report
+validation. `Core (Windows, Debug)` uses MSVC 19.44.35229.0/Visual Studio 17 2022;
+`Core (Linux, Debug)` uses GCC 13.3.0/Ninja. This is actual hosted execution,
+separate from the equivalent worker runs. No hosted retry or workflow defect
+correction is needed. Diagnostic uploads succeed: Windows artifact 12721115200
+(9776 bytes), Linux artifact 12719944156 (11214 bytes); both expire after seven
+days. The [manifest](evidence/gl011-core-ci-2026-10-27.json) retains run/job IDs,
+artifact digests, source/report hashes and limits beyond that retention period.
+The subsequent evidence-only commit changes no workflow, checker, test, core
+source or dependency input; it does not claim another hosted run.
+
+Configuration semantics follow [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
+and [CTest's documented discovery, no-tests and JUnit options](https://cmake.org/cmake/help/latest/manual/ctest.1.html).
+All 65 normalized native inputs remain at fingerprint
+`a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd`, matching main
+and both workers. Read-only Actions queries observe zero push runs at both
+post-integration main checkpoints (`73634b7e41081d5f149012b0df055949c6180bbe` and
+`f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`); the publisher was never dispatched.
+
+GL-011 stays **OPEN; IMPLEMENTED — REVIEW PENDING** for this first milestone.
+Native Godot integration, multiplayer/lifecycle fixtures, security rejection,
+sanitizers, persistence failure coverage and enforced release gates remain manual
+or independently incomplete. GL-010 provenance and GL-020 adversarial animation
+qualification are not resolved or executed by this workflow.
+
+The smallest next task after review is to integrate this independent core gate
+without enabling distribution. Adding native fixture CI or a release provenance
+gate is a separate scope.
+
+## Original shared-domain qualification
+
 Date: 2026-10-26. Starting revision:
 `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 Branch: `runtime/shared-domains` in the public `gmoddev/GodotLuau` fork.
