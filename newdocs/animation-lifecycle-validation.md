@@ -198,3 +198,37 @@ reviewing this dedicated branch for functional integration while explicitly
 retaining the security follow-up; do not represent it as fully security-qualified
 or merge it automatically. The requested branch is committed/pushed separately
 and `main` remains unchanged; exact ending/remote SHA is verified in the handoff.
+
+## Main integration (2026-10-27)
+
+**INTEGRATED FUNCTIONAL IMPLEMENTATION — SECURITY QUALIFICATION PENDING.**
+The owner authorized source integration in a separate follow-up. Main began at
+`132970c6f7270062952ef872d609844b762058f8`; the source branch remained
+`8e21d18a5504e0d703efbcf2a71a53d56314058e`. Normal two-parent merge
+`6b140427e8ab39d97e12ee693f7cbda72abc7bba` preserves all four source commits,
+without conflicts. Its entire tree equals the qualified branch. The subsequent
+integration-record commit changes documentation only.
+
+Fresh Windows Debug and Linux Release cached-build checks and 39-case core runs
+pass. Each platform executes `RunQualification.py --animation --timeout 60` and
+`--teardown --coordinated-close --timeout 60`: 36 native process results total,
+covering Local/Listen/Dedicated/Editor animation and existing multiplayer/lifetime
+regressions. Every process exits zero with PASS; expected ServerStorage diagnostics
+remain visible. No GL-017 zero-channel diagnostic is emitted. The tested binaries
+match their qualified source-branch SHA256s, and all 65 native inputs plus the
+actual animation/network fixture and runner hashes match across checkout/workers.
+The initial Windows wrapper failed quoting before executing build/tests; its log
+is retained separately from the corrected successful `win2` run.
+
+The previous six core configurations, 180 native results, four SCons builds,
+Windows core ASan and Linux full-native ASan/LSan are reused immutable evidence,
+not fresh integration executions. No expensive historical stress matrix or
+adversarial suite was rerun. Exact commands, log hashes, source identity and fresh
+results are in the [integration manifest](evidence/gl020-main-integration-2026-10-27.json).
+GL-020 remains OPEN for animation-specific adversarial transport/handler testing;
+GL-007/GL-017/GL-018 and all prior qualification boundaries remain independent.
+
+The merge and integration-record commits use `[skip ci]` so this authorized push
+does not invoke the inherited main-push publishing/deletion workflow. This follows
+[GitHub's documented push skip instruction](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs).
+No workflow was dispatched, binary published or remote release/tag changed.

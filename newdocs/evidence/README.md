@@ -1,5 +1,11 @@
 # Shared-domain qualification evidence
 
+[`gl020-main-integration-2026-10-27.json`](gl020-main-integration-2026-10-27.json)
+records the normal GL-020 merge, complete qualified-tree identity, two fresh
+39-case core executions and 36 fresh native functional process results. Matching
+library hashes support scoped reuse of the original broader qualification.
+Animation-specific adversarial security qualification remains pending.
+
 [`gl020-animation-qualification-2026-10-27.json`](gl020-animation-qualification-2026-10-27.json)
 records the GL-020 dedicated branch's functional implementation: matching native/
 fixture source hashes, six 39-case core configurations, four SCons builds and

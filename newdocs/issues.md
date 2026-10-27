@@ -595,3 +595,14 @@ multiplayer/lifetime, 50 GL-006/008). Source/fixture and binary hashes match acr
 the checkout/workers; the [manifest](evidence/gl020-animation-qualification-2026-10-27.json)
 retains exact evidence and failed fixture-attempt dispositions. No full animation
 security closure is inferred from these results.
+
+**Integration (2026-10-27): INTEGRATED FUNCTIONAL IMPLEMENTATION — SECURITY
+QUALIFICATION PENDING.** Normal merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`
+preserves all four GL-020 commits with a tree identical to qualified branch
+`8e21d18a5504e0d703efbcf2a71a53d56314058e`. The
+[integration record](animation-lifecycle-validation.md#main-integration-2026-10-27)
+distinguishes fresh functional checks from reused immutable qualification.
+GL-020 remains OPEN for animation-specific adversarial transport/handler evidence;
+the historical finding and closure requirements above remain applicable. No
+deferred adversarial qualification, binary release or general security certification
+is performed by this integration. GL-007/GL-017/GL-018 remain independent.

@@ -9,7 +9,13 @@ whose `Version` begins `v1.16.12`. Upstream `main` resolved to that same commit
 when checked on 2026-10-26. The initial fork commit was documentation only;
 `main` now contains the source-qualified Server/Client VM migration, GL-019
 hot-path optimizations and qualified GL-006/008 state/removal/chat authority
-corrections, and is the canonical development baseline. The security runtime
+corrections, and is the canonical development baseline.
+GL-020's functionally qualified animation/session lifecycle is now integrated by
+normal merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`, preserving source
+branch `fix/gl-020-animation-lifecycle` at `8e21d18a5504e0d703efbcf2a71a53d56314058e`.
+Its animation security qualification remains pending; see the
+[integration record](animation-lifecycle-validation.md#main-integration-2026-10-27).
+The preceding security runtime
 merge is `2e69d8ac703d3f968e42054871511111ab8471be`, identical to qualified source
 `462969bd967bd26fcbeccdca1bd6ae60335347f4`. The retained historical branch is
 `security/gl-006-008-rpc-authority`; see the

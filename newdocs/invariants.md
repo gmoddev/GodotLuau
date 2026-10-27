@@ -51,7 +51,7 @@ the inherited runtime already satisfies them. Baseline gaps link to
   target authority before mutating state or relaying. Do not trust a payload's
   `who`, name, role, or owner claim. GL-006/008's endpoint-specific corrections
   are integrated into main and documented in the [authority record](network-authority-validation.md);
-  GL-020's development branch applies the same execution/session rules to animation;
+  GL-020's integrated implementation applies the same execution/session rules to animation;
   full animation security qualification remains pending.
 - Animation state binds the current assigned session before puppet creation.
   Stops replace active state; character/session/service departure invalidates old
