@@ -158,6 +158,45 @@ def Benchmark(Args, Output, Environment):
     return Results
 
 
+def SecurityFixtures(Args, Output, Environment):
+    Results = []
+    for Mode in Args.security_modes:
+        Project = Output / Mode
+        Prepare(Project, Args.extension)
+        Entries = []
+        try:
+            SelectedPort = Port()
+            Roles = ["server"] if Mode == "Local" else ["server", "client1", "client2"]
+            for Role in Roles:
+                FixtureRole = "client" if Role.startswith("client") else "server"
+                Extra = ["--fixture-role", FixtureRole, "--fixture-port", str(SelectedPort), "--security-mode", Mode]
+                if FixtureRole == "client":
+                    Extra += ["--fixture-client-index", Role[-1]]
+                elif Mode in ("Dedicated", "Handler"):
+                    Extra += ["--glserver", str(SelectedPort)]
+                Label = f"security-{Mode}-{Role}"
+                Process = Start(Args.godot, Project, "NetworkSecurity.gd", Label, Extra, Environment)
+                Entries.append((Process, Label, FixtureRole))
+                if Role == "server" and Mode != "Local":
+                    Deadline = time.monotonic() + 10
+                    while not (Project / "security-ready").exists():
+                        if Process.poll() is not None or time.monotonic() > Deadline:
+                            raise RuntimeError(f"Security server failed readiness: {Label}")
+                        time.sleep(0.02)
+            Deadline = time.monotonic() + Args.timeout
+            for Process, Label, Role in Entries:
+                Result = Check(Process, Deadline, Project, Label, f"[Network:SecurityTest] {Role} PASS")
+                if "[Network:SecurityTest] FAIL" in (Project / (Label + ".stdout.log")).read_text(errors="replace"):
+                    raise RuntimeError(f"Security assertion failed: {Label}")
+                Results.append(Result)
+        finally:
+            for Process, _, _ in Entries:
+                if Process.poll() is None:
+                    Process.kill()
+                    Process.wait()
+    return Results
+
+
 def Probes(Args, Output, Environment):
     Output = Output / "engine-only"
     Output.mkdir(exist_ok=True)
@@ -184,6 +223,8 @@ def Main():
     Parser.add_argument("--baseline", type=Path)
     Parser.add_argument("--asan-runtime", type=Path)
     Parser.add_argument("--teardown", action="store_true")
+    Parser.add_argument("--security", action="store_true")
+    Parser.add_argument("--security-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Handler"), default=["Local", "Listen", "Dedicated", "Handler"])
     Parser.add_argument("--probe", action="store_true")
     Parser.add_argument("--counts", type=int, nargs="+", default=[10, 100, 1000])
     Parser.add_argument("--runtime-directory", type=Path)
@@ -205,6 +246,8 @@ def Main():
     if Args.load_only:
         Process = Start(Args.godot, Args.output, "SanitizerLoadProbe.gd", "load", [], Environment)
         Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "load", "[Runtime:LoadProbe] PASS")]
+    elif Args.security:
+        Results = SecurityFixtures(Args, Args.output, Environment)
     elif Args.probe:
         Results = Probes(Args, Args.output, Environment)
     elif Args.baseline:

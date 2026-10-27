@@ -27,6 +27,7 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 | [Shared-domain decision](adr-001-shared-execution-domains.md) | Accepted GL-014 design and compatibility contract; implementation status is separate |
 | [Shared-domain work log](shared-domains-work-log.md) | Baseline, ongoing implementation checkpoints, and executed qualification evidence |
 | [Shared-domain validation](shared-domains-validation.md) | Reproduction commands, acceptance coverage and remaining gaps |
+| [Network authority validation](network-authority-validation.md) | GL-006/008 trust boundaries, transport regressions, compatibility and remaining gaps on the security branch |
 
 ## Documentation authority
 

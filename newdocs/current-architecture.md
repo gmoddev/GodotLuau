@@ -142,12 +142,19 @@ before destruction. Retained ObjectID method closures cannot act on replacement
 services. Godot 4.7.1's independent simultaneous-disconnect relay send/leak remains
 reproducible without the extension (GL-017); production relay is still enabled.
 
-RPC dictionaries use `RPC_MODE_ANY_PEER` in `_bind_methods`, relying on individual
-handlers to enforce authority. Some do: structural replication checks sender 1,
-RemoteFunction returns match the expected peer, and owned physics updates check
-the owner. Character-state/removal receivers lack the same sender guard; state
-relays trust supplied values and chat relays trust supplied display names.
-See GL-006 through GL-008 for scope and missing runtime evidence.
+On the security branch, state/removal/chat receive RPCs use RPC_MODE_AUTHORITY
+plus connected Client-role/transport-sender-1 checks. Their client-origin state
+and chat relays require a connected Server role and active assigned remote peer.
+State relays derive the presentation index from the server's session UserId;
+chat derives its name from the matching live server PlayerObject and validates
+original string Variants, message bounds and a per-session token bucket.
+The sender waits for accepted server echo. Explicit local/system chat remains
+available, including scenes without a Players service. See the
+[authority qualification record](network-authority-validation.md) for exact
+rules, compatibility and transport evidence. This branch has not merged to main.
+Structural replication, RemoteFunction reply and owned-physics checks are
+preserved. Client-supplied movement values remain GL-007; independent animation
+RPC authority gaps are GL-020. No general networking security claim is made.
 
 The coordinator uses local process discovery/heartbeat files. Upstream documents
 no account authentication and no incoming connection validation against

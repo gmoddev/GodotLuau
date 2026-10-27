@@ -339,6 +339,14 @@ class NetworkService : public Node {
     std::map<int, int64_t> peer_seq_uid;   // peerId -> UserId asignado
     int64_t next_seq_uid = 2;              // servidor: siguiente UserId (host toma el 1)
 
+    struct ChatBudget {
+        uint64_t PlayerIdentity = 0;
+        int64_t UserIdentity = 0;
+        uint64_t Updated = 0;
+        double Tokens = 5.0;
+    };
+    std::map<int, ChatBudget> ChatBudgets;
+
     // ── RemoteFunction en vuelo (1.14.9.1) ──────────────────────────────
     // call_id -> a quién le pedimos la respuesta. Sirve para tres cosas: validar
     // que la respuesta viene del peer al que invocamos (si no, cualquier cliente
@@ -428,6 +436,56 @@ class NetworkService : public Node {
         Ref<MultiplayerPeer> p = m->get_multiplayer_peer();
         if (p.is_null() || p->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED) return 0;
         return m->get_unique_id();
+    }
+    // Inbound dispatch never treats sender zero as trusted local execution.
+    bool AcceptServerRpc() {
+        Ref<MultiplayerAPI> Multiplayer = _mp();
+        return mode == 2 && net_connected && !is_coordinator && _my_peer_id() > 1 &&
+            Multiplayer.is_valid() && !Multiplayer->is_server() &&
+            Multiplayer->get_remote_sender_id() == 1 && Multiplayer->get_peers().has(1);
+    }
+    int GetClientRpcSender() {
+        Ref<MultiplayerAPI> Multiplayer = _mp();
+        if (mode != 1 || is_coordinator || _my_peer_id() != 1 ||
+            Multiplayer.is_null() || !Multiplayer->is_server()) return 0;
+        int Sender = Multiplayer->get_remote_sender_id();
+        return Sender > 1 && Multiplayer->get_peers().has(Sender) && peer_seq_uid.count(Sender) ? Sender : 0;
+    }
+    static bool ValidChatText(const String& Text) {
+        // Limit Unicode scalars, not UTF-8 bytes. Reject controls, invalid scalar
+        // values and whitespace-only messages without truncation or reinterpretation.
+        if (Text.is_empty() || Text.length() > 256 || Text.strip_edges().is_empty()) return false;
+        for (int64_t Index = 0; Index < Text.length(); ++Index) {
+            char32_t Character = Text[Index];
+            if (Character < 32 || (Character >= 127 && Character <= 159) ||
+                (Character >= 0xd800 && Character <= 0xdfff) || Character > 0x10ffff) return false;
+        }
+        return true;
+    }
+    bool AcceptChat(int Sender, PlayerObject* Player, const String& Text) {
+        if (!ValidChatText(Text)) return false;
+        if (Player && (!Player->is_inside_tree() || Player->is_queued_for_deletion())) return false;
+        // Local single-player/system dispatch does not require a Players service.
+        // Remote clients always require a live authoritative PlayerObject.
+        bool Local = (mode == 0 && Sender == 0) || (mode == 1 && Sender == 1 && is_server());
+        if (!Player && !Local) return false;
+        int64_t UserIdentity = Player ? Player->user_id : (mode == 1 ? 1 : 0);
+        auto Session = peer_seq_uid.find(Sender);
+        if (mode != 0 && (Session == peer_seq_uid.end() || Session->second != UserIdentity)) return false;
+        uint64_t Now = Time::get_singleton()->get_ticks_msec();
+        ChatBudget& Budget = ChatBudgets[Sender];
+        uint64_t Identity = static_cast<uint64_t>(Player ? Player->get_instance_id() : get_instance_id());
+        if (Budget.PlayerIdentity != Identity || Budget.UserIdentity != UserIdentity) {
+            Budget = ChatBudget{};
+            Budget.PlayerIdentity = Identity;
+            Budget.UserIdentity = UserIdentity;
+            Budget.Updated = Now;
+        }
+        Budget.Tokens = Math::min(5.0, Budget.Tokens + static_cast<double>(Now - Budget.Updated) / 1000.0);
+        Budget.Updated = Now;
+        if (Budget.Tokens < 1.0) return false;
+        Budget.Tokens -= 1.0;
+        return true;
     }
     bool _valid(Node* n) const { return n && UtilityFunctions::is_instance_valid(n); }
 
@@ -623,13 +681,17 @@ class NetworkService : public Node {
         u["channel"]       = 0;
         Dictionary r = u.duplicate();
         r["transfer_mode"] = MultiplayerPeer::TRANSFER_MODE_RELIABLE;
-        rpc_config("_recv_state",    u);
+        Dictionary ServerUnreliable = u.duplicate();
+        ServerUnreliable["rpc_mode"] = MultiplayerAPI::RPC_MODE_AUTHORITY;
+        Dictionary ServerReliable = r.duplicate();
+        ServerReliable["rpc_mode"] = MultiplayerAPI::RPC_MODE_AUTHORITY;
+        rpc_config("_recv_state",    ServerUnreliable);
         rpc_config("_relay_state",   u);
-        rpc_config("_recv_state2d",  u);
+        rpc_config("_recv_state2d",  ServerUnreliable);
         rpc_config("_relay_state2d", u);
-        rpc_config("_recv_remove",   r);
+        rpc_config("_recv_remove",   ServerReliable);
         rpc_config("_relay_chat",    r);   // chat: confiable (no se pierde ningun mensaje)
-        rpc_config("_recv_chat",     r);
+        rpc_config("_recv_chat",     ServerReliable);
         rpc_config("_ping_req",      u);   // medicion de ping (para el menu de ajustes)
         rpc_config("_ping_res",      u);
         rpc_config("_ping_report",   u);   // el cliente reporta su ping al servidor (GetNetworkPing 1.14.10)
@@ -1126,6 +1188,8 @@ public:
         peer_player_ids.erase(id);
     }
     void _on_peer_disconnected(int id) {
+        ChatBudgets.erase(id);
+        peer_seq_uid.erase(id);
         _remove_puppet(id);
         if (is_server()) rpc("_recv_remove", id);   // que los clientes también lo quiten
         // Física (1.14.7): partes que poseía ese peer vuelven al servidor.
@@ -1824,29 +1888,47 @@ public:
     // ── RPCs de réplica ──────────────────────────────────────────────────
     // Cliente -> servidor: "aquí estoy". El servidor lo muestra y lo reenvía.
     void _relay_state(Vector3 pos, float yaw, int idx, float hp, float sp, bool air) {
-        int sid = get_multiplayer()->get_remote_sender_id();
+        int sid = GetClientRpcSender();
+        if (!sid) return;
+        idx = static_cast<int>(peer_seq_uid.at(sid)); // identity cannot come from the client's display index
         if (_diag_tick()) { gl_mp_log(String("RX relay de peer ") + String::num_int64(sid) + " pos=" + String(pos)); diag_timer = 1.0; }
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         _update_puppet3d(sid, idx, pos, yaw, hp, sp, air);
-        rpc("_recv_state", sid, pos, yaw, idx, hp, sp, air);
+        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == sid)
+            Service->rpc("_recv_state", sid, pos, yaw, idx, hp, sp, air);
     }
     void _relay_state2d(Vector2 pos, float rot, int idx) {
-        int sid = get_multiplayer()->get_remote_sender_id();
+        int sid = GetClientRpcSender();
+        if (!sid) return;
+        idx = static_cast<int>(peer_seq_uid.at(sid));
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         _update_puppet2d(sid, idx, pos, rot);
-        rpc("_recv_state2d", sid, pos, rot, idx);
+        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == sid)
+            Service->rpc("_recv_state2d", sid, pos, rot, idx);
     }
     // Servidor -> clientes: estado autoritativo de "who".
     void _recv_state(int who, Vector3 pos, float yaw, int idx, float hp, float sp, bool air) {
+        if (!AcceptServerRpc() || who <= 0 || !peer_seq_uid.count(who)) return;
         int myid = _my_peer_id();
         if (who == myid) return;              // ese soy yo
         if (_diag_tick()) { gl_mp_log(String("RX estado de ") + String::num_int64(who) + " pos=" + String(pos)); diag_timer = 1.0; }
         _update_puppet3d(who, idx, pos, yaw, hp, sp, air);
     }
     void _recv_state2d(int who, Vector2 pos, float rot, int idx) {
+        if (!AcceptServerRpc() || who <= 0 || !peer_seq_uid.count(who)) return;
         int myid = _my_peer_id();
         if (who == myid) return;
         _update_puppet2d(who, idx, pos, rot);
     }
-    void _recv_remove(int who) { _remove_puppet(who); _remove_peer_player(who); }
+    void _recv_remove(int who) {
+        // A legitimate removal arrives after transport membership has ended.
+        if (!AcceptServerRpc() || who <= 0 || who == _my_peer_id()) return;
+        _remove_puppet(who);
+        _remove_peer_player(who);
+        peer_seq_uid.erase(who);
+    }
 
     // ── CHAT EN RED (como Roblox: todos ven los mensajes de todos) ────────
     // El RobloxChat local llama gl_send_chat al enviar; el servidor lo muestra
@@ -1854,25 +1936,44 @@ public:
     void _show_chat(const String& name, const String& text) {
         if (!is_inside_tree()) return;
         Node* tcs = _find_by_class((Node*)get_tree()->get_root(), "TextChatService");
-        if (tcs) tcs->call("send_message", name, text);
         gl_mp_log(String("chat << ") + name + ": " + text);
+        // Display can invoke user callbacks, including service teardown. No
+        // service/session pointer is accessed after dispatch.
+        if (tcs) tcs->call("send_message", name, text);
     }
     void gl_send_chat(const String& name, const String& text) {
-        Ref<MultiplayerAPI> m = _mp();
-        if (m.is_null() || !m->has_multiplayer_peer()) return;   // sin sesion: solo local
-        if (is_server()) rpc("_recv_chat", 1, name, text);
-        else             rpc_id(1, "_relay_chat", name, text);
-        gl_mp_log(String("chat >> ") + name + ": " + text);
-    }
-    void _relay_chat(String name, String text) {
-        int sid = get_multiplayer()->get_remote_sender_id();
-        _show_chat(name, text);                    // el servidor tambien lo ve
-        rpc("_recv_chat", sid, name, text);        // reenviar a todos los clientes
-    }
-    void _recv_chat(int from, String name, String text) {
-        int myid = _my_peer_id();
-        if (from == myid) return;                  // yo ya lo mostre al enviarlo
+        if (!ValidChatText(text) || !is_inside_tree() || is_coordinator) return;
+        if (mode == 2) {
+            if (net_connected && _my_peer_id() > 1) rpc_id(1, "_relay_chat", name, text);
+            return; // wait for server acceptance; never show optimistic network echo
+        }
+        // Explicit trusted local API, separate from inbound RPC handlers. Server
+        // scripts may supply a system label; clients cannot reach this via RPC.
+        if (mode != 0 && (mode != 1 || !is_server() || _my_peer_id() != 1)) return;
+        PlayerObject* Player = _local_player_obj();
+        if (!AcceptChat(mode == 1 ? 1 : 0, Player, text)) return;
+        if (mode == 1) rpc("_recv_chat", 1, name, text);
         _show_chat(name, text);
+    }
+    void _relay_chat(Variant name, Variant text) {
+        int Sender = GetClientRpcSender();
+        // Godot's native binder may stringify a non-string argument even while
+        // reporting a conversion error. Validate the original wire Variants.
+        if (!Sender || name.get_type() != Variant::STRING || text.get_type() != Variant::STRING) return;
+        String Message = text;
+        PlayerObject* Player = _peer_player(Sender);
+        // No implicit creation or fallback identity for pre-initialization chat.
+        if (!AcceptChat(Sender, Player, Message)) return;
+        String Identity = Player->display_name;
+        rpc("_recv_chat", Sender, Identity, Message);
+        _show_chat(Identity, Message);
+    }
+    void _recv_chat(int from, Variant name, Variant text) {
+        if (!AcceptServerRpc() || from <= 0 || !peer_seq_uid.count(from) ||
+            name.get_type() != Variant::STRING || text.get_type() != Variant::STRING) return;
+        String Message = text;
+        if (!ValidChatText(Message)) return;
+        _show_chat(name, Message);
     }
 
     // ── PING (para el menu de ajustes, como el de Roblox) ─────────────────
@@ -2504,6 +2605,7 @@ public:
         peer.instantiate();
         Error e = peer->create_server(port, max_players > 0 ? max_players : 32);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
+        ChatBudgets.clear();
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 1;
@@ -2529,6 +2631,7 @@ public:
         target_address = ip + String(":") + String::num_int64(port);
         Error e = peer->create_client(addr, port);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); target_address = ""; return false; }
+        ChatBudgets.clear();
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 2;
@@ -2539,6 +2642,7 @@ public:
         return true;
     }
     void disconnect_net() {
+        ChatBudgets.clear();
         _clear_puppets();
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(Ref<MultiplayerPeer>());
