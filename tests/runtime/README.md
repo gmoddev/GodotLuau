@@ -1,8 +1,63 @@
 # Shared-domain regression fixtures
 
+## Native CI (GL-011B)
+
+`ci/gl-011-native-integration` adds independent
+[`runtime-native-ci.yml`](../../.github/workflows/runtime-native-ci.yml), initially
+Windows 2022/MSVC and Ubuntu 24.04/GCC Debug. It builds the actual
+`GodotLuauAdapter` against recursive pinned submodules with two build jobs,
+read-only permissions and no persisted checkout credentials. Core CI remains a
+separate workflow; the native build disables the duplicate core executable.
+
+`GodotDistribution.json` records official Godot 4.7.1 release asset URLs, IDs,
+exact sizes and GitHub-published SHA-256 digests plus source commit
+`a13da4feb8d8aefc283c3763d33a2f170a18d541`. `ProvisionGodot.py` checks the entire
+archive against those pinned values before extracting only the named executable,
+then checks exact `--version` output and records archive/executable hashes. A
+changed release asset or failed download blocks qualification. It installs no
+updater or distribution package and uses no private worker paths.
+
+From the repository root, with fresh ignored output directories:
+
+```text
+python tests/runtime/FixtureProcessTests.py
+python tests/runtime/ProvisionGodot.py --output <fresh-engine-directory>
+cmake -S tests/runtime -B <build-directory> -G <platform-generator> -DCMAKE_BUILD_TYPE=Debug -DGL_BUILD_CORE_TESTS=OFF -DGL_BUILD_GODOT_ADAPTER=ON
+cmake --build <build-directory> --config Debug --target GodotLuauAdapter --parallel 2
+python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/regression --teardown --coordinated-close --timeout 60
+python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/security --security --timeout 60
+python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/animation --animation --timeout 60
+python tests/runtime/CheckNativeCI.py --output <fresh-root> --extension <built-library> --godot-evidence <engine-directory>/provenance.json --revision <candidate-SHA>
+```
+
+Use `Visual Studio 17 2022` on hosted Windows (`Debug/godot_luau.dll`) and `Ninja`
+on Linux (`godot_luau.so`). All existing fixtures are unchanged: eight normal
+processes cover single-player, listen, dedicated server/two clients and editor
+server/two clients; ten GL-006/008 processes include their existing Handler mode;
+ten GL-020 processes cover functional animation/session behavior. The last group
+does not execute or qualify deferred adversarial animation cases. The checker
+requires the exact 8/10/10 actor labels and zero exit results.
+
+The runner now requires a fresh output tree and isolated child user profiles.
+POSIX sessions and Windows kill-on-close job objects own descendants; normal
+completion, failure, timeout, partial startup, SIGTERM/interrupt and final cleanup
+retire only task-owned groups. Windows uses hidden children and crash-dialog
+suppression. UDP selection/fixed-port preflight and coordinated close remain the
+existing fixture behavior. Required PASS, nonzero exit, correctness failure,
+GDScript error and sanitizer diagnostics are enforced; raw ENet/expected rejection
+diagnostics stay visible. Eight launcher regressions test tree cleanup and failure
+propagation without duplicating runtime assertions.
+
+The hosted job is bounded at 80 minutes (configure 5, build 50, fixture groups
+4/4/5 minutes); each fixture actor/group has the existing 60-second deadline.
+No retries, build cache, account settings, publishing or deployment are introduced.
+Seven-day artifacts contain stdout/stderr, build/configuration logs, actor results,
+Godot provenance, source/pin identity and summary hashes; no extension, executable
+or archive is uploaded. See [actual results and sanitizer assessment](../../newdocs/shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
+
 ## Independent core CI (GL-011)
 
-The `ci/gl-011-core-qualification` branch adds
+Main integrates `ci/gl-011-core-qualification` via `f0199004d56485ec7a9de14d5454d1907822ba11`, adding
 [`runtime-core-ci.yml`](../../.github/workflows/runtime-core-ci.yml), independently
 of the disabled release workflow. It runs Debug on `windows-2022` (Visual Studio
 17 2022/MSVC) and `ubuntu-24.04` (Ninja/GCC), using existing hosted tools and

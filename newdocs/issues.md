@@ -33,7 +33,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
-| GL-011 | P1 | Open; core CI integrated and hosted-qualified | Native/sanitizer/release gates remain manual |
+| GL-011 | P1 | Open; core CI integrated, native CI hosted-qualified on unmerged branch | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
@@ -349,6 +349,21 @@ The release workflow stays disabled. Native Godot, multiplayer/lifecycle/securit
 fixtures, sanitizers, persistence failures and release enforcement remain manual
 or independently incomplete. This milestone does not close GL-011 or qualify
 GL-020's deferred adversarial cases.
+
+**GL-011B native milestone (2026-10-27): NATIVE CI IMPLEMENTED AND
+HOSTED-QUALIFIED on `ci/gl-011-native-integration`, not merged.** The separate read-only
+Debug workflow builds `GodotLuauAdapter` on Windows/Linux, verifies pinned official
+Godot 4.7.1 assets and reuses 8 lifecycle/network, 10 GL-006/008 and 10 functional
+animation process fixtures per platform. New launcher ownership/cleanup and eight
+bounded failure tests address process trees and partial startup. Equivalent worker
+runs pass all 28 actors on each platform. Actual hosted
+[run 40478173463](https://github.com/gmoddev/GodotLuau/actions/runs/40478173463)
+also passes fresh Windows/Linux adapter builds, eight launcher checks and all
+28 native actors each (56 process results), with diagnostic-only uploads verified.
+This is Debug/x86_64 coverage, distinct from manual sanitizer evidence. See
+[native CI evidence and sanitizer assessment](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
+No sanitizer job or release enforcement is introduced; no GL-020 adversarial
+animation test is added or executed. GL-011 remains open.
 
 ## GL-012: Release workflow deletes prior provenance references
 
