@@ -65,7 +65,7 @@ func Player(CharacterNode: Node) -> AnimationPlayer:
 func Observe(Peer: int, Name: String, Speed: float, Looped: bool, Playing := true) -> void:
     var State: Dictionary = Cache().get(Peer, {})
     Check(not State.is_empty(), "cached target " + str(Peer))
-    Check(State.get("Name", "") == Name and State.get("Play", false) == Playing, "cached playback " + str(Peer))
+    Check(State.get("Name", "") == Name and State.get("Play", false) == Playing, "cached playback " + str(Peer) + " expected=" + Name + "/" + str(Playing) + " actual=" + str(State))
     Check(is_equal_approx(float(State.get("Speed", -1)), Speed) and State.get("Looped", false) == Looped, "cached settings " + str(Peer))
     Check(int(State.get("UserId", 0)) > 0, "assigned session ownership")
     var Animator := Player(Puppet(Peer))
@@ -324,25 +324,38 @@ func RunClient() -> void:
         Observe(First, "Wave", 1.75, false)
         var Animator := Player(Puppet(First))
         Check(Animator.current_animation_position > 0.1, "remote settings did not repeatedly restart playback")
+        Mark("settings.observed")
     if Index == 1:
+        await Wait("settings.observed")
         Track = await LoadTrack("Dance")
         Track.call("set_looped", true)
         Track.call("play")
         Mark("replace.sent")
     await Wait("stop")
-    if Index == 2: Observe(First, "Dance", 1.0, true)
-    if Index == 1: Track.call("stop"); Mark("stop.sent")
-    await Wait("once")
-    if Index == 2: Observe(First, "Dance", 1.0, true, false)
+    if Index == 2:
+        Observe(First, "Dance", 1.0, true)
+        Mark("replacement.observed")
     if Index == 1:
+        await Wait("replacement.observed")
+        Track.call("stop")
+        Mark("stop.sent")
+    await Wait("once")
+    if Index == 2:
+        Observe(First, "Dance", 1.0, true, false)
+        Mark("stop.observed")
+    if Index == 1:
+        await Wait("stop.observed")
         Track = await LoadTrack("Once")
         Track.call("play")
         await create_timer(0.2).timeout
         Check(not Track.call("is_playing"), "non-looped completion")
         Mark("once.sent")
     await Wait("respawn")
-    if Index == 2: Observe(First, "Once", 1.0, false, false)
+    if Index == 2:
+        Observe(First, "Once", 1.0, false, false)
+        Mark("once.observed")
     if Index == 1:
+        await Wait("once.observed")
         Track = await LoadTrack("Wave")
         Track.call("set_looped", true)
         Track.call("play")

@@ -409,7 +409,7 @@ class NetworkService : public Node {
             rpc_id(1, "_relay_anim", State.id, State.name, State.speed, State.looped, State.play);
         }
     }
-    void _on_animation_character_gone(uint64_t CharacterIdentity) {
+    void OnAnimationCharacterGone(uint64_t CharacterIdentity) {
         if (LocalAnimationCharacter != CharacterIdentity) return;
         LocalAnimationCharacter = 0;
         Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
@@ -1121,7 +1121,7 @@ protected:
         ClassDB::bind_method(D_METHOD("_relay_anim", "anim_id", "anim_name", "speed", "looped", "play"),                 &NetworkService::_relay_anim);
         ClassDB::bind_method(D_METHOD("_recv_anim", "who", "anim_id", "anim_name", "speed", "looped", "play"),           &NetworkService::_recv_anim);
         ClassDB::bind_method(D_METHOD("GetAnimationStates"), &NetworkService::GetAnimationStates);
-        ClassDB::bind_method(D_METHOD("_on_animation_character_gone", "identity"), &NetworkService::_on_animation_character_gone);
+        ClassDB::bind_method(D_METHOD("OnAnimationCharacterGone", "identity"), &NetworkService::OnAnimationCharacterGone);
         ClassDB::bind_method(D_METHOD("_recv_state2d", "who", "pos", "rot", "idx"), &NetworkService::_recv_state2d);
         ClassDB::bind_method(D_METHOD("_relay_state2d", "pos", "rot", "idx"),       &NetworkService::_relay_state2d);
         ClassDB::bind_method(D_METHOD("_recv_remove", "who"),                       &NetworkService::_recv_remove);
@@ -2087,7 +2087,7 @@ public:
         uint64_t CharacterIdentity = static_cast<uint64_t>(ch->get_instance_id());
         if (LocalAnimationCharacter != CharacterIdentity) {
             LocalAnimationCharacter = CharacterIdentity;
-            Callable Callback = Callable(this, "_on_animation_character_gone").bind(CharacterIdentity);
+            Callable Callback = Callable(this, "OnAnimationCharacterGone").bind(CharacterIdentity);
             if (!ch->is_connected("tree_exiting", Callback)) ch->connect("tree_exiting", Callback);
         }
         SendLocalAnimation({ anim_id, anim_name, speed, looped, play });

@@ -185,7 +185,7 @@ public:
         anim_player->stop();
         playing = false;
         _net_notify(false);
-        auto Callbacks = stopped_cbs;
+        auto Callbacks = GetCallbacks(stopped_cbs);
         emit_signal("Stopped", false);
         _fire_noarg(Callbacks);
     }
@@ -257,8 +257,8 @@ private:
         if (name != StringName(anim_name) || !playing) return;
         playing = false;
         _net_notify(false);
-        auto Ended = ended_cbs;
-        auto Stopped = stopped_cbs;
+        auto Ended = GetCallbacks(ended_cbs);
+        auto Stopped = GetCallbacks(stopped_cbs);
         uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         emit_signal("Ended");
         AnimationTrack* Track = Object::cast_to<AnimationTrack>(ObjectDB::get_instance(Identity));
@@ -267,10 +267,19 @@ private:
         _fire_noarg(Stopped);
     }
 
-    static void _fire_noarg(std::vector<LuaCallback> list) {
+    static std::vector<LuaCallback> GetCallbacks(std::vector<LuaCallback>& List) {
+        // Reap retired entries in the owner before taking the dispatch snapshot.
+        // The snapshot survives callbacks that queue or destroy the track.
+        for (size_t Index = List.size(); Index > 0; --Index)
+            if (!List[Index - 1].active || !GLReferenceAlive(List[Index - 1].main_L, List[Index - 1].ref))
+                List.erase(List.begin() + Index - 1);
+        return List;
+    }
+
+    static void _fire_noarg(const std::vector<LuaCallback>& list) {
         for (int i=(int)list.size()-1; i>=0; --i) {
-            auto& cb=list[i];
-            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)){list.erase(list.begin()+i);continue;}
+            const auto& cb=list[i];
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
             lua_State* th=lua_newthread(cb.main_L);
             lua_rawgeti(cb.main_L,LUA_REGISTRYINDEX,cb.ref);
             if(lua_isfunction(cb.main_L,-1)){lua_xmove(cb.main_L,th,1);gl_check_resume(th,GLResume(th,nullptr,0));}
