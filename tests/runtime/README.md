@@ -1,5 +1,52 @@
 # Shared-domain regression fixtures
 
+## Independent core CI (GL-011)
+
+The `ci/gl-011-core-qualification` branch adds
+[`runtime-core-ci.yml`](../../.github/workflows/runtime-core-ci.yml), independently
+of the disabled release workflow. It runs Debug on `windows-2022` (Visual Studio
+17 2022/MSVC) and `ubuntu-24.04` (Ninja/GCC), using existing hosted tools and
+recursive checkout of the unchanged pinned submodules. No Godot executable,
+updater, package download, native adapter or production binary upload is involved.
+
+Relevant source/test/dependency/workflow pushes and pull requests trigger it;
+manual dispatch is also declared. Repository access is `contents: read`, checkout
+credentials are not persisted, compilation uses two jobs, and failures are never
+silently retried. Each job has a 25-minute bound with configure/build/test step
+limits of 5/15/2 minutes. The existing CTest entry has a 30-second test deadline.
+
+Portable commands from the repository root (choose the platform's generator):
+
+```text
+cmake -S tests/runtime -B build/runtime-core -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DGL_BUILD_CORE_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=OFF -DGL_BUILD_HOT_PATH_BENCHMARKS=OFF
+cmake --build build/runtime-core --config Debug --target ExecutionDomainTests --parallel 2
+ctest --test-dir build/runtime-core -C Debug --show-only=json-v1
+python tests/runtime/CheckCoreCI.py discovery build/runtime-core/discovery.json
+ctest --test-dir build/runtime-core -C Debug -R ^ExecutionDomains$ --no-tests=error --timeout 30 --output-on-failure --verbose --test-output-size-passed 65536 --test-output-size-failed 65536 --output-junit <absolute-build-path>/core-results.xml
+python tests/runtime/CheckCoreCI.py report build/runtime-core/core-results.xml
+```
+
+Save the discovery command's stdout as `build/runtime-core/discovery.json` before
+checking it. Windows hosted configuration uses `-G "Visual Studio 17 2022"`;
+that generator selects MSVC without private worker paths or a developer-shell
+setup action. An existing local MSVC/Ninja developer environment also works.
+The checked-in workflow uses Bash's error/pipefail behavior so diagnostic capture
+cannot hide a configure/build/test failure. Missing/mismatched dependencies fail
+checkout or the explicit submodule check. Missing or unexpected CTest discovery
+fails before execution; `--no-tests=error` supplies a second zero-test guard.
+
+`CheckCoreCI.py` checks evidence only; it implements no scheduler or runtime.
+It requires exactly `ExecutionDomains` and a successful JUnit result containing
+39 distinct existing PASS cases and the complete zero-failure summary. CTest's
+default passed-output truncation must be raised to retain that evidence. Update
+the expected count deliberately if the production suite expands. Logs, discovery,
+JUnit and CMake diagnostics are uploaded for seven days even after failure;
+compiled libraries/executables are excluded.
+
+This first core milestone does not enforce release checks or qualify native
+Godot, multiplayer, animation security, sanitizers or production distribution.
+See [executed evidence and limits](../../newdocs/shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
+
 ## Animation lifecycle
 
 GL-020 extends this runner with `AnimationIntegration.gd`:

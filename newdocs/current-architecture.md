@@ -225,7 +225,14 @@ conditions, repository permissions are read-only, and checkout credentials are
 not persisted. Ordinary pushes cannot start its builds, archive commits or release
 publication. Its dormant implementation still extracts Windows binaries from a
 committed ZIP. Historical release/tag deletion has been removed by GL-012. No
-runtime-test or sanitizer workflow exists yet. The `test_chat/` fixture is not an
+sanitizer workflow exists yet. On `ci/gl-011-core-qualification`, the separate
+`runtime-core-ci.yml` builds the production `ExecutionDomainTests` target and
+runs its 39 cases through CTest on hosted Windows/Linux Debug. Read-only access,
+recursive pinned checkout, two build jobs, explicit deadlines and checked
+discovery/completion are independent of publication. Only diagnostic reports/logs
+are uploaded. The branch remains unmerged; hosted outcomes and the continuing
+GL-011 gaps are in the [CI record](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
+The `test_chat/` fixture is not an
 automated qualification gate. Re-enabling distribution requires a reviewed change;
 manual dispatch does not bypass this interim policy.
 
@@ -245,7 +252,7 @@ provenance and runtime-gate gaps remain GL-010/011. See
 | File/HTTP permissions | `src/core/luau_script.h`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
 | RPCs, players, replication | `src/services/roblox_network.h`, `src/core/gl_net_bridge.h`, `src/gameplay/roblox_remote.h` | GL-006, GL-007, GL-008 |
 | Persistence | DataStore section of `luau_stdlib.h`, native file bridge, `backend/README.md` | GL-009 |
-| Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |
+| Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |
 | Editor updates and autocomplete | `addons/GodotLuauUpdater/plugin.gd`, `src/editor/luau_autocomplete.h` | GL-016 |
 | Imported/bundled assets | `src/importer/`, `GodotLuau/assets/`, `GodotLuau/licenses/` | GL-015 |
 

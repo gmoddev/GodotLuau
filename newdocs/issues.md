@@ -33,7 +33,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
-| GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
+| GL-011 | P1 | Open; core CI implemented, review pending | Independent Windows/Linux core gate; native/release gates remain manual |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
@@ -330,6 +330,18 @@ sanitizer coverage and retain evidence. Keep docs-only checks lightweight.
 native Linux ASan/LSan evidence now exist under `tests/runtime`. They are manual
 qualification gates; the inherited release workflow still does not enforce them,
 so GL-011 remains open.
+
+**First CI milestone (2026-10-27): IMPLEMENTED — REVIEW PENDING on
+`ci/gl-011-core-qualification`.** Adds a separate read-only, non-publishing
+Windows/Linux Debug workflow for the existing 39-case production-core suite.
+Recursive pinned checkout, bounded compilation and deadlines, explicit discovery
+and full completion checks reject missing/partial evidence. No new runtime or
+duplicate scheduler is introduced. Diagnostic artifacts exclude production
+binaries. See [commands, actual outcomes and limitations](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
+The release workflow stays disabled. Native Godot, multiplayer/lifecycle/security
+fixtures, sanitizers, persistence failures and release enforcement remain manual
+or independently incomplete. This milestone does not close GL-011 or qualify
+GL-020's deferred adversarial cases.
 
 ## GL-012: Release workflow deletes prior provenance references
 
