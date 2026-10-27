@@ -147,6 +147,19 @@ func Run() -> void:
         Track.call("set_looped", false)
         Track.call("stop")
         Check(not Track.call("is_playing"), "destroyed AnimationPlayer resolves safely")
+        Track = await LoadTrack("Dance")
+        Track.call("play")
+        var Retired := Track
+        Track.connect("Stopped", func(_Completed: bool) -> void: Retired.queue_free())
+        Track.call("stop")
+        await process_frame
+        Check(not is_instance_valid(Retired), "stop callback may queue track destruction")
+        Track = await LoadTrack("Once")
+        Track.call("play")
+        var Completed := Track
+        Track.connect("Ended", func() -> void: Completed.queue_free())
+        await create_timer(0.2).timeout
+        Check(not is_instance_valid(Completed), "completion callback may queue track destruction")
         Network.free()
         Network = Create("NetworkService", "NetworkService", Game)
         await process_frame
@@ -165,6 +178,11 @@ func RunServer() -> void:
         Script("assert(game:GetService('NetworkService'):StartServer(game:GetAttribute('Port'), 4))")
         await process_frame
     Network.set_process(false)
+    if Mode == "Listen":
+        MakeCharacter()
+        Track = await LoadTrack("Wave")
+        Track.call("set_looped", true)
+        Track.call("play")
     Mark("ready")
     await Wait("client1.play")
     First = int(Read("client1.peer"))
@@ -174,17 +192,22 @@ func RunServer() -> void:
     await Wait("client2.joined")
     Second = int(Read("client2.peer"))
     await Drain()
+    if Mode == "Listen": Network.rpc("_recv_state", 1, Vector3.ZERO, 0.0, 1, 100.0, 0.0, false)
     Mark("spawn")
     await Wait("both.spawned")
     await Drain()
     Observe(First, "Wave", 1.0, true)
     Observe(Second, "Dance", 1.0, false)
+    Player(Puppet(First)).seek(4.0)
     Check(int(Cache()[First]["UserId"]) != int(Cache()[Second]["UserId"]), "independent sessions")
     Mark("settings")
     await Wait("settings.sent")
     await Drain()
     Observe(First, "Wave", 1.75, false)
+    Check(Player(Puppet(First)).current_animation_position >= 4.0, "remote updates preserve playback position")
     Observe(Second, "Dance", 1.0, false)
+    if Mode == "Listen":
+        Check(Player(Character).get_animation("Wave").loop_mode == Animation.LOOP_LINEAR, "host loop configuration independent of remote character")
     Mark("replace")
     await Wait("replace.sent")
     await Drain()
@@ -212,6 +235,8 @@ func RunServer() -> void:
     Network.call("_relay_anim", "res://Wave.tres", "Wave", 1.0, true, true)
     Network.call("_recv_anim", Second, "res://Wave.tres", "Wave", 1.0, true, true)
     Check(Cache() == Before, "wrong-role/sender-zero operations have no mutation")
+    for Target in [0, -1, 2147483647]:
+        Network.rpc("_recv_anim", Target, "res://Wave.tres", "Wave", 1.0, true, true)
     var OldSession: int = 2
     Mark("disconnect")
     await Wait("client1.disconnected")
@@ -233,7 +258,7 @@ func RunServer() -> void:
     Mark("close2")
     await Wait("client2.closed")
     await Drain()
-    Check(Cache().is_empty(), "all departed sessions cleaned")
+    Check(not Cache().has(Replacement) and not Cache().has(Second), "all departed sessions cleaned")
     Network.free()
     Network = Create("NetworkService", "NetworkService", Game)
     await process_frame
@@ -244,6 +269,11 @@ func RunServer() -> void:
     Finish()
 
 func RunClient() -> void:
+    if Index == 1:
+        MakeCharacter()
+        Track = await LoadTrack("Wave")
+        Track.call("set_looped", true)
+        Track.call("play") # A later server UID must recover playback begun before connection.
     if Network.call("get_mode") != 2:
         Script("assert(game:GetService('NetworkService'):Connect('127.0.0.1', game:GetAttribute('Port')))")
     var Deadline := Time.get_ticks_msec() + 10000
@@ -255,10 +285,6 @@ func RunClient() -> void:
     var Identity: int = Network.call("get_peer_id")
     Mark("client" + str(Index) + ".peer", str(Identity))
     if Index == 1:
-        MakeCharacter()
-        Track = await LoadTrack("Wave")
-        Track.call("set_looped", true)
-        Track.call("play")
         Mark("client1.play")
     else:
         First = int(Read("client1.peer"))
@@ -275,15 +301,29 @@ func RunClient() -> void:
         await Wait("client2.spawned")
         Mark("both.spawned")
     await Wait("settings")
+    if Index == 2 and Mode == "Listen": Observe(1, "Wave", 1.0, true)
     if Index == 1:
         var Animator := Player(Character)
         Animator.seek(5.0)
+        Track.call("set_speed", 0.0)
+        Track.call("set_speed", 20.0)
         Track.call("set_speed", 1.75)
         Track.call("set_looped", false)
         Check(Animator.current_animation_position >= 5.0, "settings do not restart animation")
+        # Invalid values must not alter cache or relay over the normal transport.
+        Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "Wave", NAN, true, true)
+        Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "Wave", INF, true, true)
+        Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "Wave", -1.0, true, true)
+        Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "", 1.0, true, true)
+        Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "Wave", 21.0, true, true)
+        Network.rpc_id(1, "_relay_anim", "x".repeat(1025), "Wave", 1.0, true, true)
+        Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "x".repeat(129), 1.0, true, true)
         Mark("settings.sent")
     await Wait("replace")
-    if Index == 2: Observe(First, "Wave", 1.75, false)
+    if Index == 2:
+        Observe(First, "Wave", 1.75, false)
+        var Animator := Player(Puppet(First))
+        Check(Animator.current_animation_position > 0.1, "remote settings did not repeatedly restart playback")
     if Index == 1:
         Track = await LoadTrack("Dance")
         Track.call("set_looped", true)
@@ -317,6 +357,7 @@ func RunClient() -> void:
         Track.call("play")
         Mark("respawn.play.sent")
     await Wait("disconnect")
+    for Target in [0, -1, 2147483647]: Check(not Cache().has(Target), "missing target mapping rejected")
     if Index == 1:
         Track.call("stop")
         Network.call("disconnect_net")

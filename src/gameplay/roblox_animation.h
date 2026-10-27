@@ -44,6 +44,34 @@ using namespace godot;
 // muñeco de otro jugador—, cargando el recurso si hace falta. Es el mismo camino
 // que Humanoid:LoadAnimation, para que se vea exactamente lo que hizo su dueño
 // (1.14.12).
+static inline bool GLLoadAnimation(AnimationPlayer* Player, const String& Identity, const String& Name) {
+    if (!Player || Name.is_empty()) return false;
+    Dictionary Resources = Player->get_meta("_gl_animation_resources", Dictionary());
+    if (Player->has_animation(StringName(Name)) &&
+        (Identity.is_empty() || String(Resources.get(Name, Identity)) == Identity)) return true;
+    ResourceLoader* Loader = ResourceLoader::get_singleton();
+    String Path = gl_is_roblox_asset(Identity) ? gl_local_asset_path(Identity) : Identity;
+    if (!Loader || Path.is_empty() || !Loader->exists(Path, "Animation")) return false;
+    Ref<Animation> Loaded = Loader->load(Path, "Animation");
+    if (Loaded.is_null()) return false;
+    // Loop mode belongs to this character, not ResourceLoader's shared cache.
+    Ref<Animation> Clip = Loaded->duplicate(true);
+    Ref<AnimationLibrary> Library;
+    if (Player->has_animation_library(StringName(""))) Library = Player->get_animation_library(StringName(""));
+    else {
+        Library.instantiate();
+        Player->add_animation_library(StringName(""), Library);
+    }
+    if (Library->has_animation(StringName(Name))) {
+        if (Player->get_current_animation() == StringName(Name)) Player->stop();
+        Library->remove_animation(StringName(Name));
+    }
+    if (Library->add_animation(StringName(Name), Clip) != OK) return false;
+    Resources[Name] = Identity;
+    Player->set_meta("_gl_animation_resources", Resources);
+    return true;
+}
+
 static inline void gl_anim_apply(Node* character, const String& anim_id, const String& anim_name,
                                  float speed, bool looped, bool play) {
     if (!character) return;
@@ -58,26 +86,12 @@ static inline void gl_anim_apply(Node* character, const String& anim_id, const S
         ap->set_name("AnimationPlayer");
         character->add_child(ap);
     }
-    if (!anim_name.is_empty() && !anim_id.is_empty() && !ap->has_animation(StringName(anim_name))) {
-        // Las animaciones de Roblox viven en su nube: no se pueden cargar aqui.
-        ResourceLoader* rl = ResourceLoader::get_singleton();
-        Ref<Animation> loaded;
-        String anim_path = anim_id;
-        if (gl_is_roblox_asset(anim_id)) anim_path = gl_local_asset_path(anim_id);
-        if (rl && !anim_path.is_empty() && rl->exists(anim_path, "Animation"))
-            loaded = rl->load(anim_path, "Animation");
-        if (loaded.is_valid()) {
-            Ref<AnimationLibrary> lib;
-            lib.instantiate();
-            lib->add_animation(StringName(anim_name), loaded);
-            ap->add_animation_library(StringName(""), lib);
-        }
-    }
-    if (anim_name.is_empty() || !ap->has_animation(StringName(anim_name))) return;
+    if (!GLLoadAnimation(ap, anim_id, anim_name)) return;
     Ref<Animation> a = ap->get_animation(StringName(anim_name));
     if (a.is_valid()) a->set_loop_mode(looped ? Animation::LOOP_LINEAR : Animation::LOOP_NONE);
     ap->set_speed_scale(speed);
-    ap->play(StringName(anim_name));
+    if (!ap->is_playing() || ap->get_current_animation() != StringName(anim_name))
+        ap->play(StringName(anim_name));
 }
 
 class AnimationTrack : public Node {
@@ -96,7 +110,12 @@ private:
     float             speed        = 1.0f;
     float             weight       = 1.0f;
     bool              playing      = false;
-    AnimationPlayer*  anim_player  = nullptr;
+    uint64_t AnimationPlayerIdentity = 0;
+
+    AnimationPlayer* GetAnimationPlayer() const {
+        AnimationPlayer* Player = Object::cast_to<AnimationPlayer>(ObjectDB::get_instance(AnimationPlayerIdentity));
+        return Player && !Player->is_queued_for_deletion() ? Player : nullptr;
+    }
 
 public:
     void set_anim_id(const String& id) { anim_id = id; }
@@ -106,7 +125,7 @@ private:
     // avisar al NetworkService para que los demás la vean en mi muñeco. Se
     // resuelve por ObjectID + call() para no depender de roblox_network.h.
     void _net_notify(bool play_flag) {
-        if (!gl_net_service_id()) return;   // sin sesión de red: nada que replicar
+        if (!is_inside_tree() || is_queued_for_deletion() || !gl_net_service_id()) return;
         Object* ns = ObjectDB::get_instance(gl_net_service_id());
         if (!ns) return;
         Node* hum = get_parent();                       // AnimationTrack > Humanoid
@@ -141,12 +160,16 @@ protected:
 public:
     void setup(const String& name, AnimationPlayer* player) {
         anim_name   = name;
-        anim_player = player;
-        if (anim_player) anim_player->connect("animation_finished",
+        AnimationPlayerIdentity = player ? static_cast<uint64_t>(player->get_instance_id()) : 0;
+        if (player) player->connect("animation_finished",
             callable_mp(this, &AnimationTrack::_on_finished));
     }
 
+    // Session initialization replays already-running local tracks after UID assignment.
+    void ReplicateState() { if (is_playing()) _net_notify(true); }
+
     void play() {
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (!anim_player || anim_name.is_empty()) return;
         if (!anim_player->has_animation(StringName(anim_name))) return;
         anim_player->set_speed_scale(speed);
@@ -157,28 +180,36 @@ public:
     }
 
     void stop() {
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (!anim_player) return;
         anim_player->stop();
         playing = false;
-        emit_signal("Stopped", false);
-        _fire_noarg(stopped_cbs);
         _net_notify(false);
+        auto Callbacks = stopped_cbs;
+        emit_signal("Stopped", false);
+        _fire_noarg(Callbacks);
     }
 
     bool is_playing() const {
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (!anim_player) return false;
         return anim_player->is_playing() && anim_player->get_current_animation() == StringName(anim_name);
     }
 
     void set_looped(bool v) {
         looped = v;
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (anim_player && !anim_name.is_empty()) _update_loop();
+        if (is_playing()) _net_notify(true);
     }
     bool get_looped() const { return looped; }
 
     void set_speed(float v) {
+        if (!Math::is_finite(v)) return;
         speed = Math::clamp(v, 0.0f, 20.0f);
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (anim_player) anim_player->set_speed_scale(speed);
+        if (is_playing()) _net_notify(true);
     }
     float get_speed() const { return speed; }
 
@@ -188,6 +219,7 @@ public:
     void adjust_speed(float v) { set_speed(v); }
 
     float get_length() const {
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (!anim_player || anim_name.is_empty()) return 0.0f;
         Ref<Animation> a = anim_player->get_animation(StringName(anim_name));
         if (!a.is_valid()) return 0.0f;
@@ -195,6 +227,7 @@ public:
     }
 
     float get_time_position() const {
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (!anim_player || !is_playing()) return 0.0f;
         return (float)anim_player->get_current_animation_position();
     }
@@ -213,6 +246,7 @@ public:
 
 private:
     void _update_loop() {
+        AnimationPlayer* anim_player = GetAnimationPlayer();
         if (!anim_player || anim_name.is_empty()) return;
         Ref<Animation> a = anim_player->get_animation(StringName(anim_name));
         if (!a.is_valid()) return;
@@ -220,15 +254,20 @@ private:
     }
 
     void _on_finished(StringName name) {
-        if (name != StringName(anim_name)) return;
+        if (name != StringName(anim_name) || !playing) return;
         playing = false;
+        _net_notify(false);
+        auto Ended = ended_cbs;
+        auto Stopped = stopped_cbs;
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         emit_signal("Ended");
-        emit_signal("Stopped", true);
-        _fire_noarg(ended_cbs);
-        _fire_noarg(stopped_cbs);
+        AnimationTrack* Track = Object::cast_to<AnimationTrack>(ObjectDB::get_instance(Identity));
+        if (Track && !Track->is_queued_for_deletion()) Track->emit_signal("Stopped", true);
+        _fire_noarg(Ended);
+        _fire_noarg(Stopped);
     }
 
-    void _fire_noarg(std::vector<LuaCallback>& list) {
+    static void _fire_noarg(std::vector<LuaCallback> list) {
         for (int i=(int)list.size()-1; i>=0; --i) {
             auto& cb=list[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)){list.erase(list.begin()+i);continue;}
