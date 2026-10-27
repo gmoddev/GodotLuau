@@ -1,5 +1,14 @@
 # Shared-domain qualification evidence
 
+[`gl020-animation-qualification-2026-10-27.json`](gl020-animation-qualification-2026-10-27.json)
+records the GL-020 dedicated branch's functional implementation: matching native/
+fixture source hashes, six 39-case core configurations, four SCons builds and
+180 final native process results. Runtime/source identity, binary/result/log
+hashes, retained fixture failures and remaining security/platform limitations
+are explicit. The [animation report](../animation-lifecycle-validation.md)
+documents execution/session/cache contracts and reproduction. GL-020 remains
+open for full animation transport security qualification; main is not merged.
+
 [`gl006-008-main-integration-2026-10-27.json`](gl006-008-main-integration-2026-10-27.json)
 records the normal main merge, qualified-tree identity, 86 matching worker source/
 build/test files, six fresh core executions and 90 fresh native process results.

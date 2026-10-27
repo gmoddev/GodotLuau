@@ -33,6 +33,7 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 | [Shared-domain work log](shared-domains-work-log.md) | Baseline, ongoing implementation checkpoints, and executed qualification evidence |
 | [Shared-domain validation](shared-domains-validation.md) | Reproduction commands, acceptance coverage and remaining gaps |
 | [Network authority validation](network-authority-validation.md) | Integrated GL-006/008 trust boundaries, transport regressions, compatibility and remaining gaps |
+| [Animation lifecycle validation](animation-lifecycle-validation.md) | GL-020 development-branch execution/session rules, functional regressions and outstanding security qualification |
 
 ## Documentation authority
 

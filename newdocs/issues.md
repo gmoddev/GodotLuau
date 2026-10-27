@@ -566,3 +566,32 @@ preserve valid ownership/late-join animation behavior, and demonstrate actual
 two-client rejection without animation/cache/relay effects plus valid play/stop.
 Do not close based only on a helper test or compilation. No animation fix is
 included in the GL-006/008 branch.
+
+**Functional implementation (2026-10-27): delivered on
+`fix/gl-020-animation-lifecycle`; security qualification remains OPEN.** Runtime
+commits `f9b27c6b6bb3caa3b8b617e029d45c858a546f9a` and
+`7212b87e71f539a80d8e6b6977510fa075c0a2ba` add existing execution-role/
+transport-sender guards, current service/session validation and AUTHORITY receive
+configuration. Cached animation records bind the server-assigned UserId, preserve
+pre-puppet/late-join updates and clear at character/session/service boundaries.
+Tracks resolve AnimationPlayers by ObjectID; settings/completion replicate and
+loaded clips are independent per character. No wire signature or shared-domain/
+GL-019 ownership/hot-path change is introduced.
+
+The [functional record](animation-lifecycle-validation.md) and its evidence
+manifest distinguish exercised playback/lifecycle checks from closure acceptance.
+GL-020 is **partially qualified**, not closed: actual two-client forged animation
+receive/relay traffic, native handler guards with RPC authority relaxed, and
+proof of rejection without cache/animation/relay effects remain for the security
+follow-up. Existing GL-006/008 adversarial regressions are retained and passing;
+they are not animation security qualification. GL-017/GL-018 remain independently
+open. This branch is not merged into main and publishes no binaries.
+
+**Executed functional qualification:** Windows/Linux Debug/Release core and
+native groups, Windows core ASan and Linux full-native ASan/LSan pass. The 39-case
+core runs in six configurations; four SCons builds pass and run their animation
+fixtures. All 180 final native process results pass (90 animation, 40 existing
+multiplayer/lifetime, 50 GL-006/008). Source/fixture and binary hashes match across
+the checkout/workers; the [manifest](evidence/gl020-animation-qualification-2026-10-27.json)
+retains exact evidence and failed fixture-attempt dispositions. No full animation
+security closure is inferred from these results.
