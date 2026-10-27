@@ -215,6 +215,12 @@ tools, and update/restart behavior. Its URLs still target `Pimpoli/GodotLuau`
 (`addons/GodotLuauUpdater/plugin.gd:4-39`), and `project.godot` enables the plugin.
 Fork source changes do not automatically change its distribution source.
 
+On the unmerged `maintenance/gl-016-fork-updater` branch, runtime replacement
+fails closed at every updater entry/completion and cleanup/rollback/restart path.
+The enabled plugin retains editor tools and explicit optional JSON data downloads,
+with visible disabled-runtime controls. There is no qualified production channel
+or user-setting override. See [fork updater policy](fork-updater-isolation.md).
+
 The single tracked Actions workflow, `.github/workflows/build-release.yml`,
 builds Linux debug/release binaries, extracts Windows binaries from a committed
 ZIP, packages releases, writes the archive back, and deletes older releases and

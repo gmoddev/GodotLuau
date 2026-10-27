@@ -1,5 +1,11 @@
 # Shared-domain qualification evidence
 
+[`gl016-updater-isolation-2026-10-27.json`](gl016-updater-isolation-2026-10-27.json)
+records the unmerged updater-isolation branch: Windows/Linux actual headless
+editor initialization, 596 checks and 42 rejected operations per platform, sentinel
+file preservation, two localhost optional-data downloads and source/log hashes.
+It establishes a closed runtime channel, not a qualified enabled release channel.
+
 [`gl020-main-integration-2026-10-27.json`](gl020-main-integration-2026-10-27.json)
 records the normal GL-020 merge, complete qualified-tree identity, two fresh
 39-case core executions and 36 fresh native functional process results. Matching
