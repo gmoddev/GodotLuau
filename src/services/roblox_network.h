@@ -365,8 +365,59 @@ class NetworkService : public Node {
     // cuanto aparece su muñeco (la animación puede llegar ANTES que el primer
     // estado de posición) y para que el servidor se la cuente a quien entra tarde
     // —si no, una animación en bucle sería invisible para el recién llegado—.
-    struct AnimState { String id; String name; float speed = 1.0f; bool looped = false; bool play = false; };
+    struct AnimState { String id; String name; float speed = 1.0f; bool looped = false; bool play = false; int64_t UserIdentity = 0; };
     std::map<int, AnimState> peer_anim;
+    uint64_t LocalAnimationCharacter = 0;
+    AnimState LocalAnimation;
+    bool AnimationShutdown = false;
+
+    bool AnimationServiceLive() {
+        if (AnimationShutdown || !is_inside_tree() || is_queued_for_deletion() ||
+            gl_net_service_id() != static_cast<uint64_t>(get_instance_id())) return false;
+        Ref<MultiplayerAPI> Multiplayer = _mp();
+        return peer.is_valid() && Multiplayer.is_valid() && Multiplayer->get_multiplayer_peer() == peer &&
+            peer->get_connection_status() == MultiplayerPeer::CONNECTION_CONNECTED &&
+            ((mode == 1 && Multiplayer->is_server()) || (mode == 2 && net_connected && !Multiplayer->is_server()));
+    }
+    bool HasAnimationSession(int Peer) {
+        auto Session = peer_seq_uid.find(Peer);
+        if (!AnimationServiceLive() || Peer <= 0 || Session == peer_seq_uid.end() || Session->second <= 0) return false;
+        // Clients trust the server's ordered UID assignments even before a
+        // puppet/PlayerObject exists. Servers also require current transport membership.
+        return mode == 2 || (mode == 1 && (Peer == 1 || _mp()->get_peers().has(Peer)));
+    }
+    static bool ValidAnimation(const String& Identity, const String& Name, float Speed, bool Play) {
+        return Identity.length() <= 1024 && Name.length() <= 128 && (!Play || !Name.is_empty()) &&
+            Math::is_finite(Speed) && Speed >= 0.0f && Speed <= 20.0f;
+    }
+    void SyncLocalAnimation() {
+        Node* Character = _local_player();
+        Node* HumanoidNode = Character ? Character->get_node_or_null("Humanoid") : nullptr;
+        if (!HumanoidNode) return;
+        for (int Index = 0; Index < HumanoidNode->get_child_count(); ++Index)
+            if (AnimationTrack* Track = Object::cast_to<AnimationTrack>(HumanoidNode->get_child(Index))) Track->ReplicateState();
+    }
+    void SendLocalAnimation(const AnimState& State) {
+        int Identity = _my_peer_id();
+        if (!HasAnimationSession(Identity) || is_coordinator) return;
+        LocalAnimation = State;
+        if (mode == 1) {
+            peer_anim[Identity] = State;
+            peer_anim[Identity].UserIdentity = peer_seq_uid.at(Identity);
+            rpc("_recv_anim", Identity, State.id, State.name, State.speed, State.looped, State.play);
+        } else if (mode == 2 && net_connected) {
+            rpc_id(1, "_relay_anim", State.id, State.name, State.speed, State.looped, State.play);
+        }
+    }
+    void OnAnimationCharacterGone(uint64_t CharacterIdentity) {
+        if (LocalAnimationCharacter != CharacterIdentity) return;
+        LocalAnimationCharacter = 0;
+        Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+        if (!LocalAnimation.play || !Scene || !Scene->is_inside_tree() || Scene->is_queued_for_deletion()) return;
+        AnimState Stopped = LocalAnimation;
+        Stopped.play = false;
+        SendLocalAnimation(Stopped);
+    }
 
     // ── Replicación automática (1.14.5) ─────────────────────────────────
     // netId (asignado por el servidor) -> ObjectID del nodo replicado. En el
@@ -546,6 +597,13 @@ class NetworkService : public Node {
     // jugador LOCAL cuando el peer soy yo.
     void _gl_peer_uid(int peer, int uid) {
         if (get_multiplayer()->get_remote_sender_id() != 1) return;   // solo el servidor asigna
+        auto Animation = peer_anim.find(peer);
+        if (Animation != peer_anim.end() && Animation->second.UserIdentity != uid) {
+            auto Puppet = puppets.find(peer);
+            if (Puppet != puppets.end() && _valid(Puppet->second.node))
+                gl_anim_apply(Puppet->second.node, "", "", 1.0f, false, false);
+            peer_anim.erase(peer);
+        }
         peer_seq_uid[peer] = (int64_t)uid;
         int myid = _my_peer_id();
         if (peer == myid) {
@@ -553,6 +611,7 @@ class NetworkService : public Node {
             if (PlayerObject* lp = _local_player_obj()) lp->user_id = (int64_t)uid;
         }
         if (PlayerObject* po = _peer_player(peer)) po->user_id = (int64_t)uid;   // corregir si ya existía
+        if (peer == myid) SyncLocalAnimation();
     }
 
     void _name_local_player(int display_num) {
@@ -701,7 +760,7 @@ class NetworkService : public Node {
         rpc_config("_set_char_health", r); // salud autoritativa del servidor (1.14.11)
         rpc_config("_gl_teleport",   r);   // TeleportService: cambiar de mundo (1.14.17)
         rpc_config("_relay_anim",    r);   // animaciones: NO se pueden perder (1.14.12)
-        rpc_config("_recv_anim",     r);
+        rpc_config("_recv_anim",     ServerReliable);
         // RemoteEvent por red (Fase 2): confiables y no-confiables, ambos sentidos
         rpc_config("_re_deliver_server",  r);
         rpc_config("_re_deliver_client",  r);
@@ -837,7 +896,7 @@ class NetworkService : public Node {
             _ensure_puppet_humanoid(pup);
             // Si el muñeco sale del árbol por fuera (Luau Destroy/ClearAllChildren),
             // quitar la entrada ANTES de que el puntero quede colgando.
-            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key));
+            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key, static_cast<uint64_t>(pup->get_instance_id())));
             Puppet P; P.node = pup; P.tpos = pos; P.tyaw = yaw; P.has_target = true;
             P.anim_sp = sp; P.anim_air = air;
             if (Node3D* v = Object::cast_to<Node3D>(pup->get_node_or_null("Visual")))
@@ -859,7 +918,8 @@ class NetworkService : public Node {
             _apply_puppet_health(pup, key, hp);
             // Animación que ya estaba sonando antes de que naciera su muñeco (1.14.12).
             auto ait = peer_anim.find(key);
-            if (ait != peer_anim.end() && ait->second.play)
+            if (ait != peer_anim.end() && ait->second.play && HasAnimationSession(key) &&
+                ait->second.UserIdentity == peer_seq_uid.at(key))
                 gl_anim_apply(pup, ait->second.id, ait->second.name, ait->second.speed, ait->second.looped, true);
         } else {
             it->second.tpos = pos; it->second.tyaw = yaw; it->second.has_target = true;
@@ -914,7 +974,7 @@ class NetworkService : public Node {
             pup->set_name(String("RemotePlayer_") + String::num_int64(key));
             wsp->add_child(pup);
             pup->set_global_position(pos);
-            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key));
+            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key, static_cast<uint64_t>(pup->get_instance_id())));
             Puppet P; P.node = pup; P.tpos2d = pos; P.tyaw = rot; P.has_target = true;
             puppets[key] = P;
             if (PlayerObject* po = _ensure_peer_player(key)) {
@@ -933,11 +993,15 @@ class NetworkService : public Node {
     }
     // El muñeco salió del árbol: quitar su entrada del mapa mientras el puntero
     // todavía es válido (evita is_instance_valid sobre un Node* colgante -> UAF).
-    void _on_puppet_gone(int key) {
+    void _on_puppet_gone(int key, uint64_t Identity) {
         auto it = puppets.find(key);
-        if (it != puppets.end()) puppets.erase(it);
+        if (it != puppets.end() && static_cast<uint64_t>(it->second.node->get_instance_id()) == Identity) {
+            peer_anim.erase(key);
+            puppets.erase(it);
+        }
     }
     void _remove_puppet(int key) {
+        peer_anim.erase(key);
         auto it = puppets.find(key);
         if (it != puppets.end()) {
             if (_valid(it->second.node)) it->second.node->queue_free();
@@ -945,6 +1009,7 @@ class NetworkService : public Node {
         }
     }
     void _clear_puppets() {
+        peer_anim.clear();
         for (auto& kv : puppets) if (_valid(kv.second.node)) kv.second.node->queue_free();
         puppets.clear();
     }
@@ -1055,10 +1120,12 @@ protected:
         ClassDB::bind_method(D_METHOD("net_anim_state", "character", "anim_id", "anim_name", "speed", "looped", "play"), &NetworkService::net_anim_state);
         ClassDB::bind_method(D_METHOD("_relay_anim", "anim_id", "anim_name", "speed", "looped", "play"),                 &NetworkService::_relay_anim);
         ClassDB::bind_method(D_METHOD("_recv_anim", "who", "anim_id", "anim_name", "speed", "looped", "play"),           &NetworkService::_recv_anim);
+        ClassDB::bind_method(D_METHOD("GetAnimationStates"), &NetworkService::GetAnimationStates);
+        ClassDB::bind_method(D_METHOD("OnAnimationCharacterGone", "identity"), &NetworkService::OnAnimationCharacterGone);
         ClassDB::bind_method(D_METHOD("_recv_state2d", "who", "pos", "rot", "idx"), &NetworkService::_recv_state2d);
         ClassDB::bind_method(D_METHOD("_relay_state2d", "pos", "rot", "idx"),       &NetworkService::_relay_state2d);
         ClassDB::bind_method(D_METHOD("_recv_remove", "who"),                       &NetworkService::_recv_remove);
-        ClassDB::bind_method(D_METHOD("_on_puppet_gone", "key"),                    &NetworkService::_on_puppet_gone);
+        ClassDB::bind_method(D_METHOD("_on_puppet_gone", "key", "identity"),        &NetworkService::_on_puppet_gone);
         ClassDB::bind_method(D_METHOD("gl_send_chat", "name", "text"),              &NetworkService::gl_send_chat);
         ClassDB::bind_method(D_METHOD("_relay_chat", "name", "text"),               &NetworkService::_relay_chat);
         ClassDB::bind_method(D_METHOD("_recv_chat", "from", "name", "text"),        &NetworkService::_recv_chat);
@@ -1134,6 +1201,7 @@ protected:
 
     void _notification(int p_what) {
         if (p_what == NOTIFICATION_EXIT_TREE) {
+            AnimationShutdown = true;
             if (gl_net_service_id() == static_cast<uint64_t>(get_instance_id())) {
                 // The SceneTree can outlive this service. Resolve pending
                 // callers before its response map and transport owner disappear.
@@ -1156,6 +1224,7 @@ public:
         }
         gl_mp_log(String("otro jugador entro (peer ") + String::num_int64(id) + ")");
         if (mode == 1) {
+            peer_anim.erase(id);
             // UserId secuencial: primero poner al día al peer nuevo con las
             // asignaciones YA hechas (host + otros peers), luego asignarle el suyo
             // y avisar a TODOS para que todas las ventanas coincidan.
@@ -1214,6 +1283,7 @@ public:
     void _on_connect_failed()          { mode = 0; if (retry_left > 0) return; _fire(fail_cbs, false, 0); }
     void _on_server_disconnected() {
         net_connected = false;
+        LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         _rf_fail_pending(0, "InvokeServer: lost connection to the server");
         _clear_puppets();
         // Cliente local: si el host (editor) se detiene, cerrar esta ventana para
@@ -1804,7 +1874,8 @@ public:
         // Animaciones en curso (1.14.12): sin esto, una animación en bucle que ya
         // estaba sonando sería invisible para el que acaba de entrar.
         for (auto& kv : peer_anim) {
-            if (!kv.second.play || kv.first == id) continue;
+            if (!kv.second.play || kv.first == id || !HasAnimationSession(kv.first) ||
+                kv.second.UserIdentity != peer_seq_uid.at(kv.first)) continue;
             rpc_id(id, "_recv_anim", kv.first, kv.second.id, kv.second.name,
                    kv.second.speed, kv.second.looped, true);
         }
@@ -2009,22 +2080,29 @@ public:
     // animación de cada jugador la decide su dueño (como Roblox).
     void net_anim_state(Object* character, String anim_id, String anim_name, float speed, bool looped, bool play) {
         Node* ch = Object::cast_to<Node>(character);
-        if (!ch || mode == 0) return;
+        if (!ch || !ch->is_inside_tree() || ch->is_queued_for_deletion() || !AnimationServiceLive() ||
+            !ValidAnimation(anim_id, anim_name, speed, play)) return;
         if (ch != _local_player()) return;   // no re-emitir la animación de un muñeco
-        if (mode == 2 && !net_connected) return;
-        if (is_server()) {
-            peer_anim[1] = { anim_id, anim_name, speed, looped, play };   // la mía, para el late-join
-            rpc("_recv_anim", 1, anim_id, anim_name, speed, looped, play);
-        } else {
-            rpc_id(1, "_relay_anim", anim_id, anim_name, speed, looped, play);
+        if (!HasAnimationSession(_my_peer_id())) return;
+        uint64_t CharacterIdentity = static_cast<uint64_t>(ch->get_instance_id());
+        if (LocalAnimationCharacter != CharacterIdentity) {
+            LocalAnimationCharacter = CharacterIdentity;
+            Callable Callback = Callable(this, "OnAnimationCharacterGone").bind(CharacterIdentity);
+            if (!ch->is_connected("tree_exiting", Callback)) ch->connect("tree_exiting", Callback);
         }
+        SendLocalAnimation({ anim_id, anim_name, speed, looped, play });
     }
     void _relay_anim(String anim_id, String anim_name, float speed, bool looped, bool play) {
-        int sid = get_multiplayer()->get_remote_sender_id();
+        int sid = GetClientRpcSender();
+        if (!sid || !HasAnimationSession(sid) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         _apply_anim_puppet(sid, anim_id, anim_name, speed, looped, play);
-        rpc("_recv_anim", sid, anim_id, anim_name, speed, looped, play);
+        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && Service->HasAnimationSession(sid) && Service->GetClientRpcSender() == sid)
+            Service->rpc("_recv_anim", sid, anim_id, anim_name, speed, looped, play);
     }
     void _recv_anim(int who, String anim_id, String anim_name, float speed, bool looped, bool play) {
+        if (!AcceptServerRpc() || !HasAnimationSession(who) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
         int myid = _my_peer_id();
         if (who == myid) return;   // ese soy yo
         _apply_anim_puppet(who, anim_id, anim_name, speed, looped, play);
@@ -2033,10 +2111,27 @@ public:
         // Se recuerda SIEMPRE, aunque el muñeco no exista todavía: se aplicará en
         // cuanto aparezca (_update_puppet3d) y sirve para contárselo a los que
         // entren después.
-        peer_anim[who] = { anim_id, anim_name, speed, looped, play };
+        if (!HasAnimationSession(who)) return;
+        peer_anim[who] = { anim_id, anim_name, speed, looped, play, peer_seq_uid.at(who) };
         auto it = puppets.find(who);
-        if (it == puppets.end() || !_valid(it->second.node)) return;
+        if (it == puppets.end() || !_valid(it->second.node) || it->second.node->is_queued_for_deletion()) return;
         gl_anim_apply(it->second.node, anim_id, anim_name, speed, looped, play);
+    }
+
+    // Read-only diagnostic snapshot; not an RPC or an alternate session registry.
+    Dictionary GetAnimationStates() const {
+        Dictionary States;
+        for (const auto& Entry : peer_anim) {
+            Dictionary State;
+            State["Id"] = Entry.second.id;
+            State["Name"] = Entry.second.name;
+            State["Speed"] = Entry.second.speed;
+            State["Looped"] = Entry.second.looped;
+            State["Play"] = Entry.second.play;
+            State["UserId"] = Entry.second.UserIdentity;
+            States[Entry.first] = State;
+        }
+        return States;
     }
 
     // ── TeleportService (1.14.17) ────────────────────────────────────────
@@ -2606,6 +2701,8 @@ public:
         Error e = peer->create_server(port, max_players > 0 ? max_players : 32);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
         ChatBudgets.clear();
+        _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
+        peer_seq_uid.clear();
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 1;
@@ -2615,6 +2712,7 @@ public:
         if (PlayerObject* lp = _local_player_obj()) lp->user_id = 1;
         _stamp_static_ids();   // antes de correr scripts: que ya vean el place con netId (1.14.10)
         gl_run_deferred_server_scripts();   // si esta ventana era cliente y se promovió a host, corre ahora sus ServerScripts
+        SyncLocalAnimation();
         set_process(true);
         return true;
     }
@@ -2632,6 +2730,8 @@ public:
         Error e = peer->create_client(addr, port);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); target_address = ""; return false; }
         ChatBudgets.clear();
+        _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
+        peer_seq_uid.clear(); gl_local_user_id() = 0;
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 2;
@@ -2642,6 +2742,7 @@ public:
         return true;
     }
     void disconnect_net() {
+        LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         ChatBudgets.clear();
         _clear_puppets();
         Ref<MultiplayerAPI> m = _mp();

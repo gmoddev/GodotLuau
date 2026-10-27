@@ -158,7 +158,39 @@ available, including scenes without a Players service. See the
 rules, compatibility, source identity and fresh integration transport evidence.
 Structural replication, RemoteFunction reply and owned-physics checks are
 preserved. Client-supplied movement values remain GL-007; independent animation
-RPC authority gaps are GL-020. No general networking security claim is made.
+RPC authority is addressed on the GL-020 development branch below; its full
+security transport qualification remains independent. No general networking
+security claim is made.
+
+On `fix/gl-020-animation-lifecycle`, `_relay_anim` keeps its reliable ANY_PEER
+client-to-server configuration and requires the existing Server-role/sender
+guard, current service/transport and assigned session. `_recv_anim` uses reliable
+AUTHORITY plus the Client-role/server-origin guard and a positive mapped target;
+the local target is ignored. Both reject nonfinite/out-of-range speed (0–20),
+IDs over 1,024 characters, names over 128 characters and empty play names before
+mutation. RPC names, arguments and wire shapes remain unchanged.
+
+`peer_anim` stores the assigned UserId with each transport peer's latest state,
+including stops. It admits mapped sessions before PlayerObject/puppet creation;
+3D puppet initialization and late-join replay validate that same session binding.
+Puppet exit/removal, peer departure, server loss, disconnect, transport replacement
+and service exit clear obsolete cache entries. Puppet exit callbacks include the
+character ObjectID so an old queued character cannot erase a replacement's state.
+Local character exit sends a stop through the existing animation wire path while
+the service/session is live; scene/service shutdown admits no animation work.
+UID assignment/server startup replays already-playing local tracks, recovering
+preconnection playback. No separate session authority is introduced.
+
+AnimationTrack resolves its AnimationPlayer ObjectID on use. Active speed/loop
+changes and natural completion notify the network; stop/completion notifications
+precede user callbacks, whose lists are copied for reentrant dispatch. Per-player
+Animation resources duplicate loaded clips so loop configuration is independent.
+The loader reuses the default library for clip replacement. Applying the current
+clip's settings preserves playback position. `GetAnimationStates()` is a native
+read-only diagnostic snapshot of the actual cache (including UserId), not an RPC.
+The [animation record](animation-lifecycle-validation.md) separates functional
+qualification from outstanding adversarial transport acceptance. Shared domains,
+GL-019 paths and owner-based coroutine cancellation are unchanged.
 
 The coordinator uses local process discovery/heartbeat files. Upstream documents
 no account authentication and no incoming connection validation against

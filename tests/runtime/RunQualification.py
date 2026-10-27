@@ -197,6 +197,48 @@ def SecurityFixtures(Args, Output, Environment):
     return Results
 
 
+def AnimationFixtures(Args, Output, Environment):
+    Results = []
+    for Mode in Args.animation_modes:
+        Project = Output / Mode
+        Prepare(Project, Args.extension)
+        Entries = []
+        try:
+            SelectedPort = 25575 if Mode == "Editor" else Port()
+            if Mode == "Editor":
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as Probe:
+                    Probe.bind(("127.0.0.1", SelectedPort))
+            Roles = ["server"] if Mode == "Local" else ["server", "client1", "client2"]
+            for Role in Roles:
+                FixtureRole = "client" if Role.startswith("client") else "server"
+                Extra = ["--fixture-role", FixtureRole, "--fixture-port", str(SelectedPort), "--animation-mode", Mode]
+                if FixtureRole == "client":
+                    Extra += ["--fixture-client-index", Role[-1]]
+                if Mode == "Editor":
+                    Extra += ["--glindex", {"server": "1", "client1": "2", "client2": "3"}[Role], "--glcount", "2", "--gldevice", "PC"]
+                elif Mode == "Dedicated" and Role == "server":
+                    Extra += ["--glserver", str(SelectedPort)]
+                Label = f"animation-{Mode}-{Role}"
+                Process = Start(Args.godot, Project, "AnimationIntegration.gd", Label, Extra, Environment)
+                Entries.append((Process, Label, FixtureRole))
+                if Role in ("server", "client1") and Mode != "Local":
+                    Marker = "ready" if Role == "server" else "latejoin"
+                    Deadline = time.monotonic() + Args.timeout
+                    while not (Project / ("animation-" + Marker)).exists():
+                        if Process.poll() is not None or time.monotonic() > Deadline:
+                            raise RuntimeError(f"Animation readiness failed: {Label}")
+                        time.sleep(0.02)
+            Deadline = time.monotonic() + Args.timeout
+            for Process, Label, Role in Entries:
+                Results.append(Check(Process, Deadline, Project, Label, f"[Network:AnimationTest] {Role} PASS"))
+        finally:
+            for Process, _, _ in Entries:
+                if Process.poll() is None:
+                    Process.kill()
+                    Process.wait()
+    return Results
+
+
 def Probes(Args, Output, Environment):
     Output = Output / "engine-only"
     Output.mkdir(exist_ok=True)
@@ -224,6 +266,8 @@ def Main():
     Parser.add_argument("--asan-runtime", type=Path)
     Parser.add_argument("--teardown", action="store_true")
     Parser.add_argument("--security", action="store_true")
+    Parser.add_argument("--animation", action="store_true")
+    Parser.add_argument("--animation-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Editor"), default=["Local", "Listen", "Dedicated", "Editor"])
     Parser.add_argument("--security-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Handler"), default=["Local", "Listen", "Dedicated", "Handler"])
     Parser.add_argument("--probe", action="store_true")
     Parser.add_argument("--counts", type=int, nargs="+", default=[10, 100, 1000])
@@ -248,6 +292,8 @@ def Main():
         Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "load", "[Runtime:LoadProbe] PASS")]
     elif Args.security:
         Results = SecurityFixtures(Args, Args.output, Environment)
+    elif Args.animation:
+        Results = AnimationFixtures(Args, Args.output, Environment)
     elif Args.probe:
         Results = Probes(Args, Args.output, Environment)
     elif Args.baseline:
