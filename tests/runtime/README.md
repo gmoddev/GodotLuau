@@ -1,5 +1,31 @@
 # Shared-domain regression fixtures
 
+## Network authority and chat security
+
+The security branch adds `NetworkSecurity.gd` through the existing runner:
+
+```text
+python tests/runtime/RunQualification.py --godot <existing-Godot-4.7.1> --extension <candidate-library> --output <new-isolated-directory> --security --timeout 60
+```
+
+This executes ten processes across Local, Listen, Dedicated and Handler modes.
+Handler deliberately changes the four receive RPCs to ANY_PEER in the fixture,
+testing native guards independently of transport authority filtering. Attacks
+still traverse real ENet; file barriers coordinate actors only. Use a new output
+directory per run, since markers and logs are retained there. For a focused
+reproduction, `--security-modes Dedicated` selects one server/two-client group.
+
+The same message signatures and existing runner prepare/start/check/deadline/
+cleanup paths apply. Windows uses hidden processes and crash-UI suppression;
+Linux full-native sanitizer runs use the established matching instrumented host,
+`detect_leaks=1`, and a 90-second timeout. Final closes are ordered after the
+transport poll, preserving GL-017 separately. Existing `--teardown
+--coordinated-close` regression runs remain a separate gate. See the
+[authority report](../../newdocs/network-authority-validation.md) for assertions,
+source identity, executed platforms and limitations.
+
+## Shared-domain coverage
+
 These tests exercise the production `GLExecutionDomain` implementation and the
 actual Godot adapters. They do not use a second scheduler/cache implementation.
 `main` is the optimized shared-domain development baseline, including GL-019;

@@ -1,5 +1,14 @@
 # Shared-domain qualification evidence
 
+[`gl006-008-qualification-2026-10-27.json`](gl006-008-qualification-2026-10-27.json)
+records the dedicated security branch's source identity, six passing 39-case
+core configurations, 90 passing native process results, binary/result/log hashes,
+per-session chat policy and remaining scope limits. Source and test hashes match
+the Windows/Linux workers. Raw logs remain on those task workers; the
+[authority report](../network-authority-validation.md) documents trust rules,
+actual adversarial transport assertions, commands and compatibility. Historical
+shared-domain and GL-019 reports below retain their original source scope.
+
 [`shared-domains-benchmark-2026-10-26.json`](shared-domains-benchmark-2026-10-26.json)
 contains all 90 final benchmark phase records: three counts, three trials, two
 architectures and five phases. See the [validation report](../shared-domains-validation.md)
