@@ -98,7 +98,8 @@ open for native integration, sanitizers and enforced release gates.
 
 Branch `ci/gl-011-native-integration` starts at verified canonical main
 `db132e45607056cf23c024599f95ed37deac09bd`, after GL-011A integration. It is
-**NATIVE CI IMPLEMENTED AND HOSTED-QUALIFIED**, not merged. The separate native
+originally **NATIVE CI IMPLEMENTED AND HOSTED-QUALIFIED** on that branch. Main
+integration is recorded below; the original qualification is preserved. The separate native
 workflow builds the production adapter in Debug on hosted Windows 2022/MSVC and
 Ubuntu 24.04/GCC using the existing CMake target, unchanged Luau/godot-cpp pins
 and two build jobs. No native implementation or existing GDScript fixture changes.
@@ -187,9 +188,37 @@ is not closed by the ordered-close matrix.
 The [native manifest](evidence/gl011-native-ci-2026-10-27.json) preserves source,
 pin, official engine, job/step timing, artifact/summary digest and worker identities.
 The final evidence-only follow-up changes no hosted-tested workflow, helper,
-fixture, native source or pin and claims no additional hosted run. The branch is
-left unmerged. The smallest next task is review and integration of this native
-gate with publication still disabled; sanitizer-host reuse remains a later scope.
+fixture, native source or pin and claims no additional hosted run. That branch
+checkpoint was left unmerged until the authorized integration below.
+
+### GL-011B main integration
+
+Starting main `db132e45607056cf23c024599f95ed37deac09bd`; qualified source
+`cebc64919e4fbf67624b19e075f31ef25941d136`. Conflict-free normal merge
+`9029d01a24d904deaa1ecd7a9c30fc483e13757f` preserves both source commits
+(`216066131b64bdd81efdd48cedc04277e5a74919`, then its evidence-only follow-up).
+The merge tree exactly equals qualified source. Integration notes change only
+existing documentation/evidence; all runtime/build/test/workflow inputs and pins
+retain their qualified identity. The source branch is retained.
+
+Fresh lightweight checks validate both workflow YAML structures, Windows/Linux
+matrices, recursive checkout/no persisted credentials, read-only permissions,
+existing core/native targets, exact recorded harness hashes, Python syntax and
+all 65 native input fingerprints. Publication remains dispatch-only with both
+jobs disabled, and runtime updater admission remains literal false. Diff/graph
+review contains no unrelated files or generated production artifacts.
+
+Hosted [run 40478173463](https://github.com/gmoddev/GodotLuau/actions/runs/40478173463)
+is rechecked as successful at the unchanged implementation: two fresh Debug
+adapter builds, 28 native actors and eight launcher checks per platform. It is
+reused within that documented scope, not presented as a fresh integration run.
+No expensive local matrix, engine download, worker job, new configuration or
+manual workflow dispatch is started. Automatically triggered integration CI is
+observed for at most 90 seconds; its completion/pending state is reported at task
+completion, without inferring success. Disposition: **INTEGRATED AND VERIFIED**
+for the source-identical integration. GL-011 and GL-007/010/017/018/020 remain
+open within their existing scopes. Publication and updater distribution stay
+disabled. This completes the authorized session; no further development begins.
 
 ### Sanitizer expansion assessment
 

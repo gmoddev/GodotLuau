@@ -237,14 +237,17 @@ The `test_chat/` fixture is not an
 automated qualification gate. Re-enabling distribution requires a reviewed change;
 manual dispatch does not bypass this interim policy.
 
-On unmerged `ci/gl-011-native-integration`, `runtime-native-ci.yml` additionally
+Main integrates `ci/gl-011-native-integration` at `cebc64919e4fbf67624b19e075f31ef25941d136`
+through normal merge `9029d01a24d904deaa1ecd7a9c30fc483e13757f`.
+`runtime-native-ci.yml` additionally
 builds the actual Debug CMake adapter on Windows/Linux and runs the unchanged
 single-player/listen/dedicated/editor fixtures plus GL-006/008 and functional
 animation groups (28 processes per platform). The runner owns child process
 trees, isolates profiles, and requires complete actors and PASS outcomes. Official
 Godot 4.7.1 archive bytes/version are verified against pinned provenance before
 execution. Both fresh hosted Debug builds and all 28 actors per platform pass at
-`216066131b64bdd81efdd48cedc04277e5a74919`; the branch remains unmerged.
+`216066131b64bdd81efdd48cedc04277e5a74919`; integrated runtime/build/test inputs
+are identical to that qualification. The source branch is retained.
 Sanitizers and release enforcement
 remain separate. See the [native CI record](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
 

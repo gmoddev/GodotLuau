@@ -1,7 +1,8 @@
 # Shared-domain qualification evidence
 
 [`gl011-native-ci-2026-10-27.json`](gl011-native-ci-2026-10-27.json) records the
-unmerged native CI milestone: fresh hosted Windows/Linux Debug adapter builds,
+native CI milestone and subsequent source-identical main integration: fresh
+source-branch hosted Windows/Linux Debug adapter builds,
 28 native actors and eight launcher regressions per platform, pinned official
 Godot archive/executable identity, source/harness/pin hashes, measured job/step
 durations and verified diagnostic-only artifacts. It distinguishes cached worker

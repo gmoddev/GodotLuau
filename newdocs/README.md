@@ -36,13 +36,14 @@ checks are recorded in its [integration record](fork-updater-isolation.md#main-i
 GL-011A core CI is integrated by normal merge `f0199004d56485ec7a9de14d5454d1907822ba11`.
 Both fresh hosted Debug jobs pass 39 cases; see the
 [CI milestone](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
-GL-011 remains open for native/sanitizer/release-enforcement gaps.
-The unmerged `ci/gl-011-native-integration` branch now passes actual hosted Debug
+GL-011 remains open for sanitizer/release-enforcement and broader coverage gaps.
+GL-011B native CI is integrated by normal merge `9029d01a24d904deaa1ecd7a9c30fc483e13757f`.
+Its qualified source passes actual hosted Debug
 adapter builds and 28 native actors on each platform, including existing network
 and functional animation regressions. See the
 [native CI milestone](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
-Native automation awaits integration; sanitizers and release enforcement remain
-separate gaps.
+Source-identical hosted qualification is reused; see the bounded
+[main integration record](shared-domains-validation.md#gl-011b-main-integration).
 
 | Document | Purpose |
 | --- | --- |

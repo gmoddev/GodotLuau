@@ -1,4 +1,24 @@
 {
+  "MainIntegration": {
+    "StartingMain": "db132e45607056cf23c024599f95ed37deac09bd",
+    "Source": "cebc64919e4fbf67624b19e075f31ef25941d136",
+    "Merge": "9029d01a24d904deaa1ecd7a9c30fc483e13757f",
+    "Method": "Normal no-ff merge; no conflicts; both source commits retained; source branch retained",
+    "Identity": "Merge tree exactly equals qualified source; integration notes change no runtime/build/test/workflow/pin input",
+    "Disposition": "INTEGRATED AND VERIFIED",
+    "FreshChecks": [
+      "git diff --exit-code cebc649 HEAD at merge: exact tree identity",
+      "Recorded LF-normalized harness/workflow hashes match; native fingerprint remains a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd for 65 inputs",
+      "Parsed YAML: both Windows/Linux matrices, read-only permissions, recursive checkout, no persisted credentials, existing native/core targets",
+      "Python py_compile for core/native checkers, process launcher/tests and Godot provisioner",
+      "Publication workflow dispatch-only with both jobs false; updater admission literal false; diff/graph checks"
+    ],
+    "ReusedHostedRun": 40478173463,
+    "ReusedScope": "Successful fresh source-branch Windows/Linux Debug adapter builds, 28 native actors and eight launcher checks each; not a new integration run",
+    "NewHostedObservation": "Automatic runs observed for at most 90 seconds after push; exact live status reported at task completion; no manual dispatch or assumed pass",
+    "Shutdown": "No local or remote-worker builds/tests, containers or background polling loops started; no PC/service shutdown or restart",
+    "HistoricalFields": "Original unmerged-branch qualification fields below are retained as historical evidence"
+  },
   "Date": "2026-10-27",
   "Branch": "ci/gl-011-native-integration",
   "BaseMain": "db132e45607056cf23c024599f95ed37deac09bd",
