@@ -40,6 +40,7 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 | [Shared-domain validation](shared-domains-validation.md) | Reproduction commands, acceptance coverage and remaining gaps |
 | [Network authority validation](network-authority-validation.md) | Integrated GL-006/008 trust boundaries, transport regressions, compatibility and remaining gaps |
 | [Animation lifecycle validation](animation-lifecycle-validation.md) | GL-020 development-branch execution/session rules, functional regressions and outstanding security qualification |
+| [Release retention](release-retention.md) | Unmerged GL-012 nondestructive policy, mocked checks and continuation assessment |
 
 ## Documentation authority
 

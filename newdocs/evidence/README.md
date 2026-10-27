@@ -1,5 +1,10 @@
 # Shared-domain qualification evidence
 
+[`gl012-release-retention-2026-10-27.json`](gl012-release-retention-2026-10-27.json)
+records the unmerged retention branch's 12 mocked/read-only tests, parsed workflow
+settings, missing-token CLI rejection, source hashes and explicit publishing/
+provenance limitations. No real release/tag operation or workflow dispatch occurs.
+
 [`gl020-main-integration-2026-10-27.json`](gl020-main-integration-2026-10-27.json)
 records the normal GL-020 merge, complete qualified-tree identity, two fresh
 39-case core executions and 36 fresh native functional process results. Matching

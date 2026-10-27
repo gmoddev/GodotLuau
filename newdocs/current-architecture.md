@@ -221,6 +221,13 @@ ZIP, packages releases, writes the archive back, and deletes older releases and
 tags. It has no runtime-test or sanitizer step. The `test_chat/` fixture is not
 an automated qualification gate.
 
+On the unmerged `maintenance/gl-012-release-retention` branch, the historical
+release/tag deletion loop is removed. A bounded read-only release/tag-absence
+preflight rejects reused identities before package/commit/publish; workflow
+publishing runs are serialized and asset overwrite is disabled. Existing build
+provenance and runtime-gate gaps remain GL-010/011. See
+[retention policy](release-retention.md).
+
 ## Task routing
 
 | Area | Read implementation first | Related issues |
