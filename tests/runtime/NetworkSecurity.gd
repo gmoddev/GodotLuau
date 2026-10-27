@@ -14,6 +14,13 @@ var Removed := 0
 var First := 0
 var Second := 0
 
+func Capture(Name: String, Text: String) -> void:
+    # Observe displayed Unicode directly; legacy Luau SetAttribute converts
+    # UTF-8 with a Latin-1 constructor and is not a Unicode observation channel.
+    Messages.append(Name + ": " + Text)
+    print("[Network:SecurityTest] displayed ", Name, " characters=", Text.length(), " preview=", Text.substr(0, 24))
+    Game.set_meta("Messages", "\n".join(Messages))
+
 func Check(Value: bool, Description: String) -> void:
     if not Value:
         Failed = true
@@ -115,10 +122,12 @@ func Run() -> void:
     Create("Players", "Players")
     Create("RunService", "RunService")
     Create("TextChatService", "TextChatService")
+    Game.get_node("TextChatService/ChatWindow").connect("MessageSent", Capture)
     Network = Create("NetworkService", "NetworkService")
     await process_frame
     Script("Observations", """
 game:GetService('TextChatService').MessageReceived:Connect(function(Message)
+    game:SetAttribute('ChatCallbacks', (game:GetAttribute('ChatCallbacks') or 0) + 1)
     game:SetAttribute('Messages', (game:GetAttribute('Messages') or '') .. Message .. '\\n')
 end)
 game:GetService('Players').PlayerRemoving:Connect(function(Player)
@@ -137,8 +146,17 @@ game:SetAttribute('Observing', true)
         Check(not Game.has_meta("Messages"), "inbound local chat rejected")
         Network.call("gl_send_chat", "Local", "LOCAL_OK")
         Check(str(Game.get_meta("Messages", "")).contains("Local: LOCAL_OK"), "single-player local chat")
+        var Chat := Game.get_node("TextChatService/ChatWindow")
+        var Input: LineEdit = Chat.find_children("*", "LineEdit", true, false)[0]
+        Input.text = "UI_LOCAL_OK"
+        Chat.call("_on_send_pressed")
+        Check(str(Game.get_meta("Messages", "")).contains("UI_LOCAL_OK"), "single-player chat UI")
+        Game.get_node("Players").free()
+        Input.text = "NO_PLAYERS_OK"
+        Chat.call("_on_send_pressed")
+        Check(str(Game.get_meta("Messages", "")).contains("NO_PLAYERS_OK"), "local chat without Players service")
     elif Role == "server":
-        if not Network.call("is_server"):
+        if Network.call("get_mode") != 1:
             Script("StartHost", "assert(game:GetService('NetworkService'):StartServer(game:GetAttribute('Port'), 4))")
             while not Network.call("is_connected_net"): await process_frame
         Mark("ready")
@@ -156,8 +174,10 @@ game:SetAttribute('Observing', true)
         await Drain()
         ObserveStable()
         var Player: Node = Network.call("player_node_for_peer", First)
-        var ExpectedName := "Player" + str(Player.get("UserId"))
-        Check(str(Player.name) == ExpectedName, "first state index cannot choose identity")
+        Script("IdentityCheck", "for _, Player in ipairs(game:GetService('Players'):GetPlayers()) do if Player.Name == '" + str(Player.name) + "' then assert(Player.Name == 'Player' .. tostring(Player.UserId)); game:SetAttribute('IdentityChecked', true) end end")
+        await process_frame
+        Check(Game.has_meta("IdentityChecked"), "first state index cannot choose identity")
+        var ExpectedName := str(Player.name)
         Mark("expected", ExpectedName)
         Mark("attack")
         await Wait("attacks.sent")
@@ -169,6 +189,10 @@ game:SetAttribute('Observing', true)
         await Wait("chat.sent")
         await Drain()
         CheckChat(ExpectedName)
+        Mark("recover")
+        await Wait("recovered.sent")
+        await Drain()
+        Check(str(Game.get_meta("Messages", "")).contains("RECOVERED_OK"), "rate refill permits later valid chat")
         Network.call("gl_send_chat", "SYSTEM", "SERVER_OK")
         Check(str(Game.get_meta("Messages", "")).contains("SYSTEM: SERVER_OK"), "server-local chat")
         # Valid server-origin updates and bounds still work after rejection.
@@ -177,6 +201,8 @@ game:SetAttribute('Observing', true)
         Network.rpc("_recv_state", -9, Vector3.ZERO, 0.0, 1, 100.0, 0.0, false)
         Mark("positive")
         await Wait("client2.positive")
+        await Drain()
+        Check(str(Game.get_meta("Messages", "")).contains("SECOND_OK"), "independent client allowance")
         Mark("disconnect")
         await Wait("client1.disconnected")
         await Drain()
@@ -190,9 +216,27 @@ game:SetAttribute('Observing', true)
         Check(is_instance_valid(Network.call("player_node_for_peer", Reconnected)), "reconnect registered")
         Check(str(Game.get_meta("Messages", "")).contains("RECONNECT_OK"), "fresh session chat/rate allowance")
         Check(not str(Game.get_meta("Messages", "")).contains("RECONNECT_EARLY"), "reconnect before identity rejected")
+        var SessionPlayer: Node = Network.call("player_node_for_peer", Reconnected)
+        SessionPlayer.queue_free()
+        await process_frame
+        Mark("invalidrecord")
+        await Wait("invalidrecord.sent")
+        await Drain()
+        Check(not str(Game.get_meta("Messages", "")).contains("MISSING_RECORD"), "invalidated ObjectID rejected")
+        Puppet(Reconnected).queue_free()
+        await process_frame
+        Mark("restore")
+        await Wait("restored.sent")
+        await Drain()
+        Check(str(Game.get_meta("Messages", "")).contains("RESTORED_OK"), "replacement player record accepted")
         Mark("done")
         await Wait("client1.done")
+        while Game.get_multiplayer().get_peers().has(Reconnected): await process_frame
+        await process_frame # finish the transport poll before the second close
+        Mark("client2.close")
         await Wait("client2.done")
+        while Game.get_multiplayer().get_peers().size() > 0: await process_frame
+        await process_frame
     else:
         Script("ConnectClient", "assert(game:GetService('NetworkService'):Connect('127.0.0.1', game:GetAttribute('Port')))")
         while not Network.call("is_connected_net"): await process_frame
@@ -223,6 +267,8 @@ game:SetAttribute('Observing', true)
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "")
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "OVERSIZE".repeat(200))
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "BAD\nCONTROL")
+            Network.rpc_id(1, "_relay_chat", "SYSTEM", "BAD" + String.chr(127) + "CONTROL")
+            Network.rpc_id(1, "_relay_chat", "SYSTEM", ["MALFORMED"])
             Network.rpc_id(1, "_relay_chat", "SYSTEM", " ")
             Network.rpc_id(1, "_relay_chat", "Player3", "SPOOF_OTHER")
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "SPOOF_SYSTEM")
@@ -230,6 +276,16 @@ game:SetAttribute('Observing', true)
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "界".repeat(257))
             for Count in range(12): Network.rpc_id(1, "_relay_chat", "SYSTEM", "BURST_" + str(Count))
             Mark("chat.sent")
+        await Wait("recover")
+        if Index == 1:
+            await create_timer(1.1).timeout
+            var Chat := Game.get_node("TextChatService/ChatWindow")
+            var Input: LineEdit = Chat.find_children("*", "LineEdit", true, false)[0]
+            var CountBefore := Messages.size()
+            Input.text = "RECOVERED_OK"
+            Chat.call("_on_send_pressed")
+            Check(Messages.size() == CountBefore, "no optimistic network UI echo")
+            Mark("recovered.sent")
         await Wait("positive")
         await Drain()
         CheckChat(Read("expected"))
@@ -259,11 +315,21 @@ game:SetAttribute('Observing', true)
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "RECONNECT_OK")
             Mark("reconnected.peer", str(Network.call("get_peer_id")))
             Mark("client1.reconnected")
+            await Wait("invalidrecord")
+            Network.rpc_id(1, "_relay_chat", "SYSTEM", "MISSING_RECORD")
+            Mark("invalidrecord.sent")
+            await Wait("restore")
+            SendState()
+            await Drain()
+            Network.rpc_id(1, "_relay_chat", "SYSTEM", "RESTORED_OK")
+            Mark("restored.sent")
         await Wait("done")
         if Index == 2:
             Check(int(Game.get_meta("Removed", 0)) == 1, "victim sees only real disconnect callback")
             Check(str(Game.get_meta("Messages", "")).contains("RECONNECT_OK"), "victim sees reconnected chat")
+            await Wait("client2.close")
         Mark("client" + str(Index) + ".done")
+    Check(int(Game.get_meta("ChatCallbacks", 0)) == Messages.size(), "display and Lua callback counts agree")
     print("[Network:SecurityTest] ", Role, " ", "FAIL" if Failed else "PASS")
     quit(1 if Failed else 0)
 
@@ -278,6 +344,6 @@ func CheckChat(ExpectedName: String) -> void:
     Check(Text.contains(ExpectedName + ": SPOOF_OTHER"), "spoofed player name replaced")
     Check(Text.contains(ExpectedName + ": SPOOF_SYSTEM"), "spoofed system name replaced")
     Check(not Text.contains("SYSTEM: SPOOF"), "no system impersonation")
-    Check(not Text.contains("OVERSIZE") and not Text.contains("BAD") and not Text.contains("FORGED"), "invalid text has no display side effects")
+    Check(not Text.contains("OVERSIZE") and not Text.contains("BAD") and not Text.contains("FORGED") and not Text.contains("MALFORMED"), "invalid text has no display side effects")
     Check(Text.contains("界".repeat(256)) and not Text.contains("界".repeat(257)), "Unicode message bounds")
     Check(Text.count("BURST_") == 2, "five-token session burst bound")
