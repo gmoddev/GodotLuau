@@ -345,6 +345,17 @@ tags, artifacts and provenance. Validate the changed workflow without performing
 destructive deletion of real published history. Do not dispatch the inherited
 workflow as a documentation check.
 
+**Branch implementation (2026-10-27): IMPLEMENTED AND VALIDATED on
+`maintenance/gl-012-release-retention`; NOT MERGED.** Removes historical release/
+tag deletion, rejects reuse of a published release or Git tag before package/
+commit/publish, serializes this workflow's publication and disables asset
+overwrite. Twelve mocked/read-only tests and parsed YAML structural checks pass;
+no live publishing/deletion or remote tag change is performed. See
+[retention policy and continuation assessment](release-retention.md) and
+[evidence](evidence/gl012-release-retention-2026-10-27.json). Main still requires
+separate integration. GL-010/011 and repository-wide immutability/external
+publisher coordination remain independent gaps.
+
 ## GL-013: Implementation headers concentrate unrelated responsibilities
 
 **Evidence:** Git blob sizes: `luau_api.h` 294380 bytes; `roblox_network.h` 154252;

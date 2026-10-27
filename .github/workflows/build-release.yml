@@ -14,6 +14,11 @@ permissions:
 # Fork interim policy: no builds, archive commits, or publication, even on manual
 # dispatch. Enabling production distribution requires a separately reviewed change.
 
+# Serialize this workflow's publishing runs; never cancel an active publication.
+concurrency:
+  group: godotluau-release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   linux:
     if: ${{ false }}
@@ -66,6 +71,14 @@ jobs:
           echo "tag=GodotLuau-$(echo "$VER" | tr -d ' ')" >> "$GITHUB_OUTPUT"
           echo "Version: $VER"
 
+      # Published releases, assets and tags are retained. A repeated version is
+      # rejected before packaging/committing/publishing, not replaced in place.
+      - name: Require a new release and tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.ver.outputs.tag }}
+        run: python3 tools/CheckReleaseIdentity.py
+
       - name: Empaquetar zips (unificado + por plataforma)
         run: |
           python3 tools/generar_release.py
@@ -87,6 +100,7 @@ jobs:
           name: "GodotLuau ${{ steps.ver.outputs.ver }}"
           make_latest: true
           prerelease: false
+          overwrite_files: false
           body: |
             Extensión GodotLuau para Godot 4 (Windows + Linux).
             Instala/actualiza sola con el plugin **GodotLuauUpdater**.
@@ -95,17 +109,4 @@ jobs:
             Windows GodotLuau ${{ steps.ver.outputs.ver }}.zip
             Linux GodotLuau ${{ steps.ver.outputs.ver }}.zip
 
-      # Solo debe quedar el Release de la version mas nueva: se borran los demas
-      # (y su tag). Se hace DESPUES de publicar, asi que si el publicado fallara
-      # no nos quedariamos sin ninguno.
-      - name: Borrar Releases antiguos (dejar solo el actual)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          KEEP: ${{ steps.ver.outputs.tag }}
-        run: |
-          for tag in $(gh release list --limit 100 --json tagName -q '.[].tagName'); do
-            if [ "$tag" != "$KEEP" ]; then
-              echo "borrando release y tag: $tag"
-              gh release delete "$tag" --yes --cleanup-tag || echo "  (no se pudo borrar $tag)"
-            fi
-          done
+      # Retention is nondestructive: no automatic deletion or historical rewrite.

@@ -225,6 +225,13 @@ runtime-test or sanitizer workflow exists yet. The `test_chat/` fixture is not a
 automated qualification gate. Re-enabling distribution requires a reviewed change;
 manual dispatch does not bypass this interim policy.
 
+On the unmerged `maintenance/gl-012-release-retention` branch, the historical
+release/tag deletion loop is removed. A bounded read-only release/tag-absence
+preflight rejects reused identities before package/commit/publish; workflow
+publishing runs are serialized and asset overwrite is disabled. Existing build
+provenance and runtime-gate gaps remain GL-010/011. See
+[retention policy](release-retention.md).
+
 ## Task routing
 
 | Area | Read implementation first | Related issues |
