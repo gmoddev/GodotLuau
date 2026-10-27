@@ -215,11 +215,15 @@ tools, and update/restart behavior. Its URLs still target `Pimpoli/GodotLuau`
 (`addons/GodotLuauUpdater/plugin.gd:4-39`), and `project.godot` enables the plugin.
 Fork source changes do not automatically change its distribution source.
 
-The single tracked Actions workflow, `.github/workflows/build-release.yml`,
-builds Linux debug/release binaries, extracts Windows binaries from a committed
-ZIP, packages releases, writes the archive back, and deletes older releases and
-tags. It has no runtime-test or sanitizer step. The `test_chat/` fixture is not
-an automated qualification gate.
+The inherited `.github/workflows/build-release.yml` is disabled during fork
+integration: only manual dispatch remains, both jobs have literal false admission
+conditions, repository permissions are read-only, and checkout credentials are
+not persisted. Ordinary pushes cannot start its builds, archive commits or release
+publication. Its dormant implementation still extracts Windows binaries from a
+committed ZIP and contains historical cleanup until GL-012 is integrated. No
+runtime-test or sanitizer workflow exists yet. The `test_chat/` fixture is not an
+automated qualification gate. Re-enabling distribution requires a reviewed change;
+manual dispatch does not bypass this interim policy.
 
 ## Task routing
 
