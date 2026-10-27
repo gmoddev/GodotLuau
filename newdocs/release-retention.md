@@ -2,7 +2,8 @@
 
 Date: 2026-10-27. Base/main: `34edaa2adfe698d6527e5c5b9bc0159428b5db64`.
 Branch: `maintenance/gl-012-release-retention`, independently based on verified
-main, not the unmerged GL-016 updater branch.
+main, not the unmerged GL-016 updater branch. The following branch qualification
+is historical; current main integration is recorded below.
 
 ## Investigation and policy
 
@@ -75,8 +76,35 @@ artifact provenance and GL-011's release-gate automation remain open; this chang
 does not redesign or qualify the rest of the publishing pipeline.
 
 Disposition: **IMPLEMENTED AND VALIDATED ON DEDICATED BRANCH — NOT MERGED.**
-Canonical main retains the inherited retention behavior until a separately
-authorized integration. Historical issue evidence remains in the ledger.
+This was the original branch disposition. The authorized main integration below
+supersedes it; historical issue evidence remains in the ledger.
+
+## Main integration (2026-10-27)
+
+Starting main: `34edaa2adfe698d6527e5c5b9bc0159428b5db64`. Safety prerequisite
+`d637603cf2e2e1cacd07109cacc765c9c21f2775` removes the inherited workflow's push
+trigger, grants only `contents: read`, disables both jobs with literal false
+conditions, and disables credential persistence in both checkouts. There are no
+other Actions workflows or cross-workflow consumers at this checkpoint. Even
+manual dispatch cannot start builds, generated ZIP commits, asset uploads or
+publication. Re-enabling any distribution requires a separately reviewed change.
+This configuration policy replaces reliance on commit skip markers.
+
+Normal merge `3551bcce8f5f68ed2ee47c2ac41e2e85f74a4feb` preserves qualified source
+`169fd98be216c4322f4c820c7d77f3081761982b`. Relative to that source, only the
+interim workflow admission/permissions and its corresponding static assertion
+change the qualified retention implementation. The read-only identity checker,
+non-canceling serialization, no-overwrite publisher setting and removed deletion
+loop are preserved. Native production code and pinned dependencies are unchanged.
+
+Fresh integration checks execute the same 12-test command, parsed YAML validation
+of dispatch-only admission/read-only permissions/disabled jobs/credential policy,
+and the missing-token CLI rejection (exit 1 before API access). These are local
+static/mocked checks, separate from the historical 12-test branch run. No real
+release, tag, binary, archive or updater package is published or changed. See the
+integration field in the existing [manifest](evidence/gl012-release-retention-2026-10-27.json).
+Disposition: **INTEGRATED AND VERIFIED** within retention and disabled-publication
+scope. GL-010/011 and external administrative mutations remain independent limits.
 
 ## Continuation assessment
 

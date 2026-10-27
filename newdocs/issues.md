@@ -34,7 +34,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
-| GL-012 | P2 | Verified history-loss behavior | Workflow attempts to delete older releases and tags |
+| GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
@@ -345,15 +345,18 @@ tags, artifacts and provenance. Validate the changed workflow without performing
 destructive deletion of real published history. Do not dispatch the inherited
 workflow as a documentation check.
 
-**Branch implementation (2026-10-27): IMPLEMENTED AND VALIDATED on
-`maintenance/gl-012-release-retention`; NOT MERGED.** Removes historical release/
+**Integration (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
+`3551bcce8f5f68ed2ee47c2ac41e2e85f74a4feb` preserves qualified branch
+`maintenance/gl-012-release-retention` at `169fd98be216c4322f4c820c7d77f3081761982b`.
+Removes historical release/
 tag deletion, rejects reuse of a published release or Git tag before package/
 commit/publish, serializes this workflow's publication and disables asset
 overwrite. Twelve mocked/read-only tests and parsed YAML structural checks pass;
 no live publishing/deletion or remote tag change is performed. See
 [retention policy and continuation assessment](release-retention.md) and
-[evidence](evidence/gl012-release-retention-2026-10-27.json). Main still requires
-separate integration. GL-010/011 and repository-wide immutability/external
+[evidence](evidence/gl012-release-retention-2026-10-27.json). The interim policy
+also removes automatic triggers and disables both publishing-workflow jobs with
+read-only permissions. GL-010/011 and repository-wide immutability/external
 publisher coordination remain independent gaps.
 
 ## GL-013: Implementation headers concentrate unrelated responsibilities

@@ -1,4 +1,19 @@
 {
+  "MainIntegration": {
+    "StartingMain": "34edaa2adfe698d6527e5c5b9bc0159428b5db64",
+    "SafetyPrerequisite": "d637603cf2e2e1cacd07109cacc765c9c21f2775",
+    "Merge": "3551bcce8f5f68ed2ee47c2ac41e2e85f74a4feb",
+    "Source": "169fd98be216c4322f4c820c7d77f3081761982b",
+    "Status": "INTEGRATED AND VERIFIED",
+    "FreshChecks": [
+      "python tests/release/ReleaseRetentionTests.py: 12 passed; static assertion updated for disabled workflow",
+      "PyYAML BaseLoader: dispatch only, contents read, both jobs literal false, both checkouts persist-credentials false, cancel-in-progress false",
+      "Token-free subprocess tools/CheckReleaseIdentity.py: exit 1, authenticated read check required before API admission",
+      "Workflow diff: no release/tag deletion, overwrite_files false, preflight before dormant package/commit/publish"
+    ],
+    "RemoteMutations": "Only authorized normal Git push; no publishing dispatch, release/tag operation, binary or archive generation",
+    "HistoricalEvidence": "All other fields below retain the original unmerged-branch qualification"
+  },
   "Date": "2026-10-27",
   "BaseMain": "34edaa2adfe698d6527e5c5b9bc0159428b5db64",
   "Branch": "maintenance/gl-012-release-retention",

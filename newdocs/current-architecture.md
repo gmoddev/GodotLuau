@@ -220,13 +220,13 @@ integration: only manual dispatch remains, both jobs have literal false admissio
 conditions, repository permissions are read-only, and checkout credentials are
 not persisted. Ordinary pushes cannot start its builds, archive commits or release
 publication. Its dormant implementation still extracts Windows binaries from a
-committed ZIP and contains historical cleanup until GL-012 is integrated. No
+committed ZIP. Historical release/tag deletion has been removed by GL-012. No
 runtime-test or sanitizer workflow exists yet. The `test_chat/` fixture is not an
 automated qualification gate. Re-enabling distribution requires a reviewed change;
 manual dispatch does not bypass this interim policy.
 
-On the unmerged `maintenance/gl-012-release-retention` branch, the historical
-release/tag deletion loop is removed. A bounded read-only release/tag-absence
+GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at
+`169fd98be216c4322f4c820c7d77f3081761982b`. A bounded read-only release/tag-absence
 preflight rejects reused identities before package/commit/publish; workflow
 publishing runs are serialized and asset overwrite is disabled. Existing build
 provenance and runtime-gate gaps remain GL-010/011. See

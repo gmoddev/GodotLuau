@@ -28,6 +28,10 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-012 release retention is integrated with publication disabled by explicit
+workflow admission and read-only permissions. See the
+[integration record](release-retention.md#main-integration-2026-10-27).
+
 | Document | Purpose |
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
