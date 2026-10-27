@@ -33,7 +33,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
-| GL-011 | P1 | Open; core CI implemented, review pending | Independent Windows/Linux core gate; native/release gates remain manual |
+| GL-011 | P1 | Open; core CI integrated and hosted-qualified | Native/sanitizer/release gates remain manual |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
@@ -331,8 +331,10 @@ native Linux ASan/LSan evidence now exist under `tests/runtime`. They are manual
 qualification gates; the inherited release workflow still does not enforce them,
 so GL-011 remains open.
 
-**First CI milestone (2026-10-27): IMPLEMENTED — REVIEW PENDING on
-`ci/gl-011-core-qualification`.** Adds a separate read-only, non-publishing
+**First CI milestone (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
+`f0199004d56485ec7a9de14d5454d1907822ba11` preserves source branch
+`ci/gl-011-core-qualification` at `95167299ad8a102b23fb3b25284a751483815779`.
+Adds a separate read-only, non-publishing
 Windows/Linux Debug workflow for the existing 39-case production-core suite.
 Recursive pinned checkout, bounded compilation and deadlines, explicit discovery
 and full completion checks reject missing/partial evidence. No new runtime or
@@ -340,7 +342,9 @@ duplicate scheduler is introduced. Diagnostic artifacts exclude production
 binaries. See [commands, actual outcomes and limitations](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
 Hosted [run 40475254435](https://github.com/gmoddev/GodotLuau/actions/runs/40475254435)
 passes both Windows MSVC and Linux GCC Debug jobs, 39 cases each, including
-discovery/report checks and diagnostic uploads. The branch remains unmerged.
+discovery/report checks and diagnostic uploads. Fresh main integration
+[run 40476321167](https://github.com/gmoddev/GodotLuau/actions/runs/40476321167)
+also passes both jobs, all 39 cases each, with reports and diagnostics retained.
 The release workflow stays disabled. Native Godot, multiplayer/lifecycle/security
 fixtures, sanitizers, persistence failures and release enforcement remain manual
 or independently incomplete. This milestone does not close GL-011 or qualify

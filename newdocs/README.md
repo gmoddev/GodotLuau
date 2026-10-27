@@ -33,8 +33,8 @@ workflow admission and read-only permissions. See the
 [integration record](release-retention.md#main-integration-2026-10-27).
 GL-016 updater isolation is also integrated; fresh Windows/Linux headless editor
 checks are recorded in its [integration record](fork-updater-isolation.md#main-integration-2026-10-27).
-The unmerged `ci/gl-011-core-qualification` branch adds independent Windows/Linux
-core CI. Both hosted Debug jobs pass 39 cases; see the
+GL-011A core CI is integrated by normal merge `f0199004d56485ec7a9de14d5454d1907822ba11`.
+Both fresh hosted Debug jobs pass 39 cases; see the
 [CI milestone](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
 GL-011 remains open for native/sanitizer/release-enforcement gaps.
 

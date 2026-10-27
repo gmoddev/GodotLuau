@@ -4,7 +4,8 @@
 
 Branch `ci/gl-011-core-qualification` starts at canonical main
 `f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`, after GL-012 and GL-016 integration.
-It remains unmerged. The independent workflow runs only the existing production
+The original branch qualification below precedes the main integration recorded
+at the end of this milestone. The independent workflow runs only the existing production
 `ExecutionDomainTests` target (one CTest entry, 39 internal regression cases).
 There is no runtime/native source, ownership, pin or wire-format change.
 The [test instructions](../tests/runtime/README.md#independent-core-ci-gl-011)
@@ -66,15 +67,32 @@ and both workers. Read-only Actions queries observe zero push runs at both
 post-integration main checkpoints (`73634b7e41081d5f149012b0df055949c6180bbe` and
 `f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`); the publisher was never dispatched.
 
-GL-011 stays **OPEN; IMPLEMENTED — REVIEW PENDING** for this first milestone.
+The original branch disposition was **OPEN; IMPLEMENTED — REVIEW PENDING**.
 Native Godot integration, multiplayer/lifecycle fixtures, security rejection,
 sanitizers, persistence failure coverage and enforced release gates remain manual
 or independently incomplete. GL-010 provenance and GL-020 adversarial animation
 qualification are not resolved or executed by this workflow.
 
-The smallest next task after review is to integrate this independent core gate
-without enabling distribution. Adding native fixture CI or a release provenance
-gate is a separate scope.
+### GL-011A main integration
+
+Starting main `f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`; normal merge
+`f0199004d56485ec7a9de14d5454d1907822ba11` preserves both source commits,
+ending at `95167299ad8a102b23fb3b25284a751483815779`. The merge has the exact
+qualified branch tree. The evidence-only source commit changes no CI/runtime/test
+or pinned dependency input. Parsed workflow/permission/trigger/deadline checks
+pass, and the updater remains fail-closed while both publishing jobs remain
+disabled. No release workflow is dispatched or repository protection changed.
+
+The main push triggers [run 40476321167](https://github.com/gmoddev/GodotLuau/actions/runs/40476321167)
+at the merge revision, completed **successfully** from 08:50:22 to 08:51:24 UTC
+(62 seconds). Windows job 122095323119 and Linux job 122095323702 each pass
+configuration, production-core compilation, exact discovery, **39 passed / 0
+failed**, and report validation. Diagnostic upload succeeds for both jobs.
+The existing [manifest](evidence/gl011-core-ci-2026-10-27.json) adds separate
+integration run/job/artifact identities and digests, retaining the original
+branch evidence. A following documentation-only commit changes none of these
+tested inputs. Disposition: **INTEGRATED AND VERIFIED** for GL-011A; GL-011 stays
+open for native integration, sanitizers and enforced release gates.
 
 ## Original shared-domain qualification
 

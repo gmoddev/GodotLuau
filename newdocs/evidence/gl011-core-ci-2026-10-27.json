@@ -1,4 +1,30 @@
 {
+  "MainIntegration": {
+    "StartingMain": "f8681c32fc45c9a9f543fb09495768bf3ebfe8e6",
+    "Source": "95167299ad8a102b23fb3b25284a751483815779",
+    "Merge": "f0199004d56485ec7a9de14d5454d1907822ba11",
+    "QualifiedTree": "Merge tree exactly equals source; final source evidence commit leaves all CI/runtime/test/pin inputs unchanged",
+    "Disposition": "INTEGRATED AND VERIFIED",
+    "Run": 40476321167,
+    "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/40476321167",
+    "Event": "push",
+    "Conclusion": "success",
+    "StartedUTC": "2026-10-27T08:50:22Z",
+    "CompletedUTC": "2026-10-27T08:51:24Z",
+    "ElapsedSeconds": 62,
+    "Windows": {
+      "Job": 122095323119, "Conclusion": "success", "CasesPassed": 39,
+      "Artifact": 12720218270, "ArtifactBytes": 9767,
+      "ArtifactSHA256": "013287efa7415ce19f5182c33254fabc753b530edeef1e9f3f833c3fde963a55"
+    },
+    "Linux": {
+      "Job": 122095323702, "Conclusion": "success", "CasesPassed": 39,
+      "Artifact": 12721241534, "ArtifactBytes": 11217,
+      "ArtifactSHA256": "cf4a10e3475bf9e35514b8699b92e108b28b9f1c12bce632debc6c152d93afc3"
+    },
+    "Safety": "Read-only core CI, no persisted credentials; publishing jobs remain disabled and updater admission false",
+    "HistoricalFields": "All original branch qualification fields below are retained"
+  },
   "Date": "2026-10-27",
   "Branch": "ci/gl-011-core-qualification",
   "BaseMain": "f8681c32fc45c9a9f543fb09495768bf3ebfe8e6",

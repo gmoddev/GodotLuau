@@ -225,12 +225,13 @@ conditions, repository permissions are read-only, and checkout credentials are
 not persisted. Ordinary pushes cannot start its builds, archive commits or release
 publication. Its dormant implementation still extracts Windows binaries from a
 committed ZIP. Historical release/tag deletion has been removed by GL-012. No
-sanitizer workflow exists yet. On `ci/gl-011-core-qualification`, the separate
+sanitizer workflow exists yet. Main integrates the qualified core CI branch via
+`f0199004d56485ec7a9de14d5454d1907822ba11`. The separate
 `runtime-core-ci.yml` builds the production `ExecutionDomainTests` target and
 runs its 39 cases through CTest on hosted Windows/Linux Debug. Read-only access,
 recursive pinned checkout, two build jobs, explicit deadlines and checked
 discovery/completion are independent of publication. Only diagnostic reports/logs
-are uploaded. The branch remains unmerged; hosted outcomes and the continuing
+are uploaded. Fresh hosted integration succeeds on Windows/Linux; outcomes and the continuing
 GL-011 gaps are in the [CI record](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
 The `test_chat/` fixture is not an
 automated qualification gate. Re-enabling distribution requires a reviewed change;
