@@ -243,7 +243,9 @@ single-player/listen/dedicated/editor fixtures plus GL-006/008 and functional
 animation groups (28 processes per platform). The runner owns child process
 trees, isolates profiles, and requires complete actors and PASS outcomes. Official
 Godot 4.7.1 archive bytes/version are verified against pinned provenance before
-execution. Hosted qualification is pending; sanitizers and release enforcement
+execution. Both fresh hosted Debug builds and all 28 actors per platform pass at
+`216066131b64bdd81efdd48cedc04277e5a74919`; the branch remains unmerged.
+Sanitizers and release enforcement
 remain separate. See the [native CI record](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
 
 GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at
@@ -262,7 +264,7 @@ provenance and runtime-gate gaps remain GL-010/011. See
 | File/HTTP permissions | `src/core/luau_script.h`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
 | RPCs, players, replication | `src/services/roblox_network.h`, `src/core/gl_net_bridge.h`, `src/gameplay/roblox_remote.h` | GL-006, GL-007, GL-008 |
 | Persistence | DataStore section of `luau_stdlib.h`, native file bridge, `backend/README.md` | GL-009 |
-| Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |
+| Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `.github/workflows/runtime-native-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |
 | Editor updates and autocomplete | `addons/GodotLuauUpdater/plugin.gd`, `src/editor/luau_autocomplete.h` | GL-016 |
 | Imported/bundled assets | `src/importer/`, `GodotLuau/assets/`, `GodotLuau/licenses/` | GL-015 |
 

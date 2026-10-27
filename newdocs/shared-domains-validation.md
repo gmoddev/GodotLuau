@@ -98,7 +98,7 @@ open for native integration, sanitizers and enforced release gates.
 
 Branch `ci/gl-011-native-integration` starts at verified canonical main
 `db132e45607056cf23c024599f95ed37deac09bd`, after GL-011A integration. It is
-**IMPLEMENTED — HOSTED QUALIFICATION PENDING**, not merged. The separate native
+**NATIVE CI IMPLEMENTED AND HOSTED-QUALIFIED**, not merged. The separate native
 workflow builds the production adapter in Debug on hosted Windows 2022/MSVC and
 Ubuntu 24.04/GCC using the existing CMake target, unchanged Luau/godot-cpp pins
 and two build jobs. No native implementation or existing GDScript fixture changes.
@@ -146,7 +146,50 @@ presented as a fresh full compilation. Logs/results remain at Windows
 `/opt/codex/godotluau/artifacts/gl011-native-ci-1`. Expected ServerStorage denials
 and RPC authority rejection diagnostics remain visible. No zero-channel ENet
 diagnostic appears in these ordered-close runs; GL-017 remains independently open.
-Hosted outcomes and measured step/job durations will be recorded after the push.
+
+### Hosted native results
+
+Implementation `216066131b64bdd81efdd48cedc04277e5a74919` passes on the first
+hosted attempt in [run 40478173463](https://github.com/gmoddev/GodotLuau/actions/runs/40478173463),
+09:05:36–09:21:08 UTC (15m32s workflow wall time). Both platforms compile the
+actual Debug GDExtension from a fresh checkout/build tree, verify the official
+engine archive/version, pass all eight launcher regressions, and complete **28
+native process results each** (8 lifecycle/network + 10 GL-006/008 + 10 functional
+animation). Incomplete groups cannot pass. No hosted retry or code correction is
+needed. The separate [core run 40478173545](https://github.com/gmoddev/GodotLuau/actions/runs/40478173545)
+also succeeds on that implementation push; core CI itself remains unchanged.
+
+| Hosted job | Compiler / generator | Total | Native build | Fixture groups |
+| --- | --- | --- | --- | --- |
+| Windows 2022 Debug | MSVC 19.44.35229.0 / Visual Studio 17 2022 | 15m28s | 13m53s | 10s + 18s + 16s |
+| Ubuntu 24.04 Debug | GCC 13.3.0 / Ninja | 9m52s | 8m53s | 9s + 17s + 14s |
+
+Cold compilation dominates: the Linux log records 970 godot-cpp binding units,
+53 Luau units and four production core units. Official engine provisioning takes
+three seconds on Windows and one on Linux. The Windows job explicitly discovers
+the existing VS Debug CRT with `vswhere` and exposes its directory to fixture
+children; it installs no runtime package or toolchain. No build cache is introduced
+for this first independently verified milestone. A later cache should target the
+costly binding build and bind OS/image, compiler, pins, configuration and source
+identity; it must not silently substitute stale output.
+
+Diagnostic artifact 12722526926 (Windows, 45665 bytes) and 12722041865 (Linux,
+50512 bytes) upload successfully with seven-day retention. Both ZIP downloads are
+verified against GitHub's artifact SHA-256 digests and inspected: 84/82 files,
+respectively, with no DLL, SO, executable or package ZIP payload. Their summaries
+record all 28 actors, exact implementation revision, engine/library hashes and
+matching harness hashes. Both retain fingerprint
+`a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd` for all 65 native
+inputs. No zero-channel ENet diagnostic appears; expected ServerStorage and RPC
+authority rejection errors remain in raw stderr and structured results. GL-017
+is not closed by the ordered-close matrix.
+
+The [native manifest](evidence/gl011-native-ci-2026-10-27.json) preserves source,
+pin, official engine, job/step timing, artifact/summary digest and worker identities.
+The final evidence-only follow-up changes no hosted-tested workflow, helper,
+fixture, native source or pin and claims no additional hosted run. The branch is
+left unmerged. The smallest next task is review and integration of this native
+gate with publication still disabled; sanitizer-host reuse remains a later scope.
 
 ### Sanitizer expansion assessment
 
