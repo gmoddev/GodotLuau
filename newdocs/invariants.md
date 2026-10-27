@@ -86,7 +86,9 @@ the inherited runtime already satisfies them. Baseline gaps link to
   dependencies, with supported platforms built and checked for that revision.
   A committed archive/hash alone does not establish this. Gaps: GL-010, GL-011.
 - Preserve published release provenance and history. Update provenance and
-  target/version selection are explicit fork policy. Gaps: GL-012, GL-016.
+  target/version selection are explicit fork policy. GL-012 now preserves history
+  with publication disabled; GL-016 rejects runtime updates before side effects.
+  A qualified production distribution channel remains unavailable (GL-010/011).
 - Preserve dependency license notices and document asset-specific redistribution
   rights. Repository-level MIT text does not settle asset provenance. GL-015.
 - Distinguish static observations, reproduced failures, measured performance,

@@ -38,7 +38,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
-| GL-016 | P1 | Verified fork distribution gap | Enabled updater still downloads upstream packages |
+| GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
@@ -466,17 +466,21 @@ Cover all version/archive/hash/history/model endpoints as appropriate, preserve
 upstream attribution, verify failure paths, and distinguish inherited ZIPs from
 fork-built artifacts. A URL replacement alone does not establish provenance.
 
-**Branch implementation (2026-10-27): IMPLEMENTED AND FUNCTIONALLY VERIFIED on
-`maintenance/gl-016-fork-updater`; NOT MERGED.** Runtime checks/download/apply,
+**Integration (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
+`abf7776dfb1d7dfde1abfc7b7cb468047575f738` preserves qualified source
+`maintenance/gl-016-fork-updater` at `ed7211a2e354aa29516c646a3ee40f2459f87106`.
+Runtime checks/download/apply,
 callbacks, history, unverified backup restore, staging/swap/restart and destructive
 startup cleanup fail closed before side effects. Enabled editor tools and explicit
 model/custom-autocomplete downloads remain available. Both Windows/Linux actual
 headless editor fixtures pass 596 assertions across 42 blocked operations and two
 localhost optional-data downloads, preserving installed files/backups/metadata.
 See [policy/recovery/limits](fork-updater-isolation.md) and
-[evidence](evidence/gl016-updater-isolation-2026-10-27.json). Main still requires
-separate authorized integration; no fork production update channel or distribution
-provenance is established. Original evidence and GL-010/011 remain independent.
+[evidence](evidence/gl016-updater-isolation-2026-10-27.json). Fresh Windows/Linux
+integration fixtures each repeat 596 assertions and 42 rejected operations; the
+historical branch results remain separate. Release publication stays disabled.
+No fork production update channel or distribution provenance is established.
+Original evidence and GL-010/011 remain independent.
 
 ## GL-017: Godot simultaneous-disconnect relay targets reset peers
 

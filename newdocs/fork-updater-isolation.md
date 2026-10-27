@@ -2,7 +2,8 @@
 
 Date: 2026-10-27. Base/main: `34edaa2adfe698d6527e5c5b9bc0159428b5db64`.
 Branch: `maintenance/gl-016-fork-updater`. This implementation is not merged into
-main. GL-020 functional integration and its pending security qualification are
+main at the original qualification checkpoint. The authorized integration below
+supersedes that disposition. GL-020 functional integration and its pending security qualification are
 unchanged.
 
 ## Policy and implementation
@@ -95,4 +96,36 @@ this GDScript/plugin-only change; the integrated native source is unchanged.
 Disposition: **IMPLEMENTED AND FUNCTIONALLY VERIFIED ON DEDICATED BRANCH —
 NOT MERGED.** Future GL-016 integration and production channel enablement require
 separate authorization. The native updater/release/provenance gaps on canonical
-main are not silently reclassified by an unmerged branch.
+main were not silently reclassified by that unmerged branch.
+
+## Main integration (2026-10-27)
+
+Post-GL-012 main: `73634b7e41081d5f149012b0df055949c6180bbe`. Normal merge
+`abf7776dfb1d7dfde1abfc7b7cb468047575f738` preserves updater source
+`ed7211a2e354aa29516c646a3ee40f2459f87106`. Both histories/evidence survive the
+shared documentation reconciliation. Plugin, configuration and both editor test
+files match all four normalized hashes in the original qualification. Native
+runtime, pins and GL-012 workflow/checker are unchanged by this merge.
+
+Fresh integration commands (the existing worker tools, headless and hidden):
+
+```text
+C:/Sandbox/Codex/Tools/python-3.12.6-controlled-v1/python.exe C:/Sandbox/Codex/Workspaces/GodotLuau/tests/editor/RunUpdaterIsolation.py --godot C:/Sandbox/Codex/Tools/Godot_v4.7.1-stable_win64.exe --output C:/Sandbox/Codex/Builds/GodotLuau/gl016-integration-abf7776 --timeout 60
+docker exec codex-godotluau-qualification python3 /work/source/tests/editor/RunUpdaterIsolation.py --godot /work/tools/Godot_v4.7.1-stable_linux.x86_64 --output /work/artifacts/gl016-integration-abf7776 --timeout 60
+python tests/release/ReleaseRetentionTests.py
+```
+
+Each fresh editor run exits zero with **596 assertions, 42 rejected operations**,
+protected inventory/hash preservation and exactly `/autocomplete.json` and
+`/model.json` requests to localhost. Plugin tools initialize; no runtime HTTP,
+restart or external install is admitted. The sentinel DLL is intentionally not
+loaded; its missing-runtime warning remains expected. No GDScript/parse errors
+occur. The release suite passes all 12 tests again; the workflow is byte-identical
+to post-GL-012 main, dispatch-only, both jobs disabled, read-only and without
+persisted checkout credentials. No unrelated native stress suite is rerun.
+
+Fresh logs/results remain in those worker output directories, separately from
+the historical branch runs. The existing [manifest](evidence/gl016-updater-isolation-2026-10-27.json)
+adds integration identity, commands and log hashes without replacing prior results.
+Disposition: **INTEGRATED AND VERIFIED** for fail-closed isolation. Enabling a
+production update channel and resolving GL-010/011 are separate work.

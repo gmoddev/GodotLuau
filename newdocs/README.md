@@ -31,6 +31,8 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 GL-012 release retention is integrated with publication disabled by explicit
 workflow admission and read-only permissions. See the
 [integration record](release-retention.md#main-integration-2026-10-27).
+GL-016 updater isolation is also integrated; fresh Windows/Linux headless editor
+checks are recorded in its [integration record](fork-updater-isolation.md#main-integration-2026-10-27).
 
 | Document | Purpose |
 | --- | --- |

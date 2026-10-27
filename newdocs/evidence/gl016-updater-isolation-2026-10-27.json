@@ -1,4 +1,28 @@
 {
+  "MainIntegration": {
+    "StartingMain": "73634b7e41081d5f149012b0df055949c6180bbe",
+    "Merge": "abf7776dfb1d7dfde1abfc7b7cb468047575f738",
+    "Source": "ed7211a2e354aa29516c646a3ee40f2459f87106",
+    "Status": "INTEGRATED AND VERIFIED",
+    "SourceIdentity": "Plugin, plugin.cfg and both editor test files match all four original normalized source hashes below",
+    "Windows": {
+      "Command": "C:/Sandbox/Codex/Tools/python-3.12.6-controlled-v1/python.exe C:/Sandbox/Codex/Workspaces/GodotLuau/tests/editor/RunUpdaterIsolation.py --godot C:/Sandbox/Codex/Tools/Godot_v4.7.1-stable_win64.exe --output C:/Sandbox/Codex/Builds/GodotLuau/gl016-integration-abf7776 --timeout 60",
+      "Exit": 0, "Checks": 596, "RejectedOperations": 42,
+      "Requests": ["/autocomplete.json", "/model.json"],
+      "StdoutSHA256": "405d32f6d295822177f120ff3b0476ce40503ce10a77939363392e45285df0ac",
+      "StderrSHA256": "ed5431909e87e36c1e0e95838fb0361f90ab2c216740974e2177e9b1dca0e952"
+    },
+    "Linux": {
+      "Command": "docker exec codex-godotluau-qualification python3 /work/source/tests/editor/RunUpdaterIsolation.py --godot /work/tools/Godot_v4.7.1-stable_linux.x86_64 --output /work/artifacts/gl016-integration-abf7776 --timeout 60",
+      "Exit": 0, "Checks": 596, "RejectedOperations": 42,
+      "Requests": ["/autocomplete.json", "/model.json"],
+      "StdoutSHA256": "d345c7b16c58d9860c3fceeabdc9c29e656c44e26393610977dcc61c01464bc0",
+      "StderrSHA256": "9d518e9db0683be2623df5de1ffaa115d68baa5e6f602690a80f2a201a7e9541"
+    },
+    "ReleaseRetention": "12 tests passed again; workflow and checker unchanged from post-GL-012 main; no automatic publication",
+    "Limits": "Sentinel runtime intentionally not loaded; expected missing-runtime warning; no production channel qualification or unrelated native stress rerun",
+    "HistoricalEvidence": "All other fields below retain the original dedicated-branch qualification"
+  },
   "Date": "2026-10-27",
   "BaseMain": "34edaa2adfe698d6527e5c5b9bc0159428b5db64",
   "Branch": "maintenance/gl-016-fork-updater",
