@@ -94,6 +94,82 @@ branch evidence. A following documentation-only commit changes none of these
 tested inputs. Disposition: **INTEGRATED AND VERIFIED** for GL-011A; GL-011 stays
 open for native integration, sanitizers and enforced release gates.
 
+## GL-011B native CI (2026-10-27)
+
+Branch `ci/gl-011-native-integration` starts at verified canonical main
+`db132e45607056cf23c024599f95ed37deac09bd`, after GL-011A integration. It is
+**IMPLEMENTED — HOSTED QUALIFICATION PENDING**, not merged. The separate native
+workflow builds the production adapter in Debug on hosted Windows 2022/MSVC and
+Ubuntu 24.04/GCC using the existing CMake target, unchanged Luau/godot-cpp pins
+and two build jobs. No native implementation or existing GDScript fixture changes.
+The [test instructions](../tests/runtime/README.md#native-ci-gl-011b) record exact
+portable commands, actor groups, deadlines and diagnostic retention.
+
+Godot provisioning is pinned to the [official 4.7.1 release](https://github.com/godotengine/godot-builds/releases/tag/4.7.1-stable).
+The official release API supplies asset IDs, byte sizes and SHA-256 digests,
+recorded in `GodotDistribution.json`; it does not grant permission to dynamically
+trust replacement bytes at a mutable tag. Before executing anything the helper
+requires the recorded archive size/digest, extracts only the named executable,
+checks `4.7.1.stable.official.a13da4feb` and records executable SHA-256. The
+[official source tag](https://github.com/godotengine/godot/tree/4.7.1-stable)
+resolves to `a13da4feb8d8aefc283c3763d33a2f170a18d541`, matching the manual
+qualification baseline. No fallback to another engine version or unverified
+worker binary is allowed. Downloads have bounded reads and a total deadline.
+
+Existing `RunQualification.py` is reused for 28 processes per platform: eight
+registration/script/module/native/lifecycle/network processes across single-player,
+listen, dedicated and editor; ten existing GL-006/008 security/regression actors;
+ten existing functional animation actors. The fixture assertions, transport and
+coordinated-close logic are unchanged. Full GL-020 adversarial animation
+qualification remains deferred. Exact actor labels/counts and successful exits
+are required by the summary checker; required PASS markers and failure/sanitizer
+diagnostics are enforced by the runner itself.
+
+The directly required launcher correction gives each fixture a POSIX session or
+Windows kill-on-close job, closes output handles on partial startup, and retires
+owned descendants even when their parent exits normally. Group cleanup runs on
+normal/failure/timeout/partial-startup paths and process exit/interruption.
+SIGTERM unwinds the runner; Windows job handles also close when its process dies.
+Child profiles/output trees are isolated, fresh output is required, and Windows
+crash/error dialogs remain suppressed. Existing ephemeral ports and 25575
+preflight remain intact. Raw stderr and ENet diagnostics are retained; no broad
+error suppression or ignored failure is added. Eight actual launcher regressions
+cover tree termination and missing PASS/failure/nonzero/sanitizer rejection.
+
+Fresh equivalent worker checks pass on both platforms, including official
+download verification, all eight launcher checks and all 28 native actors. Cached
+Debug adapter builds report no work after CMake reconfiguration: native inputs
+are unchanged at fingerprint `a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd`.
+This reuses existing compiled native code with verified source identity; it is not
+presented as a fresh full compilation. Logs/results remain at Windows
+`C:\Sandbox\Codex\Builds\GodotLuau\gl011-native-ci-1` and Linux
+`/opt/codex/godotluau/artifacts/gl011-native-ci-1`. Expected ServerStorage denials
+and RPC authority rejection diagnostics remain visible. No zero-channel ENet
+diagnostic appears in these ordered-close runs; GL-017 remains independently open.
+Hosted outcomes and measured step/job durations will be recorded after the push.
+
+### Sanitizer expansion assessment
+
+No sanitizer job is added to routine CI. The existing full-native Linux ASan/LSan
+qualification uses a matching instrumented Godot host built from the pinned
+source, minimal headless modules and compiler/runtime settings; stock Godot's
+RTLD_DEEPBIND loader is incompatible with simply preloading ASan. Its earlier
+task container has a 10 GiB memory bound. The inspected official release lists
+34 assets and no instrumented host. There is no separately qualified immutable
+host artifact available to these hosted jobs. Rebuilding the instrumented engine
+on every ordinary push would add a separate engine compilation and provenance
+pipeline; no hosted sanitizer build time or resource claim is fabricated here.
+
+The recommended later milestone is a separately triggered Linux instrumented-host
+build with recorded source/compiler/configuration and verified reusable artifact
+identity, followed by a bounded native ASan/LSan lifecycle job. Cache/admission
+keys must bind engine revision, compiler/runtime, image, build options and native
+inputs as appropriate; an ordinary stock executable is not equivalent. GL-018's
+Windows sanitizer-host gap and the minimal host's graphics/physics limitations
+remain unchanged. Current CI is Debug/native functional coverage, manual Linux
+full-native sanitizer evidence remains manual, release-gate enforcement is absent,
+and GL-010 provenance and GL-011's broader closure requirements stay open.
+
 ## Original shared-domain qualification
 
 Date: 2026-10-26. Starting revision:

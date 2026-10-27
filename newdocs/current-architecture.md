@@ -237,6 +237,15 @@ The `test_chat/` fixture is not an
 automated qualification gate. Re-enabling distribution requires a reviewed change;
 manual dispatch does not bypass this interim policy.
 
+On unmerged `ci/gl-011-native-integration`, `runtime-native-ci.yml` additionally
+builds the actual Debug CMake adapter on Windows/Linux and runs the unchanged
+single-player/listen/dedicated/editor fixtures plus GL-006/008 and functional
+animation groups (28 processes per platform). The runner owns child process
+trees, isolates profiles, and requires complete actors and PASS outcomes. Official
+Godot 4.7.1 archive bytes/version are verified against pinned provenance before
+execution. Hosted qualification is pending; sanitizers and release enforcement
+remain separate. See the [native CI record](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
+
 GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at
 `169fd98be216c4322f4c820c7d77f3081761982b`. A bounded read-only release/tag-absence
 preflight rejects reused identities before package/commit/publish; workflow
