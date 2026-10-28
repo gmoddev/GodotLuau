@@ -1,4 +1,21 @@
 {
+  "ProcessLivenessCorrection": {
+    "StartingMain": "dcc4b4c2bbe948d2d9a792991c02331b32bc5033",
+    "Branch": "fix/ci-proc-liveness-race",
+    "FailedRun": 40483447902,
+    "FailedLinuxJob": 122119224290,
+    "Failure": "FileNotFoundError /proc/2658/stat in partial-startup cleanup before provisioning/build/native fixtures; Windows passed",
+    "Fix": "Single Linux proc-stat read; narrowly handle ENOENT/ESRCH; retain zombie detection and kill-zero probe; other errors propagate; Windows unchanged",
+    "Regression": "Six Linux-only deterministic checks, including original exists/read disappearance, read ESRCH, zombie, live process, post-read disappearance and unexpected read/probe errors",
+    "BaselineProof": "New disappearance test against original helper reproduces FileNotFoundError on Linux",
+    "WorkerCommand": "python tests/runtime/FixtureProcessTests.py",
+    "Windows": { "Tests": 14, "Passed": 8, "SkippedLinuxOnly": 6, "Seconds": 0.603 },
+    "Linux": { "Tests": 14, "Passed": 14, "Skipped": 0, "Seconds": 0.257 },
+    "Static": ["python -m py_compile tests/runtime/FixtureProcessTests.py", "git diff --check"],
+    "Scope": "Only launcher liveness test helper and regressions; no native source, ownership helper, qualification runner, fixtures, workflows or pin changes; no local native build",
+    "Hosted": "Pending new integrated-main workflows; bounded observation 20 minutes after push",
+    "Disposition": "FIXED — HOSTED VERIFICATION PENDING"
+  },
   "MainIntegration": {
     "StartingMain": "db132e45607056cf23c024599f95ed37deac09bd",
     "Source": "cebc64919e4fbf67624b19e075f31ef25941d136",

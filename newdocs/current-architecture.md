@@ -247,7 +247,11 @@ trees, isolates profiles, and requires complete actors and PASS outcomes. Offici
 Godot 4.7.1 archive bytes/version are verified against pinned provenance before
 execution. Both fresh hosted Debug builds and all 28 actors per platform pass at
 `216066131b64bdd81efdd48cedc04277e5a74919`; integrated runtime/build/test inputs
-are identical to that qualification. The source branch is retained.
+were identical at integration. The subsequent Linux proc-stat liveness-test
+correction changes only process inspection in the launcher tests and adds
+deterministic coverage; native/build/workflow inputs and pins remain unchanged.
+See the [correction record](shared-domains-validation.md#linux-process-liveness-correction-2026-10-27)
+for fresh results. The source branch is retained.
 Sanitizers and release enforcement
 remain separate. See the [native CI record](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
 
