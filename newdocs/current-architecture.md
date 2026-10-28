@@ -179,7 +179,7 @@ then the existing numeric table-Offset fallback; nil/unsupported values remain
 ignored. The adapter does not check Godot `set` success or synthesize notifications.
 Lua Offset metamethod execution/errors remain part of the existing operation.
 
-Class identity, wrappers, hierarchy, all special-case Roblox properties/methods,
+Class-specific identity overrides, wrappers, hierarchy, all special-case Roblox properties/methods,
 callback bindings, Changed/attribute watchers, property-specific signals and
 replication hooks remain in their original owners. `Anchored` fallback uses the
 same extracted membership helper without moving its class-specific policy.
@@ -187,6 +187,37 @@ No public Lua API, capability, pin, wire format or VM/cache lifetime changes.
 See the [analysis and qualification](shared-domains-validation.md#gl-013-third-instance-property-extraction).
 The merge tree equals qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058`.
 GL-013 remains open for remaining header coupling.
+
+## Class identity adapter (fourth GL-013 extraction, branch only)
+
+Branch `refactor/gl-013-class-identity` starts from integrated main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6`. `luau_class_identity.cpp` owns the
+existing native-to-Roblox name mapping and generic IsA predicate. Its forward-only
+header declares `GetLuauClassName(Object*) -> String` and
+`IsLuauClass(Object*, const char*) -> bool`. It depends only on public Godot
+Object/String and cstring, with no Luau, Node, domain, service, reflection, value
+binding or large implementation header. Instance dispatch resolves ObjectID and
+keeps its class-specific identity dispatch and error/hierarchy policy. Player/Value
+overrides precede generic ClassName; the existing Mouse ClassName branch follows
+that unconditional generic return, and its ordering is preserved.
+All alias entries and exact/custom-parent/Godot is_class rules are preserved.
+
+The old unmapped-name result borrowed a TU-local static CharString; mapped names
+borrowed static literals. Current callers compare or copy immediately, with no
+retained pointer or lookup/yield in between. No supported-call lifetime defect is
+established. The new compilation boundary returns an owned Godot String instead
+of introducing a shared mutable process-wide UTF-8 buffer. IsA owns its UTF-8
+conversion locally; Lua push/error call conversions remain alive for their full
+expression and are copied by Luau. Neither native objects nor query pointers are
+retained. This is an explicit internal storage/interface change with preserved
+public behavior, not a concealed fix for a confirmed defect. The mapping table is
+immutable and no registration or mutable cache is added. No concurrent
+Godot/Luau binding execution guarantee is introduced.
+
+Both core-source build globs discover the owned implementation. The branch is
+unmerged; qualification and the [string lifetime audit](shared-domains-validation.md#gl-013-fourth-class-identity-extraction)
+distinguish tested serialized callbacks/GC/shutdown from unsupported concurrency
+and existing broader lifetime/sanitizer limitations. GL-013 remains open.
 
 ## Script capabilities and scheduling
 

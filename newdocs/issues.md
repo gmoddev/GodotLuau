@@ -498,6 +498,24 @@ identities are verified in digest-checked diagnostic archives. A one-unit
 implementation edit boundary is measured; no general build-speed or native
 lifetime/sanitizer guarantee is inferred.
 
+**Fourth extraction (2026-10-28, branch only):**
+`refactor/gl-013-class-identity` starts from integrated main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6`. The generic native/Roblox class map
+and exact/custom-parent/Godot IsA predicate move to an Object/String-only unit with
+an owned String result and two forward declarations. The old fallback used a
+TU-local mutable CharString, but current callers immediately copied/compared it;
+no supported-call lifetime defect is confirmed. Returning an owned value avoids
+introducing shared mutable fallback storage at the new compilation boundary.
+Player/Value overrides, Mouse branch ordering, ObjectID resolution and error/
+hierarchy dispatch remain unchanged. No separate lifetime fix or ownership model
+is introduced. The [audit and qualification](shared-domains-validation.md#gl-013-fourth-class-identity-extraction)
+and [new manifest](evidence/gl013-class-identity-2026-10-28.json) retain exact
+analysis, baseline fixture failure and measurements. The API header decreases
+278,169 bytes/4,885 lines ->274,780 bytes/4,838 lines; the interface is748 bytes/15
+lines. Local Windows/Linux Debug/Release core39/native28 pass (112 actors total).
+Hosted qualification follows branch publication; this extraction stays unmerged
+and GL-013 remains OPEN. No general speed/lifetime/sanitizer guarantee is inferred.
+
 ## GL-014: Shared execution domains — integrated and source-qualified
 
 **Evidence:** Per-executable-script `L_main` at `luau_script.h:960`; require's
