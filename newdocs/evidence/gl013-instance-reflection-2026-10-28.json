@@ -3,8 +3,8 @@
   "Date": "2026-10-28",
   "Branch": "refactor/gl-013-instance-reflection",
   "BaseMain": "752bb2063f61a533c3e59b481196a0d8aa88f1ba",
-  "Implementation": "Source commit containing this initial record; exact SHA added after publication",
-  "Disposition": "IMPLEMENTED — QUALIFICATION PENDING (local qualified; hosted observation follows push)",
+  "Implementation": "00097117a56c37abaf5e060033e15e2d82614581",
+  "Disposition": "THIRD EXTRACTION QUALIFIED; branch only, unmerged",
   "Stage1": {
     "StartingMain": "174efcc2bdb59c5072ba21d27645c5380c61e8e9",
     "QualifiedSource": "5f72f4cda1c5e3bb76edd33bb11e276cff07ac10",
@@ -23,8 +23,26 @@
       "Linux": 122663339715,
       "Windows": 122663339376
     },
-    "Observation": "Both core jobs pass39; fresh native builds in progress; bounded25min observation continues",
-    "Reused": "Exact qualified source/fixture identity; previous four configurations and hosted qualification, no repeated local Stage1 matrix"
+    "Observation": "Both fresh core jobs pass39 and native jobs pass28 with actual Debug builds, process checks and completeness gates; exact merge/source/fixture identity verified in both diagnostic ZIPs",
+    "Reused": "Exact qualified source/fixture identity; previous four configurations and hosted qualification, no repeated local Stage1 matrix",
+    "Disposition": "INTEGRATED AND VERIFIED",
+    "NativeStartedUTC": "2026-10-28T06:11:59Z",
+    "NativeCompletedUTC": "2026-10-28T06:27:44Z",
+    "NativeElapsedSeconds": 945,
+    "Artifacts": [
+      {
+        "id": 12797345082,
+        "name": "runtime-native-Windows-Debug",
+        "bytes": 45452,
+        "digest": "sha256:24417784eed8b93b2c34bd612233fc063beda7d7f5dfbb5af769c208ea17f9d8"
+      },
+      {
+        "id": 12796212344,
+        "name": "runtime-native-Linux-Debug",
+        "bytes": 50262,
+        "digest": "sha256:24d56ba59f417af167293e0cb6f0ab317b72be9559a501261fc895b5ec1badf7"
+      }
+    ]
   },
   "Subsystem": "Stateless generic _gl_bridge Godot property adaptation, including membership lookup and metadata/Offset fallbacks",
   "Analysis": {
@@ -487,15 +505,49 @@
     "Drivers": "Private GL013ReflectionWorker.py/Evidence.py/Baseline.py/Restore.py in task roots; commands and cache method documented in validation"
   },
   "Hosted": {
-    "Status": "Awaiting branch publication",
-    "ObservationBoundMinutes": 25
+    "Status": "Both core jobs pass39; both fresh native Debug builds, process checks and all28 actors pass; final completeness gates pass",
+    "Source": "00097117a56c37abaf5e060033e15e2d82614581",
+    "CoreRun": 40643325332,
+    "CoreJobs": {
+      "Linux": 122666288961,
+      "Windows": 122666289303
+    },
+    "NativeRun": 40643325389,
+    "NativeJobs": {
+      "Linux": 122666289407,
+      "Windows": 122666289041
+    },
+    "StartedUTC": "2026-10-28T06:21:12Z",
+    "ObservationBoundMinutes": 25,
+    "CompletedUTC": "2026-10-28T06:35:20Z",
+    "ElapsedSeconds": 848,
+    "Toolchains": "Hosted MSVC19.44.35229.0 and GCC13.3.0",
+    "Artifacts": [
+      {
+        "id": 12797166231,
+        "name": "runtime-native-Linux-Debug",
+        "bytes": 50951,
+        "digest": "sha256:dba37bca16bf80bdad876a971f019ea3149f351dfbbaaa571e4e5c5e7a9a6350"
+      },
+      {
+        "id": 12796633782,
+        "name": "runtime-native-Windows-Debug",
+        "bytes": 45349,
+        "digest": "sha256:bb49a2af83c86e9db9a6e3d6e1e623348e285b7bb6bf5baf8e57cfdd6480a590"
+      }
+    ],
+    "Identity": "Both diagnostic ZIP digests match metadata; exact implementation revision,71-input native fingerprint,extended Integration.gd hash and8/10/10 zero-exit actors verified; diagnostic files only, no binaries",
+    "Pins": "Both native checkout logs confirm unchanged godot-cpp and Luau pins",
+    "ProcessChecks": "Linux14 pass; Windows8 pass plus6 Linux-specific skips (14 discovered)",
+    "Disposition": "THIRD EXTRACTION QUALIFIED"
   },
-  "Cleanup": "Restore original source-root cache configuration and stop task container after qualification; final evidence records outcome",
+  "Cleanup": "Both workers' Debug/Release source-root cache configurations restored without rebuilding; Linux task container verified idle and stopped; Windows task-owned build/Godot/Python process scan empty; prior evidence/snapshots retained",
   "Remaining": [
     "GL-013 open; broad Instance/class-specific methods, services/editor and static-state coupling remain",
     "No production binary, release, upstream message, workflow/configuration or updater change",
     "Existing Unicode reinterpretation, unsupported reads/writes, read-only/set-result behavior and Offset truncation unchanged",
     "No new native sanitizer or graphical/production qualification; GL-017/018 and previous exploratory Part shutdown/math-closure limitations remain",
-    "Next candidate: bounded class-identity helpers only after auditing type/header and TU-local classname-buffer dependencies; not implemented here"
-  ]
+    "Next candidate: gl_roblox_classname/gl_isa string mapping and Node class checks; explicitly audit the fallback pointer into a TU-local static CharString before moving; not implemented here"
+  ],
+  "EvidenceFollowup": "This follow-up changes documentation/evidence only; source, fixtures, build configuration and workflow inputs equal implementation 00097117a56c37abaf5e060033e15e2d82614581"
 }

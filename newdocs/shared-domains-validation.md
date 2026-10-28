@@ -1658,6 +1658,17 @@ is not a pass. The next documentation commit changes no tested input. GL-013
 remains open, and the third extraction is authorized for branch publication only.
 
 
+Fresh main observation subsequently completes within the bound (15m45s native run).
+Both Windows/Linux core jobs pass 39 cases; both native jobs pass fresh actual
+Debug adapter builds, process checks, 8/10/10 actors and final completeness checks.
+Logs confirm unchanged pins; digest-checked diagnostic ZIPs verify merge revision,
+69-input native fingerprint and original extended fixture hash, with no production
+binary payload. Final main `752bb2063f61a533c3e59b481196a0d8aa88f1ba` changes only
+integration documentation relative to the tested merge. The separate manifest's
+`VariantMainIntegration` follow-up records jobs, digests and timings without
+changing historical measurements. Disposition: **INTEGRATED AND VERIFIED**.
+No Stage 2 source is included in main.
+
 ## GL-013 third Instance property extraction
 
 The branch `refactor/gl-013-instance-reflection` starts from verified local/remote
@@ -1783,6 +1794,37 @@ only validated task-source/core-test objects, never dependency objects.
 Local disposition: qualified in Windows/Linux Debug and Release. Hosted core/native
 observation follows branch push and is bounded at 25 minutes; pending jobs are not
 passes. The final documentation follow-up changes no tested input. GL-013 remains
-open. Recommended next investigation is bounded Instance class-identity helpers,
-only after checking their concrete-type includes and TU-local classname buffers.
+open. Recommended next investigation is `gl_roblox_classname`/`gl_isa`: their
+string-based mapping and Godot class checks use Node/value APIs, but the fallback
+returns a pointer into a TU-local static CharString. Its storage/lifetime contract
+must be decided explicitly before moving those helpers across a compilation boundary.
 No fourth extraction, publication, workflow or dependency change is included.
+
+Implementation `00097117a56c37abaf5e060033e15e2d82614581` is pushed and remote
+branch identity read back; remote main remains `752bb2063f61a533c3e59b481196a0d8aa88f1ba`.
+Fresh [core run 40643325332](https://github.com/gmoddev/GodotLuau/actions/runs/40643325332)
+passes 39 cases per platform, with exact pinned checkouts confirmed in both logs.
+Fresh [native run 40643325389](https://github.com/gmoddev/GodotLuau/actions/runs/40643325389)
+is under bounded observation; its two fresh Debug builds are initially pending.
+Both worker source-root configurations are restored without rebuilding; the
+Linux container is verified idle then stopped, and the Windows task-process scan
+is empty. Task snapshots, logs and all previous extraction evidence are retained.
+
+
+Final hosted observation completes in 14m08s, within the 25-minute bound. Both
+[core jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40643325332) pass39;
+both [native jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40643325389)
+pass actual fresh Debug builds, process checks (Linux14; Windows8 plus6 Linux-only
+skips), verified Godot provisioning, all28 actors and final completeness checks.
+Hosted Windows uses MSVC19.44.35229.0; Linux uses GCC13.3.0. Both native checkout
+logs confirm the unchanged pins. Digest-checked diagnostic ZIPs match implementation
+`00097117a56c37abaf5e060033e15e2d82614581`, the 71-input native fingerprint,
+extended fixture hash and 8/10/10 zero-exit actors. No binary payload is present.
+The manifest records exact job IDs, digests, sizes, timestamps and local evidence.
+
+Disposition: **THIRD EXTRACTION QUALIFIED**, on the unmerged development branch.
+The final evidence commit changes no source, fixture, build or workflow input;
+main remains `752bb2063f61a533c3e59b481196a0d8aa88f1ba`. This is compilation
+isolation and preserved exercised behavior, not a production distribution,
+full-lifetime/sanitizer or general build-speed guarantee. GL-013 and the independent
+qualification limitations remain open. Stop after this third extraction.

@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Incremental modularization underway; two extractions qualified | First integrated; generic Variant conversion qualified on branch |
+| GL-013 | P2 | Incremental modularization underway; three extractions qualified | First two integrated; Instance property adapter qualified on branch |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -441,7 +441,7 @@ Local Windows/Linux Debug/Release each pass 39 core cases and 28 native actors.
 Implementation `83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c` also passes fresh hosted
 core run `40626224165` (39 per platform) and native run `40626224232` (actual Debug
 builds, 28 actors per platform and verified diagnostic summaries). Disposition:
-**GL-013 — Incremental modularization underway; first extraction qualified.**
+**GL-013 — Incremental modularization underway; three extractions qualified.**
 Normal merge `bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7` integrates both commits
 through source `1c9f4c6296bc955a6a5969a6da0668d137e46ed1`; the merge tree exactly
 matches qualified source. The [integration record](shared-domains-validation.md#first-extraction-main-integration-2026-10-28)
@@ -488,7 +488,13 @@ and its [separate manifest](evidence/gl013-instance-reflection-2026-10-28.json).
 Baseline production fixtures establish read-only/property/metadata/Offset/error
 and Changed behavior before code moves; those semantics are preserved. GL-013
 remains OPEN for broader Instance/service/editor header coupling. The third
-extraction remains unmerged; qualification disposition is recorded with evidence.
+extraction remains unmerged. **THIRD EXTRACTION QUALIFIED**: Windows/Linux
+Debug/Release core39/native28 pass (112 local actor results); hosted core
+`40643325332` passes39 per platform and native `40643325389` passes fresh Debug
+builds/process checks/all28 actors per platform. Exact revision/source/fixture
+identities are verified in digest-checked diagnostic archives. A one-unit
+implementation edit boundary is measured; no general build-speed or native
+lifetime/sanitizer guarantee is inferred.
 
 ## GL-014: Shared execution domains — integrated and source-qualified
 
