@@ -165,13 +165,22 @@ source identity, executed platforms and limitations.
 
 ## Shared-domain coverage
 
-The GL-013 branch extends `Integration.gd` through actual native Vector3/Color3
+The integrated first GL-013 extraction extends `Integration.gd` through actual native Vector3/Color3
 constructors, arithmetic, constants, exact type rejection, native Variant bridge
 round trips, wrapper identity/destruction and fresh-domain reinitialization.
 Both Server and Client domains execute the value checks. Deferred destruction is
 observed over at most ten scheduler yields; the existing runner bounds the process.
 The lightweight Beam metadata bridge avoids introducing physics resources into
 this value-binding fixture. Existing lifecycle and network fixtures remain gates.
+
+The second GL-013 branch also exercises the generic Variant bridge in both
+directions: native INT/BOOL/FLOAT/STRING/VECTOR3/COLOR reads; scalar/value writes;
+nil, collections, callbacks and live/destroyed Instance rejection without replacing
+the previous value; unchanged table-Offset fallback; reflected integer properties
+and subsequent error propagation. Native arrays/dictionaries/object references
+remain unsupported by this bridge and retain the caller's invalid-member error.
+These cases run through
+the production Instance/property paths, not a second conversion implementation.
 
 These tests exercise the production `GLExecutionDomain` implementation and the
 actual Godot adapters. They do not use a second scheduler/cache implementation.

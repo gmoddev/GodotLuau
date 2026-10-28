@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Incremental modularization underway; first extraction qualified | Native value boundary delivered on branch; broader headers remain |
+| GL-013 | P2 | Incremental modularization underway; two extractions qualified | First integrated; generic Variant conversion qualified on branch |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -451,6 +451,24 @@ header still couples Instance dispatch, services and Godot properties; this firs
 boundary does not close GL-013. An exploratory physics-backed baseline fixture
 also exposed a Linux shutdown failure after PASS; its diagnostic evidence is
 retained as an independent qualification limitation, not fixed by extraction.
+
+**Second extraction (2026-10-28, branch only):**
+`refactor/gl-013-variant-bindings` starts from integrated main `174efcc2bdb59c5072ba21d27645c5380c61e8e9`.
+Only the two generic Luau/Variant conversion bodies move to an owned `.cpp` and
+two-declaration forward-only header; Instance reflection, ObjectID validation and
+property/Offset/error dispatch stay with their existing owners. No type support,
+ownership, registration or conversion logic is added. `luau_api.h` decreases from
+281,472 bytes/4,946 lines to 280,183 bytes/4,923 lines. See the
+[second extraction record](shared-domains-validation.md#gl-013-second-generic-variant-extraction)
+and [separate measurements](evidence/gl013-variant-extraction-2026-10-28.json).
+All Windows/Linux Debug/Release worker builds/core39/native28 pass. Implementation
+`5f72f4cda1c5e3bb76edd33bb11e276cff07ac10` also passes hosted core run `40631078253`
+(39 per platform) and native run `40631078251` (fresh actual Debug builds and28
+actors per platform). Diagnostic summaries verify exact source/fixture identity.
+Disposition: **SECOND EXTRACTION QUALIFIED**, on the unmerged branch. Baseline tests establish that unsupported reads retain invalid-member
+errors and Lua non-ASCII strings retain the existing Latin-1 constructor behavior;
+these are preserved, not silently fixed. The first extraction's historical
+measurements/limitations remain. GL-013 stays open and Stage 2 is not merged.
 
 ## GL-014: Shared execution domains — integrated and source-qualified
 
