@@ -61,6 +61,9 @@ func Run() -> void:
         NativeBridge.set_meta("_glp_NativeArray", [1, 2])
         NativeBridge.set_meta("_glp_NativeDictionary", {"Value": 1})
         NativeBridge.set_meta("_glp_NativeObject", Game)
+        NativeBridge.set_meta("_glp_process_priority", 999)
+        NativeBridge.set_meta("_glp_transform", "unsupported-native fallback")
+        var NativeMultiplayer = NativeBridge.get("multiplayer")
         CreateScript(Type, Prefix, """
 local Value = Vector3.new(3, 4, 0)
 assert(Value.X == 3 and Value.y == 4 and Value.Z == 0 and Value.Magnitude == 5)
@@ -121,6 +124,40 @@ Native.RoundTrip = {Offset = 'invalid'}
 assert(Native.RoundTrip == 17)
 Native.process_priority = -5
 assert(Native.process_priority == -5)
+-- Native properties precede metadata; unsupported native values may fall back.
+assert(Native.transform == 'unsupported-native fallback')
+Native.position = Vector3.new(2, 3, 4)
+assert(Native.position == Vector3.new(2, 3, 4))
+Native.visible = false
+assert(Native.visible == false)
+Native.process_priority = {Offset = 6}
+assert(Native.process_priority == 6)
+Native.process_priority = nil
+assert(Native.process_priority == 6)
+-- Godot's read-only multiplayer property is not writable metadata.
+Native.multiplayer = 7
+local ReadOnlyOk, ReadOnlyError = pcall(function() return Native.multiplayer end)
+assert(not ReadOnlyOk and string.find(ReadOnlyError, 'is not a valid member', 1, true))
+for Index = 1, 20 do
+    assert(Native.process_priority == 6 and Native.position.X == 2)
+end
+local MissingOk, MissingError = pcall(function() return Native.MissingReflectionProperty end)
+assert(not MissingOk and string.find(MissingError, 'MissingReflectionProperty is not a valid member', 1, true))
+local OffsetOk, OffsetError = pcall(function()
+    Native.RoundTrip = setmetatable({}, {__index = function() error('OffsetProbe') end})
+end)
+assert(not OffsetOk and string.find(OffsetError, 'OffsetProbe', 1, true))
+assert(Native.RoundTrip == 17)
+local Changed = 0
+Native.Changed:Connect(function() Changed += 1 end)
+Native.RoundTrip = 17
+assert(Changed == 0) -- Generic writes do not synthesize Instance.Changed.
+Native:SetAttribute('ReflectionProbe', 1)
+assert(Changed == 1)
+local Plain = Instance.new('Folder')
+Plain.ReflectionProbe = 7
+assert(not pcall(function() return Plain.ReflectionProbe end))
+Plain:Destroy()
 local AddOk, AddError = pcall(function() return Native.RoundTrip + Color end)
 assert(not AddOk and type(AddError) == 'string')
 Bridge:Destroy()
@@ -134,6 +171,9 @@ assert(Native.RoundTrip == 17)
 game:SetAttribute('%s', true)
 """ % Prefix, Game)
         await Until(Prefix)
+        Check(NativeBridge.get("multiplayer") == NativeMultiplayer, "Read-only native property changed")
+        Check(not NativeBridge.has_meta("_glp_multiplayer"), "Read-only write created fallback metadata")
+        Check(NativeBridge.get("process_priority") == 6, "Reflected write did not reach Godot")
     CreateScript("ModuleScript", "Counter", """
 _G.Initializations = (_G.Initializations or 0) + 1
 task.wait(0.02)

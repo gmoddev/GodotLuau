@@ -145,10 +145,46 @@ numeric and C-string conventions. Nil, collections, functions and Instance
 references are unsupported by these helpers; false preserves the output/stack
 contract. The existing caller still decides whether to ignore, raise its existing
 invalid-member error, or use
-the table-Offset fallback. `gl_has_property`, property dispatch/reflection and
-metadata fallback remain in `luau_api.h`; ObjectID resolution remains in
-`gl_runtime.h`. Both qualified source commits are preserved. See the
+the table-Offset fallback. At integration, `gl_has_property`, reflection and
+metadata fallback remain in `luau_api.h`; the third extraction below moves that
+stateless subset. ObjectID resolution remains in `gl_runtime.h`. Both qualified
+source commits are preserved. See the
 [second extraction record](shared-domains-validation.md#gl-013-second-generic-variant-extraction).
+
+## Instance property adapter (third GL-013 extraction, branch only)
+
+Branch `refactor/gl-013-instance-reflection` starts from verified integrated main
+`752bb2063f61a533c3e59b481196a0d8aa88f1ba`. The generic `_gl_bridge` read/write
+blocks and Godot property-list membership helper now belong to
+`luau_instance_reflection.cpp`. Its forward-only header exposes three internal
+functions: `HasLuauInstanceProperty`, `PushLuauInstanceProperty` and
+`WriteLuauInstanceProperty`. It retains no object, state, callback or registration.
+The caller still resolves ObjectID immediately before dispatch. Synchronous raw
+Object parameters are borrowed for the existing call only; this is no new
+ownership model or general reentrant native-lifetime guarantee.
+
+Dependencies now point from Instance dispatch to reflection to the separate
+Variant conversion and native value bindings. Reflection includes public Luau and
+Godot Object/value headers; it does not include Node, services, networking,
+execution domains, `gl_runtime.h`, `luau_script.h` or `luau_api.h`. Conversion and
+native value implementations are unchanged. There is no reverse dependency or
+include cycle. Both existing build globs discover the owned implementation.
+
+Membership still enumerates `get_property_list` by exact name without filtering
+usage/read-only flags. Reads try native properties, then `_glp_` metadata using the
+existing converters; false leaves child, lowercase alias and invalid-member error
+fallback with Instance dispatch. Writes try conversion and native `set` or metadata,
+then the existing numeric table-Offset fallback; nil/unsupported values remain
+ignored. The adapter does not check Godot `set` success or synthesize notifications.
+Lua Offset metamethod execution/errors remain part of the existing operation.
+
+Class identity, wrappers, hierarchy, all special-case Roblox properties/methods,
+callback bindings, Changed/attribute watchers, property-specific signals and
+replication hooks remain in their original owners. `Anchored` fallback uses the
+same extracted membership helper without moving its class-specific policy.
+No public Lua API, capability, pin, wire format or VM/cache lifetime changes.
+See the [analysis and qualification](shared-domains-validation.md#gl-013-third-instance-property-extraction).
+This branch is not merged; GL-013 remains open for remaining header coupling.
 
 ## Script capabilities and scheduling
 
