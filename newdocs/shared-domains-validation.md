@@ -117,8 +117,27 @@ configurations, including fresh-domain initialization. Recorded native source
 fingerprint is `ec0db95eb65d488a9b6a2037cffee8cc0d1b1cd83b2b12b7e5eabbc60af5ae41`
 for 67 inputs; normalized changed-source/fixture hashes agree across workers and
 the controlling checkout. Both workers retain the exact result/log/library hashes
-in the manifest. Hosted qualification awaits the source push and is observed for
-at most 25 minutes; no pass is assumed for pending jobs.
+in the manifest.
+
+Implementation `83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c` is pushed to the dedicated
+branch. Fresh [core run 40626224165](https://github.com/gmoddev/GodotLuau/actions/runs/40626224165)
+passes 39 cases on each hosted platform. Fresh
+[native run 40626224232](https://github.com/gmoddev/GodotLuau/actions/runs/40626224232)
+passes both actual Debug adapter builds, process checks, pinned Godot provisioning,
+all 28 actors per platform and final summary/upload steps. Native completion takes
+19m11s within the 25-minute observation bound. Hosted Windows uses MSVC
+19.44.35229.0; Linux uses GCC 13.3.0. Both checkout logs confirm the unchanged pins.
+Downloaded ZIP digests match hosted metadata; summaries match the exact commit,
+67-input native fingerprint and extended fixture hash, with 8/10/10 zero-exit
+actors and no production binary payload. These hosted elapsed times are not a
+controlled baseline/candidate build-speed comparison.
+
+Disposition: **FIRST EXTRACTION QUALIFIED** on the dedicated branch; main stays
+at `eb638bfa6ff16abc91d11742625b3cc034f53178`. The final documentation/evidence-only
+follow-up changes no tested input and claims no separate run. Worker source-root
+configurations are restored; no test/Godot process remains, and the Linux task
+container is stopped. The extraction is ready for review and a separately
+authorized merge within this bounded scope. No merge is performed here.
 
 | Configuration | Cold before/after seconds | API-header touch before/after seconds | New implementation touch seconds | Extension bytes before/after |
 | --- | --- | --- | --- | --- |

@@ -2,7 +2,9 @@
   "Issue": "GL-013",
   "StartingMain": "eb638bfa6ff16abc91d11742625b3cc034f53178",
   "Branch": "refactor/gl-013-luau-api-extraction",
-  "Disposition": "First extraction locally qualified; hosted qualification pending; not merged",
+  "Implementation": "83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c",
+  "Integration": "Dedicated branch only; remote main remains eb638bfa6ff16abc91d11742625b3cc034f53178",
+  "Disposition": "FIRST EXTRACTION QUALIFIED; not merged",
   "Subsystem": "Native Vector3/Color3 userdata allocation, checking, arithmetic and registration",
   "Boundary": "Declaration-only header with layouts, five existing bridge helpers and two registration calls; one independent implementation using public Luau and standard headers only",
   "SourceFiles": [
@@ -28,7 +30,7 @@
   "Pins": {
     "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
     "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
-    "WorkerProvenance": "Existing qualified archived dependency snapshots reused; no worker submodule Git metadata; fresh hosted recursive checkout will independently exercise repository pins"
+    "WorkerProvenance": "Existing qualified archived dependency snapshots reused; no worker submodule Git metadata; both fresh hosted checkout logs independently confirm exact godot-cpp/Luau pins"
   },
   "Method": {
     "Compilers": {
@@ -440,8 +442,32 @@
     }
   },
   "Hosted": {
-    "Status": "Pending first source branch push",
+    "Status": "Both Windows/Linux core and native jobs completed successfully",
+    "Revision": "83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c",
+    "Core": { "Run": 40626224165, "WindowsJob": 122611668810, "LinuxJob": 122611669008, "Conclusion": "success", "CasesPerPlatform": 39 },
+    "Native": {
+      "Run": 40626224232,
+      "WindowsJob": 122611669347,
+      "LinuxJob": 122611669098,
+      "Conclusion": "success",
+      "StartedUTC": "2026-10-28T03:21:33Z",
+      "CompletedUTC": "2026-10-28T03:40:44Z",
+      "ElapsedSeconds": 1151,
+      "WindowsCompiler": "MSVC 19.44.35229.0",
+      "LinuxCompiler": "GCC 13.3.0",
+      "ProcessChecks": "Linux14 pass; Windows8 pass and6 Linux-only skips",
+      "ActorsPerPlatform": 28,
+      "Groups": [8, 10, 10],
+      "AllActorExitsZero": true,
+      "Builds": "Fresh actual Debug GodotLuauAdapter builds on both platforms; verified official Godot4.7.1; all lifecycle/network/functional-animation steps and summary checks pass",
+      "WindowsArtifact": { "ID": 12790471652, "Bytes": 44779, "SHA256": "7660058dd1dac46a56c390b9dd2a55f4097d8e42ec576ab1d58371a2ad445e71", "Files": 84 },
+      "LinuxArtifact": { "ID": 12790076597, "Bytes": 50637, "SHA256": "05a51697752f28cc7c0ffd111e58c9d3c6debdee2b0734d147797a051a948577", "Files": 82 },
+      "ArtifactVerification": "Both downloaded ZIP hashes match hosted metadata; summaries confirm exact tested revision, 67-input native fingerprint, extended Integration.gd hash and 8/10/10 zero-exit actors; diagnostic files only, no production binary payload"
+    },
     "ObservationBoundMinutes": 25
   },
+  "Cleanup": "No task-owned Windows test/Godot process; Linux docker top only sleep infinity before restoring container to stopped; both worker Debug/Release GL_SOURCE_ROOT configurations restored to prior original-source paths",
+  "EvidenceFollowup": "Final follow-up changes only documentation/evidence; tested source/fixture/build/workflow inputs remain identical to implementation commit; no extra hosted run claimed",
+  "MergeReadiness": "Ready for review and a separately authorized merge within the tested extraction scope; this task does not merge main or expand independent qualification limits",
   "Remaining": "GL-013 open; broad Godot/Instance/service headers and input-service three-float packing remain. Next proposed extraction is Variant/property conversion after interface analysis; no second extraction in this task. Independent GL-003/004/005/007/009/010/011/017/018/020 limitations preserved; no production publication."
 }

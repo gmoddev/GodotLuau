@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Incremental modularization underway | First native value extraction; broader implementation headers remain |
+| GL-013 | P2 | Incremental modularization underway; first extraction qualified | Native value boundary delivered on branch; broader headers remain |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -437,8 +437,12 @@ private. CMake compiles the new unit; SCons dry-run discovery includes it.
 See the [extraction record](shared-domains-validation.md#gl-013-first-value-binding-extraction)
 and [measurements](evidence/gl013-value-extraction-2026-10-27.json).
 
-Local Windows/Linux Debug/Release each pass 39 core cases and 28 native actors;
-hosted qualification is pending the source branch push. Existing shared-domain ownership, userdata layout,
+Local Windows/Linux Debug/Release each pass 39 core cases and 28 native actors.
+Implementation `83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c` also passes fresh hosted
+core run `40626224165` (39 per platform) and native run `40626224232` (actual Debug
+builds, 28 actors per platform and verified diagnostic summaries). Disposition:
+**GL-013 — Incremental modularization underway; first extraction qualified.**
+The branch is not merged. Existing shared-domain ownership, userdata layout,
 registration order, reflection and networking remain unchanged. The original
 header still couples Instance dispatch, services and Godot properties; this first
 boundary does not close GL-013. An exploratory physics-backed baseline fixture
