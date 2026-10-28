@@ -1,0 +1,2650 @@
+{
+  "Issue": "GL-013",
+  "Date": "2026-10-28",
+  "Branch": "refactor/gl-013-script-bootstrap",
+  "BaseMain": "ce5e19fa8aea1cf65da875d07cda13c1696fc08c",
+  "Implementation": null,
+  "Disposition": "IMPLEMENTED \u2014 QUALIFICATION PENDING",
+  "LocalQualification": "Four configurations, core39/native28 each; hosted pending",
+  "AssessmentMainIntegration": {
+    "StartingMain": "08b2bb83b7093a361c80b147b4827eb22715ad32",
+    "AssessmentSource": "bbb21752b2f241d718c936b667bf7076f1d2927e",
+    "Merge": "d99adcfb2b915b3209fef7f849865cf4acc964f9",
+    "FinalRemoteMain": "ce5e19fa8aea1cf65da875d07cda13c1696fc08c",
+    "ExactAssessmentMergeTree": true,
+    "RuntimeBuildTestWorkflowPinsUnchanged": true,
+    "StaticDocumentationAndSourceChecks": "pass",
+    "CIDispatched": false,
+    "Disposition": "INTEGRATED AND VERIFIED"
+  },
+  "Boundary": {
+    "Owner": "existing src/core/luau_script.cpp",
+    "Methods": [
+      "InitializeDomain",
+      "setup_remotefunction_system",
+      "_gl_child_event"
+    ],
+    "Helpers": "Private JSON/HTTP block moved unchanged; no behavior/capability/persistence changes",
+    "Facade": "PushLuauInstance(lua_State*, godot::Node*) delegates to existing wrap_node, metatable-bearing ObjectID userdata or nil; no object/cache/VM ownership",
+    "Host": "Explicit service/runtime/error/codec/character dependencies; same method bodies except wrapper call name",
+    "Registration": "Humanoid include before workspace/network, all registration bodies/order unchanged",
+    "NewTranslationUnits": 0,
+    "NewMutableState": false,
+    "SameVMModuleCacheLifetimeAuthorityModel": true
+  },
+  "SourceAudit": {
+    "Base": "ce5e19fa8aea1cf65da875d07cda13c1696fc08c",
+    "MovedBodiesExactAfterIndentation": [
+      "InitializeDomain",
+      "setup_remotefunction_system",
+      "_gl_child_event"
+    ],
+    "PrivateJSONHTTPBlockExact": true,
+    "RetainedHeaderAndHostBodiesExact": true,
+    "WrapperFacade": "one delegation to existing wrap_node; no parallel userdata implementation",
+    "APIFanout": [
+      "src/core/luau_script.cpp"
+    ],
+    "StdlibFanout": [
+      "src/core/luau_script.cpp"
+    ],
+    "HeaderCPP": {
+      "src/core/luau_script.h": {
+        "BeforeBytes": 86306,
+        "BeforeLines": 1593,
+        "AfterBytes": 35726,
+        "AfterLines": 657
+      },
+      "src/core/luau_script.cpp": {
+        "BeforeBytes": 172,
+        "BeforeLines": 8,
+        "AfterBytes": 48651,
+        "AfterLines": 961
+      }
+    }
+  },
+  "Pins": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "DependencyIdentity": {
+    "Windows": "Fresh git rev-parse readback at both pinned submodule revisions",
+    "Linux": {
+      "ArchiveSHA256": {
+        "godot-cpp.tar": "29af1538a795102259fdb5ac08ec8da6b7c0477198567181eee934eb720f02e0",
+        "luau.tar": "31164c634c9885131c203b893e3f58e2d1841fc34049969782eb095798ae1e74"
+      },
+      "HistoricalSource": "newdocs/evidence/gl020-animation-qualification-2026-10-27.json",
+      "LiveTreeArchiveMatches": {
+        "godot-cpp": 165,
+        "luau": 852
+      },
+      "Mismatches": 0
+    }
+  },
+  "Method": "Same task source paths / existing platform-config build caches, pinned vendors warm; only task adapter/core-test objects removed for project-cold builds, two jobs. Single wall-time trials include linking; no parse-only/link-only/full-clean/memory/runtime performance claim. Original/final fixtures use production extension.",
+  "DependencyAnalysis": {
+    "BeforeRevision": "08b2bb83b7093a361c80b147b4827eb22715ad32",
+    "AfterSource": "Working source hashes below; source commit appended after publication",
+    "HeaderCountBeforeAfter": [
+      64,
+      65
+    ],
+    "TranslationUnitsBeforeAfter": [
+      8,
+      8
+    ],
+    "StronglyConnectedIncludeComponentsAfter": [],
+    "CompilerClosureMatches": 64,
+    "CompilerMethod": "Explicit eight snapshot object targets per platform/config/mode, ninja -t deps; resolve relative paths against build directory. MSVC lists headers only, GCC also lists compiling source.",
+    "Metrics": {
+      "src/core/luau_script.h": {
+        "Before": {
+          "LFBytes": 86306,
+          "Lines": 1593,
+          "AffectedTranslationUnits": [
+            "src/core/gl_domain_host.cpp",
+            "src/core/luau_script.cpp",
+            "src/core/register_types.cpp"
+          ]
+        },
+        "After": {
+          "LFBytes": 35726,
+          "Lines": 657,
+          "SHA256LF": "44bd05aabd0f95637c0157bb4fff2d7a5fcb2f70713ad14c1b3683bb987d5bd1",
+          "AffectedTranslationUnits": [
+            "src/core/gl_domain_host.cpp",
+            "src/core/luau_script.cpp",
+            "src/core/register_types.cpp"
+          ]
+        },
+        "DirectIncludesBeforeAfter": [
+          31,
+          25
+        ]
+      },
+      "src/core/luau_script.cpp": {
+        "Before": {
+          "LFBytes": 172,
+          "Lines": 8,
+          "AffectedTranslationUnits": [
+            "src/core/luau_script.cpp"
+          ]
+        },
+        "After": {
+          "LFBytes": 48651,
+          "Lines": 961,
+          "SHA256LF": "b840fe2890348fc349c0e5c6cbb3c2e6dc1be90ed5632aa64931b2a2511ab9cf",
+          "AffectedTranslationUnits": [
+            "src/core/luau_script.cpp"
+          ]
+        },
+        "DirectIncludesBeforeAfter": [
+          2,
+          12
+        ]
+      },
+      "src/core/gl_domain_host.cpp": {
+        "Before": {
+          "LFBytes": 14437,
+          "Lines": 252,
+          "AffectedTranslationUnits": [
+            "src/core/gl_domain_host.cpp"
+          ]
+        },
+        "After": {
+          "LFBytes": 14821,
+          "Lines": 266,
+          "SHA256LF": "14a5adc05cb401a17ee7059f2d128e592017f45f00d206025f86868f1e255a75",
+          "AffectedTranslationUnits": [
+            "src/core/gl_domain_host.cpp"
+          ]
+        },
+        "DirectIncludesBeforeAfter": [
+          2,
+          15
+        ]
+      },
+      "src/core/register_types.cpp": {
+        "Before": {
+          "LFBytes": 16052,
+          "Lines": 359,
+          "AffectedTranslationUnits": [
+            "src/core/register_types.cpp"
+          ]
+        },
+        "After": {
+          "LFBytes": 16130,
+          "Lines": 360,
+          "SHA256LF": "1478c1649f0e04efafdb9de989279be4d88f17c7010cd9046e0533a75213cc0a",
+          "AffectedTranslationUnits": [
+            "src/core/register_types.cpp"
+          ]
+        },
+        "DirectIncludesBeforeAfter": [
+          48,
+          48
+        ]
+      },
+      "src/core/luau_api.h": {
+        "Before": {
+          "LFBytes": 274780,
+          "Lines": 4838,
+          "AffectedTranslationUnits": [
+            "src/core/gl_domain_host.cpp",
+            "src/core/luau_script.cpp",
+            "src/core/register_types.cpp"
+          ]
+        },
+        "After": {
+          "LFBytes": 274780,
+          "Lines": 4838,
+          "SHA256LF": "ddbacf67a2d8a11975da30dc41a291ec9d459e07e93ade1f31397315e72dc1c8",
+          "AffectedTranslationUnits": [
+            "src/core/luau_script.cpp"
+          ]
+        },
+        "DirectIncludesBeforeAfter": [
+          46,
+          46
+        ]
+      },
+      "src/core/luau_stdlib.h": {
+        "Before": {
+          "LFBytes": 115894,
+          "Lines": 2464,
+          "AffectedTranslationUnits": [
+            "src/core/gl_domain_host.cpp",
+            "src/core/luau_script.cpp",
+            "src/core/register_types.cpp"
+          ]
+        },
+        "After": {
+          "LFBytes": 115894,
+          "Lines": 2464,
+          "SHA256LF": "58da869cfaa73cc1b2b079f9c6378d69d269124f9c88d9b0081b32eae76d53a7",
+          "AffectedTranslationUnits": [
+            "src/core/luau_script.cpp"
+          ]
+        },
+        "DirectIncludesBeforeAfter": [
+          0,
+          0
+        ]
+      },
+      "src/core/luau_instance_access.h": {
+        "Before": null,
+        "After": {
+          "LFBytes": 453,
+          "Lines": 12,
+          "SHA256LF": "814d81bcdd4576b58660fe9b52ed15cefb3461939d7b6ba152b40304b2f5c14a",
+          "AffectedTranslationUnits": [
+            "src/core/gl_domain_host.cpp",
+            "src/core/luau_script.cpp"
+          ]
+        },
+        "DirectIncludesBeforeAfter": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "Hosted": {
+    "State": "Not published yet",
+    "ObservationBoundMinutes": 25
+  },
+  "Remaining": [
+    "GL-013 open; next independent candidate completion ownership needs editor-specific fixtures",
+    "GL-022 shared native ModuleScript child relay remains a separate baseline gap, not fixed or counted as passing",
+    "Partial/rootless bootstrap failure branch has source-equivalence evidence, no new runtime fault-injection hook",
+    "No new native lifetime/sanitizer matrix; GL-017/018 remain separate",
+    "GL-020 animation security deferred; current animation fixtures functional only",
+    "GL-021 untouched",
+    "No new SCons/release packaging or runtime performance qualification",
+    "Main unchanged after assessment integration; this source branch stays unmerged"
+  ],
+  "FailedAttemptDispositions": {
+    "baseline-qualification1-debug": "Unchanged Windows/Linux source fails shared-ModuleScript second-domain child marker; recorded as GL-022",
+    "baseline-diagnostic2-debug": "Windows replay shows one native child-signal connection on shared ModuleScript",
+    "FinalFixture": "Distinct native relay targets retain both-domain/caller-retirement assertions; shared module cache and attribute callbacks remain tested; all original fixture assertions unchanged",
+    "candidate-build-debug": "Windows host missing explicit Humanoid prerequisite after removing transitive API include",
+    "candidate2-build-debug": "Both platforms expose registration include order; existing Humanoid include moved before workspace/network",
+    "LinuxUploadReset": "Transient SSH/scp reset before compile, retried successfully; not a runtime failure",
+    "CleanupGuard": "Literal ../.. comparison rejected CMake canonicalized path after configure; resolved-path check corrected and both configurations restored; no runtime/input impact"
+  },
+  "WorkerCleanup": "Both Windows/Linux Debug/Release source-root configurations restored and verified by resolved path; Linux container stopped; task evidence preserved",
+  "Windows": {
+    "Platform": "Windows-11-10.0.26200-SP0",
+    "CPUCount": 24,
+    "Python": "3.12.6 (tags/v3.12.6:a4a2d2b, Sep  6 2024, 20:11:23) [MSC v.1940 64 bit (AMD64)]",
+    "FinalNativeSource": {
+      "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+      "Files": 74,
+      "Newlines": "LF normalized"
+    },
+    "Measurements": {
+      "baseline-debug": {
+        "Mode": "baseline",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3",
+          "Files": 73,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 21.652,
+          "CompilationUnits": 10,
+          "Warnings": 2
+        },
+        "TouchScriptHeader": {
+          "Seconds": 19.754,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 19.722,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 6.925,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj": 6596849,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj": 3268227,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj": 106296,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj": 121199,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj": 4472955,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj": 48609,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj": 63337,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj": 76581156
+        },
+        "ObjectBytes": 91258628,
+        "LibraryBytes": 24192000,
+        "LibrarySHA256": "82b297c0ff0ba9725ae05845dc2812cc302ebddac37e3fcf357c76de2d58022f",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj: #deps 292, deps mtime 8148791564029687 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj: #deps 12, deps mtime 8148791110823577 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj: #deps 61, deps mtime 8148791115168748 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj: #deps 64, deps mtime 8148791119457122 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj: #deps 301, deps mtime 8148791761376398 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj: #deps 4, deps mtime 8148791167423995 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj: #deps 56, deps mtime 8148791171077975 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj: #deps 358, deps mtime 8148791686108854 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          }
+        ],
+        "Compiler": "14.51.36231",
+        "CMake": "cmake version 3.31.10",
+        "CoreCases": 39
+      },
+      "baseline-release": {
+        "Mode": "baseline",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3",
+          "Files": 73,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 30.727,
+          "CompilationUnits": 10,
+          "Warnings": 2
+        },
+        "TouchScriptHeader": {
+          "Seconds": 27.945,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 27.702,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 7.033,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj": 2913557,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj": 1246945,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj": 50271,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj": 49431,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj": 2166413,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj": 40685,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj": 13290,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj": 42710556
+        },
+        "ObjectBytes": 49191148,
+        "LibraryBytes": 4073984,
+        "LibrarySHA256": "0d8bf166584900773d74a769b2bc6b878c95da875003d984c2caaca592220d3d",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj: #deps 292, deps mtime 8148792434059666 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj: #deps 12, deps mtime 8148791808118504 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj: #deps 61, deps mtime 8148791813116009 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj: #deps 64, deps mtime 8148791817634136 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj: #deps 301, deps mtime 8148792707161841 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj: #deps 4, deps mtime 8148791865418916 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj: #deps 56, deps mtime 8148791869680437 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj: #deps 358, deps mtime 8148792636116147 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          }
+        ],
+        "Compiler": "14.51.36231",
+        "CMake": "cmake version 3.31.10",
+        "CoreCases": 39
+      },
+      "candidate3-debug": {
+        "Mode": "candidate3",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+          "Files": 74,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 19.049,
+          "CompilationUnits": 10,
+          "Warnings": 2
+        },
+        "TouchScriptHeader": {
+          "Seconds": 17.076,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 7.367,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 7.398,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj": 5587796,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj": 3268227,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj": 106296,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj": 121199,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj": 14779984,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj": 48609,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj": 63337,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj": 72698104
+        },
+        "ObjectBytes": 96673552,
+        "LibraryBytes": 23896576,
+        "LibrarySHA256": "2217ef63127ffbed2162ce7df9f729b88af989cffd177ac3cf3d896496d30b55",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj: #deps 229, deps mtime 8148801434118307 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_remote.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/ui/roblox_chat.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj: #deps 12, deps mtime 8148801225990741 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj: #deps 61, deps mtime 8148801230383381 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj: #deps 64, deps mtime 8148801234401778 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj: #deps 302, deps mtime 8148801703773650 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj: #deps 4, deps mtime 8148801259333024 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj: #deps 56, deps mtime 8148801262839285 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj: #deps 347, deps mtime 8148801551259932 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          }
+        ],
+        "Compiler": "14.51.36231",
+        "CMake": "cmake version 3.31.10",
+        "CoreCases": 39
+      },
+      "candidate3-release": {
+        "Mode": "candidate3",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+          "Files": 74,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 27.587,
+          "CompilationUnits": 10,
+          "Warnings": 2
+        },
+        "TouchScriptHeader": {
+          "Seconds": 28.144,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 10.754,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 10.46,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj": 2394537,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj": 1246945,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj": 50271,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj": 49431,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj": 7047987,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj": 40685,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj": 13290,
+          "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj": 40657116
+        },
+        "ObjectBytes": 51500262,
+        "LibraryBytes": 4080640,
+        "LibrarySHA256": "1395852b0ed374d4967eb695266a21b2431ef8529429554a9bb2a0c687923e36",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_domain_host.cpp.obj: #deps 229, deps mtime 8148802047041811 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_remote.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/ui/roblox_chat.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.obj: #deps 12, deps mtime 8148801752072538 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_class_identity.cpp.obj: #deps 61, deps mtime 8148801757308851 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.obj: #deps 64, deps mtime 8148801763187057 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_script.cpp.obj: #deps 302, deps mtime 8148802485408090 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.obj: #deps 4, deps mtime 8148801786633587 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.obj: #deps 56, deps mtime 8148801790448290 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/C_/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap/source/src/core/register_types.cpp.obj: #deps 347, deps mtime 8148802271342158 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": false,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          }
+        ],
+        "Compiler": "14.51.36231",
+        "CMake": "cmake version 3.31.10",
+        "CoreCases": 39
+      }
+    },
+    "Qualification": {
+      "baseline-debug": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "LibrarySHA256": "82b297c0ff0ba9725ae05845dc2812cc302ebddac37e3fcf357c76de2d58022f",
+        "LogHashes": {
+          "regression.log": "f9cdf3d23be0a6d5a3eeffc61b6c90a58e6a25c6e48b87baeafb39e5d7401a94"
+        }
+      },
+      "baseline-release": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "LibrarySHA256": "0d8bf166584900773d74a769b2bc6b878c95da875003d984c2caaca592220d3d",
+        "LogHashes": {
+          "regression.log": "d55bd0fc2fc84b9a9ca855da2e706b4ce0f143e2b73410bd42c2337b075a6b36"
+        }
+      },
+      "candidate3-debug": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "0ca0abf8aa7b4ecda1f3ba71e86edaf8ab291f52186694b4139d7dd07a15a33f",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 2058090712. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 768921894. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 683758762. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+          ]
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": []
+        },
+        "LibrarySHA256": "2217ef63127ffbed2162ce7df9f729b88af989cffd177ac3cf3d896496d30b55",
+        "LogHashes": {
+          "animation.log": "9bbaddf64b0cd21be884b68b5278d8b2f80d0943db8b59e42c9b758c95b17ad5",
+          "regression.log": "6610ea9162870fd7f6bb189efd79c3c5a8e55fdcaf5f1a614d6e64d50b596340",
+          "security.log": "396a9e821d41b6607a8cdce7eb14ee0b942e4134c1a2e32027a78882d1c3e8cb"
+        }
+      },
+      "candidate3-release": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "c406ae11c983ff2f081af1c7a6cfe0e58c6b4f2b78164d73bef42b0d98926e28",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 363585473. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 435812372. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 855268210. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+          ]
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": []
+        },
+        "LibrarySHA256": "1395852b0ed374d4967eb695266a21b2431ef8529429554a9bb2a0c687923e36",
+        "LogHashes": {
+          "animation.log": "7f62b4339b524b5942a4f9504701dcff2be7ed77c5212c72dc80deb9cbea33d4",
+          "regression.log": "9491c0a74e0f14499c2420739d772fbd531839672cf8ee732ba310cacc32f58f",
+          "security.log": "c613bd65596baa9a89b9b4fa64ce37789291175c33c2b3e60d87407e706ef8b7"
+        }
+      }
+    },
+    "FailedAttempts": {
+      "baseline-qualification1-debug": {
+        "LogHashes": {
+          "regression\\integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "regression\\integration-0.stdout.log": "cf37a8c9f6fd5625103aa4a57b56cf02560dac0d99b67c93c90efb005fdcfae5",
+          "regression\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "52f9e91af931fc4c4638a8a7a995e60eed7a43a21f5bc2f20aac22298fa6e99b",
+          "regression.log": "81820bff4fb25f090db2680c1084918121a9923b1c39be70cfd71b5cce2f17ff"
+        },
+        "NativeSourceOrFixture": "Retained task archive/source snapshots; see dispositions in qualification documentation"
+      },
+      "baseline-diagnostic2-debug": {
+        "LogHashes": {
+          "regression\\integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "regression\\integration-0.stdout.log": "1f5f9be72138e223b92947f172dec954821bc8956a5b46802bd3a8182afbf620",
+          "regression\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "32b5b2116e87900d5a1a9adc69337ce64f595c1d64361fabe2e90cbefabb2629",
+          "regression.log": "a8019e4f02019670d199d86f23f093b1156265bf47cfef25b61dae06421f6d0a"
+        },
+        "NativeSourceOrFixture": "Retained task archive/source snapshots; see dispositions in qualification documentation"
+      },
+      "candidate-build-debug": {
+        "LogHashes": {
+          "cold-extension.log": "3caa870d2dfd9f96787189c5cab307861302c6cec44b5403cc6228ff324fd56d",
+          "configure.log": "13e394ac48b194a8791bf1b2b794eb2ac63e18eda5c9bf64938b1e7a1387cb16"
+        },
+        "NativeSourceOrFixture": "Retained task archive/source snapshots; see dispositions in qualification documentation"
+      },
+      "candidate2-build-debug": {
+        "LogHashes": {
+          "cold-extension.log": "c931187620172188237d79a1cd2a1590ad5b50b30acf688134d2c5983c415b92",
+          "configure.log": "c45f2d3e20c8e50ef343af87525674a7a959b94e37251f4cd35cb4ff175e72f7"
+        },
+        "NativeSourceOrFixture": "Retained task archive/source snapshots; see dispositions in qualification documentation"
+      }
+    },
+    "SourceHashesLF": {
+      "src/core/luau_script.h": "44bd05aabd0f95637c0157bb4fff2d7a5fcb2f70713ad14c1b3683bb987d5bd1",
+      "src/core/luau_script.cpp": "b840fe2890348fc349c0e5c6cbb3c2e6dc1be90ed5632aa64931b2a2511ab9cf",
+      "src/core/gl_domain_host.cpp": "14a5adc05cb401a17ee7059f2d128e592017f45f00d206025f86868f1e255a75",
+      "src/core/register_types.cpp": "1478c1649f0e04efafdb9de989279be4d88f17c7010cd9046e0533a75213cc0a",
+      "src/core/luau_instance_access.h": "814d81bcdd4576b58660fe9b52ed15cefb3461939d7b6ba152b40304b2f5c14a",
+      "src/core/luau_api.h": "ddbacf67a2d8a11975da30dc41a291ec9d459e07e93ade1f31397315e72dc1c8",
+      "src/core/luau_stdlib.h": "58da869cfaa73cc1b2b079f9c6378d69d269124f9c88d9b0081b32eae76d53a7",
+      "tests/runtime/Integration.gd": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8"
+    }
+  },
+  "Linux": {
+    "Platform": "Linux-6.8.0-146-generic-x86_64-with-glibc2.39",
+    "CPUCount": 32,
+    "Python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "FinalNativeSource": {
+      "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+      "Files": 74,
+      "Newlines": "LF normalized"
+    },
+    "Measurements": {
+      "baseline-debug": {
+        "Mode": "baseline",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3",
+          "Files": 73,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 23.0,
+          "CompilationUnits": 10,
+          "Warnings": 0
+        },
+        "TouchScriptHeader": {
+          "Seconds": 21.897,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 21.797,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 6.273,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o": 38475736,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o": 372424,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o": 13388664,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o": 13034144,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o": 44312,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o": 2261008,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o": 439080,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o": 432160
+        },
+        "ObjectBytes": 68447528,
+        "LibraryBytes": 79241056,
+        "LibrarySHA256": "c1d579f6bc82518b1d56b9894aee1195f026a1d81e613300be937b85409bb4c2",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o: #deps 652, deps mtime 1793175974450086402 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.cpp",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o: #deps 173, deps mtime 1793175915450444887 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.cpp",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o: #deps 584, deps mtime 1793175959325178036 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.cpp",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o: #deps 593, deps mtime 1793175980771048160 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.cpp",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o: #deps 120, deps mtime 1793175915275445954 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.cpp",
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o: #deps 258, deps mtime 1793175910540474850 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.cpp",
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o: #deps 192, deps mtime 1793175911007471999 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.cpp",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o: #deps 188, deps mtime 1793175910771473440 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.cpp",
+              "src/core/luau_class_identity.h"
+            ]
+          }
+        ],
+        "Compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "CMake": "cmake version 3.28.3",
+        "CoreCases": 39
+      },
+      "baseline-release": {
+        "Mode": "baseline",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3",
+          "Files": 73,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 42.026,
+          "CompilationUnits": 10,
+          "Warnings": 0
+        },
+        "TouchScriptHeader": {
+          "Seconds": 40.52,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 40.418,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 4.52,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o": 13084712,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o": 7968,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o": 1246568,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o": 1176024,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o": 16448,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o": 157280,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o": 28136,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o": 25832
+        },
+        "ObjectBytes": 15742968,
+        "LibraryBytes": 12516600,
+        "LibrarySHA256": "4e66a608b018b357ee357cb9048600a8b716538c5bb0a4f0ee58fadf24f65999",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o: #deps 663, deps mtime 1793176104877302980 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.cpp",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o: #deps 179, deps mtime 1793175988306002612 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.cpp",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o: #deps 595, deps mtime 1793176069540514121 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.cpp",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o: #deps 604, deps mtime 1793176109420275891 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.cpp",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o: #deps 129, deps mtime 1793175988139003621 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.cpp",
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o: #deps 269, deps mtime 1793175984390026278 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.cpp",
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o: #deps 198, deps mtime 1793175984854023473 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.cpp",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o: #deps 194, deps mtime 1793175984613024930 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.cpp",
+              "src/core/luau_class_identity.h"
+            ]
+          }
+        ],
+        "Compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "CMake": "cmake version 3.28.3",
+        "CoreCases": 39
+      },
+      "candidate3-debug": {
+        "Mode": "candidate3",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+          "Files": 74,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 19.144,
+          "CompilationUnits": 10,
+          "Warnings": 0
+        },
+        "TouchScriptHeader": {
+          "Seconds": 18.142,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 6.323,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 6.274,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o": 35909608,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o": 372424,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o": 6580320,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o": 13323112,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o": 44312,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o": 2261008,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o": 439080,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o": 432160
+        },
+        "ObjectBytes": 59362024,
+        "LibraryBytes": 76732152,
+        "LibrarySHA256": "ab34d4e037b4b371e2fc380c65c8641d4e5b7f40bcd1615d3bee283c7b6e14fb",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o: #deps 641, deps mtime 1793176964388311116 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.cpp",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o: #deps 173, deps mtime 1793176931888496988 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.cpp",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o: #deps 516, deps mtime 1793176950014393309 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.cpp",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_remote.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/ui/roblox_chat.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o: #deps 594, deps mtime 1793176977001239015 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.cpp",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o: #deps 120, deps mtime 1793176931706498030 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.cpp",
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o: #deps 258, deps mtime 1793176929751509215 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.cpp",
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o: #deps 192, deps mtime 1793176930218506543 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.cpp",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o: #deps 188, deps mtime 1793176929984507882 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.cpp",
+              "src/core/luau_class_identity.h"
+            ]
+          }
+        ],
+        "Compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "CMake": "cmake version 3.28.3",
+        "CoreCases": 39
+      },
+      "candidate3-release": {
+        "Mode": "candidate3",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Project cold; pinned dependency objects warm, single trial; build timings include linking",
+        "NativeSource": {
+          "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+          "Files": 74,
+          "Newlines": "LF normalized"
+        },
+        "ColdExtension": {
+          "Seconds": 38.12,
+          "CompilationUnits": 10,
+          "Warnings": 0
+        },
+        "TouchScriptHeader": {
+          "Seconds": 36.717,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchAPIHeader": {
+          "Seconds": 9.777,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "TouchScriptImplementation": {
+          "Seconds": 9.727,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o": 12020352,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o": 7968,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o": 989720,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o": 2877160,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o": 16448,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o": 157280,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o": 28136,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o": 25832
+        },
+        "ObjectBytes": 16122896,
+        "LibraryBytes": 12557408,
+        "LibrarySHA256": "288aabf559635f7f8cfccc41db6c7b6a15f9e496304e26f672ea4d7cb291d2e6",
+        "CompilerDependencies": [
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/register_types.cpp.o: #deps 652, deps mtime 1793177052840805816 (VALID)",
+            "SourceUnit": "src/core/register_types.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_attachment.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/core/register_types.cpp",
+              "src/core/register_types.h",
+              "src/core/roblox_behavior.h",
+              "src/core/roblox_effects.h",
+              "src/core/roblox_extra.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/importer/rbx_classmap.h",
+              "src/importer/rbx_import_plugin.h",
+              "src/importer/rbx_importer.h",
+              "src/importer/rbx_instances.h",
+              "src/importer/rbx_prop.h",
+              "src/importer/rbx_reader.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_datamodel.h",
+              "src/services/roblox_game2d.h",
+              "src/services/roblox_game3d.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/services/roblox_workspace2d.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_settings_menu.h",
+              "src/ui/gl_ui_modifiers.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h",
+              "src/ui/roblox_lighting_fx.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_variant_bindings.cpp.o: #deps 179, deps mtime 1793176983270203185 (VALID)",
+            "SourceUnit": "src/core/luau_variant_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.h",
+              "src/core/luau_variant_bindings.cpp",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_domain_host.cpp.o: #deps 527, deps mtime 1793177020064992963 (VALID)",
+            "SourceUnit": "src/core/gl_domain_host.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.cpp",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_script.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/menu_templates.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_remote.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/ui/roblox_chat.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_script.cpp.o: #deps 605, deps mtime 1793177072405694150 (VALID)",
+            "SourceUnit": "src/core/luau_script.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/characters/gl_avatar.h",
+              "src/characters/humanoid.h",
+              "src/characters/humanoid2d.h",
+              "src/characters/roblox_bodymovers.h",
+              "src/characters/roblox_constraints.h",
+              "src/characters/roblox_part.h",
+              "src/characters/roblox_player.h",
+              "src/characters/roblox_player2d.h",
+              "src/characters/roblox_terrain.h",
+              "src/core/gl_asset.h",
+              "src/core/gl_debug.h",
+              "src/core/gl_domain_host.h",
+              "src/core/gl_errors.h",
+              "src/core/gl_execution_domain.h",
+              "src/core/gl_graphics.h",
+              "src/core/gl_net_bridge.h",
+              "src/core/gl_runtime.h",
+              "src/core/gl_stackguard.h",
+              "src/core/luau_api.h",
+              "src/core/luau_class_identity.h",
+              "src/core/luau_instance_access.h",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_language.h",
+              "src/core/luau_script.cpp",
+              "src/core/luau_script.h",
+              "src/core/luau_stdlib.h",
+              "src/core/luau_templates_gen.h",
+              "src/core/luau_value_bindings.h",
+              "src/core/menu_templates.h",
+              "src/editor/luau_autocomplete.h",
+              "src/editor/luau_type_database.h",
+              "src/gameplay/roblox_animation.h",
+              "src/gameplay/roblox_input.h",
+              "src/gameplay/roblox_interactive.h",
+              "src/gameplay/roblox_remote.h",
+              "src/gameplay/roblox_sound.h",
+              "src/gameplay/roblox_tween.h",
+              "src/services/folder.h",
+              "src/services/gl_chunks.h",
+              "src/services/roblox_network.h",
+              "src/services/roblox_services.h",
+              "src/services/roblox_workspace.h",
+              "src/ui/gl_gui_core.h",
+              "src/ui/gl_world_gui.h",
+              "src/ui/roblox_billboard.h",
+              "src/ui/roblox_chat.h",
+              "src/ui/roblox_gui.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_value_bindings.cpp.o: #deps 129, deps mtime 1793176983094204191 (VALID)",
+            "SourceUnit": "src/core/luau_value_bindings.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_value_bindings.cpp",
+              "src/core/luau_value_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/gl_execution_domain.cpp.o: #deps 269, deps mtime 1793176980495219044 (VALID)",
+            "SourceUnit": "src/core/gl_execution_domain.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/gl_execution_domain.cpp",
+              "src/core/gl_execution_domain.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_instance_reflection.cpp.o: #deps 198, deps mtime 1793176980962216375 (VALID)",
+            "SourceUnit": "src/core/luau_instance_reflection.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_instance_reflection.cpp",
+              "src/core/luau_instance_reflection.h",
+              "src/core/luau_variant_bindings.h"
+            ]
+          },
+          {
+            "Target": "CMakeFiles/GodotLuauAdapter.dir/work/gl013-bootstrap/source/src/core/luau_class_identity.cpp.o: #deps 194, deps mtime 1793176980724217733 (VALID)",
+            "SourceUnit": "src/core/luau_class_identity.cpp",
+            "SourceListed": true,
+            "ProjectInputs": [
+              "src/core/luau_class_identity.cpp",
+              "src/core/luau_class_identity.h"
+            ]
+          }
+        ],
+        "Compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "CMake": "cmake version 3.28.3",
+        "CoreCases": 39
+      }
+    },
+    "Qualification": {
+      "baseline-debug": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "LibrarySHA256": "c1d579f6bc82518b1d56b9894aee1195f026a1d81e613300be937b85409bb4c2",
+        "LogHashes": {
+          "regression.log": "f5a8071e359f7280798a01df73729fc58b25cea5b637a6563938a5af60039511"
+        }
+      },
+      "baseline-release": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "LibrarySHA256": "4e66a608b018b357ee357cb9048600a8b716538c5bb0a4f0ee58fadf24f65999",
+        "LogHashes": {
+          "regression.log": "a853ca25e620edb1ef4aae24a878931307aa7221a2b29ed5a8bf6e47715d219b"
+        }
+      },
+      "candidate3-debug": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "5f6c9aa303cfab40cbeb3ca020ab7736faec6febd0ebedc6db7e19beb98bf92e",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 1315844763. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 618621014. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 250064082. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+          ]
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": []
+        },
+        "LibrarySHA256": "ab34d4e037b4b371e2fc380c65c8641d4e5b7f40bcd1615d3bee283c7b6e14fb",
+        "LogHashes": {
+          "animation.log": "9daa1ab3208e3da51019e9bd79e48e2f0c55294bab82003a0175d0c7053222dd",
+          "regression.log": "5c3af906b51dcf4785c41edc36f6cbcc1e539f3a82934b5e1f4a960c099c77d0",
+          "security.log": "08043f324a72b00b42bebaa0595550456d374e95dd775f10ae5b593853787fef"
+        }
+      },
+      "candidate3-release": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          ]
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "24f9e6b5c8cb05a1108f8d6d9ce9455c55012afa878d0cb424e14f7580569cea",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": [
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 203958706. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 611929957. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+            "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 859011624. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+          ]
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+          "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+          "Diagnostics": []
+        },
+        "LibrarySHA256": "288aabf559635f7f8cfccc41db6c7b6a15f9e496304e26f672ea4d7cb291d2e6",
+        "LogHashes": {
+          "animation.log": "6a877941a863a185d62f3db643d855471b39e9833cd8e22914104c942560f375",
+          "regression.log": "69ab20b8378ba22d29c481121eacf111aa20b5c7b7ed44b52c2e866131c89e47",
+          "security.log": "c8fb24c7e56534f5ad69ea4a0152e29968b4a1c49caca4834522bebb6b38228d"
+        }
+      }
+    },
+    "FailedAttempts": {
+      "baseline-qualification1-debug": {
+        "LogHashes": {
+          "regression/integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "regression/integration-0.stdout.log": "bce326f8ac255d0c2a29bee985367712561e410d314d36196925664bf1118574",
+          "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "52f9e91af931fc4c4638a8a7a995e60eed7a43a21f5bc2f20aac22298fa6e99b",
+          "regression.log": "0010003386790ad37f9dcbd287ede360963e19c0206a9ddb09e59e5eb5a8ca1d"
+        },
+        "NativeSourceOrFixture": "Retained task archive/source snapshots; see dispositions in qualification documentation"
+      },
+      "candidate2-build-debug": {
+        "LogHashes": {
+          "cold-extension.log": "093c3fe9b22f5b61867857356ef903bb82585d6e0934513ae6f097504b02de79",
+          "configure.log": "2da4cfafa2d04c4fbeb4a63f7c94060fb109aca800b01fa9c277ebc3e84bf3c4"
+        },
+        "NativeSourceOrFixture": "Retained task archive/source snapshots; see dispositions in qualification documentation"
+      }
+    },
+    "SourceHashesLF": {
+      "src/core/luau_script.h": "44bd05aabd0f95637c0157bb4fff2d7a5fcb2f70713ad14c1b3683bb987d5bd1",
+      "src/core/luau_script.cpp": "b840fe2890348fc349c0e5c6cbb3c2e6dc1be90ed5632aa64931b2a2511ab9cf",
+      "src/core/gl_domain_host.cpp": "14a5adc05cb401a17ee7059f2d128e592017f45f00d206025f86868f1e255a75",
+      "src/core/register_types.cpp": "1478c1649f0e04efafdb9de989279be4d88f17c7010cd9046e0533a75213cc0a",
+      "src/core/luau_instance_access.h": "814d81bcdd4576b58660fe9b52ed15cefb3461939d7b6ba152b40304b2f5c14a",
+      "src/core/luau_api.h": "ddbacf67a2d8a11975da30dc41a291ec9d459e07e93ade1f31397315e72dc1c8",
+      "src/core/luau_stdlib.h": "58da869cfaa73cc1b2b079f9c6378d69d269124f9c88d9b0081b32eae76d53a7",
+      "tests/runtime/Integration.gd": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8"
+    }
+  },
+  "NativeSource": {
+    "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+    "Files": 74,
+    "Newlines": "LF normalized"
+  },
+  "FixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+  "OriginalFixtureAssertionsUnchanged": true,
+  "InputArchiveHashes": {
+    "GL013BootstrapBaseline.zip": "d2e8c9dd18a030c4a5d485ab35e06ebb79c7a64d40b6cbecc1fb100a0b979871",
+    "GL013BootstrapBaselineFixtures.zip": "432b12403dce365262a8bdd742d0bd4fd1394c0a8321388844ecc11675bb5cbc",
+    "GL013BootstrapDiagnostic.zip": "f6ccb57c36b3dcf7c7ef7a3dcf521e06df75f9e443cdf2529b33e59aa940680c",
+    "GL013BootstrapFixtures2.zip": "158de76730574369389a7a6ab7ebb20b47f299df45e9aa87e4727d4578b2b2e0",
+    "GL013BootstrapCandidate.zip": "4802c7865cf235fe2f7fc3364e86a0a4d0c44c2238e859f015be6329c1c37677",
+    "GL013BootstrapCandidate2.zip": "6674a121f1461f3e175a841341094da596b3b3300b25d0a4e706cfa8802c013a",
+    "GL013BootstrapCandidate3.zip": "dc8084f4a1baecea8d8b51c900ae42e92e1f27bb5471e7d8071b2e9759b0a919"
+  },
+  "Symbols": "Linux Debug nm --defined-only script object: one T definition each for facade and three moved methods; successful links in four configurations"
+}

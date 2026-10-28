@@ -2181,3 +2181,193 @@ editor/game execution or CI dispatch were needed for this documentation merge.
 The following documentation follow-up updates historical branch status only.
 GL-013 remains open; recommendations are not runtime invariants. The separately
 authorized bootstrap implementation starts from verified main on its own branch.
+
+## GL-013 fifth script bootstrap boundary
+
+Branch `refactor/gl-013-script-bootstrap` starts at final assessment-integration
+main `ce5e19fa8aea1cf65da875d07cda13c1696fc08c`. Assessment source `bbb2175` is
+preserved by normal merge `d99adcf`; the documentation-only follow-up is `ce5e19f`.
+Stage 1 is **INTEGRATED AND VERIFIED**: remote main was read back at that SHA,
+with unchanged runtime/test/build/workflow/pin inputs and no CI dispatch.
+Stage 2 is locally qualified; hosted qualification follows publication. It remains
+unmerged. The [manifest](evidence/gl013-script-bootstrap-2026-10-28.json) records
+source identity, all four configurations, compiler closures and failed attempts.
+
+### Selected implementation and source equivalence
+
+Move InitializeDomain, setup_remotefunction_system and `_gl_child_event` from
+script header to its existing CPP, together with the private JSON/HTTP helpers
+used only by bootstrap. Three method bodies compare exactly after removing class
+indentation; the private helper block is byte-identical after LF normalization.
+Retained script lifecycle/template methods are unchanged. Host method bodies differ
+only by wrapper call name. Registration bodies and order are unchanged; Humanoid's
+existing include moves before workspace/network to make an implicit prerequisite
+explicit. No new CPP, VM owner, service locator or registration path is introduced.
+
+The forward-only `luau_instance_access.h` declares `PushLuauInstance(lua_State*,
+godot::Node*)`. The script CPP implementation delegates once to existing wrap_node:
+one nil or ObjectID userdata plus the same GodotObject metatable, no retained native
+object, wrapper cache or parallel userdata implementation. Host environment setup,
+WaitForChild and pending native-argument resumes use this facade after resolving
+ObjectID. A non-null push requires the existing per-domain metatable. Raw
+GLPushNodeHandle lacks that metatable and was deliberately not substituted.
+Linux Debug object symbols contain one strong definition of each moved method
+and the facade; successful Windows/Linux links and source checks exclude duplicate
+bootstrap/wrapper ownership. The external GDExtension entry contract is unchanged.
+
+Rejected alternatives: moving only InitializeDomain leaves relay/codec dependencies
+in the header and direct host wrap_node calls; exposing the entire wrapper or
+dispatch API widens the interface unnecessarily; a new CPP adds no useful owner
+over the existing script implementation. Template caching, attribute watcher
+redesign, network codec extraction, editor completion and GL-021 changes are not
+bundled into this move. HTTP/JSON behavior is moved verbatim, not redesigned.
+
+### Initialization, cancellation and teardown ordering
+
+| Order and scope | Existing operation retained |
+| --- | --- |
+| Per-process extension levels | Register language/resources/classes/editor plugin at the existing levels; retain singleton/reference index identities. |
+| Per-domain creation | Host lazily constructs Server/Client GLExecutionDomain; core allocates VM, opens Luau libraries, creates bootstrap owner, flags, `_G`/shared and builtins/task/require machinery. Host installs environment/module/time/error/invalidation hooks. |
+| Per-execution attempt | iniciar_corrutina checks editor/module/role/template/enabled/already-started/source conditions. It obtains the host/domain and claims initialization using the existing per-domain bit. |
+| Per-domain native setup | Register live state; install GodotObject index/newindex/equality/string metatable; set replication/invoke hooks; register value metatables. |
+| Per-domain scene/globals | Discover game and Workspace with the existing root/viewport fallbacks; push wrappers and nil script; install Instance and value globals. |
+| Per-domain bridge order | Install print/warn/error/introspection/time/input bindings, RemoteFunction machinery, file bridge, network role/VM ID and network table, JSON/HTTP and raw Instance constructor in the original order. |
+| Per-domain stdlib | Expose temporary `_GLDomainSpawn`, compile/load/call the exact embedded stdlib, retain existing error logging/pops, then remove that temporary global. |
+| Per-script run | Create/reuse execution owner rules and independent environment/coroutines, initialize script wrapper via host facade, retain RunGuard and execute source. Module cache and sticky errors remain core/domain owned. |
+| Per-script disable/reload | StopRun cancels owner and releases guard; source revision invalidates module identity; enabled eligible scripts restart through existing deferred path. Domain and unrelated module caches survive. |
+| Per-service/session | Native service IDs, role, response maps, network disconnect/replacement and pending invokes retain current owners and cancellation. No per-domain/session registry is added. |
+| Owner/thread cancellation | Host removes child/invoke/pending resume and service wait records with existing guards; core invalidates callback references before VM release. Child relay resolves reference state at dispatch. |
+| Scene/domain shutdown | Stop admission for both domains; dispatch finite close-hook snapshot and cancel owners. Shutdown is idempotent. VM close stays in destruction after active resumes, not inside a callback. |
+| Extension teardown | Scene shutdown precedes material-cache and loader/saver cleanup; server level unregisters language. No native registration or static destruction order is changed. |
+
+The original initialization claim precedes the body and is not transactional.
+The rootless early return and stdlib failure paths are preserved, not corrected.
+Normal production startup/repeat/reload/shutdown paths run in native fixtures;
+an artificially interrupted/rootless bootstrap is covered by source equivalence,
+not a new fault-injection runtime test or added public test hook. This distinction
+does not establish recovery from arbitrary allocation/initialization failures.
+
+### State and dependency ownership
+
+External-inline runtime role/service identity, live-state/reference, pending-resume
+and response accessors keep their shared identity. Template string cache remains
+TU-local in the script header; script counter cache remains in its existing inline
+method. Codec error and pcall trace slots keep their TU-local linkage. Attribute
+watchers stay static inside API implementation; all watch/fire entry points remain
+together, now instantiated only in script CPP. Removing unused host/registration
+API copies does not introduce a process singleton or change reference ownership.
+The baseline and candidate cross-domain attribute fixture both pass. The VM-ID
+counter and RF source literal remain function-local statics in the same logical
+method/lambda scopes. No registration flag or other mutable static is added.
+
+Before: host/script/registration → script header → API/native implementations and
+embedded stdlib. After: those consumers → script class/lifecycle header; only script
+CPP → API/stdlib/private bootstrap helpers; host → narrow wrapper declaration plus
+its real runtime/error/service/network/codec dependencies. Registration still needs
+concrete native class headers. Completion still reaches two TUs. Network/service
+headers still reach three; this change does not pretend to isolate them.
+
+| Project dependency metric | Baseline → candidate |
+| --- | ---: |
+| Native headers / CPPs | 64 / 8 → 65 / 8 |
+| Script header LF bytes / lines | 86,306 / 1,593 → 35,726 / 657 |
+| Script CPP LF bytes / lines | 172 / 8 → 48,651 / 961 |
+| New wrapper declaration | 453 bytes / 12 lines; zero includes |
+| Script header direct include directives / project closure | 31 / 41 → 25 / 7 |
+| Host project-header closure | 42 → 21 |
+| Script CPP project-header closure | 45 → 46 |
+| Registration project-header closure | 63 → 57 |
+| API / stdlib consuming TUs | 3 / 3 → 1 / 1 |
+| Script header / script CPP touch builds | 3 / 1 → 3 / 1 TUs |
+| API header touch builds | 3 → 1 TU |
+
+Static graph has no project include cycle. All 64 before/after Windows/Linux
+Debug/Release object dependency closures match it exactly. Ninja/MSVC emits
+relative header paths and omits the compiling CPP; GCC includes the source. The
+analysis resolves paths against each build directory and compares headers with
+the appropriate source-listing convention. Records are retained, not inferred
+from filenames or header sizes. CMake and SCons still discover eight core CPPs.
+
+### Comparable build measurements
+
+Same task source path and build caches, pinned vendor objects warm, two jobs,
+each configuration/platform sequential. Project adapter/core-test objects only
+are removed for each cold project build. Cold compilation is eight adapter plus
+two core-test inputs, not a dependency-clean build. CMake/compiler identity is
+unchanged within each pair: Windows MSVC toolset 14.51.36231 and Linux GCC 13.3.0.
+Windows pinned Git revisions were read; Linux's historical pinned archives match
+their recorded SHA256 and every archived file matches the live vendor tree
+(godot-cpp 165 files, Luau 852). Pins are unchanged. No vendored source is edited.
+
+Seconds include linking, single trials with uncontrolled ambient load:
+
+| Configuration | Cold project | Script header touch | API header touch | Script CPP touch |
+| --- | ---: | ---: | ---: | ---: |
+| Windows Debug | 21.652 → 19.049 | 19.754 → 17.076 | 19.722 → 7.367 | 6.925 → 7.398 |
+| Windows Release | 30.727 → 27.587 | 27.945 → 28.144 | 27.702 → 10.754 | 7.033 → 10.460 |
+| Linux Debug | 23.000 → 19.144 | 21.897 → 18.142 | 21.797 → 6.323 | 6.273 → 6.274 |
+| Linux Release | 42.026 → 38.120 | 40.520 → 36.717 | 40.418 → 9.777 | 4.520 → 9.727 |
+
+| Configuration | Adapter object bytes | Extension bytes |
+| --- | ---: | ---: |
+| Windows Debug | 91,258,628 → 96,673,552 | 24,192,000 → 23,896,576 |
+| Windows Release | 49,191,148 → 51,500,262 | 4,073,984 → 4,080,640 |
+| Linux Debug | 68,447,528 → 59,362,024 | 79,241,056 → 76,732,152 |
+| Linux Release | 15,742,968 → 16,122,896 | 12,516,600 → 12,557,408 |
+
+Windows cold builds retain two existing pinned Luau Ast.h C4100 warnings; touched
+native builds add none. Linux records zero warnings. Script CPP edit times increase,
+especially Release, and Windows Release script-header time slightly increases.
+The evidence establishes API fan-out reduction and independent bootstrap ownership,
+not universal speed or binary-size improvement. Full-clean vendor cost, isolated
+header parsing/link CPU, peak memory and runtime performance are not measured.
+The additional synchronous wrapper call is not separately benchmarked.
+
+### Production qualification, failed attempts and limits
+
+All four baseline builds/core39 runs pass. The final expanded regression fixture
+also passes baseline Debug/Release on both platforms (8 actors each, 32 baseline
+actors), establishing new assertions on unchanged production before candidate
+qualification. Candidate Debug/Release on both platforms pass core39 plus 8 existing
+lifecycle/startup actors, 10 GL-006/008 actors and 10 functional animation actors:
+112 final candidate actors, all zero exits, with source/fixture/library hashes.
+These include actual GDExtension loading, single-player, listen, dedicated/two-client
+and editor-style startup, value/Variant/reflection/identity, invalid/destroyed native
+references, module sharing/invalidation/errors, disable/reload/cancellation, waits,
+pending RemoteFunctions, service replacement, scene teardown and repeated shutdown.
+The Editor label simulates startup flags; it does not run actual editor UI tests.
+
+Added assertions exercise the real bootstrap's native global/function tables,
+JSON round trip, game/workspace wrappers, per-domain module state, same metatable
+for module/script/scene wrappers, repeated start guards, removed bootstrap global,
+cross-domain attribute watchers and child relays after requiring callers retire.
+No second bootstrap, additional process group or weakened existing assertion.
+Fresh-domain and destruction cases remain in the existing fixture.
+
+Preserved failures: initial shared-native-ModuleScript child relay attempt fails
+before code changes on Windows/Linux Debug. Windows diagnostic replay observes
+one native connection; GL-022 records the compatibility gap and unresolved exact
+cause. Distinct relay targets retain both-domain lifetime assertions while shared
+module/cache assertions remain. This does not close or qualify the shared-target
+case. Failed logs and original fixture archive remain under gl013-bootstrap.
+First candidate Windows compile lacks Humanoid in host; second candidate compile
+exposes registration's workspace/network include order on both platforms. Explicit
+consumer prerequisites fix these compile failures; no native type/authority method
+changes. A transient Linux SSH upload reset is retried before compilation and is
+an infrastructure event. None of these failed attempts is reported as a pass.
+
+No new native lifetime/ownership algorithm changes, so no additional sanitizer
+matrix was run; earlier sanitizer evidence retains its original source/scope.
+GL-017/018 limitations, deferred GL-020 adversarial qualification, GL-021 alias gap
+and new GL-022 remain independent. No new SCons/release packaging qualification,
+CI workflow, distribution channel or production binary publication is added.
+GL-013 stays open. The next independent boundary is completion ownership after
+its editor-specific fixture gap is addressed; do not begin it automatically.
+
+Worker source-root configurations are restored for both Debug/Release on both
+platforms; the Linux qualification container is stopped. The first cleanup guard
+compared a literal path containing `..` to CMake's canonical path and failed after
+configuration; it was corrected to compare resolved paths, then both configurations
+were restored and verified. This private guard failure changes no qualification
+input or runtime outcome. Evidence and source/library snapshots remain isolated
+under each worker's gl013-bootstrap task directory.

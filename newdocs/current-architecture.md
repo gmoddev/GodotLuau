@@ -112,7 +112,7 @@ Callback functions retain internal linkage; shared bridge helpers and registrati
 have one ordinary C++ definition. No new static state or registration singleton
 is introduced. Both qualified source commits and the historical branch remain.
 
-`luau_script.h` calls registration at the same two per-domain initialization
+Domain bootstrap in `luau_script.cpp` calls registration at the same two per-domain initialization
 points: metatables before globals, preserving the intervening Instance setup.
 `luau_api.h` consumes the narrow declaration header for its existing conversions
 and Instance operations. Godot Variant/property reflection, CFrame/Vector2 Lua
@@ -239,6 +239,54 @@ after it. These are proposals, not delivered boundaries. GL-021 separately recor
 the source-observed inert lowercase-alias gap. No production implementation or
 ownership contract changes in this assessment; GL-013 remains open.
 
+## Script bootstrap boundary (fifth GL-013 extraction, development branch)
+
+`refactor/gl-013-script-bootstrap` starts at integrated main
+`ce5e19fa8aea1cf65da875d07cda13c1696fc08c` and remains unmerged.
+`luau_script.cpp` owns the existing InitializeDomain, RemoteFunction setup and
+child-event relay bodies plus their private JSON/HTTP helpers. `luau_script.h`
+retains script/resource declarations, editor/template handling and execution
+startup/cancellation. The three moved bodies are exact after class indentation;
+JSON/HTTP helper text is unchanged. This changes compilation ownership, not VM,
+module, callback, service or persistence authority.
+
+`luau_instance_access.h` forward-declares lua_State and Godot Node and exposes
+only `PushLuauInstance`. Its implementation delegates to the existing `wrap_node`
+in the same CPP, preserving nil, ObjectID userdata and GodotObject metatable.
+It owns no object, cache, VM or registry. `GLPushNodeHandle` is not substituted:
+that function does not install the metatable. Host environment and resume paths
+resolve ObjectIDs and call the facade synchronously. The metatable must already
+be installed for non-null wrappers.
+
+Host service/codec/error/runtime includes are now explicit. Humanoid must precede
+network implementation in host and workspace/network in registration; the latter
+include moves upward without changing any registration body or order. Native
+service, network, core VM/scheduler, compatibility runtime, dispatch, stdlib and
+the previous four adapters otherwise remain unchanged. No TU is added.
+
+Compiler records on both platforms/configurations match the source graph: API
+and stdlib now reach only script CPP (three TUs before); host project-header
+closure falls 42 → 21, registration 63 → 57, script CPP grows 45 → 46.
+Script header still reaches three TUs; its own closure falls 41 → 7. A new wrapper
+declaration affects host and script only. The graph has no project include cycle.
+
+External-inline shared state remains shared. Template cache and script counter
+storage remain where they were; codec error/trace slots retain TU-local linkage.
+Dispatch attribute watchers remain private to API implementation, now compiled
+only in script CPP, rather than being moved to a singleton. All live watcher
+entry points and registration stay together. The old unused API copies are no
+longer instantiated in host/registration. `_GL_VM_ID`'s function-local counter
+and RemoteFunction source literal retain their function storage duration; no
+initialization flag or global registry is introduced. This is serialized native
+execution, not a new thread-safety guarantee.
+
+Local Windows/Linux Debug/Release core39/native28 pass; hosted observation follows
+publication. See the [fifth qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary).
+GL-013 stays open. GL-022 separately records the reproduced baseline shared-module
+child-relay connection conflict; distinct relay targets pass both-domain coverage.
+The next ranked independent candidate remains editor completion ownership, with
+its missing editor-specific fixture requirements. It is not implemented here.
+
 ## Script capabilities and scheduling
 
 Domain setup publishes `_FileAccess` and `_HTTP` into gameplay VMs.
@@ -248,7 +296,7 @@ level DataStore wrapper rejects network clients, but this does not remove the
 native global. OS permissions and platform restrictions still apply.
 
 HTTP uses synchronous `HTTPClient` polling and delays on the calling thread
-in `luau_script.h`. It has a nominal ten-second timeout; this is not a
+in `luau_script.cpp`. It has a nominal ten-second timeout; this is not a
 nonblocking scheduler or a demonstrated bound on every network/body path.
 No explicit sandbox setup, instruction-interrupt budget, or custom memory quota
 was found in extension VM initialization or the searched extension source.
@@ -407,9 +455,9 @@ provenance and runtime-gate gaps remain GL-010/011. See
 
 | Area | Read implementation first | Related issues |
 | --- | --- | --- |
-| VM, require, tasks, shutdown | `src/core/gl_execution_domain.h/.cpp`, `gl_domain_host.h/.cpp`, `luau_script.h` | GL-001, GL-004, GL-014 |
+| VM, require, tasks, shutdown | `src/core/gl_execution_domain.h/.cpp`, `gl_domain_host.h/.cpp`, `luau_script.h/.cpp` | GL-001, GL-004, GL-014 |
 | Native object methods | `src/core/luau_api.h`, `gl_runtime.h` | GL-001, GL-002, GL-013 |
-| File/HTTP permissions | `src/core/luau_script.h`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
+| File/HTTP permissions | `src/core/luau_script.cpp`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
 | RPCs, players, replication | `src/services/roblox_network.h`, `src/core/gl_net_bridge.h`, `src/gameplay/roblox_remote.h` | GL-006, GL-007, GL-008 |
 | Persistence | DataStore section of `luau_stdlib.h`, native file bridge, `backend/README.md` | GL-009 |
 | Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `.github/workflows/runtime-native-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |

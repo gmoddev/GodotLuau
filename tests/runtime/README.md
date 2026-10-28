@@ -165,6 +165,18 @@ source identity, executed platforms and limitations.
 
 ## Shared-domain coverage
 
+The fifth GL-013 bootstrap fixture runs first in both Server and Client domains.
+It captures the actual production global tables/functions and wrapper metatables
+in a shared ModuleScript, verifies per-domain caches and independent `_G`/`shared`,
+JSON round trips, game/workspace/native globals, removed temporary bootstrap
+spawner and repeated startup without duplicate execution. It checks module-owned
+attribute callbacks across domains and child callbacks after caller retirement.
+Child relays use distinct native ModuleScript targets: the original shared-target
+attempt reproduced GL-022 before any production change and remains separately
+recorded. Existing destruction/reload/cancellation, value/reflection/identity,
+network, RemoteFunction and functional animation assertions remain unchanged.
+No additional process group or parallel bootstrap implementation is introduced.
+
 The integrated first GL-013 extraction extends `Integration.gd` through actual native Vector3/Color3
 constructors, arithmetic, constants, exact type rejection, native Variant bridge
 round trips, wrapper identity/destruction and fresh-domain reinitialization.

@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Open; four extractions integrated, assessment complete | Script bootstrap/Instance access ranked next; no fifth extraction |
+| GL-013 | P2 | Open; four extractions integrated, fifth locally qualified | Bootstrap/Instance boundary on development branch; hosted qualification pending |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -44,6 +44,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
+| GL-022 | P2 | Reproduced baseline callback compatibility gap | Shared ModuleScript's second-domain child relay is absent |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -541,6 +542,23 @@ historical. State/dispatch/network boundaries need their stated proof before a
 future extraction. GL-021 records a separate static compatibility discrepancy.
 No fifth extraction, production/test/build/workflow change or unrelated closure.
 
+**Fifth extraction (development branch, 2026-10-28): local qualification complete.**
+`refactor/gl-013-script-bootstrap` begins at main
+`ce5e19fa8aea1cf65da875d07cda13c1696fc08c` after assessment integration. Bootstrap,
+RemoteFunction setup and child relay move to existing script CPP, with one narrow
+wrapper-push declaration and explicit host/registration include prerequisites.
+VM, scheduler, module cache and network/dispatch implementations remain unchanged.
+Compiler dependency closures match the graph in all eight before/after/platform/
+configuration sets (64 objects): API and stdlib fan-out three → one; script-header
+touch still rebuilds three. All four candidate configurations pass 39 core cases
+and 28 native actors (112 candidate actors); unchanged baseline passes the final
+expanded eight-actor regression group in all four configurations.
+The [fifth qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary)
+and [manifest](evidence/gl013-script-bootstrap-2026-10-28.json) retain timing/size
+increases, include failures, baseline callback finding GL-022 and qualification
+limits. Hosted observation follows branch publication; this is not merged to main.
+GL-013 remains OPEN; no sixth extraction or unrelated issue closure is implied.
+
 ## GL-014: Shared execution domains — integrated and source-qualified
 
 **Evidence:** Per-executable-script `L_main` at `luau_script.h:960`; require's
@@ -828,3 +846,35 @@ Disconnect/disconnect, Connected=false, nil Wait result, repeated calls with no
 references or callbacks, GC and fresh-domain teardown. Preserve the inert nature.
 Close only with linked implementation and executed regression evidence. Do not
 silently combine this behavior change with the next GL-013 extraction.
+
+## GL-022: Shared ModuleScript loses the second domain's child relay
+
+**Classification: Reproduced baseline callback compatibility gap; cause needs review.**
+The first fifth-extraction fixture runs the same native ModuleScript in Server
+and Client domains, with each module connecting game.ChildAdded. Both requiring
+callers retire; a later child reaches the Server callback but the Client marker
+never appears. This fails on unchanged production main `ce5e19f` / native fingerprint
+`653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3`, Windows and
+Linux Debug, before the refactor. Windows diagnostic replay shows only one native
+child_entered_tree connection, targeting the shared ModuleScript with one bound ref.
+
+`luau_api.h:1239-1286` selects the owner's native script node and uses
+`Callable(sn, "_gl_child_event").bind(ref)` with an is_connected guard. Domains
+share the same native ModuleScript receiver even though references/VMs differ.
+The trace identifies the missing connection; exact callable equality/registration
+cause and any broader signal impact remain unproven. No UAF, authority defect or
+cache-isolation failure is established. Source, failed logs and diagnostic replay
+are retained under worker `gl013-bootstrap/baseline-qualification1-debug` and
+`baseline-diagnostic2-debug`; see the fifth manifest for hashes and scope.
+
+Distinct native relay ModuleScripts pass the same both-domain/caller-retirement
+assertions in baseline Windows/Linux Debug/Release. The final extraction fixture
+uses those targets, retains shared-module cache/metatable checks and adds
+cross-domain attribute watchers. The failed shared-target expectation is preserved,
+not reported as passing or fixed. No production callback/ModuleScript logic is
+changed to address this finding. The refactor's qualification does not close it.
+
+**Separate follow-up:** reproduce the shared-native-target case, trace connection
+identity and owner/reference cleanup, and implement a focused fix with two-domain,
+same-domain multiple connection, disconnect, caller/module destruction and fresh
+domain tests. Close only with linked fix and executed evidence.
