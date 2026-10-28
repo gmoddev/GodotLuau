@@ -54,4 +54,3 @@ bool IsLuauClass(Object* n, const char* q) {
     if (n->is_class(q)) return true;
     return false;
 }
-
