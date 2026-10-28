@@ -165,6 +165,14 @@ source identity, executed platforms and limitations.
 
 ## Shared-domain coverage
 
+The GL-013 branch extends `Integration.gd` through actual native Vector3/Color3
+constructors, arithmetic, constants, exact type rejection, native Variant bridge
+round trips, wrapper identity/destruction and fresh-domain reinitialization.
+Both Server and Client domains execute the value checks. Deferred destruction is
+observed over at most ten scheduler yields; the existing runner bounds the process.
+The lightweight Beam metadata bridge avoids introducing physics resources into
+this value-binding fixture. Existing lifecycle and network fixtures remain gates.
+
 These tests exercise the production `GLExecutionDomain` implementation and the
 actual Godot adapters. They do not use a second scheduler/cache implementation.
 `main` is the optimized shared-domain development baseline, including GL-019;

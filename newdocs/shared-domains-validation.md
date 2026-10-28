@@ -1,5 +1,144 @@
 # Shared-domain implementation and qualification
 
+## GL-013 first value-binding extraction
+
+Branch `refactor/gl-013-luau-api-extraction` starts at verified local/remote main
+`eb638bfa6ff16abc91d11742625b3cc034f53178`. This is one implementation extraction,
+not a new runtime architecture; it is not merged into main.
+
+### Source analysis and selected boundary
+
+At this baseline `luau_api.h` contains 5,168 lines/290,353 LF bytes. Its free
+functions have internal linkage (`static`, some also `inline`); LuauVector3's
+class-body math methods are implicitly inline. `luau_script.h` includes it and
+contains inline class implementation/registration. `luau_script.cpp` contributes
+only the ordinary out-of-line `_get_language` definition. `luau_stdlib.h` owns a
+TU-local embedded Lua program. `gl_runtime.h` supplies ObjectID wrappers, inline
+compatibility bridges and existing state/hooks; VM ownership remains in
+`GLExecutionDomain`/`GLDomainHost`, not in these value bindings.
+
+The only direct `luau_api.h` include is `luau_script.h`. Its transitive consumers
+include `luau_language.h`, `roblox_datamodel.h`, `rbx_importer.h` and three adapter
+translation units: `luau_script.cpp`, `gl_domain_host.cpp`, `register_types.cpp`.
+The last also performs Godot class registration. Broad includes bring gameplay,
+services, networking and editor/importer dependencies into these units. Instance
+index/newindex/methods depend directly on Godot types and domain-owned callbacks;
+attribute watchers, classname buffers, virtual-container tables and replication
+hooks retain their original TU/static ownership. No Luau private VM headers or
+direct VM-structure access are used by the selected value functions: they call
+the public Lua C API. Generic property conversion and Instance reflection stay
+Godot-dependent in `luau_api.h`.
+
+Native Vector3/Color3 is the first boundary because its allocation, type checking,
+arithmetic and registration form a small cohesive subsystem with no Godot or
+domain requirement. Instance dispatch would require a much wider cross-subsystem
+interface; selecting it by line count would expand scope. Lua-backed CFrame,
+Vector2, BrickColor and existing input-service value packing remain untouched.
+
+`src/core/luau_value_bindings.h` is 31 lines/1,185 LF bytes: two existing layouts,
+five existing native bridge declarations and two registration calls. It only
+forward-declares `lua_State`. The 260-line/10,405-byte implementation includes its
+own header first, public Luau headers and standard headers. It includes no large
+implementation header, Godot type or domain host. Twelve callback functions stay
+`static`; five bridge functions and the two new initialization functions have one
+ordinary C++ definition. Five existing math member bodies move out of line.
+All 17 moved free-function bodies compare exactly to baseline. No duplicate copy,
+registry, abstract interface, shim, static initialization or new state is added.
+
+`luau_api.h` now includes that declaration interface and is 4,946 lines/281,472
+LF bytes, down 222 lines/8,881 bytes. Only its value implementation is removed.
+`luau_script.h` replaces the two original registration blocks with calls at their
+original positions. Metatable names, callback debug names, layouts, numeric
+operations, stack effects and Lua-facing signatures are preserved; private bridge
+linkage becomes shared within the extension. Godot class registration is unchanged.
+The new include edge terminates at a forward declaration, adding no include cycle.
+`roblox_input.h`'s pre-existing independent three-float packing remains a coupling
+to the layout; this extraction does not change that service.
+
+### Build and runtime qualification
+
+Both existing build paths discover `src/core/*.cpp`: CMake's `CONFIGURE_DEPENDS`
+glob and SCons' `Glob`. No build-file change is necessary. CMake actually compiles
+and links the new unit on Windows/Linux Debug/Release. A Linux SCons `-n`
+`platform=linux target=template_debug -j2` dry run explicitly lists the new unit;
+this is source-discovery evidence, not a new SCons package qualification. Linux
+`nm -C` confirms single registration/helper definitions and local math callbacks.
+
+Measurements use the same task snapshot path, existing pinned-vendor build
+objects, CMake/Ninja, two compiler jobs, MSVC 19.51.36260.0 on DockerPC and
+GCC 13.3.0 in the task-owned Ubuntu container. A baseline archive of the starting
+revision precedes edits. Candidate measurement deletes only snapshot/core-test
+objects, retaining vendor objects. Cold figures include adapter and core-test
+compilation/linking: six C++ units before, seven after. Header-touch figures
+rebuild three adapter units in both versions. Touching the new implementation
+rebuilds only that one unit. These are one trial per configuration, not statistical
+performance claims; full dependency-clean rebuilds and peak compiler RSS are not
+measured. Pinned dependency objects are deliberately warm in both comparisons.
+Windows Debug is slower in this trial; no overall compile-speed improvement is
+claimed. Exact seconds, object sizes, library sizes and warnings are in the
+[evidence manifest](evidence/gl013-value-extraction-2026-10-27.json).
+
+Reproduce with a baseline/candidate source snapshot under the same `<Source>`
+and matching existing dependency build tree:
+
+```text
+cmake -S <PinnedWorkerSource>/tests/runtime -B <Build> -DGL_SOURCE_ROOT=<Source> -DGL_BUILD_CORE_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=ON -DGL_BASELINE_SOURCE_ROOT=
+cmake --build <Build> --target GodotLuauAdapter ExecutionDomainTests --parallel 2
+ctest --test-dir <Build> --output-on-failure --verbose --timeout 30
+```
+
+Remove only the selected source/core-test objects for the extension-cold run;
+retain dependency objects. Time each build using a monotonic wall clock; count
+`Building CXX object` records. Touch only `luau_api.h`, rebuild/time, then in the
+candidate touch only `luau_value_bindings.cpp` and rebuild/time. Record the active
+adapter objects and extension byte sizes. Native runs use the existing
+`RunQualification.py` commands above/below with `--teardown --coordinated-close`,
+`--security` and `--animation` in separate fresh directories, timeout 60.
+
+`Integration.gd` adds actual native constructor/constants/arithmetic/type-error,
+Variant bridge round-trip, wrapper identity/destruction and fresh-domain checks;
+both Server and Client run the value cases. Existing 39-case core, native loading,
+owner teardown, reload, network and functional-animation gates remain intact.
+An initial exploratory Part-backed fixture assumed one yield guaranteed deletion;
+the baseline disproved that assumption. After bounded deletion observation it
+passed assertions but Linux still exited -11 at shutdown with four ObjectDB
+instances reported. Those baseline artifacts are retained at `gl013/baseline-values`
+and `baseline-values-2`; no cause or fix is claimed. The final lightweight Beam
+metadata bridge passes eight baseline Linux actors and exercises the selected
+conversions without introducing physics resources. Baseline Windows also passes
+eight actors with the earlier Part fixture after corrected deletion observation.
+The final candidate fixture must pass on both platforms; a PASS marker alone
+never overrides a nonzero exit.
+
+Local qualification passes Windows/Linux Debug and Release: 39 production-core
+cases in each configuration, actual GDExtension loading and all 28 required native
+actors each (112 total). The final Beam/value fixture passes both platforms and
+configurations, including fresh-domain initialization. Recorded native source
+fingerprint is `ec0db95eb65d488a9b6a2037cffee8cc0d1b1cd83b2b12b7e5eabbc60af5ae41`
+for 67 inputs; normalized changed-source/fixture hashes agree across workers and
+the controlling checkout. Both workers retain the exact result/log/library hashes
+in the manifest. Hosted qualification awaits the source push and is observed for
+at most 25 minutes; no pass is assumed for pending jobs.
+
+| Configuration | Cold before/after seconds | API-header touch before/after seconds | New implementation touch seconds | Extension bytes before/after |
+| --- | --- | --- | --- | --- |
+| Windows Debug | 21.448 / 32.785 | 19.822 / 30.840 | 1.133 | 24,191,488 / 24,191,488 |
+| Windows Release | 43.185 / 42.719 | 42.673 / 35.424 | 1.333 | 4,075,008 / 4,073,984 |
+| Linux Debug | 22.692 / 22.649 | 21.841 / 21.749 | 1.116 | 78,957,184 / 78,938,272 |
+| Linux Release | 41.574 / 41.824 | 40.321 / 40.471 | 0.565 | 12,519,496 / 12,515,920 |
+
+No userdata/native
+ownership rule changes, so no new sanitizer configuration is introduced. Existing
+retained math closures still capture native value addresses under the inherited
+semantics; safety across value collection is not established by this movement.
+GL-003/004/005/007/009/010/011/017/018/020 limitations remain independent; no
+dependency, updater, release or production publication behavior changes.
+
+GL-013 stays open. Recommended next extraction for a separately authorized task:
+the Godot Variant/property-conversion helpers, after defining their interface to
+these values and the Instance bridge. The large Instance index/newindex dispatch
+and header-heavy service/editor dependencies remain; no second extraction starts.
+
 ## GL-011 independent core CI (2026-10-27)
 
 Branch `ci/gl-011-core-qualification` starts at canonical main
