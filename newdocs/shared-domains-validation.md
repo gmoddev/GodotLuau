@@ -2043,3 +2043,26 @@ isolation and the exercised compatibility cases, not general runtime throughput,
 threaded native access, sanitizer/production distribution or complete GL-013 closure.
 The initial fixture failure and all prior extraction evidence remain. Stop after
 this fourth extraction.
+
+
+A final full-range `git diff --check` caught a trailing blank line in the newly
+added implementation (the earlier working-tree check did not inspect untracked
+files). Published history is preserved: whitespace-only commit
+`688fd5bc77893f7f5728d6e7ad44f2fcf4b200ba` removes exactly one EOF newline. Every
+preceding byte equals qualified implementation `9320b3e`; all other native,fixture,
+build/workflow and dependency inputs remain identical. The final implementation
+is 3,623 LF bytes/56 lines; original measured 3,624/57 and source hashes remain as
+historical evidence. The final 73-input fingerprint is
+`653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3`.
+
+Completed local and hosted implementation qualification is reused for identical
+C++ code; no expensive local matrix is repeated for trailing EOF whitespace.
+Fresh [core run 40648770262](https://github.com/gmoddev/GodotLuau/actions/runs/40648770262)
+passes 39 per platform. Fresh [native run 40648770257](https://github.com/gmoddev/GodotLuau/actions/runs/40648770257)
+is still building on both platforms after the bounded initial observation (about 90s,
+final snapshot 98s from 07:14:16Z). Those pending jobs are not claimed passed; the
+completed source-qualification runs above target 9320b3e. The manifest records this
+follow-up separately rather than silently replacing tested fingerprints.
+**FOURTH EXTRACTION QUALIFIED** applies to the unchanged implementation; latest
+whitespace-follow-up native CI remains pending at this snapshot. Final evidence
+changes no source/input relative to 688fd5b, and remote main remains 4e3db84.

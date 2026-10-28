@@ -519,6 +519,9 @@ platform. Digest-checked summaries verify exact revision/source/fixture identity
 No supported-call lifetime defect is confirmed; no new sanitizer matrix is run
 because native object ownership is unchanged. This extraction stays unmerged and
 GL-013 remains OPEN. No general speed/lifetime/sanitizer guarantee is inferred.
+EOF-only follow-up `688fd5b` removes one trailing blank line; implementation code
+is unchanged. Fresh follow-up core39 passes; native run `40648770257` remains
+building at bounded observation, separately from completed 9320b3e qualification.
 
 ## GL-014: Shared execution domains — integrated and source-qualified
 

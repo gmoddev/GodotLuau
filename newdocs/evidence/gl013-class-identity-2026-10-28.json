@@ -569,5 +569,36 @@
     "No native object ownership change or new sanitizer/graphical/production qualification; independent GL-017/018 and prior exploratory failures retained",
     "Recommended next candidate: stateless inert-signal construction and lowercase alias helpers, excluding stateful connection/ownership handling; not extracted here"
   ],
-  "EvidenceFollowup": "This final commit changes documentation/evidence only; source,fixtures,build/workflow configuration and pins equal implementation 9320b3e4c69b6c883fa37c6fed6769b0acbe5f40"
+  "EvidenceFollowup": "8d2699485a1a2aa67a56b6cc3b87d3a7327c75ad changed documentation/evidence only and preserved exact 9320b3e source/test/build/workflow identity. The later EOF-only cleanup and its observation are separately recorded below; historical measurements/hashes are unchanged.",
+  "WhitespaceFollowup": {
+    "Source": "688fd5bc77893f7f5728d6e7ad44f2fcf4b200ba",
+    "Change": "Removed one blank line at EOF from luau_class_identity.cpp, caught by final commit-range git diff --check; no other preceding byte changes",
+    "Comparison": "git show 9320b3e:src/core/luau_class_identity.cpp == final normalized file bytes + one newline; all other native/test/build/workflow inputs identical. No token,line value before EOF,alias,predicate or runtime behavior changes",
+    "NativeSource": {
+      "SHA256": "653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3",
+      "Files": 73,
+      "Newlines": "LF normalized"
+    },
+    "ImplementationLF": {
+      "Bytes": 3623,
+      "Lines": 56
+    },
+    "QualificationReuse": "Original Windows/Linux Debug/Release local core39/native28 and hosted9320b3e core/native qualification applies to identical C++ code; no repeated expensive local matrix solely for EOF whitespace",
+    "CoreRun": 40648770262,
+    "CoreJobs": {
+      "Windows": 122683683683,
+      "Linux": 122683683759
+    },
+    "CoreResults": "Both fresh core jobs pass39, verified in logs",
+    "NativeRun": 40648770257,
+    "NativeJobs": {
+      "Windows": 122683683370,
+      "Linux": 122683683606
+    },
+    "NativeStatus": "Both fresh native jobs building at bounded observation snapshot; pending, not claimed passed",
+    "StartedUTC": "2026-10-28T07:14:16Z",
+    "ObservedUTC": "2026-10-28T07:15:54Z",
+    "Observation": "About90-second bounded wait target; final snapshot98seconds after start",
+    "Publication": "Normal follow-up commit; published history preserved; main remains4e3db8496e189b6e09148b015eff28b1c8ae29b6"
+  }
 }
