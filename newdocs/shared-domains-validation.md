@@ -1856,6 +1856,16 @@ results are recorded during the separately authorized fourth extraction. Pending
 jobs are not passes. The following integration documentation changes no tested input.
 
 
+Fresh main observation completes in 19m19s, within the bound. Both core jobs pass 39;
+both native jobs pass actual Debug builds, process checks,8/10/10 actors and final
+completeness checks. Checkout logs confirm exact pins; both diagnostic ZIP digests
+match metadata, with merge revision,71-input native fingerprint and original
+reflection fixture hash verified and no binary payload. Final main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6` differs from the tested merge only in
+integration documentation. The manifest's ReflectionMainIntegration follow-up
+preserves all prior measurements. Disposition: **INTEGRATED AND VERIFIED**.
+No fourth-extraction source is on main.
+
 ## GL-013 fourth Class identity extraction
 
 Branch `refactor/gl-013-class-identity` starts from verified local/remote main
@@ -1956,18 +1966,18 @@ mock or duplicate identity implementation substitutes for production bindings.
 
 ### Measurements and qualification results
 
-All Windows/Linux Debug and Release candidate builds pass39 core cases and28 native
+All Windows/Linux Debug and Release candidate builds pass 39 core cases and 28 native
 actors per configuration (112 total). Extended production identity fixtures and all
 existing lifecycle/network/functional-animation groups pass. The corrected baseline
-passes8 actors per platform. Exact source,fixture,library,result and log hashes plus
+passes 8 actors per platform. Exact source,fixture,library,result and log hashes plus
 object sizes are retained in the [separate manifest](evidence/gl013-class-identity-2026-10-28.json).
 Both workers match this checkout's 73-input native fingerprint
 `26680e318ee208040329105b03ae430cc530544d2418a26f8e4ba9e32192421d`.
 
 Same task snapshot path, workers, pinned dependencies, CMake/Ninja configurations
-and two jobs are used. Cold extension means7 adapter+2 core units before and8+2
-after, with pinned dependency objects warm. API-header touch rebuilds3 units in
-both; identity-implementation touch rebuilds1. Two existing MSVC Ast.h C4100 warnings
+and two jobs are used. Cold extension means 7 adapter+2 core units before and 8+2
+after, with pinned dependency objects warm. API-header touch rebuilds 3 units in
+both; identity-implementation touch rebuilds 1. Two existing MSVC Ast.h C4100 warnings
 remain in cold core builds; no new native warnings and Linux zero. CMake actually
 compiles/links the unit in all four configurations; SCons' unchanged core glob
 includes it by source inspection only. Linux nm -C confirms two single ordinary
@@ -1984,8 +1994,8 @@ These are single trials with warm dependency objects, uncontrolled ambient worke
 load, no full dependency-clean timing and no compiler peak RSS. The Windows Debug
 sample varies substantially; no overall speedup or smaller-binary claim is made.
 The demonstrated boundary is one-unit implementation editing. Header LF size falls
-3,389 bytes/47 lines:278,169/4,885 ->274,780/4,838. The interface is748 bytes/15 lines;
-implementation3,624 bytes/57 lines. Remaining broad API includes still reach three
+3,389 bytes/47 lines: 278,169/4,885 -> 274,780/4,838. The interface is 748 bytes/15 lines;
+implementation 3,624 bytes/57 lines. Remaining broad API includes still reach three
 consuming units. Owned-string runtime costs are not benchmarked.
 
 Reproduction follows the preceding CMake/core/native commands using source roots
@@ -1997,8 +2007,39 @@ Only validated task-source/core-test objects are removed for cold candidate runs
 dependency objects remain. Touch operations change timestamps only.
 
 Local disposition: qualified across all four configurations. Hosted core/native
-observation follows publication with a25-minute bound; pending jobs are not passes.
+observation follows publication with a 25-minute bound; pending jobs are not passes.
 GL-013 remains open. Recommended next investigation is stateless inert-signal
 construction and lowercase signal aliases, separately from stateful connection/
 owner handling. No fifth extraction, ownership/configuration change, new capability,
 workflow, updater distribution or release publication is included.
+
+Implementation `9320b3e4c69b6c883fa37c6fed6769b0acbe5f40` is pushed and remote
+branch identity read back; main remains `4e3db8496e189b6e09148b015eff28b1c8ae29b6`.
+Fresh [core run 40646744969](https://github.com/gmoddev/GodotLuau/actions/runs/40646744969)
+passes 39 on both platforms; logs confirm the unchanged pins. Fresh
+[native run 40646744985](https://github.com/gmoddev/GodotLuau/actions/runs/40646744985)
+is initially building under the 25-minute observation bound. Both worker caches are
+restored to their original source roots without rebuilding; Linux is verified idle
+then stopped, and the Windows task-process scan is empty. Prior artifacts remain.
+
+
+Final hosted observation completes in 16m06s, within the 25-minute bound. Both
+[core jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40646744969) pass 39;
+both [native jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40646744985)
+pass fresh actual Debug builds, process checks (Linux 14; Windows 8 plus 6 Linux-only
+skips), verified Godot provisioning, all 28 actors and final completeness gates.
+Hosted MSVC19.44.35229.0/GCC13.3.0 and exact dependency pins are confirmed in logs.
+Both diagnostic ZIP digests match metadata; their summaries verify implementation
+`9320b3e4c69b6c883fa37c6fed6769b0acbe5f40`, the 73-input native fingerprint,
+extended fixture hash and 8/10/10 zero-exit actors. Only diagnostics are retained,
+without binary payload. Exact jobs, hashes and timings are in the manifest.
+
+Disposition: **FOURTH EXTRACTION QUALIFIED**, on its unmerged development branch.
+No separate supported-call lifetime defect was confirmed. The explicit owned-value
+interface avoids shared mutable name-buffer coupling while preserving exercised
+Lua behavior. Final evidence changes no source/fixture/build/workflow input; main
+remains `4e3db8496e189b6e09148b015eff28b1c8ae29b6`. This qualifies compilation
+isolation and the exercised compatibility cases, not general runtime throughput,
+threaded native access, sanitizer/production distribution or complete GL-013 closure.
+The initial fixture failure and all prior extraction evidence remain. Stop after
+this fourth extraction.
