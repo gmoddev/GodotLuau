@@ -42,6 +42,9 @@ The fourth ClassName/IsA adapter is integrated by normal merge
 [integration record](shared-domains-validation.md#fourth-extraction-main-integration-2026-10-28).
 GL-013 stays open for incremental modularization; no broader lifetime or build-speed
 guarantee is inferred.
+The [remaining-boundary assessment](gl013-boundary-assessment.md) inventories the
+integrated source and ranks script bootstrap/Instance access as the preferred next
+boundary. It is a proposal on an unmerged documentation branch, not a fifth extraction.
 
 GL-012 release retention is integrated with publication disabled by explicit
 workflow admission and read-only permissions. See the
@@ -64,6 +67,7 @@ Source-identical hosted qualification is reused; see the bounded
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
 | [Current architecture](current-architecture.md) | Implemented ownership and subsystem entry points |
+| [GL-013 boundary assessment](gl013-boundary-assessment.md) | Measured source/dependency inventory and ranked future boundaries; assessment only |
 | [Invariants](invariants.md) | Required properties for new/touched behavior, with known baseline gaps |
 | [Issue ledger](issues.md) | Stable IDs, evidence, priorities, proof gaps, and closure criteria |
 | [Review validation](review-validation.md) | Claim-by-claim assessment of the supplied architecture review |

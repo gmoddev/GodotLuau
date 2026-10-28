@@ -220,6 +220,25 @@ qualification and the [string lifetime audit](shared-domains-validation.md#gl-01
 distinguish tested serialized callbacks/GC/shutdown from unsupported concurrency
 and existing broader lifetime/sanitizer limitations. GL-013 remains open.
 
+## Remaining implementation coupling (GL-013 assessment)
+
+At integrated main `08b2bb83b7093a361c80b147b4827eb22715ad32`, the source contains
+64 native project headers and eight core implementation units. Static includes
+and retained qualified Linux Debug compiler dependencies agree: API/script/network
+and GUI implementation still reach host, script and registration TUs; completion
+reaches script and registration. No project include cycle is found. The four
+extracted implementation units each have only one or two project-header dependencies.
+
+The [focused assessment](gl013-boundary-assessment.md) records the full inventory,
+responsibility/lifetime map, compiler evidence, historical comparison and ranked
+proposals. The preferred future change is script bootstrap plus narrow Instance
+access in existing `luau_script.cpp`; host wrapper/service/codec calls must first
+be made explicit. Moving only InitializeDomain cannot remove all API dependencies.
+Completion ownership, GUI metadata/style adaptation and inert-signal helpers rank
+after it. These are proposals, not delivered boundaries. GL-021 separately records
+the source-observed inert lowercase-alias gap. No production implementation or
+ownership contract changes in this assessment; GL-013 remains open.
+
 ## Script capabilities and scheduling
 
 Domain setup publishes `_FileAccess` and `_HTTP` into gameplay VMs.
