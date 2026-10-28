@@ -2,7 +2,7 @@
 #define LUAU_API_H
 
 #include "luau_value_bindings.h"
-#include "luau_variant_bindings.h"
+#include "luau_instance_reflection.h"
 #include "gl_errors.h"
 #include "gl_stackguard.h"
 #include "folder.h"
@@ -165,22 +165,6 @@ static String read_brickcolor_name(lua_State* L, int idx) {
     return String();
 }
 
-// ════════════════════════════════════════════════════════════════════
-//  Puente genérico de propiedades (clases nuevas con meta "_gl_bridge")
-//  Permite leer/escribir cualquier propiedad registrada en el ClassDB con
-//  nombre estilo Roblox (ADD_PROPERTY) sin cablearla a mano en el index/
-//  newindex. Solo se activa en nodos que ponen set_meta("_gl_bridge", true)
-//  en su constructor, así que NO afecta a las clases existentes.
-// ════════════════════════════════════════════════════════════════════
-static bool gl_has_property(Object* o, const String& pname) {
-    if (!o) return false;
-    TypedArray<Dictionary> pl = o->get_property_list();
-    for (int i = 0; i < pl.size(); i++) {
-        Dictionary d = pl[i];
-        if (String(d.get("name", String())) == pname) return true;
-    }
-    return false;
-}
 // Señal "inerte": objeto con Connect/Once/Wait que NO hace nada y NO filtra
 // referencias. Se usa para señales aún no soportadas (antes conectaban a
 // métodos inexistentes y acumulaban refs sin liberarse nunca).
@@ -3951,20 +3935,13 @@ static int godot_object_index(lua_State* L) {
 
     // Anchored en un Node3D que no es Part (el HumanoidRootPart del rig del
     // personaje lo es): se guarda como estado propio en vez de reventar.
-    if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(n) && !gl_has_property(n, "Anchored")) {
+    if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(n) && !HasLuauInstanceProperty(n, "Anchored")) {
         lua_pushboolean(L, n->has_meta("_gl_anchored") ? (bool)n->get_meta("_gl_anchored") : 0);
         return 1;
     }
 
     // ── Puente genérico de lectura (solo clases nuevas con meta _gl_bridge) ──
-    if (n->has_meta("_gl_bridge")) {
-        if (gl_has_property(n, String(key))) {
-            Variant gv = n->get(String(key));
-            if (gl_variant_to_luau(L, gv)) return 1;
-        }
-        String _mk = String("_glp_") + String(key);
-        if (n->has_meta(_mk) && gl_variant_to_luau(L, n->get_meta(_mk))) return 1;
-    }
+    if (PushLuauInstanceProperty(L, n, key)) return 1;
 
     Node* child = n->get_node_or_null(NodePath(key));
     if (child) { wrap_node(L, child); return 1; }
@@ -4019,7 +3996,7 @@ static int godot_object_newindex_impl(lua_State* L) {
     // Anchored sobre un Node3D que no es Part (ver la lectura mas arriba).
     {
         Node* _n = gow_node(wrapper);
-        if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(_n) && !gl_has_property(_n, "Anchored")) {
+        if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(_n) && !HasLuauInstanceProperty(_n, "Anchored")) {
             const bool on = lua_toboolean(L, 3) != 0;
             _n->set_meta("_gl_anchored", on);
             if (PhysicsBody3D* pb = Object::cast_to<PhysicsBody3D>(_n))
@@ -4721,22 +4698,7 @@ static int godot_object_newindex_impl(lua_State* L) {
     }
 
     // ── Puente genérico de escritura (solo clases nuevas con meta _gl_bridge) ──
-    if (n->has_meta("_gl_bridge")) {
-        Variant gv;
-        if (gl_luau_to_variant(L, 3, gv)) {
-            if (gl_has_property(n, String(key))) n->set(String(key), gv);
-            else n->set_meta(String("_glp_") + String(key), gv);
-        } else if (lua_istable(L, 3)) {
-            // UDim / UDim2 → usar Offset (p.ej. CornerRadius, Padding numéricos)
-            lua_getfield(L, 3, "Offset");
-            if (lua_isnumber(L, -1)) {
-                int off = (int)lua_tonumber(L, -1);
-                if (gl_has_property(n, String(key))) n->set(String(key), off);
-                else n->set_meta(String("_glp_") + String(key), off);
-            }
-            lua_pop(L, 1);
-        }
-    }
+    WriteLuauInstanceProperty(L, n, key);
     return 0;
 }
 

@@ -1656,3 +1656,133 @@ target this merge. Observation is bounded at 25 minutes, with results recorded
 during the authorized third extraction. Initial status is pending; pending work
 is not a pass. The next documentation commit changes no tested input. GL-013
 remains open, and the third extraction is authorized for branch publication only.
+
+
+## GL-013 third Instance property extraction
+
+The branch `refactor/gl-013-instance-reflection` starts from verified local/remote
+main `752bb2063f61a533c3e59b481196a0d8aa88f1ba`, following the second extraction's
+normal integration. Stage 2 is authorized for branch publication only. Main does
+not contain this extraction. No fourth extraction is included.
+
+### Source map and selected interface
+
+| Responsibility | Existing owner and dependency |
+| --- | --- |
+| Native userdata/identity | `GodotObjectWrapper` stores ObjectID; `gow_node` in `gl_runtime.h` resolves ObjectDB and checks Node type/liveness on access. `wrap_node` retains the existing layout/metatable and identity behavior. |
+| Class identity | `gl_roblox_classname`, IsA checks and class-specific tests remain in `luau_api.h`; classname buffers remain TU-local. |
+| Read dispatch | `godot_object_index` applies stack guard, key/wrapper checks, special-case properties/methods, Anchored compatibility, generic bridge, child lookup, lowercase alias, then the existing invalid-member error. |
+| Write dispatch | `godot_object_newindex_impl` validates/resolves the wrapper and handles class-specific setters before the generic bridge. The outer `godot_object_newindex` still performs replication afterward. |
+| Method lookup/binding | Explicit key branches and existing Lua functions/closures; native callback captures, owner/reference guards and service dependencies stay in their current implementation. No generic callable registry exists in the selected subset. |
+| Variant/value conversion | The preceding two independently owned modules; their bodies, layouts, metatable names and two initialization positions remain unchanged. |
+| Generic reflection | Exact property-list enumeration, Object get/set and `_glp_` metadata fallback. No cached schema, permission/usage filtering or automatic notification is added. |
+| Signals/reentrancy | Attribute watchers use a TU-local vector of node IDs, Lua references and owner checks; Changed/ValueBase/property-specific signal paths remain outside the adapter. Generic GetPropertyChangedSignal remains inert where already unsupported. |
+| Registration/includes | `luau_script.h` owns existing domain setup and includes `luau_api.h`; transitive API consumers remain gl_domain_host/luau_script/register_types. Static watcher/container/replication state and class registration stay in place. |
+
+A whole Instance adapter would bring class-specific services/gameplay, callbacks,
+replication and initialization dependencies across the boundary. It is rejected
+for this bounded task. Extracting only the membership loop would leave its generic
+read/write policy duplicated among API consumers. The selected subsystem instead
+owns membership plus both generic adaptation blocks, while leaving all Roblox
+compatibility and caller fallback policy with their existing owners. No reflection
+framework, hierarchy, registry or injection layer is introduced.
+
+The interface is established before moving the blocks: three functions in a
+forward-declaration-only header. `HasLuauInstanceProperty(Object*, const String&)`
+accepts null just as the old helper did. `PushLuauInstanceProperty(L,Object*,Key)`
+requires the caller's live borrowed object/checked key and existing metatables,
+pushes one value on true and none on false. `WriteLuauInstanceProperty` uses the
+existing value at Lua stack index 3. Both preserve `_gl_bridge` admission. No
+parameter is retained and no static state or registration is added. The C++
+implementation includes its header first, public Luau, Godot Object/value headers
+and only the narrow Variant conversion interface. No Node, domain, service,
+networking or large implementation header is needed. The dependency direction is
+Instance dispatch -> property adapter -> Variant conversion -> native values.
+The native-value module remains Godot-free, with no reverse include cycle.
+
+The membership function body and both bridge blocks compare exactly to baseline,
+apart from the helper's PascalCase name and read-success `return true` instead of
+returning the enclosing Lua result count 1. The caller returns 1 at the same
+position. Both Anchored compatibility sites call the same membership function.
+The old definitions/blocks are removed rather than retained as parallel paths.
+Three ordinary C++ definitions own this implementation; no callback or ABI/public
+Lua registration changes. Narrow forward declarations reduce implementation edit
+coupling; touching the original API header still affects its three consumers.
+
+### Behavior and baseline evidence
+
+An immutable baseline archive precedes any C++ edit. Windows/Linux Debug and
+Release baseline builds and all 39 core cases pass. Before moving implementation,
+the extended `Integration.gd` fixture passes eight production native actors on each
+platform using the unchanged Debug extension (`baseline-reflection-debug`). It
+establishes exact native-property precedence over metadata, metadata fallback for
+unsupported native Transform3D, Vector3/bool/int writes, read-only `multiplayer`
+write rejection with no `_glp_multiplayer` entry/native mutation, ignored nil,
+numeric table Offset, repeated access and existing missing-member/Offset-metamethod
+errors. GDScript also reads back the native value, so tests cannot pass through
+metadata alone. Changed remains silent for generic writes and fires on the
+existing SetAttribute path. Non-bridge objects retain ignored writes. Prior
+scalar/Unicode/unsupported Variant, wrapper identity/destruction and fresh-domain
+cases remain; the existing fixture also destroys owners inside callbacks.
+
+The extraction preserves Godot `set` failure handling (return ignored), property
+usage/read-only policy, class-specific dispatch and diagnostics. Unsupported reads
+still reach the existing invalid-member error unless a supported metadata/child
+fallback succeeds. Lua UTF-8 byte reinterpretation, unsupported writes and numeric
+Offset truncation stay unchanged. The borrowed call introduces no retained raw
+pointer or ownership change; Offset metamethod execution can reenter/raise exactly
+as before. No new sanitizer matrix is justified by this stateless physical split;
+existing GL-017/018 and historical Part/shutdown/math-closure qualification limits
+remain visible, without claiming general native-lifetime safety.
+
+### Measurements and qualification
+
+All four candidate builds pass 39 production-core cases and all 28 native actors
+per configuration (112 total), including the extended reflection fixture, existing
+lifecycle/reload/owner-callback teardown, network and functional animation groups.
+The separate [manifest](evidence/gl013-instance-reflection-2026-10-28.json) retains
+exact measurements, object sizes, source/fixture/library and result/log hashes.
+Both workers match this checkout's 71-input native fingerprint
+`671227453cc8b67fbf763be7968faae1ea295d1e2e916aabc7501b709b8abbed`.
+
+The same immutable-baseline/candidate snapshot path, pinned dependencies, hardware,
+CMake/Ninja configuration and two jobs are used for comparison. Baseline cold means
+six adapter plus two core-test units; candidate adds one adapter unit. Pinned vendor
+objects stay warm. API touches rebuild three units in both; reflection implementation
+touches rebuild exactly one. Two existing MSVC Luau Ast.h C4100 warnings remain in
+cold core builds; no new native warning appears, and Linux reports zero warnings.
+CMake actually compiles/links the discovered source in all four configurations.
+SCons' unchanged `Glob("src/core/*.cpp")` includes it by source inspection only;
+no new SCons/package qualification is claimed. Linux `nm -C` confirms a single
+ordinary global definition of each adapter function.
+
+| Configuration | Cold seconds before/after | API touch seconds before/after | Reflection touch seconds | Adapter object bytes before/after | Extension bytes before/after |
+| --- | --- | --- | --- | --- | --- |
+| Windows Debug | 21.469 / 21.182 | 19.391 / 19.038 | 0.923 | 91,084,363 / 91,179,002 | 24,192,000 / 24,194,048 |
+| Windows Release | 30.421 / 29.697 | 27.988 / 27.553 | 1.306 | 49,113,557 / 49,149,845 | 4,074,496 / 4,073,984 |
+| Linux Debug | 22.950 / 22.892 | 21.747 / 21.841 | 1.266 | 67,641,664 / 68,053,648 | 79,034,808 / 79,138,320 |
+| Linux Release | 42.116 / 42.066 | 40.314 / 40.414 | 0.665 | 15,705,912 / 15,724,776 | 12,516,144 / 12,516,600 |
+
+These are single trials, with no full dependency-clean or peak compiler RSS
+measurement. The small timing differences do not establish an overall speedup.
+The useful measured boundary is a one-unit implementation edit. `luau_api.h`
+decreases 2,014 LF bytes/38 lines (280,183/4,923 -> 278,169/4,885); the interface
+is 1,007 bytes/18 lines and implementation 1,878 bytes/53 lines. Binary/object
+sizes are not uniformly reduced. Broader includes remain in the three API consumers.
+
+Reproduction uses the existing CMake/core/native commands above with source roots
+`C:/Sandbox/Codex/Builds/GodotLuau/gl013-reflection/source` or
+`/work/gl013-reflection/source`, existing Debug/Release build caches and two jobs.
+Private worker drivers run baseline then candidate in both configurations, recording
+`cold-extension.log`, `touch-api.log`, `touch-reflection.log`, `core.log`, three
+native logs/result sets and `measurements.json`; the manifest retains their hashes.
+Baseline extended-fixture artifacts are kept at `baseline-reflection-debug` on each
+worker. Header/implementation touch changes timestamps only; candidate cold removes
+only validated task-source/core-test objects, never dependency objects.
+
+Local disposition: qualified in Windows/Linux Debug and Release. Hosted core/native
+observation follows branch push and is bounded at 25 minutes; pending jobs are not
+passes. The final documentation follow-up changes no tested input. GL-013 remains
+open. Recommended next investigation is bounded Instance class-identity helpers,
+only after checking their concrete-type includes and TU-local classname buffers.
+No fourth extraction, publication, workflow or dependency change is included.

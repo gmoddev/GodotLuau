@@ -458,3 +458,18 @@ binary is stripped; inclusive caller costs overlap. Profiled runs are separate
 from the unprofiled latency trials. Raw data, commands, identities, accepted/
 rejected candidates and qualification are in the
 [GL-019 report](../../newdocs/shared-domains-validation.md#gl-019-optimization-2026-10-26).
+
+
+### GL-013 Instance reflection extraction
+
+`Integration.gd` exercises the production generic property bridge in both Server
+and Client domains. Additional baseline-established cases cover native properties
+before conflicting metadata, unsupported native-property metadata fallback,
+Vector3/bool/native integer writes, read-only `multiplayer` rejection without
+metadata creation, nil/Offset writes, repeated access, missing-member and Offset
+metamethod errors, unchanged Changed/SetAttribute notification behavior and a
+non-bridge object's ignored write. Existing value/conversion, destroyed ObjectID,
+callback-destruction, reload and fresh-domain cases remain. No mock reflection
+implementation is used. Run the existing core and three native groups above;
+no separate configuration or workflow is required. See the
+[qualification record](../../newdocs/shared-domains-validation.md#gl-013-third-instance-property-extraction).

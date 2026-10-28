@@ -472,6 +472,24 @@ errors and Lua non-ASCII strings retain the existing Latin-1 constructor behavio
 these are preserved, not silently fixed. The first extraction's historical
 measurements/limitations remain. GL-013 stays open.
 
+**Third extraction (2026-10-28, branch only):**
+`refactor/gl-013-instance-reflection` starts from verified integrated main
+`752bb2063f61a533c3e59b481196a0d8aa88f1ba`. Exact property-list membership and
+the two generic `_gl_bridge` read/write blocks move to an owned Object adapter,
+with a three-declaration forward-only interface. Dependencies now point from
+Instance dispatch through reflection to Variant conversion and native values;
+no Node/service/domain header, retained object, registry or registration is added.
+Class identity, method/signal/callback bindings, ObjectID validation, class-specific
+properties, child/error fallbacks and replication remain in their existing owners.
+The API header decreases from 280,183 bytes/4,923 lines to 278,169 bytes/4,885 lines.
+The new interface is 1,007 bytes/18 lines; implementation is 1,878 bytes/53 lines.
+See [third extraction analysis and qualification](shared-domains-validation.md#gl-013-third-instance-property-extraction)
+and its [separate manifest](evidence/gl013-instance-reflection-2026-10-28.json).
+Baseline production fixtures establish read-only/property/metadata/Offset/error
+and Changed behavior before code moves; those semantics are preserved. GL-013
+remains OPEN for broader Instance/service/editor header coupling. The third
+extraction remains unmerged; qualification disposition is recorded with evidence.
+
 ## GL-014: Shared execution domains — integrated and source-qualified
 
 **Evidence:** Per-executable-script `L_main` at `luau_script.h:960`; require's

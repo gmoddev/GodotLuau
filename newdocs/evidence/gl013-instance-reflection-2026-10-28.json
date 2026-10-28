@@ -1,0 +1,501 @@
+{
+  "Issue": "GL-013",
+  "Date": "2026-10-28",
+  "Branch": "refactor/gl-013-instance-reflection",
+  "BaseMain": "752bb2063f61a533c3e59b481196a0d8aa88f1ba",
+  "Implementation": "Source commit containing this initial record; exact SHA added after publication",
+  "Disposition": "IMPLEMENTED — QUALIFICATION PENDING (local qualified; hosted observation follows push)",
+  "Stage1": {
+    "StartingMain": "174efcc2bdb59c5072ba21d27645c5380c61e8e9",
+    "QualifiedSource": "5f72f4cda1c5e3bb76edd33bb11e276cff07ac10",
+    "QualifiedTip": "d97fa5da9c5fb587061db9e35be00e764a47e3de",
+    "Merge": "21d10d91769ee81c85ae2e1d2029e683feeb51ba",
+    "FinalMain": "752bb2063f61a533c3e59b481196a0d8aa88f1ba",
+    "CompleteMergeTreeIdentical": true,
+    "BothCommitsPreserved": true,
+    "CoreRun": 40642408324,
+    "NativeRun": 40642408346,
+    "CoreJobs": {
+      "Linux": 122663339012,
+      "Windows": 122663339266
+    },
+    "NativeJobs": {
+      "Linux": 122663339715,
+      "Windows": 122663339376
+    },
+    "Observation": "Both core jobs pass39; fresh native builds in progress; bounded25min observation continues",
+    "Reused": "Exact qualified source/fixture identity; previous four configurations and hosted qualification, no repeated local Stage1 matrix"
+  },
+  "Subsystem": "Stateless generic _gl_bridge Godot property adaptation, including membership lookup and metadata/Offset fallbacks",
+  "Analysis": {
+    "Before": "Three API-consuming TUs duplicate static property-list helper and generic read/write blocks; API directly includes converter declarations",
+    "After": "API -> three-declaration property adapter -> Variant conversion -> native value bindings. Adapter only uses public Luau and Godot Object/value headers, no Node/services/domains/runtime/API implementation includes",
+    "Rejected": "Whole Instance dispatch requires class-specific services, callback/static-state and replication dependencies; membership-only extraction would leave generic adaptation implementation in the API header",
+    "Linkage": "One ordinary C++ definition per internal adapter function; Linux nm -C confirms single global definitions; existing build visibility policy unchanged",
+    "State": "No registration, mutable static state, retained object, Lua state or callback",
+    "PreservedOwners": "ObjectID resolution/wrappers, class identity, methods, class-specific properties, hierarchy/error/alias fallback, signals/attribute watchers and replication remain unchanged",
+    "Bodies": "Membership and both generic bridge blocks compare exactly to baseline apart from helper PascalCase naming and read-success bool adaptation",
+    "Interface": "HasLuauInstanceProperty(Object*,const String&); PushLuauInstanceProperty(lua_State*,Object*,const char*); WriteLuauInstanceProperty(lua_State*,Object*,const char*). Synchronous borrowed live object; value stack index3; Offset metamethod may raise/reenter"
+  },
+  "SourceFiles": [
+    "src/core/luau_api.h",
+    "src/core/luau_instance_reflection.h",
+    "src/core/luau_instance_reflection.cpp"
+  ],
+  "TestFiles": [
+    "tests/runtime/Integration.gd",
+    "tests/runtime/README.md"
+  ],
+  "HeaderLF": {
+    "BeforeBytes": 280183,
+    "BeforeLines": 4923,
+    "AfterBytes": 278169,
+    "AfterLines": 4885,
+    "RemovedBytes": 2014,
+    "RemovedLines": 38,
+    "InterfaceBytes": 1007,
+    "InterfaceLines": 18,
+    "ImplementationBytes": 1878,
+    "ImplementationLines": 53
+  },
+  "Method": {
+    "Toolchains": "Windows MSVC19.51.36260.0 and Linux GCC13.3.0; existing CMake/Ninja builds",
+    "Parallelism": 2,
+    "Trials": 1,
+    "Cache": "Same task source path, workers/configurations and warm pinned dependency objects; adapter/core-test objects cold in both measurements",
+    "ColdUnits": "Baseline6 adapter+2 core; candidate7 adapter+2 core",
+    "HeaderTouchUnits": 3,
+    "ReflectionTouchUnits": 1,
+    "Warnings": "Two existing MSVC Luau Ast.h C4100 warnings in cold core build; no new native warnings; Linux zero",
+    "Limits": "No full dependency-clean build or peak compiler RSS measured; single trials do not establish overall speed or binary-size improvement",
+    "BaselineArchiveSHA256": "dd190189d9c084b91261919d71312a420ed92b4af0ff2b9c92d9e636ee30a5b1"
+  },
+  "Pins": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "BaselineFixtures": {
+    "Source": "Extended Integration.gd using unchanged baseline Debug adapter before C++ moves",
+    "Windows": "baseline-reflection-debug/regression: 8 actors pass, exit0",
+    "Linux": "baseline-reflection-debug/regression: 8 actors pass, exit0",
+    "Cases": "Native-property/metadata precedence; unsupported native fallback; read-only property with no native/metadata mutation; scalar/vector/nil/Offset; repeated access; missing/Offset metamethod errors; unchanged Changed and SetAttribute; ignored non-bridge writes",
+    "InitialFailures": "None in this extraction; prior two extraction failure records remain unchanged"
+  },
+  "BuildDiscovery": {
+    "CMake": "Existing CONFIGURE_DEPENDS core glob compiles/links the new unit on Windows/Linux Debug/Release",
+    "SCons": "Existing unchanged Glob(src/core/*.cpp) includes the new source; source inspection only, no new SCons build/package qualification",
+    "Symbols": "Linux Debug nm -C shows exactly one T definition of each adapter function"
+  },
+  "Windows": {
+    "Platform": "Windows-11-10.0.26200-SP0",
+    "Python": "3.12.6 (tags/v3.12.6:a4a2d2b, Sep  6 2024, 20:11:23) [MSC v.1940 64 bit (AMD64)]",
+    "NativeSource": {
+      "SHA256": "671227453cc8b67fbf763be7968faae1ea295d1e2e916aabc7501b709b8abbed",
+      "Files": 71,
+      "Newlines": "LF normalized"
+    },
+    "Measurements": {
+      "baseline-debug": {
+        "Mode": "baseline",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 21.469,
+          "CompilationUnits": 8,
+          "Warnings": 2
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 19.391,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_domain_host.cpp.obj": 6602557,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_execution_domain.cpp.obj": 3268235,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_script.cpp.obj": 4478519,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_value_bindings.cpp.obj": 48609,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_variant_bindings.cpp.obj": 63341,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\register_types.cpp.obj": 76623102
+        },
+        "LibraryBytes": 24192000,
+        "ObjectBytes": 91084363
+      },
+      "baseline-release": {
+        "Mode": "baseline",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 30.421,
+          "CompilationUnits": 8,
+          "Warnings": 2
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 27.988,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_domain_host.cpp.obj": 2913561,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_execution_domain.cpp.obj": 1246945,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_script.cpp.obj": 2166413,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_value_bindings.cpp.obj": 40685,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_variant_bindings.cpp.obj": 13290,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\register_types.cpp.obj": 42732663
+        },
+        "LibraryBytes": 4074496,
+        "ObjectBytes": 49113557
+      },
+      "candidate-debug": {
+        "Mode": "candidate",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 21.182,
+          "CompilationUnits": 9,
+          "Warnings": 2
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 19.038,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchReflectionImplementation": {
+          "Seconds": 0.923,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_domain_host.cpp.obj": 6602379,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_execution_domain.cpp.obj": 3268235,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_instance_reflection.cpp.obj": 121203,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_script.cpp.obj": 4478297,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_value_bindings.cpp.obj": 48609,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_variant_bindings.cpp.obj": 63341,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\register_types.cpp.obj": 76596938
+        },
+        "LibraryBytes": 24194048,
+        "ObjectBytes": 91179002
+      },
+      "candidate-release": {
+        "Mode": "candidate",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 29.697,
+          "CompilationUnits": 9,
+          "Warnings": 2
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 27.553,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchReflectionImplementation": {
+          "Seconds": 1.306,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_domain_host.cpp.obj": 2913561,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\gl_execution_domain.cpp.obj": 1246945,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_instance_reflection.cpp.obj": 49431,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_script.cpp.obj": 2166413,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_value_bindings.cpp.obj": 40685,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\luau_variant_bindings.cpp.obj": 13290,
+          "CMakeFiles\\GodotLuauAdapter.dir\\C_\\Sandbox\\Codex\\Builds\\GodotLuau\\gl013-reflection\\source\\src\\core\\register_types.cpp.obj": 42719520
+        },
+        "LibraryBytes": 4073984,
+        "ObjectBytes": 49149845
+      }
+    },
+    "Qualification": {
+      "debug": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9"
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "0816edc3f2e8773c174d2fb9bc8be3c0aeacd9a8126b65f03bcc73de381baba6"
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318"
+        },
+        "CoreCases": 39,
+        "LogHashes": {
+          "animation.log": "c8a0be889da74440aaaa8106091c2d786b8266d0582247750023ca057031425e",
+          "cold-extension.log": "a3734c5e95b8e7e3dc9ef2a3180c8914209bcca9ab30f4c9080b35d1d700176f",
+          "configure.log": "c45f2d3e20c8e50ef343af87525674a7a959b94e37251f4cd35cb4ff175e72f7",
+          "core.log": "1450d07095c27243cab4dc379795dfa8feba47fd4ac676b9a37b331337c60aa5",
+          "regression.log": "623de333c81885a265f774dff9d7a5129013bf4cacc4494f81775c468c28f31e",
+          "security.log": "a2bb79bc67377b2ea66947fafe85c4d48ca93b327eb42d441cd06bf1c2a3c075",
+          "touch-api.log": "1f7a7b316420748ff5c6a01ca76fd8f3348b91dd2ab4585770109f12a75c7774",
+          "touch-reflection.log": "fe76383ccc8130e234c9922e12122b1bdeafe357c35c991bc409e04fbe493042"
+        },
+        "ExtensionSHA256": "244b13c0ed4883859370963e7b40c1427289738e2f7973a2123e2d41678d31ba"
+      },
+      "release": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9"
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "4f58284c427a792733df6225fc3cd9341b6d4f0eca2eb639c34d9a3f4ddda39a"
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318"
+        },
+        "CoreCases": 39,
+        "LogHashes": {
+          "animation.log": "dfb0996f69e46386ec8207d4eaf8247c832294cfd4ba4a898b6c58f56bc630ef",
+          "cold-extension.log": "a3734c5e95b8e7e3dc9ef2a3180c8914209bcca9ab30f4c9080b35d1d700176f",
+          "configure.log": "d789ee220fbfd7c1abf897c38d51e0e57b15c94707b5269539f89efb0c81ac55",
+          "core.log": "51f24183820a0808463359670c1154fcddeeea2618f039134c6f13dbb352e8e5",
+          "regression.log": "5af61b4baa689b53bdf3b3e833367791f21e69ecb41588bacf8549035de4b967",
+          "security.log": "6d53cff786188691a624bd3ead5393f38bf8616d25491d1aaea7f3fa2d78fb89",
+          "touch-api.log": "1f7a7b316420748ff5c6a01ca76fd8f3348b91dd2ab4585770109f12a75c7774",
+          "touch-reflection.log": "fe76383ccc8130e234c9922e12122b1bdeafe357c35c991bc409e04fbe493042"
+        },
+        "ExtensionSHA256": "3c4731ebf7adba55515ecc3134ccf8f8be80288ccb9138c030913f05104ea268"
+      }
+    },
+    "SourceHashesLF": {
+      "src/core/luau_api.h": "20c7d1b5673104fd33a5e19abe79a42fd75764e0a3a32d45c8b6511ef5bc9066",
+      "src/core/luau_instance_reflection.h": "7500d99d8843051cd2701a0bce3bbf3ebbc9729ac5cd29b4ee3b73c759ac84bf",
+      "src/core/luau_instance_reflection.cpp": "c6a3a8376037310bab84d268ab92bc04b420555a55ca9448434de68cb7513e26",
+      "src/core/luau_variant_bindings.h": "aa63d5356b04e6a67a2494131cdd87827209eaa959e0ed34f81e965c131c1ac4",
+      "src/core/luau_variant_bindings.cpp": "b316536110a6bb97e8c1b0510bb7998fc250f8299d30b2dcec2e880a45ad493a",
+      "src/core/luau_value_bindings.h": "ffcc71b3d07452ca0305cb7d34dc1f1692fe14d73580ce8173546d037b4d0fed",
+      "src/core/luau_value_bindings.cpp": "b71ba38d41251e4a0b12a079de03e1a4ce1d2a212b5bc7e61f63ae455a28defc",
+      "tests/runtime/Integration.gd": "015841b120896fcdb6dd6df164b0d16b0b0ad87065f9006bc3d810b3c5544673"
+    }
+  },
+  "Linux": {
+    "Platform": "Linux-6.8.0-146-generic-x86_64-with-glibc2.39",
+    "Python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "NativeSource": {
+      "SHA256": "671227453cc8b67fbf763be7968faae1ea295d1e2e916aabc7501b709b8abbed",
+      "Files": 71,
+      "Newlines": "LF normalized"
+    },
+    "Measurements": {
+      "baseline-debug": {
+        "Mode": "baseline",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 22.95,
+          "CompilationUnits": 8,
+          "Warnings": 0
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 21.747,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/register_types.cpp.o": 38494192,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_variant_bindings.cpp.o": 372432,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_domain_host.cpp.o": 13412152,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_script.cpp.o": 13057552,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_value_bindings.cpp.o": 44320,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_execution_domain.cpp.o": 2261016
+        },
+        "LibraryBytes": 79034808,
+        "ObjectBytes": 67641664
+      },
+      "baseline-release": {
+        "Mode": "baseline",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 42.116,
+          "CompilationUnits": 8,
+          "Warnings": 0
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 40.314,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/register_types.cpp.o": 13101624,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_variant_bindings.cpp.o": 7968,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_domain_host.cpp.o": 1246568,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_script.cpp.o": 1176024,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_value_bindings.cpp.o": 16448,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_execution_domain.cpp.o": 157280
+        },
+        "LibraryBytes": 12516144,
+        "ObjectBytes": 15705912
+      },
+      "candidate-debug": {
+        "Mode": "candidate",
+        "Configuration": "Debug",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 22.892,
+          "CompilationUnits": 9,
+          "Warnings": 0
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 21.841,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchReflectionImplementation": {
+          "Seconds": 1.266,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/register_types.cpp.o": 38485160,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_variant_bindings.cpp.o": 372432,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_domain_host.cpp.o": 13403120,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_script.cpp.o": 13048520,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_value_bindings.cpp.o": 44320,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_execution_domain.cpp.o": 2261016,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_instance_reflection.cpp.o": 439080
+        },
+        "LibraryBytes": 79138320,
+        "ObjectBytes": 68053648
+      },
+      "candidate-release": {
+        "Mode": "candidate",
+        "Configuration": "Release",
+        "Parallelism": 2,
+        "Scope": "Extension-cold, pinned vendor objects warm; not a full dependency-clean build",
+        "ColdExtension": {
+          "Seconds": 42.066,
+          "CompilationUnits": 9,
+          "Warnings": 0
+        },
+        "TouchOriginalHeader": {
+          "Seconds": 40.414,
+          "CompilationUnits": 3,
+          "Warnings": 0
+        },
+        "TouchReflectionImplementation": {
+          "Seconds": 0.665,
+          "CompilationUnits": 1,
+          "Warnings": 0
+        },
+        "Objects": {
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/register_types.cpp.o": 13092352,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_variant_bindings.cpp.o": 7968,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_domain_host.cpp.o": 1246568,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_script.cpp.o": 1176024,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_value_bindings.cpp.o": 16448,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/gl_execution_domain.cpp.o": 157280,
+          "CMakeFiles/GodotLuauAdapter.dir/work/gl013-reflection/source/src/core/luau_instance_reflection.cpp.o": 28136
+        },
+        "LibraryBytes": 12516600,
+        "ObjectBytes": 15724776
+      }
+    },
+    "Qualification": {
+      "debug": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8"
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "37b77b73e1bb5dc92e4bb2c89725b60adf6665af27b9ae0ad8b1713687460648"
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8"
+        },
+        "CoreCases": 39,
+        "LogHashes": {
+          "animation.log": "13c6e26427c0a6c7935dd06e07c8401e4787385be1eac88d19f28f8e9b932c15",
+          "cold-extension.log": "8cca8ac247d561915b088374a07408858a57192d7448780730da7ce8607a8e8f",
+          "configure.log": "2da4cfafa2d04c4fbeb4a63f7c94060fb109aca800b01fa9c277ebc3e84bf3c4",
+          "core.log": "91efbb50555400e80ec1e95110b58b12a020d7a9fb6c0c1ffcc341f0e2bff802",
+          "regression.log": "5a6c75cebd134da730bad80bb34d6ff8afa1fdda665cea7a58434c1bf13db82a",
+          "security.log": "eed6ed0e97f9f70dd128350b17cfd4906d75b7aa660e4d806a23abc230ee91e2",
+          "touch-api.log": "d4fb6074e393917af676c5045ebd61380c10b0ea40360c75011add9974b731a3",
+          "touch-reflection.log": "f5a70ca80d60b342760e39784ccdf3beac90dafeefe1c05d5487feb07fa926f6"
+        },
+        "ExtensionSHA256": "034dc0c99964e83856763b3b6acefec9f29ba22a9af7e45a7dc77dad425e3ea6"
+      },
+      "release": {
+        "regression": {
+          "Actors": 8,
+          "AllExitZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8"
+        },
+        "security": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "962bb08cf37d5a815690ec510de1e3797c2abd2f23e3bde133e6c3b17a3a6649"
+        },
+        "animation": {
+          "Actors": 10,
+          "AllExitZero": true,
+          "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8"
+        },
+        "CoreCases": 39,
+        "LogHashes": {
+          "animation.log": "9bec61e29d10044716a35e63db93a80a480e6a1d23e74da1f602623fddd5336e",
+          "cold-extension.log": "4817ace318f5a1c485f3675fbbaefff48fb82adb80ab858c8779aad5b7e244c8",
+          "configure.log": "24a705578d66ecf8fe4e9ccf320e99765c72c2ecffb5234c0d5a16be26c749cf",
+          "core.log": "a75db126354419d0b94e172c658f5fe9858aa26064fb30911a4ced4b148954d4",
+          "regression.log": "0d2b43255756613d54abfa3c40688e62a34ba73cc7e12cee6dc1979b94992ab6",
+          "security.log": "487b5e2ae27488a9e1c07dc78c3d2396794beaf5606a883fd900882b7269567b",
+          "touch-api.log": "d4fb6074e393917af676c5045ebd61380c10b0ea40360c75011add9974b731a3",
+          "touch-reflection.log": "f5a70ca80d60b342760e39784ccdf3beac90dafeefe1c05d5487feb07fa926f6"
+        },
+        "ExtensionSHA256": "e0bdf911b88cf676c0ad1bc5a40426750a7c3f7e99052336daee5c24522c7c0e"
+      }
+    },
+    "SourceHashesLF": {
+      "src/core/luau_api.h": "20c7d1b5673104fd33a5e19abe79a42fd75764e0a3a32d45c8b6511ef5bc9066",
+      "src/core/luau_instance_reflection.h": "7500d99d8843051cd2701a0bce3bbf3ebbc9729ac5cd29b4ee3b73c759ac84bf",
+      "src/core/luau_instance_reflection.cpp": "c6a3a8376037310bab84d268ab92bc04b420555a55ca9448434de68cb7513e26",
+      "src/core/luau_variant_bindings.h": "aa63d5356b04e6a67a2494131cdd87827209eaa959e0ed34f81e965c131c1ac4",
+      "src/core/luau_variant_bindings.cpp": "b316536110a6bb97e8c1b0510bb7998fc250f8299d30b2dcec2e880a45ad493a",
+      "src/core/luau_value_bindings.h": "ffcc71b3d07452ca0305cb7d34dc1f1692fe14d73580ce8173546d037b4d0fed",
+      "src/core/luau_value_bindings.cpp": "b71ba38d41251e4a0b12a079de03e1a4ce1d2a212b5bc7e61f63ae455a28defc",
+      "tests/runtime/Integration.gd": "015841b120896fcdb6dd6df164b0d16b0b0ad87065f9006bc3d810b3c5544673"
+    }
+  },
+  "Artifacts": {
+    "Windows": "C:/Sandbox/Codex/Builds/GodotLuau/gl013-reflection",
+    "Linux": "/opt/codex/godotluau/gl013-reflection (container /work/gl013-reflection)",
+    "Workers": "Existing task snapshots and prior evidence preserved; source identity normalized LF",
+    "Drivers": "Private GL013ReflectionWorker.py/Evidence.py/Baseline.py/Restore.py in task roots; commands and cache method documented in validation"
+  },
+  "Hosted": {
+    "Status": "Awaiting branch publication",
+    "ObservationBoundMinutes": 25
+  },
+  "Cleanup": "Restore original source-root cache configuration and stop task container after qualification; final evidence records outcome",
+  "Remaining": [
+    "GL-013 open; broad Instance/class-specific methods, services/editor and static-state coupling remain",
+    "No production binary, release, upstream message, workflow/configuration or updater change",
+    "Existing Unicode reinterpretation, unsupported reads/writes, read-only/set-result behavior and Offset truncation unchanged",
+    "No new native sanitizer or graphical/production qualification; GL-017/018 and previous exploratory Part shutdown/math-closure limitations remain",
+    "Next candidate: bounded class-identity helpers only after auditing type/header and TU-local classname-buffer dependencies; not implemented here"
+  ]
+}
