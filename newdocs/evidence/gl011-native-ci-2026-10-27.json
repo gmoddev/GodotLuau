@@ -2,6 +2,10 @@
   "ProcessLivenessCorrection": {
     "StartingMain": "dcc4b4c2bbe948d2d9a792991c02331b32bc5033",
     "Branch": "fix/ci-proc-liveness-race",
+    "Correction": "a6411da5b1ac4f79e9f0b6163fb78827157863a1",
+    "Merge": "995401b03335bca26eb8e1b62d52848f89a69e1e",
+    "MergeMethod": "Normal no-ff merge; exact correction branch tree; correction commit and branch retained",
+    "FixtureProcessTestsSHA256LF": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
     "FailedRun": 40483447902,
     "FailedLinuxJob": 122119224290,
     "Failure": "FileNotFoundError /proc/2658/stat in partial-startup cleanup before provisioning/build/native fixtures; Windows passed",
@@ -13,8 +17,27 @@
     "Linux": { "Tests": 14, "Passed": 14, "Skipped": 0, "Seconds": 0.257 },
     "Static": ["python -m py_compile tests/runtime/FixtureProcessTests.py", "git diff --check"],
     "Scope": "Only launcher liveness test helper and regressions; no native source, ownership helper, qualification runner, fixtures, workflows or pin changes; no local native build",
-    "Hosted": "Pending new integrated-main workflows; bounded observation 20 minutes after push",
-    "Disposition": "FIXED — HOSTED VERIFICATION PENDING"
+    "Cleanup": "Windows CIM finds no matching test/child Python process; Linux docker top shows only sleep infinity; task container restored to stopped state",
+    "PreservationProof": "AST comparison confirms every original test method and Windows Alive branch unchanged",
+    "HostedCore": { "Run": 40618765032, "WindowsJob": 122587388492, "LinuxJob": 122587388681, "Conclusion": "success", "CasesPerPlatform": 39 },
+    "HostedNative": {
+      "Run": 40618765012,
+      "WindowsJob": 122587388823,
+      "LinuxJob": 122587388614,
+      "Conclusion": "success",
+      "ProcessTests": "Linux 14 pass in 0.430s; Windows eight pass plus six Linux-only skips in 0.594s",
+      "BuildAndFixtures": "Both actual adapter builds and all lifecycle/network/functional-animation groups pass; final checks require 28 actors each, 8/10/10 with Exit 0",
+      "StartedUTC": "2026-10-28T02:04:27Z",
+      "CompletedUTC": "2026-10-28T02:23:05Z",
+      "ElapsedSeconds": 1118,
+      "NativeSourceSHA256LF": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+      "WindowsArtifact": { "ID": 12787007629, "Bytes": 46318, "SHA256": "303b5b9f3d3a3a965bfb66e658768519ae8c1628eb66b3cdfd592a42dba7ddb0", "Files": 84 },
+      "LinuxArtifact": { "ID": 12786547155, "Bytes": 49468, "SHA256": "fd0d6e87eab36812cfb070f05ebe0719c315d9042ea529324d9975e502d076e8", "Files": 81 },
+      "ArtifactVerification": "Downloaded ZIP hashes match metadata; summaries verify merge revision, corrected helper hash, unchanged 65-input native fingerprint, exact 8/10/10 actors with Exit 0; no .dll/.so/.exe/.zip payload"
+    },
+    "Observation": "Bounded to 20 minutes after push; no old-revision rerun or manual dispatch",
+    "Disposition": "FIXED AND HOSTED-VERIFIED",
+    "EvidenceFollowup": "Documentation-only final commit changes no CI-tested input; no separate hosted run claimed; GL-011 and existing independent limitations remain open; publication/updater disabled"
   },
   "MainIntegration": {
     "StartingMain": "db132e45607056cf23c024599f95ed37deac09bd",

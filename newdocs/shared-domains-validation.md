@@ -246,8 +246,24 @@ ignored harness substituting the original helper. Controller `python -m
 py_compile tests/runtime/FixtureProcessTests.py` and `git diff --check` pass.
 No local native rebuild is needed or performed.
 
-New integrated-main hosted results are pending. Observation is bounded to
-20 minutes after push; only completed jobs establish success. The
+Correction `a6411da5b1ac4f79e9f0b6163fb78827157863a1` is preserved by normal
+merge `995401b03335bca26eb8e1b62d52848f89a69e1e`, pushed to fork main. The branch
+is retained. Fresh [core run 40618765032](https://github.com/gmoddev/GodotLuau/actions/runs/40618765032)
+passes 39 cases on each platform. Fresh [native run 40618765012](https://github.com/gmoddev/GodotLuau/actions/runs/40618765012)
+passes both Debug jobs: complete process suites (Linux 14; Windows eight plus six
+Linux-only skips), verified Godot provisioning, actual adapter builds, all three
+fixture groups, final 28-actor checks and diagnostic uploads. Native elapsed run
+time is 18m38s, completing within the 20-minute observation bound; no retry or
+manual dispatch occurs. These runs target the corrected merge, not the old SHA.
+
+Both downloaded diagnostic ZIP digests match hosted metadata; their summaries
+identify the corrected helper hash and unchanged 65-input native fingerprint,
+exactly 8/10/10 actors with zero exit codes, and no production binary payload.
+Worker inspection finds no surviving test Python children; the Linux task
+container is restored to stopped. AST comparison confirms every original test
+method and Windows liveness branch unchanged. Disposition:
+**FIXED AND HOSTED-VERIFIED**. The final evidence-only commit changes no tested
+input and does not claim a separate run. The
 [existing manifest](evidence/gl011-native-ci-2026-10-27.json) records correction
 identity and results separately from historical qualification. GL-011 remains
 open for sanitizer/release enforcement; all other recorded limitations and

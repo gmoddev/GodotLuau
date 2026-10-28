@@ -376,7 +376,11 @@ proc-stat check/read race before provisioning or compilation; Windows passed.
 The [focused correction](shared-domains-validation.md#linux-process-liveness-correction-2026-10-27)
 uses one guarded read with narrow disappearance handling. Complete worker tests
 pass (Linux 14; Windows eight plus six Linux-only skips); deterministic baseline
-reproduction fails as expected. Fresh integrated hosted verification is pending.
+reproduction fails as expected. Fresh corrected-main core run `40618765032` passes
+39 cases per platform; native run `40618765012` passes both actual adapter builds,
+process suites and all 28 actors per platform. Both diagnostic summaries verify
+the correction and unchanged native fingerprint. The race is fixed and
+hosted-verified; historical evidence remains separate.
 This CI reliability correction does not close GL-011 or expand runtime scope.
 
 ## GL-012: Release workflow deletes prior provenance references
