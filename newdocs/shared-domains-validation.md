@@ -183,6 +183,14 @@ authorized second extraction. Integration documentation changes no tested input.
 GL-013 remains open; one further extraction is separately authorized on a new
 branch from verified integrated main, without permission to merge that work.
 
+Fresh main observation subsequently completes during Stage 2: both core jobs pass
+39 cases per platform; both native jobs pass actual Debug adapter builds, process
+checks and all 28 actors each, including final completeness checks. Native job logs
+`122623327125` (Windows) and `122623327392` (Linux) confirm the 28-result PASS.
+Both workflows target merge `bdd57fd`; canonical main `174efcc` changes documentation
+only. Disposition: **INTEGRATED AND VERIFIED**. These are fresh main results,
+distinct from reused source qualification. Existing limitations remain unchanged.
+
 ## GL-013 second generic Variant extraction
 
 Stage 2 starts from verified integrated main
@@ -286,8 +294,21 @@ overall faster compilation or smaller binaries. Exact object sizes are retained
 in the manifest. Reproduction uses the first extraction's commands with the new snapshot
 and `luau_variant_bindings.cpp` as the implementation-touch input. Both Windows/
 Linux Debug and Release core/native gates pass; existing hosted core/native Debug
-qualification is pending the source push. Hosted observation is bounded at 25 minutes after push;
-pending results never count as passes. No new sanitizer configuration is justified
+qualification completes on implementation `5f72f4cda1c5e3bb76edd33bb11e276cff07ac10`:
+[core run 40631078253](https://github.com/gmoddev/GodotLuau/actions/runs/40631078253)
+passes 39 cases per platform; [native run 40631078251](https://github.com/gmoddev/GodotLuau/actions/runs/40631078251)
+passes both fresh actual Debug builds, process checks, verified Godot provisioning,
+all 28 actors per platform and final completeness/uploads. Native run time is
+19m13s, within the 25-minute observation bound. Both checkout logs confirm exact
+dependency pins. Downloaded diagnostic ZIP digests match metadata; summaries
+verify the tested commit,69-input fingerprint and extended fixture hash, with
+exact8/10/10 groups and zero actor exits. No binaries are published or uploaded.
+
+Disposition: **SECOND EXTRACTION QUALIFIED**. The branch is ready for review within
+its bounded scope and remains unmerged; remote main stays `174efcc2bdb59c5072ba21d27645c5380c61e8e9`.
+The final evidence-only follow-up changes no tested input and claims no additional
+run. Worker Debug/Release source-root settings are restored; no task-owned test/
+Godot process remains, and the Linux task container is stopped. No new sanitizer configuration is justified
 by this ownership-preserving movement.
 
 GL-013 remains open. The next separately authorized candidate is a bounded Instance
