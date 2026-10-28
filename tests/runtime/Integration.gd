@@ -46,6 +46,44 @@ func Run() -> void:
     Service.name = "RunService"
     Game.add_child(Service)
     print("[Runtime:Integration] Fixture services created")
+    # Exercise the native value bindings in both domains through production APIs.
+    for Type in ["ServerScript", "LocalScript"]:
+        var Prefix := "ValueServer" if Type == "ServerScript" else "ValueClient"
+        CreateScript(Type, Prefix, """
+local Value = Vector3.new(3, 4, 0)
+assert(Value.X == 3 and Value.y == 4 and Value.Z == 0 and Value.Magnitude == 5)
+assert(Vector3.zero == Vector3.new() and Vector3.one == Vector3.new(1, 1, 1))
+assert(Value + Vector3.one == Vector3.new(4, 5, 1))
+assert(Value - Vector3.one == Vector3.new(2, 3, -1))
+assert(Value * 2 == 2 * Value and Value / 2 == Vector3.new(1.5, 2, 0))
+assert(Value * Vector3.new(2, 3, 4) == Vector3.new(6, 12, 0))
+assert(Value / Vector3.new(3, 2, 1) == Vector3.new(1, 2, 0))
+assert(-Value == Vector3.new(-3, -4, 0) and Vector3.zero.Unit == Vector3.zero)
+assert(math.abs(Value.Unit.Magnitude - 1) < 0.0001)
+assert(Value.Lerp(Vector3.new(5, 6, 2), 0.5) == Vector3.new(4, 5, 1))
+assert(Value.Dot(Vector3.one) == 7 and Value.Cross(Vector3.one) == Vector3.new(4, -3, -1))
+assert(tostring(Value) == '3.000, 4.000, 0.000' and Value.Unknown == nil)
+local Color = Color3.fromRGB(255, 128, 0)
+assert(Color.R == 1 and math.abs(Color.g - 128/255) < 0.0001 and Color.B == 0)
+assert(Color3.new().R == 0 and Color.Unknown == nil)
+assert(Value + Color == nil and Value + game == nil)
+local Ok, Message = pcall(Vector3.new, 'invalid')
+assert(not Ok and type(Message) == 'string')
+local Bridge = Instance.new('Beam')
+Bridge.Parent = game
+Bridge.TestVector = Value
+Bridge.TestColor = Color
+assert(Bridge.TestVector == Value and Bridge.TestColor.R == Color.R)
+assert(Bridge == game:FindFirstChild(Bridge.Name) and Bridge.Parent == game)
+Bridge:Destroy()
+for Index = 1, 10 do
+    if Bridge.Name == nil then break end
+    task.wait()
+end
+assert(Bridge.Name == nil)
+game:SetAttribute('%s', true)
+""" % Prefix, Game)
+        await Until(Prefix)
     CreateScript("ModuleScript", "Counter", """
 _G.Initializations = (_G.Initializations or 0) + 1
 task.wait(0.02)
@@ -280,7 +318,7 @@ game:SetAttribute('LuaSubscribed', true)
     Game.name = "Game"
     root.add_child(Game)
     current_scene = Game
-    CreateScript("ServerScript", "FreshScene", "assert(_G.Initializations == nil and shared.Counter == nil and script.Name == 'FreshScene'); game:SetAttribute('FreshDomain', true)", Game)
+    CreateScript("ServerScript", "FreshScene", "assert(_G.Initializations == nil and shared.Counter == nil and script.Name == 'FreshScene'); assert(Vector3.new(1, 2, 3) + Vector3.one == Vector3.new(2, 3, 4) and Color3.fromRGB(255, 0, 0).R == 1); game:SetAttribute('FreshDomain', true)", Game)
     Game.add_child(Service)
     await Until("FreshDomain")
     await process_frame

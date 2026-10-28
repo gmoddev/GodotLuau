@@ -960,20 +960,7 @@ public:
 
         // ── Math metatables ───────────────────────────────────────────────────
         //// ── Metatables matemáticas ────────────────────────────────────────────
-        luaL_newmetatable(L_main, "Vector3");
-        lua_pushcfunction(L_main, godot_vector3_index, "__index");   lua_setfield(L_main, -2, "__index");
-        lua_pushcfunction(L_main, godot_vector3_add,   "__add");     lua_setfield(L_main, -2, "__add");
-        lua_pushcfunction(L_main, godot_vector3_sub,   "__sub");     lua_setfield(L_main, -2, "__sub");
-        lua_pushcfunction(L_main, godot_vector3_mul,   "__mul");     lua_setfield(L_main, -2, "__mul");
-        lua_pushcfunction(L_main, godot_vector3_div,   "__div");     lua_setfield(L_main, -2, "__div");
-        lua_pushcfunction(L_main, godot_vector3_unm,   "__unm");     lua_setfield(L_main, -2, "__unm");
-        lua_pushcfunction(L_main, godot_vector3_eq,    "__eq");      lua_setfield(L_main, -2, "__eq");
-        lua_pushcfunction(L_main, godot_vector3_tostring, "__tostring"); lua_setfield(L_main, -2, "__tostring");
-        lua_pop(L_main, 1);
-
-        luaL_newmetatable(L_main, "Color3");
-        lua_pushcfunction(L_main, godot_color3_index, "__index"); lua_setfield(L_main, -2, "__index");
-        lua_pop(L_main, 1);
+        RegisterLuauValueMetatables(L_main);
 
         // ── Buscar game y workspace ───────────────────────────────────────────
         Node* game_node = nullptr;
@@ -1017,27 +1004,7 @@ public:
         lua_setfield(L_main, -2, "new");
         lua_setglobal(L_main, "Instance");
 
-        // ── Vector3 ───────────────────────────────────────────────────────────
-        lua_newtable(L_main);
-        lua_pushcfunction(L_main, godot_vector3_new,  "new");    lua_setfield(L_main, -2, "new");
-        {
-            LuauVector3* z = (LuauVector3*)lua_newuserdata(L_main, sizeof(LuauVector3));
-            z->x = 0; z->y = 0; z->z = 0;
-            luaL_getmetatable(L_main, "Vector3"); lua_setmetatable(L_main, -2);
-            lua_setfield(L_main, -2, "zero");
-
-            LuauVector3* o = (LuauVector3*)lua_newuserdata(L_main, sizeof(LuauVector3));
-            o->x = 1; o->y = 1; o->z = 1;
-            luaL_getmetatable(L_main, "Vector3"); lua_setmetatable(L_main, -2);
-            lua_setfield(L_main, -2, "one");
-        }
-        lua_setglobal(L_main, "Vector3");
-
-        // ── Color3 ────────────────────────────────────────────────────────────
-        lua_newtable(L_main);
-        lua_pushcfunction(L_main, godot_color3_new,      "new");     lua_setfield(L_main, -2, "new");
-        lua_pushcfunction(L_main, godot_color3_from_rgb, "fromRGB"); lua_setfield(L_main, -2, "fromRGB");
-        lua_setglobal(L_main, "Color3");
+        RegisterLuauValueGlobals(L_main);
 
         // task/require are installed once by GLExecutionDomain and resolve the current owner.
 
