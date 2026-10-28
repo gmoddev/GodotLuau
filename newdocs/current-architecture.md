@@ -151,9 +151,10 @@ stateless subset. ObjectID resolution remains in `gl_runtime.h`. Both qualified
 source commits are preserved. See the
 [second extraction record](shared-domains-validation.md#gl-013-second-generic-variant-extraction).
 
-## Instance property adapter (third GL-013 extraction, branch only)
+## Instance property adapter (third GL-013 extraction, integrated)
 
-Branch `refactor/gl-013-instance-reflection` starts from verified integrated main
+Normal merge `b7ec9fd614bd0e92ce418859de68b835180a7d7c` integrates both commits
+from `refactor/gl-013-instance-reflection`, based on prior main
 `752bb2063f61a533c3e59b481196a0d8aa88f1ba`. The generic `_gl_bridge` read/write
 blocks and Godot property-list membership helper now belong to
 `luau_instance_reflection.cpp`. Its forward-only header exposes three internal
@@ -184,7 +185,8 @@ replication hooks remain in their original owners. `Anchored` fallback uses the
 same extracted membership helper without moving its class-specific policy.
 No public Lua API, capability, pin, wire format or VM/cache lifetime changes.
 See the [analysis and qualification](shared-domains-validation.md#gl-013-third-instance-property-extraction).
-This branch is not merged; GL-013 remains open for remaining header coupling.
+The merge tree equals qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058`.
+GL-013 remains open for remaining header coupling.
 
 ## Script capabilities and scheduling
 

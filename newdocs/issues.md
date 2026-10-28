@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Incremental modularization underway; three extractions qualified | First two integrated; Instance property adapter qualified on branch |
+| GL-013 | P2 | Incremental modularization underway; three extractions qualified | First three extractions integrated; broader header coupling remains |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -472,7 +472,7 @@ errors and Lua non-ASCII strings retain the existing Latin-1 constructor behavio
 these are preserved, not silently fixed. The first extraction's historical
 measurements/limitations remain. GL-013 stays open.
 
-**Third extraction (2026-10-28, branch only):**
+**Third extraction (2026-10-28, integrated):**
 `refactor/gl-013-instance-reflection` starts from verified integrated main
 `752bb2063f61a533c3e59b481196a0d8aa88f1ba`. Exact property-list membership and
 the two generic `_gl_bridge` read/write blocks move to an owned Object adapter,
@@ -487,8 +487,10 @@ See [third extraction analysis and qualification](shared-domains-validation.md#g
 and its [separate manifest](evidence/gl013-instance-reflection-2026-10-28.json).
 Baseline production fixtures establish read-only/property/metadata/Offset/error
 and Changed behavior before code moves; those semantics are preserved. GL-013
-remains OPEN for broader Instance/service/editor header coupling. The third
-extraction remains unmerged. **THIRD EXTRACTION QUALIFIED**: Windows/Linux
+remains OPEN for broader Instance/service/editor header coupling. Normal merge
+`b7ec9fd614bd0e92ce418859de68b835180a7d7c` preserves both commits with a tree
+identical to qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058`.
+**THIRD EXTRACTION QUALIFIED AND INTEGRATED**: Windows/Linux
 Debug/Release core39/native28 pass (112 local actor results); hosted core
 `40643325332` passes39 per platform and native `40643325389` passes fresh Debug
 builds/process checks/all28 actors per platform. Exact revision/source/fixture

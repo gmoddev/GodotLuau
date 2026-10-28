@@ -34,6 +34,9 @@ source commits. See the [integration record](shared-domains-validation.md#first-
 The second generic Variant extraction is integrated by normal merge
 `21d10d91769ee81c85ae2e1d2029e683feeb51ba`; see its
 [integration record](shared-domains-validation.md#second-extraction-main-integration-2026-10-28).
+The third Instance property adapter is integrated by normal merge
+`b7ec9fd614bd0e92ce418859de68b835180a7d7c`; see its
+[integration record](shared-domains-validation.md#third-extraction-main-integration-2026-10-28).
 GL-013 stays open for incremental modularization; no broader lifetime or build-speed
 guarantee is inferred.
 

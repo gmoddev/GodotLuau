@@ -1828,3 +1828,29 @@ main remains `752bb2063f61a533c3e59b481196a0d8aa88f1ba`. This is compilation
 isolation and preserved exercised behavior, not a production distribution,
 full-lifetime/sanitizer or general build-speed guarantee. GL-013 and the independent
 qualification limitations remain open. Stop after this third extraction.
+
+
+## Third extraction main integration (2026-10-28)
+
+Starting local/remote main `752bb2063f61a533c3e59b481196a0d8aa88f1ba` normally
+merges qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058` as
+`b7ec9fd614bd0e92ce418859de68b835180a7d7c`. Both implementation `0009711` and
+final evidence `90776e7` remain ancestors; the entire merge tree equals that tip.
+The final source-branch commit changes four qualification/evidence files only.
+Source, fixtures, build/workflow configuration and pins equal tested implementation
+`00097117a56c37abaf5e060033e15e2d82614581`.
+
+Focused checks verify the qualified native fingerprint, exact unchanged inputs,
+three single reflection definitions and no old duplicate membership implementation,
+source discovery and declaration-only interface. Generic property, metadata/Offset,
+ObjectID and callback/registration contracts are unchanged. Existing Windows/Linux
+Debug/Release core39/native28 and hosted core/native qualification is reused within
+its documented scope; no Stage1 local matrix is repeated. Release jobs remain false
+with read-only permissions and updater admission false. Push/readback confirms the
+exact merge on origin main. GL-013 remains open.
+
+Fresh [core run 40645510990](https://github.com/gmoddev/GodotLuau/actions/runs/40645510990)
+and [native run 40645511072](https://github.com/gmoddev/GodotLuau/actions/runs/40645511072)
+target the merge. Initial status is in progress, with a 25-minute observation bound;
+results are recorded during the separately authorized fourth extraction. Pending
+jobs are not passes. The following integration documentation changes no tested input.

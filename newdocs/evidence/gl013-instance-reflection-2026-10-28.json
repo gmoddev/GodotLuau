@@ -549,5 +549,26 @@
     "No new native sanitizer or graphical/production qualification; GL-017/018 and previous exploratory Part shutdown/math-closure limitations remain",
     "Next candidate: gl_roblox_classname/gl_isa string mapping and Node class checks; explicitly audit the fallback pointer into a TU-local static CharString before moving; not implemented here"
   ],
-  "EvidenceFollowup": "This follow-up changes documentation/evidence only; source, fixtures, build configuration and workflow inputs equal implementation 00097117a56c37abaf5e060033e15e2d82614581"
+  "EvidenceFollowup": "This follow-up changes documentation/evidence only; source, fixtures, build configuration and workflow inputs equal implementation 00097117a56c37abaf5e060033e15e2d82614581",
+  "ReflectionMainIntegration": {
+    "StartingMain": "752bb2063f61a533c3e59b481196a0d8aa88f1ba",
+    "QualifiedImplementation": "00097117a56c37abaf5e060033e15e2d82614581",
+    "QualifiedTip": "90776e7c1c5ba2b087d4efc4b9ecc2e50a223058",
+    "Merge": "b7ec9fd614bd0e92ce418859de68b835180a7d7c",
+    "CompleteTreeIdentical": true,
+    "BothCommitsPreserved": true,
+    "FreshChecks": [
+      "qualified native fingerprint",
+      "source/test/build/workflow identity",
+      "single definitions/no duplicate",
+      "source discovery/linkage/declaration boundary",
+      "publication/updater admission false",
+      "git diff --check",
+      "remote SHA readback"
+    ],
+    "CoreRun": 40645510990,
+    "NativeRun": 40645511072,
+    "InitialObservation": "Both workflows in progress; follow-up recorded with fourth extraction",
+    "ObservationBoundMinutes": 25
+  }
 }
