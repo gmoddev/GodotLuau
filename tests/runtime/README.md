@@ -473,3 +473,19 @@ callback-destruction, reload and fresh-domain cases remain. No mock reflection
 implementation is used. Run the existing core and three native groups above;
 no separate configuration or workflow is required. See the
 [qualification record](../../newdocs/shared-domains-validation.md#gl-013-third-instance-property-extraction).
+
+
+### GL-013 class identity extraction
+
+`Integration.gd` exercises ClassName/IsA through production bindings in both domains:
+Folder, unmapped Beam/Trail/Node3D, native PointLight/OmniLight3D and Frame aliases,
+IntValue/script special cases, native and compatibility parents, unrelated/empty/
+invalid/case-sensitive names, hierarchy search consumers, repeated and sequential
+lookups, retained Lua strings, lookup inside native attribute callbacks, missing-
+member error formatting, destruction/replacement and fresh-domain initialization.
+Bounded allocation pressure requires an observed `gcinfo()` decrease before
+rechecking retained strings. Production Luau exposes gcinfo, not collectgarbage;
+the initial baseline fixture error is retained in the qualification record.
+Use the existing core and three native groups, without a new configuration or
+mock identity implementation. See the
+[audit and evidence](../../newdocs/shared-domains-validation.md#gl-013-fourth-class-identity-extraction).

@@ -1854,3 +1854,215 @@ and [native run 40645511072](https://github.com/gmoddev/GodotLuau/actions/runs/4
 target the merge. Initial status is in progress, with a 25-minute observation bound;
 results are recorded during the separately authorized fourth extraction. Pending
 jobs are not passes. The following integration documentation changes no tested input.
+
+
+Fresh main observation completes in 19m19s, within the bound. Both core jobs pass 39;
+both native jobs pass actual Debug builds, process checks,8/10/10 actors and final
+completeness checks. Checkout logs confirm exact pins; both diagnostic ZIP digests
+match metadata, with merge revision,71-input native fingerprint and original
+reflection fixture hash verified and no binary payload. Final main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6` differs from the tested merge only in
+integration documentation. The manifest's ReflectionMainIntegration follow-up
+preserves all prior measurements. Disposition: **INTEGRATED AND VERIFIED**.
+No fourth-extraction source is on main.
+
+## GL-013 fourth Class identity extraction
+
+Branch `refactor/gl-013-class-identity` starts from verified local/remote main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6`, following normal reflection integration.
+Only this fourth extraction is authorized for branch publication; it remains
+unmerged. No fifth extraction or unrelated runtime work is included.
+
+### Actual behavior, consumers and boundary
+
+The old `gl_roblox_classname(Node*)` first obtains a Godot String from get_class,
+then checks a fixed table of native/Roblox names. Null yields Instance. Examples
+include OmniLight3D -> PointLight, RobloxFrame -> Frame, ServerScript -> Script,
+Humanoid2D -> Humanoid and RobloxChat -> TextChatService; unmapped native names
+remain exact. The table is not a dynamic registry or object/name cache.
+`gl_isa` rejects null object/query, accepts Instance and exact mapped names,
+adds Part's BasePart/PVInstance, selected GUI GuiObject/GuiBase2d and script
+LuaSourceContainer compatibility, then falls back to Godot is_class. Empty,
+unknown and wrong-case names retain the baseline result.
+
+All consumers are in `luau_api.h`: generic ClassName, invalid-member error
+formatting, generic IsA and child/ancestor class searches. They do not retain a
+name pointer beyond the immediate operation. Class-specific PlayerObject and
+RobloxValue ClassName/IsA branches and Mouse ClassName remain in dispatch; notably
+IntValue's concrete identity differs from generic RobloxValue -> NumberValue.
+Moving these branches would add concrete-type/header/callback dependencies and
+risk changing compatibility; it is rejected. Moving only the table would leave
+its name/parent policy split across duplicate header implementations. The selected
+boundary owns the complete generic name mapping plus predicate, not wrapper
+resolution, class-specific overrides, traversal, errors or Lua registration.
+
+Source-order counterevidence matters: the Mouse-specific ClassName branch occurs
+after the unconditional generic ClassName return, so it is not an effective name
+override in this path. That baseline ordering is preserved; merely finding a
+branch labeled Mouse would not establish a public Mouse alias. No separate Mouse
+compatibility correction is bundled with this extraction.
+
+The new forward-only header has two declarations. `GetLuauClassName(Object*)`
+returns an owned Godot String; `IsLuauClass(Object*, const char*)` borrows the live
+object/query for the current call only. Object get_class/is_class are the only
+native operations, so a Node dependency is unnecessary. Callers still resolve
+ObjectIDs through gow_node at their existing points. The implementation includes
+its own header first, Godot Object/String and cstring only, with no Luau, domain,
+service, gameplay, property/conversion or implementation header. Dependencies
+point from Instance dispatch to this independent Godot adapter; there is no
+reverse include or registration/static initialization dependency.
+
+The entire table and predicate compare to baseline after the explicit function
+signature/name/storage adaptations. Names become PascalCase; the former Node
+parameter becomes its Object base. Unmapped return changes from a borrowed static
+buffer to the existing owned Godot String. IsA owns a local CharString before
+using the same strcmp/Godot rules; ClassName/error callers use `.utf8().get_data()`
+within the same full expression. The old implementations are removed, with two
+ordinary C++ definitions and no duplicate dispatch path. This internal value
+boundary can add String/UTF-8 conversion work for mapped names; runtime throughput
+is not benchmarked and no runtime speed claim is made. GL-019 code is unchanged.
+
+### Explicit string-storage lifetime audit
+
+| Storage/use | Baseline finding and new contract |
+| --- | --- |
+| Static name literals | Fixed table entries have static lifetime; no issue established. The immutable table remains, returning the same textual identity. |
+| Fallback storage | The actual type is a mutable TU-local static Godot CharString, not std::string or thread_local. Assignment from `c.utf8()` retains the COW buffer through CharString copy assignment; the temporary's destruction does not invalidate that retained storage. A later fallback lookup may overwrite it. |
+| Existing borrowers | IsA compares before another class lookup; ClassName immediately calls lua_pushstring; error formatting calls luaL_error. No class-name pointer is stored in a closure, cache, userdata or pending task. `gl_instance_fullname` uses parent/name traversal and does not call the identity helper. |
+| Luau copying | Pinned lapi.cpp lua_pushstring calls lua_pushlstring/strlen; luaS_newlstr interns or copies bytes into a TString. laux.cpp luaL_errorL formats into Lua strings before raising. Returned Lua strings do not borrow native name storage. |
+| Temporary conversions | Existing class-specific Value and fullname/tostring conversions use a temporary CharString alive through the full expression. New generic ClassName/error conversions use the same lifetime rule with an owned String result. IsA's named CharString remains alive through all comparisons/native inheritance checks. No pointer into a destroyed conversion temporary is returned. |
+| Sequential/reentrant use | Sequential lookups overwrite the old fallback buffer only after the current consumer has copied/compared it. Selected helpers make no Lua call/yield. Production code registers no Lua userdata destructor that performs a class lookup during string-push GC; the domain userthread hook owns thread bookkeeping. Supported native attribute callbacks can call class lookups, but no earlier native name borrow crosses their dispatch. Fixtures retain Lua strings across those calls. |
+| Concurrency | Domain Tick/managed callbacks run through the existing SceneTree host; no parallel native-binding dispatch is established here. Shared Server/Client domains are not OS threads. Unsupported cross-thread Godot/Luau use is neither required nor qualified. No claim of general concurrency safety is made from static storage appearance. |
+| New boundary | Returning an owned Godot String avoids changing three TU-local mutable buffers into one shared mutable global buffer and avoids exposing an overwrite-sensitive borrowed-pointer contract. There is no mutable identity buffer/cache in the new unit. Object ownership remains unchanged. |
+
+Disposition: **no confirmed lifetime defect in the examined supported call graph**.
+A stale-pointer test that intentionally retained the old private borrowed pointer
+past another lookup would exceed every existing caller's contract; it is not a
+reproduced production UAF. No separate defect/fix commit or new issue is invented.
+The owned result is an explicit compilation-interface decision, not a behavioral
+correction disguised as a mechanical move. No native object ownership or confirmed
+lifetime defect changes, so no new sanitizer matrix is run; existing GL-017/018,
+prior Part-shutdown evidence and retained math-closure limitations stay independent.
+
+### Baseline and focused qualification
+
+An immutable source archive and all Windows/Linux Debug/Release cold/header/core
+baseline measurements precede C++ edits. Extended production fixtures run on the
+unchanged Debug adapters on both workers. The first attempt fails at the fixture's
+unsupported `collectgarbage` call, after preceding identity assertions; logs are
+retained at `gl013-class/baseline-identity-debug`. Production Luau's lbaselib exposes
+gcinfo, not that entry point. The corrected fixture uses 20,000 bounded ephemeral
+allocations and requires an observed gcinfo decrease before asserting retained
+names again. No runtime capability is added to force collection. Both corrected
+baseline runs pass all eight actors at `baseline-identity-2-debug`.
+
+The fixture covers exact aliases, custom and Godot parents, unrelated/empty/
+unknown/wrong-case queries, repeated/sequential names from different classes,
+Lua-owned names retained after later lookups, attribute-callback lookups, existing
+error formatting, retained generic IsA on a destroyed wrapper, native replacement,
+GC pressure and fresh-domain ClassName/IsA. Existing owner callback destruction,
+script reload/shutdown, multiplayer and functional-animation groups remain. No
+mock or duplicate identity implementation substitutes for production bindings.
+
+### Measurements and qualification results
+
+All Windows/Linux Debug and Release candidate builds pass 39 core cases and 28 native
+actors per configuration (112 total). Extended production identity fixtures and all
+existing lifecycle/network/functional-animation groups pass. The corrected baseline
+passes 8 actors per platform. Exact source,fixture,library,result and log hashes plus
+object sizes are retained in the [separate manifest](evidence/gl013-class-identity-2026-10-28.json).
+Both workers match this checkout's 73-input native fingerprint
+`26680e318ee208040329105b03ae430cc530544d2418a26f8e4ba9e32192421d`.
+
+Same task snapshot path, workers, pinned dependencies, CMake/Ninja configurations
+and two jobs are used. Cold extension means 7 adapter+2 core units before and 8+2
+after, with pinned dependency objects warm. API-header touch rebuilds 3 units in
+both; identity-implementation touch rebuilds 1. Two existing MSVC Ast.h C4100 warnings
+remain in cold core builds; no new native warnings and Linux zero. CMake actually
+compiles/links the unit in all four configurations; SCons' unchanged core glob
+includes it by source inspection only. Linux nm -C confirms two single ordinary
+identity definitions. No SCons package build is newly claimed.
+
+| Configuration | Cold seconds before/after | API touch seconds before/after | Identity touch seconds | Adapter object bytes before/after | Extension bytes before/after |
+| --- | --- | --- | --- | --- | --- |
+| Windows Debug | 21.708 / 28.911 | 19.843 / 23.189 | 0.926 | 91,177,976 / 91,257,778 | 24,193,536 / 24,192,000 |
+| Windows Release | 30.483 / 30.441 | 27.929 / 28.067 | 1.301 | 49,149,615 / 49,190,958 | 4,073,472 / 4,073,984 |
+| Linux Debug | 22.899 / 22.951 | 21.948 / 21.797 | 1.266 | 68,053,336 / 68,447,240 | 79,138,248 / 79,240,992 |
+| Linux Release | 42.123 / 42.025 | 40.720 / 40.421 | 0.615 | 15,724,648 / 15,742,904 | 12,516,600 / 12,516,600 |
+
+These are single trials with warm dependency objects, uncontrolled ambient worker
+load, no full dependency-clean timing and no compiler peak RSS. The Windows Debug
+sample varies substantially; no overall speedup or smaller-binary claim is made.
+The demonstrated boundary is one-unit implementation editing. Header LF size falls
+3,389 bytes/47 lines: 278,169/4,885 -> 274,780/4,838. The interface is 748 bytes/15 lines;
+implementation 3,624 bytes/57 lines. Remaining broad API includes still reach three
+consuming units. Owned-string runtime costs are not benchmarked.
+
+Reproduction follows the preceding CMake/core/native commands using source roots
+`C:/Sandbox/Codex/Builds/GodotLuau/gl013-class/source` and `/work/gl013-class/source`,
+existing Debug/Release build caches and two jobs. Private worker drivers run
+baseline/candidate in each configuration, record cold-extension/touch-api/touch-class/
+core/native logs and measurements.json, and preserve baseline fixture failures.
+Only validated task-source/core-test objects are removed for cold candidate runs;
+dependency objects remain. Touch operations change timestamps only.
+
+Local disposition: qualified across all four configurations. Hosted core/native
+observation follows publication with a 25-minute bound; pending jobs are not passes.
+GL-013 remains open. Recommended next investigation is stateless inert-signal
+construction and lowercase signal aliases, separately from stateful connection/
+owner handling. No fifth extraction, ownership/configuration change, new capability,
+workflow, updater distribution or release publication is included.
+
+Implementation `9320b3e4c69b6c883fa37c6fed6769b0acbe5f40` is pushed and remote
+branch identity read back; main remains `4e3db8496e189b6e09148b015eff28b1c8ae29b6`.
+Fresh [core run 40646744969](https://github.com/gmoddev/GodotLuau/actions/runs/40646744969)
+passes 39 on both platforms; logs confirm the unchanged pins. Fresh
+[native run 40646744985](https://github.com/gmoddev/GodotLuau/actions/runs/40646744985)
+is initially building under the 25-minute observation bound. Both worker caches are
+restored to their original source roots without rebuilding; Linux is verified idle
+then stopped, and the Windows task-process scan is empty. Prior artifacts remain.
+
+
+Final hosted observation completes in 16m06s, within the 25-minute bound. Both
+[core jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40646744969) pass 39;
+both [native jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40646744985)
+pass fresh actual Debug builds, process checks (Linux 14; Windows 8 plus 6 Linux-only
+skips), verified Godot provisioning, all 28 actors and final completeness gates.
+Hosted MSVC19.44.35229.0/GCC13.3.0 and exact dependency pins are confirmed in logs.
+Both diagnostic ZIP digests match metadata; their summaries verify implementation
+`9320b3e4c69b6c883fa37c6fed6769b0acbe5f40`, the 73-input native fingerprint,
+extended fixture hash and 8/10/10 zero-exit actors. Only diagnostics are retained,
+without binary payload. Exact jobs, hashes and timings are in the manifest.
+
+Disposition: **FOURTH EXTRACTION QUALIFIED**, on its unmerged development branch.
+No separate supported-call lifetime defect was confirmed. The explicit owned-value
+interface avoids shared mutable name-buffer coupling while preserving exercised
+Lua behavior. Final evidence changes no source/fixture/build/workflow input; main
+remains `4e3db8496e189b6e09148b015eff28b1c8ae29b6`. This qualifies compilation
+isolation and the exercised compatibility cases, not general runtime throughput,
+threaded native access, sanitizer/production distribution or complete GL-013 closure.
+The initial fixture failure and all prior extraction evidence remain. Stop after
+this fourth extraction.
+
+
+A final full-range `git diff --check` caught a trailing blank line in the newly
+added implementation (the earlier working-tree check did not inspect untracked
+files). Published history is preserved: whitespace-only commit
+`688fd5bc77893f7f5728d6e7ad44f2fcf4b200ba` removes exactly one EOF newline. Every
+preceding byte equals qualified implementation `9320b3e`; all other native,fixture,
+build/workflow and dependency inputs remain identical. The final implementation
+is 3,623 LF bytes/56 lines; original measured 3,624/57 and source hashes remain as
+historical evidence. The final 73-input fingerprint is
+`653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3`.
+
+Completed local and hosted implementation qualification is reused for identical
+C++ code; no expensive local matrix is repeated for trailing EOF whitespace.
+Fresh [core run 40648770262](https://github.com/gmoddev/GodotLuau/actions/runs/40648770262)
+passes 39 per platform. Fresh [native run 40648770257](https://github.com/gmoddev/GodotLuau/actions/runs/40648770257)
+is still building on both platforms after the bounded initial observation (about 90s,
+final snapshot 98s from 07:14:16Z). Those pending jobs are not claimed passed; the
+completed source-qualification runs above target 9320b3e. The manifest records this
+follow-up separately rather than silently replacing tested fingerprints.
+**FOURTH EXTRACTION QUALIFIED** applies to the unchanged implementation; latest
+whitespace-follow-up native CI remains pending at this snapshot. Final evidence
+changes no source/input relative to 688fd5b, and remote main remains 4e3db84.

@@ -569,6 +569,34 @@
     "CoreRun": 40645510990,
     "NativeRun": 40645511072,
     "InitialObservation": "Both workflows in progress; follow-up recorded with fourth extraction",
-    "ObservationBoundMinutes": 25
+    "ObservationBoundMinutes": 25,
+    "FinalMain": "4e3db8496e189b6e09148b015eff28b1c8ae29b6",
+    "Disposition": "INTEGRATED AND VERIFIED",
+    "FinalObservation": "Fresh Windows/Linux core39 and native28 all pass; exact merge/source/fixture identity verified in digest-checked diagnostic ZIPs, with no binary payload",
+    "CoreJobs": {
+      "Windows": 122673283657,
+      "Linux": 122673285064
+    },
+    "NativeJobs": {
+      "Windows": 122673283626,
+      "Linux": 122673284002
+    },
+    "NativeStartedUTC": "2026-10-28T06:42:41Z",
+    "NativeCompletedUTC": "2026-10-28T07:02:00Z",
+    "NativeElapsedSeconds": 1159,
+    "Artifacts": [
+      {
+        "id": 12798445746,
+        "name": "runtime-native-Windows-Debug",
+        "bytes": 45785,
+        "digest": "sha256:9e24d6901cadc18f05e9cc7e52ab63500fe23d04b1ab686b8b465fd26122eaf7"
+      },
+      {
+        "id": 12797517737,
+        "name": "runtime-native-Linux-Debug",
+        "bytes": 50473,
+        "digest": "sha256:5f5724425c0bb42144bae234806f5004086eda8aff86a0cb7535e207ad1a1142"
+      }
+    ]
   }
 }

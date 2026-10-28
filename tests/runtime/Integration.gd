@@ -174,6 +174,74 @@ game:SetAttribute('%s', true)
         Check(NativeBridge.get("multiplayer") == NativeMultiplayer, "Read-only native property changed")
         Check(not NativeBridge.has_meta("_glp_multiplayer"), "Read-only write created fallback metadata")
         Check(NativeBridge.get("process_priority") == 6, "Reflected write did not reach Godot")
+    # Class identity strings must survive other lookups, callbacks, GC and deletion.
+    for Type in ["ServerScript", "LocalScript"]:
+        var Prefix := "IdentityServer" if Type == "ServerScript" else "IdentityClient"
+        CreateScript(Type, Prefix, """
+local Folder = Instance.new('Folder', game)
+local Beam = Instance.new('Beam', Folder)
+local Trail = Instance.new('Trail', Folder)
+local Model = Instance.new('Model', Folder)
+local Light = Instance.new('PointLight', Folder)
+local Frame = Instance.new('Frame', Folder)
+local Value = Instance.new('IntValue', Folder)
+local Names = {Folder.ClassName, Beam.ClassName, Trail.ClassName, Model.ClassName, Light.ClassName, Frame.ClassName, Value.ClassName, script.ClassName}
+local Expected = {'Folder', 'Beam', 'Trail', 'Node3D', 'PointLight', 'Frame', 'IntValue', script:IsA('Script') and 'Script' or 'LocalScript'}
+for Index, Name in ipairs(Names) do assert(Name == Expected[Index]) end
+assert(Folder:IsA('Folder') and Folder:IsA('Node') and Folder:IsA('Instance'))
+assert(Beam:IsA('Beam') and Beam:IsA('Node3D') and Beam:IsA('Node'))
+assert(Light:IsA('PointLight') and Light:IsA('OmniLight3D') and Light:IsA('Light3D'))
+assert(Frame:IsA('Frame') and Frame:IsA('GuiObject') and Frame:IsA('GuiBase2d') and Frame:IsA('Control'))
+assert(Value:IsA('IntValue') and Value:IsA('ValueBase') and not Value:IsA('NumberValue'))
+assert(script:IsA('LuaSourceContainer'))
+for _, Query in ipairs({'', 'NoSuchNativeClass', 'Humanoid', 'beam', 'Part'}) do
+    assert(not Beam:IsA(Query))
+end
+assert(Folder:FindFirstChildWhichIsA('Node3D') == Beam)
+assert(Beam:FindFirstAncestorWhichIsA('Folder') == Folder)
+for Index = 1, 40 do
+    assert(Beam.ClassName == 'Beam' and Trail.ClassName == 'Trail' and Model.ClassName == 'Node3D')
+    assert(Beam:IsA('Node3D') and not Trail:IsA('Beam'))
+    for NameIndex, Name in ipairs(Names) do assert(Name == Expected[NameIndex]) end
+end
+local ErrorOk, ErrorText = pcall(function() return Beam.MissingClassIdentityMember end)
+assert(not ErrorOk and string.find(ErrorText, 'MissingClassIdentityMember is not a valid member of Beam', 1, true))
+local CallbackDone = false
+Folder:GetAttributeChangedSignal('IdentityProbe'):Connect(function()
+    local Before = Beam.ClassName
+    local Nested = Trail.ClassName
+    assert(Before == 'Beam' and Nested == 'Trail' and Light:IsA('Light3D'))
+    Folder:SetAttribute('NestedIdentity', Model.ClassName)
+    assert(Before == 'Beam' and Beam.ClassName == Before)
+    CallbackDone = true
+end)
+Folder:SetAttribute('IdentityProbe', 1)
+assert(CallbackDone and Folder:GetAttribute('NestedIdentity') == 'Node3D')
+local RetainedIsA = Beam.IsA
+Beam:Destroy()
+for Index = 1, 10 do
+    if Beam.ClassName == nil then break end
+    task.wait()
+end
+assert(Beam.ClassName == nil and not RetainedIsA(Beam, 'Instance'))
+local Replacement = Instance.new('Trail', Folder)
+assert(Replacement ~= Beam and Replacement.ClassName == 'Trail')
+assert(Names[2] == 'Beam' and Names[3] == 'Trail')
+-- Production Luau exposes gcinfo, not an explicit collectgarbage entry point.
+local PreviousMemory = gcinfo()
+local ObservedCollection = false
+for Index = 1, 20000 do
+    local Garbage = {Trail.ClassName, Model.ClassName, string.rep('identity-gc-', 20) .. tostring(Index)}
+    local Memory = gcinfo()
+    if Memory < PreviousMemory then ObservedCollection = true end
+    PreviousMemory = Memory
+end
+assert(ObservedCollection)
+for Index, Name in ipairs(Names) do assert(Name == Expected[Index]) end
+Folder:Destroy()
+game:SetAttribute('%s', true)
+""" % Prefix, Game)
+        await Until(Prefix)
     CreateScript("ModuleScript", "Counter", """
 _G.Initializations = (_G.Initializations or 0) + 1
 task.wait(0.02)
@@ -408,7 +476,7 @@ game:SetAttribute('LuaSubscribed', true)
     Game.name = "Game"
     root.add_child(Game)
     current_scene = Game
-    CreateScript("ServerScript", "FreshScene", "assert(_G.Initializations == nil and shared.Counter == nil and script.Name == 'FreshScene'); assert(Vector3.new(1, 2, 3) + Vector3.one == Vector3.new(2, 3, 4) and Color3.fromRGB(255, 0, 0).R == 1); game:SetAttribute('FreshDomain', true)", Game)
+    CreateScript("ServerScript", "FreshScene", "assert(_G.Initializations == nil and shared.Counter == nil and script.Name == 'FreshScene'); assert(script.ClassName == 'Script' and script:IsA('LuaSourceContainer') and game.ClassName == 'Node'); assert(Vector3.new(1, 2, 3) + Vector3.one == Vector3.new(2, 3, 4) and Color3.fromRGB(255, 0, 0).R == 1); game:SetAttribute('FreshDomain', true)", Game)
     Game.add_child(Service)
     await Until("FreshDomain")
     await process_frame

@@ -3,6 +3,7 @@
 
 #include "luau_value_bindings.h"
 #include "luau_instance_reflection.h"
+#include "luau_class_identity.h"
 #include "gl_errors.h"
 #include "gl_stackguard.h"
 #include "folder.h"
@@ -234,54 +235,6 @@ static void _gl_push_connection(lua_State* L, Node* node, int ref) {
     lua_setmetatable(L, -2);
 }
 
-// ── ClassName / IsA estilo Roblox ────────────────────────────────────────────
-// Devuelve el nombre de clase Roblox a partir de la clase Godot interna.
-static const char* gl_roblox_classname(Node* n) {
-    if (!n) return "Instance";
-    String c = n->get_class();
-    struct M { const char* g; const char* r; };
-    static const M map[] = {
-        {"RobloxPart","Part"},{"Folder","Folder"},{"Humanoid","Humanoid"},{"Humanoid2D","Humanoid"},
-        {"RobloxPlayer","Player"},{"RobloxPlayer2D","Player"},
-        {"OmniLight3D","PointLight"},{"SpotLight3D","SpotLight"},{"DirectionalLight3D","DirectionalLight"},
-        {"RemoteEventNode","RemoteEvent"},{"RemoteFunctionNode","RemoteFunction"},{"BindableEventNode","BindableEvent"},
-        {"RobloxSound","Sound"},{"RobloxSoundGroup","SoundGroup"},{"RobloxTween","Tween"},{"TweenService","TweenService"},
-        {"ScreenGui","ScreenGui"},{"RobloxFrame","Frame"},{"RobloxTextLabel","TextLabel"},
-        {"RobloxTextButton","TextButton"},{"RobloxTextBox","TextBox"},{"RobloxImageLabel","ImageLabel"},
-        {"RobloxScrollingFrame","ScrollingFrame"},{"ServerScript","Script"},{"LocalScript","LocalScript"},
-        {"ModuleScript","ModuleScript"},{"RobloxTool","Tool"},{"ClickDetector","ClickDetector"},
-        {"ProximityPrompt","ProximityPrompt"},{"SpawnLocation","SpawnLocation"},{"BillboardGui","BillboardGui"},
-        {"SurfaceGui","SurfaceGui"},{"Motor6D","Motor6D"},{"AnimationObject","Animation"},{"AnimationTrack","AnimationTrack"},
-        {"RobloxWorkspace","Workspace"},{"RobloxWorkspace2D","Workspace"},{"RobloxChat","TextChatService"},
-        {"RobloxTerrain","Terrain"},{"RobloxValue","NumberValue"},{"PlayerObject","Player"},
-        {"BodyVelocity","BodyVelocity"},{"BodyPosition","BodyPosition"},{"BodyForce","BodyForce"},
-        {"BodyAngularVelocity","BodyAngularVelocity"},{"BodyGyro","BodyGyro"},
-        {"WeldConstraint","WeldConstraint"},{"HingeConstraint","HingeConstraint"},
-        {"BallSocketConstraint","BallSocketConstraint"},{"RodConstraint","RodConstraint"},{"SpringConstraint","SpringConstraint"},
-        {nullptr,nullptr}
-    };
-    for (int i = 0; map[i].g; i++) if (c == map[i].g) return map[i].r;
-    // Servicios / nodos no mapeados conservan su nombre (Players, Lighting, ReplicatedStorage...)
-    static CharString buf; buf = c.utf8(); return buf.get_data();
-}
-
-// IsA estilo Roblox: nombre exacto + jerarquía pragmática + compat con clase Godot.
-static bool gl_isa(Node* n, const char* q) {
-    if (!n || !q) return false;
-    if (strcmp(q, "Instance") == 0) return true;          // todo es Instance
-    const char* rc = gl_roblox_classname(n);
-    if (strcmp(rc, q) == 0) return true;
-    if (strcmp(rc, "Part") == 0 && (strcmp(q,"BasePart")==0 || strcmp(q,"PVInstance")==0)) return true;
-    bool gui = (strcmp(rc,"Frame")==0||strcmp(rc,"TextLabel")==0||strcmp(rc,"TextButton")==0||
-                strcmp(rc,"TextBox")==0||strcmp(rc,"ImageLabel")==0||strcmp(rc,"ScrollingFrame")==0);
-    if (gui && (strcmp(q,"GuiObject")==0 || strcmp(q,"GuiBase2d")==0)) return true;
-    if ((strcmp(rc,"Script")==0||strcmp(rc,"LocalScript")==0||strcmp(rc,"ModuleScript")==0)
-        && strcmp(q,"LuaSourceContainer")==0) return true;
-    // Compat: aceptar también el nombre de clase Godot (IsA("RobloxPart"), IsA("Node")...)
-    if (n->is_class(q)) return true;
-    return false;
-}
-
 // ════════════════════════════════════════════════════════════════════
 //  Instance methods (accessible from Lua)
 ////
@@ -397,7 +350,7 @@ static int method_findfirstancestorofclass(lua_State* L) {
     if (!w || !gow_node(w)) { lua_pushnil(L); return 1; }
     Node* cur = gow_node(w)->get_parent();
     while (cur) {
-        if (gl_isa(cur, cls)) { wrap_node(L, cur); return 1; }
+        if (IsLuauClass(cur, cls)) { wrap_node(L, cur); return 1; }
         cur = cur->get_parent();
     }
     lua_pushnil(L); return 1;
@@ -440,7 +393,7 @@ static int method_findfirstchild_whichisa(lua_State* L) {
     if (!w || !gow_node(w)) { lua_pushnil(L); return 1; }
     for (int i = 0; i < gow_node(w)->get_child_count(); i++) {
         Node* ch = gow_node(w)->get_child(i);
-        if (ch && gl_isa(ch, cls)) { wrap_node(L, ch); return 1; }
+        if (ch && IsLuauClass(ch, cls)) { wrap_node(L, ch); return 1; }
     }
     lua_pushnil(L); return 1;
 }
@@ -452,7 +405,7 @@ static int method_findfirstchildofclass(lua_State* L) {
         TypedArray<Node> ch = gow_node(w)->get_children();
         for (int i = 0; i < ch.size(); i++) {
             Node* n = Object::cast_to<Node>(ch[i]);
-            if (n && gl_isa(n, cls)) { wrap_node(L, n); return 1; }
+            if (n && IsLuauClass(n, cls)) { wrap_node(L, n); return 1; }
         }
     }
     lua_pushnil(L); return 1;
@@ -495,7 +448,7 @@ static int method_getdescendants(lua_State* L) {
 static int method_isa(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     const char* cls = luaL_checkstring(L, 2);
-    lua_pushboolean(L, w && gl_isa(gow_node(w), cls));
+    lua_pushboolean(L, w && IsLuauClass(gow_node(w), cls));
     return 1;
 }
 
@@ -1355,7 +1308,7 @@ static int godot_object_index(lua_State* L) {
 
     // ── Propiedades de Instance ───────────────────────────────────
     if (strcmp(key, "Name")      == 0) { lua_pushstring(L, String(n->get_name()).utf8().get_data()); return 1; }
-    if (strcmp(key, "ClassName") == 0) { lua_pushstring(L, gl_roblox_classname(n)); return 1; }
+    if (strcmp(key, "ClassName") == 0) { lua_pushstring(L, GetLuauClassName(n).utf8().get_data()); return 1; }
     if (strcmp(key, "Parent")    == 0) { wrap_node(L, n->get_parent()); return 1; }
 
     // ── Players ───────────────────────────────────────────────────
@@ -3961,7 +3914,7 @@ static int godot_object_index(lua_State* L) {
     // COMO ROBLOX: indexar un miembro que no existe es un ERROR, no nil.
     // (Para sondear sin error existen FindFirstChild / pcall, igual que alla.)
     luaL_error(L, "%s is not a valid member of %s \"%s\"",
-               key, gl_roblox_classname(n), gl_instance_fullname(n).utf8().get_data());
+               key, GetLuauClassName(n).utf8().get_data(), gl_instance_fullname(n).utf8().get_data());
     return 0;
 }
 
