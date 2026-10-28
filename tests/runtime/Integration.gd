@@ -49,6 +49,18 @@ func Run() -> void:
     # Exercise the native value bindings in both domains through production APIs.
     for Type in ["ServerScript", "LocalScript"]:
         var Prefix := "ValueServer" if Type == "ServerScript" else "ValueClient"
+        var NativeBridge: Node = ClassDB.instantiate("Beam")
+        NativeBridge.name = Prefix + "Native"
+        Game.add_child(NativeBridge)
+        NativeBridge.set_meta("_glp_NativeInt", -17)
+        NativeBridge.set_meta("_glp_NativeBool", false)
+        NativeBridge.set_meta("_glp_NativeFloat", 2.5)
+        NativeBridge.set_meta("_glp_NativeString", "héλ")
+        NativeBridge.set_meta("_glp_NativeVector", Vector3(8, 9, 10))
+        NativeBridge.set_meta("_glp_NativeColor", Color(0.25, 0.5, 0.75))
+        NativeBridge.set_meta("_glp_NativeArray", [1, 2])
+        NativeBridge.set_meta("_glp_NativeDictionary", {"Value": 1})
+        NativeBridge.set_meta("_glp_NativeObject", Game)
         CreateScript(Type, Prefix, """
 local Value = Vector3.new(3, 4, 0)
 assert(Value.X == 3 and Value.y == 4 and Value.Z == 0 and Value.Magnitude == 5)
@@ -75,12 +87,50 @@ Bridge.TestVector = Value
 Bridge.TestColor = Color
 assert(Bridge.TestVector == Value and Bridge.TestColor.R == Color.R)
 assert(Bridge == game:FindFirstChild(Bridge.Name) and Bridge.Parent == game)
+local Native = game:FindFirstChild(script.Name .. 'Native')
+assert(Native.NativeInt == -17 and Native.NativeBool == false and Native.NativeFloat == 2.5)
+assert(Native.NativeString == 'héλ' and Native.NativeVector == Vector3.new(8, 9, 10))
+assert(Native.NativeColor.R == 0.25 and Native.NativeColor.G == 0.5 and Native.NativeColor.B == 0.75)
+for _, Key in ipairs({'NativeArray', 'NativeDictionary', 'NativeObject'}) do
+    local ReadOk, ReadError = pcall(function() return Native[Key] end)
+    assert(not ReadOk and string.find(ReadError, Key .. ' is not a valid member', 1, true))
+end
+for _, Number in ipairs({0, -3.5, 9007199254740991}) do
+    Native.RoundTrip = Number
+    assert(Native.RoundTrip == Number)
+end
+Native.RoundTrip = false
+assert(Native.RoundTrip == false)
+Native.RoundTrip = true
+assert(Native.RoundTrip == true)
+Native.RoundTrip = 'héλ'
+-- Preserve the existing Godot String(const char*) Latin-1 interpretation.
+assert(Native.RoundTrip == 'hÃ©Î»')
+Native.RoundTrip = 'scalar string'
+assert(Native.RoundTrip == 'scalar string')
+Native.RoundTrip = 42
+Native.RoundTrip = nil
+assert(Native.RoundTrip == 42)
+for _, Unsupported in ipairs({{}, {1, 2}, function() end, game, newproxy(true)}) do
+    Native.RoundTrip = Unsupported
+    assert(Native.RoundTrip == 42)
+end
+Native.RoundTrip = {Offset = 17}
+assert(Native.RoundTrip == 17)
+Native.RoundTrip = {Offset = 'invalid'}
+assert(Native.RoundTrip == 17)
+Native.process_priority = -5
+assert(Native.process_priority == -5)
+local AddOk, AddError = pcall(function() return Native.RoundTrip + Color end)
+assert(not AddOk and type(AddError) == 'string')
 Bridge:Destroy()
 for Index = 1, 10 do
     if Bridge.Name == nil then break end
     task.wait()
 end
 assert(Bridge.Name == nil)
+Native.RoundTrip = Bridge
+assert(Native.RoundTrip == 17)
 game:SetAttribute('%s', true)
 """ % Prefix, Game)
         await Until(Prefix)

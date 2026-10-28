@@ -127,6 +127,28 @@ Both CMake and SCons discover core `.cpp` sources; the new implementation must
 remain in that discovered set. Other large headers and their remaining coupling
 remain GL-013 work, not additional extractions in this change.
 
+## Generic Variant conversion (second GL-013 extraction)
+
+Branch `refactor/gl-013-variant-bindings`, based on integrated main
+`174efcc2bdb59c5072ba21d27645c5380c61e8e9`, separates the two generic conversion
+functions into `luau_variant_bindings.cpp`. Its header forward-declares only
+`lua_State` and Godot `Variant`, exposing the existing two boolean conversion
+functions. The implementation depends on public Luau, Godot value types and the
+native value-binding interface; it includes no Node, Instance dispatch, ObjectID
+wrapper, service, execution-domain or large implementation header. There is no
+registration, retained state or new initialization order.
+
+Luau numbers/booleans/strings and exact Vector3/Color3 userdata convert to Variants.
+Godot BOOL/INT/FLOAT/STRING/VECTOR3/COLOR convert back, with the inherited double
+numeric and C-string conventions. Nil, collections, functions and Instance
+references are unsupported by these helpers; false preserves the output/stack
+contract. The existing caller still decides whether to ignore, raise its existing
+invalid-member error, or use
+the table-Offset fallback. `gl_has_property`, property dispatch/reflection and
+metadata fallback remain in `luau_api.h`; ObjectID resolution remains in
+`gl_runtime.h`. This branch is not merged into main. See the
+[second extraction record](shared-domains-validation.md#gl-013-second-generic-variant-extraction).
+
 ## Script capabilities and scheduling
 
 Domain setup publishes `_FileAccess` and `_HTTP` into gameplay VMs.

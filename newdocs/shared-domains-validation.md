@@ -183,6 +183,119 @@ authorized second extraction. Integration documentation changes no tested input.
 GL-013 remains open; one further extraction is separately authorized on a new
 branch from verified integrated main, without permission to merge that work.
 
+## GL-013 second generic Variant extraction
+
+Stage 2 starts from verified integrated main
+`174efcc2bdb59c5072ba21d27645c5380c61e8e9` on
+`refactor/gl-013-variant-bindings`, not the historical first-extraction branch.
+Its scope is only generic Luau/Godot value conversion; the branch is not merged.
+
+### Selection, dependencies and preserved contracts
+
+`gl_luau_to_variant` and `gl_variant_to_luau` were static free-function definitions
+in `luau_api.h`, duplicated per including translation unit. Their only direct
+consumers are the generic property read/write paths in that header: two reverse
+conversion sites and one forward conversion site. They use public Luau calls,
+Godot value types and the first extraction's exact-metatable checks/allocation.
+They neither resolve native objects nor access VM internals, domain ownership,
+callbacks or mutable static state. Registration remains entirely with existing
+domain/value initialization; conversion needs the same already-created metatables.
+
+`gl_has_property` inspects Godot Object property lists and remains TU-local with
+Instance dispatch. Read/write dispatch also owns native liveness checks via
+`gow_node`, property lookup/set/get, metadata fallbacks, table-Offset handling and
+invalid-member errors. Those functions are not generic conversion and are not
+moved together just because they shared a header. A larger Instance/property
+adapter would require broader lifetime/dispatch contracts; it is rejected for
+this extraction. A new collection/object conversion framework is also rejected:
+the existing generic helper intentionally does not support those types.
+
+The new `luau_variant_bindings.h` has only forward declarations for `lua_State`
+and `godot::Variant`, and the two existing boolean function signatures. Its
+implementation includes that header first, `luau_value_bindings.h`, public Lua,
+Godot Variant/String/Vector3/Color and cstdint headers. It includes no Node, ObjectID
+wrapper, service, domain, `luau_script.h` or `luau_api.h`. Dependencies point from
+Instance dispatch to conversion to value helpers, with no reverse include cycle.
+The value module remains Godot-free. The two bodies are byte-for-byte unchanged;
+only their internal-to-TU linkage becomes one ordinary definition each. No new
+registration, static initialization, state, public Lua API or ownership rule exists.
+
+Forward conversion accepts numbers as Godot double, bool, strings and exact
+Vector3/Color3 userdata. Reverse conversion accepts BOOL/INT/FLOAT/STRING/VECTOR3/
+COLOR and retains double numeric semantics. Unsupported conversion returns false:
+forward leaves the output and stack unchanged, reverse pushes nothing. The
+Instance caller preserves existing ignored writes, table-Offset fallback and
+invalid-member errors. Arrays/dictionaries/Instances are not newly supported.
+
+The baseline fixture initially expected unsupported reads to return nil; both
+workers showed the existing invalid-member error instead. A second initial
+expectation of non-ASCII string round-trip equality also failed: pinned
+godot-cpp `src/variant/char_string.cpp:159-160` implements `String(const char*)`
+with `string_new_with_latin1_chars`. Thus Lua UTF-8 bytes for `héλ` return as
+`hÃ©Î»`; native Godot strings still return UTF-8 correctly. Both behaviors are
+preserved explicitly by golden assertions, without an encoding fix. Initial
+failure artifacts remain in `gl013-variant/baseline-conversions` and
+`baseline-conversions-2`; the corrected fixture passes all eight baseline actors
+on both platforms at `baseline-conversions-3`. No runtime logic changed to obtain
+those passes. Existing first-extraction math/physics limitations remain separate.
+
+`Integration.gd` extends the existing Server/Client cases with native INT/BOOL/
+FLOAT/STRING/VECTOR3/COLOR reads; numeric, boolean and string writes; retained
+vector/color round trips; nil/unsupported table, array, function, userdata and
+live/destroyed Instance rejection preserving the prior value; table-Offset
+fallback; reflected integer property access; and caught error propagation.
+Existing wrapper destruction and fresh-domain checks remain. These are real
+production property/converter calls, not a mock or duplicate implementation.
+
+### Measurements and qualification
+
+Baseline source is archived before implementation to an isolated task snapshot;
+the same snapshot path, worker hardware, pinned dependencies, compiler/configuration
+and two build jobs are used before/after. Pinned vendor objects stay warm; task
+adapter/core objects are cold for each cold measurement. Baseline compiles five
+adapter plus two core-test units; candidate adds one converter unit. API-header
+touch still rebuilds three adapter units; converter-implementation touch is measured
+separately. Object and extension sizes, warnings, exact results/log hashes and
+limitations are recorded in the
+[second extraction manifest](evidence/gl013-variant-extraction-2026-10-28.json).
+Previous measurements remain historical and are not overwritten. Full dependency-
+clean time and peak compiler RSS are not measured; a single trial establishes no
+general speed claim.
+
+Local Windows/Linux Debug and Release builds pass, each with 39 core cases and
+all 28 required native actors (112 total); both final baseline conversion runs
+also pass eight actors. Native source fingerprint is
+`24dd210d77dade0a6ae5279402f4c31c61d57049636f6a505b1a4e3934b08f17` for 69 inputs.
+Changed source/fixture hashes match both workers and this checkout. CMake compiles
+and links the new unit in all four configurations; Linux SCons dry-run discovery
+lists it, and `nm -C` shows exactly one definition of each converter. Both build
+systems retain their existing `src/core/*.cpp` discovery; no new build configuration
+or workflow is needed. The API header decreases from 281,472 bytes/4,946 lines to
+280,183 bytes/4,923 lines; the interface is 688 bytes/15 lines and implementation
+1,601 bytes/36 lines, using normalized LF bytes.
+
+| Configuration | Dependency-warm cold before/after seconds | API-header touch before/after seconds | Converter touch seconds | Extension bytes before/after |
+| --- | --- | --- | --- | --- |
+| Windows Debug | 21.118 / 25.409 | 19.307 / 23.181 | 1.023 | 24,192,000 / 24,192,000 |
+| Windows Release | 31.639 / 34.776 | 30.746 / 32.462 | 1.361 | 4,073,984 / 4,073,984 |
+| Linux Debug | 22.692 / 22.792 | 21.691 / 21.742 | 1.165 | 78,938,368 / 79,034,768 |
+| Linux Release | 41.722 / 41.924 | 40.270 / 40.421 | 0.564 | 12,515,920 / 12,516,144 |
+
+These single samples demonstrate a one-unit implementation edit boundary, not
+overall faster compilation or smaller binaries. Exact object sizes are retained
+in the manifest. Reproduction uses the first extraction's commands with the new snapshot
+and `luau_variant_bindings.cpp` as the implementation-touch input. Both Windows/
+Linux Debug and Release core/native gates pass; existing hosted core/native Debug
+qualification is pending the source push. Hosted observation is bounded at 25 minutes after push;
+pending results never count as passes. No new sanitizer configuration is justified
+by this ownership-preserving movement.
+
+GL-013 remains open. The next separately authorized candidate is a bounded Instance
+reflection adapter around `gl_has_property`, after mapping property/fallback and
+lifetime contracts. Broad Instance dispatch and service/editor header dependencies
+remain. No third extraction or unrelated runtime/dependency/publication change is
+part of this task.
+
 ## GL-011 independent core CI (2026-10-27)
 
 Branch `ci/gl-011-core-qualification` starts at canonical main
