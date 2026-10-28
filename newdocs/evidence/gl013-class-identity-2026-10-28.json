@@ -600,5 +600,31 @@
     "ObservedUTC": "2026-10-28T07:15:54Z",
     "Observation": "About90-second bounded wait target; final snapshot98seconds after start",
     "Publication": "Normal follow-up commit; published history preserved; main remains4e3db8496e189b6e09148b015eff28b1c8ae29b6"
+  },
+  "ClassMainIntegration": {
+    "StartingMain": "4e3db8496e189b6e09148b015eff28b1c8ae29b6",
+    "QualifiedImplementation": "9320b3e4c69b6c883fa37c6fed6769b0acbe5f40",
+    "QualifiedCleanup": "688fd5bc77893f7f5728d6e7ad44f2fcf4b200ba",
+    "QualifiedTip": "eb53661072999887d2a124e5d4ece2f458c7bb30",
+    "Merge": "35c993ce3711076a61dace5324f74691f4fb77ef",
+    "CompleteTreeIdentical": true,
+    "FourCommitsPreserved": true,
+    "FreshChecks": [
+      "four-commit ancestry",
+      "exact source/fixture/build/workflow identity",
+      "owned String interface/single symbols",
+      "unchanged alias/predicate and API/ObjectID ownership",
+      "CMake/SCons source discovery",
+      "publication/updater false",
+      "git diff --check",
+      "remote SHA readback"
+    ],
+    "CleanupCoreRun": 40648770262,
+    "CleanupNativeRun": 40648770257,
+    "CleanupStatus": "Both workflows completed successfully on both platforms; prior pending snapshot preserved",
+    "CoreRun": 40651973151,
+    "NativeRun": 40651973098,
+    "InitialObservation": "Both integrated workflows in progress; follow-up recorded with assessment",
+    "ObservationBoundMinutes": 25
   }
 }

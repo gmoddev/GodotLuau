@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Incremental modularization underway; four extractions qualified | First three integrated; class identity qualified on branch |
+| GL-013 | P2 | Incremental modularization underway; four extractions qualified | All four extractions integrated; remaining boundaries under assessment |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -498,7 +498,7 @@ identities are verified in digest-checked diagnostic archives. A one-unit
 implementation edit boundary is measured; no general build-speed or native
 lifetime/sanitizer guarantee is inferred.
 
-**Fourth extraction (2026-10-28, branch only):**
+**Fourth extraction (2026-10-28, integrated):**
 `refactor/gl-013-class-identity` starts from integrated main
 `4e3db8496e189b6e09148b015eff28b1c8ae29b6`. The generic native/Roblox class map
 and exact/custom-parent/Godot IsA predicate move to an Object/String-only unit with
@@ -517,8 +517,9 @@ lines. Local Windows/Linux Debug/Release core39/native28 pass (112 actors total)
 and native `40646744985` passes fresh Debug builds/process checks/all 28 actors per
 platform. Digest-checked summaries verify exact revision/source/fixture identity.
 No supported-call lifetime defect is confirmed; no new sanitizer matrix is run
-because native object ownership is unchanged. This extraction stays unmerged and
-GL-013 remains OPEN. No general speed/lifetime/sanitizer guarantee is inferred.
+because native object ownership is unchanged. Normal merge
+`35c993ce3711076a61dace5324f74691f4fb77ef` preserves all four commits and equals
+qualified tip `eb53661072999887d2a124e5d4ece2f458c7bb30`. GL-013 remains OPEN. No general speed/lifetime/sanitizer guarantee is inferred.
 EOF-only follow-up `688fd5b` removes one trailing blank line; implementation code
 is unchanged. Fresh follow-up core39 passes; native run `40648770257` remains
 building at bounded observation, separately from completed 9320b3e qualification.

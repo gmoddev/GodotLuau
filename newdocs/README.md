@@ -37,6 +37,9 @@ The second generic Variant extraction is integrated by normal merge
 The third Instance property adapter is integrated by normal merge
 `b7ec9fd614bd0e92ce418859de68b835180a7d7c`; see its
 [integration record](shared-domains-validation.md#third-extraction-main-integration-2026-10-28).
+The fourth ClassName/IsA adapter is integrated by normal merge
+`35c993ce3711076a61dace5324f74691f4fb77ef`; see its
+[integration record](shared-domains-validation.md#fourth-extraction-main-integration-2026-10-28).
 GL-013 stays open for incremental modularization; no broader lifetime or build-speed
 guarantee is inferred.
 

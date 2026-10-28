@@ -2066,3 +2066,34 @@ follow-up separately rather than silently replacing tested fingerprints.
 **FOURTH EXTRACTION QUALIFIED** applies to the unchanged implementation; latest
 whitespace-follow-up native CI remains pending at this snapshot. Final evidence
 changes no source/input relative to 688fd5b, and remote main remains 4e3db84.
+
+
+## Fourth extraction main integration (2026-10-28)
+
+Starting local/remote main `4e3db8496e189b6e09148b015eff28b1c8ae29b6` normally
+merges qualified tip `eb53661072999887d2a124e5d4ece2f458c7bb30` as
+`35c993ce3711076a61dace5324f74691f4fb77ef`. All four commits (`9320b3e`,
+`8d26994`, `688fd5b`, `eb53661`) remain ancestors; the entire merge tree equals
+the qualified tip. Final source/build/workflow/fixture inputs exactly equal
+cleanup revision `688fd5bc77893f7f5728d6e7ad44f2fcf4b200ba`; only one EOF newline
+separates that source from original tested implementation `9320b3e`.
+
+Focused checks verify ancestry, exact source/native fingerprint and final tree,
+owned String interface, single identity definitions, unchanged aliases/predicate,
+both core-source discovery globs and unchanged registration/ObjectID/domain/API
+contracts. No supported-call UAF is newly claimed. Full-range whitespace checking
+passes; release jobs remain false/read-only and updater admission remains false.
+The merge is pushed and remote SHA read back. Existing local Windows/Linux
+Debug/Release core39/native28 evidence is reused, with no new local matrix.
+Cleanup [core40648770262](https://github.com/gmoddev/GodotLuau/actions/runs/40648770262)
+and [native40648770257](https://github.com/gmoddev/GodotLuau/actions/runs/40648770257)
+are now both completed successfully on Windows/Linux; their earlier pending
+snapshot remains historical evidence rather than being silently overwritten.
+
+Fresh integrated [core40651973151](https://github.com/gmoddev/GodotLuau/actions/runs/40651973151)
+and [native40651973098](https://github.com/gmoddev/GodotLuau/actions/runs/40651973098)
+target the merge. Initial status is in progress, with a25-minute observation bound;
+results are recorded during the authorized assessment. Pending workflows are not
+passes. The following integration documentation changes no tested inputs.
+GL-013 remains open. Assessment work will change documentation only on its own
+unmerged branch; no fifth extraction or runtime/configuration change is authorized.

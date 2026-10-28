@@ -188,9 +188,10 @@ See the [analysis and qualification](shared-domains-validation.md#gl-013-third-i
 The merge tree equals qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058`.
 GL-013 remains open for remaining header coupling.
 
-## Class identity adapter (fourth GL-013 extraction, branch only)
+## Class identity adapter (fourth GL-013 extraction, integrated)
 
-Branch `refactor/gl-013-class-identity` starts from integrated main
+Normal merge `35c993ce3711076a61dace5324f74691f4fb77ef` integrates all four
+commits of `refactor/gl-013-class-identity`, based on prior main
 `4e3db8496e189b6e09148b015eff28b1c8ae29b6`. `luau_class_identity.cpp` owns the
 existing native-to-Roblox name mapping and generic IsA predicate. Its forward-only
 header declares `GetLuauClassName(Object*) -> String` and
@@ -214,8 +215,8 @@ public behavior, not a concealed fix for a confirmed defect. The mapping table i
 immutable and no registration or mutable cache is added. No concurrent
 Godot/Luau binding execution guarantee is introduced.
 
-Both core-source build globs discover the owned implementation. The branch is
-unmerged; qualification and the [string lifetime audit](shared-domains-validation.md#gl-013-fourth-class-identity-extraction)
+Both core-source build globs discover the owned implementation. The merge tree equals qualified tip `eb53661072999887d2a124e5d4ece2f458c7bb30`;
+qualification and the [string lifetime audit](shared-domains-validation.md#gl-013-fourth-class-identity-extraction)
 distinguish tested serialized callbacks/GC/shutdown from unsupported concurrency
 and existing broader lifetime/sanitizer limitations. GL-013 remains open.
 
