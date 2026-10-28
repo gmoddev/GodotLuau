@@ -1,5 +1,6 @@
 """Bounded launcher regressions; no alternative runtime or native fixture logic."""
 import ctypes
+import errno
 import os
 from pathlib import Path
 import subprocess
@@ -7,6 +8,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 from FixtureProcesses import StartProcess, StopProcess, StopAll
 from RunQualification import Check
@@ -27,8 +29,13 @@ def Alive(Pid):
         finally:
             Kernel.CloseHandle(Handle)
     try:
-        if Path('/proc/%d/stat' % Pid).exists() and Path('/proc/%d/stat' % Pid).read_text().split()[2] == 'Z':
-            return False
+        if sys.platform == 'linux':
+            try:
+                Stat = Path('/proc/%d/stat' % Pid).read_text()
+            except (FileNotFoundError, ProcessLookupError):
+                return False
+            if Stat.split()[2] == 'Z':
+                return False
         os.kill(Pid, 0)
         return True
     except ProcessLookupError:
@@ -64,6 +71,49 @@ class FixtureProcessTests(unittest.TestCase):
         while Alive(Pid) and time.monotonic() < Deadline:
             time.sleep(0.02)
         self.assertFalse(Alive(Pid), 'Owned descendant remained alive')
+
+    @unittest.skipUnless(sys.platform == 'linux', 'Linux /proc inspection')
+    def test_disappearance_before_stat_read_reports_dead(self):
+        # Reproduce an existing proc entry disappearing before its read.
+        with patch.object(Path, 'exists', return_value=True) as Exists, patch.object(Path, 'read_text', side_effect=FileNotFoundError) as Read, patch.object(os, 'kill') as Kill:
+            self.assertFalse(Alive(123))
+            Exists.assert_not_called()
+            Read.assert_called_once_with()
+            Kill.assert_not_called()
+
+    @unittest.skipUnless(sys.platform == 'linux', 'Linux /proc inspection')
+    def test_stat_read_process_lookup_reports_dead(self):
+        with patch.object(Path, 'read_text', side_effect=ProcessLookupError), patch.object(os, 'kill') as Kill:
+            self.assertFalse(Alive(123))
+            Kill.assert_not_called()
+
+    @unittest.skipUnless(sys.platform == 'linux', 'Linux /proc inspection')
+    def test_zombie_reports_dead(self):
+        with patch.object(Path, 'read_text', return_value='123 (python) Z'), patch.object(os, 'kill') as Kill:
+            self.assertFalse(Alive(123))
+            Kill.assert_not_called()
+
+    @unittest.skipUnless(sys.platform == 'linux', 'Linux /proc inspection')
+    def test_running_process_reports_alive(self):
+        with patch.object(Path, 'read_text', return_value='123 (python) S'), patch.object(os, 'kill') as Kill:
+            self.assertTrue(Alive(123))
+            Kill.assert_called_once_with(123, 0)
+
+    @unittest.skipUnless(sys.platform == 'linux', 'Linux /proc inspection')
+    def test_disappearance_after_stat_read_reports_dead(self):
+        with patch.object(Path, 'read_text', return_value='123 (python) S'), patch.object(os, 'kill', side_effect=ProcessLookupError):
+            self.assertFalse(Alive(123))
+
+    @unittest.skipUnless(sys.platform == 'linux', 'Linux /proc inspection')
+    def test_unexpected_inspection_errors_propagate(self):
+        for Error in (PermissionError(errno.EACCES, 'denied'), OSError(errno.EIO, 'read failed')):
+            with self.subTest(Error=Error), patch.object(Path, 'read_text', side_effect=Error), patch.object(os, 'kill') as Kill:
+                with self.assertRaises(type(Error)):
+                    Alive(123)
+                Kill.assert_not_called()
+            with self.subTest(KillError=Error), patch.object(Path, 'read_text', return_value='123 (python) S'), patch.object(os, 'kill', side_effect=Error):
+                with self.assertRaises(type(Error)):
+                    Alive(123)
 
     def test_forced_cleanup_terminates_descendants(self):
         Process, Child = self.Tree()

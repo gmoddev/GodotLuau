@@ -371,6 +371,14 @@ change documentation only. Existing hosted qualification is reused within its
 Debug/x86_64 scope. No expensive local matrix is repeated; automatically triggered
 integration runs are observed for a bounded period and are not assumed to pass.
 
+The integrated Linux run `40483447902` subsequently exposed a launcher-test
+proc-stat check/read race before provisioning or compilation; Windows passed.
+The [focused correction](shared-domains-validation.md#linux-process-liveness-correction-2026-10-27)
+uses one guarded read with narrow disappearance handling. Complete worker tests
+pass (Linux 14; Windows eight plus six Linux-only skips); deterministic baseline
+reproduction fails as expected. Fresh integrated hosted verification is pending.
+This CI reliability correction does not close GL-011 or expand runtime scope.
+
 ## GL-012: Release workflow deletes prior provenance references
 
 **Original evidence:** The final release step lists up to 100 releases and attempts

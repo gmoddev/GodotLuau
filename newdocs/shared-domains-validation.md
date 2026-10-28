@@ -220,6 +220,39 @@ for the source-identical integration. GL-011 and GL-007/010/017/018/020 remain
 open within their existing scopes. Publication and updater distribution stay
 disabled. This completes the authorized session; no further development begins.
 
+### Linux process-liveness correction (2026-10-27)
+
+Starting main `dcc4b4c2bbe948d2d9a792991c02331b32bc5033` failed Linux
+[native run 40483447902](https://github.com/gmoddev/GodotLuau/actions/runs/40483447902),
+job `122119224290`, in `test_partial_startup_failure_cleans_prior_actor`:
+`/proc/2658/stat` disappeared between `exists()` and `read_text()`.
+The Windows job passed; Linux provisioning, compilation and native fixtures were
+skipped. Prior successful source qualification remains historical evidence.
+
+`fix/ci-proc-liveness-race` replaces that precheck with one Linux proc-stat read.
+Only `FileNotFoundError`/`ProcessLookupError` indicate disappearance; zombie
+detection and the subsequent zero-signal probe remain, including termination
+between read and probe. Permission and unrelated I/O errors propagate. Windows
+liveness, tree ownership, deadlines and all existing assertions are unchanged.
+
+Six deterministic Linux tests cover the original race, ESRCH during read, zombie,
+running process, disappearance during the subsequent probe and unexpected errors
+at both operations. Running the new race test against the starting helper
+reproduces `FileNotFoundError`; the corrected complete suite passes all 14 Linux
+tests (0.257s). Windows passes the original eight with six Linux-only skips
+(0.603s). Commands: Python 3.12 `tests/runtime/FixtureProcessTests.py` on DockerPC
+and the task-owned Linux qualification container; baseline reproduction uses an
+ignored harness substituting the original helper. Controller `python -m
+py_compile tests/runtime/FixtureProcessTests.py` and `git diff --check` pass.
+No local native rebuild is needed or performed.
+
+New integrated-main hosted results are pending. Observation is bounded to
+20 minutes after push; only completed jobs establish success. The
+[existing manifest](evidence/gl011-native-ci-2026-10-27.json) records correction
+identity and results separately from historical qualification. GL-011 remains
+open for sanitizer/release enforcement; all other recorded limitations and
+disabled publication/updater policy remain unchanged.
+
 ### Sanitizer expansion assessment
 
 No sanitizer job is added to routine CI. The existing full-native Linux ASan/LSan

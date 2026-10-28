@@ -48,6 +48,13 @@ GDScript error and sanitizer diagnostics are enforced; raw ENet/expected rejecti
 diagnostics stay visible. Eight launcher regressions test tree cleanup and failure
 propagation without duplicating runtime assertions.
 
+Six Linux-only deterministic liveness checks additionally cover disappearance
+before/after the guarded proc-stat read, zombies, live processes and propagation
+of unexpected read/probe errors. The complete launcher suite has 14 tests:
+14 execute on Linux; Windows executes the original eight and skips these six.
+The Windows liveness implementation and all existing cleanup assertions remain
+unchanged. See the [race correction record](../../newdocs/shared-domains-validation.md#linux-process-liveness-correction-2026-10-27).
+
 The hosted job is bounded at 80 minutes (configure 5, build 50, fixture groups
 4/4/5 minutes); each fixture actor/group has the existing 60-second deadline.
 No retries, build cache, account settings, publishing or deployment are introduced.
