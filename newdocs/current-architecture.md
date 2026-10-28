@@ -280,8 +280,9 @@ and RemoteFunction source literal retain their function storage duration; no
 initialization flag or global registry is introduced. This is serialized native
 execution, not a new thread-safety guarantee.
 
-Local Windows/Linux Debug/Release core39/native28 pass; hosted observation follows
-publication. See the [fifth qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary).
+Local Windows/Linux Debug/Release core39/native28 and fresh hosted Debug core39/
+native28 on both platforms pass at implementation `50f1c0e`. See the
+[fifth qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary).
 GL-013 stays open. GL-022 separately records the reproduced baseline shared-module
 child-relay connection conflict; distinct relay targets pass both-domain coverage.
 The next ranked independent candidate remains editor completion ownership, with

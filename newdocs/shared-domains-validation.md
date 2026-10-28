@@ -2189,7 +2189,8 @@ main `ce5e19fa8aea1cf65da875d07cda13c1696fc08c`. Assessment source `bbb2175` is
 preserved by normal merge `d99adcf`; the documentation-only follow-up is `ce5e19f`.
 Stage 1 is **INTEGRATED AND VERIFIED**: remote main was read back at that SHA,
 with unchanged runtime/test/build/workflow/pin inputs and no CI dispatch.
-Stage 2 is locally qualified; hosted qualification follows publication. It remains
+Stage 2 is **FIFTH EXTRACTION QUALIFIED** at implementation
+`50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4`, with hosted results below. It remains
 unmerged. The [manifest](evidence/gl013-script-bootstrap-2026-10-28.json) records
 source identity, all four configurations, compiler closures and failed attempts.
 
@@ -2290,6 +2291,31 @@ from filenames or header sizes. CMake and SCons still discover eight core CPPs.
 
 ### Comparable build measurements
 
+Actual private worker drivers are retained at each task root. They prepare the
+archived baseline or candidate source at the same source path, then execute the
+following commands for Debug/Release (replace Config with the selected cache):
+
+```text
+cmake -S <Original>/tests/runtime -B <BuildRoot>/Config -DGL_SOURCE_ROOT=<Task>/source -DGL_BUILD_CORE_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=ON -DGL_BASELINE_SOURCE_ROOT=
+cmake --build <BuildRoot>/Config --target GodotLuauAdapter ExecutionDomainTests --parallel 2
+ctest --test-dir <BuildRoot>/Config --output-on-failure --verbose --timeout 30
+ninja -C <BuildRoot>/Config -t deps <eight explicit snapshot object targets>
+python <Task>/source/tests/runtime/RunQualification.py --godot <qualified-Godot-4.7.1> --extension <saved-library> --output <new-output>/regression --teardown --coordinated-close --timeout 60
+python <Task>/source/tests/runtime/RunQualification.py --godot <qualified-Godot-4.7.1> --extension <saved-library> --output <new-output>/security --security --timeout 60
+python <Task>/source/tests/runtime/RunQualification.py --godot <qualified-Godot-4.7.1> --extension <saved-library> --output <new-output>/animation --animation --timeout 60
+```
+
+Linux Original is `/work/source`, Task `/work/gl013-bootstrap` and caches
+`/work/builds/linux-debug` / `linux-release` in the existing qualification container.
+Windows Original is `C:/Sandbox/Codex/Workspaces/GodotLuau`, Task
+`C:/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap`, caches `runtime-msvc-debug` /
+`runtime-msvc-release` under the same Build parent, using the existing VS18 vcvars64
+environment and CMake 3.31.10. Drivers are `GL013BootstrapWorker.py baseline build`,
+`baseline qualification3`, `candidate3 build` and `candidate3 qualification1`;
+failed attempts use separate directories. Existing output directories are never
+accepted as a fresh run. Source/CMake/core-test hashes match the checkout on both
+workers. Private analysis/driver code stays ignored, not permanent repository tooling.
+
 Same task source path and build caches, pinned vendor objects warm, two jobs,
 each configuration/platform sequential. Project adapter/core-test objects only
 are removed for each cold project build. Cold compilation is eight adapter plus
@@ -2371,3 +2397,36 @@ configuration; it was corrected to compare resolved paths, then both configurati
 were restored and verified. This private guard failure changes no qualification
 input or runtime outcome. Evidence and source/library snapshots remain isolated
 under each worker's gl013-bootstrap task directory.
+
+### Fifth extraction hosted qualification
+
+Implementation `50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4` is pushed and remote
+source branch SHA read back. Existing [core40661531131](https://github.com/gmoddev/GodotLuau/actions/runs/40661531131)
+and [native40661531193](https://github.com/gmoddev/GodotLuau/actions/runs/40661531193)
+both complete successfully on that exact source. The early queued/in-progress
+snapshots remain in the manifest. Both workflows complete within the 25-minute
+observation bound, native by 09:17:23 UTC (created 09:05:22 UTC).
+
+Core jobs `122725470749` (Windows) and `122725470976` (Linux) each log 39 distinct
+PASS cases and 39 passed / zero failed. Native jobs `122725470508` and
+`122725470398` each build the actual Debug adapter and pass 8 lifecycle/startup,
+10 network and 10 functional animation actors; the 28-process admission check
+passes. Runner self-tests execute 14 on Linux; Windows executes eight with six
+platform-specific skips. No test-count or native admission assertion is weakened.
+
+Diagnostic ZIPs match GitHub artifact digests: Windows
+`1593942f814d9f4d9b0c7cdd5a64871b4625100952feb280b536818640c8cdbf`, Linux
+`9d41c59bb7289d6e351c2b0e89e9ff8911c2b8cd2e1ce8a5014dd73259e8ee4a`.
+Both summaries verify exact revision, native fingerprint
+`31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e` (74 inputs),
+the pinned submodule logs, all 22 harness hashes and all 28 zero exits. The extended
+Integration fixture is `387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8`
+after LF normalization. Godot is verified official 4.7.1. These ZIPs contain no
+production binaries; summary binary hashes are retained as identity evidence.
+
+Disposition: **FIFTH EXTRACTION QUALIFIED**, bounded to the unchanged initialization/
+wrapper behavior and exercised paths. Hosted Debug does not add Release sanitizer,
+rootless fault recovery, GL-020 adversarial or GL-022 shared-target qualification.
+The final documentation/evidence follow-up changes no source, fixture, build,
+workflow or dependency input. Main remains `ce5e19f`; the development branch stays
+unmerged. GL-013 remains OPEN, with no sixth extraction or publication channel work.

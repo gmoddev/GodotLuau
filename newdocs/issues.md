@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Open; four extractions integrated, fifth locally qualified | Bootstrap/Instance boundary on development branch; hosted qualification pending |
+| GL-013 | P2 | Open; four extractions integrated, fifth qualified | API/stdlib fan-out three to one; bootstrap branch remains unmerged |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -542,7 +542,7 @@ historical. State/dispatch/network boundaries need their stated proof before a
 future extraction. GL-021 records a separate static compatibility discrepancy.
 No fifth extraction, production/test/build/workflow change or unrelated closure.
 
-**Fifth extraction (development branch, 2026-10-28): local qualification complete.**
+**Fifth extraction (development branch, 2026-10-28): FIFTH EXTRACTION QUALIFIED.**
 `refactor/gl-013-script-bootstrap` begins at main
 `ce5e19fa8aea1cf65da875d07cda13c1696fc08c` after assessment integration. Bootstrap,
 RemoteFunction setup and child relay move to existing script CPP, with one narrow
@@ -556,7 +556,12 @@ expanded eight-actor regression group in all four configurations.
 The [fifth qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary)
 and [manifest](evidence/gl013-script-bootstrap-2026-10-28.json) retain timing/size
 increases, include failures, baseline callback finding GL-022 and qualification
-limits. Hosted observation follows branch publication; this is not merged to main.
+limits. Implementation `50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4` is pushed and
+remote identity read back. Fresh hosted core `40661531131` passes 39 distinct cases
+per platform and native `40661531193` passes fresh Debug builds, process-runner
+self-checks and all 28 actors per platform. Digest-checked summaries match exact
+source/pins/all 22 harness hashes. Both complete within the 25-minute bound.
+The evidence follow-up changes no tested input; this is not merged to main.
 GL-013 remains OPEN; no sixth extraction or unrelated issue closure is implied.
 
 ## GL-014: Shared execution domains — integrated and source-qualified

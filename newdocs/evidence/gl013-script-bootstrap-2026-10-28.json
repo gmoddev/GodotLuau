@@ -3,9 +3,9 @@
   "Date": "2026-10-28",
   "Branch": "refactor/gl-013-script-bootstrap",
   "BaseMain": "ce5e19fa8aea1cf65da875d07cda13c1696fc08c",
-  "Implementation": null,
-  "Disposition": "IMPLEMENTED \u2014 QUALIFICATION PENDING",
-  "LocalQualification": "Four configurations, core39/native28 each; hosted pending",
+  "Implementation": "50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4",
+  "Disposition": "FIFTH EXTRACTION QUALIFIED",
+  "LocalQualification": "Four Windows/Linux Debug/Release configurations, core39/native28 each; fresh hosted Windows/Linux Debug core39/native28 pass",
   "AssessmentMainIntegration": {
     "StartingMain": "08b2bb83b7093a361c80b147b4827eb22715ad32",
     "AssessmentSource": "bbb21752b2f241d718c936b667bf7076f1d2927e",
@@ -251,8 +251,123 @@
     }
   },
   "Hosted": {
-    "State": "Not published yet",
-    "ObservationBoundMinutes": 25
+    "InitialState": "Not published yet",
+    "State": "Both core and native workflows completed successfully on Windows and Linux",
+    "SourceRevision": "50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4",
+    "ObservedUTC": "2026-10-28T09:11:17Z",
+    "ObservationStartUTC": "2026-10-28T09:05:22Z",
+    "ObservationBoundMinutes": 25,
+    "CoreRun": 40661531131,
+    "NativeRun": 40661531193,
+    "CoreURL": "https://github.com/gmoddev/GodotLuau/actions/runs/40661531131",
+    "NativeURL": "https://github.com/gmoddev/GodotLuau/actions/runs/40661531193",
+    "CoreJobs": {
+      "Windows": 122725470749,
+      "Linux": 122725470976
+    },
+    "NativeJobs": {
+      "Linux": 122725470398,
+      "Windows": 122725470508
+    },
+    "CoreCasesPerPlatform": 39,
+    "CoreDistinctPASSLinesVerified": true,
+    "ProgressSnapshot": {
+      "State": "Core completed successfully on both platforms; native adapter builds in progress",
+      "SourceRevision": "50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4",
+      "ObservedUTC": "2026-10-28T09:11:17Z",
+      "ObservationStartUTC": "2026-10-28T09:05:22Z",
+      "ObservationBoundMinutes": 25,
+      "CoreRun": 40661531131,
+      "NativeRun": 40661531193,
+      "CoreURL": "https://github.com/gmoddev/GodotLuau/actions/runs/40661531131",
+      "NativeURL": "https://github.com/gmoddev/GodotLuau/actions/runs/40661531193",
+      "CoreJobs": {
+        "Windows": 122725470749,
+        "Linux": 122725470976
+      },
+      "NativeJobs": {
+        "Linux": 122725470398,
+        "Windows": 122725470508
+      },
+      "CoreCasesPerPlatform": 39,
+      "CoreDistinctPASSLinesVerified": true
+    },
+    "FinalObservationUTC": "2026-10-28T09:23:52Z",
+    "CompletedUTC": {
+      "Core": "2026-10-28T09:06:27Z",
+      "Native": "2026-10-28T09:17:23Z"
+    },
+    "WithinObservationBound": true,
+    "NativeActorsPerPlatform": 28,
+    "NativeGroups": {
+      "regression": 8,
+      "security": 10,
+      "animation": 10
+    },
+    "NativeAdmissionVerifiedInLogs": true,
+    "FixtureProcessSelfTests": {
+      "Linux": {
+        "Executed": 14,
+        "Skipped": 0
+      },
+      "Windows": {
+        "Executed": 8,
+        "Skipped": 6
+      }
+    },
+    "DiagnosticVerification": {
+      "Linux": {
+        "ArtifactID": 12804736756,
+        "ArchiveSHA256": "9d41c59bb7289d6e351c2b0e89e9ff8911c2b8cd2e1ce8a5014dd73259e8ee4a",
+        "Revision": "50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4",
+        "NativeSource": {
+          "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+          "Files": 74,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "b0248cd6b973ce2fd9c227ddbfd5d919f7e2dec72e22240c5b32282f96644f69",
+        "Processes": 28,
+        "Groups": {
+          "regression": 8,
+          "security": 10,
+          "animation": 10
+        },
+        "AllExitsZero": true,
+        "HarnessFilesVerified": 22,
+        "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+        "PinnedSubmoduleLogsVerified": true,
+        "GodotVersion": "4.7.1.stable.official.a13da4feb",
+        "GodotExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+        "ProductionBinaryPayloads": 0,
+        "Scope": "Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification"
+      },
+      "Windows": {
+        "ArtifactID": 12804668113,
+        "ArchiveSHA256": "1593942f814d9f4d9b0c7cdd5a64871b4625100952feb280b536818640c8cdbf",
+        "Revision": "50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4",
+        "NativeSource": {
+          "SHA256": "31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e",
+          "Files": 74,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "31ae33c9dc29efca3bc8362324a60bf3b90bc459fd12614eefd4c6c3c5e4e849",
+        "Processes": 28,
+        "Groups": {
+          "regression": 8,
+          "security": 10,
+          "animation": 10
+        },
+        "AllExitsZero": true,
+        "HarnessFilesVerified": 22,
+        "IntegrationFixtureSHA256LF": "387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8",
+        "PinnedSubmoduleLogsVerified": true,
+        "GodotVersion": "4.7.1.stable.official.a13da4feb",
+        "GodotExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+        "ProductionBinaryPayloads": 0,
+        "Scope": "Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification"
+      }
+    },
+    "SourceAndHarnessUnchangedByEvidenceFollowup": true
   },
   "Remaining": [
     "GL-013 open; next independent candidate completion ownership needs editor-specific fixtures",
@@ -262,7 +377,7 @@
     "GL-020 animation security deferred; current animation fixtures functional only",
     "GL-021 untouched",
     "No new SCons/release packaging or runtime performance qualification",
-    "Main unchanged after assessment integration; this source branch stays unmerged"
+    "Main unchanged after assessment integration; fifth source and its evidence follow-up stay unmerged"
   ],
   "FailedAttemptDispositions": {
     "baseline-qualification1-debug": "Unchanged Windows/Linux source fails shared-ModuleScript second-domain child marker; recorded as GL-022",
@@ -2646,5 +2761,13 @@
     "GL013BootstrapCandidate2.zip": "6674a121f1461f3e175a841341094da596b3b3300b25d0a4e706cfa8802c013a",
     "GL013BootstrapCandidate3.zip": "dc8084f4a1baecea8d8b51c900ae42e92e1f27bb5471e7d8071b2e9759b0a919"
   },
-  "Symbols": "Linux Debug nm --defined-only script object: one T definition each for facade and three moved methods; successful links in four configurations"
+  "Symbols": "Linux Debug nm --defined-only script object: one T definition each for facade and three moved methods; successful links in four configurations",
+  "ImplementationRemoteReadback": true,
+  "CoreBuildInputsHashLF": {
+    "CMakeLists.txt": "360a7c38cbb5030ca37eeea0ab4ebedb135345333669b7c4510547de3f55d5e1",
+    "ExecutionDomainTests.cpp": "b0dd06abff3c6b449014547e0d4a162e735d39406934c5b758a0dd35cfb39632"
+  },
+  "CoreBuildInputsMatchBothWorkers": true,
+  "TaskOwnedNativeBuildProcessesAfterCleanup": 0,
+  "RetainedStderrReview": "No leak/orphan/freed/SCRIPT ERROR/sanitizer diagnostic flags in baseline/candidate groups; expected rejection diagnostics preserved"
 }
