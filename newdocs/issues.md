@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Incremental modularization underway; four extractions qualified | All four extractions integrated; remaining boundaries under assessment |
+| GL-013 | P2 | Open; four extractions integrated, assessment complete | Script bootstrap/Instance access ranked next; no fifth extraction |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -43,6 +43,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
+| GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -521,8 +522,24 @@ because native object ownership is unchanged. Normal merge
 `35c993ce3711076a61dace5324f74691f4fb77ef` preserves all four commits and equals
 qualified tip `eb53661072999887d2a124e5d4ece2f458c7bb30`. GL-013 remains OPEN. No general speed/lifetime/sanitizer guarantee is inferred.
 EOF-only follow-up `688fd5b` removes one trailing blank line; implementation code
-is unchanged. Fresh follow-up core39 passes; native run `40648770257` remains
-building at bounded observation, separately from completed 9320b3e qualification.
+is unchanged. Fresh follow-up core39 passed while native run `40648770257` was still
+building at that earlier bounded observation. Both cleanup workflows subsequently
+passed; fresh merge core `40651973151` and native `40651973098` also pass Windows/Linux
+39 core cases / 28 native processes each. Final main is
+`08b2bb83b7093a361c80b147b4827eb22715ad32`, with identical tested inputs.
+
+**Remaining-boundary assessment (2026-10-28): complete, GL-013 still OPEN.**
+The [assessment](gl013-boundary-assessment.md) and
+[inventory/compiler evidence](evidence/gl013-boundary-assessment-2026-10-28.json)
+record 64 headers/eight implementation units, no project include cycles and exact
+matches of eight qualified compiler include closures. Four isolated owners are a
+maintainability improvement; API-header edits still affect three TUs and no general
+build-speed improvement is established. Prefer script bootstrap/Instance access in
+existing `luau_script.cpp`, followed by completion ownership and GUI metadata/style
+adaptation. Inert helpers rank below these; earlier next-helper suggestions are
+historical. State/dispatch/network boundaries need their stated proof before a
+future extraction. GL-021 records a separate static compatibility discrepancy.
+No fifth extraction, production/test/build/workflow change or unrelated closure.
 
 ## GL-014: Shared execution domains — integrated and source-qualified
 
@@ -786,3 +803,28 @@ GL-020 remains OPEN for animation-specific adversarial transport/handler evidenc
 the historical finding and closure requirements above remain applicable. No
 deferred adversarial qualification, binary release or general security certification
 is performed by this integration. GL-007/GL-017/GL-018 remain independent.
+
+## GL-021: Inert signals omit lowercase once/wait aliases
+
+**Classification: Verified construction-order discrepancy; runtime unexercised.**
+Source revision `08b2bb83b7093a361c80b147b4827eb22715ad32`:
+`src/core/luau_api.h:63-71` copies Connect/Wait/Once to connect/wait/once only when
+each uppercase field already exists. `_gl_push_inert_signal` at `172-190` creates
+a new table, installs Connect, calls that copier at `185`, then installs Once and
+Wait at `186-189`. Thus the constructed table has connect but no once/wait fields.
+The source's stated legacy signal contract includes all three lowercase names.
+`GetPropertyChangedSignal` at `1290-1295` returns this inert table.
+
+**Impact and limits:** scripts expecting the documented lowercase inert methods
+would find nil. This is a source trace, not an executed failure, native lifetime
+defect or security finding. Uppercase behavior and connection reference handling
+are not reclassified. No focused assertion for these lowercase inert fields was
+found in the current native fixtures. No code or tests changed during assessment.
+
+**Separate follow-up:** reproduce with actual production GetPropertyChangedSignal;
+decide and document the intended alias contract; correct construction order in a
+focused compatibility fix. Require Connect/connect, Once/once, Wait/wait,
+Disconnect/disconnect, Connected=false, nil Wait result, repeated calls with no
+references or callbacks, GC and fresh-domain teardown. Preserve the inert nature.
+Close only with linked implementation and executed regression evidence. Do not
+silently combine this behavior change with the next GL-013 extraction.

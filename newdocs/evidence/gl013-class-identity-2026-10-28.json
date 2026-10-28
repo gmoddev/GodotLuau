@@ -625,6 +625,76 @@
     "CoreRun": 40651973151,
     "NativeRun": 40651973098,
     "InitialObservation": "Both integrated workflows in progress; follow-up recorded with assessment",
-    "ObservationBoundMinutes": 25
+    "ObservationBoundMinutes": 25,
+    "FinalRemoteMain": "08b2bb83b7093a361c80b147b4827eb22715ad32",
+    "FinalMainDocumentationOnly": true,
+    "Disposition": "INTEGRATED AND VERIFIED",
+    "ObservedUTC": "2026-10-28T08:06:37Z",
+    "WorkflowCompletionUTC": {
+      "Core": "2026-10-28T07:45:04Z",
+      "Native": "2026-10-28T08:00:15Z"
+    },
+    "FinalObservation": "Both merge workflows completed successfully on Windows and Linux within the 25-minute bound; 39 core cases and 28 native process results per platform. No new local matrix.",
+    "CoreJobs": {
+      "Windows": 122693937967,
+      "Linux": 122693938282
+    },
+    "NativeJobs": {
+      "Windows": 122693937576,
+      "Linux": 122693937878
+    },
+    "CoreCasesPerPlatform": 39,
+    "NativeDiagnosticVerification": {
+      "Linux": {
+        "DiagnosticArchiveSHA256": "0ebeb988093ea6e88d33881dbd787c269f613e5e6e5e40ba27532ae4572f0b17",
+        "Revision": "35c993ce3711076a61dace5324f74691f4fb77ef",
+        "NativeSource": {
+          "SHA256": "653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3",
+          "Files": 73,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "cbcf5b0dd680c5a9629c5d22ef2d6a1275122a638f66526fcd8960eb0d7c6561",
+        "Processes": 28,
+        "Groups": {
+          "regression": 8,
+          "security": 10,
+          "animation": 10
+        },
+        "AllExitsZero": true,
+        "AllHarnessHashesMatchFinalMain": true,
+        "HarnessFiles": 22,
+        "GodotVersion": "4.7.1.stable.official.a13da4feb",
+        "BinaryPayloads": 0,
+        "Scope": "Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification"
+      },
+      "Windows": {
+        "DiagnosticArchiveSHA256": "5b3deff0f73700dbeff90592f1c2b7fb281bbaf2f80abdf9a42fccb94c2bd1b7",
+        "Revision": "35c993ce3711076a61dace5324f74691f4fb77ef",
+        "NativeSource": {
+          "SHA256": "653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3",
+          "Files": 73,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "82c8febabd39e9d3cabae879e8e352cc66bb35babd46b0b45f999ad2c02e6518",
+        "Processes": 28,
+        "Groups": {
+          "regression": 8,
+          "security": 10,
+          "animation": 10
+        },
+        "AllExitsZero": true,
+        "AllHarnessHashesMatchFinalMain": true,
+        "HarnessFiles": 22,
+        "GodotVersion": "4.7.1.stable.official.a13da4feb",
+        "BinaryPayloads": 0,
+        "Scope": "Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification"
+      }
+    },
+    "ScopeLimits": [
+      "Hosted Debug only; existing qualified local Debug/Release matrix reused",
+      "No new sanitizer matrix or complete native lifetime guarantee",
+      "GL-020 adversarial animation qualification remains separate",
+      "Distribution/updater/publication remain disabled"
+    ]
   }
 }

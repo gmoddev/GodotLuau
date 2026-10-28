@@ -2012,6 +2012,9 @@ GL-013 remains open. Recommended next investigation is stateless inert-signal
 construction and lowercase signal aliases, separately from stateful connection/
 owner handling. No fifth extraction, ownership/configuration change, new capability,
 workflow, updater distribution or release publication is included.
+That recommendation is historical; the subsequent
+[remaining-boundary assessment](gl013-boundary-assessment.md#ranked-future-work--proposals-not-authorization)
+ranks the script bootstrap/Instance-access boundary ahead of another tiny helper.
 
 Implementation `9320b3e4c69b6c883fa37c6fed6769b0acbe5f40` is pushed and remote
 branch identity read back; main remains `4e3db8496e189b6e09148b015eff28b1c8ae29b6`.
@@ -2092,8 +2095,69 @@ snapshot remains historical evidence rather than being silently overwritten.
 
 Fresh integrated [core40651973151](https://github.com/gmoddev/GodotLuau/actions/runs/40651973151)
 and [native40651973098](https://github.com/gmoddev/GodotLuau/actions/runs/40651973098)
-target the merge. Initial status is in progress, with a25-minute observation bound;
-results are recorded during the authorized assessment. Pending workflows are not
-passes. The following integration documentation changes no tested inputs.
-GL-013 remains open. Assessment work will change documentation only on its own
-unmerged branch; no fifth extraction or runtime/configuration change is authorized.
+target merge `35c993ce3711076a61dace5324f74691f4fb77ef`. The initial in-progress
+snapshot remains in the manifest. **INTEGRATED AND VERIFIED:** both workflows
+completed successfully within the 25-minute bound, by 08:00:15 UTC. Core jobs
+`122693937967` (Windows) and `122693938282` (Linux) each log 39 passed, 0 failed;
+native jobs `122693937576` and `122693937878` each log 8 lifecycle, 10 network and
+10 functional animation process results, with the 28-result admission check passing.
+
+Both native diagnostic archives were SHA256 checked against GitHub artifact digests:
+Windows `5b3deff0f73700dbeff90592f1c2b7fb281bbaf2f80abdf9a42fccb94c2bd1b7`,
+Linux `0ebeb988093ea6e88d33881dbd787c269f613e5e6e5e40ba27532ae4572f0b17`.
+Their summaries target the merge and native fingerprint
+`653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3` (73 inputs),
+all 28 exits are zero, and all 22 harness hashes match final main. Godot is verified
+official 4.7.1; diagnostic archives contain no production binaries. Binary/source
+identities and precise scope are appended under `ClassMainIntegration` in the
+[manifest](evidence/gl013-class-identity-2026-10-28.json), preserving earlier records.
+
+Final pushed/read-back main is `08b2bb83b7093a361c80b147b4827eb22715ad32`.
+Its follow-up changes integration documentation only; tested inputs are identical
+to the CI merge. Hosted Debug results do not add Release/sanitizer/complete lifetime
+qualification or GL-020 adversarial coverage. Existing local four-configuration
+evidence remains bounded as recorded above. Publication and updater stay disabled.
+GL-013 remains open.
+
+## GL-013 remaining-boundary assessment (2026-10-28)
+
+**ARCHITECTURAL ASSESSMENT COMPLETE.** The unmerged documentation branch
+`research/gl-013-remaining-boundaries` starts at verified main `08b2bb8`.
+The [focused assessment](gl013-boundary-assessment.md) supplies the current inventory,
+responsibility/lifetime/dependency map, cumulative four-extraction evaluation,
+ranked four-candidate plan and qualification gates. A focused document keeps the
+existing long qualification log readable; current architecture and issue ledger
+link it rather than creating another source of ownership requirements.
+
+Executed commands and evidence:
+
+- `rg --files src` and temporary ignored `python -X utf8 .runtime-tests/GL013Assessment.py`:
+  64 headers / eight implementation units, LF sizes/lines, unpreprocessed
+  tree-sitter syntax counts, raw-string sizes, include edges and reverse consumers.
+  Parser/macro limitations remain explicit in the
+  [inventory](evidence/gl013-boundary-assessment-2026-10-28.json).
+- Existing worker `ninja -C /work/builds/linux-debug -t deps` with the eight explicit
+  `/work/gl013-class/source` object targets: all eight project include closures
+  exactly match the graph, including 42/45/63 project headers for host/script/
+  registration. Default restored source targets were first found to describe an
+  older baseline, so only explicit qualified snapshot records support this result.
+  No configure/compile/test was run. The container is stopped again.
+- `git show eb638bfa6ff16abc91d11742625b3cc034f53178:src/core/luau_api.h` and
+  `git ls-tree -r --name-only ... src/core`: reliable first-extraction baseline
+  290,353 bytes / 5,168 lines and four TUs versus current 274,780 / 4,838 and eight.
+  Header reduction is 5.36% bytes / 6.39% lines; it is not a measured speedup.
+- Review of all four existing GL-013 manifests: own-unit touch compiles one TU,
+  API-header touch three; dependency-warm single trials do not establish full-clean,
+  parsing-only, linking-only, memory or runtime performance improvements.
+- Source/caller/state audit, linked-document and source-reference checks, JSON
+  validation, `git diff --check`, and exact source/test/build/workflow/submodule
+  identity against final main. Only assessment/evidence documentation is committed.
+
+Preferred next work is script bootstrap and narrow Instance access using existing
+`luau_script.cpp`, with explicit host service/codec dependencies and unchanged
+registration/lifetime ordering. Completion ownership and GUI metadata/style follow;
+inert helpers have smaller benefit and a separate GL-021 alias discrepancy to
+resolve first. Full dispatch/network/callback ownership and embedded-data movement
+are deferred with specific proof requirements. No fifth extraction, production
+change, new local/native matrix, editor/game launch, dependency upgrade or binary
+publication was performed. Stage 2 stops after this assessment.
