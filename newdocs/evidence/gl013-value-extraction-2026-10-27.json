@@ -1,4 +1,18 @@
 {
+  "MainIntegration": {
+    "Date": "2026-10-28",
+    "StartingMain": "eb638bfa6ff16abc91d11742625b3cc034f53178",
+    "Source": "1c9f4c6296bc955a6a5969a6da0668d137e46ed1",
+    "Merge": "bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7",
+    "Method": "Normal no-ff merge; both source commits retained; exact qualified source tree; historical branch retained",
+    "FreshChecks": "Actual diff/ancestry, source and fixture LF hashes, registration order, standalone interface, single implementations, CMake/SCons globs, disabled release policy, JSON/diff checks",
+    "ReusedScope": "Identical tested inputs: Windows/Linux Debug/Release39 core cases and28 native actors each; hosted core/native success on83bc42d; no expensive local matrix repeated",
+    "FreshCoreRun": 40629813359,
+    "FreshNativeRun": 40629813337,
+    "InitialObservationSeconds": 90,
+    "FreshHostedStatus": "Pending initial bounded observation; exact results reported separately; no assumed pass",
+    "HistoricalFields": "Original branch qualification and unmerged checkpoint fields below are preserved as historical evidence"
+  },
   "Issue": "GL-013",
   "StartingMain": "eb638bfa6ff16abc91d11742625b3cc034f53178",
   "Branch": "refactor/gl-013-luau-api-extraction",

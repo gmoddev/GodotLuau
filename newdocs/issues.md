@@ -426,7 +426,7 @@ bug and does not justify a sweeping rewrite.
 ownership/interfaces, preserve behavior, and measure build impact when claimed.
 Avoid mixing mechanical movement with unrelated runtime changes.
 
-**First extraction (2026-10-27, branch only):** Starting main
+**First extraction (qualified 2026-10-27; integrated 2026-10-28):** Starting main
 `eb638bfa6ff16abc91d11742625b3cc034f53178`; branch
 `refactor/gl-013-luau-api-extraction` moves native Vector3/Color3 userdata bindings
 to a separately compiled unit with no Godot/domain dependency. The original
@@ -442,7 +442,10 @@ Implementation `83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c` also passes fresh host
 core run `40626224165` (39 per platform) and native run `40626224232` (actual Debug
 builds, 28 actors per platform and verified diagnostic summaries). Disposition:
 **GL-013 — Incremental modularization underway; first extraction qualified.**
-The branch is not merged. Existing shared-domain ownership, userdata layout,
+Normal merge `bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7` integrates both commits
+through source `1c9f4c6296bc955a6a5969a6da0668d137e46ed1`; the merge tree exactly
+matches qualified source. The [integration record](shared-domains-validation.md#first-extraction-main-integration-2026-10-28)
+distinguishes reused qualification from fresh main CI observation. Existing shared-domain ownership, userdata layout,
 registration order, reflection and networking remain unchanged. The original
 header still couples Instance dispatch, services and Godot properties; this first
 boundary does not close GL-013. An exploratory physics-backed baseline fixture

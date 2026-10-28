@@ -100,7 +100,9 @@ engine-neutral Instance ownership layer as already implemented.
 
 ## Native value binding boundary (GL-013)
 
-On `refactor/gl-013-luau-api-extraction`, `luau_value_bindings.cpp` owns the
+Main integrates `refactor/gl-013-luau-api-extraction` at
+`1c9f4c6296bc955a6a5969a6da0668d137e46ed1` through normal merge
+`bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7`. `luau_value_bindings.cpp` owns the
 native Vector3/Color3 userdata allocation, exact-metatable checks, math callbacks
 and registration. Its declaration header exposes the existing two layouts and
 five bridge helpers plus two registration calls. It forward-declares `lua_State`;
@@ -108,7 +110,7 @@ the implementation includes only public Luau headers and standard math/string
 headers, with no Godot, execution-domain or large implementation-header dependency.
 Callback functions retain internal linkage; shared bridge helpers and registration
 have one ordinary C++ definition. No new static state or registration singleton
-is introduced. This branch is not merged into main.
+is introduced. Both qualified source commits and the historical branch remain.
 
 `luau_script.h` calls registration at the same two per-domain initialization
 points: metatables before globals, preserving the intervening Instance setup.

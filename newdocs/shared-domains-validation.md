@@ -158,6 +158,31 @@ the Godot Variant/property-conversion helpers, after defining their interface to
 these values and the Instance bridge. The large Instance index/newindex dispatch
 and header-heavy service/editor dependencies remain; no second extraction starts.
 
+### First extraction main integration (2026-10-28)
+
+Starting main `eb638bfa6ff16abc91d11742625b3cc034f53178`; qualified source
+`1c9f4c6296bc955a6a5969a6da0668d137e46ed1`. Normal merge
+`bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7` preserves implementation `83bc42d`
+and its evidence-only follow-up `1c9f4c6`, without conflicts. Its tree exactly
+equals qualified source. The branch remains a historical reference.
+
+Fresh checks inspect the actual diff, two-commit ancestry, unchanged normalized
+source/fixture hashes and registration calls, declaration-only value interface,
+single implementation and CMake/SCons source globs. Publication remains
+dispatch-only/read-only with both release jobs false; updater admission remains
+literal false. JSON/diff/source identity checks pass. No local native matrix is
+repeated: the exact tested inputs retain the Windows/Linux Debug/Release and
+hosted qualification recorded above. Historical limitations remain unchanged.
+
+The merge is pushed and remote main read back. Fresh automatic
+[core run 40629813359](https://github.com/gmoddev/GodotLuau/actions/runs/40629813359)
+and [native run 40629813337](https://github.com/gmoddev/GodotLuau/actions/runs/40629813337)
+target that merge. Initial observation is bounded at 90 seconds; pending jobs
+are not assumed successful. Their later results may be recorded alongside the
+authorized second extraction. Integration documentation changes no tested input.
+GL-013 remains open; one further extraction is separately authorized on a new
+branch from verified integrated main, without permission to merge that work.
+
 ## GL-011 independent core CI (2026-10-27)
 
 Branch `ci/gl-011-core-qualification` starts at canonical main
