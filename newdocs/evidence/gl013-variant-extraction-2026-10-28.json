@@ -466,7 +466,13 @@
   "Hosted": {
     "Status": "All Windows/Linux core and native jobs completed successfully",
     "Revision": "5f72f4cda1c5e3bb76edd33bb11e276cff07ac10",
-    "Core": { "Run": 40631078253, "WindowsJob": 122627339056, "LinuxJob": 122627339404, "Conclusion": "success", "CasesPerPlatform": 39 },
+    "Core": {
+      "Run": 40631078253,
+      "WindowsJob": 122627339056,
+      "LinuxJob": 122627339404,
+      "Conclusion": "success",
+      "CasesPerPlatform": 39
+    },
     "Native": {
       "Run": 40631078251,
       "WindowsJob": 122627339013,
@@ -479,17 +485,53 @@
       "LinuxCompiler": "GCC13.3.0",
       "ProcessChecks": "Windows8 pass plus6 Linux-only skips; Linux14 pass",
       "ActorsPerPlatform": 28,
-      "Groups": [8, 10, 10],
+      "Groups": [
+        8,
+        10,
+        10
+      ],
       "AllExitsZero": true,
       "ActualBuilds": "Both fresh Debug GodotLuauAdapter builds, verified Godot4.7.1, all lifecycle/network/functional-animation groups and final completeness/upload checks pass",
       "Pins": "Both hosted checkout logs confirm repository godot-cpp/Luau pins",
-      "WindowsArtifact": { "ID": 12791849064, "Bytes": 44882, "SHA256": "1631aba1f4339255e8c66abc67fd87bee3adfd81092436435e3ddf3d6d9ad43f", "Files": 83 },
-      "LinuxArtifact": { "ID": 12791911876, "Bytes": 50825, "SHA256": "6e961b84e32cdeb3086bc18a49e8f3a3f48dd28e2fbb28a7bfeb8d12fced57ae", "Files": 83 },
+      "WindowsArtifact": {
+        "ID": 12791849064,
+        "Bytes": 44882,
+        "SHA256": "1631aba1f4339255e8c66abc67fd87bee3adfd81092436435e3ddf3d6d9ad43f",
+        "Files": 83
+      },
+      "LinuxArtifact": {
+        "ID": 12791911876,
+        "Bytes": 50825,
+        "SHA256": "6e961b84e32cdeb3086bc18a49e8f3a3f48dd28e2fbb28a7bfeb8d12fced57ae",
+        "Files": 83
+      },
       "ArtifactVerification": "Both downloaded ZIP digests match hosted metadata; summaries confirm tested revision,69-input native fingerprint, final extended fixture hash and all28 zero-exit actors with exact8/10/10 groups; diagnostic-only payloads"
     },
     "ObservationBoundMinutes": 25
   },
   "Cleanup": "Both Debug/Release worker GL_SOURCE_ROOT settings restored; no task-owned Windows Python/Godot process; Linux docker top only sleep infinity before container restored to stopped",
   "EvidenceFollowup": "Final documentation-only follow-up changes no tested source, fixture, build, workflow or pin input; no new hosted run claimed; main remains174efcc and Stage2 remains unmerged",
-  "Remaining": "GL-013 open; Stage2 unmerged. Broad Instance/service coupling, inherited retained math captures/physics baseline failure, legacy string encoding and independent GL-003/004/005/007/009/010/011/017/018/020 limitations remain. No updater, workflow, pin or production publication change. Next separately authorized candidate: bounded Instance reflection adapter, after contract mapping; no third extraction."
+  "Remaining": "GL-013 open; Stage2 unmerged. Broad Instance/service coupling, inherited retained math captures/physics baseline failure, legacy string encoding and independent GL-003/004/005/007/009/010/011/017/018/020 limitations remain. No updater, workflow, pin or production publication change. Next separately authorized candidate: bounded Instance reflection adapter, after contract mapping; no third extraction.",
+  "VariantMainIntegration": {
+    "StartingMain": "174efcc2bdb59c5072ba21d27645c5380c61e8e9",
+    "QualifiedImplementation": "5f72f4cda1c5e3bb76edd33bb11e276cff07ac10",
+    "QualifiedTip": "d97fa5da9c5fb587061db9e35be00e764a47e3de",
+    "Merge": "21d10d91769ee81c85ae2e1d2029e683feeb51ba",
+    "CompleteTreeIdentical": true,
+    "BothCommitsPreserved": true,
+    "FreshChecks": [
+      "exact converter body comparison",
+      "one definition each",
+      "source/test/build/workflow identity",
+      "declaration interface and source discovery",
+      "publication/updater admission false",
+      "git diff --check",
+      "remote SHA readback"
+    ],
+    "Reused": "Existing four-configuration source qualification and hosted core/native results",
+    "CoreRun": 40642408324,
+    "NativeRun": 40642408346,
+    "InitialObservation": "pending; follow-up results recorded during third extraction",
+    "ObservationBoundMinutes": 25
+  }
 }

@@ -129,7 +129,8 @@ remain GL-013 work, not additional extractions in this change.
 
 ## Generic Variant conversion (second GL-013 extraction)
 
-Branch `refactor/gl-013-variant-bindings`, based on integrated main
+Normal merge `21d10d91769ee81c85ae2e1d2029e683feeb51ba` integrates
+`refactor/gl-013-variant-bindings`, based on prior main
 `174efcc2bdb59c5072ba21d27645c5380c61e8e9`, separates the two generic conversion
 functions into `luau_variant_bindings.cpp`. Its header forward-declares only
 `lua_State` and Godot `Variant`, exposing the existing two boolean conversion
@@ -146,7 +147,7 @@ contract. The existing caller still decides whether to ignore, raise its existin
 invalid-member error, or use
 the table-Offset fallback. `gl_has_property`, property dispatch/reflection and
 metadata fallback remain in `luau_api.h`; ObjectID resolution remains in
-`gl_runtime.h`. This branch is not merged into main. See the
+`gl_runtime.h`. Both qualified source commits are preserved. See the
 [second extraction record](shared-domains-validation.md#gl-013-second-generic-variant-extraction).
 
 ## Script capabilities and scheduling

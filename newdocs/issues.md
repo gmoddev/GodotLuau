@@ -452,7 +452,7 @@ boundary does not close GL-013. An exploratory physics-backed baseline fixture
 also exposed a Linux shutdown failure after PASS; its diagnostic evidence is
 retained as an independent qualification limitation, not fixed by extraction.
 
-**Second extraction (2026-10-28, branch only):**
+**Second extraction (2026-10-28, integrated):**
 `refactor/gl-013-variant-bindings` starts from integrated main `174efcc2bdb59c5072ba21d27645c5380c61e8e9`.
 Only the two generic Luau/Variant conversion bodies move to an owned `.cpp` and
 two-declaration forward-only header; Instance reflection, ObjectID validation and
@@ -465,10 +465,12 @@ All Windows/Linux Debug/Release worker builds/core39/native28 pass. Implementati
 `5f72f4cda1c5e3bb76edd33bb11e276cff07ac10` also passes hosted core run `40631078253`
 (39 per platform) and native run `40631078251` (fresh actual Debug builds and28
 actors per platform). Diagnostic summaries verify exact source/fixture identity.
-Disposition: **SECOND EXTRACTION QUALIFIED**, on the unmerged branch. Baseline tests establish that unsupported reads retain invalid-member
+Normal merge `21d10d91769ee81c85ae2e1d2029e683feeb51ba` preserves both commits
+with an identical tree. Fresh main core/native observation is recorded below.
+Disposition: **SECOND EXTRACTION QUALIFIED AND INTEGRATED**. Baseline tests establish that unsupported reads retain invalid-member
 errors and Lua non-ASCII strings retain the existing Latin-1 constructor behavior;
 these are preserved, not silently fixed. The first extraction's historical
-measurements/limitations remain. GL-013 stays open and Stage 2 is not merged.
+measurements/limitations remain. GL-013 stays open.
 
 ## GL-014: Shared execution domains — integrated and source-qualified
 

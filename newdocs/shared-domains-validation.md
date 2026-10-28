@@ -1630,3 +1630,29 @@ Main subsequently integrated that exact qualified source through normal merge
 and [separate integration manifest](evidence/gl006-008-main-integration-2026-10-27.json)
 for the six fresh core checks and 90 fresh native process results. The corrected
 networking endpoints are the current main baseline; GL-007 and GL-020 remain open.
+
+
+## Second extraction main integration (2026-10-28)
+
+Starting local/remote main `174efcc2bdb59c5072ba21d27645c5380c61e8e9`
+merges qualified branch tip `d97fa5da9c5fb587061db9e35be00e764a47e3de`
+normally as `21d10d91769ee81c85ae2e1d2029e683feeb51ba`. Both source commits
+(`5f72f4c` and `d97fa5d`) remain ancestors; the entire merge tree equals that tip.
+The final branch commit changes four evidence/documentation files only. Source,
+fixtures, dependencies, build configuration and workflows equal qualified
+implementation `5f72f4cda1c5e3bb76edd33bb11e276cff07ac10`.
+
+Fresh integration checks compare both converter bodies exactly to pre-extraction
+source, confirm one definition each, inspect unchanged reflection/registration,
+forward-only headers and both source-discovery globs, parse evidence and check the
+diff. Prior Windows/Linux Debug/Release core39/native28 qualification is reused
+within its recorded scope; no expensive local matrix is repeated. Release jobs
+remain false with read-only permissions and updater admission remains false.
+The normal push is read back at the exact merge SHA.
+
+Fresh [core run 40642408324](https://github.com/gmoddev/GodotLuau/actions/runs/40642408324)
+and [native run 40642408346](https://github.com/gmoddev/GodotLuau/actions/runs/40642408346)
+target this merge. Observation is bounded at 25 minutes, with results recorded
+during the authorized third extraction. Initial status is pending; pending work
+is not a pass. The next documentation commit changes no tested input. GL-013
+remains open, and the third extraction is authorized for branch publication only.

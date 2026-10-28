@@ -31,6 +31,9 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 GL-013's first native Vector3/Color3 implementation extraction is integrated by
 normal merge `bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7`, preserving both qualified
 source commits. See the [integration record](shared-domains-validation.md#first-extraction-main-integration-2026-10-28).
+The second generic Variant extraction is integrated by normal merge
+`21d10d91769ee81c85ae2e1d2029e683feeb51ba`; see its
+[integration record](shared-domains-validation.md#second-extraction-main-integration-2026-10-28).
 GL-013 stays open for incremental modularization; no broader lifetime or build-speed
 guarantee is inferred.
 
