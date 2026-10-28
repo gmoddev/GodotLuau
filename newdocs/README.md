@@ -44,7 +44,8 @@ GL-013 stays open for incremental modularization; no broader lifetime or build-s
 guarantee is inferred.
 The [remaining-boundary assessment](gl013-boundary-assessment.md) inventories the
 integrated source and ranks script bootstrap/Instance access as the preferred next
-boundary. It is a proposal on an unmerged documentation branch, not a fifth extraction.
+boundary. Normal merge `d99adcfb2b915b3209fef7f849865cf4acc964f9` integrates the
+assessment; its recommendations remain proposals, not implemented boundaries.
 
 GL-012 release retention is integrated with publication disabled by explicit
 workflow admission and read-only permissions. See the

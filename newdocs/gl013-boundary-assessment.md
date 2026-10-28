@@ -3,6 +3,9 @@
 Assessment date: 2026-10-28. Source revision:
 [`08b2bb83b7093a361c80b147b4827eb22715ad32`](https://github.com/gmoddev/GodotLuau/tree/08b2bb83b7093a361c80b147b4827eb22715ad32),
 after normal ClassName/IsA merge `35c993ce3711076a61dace5324f74691f4fb77ef`.
+Assessment commit `bbb21752b2f241d718c936b667bf7076f1d2927e` is now integrated
+by normal merge `d99adcfb2b915b3209fef7f849865cf4acc964f9`. This preserves the
+historical source snapshot and proposal status; it does not implement the next boundary.
 This focused assessment supplements [current architecture](current-architecture.md)
 and the [qualification record](shared-domains-validation.md#fourth-extraction-main-integration-2026-10-28).
 It does not replace the [invariants](invariants.md), accept a new ownership model,
@@ -416,8 +419,9 @@ implementation readiness, not the completeness of this static prioritization.
 GL-021 is a source-verified compatibility discrepancy, not a reproduced failure.
 Existing correctness/security/lifetime gaps retain their separate issue status.
 
-The assessment branch is `research/gl-013-remaining-boundaries`, based on the
-verified main above, and must remain unmerged. Integration CI outcomes are in the
+The original assessment branch is `research/gl-013-remaining-boundaries`, based on
+the verified main above. It was left unmerged at assessment completion and later
+integrated by the explicitly authorized merge recorded above. Integration CI outcomes are in the
 existing qualification record and ClassName evidence manifest, separate from this
 documentation-only assessment. Stop here; the preferred extraction requires a
 separately authorized implementation task.

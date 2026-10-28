@@ -2160,4 +2160,24 @@ inert helpers have smaller benefit and a separate GL-021 alias discrepancy to
 resolve first. Full dispatch/network/callback ownership and embedded-data movement
 are deferred with specific proof requirements. No fifth extraction, production
 change, new local/native matrix, editor/game launch, dependency upgrade or binary
-publication was performed. Stage 2 stops after this assessment.
+publication was performed. That assessment stage stopped after documentation.
+
+## Assessment main integration (2026-10-28)
+
+**INTEGRATED AND VERIFIED.** Starting local/remote main
+`08b2bb83b7093a361c80b147b4827eb22715ad32` normally merges assessment source
+`bbb21752b2f241d718c936b667bf7076f1d2927e` as
+`d99adcfb2b915b3209fef7f849865cf4acc964f9`. The merge tree exactly equals the
+assessment source and preserves its commit. All seven changed paths are
+documentation/evidence under newdocs; no source, fixture, build, workflow, pin,
+binary or behavioral contract changes. Local/remote main match after push.
+
+Static checks verify all 72 inventory source hashes, header/TU counts, recorded
+include edges/closures, historical evidence preservation, local Markdown links
+and anchors, relevant source references and full-range whitespace. The native
+fingerprint remains `653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3`.
+Release jobs remain false/read-only; updater admission remains false. No builds,
+editor/game execution or CI dispatch were needed for this documentation merge.
+The following documentation follow-up updates historical branch status only.
+GL-013 remains open; recommendations are not runtime invariants. The separately
+authorized bootstrap implementation starts from verified main on its own branch.
