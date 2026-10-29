@@ -82,7 +82,9 @@ static void gl_report_script_error_with_trace(lua_State* th, const godot::String
     struct Unset { ~Unset() { reporting = false; } };
     static bool* _flag = &reporting;
     struct Guard { ~Guard() { *_flag = false; } } _guard;
-    const char* raw = lua_tostring(th, -1);
+    // Reporting runs after protection has returned. Numeric conversion would
+    // allocate VM memory here and could escape on a nearly exhausted quota.
+    const char* raw = lua_type(th, -1) == LUA_TSTRING ? lua_tostring(th, -1) : nullptr;
     godot::String msg = raw ? godot::String::utf8(raw) : godot::String("Unknown error");
     godot::UtilityFunctions::print_rich(godot::String("[color=") + GL_ERR_COLOR + "]" + msg + "[/color]");
     godot::UtilityFunctions::print_rich(gl_format_roblox_stack(trace));

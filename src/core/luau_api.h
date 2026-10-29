@@ -480,13 +480,7 @@ static void gl_fire_attribute_changed(Node* n, const String& attr) {
         GLAttrWatch w = v[i];
         if (!w.active || !GLReferenceAlive(w.main_L, w.ref)) { v.erase(v.begin() + i); continue; }
         if (w.node_id != id || w.attr != attr) continue;
-        lua_State* th = lua_newthread(w.main_L);
-        lua_rawgeti(w.main_L, LUA_REGISTRYINDEX, w.ref);
-        if (lua_isfunction(w.main_L, -1)) {
-            lua_xmove(w.main_L, th, 1);
-            gl_check_resume(th, GLResume(th, nullptr, 0));
-        } else lua_pop(w.main_L, 1);
-        lua_pop(w.main_L, 1);
+        GLDispatch(w.ref, [](lua_State*) -> int { return 0; });
     }
 }
 
@@ -4753,12 +4747,12 @@ static void gl_rep_apply_prop(Node* target, const String& key, const Variant& en
         }
         return;
     }
-    lua_State* th = lua_newthread(L);
-    wrap_node(th, target);                          // idx 1
-    lua_pushstring(th, key.utf8().get_data());      // idx 2
-    gl_net_decode(th, enc, target);                 // idx 3
-    godot_object_newindex_impl(th);                 // aplica SIN volver a replicar
-    lua_pop(L, 1);                                  // quita el hilo
+    GLGetOwner(L)->Domain->RunNative([&](lua_State* Thread) {
+        wrap_node(Thread, target);
+        lua_pushstring(Thread, key.utf8().get_data());
+        gl_net_decode(Thread, enc, target);
+        godot_object_newindex_impl(Thread);
+    });
 }
 
 // __newindex real: aplica y (si somos servidor de red) difunde el delta.

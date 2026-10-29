@@ -16,7 +16,8 @@ def Main():
     Expected = {
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
-        'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])]
+        'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
+        'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']]
     }
     Groups = {}
     for Name, Labels in Expected.items():
@@ -28,6 +29,10 @@ def Main():
     for Marker in ['[Runtime:ChildRelay] PASS', '[Runtime:ChildRelay] Independent domain destruction and replacement checked', '[Runtime:ChildRelay] Scene generations PASS', '[Runtime:ChildRelay] Dispatch shutdown PASS']:
         if Marker not in Lifecycle:
             raise ValueError('GL-022 native regression was not exercised: ' + Marker)
+    for Label in Expected['resources']:
+        Text = (Args.output / 'resources' / (Label + '.stdout.log')).read_text(errors='replace')
+        if '[Runtime:Resource] PASS ' + Label.removeprefix('resource-') not in Text or '[Runtime:Resource] FAIL' in Text:
+            raise ValueError('GL-004 native resource regression missing/failed: ' + Label)
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
@@ -38,7 +43,7 @@ def Main():
         'Scope': 'Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification'
     }
     (Args.output / 'summary.json').write_text(json.dumps(Evidence, indent=2))
-    print('[Runtime:NativeCI] PASS 28 required process results')
+    print('[Runtime:NativeCI] PASS 36 required process results')
 
 
 if __name__ == '__main__':

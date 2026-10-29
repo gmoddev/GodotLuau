@@ -791,15 +791,11 @@ class NetworkService : public Node {
         std::vector<NCB> snapshot = cbs;
         for (auto& cb : snapshot) {
             if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
-            lua_State* th = lua_newthread(cb.L);
-            lua_rawgeti(cb.L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.L, -1)) {
-                lua_xmove(cb.L, th, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 int nargs = 0;
-                if (has_id) { lua_pushinteger(th, id); nargs = 1; }
-                gl_check_resume(th, GLResume(th, nullptr, nargs));
-            } else lua_pop(cb.L, 1);
-            lua_pop(cb.L, 1);
+                if (has_id) { lua_pushinteger(Thread, id); nargs = 1; }
+                return nargs;
+            });
         }
     }
 
@@ -1401,17 +1397,20 @@ public:
                 : "InvokeClient: OnClientInvoke is not set for this RemoteFunction");
             return;
         }
-        lua_State* th = lua_newthread(L);
-        lua_getglobal(th, "__gl_rf_serve");
-        if (!lua_isfunction(th, -1)) { lua_pop(L, 1); _rf_send_error(reply_peer, call_id, "RemoteFunction handler could not be started"); return; }
-        lua_rawgeti(th, LUA_REGISTRYINDEX, handler_ref);   // handler
-        if (player) _gl_push_node(th, player); else lua_pushnil(th);   // player
-        lua_pushnumber(th, (double)call_id);               // callId
-        lua_pushnumber(th, (double)reply_peer);            // replyPeer
-        lua_pushboolean(th, is_server ? 1 : 0);            // isServer
-        int n = gl_net_decode_args(th, args, this);        // ...args
-        gl_check_resume(th, GLResume(th, nullptr, 5 + n));
-        lua_pop(L, 1);   // quitar el hilo wrapper (el handler corre en su propio hilo de task.spawn)
+        int Status = GLDispatch(handler_ref, [&](lua_State* Thread) -> int {
+            // Prepare supplied the handler; insert the trusted serving wrapper
+            // ahead of it so the handler becomes the wrapper's first argument.
+            lua_getglobal(Thread, "__gl_rf_serve");
+            luaL_checktype(Thread, -1, LUA_TFUNCTION);
+            lua_insert(Thread, 1);
+            if (player) _gl_push_node(Thread, player); else lua_pushnil(Thread);
+            lua_pushnumber(Thread, (double)call_id);
+            lua_pushnumber(Thread, (double)reply_peer);
+            lua_pushboolean(Thread, is_server ? 1 : 0);
+            return 5 + gl_net_decode_args(Thread, args, this);
+        });
+        if (Status != LUA_OK && Status != LUA_YIELD)
+            _rf_send_error(reply_peer, call_id, "[Runtime:Callback] RemoteFunction handler could not be started");
     }
     void _rf_invoke_server(String path, int call_id, Array args) {
         if (!is_server()) return;

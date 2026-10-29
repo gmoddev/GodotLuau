@@ -883,12 +883,12 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
         std::string sbc = Luau::compile(LUAU_STDLIB_CODE);
         if (luau_load(L_main, "__GodotLuauStdlib", sbc.data(), sbc.size(), 0) == 0) {
             if (lua_pcall(L_main, 0, 0, 0) != LUA_OK) {
-                UtilityFunctions::print("[GodotLuau Stdlib Error] ", lua_tostring(L_main, -1));
-                lua_pop(L_main, 1);
+                UtilityFunctions::print("[Runtime:Bootstrap] Standard library failed: ", lua_tostring(L_main, -1));
+                lua_error(L_main); // InitializeHost protects this same root state
             }
         } else {
-            UtilityFunctions::print("[GodotLuau Stdlib Syntax] ", lua_tostring(L_main, -1));
-            lua_pop(L_main, 1);
+            UtilityFunctions::print("[Runtime:Bootstrap] Standard library load failed: ", lua_tostring(L_main, -1));
+            lua_error(L_main);
         }
     }
     lua_pushnil(L_main); lua_setglobal(L_main, "_GLDomainSpawn");
@@ -948,13 +948,10 @@ void ScriptNodeBase::_gl_child_event(Node* Child, int Reference) {
     lua_State* Anchor = GLReferenceState(Reference);
     if (!Anchor || !Child) return;
     if (GLGetOwner(Anchor)->Domain->IsClosing()) return;
-    lua_State* Thread = lua_newthread(Anchor);
-    lua_rawgeti(Thread, LUA_REGISTRYINDEX, Reference);
-    if (lua_isfunction(Thread, -1)) {
+    GLDispatch(Reference, [&](lua_State* Thread) -> int {
         wrap_node(Thread, Child);
-        GLResume(Thread, nullptr, 1);
-    }
-    lua_pop(Anchor, 1);
+        return 1;
+    });
 }
 
 ScriptLanguage *LuauScript::_get_language() const {

@@ -9,6 +9,7 @@ import shutil
 import signal
 import socket
 import subprocess
+import sys
 import time
 from FixtureProcesses import StartProcess, StopProcess, StopAll
 
@@ -46,7 +47,11 @@ def Prepare(Output, Extension):
 
 def Start(Godot, Output, Script, Label, Extra, Environment):
     with open(Output / (Label + ".stdout.log"), "w") as Stdout, open(Output / (Label + ".stderr.log"), "w") as Stderr:
-        return StartProcess([str(Godot), "--headless", "--disable-crash-handler", "--single-threaded-scene", "--path", str(Output), "--script", "res://" + Script, "--", *Extra], Stdout, Stderr, Environment)
+        Command = [str(Godot), "--headless", "--disable-crash-handler", "--single-threaded-scene", "--path", str(Output), "--script", "res://" + Script, "--", *Extra]
+        if os.name == 'posix' and Label.startswith('resource-'):
+            Command = [sys.executable, '-c',
+                       'import os,resource,sys; resource.setrlimit(resource.RLIMIT_CPU,(30,30)); resource.setrlimit(resource.RLIMIT_CORE,(0,0)); os.execv(sys.argv[1],sys.argv[1:])', *Command]
+        return StartProcess(Command, Stdout, Stderr, Environment)
 
 
 def Check(Process, Deadline, Output, Label, Marker):
@@ -122,7 +127,9 @@ def Benchmark(Args, Output, Environment):
     Stage = Output / "benchmark-stage.json"
     for Count in Args.counts:
         for Trial in range(Args.repeat):
-            Configurations = [("Baseline", Args.baseline), ("Shared", Args.extension)]
+            Configurations = [("Shared", Args.extension)]
+            if Args.baseline:
+                Configurations.insert(0, ("Baseline", Args.baseline))
             if Trial % 2:
                 Configurations.reverse()
             for Mode, Extension in Configurations:
@@ -251,16 +258,27 @@ def Probes(Args, Output, Environment):
     return Results
 
 
+def Resources(Args, Output, Environment):
+    Results = []
+    for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']:
+        Label = 'resource-' + Case
+        Process = Start(Args.godot, Output, 'ResourceIntegration.gd', Label, [Case], Environment)
+        Results.append(Check(Process, time.monotonic() + Args.timeout, Output, Label, '[Runtime:Resource] PASS ' + Case))
+    return Results
+
+
 def Main():
     Parser = argparse.ArgumentParser()
     Parser.add_argument("--godot", type=Path, required=True)
     Parser.add_argument("--extension", type=Path, required=True)
     Parser.add_argument("--output", type=Path, required=True)
     Parser.add_argument("--baseline", type=Path)
+    Parser.add_argument("--benchmark", action="store_true", help="Run candidate population workload without requiring a baseline binary")
     Parser.add_argument("--asan-runtime", type=Path)
     Parser.add_argument("--teardown", action="store_true")
     Parser.add_argument("--security", action="store_true")
     Parser.add_argument("--animation", action="store_true")
+    Parser.add_argument("--resources", action="store_true")
     Parser.add_argument("--animation-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Editor"), default=["Local", "Listen", "Dedicated", "Editor"])
     Parser.add_argument("--security-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Handler"), default=["Local", "Listen", "Dedicated", "Handler"])
     Parser.add_argument("--probe", action="store_true")
@@ -296,9 +314,11 @@ def Main():
         Results = SecurityFixtures(Args, Args.output, Environment)
     elif Args.animation:
         Results = AnimationFixtures(Args, Args.output, Environment)
+    elif Args.resources:
+        Results = Resources(Args, Args.output, Environment)
     elif Args.probe:
         Results = Probes(Args, Args.output, Environment)
-    elif Args.baseline:
+    elif Args.baseline or Args.benchmark:
         Results = Benchmark(Args, Args.output, Environment)
     else:
         Results = Fixtures(Args, Args.output, Environment)

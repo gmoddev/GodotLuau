@@ -749,16 +749,13 @@ public:
     void _on_luau_part_touched(Node* p_hit, int p_ref, int64_t) {
         lua_State* Anchor = GLReferenceState(p_ref);
         if (!Anchor || !p_hit) return;
-        lua_State* Thread = lua_newthread(Anchor);
-        lua_rawgeti(Thread, LUA_REGISTRYINDEX, p_ref);
-        if (lua_isfunction(Thread, -1)) {
+        GLDispatch(p_ref, [&](lua_State* Thread) -> int {
             auto Handle = static_cast<GodotObjectWrapper*>(lua_newuserdata(Thread, sizeof(GodotObjectWrapper)));
             gow_set(Handle, p_hit);
             luaL_getmetatable(Thread, "GodotObject");
             lua_setmetatable(Thread, -2);
-            GLResume(Thread, nullptr, 1);
-        }
-        lua_pop(Anchor, 1);
+            return 1;
+        });
     }
 
     // ── Anchored ───────────────────────────────────────────────────
