@@ -220,3 +220,22 @@ gl022 roots; local receipts are ignored under `.runtime-tests/gl022`. GL-013 sta
 open after its fifth integration. GL-017/018, GL-020 adversarial qualification,
 GL-021 and unrelated capability/input/persistence/provenance/distribution issues
 remain unchanged. No further extraction or development task is started.
+
+## Main integration
+
+Starting local/remote main: `67b88c4202a5c6b9eee46cc7dd5faa4c3fcc1e01`.
+Qualified local/remote source: `ef8a6b47e918cc72d26e572f3e4a539a5db66161`.
+One clean worktree, no active file claims or divergent main changes. Normal
+`--no-ff` merge `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9` preserves all three
+commits without conflicts, squash, rebase or history rewrite. Its entire tree
+equals the qualified branch. Runtime/build/fixtures equal final tested input
+`0cdaed65f0a9592c7a19302d837e5a0e68db5c58`; native fingerprint remains
+`6b68311d1dac1af0d3e84049620a7138f5518bb2aba980dc5633a08d4efc218d` (74 inputs).
+The prior local/sanitizer and hosted evidence above applies within its original
+scope; no new full qualification is claimed from source identity alone.
+
+Architecture, index and GL-022 status now identify main as integrated. Dependency
+pins, core VM/cache/hot paths, workflows, updater and assets are unchanged. Release
+workflow remains manual-only, read-only and job-disabled; updater admission still
+returns false. No protection/ruleset bypass is needed. Fresh main Windows/Linux
+core/native CI is pending. GL-017/018 and all other independent limitations remain.

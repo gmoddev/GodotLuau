@@ -291,9 +291,11 @@ child-relay connection conflict; distinct relay targets pass both-domain coverag
 The next ranked independent candidate remains editor completion ownership, with
 its missing editor-specific fixture requirements. It is not implemented here.
 
-## Child signal subscriptions (GL-022 development branch)
+## Child signal subscriptions (GL-022 integrated)
 
-On `fix/gl-022-cross-domain-child-relay`, child subscriptions use a custom native
+Main integrates `fix/gl-022-cross-domain-child-relay` at qualified tip
+`ef8a6b47e918cc72d26e572f3e4a539a5db66161` through normal merge
+`f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`. Child subscriptions use a custom native
 Callable keyed by immutable callback reference and receiver ObjectID. Godot's
 signal map ignores bind arguments, merging the previous bound-method identity
 on a shared native ModuleScript. The existing scene domain host tracks native
@@ -302,7 +304,8 @@ Dispatch resolves ObjectIDs and the existing reference mapping; no VM pointer
 is captured by the Callable. Dead targets are reaped before the next host tick.
 The [GL-022 record](gl022-child-relay-validation.md) preserves the failing baseline,
 mechanism, lifecycle contract and passing Windows/Linux/ASan/hosted qualification.
-This fix is qualified on the development branch and is not on main.
+The integrated implementation is identical to the qualified source. Fresh main
+CI status is recorded in the integration section of that record.
 
 ## Script capabilities and scheduling
 

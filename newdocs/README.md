@@ -28,6 +28,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-022's qualified shared-ModuleScript child relay correction is integrated into
+main through `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`, preserving all three
+source commits. See the [integration record](gl022-child-relay-validation.md#main-integration).
+Release publication and the runtime updater remain disabled.
+
 GL-013's first native Vector3/Color3 implementation extraction is integrated by
 normal merge `bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7`, preserving both qualified
 source commits. See the [integration record](shared-domains-validation.md#first-extraction-main-integration-2026-10-28).

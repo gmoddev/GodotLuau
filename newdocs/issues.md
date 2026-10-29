@@ -7,7 +7,7 @@ specific captures, GL-014 is integrated into main and source-qualified, and GL-0
 is optimized, qualified and integrated into main. GL-006/GL-008 are also integrated
 into main and resolved for their qualified endpoints; GL-020 records a
 separate animation authority gap. GL-022 is fixed and qualified on its dedicated
-development branch, pending main integration. Other entries remain open. This file does not
+branch and now integrated into main. Other entries remain open. This file does not
 create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
@@ -45,7 +45,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
-| GL-022 | P2 | Fixed and qualified on development branch | Distinct native subscription identities; main retains the baseline defect |
+| GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -907,3 +907,10 @@ signals' Connect-only protocol, test-adapter teardown access and limits.
 This resolves the exercised scope on `fix/gl-022-cross-domain-child-relay`,
 not main or unrelated findings. GL-017/018 and deferred GL-020 adversarial
 qualification remain open.
+
+**Main integration:** Normal merge `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`
+preserves all three qualified GL-022 commits without conflicts. Runtime/build/
+fixture inputs are unchanged from qualified revision `0cdaed6`; see the
+[integration record](gl022-child-relay-validation.md#main-integration) for fresh
+main CI results and retained limitations. Historical branch evidence above is
+preserved; no broader issue closure or distribution readiness is inferred.
