@@ -50,6 +50,8 @@ if(GL_BUILD_GODOT_ADAPTER)
         set_target_properties(${Target} PROPERTIES PREFIX "" OUTPUT_NAME ${Output})
     endfunction()
     GLAdapter(GodotLuauAdapter ${GL_SOURCE_ROOT} godot_luau)
+    # Teardown access for the native fixture; never part of the SCons product.
+    target_compile_definitions(GodotLuauAdapter PRIVATE GL_RUNTIME_TESTS)
     if(GL_BASELINE_SOURCE_ROOT)
         GLAdapter(GodotLuauBaselineAdapter ${GL_BASELINE_SOURCE_ROOT} godot_luau_baseline)
     endif()

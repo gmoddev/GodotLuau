@@ -6,7 +6,8 @@ Historical evidence is preserved below. GL-001/GL-002 are resolved for their
 specific captures, GL-014 is integrated into main and source-qualified, and GL-019
 is optimized, qualified and integrated into main. GL-006/GL-008 are also integrated
 into main and resolved for their qualified endpoints; GL-020 records a
-separate animation authority gap. Other entries remain open. This file does not
+separate animation authority gap. GL-022 is fixed and qualified on its dedicated
+development branch, pending main integration. Other entries remain open. This file does not
 create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
@@ -44,7 +45,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
-| GL-022 | P2 | Reproduced baseline callback compatibility gap | Shared ModuleScript's second-domain child relay is absent |
+| GL-022 | P2 | Fixed and qualified on development branch | Distinct native subscription identities; main retains the baseline defect |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -861,7 +862,7 @@ silently combine this behavior change with the next GL-013 extraction.
 
 ## GL-022: Shared ModuleScript loses the second domain's child relay
 
-**Classification: Reproduced baseline callback compatibility gap; cause needs review.**
+**Original classification: Reproduced baseline callback compatibility gap; cause needs review.**
 The first fifth-extraction fixture runs the same native ModuleScript in Server
 and Client domains, with each module connecting game.ChildAdded. Both requiring
 callers retire; a later child reaches the Server callback but the Client marker
@@ -890,3 +891,19 @@ changed to address this finding. The refactor's qualification does not close it.
 identity and owner/reference cleanup, and implement a focused fix with two-domain,
 same-domain multiple connection, disconnect, caller/module destruction and fresh
 domain tests. Close only with linked fix and executed evidence.
+
+**Resolution (2026-10-29): FIXED AND QUALIFIED on the development branch.**
+The [record](gl022-child-relay-validation.md#stage-2-baseline-and-mechanism-2026-10-29)
+reproduces the shared-target failure on both unchanged Debug platforms. Godot
+source and native is_connected diagnostics confirm bound arguments are excluded
+from signal identity; public references are process-wide/non-recycled. The
+development branch uses distinct base Callables and host-owned cleanup, preserving
+module-owned callbacks after caller retirement. Windows/Linux Debug/Release
+core39 and 112 native actors pass; Windows core ASan and Linux core/full-native
+ASan/LSan pass (28 native actors). Final hosted core39/native28 pass per platform
+on `0cdaed65f0a9592c7a19302d837e5a0e68db5c58`; verified artifacts exercise all
+four required GL-022 markers. The record preserves baseline failures, the child
+signals' Connect-only protocol, test-adapter teardown access and limits.
+This resolves the exercised scope on `fix/gl-022-cross-domain-child-relay`,
+not main or unrelated findings. GL-017/018 and deferred GL-020 adversarial
+qualification remain open.

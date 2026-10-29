@@ -28,6 +28,278 @@ func Until(Key: String, Frames := 120) -> bool:
     Check(false, "Timed out waiting for " + Key)
     return false
 
+func RelayCaller(Type: String, Source: String, Marker: String) -> void:
+    var Caller := CreateScript(Type, Marker + "Caller", Source + "\ngame:SetAttribute('" + Marker + "', true)", Game)
+    await Until(Marker)
+    Caller.queue_free()
+    await process_frame
+
+func ChildConnections(Receiver: int) -> int:
+    var Count := 0
+    for Connection in Game.get_signal_connection_list("child_entered_tree"):
+        var Handler: Callable = Connection["callable"]
+        if Handler.get_object_id() == Receiver:
+            Count += 1
+    return Count
+
+func RelayChild(Name: String) -> Node:
+    var Child := Node.new()
+    Child.name = Name
+    Game.add_child(Child)
+    return Child
+
+func CheckSharedChildRelay(Storage: Node) -> void:
+    var Relay := CreateScript("ModuleScript", "SharedChildRelay", """
+local Prefix = __IS_CLIENT and 'GL022Client' or 'GL022Server'
+assert(_G.GL022DomainTag == nil or _G.GL022DomainTag == Prefix)
+_G.GL022DomainTag = Prefix
+shared.GL022Runs = (shared.GL022Runs or 0) + 1
+shared.GL022Module = {Prefix = Prefix}
+game:SetAttribute(Prefix .. 'Domain', _GL_VM_ID())
+local function Record(Child, Suffix)
+    assert(shared.GL022Module.Prefix == Prefix and _G.GL022DomainTag == Prefix)
+    if Child.Name:sub(1, 5) == 'GL022' then
+        local Key = Prefix .. Child.Name .. Suffix
+        game:SetAttribute(Key, (game:GetAttribute(Key) or 0) + 1)
+    end
+end
+shared.GL022Module.Primary = game.ChildAdded:Connect(function(Child)
+    Record(Child, 'Primary')
+    if Child.Name == 'GL022First' then
+        game:SetAttribute(Prefix .. 'Count', (game:GetAttribute(Prefix .. 'Count') or 0) + 1)
+        if not __IS_CLIENT then
+            local Nested = Instance.new('Folder')
+            Nested.Name = 'GL022Nested'
+            Nested.Parent = game
+        end
+        task.wait()
+        game:SetAttribute(Prefix .. 'Yielded', true)
+    elseif Child.Name == 'GL022DestroyOwner' then
+        script:Destroy()
+        task.wait()
+        game:SetAttribute(Prefix .. 'StaleAfterDestroy', true)
+    end
+end)
+shared.GL022Module.Secondary = game.ChildAdded:Connect(function(Child) Record(Child, 'Secondary') end)
+local Victim, Pruner
+Pruner = game.ChildAdded:Connect(function(Child)
+    if Child.Name == 'GL022Prune' then Victim:Disconnect(); Pruner:Disconnect() end
+end)
+Victim = game.ChildAdded:Connect(function(Child)
+    if Child.Name == 'GL022Prune' then game:SetAttribute(Prefix .. 'VictimRan', true) end
+end)
+assert(shared.GL022Module.Primary.Connected and shared.GL022Module.Secondary.Connected)
+-- Child signals currently expose Connect/connect only. Existing service
+-- Once/Wait fixtures below retain their separate public contracts.
+assert(game.ChildAdded.Once == nil and game.ChildAdded.Wait == nil)
+return shared.GL022Module
+""", Storage)
+    for Type in ["ServerScript", "LocalScript"]:
+        var Prefix := "GL022Server" if Type == "ServerScript" else "GL022Client"
+        var Caller := CreateScript(Type, Prefix + "Caller", """
+local First = require(game.ReplicatedStorage.SharedChildRelay)
+assert(First == require(game.ReplicatedStorage.SharedChildRelay))
+assert(First.Prefix == '%s')
+game:SetAttribute('%sReady', true)
+""" % [Prefix, Prefix], Game)
+        await Until(Prefix + "Ready")
+        Caller.queue_free()
+    await process_frame
+    await process_frame
+    var Connections: Array = []
+    for Connection in Game.get_signal_connection_list("child_entered_tree"):
+        var Handler: Callable = Connection["callable"]
+        if Handler.get_object() == Relay:
+            Connections.append({"Object": Handler.get_object_id(), "Method": Handler.get_method(), "Identity": str(Handler),
+                "Bound": Handler.get_bound_arguments(), "Hash": Handler.hash()})
+    var Child := Node.new()
+    Child.name = "GL022First"
+    Game.add_child(Child)
+    await process_frame
+    print("[Runtime:ChildRelay] ", JSON.stringify({"Module": Relay.get_instance_id(),
+        "ServerDomain": Game.get_meta("GL022ServerDomain", "missing"),
+        "ClientDomain": Game.get_meta("GL022ClientDomain", "missing"), "Connections": Connections,
+        "UnrelatedBoundRefConnected": Game.is_connected("child_entered_tree", Callable(Relay, "_gl_child_event").bind(-12345)),
+        "ServerCount": Game.get_meta("GL022ServerCount", 0), "ClientCount": Game.get_meta("GL022ClientCount", 0)}))
+    Check(Game.get_meta("GL022ServerCount", 0) == 1, "Shared ModuleScript Server child callback missing or duplicated")
+    Check(Game.get_meta("GL022ClientCount", 0) == 1, "Shared ModuleScript Client child callback missing or duplicated")
+    var RelayIdentity := Relay.get_instance_id()
+    Check(ChildConnections(RelayIdentity) == 8, "Logical child subscriptions were deduplicated")
+    await Until("GL022ServerYielded")
+    await Until("GL022ClientYielded")
+    for Prefix in ["GL022Server", "GL022Client"]:
+        Check(Game.get_meta(Prefix + "GL022NestedPrimary", 0) == 1, "Reentrant child callback crossed domains or duplicated")
+        Check(Game.get_meta(Prefix + "GL022FirstSecondary", 0) == 1, "Same-owner second callback was lost")
+    await RelayCaller("ServerScript", "local M = require(game.ReplicatedStorage.SharedChildRelay); M.Secondary:Disconnect(); M.Secondary:disconnect(); assert(not M.Secondary.Connected and M.Primary.Connected)", "GL022Disconnected")
+    RelayChild("GL022Second")
+    Check(Game.get_meta("GL022ServerGL022SecondSecondary", 0) == 0, "Disconnected callback ran")
+    Check(Game.get_meta("GL022ClientGL022SecondSecondary", 0) == 1, "Server disconnect removed Client callback")
+    RelayChild("GL022Prune")
+    Check(not Game.has_meta("GL022ServerVictimRan") and not Game.has_meta("GL022ClientVictimRan"), "Callback disconnected during dispatch still ran")
+    Check(ChildConnections(RelayIdentity) == 3, "Self/peer disconnection leaked native slots")
+    # The production host has no one-domain teardown API. The CMake test adapter
+    # exposes only this teardown helper; all executable callers retire first.
+    for Target in Game.get_children():
+        if Target.is_class("ServerScript") or Target.is_class("LocalScript"):
+            Target.queue_free()
+    await process_frame
+    await process_frame
+    var Host: Node
+    for Target in Game.get_children():
+        if Target.is_class("GLDomainHost"):
+            Host = Target
+    Check(Host != null and Host.has_method("_gl_test_reset_domain"), "Native test adapter lacks one-domain teardown access")
+    if Host != null and Host.has_method("_gl_test_reset_domain"):
+        Host.call("_gl_test_reset_domain", false)
+        Check(ChildConnections(RelayIdentity) == 2, "Server VM shutdown removed Client or retained Server slots")
+        RelayChild("GL022ClientSurvives")
+        Check(Game.get_meta("GL022ClientGL022ClientSurvivesPrimary", 0) == 1, "Client callback lost after Server VM destruction")
+        Check(Game.get_meta("GL022ServerGL022ClientSurvivesPrimary", 0) == 0, "Destroyed Server VM received callback")
+        await RelayCaller("ServerScript", "local M = require(game.ReplicatedStorage.SharedChildRelay); assert(shared.GL022Runs == 1 and M.Prefix == 'GL022Server')", "GL022FreshServer")
+        RelayChild("GL022Fresh")
+        for Prefix in ["GL022Server", "GL022Client"]:
+            Check(Game.get_meta(Prefix + "GL022FreshPrimary", 0) == 1, "Fresh VM revived stale callback or lost current callback")
+        Check(ChildConnections(RelayIdentity) == 6, "Fresh VM duplicated native subscriptions")
+        print("[Runtime:ChildRelay] Independent domain destruction and replacement checked")
+    for Type in ["ServerScript", "LocalScript"]:
+        await RelayCaller(Type, "shared.GL022Old = require(game.ReplicatedStorage.SharedChildRelay)", "GL022Saved" + Type)
+    var Resource: Script = Relay.call("get_codigo_luau")
+    Resource.source_code += "\n-- GL022 revised source"
+    Check(ChildConnections(RelayIdentity) == 0, "Module revision left native connections behind")
+    for Type in ["ServerScript", "LocalScript"]:
+        await RelayCaller(Type, "assert(not shared.GL022Old.Primary.Connected); local M = require(game.ReplicatedStorage.SharedChildRelay); assert(M ~= shared.GL022Old and shared.GL022Runs == 2)", "GL022Reloaded" + Type)
+    CreateScript("ModuleScript", "OtherChildRelay", """
+game.ChildAdded:Connect(function(Child)
+    if Child.Name == 'GL022OtherSurvives' then game:SetAttribute('GL022OtherDelivered', true) end
+end)
+return true
+""", Storage)
+    await RelayCaller("ServerScript", "assert(require(game.ReplicatedStorage.OtherChildRelay))", "GL022OtherReady")
+    RelayChild("GL022DestroyOwner")
+    await process_frame
+    await process_frame
+    Check(not is_instance_valid(Relay) and ChildConnections(RelayIdentity) == 0, "Callback-triggered module deletion retained connections")
+    Check(not Game.has_meta("GL022ServerStaleAfterDestroy") and not Game.has_meta("GL022ClientStaleAfterDestroy"), "Destroyed module resumed a yielded callback")
+    RelayChild("GL022OtherSurvives")
+    Check(Game.get_meta("GL022OtherDelivered", false), "Destroying one module removed another module's subscription")
+    var NativeTarget := RelayChild("GL022NativeTarget")
+    var TargetOwner := CreateScript("ServerScript", "GL022TargetOwner", """
+shared.GL022SavedSignal = game.GL022NativeTarget.ChildAdded
+shared.GL022TargetConnection = shared.GL022SavedSignal:Connect(function() error('dead target callback') end)
+game:SetAttribute('GL022TargetReady', true)
+""", Game)
+    await Until("GL022TargetReady")
+    NativeTarget.free()
+    await process_frame
+    await process_frame
+    await RelayCaller("ServerScript", "assert(not shared.GL022TargetConnection.Connected); shared.GL022TargetConnection:Disconnect(); assert(shared.GL022SavedSignal:Connect(function() end) == nil)", "GL022DeadTargetChecked")
+    TargetOwner.queue_free()
+    await CheckScriptChildRelay()
+    Child.queue_free()
+    await process_frame
+    if not Failed:
+        print("[Runtime:ChildRelay] PASS")
+
+func CheckScriptChildRelay() -> void:
+    var Owner := CreateScript("ServerScript", "GL022ScriptOwner", """
+shared.GL022ScriptConnection = game.ChildAdded:Connect(function(Child)
+    if Child.Name:sub(1, 11) == 'GL022Script' then
+        game:SetAttribute(Child.Name, (game:GetAttribute(Child.Name) or 0) + 1)
+    end
+end)
+game.ChildRemoved:Connect(function(Child)
+    if Child.Name == 'GL022Removal' then game:SetAttribute('GL022Removed', true) end
+end)
+game:SetAttribute('GL022ScriptReady', true)
+""", Game)
+    await Until("GL022ScriptReady")
+    var Identity := Owner.get_instance_id()
+    Check(ChildConnections(Identity) == 1, "Script child callback missing")
+    var Removed := RelayChild("GL022Removal")
+    Game.remove_child(Removed)
+    Removed.free()
+    Check(Game.get_meta("GL022Removed", false), "ChildRemoved relay changed behavior")
+    Owner.call("set_enabled", false)
+    RelayChild("GL022ScriptDisabled")
+    Check(not Game.has_meta("GL022ScriptDisabled") and ChildConnections(Identity) == 0, "Disable retained script callback")
+    Owner.call("set_enabled", true)
+    await process_frame
+    await process_frame
+    RelayChild("GL022ScriptEnabled")
+    Check(Game.get_meta("GL022ScriptEnabled", 0) == 1 and ChildConnections(Identity) == 1, "Re-enable duplicated or lost callback")
+    var Resource: Script = Owner.call("get_codigo_luau")
+    Resource.source_code += "\n-- GL022 executable reload"
+    await process_frame
+    await process_frame
+    RelayChild("GL022ScriptReloaded")
+    Check(Game.get_meta("GL022ScriptReloaded", 0) == 1 and ChildConnections(Identity) == 1, "Reload revived a retired script subscription")
+    Owner.queue_free()
+    await process_frame
+    Check(ChildConnections(Identity) == 0, "Script destruction leaked child connections")
+
+func CheckRelayScenes() -> void:
+    var Source := Node.new()
+    Source.name = "GL022External"
+    root.add_child(Source)
+    for Generation in range(2):
+        Game.queue_free()
+        await process_frame
+        await process_frame
+        Check(Source.get_signal_connection_list("child_entered_tree").is_empty(), "Scene shutdown retained external native connections")
+        Game = Node.new()
+        Game.name = "Game"
+        root.add_child(Game)
+        current_scene = Game
+        var Storage := Node.new()
+        Storage.name = "ReplicatedStorage"
+        Game.add_child(Storage)
+        CreateScript("ModuleScript", "SceneRelay", """
+local Prefix = __IS_CLIENT and 'Client' or 'Server'
+assert(shared.GL022Scene == nil)
+shared.GL022Scene = true
+local Target = game.Parent.GL022External
+Target.ChildAdded:Connect(function(Child)
+    if Child.Name == 'GL022CloseScene' then
+        Target:SetAttribute('GL022CloseDispatches', (Target:GetAttribute('GL022CloseDispatches') or 0) + 1)
+        game:Destroy()
+        task.wait()
+        Target:SetAttribute('GL022StaleAfterSceneShutdown', true)
+        return
+    end
+    local Key = Prefix .. 'SceneCount'
+    Target:SetAttribute(Key, (Target:GetAttribute(Key) or 0) + 1)
+end)
+return true
+""", Storage)
+        for Type in ["ServerScript", "LocalScript"]:
+            await RelayCaller(Type, "assert(require(game.ReplicatedStorage.SceneRelay))", "GL022Scene" + str(Generation) + Type)
+        Check(Source.get_signal_connection_list("child_entered_tree").size() == 2, "Fresh scene lost a domain or duplicated stale native callbacks")
+        var Child := Node.new()
+        Source.add_child(Child)
+        for Prefix in ["Server", "Client"]:
+            Check(Source.get_meta(Prefix + "SceneCount", 0) == Generation + 1, "Callback delivered through stale scene or wrong VM")
+        Child.queue_free()
+        if Generation == 1:
+            var CloseChild := Node.new()
+            CloseChild.name = "GL022CloseScene"
+            Source.add_child(CloseChild)
+            await process_frame
+            await process_frame
+            Check(Source.get_meta("GL022CloseDispatches", 0) == 1, "Closing domain dispatched another callback")
+            Check(not Source.has_meta("GL022StaleAfterSceneShutdown"), "Scene destruction resumed retired callback work")
+            Check(Source.get_signal_connection_list("child_entered_tree").is_empty(), "Dispatch shutdown retained native connections")
+            CloseChild.queue_free()
+            if not Failed:
+                print("[Runtime:ChildRelay] Dispatch shutdown PASS")
+    if is_instance_valid(Game):
+        Game.queue_free()
+    await process_frame
+    await process_frame
+    Check(Source.get_signal_connection_list("child_entered_tree").is_empty(), "Final scene left native signal connections")
+    Source.free()
+    if not Failed:
+        print("[Runtime:ChildRelay] Scene generations PASS")
+
 func Run() -> void:
     var LoadResult := GDExtensionManager.load_extension("res://godot_luau.gdextension")
     Check(LoadResult == GDExtensionManager.LOAD_STATUS_OK or LoadResult == GDExtensionManager.LOAD_STATUS_ALREADY_LOADED, "Extension failed to load")
@@ -124,6 +396,7 @@ game:SetAttribute('%s', true)
     await Until("BootstrapServerAttribute")
     await Until("BootstrapClientAttribute")
     print("[Runtime:Integration] Per-domain bootstrap, shared module wrappers and retired-caller child relays checked")
+    await CheckSharedChildRelay(Storage)
     # Exercise the native value bindings in both domains through production APIs.
     for Type in ["ServerScript", "LocalScript"]:
         var Prefix := "ValueServer" if Type == "ServerScript" else "ValueClient"
@@ -566,6 +839,7 @@ game:SetAttribute('LuaSubscribed', true)
     AfterWarning.name = "AfterWarning"
     Game.add_child(AfterWarning)
     await Until("WarnWaitDone")
+    await CheckRelayScenes()
     print("[Runtime:Integration] Child waits, owner destruction, survivor cache, disable/reload and retained WaitForChild checked")
     print("[Runtime:Integration] ", "FAILED" if Failed else "PASS")
     quit(1 if Failed else 0)

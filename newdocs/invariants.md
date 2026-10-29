@@ -17,6 +17,10 @@ the inherited runtime already satisfies them. Baseline gaps link to
   Reload, destruction during callback execution, and pending yields require
   explicit ownership and regression coverage. Existing live-VM guards are useful
   implementation evidence, not a complete proof.
+- Child subscriptions have independent native Callable identities even when
+  Server/Client owners share one native ModuleScript. Caller retirement must not
+  retire module-owned callbacks. Disconnect/invalidation affects only the owning
+  reference before VM release; native endpoints resolve through ObjectIDs. GL-022.
 
 ## Execution domains and capabilities
 
