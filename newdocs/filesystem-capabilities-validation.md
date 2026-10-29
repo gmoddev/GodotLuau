@@ -179,7 +179,7 @@ restrictions follow ADR-003. GL-005, GL-009, GL-017/018, GL-020 adversarial
 qualification, trusted project graphs and same-credential OS writers remain
 outside the fix. This is no claim of remote script injection or an OS sandbox.
 
-## Publication and hosted CI
+## Branch publication and hosted CI
 
 Implementation commit `c3fc544a686b5d43bf67f0f5e864105957c52171` is published on
 the dedicated branch; remote main remains `2e89995`. Fresh hosted core run
@@ -203,3 +203,96 @@ Main integration is deliberately pending, not part of this task. Main remains
 `2e899956fa685b0b5cbe8e058c506c9d2ffc760f`; no history was rewritten, release
 publication remains disabled, and the runtime updater still rejects admission.
 The owned Linux container is stopped; worker build caches and logs remain.
+
+## Main integration (2026-10-29)
+
+Requested scope is integration/verification only. Starting local and remote main
+is `2e899956fa685b0b5cbe8e058c506c9d2ffc760f`. The clean, single checkout has no
+active file claims or unrelated changes. Source tip
+`9824faf5937654ba48558b43d09a3064d25a71fa` is exactly two commits ahead, without
+divergence: implementation `c3fc544a686b5d43bf67f0f5e864105957c52171` and its
+documentation/evidence follow-up. The follow-up changes five `newdocs` files
+only; source, tests, builds, workflows and dependency pins are identical.
+
+Normal merge `5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2` preserves both source
+commits, with starting main and source tip as its first and second parents.
+Its full tree is identical to the qualified tip (tree
+`5db120938012f2870ea51c9887632b6a831b13dd`). No conflict, implementation,
+capability, persistence model, dependency or workflow adjustment is required.
+The retained native fingerprint is
+`16b67f44c4120b3a9790e501c7f8ed1753d8559530e5b4d76318742ab5f932a5` (78 inputs).
+The original test README's branch-qualification text describes the pre-integration
+checkpoint; this section supplies current main status without changing test inputs.
+
+Source review confirms one VM-owned storage bridge and one bootstrap installation,
+native raw denial, current live owner/domain/native-role admission, operation
+grants and bounded namespace leaves. Validation precedes mutation; Linux
+descriptor-relative/no-follow and Windows handle-relative/reparse checks remain
+exactly qualified. No unrestricted fallback or second authority registry is added.
+Legacy filenames/encoding, Server services, Client local Messaging, shared
+mailboxes/maps and API shapes follow ADR-003 unchanged. Editor operations still
+require the actual editor hint; project assets retain their narrower trusted
+ResourceLoader contract. GL-004 core/host implementation is unchanged apart from
+the qualified read-only shutdown-thread predicate; GL-022 relay ownership,
+GL-019 paths, networking authority and animation code retain their qualified
+contracts.
+
+Historical qualification above and both branch hosted artifacts were rechecked,
+including all four archive digests and report/source/fixture/engine/log identities.
+The six-configuration sanitizer matrix and four SCons products are **reused
+evidence**, not newly executed integration tests. Their inputs/pins are identical.
+
+Fresh worker checks use the existing incremental CMake directories with two jobs,
+Debug/Release core CTest and all five Debug native groups. Fresh outputs are
+`gl003-main-5ba96ad-{windows,linux}`; build/core/check logs use the same prefix.
+Source, all 26 harness files, core test source and engine bytes match the qualified
+record before testing. Windows dependency HEADs match the pins. The first Linux
+identity probe stops before testing because its cached dependency trees lack Git
+metadata; the corrected probe hashes every pinned tracked dependency path/content
+with normalized newlines, verifies exact contents, then starts the same tests.
+No runtime/fixture assertion is weakened or changed.
+
+Windows and Linux fresh Debug/Release core each pass 69 cases, and Debug native
+passes all 39 actors per platform, including the three filesystem/service actors.
+The same raw-denial, wrong-role, invalid-name/path, unchanged sentinel, rejected
+delete/list/write, retained function, reload/fresh-domain and closing-thread
+assertions execute against production native code. Host GDScript fixture writes
+and trusted project image/sound/animation controls pass; no interactive editor
+session is newly qualified. Existing native lifecycle/network/resource/animation
+groups retain GL-004/019/022 and network/functional-animation acceptance facts.
+
+The merge is pushed to origin/main and read back as
+`5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2`. Remote ancestry retains both source
+commits, and the development branch remains at `9824faf`. Fresh main core run
+[`40970974054`](https://github.com/gmoddev/GodotLuau/actions/runs/40970974054)
+passes both platforms: downloaded archives match GitHub digests, discovery is
+exact, and each report contains all 69 distinct passing cases. Main native run
+[`40970974142`](https://github.com/gmoddev/GodotLuau/actions/runs/40970974142)
+passes Windows and Linux native qualification: all 39 actors and all three
+filesystem PASS markers per platform. Both native summaries identify the exact
+merge, the qualified native fingerprint, all 26 fixture hashes and official
+engine executable bytes. Every retained native log hash is checked, as are
+four GL-022 lifecycle markers and eight GL-004 resource markers per platform.
+All four downloaded main CI archive digests match GitHub. Required actor labels,
+zero exits and on-disk results match each summary; no required test is omitted.
+Observation was bounded to 20 minutes from the initial main CI check; pending
+compilation was never reported as a pass. The final hosted verification completes
+after both jobs actually succeed.
+
+**Disposition: INTEGRATED AND VERIFIED**, resolving GL-003 only within ADR-003's
+documented native-storage authority contract. Direct raw access and alternate
+paths remain denied without sentinel mutation, while authorized Server storage,
+legacy data, cross-process Messaging/MemoryStore, trusted project resources,
+reload/domain replacement and close-save behavior pass the fresh fixtures.
+No new interactive editor qualification, hostile-project/OS sandbox, I/O
+preemption, native/process memory cap, transactional persistence or adversarial
+animation guarantee is inferred. GL-005, GL-009, GL-017, GL-018 and GL-020's
+adversarial qualification remain separate and unresolved within their own scope.
+
+The documentation-only completion commit follows the verified merge, with no
+runtime, test, build, workflow or dependency input changes. Its final remote SHA
+is captured after push in local `.runtime-tests/gl003/main/final-state.json` and
+the completion report. Final source/configuration identities remain those above.
+Release publication and updater admission remain disabled. The owned Linux
+container is stopped, Windows has no remaining build/Godot processes, and useful
+caches/logs and unrelated services are preserved. No next development task starts.

@@ -26,14 +26,14 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 - Client/server context describes execution, not a privilege grant. Check native
   operations at the boundary rather than relying on a higher-level wrapper or
-  the name/visibility of a global. GL-003's branch implements the bounded native
+  the name/visibility of a global. Integrated GL-003 implements the bounded native
   storage contract in [ADR-003](adr-003-native-storage-authority.md); qualification
   and integration status remain in the issue ledger.
 - Define supported script trust explicitly before advertising sandboxing.
   Lower-trust script support requires restricted globals, explicit capabilities,
   confined filesystem roots, bounded input/output, cancellation, and accountable
   execution/memory limits. Integrated resource controls follow ADR-002;
-  native storage authority follows ADR-003 on its dedicated branch; HTTP capability
+  native storage authority follows ADR-003 on main; HTTP capability
   and scheduling remain GL-005. Trusted project assets are not hostile-package
   isolation or a race-resistant ResourceLoader sandbox.
 - One VM exists per applicable Server/Client domain in a running game process;

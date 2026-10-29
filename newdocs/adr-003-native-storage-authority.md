@@ -1,8 +1,11 @@
 # ADR-003: Native service storage authority
 
-Status: implemented and qualified on
-`security/gl-003-filesystem-capabilities`, including fresh Windows/Linux hosted
-core/native CI. Not merged into main.
+Status: accepted, qualified and integrated by normal merge
+`5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2`, retaining both source commits on
+`security/gl-003-filesystem-capabilities`. Fresh main Windows/Linux core/native
+hosted CI and local integration checks pass in the linked integration record.
+GL-003 is resolved within this native-storage authority contract; the trust and
+resource limitations below remain unchanged.
 Extends ADR-001/002 without changing VM or scheduler
 ownership. Executed evidence and unresolved checks live in the
 [work record](filesystem-capabilities-validation.md).

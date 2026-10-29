@@ -28,8 +28,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-003 is fixed and qualified on `security/gl-003-filesystem-capabilities`, with
-fresh hosted Windows/Linux core/native CI and no main merge.
+GL-003 is integrated by normal merge `5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2`,
+preserving both qualified commits on `security/gl-003-filesystem-capabilities`.
+Fresh Windows/Linux local integration checks and main hosted core/native CI pass;
+GL-003 is resolved within ADR-003's bounded native-storage authority contract.
+See the [main integration record](filesystem-capabilities-validation.md#main-integration-2026-10-29).
 The [filesystem boundary work record](filesystem-capabilities-validation.md)
 separates reproduced baseline behavior, implemented
 [storage authority](adr-003-native-storage-authority.md) and executed qualification.

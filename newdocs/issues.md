@@ -26,7 +26,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | --- | --- | --- | --- |
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
 | GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
-| GL-003 | P1 | Fixed and qualified on branch; main integration pending | Native file global bypasses higher-level role restrictions on main |
+| GL-003 | P1 | Resolved within ADR-003; integrated and verified | Native file global bypassed higher-level role restrictions |
 | GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
@@ -123,9 +123,16 @@ actors and four SCons products each with eleven resource/filesystem actors pass.
 Fresh hosted core `40881074709` passes all 69 cases per platform; native
 `40881074701` passes all 39 actors per platform. All four downloaded artifact
 digests, source/harness/engine identities and native log hashes are verified in
-the linked record and manifest. Main integration remains pending by request;
-main `2e89995` still has the exposure. GL-005/009 and the documented project/OS
-trust and sanitizer limitations remain separate.
+the linked record and manifest. Normal merge
+`5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2` integrates both commits with an
+identical tree. Fresh Windows/Linux Debug/Release core passes 69 cases each and
+Debug native passes all 39 actors per platform. Fresh main core `40970974054`
+passes all 69 cases per platform; native `40970974142` passes all 39 actors per
+platform, including GL-003 filesystem/service fixtures. Four downloaded archive
+digests, exact merge/source/harness/engine identities and every native log hash
+are verified. **Resolved within ADR-003's bounded native-storage authority
+contract.** GL-005/009/017/018, adversarial GL-020, trusted project resources,
+same-credential OS writers and native I/O/allocation limitations remain separate.
 
 **Inherited review evidence:** `src/core/luau_script.h:1604-1642` unconditionally installs
 `_FileAccess.read/write/exists/delete/list`; supplied paths reach FileAccess or
