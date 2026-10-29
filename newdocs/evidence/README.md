@@ -1,5 +1,9 @@
 # Shared-domain qualification evidence
 
+[GL-022 main integration](gl022-main-integration-2026-10-29.json) records the
+normal merge, source identity and successful fresh hosted Windows/Linux core
+and native gates, with verified artifact digests and executed GL-022 markers.
+
 [GL-022 child relay](gl022-child-relay-2026-10-29.json) records the preceding
 GL-013 bootstrap main integration, failing shared-target baseline, verified
 Callable identity mechanism, final input/fixture/library hashes, 140 local

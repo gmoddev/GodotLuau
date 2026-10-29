@@ -238,4 +238,25 @@ Architecture, index and GL-022 status now identify main as integrated. Dependenc
 pins, core VM/cache/hot paths, workflows, updater and assets are unchanged. Release
 workflow remains manual-only, read-only and job-disabled; updater admission still
 returns false. No protection/ruleset bypass is needed. Fresh main Windows/Linux
-core/native CI is pending. GL-017/018 and all other independent limitations remain.
+core/native CI passed as recorded below. GL-017/018 and all other independent limitations remain.
+
+**INTEGRATED AND VERIFIED within retained qualification limits.** Main was
+pushed/read back at `e98a8909cd2b5b7680a888956dca6db13032c8de`.
+Fresh [core 40827734653](https://github.com/gmoddev/GodotLuau/actions/runs/40827734653)
+and [native 40827734737](https://github.com/gmoddev/GodotLuau/actions/runs/40827734737)
+complete successfully on that exact revision. Both core logs contain 39 distinct
+PASS cases and zero failures. Each native platform passes eight lifecycle,
+ten network and ten functional animation actors. Both downloaded artifact
+digests match GitHub metadata; summaries match revision, native fingerprint,
+all 22 harness hashes and 28 zero exits. Both actual Integration logs include
+all four GL-022 markers, including independent VM replacement and shutdown
+during dispatch. No pending job is counted as passing.
+
+The [integration manifest](evidence/gl022-main-integration-2026-10-29.json)
+records immutable revisions, run IDs and artifact digests. The final evidence
+follow-up changes documentation/data only, so qualified source/build/fixtures
+remain identical. Its commit following `e98a890` is the publication tip.
+The source branch remains retained at `ef8a6b4`. Release jobs and runtime updater
+remain disabled, with no workflow dispatch, binaries or release publication.
+Prior sanitizer/Release evidence remains reused within its original scope;
+fresh hosted Debug CI does not close GL-017/018 or GL-020 adversarial gaps.

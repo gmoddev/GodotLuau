@@ -1,0 +1,29 @@
+{
+  "StartingMain": "67b88c4202a5c6b9eee46cc7dd5faa4c3fcc1e01",
+  "QualifiedBranchTip": "ef8a6b47e918cc72d26e572f3e4a539a5db66161",
+  "Merge": "f1e1b9c492e56549a72739ad3086ad3ec9c32ee9",
+  "HostedRevision": "e98a8909cd2b5b7680a888956dca6db13032c8de",
+  "CoreRun": 40827734653,
+  "NativeRun": 40827734737,
+  "CoreCasesPerPlatform": 39,
+  "HostedResults": "All four jobs success",
+  "Artifacts": {
+    "runtime-native-Windows-Debug": {
+      "Artifact": 12877419569,
+      "SHA256": "286ec6d08e47ce8555f01f6c96aa77558736e3e29b8d512f7790a2c82a51fd1f",
+      "Processes": 28,
+      "SourceAnd22HarnessHashesMatch": true,
+      "FourGL022MarkersVerified": true,
+      "AllExitsZero": true
+    },
+    "runtime-native-Linux-Debug": {
+      "Artifact": 12877404101,
+      "SHA256": "4d165934ab423c42596d4febfcb39dacb6e0862cc0171384ec112194203e22ff",
+      "Processes": 28,
+      "SourceAnd22HarnessHashesMatch": true,
+      "FourGL022MarkersVerified": true,
+      "AllExitsZero": true
+    }
+  },
+  "Disposition": "INTEGRATED AND VERIFIED within retained qualification limits"
+}
