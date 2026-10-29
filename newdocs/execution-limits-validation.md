@@ -369,3 +369,29 @@ remain disabled. No PR, upstream message, distribution or main merge is created.
 GL-003/005, Windows native ASan GL-018, GL-020 adversarial qualification and other
 independent limitations remain open. The owned Linux qualification container is
 stopped; caches/logs are preserved and unrelated services remain untouched.
+
+## Main integration
+
+Starting local/remote main: `8aec90252d10f7dcec97e97423ca390467087711`.
+Qualified local/remote branch tip: `f38e4faa06498ff748a8733b9f11bbc54500a816`.
+One clean worktree, no active claims, three commits ahead and no divergence.
+Normal merge `55a9c20827dda9dda67372e655e67803e21236b1` preserves `1e201ed`,
+`040996e` and `f38e4fa`, without conflict, squash, rebase or force-push.
+The merge's entire tree equals the qualified tip. Its runtime, policy, build,
+fixtures, workflows and pins also equal hosted source `040996e`.
+Native fingerprint remains `8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c`
+(75 inputs). There is no policy/default, hook, allocator or registration change.
+
+Fresh worker verification passes Windows/Linux Debug and Release core (66 cases
+per configuration), plus Debug native lifecycle/GL-022 and all eight resource
+actors (16 per platform). Incremental builds use two jobs and unchanged caches.
+Worker native fingerprints and all 24 harness hashes match the qualified source.
+The [integration manifest](evidence/gl004-main-integration-2026-10-29.json)
+retains fresh JUnit/result digests. The historical
+six-configuration core, 180-actor native, SCons, sanitizer and workload evidence
+above is reused within its original scope, not described as newly executed.
+Release jobs remain manual-only, read-only and job-disabled; updater admission
+still returns false. No binary/archive publication or upstream operation occurs.
+Fresh main hosted core/native CI remains pending. GL-003/005, GL-018 and GL-020
+adversarial qualification remain independent; VM quotas do not bound native RSS,
+and Luau interrupts cannot preempt arbitrary native blocking calls.

@@ -1,0 +1,121 @@
+{
+  "StartingMain": "8aec90252d10f7dcec97e97423ca390467087711",
+  "QualifiedTip": "f38e4faa06498ff748a8733b9f11bbc54500a816",
+  "Merge": "55a9c20827dda9dda67372e655e67803e21236b1",
+  "Disposition": "Local integration verified; fresh hosted CI pending",
+  "FreshWorkers": {
+    "linux": {
+      "NativeSource": {
+        "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+        "Files": 75,
+        "Newlines": "LF normalized"
+      },
+      "Core": {
+        "debug": {
+          "Cases": 66,
+          "JUnitSHA256": "6f18396ca31a4a268afb057c4c2aabfe77ce2109174a6caa13ae82859af93848"
+        },
+        "release": {
+          "Cases": 66,
+          "JUnitSHA256": "288019b76ee1cfcb7cbee9defb8b74b32e96b81136e2ca83cf3a2d0823f09953"
+        }
+      },
+      "Native": {
+        "regression": {
+          "Actors": 8,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "Path": "/work/results/gl004-main-integration-linux/regression"
+        },
+        "resources": {
+          "Actors": 8,
+          "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+          "Path": "/work/results/gl004-main-integration-linux/resources"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f",
+        "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37"
+      }
+    },
+    "windows": {
+      "NativeSource": {
+        "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+        "Files": 75,
+        "Newlines": "LF normalized"
+      },
+      "Core": {
+        "debug": {
+          "Cases": 66,
+          "JUnitSHA256": "acc88efbdab52829c2f1bd8e49ecb50e989dfc94423149acc7da7eca279d96f0"
+        },
+        "release": {
+          "Cases": 66,
+          "JUnitSHA256": "dfb8e8cffefdb84b2df571b08ee9c6a8f03f752abf2d418c4cbed2608355ed27"
+        }
+      },
+      "Native": {
+        "regression": {
+          "Actors": 8,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-main-integration-windows\\regression"
+        },
+        "resources": {
+          "Actors": 8,
+          "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-main-integration-windows\\resources"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+        "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+        "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+      }
+    }
+  },
+  "ReusedEvidence": "gl004-execution-limits-2026-10-29.json within original scope; no new sanitizer/SCons qualification",
+  "ReleasePublication": false,
+  "RuntimeUpdater": false
+}

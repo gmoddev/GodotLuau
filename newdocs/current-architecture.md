@@ -318,7 +318,7 @@ native global. OS permissions and platform restrictions still apply.
 HTTP uses synchronous `HTTPClient` polling and delays on the calling thread
 in `luau_script.cpp`. It has a nominal ten-second timeout; this is not a
 nonblocking scheduler or a demonstrated bound on every network/body path.
-On `runtime/gl-004-execution-limits`, VM creation uses an allocator-backed domain
+After GL-004 integration on main, VM creation uses an allocator-backed domain
 account with a hard requested-byte quota. Trusted registration/stdlib bootstrap
 precedes sandbox sealing; intrinsic libraries/root globals become read-only,
 while existing mutable custom facades and `_G`/`shared` retain their contracts.
@@ -326,7 +326,7 @@ Owner environments use luaL_sandboxthread with safeenv disabled so custom typeof
 mutable facades and getfenv/setfenv keep their actual behavior. No new filesystem
 or HTTP capability gate is introduced. Imported/hostile script isolation remains
 outside the supported claim. See [ADR-002](adr-002-domain-resource-policy.md)
-and the [branch qualification record](execution-limits-validation.md).
+and the [qualification/integration record](execution-limits-validation.md).
 
 Gameplay resumes, synchronous invokes and native argument preparation use
 protected boundaries on the state that allocates/executes. Active C++ execution
@@ -365,7 +365,7 @@ Disable/destroy/source reload invalidates a run's callbacks, waits and tasks;
 re-enable/reload starts a fresh environment. Unrelated owners and module caches
 survive. Shutdown closes admission in both domains before a finite BindToClose
 snapshot, then invalidates owners; close hooks cannot initialize modules or
-schedule new work, and yielded close hooks are cancelled. GL-004's branch adds
+schedule new work, and yielded close hooks are cancelled. Integrated GL-004 adds
 VM safepoint/elapsed interruption and one aggregate close-hook deadline. Local synchronous
 RemoteFunction fallback remains non-yielding; network handlers support yields.
 Native stack guards use per-thread OS bounds on Windows/Linux and real frame/
