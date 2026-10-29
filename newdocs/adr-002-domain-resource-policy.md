@@ -1,6 +1,6 @@
 # ADR-002: Shared-domain resource policy
 
-Status: locally qualified on `runtime/gl-004-execution-limits`; fresh hosted CI pending.
+Status: accepted and qualified on `runtime/gl-004-execution-limits`; not merged to main.
 Builds and executed evidence are recorded in [the work record](execution-limits-validation.md).
 This decision extends [ADR-001](adr-001-shared-execution-domains.md), without
 changing its VM, environment, cache or scheduler ownership model.

@@ -5,9 +5,10 @@
 Verified local/remote main `8aec90252d10f7dcec97e97423ca390467087711`;
 clean single worktree, unchanged pinned Luau and godot-cpp. Development branch:
 `runtime/gl-004-execution-limits`. No main merge or distribution is authorized.
-GL-004 remains open until implementation and executed qualification establish
-the controls below. This record is an implementation work log, not evidence
-that controls already exist.
+This chronological record preserves intermediate implementation states and
+failures. The final policy is [ADR-002](adr-002-domain-resource-policy.md);
+completed qualification and its limits appear below. GL-004 is fixed and
+qualified on this development branch, not merged to main.
 
 ## Trust and accounting contract
 
@@ -299,7 +300,8 @@ approved portable module through RunSConsPortable.py, not a global installation.
 All heavy work runs on the configured workers. Local Python AST, documentation
 link/source review and git diff whitespace checks pass. No dependency/vendor,
 asset, release workflow or updater file changes are included.
-Fresh hosted Debug CI on the published implementation is the remaining gate.
+The hosted record below completes qualification on the published implementation
+and its fixture follow-up.
 
 ## Hosted qualification
 
@@ -338,3 +340,32 @@ full-core/native/resource/SCons results retain their original fixture hashes;
 the manifest records the changed fixture and follow-up log/result digests
 separately. Runtime source remains `8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c`.
 Fresh hosted CI is required for the fixture follow-up before final qualification.
+
+Fixture follow-up `040996e7d176bd4427644b14f5b4bf30ac45ce9d` is published without
+rewriting implementation history. Fresh
+[core 40857805897](https://github.com/gmoddev/GodotLuau/actions/runs/40857805897)
+passes both platforms, 66 cases each; downloaded artifact digests and result
+reports verify. Fresh
+[native 40857806041](https://github.com/gmoddev/GodotLuau/actions/runs/40857806041)
+passes Windows and Linux with all 36 actors each and the corrected fixture hash.
+All four hosted jobs complete successfully on `040996e`. The previous failed
+native run remains counterevidence, not overwritten or counted as passing.
+
+All four downloaded artifact ZIP SHA-256 digests match GitHub metadata. Both core
+discovery/JUnit reports pass local CheckCoreCI replay. Both native summaries bind
+the exact hosted revision, the 75-input native fingerprint, all 24 effective
+harness hashes, official engine identities and 36 zero actor exits. Every retained
+native log digest verifies (94 Linux, 96 Windows), including the actual four GL-022
+and eight GL-004 resource markers. The manifest retains run/job/artifact IDs,
+digests and scope. Fresh Windows native compilation also succeeds without the
+worker's cache-local incremental-link workaround.
+
+**FIXED AND QUALIFIED on the development branch**, within ADR-002's resource and
+compatibility contract. Main remains `8aec90252d10f7dcec97e97423ca390467087711`.
+Implementation `1e201ed` and fixture follow-up `040996e` are retained; this final
+follow-up changes documentation/evidence only. Runtime source, build inputs and
+fixtures equal the hosted revision. Release publication and runtime updating
+remain disabled. No PR, upstream message, distribution or main merge is created.
+GL-003/005, Windows native ASan GL-018, GL-020 adversarial qualification and other
+independent limitations remain open. The owned Linux qualification container is
+stopped; caches/logs are preserved and unrelated services remain untouched.

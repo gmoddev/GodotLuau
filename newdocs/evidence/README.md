@@ -3,7 +3,9 @@
 [GL-004 execution limits](gl004-execution-limits-2026-10-29.json) records the
 dedicated branch's six core configurations, 180 native actors, four SCons products,
 default-policy workloads, input/binary/log hashes and retained limitations.
-Fresh hosted CI is pending publication; no main merge is claimed.
+Fresh Windows/Linux core/native CI passes on `040996e`; all four artifact digests
+and native input/log identities verify. The original Windows fixture failure and
+its qualified bounded-delivery correction remain recorded. No main merge is claimed.
 
 [GL-022 main integration](gl022-main-integration-2026-10-29.json) records the
 normal merge, source identity and successful fresh hosted Windows/Linux core

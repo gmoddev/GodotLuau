@@ -30,9 +30,10 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 GL-004 development is on `runtime/gl-004-execution-limits`, with no main merge.
 See the [resource policy decision](adr-002-domain-resource-policy.md) and
-[live work/validation record](execution-limits-validation.md). Local qualification
-is complete; fresh hosted CI remains pending. Intermediate probes are recorded
-separately from the final source's results.
+[work/validation record](execution-limits-validation.md). GL-004 is fixed and
+qualified on that branch, including fresh Windows/Linux core/native CI.
+Intermediate probes and the corrected network-fixture failure are recorded
+separately from final results. It is not merged to main.
 
 GL-022's qualified shared-ModuleScript child relay correction is integrated into
 main through `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`, preserving all three

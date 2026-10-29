@@ -1,7 +1,7 @@
 {
   "Date": "2026-10-29",
   "Branch": "runtime/gl-004-execution-limits",
-  "Disposition": "Runtime locally qualified; bounded network fixture follow-up qualified; fresh hosted CI pending",
+  "Disposition": "FIXED AND QUALIFIED on development branch; not merged to main",
   "MainUnchanged": "8aec90252d10f7dcec97e97423ca390467087711",
   "PinnedDependencies": {
     "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
@@ -664,7 +664,8 @@
     "Linux full native sanitizer uses matching ASan/LSan engine; leak detection and exit leak check defaults verified true",
     "Worker builds reuse pinned dependency caches with two compilation jobs",
     "Benchmarks are one trial per platform under production defaults, not statistical speed comparisons",
-    "Releases and runtime updater remain disabled; no main merge"
+    "Releases and runtime updater remain disabled; no main merge",
+    "Initial hosted Windows native network fixture failure retained; bounded positive-control correction passes five local configurations and five Handler trials, then fresh hosted native CI"
   ],
   "Implementation": "1e201ed9f229a5d9b39043c303e573e9566fa69c",
   "NetworkFixtureFollowup": {
@@ -783,5 +784,256 @@
     "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
     "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
     "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+  },
+  "HostedRevision": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+  "Hosted": {
+    "Revision": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+    "Runs": {
+      "Core": {
+        "conclusion": "success",
+        "databaseId": 40857805897,
+        "headSha": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+        "jobs": [
+          {
+            "databaseId": 123393095858,
+            "name": "Core (Windows, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857805897/job/123393095858",
+            "startedAt": "2026-10-29T10:28:15Z",
+            "completedAt": "2026-10-29T10:29:21Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Configure production core": "success",
+              "Build ExecutionDomainTests": "success",
+              "Require production regression discovery": "success",
+              "Run production core through CTest": "success",
+              "Retain qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          },
+          {
+            "databaseId": 123393096142,
+            "name": "Core (Linux, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857805897/job/123393096142",
+            "startedAt": "2026-10-29T10:28:15Z",
+            "completedAt": "2026-10-29T10:28:43Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Configure production core": "success",
+              "Build ExecutionDomainTests": "success",
+              "Require production regression discovery": "success",
+              "Run production core through CTest": "success",
+              "Retain qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857805897"
+      },
+      "Native": {
+        "conclusion": "success",
+        "databaseId": 40857806041,
+        "headSha": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+        "jobs": [
+          {
+            "databaseId": 123393097280,
+            "name": "Native (Linux, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857806041/job/123393097280",
+            "startedAt": "2026-10-29T10:28:16Z",
+            "completedAt": "2026-10-29T10:39:02Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Record source and dependency identity": "success",
+              "Verify fixture process ownership and failure handling": "success",
+              "Provision verified official Godot 4.7.1": "success",
+              "Configure production native adapter": "success",
+              "Build GodotLuauAdapter": "success",
+              "Expose installed MSVC Debug runtime": "skipped",
+              "Single-player listen dedicated and editor lifecycle": "success",
+              "GL-006 and GL-008 existing network regressions": "success",
+              "GL-020 existing functional animation lifecycle": "success",
+              "GL-004 isolated resource and recovery cases": "success",
+              "Require all native actors and retain identity": "success",
+              "Retain native qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          },
+          {
+            "databaseId": 123393097890,
+            "name": "Native (Windows, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857806041/job/123393097890",
+            "startedAt": "2026-10-29T10:28:16Z",
+            "completedAt": "2026-10-29T10:46:50Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Record source and dependency identity": "success",
+              "Verify fixture process ownership and failure handling": "success",
+              "Provision verified official Godot 4.7.1": "success",
+              "Configure production native adapter": "success",
+              "Build GodotLuauAdapter": "success",
+              "Expose installed MSVC Debug runtime": "success",
+              "Single-player listen dedicated and editor lifecycle": "success",
+              "GL-006 and GL-008 existing network regressions": "success",
+              "GL-020 existing functional animation lifecycle": "success",
+              "GL-004 isolated resource and recovery cases": "success",
+              "Require all native actors and retain identity": "success",
+              "Retain native qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857806041"
+      }
+    },
+    "Artifacts": {
+      "runtime-core-Windows-Debug": {
+        "ID": 12890665366,
+        "SHA256": "341e1210cf05492161c6f41a0e22de292b7763ff649786c6eebc28676d27e6d8",
+        "Bytes": 11693,
+        "Run": 40857805897,
+        "Cases": 66
+      },
+      "runtime-core-Linux-Debug": {
+        "ID": 12889533865,
+        "SHA256": "89b9b9814219b90a2978671bedd93a89f51c0d86fbdebfc6909099d7b5287e4c",
+        "Bytes": 13046,
+        "Run": 40857805897,
+        "Cases": 66
+      },
+      "runtime-native-Linux-Debug": {
+        "ID": 12890736513,
+        "SHA256": "fc9322bbee1550d62cbac065444f42f9bf2c16fc8cf81a7e1bae464bebaf3662",
+        "Bytes": 62694,
+        "Run": 40857806041,
+        "Processes": 36,
+        "SummarySHA256": "6de8caeb765ced8ed4ec82c2ae13a959473a976c0e502ad4592a1270d6c60708",
+        "NativeSource": {
+          "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+          "Files": 75,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+          "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "7dbfdba57dd771e2c24981407b1a4ac2823df83bf0622d98e10808445411dfc8",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992009,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+            "Bytes": 76056717,
+            "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+          },
+          "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 94,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8
+      },
+      "runtime-native-Windows-Debug": {
+        "ID": 12890159570,
+        "SHA256": "e2d39d31b2711d8ee37453a20eb72081ca35f73e679772b0a52e6e5fc3611114",
+        "Bytes": 58000,
+        "Run": 40857806041,
+        "Processes": 36,
+        "SummarySHA256": "e9aaf6e856465d5a9c83358341a7d00d2cd5f2918aa3ad612073f2c33b3f6380",
+        "NativeSource": {
+          "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+          "Files": 75,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+          "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "a87940486e9a19d11e6919fb56eb566dfd8625ce0f381c198749ea0900a90c41",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992673,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+            "Bytes": 84198557,
+            "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "Executable": "Godot_v4.7.1-stable_win64.exe"
+          },
+          "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 96,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8
+      }
+    },
+    "Result": "Four successful hosted Debug jobs; all artifact digests, cases, source/harness/engine identities and native log hashes verified"
   }
 }

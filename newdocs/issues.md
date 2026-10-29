@@ -27,7 +27,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
 | GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
 | GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
-| GL-004 | P1 | Locally qualified on branch; hosted CI pending | Shared-domain sandbox, interruption, allocator/admission limits on dedicated branch |
+| GL-004 | P1 | Fixed and qualified on branch; not merged | Shared-domain sandbox, interruption, allocator/admission limits on dedicated branch |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
@@ -156,8 +156,16 @@ from trusted bootstrap and preserves GL-003/005 as separate capability issues.
 The [work/validation record](execution-limits-validation.md) and linked manifest
 record six final 66-case core configurations, 180 native actors, four SCons
 products with 32 resource actors, representative default-policy workloads and
-the failures/corrections that led to this source. Fresh hosted CI is pending.
-This issue stays open until the final branch/configuration evidence is complete.
+the failures/corrections that led to this source. Implementation `1e201ed` and
+fixture follow-up `040996e` preserve published history. Fresh hosted
+[core 40857805897](https://github.com/gmoddev/GodotLuau/actions/runs/40857805897)
+passes 66 cases on both platforms; fresh
+[native 40857806041](https://github.com/gmoddev/GodotLuau/actions/runs/40857806041)
+passes all 36 actors on both. All downloaded artifact digests, source/harness/
+engine identities and retained native log hashes verify. The initial Windows
+fixture failure remains recorded, with bounded positive-state delivery correction
+and 65 passing follow-up actors across the existing worker configurations/trials.
+**FIXED AND QUALIFIED on this branch**, within the linked resource contract.
 It is not a hostile-script isolation claim, and this work is not merged to main.
 
 ## GL-005: HTTP is synchronous and broadly exposed
