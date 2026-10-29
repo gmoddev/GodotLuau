@@ -300,3 +300,41 @@ All heavy work runs on the configured workers. Local Python AST, documentation
 link/source review and git diff whitespace checks pass. No dependency/vendor,
 asset, release workflow or updater file changes are included.
 Fresh hosted Debug CI on the published implementation is the remaining gate.
+
+## Hosted qualification
+
+Implementation `1e201ed9f229a5d9b39043c303e573e9566fa69c` is published on
+`runtime/gl-004-execution-limits`. Main remains
+`8aec90252d10f7dcec97e97423ca390467087711`. Fresh
+[core run 40855056067](https://github.com/gmoddev/GodotLuau/actions/runs/40855056067)
+passes Windows/Linux Debug, 66 distinct cases each. Both downloaded core artifact
+ZIP digests match GitHub metadata; local replay of CheckCoreCI discovery/report
+passes on each. The independently triggered
+[native run 40855056031](https://github.com/gmoddev/GodotLuau/actions/runs/40855056031)
+passes Linux Debug with 36 actors. Its downloaded ZIP digest, source/harness
+identity and all retained log hashes verify. Windows compilation and all eight
+lifecycle actors passed, but Handler client1 failed `valid subsequent 2D state`
+in the network group. Animation/resources were skipped. The native workflow is
+failed, not qualified by its successful build or Linux result. Failed Windows
+artifact `12888959312` verifies as SHA-256
+`bce66b4130640f1ee473fc64c2c46c5cef47506cd456f34b9c80afaaec661331`.
+
+The fixture sent each valid positive state once over an explicitly unreliable
+RPC, then slept 250 ms before asserting observation; it also acknowledged only
+client2 before advancing. Receive-state handlers are unchanged by GL-004, and
+the logs contain no GL-004 resource failure. The logs do not prove whether the
+packet was late or lost. The positive control now resends the same real valid
+RPCs every 50 ms for at most five seconds and requires **both** clients to
+acknowledge exact state observation. Clients have their own five-second state
+deadline and report the actual position on failure. Authority configurations,
+wrong-peer attacks, rejection assertions, exact expected positions and failing
+exit behavior are retained. This is a bounded delivery fixture correction, not
+a network runtime change or a weaker successful-state assertion.
+
+The updated network fixture passes Windows Debug/Release and Linux
+Debug/Release/ASan using the identical native binaries: all 50 actors pass.
+Five additional Windows Debug Handler trials pass all 15 actors. Earlier
+full-core/native/resource/SCons results retain their original fixture hashes;
+the manifest records the changed fixture and follow-up log/result digests
+separately. Runtime source remains `8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c`.
+Fresh hosted CI is required for the fixture follow-up before final qualification.

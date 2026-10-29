@@ -46,6 +46,18 @@ func Wait(Name: String) -> void:
 func Drain() -> void:
     await create_timer(0.25).timeout
 
+func WaitState(Peer: int, Expected: float) -> bool:
+    var Deadline := Time.get_ticks_msec() + 5000
+    while Time.get_ticks_msec() < Deadline:
+        var Character := Puppet(Peer)
+        if is_instance_valid(Character) and is_equal_approx(Character.get("global_position").x, Expected):
+            return true
+        await process_frame
+    var Character := Puppet(Peer)
+    print("[Network:SecurityTest] State deadline peer=", Peer, " expected=", Expected,
+        " actual=", Character.get("global_position") if is_instance_valid(Character) else "missing")
+    return false
+
 func Create(Type: String, Name: String) -> Node:
     var Result: Node = ClassDB.instantiate(Type)
     Result.name = Name
@@ -196,10 +208,21 @@ game:SetAttribute('Observing', true)
         Network.call("gl_send_chat", "SYSTEM", "SERVER_OK")
         Check(str(Game.get_meta("Messages", "")).contains("SYSTEM: SERVER_OK"), "server-local chat")
         # Valid server-origin updates and bounds still work after rejection.
-        Network.rpc("_recv_state", First, Vector3(11, 0, 0), 0.0, 2, 95.0, 0.0, false)
-        Network.rpc("_recv_state2d", Second, Vector2(21, 0), 0.0, 3)
         Network.rpc("_recv_state", -9, Vector3.ZERO, 0.0, 1, 100.0, 0.0, false)
         Mark("positive")
+        # State RPCs are deliberately unreliable. A fixed sleep after a single
+        # send does not prove delivery on a loaded runner. Keep real dispatch and
+        # exact state assertions; resend only valid positive controls until both
+        # clients acknowledge observation, or fail the bounded delivery window.
+        var PositiveDeadline := Time.get_ticks_msec() + 5000
+        while not FileAccess.file_exists("res://security-client1.positive") or not FileAccess.file_exists("res://security-client2.positive"):
+            if Time.get_ticks_msec() >= PositiveDeadline:
+                Check(false, "positive state delivery deadline")
+                break
+            Network.rpc("_recv_state", First, Vector3(11, 0, 0), 0.0, 2, 95.0, 0.0, false)
+            Network.rpc("_recv_state2d", Second, Vector2(21, 0), 0.0, 3)
+            await create_timer(0.05).timeout
+        await Wait("client1.positive")
         await Wait("client2.positive")
         await Drain()
         Check(str(Game.get_meta("Messages", "")).contains("SECOND_OK"), "independent client allowance")
@@ -291,14 +314,13 @@ game:SetAttribute('Observing', true)
         CheckChat(Read("expected"))
         Check(str(Game.get_meta("Messages", "")).contains("SYSTEM: SERVER_OK"), "receive valid server chat")
         if Index == 2:
-            var Character := Puppet(First)
-            Check(is_instance_valid(Character) and is_equal_approx(Character.get("global_position").x, 11.0), "valid subsequent 3D state")
+            Check(await WaitState(First, 11.0), "valid subsequent 3D state")
             Check(Puppet(-9) == null, "server invalid target rejected")
             Network.rpc_id(1, "_relay_chat", "Other", "SECOND_OK")
             Mark("client2.positive")
         else:
-            var Character := Puppet(Second)
-            Check(is_instance_valid(Character) and is_equal_approx(Character.get("global_position").x, 21.0), "valid subsequent 2D state")
+            Check(await WaitState(Second, 21.0), "valid subsequent 2D state")
+            Mark("client1.positive")
         await Wait("disconnect")
         if Index == 1:
             Attack(1)
