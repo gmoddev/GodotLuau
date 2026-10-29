@@ -267,6 +267,26 @@ def Resources(Args, Output, Environment):
     return Results
 
 
+def Filesystem(Args, Output, Environment):
+    Results = []
+    Process = Start(Args.godot, Output, 'FilesystemIntegration.gd', 'filesystem-capabilities', [], Environment)
+    Results.append(Check(Process, time.monotonic() + Args.timeout, Output, 'filesystem-capabilities', '[Runtime:FilesystemTest] PASS enforced'))
+    Entries = []
+    try:
+        for Role in ['writer', 'reader']:
+            Label = 'filesystem-' + Role
+            Process = Start(Args.godot, Output, 'FilesystemServices.gd', Label,
+                            ['--filesystem-role', Role, '--glserver', str(Port())], Environment)
+            Entries.append((Process, Label, Role))
+        Deadline = time.monotonic() + Args.timeout
+        for Process, Label, Role in Entries:
+            Results.append(Check(Process, Deadline, Output, Label, '[Runtime:FilesystemTest] PASS ' + Role))
+    finally:
+        for Process, _, _ in Entries:
+            StopProcess(Process)
+    return Results
+
+
 def Main():
     Parser = argparse.ArgumentParser()
     Parser.add_argument("--godot", type=Path, required=True)
@@ -279,6 +299,7 @@ def Main():
     Parser.add_argument("--security", action="store_true")
     Parser.add_argument("--animation", action="store_true")
     Parser.add_argument("--resources", action="store_true")
+    Parser.add_argument("--filesystem", action="store_true")
     Parser.add_argument("--animation-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Editor"), default=["Local", "Listen", "Dedicated", "Editor"])
     Parser.add_argument("--security-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Handler"), default=["Local", "Listen", "Dedicated", "Handler"])
     Parser.add_argument("--probe", action="store_true")
@@ -316,6 +337,8 @@ def Main():
         Results = AnimationFixtures(Args, Args.output, Environment)
     elif Args.resources:
         Results = Resources(Args, Args.output, Environment)
+    elif Args.filesystem:
+        Results = Filesystem(Args, Args.output, Environment)
     elif Args.probe:
         Results = Probes(Args, Args.output, Environment)
     elif Args.baseline or Args.benchmark:

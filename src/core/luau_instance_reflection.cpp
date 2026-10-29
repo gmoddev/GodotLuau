@@ -2,6 +2,7 @@
 #include "luau_variant_bindings.h"
 
 #include "lua.h"
+#include "lualib.h"
 
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
@@ -34,6 +35,8 @@ bool PushLuauInstanceProperty(lua_State* L, Object* n, const char* key) {
 }
 
 void WriteLuauInstanceProperty(lua_State* L, Object* n, const char* key) {
+    if (String(key)=="Modo_Roblox_Studio")
+        luaL_error(L,"[Runtime:Capabilities] Editor filesystem property denied");
     if (n->has_meta("_gl_bridge")) {
         Variant gv;
         if (gl_luau_to_variant(L, 3, gv)) {

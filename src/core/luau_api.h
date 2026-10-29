@@ -488,6 +488,8 @@ static int method_setattribute(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
         const char* key = luaL_checkstring(L, 2);
+        if (strcmp(key,"_gl_bridge")==0)
+            luaL_error(L,"[Runtime:Capabilities] Native bridge metadata is host-owned");
         if (lua_isnumber(L, 3)) {
             gow_node(w)->set_meta(key, lua_tonumber(L, 3));
         } else if (lua_isboolean(L, 3)) {
@@ -1196,14 +1198,11 @@ static int godot_object_index(lua_State* L) {
 
     // game:UpdateStructure() — actualizador incremental (1.15): rellena lo que
     // falte y migra nodos sin borrar ni pisar la config. Mismo efecto que la
-    // opción "Actualizar estructura" del inspector; útil para scripts de build.
+    // opción del inspector. Gameplay cannot invoke this editor authority.
     if (strcmp(key, "UpdateStructure") == 0 && n->has_method("_gl_update_structure")) {
-        lua_pushlightuserdata(L, (void*)n);
-        lua_pushcclosure(L, [](lua_State* pL) -> int {
-            Node* nd = (Node*)lua_touserdata(pL, lua_upvalueindex(1));
-            if (nd && nd->has_method("_gl_update_structure")) nd->call("_gl_update_structure");
-            return 0;
-        }, "UpdateStructure", 1);
+        lua_pushcfunction(L, [](lua_State* pL) -> int {
+            luaL_error(pL,"[Runtime:Capabilities] Editor filesystem operation denied");
+        }, "UpdateStructure");
         return 1;
     }
 

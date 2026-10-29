@@ -141,3 +141,9 @@ Task artifacts are retained for review and reproduction, not promised permanent
 hosting. The repository keeps the commands, source fixtures, benchmark records
 and immutable qualification/package identities. No binary is committed or
 published as a release, and the inherited ZIP is never a qualification input.
+
+GL-003's [filesystem manifest](gl003-filesystem-capabilities-2026-10-29.json)
+records the final worker matrix, native source/fixture/core-test identities,
+engine/product hashes and retained baseline log hashes. Its
+[work record](../filesystem-capabilities-validation.md) separates baseline,
+intermediate failures, local qualification and hosted CI status.

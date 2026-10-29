@@ -1160,9 +1160,10 @@ inline Ref<Texture2D> gl_gui_load_image(Node* owner, const String& path) {
         if (real.is_empty()) { if (owner) owner->set_meta("__rbx_missing_asset", path); return Ref<Texture2D>(); }
         if (owner) owner->remove_meta("__rbx_missing_asset");
     }
+    if (!GLProjectResourcePath(real)) return Ref<Texture2D>();
     ResourceLoader* rl = ResourceLoader::get_singleton();
-    if (!rl || !rl->exists(real)) return Ref<Texture2D>();
-    return rl->load(real);
+    if (!rl || !rl->exists(real, "Texture2D")) return Ref<Texture2D>();
+    return rl->load(real, "Texture2D");
 }
 
 // ────────────────────────────────────────────────────────────────────

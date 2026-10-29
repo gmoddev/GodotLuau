@@ -4,6 +4,7 @@
 #include "luau_api.h"
 #include "luau_stdlib.h"
 #include "gl_net_bridge.h"
+#include "gl_service_storage.h"
 
 #include "Luau/Compiler.h"
 #include <godot_cpp/classes/http_client.hpp>
@@ -709,45 +710,7 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
     // ── require ───────────────────────────────────────────────────────────
     setup_remotefunction_system(L_main);
 
-    // ── _FileAccess — I/O de archivos para DataStoreService ───────────────
-    lua_newtable(L_main);
-    lua_pushcfunction(L_main, [](lua_State* L) -> int {
-        const char* path = luaL_checkstring(L, 1);
-        Ref<FileAccess> f = FileAccess::open(String(path), FileAccess::READ);
-        if (f.is_null()) { lua_pushnil(L); return 1; }
-        String s = f->get_as_text();
-        lua_pushstring(L, s.utf8().get_data());
-        return 1;
-    }, "read");     lua_setfield(L_main, -2, "read");
-    lua_pushcfunction(L_main, [](lua_State* L) -> int {
-        const char* path = luaL_checkstring(L, 1);
-        const char* data = luaL_checkstring(L, 2);
-        Ref<FileAccess> f = FileAccess::open(String(path), FileAccess::WRITE);
-        if (!f.is_null()) f->store_string(String(data));
-        return 0;
-    }, "write");    lua_setfield(L_main, -2, "write");
-    lua_pushcfunction(L_main, [](lua_State* L) -> int {
-        lua_pushboolean(L, FileAccess::file_exists(String(luaL_checkstring(L, 1))) ? 1 : 0);
-        return 1;
-    }, "exists");   lua_setfield(L_main, -2, "exists");
-    lua_pushcfunction(L_main, [](lua_State* L) -> int {
-        DirAccess::remove_absolute(String(luaL_checkstring(L, 1)));
-        return 0;
-    }, "delete");   lua_setfield(L_main, -2, "delete");
-    // Listar archivos de un directorio: lo usa el MessagingService entre
-    // instancias (1.14.16) para ver los buzones de los demás servidores.
-    lua_pushcfunction(L_main, [](lua_State* L) -> int {
-        Ref<DirAccess> d = DirAccess::open(String(luaL_checkstring(L, 1)));
-        lua_newtable(L);
-        if (d.is_null()) return 1;
-        PackedStringArray files = d->get_files();
-        for (int i = 0; i < files.size(); i++) {
-            lua_pushstring(L, files[i].utf8().get_data());
-            lua_rawseti(L, -2, i + 1);
-        }
-        return 1;
-    }, "list");     lua_setfield(L_main, -2, "list");
-    lua_setglobal(L_main, "_FileAccess");
+    GLServiceStorage::Install(L_main, Runtime);
 
     // ── _GL_NET_ROLE — 0 single-player, 1 servidor/host, 2 cliente ───────
     // Lo usa el DataStoreService del stdlib para no dejar que un cliente
@@ -764,8 +727,7 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
     // MessagingService owns one mailbox per domain VM. Local subscriptions
     // share its service state; the stdlib asks once during domain bootstrap.
     lua_pushcfunction(L_main, [](lua_State* L) -> int {
-        static int64_t ctr = 0;
-        lua_pushnumber(L, (double)(++ctr));
+        lua_pushnumber(L, (double)GLStorageVmIdentity());
         return 1;
     }, "_GL_VM_ID");
     lua_setglobal(L_main, "_GL_VM_ID");
@@ -775,9 +737,14 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
     // asi que el stdlib no depende de roblox_network.h.
     lua_newtable(L_main);
     lua_pushcfunction(L_main, [](lua_State* L) -> int {
+        size_t Length=0;
+        const char* m = luaL_checklstring(L, 1, &Length);
+        if (Length>64 || std::strlen(m)!=Length || (strcmp(m,"net_teleport_arrived")!=0 && strcmp(m,"net_teleport_data")!=0 && strcmp(m,"net_world_ports")!=0))
+            luaL_error(L,"[Runtime:Capabilities] Network host operation denied");
+        auto Owner=GLGetOwner(L);
+        if (!Owner || !Owner->Alive || Owner->Domain->IsClosing()) luaL_error(L,"[Runtime:Capabilities] Network service unavailable");
         Object* ns = ObjectDB::get_instance(gl_net_service_id());
         if (!ns) { lua_pushnil(L); return 1; }
-        const char* m = luaL_checkstring(L, 1);
         // (metodo, arg1, arg2, arg3) -> Variant; solo lo que necesita el stdlib
         Variant r;
         if (lua_gettop(L) >= 4)      r = ns->call(StringName(m), (int64_t)luaL_checknumber(L, 2),
@@ -892,6 +859,7 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
         }
     }
     lua_pushnil(L_main); lua_setglobal(L_main, "_GLDomainSpawn");
+    lua_pushnil(L_main); lua_setglobal(L_main, "_ServiceStorage");
 }
 
 void ScriptNodeBase::setup_remotefunction_system(lua_State* L) {

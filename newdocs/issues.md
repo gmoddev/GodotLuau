@@ -26,7 +26,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | --- | --- | --- | --- |
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
 | GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
-| GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
+| GL-003 | P1 | Native fix locally qualified on branch; hosted pending | Native file global bypasses higher-level role restrictions on main |
 | GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
@@ -114,7 +114,15 @@ criteria are satisfied; this does not qualify every service binding. See
 
 ## GL-003: FileAccess global bypasses DataStore's role guard
 
-**Evidence:** `src/core/luau_script.h:1604-1642` unconditionally installs
+Development on `security/gl-003-filesystem-capabilities` records actual native
+Windows/Linux baseline reproduction and boundary inventory in the
+[work/qualification record](filesystem-capabilities-validation.md).
+Native enforcement is implemented on that branch. Final six 69-case core
+configurations, 195 full-native actors and four SCons products each with eleven
+resource/filesystem actors pass; fresh hosted CI remains pending. The issue stays
+open until that gate is recorded; main still has the exposure.
+
+**Inherited review evidence:** `src/core/luau_script.h:1604-1642` unconditionally installs
 `_FileAccess.read/write/exists/delete/list`; supplied paths reach FileAccess or
 DirAccess without a native role, capability, or root check.
 `src/core/luau_stdlib.h:627-633` rejects network clients only at the DataStore layer.
@@ -122,7 +130,8 @@ DirAccess without a native role, capability, or root check.
 **Consequence/limits:** A running gameplay script can call the lower-level global
 directly. This is not evidence that a remote player can inject script code, and
 the supported hostile-package boundary is undocumented. OS/platform permissions
-still apply. Security verdict: `needs_review`, rank 1 in that queue.
+still apply. The original triage verdict was `needs_review`, rank 1 in that queue;
+the new controlled native baseline now confirms the local gameplay exposure.
 
 **Fix boundary and closure:** First specify trusted-host versus gameplay grants.
 Enforce grants and canonical root confinement at native entry points, including
