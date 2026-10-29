@@ -46,6 +46,84 @@ func Run() -> void:
     Service.name = "RunService"
     Game.add_child(Service)
     print("[Runtime:Integration] Fixture services created")
+    # Capture the real first bootstrap in each domain, then verify subsequent
+    # script starts reuse its globals, wrappers and per-domain module result.
+    CreateScript("ModuleScript", "BootstrapContract", """
+assert(typeof(game) == 'Instance' and game.Name == 'Game')
+assert(typeof(workspace) == 'Instance' and typeof(script) == 'Instance')
+assert(type(_G) == 'table' and type(shared) == 'table')
+assert(type(task.spawn) == 'function' and type(require) == 'function')
+assert(type(Instance.new) == 'function' and type(Vector3.new) == 'function')
+assert(type(Color3.new) == 'function' and type(CFrame.new) == 'function')
+assert(type(_FileAccess.read) == 'function' and type(_FileAccess.write) == 'function')
+assert(type(_HTTP.request) == 'function' and type(_HTTP.get) == 'function' and type(_HTTP.post) == 'function')
+assert(type(_GL_NET.call) == 'function' and type(_GL_NET.teleport) == 'function')
+assert(type(__gl_rf_serve) == 'function' and type(__gl_rf_respond) == 'function')
+assert(type(_GL_VM_ID) == 'function' and _GLDomainSpawn == nil)
+local Decoded = _JSON.decode(_JSON.encode({Flag = true, Text = 'bootstrap', Items = {1, 2}}))
+assert(Decoded.Flag and Decoded.Text == 'bootstrap' and Decoded.Items[2] == 2)
+local Prefix = __IS_CLIENT and 'BootstrapClient' or 'BootstrapServer'
+assert(_GL_NET_ROLE() == (__IS_CLIENT and 2 or 0))
+assert(_G.BootstrapDomainTag == nil and shared.BootstrapModuleRuns == nil)
+_G.BootstrapDomainTag = Prefix
+shared.BootstrapModuleRuns = 1
+local Meta = getmetatable(game)
+assert(Meta == getmetatable(script) and Meta == getmetatable(workspace))
+game:GetAttributeChangedSignal('BootstrapAttributeTrigger'):Connect(function()
+    assert(_G.BootstrapDomainTag == Prefix and shared.BootstrapModuleRuns == 1)
+    game:SetAttribute(Prefix .. 'Attribute', true)
+end)
+return {Prefix = Prefix, Meta = Meta, Game = game, Workspace = workspace,
+    JSON = _JSON, HTTP = _HTTP, InstanceNew = Instance.new, VectorNew = Vector3.new,
+    RemoteServe = __gl_rf_serve}
+""", Storage)
+    for Type in ["ServerScript", "LocalScript"]:
+        var Prefix := "BootstrapServer" if Type == "ServerScript" else "BootstrapClient"
+        # Distinct native relay targets preserve both-domain coverage without
+        # depending on the pre-existing shared-object connection conflict.
+        CreateScript("ModuleScript", Prefix + "Relay", """
+local Prefix = __IS_CLIENT and 'BootstrapClient' or 'BootstrapServer'
+local Meta = getmetatable(game)
+game.ChildAdded:Connect(function(Child)
+    if Child.Name == 'BootstrapChild' then
+        assert(getmetatable(Child) == Meta and Child == game.BootstrapChild)
+        game:SetAttribute(Prefix .. 'ModuleChild', true)
+    end
+end)
+return true
+""", Storage)
+        var Starters: Array[Node] = []
+        for Attempt in range(2):
+            var Marker := Prefix + str(Attempt)
+            var Starter := CreateScript(Type, Marker, """
+local Bootstrap = require(game.ReplicatedStorage.BootstrapContract)
+assert(require(game.ReplicatedStorage['%sRelay']))
+assert(Bootstrap.Prefix == '%s' and _G.BootstrapDomainTag == '%s')
+assert(shared.BootstrapModuleRuns == 1 and Bootstrap.Game == game and Bootstrap.Workspace == workspace)
+assert(Bootstrap.Meta == getmetatable(script) and script == game:FindFirstChild(script.Name))
+assert(Bootstrap.JSON == _JSON and Bootstrap.HTTP == _HTTP)
+assert(Bootstrap.InstanceNew == Instance.new and Bootstrap.VectorNew == Vector3.new)
+assert(Bootstrap.RemoteServe == __gl_rf_serve and _GLDomainSpawn == nil)
+game:SetAttribute('%sRuns', (game:GetAttribute('%sRuns') or 0) + 1)
+game:SetAttribute('%s', true)
+""" % [Prefix, Prefix, Prefix, Prefix, Prefix, Marker], Game)
+            Starters.append(Starter)
+            await Until(Marker)
+            Starter.call("iniciar_corrutina")
+            Starter.call("iniciar_corrutina")
+            Check(Game.get_meta(Prefix + "Runs", 0) == Attempt + 1, "Repeated startup duplicated bootstrap or script execution")
+        for Starter in Starters:
+            Starter.queue_free()
+    await process_frame
+    var BootstrapChild := Node.new()
+    BootstrapChild.name = "BootstrapChild"
+    Game.add_child(BootstrapChild)
+    await Until("BootstrapServerModuleChild")
+    await Until("BootstrapClientModuleChild")
+    CreateScript("ServerScript", "BootstrapAttributeTrigger", "game:SetAttribute('BootstrapAttributeTrigger', true)", Game)
+    await Until("BootstrapServerAttribute")
+    await Until("BootstrapClientAttribute")
+    print("[Runtime:Integration] Per-domain bootstrap, shared module wrappers and retired-caller child relays checked")
     # Exercise the native value bindings in both domains through production APIs.
     for Type in ["ServerScript", "LocalScript"]:
         var Prefix := "ValueServer" if Type == "ServerScript" else "ValueClient"

@@ -1,5 +1,19 @@
 #include "gl_domain_host.h"
 #include "luau_script.h"
+#include "luau_instance_access.h"
+#include "gl_runtime.h"
+#include "gl_errors.h"
+#include "gl_net_bridge.h"
+#include "humanoid.h"
+#include "roblox_network.h"
+#include "roblox_services.h"
+#include "roblox_player.h"
+#include "roblox_remote.h"
+
+#include <godot_cpp/classes/time.hpp>
+#include <godot_cpp/classes/window.hpp>
+#include <algorithm>
+#include <functional>
 
 namespace {
 uint64_t GLHostIdentity = 0;
@@ -51,7 +65,7 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
         Domains[Index]->SetTimeProvider([]() { return static_cast<double>(Time::get_singleton()->get_ticks_msec()) / 1000.0; });
         Domains[Index]->SetEnvironmentHook([](lua_State* Thread, uint64_t Identity) {
             Node* Script = Object::cast_to<Node>(ObjectDB::get_instance(Identity));
-            wrap_node(Thread, Script); lua_setglobal(Thread, "script");
+            PushLuauInstance(Thread, Script); lua_setglobal(Thread, "script");
         });
         Domains[Index]->SetModuleResolver([](lua_State* Thread, int Argument, GLModuleSource& Module) {
             auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(Thread, Argument));
@@ -193,7 +207,7 @@ void GLDomainHost::_process(double Delta) {
         }
         if (!Domain || Ready) {
             ChildWaits.erase(ChildWaits.begin() + Index);
-            if (Domain) { wrap_node(Wait.Thread, Found); GLResume(Wait.Thread, nullptr, 1); }
+            if (Domain) { PushLuauInstance(Wait.Thread, Found); GLResume(Wait.Thread, nullptr, 1); }
             GLUnreference(nullptr, Wait.Reference);
         } else ++Index;
     }
@@ -210,7 +224,7 @@ void GLDomainHost::_process(double Delta) {
         if (Resume.use_args) {
             Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(Resume.ctx_id));
             Arguments = gl_net_decode_args(Resume.thread, Resume.args, Context);
-        } else if (Resume.NodeId) wrap_node(Resume.thread, Object::cast_to<Node>(ObjectDB::get_instance(Resume.NodeId)));
+        } else if (Resume.NodeId) PushLuauInstance(Resume.thread, Object::cast_to<Node>(ObjectDB::get_instance(Resume.NodeId)));
         else lua_pushnumber(Resume.thread, Resume.delta);
         GLResume(Resume.thread, nullptr, Arguments);
     }

@@ -46,6 +46,11 @@ The [remaining-boundary assessment](gl013-boundary-assessment.md) inventories th
 integrated source and ranks script bootstrap/Instance access as the preferred next
 boundary. Normal merge `d99adcfb2b915b3209fef7f849865cf4acc964f9` integrates the
 assessment; its recommendations remain proposals, not implemented boundaries.
+The fifth bootstrap/Instance-access boundary is qualified
+on unmerged `refactor/gl-013-script-bootstrap`; see its
+[qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary).
+Fresh hosted core39/native28 pass on Windows/Linux at implementation `50f1c0e`;
+the branch remains unmerged and GL-013 remains open.
 
 GL-012 release retention is integrated with publication disabled by explicit
 workflow admission and read-only permissions. See the
