@@ -2430,3 +2430,12 @@ rootless fault recovery, GL-020 adversarial or GL-022 shared-target qualificatio
 The final documentation/evidence follow-up changes no source, fixture, build,
 workflow or dependency input. Main remains `ce5e19f`; the development branch stays
 unmerged. GL-013 remains OPEN, with no sixth extraction or publication channel work.
+
+### Fifth extraction main integration (2026-10-29)
+
+Normal merge `109bd6d838410509da9831b1502dfffb023ad823` integrates qualified
+tip `9171199fc6b3b43a2aa07a98f3f20977abc43533` from starting main
+`ce5e19fa8aea1cf65da875d07cda13c1696fc08c`, without conflicts or source changes.
+The above qualification remains historical evidence within its original scope.
+The [integration and GL-022 work record](gl022-child-relay-validation.md)
+records fresh checks, hosted outcomes and the separately authorized callback fix.

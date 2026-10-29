@@ -239,10 +239,13 @@ after it. These are proposals, not delivered boundaries. GL-021 separately recor
 the source-observed inert lowercase-alias gap. No production implementation or
 ownership contract changes in this assessment; GL-013 remains open.
 
-## Script bootstrap boundary (fifth GL-013 extraction, development branch)
+## Script bootstrap boundary (fifth GL-013 extraction, integrated)
 
 `refactor/gl-013-script-bootstrap` starts at integrated main
-`ce5e19fa8aea1cf65da875d07cda13c1696fc08c` and remains unmerged.
+`ce5e19fa8aea1cf65da875d07cda13c1696fc08c`. Normal merge
+`109bd6d838410509da9831b1502dfffb023ad823` integrates qualified branch tip
+`9171199fc6b3b43a2aa07a98f3f20977abc43533` with an identical tree. See the
+[integration record](gl022-child-relay-validation.md#stage-1-gl-013-script-bootstrap-integration-2026-10-29).
 `luau_script.cpp` owns the existing InitializeDomain, RemoteFunction setup and
 child-event relay bodies plus their private JSON/HTTP helpers. `luau_script.h`
 retains script/resource declarations, editor/template handling and execution

@@ -35,7 +35,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Open; four extractions integrated, fifth qualified | API/stdlib fan-out three to one; bootstrap branch remains unmerged |
+| GL-013 | P2 | Open; five extractions integrated | API/stdlib fan-out three to one; bootstrap owned by script CPP |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -563,6 +563,13 @@ self-checks and all 28 actors per platform. Digest-checked summaries match exact
 source/pins/all 22 harness hashes. Both complete within the 25-minute bound.
 The evidence follow-up changes no tested input; this is not merged to main.
 GL-013 remains OPEN; no sixth extraction or unrelated issue closure is implied.
+
+**Fifth extraction integration (2026-10-29):** Normal merge
+`109bd6d838410509da9831b1502dfffb023ad823` preserves both source commits and
+exact qualified tree `9171199fc6b3b43a2aa07a98f3f20977abc43533`. Fresh checks
+and hosted outcomes are recorded in the [integration record](gl022-child-relay-validation.md).
+GL-013 stays open. GL-022's shared-target reproduction predates this extraction
+and is not treated as an introduced refactor regression.
 
 ## GL-014: Shared execution domains — integrated and source-qualified
 
