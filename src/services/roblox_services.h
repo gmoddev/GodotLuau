@@ -96,14 +96,10 @@ public:
         std::vector<LuaCallback> snap = changed_cbs;
         for (auto& cb : snap) {
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
-            lua_State* th = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, th, 1);
-                _push_value(th);
-                gl_check_resume(th, GLResume(th, nullptr, 1));
-            } else lua_pop(cb.main_L, 1);
-            lua_pop(cb.main_L, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
+                _push_value(Thread);
+                return 1;
+            });
         }
     }
 protected:
@@ -168,21 +164,16 @@ public:
         std::vector<LuaCallback> snap = list;
         for (auto& cb : snap) {
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
-            lua_State* th = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, th, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 if (character) {
-                    GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(th, sizeof(GodotObjectWrapper));
+                    GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(Thread, sizeof(GodotObjectWrapper));
                     gow_set(w, character);
-                    luaL_getmetatable(th, "GodotObject");
-                    lua_setmetatable(th, -2);
-                    gl_check_resume(th, GLResume(th, nullptr, 1));
-                } else {
-                    gl_check_resume(th, GLResume(th, nullptr, 0));
+                    luaL_getmetatable(Thread, "GodotObject");
+                    lua_setmetatable(Thread, -2);
+                    return 1;
                 }
-            } else lua_pop(cb.main_L, 1);
-            lua_pop(cb.main_L, 1);
+                return 0;
+            });
         }
     }
     // Asigna el personaje SIN disparar señales (para poder disparar PlayerAdded
@@ -737,22 +728,18 @@ private:
             auto cb = list[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { list.erase(list.begin()+i); continue; }
             bool once = cb.once;
-            lua_State* th = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 if (once) list[i].active = false;   // :Once → desconectar ANTES de invocar (como Roblox)
-                lua_xmove(cb.main_L, th, 1);
                 if (player) {
-                    GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(th, sizeof(GodotObjectWrapper));
+                    GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(Thread, sizeof(GodotObjectWrapper));
                     gow_set(w, player);
-                    luaL_getmetatable(th, "GodotObject");
-                    lua_setmetatable(th, -2);
+                    luaL_getmetatable(Thread, "GodotObject");
+                    lua_setmetatable(Thread, -2);
                 } else {
-                    lua_pushnil(th);
+                    lua_pushnil(Thread);
                 }
-                gl_check_resume(th, GLResume(th, nullptr, 1));
-            } else lua_pop(cb.main_L, 1);
-            lua_pop(cb.main_L, 1);
+                return 1;
+            });
         }
     }
 };
@@ -1474,16 +1461,10 @@ public:
                 msg_received_cbs.erase(msg_received_cbs.begin() + i);
                 continue;
             }
-            lua_State* th = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, th, 1);
-                lua_pushstring(th, full.utf8().get_data());
-                gl_check_resume(th, GLResume(th, nullptr, 1));
-            } else {
-                lua_pop(cb.main_L, 1);
-            }
-            lua_pop(cb.main_L, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
+                lua_pushstring(Thread, full.utf8().get_data());
+                return 1;
+            });
         }
     }
 };
@@ -1574,16 +1555,10 @@ protected:
                 continue;
             }
             if (cb.once) list[i].active = false;
-            lua_State* thread = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, thread, 1);
-                lua_pushnumber(thread, delta);
-                gl_check_resume(thread, GLResume(thread, nullptr, 1));
-            } else {
-                lua_pop(cb.main_L, 1);
-            }
-            lua_pop(cb.main_L, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
+                lua_pushnumber(Thread, delta);
+                return 1;
+            });
             if (cb.once) GLUnreference(nullptr, cb.ref);
         }
     }

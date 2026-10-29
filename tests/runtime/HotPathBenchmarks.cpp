@@ -28,6 +28,7 @@ void operator delete[](void* Pointer, size_t) noexcept { std::free(Pointer); }
 
 static std::chrono::steady_clock::time_point WallStarted;
 static std::clock_t CpuStarted;
+static GLExecutionDomain* MeasuredDomain = nullptr;
 static int Mark(lua_State*) {
     Allocations = AllocationBytes = 0;
     WallStarted = std::chrono::steady_clock::now(); CpuStarted = std::clock(); Counting = true;
@@ -38,8 +39,10 @@ static void Report(const char* Phase, size_t Operations) {
     auto Ended = std::chrono::steady_clock::now();
     double CpuMs = 1000.0 * (std::clock() - CpuStarted) / CLOCKS_PER_SEC;
     double WallMs = std::chrono::duration<double, std::milli>(Ended - WallStarted).count();
-    std::printf("{\"Phase\":\"%s\",\"Operations\":%zu,\"WallMs\":%.6f,\"CpuMs\":%.6f,\"CppAllocations\":%zu,\"CppAllocationBytes\":%zu}\n",
-        Phase, Operations, WallMs, CpuMs, Allocations, AllocationBytes);
+    std::printf("{\"Phase\":\"%s\",\"Operations\":%zu,\"WallMs\":%.6f,\"CpuMs\":%.6f,\"CppAllocations\":%zu,\"CppAllocationBytes\":%zu,\"VmLiveBytes\":%zu,\"VmPeakBytes\":%zu,\"Tasks\":%zu,\"Owners\":%zu,\"References\":%zu}\n",
+        Phase, Operations, WallMs, CpuMs, Allocations, AllocationBytes,
+        MeasuredDomain->GetMemoryAccount().Live, MeasuredDomain->GetMemoryAccount().Peak,
+        MeasuredDomain->GetTaskCount(), MeasuredDomain->GetOwnerCount(), MeasuredDomain->GetReferenceCount());
 }
 static int Result(lua_State* Thread) {
     Report(luaL_checkstring(Thread, 1), static_cast<size_t>(luaL_checknumber(Thread, 2))); return 0;
@@ -51,6 +54,7 @@ int main(int Arguments, char** Values) {
     size_t Count = Arguments > 1 ? std::strtoul(Values[1], nullptr, 10) : 1000;
     bool Failed = false;
     GLExecutionDomain Domain(GLDomainKind::Server);
+    MeasuredDomain = &Domain;
     Domain.SetErrorHandler([&](lua_State*, const std::string& Error) { Failed = true; std::fprintf(stderr, "%s\n", Error.c_str()); });
     lua_pushcfunction(Domain.GetState(), Mark, "Mark"); lua_setglobal(Domain.GetState(), "Mark");
     lua_pushcfunction(Domain.GetState(), Result, "Result"); lua_setglobal(Domain.GetState(), "Result");

@@ -2,7 +2,9 @@
 #include "gl_stackguard.h"
 #include <cstdio>
 #include <functional>
+#include <limits>
 #include <stdexcept>
+#include <thread>
 #include <unordered_map>
 #ifdef _WIN32
 #include <windows.h>
@@ -35,7 +37,8 @@ struct Fixture {
     GLExecutionOwner* Run(uint64_t Identity, const char* Source) {
         auto Owner = Domain.CreateOwner(Identity);
         Check(Owner != nullptr, "CreateOwner failed");
-        Check(Domain.Execute(Owner, Source, "=Script" + std::to_string(Identity)), "Script failed to start/execute");
+        if (!Domain.Execute(Owner, Source, "=Script" + std::to_string(Identity)))
+            throw std::runtime_error(Errors.empty() ? "Script failed to start/execute" : Errors.back());
         return Owner;
     }
     void UseRevisions() {
@@ -65,16 +68,312 @@ struct Fixture {
 };
 }
 
-int main() {
+static int LimitCase(const std::string& Name) {
+    GLDomainLimits Limits;
+    Limits.ResumeMilliseconds = 10;
+    if (Name == "cross-time" || Name == "cross-reentry") Limits.ResumeMilliseconds = 50;
+    if (Name == "cross-count") { Limits.ResumeMilliseconds=0; Limits.MaxSafepoints=32; }
+    if (Name == "cross-memory") { Limits.ResumeMilliseconds=0; Limits.MemoryBytes=512*1024; }
+    if (Name == "memory-catch") { Limits.ResumeMilliseconds = 0; Limits.MemoryBytes = 512*1024; }
+    if (Name == "finite-exceeded") { Limits.ResumeMilliseconds = 1000; Limits.MaxSafepoints = 32; }
+    GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+    std::vector<std::string> Errors;
+    Domain.SetErrorHandler([&](lua_State*, const std::string& Error) { Errors.push_back(Error); });
+    auto Owner = Domain.CreateOwner(1);
+    Check(Domain.Execute(Owner, "shared.Callback = function() while true do end end; task.defer(function() shared.CancelledRan = true end)", "=Preparation"), "Preparation failed");
+    lua_getglobal(Owner->Anchor, "shared"); lua_getfield(Owner->Anchor, -1, "Callback");
+    int Reference = GLReference(Owner->Anchor, -1); lua_pop(Owner->Anchor, 2);
+    bool Result = false;
+    if (Name == "cross-time" || Name == "cross-count" || Name == "cross-reentry" || Name == "cross-memory") {
+        GLDomainLimits ChildLimits; ChildLimits.ResumeMilliseconds=0; ChildLimits.MaxSafepoints=0;
+        std::vector<std::string> ChildErrors;
+        GLExecutionDomain Child(GLDomainKind::Client,ChildLimits);
+        Child.SetErrorHandler([&](lua_State*,const std::string& Error){ ChildErrors.push_back(Error); });
+        lua_pushinteger(Child.GetState(),Reference);
+        lua_pushcclosure(Child.GetState(),[](lua_State* Thread)->int {
+            GLDispatch(lua_tointeger(Thread,lua_upvalueindex(1)),[](lua_State*)->int { return 0; });
+            return 0;
+        },"CrossDomainBounce",1); lua_setglobal(Child.GetState(),"Bounce");
+        auto ChildOwner=Child.CreateOwner(10);
+        Result=Domain.RunNative([&](lua_State* Parent) {
+            if (Name=="cross-memory") {
+                int Status=lua_cpcall(Parent,[](lua_State* Thread)->int { lua_newuserdata(Thread,1024*1024); return 0; },nullptr);
+                Check(Status==LUA_ERRMEM,"Parent allocation rejection was not exercised"); lua_pop(Parent,1);
+            }
+            Child.Execute(ChildOwner,Name=="cross-reentry" ? "shared.Entered=true; Bounce()" :
+                "shared.Entered=true; while true do end","=CrossDomain");
+        });
+        Check(!Result && !ChildOwner->Alive && !ChildErrors.empty(),"Child domain bypassed active ancestor budget");
+        lua_getglobal(ChildOwner->Anchor,"shared"); lua_getfield(ChildOwner->Anchor,-1,"Entered");
+        Check(static_cast<bool>(lua_toboolean(ChildOwner->Anchor,-1))==(Name!="cross-memory"),
+            "Cross-domain execution did not respect the active ancestor's allocation state"); lua_pop(ChildOwner->Anchor,2);
+        Check(Child.Execute(Child.CreateOwner(11),"shared.Survived=true","=ChildSurvivor"),"Unrelated child-domain owner did not survive");
+    } else if (Name == "callback" || Name == "shutdown" || Name == "marshal" || Name == "invoke" || Name == "native") {
+        if (Name == "shutdown") { Domain.AddCloseCallback(Owner->Anchor, Reference); Domain.Shutdown(); }
+        else if (Name == "native") {
+            Result = Domain.RunNative([&](lua_State* Thread) {
+                lua_rawgeti(Thread, LUA_REGISTRYINDEX, Reference); lua_call(Thread, 0, 0);
+            });
+        } else if (Name == "invoke") {
+            Result = Domain.Invoke(Reference, [](lua_State*) -> int { return 0; }, [](lua_State*) {}) == LUA_OK;
+        } else if (Name == "marshal") {
+            Result = GLDispatch(Reference, [&](lua_State* Thread) -> int {
+                lua_rawgeti(Thread, LUA_REGISTRYINDEX, Reference);
+                lua_call(Thread, 0, 0);
+                return 0;
+            }) == LUA_OK;
+        } else {
+            Result = GLDispatch(Reference, [](lua_State*) -> int { return 0; }) == LUA_OK;
+        }
+    } else {
+        std::string Source = "while true do end";
+        if (Name == "nested") Source = "coroutine.resume(coroutine.create(function() while true do end end)); while true do end";
+        if (Name == "pcall") Source = "while true do pcall(function() while true do end end) end";
+        if (Name == "memory-catch") Source = "while true do pcall(function() return table.create(1024*1024) end) end";
+        if (Name == "finite-exceeded") Source = "local Sum=0; for Index=1,1000000 do Sum+=Index end; shared.Sum=Sum";
+        if (Name == "finite-within") Source = "shared.Finite=123";
+        if (Name == "module") {
+            Domain.SetModuleResolver([](lua_State*, int, GLModuleSource& Source) { Source={100,"while true do end","=BudgetModule"}; return true; });
+            Source = "return require(100)";
+        }
+        Result = Domain.Execute(Owner, Source, "=BudgetCase");
+    }
+    if (Name == "finite-within") Check(Result && Errors.empty() && Owner->Alive, "Valid computation rejected");
+    else if (Name == "cross-memory") {
+        Check(!Result && Domain.HasMemoryFailure() && !Owner->Alive && !GLReferenceState(Reference),
+            "Caught parent OOM escaped through a child domain or retained stale work");
+    } else if (Name == "cross-time" || Name == "cross-count" || Name == "cross-reentry") {
+        Check(!Result && !Errors.empty() && !Domain.CanRunNative(),"Cross-domain ancestor did not receive failure disposition");
+        Check(Owner->Alive==(Name!="cross-reentry"),"Cross-domain cancellation affected wrong registering owner");
+    } else if (Name == "memory-catch") {
+        Check(!Result && !Errors.empty() && !Owner->Alive && Domain.HasMemoryFailure() && Domain.IsClosing(),
+            "Caught allocation failure bypassed retirement with elapsed policy disabled");
+        Check(Errors.front().find("[Runtime:Memory]")!=std::string::npos && !GLReferenceState(Reference),
+            "Quota failure lost category or retained stale callbacks");
+    } else if (Name == "native") {
+        Check(!Result && !Errors.empty() && !Domain.CanRunNative() && Owner->Alive,
+            "Host operation failure did not retire its bootstrap owner independently");
+        bool Reentered = false;
+        Check(!Domain.RunNative([&](lua_State*) { Reentered = true; }) && !Reentered,
+            "Failed host operation owner was revived");
+        GLExecutionDomain Reentry(GLDomainKind::Server, Limits);
+        auto Target = Reentry.CreateOwner(4);
+        Check(Reentry.Execute(Target,"shared.Callback=function() shared.Entered=true end","=ReentrySetup"),"Reentry setup failed");
+        lua_getglobal(Target->Anchor,"shared"); lua_getfield(Target->Anchor,-1,"Callback");
+        int Callback=GLReference(Target->Anchor,-1); lua_pop(Target->Anchor,2);
+        Check(!Reentry.RunNative([&](lua_State*) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            GLDispatch(Callback,[](lua_State*) -> int { return 0; });
+        }),"Expired native operation was accepted");
+        lua_getglobal(Target->Anchor,"shared"); lua_getfield(Target->Anchor,-1,"Entered");
+        Check(lua_isnil(Target->Anchor,-1),"Expired reentry executed gameplay before checking inherited deadline");
+        lua_pop(Target->Anchor,2);
+    } else {
+        Check(!Result && !Errors.empty() && !Owner->Alive, "Resource interruption did not terminate owner");
+        Check(Errors.front().find("[Runtime:Execution]") != std::string::npos, "Missing resource error category");
+        Check(GLReferenceState(Reference) == nullptr, "Interrupted owner retained callback reference");
+    }
+    if (Name == "invoke") {
+        GLExecutionDomain Copy(GLDomainKind::Client, Limits);
+        auto Target = Copy.CreateOwner(4);
+        Check(Copy.Execute(Target,"shared.Callback=function() return 1 end","=CopySetup"),"Copy setup failed");
+        lua_getglobal(Target->Anchor,"shared"); lua_getfield(Target->Anchor,-1,"Callback");
+        int Callback=GLReference(Target->Anchor,-1); lua_pop(Target->Anchor,2);
+        Check(Copy.Invoke(Callback,[](lua_State*) -> int { return 0; },[](lua_State*) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        })==LUA_ERRRUN && !Target->Alive && !GLReferenceState(Callback),
+            "Post-copy native deadline did not cancel the synchronous callback owner");
+        Check(Copy.Execute(Copy.CreateOwner(5),"shared.Survived=true","=CopySurvivor"),
+            "Post-copy deadline cancelled an unrelated owner");
+    }
+    if (Name != "shutdown" && Name != "memory-catch" && Name != "cross-memory") {
+        Domain.Tick(0.02);
+        auto Survivor = Domain.CreateOwner(2);
+        std::string Source = Name == "module" ? "local Ok,Error=pcall(require,100); assert(not Ok and string.find(Error,'budget') or not Ok and string.find(Error,'deadline'))" :
+            Name == "native" || Name == "cross-time" || Name == "cross-count" ? "assert(shared.CancelledRan==true)" : "assert(shared.CancelledRan==nil or shared.Finite==123)";
+        Check(Domain.Execute(Survivor, Source, "=Survivor"), "Unrelated execution did not survive");
+        Domain.Shutdown();
+    }
+    GLExecutionDomain Fresh(GLDomainKind::Client);
+    Check(Fresh.Execute(Fresh.CreateOwner(3), "assert(shared.Callback==nil)", "=Fresh"), "Fresh domain initialization failed");
+    std::printf("[Runtime:LimitTest] PASS %s\n", Name.c_str());
+    return 0;
+}
+
+int main(int Arguments, char** Values) {
     std::setvbuf(stdout, nullptr, _IONBF, 0);
 #ifdef _WIN32
     SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
 #endif
+    if (Arguments == 3 && std::string(Values[1]) == "--limit-case") {
+        try { return LimitCase(Values[2]); }
+        catch (const std::exception& Error) { std::fprintf(stderr,"[Runtime:LimitTest] FAIL %s\n",Error.what()); return 1; }
+    }
     int Passed = 0, Failed = 0;
     auto Test = [&](const char* Name, const std::function<void()>& Body) {
         try { Body(); ++Passed; std::printf("[Runtime:Test] PASS %s\n", Name); }
         catch (const std::exception& Error) { ++Failed; std::printf("[Runtime:Test] FAIL %s: %s\n", Name, Error.what()); }
     };
+    Test("VM allocator accounts growth shrink rejection and frees", [] {
+        GLMemoryAccount Account;
+        Account.Limit = 4096;
+        void* Block = GLMemoryAccount::Allocate(&Account, nullptr, 0, 256);
+        Check(Block && Account.Live == 256 && Account.Peak == 256, "Initial allocation not counted");
+        Block = GLMemoryAccount::Allocate(&Account, Block, 256, 1024);
+        Check(Block && Account.Live == 1024, "Growth not counted");
+        void* Extra = GLMemoryAccount::Allocate(&Account, nullptr, 0, 3072);
+        Check(Extra && Account.Live==4096 && !GLMemoryAccount::Allocate(&Account,nullptr,0,1),
+            "Quota did not include allocations in other live blocks");
+        GLMemoryAccount::Allocate(&Account,Extra,3072,0);
+        Check(!GLMemoryAccount::Allocate(&Account, Block, 1024, 8192), "Quota did not reject growth");
+        Check(Account.Live == 1024, "Rejected realloc changed accounting");
+        Account.Limit = 1; // shrinking must remain possible after a reduced cap
+        Block = GLMemoryAccount::Allocate(&Account, Block, 1024, 128);
+        Check(Block && Account.Live == 128 && Account.Peak == 4096, "Shrink not counted");
+        GLMemoryAccount::Allocate(&Account, Block, 128, 0);
+        Check(Account.Live == 0 && !Account.InvalidAccounting, "Free accounting invalid");
+    });
+    Test("VM allocator rejects invalid sizes and arithmetic overflow", [] {
+        GLMemoryAccount Account;
+        Check(!GLMemoryAccount::Allocate(&Account, nullptr, 1, 1) && Account.InvalidAccounting, "Invalid old size accepted");
+        Account = {};
+        Account.Live = (std::numeric_limits<size_t>::max)();
+        Check(!GLMemoryAccount::Allocate(&Account, nullptr, 0, 1), "Accounting addition overflowed");
+        Check(Account.Live == (std::numeric_limits<size_t>::max)(), "Overflow changed accounting");
+    });
+    Test("Actual VM allocation failure is protected and close releases accounting", [] {
+        GLMemoryAccount Account;
+        lua_State* State = lua_newstate(GLMemoryAccount::Allocate, &Account);
+        Check(State && Account.Live > 0, "VM did not use accounting allocator");
+        Account.Limit = Account.Live + 4096;
+        int Status = lua_cpcall(State, [](lua_State* Thread) -> int {
+            lua_newuserdata(Thread, 1024 * 1024);
+            return 0;
+        }, nullptr);
+        Check(Status == LUA_ERRMEM && Account.Rejections > 0, "Expected protected quota failure");
+        lua_close(State);
+        Check(Account.Live == 0 && !Account.InvalidAccounting, "VM close did not free accounted allocations");
+    });
+    Test("Sandbox preserves custom typeof shared facades and function environments", [] {
+        Fixture F;
+        lua_pushcfunction(F.Domain.GetState(), [](lua_State* Thread) -> int {
+            lua_pushstring(Thread, "CustomType"); return 1;
+        }, "typeof"); lua_setglobal(F.Domain.GetState(), "typeof");
+        F.Sources[100] = "assert(typeof({}) == 'CustomType'); shared.Module = {}; return shared.Module";
+        F.Run(1, "assert(io==nil and package==nil and dofile==nil and loadfile==nil and debug.getregistry==nil and os.execute==nil); assert(typeof({}) == 'CustomType'); assert(require(100) == shared.Module); _G.Mutable = 42; shared.Mutable = 43; assert(not pcall(function() table.insert = nil end)); local M = getmetatable(getfenv(1)); assert(not pcall(function() M.__index=nil end)); local F = function() return Value end; setfenv(F, {Value=12}); assert(F()==12)");
+        Check(F.Domain.IsSandboxed(), "Gameplay admission did not seal root libraries");
+        F.Run(2, "assert(_G.Mutable==42 and shared.Mutable==43); assert(typeof({})=='CustomType'); table.insert({}, 1)");
+        F.NoErrors();
+    });
+    Test("Task quota rejects admission before creating extra coroutine and recovers after tick", [] {
+        GLDomainLimits Limits; Limits.Tasks = 8;
+        GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+        auto Owner = Domain.CreateOwner(1);
+        Check(Domain.Execute(Owner, "for Index=1,7 do task.defer(function() end) end; local Ok, Error=pcall(task.defer,function() end); assert(not Ok and string.find(Error,'admission'))", "=TaskQuota"), "Task admission failure escaped protection");
+        Check(Domain.GetTaskCount()==8, "Rejected task grew retained scheduler records");
+        Domain.Tick(0.02); Domain.Tick(0.02);
+        Check(Domain.GetTaskCount()==0, "Completed tasks did not release quota");
+        Check(Domain.Execute(Owner, "task.defer(function() shared.Recovered=true end)", "=TaskRecovery"), "Task admission did not recover");
+        Domain.Tick(0.02);
+    });
+    Test("Reference quota and owner quota reject without replacing valid work", [] {
+        GLDomainLimits Limits; Limits.References=4; Limits.Owners=2;
+        GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+        auto Owner = Domain.CreateOwner(1);
+        Check(Domain.Execute(Owner, "for Index=1,4 do _GLBindCallback(function() end) end; assert(not pcall(_GLBindCallback,function() end))", "=ReferenceQuota"), "Reference quota escaped Lua protection");
+        Check(Domain.GetReferenceCount()==4, "Reference quota was bypassed");
+        Check(Domain.CreateOwner(2) && !Domain.CreateOwner(3), "Owner quota was bypassed");
+        Check(!Domain.CreateOwner(1) && Owner->Alive && Domain.FindOwner(1)==Owner,
+            "Rejected replacement cancelled a valid execution owner");
+        Domain.CancelOwner(Owner);
+        Check(Domain.GetReferenceCount()==0, "Cancellation did not release reference quota");
+        GLDomainLimits ThreadLimits; ThreadLimits.Coroutines=2;
+        GLExecutionDomain ThreadDomain(GLDomainKind::Client,ThreadLimits);
+        auto Previous=ThreadDomain.CreateOwner(1);
+        Check(Previous && !ThreadDomain.CreateOwner(1) && Previous->Alive && ThreadDomain.FindOwner(1)==Previous,
+            "Coroutine admission failure cancelled a valid previous owner");
+    });
+    Test("Live coroutine quota includes untracked manual coroutines and frees on collection", [] {
+        GLDomainLimits Limits; Limits.Coroutines=12;
+        GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+        auto Owner = Domain.CreateOwner(1);
+        Check(Domain.Execute(Owner, "shared.Threads={}; for Index=1,9 do table.insert(shared.Threads,coroutine.create(function() end)) end; assert(not pcall(coroutine.create,function() end)); shared.Threads=nil", "=CoroutineQuota"), "Coroutine admission error escaped Lua protection");
+        Check(Domain.GetCoroutineCount()==12, "Manual coroutine accounting is incomplete");
+        Domain.Tick(0.02); lua_gc(Domain.GetState(), LUA_GCCOLLECT, 0);
+        Check(Domain.GetCoroutineCount()==2, "Collected coroutines retained admission quota");
+        Check(Domain.Execute(Owner, "assert(coroutine.create(function() end))", "=CoroutineRecovery"), "Coroutine quota did not recover");
+    });
+    Test("Memory quota retirement covers caught Lua failure and fresh domain recovery", [] {
+        for (int Index=0; Index<4; ++Index) {
+            GLDomainLimits Limits; Limits.MemoryBytes=512*1024;
+            GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+            auto Owner=Domain.CreateOwner(1);
+            Check(Owner && Domain.Execute(Owner, "shared.Small=table.create(1000); shared.Small=nil", "=WithinMemory"), "Within-quota allocation failed");
+            size_t BeforeCollection=Domain.GetMemoryAccount().Live;
+            lua_gc(Domain.GetState(), LUA_GCCOLLECT, 0);
+            size_t Before=Domain.GetMemoryAccount().Live;
+            Check(Before<BeforeCollection,"Garbage collection did not release allocator-accounted memory");
+            const char* Source = Index%2 ? "pcall(function() shared.TooLarge={}; for Index=1,128 do table.insert(shared.TooLarge,table.create(1024)) end end)" :
+                "pcall(function() shared.TooLarge=table.create(1024*1024) end)";
+            Check(!Domain.Execute(Owner, Source, "=MemoryQuota"), "Caught OOM bypassed terminal domain policy");
+            Check(Domain.HasMemoryFailure() && Domain.IsClosing() && !Owner->Alive && !Domain.CreateOwner(2), "Exhausted domain remained available");
+            Check(Domain.GetMemoryAccount().Live <= Limits.MemoryBytes && Domain.GetMemoryAccount().Peak <= Limits.MemoryBytes && Before>0, "VM exceeded allocator quota");
+            Domain.Shutdown(); Domain.Tick(0.02);
+            GLExecutionDomain Fresh(GLDomainKind::Client, Limits);
+            Check(Fresh.Execute(Fresh.CreateOwner(1), "assert(shared.TooLarge==nil)", "=FreshMemory"), "Explicit fresh domain did not recover");
+        }
+    });
+    Test("Memory failure during callback marshalling retires without unprotected unwind", [] {
+        GLDomainLimits Limits; Limits.MemoryBytes=512*1024;
+        GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+        auto Owner=Domain.CreateOwner(1);
+        Check(Domain.Execute(Owner,"function Callback() error('must not execute') end","=CallbackSetup"),"Setup failed");
+        lua_getglobal(Owner->Anchor,"Callback"); int Reference=GLReference(Owner->Anchor,-1); lua_pop(Owner->Anchor,1);
+        Check(GLDispatch(Reference,[](lua_State* Thread)->int { lua_newuserdata(Thread,1024*1024); return 1; })==LUA_ERRMEM,"Marshaller OOM was not contained");
+        Check(Domain.HasMemoryFailure() && !Owner->Alive && !GLReferenceState(Reference),"Marshaller failure retained old callbacks");
+        GLExecutionDomain SourceDomain(GLDomainKind::Server,Limits), CallerDomain(GLDomainKind::Client);
+        auto SourceOwner=SourceDomain.CreateOwner(1);
+        Check(SourceDomain.Execute(SourceOwner,"function Callback() return 42 end","=ReturnSetup"),"Return setup failed");
+        lua_getglobal(SourceOwner->Anchor,"Callback"); int SourceReference=GLReference(SourceOwner->Anchor,-1); lua_pop(SourceOwner->Anchor,1);
+        Check(!CallerDomain.RunNative([&](lua_State* Caller) {
+            SourceDomain.Invoke(SourceReference,[](lua_State*)->int { return 0; },[&](lua_State* Source) {
+                int Status=lua_cpcall(Source,[](lua_State* Thread)->int { lua_newuserdata(Thread,1024*1024); return 0; },nullptr);
+                Check(Status==LUA_ERRMEM,"Protected source allocation unexpectedly succeeded"); lua_pop(Source,1);
+                luaL_error(Caller,"[Runtime:Callback] Destination rejected return copy");
+            });
+        }),"Cross-domain destination error escaped protection");
+        Check(SourceDomain.HasMemoryFailure() && !CallerDomain.HasMemoryFailure() && CallerDomain.CanRunNative(),
+            "Source rejection was lost while unwinding a destination error or retired the wrong domain");
+    });
+    Test("Insufficient VM bootstrap quota produces a controlled unavailable domain", [] {
+        GLDomainLimits Limits; Limits.MemoryBytes=4096;
+        GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+        Check(Domain.IsClosing() && Domain.HasMemoryFailure() && Domain.GetFailure() && !Domain.CreateOwner(1),"Tiny bootstrap quota did not retire domain");
+        Check(std::string(Domain.GetFailure()).find("quota")!=std::string::npos,
+            "Bootstrap quota rejection was reported as an underlying host allocation failure");
+        Domain.Shutdown();
+        GLDomainLimits HostLimits; HostLimits.Coroutines=1;
+        GLExecutionDomain FailedHost(GLDomainKind::Client,HostLimits);
+        bool Caught=false;
+        Check(!FailedHost.InitializeHost([&](lua_State* Thread) {
+            int Status=lua_cpcall(Thread,[](lua_State* Current)->int { lua_newthread(Current); return 0; },nullptr);
+            Caught=Status==LUA_ERRRUN;
+            if (Status!=LUA_OK) lua_pop(Thread,1);
+        }) && Caught && FailedHost.IsClosing() && !FailedHost.HasMemoryFailure() && FailedHost.GetAdmissionRejections()==1,
+            "Caught bootstrap admission failure left a partially initialized domain available");
+    });
+    Test("Shared module allocations use the domain quota and retire all owners on exhaustion", [] {
+        GLDomainLimits Limits; Limits.MemoryBytes=512*1024;
+        GLExecutionDomain Domain(GLDomainKind::Server, Limits);
+        Domain.SetModuleResolver([](lua_State*, int, GLModuleSource& Source) {
+            Source={100,"return table.create(1024*1024)","=MemoryModule"}; return true;
+        });
+        auto Owner=Domain.CreateOwner(1);
+        auto Other=Domain.CreateOwner(2);
+        Check(!Domain.Execute(Owner,"pcall(require,100)","=SharedQuota"),"Module bypassed domain quota");
+        Check(Domain.HasMemoryFailure() && !Owner->Alive && !Other->Alive,"Module quota failure did not retire shared VM");
+        Check(Domain.GetMemoryAccount().Peak<=Limits.MemoryBytes,"Module allocation exceeded hard quota");
+    });
     for (GLDomainKind Kind : {GLDomainKind::Server, GLDomainKind::Client}) {
         Test(Kind == GLDomainKind::Server ? "Server module sharing and ordering" : "Client module sharing and ordering", [Kind] {
             Fixture F(Kind);
@@ -217,6 +516,14 @@ int main() {
         Fixture F;
         auto Bad = F.Domain.CreateOwner(1);
         Check(!F.Domain.Execute(Bad, "error('expected script error')", "=Bad"), "Expected script error was accepted");
+        bool NumericErrorPreserved = false;
+        F.Domain.SetErrorHandler([&](lua_State* Thread, const std::string& Error) {
+            NumericErrorPreserved = lua_type(Thread, -1) == LUA_TNUMBER;
+            F.Errors.push_back(Error);
+        });
+        Check(!F.Domain.Execute(Bad, "error(3.14159265, 0)", "=NumericError"), "Expected numeric error was accepted");
+        Check(NumericErrorPreserved && F.Errors.back().find("non-string") != std::string::npos,
+            "Error reporting allocated/coerced a numeric VM error outside protection");
         F.Run(2, "shared.Survived = true"); F.Verify("assert(shared.Survived)");
     });
     Test("spawn, defer, delay, wait arguments and reentrant scheduling", [] {

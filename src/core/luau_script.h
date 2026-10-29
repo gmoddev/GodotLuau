@@ -283,7 +283,9 @@ public:
     }
     void resume_external_thread(lua_State* Thread, int Arguments) { GLResume(Thread, nullptr, Arguments); }
     void resume_external_thread_error(lua_State* Thread, const String& Error) {
-        lua_pushstring(Thread, Error.utf8().get_data()); GLResumeError(Thread, nullptr);
+        if (auto Owner = GLGetOwner(Thread)) Owner->Domain->ResumePrepared(Thread, [&](lua_State* Scratch) -> int {
+            lua_pushstring(Scratch, Error.utf8().get_data()); return 1;
+        }, true);
     }
     void _gl_source_changed() {
         if (Engine::get_singleton()->is_editor_hint()) return;
@@ -594,13 +596,13 @@ public:
         auto Host = GLGetDomainHost(get_tree());
         if (!Host) { script_started = false; return; }
         Domain = &Host->GetDomain(Kind);
-        if (Host->ClaimInitialization(Kind)) InitializeDomain(*Domain);
+        if (Domain->IsClosing()) return;
+        if (Host->ClaimInitialization(Kind) && !Domain->InitializeHost([&](lua_State*) { InitializeDomain(*Domain); })) return;
         RunOwner = Domain->CreateOwner(static_cast<uint64_t>(get_instance_id()));
         if (!RunOwner) { script_started = false; return; }
         L_main = RunOwner->Anchor;
-        lua_pushboolean(L_main, true);
-        RunGuard = GLReference(L_main, -1);
-        lua_pop(L_main, 1);
+        RunGuard = Domain->CreateGuard(RunOwner);
+        if (RunGuard == LUA_NOREF) return;
         String ChunkName = String("=") + gl_instance_fullname(this);
         Domain->Execute(RunOwner, codigo_luau->_get_source_code().utf8().get_data(), ChunkName.utf8().get_data());
     }

@@ -6,6 +6,7 @@
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/callable.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
 #include <array>
 
 class GLDomainHost : public godot::Node {
@@ -48,6 +49,7 @@ class GLDomainHost : public godot::Node {
 
 protected:
     static void _bind_methods() {
+        godot::ClassDB::bind_method(godot::D_METHOD("GetResourceStats", "client"), &GLDomainHost::GetResourceStats);
 #ifdef GL_RUNTIME_TESTS
         godot::ClassDB::bind_method(godot::D_METHOD("_gl_test_reset_domain", "client"), &GLDomainHost::ResetDomainForTests);
 #endif
@@ -57,6 +59,7 @@ protected:
 public:
     ~GLDomainHost();
     GLExecutionDomain& GetDomain(GLDomainKind Kind);
+    godot::Dictionary GetResourceStats(bool Client) const;
     bool ClaimInitialization(GLDomainKind Kind);
     bool ConnectChild(lua_State* Thread, godot::Node* Target, godot::Node* Receiver, bool Added, int Reference);
     void DisconnectChild(int Reference);

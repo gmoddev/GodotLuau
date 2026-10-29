@@ -121,6 +121,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/animation" --animation --timeout 60
 
+      - name: GL-004 isolated resource and recovery cases
+        timeout-minutes: 3
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/resources" --resources --timeout 15
+
       - name: Require all native actors and retain identity
         timeout-minutes: 1
         run: |

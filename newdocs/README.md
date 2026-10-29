@@ -28,6 +28,12 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-004 development is on `runtime/gl-004-execution-limits`, with no main merge.
+See the [resource policy decision](adr-002-domain-resource-policy.md) and
+[live work/validation record](execution-limits-validation.md). Local qualification
+is complete; fresh hosted CI remains pending. Intermediate probes are recorded
+separately from the final source's results.
+
 GL-022's qualified shared-ModuleScript child relay correction is integrated into
 main through `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`, preserving all three
 source commits. See the [integration record](gl022-child-relay-validation.md#main-integration).

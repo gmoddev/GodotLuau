@@ -140,28 +140,18 @@ public:
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
             auto cb = cbs[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
-            lua_State* thread = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, thread, 1);
-                gl_check_resume(thread, GLResume(thread, nullptr, 0));
-            } else { lua_pop(cb.main_L, 1); }
-            lua_pop(cb.main_L, 1);
+            GLDispatch(cb.ref, [](lua_State*) -> int { return 0; });
         }
     }
     static void fire_lua_state_changed(std::vector<LuaCallback>& cbs, int new_state, int old_state) {
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
             auto cb = cbs[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
-            lua_State* thread = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, thread, 1);
-                lua_pushnumber(thread, new_state);
-                lua_pushnumber(thread, old_state);
-                gl_check_resume(thread, GLResume(thread, nullptr, 2));
-            } else { lua_pop(cb.main_L, 1); }
-            lua_pop(cb.main_L, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
+                lua_pushnumber(Thread, new_state);
+                lua_pushnumber(Thread, old_state);
+                return 2;
+            });
         }
     }
 
@@ -171,15 +161,11 @@ public:
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
             auto cb = cbs[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
-            lua_State* thread = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, thread, 1);
-                if (arg.get_type() == Variant::BOOL) lua_pushboolean(thread, (bool)arg);
-                else                                 lua_pushnumber(thread, (double)arg);
-                gl_check_resume(thread, GLResume(thread, nullptr, 1));
-            } else { lua_pop(cb.main_L, 1); }
-            lua_pop(cb.main_L, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
+                if (arg.get_type() == Variant::BOOL) lua_pushboolean(Thread, (bool)arg);
+                else                                 lua_pushnumber(Thread, (double)arg);
+                return 1;
+            });
         }
     }
 
@@ -187,15 +173,11 @@ public:
         for (int i = (int)cbs.size() - 1; i >= 0; i--) {
             auto cb = cbs[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { cbs.erase(cbs.begin() + i); continue; }
-            lua_State* thread = lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L, LUA_REGISTRYINDEX, cb.ref);
-            if (lua_isfunction(cb.main_L, -1)) {
-                lua_xmove(cb.main_L, thread, 1);
-                lua_pushnumber(thread, new_hp);
-                lua_pushnumber(thread, old_hp);
-                gl_check_resume(thread, GLResume(thread, nullptr, 2));
-            } else { lua_pop(cb.main_L, 1); }
-            lua_pop(cb.main_L, 1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
+                lua_pushnumber(Thread, new_hp);
+                lua_pushnumber(Thread, old_hp);
+                return 2;
+            });
         }
     }
 

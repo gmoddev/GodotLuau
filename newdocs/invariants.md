@@ -48,6 +48,19 @@ the inherited runtime already satisfies them. Baseline gaps link to
   within a running callback. GL-014's source-qualification evidence is recorded;
   bounded remaining platform gaps are GL-017/GL-018. GL-019's measured
   optimizations are integrated; retained task-creation costs remain documented.
+- Gameplay entry, marshalling and resumed execution use same-state protected VM
+  boundaries. Nested Server/Client calls inherit active ancestor time/count
+  constraints; catching an inner error must not reset an active attempt.
+- Allocator accounting/quota applies to requested VM bytes, including bootstrap,
+  shared modules and registry roots. Its context remains valid through lua_close;
+  it performs no Lua calls, throwing operations or reentrant container allocation.
+- Memory rejection remains latched through caught errors and disabled timers.
+  Resource exhaustion retires that domain at a protected boundary, invalidates
+  future work and does not close a currently executing VM or restart it.
+- Nonterminal admission rejection does not retain excess work or cancel a valid
+  previous owner before a replacement is admitted. Cancelled records and dead tokens
+  remain bounded until safe reaping/GC. Error reporting does not allocate Lua
+  strings outside protection. See [ADR-002](adr-002-domain-resource-policy.md).
 
 ## Multiplayer authority
 
