@@ -24,6 +24,10 @@ def Main():
         if [Result['Label'] for Result in Results] != Labels or any(Result['Exit'] != 0 for Result in Results):
             raise ValueError('Missing or failed native fixture results: ' + Name)
         Groups[Name] = Results
+    Lifecycle = (Args.output / 'regression' / 'integration-0.stdout.log').read_text(errors='replace')
+    for Marker in ['[Runtime:ChildRelay] PASS', '[Runtime:ChildRelay] Independent domain destruction and replacement checked', '[Runtime:ChildRelay] Scene generations PASS']:
+        if Marker not in Lifecycle:
+            raise ValueError('GL-022 native regression was not exercised: ' + Marker)
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),

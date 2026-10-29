@@ -177,6 +177,17 @@ recorded. Existing destruction/reload/cancellation, value/reflection/identity,
 network, RemoteFunction and functional animation assertions remain unchanged.
 No additional process group or parallel bootstrap implementation is introduced.
 
+GL-022 extends this same Integration process with one shared native ModuleScript,
+independent module tables, multiple subscriptions, retired callers, exact-once/
+reentrant/yielded delivery and independent/self/peer disconnect. It covers module/
+script invalidation and destruction, dead targets, ChildRemoved and repeated
+scene replacement with a surviving emitter. The CMake adapter's GL_RUNTIME_TESTS
+reset method permits destroying/recreating Server while Client remains live;
+callers retire before this test-only destruction. Shipping SCons builds do not
+expose it. Child signals retain their Connect-only protocol; service Once/Wait
+assertions remain below. CheckNativeCI requires the new PASS markers. See the
+[record](../../newdocs/gl022-child-relay-validation.md).
+
 The integrated first GL-013 extraction extends `Integration.gd` through actual native Vector3/Color3
 constructors, arithmetic, constants, exact type rejection, native Variant bridge
 round trips, wrapper identity/destruction and fresh-domain reinitialization.

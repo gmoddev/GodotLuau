@@ -890,3 +890,12 @@ changed to address this finding. The refactor's qualification does not close it.
 identity and owner/reference cleanup, and implement a focused fix with two-domain,
 same-domain multiple connection, disconnect, caller/module destruction and fresh
 domain tests. Close only with linked fix and executed evidence.
+
+**Development (2026-10-29): cause verified; correction under qualification.**
+The [record](gl022-child-relay-validation.md#stage-2-baseline-and-mechanism-2026-10-29)
+reproduces the shared-target failure on both unchanged Debug platforms. Godot
+source and native is_connected diagnostics confirm bound arguments are excluded
+from signal identity; public references are process-wide/non-recycled. The
+development branch uses distinct base Callables and host-owned cleanup. Expanded
+Linux Debug lifecycle checks pass; full platform/sanitizer/hosted gates remain
+pending. This is not a main merge or closure of unrelated findings.

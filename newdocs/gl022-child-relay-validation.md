@@ -56,3 +56,74 @@ This evidence follow-up is documentation only; the main publication tip is its
 Git commit immediately following `84f4229`. No further extraction, release,
 updater change or GL-022 correction is included in Stage 1. Stage 2 starts from
 that verified main, not from the historical extraction branch.
+
+## Stage 2: baseline and mechanism (2026-10-29)
+
+Development branch `fix/gl-022-cross-domain-child-relay` starts at verified
+post-integration main `67b88c4202a5c6b9eee46cc7dd5faa4c3fcc1e01`.
+Before production edits, the extended existing Integration fixture reproduces
+GL-022 against the unchanged Windows/Linux Debug libraries. One native
+ModuleScript is required twice within each independent domain. Both callers
+retire before adding GL022First. Server count is one; Client count is zero.
+Each log shows one native child_entered_tree connection to that ModuleScript,
+bound reference 268435466, and is_connected with unrelated ref -12345 is true.
+The per-domain labels and independent module tables remain distinct. _GL_VM_ID
+returns a new diagnostic number per call, not a stable VM address; its captured
+3/4 values are supplementary markers, not the domain-isolation proof.
+
+The actual matching Godot source confirms the mechanism: Object::connect,
+is_connected and disconnect index signal slots by get_base_comparator;
+CallableCustomBind::get_base_comparator delegates to the unbound callable.
+Different bind(ref) arguments therefore do not distinguish the common native
+ModuleScript + _gl_child_event pair. The registration guard silently skips the
+second logical subscription. Its disconnect lookup can also select the first.
+GLReference uses one process-wide, non-recycled counter and owner mapping;
+numeric VM registry collision and requiring-caller retirement are not the cause.
+No module-cache or authority failure is inferred.
+
+Failing stdout/stderr and the original fixture copy are preserved in each
+worker's gl022/baseline-shared-target output. The runner exits nonzero, retaining
+the failure. Distinct-target bootstrap relays still pass beforehand.
+
+Correction boundary: give each child subscription a genuinely distinct native
+Callable identity, using the existing immutable callback reference and native
+receiver ObjectID. Retain the existing reference-to-owner/VM dispatch. Track
+native connections in the scene's existing domain host so owner invalidation,
+explicit disconnect and scene shutdown disconnect only that subscription and
+release its reference. No competing VM/scheduler or global subscription registry.
+
+### Implementation and focused checks
+
+Both first corrected Linux Debug runs pass all eight lifecycle actors. Expanded
+coverage passes shared-target/multiple subscription, caller retirement, independent
+disconnect, self/peer disconnect during dispatch, reentrant/yielded callbacks,
+module invalidation/deletion, script disable/re-enable/reload, ChildRemoved,
+dead native target handles and repeated scene generations with a surviving emitter.
+No production compile/fixture failure occurred in these two candidate runs.
+
+GLChildCallable stores receiver ObjectID plus immutable public reference; base
+comparison includes that identity. Dispatch resolves the live receiver and owner,
+then uses existing _gl_child_event/GLResume. Host records hold weak target IDs,
+Callables, references and comparison-only anchor identities. Owner invalidation
+disconnects entries before registry release. Explicit disconnect erases its entry
+before native disconnection; dead targets are reaped before the next host tick.
+The native Callable retains no VM pointer. Signal handles resolve ObjectIDs.
+The receiver rejects closing domains before creating work; existing scheduler
+roots protect reentrant/cancelled work. No cache/hot-path semantics change.
+
+ChildAdded/ChildRemoved retain Connect/connect and Disconnect/disconnect;
+Connected reflects live reference ownership. These signals had no Once/Wait
+methods in the baseline; service Once/Wait/cancellation fixtures retain their
+separate contracts. No unrelated signal or inert lowercase-alias fix is added.
+
+Only the CMake qualification adapter defines GL_RUNTIME_TESTS and binds
+_gl_test_reset_domain. The fixture calls it outside Lua after retiring all
+executable callers, destroys Server, checks Client still receives, and creates
+a fresh Server VM without stale delivery. Shipping SCons builds do not expose
+partial teardown. Existing native CI runs the expanded Integration process;
+CheckNativeCI now requires child-relay, independent-domain and scene-generation
+PASS markers. No separate workflow or process group is introduced.
+
+Full Windows/Linux Debug/Release, sanitizer and hosted branch checks are pending.
+GL-022 is not yet closed. The branch must not be merged automatically; GL-017/018,
+GL-020 adversarial evidence and other open issues retain their separate scope.

@@ -947,6 +947,7 @@ void ScriptNodeBase::setup_remotefunction_system(lua_State* L) {
 void ScriptNodeBase::_gl_child_event(Node* Child, int Reference) {
     lua_State* Anchor = GLReferenceState(Reference);
     if (!Anchor || !Child) return;
+    if (GLGetOwner(Anchor)->Domain->IsClosing()) return;
     lua_State* Thread = lua_newthread(Anchor);
     lua_rawgeti(Thread, LUA_REGISTRYINDEX, Reference);
     if (lua_isfunction(Thread, -1)) {

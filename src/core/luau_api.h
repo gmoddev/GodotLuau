@@ -47,6 +47,7 @@
 #include "Luau/Compiler.h"
 
 #include "gl_runtime.h"   // GodotObjectWrapper (ObjectID), gow_node/gow_set, registro de estados vivos
+#include "gl_domain_host.h"
 
 #include <cmath>
 #include <cstring>
@@ -1239,47 +1240,47 @@ static int godot_object_index(lua_State* L) {
     if (strcmp(key, "ChildAdded") == 0 || strcmp(key, "ChildRemoved") == 0) {
         bool is_added = (strcmp(key, "ChildAdded") == 0);
         lua_newtable(L);
-        lua_pushlightuserdata(L, (void*)n);
+        GLPushNodeHandle(L, n);
         lua_pushboolean(L, is_added ? 1 : 0);
         lua_pushcclosure(L, [](lua_State* pL) -> int {
-            Node* nd = (Node*)lua_touserdata(pL, lua_upvalueindex(1));
+            Node* nd = GLNodeUpvalue(pL, 1);
             bool adding = lua_toboolean(pL, lua_upvalueindex(2)) != 0;
             if (!nd || !lua_isfunction(pL, 2)) { lua_pushnil(pL); return 1; }
-            // Dueño del callback = el ScriptNodeBase. Godot desconecta solo al
-            // liberar cualquiera de los dos extremos → sin fugas ni use-after-free.
+            // The executing script/module owns the callback, independently of
+            // the original requiring caller and of other domain subscriptions.
             GLPushScriptNode(pL);
             Node* sn = (Node*)lua_touserdata(pL, -1); lua_pop(pL, 1);
             if (!sn) { lua_pushnil(pL); return 1; }
             lua_pushvalue(pL, 2); int ref = GLReference(pL, -1); lua_pop(pL, 1);
-            const char* gsig = adding ? "child_entered_tree" : "child_exiting_tree";
-            // .bind(ref) crea un Callable distinto por conexion, pero Godot
-            // compara solo el metodo base: sin este guardia salta un warning
-            // "Signal already connected" por cada script que escucha ChildAdded.
-            if (nd->has_signal(gsig) && !nd->is_connected(gsig, Callable(sn, "_gl_child_event").bind(ref)))
-                nd->connect(gsig, Callable(sn, "_gl_child_event").bind(ref));
-            // Objeto conexión con Disconnect() (resuelve por ObjectID: seguro
-            // aunque los nodos se hayan destruido cuando se llame).
+            auto Host = GLGetDomainHost();
+            if (!Host || !Host->ConnectChild(pL, nd, sn, adding, ref)) {
+                GLUnreference(nullptr, ref);
+                lua_pushnil(pL);
+                return 1;
+            }
             lua_newtable(pL);
-            lua_pushlightuserdata(pL, (void*)(uintptr_t)nd->get_instance_id());
-            lua_pushlightuserdata(pL, (void*)(uintptr_t)sn->get_instance_id());
-            lua_pushstring(pL, gsig);
+            lua_pushlightuserdata(pL, (void*)(uintptr_t)Host->get_instance_id());
             lua_pushinteger(pL, ref);
             lua_pushcclosure(pL, [](lua_State* dL) -> int {
-                uint64_t tid = (uint64_t)(uintptr_t)lua_touserdata(dL, lua_upvalueindex(1));
-                uint64_t sid = (uint64_t)(uintptr_t)lua_touserdata(dL, lua_upvalueindex(2));
-                const char* sig = lua_tostring(dL, lua_upvalueindex(3));
-                int r = (int)lua_tointeger(dL, lua_upvalueindex(4));
-                Node* tnd = Object::cast_to<Node>(ObjectDB::get_instance(tid));
-                Node* snn = Object::cast_to<Node>(ObjectDB::get_instance(sid));
-                if (tnd && snn) {
-                    Callable c = Callable(snn, "_gl_child_event").bind(r);
-                    if (tnd->is_connected(sig, c)) tnd->disconnect(sig, c);
-                }
+                uint64_t Identity = (uint64_t)(uintptr_t)lua_touserdata(dL, lua_upvalueindex(1));
+                int Reference = (int)lua_tointeger(dL, lua_upvalueindex(2));
+                if (auto Host = Object::cast_to<GLDomainHost>(ObjectDB::get_instance(Identity))) Host->DisconnectChild(Reference);
                 return 0;
-            }, "Disconnect", 4);
+            }, "Disconnect", 2);
             lua_setfield(pL, -2, "Disconnect");
             lua_getfield(pL, -1, "Disconnect");   // alias legacy :disconnect()
             lua_setfield(pL, -2, "disconnect");
+            lua_newtable(pL);
+            lua_pushinteger(pL, ref);
+            lua_pushcclosure(pL, [](lua_State* State) -> int {
+                const char* Key = lua_tostring(State, 2);
+                if (Key && strcmp(Key, "Connected") == 0)
+                    lua_pushboolean(State, GLReferenceState(static_cast<int>(lua_tointeger(State, lua_upvalueindex(1)))) != nullptr);
+                else lua_pushnil(State);
+                return 1;
+            }, "__index", 1);
+            lua_setfield(pL, -2, "__index");
+            lua_setmetatable(pL, -2);
             return 1;
         }, "Connect", 2);
         lua_setfield(L, -2, "Connect");
