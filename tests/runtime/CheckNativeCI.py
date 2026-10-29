@@ -25,7 +25,7 @@ def Main():
             raise ValueError('Missing or failed native fixture results: ' + Name)
         Groups[Name] = Results
     Lifecycle = (Args.output / 'regression' / 'integration-0.stdout.log').read_text(errors='replace')
-    for Marker in ['[Runtime:ChildRelay] PASS', '[Runtime:ChildRelay] Independent domain destruction and replacement checked', '[Runtime:ChildRelay] Scene generations PASS']:
+    for Marker in ['[Runtime:ChildRelay] PASS', '[Runtime:ChildRelay] Independent domain destruction and replacement checked', '[Runtime:ChildRelay] Scene generations PASS', '[Runtime:ChildRelay] Dispatch shutdown PASS']:
         if Marker not in Lifecycle:
             raise ValueError('GL-022 native regression was not exercised: ' + Marker)
     Evidence = {

@@ -258,7 +258,14 @@ local Prefix = __IS_CLIENT and 'Client' or 'Server'
 assert(shared.GL022Scene == nil)
 shared.GL022Scene = true
 local Target = game.Parent.GL022External
-Target.ChildAdded:Connect(function()
+Target.ChildAdded:Connect(function(Child)
+    if Child.Name == 'GL022CloseScene' then
+        Target:SetAttribute('GL022CloseDispatches', (Target:GetAttribute('GL022CloseDispatches') or 0) + 1)
+        game:Destroy()
+        task.wait()
+        Target:SetAttribute('GL022StaleAfterSceneShutdown', true)
+        return
+    end
     local Key = Prefix .. 'SceneCount'
     Target:SetAttribute(Key, (Target:GetAttribute(Key) or 0) + 1)
 end)
@@ -272,7 +279,20 @@ return true
         for Prefix in ["Server", "Client"]:
             Check(Source.get_meta(Prefix + "SceneCount", 0) == Generation + 1, "Callback delivered through stale scene or wrong VM")
         Child.queue_free()
-    Game.queue_free()
+        if Generation == 1:
+            var CloseChild := Node.new()
+            CloseChild.name = "GL022CloseScene"
+            Source.add_child(CloseChild)
+            await process_frame
+            await process_frame
+            Check(Source.get_meta("GL022CloseDispatches", 0) == 1, "Closing domain dispatched another callback")
+            Check(not Source.has_meta("GL022StaleAfterSceneShutdown"), "Scene destruction resumed retired callback work")
+            Check(Source.get_signal_connection_list("child_entered_tree").is_empty(), "Dispatch shutdown retained native connections")
+            CloseChild.queue_free()
+            if not Failed:
+                print("[Runtime:ChildRelay] Dispatch shutdown PASS")
+    if is_instance_valid(Game):
+        Game.queue_free()
     await process_frame
     await process_frame
     Check(Source.get_signal_connection_list("child_entered_tree").is_empty(), "Final scene left native signal connections")
