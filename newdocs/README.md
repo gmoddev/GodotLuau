@@ -28,8 +28,9 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-003 development is on `security/gl-003-filesystem-capabilities`, with no main
-merge. The [filesystem boundary work record](filesystem-capabilities-validation.md)
+GL-003 is fixed and qualified on `security/gl-003-filesystem-capabilities`, with
+fresh hosted Windows/Linux core/native CI and no main merge.
+The [filesystem boundary work record](filesystem-capabilities-validation.md)
 separates reproduced baseline behavior, implemented
 [storage authority](adr-003-native-storage-authority.md) and executed qualification.
 

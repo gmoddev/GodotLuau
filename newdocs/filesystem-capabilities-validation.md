@@ -67,6 +67,11 @@ The first enforced probe (`gl003-enforced-1`) failed its explicit-denial asserti
 allowlist. No host-key access was observed. Moving the native allowlist and owner
 check before object lookup fixes this; `gl003-enforced-2` passes on both workers.
 
+An early Windows compile also exposed a Win32 `CONNECT_DEFERRED` macro collision
+when platform headers were included through the public asset header. Moving the
+platform resource check into `gl_asset.cpp` keeps those headers private; subsequent
+Windows/Linux CMake and SCons products compile. No vendor patch is involved.
+
 `gl003-services-probe` passes on Windows/Linux Debug: 69 production core cases and
 three actual GDExtension filesystem actors. These exercise native raw denial,
 Server/Client separation, module/coroutine/task/signal calls, path/name/encoding
@@ -85,8 +90,8 @@ The fix-finding workflow's independent initial investigation and final read-only
 candidate review are complete. The latter reported no concrete surviving bypass
 or unintended regression in reviewed paths; source review is not runtime proof.
 
-The final local Debug/Release/sanitizer and SCons qualification passes below.
-Hosted CI and publication remain pending at this commit.
+The final local Debug/Release/sanitizer and SCons qualification passes below;
+completed publication and fresh hosted qualification follow in the final section.
 
 The initial complete matrix (`gl003-final`, native fingerprint
 `ea9756beed9b9610bb379a5182f4a33844f427e1300f2d410a468f63755bb52d`)
@@ -173,3 +178,28 @@ shared physical files; their newly explicit failure and Client persistence
 restrictions follow ADR-003. GL-005, GL-009, GL-017/018, GL-020 adversarial
 qualification, trusted project graphs and same-credential OS writers remain
 outside the fix. This is no claim of remote script injection or an OS sandbox.
+
+## Publication and hosted CI
+
+Implementation commit `c3fc544a686b5d43bf67f0f5e864105957c52171` is published on
+the dedicated branch; remote main remains `2e89995`. Fresh hosted core run
+[`40881074709`](https://github.com/gmoddev/GodotLuau/actions/runs/40881074709)
+passes both Windows/Linux jobs. Downloaded artifact SHA-256 digests match GitHub,
+CTest discovery is exact, and each report contains all 69 distinct passing cases.
+Native run [`40881074701`](https://github.com/gmoddev/GodotLuau/actions/runs/40881074701)
+also passes both Windows/Linux jobs, all 39 actors per platform. The four
+downloaded artifact archives match GitHub SHA-256 digests and the exact
+implementation revision. Native summaries match the final source fingerprint,
+all 26 normalized fixture hashes and the qualified official engine executable
+hashes. Every retained native log hash is verified, with four GL-022 lifecycle
+markers, eight resource case markers and three filesystem actor markers per
+platform. Exact actor labels, zero exits and on-disk results agree with summaries.
+The manifest retains run/job/artifact IDs and digests; downloaded logs remain in
+local `.runtime-tests/gl003/hosted`. Intermediate failures remain recorded above.
+
+GL-003 is **fixed and qualified on the dedicated branch**. The source and test
+inputs remain identical to `c3fc544`; this follow-up changes documentation only.
+Main integration is deliberately pending, not part of this task. Main remains
+`2e899956fa685b0b5cbe8e058c506c9d2ffc760f`; no history was rewritten, release
+publication remains disabled, and the runtime updater still rejects admission.
+The owned Linux container is stopped; worker build caches and logs remain.

@@ -1,7 +1,8 @@
 # ADR-003: Native service storage authority
 
-Status: implemented and locally qualified on
-`security/gl-003-filesystem-capabilities`; fresh hosted CI pending.
+Status: implemented and qualified on
+`security/gl-003-filesystem-capabilities`, including fresh Windows/Linux hosted
+core/native CI. Not merged into main.
 Extends ADR-001/002 without changing VM or scheduler
 ownership. Executed evidence and unresolved checks live in the
 [work record](filesystem-capabilities-validation.md).

@@ -733,5 +733,628 @@
     "Native I/O remains synchronous and native buffers are bounded separately from VM accounting; GL-005 and GL-009 remain open",
     "Windows full-native ASan remains GL-018; GL-020 adversarial qualification remains open",
     "No main merge; release workflow and runtime updater remain disabled"
-  ]
+  ],
+  "Implementation": "c3fc544a686b5d43bf67f0f5e864105957c52171",
+  "HostedCI": {
+    "Revision": "c3fc544a686b5d43bf67f0f5e864105957c52171",
+    "Runs": {
+      "Core": {
+        "conclusion": "success",
+        "databaseId": 40881074709,
+        "headSha": "c3fc544a686b5d43bf67f0f5e864105957c52171",
+        "jobs": [
+          {
+            "completedAt": "2026-10-29T13:21:56Z",
+            "conclusion": "success",
+            "databaseId": 123472420427,
+            "name": "Core (Windows, Debug)",
+            "startedAt": "2026-10-29T13:20:50Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-29T13:20:51Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-29T13:20:51Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:07Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-29T13:20:51Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:27Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-29T13:21:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:46Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-29T13:21:27Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:48Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-29T13:21:46Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:51Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-29T13:21:48Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:52Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-29T13:21:51Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:54Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-29T13:21:52Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:54Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-29T13:21:54Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40881074709/job/123472420427"
+          },
+          {
+            "completedAt": "2026-10-29T13:21:24Z",
+            "conclusion": "success",
+            "databaseId": 123472420860,
+            "name": "Core (Linux, Debug)",
+            "startedAt": "2026-10-29T13:20:51Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-29T13:20:53Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-29T13:20:52Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:00Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-29T13:20:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:04Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-29T13:21:00Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:18Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-29T13:21:04Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:19Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-29T13:21:18Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:20Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-29T13:21:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:22Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-29T13:21:20Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:22Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-29T13:21:22Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:22Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-29T13:21:22Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40881074709/job/123472420860"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40881074709"
+      },
+      "Native": {
+        "conclusion": "success",
+        "databaseId": 40881074701,
+        "headSha": "c3fc544a686b5d43bf67f0f5e864105957c52171",
+        "jobs": [
+          {
+            "completedAt": "2026-10-29T13:30:02Z",
+            "conclusion": "success",
+            "databaseId": 123472419881,
+            "name": "Native (Linux, Debug)",
+            "startedAt": "2026-10-29T13:20:50Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-29T13:20:52Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-29T13:20:51Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:02Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-29T13:20:52Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:02Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-29T13:21:02Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:03Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-29T13:21:02Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:04Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-29T13:21:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:07Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 6,
+                "startedAt": "2026-10-29T13:21:04Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:09Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 7,
+                "startedAt": "2026-10-29T13:21:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:09Z",
+                "conclusion": "skipped",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 8,
+                "startedAt": "2026-10-29T13:29:09Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:19Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 9,
+                "startedAt": "2026-10-29T13:29:09Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:36Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 10,
+                "startedAt": "2026-10-29T13:29:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:50Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 11,
+                "startedAt": "2026-10-29T13:29:36Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:53Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 12,
+                "startedAt": "2026-10-29T13:29:50Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:58Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 13,
+                "startedAt": "2026-10-29T13:29:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:58Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 14,
+                "startedAt": "2026-10-29T13:29:58Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:29:59Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 15,
+                "startedAt": "2026-10-29T13:29:58Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:00Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 30,
+                "startedAt": "2026-10-29T13:29:59Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:00Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 31,
+                "startedAt": "2026-10-29T13:30:00Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40881074701/job/123472419881"
+          },
+          {
+            "completedAt": "2026-10-29T13:31:08Z",
+            "conclusion": "success",
+            "databaseId": 123472420389,
+            "name": "Native (Windows, Debug)",
+            "startedAt": "2026-10-29T13:20:50Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-29T13:20:52Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-29T13:20:51Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:06Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-29T13:20:52Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:08Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-29T13:21:06Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:09Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-29T13:21:08Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:13Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-29T13:21:09Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:21:28Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 6,
+                "startedAt": "2026-10-29T13:21:13Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:13Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 7,
+                "startedAt": "2026-10-29T13:21:28Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:14Z",
+                "conclusion": "success",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 8,
+                "startedAt": "2026-10-29T13:30:13Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:24Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 9,
+                "startedAt": "2026-10-29T13:30:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:41Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 10,
+                "startedAt": "2026-10-29T13:30:24Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:55Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 11,
+                "startedAt": "2026-10-29T13:30:41Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:30:58Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 12,
+                "startedAt": "2026-10-29T13:30:55Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:31:03Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 13,
+                "startedAt": "2026-10-29T13:30:58Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:31:03Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 14,
+                "startedAt": "2026-10-29T13:31:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:31:05Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 15,
+                "startedAt": "2026-10-29T13:31:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:31:06Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 30,
+                "startedAt": "2026-10-29T13:31:05Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-29T13:31:06Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 31,
+                "startedAt": "2026-10-29T13:31:06Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40881074701/job/123472420389"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40881074701"
+      }
+    },
+    "Artifacts": {
+      "runtime-core-Linux-Debug": {
+        "ID": 12900730411,
+        "SHA256": "e39589c45bb5854d595618bd3dc3db4b03f242ab5911d39c172019f2a1aea337",
+        "Bytes": 13276,
+        "Run": 40881074709,
+        "Cases": 69
+      },
+      "runtime-core-Windows-Debug": {
+        "ID": 12900696130,
+        "SHA256": "297f28eca3c27b39b99271ece443381e9722429a6d98e0b326c58e4410945bc8",
+        "Bytes": 11917,
+        "Run": 40881074709,
+        "Cases": 69
+      },
+      "runtime-native-Windows-Debug": {
+        "ID": 12901675816,
+        "SHA256": "c6b2fb25a6fc75aad2ef94bf8904f3369aa463dba39f82ec00bca952231e794b",
+        "Bytes": 60444,
+        "Run": 40881074701,
+        "Processes": 39,
+        "SummarySHA256": "701f3f91f91bcaf38912c43c0b17d54c8b9f7f22f88d299a2989601f5ea54dbb",
+        "NativeSource": {
+          "SHA256": "16b67f44c4120b3a9790e501c7f8ed1753d8559530e5b4d76318742ab5f932a5",
+          "Files": 78,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CheckCoreCI.py": "fece7704d7c7ee1fc270461da3dc4a9c3f01d17a22a0d013c3f858dd2d0c8251",
+          "CheckNativeCI.py": "534589ca21c61ff5a3632c4dabe0689f3627787080c8aca3834550154c069540",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "802788e6fa78f1ae7b6edb815553e47402ae746856ab0d3f966a4dc009426436",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "75f24356b1b4166a739eb208f3a6b949e27ae22ea87c489aac652be8ad14d687",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "ceb09262fb3bae8d6013ec5694658745d695ea92bc71a6d8216091ecf421a3ce",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992673,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+            "Bytes": 84198557,
+            "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "Executable": "Godot_v4.7.1-stable_win64.exe"
+          },
+          "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 102,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8,
+        "FilesystemMarkers": 3
+      },
+      "runtime-native-Linux-Debug": {
+        "ID": 12900662673,
+        "SHA256": "2031b5f3b4a5135c9d9f937684a4d84835d47ae7cc3f14ed68af5ce6c5809efa",
+        "Bytes": 63872,
+        "Run": 40881074701,
+        "Processes": 39,
+        "SummarySHA256": "1e4a86f7167230079c554e9bcd3835f28e4ab0495f77d4526f7ea1c4d709594f",
+        "NativeSource": {
+          "SHA256": "16b67f44c4120b3a9790e501c7f8ed1753d8559530e5b4d76318742ab5f932a5",
+          "Files": 78,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "CheckCoreCI.py": "fece7704d7c7ee1fc270461da3dc4a9c3f01d17a22a0d013c3f858dd2d0c8251",
+          "CheckNativeCI.py": "534589ca21c61ff5a3632c4dabe0689f3627787080c8aca3834550154c069540",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "802788e6fa78f1ae7b6edb815553e47402ae746856ab0d3f966a4dc009426436",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "75f24356b1b4166a739eb208f3a6b949e27ae22ea87c489aac652be8ad14d687",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "b6dc61da539062751af2e7b58d54a3f636cfcc8e85e4a9f933181076e713e430",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992009,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+            "Bytes": 76056717,
+            "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+          },
+          "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 100,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8,
+        "FilesystemMarkers": 3
+      }
+    },
+    "Result": "Four successful hosted Debug jobs; all artifact digests, cases, source/harness/engine identities and native log hashes verified"
+  }
 }

@@ -26,7 +26,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | --- | --- | --- | --- |
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
 | GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
-| GL-003 | P1 | Native fix locally qualified on branch; hosted pending | Native file global bypasses higher-level role restrictions on main |
+| GL-003 | P1 | Fixed and qualified on branch; main integration pending | Native file global bypasses higher-level role restrictions on main |
 | GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
@@ -117,10 +117,15 @@ criteria are satisfied; this does not qualify every service binding. See
 Development on `security/gl-003-filesystem-capabilities` records actual native
 Windows/Linux baseline reproduction and boundary inventory in the
 [work/qualification record](filesystem-capabilities-validation.md).
-Native enforcement is implemented on that branch. Final six 69-case core
-configurations, 195 full-native actors and four SCons products each with eleven
-resource/filesystem actors pass; fresh hosted CI remains pending. The issue stays
-open until that gate is recorded; main still has the exposure.
+Native enforcement at `c3fc544a686b5d43bf67f0f5e864105957c52171` is fixed and
+qualified on that branch. Final six 69-case core configurations, 195 full-native
+actors and four SCons products each with eleven resource/filesystem actors pass.
+Fresh hosted core `40881074709` passes all 69 cases per platform; native
+`40881074701` passes all 39 actors per platform. All four downloaded artifact
+digests, source/harness/engine identities and native log hashes are verified in
+the linked record and manifest. Main integration remains pending by request;
+main `2e89995` still has the exposure. GL-005/009 and the documented project/OS
+trust and sanitizer limitations remain separate.
 
 **Inherited review evidence:** `src/core/luau_script.h:1604-1642` unconditionally installs
 `_FileAccess.read/write/exists/delete/list`; supplied paths reach FileAccess or
