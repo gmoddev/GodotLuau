@@ -1,4 +1,5 @@
 #include "gl_execution_domain.h"
+#include "gl_storage.h"
 #include "gl_stackguard.h"
 #include <cstdio>
 #include <functional>
@@ -6,6 +7,12 @@
 #include <stdexcept>
 #include <thread>
 #include <unordered_map>
+#include <fstream>
+#include <atomic>
+#include <cstring>
+#ifdef _WIN32
+#include <winioctl.h>
+#endif
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -14,6 +21,41 @@ namespace {
 void Check(bool Condition, const char* Message) {
     if (!Condition) throw std::runtime_error(Message);
 }
+struct StorageFixture {
+    std::filesystem::path Base,Root,Outside;
+    StorageFixture() {
+        auto Parent=std::filesystem::absolute(std::filesystem::current_path());
+        Base=Parent/("gl003-test-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+        Root=Base/"allowed"; Outside=Base/"outside";
+        std::filesystem::create_directories(Root); std::filesystem::create_directory(Outside);
+        std::ofstream(Outside/"ds_race.json")<<"sentinel";
+    }
+    ~StorageFixture() {
+        // Only this named disposable test subtree is recursively removed.
+        if (Base.parent_path()==std::filesystem::absolute(std::filesystem::current_path())) {
+            std::error_code Error; std::filesystem::remove_all(Base,Error);
+        }
+    }
+#ifdef _WIN32
+    static bool Tag(HANDLE Handle,const std::filesystem::path& Target,bool Set) {
+        struct Mount { DWORD Tag; WORD Length,Reserved,SubOffset,SubLength,PrintOffset,PrintLength; wchar_t Paths[2048]; } Data{};
+        Data.Tag=IO_REPARSE_TAG_MOUNT_POINT;
+        if (Set) {
+            std::wstring Substitute=L"\\??\\"+Target.native(), Print=Target.native();
+            if (Substitute.size()+Print.size()+2>2048) return false;
+            Data.SubLength=WORD(Substitute.size()*2); Data.PrintOffset=Data.SubLength+2;
+            Data.PrintLength=WORD(Print.size()*2); Data.Length=WORD(8+Data.PrintOffset+Data.PrintLength+2);
+            std::memcpy(Data.Paths,Substitute.c_str(),Data.SubLength);
+            std::memcpy(reinterpret_cast<char*>(Data.Paths)+Data.PrintOffset,Print.c_str(),Data.PrintLength);
+        }
+        DWORD Written=0;
+        return DeviceIoControl(Handle,Set?FSCTL_SET_REPARSE_POINT:FSCTL_DELETE_REPARSE_POINT,&Data,Set?8+Data.Length:8,nullptr,0,&Written,nullptr)!=0;
+    }
+    static HANDLE DirectoryHandle(const std::filesystem::path& Path) {
+        return CreateFileW(Path.c_str(),GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_FLAG_BACKUP_SEMANTICS|FILE_FLAG_OPEN_REPARSE_POINT,nullptr);
+    }
+#endif
+};
 struct Fixture {
     std::vector<std::string> Errors;
     std::unordered_map<uint64_t, std::string> Sources;
@@ -615,12 +657,17 @@ shared.Waited = true
     });
     Test("Close callbacks run once with admission closed and cached require available", [] {
         Fixture F;
+        lua_pushcfunction(F.Domain.GetState(),[](lua_State* Thread)->int {
+            auto Owner=GLGetOwner(Thread);
+            lua_pushboolean(Thread,Owner && Owner->Domain->IsShutdownCallback(Thread)); return 1;
+        },"InShutdown"); lua_setglobal(F.Domain.GetState(),"InShutdown");
         F.Sources[100] = "return {Value = 12}";
-        auto Owner = F.Run(1, "require(100); function Close() shared.Closed = (shared.Closed or 0) + 1; assert(require(100).Value == 12); assert(not pcall(task.defer, function() end)) end");
+        auto Owner = F.Run(1, "assert(not InShutdown()); require(100); function Close() assert(InShutdown()); shared.Closed = (shared.Closed or 0) + 1; assert(require(100).Value == 12); assert(not pcall(task.defer, function() end)) end");
         lua_getglobal(Owner->Anchor, "Close");
         int Reference = GLReference(Owner->Anchor, -1); lua_pop(Owner->Anchor, 1);
         F.Domain.AddCloseCallback(Owner->Anchor, Reference);
         F.Domain.StopAdmission(); F.Domain.Shutdown(); F.Domain.Shutdown();
+        Check(!F.Domain.IsShutdownCallback(Owner->Anchor),"Retired anchor retained shutdown authority");
         lua_getglobal(F.Domain.GetState(), "shared"); lua_getfield(F.Domain.GetState(), -1, "Closed");
         Check(lua_tonumber(F.Domain.GetState(), -1) == 1, "Close callback did not run exactly once");
         lua_pop(F.Domain.GetState(), 2); F.NoErrors();
@@ -724,6 +771,97 @@ shared.Waited = true
         Check(Floor != nullptr, "OS stack bounds are unavailable");
         Check(gl_stack_exhausted(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(Floor) + GL_STACK_MARGIN / 2)), "Guard did not reject the reserved stack margin");
 #endif
+    });
+    Test("Filesystem native operation grants and bounded storage",[] {
+        StorageFixture F;
+        GLStorage Store(F.Root.u8string(),GLStorage::Read|GLStorage::Write|GLStorage::Delete|GLStorage::List);
+        std::string Data;
+        Check(Store.WriteFile("ds_unicode_\xe9\x9b\xaa.json","payload")==GLStorage::Error::None,"Authorized Unicode write failed");
+        Check(Store.ReadFile("ds_unicode_\xe9\x9b\xaa.json",Data)==GLStorage::Error::None && Data=="payload","Authorized read failed");
+        GLStorage ReadOnly(F.Root.u8string(),GLStorage::Read);
+        std::vector<std::string> Names;
+        Check(ReadOnly.WriteFile("ds_unicode_\xe9\x9b\xaa.json","changed")==GLStorage::Error::Denied,"Read authority granted write");
+        Check(ReadOnly.Remove("ds_unicode_\xe9\x9b\xaa.json")==GLStorage::Error::Denied,"Read authority granted delete");
+        Check(ReadOnly.Names("ds_",Names)==GLStorage::Error::Denied,"Read authority granted enumeration");
+        Check(Store.WriteFile("ds_unicode_\xe9\x9b\xaa.json",std::string(GLStorage::MaxBytes+1,'x'))==GLStorage::Error::Limit,"Write bound not enforced");
+        Check(Store.ReadFile("ds_unicode_\xe9\x9b\xaa.json",Data)==GLStorage::Error::None && Data=="payload","Rejected write mutated data");
+        Check(Store.Remove("ds_unicode_\xe9\x9b\xaa.json")==GLStorage::Error::None,"Authorized deletion failed");
+        Check(Store.ReadFile("ds_missing.json",Data)==GLStorage::Error::Missing,"Missing file disposition lost");
+        Check(Store.WriteFile("ds_capacity.json",std::string(GLStorage::MaxBytes,'y'))==GLStorage::Error::None,"Valid maximum payload rejected");
+        Check(Store.ReadFile("ds_capacity.json",Data)==GLStorage::Error::None && Data.size()==GLStorage::MaxBytes && Data.front()=='y' && Data.back()=='y',"Maximum payload did not round trip");
+        for (int Index=0;Index<1024;++Index)
+            Check(Store.WriteFile("ds_scale_"+std::to_string(Index)+".json","{}")==GLStorage::Error::None,"Representative collection write rejected");
+        Check(Store.Names("ds_scale_",Names)==GLStorage::Error::None && Names.size()==1024,"Representative collection enumeration failed");
+    });
+    Test("Filesystem hostile names and final links reject without mutation",[] {
+        StorageFixture F;
+        GLStorage Store(F.Root.u8string(),GLStorage::Read|GLStorage::Write|GLStorage::Delete|GLStorage::List);
+        std::string Data;
+        std::vector<std::string> Bad={"","/ds_abs.json","../outside/ds_race.json","ds_a/../../ds_race.json","ds_a\\..\\ds_race.json","C:ds_x.json","C:\\ds_x.json","\\\\server\\share\\ds_x.json","\\\\?\\C:\\ds_x.json","ds_a.json:stream","ds_x.json.","ds_x.json ","other.json",std::string("ds_a\0b.json",11),"ds_\xc0\xaf.json","ds_\xed\xa0\x80.json","ds_\xf4\x90\x80\x80.json",std::string(250,'x')+".json"};
+        auto Time=std::filesystem::last_write_time(F.Outside/"ds_race.json");
+        for (const auto& Name:Bad) {
+            Check(Store.WriteFile(Name,"bad")!=GLStorage::Error::None,"Hostile write allowed");
+            Check(Store.ReadFile(Name,Data)!=GLStorage::Error::None,"Hostile read allowed");
+            Check(Store.Remove(Name)!=GLStorage::Error::None,"Hostile delete allowed");
+        }
+        std::filesystem::create_hard_link(F.Outside/"ds_race.json",F.Root/"ds_alias.json");
+        Check(Store.WriteFile("ds_alias.json","bad")==GLStorage::Error::InvalidPath,"Hard-link write allowed");
+        Check(Store.ReadFile("ds_alias.json",Data)==GLStorage::Error::InvalidPath,"Hard-link read allowed");
+        Check(Store.Remove("ds_alias.json")==GLStorage::Error::InvalidPath,"Hard-link deletion allowed");
+#ifdef __linux__
+        std::filesystem::create_symlink(F.Outside/"ds_race.json",F.Root/"ds_link.json");
+        Check(Store.WriteFile("ds_link.json","bad")!=GLStorage::Error::None,"Symlink write escaped");
+        Check(Store.ReadFile("ds_link.json",Data)!=GLStorage::Error::None,"Symlink read escaped");
+        Check(mkfifo((F.Root/"ds_pipe.json").c_str(),0600)==0,"FIFO preparation failed");
+        Check(Store.ReadFile("ds_pipe.json",Data)==GLStorage::Error::InvalidPath,"Special file accepted");
+#endif
+        std::ifstream File(F.Outside/"ds_race.json"); File>>Data;
+        Check(Data=="sentinel" && Time==std::filesystem::last_write_time(F.Outside/"ds_race.json"),"Protected sentinel changed");
+    });
+    Test("Filesystem intermediate links and replacement races stay confined",[] {
+        StorageFixture F;
+        auto Alias=F.Base/"alias";
+#ifdef _WIN32
+        std::filesystem::create_directory(Alias);
+        HANDLE Writer=StorageFixture::DirectoryHandle(Alias);
+        struct HandleGuard { HANDLE Value; ~HandleGuard() { if (Value!=INVALID_HANDLE_VALUE) CloseHandle(Value); } } Guard{Writer};
+        Check(Writer!=INVALID_HANDLE_VALUE,"Junction handle unavailable");
+        bool Tagged=StorageFixture::Tag(Writer,F.Outside,true);
+        Check(Tagged,"Junction preparation failed");
+#else
+        std::filesystem::create_directory_symlink(F.Outside,Alias);
+#endif
+        GLStorage Store(Alias.u8string(),GLStorage::Read|GLStorage::Write|GLStorage::Delete|GLStorage::List);
+        std::string Data;
+        Check(Store.ReadFile("ds_race.json",Data)!=GLStorage::Error::None,"Intermediate link read escaped");
+        Check(Store.WriteFile("ds_race.json","bad")!=GLStorage::Error::None,"Intermediate link write escaped");
+        std::atomic<bool> Stop{false};
+        std::thread Peer([&] {
+            while (!Stop) {
+#ifdef _WIN32
+                StorageFixture::Tag(Writer,F.Outside,false);
+                GLStorage(Alias.u8string(),GLStorage::Delete).Remove("ds_race.json");
+                StorageFixture::Tag(Writer,F.Outside,true);
+#else
+                std::error_code Error;
+                std::filesystem::remove(Alias,Error);
+                std::filesystem::create_directory_symlink(F.Outside,Alias,Error);
+#endif
+            }
+        });
+        bool Escaped=false;
+        for (int Index=0;Index<200;++Index) {
+            Data.clear();
+            if (Store.ReadFile("ds_race.json",Data)==GLStorage::Error::None && Data=="sentinel") Escaped=true;
+            Store.WriteFile("ds_race.json","bad");
+        }
+        Stop=true; Peer.join();
+#ifdef _WIN32
+        StorageFixture::Tag(Writer,F.Outside,false);
+#endif
+        Check(!Escaped,"Concurrent reparse/link replacement escaped");
+        std::ifstream File(F.Outside/"ds_race.json"); File>>Data;
+        Check(Data=="sentinel","Concurrent replacement modified outside sentinel");
     });
     std::printf("[Runtime:Test] %d passed, %d failed\n", Passed, Failed);
     return Failed == 0 ? 0 : 1;

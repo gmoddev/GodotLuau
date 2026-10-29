@@ -64,6 +64,7 @@ public:
     lua_State* GetState() const { return State; }
     GLDomainKind GetKind() const { return Kind; }
     bool IsClosing() const { return Closing || AdmissionClosed; }
+    bool IsShutdownCallback(lua_State* Thread) const { return Closing && Thread && Thread==ClosingThread; }
     void StopAdmission() { AdmissionClosed = true; }
     void SetModuleResolver(ModuleResolver Resolver) { ResolveModule = std::move(Resolver); }
     void SetModuleLoader(ModuleLoader Loader) { LoadModule = std::move(Loader); }

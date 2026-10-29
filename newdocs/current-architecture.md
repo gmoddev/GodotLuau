@@ -309,11 +309,16 @@ CI status is recorded in the integration section of that record.
 
 ## Script capabilities and scheduling
 
-Domain setup publishes `_FileAccess` and `_HTTP` into gameplay VMs.
-The native file bridge accepts script paths directly without a role/capability
-check or extension-level root confinement. The higher
-level DataStore wrapper rejects network clients, but this does not remove the
-native global. OS permissions and platform restrictions still apply.
+On main `2e89995`, domain setup publishes an unrestricted `_FileAccess` bridge
+and `_HTTP` into gameplay VMs. The GL-003 work branch replaces the raw file
+operations with native denial and typed native service operations, with live
+owner/domain and native role checks. Storage uses the same shared `user://`
+filenames through bounded, handle-relative platform operations. Client persistence
+is denied; Client Messaging stays local. Editor structure mutation and arbitrary
+network helper dispatch are gated; dynamic assets receive only trusted-project
+resource access. See [ADR-003](adr-003-native-storage-authority.md) and its
+[qualification record](filesystem-capabilities-validation.md) for exact authority,
+compatibility and limits. This branch has not been merged into main.
 
 HTTP uses synchronous `HTTPClient` polling and delays on the calling thread
 in `luau_script.cpp`. It has a nominal ten-second timeout; this is not a
@@ -323,8 +328,8 @@ account with a hard requested-byte quota. Trusted registration/stdlib bootstrap
 precedes sandbox sealing; intrinsic libraries/root globals become read-only,
 while existing mutable custom facades and `_G`/`shared` retain their contracts.
 Owner environments use luaL_sandboxthread with safeenv disabled so custom typeof,
-mutable facades and getfenv/setfenv keep their actual behavior. No new filesystem
-or HTTP capability gate is introduced. Imported/hostile script isolation remains
+mutable facades and getfenv/setfenv keep their actual behavior. GL-004 itself
+introduces no filesystem or HTTP gate. Imported/hostile script isolation remains
 outside the supported claim. See [ADR-002](adr-002-domain-resource-policy.md)
 and the [qualification/integration record](execution-limits-validation.md).
 
@@ -435,7 +440,8 @@ no account authentication and no incoming connection validation against
 `host.key`. The presence of that key is not authentication.
 
 `DataStoreService` is embedded Luau in `src/core/luau_stdlib.h`.
-It serializes local JSON through `_FileAccess`; `UpdateAsync` is read/transform/
+On main it serializes local JSON through `_FileAccess`; the GL-003 branch uses
+typed native service storage instead. `UpdateAsync` remains read/transform/
 write, without a cross-process transaction or compare-and-swap. Worlds can share
 `user://`, so competing processes can lose updates. The write bridge overwrites
 the target directly. `backend/` contains an optional Nakama/PostgreSQL development

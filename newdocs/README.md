@@ -28,6 +28,12 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-003 is fixed and qualified on `security/gl-003-filesystem-capabilities`, with
+fresh hosted Windows/Linux core/native CI and no main merge.
+The [filesystem boundary work record](filesystem-capabilities-validation.md)
+separates reproduced baseline behavior, implemented
+[storage authority](adr-003-native-storage-authority.md) and executed qualification.
+
 GL-004 is integrated by normal merge `55a9c20827dda9dda67372e655e67803e21236b1`,
 preserving the three commits at retained branch `runtime/gl-004-execution-limits`.
 See the [resource policy decision](adr-002-domain-resource-policy.md) and

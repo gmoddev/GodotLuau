@@ -15,6 +15,8 @@
 
 using namespace godot;
 
+bool GLProjectResourcePath(String& Path);
+
 inline bool gl_is_roblox_asset(const String& id) {
     return id.begins_with("rbxassetid://")               ||
            id.begins_with("rbxasset://")                 ||
@@ -55,7 +57,8 @@ inline String gl_local_asset_path(const String& id) {
                                    ".ogg", ".wav", ".mp3", ".tres", ".res" };
     for (int i = 0; i < 10; i++) {
         const String p = String("res://GodotLuau/assets/rbx/") + num + kExts[i];
-        if (rl->exists(p)) return p;
+        String Candidate=p;
+        if (GLProjectResourcePath(Candidate) && rl->exists(Candidate)) return Candidate;
     }
     return String();
 }

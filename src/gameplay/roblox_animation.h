@@ -51,7 +51,7 @@ static inline bool GLLoadAnimation(AnimationPlayer* Player, const String& Identi
         (Identity.is_empty() || String(Resources.get(Name, Identity)) == Identity)) return true;
     ResourceLoader* Loader = ResourceLoader::get_singleton();
     String Path = gl_is_roblox_asset(Identity) ? gl_local_asset_path(Identity) : Identity;
-    if (!Loader || Path.is_empty() || !Loader->exists(Path, "Animation")) return false;
+    if (!Loader || !GLProjectResourcePath(Path) || !Loader->exists(Path, "Animation")) return false;
     Ref<Animation> Loaded = Loader->load(Path, "Animation");
     if (Loaded.is_null()) return false;
     // Loop mode belongs to this character, not ResourceLoader's shared cache.

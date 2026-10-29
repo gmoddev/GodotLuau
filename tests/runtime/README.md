@@ -1,5 +1,27 @@
 # Shared-domain regression fixtures
 
+## GL-003 filesystem qualification branch
+
+`security/gl-003-filesystem-capabilities` extends the production core suite to
+69 cases (53 ordinary, 16 isolated resource children) and native CI to 39 actors.
+The three added core cases exercise the actual native filesystem backend against
+disposable roots, operation grants, invalid path representations, Unicode,
+hard links, Linux symlinks/FIFOs, Windows junctions and replacement races.
+Native `--filesystem` adds one Server/Client/module/callback/reload/scene/asset
+actor plus two real server processes sharing service storage. All three must
+exit zero with filesystem PASS markers. Failure assertions are not satisfied by
+Lua-only permission mocks or watchdog kills.
+
+```text
+python tests/runtime/RunQualification.py --godot <engine> --extension <library> --output <fresh>/filesystem --filesystem --timeout 60
+```
+
+Run `FilesystemIntegration.gd -- --baseline` only against the original qualified
+baseline to reproduce raw access, using the existing bounded launcher and a
+disposable project/profile. See [ADR-003](../../newdocs/adr-003-native-storage-authority.md)
+and [the work record](../../newdocs/filesystem-capabilities-validation.md) for
+actual qualification status and compatibility limitations. Main is unchanged.
+
 ## GL-004 resource qualification
 
 The development branch extends core CI to **66 distinct cases**: 50 normal cases

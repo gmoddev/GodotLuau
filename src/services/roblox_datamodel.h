@@ -69,9 +69,12 @@ public:
 
     // Actualizador incremental (1.15): rellena los nodos que falten y aplica las
     // migraciones SIN borrar el Game ni pisar lo que el usuario tenga dentro.
-    // No está gateado a is_editor_hint para poder verificarlo también en headless;
-    // en el editor lo dispara la opción "Actualizar estructura" del inspector.
+    // Editor-authorized only; gameplay must not reach filesystem writes through
+    // this method or deferred inspector-property aliases.
     void _gl_update_structure() {
+        // Editor authority comes from the engine, never gameplay metadata or a
+        // deferred call that has lost its originating Luau owner.
+        if (!Engine::get_singleton()->is_editor_hint()) return;
         // Detectar 3D vs 2D por la clase del Workspace ya presente.
         int tipo = 1;
         if (Node* ws = get_node_or_null(NodePath("Workspace"))) {
