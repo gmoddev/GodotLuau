@@ -1,0 +1,482 @@
+{
+  "Date": "2026-10-29",
+  "Stage1": {
+    "StartingMain": "ce5e19fa8aea1cf65da875d07cda13c1696fc08c",
+    "QualifiedImplementation": "50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4",
+    "QualifiedTip": "9171199fc6b3b43a2aa07a98f3f20977abc43533",
+    "Merge": "109bd6d838410509da9831b1502dfffb023ad823",
+    "MergeTree": "ecaf2e7990e3c855ed1c0fc3fec0ef266a9075d9",
+    "VerifiedRemoteMain": "67b88c4202a5c6b9eee46cc7dd5faa4c3fcc1e01",
+    "HostedRevision": "84f42297cf90847ff0d66d805136ad4047e22d21",
+    "HostedCoreRun": 40822047619,
+    "HostedNativeRun": 40822047626,
+    "FourHostedJobs": "success",
+    "FreshWorkerCore": "39 cases in Windows/Linux Debug/Release",
+    "FreshWorkerNative": "8 lifecycle actors per Debug platform",
+    "ReusedEvidence": "gl013-script-bootstrap-2026-10-28.json within original source/configuration scope",
+    "Disposition": "INTEGRATED AND VERIFIED"
+  },
+  "Stage2": {
+    "Branch": "fix/gl-022-cross-domain-child-relay",
+    "BaseMain": "67b88c4202a5c6b9eee46cc7dd5faa4c3fcc1e01",
+    "Implementation": "1469da696565ef7ed77ee0b5f3adb800500e4d0a",
+    "FinalFixture": "0cdaed65f0a9592c7a19302d837e5a0e68db5c58",
+    "NativeSource": {
+      "SHA256": "6b68311d1dac1af0d3e84049620a7138f5518bb2aba980dc5633a08d4efc218d",
+      "Files": 74,
+      "Newlines": "LF normalized"
+    },
+    "HarnessSHA256": {
+      "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+      "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f",
+      "CheckCoreCI.py": "196cdf440ab1ad87c1453584e62f7acdf514a3156fd9c6d4cb72aae3634b4118",
+      "Benchmark.gd": "e4a18aa5e53cc1dbfe3c2909cc18cbd8292c7c98fb87414ba70fec6b859c1280",
+      "CheckNativeCI.py": "db6ba40a59a31683774ed835b71a0a73b24dfcf3922f2dd530c544f1845c7c62",
+      "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+      "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+      "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+      "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+      "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+      "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+      "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+      "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+      "NetworkSecurity.gd": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+      "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+      "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+      "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+      "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+      "RunQualification.py": "96fce1b3b671fda8db95e27ef0ffdf04defeac31f0e6fb0f47580e4ccd3a5cbc",
+      "RunRequireBenchmark.py": "79c454eb083126a795f4f301862e204643075cd866223759ae1111e48eba3d0c",
+      "CMakeLists.txt": "eaed7fdcf8eea31c47a4a6a18ed04a2bd5cdbc5a015e6e0d1641fb1a59c2a3f8",
+      "RequireBenchmark.gd": "a674f8fa9cd7939949e26955e478af058a34ec16a4734b1780c49fad3165127b"
+    },
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    },
+    "LinuxVendorArchiveSHA256": {
+      "godot-cpp": "29af1538a795102259fdb5ac08ec8da6b7c0477198567181eee934eb720f02e0",
+      "luau": "31164c634c9885131c203b893e3f58e2d1841fc34049969782eb095798ae1e74"
+    },
+    "GodotSourceIdentity": {
+      "Revision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+      "SHA256": {
+        "core/object/object.cpp": "d16943098177c719820de78f664d4cde3a9c4f997f25ccfa6a1f9b7e18098bd4",
+        "core/variant/callable_bind.cpp": "b78a27dac00c6f1419016eea3b60e096b2bb98b074708cd70afd5dde8035206e"
+      }
+    },
+    "Mechanism": "Godot signal keys use get_base_comparator; bind arguments do not distinguish shared native receiver + method. Distinct base custom Callables include receiver ObjectID and existing immutable public reference.",
+    "Baseline": {
+      "Windows": {
+        "Native": {
+          "ClientCount": 0,
+          "ClientDomain": 4,
+          "Connections": [
+            {
+              "Bound": [
+                268435466
+              ],
+              "Hash": 3301672428,
+              "Method": "_gl_child_event",
+              "Object": 27363640801
+            }
+          ],
+          "Module": 27363640801,
+          "ServerCount": 1,
+          "ServerDomain": 3,
+          "UnrelatedBoundRefConnected": true
+        },
+        "FixtureSHA256": "21269ed2ab162f1ab72ee1773000fe9ed14a88ca242a60d394bd42854a6a3a87",
+        "StdoutSHA256": "f5c9ae30c252e5d01c8abab3391b7c331ca1c472d10285cec0e1124f18b4fcc5",
+        "LibrarySHA256": "83f90aa6eda625dde7c482c81262bbb9a52b843634a81ed54bf9cd47ea203890",
+        "FunctionalFailurePreserved": true
+      },
+      "Linux": {
+        "Native": {
+          "ClientCount": 0,
+          "ClientDomain": 4,
+          "Connections": [
+            {
+              "Bound": [
+                268435466
+              ],
+              "Hash": 2135837146,
+              "Method": "_gl_child_event",
+              "Object": 27447526881
+            }
+          ],
+          "Module": 27447526881,
+          "ServerCount": 1,
+          "ServerDomain": 3,
+          "UnrelatedBoundRefConnected": true
+        },
+        "FixtureSHA256": "21269ed2ab162f1ab72ee1773000fe9ed14a88ca242a60d394bd42854a6a3a87",
+        "StdoutSHA256": "1d3e118881f1373b5e3fd657c3b3b05249ab3e099514d8a061db41ac2ade990c",
+        "LibrarySHA256": "8b8e8463de573ea733a419f480b2afb859dfdfb05233357e999b5df3fec9aa1f",
+        "FunctionalFailurePreserved": true
+      }
+    },
+    "Core": {
+      "Windows": {
+        "debug": {
+          "Passed": 39,
+          "Failed": 0,
+          "LogSHA256": "865b5d1931178e2117603d00ea2aa485d16e631746059c9860d53141e273fd1f"
+        },
+        "release": {
+          "Passed": 39,
+          "Failed": 0,
+          "LogSHA256": "46e315d24eb0b14bb632077dacc2b5cdf792217ec616fe1dff1427bcac5267df"
+        },
+        "asan": {
+          "Passed": 39,
+          "Failed": 0,
+          "LogSHA256": "b1bc57a141b82f2a4f9f5a6f00971a1063ea30cbd597909fb17f27ac9de2ffe1"
+        }
+      },
+      "Linux": {
+        "debug": {
+          "Passed": 39,
+          "Failed": 0,
+          "LogSHA256": "91efbb50555400e80ec1e95110b58b12a020d7a9fb6c0c1ffcc341f0e2bff802"
+        },
+        "release": {
+          "Passed": 39,
+          "Failed": 0,
+          "LogSHA256": "a75db126354419d0b94e172c658f5fe9858aa26064fb30911a4ced4b148954d4"
+        },
+        "asan": {
+          "Passed": 39,
+          "Failed": 0,
+          "LogSHA256": "1456b4be525f2c4a15b04cbdeace0985ed0b383c0f38c3615de7ee53fec568aa"
+        }
+      }
+    },
+    "Libraries": {
+      "Windows": {
+        "debug": {
+          "SHA256": "3038635bdd5a0cd48161dc3a25127dd4b8ee8cbe1b272e933555a27615c5b4ac",
+          "Bytes": 23895552,
+          "TestAccessDefined": true
+        },
+        "release": {
+          "SHA256": "f21dcacabca5914cd59d03e5030c31a213c3ab555544f889ead85d994a45ef3e",
+          "Bytes": 4085248,
+          "TestAccessDefined": true
+        }
+      },
+      "Linux": {
+        "debug": {
+          "SHA256": "bbc816a4bda4f314f9817a4974fd8188c14e018ad6458db2055adaa7bd23566c",
+          "Bytes": 76835024,
+          "TestAccessDefined": true
+        },
+        "release": {
+          "SHA256": "9c08b1790b7c09ad15f21a20f191dd7cb7a39d7412660518c1ec6f4ee7142465",
+          "Bytes": 12559632,
+          "TestAccessDefined": true
+        },
+        "asan": {
+          "SHA256": "b256f46566d44e738a310438eabff1290a7b4645b7166364b471923eae355a41",
+          "Bytes": 97919248,
+          "TestAccessDefined": true
+        }
+      }
+    },
+    "Native": {
+      "Windows": {
+        "debug-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "FixtureSHA256": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl022\\final-dispatch-debug",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "ServerStorageNegativeCheck"
+          ],
+          "AllFourGL022Markers": true
+        },
+        "debug-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "d2fb1f7070911fa2a24651c3ccaca192b7a2e21a9b0d82aa5a4bff9e94466b74",
+          "FixtureSHA256": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+          "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl022\\candidate3\\debug-security",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "AuthorityNegativeCheck"
+          ]
+        },
+        "debug-animation": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+          "FixtureSHA256": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl022\\candidate3\\debug-animation",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": []
+        },
+        "release-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "FixtureSHA256": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl022\\final-dispatch-release",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "ServerStorageNegativeCheck"
+          ],
+          "AllFourGL022Markers": true
+        },
+        "release-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "e5beb853e045e8adc3bdb61ea6b7124185e5ccd3eedb9e25209d5c7049deefa5",
+          "FixtureSHA256": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+          "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl022\\candidate3\\release-security",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "AuthorityNegativeCheck"
+          ]
+        },
+        "release-animation": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+          "FixtureSHA256": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl022\\candidate3\\release-animation",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": []
+        }
+      },
+      "Linux": {
+        "debug-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "FixtureSHA256": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "Path": "/work/builds/gl022/final-dispatch-regression",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "ServerStorageNegativeCheck"
+          ],
+          "AllFourGL022Markers": true
+        },
+        "debug-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "ed438273382f1594ce30aa8172563a4385ceea732a0bf4710d542196147bd6f1",
+          "FixtureSHA256": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+          "Path": "/work/builds/gl022/candidate3/debug-security",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "AuthorityNegativeCheck"
+          ]
+        },
+        "debug-animation": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+          "FixtureSHA256": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Path": "/work/builds/gl022/candidate3/debug-animation",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": []
+        },
+        "release-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "FixtureSHA256": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "Path": "/work/builds/gl022/final-dispatch-release",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "ServerStorageNegativeCheck"
+          ],
+          "AllFourGL022Markers": true
+        },
+        "release-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "d1f8ac36296e46bf8f413bd97330db795c403a0b8c2ba0f15adb5a12366bb5ed",
+          "FixtureSHA256": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+          "Path": "/work/builds/gl022/candidate3/release-security",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "AuthorityNegativeCheck"
+          ]
+        },
+        "release-animation": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+          "FixtureSHA256": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Path": "/work/builds/gl022/candidate3/release-animation",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": []
+        },
+        "asan-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "dfaabcdd0f54f89450cd2615dc6ea7c35df624de2017f0af082a45c0d3a712ff",
+          "FixtureSHA256": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "Path": "/work/builds/gl022/final-dispatch-asan",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "MinimalHostPhysics",
+            "ServerStorageNegativeCheck"
+          ],
+          "AllFourGL022Markers": true
+        },
+        "asan-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "6cfedf4681fafed9e65abc92d87967b45194f44b0d850cda60987fe9659099f1",
+          "FixtureSHA256": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+          "Path": "/work/builds/gl022/asan/security",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "AuthorityNegativeCheck",
+            "MinimalHostFonts",
+            "MinimalHostPhysics"
+          ]
+        },
+        "asan-animation": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "01acbb78131eacb864b3976b3ebc5ebd35d1e69ebd86f7702bcafe8a326cccd8",
+          "FixtureSHA256": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Path": "/work/builds/gl022/asan/animation",
+          "KnownGL017Labels": [],
+          "DiagnosticKinds": [
+            "MinimalHostFonts",
+            "MinimalHostPhysics"
+          ]
+        }
+      }
+    },
+    "NormalNativeProcesses": 112,
+    "LinuxFullNativeSanitizerProcesses": 28,
+    "SanitizerReportFiles": [],
+    "Sanitizer": "Matching full Linux instrumented engine/bindings/adapter/Luau, detect_leaks=1; Windows core only",
+    "Hosted": {
+      "Revision": "0cdaed65f0a9592c7a19302d837e5a0e68db5c58",
+      "CoreRun": 40825275734,
+      "NativeRun": 40825275692,
+      "Status": "success",
+      "SupersededNativeRun": 40825013772,
+      "SupersededReason": "Cancelled by task after fixture-only dispatch-shutdown coverage advanced; no production source change or failed gate",
+      "Artifacts": {
+        "Windows": {
+          "ArtifactID": 12877420927,
+          "ArtifactSHA256": "18468b3a497efee161cb121daf89917dc57df4111585e4ee77aa12e30621dd6f",
+          "NativeSourceAndAll22HarnessInputsMatch": true,
+          "AllFourGL022Markers": true,
+          "Processes": 28,
+          "AllExitsZero": true,
+          "ExtensionSHA256": "e4c773af009fd05113f5e30579c09eaa065e0b100a5437f903751d33961890c3",
+          "DiagnosticsOnly": true
+        },
+        "Linux": {
+          "ArtifactID": 12877125401,
+          "ArtifactSHA256": "f51ee4d22a0fcb2768bad5a7777e34e5f64e7796ad85ff5822fb794faf85cd29",
+          "NativeSourceAndAll22HarnessInputsMatch": true,
+          "AllFourGL022Markers": true,
+          "Processes": 28,
+          "AllExitsZero": true,
+          "ExtensionSHA256": "8105225d40ecc1883dabc01a5f57c9b80df2afaae270afb2ffab7614258ff4fe",
+          "DiagnosticsOnly": true
+        }
+      },
+      "CoreJobs": {
+        "Core (Linux, Debug)": 123286769868,
+        "Core (Windows, Debug)": 123286770214
+      },
+      "NativeJobs": {
+        "Native (Linux, Debug)": 123286770282,
+        "Native (Windows, Debug)": 123286770541
+      },
+      "CreatedAt": "2026-10-29T05:46:02Z",
+      "CompletedAt": "2026-10-29T06:05:09Z"
+    },
+    "ShippingTestAccess": "GL_RUNTIME_TESTS applies only to CMake GodotLuauAdapter; partial-domain teardown helper is absent from SCons shipping builds. New lifecycle fixture requires this qualification adapter.",
+    "Limits": [
+      "GL-017 independent engine diagnostic/leak remains open; ordered closes retained",
+      "GL-018 Windows full-native sanitizer host unqualified",
+      "Minimal Linux sanitizer host has dummy physics and missing FreeType/font diagnostics; no rendering/physics qualification",
+      "GL-020 functional animation only; deferred adversarial qualification not executed",
+      "No new SCons or distribution package qualification in Stage2",
+      "Child signals retain Connect/connect only; service Once/Wait assertions preserved",
+      "No new performance profile or universal safety/performance claim",
+      "GL-021 and capability/input/persistence/distribution issues unchanged",
+      "Development branch only; not merged to main; no production binaries/releases/updater publication"
+    ],
+    "Disposition": "FIXED AND QUALIFIED on development branch; not merged to main",
+    "CorrectedSharedNativeSample": {
+      "ClientCount": 1,
+      "ClientDomain": 4,
+      "Connections": [
+        {
+          "Bound": [],
+          "Hash": 268435466,
+          "Identity": "[Runtime:ChildRelay] 268435466",
+          "Method": "",
+          "Object": 27447526881
+        },
+        {
+          "Bound": [],
+          "Hash": 268435467,
+          "Identity": "[Runtime:ChildRelay] 268435467",
+          "Method": "",
+          "Object": 27447526881
+        },
+        {
+          "Bound": [],
+          "Hash": 268435468,
+          "Identity": "[Runtime:ChildRelay] 268435468",
+          "Method": "",
+          "Object": 27447526881
+        },
+        {
+          "Bound": [],
+          "Hash": 268435469,
+          "Identity": "[Runtime:ChildRelay] 268435469",
+          "Method": "",
+          "Object": 27447526881
+        },
+        {
+          "Bound": [],
+          "Hash": 268435471,
+          "Identity": "[Runtime:ChildRelay] 268435471",
+          "Method": "",
+          "Object": 27447526881
+        },
+        {
+          "Bound": [],
+          "Hash": 268435472,
+          "Identity": "[Runtime:ChildRelay] 268435472",
+          "Method": "",
+          "Object": 27447526881
+        },
+        {
+          "Bound": [],
+          "Hash": 268435473,
+          "Identity": "[Runtime:ChildRelay] 268435473",
+          "Method": "",
+          "Object": 27447526881
+        },
+        {
+          "Bound": [],
+          "Hash": 268435474,
+          "Identity": "[Runtime:ChildRelay] 268435474",
+          "Method": "",
+          "Object": 27447526881
+        }
+      ],
+      "Module": 27447526881,
+      "ServerCount": 1,
+      "ServerDomain": 3,
+      "UnrelatedBoundRefConnected": false
+    }
+  }
+}

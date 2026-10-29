@@ -1,5 +1,11 @@
 # Shared-domain qualification evidence
 
+[GL-022 child relay](gl022-child-relay-2026-10-29.json) records the preceding
+GL-013 bootstrap main integration, failing shared-target baseline, verified
+Callable identity mechanism, final input/fixture/library hashes, 140 local
+native actors and successful Windows/Linux hosted core/native checks. The
+correction is qualified on its development branch and is not merged to main.
+
 [`gl011-native-ci-2026-10-27.json`](gl011-native-ci-2026-10-27.json) records the
 native CI milestone and subsequent source-identical main integration: fresh
 source-branch hosted Windows/Linux Debug adapter builds,

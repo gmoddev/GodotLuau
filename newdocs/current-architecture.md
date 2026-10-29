@@ -301,7 +301,8 @@ connections and disconnects by owner/reference, preserving the other VM's work.
 Dispatch resolves ObjectIDs and the existing reference mapping; no VM pointer
 is captured by the Callable. Dead targets are reaped before the next host tick.
 The [GL-022 record](gl022-child-relay-validation.md) preserves the failing baseline,
-mechanism, lifecycle contract and qualification status. This fix is not on main.
+mechanism, lifecycle contract and passing Windows/Linux/ASan/hosted qualification.
+This fix is qualified on the development branch and is not on main.
 
 ## Script capabilities and scheduling
 
