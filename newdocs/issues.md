@@ -27,7 +27,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
 | GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
 | GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
-| GL-004 | P1 | Integrated qualified source; main CI pending | Shared-domain sandbox, interruption, allocator/admission limits |
+| GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
@@ -167,7 +167,12 @@ fixture failure remains recorded, with bounded positive-state delivery correctio
 and 65 passing follow-up actors across the existing worker configurations/trials.
 **FIXED AND QUALIFIED on this branch**, within the linked resource contract.
 It is not a hostile-script isolation claim. Normal merge `55a9c20` integrates the
-qualified source; fresh main CI remains pending. See the integration record below
+qualified source. Fresh main core `40861479206` passes 66 cases per platform;
+native `40861479365` passes all 36 actors per platform, including resource and
+GL-022 markers. Artifact digests and source/harness/log identities verify.
+**INTEGRATED AND RESOLVED within ADR-002**, with no resource-policy expansion.
+GL-003/005, GL-018 and GL-020 adversarial qualification remain open.
+See the integration record below
 the historical branch evidence in [the work record](execution-limits-validation.md#main-integration).
 
 ## GL-005: HTTP is synchronous and broadly exposed

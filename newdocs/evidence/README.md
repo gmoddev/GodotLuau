@@ -1,5 +1,12 @@
 # Shared-domain qualification evidence
 
+[GL-004 main integration](gl004-main-integration-2026-10-29.json) records the
+normal merge and exact source/configuration identity, fresh worker Debug/Release
+core and Debug lifecycle/resource checks. Fresh main Windows/Linux core/native
+CI passes; all four artifact digests and native identities/log hashes verify.
+The result is recorded in
+the [integration record](../execution-limits-validation.md#main-integration).
+
 [GL-004 execution limits](gl004-execution-limits-2026-10-29.json) records the
 dedicated branch's six core configurations, 180 native actors, four SCons products,
 default-policy workloads, input/binary/log hashes and retained limitations.

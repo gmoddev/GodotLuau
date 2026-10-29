@@ -30,7 +30,8 @@ the inherited runtime already satisfies them. Baseline gaps link to
 - Define supported script trust explicitly before advertising sandboxing.
   Lower-trust script support requires restricted globals, explicit capabilities,
   confined filesystem roots, bounded input/output, cancellation, and accountable
-  execution/memory limits. Gaps: GL-003, GL-004, GL-005.
+  execution/memory limits. Integrated resource controls follow ADR-002;
+  capability gaps remain GL-003 and GL-005.
 - One VM exists per applicable Server/Client domain in a running game process;
   executable scripts must not allocate individual VMs or mix domain authority.
   Script/module environments retain their own identity and ordinary globals;

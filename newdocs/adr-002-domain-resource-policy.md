@@ -1,7 +1,7 @@
 # ADR-002: Shared-domain resource policy
 
 Status: accepted; qualified source integrated by normal merge `55a9c20`.
-Fresh main CI remains pending in the linked integration record.
+Fresh Windows/Linux main core/native CI passes in the linked integration record.
 Builds and executed evidence are recorded in [the work record](execution-limits-validation.md).
 This decision extends [ADR-001](adr-001-shared-execution-domains.md), without
 changing its VM, environment, cache or scheduler ownership model.

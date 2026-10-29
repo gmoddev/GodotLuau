@@ -8,7 +8,8 @@ clean single worktree, unchanged pinned Luau and godot-cpp. Development branch:
 This chronological record preserves intermediate implementation states and
 failures. The final policy is [ADR-002](adr-002-domain-resource-policy.md);
 completed qualification and its limits appear below. GL-004 is fixed and
-qualified on this development branch, not merged to main.
+qualified on its development branch; see [main integration](#main-integration)
+for the current integration disposition.
 
 ## Trust and accounting contract
 
@@ -392,6 +393,33 @@ six-configuration core, 180-actor native, SCons, sanitizer and workload evidence
 above is reused within its original scope, not described as newly executed.
 Release jobs remain manual-only, read-only and job-disabled; updater admission
 still returns false. No binary/archive publication or upstream operation occurs.
-Fresh main hosted core/native CI remains pending. GL-003/005, GL-018 and GL-020
+Fresh main hosted core/native CI passes as recorded below. GL-003/005, GL-018 and GL-020
 adversarial qualification remain independent; VM quotas do not bound native RSS,
 and Luau interrupts cannot preempt arbitrary native blocking calls.
+
+Published/read-back main is `d1a3c1e84a5a1503691005177547f7c65089bad2`.
+Fresh [main core 40861479206](https://github.com/gmoddev/GodotLuau/actions/runs/40861479206)
+passes both platforms; downloaded reports each verify 66 cases. Fresh
+[main native 40861479365](https://github.com/gmoddev/GodotLuau/actions/runs/40861479365)
+passes both Windows/Linux Debug with all 36 actors each. All four jobs completed
+successfully within the bounded 20-minute observation period.
+
+**INTEGRATED AND VERIFIED within ADR-002.** Downloaded artifact ZIP digests match
+GitHub metadata. Both core discovery/reports pass local checker replay (66 cases
+each). Native summaries bind hosted revision `d1a3c1e`, the exact native input
+fingerprint, all 24 effective harness hashes and the pinned official engines.
+All actor exits are zero; all retained native log hashes verify (96 Windows,
+95 Linux). Actual logs contain all four GL-022 markers and eight resource-case
+PASS markers per platform. The integration manifest retains job/run/artifact
+identities and digests. No pending/skipped group is counted as passing.
+
+The final documentation/evidence follow-up leaves runtime, policy defaults,
+build configuration, workflows, fixtures and pinned dependencies identical to
+the qualified source and freshly tested main. All three GL-004 commits and the
+development branch remain retained. GL-004 is resolved only within ADR-002;
+native capabilities, blocking-call preemption and process-level isolation are
+not added. The fresh matrix above reuses prior sanitizer/SCons/workload evidence
+within its original scope. Release publication and runtime updating remain
+disabled. Worker scripts and their owned fixture children have exited; the owned
+Linux container is stopped, caches/logs are preserved, and unrelated workloads
+are unchanged. No subsequent development task is started.

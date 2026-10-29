@@ -32,9 +32,9 @@ GL-004 is integrated by normal merge `55a9c20827dda9dda67372e655e67803e21236b1`,
 preserving the three commits at retained branch `runtime/gl-004-execution-limits`.
 See the [resource policy decision](adr-002-domain-resource-policy.md) and
 [work/validation record](execution-limits-validation.md). GL-004 is fixed and
-qualified on that branch, including fresh Windows/Linux core/native CI.
+qualified and integrated on main, including fresh Windows/Linux core/native CI.
 Intermediate probes and the corrected network-fixture failure are recorded
-separately from final results. Fresh main CI is pending; see the integration record.
+separately from final results. See the verified main integration record.
 
 GL-022's qualified shared-ModuleScript child relay correction is integrated into
 main through `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`, preserving all three
