@@ -25,7 +25,7 @@ bootstrap is introduced; template-cache ownership remains in its existing header
 
 Release workflow is manual-only with both jobs disabled; updater runtime paths
 remain blocked by fork policy. Core/native CI remain enabled. Hosted integration
-verification is pending. GL-022's known baseline
+verification completed successfully below. GL-022's known baseline
 reproduction remains open and predates this extraction.
 
 Fresh focused worker checks pass Windows/Linux Debug and Release core39 and
@@ -40,3 +40,19 @@ synchronization. Native fingerprint remains
 `31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e` (74 files).
 Private orchestration/logs are under worker `Builds/GodotLuau/gl022/stage1`
 and `/work/builds/gl022/stage1`; no worker tools or settings changed.
+
+Main push/readback revision: `84f42297cf90847ff0d66d805136ad4047e22d21`.
+Fresh hosted [core 40822047619](https://github.com/gmoddev/GodotLuau/actions/runs/40822047619)
+and [native 40822047626](https://github.com/gmoddev/GodotLuau/actions/runs/40822047626)
+both complete successfully on that exact SHA. Core jobs `123276512512` and
+`123276512733` each log 39 PASS markers and 39 passed / zero failed. Native
+jobs `123276512354` and `123276512688` each log passing 8 lifecycle, 10 network,
+10 functional animation actors and the 28-process admission check. Observed
+within a 25-minute bound; native completed at 05:31:30 UTC after creation at
+05:12:32 UTC. Pending snapshots were never reported as passing.
+
+Stage 1: **INTEGRATED AND VERIFIED**, within the original qualification limits.
+This evidence follow-up is documentation only; the main publication tip is its
+Git commit immediately following `84f4229`. No further extraction, release,
+updater change or GL-022 correction is included in Stage 1. Stage 2 starts from
+that verified main, not from the historical extraction branch.
