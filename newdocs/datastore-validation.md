@@ -1,5 +1,9 @@
 # GL-009 transactional DataStore work and qualification
 
+This report preserves branch qualification history. Current main integration,
+writer exclusion, data compatibility and fresh CI are in the
+[integration record](datastore-integration.md).
+
 ## Starting checkpoint (2026-10-29)
 
 Branch `persistence/gl-009-transactional-datastore` starts from verified local and

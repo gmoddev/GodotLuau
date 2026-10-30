@@ -5,6 +5,8 @@ on:
     paths:
       - "src/**"
       - "tests/runtime/**"
+      - "tests/packaging/**"
+      - "tools/generar_release.py"
       - "luau"
       - "godot-cpp"
       - ".gitmodules"
@@ -13,6 +15,8 @@ on:
     paths:
       - "src/**"
       - "tests/runtime/**"
+      - "tests/packaging/**"
+      - "tools/generar_release.py"
       - "luau"
       - "godot-cpp"
       - ".gitmodules"
@@ -69,6 +73,10 @@ jobs:
       - name: Provision verified official Godot 4.7.1
         timeout-minutes: 5
         run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot-4.7.1" 2>&1 | tee "$RUNNER_TEMP/native-ci/provision.log"
+
+      - name: Verify DataStore companion archive packaging
+        timeout-minutes: 2
+        run: python tests/packaging/PackagingTests.py 2>&1 | tee "$RUNNER_TEMP/native-ci/package-tests.log"
 
       - name: Configure production native adapter
         timeout-minutes: 5

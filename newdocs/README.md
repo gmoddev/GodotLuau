@@ -28,14 +28,14 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-009 is implemented and qualified on `persistence/gl-009-transactional-datastore`,
-at runtime revision `d4dfb32`, and remains unmerged.
+GL-009 is integrated by normal merge `fc923d2713c39e39fa8db87576bd8e7a5b91ef6d`,
+preserving all four commits at retained branch tip `d5e855b` and the qualified tree.
 The [work record](datastore-validation.md) separates reproduced baseline failures
 from implementation/qualification, and [ADR-005](adr-005-transactional-datastore.md)
 records the transaction/durability, helper-process and host-reaper contract.
-Windows/Linux core/native CI and all four artifacts are verified; see the
-[final disposition](datastore-validation.md#final-disposition). Main,
-release publication and updater distribution remain unchanged.
+Branch qualification is retained; fresh integration checks and hosted main CI
+are recorded in the [integration record](datastore-integration.md). Release
+publication and updater distribution remain disabled.
 
 GL-005 is integrated by normal merge `b7d108b08b9b55c8333a1799743204441b424dba`,
 preserving all three commits on `runtime/gl-005-async-http` at `4a5ebbd`.

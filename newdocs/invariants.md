@@ -95,7 +95,7 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 - Persistent read/modify/write has one documented authority and cross-process
   concurrency semantics. Atomic file replacement alone does not prevent lost
-  updates. GL-009's dedicated branch implements the per-record cooperating-local-
+  updates. Integrated GL-009 implements the per-record cooperating-local-
   writer protocol in [ADR-005](adr-005-transactional-datastore.md); qualification
   and main integration status remain explicit in the issue ledger.
 - Report persistence success only after the chosen durability point; propagate

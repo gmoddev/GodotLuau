@@ -32,7 +32,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
-| GL-009 | P1 | Fixed/qualified on branch; main pending | Transactional DataStore qualified within ADR-005 scope; unmerged |
+| GL-009 | P1 | Integrated; main verification underway | Transactional DataStore within ADR-005; controlled merge and packaging checks |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
@@ -356,8 +356,10 @@ Windows/Linux deterministic lost-update and controlled truncation-interruption
 reproductions now exist in the [work record](datastore-validation.md).
 [ADR-005](adr-005-transactional-datastore.md) selects confined transactional files
 and a companion native I/O process. Implementation `d4dfb32` is fixed and qualified
-within that supported contract; the branch remains unmerged. Main still has the
-historical defect. No release or updater enablement is authorized. See the
+within that supported contract. Normal merge `fc923d2` integrates all four commits
+at branch tip `d5e855b`; its tree equals that qualified tip. Main integration
+verification is in the [integration record](datastore-integration.md). No release
+or updater enablement is authorized. See the
 [final evidence and CI](datastore-validation.md#final-disposition).
 
 **Verified starting-main evidence:** `src/core/luau_stdlib.h` implements Get/Set/Update/Increment

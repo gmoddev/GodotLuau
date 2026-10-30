@@ -4,13 +4,15 @@ GodotLuau — Generador del paquete de release
 Regenera GodotLuau.zip (el paquete que descarga el auto-updater)
 y su hash GodotLuau.zip.sha256 para la verificación de integridad.
 
-Ejecutar SIEMPRE después de recompilar las DLLs y antes de hacer push:
-    python generar_release.py
+Run only when explicitly packaging verified products, with --out targeting a
+disposable/output directory. This is not a generic pre-push check. Release and
+updater publication require separate authorization and qualification.
 """
 import os
 import sys
 import hashlib
 import zipfile
+import stat
 
 NOMBRE_ZIP = "GodotLuau.zip"
 
@@ -35,6 +37,25 @@ BIN_POR_PLATAFORMA = {
     "macos":   (".dylib",),
 }
 
+DataStoreCompanions = {
+    "windows": "godot_luau_store_worker.exe",
+    "linux": "godot_luau_store_worker",
+}
+
+
+def CheckCompanions(Platform):
+    if Platform and Platform not in BIN_POR_PLATAFORMA:
+        raise RuntimeError("[Persistence:Packaging] Unsupported platform")
+    Directory = os.path.join("GodotLuau", "bin")
+    Names = os.listdir(Directory) if os.path.isdir(Directory) else []
+    for Selected, Companion in DataStoreCompanions.items():
+        if Platform and Platform != Selected:
+            continue
+        Suffix = ".dll" if Selected == "windows" else ".so"
+        if any(Name.startswith("godot_luau.") and Name.endswith(Suffix) for Name in Names):
+            if not os.path.isfile(os.path.join(Directory, Companion)):
+                raise RuntimeError("[Persistence:Packaging] Missing required companion: " + Companion)
+
 
 def agregar_archivo(zf, ruta, arcname):
     """Agrega un archivo al zip quitando el BOM UTF-8 de los archivos de texto.
@@ -49,11 +70,20 @@ def agregar_archivo(zf, ruta, arcname):
                 f.write(data)
             print(f"⚠  BOM eliminado: {arcname}")
         zf.writestr(arcname, data)
+    elif os.path.basename(ruta) == DataStoreCompanions["linux"] and os.path.basename(os.path.dirname(ruta)) == "bin":
+        # Preserve Linux executable metadata even when packaging on Windows.
+        Info = zipfile.ZipInfo.from_file(ruta, arcname)
+        Info.create_system = 3
+        Info.external_attr = (stat.S_IFREG | 0o755) << 16
+        with open(ruta, "rb") as Source:
+            zf.writestr(Info, Source.read(), compress_type=zipfile.ZIP_DEFLATED)
     else:
         zf.write(ruta, arcname=arcname)
 
 
 def empaquetar(nombre_zip=NOMBRE_ZIP, only=None):
+    # Reject before opening/replacing an existing archive or touching text files.
+    CheckCompanions(only)
     print("=" * 54)
     print(f"  GodotLuau — Empaquetando {nombre_zip}"
           + (f" (solo {only})" if only else " (todas las plataformas)"))
@@ -76,9 +106,10 @@ def empaquetar(nombre_zip=NOMBRE_ZIP, only=None):
                 for archivo in archivos:
                     raiz_norm = raiz.replace("\\", "/")
                     if raiz_norm.endswith("/bin"):
-                        if not archivo.endswith(EXTENSIONES_BIN):
+                        IsCompanion = archivo in DataStoreCompanions.values()
+                        if not archivo.endswith(EXTENSIONES_BIN) and not IsCompanion:
                             continue
-                        if only and not archivo.endswith(bin_ok):
+                        if only and not archivo.endswith(bin_ok) and archivo != DataStoreCompanions.get(only):
                             continue   # binario de otra plataforma → fuera de este zip
                     ruta = os.path.join(raiz, archivo)
                     agregar_archivo(zf, ruta, ruta.replace("\\", "/"))

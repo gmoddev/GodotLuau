@@ -466,7 +466,7 @@ no account authentication and no incoming connection validation against
 Before GL-003 it serializes local JSON through `_FileAccess`; integrated main
 uses typed native service storage instead. That main baseline still has the
 nontransactional read/transform/write implementation reproduced by GL-009.
-The dedicated GL-009 branch implements [ADR-005](adr-005-transactional-datastore.md):
+Normal merge `fc923d2` integrates GL-009's [ADR-005](adr-005-transactional-datastore.md):
 `gl_datastore.cpp` owns bounded, owner-aware requests on the existing host;
 `src/persistence/worker_main.cpp` performs only native I/O through the confined
 `gl_datastore_backend.h`. One stable root lock serializes cooperating local

@@ -1,6 +1,7 @@
 # ADR-005: Confined transactional DataStore files
 
-Status: accepted and qualified on the GL-009 branch at `d4dfb32`; not merged.
+Status: accepted; qualified at `d4dfb32`, integrated by normal merge `fc923d2`.
+Fresh main verification is recorded in the [integration record](datastore-integration.md).
 Extends ADR-003's DataStore operations only. Execution, HTTP, MemoryStore and
 Messaging authority remain those of ADR-001/002/003/004. Executed results are in
 [the work record](datastore-validation.md).
