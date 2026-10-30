@@ -1,8 +1,9 @@
-# Character V2 preparation record
+# Character V2 development and qualification record
 
-Status: runtime migration in progress on `runtime/character-v2-model`, following
-verified preparation CI at `9ec71c0`. No Character V2 runtime qualification is
-claimed yet. Both development branches remain unmerged; main is `4ea5311`.
+Status: runtime migration implemented and qualified for the documented
+source/headless scope at `d7905dd`, following verified preparation CI at `9ec71c0`.
+See the [final qualification record](character-v2-validation.md). Both development
+branches remain unmerged; main is `4ea5311`.
 Release publication and updater distribution remain disabled.
 
 ## Gate and source identity
@@ -260,3 +261,26 @@ only each client's automatic broadcaster through process_mode; its explicit
 SendState still uses actual readiness RPCs, and SceneMultiplayer continues actual
 polling/dispatch. The same pre-admission rejection and all existing chat/state
 assertions remain. The prior Windows V6 failure is retained, not waived.
+
+## Final disposition
+
+Source/test revision `d7905dd4af5c7a89c9b0f0a005861e9043379be1` passes the complete
+V7 matrix: six 73-case core configurations, five 86-actor native configurations
+and four 40-actor SCons products. Actual R6 passes all 76 Model checks on each
+platform. Process ownership/packaging and companion recovery checks pass with
+the documented Windows platform skips. Comparable parent/candidate Release
+measurements retain actual costs and jitter; no broad improvement is claimed.
+
+Hosted core run `41139334359` and native run `41139334272` pass all four jobs at
+that exact revision. All four downloaded artifacts match published ZIP digests;
+native artifacts verify exact source, all 259 log hashes and 52 harness hashes
+per platform. Transferred local archives verify all 12,229 Windows and 14,530
+Linux manifest entries. The [qualification record](character-v2-validation.md)
+and [machine-readable summary](evidence/character-v2-qualification.json) retain
+identities, commands, results, measured costs and the graphical/GL-017/GL-018/
+GL-020/dependency limits.
+
+The final attestation is documentation-only. Main and GL-007 remain unchanged;
+neither development branch is merged. Release publication and updater
+distribution remain disabled. Build/dependency caches and original failures are
+preserved; all qualifier-owned actor/companion work has completed.

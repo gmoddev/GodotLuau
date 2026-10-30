@@ -37,7 +37,8 @@ and all four verified hosted jobs/artifacts. The
 reproductions, architecture mapping and development failures from those final
 results. [ADR-006](adr-006-character-authority.md) defines the bounded character
 authority and presentation catalog contract.
-Character V2 is implemented and undergoing qualification on the stacked branch `runtime/character-v2-model`,
+Character V2 is implemented and qualified for its documented source/headless scope
+on the stacked branch `runtime/character-v2-model`,
 from qualified tip `514d12f`. Its [work record](character-v2-development.md) retains
 the actual Windows/Linux R6 baseline and [design decision](adr-007-model-character.md).
 Its [API and migration contract](character-v2-api.md) describes the breaking 3D

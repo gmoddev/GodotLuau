@@ -1,7 +1,7 @@
 # Character V2 API and migration
 
-Status: candidate contract under implementation on `runtime/character-v2-model`.
-This document does not claim completed runtime qualification. See the
+Status: implemented and qualified for the documented source/headless scope on
+`runtime/character-v2-model`, unmerged. See the
 [work record](character-v2-development.md) and [ADR-007](adr-007-model-character.md).
 
 ## Identity and ownership

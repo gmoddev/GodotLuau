@@ -1,0 +1,682 @@
+{
+  "SourceCommit": "d7905dd4af5c7a89c9b0f0a005861e9043379be1",
+  "NativeSource": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+  "Core": {
+    "windows-debug": 73,
+    "windows-release": 73,
+    "windows-asan": 73,
+    "linux-debug": 73,
+    "linux-release": 73,
+    "linux-asan": 73
+  },
+  "Native": {
+    "windows-debug": {
+      "Actors": 86,
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10,
+        "characters": 20,
+        "resources": 8,
+        "filesystem": 3,
+        "http": 4,
+        "datastore": 23
+      },
+      "ExtensionSHA256": "c6b8d64069b14a7dbb5eb58d06853efd4809b3531a34dc44c500c6a3e1947153",
+      "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+      "DataStoreNative": {
+        "FaultStages": 4,
+        "KillStages": 4,
+        "IndependentIncrements": 40,
+        "PowerLossTest": false
+      }
+    },
+    "windows-release": {
+      "Actors": 86,
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10,
+        "characters": 20,
+        "resources": 8,
+        "filesystem": 3,
+        "http": 4,
+        "datastore": 23
+      },
+      "ExtensionSHA256": "7c2b878eb2297af5660c566d3f19da5d6976de35ee9220986aa4e0432413d99c",
+      "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+      "DataStoreNative": {
+        "FaultStages": 4,
+        "KillStages": 4,
+        "IndependentIncrements": 40,
+        "PowerLossTest": false
+      }
+    },
+    "linux-debug": {
+      "Actors": 86,
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10,
+        "characters": 20,
+        "resources": 8,
+        "filesystem": 3,
+        "http": 4,
+        "datastore": 23
+      },
+      "ExtensionSHA256": "2a9934686dd1a1b4b7f00831f0376518cae4014fbf3bce041369c4aacc4a3b8c",
+      "GodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+      "DataStoreNative": {
+        "FaultStages": 4,
+        "KillStages": 4,
+        "IndependentIncrements": 40,
+        "PowerLossTest": false
+      }
+    },
+    "linux-release": {
+      "Actors": 86,
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10,
+        "characters": 20,
+        "resources": 8,
+        "filesystem": 3,
+        "http": 4,
+        "datastore": 23
+      },
+      "ExtensionSHA256": "89c3855697df16e90f9b27bd146f3e97f30b3f93efa7ad3eb61df58c3a2fb47f",
+      "GodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+      "DataStoreNative": {
+        "FaultStages": 4,
+        "KillStages": 4,
+        "IndependentIncrements": 40,
+        "PowerLossTest": false
+      }
+    },
+    "linux-asan": {
+      "Actors": 86,
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10,
+        "characters": 20,
+        "resources": 8,
+        "filesystem": 3,
+        "http": 4,
+        "datastore": 23
+      },
+      "ExtensionSHA256": "e7cae2785122fac41d50c45ad012cbf76d8a601a983e65398a0a503069e359b7",
+      "GodotSHA256": "02f913eddb7069fe2c35319d74af10525752ab33c08ac2e1f4612e829a96853a",
+      "DataStoreNative": {
+        "FaultStages": 4,
+        "KillStages": 4,
+        "IndependentIncrements": 40,
+        "PowerLossTest": false
+      }
+    }
+  },
+  "Products": {
+    "windows-template_debug": {
+      "Actors": 40,
+      "ExtensionSHA256": "4c735e22b765ccaacdcfda3d17c857de9580f7d83187659020d7cbb22bbac35a"
+    },
+    "windows-template_release": {
+      "Actors": 40,
+      "ExtensionSHA256": "d9b85c80c3926cbfbaec6d584f1700397cc82596c71b70b6003e21e536fe85c9"
+    },
+    "windows-process-tests": {
+      "Discovered": 14,
+      "Passed": 8,
+      "Skipped": 6
+    },
+    "windows-packaging-tests": {
+      "Discovered": 5,
+      "Passed": 5,
+      "Skipped": 0
+    },
+    "linux-template_debug": {
+      "Actors": 40,
+      "ExtensionSHA256": "ea3d945cef5056be88f45f7d3d6281b1b85a6f366cd57d9270ba842ac55f4184"
+    },
+    "linux-template_release": {
+      "Actors": 40,
+      "ExtensionSHA256": "f6a144502c4970c538b2889a7d38762b29f44abe0e214fb8fc6e71cc9d157ce1"
+    },
+    "linux-process-tests": {
+      "Discovered": 14,
+      "Passed": 14,
+      "Skipped": 0
+    },
+    "linux-packaging-tests": {
+      "Discovered": 5,
+      "Passed": 5,
+      "Skipped": 0
+    }
+  },
+  "Archives": {
+    "windows": {
+      "SHA256": "9d4f3f72c444004a13a219f22c07add627ebd3e0a8283616fb378640add98261",
+      "Files": 12229,
+      "Dependencies": {
+        "godot-cpp": {
+          "Revision": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "Files": 165,
+          "SHA256": "88627d442827ebb09f0de875e59939216f74a09d2479104f00714b047548620c"
+        },
+        "luau": {
+          "Revision": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+          "Files": 852,
+          "SHA256": "fde7ed51588a364dcb97680fbe40e73106b3e4ce4b52d8652c36b1a2ba563391"
+        }
+      }
+    },
+    "linux": {
+      "SHA256": "5a8bdc4b2f210b1e4938a02a300b057f58419bee55d2faf3ed2214c522511241",
+      "Files": 14530,
+      "Dependencies": {
+        "godot-cpp": {
+          "Revision": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "Files": 165,
+          "SHA256": "88627d442827ebb09f0de875e59939216f74a09d2479104f00714b047548620c"
+        },
+        "luau": {
+          "Revision": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+          "Files": 852,
+          "SHA256": "fde7ed51588a364dcb97680fbe40e73106b3e4ce4b52d8652c36b1a2ba563391"
+        }
+      }
+    }
+  },
+  "Hosted": {
+    "runtime-core-Linux-Debug": {
+      "Cases": 73,
+      "SHA256": "f84a59b6122c0cbe952052b62dd8446b50e88c926b640356bb1a16ccf8099d01"
+    },
+    "runtime-core-Windows-Debug": {
+      "Cases": 73,
+      "SHA256": "47afb49354c4998ad3626b3ef5a037591f3b9a1064a9fcf5f7d3439772429934"
+    },
+    "runtime-native-Linux-Debug": {
+      "Actors": 86,
+      "SHA256": "fe4216db806e90845260857b19d69746348f536eac1e447315e4aa3f11772679",
+      "VerifiedLogs": 259,
+      "VerifiedHarnessFiles": 52
+    },
+    "runtime-native-Windows-Debug": {
+      "Actors": 86,
+      "SHA256": "f11421a892c33453e0add6e24edefdbfd087f2a281c01af7b37cae75924fc4c7",
+      "VerifiedLogs": 259,
+      "VerifiedHarnessFiles": 52
+    }
+  },
+  "Measurements": {
+    "windows-comparison-parent": {
+      "After100Respawns": {
+        "ObjectDelta": 0,
+        "StaticMemoryDeltaBytes": 4
+      },
+      "Architecture": "GL007",
+      "CharacterNativeNodes": 21,
+      "CreationMicroseconds": {
+        "Median": 6758,
+        "P95": 7331,
+        "Samples": 30
+      },
+      "NativeAnimationAdvanceMicroseconds": {
+        "Median": 0.553,
+        "P95": 0.574,
+        "Samples": 30
+      },
+      "OneCharacter": {
+        "Characters": 1,
+        "Objects": 1568,
+        "PhysicsSeconds": {
+          "Median": 0.000218,
+          "P95": 0.006592,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000324,
+          "P95": 0.018511,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 33242917
+      },
+      "RespawnMicroseconds": {
+        "Median": 393,
+        "P95": 474,
+        "Samples": 30
+      },
+      "Rig": "R6",
+      "SixteenCharacters": {
+        "Characters": 16,
+        "Objects": 2081,
+        "PhysicsSeconds": {
+          "Median": 0.000692,
+          "P95": 0.000812,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000334,
+          "P95": 0.000334,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 34852981
+      },
+      "StaticMemoryBytes": 31047717
+    },
+    "windows-comparison-candidate": {
+      "After100Respawns": {
+        "ObjectDelta": 0,
+        "StaticMemoryDeltaBytes": 0
+      },
+      "Architecture": "CharacterV2",
+      "CharacterNativeNodes": 22,
+      "CreationMicroseconds": {
+        "Median": 6712,
+        "P95": 7878,
+        "Samples": 30
+      },
+      "NativeAnimationAdvanceMicroseconds": {
+        "Median": 0.269,
+        "P95": 0.273,
+        "Samples": 30
+      },
+      "OneCharacter": {
+        "Characters": 1,
+        "Objects": 1569,
+        "PhysicsSeconds": {
+          "Median": 0.000212,
+          "P95": 0.006451,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000267,
+          "P95": 0.010086,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 33270177
+      },
+      "RespawnMicroseconds": {
+        "Median": 433,
+        "P95": 517,
+        "Samples": 30
+      },
+      "Rig": "R6",
+      "SixteenCharacters": {
+        "Characters": 16,
+        "Objects": 2096,
+        "PhysicsSeconds": {
+          "Median": 0.000711,
+          "P95": 0.000812,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000307,
+          "P95": 0.000322,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 34928769
+      },
+      "StaticMemoryBytes": 31074889
+    },
+    "windows-network-parent": [
+      {
+        "Architecture": "GL007",
+        "Objects": 1583,
+        "PhysicsSeconds": {
+          "Median": 0.000214,
+          "P95": 0.01908,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000351,
+          "P95": 0.001962,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "server0",
+        "StaticMemoryBytes": 32495544
+      },
+      {
+        "Architecture": "GL007",
+        "Objects": 1582,
+        "PhysicsSeconds": {
+          "Median": 0.00024,
+          "P95": 0.015367,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000322,
+          "P95": 0.006999,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client1",
+        "StaticMemoryBytes": 32482689
+      },
+      {
+        "Architecture": "GL007",
+        "Objects": 1582,
+        "PhysicsSeconds": {
+          "Median": 0.000236,
+          "P95": 0.013845,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000317,
+          "P95": 0.009512,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client2",
+        "StaticMemoryBytes": 32485793
+      }
+    ],
+    "windows-network-candidate": [
+      {
+        "Architecture": "CharacterV2",
+        "Objects": 1589,
+        "PhysicsSeconds": {
+          "Median": 0.00023,
+          "P95": 0.028647,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000352,
+          "P95": 0.002019,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "server0",
+        "StaticMemoryBytes": 32534840
+      },
+      {
+        "Architecture": "CharacterV2",
+        "Objects": 1590,
+        "PhysicsSeconds": {
+          "Median": 0.000235,
+          "P95": 0.015369,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000309,
+          "P95": 0.007759,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client1",
+        "StaticMemoryBytes": 32527445
+      },
+      {
+        "Architecture": "CharacterV2",
+        "Objects": 1589,
+        "PhysicsSeconds": {
+          "Median": 0.000219,
+          "P95": 0.019419,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000279,
+          "P95": 0.001425,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client2",
+        "StaticMemoryBytes": 32526397
+      }
+    ],
+    "windows-r6-model": {
+      "Architecture": "CharacterV2",
+      "Checks": 76,
+      "Fall": -19.7500019073486,
+      "Jump": 20,
+      "Rig": "R6"
+    },
+    "linux-comparison-parent": {
+      "After100Respawns": {
+        "ObjectDelta": 0,
+        "StaticMemoryDeltaBytes": 4
+      },
+      "Architecture": "GL007",
+      "CharacterNativeNodes": 21,
+      "CreationMicroseconds": {
+        "Median": 2569,
+        "P95": 2759,
+        "Samples": 30
+      },
+      "NativeAnimationAdvanceMicroseconds": {
+        "Median": 0.122,
+        "P95": 0.124,
+        "Samples": 30
+      },
+      "OneCharacter": {
+        "Characters": 1,
+        "Objects": 1568,
+        "PhysicsSeconds": {
+          "Median": 0.000223,
+          "P95": 0.000353,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000142,
+          "P95": 0.004603,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 33224053
+      },
+      "RespawnMicroseconds": {
+        "Median": 326,
+        "P95": 345,
+        "Samples": 30
+      },
+      "Rig": "R6",
+      "SixteenCharacters": {
+        "Characters": 16,
+        "Objects": 2081,
+        "PhysicsSeconds": {
+          "Median": 0.000497,
+          "P95": 0.000563,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000185,
+          "P95": 0.000195,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 34843189
+      },
+      "StaticMemoryBytes": 32903533
+    },
+    "linux-comparison-candidate": {
+      "After100Respawns": {
+        "ObjectDelta": 0,
+        "StaticMemoryDeltaBytes": 0
+      },
+      "Architecture": "CharacterV2",
+      "CharacterNativeNodes": 22,
+      "CreationMicroseconds": {
+        "Median": 2400,
+        "P95": 2746,
+        "Samples": 30
+      },
+      "NativeAnimationAdvanceMicroseconds": {
+        "Median": 0.119,
+        "P95": 0.125,
+        "Samples": 30
+      },
+      "OneCharacter": {
+        "Characters": 1,
+        "Objects": 1569,
+        "PhysicsSeconds": {
+          "Median": 0.000244,
+          "P95": 0.000458,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.00015,
+          "P95": 0.004672,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 33251625
+      },
+      "RespawnMicroseconds": {
+        "Median": 365,
+        "P95": 382,
+        "Samples": 30
+      },
+      "Rig": "R6",
+      "SixteenCharacters": {
+        "Characters": 16,
+        "Objects": 2096,
+        "PhysicsSeconds": {
+          "Median": 0.000628,
+          "P95": 0.000651,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000177,
+          "P95": 0.000197,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 34919513
+      },
+      "StaticMemoryBytes": 32931137
+    },
+    "linux-network-parent": [
+      {
+        "Architecture": "GL007",
+        "Objects": 1583,
+        "PhysicsSeconds": {
+          "Median": 0.000206,
+          "P95": 0.003345,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000175,
+          "P95": 0.010471,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "server0",
+        "StaticMemoryBytes": 32493024
+      },
+      {
+        "Architecture": "GL007",
+        "Objects": 1583,
+        "PhysicsSeconds": {
+          "Median": 0.000232,
+          "P95": 0.003976,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000215,
+          "P95": 0.007149,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client1",
+        "StaticMemoryBytes": 32483473
+      },
+      {
+        "Architecture": "GL007",
+        "Objects": 1582,
+        "PhysicsSeconds": {
+          "Median": 0.000187,
+          "P95": 0.003829,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000141,
+          "P95": 0.005962,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client2",
+        "StaticMemoryBytes": 32482137
+      }
+    ],
+    "linux-network-candidate": [
+      {
+        "Architecture": "CharacterV2",
+        "Objects": 1587,
+        "PhysicsSeconds": {
+          "Median": 0.000248,
+          "P95": 0.003387,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000248,
+          "P95": 0.010994,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "server0",
+        "StaticMemoryBytes": 32526656
+      },
+      {
+        "Architecture": "CharacterV2",
+        "Objects": 1585,
+        "PhysicsSeconds": {
+          "Median": 0.000246,
+          "P95": 0.003872,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.000199,
+          "P95": 0.006106,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client1",
+        "StaticMemoryBytes": 32517501
+      },
+      {
+        "Architecture": "CharacterV2",
+        "Objects": 1588,
+        "PhysicsSeconds": {
+          "Median": 0.000235,
+          "P95": 0.00403,
+          "Samples": 240
+        },
+        "ProcessSeconds": {
+          "Median": 0.00019,
+          "P95": 0.007197,
+          "Samples": 240
+        },
+        "RemoteCharacters": 2,
+        "Role": "client2",
+        "StaticMemoryBytes": 32521965
+      }
+    ],
+    "linux-r6-model": {
+      "Architecture": "CharacterV2",
+      "Checks": 76,
+      "Fall": -19.7500019073486,
+      "Jump": 20,
+      "Rig": "R6"
+    }
+  },
+  "ParentGL007": "514d12f1bf1add924214492248a459e0763d4ca0",
+  "Main": "4ea53113a98961a64347c672890f65bf9b5c8a54",
+  "HostedRuns": {
+    "Core": 41139334359,
+    "Native": 41139334272
+  },
+  "SourceFiles": 88,
+  "NativeModelChecks": 76,
+  "Publication": {
+    "Merged": false,
+    "ReleasesEnabled": false,
+    "UpdaterEnabled": false
+  },
+  "Limitations": [
+    "Headless qualification; no rendered graphical or physical-device ergonomics claim",
+    "GL-018 Windows full-native sanitizer host remains unqualified",
+    "GL-017 external Godot relay edge remains open; inherited inactive-ENet diagnostics retained",
+    "No server collision truth, production anti-cheat, full GL-020 security audit or mixed-build gameplay claim",
+    "GL-026 bounded importer/protocol workaround only; dependencies remain pinned"
+  ],
+  "ArtifactDirectory": "C:/Users/aiden/.codex/artifacts/godotluau/character-v2"
+}

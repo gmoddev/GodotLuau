@@ -1,8 +1,8 @@
 # ADR-007: Model-based Character ownership
 
-Status: selected design under implementation on `runtime/character-v2-model`.
-The measured parent and preparation CI are verified; candidate production
-behavior is not qualified yet. See the [work record](character-v2-development.md).
+Status: accepted, implemented and qualified for the documented source/headless
+scope on `runtime/character-v2-model`, unmerged. See the
+[qualification](character-v2-validation.md) and [work record](character-v2-development.md).
 
 ## Preparation and ancestry
 
