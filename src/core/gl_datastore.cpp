@@ -147,7 +147,7 @@ int GLDataStoreManager::Begin(lua_State* Thread,GLExecutionDomain* Domain,const 
     auto Item=std::make_unique<Work>();
     Item->Thread=Thread; Item->Anchor=GLGetOwnerState(Thread); Item->Op=Input.Op; Item->Input=Encode(Input);
     bool Synchronous=!lua_isyieldable(Thread) || Domain->IsClosing();
-    Item->Deadline=Now()+(Synchronous?100:30000);
+    Item->Deadline=Now()+(Synchronous?250:30000);
     if (Synchronous) {
         ++Slots; Item->OwnSlot=true;
         do { Item->Advance(); if (!Item->Done) std::this_thread::sleep_for(std::chrono::milliseconds(1)); } while (!Item->Done);

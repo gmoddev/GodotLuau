@@ -144,3 +144,13 @@ JSON NUL with U+FFFD and emits a diagnostic before the post-parse check. The new
 lexical pass rejects that escape before parsing; v2 is a recorded failed run,
 not qualification. Missing/incompatible helper actors and 4MiB frame measurements
 are included in the next full run. No release/updater/main action is permitted.
+
+V3 Windows Release passes its 23 DataStore actors but the existing filesystem
+fixture catches a close-hook SetAsync timeout at the provisional 100ms sync bound;
+the helper had not published the final value. The caller receives indeterminate
+rather than false success. The finite sync bound becomes250ms to accommodate
+ordinary Windows process startup; cancellation reaping also precedes close hooks
+so retired requests do not needlessly consume their admission slots. These are
+explicit changes to the selected bound, requiring final qualification again.
+Native normal calls still yield and native lock waiting stays off the frame
+thread. V3 is retained as preliminary/failed evidence, not the final matrix.

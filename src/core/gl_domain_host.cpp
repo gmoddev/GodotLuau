@@ -444,6 +444,7 @@ void GLDomainHost::Shutdown() {
     for (const auto& Domain : Domains) if (Domain) Domain->StopAdmission();
     if (DataStore) DataStore->CancelAll();
     if (Http) Http->Shutdown();
+    GLDataStoreManager::DrainRetired();
     for (const auto& Domain : Domains) if (Domain) Domain->Shutdown();
     if (DataStore) DataStore->CancelAll();
     GLDataStoreManager::DrainRetired();

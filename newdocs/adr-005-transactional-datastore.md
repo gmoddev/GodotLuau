@@ -130,7 +130,7 @@ Current admission is four native requests/helpers across live hosts in an
 extension generation and two per owner. IPC work is at most 1 MiB sent and 1 MiB
 received per request per host tick; at most one new helper starts per tick. Normal
 operations have a 30-second deadline, native lock contention a one-second bound,
-and non-yielding/close IPC a 100 ms bound per call. Conflict backoff is 5–25 ms,
+and non-yielding/close IPC a 250 ms bound per call. Conflict backoff is 5–25 ms,
 with eight total attempts. JSON is bounded to 16 MiB physical bytes, depth20 and
 65,536 traversal nodes; lexical limits precede native parser allocation. Existing
 logical/physical filename limits remain 200/240 bytes. The companion also bounds
