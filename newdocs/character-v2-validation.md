@@ -23,14 +23,17 @@ both platforms. These development results do not substitute for the final matrix
 ## Final configuration matrix
 
 Final native input fingerprint (88 LF-normalized production files):
-`c34d100ee297acb76670ccb0e25546bd12ae7ca632ca365b241af3a9804ed283`.
+`db48047d9cac6e7f9f77f1fcf98e5ccacbf5435c145be22a402a6e0369bb881a`.
 The final Model fixture has 76 checks, including repeated import rejection,
 keyboard/gamepad/mobile input, script reload and a custom visual template.
+Three further actors exercise initial manual loading, independent Player
+admission and late join without pre-existing Characters. The new fixture passes
+Windows/Linux Debug; final matrix qualification for this follow-up is pending.
 
 Pending. Required core configurations are Windows/Linux Debug, Release and core
 ASan; native configurations are Windows/Linux Debug and Release plus matching
 Linux full-native ASan/LSan. Each native configuration requires all eight groups,
-83 complete actors and GL-009 companion fault/recovery evidence. Four SCons
+86 complete actors and GL-009 companion fault/recovery evidence. Four SCons
 products, process/packaging checks, R6/custom-rig fixtures, performance measurements
 and source-identical hosted core/native CI remain to be recorded.
 

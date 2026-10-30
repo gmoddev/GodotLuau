@@ -116,7 +116,13 @@ Explicit server removal sends reliable `_character_removed(who, epoch, life)`.
 The receiver admits only its live server/session and non-stale epoch/life, records
 a tombstone before deferring lifecycle callbacks, and rejects same/older-life
 pose and animation packets. A newer trusted LoadCharacter can create the next
-life. The connected Player survives the absence of its Character. Same-tree
+life. Life zero is reserved for an admitted Player with no initial Character:
+version-3 readiness admits that Player after the transport poll even when
+CharacterAutoLoads is false, and the reliable absence record suppresses stale
+presentation. A later Server LoadCharacter grants a positive new life. Local
+readiness does not require a pre-existing Character. Dedicated/editor observer
+windows remain excluded as local Players. The connected Player survives the
+absence of its Character. Same-tree
 reparenting preserves Character identity and does not send a removal.
 
 Before production edits, capture a comparable native creation/respawn/object/

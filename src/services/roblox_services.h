@@ -551,14 +551,23 @@ private:
     void _tick_player_added(double delta) {
         if (_gl_local_added_fired) return;
         Node* character = _find_local_character();
-        if (!character) { _gl_ready_time = 0.0; return; }  // esperar al personaje
+        if (!character && character_auto_loads) { _gl_ready_time = 0.0; return; }
+        Node* Network = is_inside_tree() ? _find_network_service(get_tree()->get_root()) : nullptr;
+        if (Network && !static_cast<bool>(Network->call("HasLocalParticipant"))) return;
         _gl_ready_time += delta;
         if (_gl_ready_time < 0.25) return;                 // margen para PlayerAdded:Connect
         _gl_local_added_fired = true;
         PlayerObject* po = ensure_local_player_obj();      // Player con .Character ya asignado (silencioso)
         if (po) {
-            fire_player_added(po);        // PlayerAdded PRIMERO (como Roblox)
-            po->fire_character_added();   // ...luego CharacterAdded (ya hay listeners)
+            const uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+            const uint64_t PlayerIdentity = static_cast<uint64_t>(po->get_instance_id());
+            const uint64_t CharacterIdentity = character ? static_cast<uint64_t>(character->get_instance_id()) : 0;
+            fire_player_added(po);
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+            Node* Current = po && !po->is_queued_for_deletion() ? po->get_character() : nullptr;
+            if (Current && static_cast<uint64_t>(Current->get_instance_id()) == CharacterIdentity)
+                po->fire_character_added();
         }
     }
 
@@ -737,6 +746,14 @@ public:
         uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         PlayerObject* po = ensure_local_player_obj();
         uint64_t PlayerIdentity = po ? static_cast<uint64_t>(po->get_instance_id()) : 0;
+        if (!_gl_local_added_fired && po) {
+            _gl_local_added_fired = true;
+            po->added_fired = true;
+            fire_player_added(po);
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+            po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+            if (!po || po->is_queued_for_deletion()) return;
+        }
         if (Node* old = _find_local_character()) {
             uint64_t CharacterIdentity = static_cast<uint64_t>(old->get_instance_id());
             if (po) po->fire_character_removing();

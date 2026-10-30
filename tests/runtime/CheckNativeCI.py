@@ -17,7 +17,7 @@ def Main():
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
-        'characters': [*[f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])], 'character-model'],
+        'characters': [*[f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])], 'character-model', 'character-manual-server', 'character-manual-client1', 'character-manual-client2'],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
         'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],

@@ -222,3 +222,26 @@ the same rejected legacy import three times (76 total checks) and starts V5
 qualification. No sanitizer suppression, leak waiver, dependency change or
 assertion removal is used. The native grant/cache correction and importer reset
 workaround are separate from GL-017's inherited inactive-ENet diagnostics.
+
+Final lifecycle review finds an initial manual-loading deadlock: suppressing the
+automatic root still left local PlayerAdded/readiness and remote admission tied
+to Character existence. The follow-up admits protocol-3 Players after transport
+polling, independently of initial Character creation. Life zero is the explicit
+initial-absence tombstone; a positive Server grant creates the actual life.
+Dedicated/editor observer windows remain excluded from local-player admission.
+A new real dedicated-server/two-client fixture checks PlayerAdded without a
+Character, Server manual LoadCharacter, exact births and both owner/observer roots.
+
+The preceding Windows V5 pipeline stops on GL-005's lifecycle frame-progress
+assertion before measurements/products. HTTP implementation is unchanged; the
+failure remains retained and requires a fresh check, not an assertion waiver.
+
+The manual-loading fixture now passes all three actors on Windows/Linux Debug.
+It starts a dedicated server with automatic loading disabled, admits the first
+Player without a Character, then introduces a late second client. It requires
+the restored unspawned roster, Server manual loads, actual Player.Character
+identity, and one CharacterAdded for each local/remote life. The initial failed
+probe caught readiness still behind a root check; that gate now runs before
+Character discovery. Initial local PlayerAdded no longer waits for a root, and
+explicit early loads dispatch admission before birth without a duplicate tick.
+The full native requirement becomes 86 actors; SCons focus becomes 40.

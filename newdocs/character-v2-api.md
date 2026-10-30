@@ -179,3 +179,11 @@ schedule one bounded refresh.
 Player.CameraMode remains the existing classic/first-person setting. Character
 CameraMode forwards the internal camera's follow style (1=fixed, 2=smooth,
 3=combined); those two settings have different meanings.
+
+CharacterAutoLoads=false preserves connected Player identity and PlayerAdded even
+before an initial Character exists. Version-3 readiness runs without a local
+root; its reliable life-zero absence record also restores the unspawned Player
+to late joiners. Server Player:LoadCharacter creates a positive life and delivers
+the actual owner/observer roots. PlayerAdded callbacks may request that load;
+birth events remain ordered and reentrant loads coalesce. Dedicated/editor
+observer windows are excluded as local Players.

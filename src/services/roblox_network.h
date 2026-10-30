@@ -314,6 +314,8 @@ class NetworkService : public Node {
     bool   net_connected = false;
     int    retry_left = 0;
     String target_address = "";   // "ip:puerto" del servidor al que se conectó (para GetServerAddress)
+    bool LocalPlayerSuppressed = false;
+    std::unordered_set<int> ReadyAdmissions;
     bool   is_dedicated = false;   // servidor dedicado (sin jugador local, estilo minecraft_server.jar)
     double retry_timer = 0.0;
 
@@ -940,6 +942,7 @@ private:
     // La ventana del SERVIDOR no tiene personaje (como en Roblox Studio):
     // el server observa con la camara libre; los jugadores son los clientes.
     void _remove_local_player() {
+        LocalPlayerSuppressed = true;
         Node* p = _local_player();
         if (p) { gl_mp_log("ventana de servidor: sin personaje (solo observa)"); p->queue_free(); }
     }
@@ -1453,16 +1456,16 @@ private:
     }
     void _broadcast_local() {
         if (mode == 2 && !net_connected) return;   // cliente aún negociando: nada de RPC
+        if (mode == 2 && !LocalCharacterGrant.Epoch) {
+            if (CharacterTime() >= CharacterReadyAt) {
+                CharacterReadyAt = CharacterTime() + 1;
+                rpc_id(1, "_character_ready", 3);
+            }
+            return;
+        }
         Node* lp = _local_player();
         if (!lp) return;   // la ventana del servidor no tiene personaje: no difunde
         if (mode == 2) {
-            if (!LocalCharacterGrant.Epoch) {
-                if (CharacterTime() >= CharacterReadyAt) {
-                    CharacterReadyAt = CharacterTime() + 1;
-                    rpc_id(1, "_character_ready", 3);
-                }
-                return;
-            }
             if (!ApplyCharacterGrant()) return;
             double Now = CharacterTime();
             double Slack = LocalCharacterGrant.Walk * 1.5 * 2 / Engine::get_singleton()->get_physics_ticks_per_second();
@@ -1540,6 +1543,8 @@ protected:
     static void _bind_methods() {
         ClassDB::bind_method(D_METHOD("_on_peer_connected", "id"),    &NetworkService::_on_peer_connected);
         ClassDB::bind_method(D_METHOD("_character_ready", "version"), &NetworkService::_character_ready);
+        ClassDB::bind_method(D_METHOD("AdmitCharacterPeer", "peer", "user"), &NetworkService::AdmitCharacterPeer);
+        ClassDB::bind_method(D_METHOD("HasLocalParticipant"), &NetworkService::HasLocalParticipant);
         ClassDB::bind_method(D_METHOD("RequestCharacterReset"), &NetworkService::RequestCharacterReset);
         ClassDB::bind_method(D_METHOD("_apply_local_reset", "identity"), &NetworkService::ApplyLocalReset);
         ClassDB::bind_method(D_METHOD("_character_reset", "epoch"), &NetworkService::_character_reset);
@@ -1684,6 +1689,9 @@ public:
             // clientes ya no corren ServerScripts, así que sin esto no verían lo que el
             // servidor creó antes de que ellos conectaran (late-join).
             _rep_sync_peer(id);
+            for (const auto& Entry : CharacterAuthorities)
+                if (!Entry.second.Identity && Entry.second.Epoch > 0)
+                    rpc_id(id, "_character_removed", Entry.first, Entry.second.Epoch, Entry.second.Life);
         }
         // NO se dispara Players.PlayerAdded aquí: un peer SIN personaje (p.ej. la
         // ventana SERVIDOR sin jugador) NO es un Player. PlayerAdded se dispara
@@ -1707,7 +1715,7 @@ public:
     void _on_peer_disconnected(int id) {
         ChatBudgets.erase(id);
         AnimationBudgets.erase(id);
-        CharacterAuthorities.erase(id); ResetRequests.erase(id); ReparentAnimations.erase(id); CharacterSnapshots.erase(id);
+        CharacterAuthorities.erase(id); ReadyAdmissions.erase(id); ResetRequests.erase(id); ReparentAnimations.erase(id); CharacterSnapshots.erase(id);
         peer_seq_uid.erase(id);
         _remove_puppet(id);
         if (is_server()) rpc("_recv_remove", id);   // que los clientes también lo quiten
@@ -1733,7 +1741,7 @@ public:
     void _on_server_disconnected() {
         net_connected = false;
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+        CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         _rf_fail_pending(0, "InvokeServer: lost connection to the server");
         _clear_puppets();
@@ -2403,7 +2411,7 @@ public:
         // El jugador local solo cuenta si TIENE personaje: la ventana "servidor"
         // (host sin personaje, cámara libre) no debe aparecer como jugador.
         if (PlayerObject* lp = _local_player_obj())
-            if (lp->get_character()) r.push_back(lp);
+            if (HasLocalParticipant()) r.push_back(lp);
         for (auto& kv : peer_player_ids)
             if (PlayerObject* po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(kv.second)))
                 r.push_back(po); // a connected Player remains present between Characters
@@ -2411,11 +2419,31 @@ public:
     }
 
     // ── RPCs de réplica ──────────────────────────────────────────────────
+    bool HasLocalParticipant() { return !LocalPlayerSuppressed || _local_player() != nullptr; }
     void _character_ready(int Version) {
         int Sender = GetClientRpcSender();
-        if (!Sender || Version != 3 || CharacterAuthorities.count(Sender)) return;
+        if (!Sender || Version != 3 || CharacterAuthorities.count(Sender) || !peer_seq_uid.count(Sender) ||
+            !ReadyAdmissions.insert(Sender).second) return;
+        call_deferred("AdmitCharacterPeer", Sender, peer_seq_uid.at(Sender));
+    }
+    void AdmitCharacterPeer(int Peer, int64_t User) {
+        ReadyAdmissions.erase(Peer);
+        if (mode != 1 || !is_inside_tree() || is_queued_for_deletion() || GLExecutionDomain::IsClientExecution() || !peer_seq_uid.count(Peer) ||
+            peer_seq_uid.at(Peer) != User || !_mp()->get_peers().has(Peer) || CharacterAuthorities.count(Peer)) return;
         Players* Service = _players_service();
-        if (!Service || Service->get_character_auto_loads()) SpawnCharacter(Sender);
+        if (!Service || Service->get_character_auto_loads()) { SpawnCharacter(Peer); return; }
+        CharacterAuthority Absent;
+        Absent.Epoch = NextCharacterEpoch++;
+        CharacterAuthorities[Peer] = Absent;
+        PlayerObject* Player = _ensure_peer_player(Peer);
+        if (!Player) return;
+        String Name = String("Player") + String::num_int64(User);
+        Player->set_name(Name); Player->display_name = Name;
+        rpc("_character_removed", Peer, Absent.Epoch, 0);
+        if (!Player->added_fired) {
+            Player->added_fired = true;
+            Service->fire_player_added(Player);
+        }
     }
 
     void RequestCharacterReset() {
@@ -2575,21 +2603,33 @@ public:
         }
     }
     void CharacterRemoved(int Who, int64_t Epoch, int64_t Life) {
-        if (!AcceptServerRpc() || Who <= 0 || !peer_seq_uid.count(Who) || Epoch <= 0 || Life <= 0 || Life > Epoch) return;
+        if (!AcceptServerRpc() || Who <= 0 || !peer_seq_uid.count(Who) || Epoch <= 0 || Life < 0 || Life > Epoch) return;
         auto Found = CharacterSnapshots.find(Who);
         if (Found != CharacterSnapshots.end() && (Epoch < Found->second.Epoch || Life < Found->second.Life ||
             (Found->second.Removed && Life == Found->second.Life))) return;
         if (Who == _my_peer_id() && Epoch < LocalCharacterGrant.Epoch) return;
         CharacterSnapshots[Who] = {Epoch, 0, Life, true};
+        if (Who == _my_peer_id()) { LocalCharacterGrant.Epoch = Epoch; LocalGrantedCharacter = 0; }
         peer_anim.erase(Who); ReparentAnimations.erase(Who);
         call_deferred("ApplyCharacterRemoval", Who, Epoch, Life);
     }
     void ApplyCharacterRemoval(int Who, int64_t Epoch, int64_t Life) {
         auto Found = CharacterSnapshots.find(Who);
-        if (mode != 2 || Found == CharacterSnapshots.end() || !Found->second.Removed ||
-            Found->second.Epoch != Epoch || Found->second.Life != Life) return;
+        if (mode != 2 || !peer_seq_uid.count(Who) || Found == CharacterSnapshots.end() || !Found->second.Removed ||
+            Found->second.Epoch != Epoch || Found->second.Life != Life ||
+            (Who == _my_peer_id() && LocalCharacterGrant.Epoch > Epoch)) return;
         const uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
-        PlayerObject* Player = Who == _my_peer_id() ? _local_player_obj() : _peer_player(Who);
+        PlayerObject* Player = Who == _my_peer_id() ? _local_player_obj() : _ensure_peer_player(Who);
+        if (Player && Who != _my_peer_id() && !Player->added_fired) {
+            const uint64_t PlayerIdentity = static_cast<uint64_t>(Player->get_instance_id());
+            Player->set_name(String("Player") + String::num_int64(peer_seq_uid.at(Who)));
+            Player->display_name = Player->get_name();
+            Player->added_fired = true;
+            if (auto Service = _players_service()) Service->fire_player_added(Player);
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            Player = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+            if (!Player || Player->is_queued_for_deletion()) return;
+        }
         Node* Character = Player ? Player->get_character() : nullptr;
         const uint64_t CharacterIdentity = Character ? static_cast<uint64_t>(Character->get_instance_id()) : 0;
         const uint64_t PlayerIdentity = Player ? static_cast<uint64_t>(Player->get_instance_id()) : 0;
@@ -3481,7 +3521,7 @@ public:
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
         ChatBudgets.clear();
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+        CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
         peer_seq_uid.clear();
         Ref<MultiplayerAPI> m = _mp();
@@ -3512,7 +3552,7 @@ public:
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); target_address = ""; return false; }
         ChatBudgets.clear();
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0; CharacterReadyAt = 0;
+        CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0; CharacterReadyAt = 0;
         LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();
         _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
         peer_seq_uid.clear(); gl_local_user_id() = 0;
@@ -3527,7 +3567,7 @@ public:
     }
     void disconnect_net() {
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+        CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();
         LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         ChatBudgets.clear();
