@@ -32,7 +32,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
-| GL-009 | P1 | Integrated; main verification underway | Transactional DataStore within ADR-005; controlled merge and packaging checks |
+| GL-009 | P1 | Integrated; fixed and qualified within scope | Controlled main merge, stopped-writer gate, preserved data and verified companion packages |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
@@ -358,7 +358,12 @@ reproductions now exist in the [work record](datastore-validation.md).
 and a companion native I/O process. Implementation `d4dfb32` is fixed and qualified
 within that supported contract. Normal merge `fc923d2` integrates all four commits
 at branch tip `d5e855b`; its tree equals that qualified tip. Main integration
-verification is in the [integration record](datastore-integration.md). No release
+verification is in the [integration record](datastore-integration.md#final-disposition).
+Fresh Windows/Linux hosted core72/native66 and five packaging tests per platform
+pass at follow-up `31d0f1f`, with all four artifacts and 426 native log hashes
+verified. The legacy-writer gate clears before merge, all nine seeded legacy files
+and their backups remain byte-identical, and extracted native packages pass on
+both OSes. No existing application root is activated. No release
 or updater enablement is authorized. See the
 [final evidence and CI](datastore-validation.md#final-disposition).
 
@@ -409,6 +414,14 @@ archive reuse as a substitute for source builds.
 explicit-input local package are recorded in the shared-domain validation report.
 The inherited release workflow still reuses its ZIP; GL-010 remains open for
 published release provenance and workflow correction.
+
+GL-009 integration follow-up `31d0f1f` fixes the source ZIP builder's omitted
+Windows/extensionless Linux companion, executable metadata and missing-helper
+preflight; real extracted source-built packages pass on both platforms. The
+disabled inherited release workflow still stages only Linux `.so` files and
+reuses its Windows ZIP. Its pipeline/provenance and updater extraction remain
+unqualified; publication stays disabled. See the
+[integration record](datastore-integration.md#companion-archive-follow-up).
 
 ## GL-011: Automated runtime qualification is missing from release gates
 

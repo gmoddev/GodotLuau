@@ -33,8 +33,10 @@ preserving all four commits at retained branch tip `d5e855b` and the qualified t
 The [work record](datastore-validation.md) separates reproduced baseline failures
 from implementation/qualification, and [ADR-005](adr-005-transactional-datastore.md)
 records the transaction/durability, helper-process and host-reaper contract.
-Branch qualification is retained; fresh integration checks and hosted main CI
-are recorded in the [integration record](datastore-integration.md). Release
+Branch qualification is retained; fresh Windows/Linux core/native main CI and
+all four artifacts are verified at packaging follow-up `31d0f1f`. Writer exclusion,
+data preservation, extracted packages and lifecycle checks are in the
+[integration record](datastore-integration.md#final-disposition). Release
 publication and updater distribution remain disabled.
 
 GL-005 is integrated by normal merge `b7d108b08b9b55c8333a1799743204441b424dba`,

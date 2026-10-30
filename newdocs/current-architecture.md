@@ -464,7 +464,7 @@ no account authentication and no incoming connection validation against
 
 `DataStoreService` is embedded Luau in `src/core/luau_stdlib.h`.
 Before GL-003 it serializes local JSON through `_FileAccess`; integrated main
-uses typed native service storage instead. That main baseline still has the
+uses typed native service storage instead. Main `bc8ca88` still had the
 nontransactional read/transform/write implementation reproduced by GL-009.
 Normal merge `fc923d2` integrates GL-009's [ADR-005](adr-005-transactional-datastore.md):
 `gl_datastore.cpp` owns bounded, owner-aware requests on the existing host;
@@ -475,9 +475,11 @@ Stage/sync/relative atomic replace/final flush precedes acknowledgment. Remove
 writes a null tombstone and returns committed previous data; Get no longer uses
 stale cache for missing/error cases. Strict DataStore-only codecs preserve legacy
 encoding while rejecting invalid/lossy candidate shapes. Ordered sorting remains
-local cache, and public version methods remain compatibility stubs. The branch
+local cache, and public version methods remain compatibility stubs. The implementation
 has no cross-key transactions or mixed-old-writer guarantee. Qualification status
 and deployment/recovery limits are in the [work record](datastore-validation.md).
+The [integration record](datastore-integration.md) records writer exclusion,
+legacy-file preservation, side-by-side companion packaging and fresh main CI.
 MemoryStore/Messaging retain ADR-003's existing operations. `backend/` contains
 an optional Nakama/PostgreSQL development stack; it is not this authority.
 
