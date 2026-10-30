@@ -170,3 +170,20 @@ its nested exec retained the wrapper's __file__; running the unchanged probe as
 its own process fixes orchestration without changing runtime/tests. The matrix
 will freeze native source and effective fixture hashes before Debug/Release/ASan
 and SCons qualification.
+
+The first frozen matrix passes Windows/Linux Debug and Release (core72/native43)
+and all six core configurations, but Linux native ASan/LSan stops in HTTP default
+denial. LSan reports 11,208 bytes/56 allocations from the fixture's two generic
+HTTPRequest instances. The alternate-path test created unparented nodes without
+destroying them. It now calls Destroy after checking that request is unavailable.
+No runtime change or sanitizer suppression is involved. The original matrix's
+failed logs remain distinct; corrected final qualification will use fresh v2
+directories and effective fixture hashes.
+
+The cleanup probe then passes enabled/default-denied/lifecycle under ASan/LSan,
+but TLS fails explicitly: the existing minimal matching engine was built without
+HTTPS support. BuildSanitizedGodot.sh now enables Godot's existing mbedTLS module
+at the same pinned engine revision. Rebuilding uses the same incremental cache,
+two jobs and the owned worker container; no tool installation, system trust
+change or leak-detection suppression is involved. TLS sanitizer qualification
+requires the rebuilt engine and is not inferred from the earlier HTTP passes.

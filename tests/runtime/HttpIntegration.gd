@@ -111,6 +111,7 @@ local Result=Service:RequestAsync({Url=Origin..'/forbidden/default'})
 assert(not Result.Success and Result.StatusCode==0 and Result.Body=='')
 local Request=Instance.new('HTTPRequest')
 assert(not pcall(function() Request:request(Origin..'/forbidden/node') end))
+Request:Destroy()
 assert(not pcall(_GL_NET.call,'request',Origin..'/forbidden/helper'))
 game:SetAttribute(script.Name..'Denied',true)
 """
