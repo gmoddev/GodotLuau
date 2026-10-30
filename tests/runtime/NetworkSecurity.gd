@@ -86,27 +86,36 @@ func Puppet(Peer: int) -> Node:
     return root.get_node_or_null("RemotePlayer_" + str(Peer))
 
 func SendState() -> void:
-    if Index == 1:
-        Network.rpc_id(1, "_relay_state", Vector3(10, 0, 0), 0.0, 999, 100.0, 0.0, false)
-    else:
-        Network.rpc_id(1, "_relay_state2d", Vector2(20, 0), 0.0, 999)
+    var Peer: int = Network.call("get_peer_id")
+    var Deadline := Time.get_ticks_msec() + 5000
+    var State: Dictionary = Network.call("GetCharacterStates").get(Peer, {})
+    while int(State.get("Epoch", 0)) == 0:
+        Check(Time.get_ticks_msec() < Deadline, "character grant deadline")
+        if Time.get_ticks_msec() >= Deadline: return
+        Network.rpc_id(1, "_character_ready", 2)
+        await create_timer(0.05).timeout
+        State = Network.call("GetCharacterStates").get(Peer, {})
+    Network.rpc_id(1, "_relay_character", State.Epoch, 1, State.Position, 0.0, 0.0, false)
 
 func Attack(Target: int) -> void:
     # A modified client can alter its own RPC configuration. This never alters
     # the remote service's configuration or its handler guards.
-    for Method in ["_recv_state", "_recv_state2d", "_recv_remove", "_recv_chat"]:
+    for Method in ["_recv_state", "_recv_state2d", "_recv_character", "_character_grant", "_recv_remove", "_recv_chat"]:
         Network.rpc_config(Method, {"rpc_mode": MultiplayerAPI.RPC_MODE_ANY_PEER,
-            "transfer_mode": MultiplayerPeer.TRANSFER_MODE_RELIABLE if Method in ["_recv_remove", "_recv_chat"] else MultiplayerPeer.TRANSFER_MODE_UNRELIABLE,
+            "transfer_mode": MultiplayerPeer.TRANSFER_MODE_RELIABLE if Method in ["_character_grant", "_recv_remove", "_recv_chat"] else MultiplayerPeer.TRANSFER_MODE_UNRELIABLE,
             "call_local": false, "channel": 0})
     for Who in [First, Second, -1, 0, 2147483647]:
         Network.rpc_id(Target, "_recv_state", Who, Vector3(9999, 9999, 9999), 0.0, 888, 1.0, 0.0, false)
         Network.rpc_id(Target, "_recv_state2d", Who, Vector2(9999, 9999), 0.0, 888)
         Network.rpc_id(Target, "_recv_remove", Who)
+        Network.rpc_id(Target, "_recv_character", Who, 99999, 99999, Vector3(9999, 9999, 9999), 0.0, 1.0, 100.0, 0.0, false, false, 99999)
+    Network.rpc_id(Target, "_character_grant", 99999, Vector3(9999, 9999, 9999), 0.0, 10000.0, 20.0, 45.0, false, true)
     Network.rpc_id(Target, "_recv_chat", 1, "SYSTEM", "FORGED_RECEIVE")
     if Target != 1:
         Network.rpc_id(Target, "_relay_state", Vector3(9999, 9999, 9999), 0.0, 888, 1.0, 0.0, false)
         Network.rpc_id(Target, "_relay_state2d", Vector2(9999, 9999), 0.0, 888)
         Network.rpc_id(Target, "_relay_chat", "SYSTEM", "FORGED_RELAY")
+        Network.rpc_id(Target, "_relay_character", 99999, 99999, Vector3(9999, 9999, 9999), 0.0, 0.0, false)
 
 func ObserveStable() -> void:
     for Peer in [First, Second]:
@@ -114,7 +123,10 @@ func ObserveStable() -> void:
         var Character := Puppet(Peer)
         Check(is_instance_valid(Character), "player survived unauthorized removal " + str(Peer))
         if is_instance_valid(Character):
-            var Expected := 10.0 if Peer == First else 20.0
+            # Connection order need not match fixture client index. The server
+            # selected this spawn from its assigned UID, never the input index.
+            var SessionPlayer: Node = Network.call("player_node_for_peer", Peer)
+            var Expected := 10.0 if str(SessionPlayer.name) == "Player2" else 20.0
             Check(is_equal_approx(Character.get("global_position").x, Expected), "presentation unchanged " + str(Peer))
             if Peer == First:
                 Check(is_equal_approx(float(Character.get_node("Humanoid").get("Health")), 100.0), "health unchanged")
@@ -145,6 +157,11 @@ end)
 game:GetService('Players').PlayerRemoving:Connect(function(Player)
     game:SetAttribute('Removed', (game:GetAttribute('Removed') or 0) + 1)
 end)
+game:GetService('Players').PlayerAdded:Connect(function(Player)
+    Player.CharacterAdded:Connect(function(Character)
+        Character.Position = Vector3.new(Player.UserId == 2 and 10 or 20, 0, 0)
+    end)
+end)
 game:SetAttribute('Observing', true)
 """)
     while not Game.has_meta("Observing"): await process_frame
@@ -154,6 +171,8 @@ game:SetAttribute('Observing', true)
         Network.call("_recv_remove", 1)
         Network.call("_recv_chat", 1, "SYSTEM", "FORGED_LOCAL")
         Network.call("_relay_chat", "SYSTEM", "FORGED_LOCAL_RELAY")
+        Network.call("_recv_character", 7, 1, 1, Vector3.ZERO, 0.0, 100.0, 100.0, 0.0, false, false, 1)
+        Network.call("_relay_character", 1, 1, Vector3.ZERO, 0.0, 0.0, false)
         Check(Puppet(7) == null and Puppet(8) == null, "inbound handlers reject sender zero")
         Check(not Game.has_meta("Messages"), "inbound local chat rejected")
         Network.call("gl_send_chat", "Local", "LOCAL_OK")
@@ -219,8 +238,10 @@ game:SetAttribute('Observing', true)
             if Time.get_ticks_msec() >= PositiveDeadline:
                 Check(false, "positive state delivery deadline")
                 break
-            Network.rpc("_recv_state", First, Vector3(11, 0, 0), 0.0, 2, 95.0, 0.0, false)
-            Network.rpc("_recv_state2d", Second, Vector2(21, 0), 0.0, 3)
+            var FirstState: Dictionary = Network.call("GetCharacterStates")[First]
+            var SecondState: Dictionary = Network.call("GetCharacterStates")[Second]
+            Network.rpc("_recv_character", First, FirstState.Epoch, 10000, Vector3(11, 0, 0), 0.0, 95.0, 100.0, 0.0, false, false, FirstState.Life)
+            Network.rpc("_recv_character", Second, SecondState.Epoch, 10000, Vector3(21, 0, 0), 0.0, 100.0, 100.0, 0.0, false, false, SecondState.Life)
             await create_timer(0.05).timeout
         await Wait("client1.positive")
         await Wait("client2.positive")
@@ -248,6 +269,7 @@ game:SetAttribute('Observing', true)
         Check(not str(Game.get_meta("Messages", "")).contains("MISSING_RECORD"), "invalidated ObjectID rejected")
         Puppet(Reconnected).queue_free()
         await process_frame
+        Network.call("RespawnCharacter", Reconnected)
         Mark("restore")
         await Wait("restored.sent")
         await Drain()
@@ -273,7 +295,7 @@ game:SetAttribute('Observing', true)
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "PREINIT_FORGED")
             Mark("preinit.sent")
         await Wait("initialize")
-        SendState()
+        await SendState()
         await Drain()
         Mark("client" + str(Index) + ".initialized")
         await Wait("attack")
@@ -319,7 +341,7 @@ game:SetAttribute('Observing', true)
             Network.rpc_id(1, "_relay_chat", "Other", "SECOND_OK")
             Mark("client2.positive")
         else:
-            Check(await WaitState(Second, 21.0), "valid subsequent 2D state")
+            Check(await WaitState(Second, 21.0), "valid subsequent second-character state")
             Mark("client1.positive")
         await Wait("disconnect")
         if Index == 1:
@@ -332,7 +354,7 @@ game:SetAttribute('Observing', true)
             while not Network.call("is_connected_net"): await process_frame
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "RECONNECT_EARLY")
             await Drain()
-            SendState()
+            await SendState()
             await Drain()
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "RECONNECT_OK")
             Mark("reconnected.peer", str(Network.call("get_peer_id")))
@@ -341,7 +363,7 @@ game:SetAttribute('Observing', true)
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "MISSING_RECORD")
             Mark("invalidrecord.sent")
             await Wait("restore")
-            SendState()
+            await SendState()
             await Drain()
             Network.rpc_id(1, "_relay_chat", "SYSTEM", "RESTORED_OK")
             Mark("restored.sent")
@@ -356,9 +378,9 @@ game:SetAttribute('Observing', true)
     quit(1 if Failed else 0)
 
 func ConfigureHandlerProbe() -> void:
-    for Method in ["_recv_state", "_recv_state2d", "_recv_remove", "_recv_chat"]:
+    for Method in ["_recv_state", "_recv_state2d", "_recv_character", "_character_grant", "_recv_remove", "_recv_chat"]:
         Network.rpc_config(Method, {"rpc_mode": MultiplayerAPI.RPC_MODE_ANY_PEER,
-            "transfer_mode": MultiplayerPeer.TRANSFER_MODE_RELIABLE if Method in ["_recv_remove", "_recv_chat"] else MultiplayerPeer.TRANSFER_MODE_UNRELIABLE,
+            "transfer_mode": MultiplayerPeer.TRANSFER_MODE_RELIABLE if Method in ["_character_grant", "_recv_remove", "_recv_chat"] else MultiplayerPeer.TRANSFER_MODE_UNRELIABLE,
             "call_local": false, "channel": 0})
 
 func CheckChat(ExpectedName: String) -> void:

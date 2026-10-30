@@ -129,6 +129,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/animation" --animation --timeout 60
 
+      - name: GL-007 character authority and animation-health rejection
+        timeout-minutes: 5
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/characters" --characters --timeout 60
+
       - name: GL-004 isolated resource and recovery cases
         timeout-minutes: 3
         run: |
@@ -181,6 +189,7 @@ jobs:
             ${{ runner.temp }}/native-ci/**/results.json
             ${{ runner.temp }}/native-ci/**/server-results.json
             ${{ runner.temp }}/native-ci/**/native-evidence.json
+            ${{ runner.temp }}/native-ci/**/latency-proxy.json
             ${{ runner.temp }}/native-ci/source.json
             ${{ runner.temp }}/native-ci/summary.json
             ${{ runner.temp }}/godot-4.7.1/provenance.json

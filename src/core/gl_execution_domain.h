@@ -63,6 +63,9 @@ public:
 
     lua_State* GetState() const { return State; }
     GLDomainKind GetKind() const { return Kind; }
+    // Synchronous native entry points use the executing VM, including callbacks
+    // and generic Godot call/set aliases. No authority is inferred from a node.
+    static bool IsClientExecution();
     bool IsClosing() const { return Closing || AdmissionClosed; }
     bool IsShutdownCallback(lua_State* Thread) const { return Closing && Thread && Thread==ClosingThread; }
     void StopAdmission() { AdmissionClosed = true; }

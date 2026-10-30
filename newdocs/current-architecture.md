@@ -401,6 +401,13 @@ return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
 
 ## Networking and persistence
 
+The unmerged `security/gl-007-character-authority` worktree stages protocol 2
+character grants/snapshots, native server health, bounded pose admission, and a
+startup presentation-animation catalog. Its current implementation and pending
+qualification are separated in [ADR-006](adr-006-character-authority.md) and the
+[work record](character-development.md). The historical main descriptions below
+still describe main's protocol 1 baseline. Character V2 has not started.
+
 `NetworkService` combines connection setup, ENet RPCs, players, puppet state,
 replication, remote invocation, physics ownership, chat, and coordinator/world
 process support in `src/services/roblox_network.h`.

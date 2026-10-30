@@ -246,6 +246,8 @@ static int method_destroy(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     Node* n = w ? gow_node(w) : nullptr;
     if (n) {
+        auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+        if (Service && !Service->CanWriteCharacter(n, true)) return 0;
         // Replicación (1.14.5): si somos servidor y la instancia está replicada,
         // avisar a los clientes ANTES de liberarla aquí.
         if (gl_net_role() == 1 && n->has_meta("_gl_netid")) {
@@ -296,6 +298,7 @@ static int method_clearallchildren(lua_State* L) {
         for (int i = 0; i < ch.size(); i++) {
             Node* n = Object::cast_to<Node>(ch[i]);
             if (!n) continue;
+            if (rns && !rns->CanWriteCharacter(n, true)) continue;
             if (rns && n->has_meta("_gl_netid")) rns->rep_unreplicate(n);
             n->queue_free();
         }
@@ -892,10 +895,11 @@ static int godot_object_index(lua_State* L) {
                 return 1;
             }
             if (strcmp(key, "LoadCharacter") == 0) {
-                lua_pushlightuserdata(L, (void*)plr);
+                wrap_node(L, plr);
                 lua_pushcclosure(L, [](lua_State* pL) -> int {
-                    PlayerObject* p = (PlayerObject*)lua_touserdata(pL, lua_upvalueindex(1));
-                    if (!p) return 0;
+                    auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(pL, lua_upvalueindex(1)));
+                    auto p = Wrapper ? Object::cast_to<PlayerObject>(gow_node(Wrapper)) : nullptr;
+                    if (!p || p->is_queued_for_deletion()) return 0;
                     if (Node* ns = _gl_find_network_service(p)) { ns->call("net_load_character", (Object*)p); return 0; }
                     // Sin NetworkService (juego normal sin red): respawn local.
                     Node* ps = p->get_parent();
@@ -1911,13 +1915,17 @@ static int godot_object_index(lua_State* L) {
             return 1;
         }
         if (strcmp(key, "LoadAnimation") == 0) {
-            lua_pushlightuserdata(L, (void*)hum);
+            wrap_node(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = (Humanoid*)lua_touserdata(pL, lua_upvalueindex(1));
-                if (!h) { lua_pushnil(pL); return 1; }
+                auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(pL, lua_upvalueindex(1)));
+                Humanoid* h = Wrapper ? Object::cast_to<Humanoid>(gow_node(Wrapper)) : nullptr;
+                if (!h || h->is_queued_for_deletion()) { lua_pushnil(pL); return 1; }
+                uint64_t HumanoidIdentity = static_cast<uint64_t>(h->get_instance_id());
                 // Find or create AnimationPlayer in parent
                 Node* parent = h->get_parent();
                 if (!parent) { lua_pushnil(pL); return 1; }
+                auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+                if (Service && !Service->CanWriteCharacter(parent)) { lua_pushnil(pL); return 1; }
                 AnimationPlayer* ap = nullptr;
                 for (int i = 0; i < parent->get_child_count(); i++) {
                     ap = Object::cast_to<AnimationPlayer>(parent->get_child(i));
@@ -1928,6 +1936,8 @@ static int godot_object_index(lua_State* L) {
                     ap->set_name("AnimationPlayer");
                     parent->add_child(ap);
                 }
+                uint64_t AnimationPlayerIdentity = static_cast<uint64_t>(ap->get_instance_id());
+                if (ObjectDB::get_instance(HumanoidIdentity) != h || h->is_queued_for_deletion() || ap->is_queued_for_deletion()) { lua_pushnil(pL); return 1; }
                 // Get animation name from arg (AnimationObject or string)
                 String anim_name_s = "default";
                 String anim_id_s   = "";   // se guarda en el track para poder replicarlo (1.14.12)
@@ -1948,6 +1958,8 @@ static int godot_object_index(lua_State* L) {
                 } else if (lua_isstring(pL, 2)) {
                     anim_name_s = String(lua_tostring(pL, 2));
                 }
+                if (ObjectDB::get_instance(HumanoidIdentity) != h || h->is_queued_for_deletion() ||
+                    ObjectDB::get_instance(AnimationPlayerIdentity) != ap || ap->is_queued_for_deletion()) { lua_pushnil(pL); return 1; }
                 AnimationTrack* track = memnew(AnimationTrack);
                 track->set_name("__anim_track__");
                 track->set_anim_id(anim_id_s);
@@ -2025,14 +2037,14 @@ static int godot_object_index(lua_State* L) {
         //// ── Señales del Humanoid ──────────────────────────────────
         if (strcmp(key, "Died") == 0) {
             lua_newtable(L);
-            lua_pushlightuserdata(L, (void*)hum);
+            GLPushNodeHandle(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = static_cast<Humanoid*>(lua_touserdata(pL, lua_upvalueindex(1)));
+                Humanoid* h = Object::cast_to<Humanoid>(GLNodeUpvalue(pL, 1));
                 int fn_pos = -1;
                 for (int ai = 1; ai <= lua_gettop(pL); ai++) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
-                if (fn_pos == -1 || !h) return 0;
+                if (fn_pos == -1 || !h || h->is_queued_for_deletion()) return 0;
                 GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
@@ -2091,14 +2103,14 @@ static int godot_object_index(lua_State* L) {
         }
         if (strcmp(key, "HealthChanged") == 0) {
             lua_newtable(L);
-            lua_pushlightuserdata(L, (void*)hum);
+            GLPushNodeHandle(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = static_cast<Humanoid*>(lua_touserdata(pL, lua_upvalueindex(1)));
+                Humanoid* h = Object::cast_to<Humanoid>(GLNodeUpvalue(pL, 1));
                 int fn_pos = -1;
                 for (int ai = 1; ai <= lua_gettop(pL); ai++) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
-                if (fn_pos == -1 || !h) return 0;
+                if (fn_pos == -1 || !h || h->is_queued_for_deletion()) return 0;
                 GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
@@ -2115,14 +2127,14 @@ static int godot_object_index(lua_State* L) {
         }
         if (strcmp(key, "StateChanged") == 0) {
             lua_newtable(L);
-            lua_pushlightuserdata(L, (void*)hum);
+            GLPushNodeHandle(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = static_cast<Humanoid*>(lua_touserdata(pL, lua_upvalueindex(1)));
+                Humanoid* h = Object::cast_to<Humanoid>(GLNodeUpvalue(pL, 1));
                 int fn_pos = -1;
                 for (int ai = 1; ai <= lua_gettop(pL); ai++) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
-                if (fn_pos == -1 || !h) return 0;
+                if (fn_pos == -1 || !h || h->is_queued_for_deletion()) return 0;
                 GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
@@ -2183,6 +2195,19 @@ static int godot_object_index(lua_State* L) {
     // ── NetworkService (multijugador, Fase 0) ─────────────────────────
     NetworkService* nsvc = Object::cast_to<NetworkService>(n);
     if (nsvc) {
+        if (strcmp(key, "RegisterCharacterAnimation") == 0) {
+            GLPushNodeHandle(L, nsvc);
+            lua_pushcclosure(L, [](lua_State* Thread) -> int {
+                auto Service = Object::cast_to<NetworkService>(GLNodeUpvalue(Thread, 1));
+                size_t Size = 0;
+                const char* Bytes = luaL_checklstring(Thread, 2, &Size);
+                if (Size > 4096) { lua_pushboolean(Thread, false); return 1; }
+                String Asset = String::utf8(Bytes, Size);
+                lua_pushboolean(Thread, Service && Service->RegisterCharacterAnimation(Asset));
+                return 1;
+            }, "RegisterCharacterAnimation", 1);
+            return 1;
+        }
         if (strcmp(key, "StartServer") == 0) {
             GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
@@ -3923,6 +3948,19 @@ static int godot_object_newindex_impl(lua_State* L) {
     const char* key = luaL_checkstring(L, 2);
     if (!wrapper || !gow_node(wrapper)) return 0;
 
+    // Listen/single-process Client VM references share native objects with the
+    // server. A client write must not be mistaken for a trusted correction.
+    if (GLExecutionDomain::IsClientExecution() && gl_net_role() == 1) {
+        auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+        if (Service && !Service->CanWriteCharacter(gow_node(wrapper), true)) {
+            return 0;
+        }
+        if (Service && (strcmp(key, "Parent") == 0 || strcmp(key, "parent") == 0)) {
+            auto Destination = static_cast<GodotObjectWrapper*>(lua_touserdata(L, 3));
+            if (Destination && !Service->CanWriteCharacter(gow_node(Destination))) return 0;
+        }
+    }
+
     // Camera.CameraType / CameraSubject: se guardan (la camara la mueve el
     // PlayerModule). Antes escribirlos era un error y el script moria.
     {
@@ -4731,6 +4769,23 @@ static void gl_rep_on_newindex(lua_State* L) {
 // Instalado en gl_apply_prop_hook(). Hilo Luau fresco: el impl lee índices 1/2/3.
 static void gl_rep_apply_prop(Node* target, const String& key, const Variant& enc) {
     if (!target) return;
+    // Server-admitted generic replication must apply native character setters
+    // before entering the Client VM. Gameplay cannot obtain this hook. Keeping
+    // the call outside a Client scope avoids granting an ambient permission
+    // that a HealthChanged callback could inherit and reuse.
+    if (!GLExecutionDomain::IsClientExecution() && (enc.get_type() == Variant::FLOAT || enc.get_type() == Variant::INT)) {
+        if (auto Health = Object::cast_to<Humanoid>(target)) {
+            if (key == "Health") { Health->set_health(static_cast<float>(enc)); return; }
+            if (key == "MaxHealth") { Health->set_max_health(static_cast<float>(enc)); return; }
+            if (key == "WalkSpeed") { Health->set_walk_speed(static_cast<float>(enc)); return; }
+            if (key == "JumpPower") { Health->set_jump_power(static_cast<float>(enc)); return; }
+            if (key == "Gravity") { Health->set_gravity_val(static_cast<float>(enc)); return; }
+        }
+        if (auto Health = Object::cast_to<Humanoid2D>(target)) {
+            if (key == "Health") { Health->set_health(static_cast<float>(enc)); return; }
+            if (key == "MaxHealth") { Health->set_max_health(static_cast<float>(enc)); return; }
+        }
+    }
     lua_State* L = gl_any_state();
     if (!L) {
         // Sin NINGUNA VM Luau viva (place sin LocalScripts) la réplica se perdía

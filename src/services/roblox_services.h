@@ -146,6 +146,17 @@ public:
     std::vector<LuaCallback> char_appearance_cbs;
     struct LuaWait { lua_State* th; lua_State* main_L; int Guard = GLCaptureWait(th); };
     std::vector<LuaWait> char_added_waits;   // CharacterAdded:Wait()
+    ~PlayerObject() {
+        for (const auto& Callback : char_added_cbs) GLUnreference(nullptr, Callback.ref);
+        for (const auto& Callback : char_removing_cbs) GLUnreference(nullptr, Callback.ref);
+        for (const auto& Callback : char_appearance_cbs) GLUnreference(nullptr, Callback.ref);
+        auto Waits = std::move(char_added_waits);
+        for (const auto& Wait : Waits) {
+            if (GLReferenceAlive(Wait.main_L, Wait.Guard))
+                if (auto Owner = GLGetOwner(Wait.th)) Owner->Domain->CancelThread(Wait.th);
+            GLUnreference(nullptr, Wait.Guard);
+        }
+    }
     void add_char_added_wait(lua_State* th, lua_State* mL) { char_added_waits.push_back({ th, mL }); }
 
     void add_char_added_cb(lua_State* L, int ref)      { char_added_cbs.push_back({ L, ref, true }); }
@@ -162,8 +173,11 @@ public:
     }
     void _fire_char(std::vector<LuaCallback>& list, Node* character) {
         std::vector<LuaCallback> snap = list;
+        uint64_t CharacterIdentity = character ? static_cast<uint64_t>(character->get_instance_id()) : 0;
         for (auto& cb : snap) {
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
+            character = Object::cast_to<Node>(ObjectDB::get_instance(CharacterIdentity));
+            if (!character || character->is_queued_for_deletion()) break;
             GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 if (character) {
                     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(Thread, sizeof(GodotObjectWrapper));
@@ -185,8 +199,14 @@ public:
     void fire_character_added() {
         Node* c = get_character();
         if (!c) return;
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        uint64_t CharacterIdentity = static_cast<uint64_t>(c->get_instance_id());
         _fire_char(char_added_cbs, c);
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion() ||
+            ObjectDB::get_instance(CharacterIdentity) != c || c->is_queued_for_deletion() || get_character() != c) return;
         _fire_char(char_appearance_cbs, c);
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion() ||
+            ObjectDB::get_instance(CharacterIdentity) != c || c->is_queued_for_deletion() || get_character() != c) return;
         // CharacterAdded:Wait() → reanudar (diferido) con el personaje. Se pasa por
         // ObjectID (ruta use_args), NO por puntero crudo: entre encolar y drenar el
         // personaje podría liberarse (peer que se va) → use-after-free.
@@ -533,6 +553,7 @@ private:
     // y se rehace en cada respawn, así que una conexión habría que rehacerla
     // cada vez (y se pierde si alguien mata al Humanoid sin pasar por Died).
     void _tick_respawn(double delta) {
+        if (gl_net_role() == 2) return; // remote lifecycle belongs to the server
         if (!character_auto_loads) return;
         if (_death_timer >= 0.0) {
             _death_timer += delta;
@@ -550,6 +571,20 @@ private:
 
 public:
 
+    ~Players() {
+        for (const auto& Callback : player_added_cbs) GLUnreference(nullptr, Callback.ref);
+        for (const auto& Callback : player_removing_cbs) GLUnreference(nullptr, Callback.ref);
+        auto Added = std::move(player_added_waits);
+        auto Removing = std::move(player_removing_waits);
+        auto Cancel = [](const auto& Waits) {
+            for (const auto& Wait : Waits) {
+                if (GLReferenceAlive(Wait.main_L, Wait.Guard))
+                    if (auto Owner = GLGetOwner(Wait.th)) Owner->Domain->CancelThread(Wait.th);
+                GLUnreference(nullptr, Wait.Guard);
+            }
+        };
+        Cancel(Added); Cancel(Removing);
+    }
     void add_player_added_cb(lua_State* L, int ref, bool once = false)    { player_added_cbs.push_back({L,ref,true,once}); }
     void add_player_removing_cb(lua_State* L, int ref, bool once = false) { player_removing_cbs.push_back({L,ref,true,once}); }
     // Crea PlayerGui/Backpack/PlayerScripts del jugador y clona dentro lo que
@@ -594,8 +629,20 @@ public:
         for (auto& cb : player_removing_cbs) if (cb.ref == ref) cb.active = false;
     }
 
-    void fire_player_added(Node* player)    { _fire_player_event(player_added_cbs, player); _drain_waits(player_added_waits, player); }
-    void fire_player_removing(Node* player) { _fire_player_event(player_removing_cbs, player); _drain_waits(player_removing_waits, player); }
+    void fire_player_added(Node* player) {
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        uint64_t PlayerIdentity = player ? static_cast<uint64_t>(player->get_instance_id()) : 0;
+        _fire_player_event(player_added_cbs, player);
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+        _drain_waits(player_added_waits, Object::cast_to<Node>(ObjectDB::get_instance(PlayerIdentity)));
+    }
+    void fire_player_removing(Node* player) {
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        uint64_t PlayerIdentity = player ? static_cast<uint64_t>(player->get_instance_id()) : 0;
+        _fire_player_event(player_removing_cbs, player);
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+        _drain_waits(player_removing_waits, Object::cast_to<Node>(ObjectDB::get_instance(PlayerIdentity)));
+    }
     void _drain_waits(std::vector<LuaWait>& waits, Node* player) {
         if (waits.empty()) return;
         std::vector<LuaWait> snap = waits;
@@ -661,18 +708,28 @@ public:
     // hace el Workspace (build_local_character), que es quien sabe del spawn,
     // el rig y los StarterCharacterScripts.
     void load_local_character() {
+        if (GLExecutionDomain::IsClientExecution()) return;
         if (!is_inside_tree()) return;
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         PlayerObject* po = ensure_local_player_obj();
+        uint64_t PlayerIdentity = po ? static_cast<uint64_t>(po->get_instance_id()) : 0;
         if (Node* old = _find_local_character()) {
+            uint64_t CharacterIdentity = static_cast<uint64_t>(old->get_instance_id());
             if (po) po->fire_character_removing();
-            if (old->get_parent()) old->get_parent()->remove_child(old);
-            old->queue_free();
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+            old = Object::cast_to<Node>(ObjectDB::get_instance(CharacterIdentity));
+            if (old && !old->is_queued_for_deletion()) {
+                if (old->get_parent()) old->get_parent()->remove_child(old);
+                old->queue_free();
+            }
         }
         Node* dm = get_parent();
         Node* ws = dm ? dm->get_node_or_null("Workspace") : nullptr;
         if (ws && ws->has_method("build_local_character")) ws->call("build_local_character");
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+        po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
         Node* fresh = _find_local_character();
-        if (po && fresh) {
+        if (po && !po->is_queued_for_deletion() && fresh && !fresh->is_queued_for_deletion()) {
             po->set_character_silent(fresh);
             // Re-apuntar el Mouse al personaje NUEVO (por método, para no depender
             // del orden de includes con RobloxMouse).
@@ -724,12 +781,21 @@ private:
         return nullptr;
     }
     void _fire_player_event(std::vector<LuaCallback>& list, Node* player) {
-        for (int i = (int)list.size()-1; i >= 0; --i) {
-            auto cb = list[i];
-            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { list.erase(list.begin()+i); continue; }
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        uint64_t PlayerIdentity = player ? static_cast<uint64_t>(player->get_instance_id()) : 0;
+        list.erase(std::remove_if(list.begin(), list.end(), [](const LuaCallback& Callback) {
+            return !Callback.active || !GLReferenceAlive(Callback.main_L, Callback.ref);
+        }), list.end());
+        auto Snapshot = list;
+        for (auto Iterator = Snapshot.rbegin(); Iterator != Snapshot.rend(); ++Iterator) {
+            auto cb = *Iterator;
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+            player = Object::cast_to<Node>(ObjectDB::get_instance(PlayerIdentity));
+            if (!player || player->is_queued_for_deletion()) return;
+            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
             bool once = cb.once;
+            if (once) for (auto& Callback : list) if (Callback.ref == cb.ref) Callback.active = false;
             GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
-                if (once) list[i].active = false;   // :Once → desconectar ANTES de invocar (como Roblox)
                 if (player) {
                     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(Thread, sizeof(GodotObjectWrapper));
                     gow_set(w, player);
