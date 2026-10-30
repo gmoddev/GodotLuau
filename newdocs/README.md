@@ -37,7 +37,10 @@ and all four verified hosted jobs/artifacts. The
 reproductions, architecture mapping and development failures from those final
 results. [ADR-006](adr-006-character-authority.md) defines the bounded character
 authority and presentation catalog contract.
-Character V2 remains a proposed, subsequent stacked stage; neither stage is
+Character V2 has a separate stacked preparation branch, `runtime/character-v2-model`,
+from qualified tip `514d12f`. Its [work record](character-v2-development.md) retains
+the actual Windows/Linux R6 baseline and [design decision](adr-007-model-character.md).
+Its runtime migration is not implemented or qualified; neither branch is
 authorized for merge. The [scoped API audit](inherited-api-audit.md) records
 HttpService follow-up GL-023 without changing the qualified GL-005 transport.
 
