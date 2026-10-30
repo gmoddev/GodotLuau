@@ -28,7 +28,7 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-005 investigation is on `runtime/gl-005-async-http`, with no main merge.
+GL-005 is fixed and qualified on `runtime/gl-005-async-http`, with no main merge.
 The [HTTP work record](http-validation.md) separates source findings, controlled
 reproduction, design decisions and executed qualification as work proceeds.
 The [HTTP authority decision](adr-004-asynchronous-http.md) records the selected

@@ -28,7 +28,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
 | GL-003 | P1 | Resolved within ADR-003; integrated and verified | Native file global bypassed higher-level role restrictions |
 | GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
-| GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
+| GL-005 | P2 | Fixed and qualified on dedicated branch; not merged | Async HTTP with native origin grants, bounds and lifetime cleanup |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
@@ -199,20 +199,30 @@ the historical branch evidence in [the work record](execution-limits-validation.
 ## GL-005: HTTP is synchronous and broadly exposed
 
 Work on `runtime/gl-005-async-http` starts from integrated main `3d390a0`.
-The [HTTP investigation/qualification record](http-validation.md) tracks progress;
-baseline blocking/truncated-success behavior is reproduced on Windows/Linux,
-and the native async candidate is implemented. Focused qualification and candidate
-review corrections are recorded there; full acceptance is pending. This issue
-stays open until those gates pass.
+**FIXED AND QUALIFIED ON BRANCH, NOT MERGED:** Implementation `4dbecc8` plus
+fixture/TLS-build follow-up `fce3637` replaces the blocking helper with host-ticked
+coroutine completion, native Server/exact-origin grants and finite limits. Six
+core configurations pass72, five native configurations pass43 and four SCons
+products pass HTTP4/resource8/filesystem3. Fresh hosted core/native Windows/Linux
+jobs pass at `fce3637`; all four artifacts and native log/source/harness/engine
+identities are downloaded and verified. See the
+[work record](http-validation.md#final-local-qualification) and
+[evidence manifest](evidence/gl005-asynchronous-http-2026-10-29.json).
+Main still has the baseline implementation. GL-003/004 source contracts and
+regressions are preserved; releases and the updater remain disabled.
 
-**Evidence:** `src/core/luau_script.h:293-439` implements `gl_http_perform` with
-polling/delays; `_HTTP` is installed at `1725-1760` and used by HttpService.
+**Original evidence:** The initial review's `src/core/luau_script.h:293-439`
+implements `gl_http_perform` with polling/delays, with `_HTTP` installed at
+`1725-1760`. The later GL-013 extraction moves those bodies to `luau_script.cpp`;
+the GL-005 starting main still has the same blocking helper used by HttpService.
 
-**Consequence/limits:** Calls can stall the calling thread. The helper has a
+**Baseline consequence/limits:** Calls can stall the calling thread. The helper has a
 nominal ten-second timeout, so it is incorrect to claim no timeout exists; this
 is not a proven universal deadline or nonblocking execution. No native capability
 or domain allowlist is present. Hostile-script/network impact needs deployment
-context; no SSRF exploit or timing benchmark was performed.
+context. That original review performed no SSRF exploit or timing benchmark.
+The linked GL-005 work record now includes controlled native timing/truncation
+reproduction and the branch's authority/scheduling regression results.
 
 **Fix boundary and closure:** Specify permitted hosts/grants and request/response
 bounds, then use asynchronous I/O with coroutine completion, cancellation, and

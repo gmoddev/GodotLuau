@@ -13,11 +13,13 @@ of this task. GL-003 storage and GL-004 execution/resource contracts are retaine
 All three native `_HTTP.request/get/post` entry points in `luau_script.cpp` call
 `gl_http_perform`. HttpService is a Lua pcall facade, not an authorization gate.
 `HttpEnabled`, Lua role globals and private-looking tables cannot grant authority.
-The current helper loops and sleeps on the calling thread. Its nominal ten-second
+The baseline helper loops and sleeps on the calling thread. Its nominal ten-second
 deadline is checked only for empty body chunks; continuous data can bypass that
 check. It sets Success from the status before body completion, so timeout or
 truncation can retain a successful 2xx disposition. These are source observations;
 controlled native timing/truncation reproduction is still pending.
+The later controlled-baseline section records the executed reproduction; this
+paragraph describes the initial investigation checkpoint.
 
 Inputs, accumulated response bytes, headers and request concurrency have no
 HTTP-specific bounds. Header conversion lacks CR/LF/NUL validation; URL parsing
@@ -187,3 +189,127 @@ at the same pinned engine revision. Rebuilding uses the same incremental cache,
 two jobs and the owned worker container; no tool installation, system trust
 change or leak-detection suppression is involved. TLS sanitizer qualification
 requires the rebuilt engine and is not inferred from the earlier HTTP passes.
+Its first shell invocation rejects CRLF in the transferred script before SCons
+starts. The worker executes an LF-normalized copy of the same script; the
+incremental mbedTLS engine rebuild then exits zero in 18.81 seconds. Caches and
+the pinned engine revision are preserved.
+
+Corrected v2 CMake Debug/Release and all core configurations pass on both workers;
+Linux ASan/LSan HTTP4 now passes with HTTPS enabled and proceeds to existing groups.
+Windows SCons Debug passes HTTP4/resource8 but its unchanged filesystem reader
+asserts in the one-line expiration check, then the writer times out waiting for
+reader-done. The reader's stored Expiring entry has a one-second integer wall-clock
+expiry. The log does not distinguish its immediate-read assertion from its
+post-two-second assertion; clock-boundary sensitivity is a hypothesis, not a
+confirmed cause. GL-003 source/fixtures and GL-004 are unchanged. The failed
+directory is preserved and the exact filesystem case is rerun in a fresh retry
+directory before continuing SCons Release. A successful retry will not erase this
+counterevidence or establish stronger TTL/concurrency semantics than GL-009.
+
+## Qualification commands and identity
+
+Implementation commit is `4dbecc8ddf38a375457d5603f73184db6e061cf1`;
+fixture cleanup/TLS build configuration is `fce3637b7625d9086e28d78314cb7ed50ae1aa34`.
+Native input fingerprint is
+`cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc`
+(81 files, LF-normalized). Core test CPP is
+`67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20`.
+The 32 effective Python/GDScript/PEM/CMake/distribution inputs are hashed separately.
+The sanitizer-engine build script is recorded separately from those fixture inputs.
+Pinned godot-cpp/Luau content is checked against the existing tracked-file digest,
+including the Linux tar-tree workspace that has no submodule Git metadata.
+
+Windows uses `C:\Sandbox\Codex\Workspaces\GodotLuau`, persistent
+`Builds\GodotLuau\runtime-msvc-{debug,release,asan}`, MSVC via vcvars64, CMake
+3.31.10 and portable SCons 4.5.2. Linux uses `/work/source` and
+`/work/builds/linux-{debug,release,asan}` in the owned qualification container.
+Every native build uses two jobs and incremental dependency caches. Native engines
+are official Godot 4.7.1, or its matching pinned ASan/LSan headless build with
+mbedTLS for the Linux sanitizer actors. Windows full native ASan remains GL-018;
+only its core sanitizer configuration is claimed.
+
+The worker orchestration captures these commands in separate per-stage logs:
+
+```text
+cmake --build <config> --target ExecutionDomainTests GodotLuauAdapter --parallel 2
+ctest --test-dir <config> --output-junit <report> --test-output-size-passed 65536 --test-output-size-failed 65536 --output-on-failure
+python tests/runtime/CheckCoreCI.py report <report>
+python tests/runtime/RunQualification.py --godot <engine> --extension <library> --output <fresh-group> --http --timeout 60
+```
+
+The other native groups use the same launcher with `--teardown --coordinated-close`,
+`--security`, `--animation`, `--resources --timeout 15`, or `--filesystem`.
+SCons runs `platform=windows|linux target=template_debug|template_release -j2`;
+Windows invokes the already approved RunSConsPortable.py and its isolated tool path.
+Each SCons product runs HTTP4/resource8/filesystem3 with the same launcher.
+FixtureProcessTests.py checks process ownership/failure cleanup. The sanitizer
+engine uses BuildSanitizedGodot.sh with `/work 2`, including use_asan/use_lsan;
+leak-at-exit detection stays enabled. Reproduced baseline, failed probes and final
+`gl005-qualified-v2-*` outputs remain separate. Hosted CI additionally runs the
+strict core/native result checkers and retains actual source/harness/engine/log
+identity; green workflow status alone is not the artifact-verification receipt.
+
+## Final local qualification
+
+The corrected v2 matrix passes. The [evidence manifest](evidence/gl005-asynchronous-http-2026-10-29.json)
+retains input identities, engine/binary hashes, JUnit/result/log digests and
+settled HTTP observations. No forbidden request reaches an endpoint; native
+default-denied actors observe no HTTP requests. TLS actors reach the legitimate,
+wrong-hostname, untrusted-chain and stalled-handshake transports. Byte/deadline,
+binary/non-2xx/method, scheduling and lifetime controls all pass. The original
+slow-frame and truncated-success defects no longer reproduce in candidate mode.
+
+| Worker/configuration | Core | Native actors | HTTP enabled peak gap |
+|---|---:|---:|---:|
+| Windows MSVC Debug | 72 | 43 | 0.072591 s |
+| Windows MSVC Release | 72 | 43 | 0.013630 s |
+| Windows core ASan | 72 | Not claimed (GL-018) | Not applicable |
+| Linux Debug | 72 | 43 | 0.026918 s |
+| Linux Release | 72 | 43 | 0.008474 s |
+| Linux matching ASan/LSan engine + adapter | 72 | 43 | 0.058842 s |
+
+Each native row includes HTTP4 plus all existing regression8/security10/
+animation10/resource8/filesystem3 actors. SCons Windows/Linux template_debug and
+template_release each pass HTTP4/resource8/filesystem3 (15 actors per product).
+The Windows template_debug filesystem result uses its explicit fresh retry;
+the original failed expiration assertion remains described above. Fixture process
+ownership tests pass 14/14 on Linux; Windows passes eight with six POSIX-only
+cases explicitly skipped. No unrelated storage, scheduler or dependency source
+is changed. GL-003 close-save and GL-004 retirement/recovery are exercised in the
+HTTP lifecycle case as well as their original groups.
+
+The native source and 32 effective fixture hashes match both workers and the
+local checkout. Both official engine hashes match their previously verified
+4.7.1 distributions. The matching Linux engine now has mbedTLS and a new recorded
+binary hash; it is not misidentified as the earlier TLS-disabled engine. Build
+tools/caches remain on workers. The owned Linux container has been stopped after
+qualification; no fixture server/process remains running, and unrelated host
+workloads were not changed.
+
+Hosted core [40989908872](https://github.com/gmoddev/GodotLuau/actions/runs/40989908872)
+passes 72 cases per platform at the fixture-corrected revision; both ZIP digests,
+discovery and JUnit completion are downloaded and checked. Hosted native
+[40989908863](https://github.com/gmoddev/GodotLuau/actions/runs/40989908863) passes
+43 actors per platform at `fce3637`. All four artifact ZIP digests are verified;
+both native summaries match the local native fingerprint, all 32 fixture hashes
+and the official engine hashes. Every recorded native log hash (Windows115/Linux113),
+GL-022/resource/filesystem/HTTP PASS marker, actor result and settled HTTP server
+observation is checked. Forbidden HTTP hits remain zero, and default-denied actors
+make no HTTP requests. The earlier implementation-only core/native runs also pass;
+the final receipt uses the fixture-corrected revision rather than substituting
+that earlier success.
+
+GL-005 is fixed and qualified within ADR-004 on this dedicated branch. This is
+not main integration: main remains `3d390a03d2f8078795333622e876ad1754202d58`.
+The final follow-up changes only documentation/evidence; native, core-test and
+fixture input identities remain those qualified above. Release jobs still have
+false admission/read-only permissions; RuntimeUpdatesAllowed still returns false.
+No release dispatch, updater enablement, main merge or history rewrite occurs.
+
+The contract requires explicit native origin grants and intentionally corrects
+HTTP binary/NUL handling. It does not establish hostile-project/OS isolation,
+DNS-rebinding prevention, a hard real-time frame budget or total-process memory
+limits. The parser's native chunk bound can exceed the delivered API-body bound.
+GL-009, GL-017/018 and adversarial GL-020 remain separate. The observed Windows
+filesystem expiration failure and successful exact-case retry remain in this
+record; they are not reclassified as a resolved storage/TTL defect.

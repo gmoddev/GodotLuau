@@ -1,6 +1,6 @@
 # ADR-004: Native asynchronous HTTP authority
 
-Status: implemented prototype on `runtime/gl-005-async-http`; qualification pending.
+Status: implemented and qualified on `runtime/gl-005-async-http`; not merged into main.
 Extends ADR-001/002 and preserves ADR-003. Actual evidence is in the
 [HTTP work record](http-validation.md). No main merge or distribution enablement.
 
@@ -121,4 +121,5 @@ there is no gameplay certificate-bypass flag.
 Previously unrestricted calls require explicit project grants. This is intentional
 capability tightening, not silent migration to another backend. GL-009 persistence,
 GL-017/018 platform limitations, adversarial GL-020 and hostile-project/OS isolation
-remain separate. Final acceptance requires the linked executed qualification.
+remain separate. The linked work record and evidence manifest establish the
+executed branch qualification, including retained failures and platform limits.

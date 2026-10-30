@@ -252,6 +252,9 @@ retains script/resource declarations, editor/template handling and execution
 startup/cancellation. The three moved bodies are exact after class indentation;
 JSON/HTTP helper text is unchanged. This changes compilation ownership, not VM,
 module, callback, service or persistence authority.
+That statement describes the integrated extraction. The later dedicated GL-005
+branch removes the blocking HTTP helper and installs the manager described below;
+its JSON helpers remain in this compilation unit.
 
 `luau_instance_access.h` forward-declares lua_State and Godot Node and exposes
 only `PushLuauInstance`. Its implementation delegates to the existing `wrap_node`
