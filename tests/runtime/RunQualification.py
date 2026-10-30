@@ -287,6 +287,52 @@ def Filesystem(Args, Output, Environment):
     return Results
 
 
+def Http(Args, Output, Environment):
+    from HttpFixtureServer import Serve
+    Results = []
+    for Case in ['enabled', 'denied', 'lifecycle', 'tls']:
+        Project = Output / Case
+        Prepare(Project, Args.extension)
+        ActorEnvironment = dict(Environment)
+        for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
+            Directory = Project / 'profile' / Name
+            Directory.mkdir(parents=True)
+            ActorEnvironment[Name] = str(Directory)
+        if Case == 'tls':
+            shutil.copyfile(Path(__file__).with_name('HttpFixtureCA.pem'), Project / 'http-ca.pem')
+            with (Project / 'project.godot').open('a') as Config:
+                Config.write('\n[network]\ntls/certificate_bundle_override="res://http-ca.pem"\n')
+        Label = 'http-' + Case
+        State = None
+        try:
+            with Serve(Tls=Case == 'tls') as (State, Origin):
+                Extra = ['--http-case', Case, '--http-origin', Origin]
+                for Name, Value in State.Origins.items():
+                    if Name != 'Http': Extra += ['--http-' + Name.lower(), Value]
+                Process = Start(Args.godot, Project, 'HttpIntegration.gd', Label, Extra, ActorEnvironment)
+                Result = Check(Process, time.monotonic() + Args.timeout, Project, Label, '[Runtime:HttpTest] PASS ' + Case)
+        finally:
+            if State is not None:
+                (Project / 'server-results.json').write_text(json.dumps({'Hits': State.Hits, 'Connections': State.Connections}, indent=2))
+        # Listener/connection cleanup has completed; observations are settled.
+        if any(Hit['Path'].startswith('/forbidden') for Hit in State.Hits):
+            raise RuntimeError('[Runtime:HttpTest] Rejected request reached loopback server: ' + Label)
+        if Case == 'denied' and State.Hits:
+            raise RuntimeError('[Runtime:HttpTest] Default denial performed network I/O')
+        if Case == 'tls' and (State.Connections.get('Tls', 0) < 3 or any(State.Connections.get(Name, 0) == 0 for Name in ['Untrusted', 'Stall'])):
+            raise RuntimeError('[Runtime:HttpTest] Required TLS path did not reach transport')
+        for Kind in ['stdout', 'stderr']:
+            Text = (Project / (Label + '.' + Kind + '.log')).read_text(errors='replace')
+            if 'PrivateSentinel' in Text:
+                raise RuntimeError('[Runtime:HttpTest] HTTP diagnostics leaked a supplied URL')
+            ScriptErrors = [Line.strip() for Line in Text.splitlines() if '[Runtime:Script]' in Line]
+            ExpectedOom = '[Runtime:Script] Oom: [Runtime:Memory] Domain VM allocation quota exceeded; domain retired'
+            if any(Line != ExpectedOom or Case != 'lifecycle' for Line in ScriptErrors):
+                raise RuntimeError('[Runtime:HttpTest] Unexpected script error in ' + Label)
+        Results.append(Result)
+    return Results
+
+
 def Main():
     Parser = argparse.ArgumentParser()
     Parser.add_argument("--godot", type=Path, required=True)
@@ -300,6 +346,7 @@ def Main():
     Parser.add_argument("--animation", action="store_true")
     Parser.add_argument("--resources", action="store_true")
     Parser.add_argument("--filesystem", action="store_true")
+    Parser.add_argument("--http", action="store_true")
     Parser.add_argument("--animation-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Editor"), default=["Local", "Listen", "Dedicated", "Editor"])
     Parser.add_argument("--security-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Handler"), default=["Local", "Listen", "Dedicated", "Handler"])
     Parser.add_argument("--probe", action="store_true")
@@ -339,6 +386,8 @@ def Main():
         Results = Resources(Args, Args.output, Environment)
     elif Args.filesystem:
         Results = Filesystem(Args, Args.output, Environment)
+    elif Args.http:
+        Results = Http(Args, Args.output, Environment)
     elif Args.probe:
         Results = Probes(Args, Args.output, Environment)
     elif Args.baseline or Args.benchmark:

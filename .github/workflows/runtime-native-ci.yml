@@ -137,6 +137,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/filesystem" --filesystem --timeout 60
 
+      - name: GL-005 asynchronous HTTP authority bounds and lifecycle
+        timeout-minutes: 3
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/http" --http --timeout 60
+
       - name: Require all native actors and retain identity
         timeout-minutes: 1
         run: |
@@ -155,6 +163,7 @@ jobs:
           path: |
             ${{ runner.temp }}/native-ci/**/*.log
             ${{ runner.temp }}/native-ci/**/results.json
+            ${{ runner.temp }}/native-ci/**/server-results.json
             ${{ runner.temp }}/native-ci/source.json
             ${{ runner.temp }}/native-ci/summary.json
             ${{ runner.temp }}/godot-4.7.1/provenance.json

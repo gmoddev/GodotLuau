@@ -788,7 +788,7 @@ function HttpService:GetAsync(url, noCache, headers)
         local ok, r = pcall(_HTTP.get, url, headers)
         if ok then return r end
     end
-    warn("[HttpService] GetAsync sin conexión: " .. tostring(url))
+    warn("[Runtime:HTTP] GetAsync failed")
     return ""
 end
 
@@ -797,7 +797,7 @@ function HttpService:PostAsync(url, data, contentType, compress, headers)
         local ok, r = pcall(_HTTP.post, url, data or "", contentType or "application/json", headers)
         if ok then return r end
     end
-    warn("[HttpService] PostAsync sin conexión: " .. tostring(url))
+    warn("[Runtime:HTTP] PostAsync failed")
     return ""
 end
 
@@ -818,7 +818,7 @@ function HttpService:RequestAsync(options)
             }
         end
     end
-    warn("[HttpService] RequestAsync sin conexión: " .. tostring(url))
+    warn("[Runtime:HTTP] RequestAsync failed")
     return { Success = false, StatusCode = 0, StatusMessage = "No HTTP", Body = "" }
 end
 

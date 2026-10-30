@@ -28,6 +28,12 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-005 investigation is on `runtime/gl-005-async-http`, with no main merge.
+The [HTTP work record](http-validation.md) separates source findings, controlled
+reproduction, design decisions and executed qualification as work proceeds.
+The [HTTP authority decision](adr-004-asynchronous-http.md) records the selected
+native origin grants, coroutine ownership, bounds and compatibility changes.
+
 GL-003 is integrated by normal merge `5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2`,
 preserving both qualified commits on `security/gl-003-filesystem-capabilities`.
 Fresh Windows/Linux local integration checks and main hosted core/native CI pass;

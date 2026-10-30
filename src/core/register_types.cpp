@@ -1,5 +1,6 @@
 #include "register_types.h"
 #include "gl_debug.h"
+#include "gl_http.h"
 #include "luau_script.h"
 #include "luau_language.h"
 // Workspace/network implementation headers require this concrete type first.
@@ -74,6 +75,7 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
     // ── SCENE level: register all nodes and services
     //// ── Nivel SCENE: registrar todos los nodos y servicios
     if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+        RegisterGLHttpTypes();
 
         // Limites de Jolt Physics (respaldo para juegos exportados; en el
         // editor el plugin ya los persiste en project.godot). Godot limita

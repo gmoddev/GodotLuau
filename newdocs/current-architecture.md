@@ -322,9 +322,26 @@ resource access. See [ADR-003](adr-003-native-storage-authority.md) and its
 [qualification record](filesystem-capabilities-validation.md) for exact authority,
 compatibility and limits. Fresh main hosted CI status is in the integration record.
 
-HTTP uses synchronous `HTTPClient` polling and delays on the calling thread
-in `luau_script.cpp`. It has a nominal ten-second timeout; this is not a
-nonblocking scheduler or a demonstrated bound on every network/body path.
+Main `3d390a0` still uses synchronous `HTTPClient` polling and delays in
+`luau_script.cpp`, with a nominal ten-second timeout checked incompletely during
+body reads. Dedicated branch `runtime/gl-005-async-http` replaces that path with
+`GLHttpManager` in `gl_http.cpp`, owned by the existing scene domain host.
+Native HTTP is default-denied and requires a live Server owner, non-client native
+role and a trusted project exact-origin grant. Arguments/admission are checked
+before DNS/send; admitted coroutines yield and complete through protected native
+host ticks. Owner/thread/module/scene retirement closes requests before VM close.
+Manual coroutine resumes cancel the old HTTP operation and raise an error.
+No worker Lua VM, generic capability registry or storage authority is introduced.
+
+The manager uses Godot's nonblocking DNS/TCP/validated TLS and HTTPClient parser
+through an internal metered StreamPeer. Finite per-tick and cumulative wire/header
+limits bound the parser's work, with a per-stage monotonic deadline, four requests
+per host and two per owner. The API delivers at most 4 MiB, with explicit failure
+and no partial successful body on truncation/overflow/timeout. HTTP bodies preserve
+binary/UTF-8 lengths; legacy storage encoding remains unchanged. No redirects,
+decompression or TLS bypass is enabled. Exact settings, bounds, compatibility and
+DNS/native-allocation limits are in [ADR-004](adr-004-asynchronous-http.md);
+executed results and branch-only status are in the [HTTP record](http-validation.md).
 After GL-004 integration on main, VM creation uses an allocator-backed domain
 account with a hard requested-byte quota. Trusted registration/stdlib bootstrap
 precedes sandbox sealing; intrinsic libraries/root globals become read-only,
@@ -509,7 +526,7 @@ provenance and runtime-gate gaps remain GL-010/011. See
 | --- | --- | --- |
 | VM, require, tasks, shutdown | `src/core/gl_execution_domain.h/.cpp`, `gl_domain_host.h/.cpp`, `luau_script.h/.cpp` | GL-001, GL-004, GL-014 |
 | Native object methods | `src/core/luau_api.h`, `gl_runtime.h` | GL-001, GL-002, GL-013 |
-| File/HTTP permissions | `src/core/luau_script.cpp`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
+| File/HTTP permissions | `src/core/gl_service_storage.h`, `gl_storage.cpp`, `gl_http.cpp`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
 | RPCs, players, replication | `src/services/roblox_network.h`, `src/core/gl_net_bridge.h`, `src/gameplay/roblox_remote.h` | GL-006, GL-007, GL-008 |
 | Persistence | DataStore section of `luau_stdlib.h`, native file bridge, `backend/README.md` | GL-009 |
 | Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `.github/workflows/runtime-native-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |

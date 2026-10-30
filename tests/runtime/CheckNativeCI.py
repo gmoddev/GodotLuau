@@ -18,7 +18,8 @@ def Main():
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
-        'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader']
+        'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
+        'http': ['http-enabled','http-denied','http-lifecycle','http-tls']
     }
     Groups = {}
     for Name, Labels in Expected.items():
@@ -38,17 +39,22 @@ def Main():
         Text=(Args.output/'filesystem'/(Label+'.stdout.log')).read_text(errors='replace')
         if '[Runtime:FilesystemTest] PASS '+Marker not in Text or '[Runtime:FilesystemTest] FAIL' in Text:
             raise ValueError('GL-003 native filesystem regression missing/failed: '+Label)
+    for Case in ['enabled', 'denied', 'lifecycle', 'tls']:
+        Text = (Args.output / 'http' / Case / ('http-' + Case + '.stdout.log')).read_text(errors='replace')
+        Server = json.loads((Args.output / 'http' / Case / 'server-results.json').read_text())
+        if '[Runtime:HttpTest] PASS ' + Case not in Text or '[Runtime:HttpTest] FAIL' in Text or any(Hit['Path'].startswith('/forbidden') for Hit in Server['Hits']):
+            raise ValueError('GL-005 HTTP regression missing/failed: ' + Case)
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
-        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
+        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
         'Scope': 'Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification'
     }
     (Args.output / 'summary.json').write_text(json.dumps(Evidence, indent=2))
-    print('[Runtime:NativeCI] PASS 39 required process results')
+    print('[Runtime:NativeCI] PASS 43 required process results')
 
 
 if __name__ == '__main__':

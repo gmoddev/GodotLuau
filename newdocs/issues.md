@@ -198,6 +198,13 @@ the historical branch evidence in [the work record](execution-limits-validation.
 
 ## GL-005: HTTP is synchronous and broadly exposed
 
+Work on `runtime/gl-005-async-http` starts from integrated main `3d390a0`.
+The [HTTP investigation/qualification record](http-validation.md) tracks progress;
+baseline blocking/truncated-success behavior is reproduced on Windows/Linux,
+and the native async candidate is implemented. Focused qualification and candidate
+review corrections are recorded there; full acceptance is pending. This issue
+stays open until those gates pass.
+
 **Evidence:** `src/core/luau_script.h:293-439` implements `gl_http_perform` with
 polling/delays; `_HTTP` is installed at `1725-1760` and used by HttpService.
 
