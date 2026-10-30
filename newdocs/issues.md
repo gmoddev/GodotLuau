@@ -351,15 +351,24 @@ retains these limits and records fresh focused checks without a new security pha
 
 ## GL-009: DataStore loses updates and has no crash-atomic write protocol
 
-**Evidence:** `src/core/luau_stdlib.h:639-677` implements Get/Set/Update/Increment
+Work starts from main `bc8ca88` on `persistence/gl-009-transactional-datastore`.
+Windows/Linux deterministic lost-update and controlled truncation-interruption
+reproductions now exist in the [work record](datastore-validation.md).
+[ADR-005](adr-005-transactional-datastore.md) selects confined transactional files
+and a companion native I/O process. Implementation and qualification are underway;
+the issue remains open. No main merge, release or updater enablement is authorized.
+
+**Historical baseline evidence:** the original `src/core/luau_stdlib.h` implements Get/Set/Update/Increment
 as local JSON access. `UpdateAsync` is Get/transform/Set with no lock, version,
 transaction, or CAS. Native writes at `luau_script.h:1614-1619` directly overwrite
 the target. README's coordinator limits explicitly document shared `user://`.
 
 **Consequence/limits:** Two world processes can read the same value and overwrite
 one another; interruption can leave incomplete JSON. A single non-yielding
-transform is not cross-process serialization. No corruption or competing-writer
-failure was reproduced. The optional Nakama stack is not wired into DataStore.
+transform is not cross-process serialization. Windows/Linux baseline tests now
+reproduce competing-writer loss and loss of a prior acknowledged sentinel after
+controlled truncation/interruption; see the linked work record. The optional
+Nakama stack is not wired into DataStore.
 
 **Fix boundary and closure:** Select/document one persistence authority and
 concurrency/durability contract. SQLite or Nakama are options, not accepted
