@@ -1,5 +1,6 @@
 #ifndef ROBLOX_ANIMATION_H
 #define ROBLOX_ANIMATION_H
+#include "rbx_character.h"
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/animation_player.hpp>
@@ -255,8 +256,12 @@ private:
     float             weight       = 1.0f;
     bool              playing      = false;
     uint64_t AnimationPlayerIdentity = 0;
+    uint64_t CharacterIdentity = 0, AnimatorIdentity = 0;
+    Ref<Animation> OwnedClip;
+    bool OwnerRetired = false;
 
     AnimationPlayer* GetAnimationPlayer() const {
+        if (CharacterIdentity && (OwnerRetired || !ValidCharacterOwner())) return nullptr;
         AnimationPlayer* Player = Object::cast_to<AnimationPlayer>(ObjectDB::get_instance(AnimationPlayerIdentity));
         if (!Player || Player->is_queued_for_deletion()) return nullptr;
         if (GLExecutionDomain::IsClientExecution()) {
@@ -267,7 +272,50 @@ private:
     }
 
 public:
+
+    ~AnimationTrack() { RetirePlayback(); ReleaseCallbacks(); }
+    void ReleaseCallbacks() {
+        for (const auto& Callback : ended_cbs) GLUnreference(nullptr, Callback.ref);
+        for (const auto& Callback : stopped_cbs) GLUnreference(nullptr, Callback.ref);
+        ended_cbs.clear(); stopped_cbs.clear();
+    }
+    bool HasPlaybackLease() const {
+        auto Character = Object::cast_to<RBXCharacter>(ObjectDB::get_instance(CharacterIdentity));
+        return !CharacterIdentity || (Character && !Character->is_queued_for_deletion() &&
+            Character->OwnsTrack(AnimatorIdentity, static_cast<uint64_t>(get_instance_id())));
+    }
+    void RetirePlayback() {
+        if (!CharacterIdentity || OwnerRetired) return;
+        OwnerRetired = true;
+        auto Character = Object::cast_to<RBXCharacter>(ObjectDB::get_instance(CharacterIdentity));
+        if (!Character || Character->is_queued_for_deletion() ||
+            !Character->OwnsTrack(AnimatorIdentity, static_cast<uint64_t>(get_instance_id()))) return;
+        Character->SetActiveTrack(0, 0);
+        auto Player = Object::cast_to<AnimationPlayer>(ObjectDB::get_instance(AnimationPlayerIdentity));
+        if (!Player || Player->is_queued_for_deletion() || Player->get_parent() != Character ||
+            !Player->has_animation(anim_name) || Player->get_animation(anim_name) != OwnedClip ||
+            Player->get_current_animation() != StringName(anim_name)) return;
+        Player->stop(); playing = false;
+        Object* Service = ObjectDB::get_instance(gl_net_service_id());
+        if (Service && Character->is_inside_tree())
+            Service->call("net_anim_state", Character, anim_id, anim_name, speed, looped, false);
+    }
+    void _notification(int What) {
+        if (What == NOTIFICATION_UNPARENTED && CharacterIdentity) { RetirePlayback(); ReleaseCallbacks(); }
+    }
+
     void set_anim_id(const String& id) { anim_id = id; }
+    void SetCharacterOwner(Node* Character, Node* Animator) {
+        CharacterIdentity = Character ? static_cast<uint64_t>(Character->get_instance_id()) : 0;
+        AnimatorIdentity = Animator ? static_cast<uint64_t>(Animator->get_instance_id()) : 0;
+    }
+    bool ValidCharacterOwner() const {
+        if (OwnerRetired) return false;
+        Node* Character = Object::cast_to<Node>(ObjectDB::get_instance(CharacterIdentity));
+        Node* Animator = Object::cast_to<Node>(ObjectDB::get_instance(AnimatorIdentity));
+        return Character && Character->is_inside_tree() && !Character->is_queued_for_deletion() && Animator && Animator->is_inside_tree() && !Animator->is_queued_for_deletion() &&
+            Animator->get_parent() == Character && get_parent() == Animator;
+    }
 
 private:
     // Replicación (1.14.12): al reproducir/parar una animación en MI personaje,
@@ -279,7 +327,7 @@ private:
         if (!ns) return;
         Node* hum = get_parent();                       // AnimationTrack > Humanoid
         Node* character = hum ? hum->get_parent() : nullptr;
-        if (!character) return;
+        if (!character || (CharacterIdentity && !ValidCharacterOwner())) return;
         ns->call("net_anim_state", (Object*)character, anim_id, anim_name, speed, looped, play_flag);
     }
 
@@ -322,27 +370,45 @@ public:
         if (!anim_player || anim_name.is_empty()) return;
         if (!anim_player->has_animation(StringName(anim_name))) return;
         if (GLExecutionDomain::IsClientExecution() && !GLPresentationAnimation(anim_player->get_animation(anim_name), anim_player->get_parent(), anim_player)) return;
+        const uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        if (auto Character = Object::cast_to<RBXCharacter>(ObjectDB::get_instance(CharacterIdentity))) {
+            auto Previous = Object::cast_to<AnimationTrack>(ObjectDB::get_instance(Character->GetActiveTrack()));
+            if (Previous && Previous != this) Previous->stop();
+            auto Live = Object::cast_to<AnimationTrack>(ObjectDB::get_instance(Identity));
+            if (Live != this || is_queued_for_deletion() || !ValidCharacterOwner()) return;
+            anim_player = GetAnimationPlayer();
+            if (!anim_player) return;
+            Character = Object::cast_to<RBXCharacter>(ObjectDB::get_instance(CharacterIdentity));
+            if (!Character || Character->is_queued_for_deletion()) return;
+            Character->SetActiveTrack(AnimatorIdentity, Identity);
+        }
+        OwnedClip = anim_player->get_animation(anim_name);
+        playing = true;
         anim_player->set_speed_scale(speed);
         anim_player->play(StringName(anim_name));
-        playing = true;
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
         _update_loop();
-        _net_notify(true);
+        if (ObjectDB::get_instance(Identity) == this && !is_queued_for_deletion() && GetAnimationPlayer()) _net_notify(true);
     }
 
     void stop() {
-        AnimationPlayer* anim_player = GetAnimationPlayer();
-        if (!anim_player) return;
-        anim_player->stop();
-        playing = false;
-        _net_notify(false);
+        AnimationPlayer* Player = GetAnimationPlayer();
+        if (!Player || !HasPlaybackLease() || (!OwnedClip.is_null() && Player->get_animation(anim_name) != OwnedClip)) return;
+        const uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         auto Callbacks = GetCallbacks(stopped_cbs);
+        playing = false;
+        if (auto Character = Object::cast_to<RBXCharacter>(ObjectDB::get_instance(CharacterIdentity))) Character->SetActiveTrack(0, 0);
+        Player->stop();
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+        _net_notify(false);
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
         emit_signal("Stopped", false);
-        _fire_noarg(Callbacks);
+        _fire_stopped(Callbacks, false, Identity);
     }
 
     bool is_playing() const {
         AnimationPlayer* anim_player = GetAnimationPlayer();
-        if (!anim_player) return false;
+        if (!anim_player || !HasPlaybackLease()) return false;
         return anim_player->is_playing() && anim_player->get_current_animation() == StringName(anim_name);
     }
 
@@ -350,7 +416,7 @@ public:
         AnimationPlayer* anim_player = GetAnimationPlayer();
         if (GLExecutionDomain::IsClientExecution() && !anim_player) return;
         looped = v;
-        if (anim_player && !anim_name.is_empty()) _update_loop();
+        if (anim_player && HasPlaybackLease() && is_playing() && !anim_name.is_empty()) _update_loop();
         if (is_playing()) _net_notify(true);
     }
     bool get_looped() const { return looped; }
@@ -360,7 +426,7 @@ public:
         AnimationPlayer* anim_player = GetAnimationPlayer();
         if (GLExecutionDomain::IsClientExecution() && !anim_player) return;
         speed = Math::clamp(v, 0.0f, 20.0f);
-        if (anim_player) anim_player->set_speed_scale(speed);
+        if (anim_player && HasPlaybackLease() && is_playing()) anim_player->set_speed_scale(speed);
         if (is_playing()) _net_notify(true);
     }
     float get_speed() const { return speed; }
@@ -406,17 +472,19 @@ private:
     }
 
     void _on_finished(StringName name) {
-        if (name != StringName(anim_name) || !playing) return;
-        playing = false;
-        _net_notify(false);
+        if (name != StringName(anim_name) || !playing || !HasPlaybackLease() || (CharacterIdentity && !ValidCharacterOwner())) return;
+        const uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         auto Ended = GetCallbacks(ended_cbs);
         auto Stopped = GetCallbacks(stopped_cbs);
-        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        playing = false;
+        if (auto Character = Object::cast_to<RBXCharacter>(ObjectDB::get_instance(CharacterIdentity))) Character->SetActiveTrack(0, 0);
+        _net_notify(false);
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
         emit_signal("Ended");
         AnimationTrack* Track = Object::cast_to<AnimationTrack>(ObjectDB::get_instance(Identity));
         if (Track && !Track->is_queued_for_deletion()) Track->emit_signal("Stopped", true);
-        _fire_noarg(Ended);
-        _fire_noarg(Stopped);
+        _fire_noarg(Ended, Identity);
+        _fire_stopped(Stopped, true, Identity);
     }
 
     static std::vector<LuaCallback> GetCallbacks(std::vector<LuaCallback>& List) {
@@ -428,8 +496,20 @@ private:
         return List;
     }
 
-    static void _fire_noarg(const std::vector<LuaCallback>& list) {
+
+    static void _fire_stopped(const std::vector<LuaCallback>& List, bool Completed, uint64_t Owner) {
+        for (auto Index = List.rbegin(); Index != List.rend(); ++Index) {
+            auto Track = Object::cast_to<AnimationTrack>(ObjectDB::get_instance(Owner));
+            if (!Track || Track->is_queued_for_deletion() || (Track->CharacterIdentity && !Track->ValidCharacterOwner())) return;
+            if (!Index->active || !GLReferenceAlive(Index->main_L, Index->ref)) continue;
+            GLDispatch(Index->ref, [&](lua_State* Thread) -> int { lua_pushboolean(Thread, Completed); return 1; });
+        }
+    }
+
+    static void _fire_noarg(const std::vector<LuaCallback>& list, uint64_t Owner = 0) {
         for (int i=(int)list.size()-1; i>=0; --i) {
+            auto Track = Object::cast_to<AnimationTrack>(ObjectDB::get_instance(Owner));
+            if (Owner && (!Track || Track->is_queued_for_deletion() || (Track->CharacterIdentity && !Track->ValidCharacterOwner()))) return;
             const auto& cb=list[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
             GLDispatch(cb.ref, [](lua_State*) -> int { return 0; });

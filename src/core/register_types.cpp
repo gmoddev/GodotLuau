@@ -4,7 +4,7 @@
 #include "luau_script.h"
 #include "luau_language.h"
 // Workspace/network implementation headers require this concrete type first.
-#include "humanoid.h"
+#include "rbx_character.h"
 #include "roblox_workspace.h"
 #include "roblox_workspace2d.h"
 #include "roblox_player.h"
@@ -111,9 +111,11 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
 
         // 3D characters and physics
         //// Personajes y físicas 3D
-        ClassDB::register_class<Humanoid>();
+        ClassDB::register_class<RBXModel>();
+        ClassDB::register_class<RBXAnimator>();
+        ClassDB::register_internal_class<RobloxPlayer>();
+        ClassDB::register_class<RBXCharacter>();
         ClassDB::register_class<RobloxWorkspace>();
-        ClassDB::register_class<RobloxPlayer>();
         // RobloxPart INTERNA (oculta del "Add Node", pero cargable: las escenas
         // viejas type="RobloxPart" siguen abriendo). El usuario usa "Part" (1.15).
         ClassDB::register_internal_class<RobloxPart>();
@@ -124,7 +126,6 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
         // tenian equivalente aqui. RBXInstance es el comodin que evita perder
         // instancias de clases todavia no soportadas.
         ClassDB::register_class<RBXInstance>();
-        ClassDB::register_class<RBXModel>();
         ClassDB::register_class<RBXMeshPart>();
         ClassDB::register_class<RBXTexture>();
         ClassDB::register_class<RBXDecal>();
@@ -324,6 +325,8 @@ void uninitialize_luau_module(ModuleInitializationLevel p_level) {
         // vacian se destruyen al descargar la DLL, cuando el servidor ya no
         // esta: sus RID quedan fugados y ~BaseMaterial3D suelta errores.
         gl_shared_materials().clear();
+        gl_shared_meshes().clear();
+        gl_shared_shapes().clear();
         RobloxTerrain::_gl_clear_material_cache();
         // Quitarlos del ResourceLoader/Saver NO basta: estos Ref son ESTATICOS y
         // seguian sujetando su referencia, asi que los dos objetos vivian hasta la

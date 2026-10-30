@@ -293,7 +293,7 @@ private:
         if(has("character")||has("personaje")||has("personagem"))
             add("player.Character or player.CharacterAdded:Wait()","player.Character or player.CharacterAdded:Wait()","Safe character reference.");
         if(has("humanoid"))
-            add("character:FindFirstChildOfClass(\"Humanoid\")","character:FindFirstChildOfClass(\"Humanoid\")","Get Humanoid from character.");
+            add("Character.Health","Character.Health","Character-owned health.");
         if(has("rootpart")||vn=="hrp"||has("root"))
             add("character:FindFirstChild(\"HumanoidRootPart\")","character:FindFirstChild(\"HumanoidRootPart\")","Character root part.");
         if(vn=="rs"||has("runservice"))
@@ -893,8 +893,8 @@ public:
     static String godot_class_to_roblox(const String& c) {
         static const char* m[][2] = {
             {"RobloxPart","BasePart"},{"RobloxWorkspace","Workspace"},{"RobloxWorkspace2D","Workspace"},
-            {"RobloxPlayer","Player"},{"RobloxPlayer2D","Player"},
-            {"Humanoid","Humanoid"},{"Humanoid2D","Humanoid"},
+            {"RBXCharacter","Character"},{"RBXModel","Model"},{"RBXAnimator","Animator"},{"RobloxPlayer2D","Player"},
+            {"Humanoid2D","Humanoid"},
             {"RobloxTemplate","DataModel"},{"RobloxGame3D","DataModel"},{"RobloxGame2D","DataModel"},
             {"RemoteEventNode","RemoteEvent"},{"RemoteFunctionNode","RemoteFunction"},
             {"BindableEventNode","BindableEvent"},
@@ -1202,7 +1202,7 @@ public:
             else if(var_val.begins_with("script")) lv.inferred_type="Script";
             // Player / Character chains
             else if(var_val.find("LocalPlayer.Character")!=-1||var_val.find("CharacterAdded:Wait()")!=-1)
-                lv.inferred_type="Model";
+                lv.inferred_type="Character";
             else if(var_val.find(".LocalPlayer")!=-1)      lv.inferred_type="Player";
             else if(var_val.find("CurrentCamera")!=-1)     lv.inferred_type="Camera";
             else if(var_val.find(":FindFirstChildOfClass(\"Humanoid\")")!=-1||
@@ -1250,7 +1250,7 @@ public:
             {"game.ReplicatedStorage","ReplicatedStorage"},{"game.ServerScriptService","ServerScriptService"},
             {"game.StarterPlayer","StarterPlayer"},{"game.StarterGui","StarterGui"},
             {"game.Players.LocalPlayer","Player"},
-            {"game.Players.LocalPlayer.Character","Model"},
+            {"game.Players.LocalPlayer.Character","Character"},
             {"workspace.CurrentCamera","Camera"},{"workspace.Terrain","Terrain"},
             {"RemoteEvent","RemoteEvent"},{"RemoteFunction","RemoteFunction"},
             {"BindableEvent","BindableEvent"},{"BindableFunction","BindableFunction"},
@@ -1324,7 +1324,7 @@ public:
                 }
             } else if(str_ctx==STR_CTX_IS_A||str_ctx==STR_CTX_INSTANCE_NEW) {
                 static const char* classes[]={"Part","Model","Folder","Script","LocalScript","ModuleScript",
-                    "Humanoid","Animation","Sound","ScreenGui","Frame","TextLabel","TextButton","TextBox",
+                    "Character","Animator","Animation","Sound","ScreenGui","Frame","TextLabel","TextButton","TextBox",
                     "ImageLabel","ImageButton","ScrollingFrame","SurfaceGui","BillboardGui",
                     "BasePart","MeshPart","UnionOperation","SpecialMesh","Decal","Texture",
                     "PointLight","SpotLight","SurfaceLight","ParticleEmitter","Trail","Beam",
@@ -1616,8 +1616,8 @@ public:
             try_colon("Destroy()",        "Destroy()",                     "Remove from scene and memory.",1,kDel);
             try_colon("SetAttribute(k,v)","SetAttribute(\"\", )",          "Store custom attribute.",1,kObj);
             try_colon("GetAttribute(k)",  "GetAttribute(\"\")",            "Read custom attribute.",1,kObj);
-            try_colon("TakeDamage(n)",    "TakeDamage()",                  "Reduce Humanoid health.",1,kObj);
-            try_colon("LoadAnimation(a)", "LoadAnimation(animation)",      "Load animation onto Humanoid.",1,kObj);
+            try_colon("TakeDamage(n)",    "TakeDamage()",                  "Reduce Character health (server authority).",1,kObj);
+            try_colon("LoadAnimation(a)", "LoadAnimation(animation)",      "Load animation through the Character Animator.",1,kObj);
         }
 
         std::sort(sorter.begin(),sorter.end());

@@ -217,7 +217,8 @@ inline bool gl_is_static_netid(uint64_t id) { return (id & GL_STATIC_ID_BIT) != 
 //  HumanoidRootPart (o Torso), cuyo Parent sí es el personaje.
 inline Node* gl_touch_reported_node(Node* body) {
     if (!body) return nullptr;
-    if (!body->get_node_or_null(NodePath("Humanoid"))) return body;   // no es un personaje
+    if (body->get_parent() && body->get_parent()->is_class("RBXCharacter")) body = body->get_parent();
+    if (!body->is_class("RBXCharacter") && !body->get_node_or_null(NodePath("Humanoid"))) return body;   // no es un personaje
     if (Node* p = body->get_node_or_null(NodePath("HumanoidRootPart"))) return p;
     if (Node* t = body->get_node_or_null(NodePath("Torso"))) return t;
     return body;
@@ -337,7 +338,7 @@ inline bool gl_in_template_container(const Node* n) {
 inline Node3D* gl_character_root_of_hrp(Node* n) {
     if (!n || n->get_name() != StringName("HumanoidRootPart")) return nullptr;
     Node* p = n->get_parent();
-    if (!p || !p->get_node_or_null(NodePath("Humanoid"))) return nullptr;
+    if (!p || (!p->is_class("RBXCharacter") && !p->get_node_or_null(NodePath("Humanoid")))) return nullptr;
     return Object::cast_to<Node3D>(p);
 }
 inline void gl_set_part_global_transform(Node3D* n3d, const Transform3D& t) {

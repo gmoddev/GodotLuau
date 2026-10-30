@@ -1,10 +1,8 @@
 # ADR-007: Model-based Character ownership
 
-Status: selected design for the preparation branch `runtime/character-v2-model`.
-The branch currently contains documentation and a measured baseline fixture.
-Production behavior is unchanged from qualified GL-007; Character V2 runtime
-implementation and qualification remain outstanding. See the
-[preparation record](character-v2-development.md).
+Status: selected design under implementation on `runtime/character-v2-model`.
+The measured parent and preparation CI are verified; candidate production
+behavior is not qualified yet. See the [work record](character-v2-development.md).
 
 ## Preparation and ancestry
 
@@ -79,6 +77,47 @@ GL-007's field authority, freshness, rejection and lifecycle guarantees are
 requirements for the new root. Any necessary wire change requires an explicit
 version gate, exact payload documentation and safe incompatible-peer rejection;
 an internal class rename alone does not justify a second replication system.
+
+### Selected wire contract: character protocol 3
+
+The Character root now supports server-authored orientation/uniform scale and
+movement acceleration/rotation settings. Protocol 2 carried only position/yaw
+and walk/jump/gravity and cannot express that contract. Protocol 3 retains the
+existing relay/session/epoch mechanism and client prediction input shape.
+Readiness requires version 3; version 2 cannot create an admitted writer life.
+
+`_character_grant` retains its eight fields and appends `contract: Dictionary`.
+`_recv_character` retains its eleven fields and appends that same dictionary.
+For 3D, its exact keys are `Version=3`, `Pose: Transform3D`,
+`WalkSpeed: float`, `JumpPower: float`, `Gravity: float`,
+`Acceleration: float`, `AirAcceleration: float`, `TurnSpeed: float`, and
+`AutoRotate: bool`. Numeric movement configuration is finite in `[0, 1000000]`.
+The finite positive uniform Pose must agree with the separate position/yaw
+fields; grant walk/jump/gravity must also agree with that dictionary.
+For 2D the exact dictionary is `{Version=3}`; the existing
+2D controller configuration and plane bounds are unchanged. Missing/malformed
+contracts fail before state, cache, health or presentation mutation. Historical
+fields are not reinterpreted. Full mixed-build gameplay is unsupported.
+
+An owner client still submits only epoch/sequence/position/yaw/speed/airborne.
+It cannot supply health, scale, pitch/roll or movement configuration. Trusted
+server root/configuration changes issue a correction epoch and a complete grant.
+Observers use the admitted full pose for presentation; the internal body follows
+that same root. GL-007's bounded movement and airborne-rise admission remain.
+
+The native reset UI uses `_character_reset(epoch)`: the server checks the live
+transport owner, current epoch, live Character and a one-second request bound,
+then applies death through the same server health API. It cannot select another
+player, supply health or reset a replacement life through a stale request.
+Single-player/host reset is similarly bounded and resolves the local ObjectID
+again before applying. Arbitrary Client health writes remain forbidden.
+
+Explicit server removal sends reliable `_character_removed(who, epoch, life)`.
+The receiver admits only its live server/session and non-stale epoch/life, records
+a tombstone before deferring lifecycle callbacks, and rejects same/older-life
+pose and animation packets. A newer trusted LoadCharacter can create the next
+life. The connected Player survives the absence of its Character. Same-tree
+reparenting preserves Character identity and does not send a removal.
 
 Before production edits, capture a comparable native creation/respawn/object/
 memory baseline. Qualification then requires full core regressions, focused real

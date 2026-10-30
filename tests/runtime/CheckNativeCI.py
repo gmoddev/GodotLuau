@@ -17,7 +17,7 @@ def Main():
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
-        'characters': [f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
+        'characters': [*[f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])], 'character-model'],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
         'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],
@@ -57,7 +57,7 @@ def Main():
         'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
-        'Scope': 'Debug native fixtures including GL-007 character/animation-health authority; no sanitizer configuration or full GL-020 security audit'
+        'Scope': 'Debug native fixtures including Model Character V2 and inherited GL-007 character/animation-health authority; no sanitizer configuration or full GL-020 security audit'
     }
     Latency = json.loads((Args.output / 'characters/Latency/latency-proxy.json').read_text())
     if len(Latency) != 2 or any(Item['Dropped'] or Item['Forwarded'] <= 0 or Item['MinimumObservedSeconds'] < .19 for Item in Latency):

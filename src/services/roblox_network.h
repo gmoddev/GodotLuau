@@ -288,7 +288,9 @@ class NetworkService : public Node {
 
     struct NCB { lua_State* L; int ref; bool active = true; };
     struct Puppet {
-        Node*   node = nullptr;
+        GLCharacterNodeRef<Node> node;
+        bool CheckQueued = false;
+        Transform3D Pose;
         Vector3 tpos;                 // objetivo 3D
         Vector2 tpos2d;               // objetivo 2D
         float   tyaw = 0.0f;
@@ -337,6 +339,9 @@ class NetworkService : public Node {
         uint64_t Identity = 0;
         int64_t Epoch = 0, Life = 0, InputSequence = 0, OutputSequence = 0;
         uint64_t AcceptedInputs = 0, RateRejectedInputs = 0;
+        Transform3D Pose;
+        double Acceleration = 110, AirAcceleration = 45, TurnSpeed = 11;
+        bool AutoRotate = true;
         Vector3 Position;
         double Yaw = 0, Walk = 16, Jump = 20, Gravity = 45;
         double Credit = 0, VerticalCredit = 0, AirTime = 0, Rise = 0;
@@ -346,8 +351,12 @@ class NetworkService : public Node {
         bool Is2D = false, Air = false;
     };
     std::map<int, CharacterAuthority> CharacterAuthorities;
+    std::map<int, double> ResetRequests;
+    std::unordered_set<int> SpawningCharacters;
+    double LocalResetAt = -1;
+    bool LocalResetPending = false;
     std::vector<int> CharacterTickPeers;
-    struct CharacterSnapshot { int64_t Epoch = 0, Sequence = 0, Life = 0; };
+    struct CharacterSnapshot { int64_t Epoch = 0, Sequence = 0, Life = 0; bool Removed = false; };
     std::map<int, CharacterSnapshot> CharacterSnapshots;
     int64_t NextCharacterEpoch = 1;
     CharacterAuthority LocalCharacterGrant;
@@ -380,8 +389,50 @@ class NetworkService : public Node {
         return 0;
     }
     static Node* CharacterHealth(Node* Character) {
-        return Character ? Character->get_node_or_null("Humanoid") : nullptr;
+        return Character ? (Character->is_class("RBXCharacter") ? Character : Character->get_node_or_null("Humanoid")) : nullptr;
     }
+
+    static Dictionary CharacterContract(const CharacterAuthority& State) {
+        Dictionary Contract; Contract["Version"] = 3;
+        if (!State.Is2D) {
+            Contract["Pose"] = State.Pose;
+            Contract["WalkSpeed"] = State.Walk; Contract["JumpPower"] = State.Jump; Contract["Gravity"] = State.Gravity;
+            Contract["Acceleration"] = State.Acceleration; Contract["AirAcceleration"] = State.AirAcceleration;
+            Contract["TurnSpeed"] = State.TurnSpeed; Contract["AutoRotate"] = State.AutoRotate;
+        }
+        return Contract;
+    }
+    static bool ValidCharacterContract(const Dictionary& Contract, bool Is2D, Vector3 Position, double Yaw) {
+        if (!Contract.has("Version") || Contract["Version"].get_type() != Variant::INT || static_cast<int>(Contract["Version"]) != 3) return false;
+        if (Is2D) return Contract.size() == 1;
+        if (Contract.size() != 9 || !Contract.has("Pose") || Contract["Pose"].get_type() != Variant::TRANSFORM3D ||
+            !Contract.has("AutoRotate") || Contract["AutoRotate"].get_type() != Variant::BOOL) return false;
+        Transform3D Pose = Contract["Pose"];
+        if (!RBXCharacter::ValidPose(Pose) || !Pose.origin.is_equal_approx(Position) ||
+            Math::abs(Math::wrapf(static_cast<double>(Pose.basis.orthonormalized().get_euler().y) - Yaw, -Math_PI, Math_PI)) > .0001) return false;
+        for (const char* Name : {"WalkSpeed", "JumpPower", "Gravity", "Acceleration", "AirAcceleration", "TurnSpeed"}) {
+            if (!Contract.has(Name)) return false;
+            Variant Value = Contract[Name];
+            if (Value.get_type() != Variant::FLOAT && Value.get_type() != Variant::INT) return false;
+            double Number = Value;
+            if (!std::isfinite(Number) || Number < 0 || Number > 1000000) return false;
+        }
+        return true;
+    }
+    static void ApplyCharacterContract(RBXCharacter* Character, const Dictionary& Contract) {
+        Character->set_global_transform(Contract["Pose"]);
+        Character->set_walk_speed(Contract["WalkSpeed"]); Character->set_jump_power(Contract["JumpPower"]); Character->set_gravity_val(Contract["Gravity"]);
+        Character->SetAcceleration(Contract["Acceleration"]); Character->SetAirAcceleration(Contract["AirAcceleration"]);
+        Character->SetTurnSpeed(Contract["TurnSpeed"]); Character->set_auto_rotate(Contract["AutoRotate"]);
+        Character->SynchronizeBody();
+    }
+    static void CaptureCharacterContract(CharacterAuthority& State, RBXCharacter* Character) {
+        State.Pose = Character->get_global_transform();
+        State.Walk = Character->get_walk_speed(); State.Jump = Character->get_jump_power(); State.Gravity = Character->get_gravity_val();
+        State.Acceleration = Character->GetAcceleration(); State.AirAcceleration = Character->GetAirAcceleration();
+        State.TurnSpeed = Character->GetTurnSpeed(); State.AutoRotate = Character->get_auto_rotate();
+    }
+
     void PublishCharacter(int Peer, float Speed = -1, bool Air = false) {
         auto Found = CharacterAuthorities.find(Peer);
         if (Found == CharacterAuthorities.end() || !LiveCharacter(Found->second.Identity) || !peer_seq_uid.count(Peer)) return;
@@ -390,7 +441,7 @@ class NetworkService : public Node {
         if (State.Health <= 0) { State.Speed = 0; State.Air = false; }
         State.Published = CharacterTime();
         rpc("_recv_character", Peer, State.Epoch, ++State.OutputSequence, State.Position, State.Yaw,
-            State.Health, State.Maximum, State.Speed, State.Air, State.Is2D, State.Life);
+            State.Health, State.Maximum, State.Speed, State.Air, State.Is2D, State.Life, CharacterContract(State));
     }
     void GrantCharacter(int Peer, bool Respawn, bool ResetMotion = true) {
         auto Found = CharacterAuthorities.find(Peer);
@@ -400,6 +451,8 @@ class NetworkService : public Node {
         if (Respawn) State.Life = State.Epoch;
         auto Animation = peer_anim.find(Peer);
         if (Animation != peer_anim.end()) Animation->second.Life = State.Life;
+        auto Reparent = ReparentAnimations.find(Peer);
+        if (Reparent != ReparentAnimations.end() && Reparent->second.first == State.Identity) Reparent->second.second.Life = State.Life;
         State.InputSequence = 0;
         State.OutputSequence = 0;
         State.Accepted = State.Updated = CharacterTime();
@@ -413,11 +466,14 @@ class NetworkService : public Node {
         State.Tokens = 4;
         State.Speed = 0;
         rpc_id(Peer, "_character_grant", State.Epoch, State.Position, State.Yaw,
-            State.Walk, State.Jump, State.Gravity, State.Is2D, Respawn);
+            State.Walk, State.Jump, State.Gravity, State.Is2D, Respawn, CharacterContract(State));
         PublishCharacter(Peer);
     }
     void SpawnCharacter(int Peer) {
         if (!is_server() || GLExecutionDomain::IsClientExecution() || !peer_seq_uid.count(Peer)) return;
+        if (!SpawningCharacters.insert(Peer).second) return;
+        const uint64_t SpawnIdentity = static_cast<uint64_t>(get_instance_id());
+        struct SpawnGuard { uint64_t Identity; int Peer; ~SpawnGuard() { if (auto Owner = Object::cast_to<NetworkService>(ObjectDB::get_instance(Identity))) Owner->SpawningCharacters.erase(Peer); } } Guard{SpawnIdentity, Peer};
         uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         if (PlayerObject* Player = _peer_player(Peer)) {
             uint64_t PlayerIdentity = static_cast<uint64_t>(Player->get_instance_id());
@@ -455,9 +511,12 @@ class NetworkService : public Node {
         Puppet->second.tpos = State.Position;
         Puppet->second.tpos2d = Vector2(State.Position.x, State.Position.y);
         Puppet->second.tyaw = State.Yaw;
+        if (auto Root = Object::cast_to<RBXCharacter>(Character)) CaptureCharacterContract(State, Root);
+        Puppet->second.Pose = State.Pose;
         if (Is2D) { State.Walk = 200; State.Jump = 500; State.Gravity = 980; }
-        else if (auto Hum = Object::cast_to<Humanoid>(Health)) {
+        else if (auto Hum = Object::cast_to<RBXCharacter>(Health)) {
             State.Walk = Hum->get_walk_speed(); State.Jump = Hum->get_jump_power(); State.Gravity = Hum->get_gravity_val();
+            CaptureCharacterContract(State, Hum);
         }
         State.Health = Health->call("get_health"); State.Maximum = Health->call("get_max_health");
         CharacterAuthorities[Peer] = State;
@@ -480,17 +539,23 @@ class NetworkService : public Node {
             Changed = true;
         }
         bool Corrected = Position != State.Position || !Math::is_equal_approx(Yaw, State.Yaw);
-        if (auto Hum = Object::cast_to<Humanoid>(Health)) {
+        if (auto Hum = Object::cast_to<RBXCharacter>(Health)) {
             if (State.Walk != Hum->get_walk_speed() || State.Jump != Hum->get_jump_power() || State.Gravity != Hum->get_gravity_val()) {
                 State.Walk = Hum->get_walk_speed(); State.Jump = Hum->get_jump_power(); State.Gravity = Hum->get_gravity_val();
                 Corrected = true;
             }
         }
+        if (auto Root = Object::cast_to<RBXCharacter>(Character)) {
+            if (!Root->get_global_transform().is_equal_approx(State.Pose) ||
+                State.Acceleration != Root->GetAcceleration() || State.AirAcceleration != Root->GetAirAcceleration() ||
+                State.TurnSpeed != Root->GetTurnSpeed() || State.AutoRotate != Root->get_auto_rotate()) Corrected = true;
+            CaptureCharacterContract(State, Root);
+        }
         if (Corrected && FinitePose(Position, Yaw)) {
             State.Position = Position; State.Yaw = Yaw;
             auto Puppet = puppets.find(Peer);
             if (Puppet != puppets.end()) {
-                Puppet->second.tpos = Position; Puppet->second.tpos2d = Vector2(Position.x, Position.y); Puppet->second.tyaw = Yaw;
+                Puppet->second.tpos = Position; Puppet->second.tpos2d = Vector2(Position.x, Position.y); Puppet->second.tyaw = Yaw; Puppet->second.Pose = State.Pose;
             }
             GrantCharacter(Peer, false);
         } else if (Changed) PublishCharacter(Peer);
@@ -537,6 +602,7 @@ class NetworkService : public Node {
     // estado de posición) y para que el servidor se la cuente a quien entra tarde
     // —si no, una animación en bucle sería invisible para el recién llegado—.
     struct AnimState { String id; String name; float speed = 1.0f; bool looped = false; bool play = false; int64_t UserIdentity = 0; int64_t Life = 0; Ref<Animation> Checked; GLPresentationPlayback Playback; };
+    std::map<int, std::pair<uint64_t, AnimState>> ReparentAnimations;
     std::map<int, AnimState> peer_anim;
     std::map<int, std::pair<double, double>> AnimationBudgets;
     std::map<String, Ref<Animation>> CharacterAnimationCatalog;
@@ -616,7 +682,7 @@ private:
     }
     void SyncLocalAnimation() {
         Node* Character = _local_player();
-        Node* HumanoidNode = Character ? Character->get_node_or_null("Humanoid") : nullptr;
+        Node* HumanoidNode = Character ? Character->get_node_or_null("Animator") : nullptr;
         if (!HumanoidNode) return;
         for (int Index = 0; Index < HumanoidNode->get_child_count(); ++Index)
             if (AnimationTrack* Track = Object::cast_to<AnimationTrack>(HumanoidNode->get_child(Index))) Track->ReplicateState();
@@ -768,10 +834,18 @@ private:
     bool _valid(Node* n) const { return n && UtilityFunctions::is_instance_valid(n); }
 
     // El personaje local. También fija is_2d según lo que exista en el mundo.
+    static Node* FindLocalCharacter(Node* Root) {
+        if (auto Character = Object::cast_to<RBXCharacter>(Root)) {
+            if (Character->IsLocalControl()) return Character;
+        }
+        for (int Index = 0; Root && Index < Root->get_child_count(); ++Index)
+            if (Node* Character = FindLocalCharacter(Root->get_child(Index))) return Character;
+        return nullptr;
+    }
     Node* _local_player() {
         if (!is_inside_tree()) return nullptr;
         Node* root = (Node*)get_tree()->get_root();
-        Node* p = _find_by_class(root, "RobloxPlayer");
+        Node* p = FindLocalCharacter(root);
         if (p) { is_2d = false; return p; }
         p = _find_by_class(root, "RobloxPlayer2D");
         if (p) { is_2d = true; return p; }
@@ -977,7 +1051,9 @@ private:
         rpc_config("_relay_state2d", u);
         rpc_config("_character_ready", r);
         rpc_config("_character_sync", r);
+        rpc_config("_character_reset", r);
         rpc_config("_character_grant", ServerReliable);
+        rpc_config("_character_removed", ServerReliable);
         rpc_config("_relay_character", u);
         rpc_config("_recv_character", ServerUnreliable);
         rpc_config("_recv_remove",   ServerReliable);
@@ -1035,25 +1111,17 @@ private:
 
     // ── Muñecos (representación visual de los otros jugadores) ────────────
     Node3D* _make_puppet3d(int idx) {
-        AnimatableBody3D* body = memnew(AnimatableBody3D);
-        // CRITICO: con sync_to_physics (default) la fisica REVIERTE cualquier
-        // set_global_position y el muñeco queda clavado donde nacio.
-        body->set_sync_to_physics(false);
-
-        CollisionShape3D* col = memnew(CollisionShape3D);
-        Ref<CapsuleShape3D> cs; cs.instantiate();
-        cs->set_radius(0.5f);
-        cs->set_height(2.0f);
-        col->set_shape(cs);
-        body->add_child(col);
-
+        Node3D* vis = gl_build_character(this);
+        RBXCharacter* body = Object::cast_to<RBXCharacter>(vis);
+        const bool ClonedCharacter = body != nullptr;
+        if (!body) body = memnew(RBXCharacter);
+        body->SetPresentationOnly(true);
         // Visual: el MISMO personaje que el local (StarterCharacter o avatar R6
         // con animaciones); si falta todo, capsula azulada.
-        Node3D* vis = gl_build_character(this);
-        if (vis) {
+        if (!ClonedCharacter && vis) {
             vis->set_name("Visual");
             body->add_child(vis);
-        } else {
+        } else if (!ClonedCharacter) {
             MeshInstance3D* m = memnew(MeshInstance3D);
             m->set_name("Visual");
             Ref<CapsuleMesh> cm; cm.instantiate();
@@ -1088,19 +1156,16 @@ private:
         return body;
     }
 
-    // Humanoid del personaje remoto (1.14.11). NO lo mueve: Humanoid::
+    // Humanoid del personaje remoto (1.14.11). NO lo mueve: RBXCharacter::
     // _physics_process hace cast_to<CharacterBody3D>(get_parent()) y sale, y el
     // muñeco es un AnimatableBody3D → queda solo como objeto de API (Health,
     // WalkSpeed, TakeDamage, Died, HealthChanged...), que es justo lo que hace
     // falta. La posición la sigue mandando la red.
     void _ensure_puppet_humanoid(Node* pup) {
-        if (!pup || pup->get_node_or_null(NodePath("Humanoid"))) return;
-        Humanoid* hum = memnew(Humanoid);
-        hum->set_name("Humanoid");
-        pup->add_child(hum);
+        if (auto Character = Object::cast_to<RBXCharacter>(pup)) Character->EnsureRootPart();
     }
 
-    void _update_puppet3d(int key, int idx, Vector3 pos, float yaw, float hp, float sp, bool air, float Maximum = 100) {
+    void _update_puppet3d(int key, int idx, Vector3 pos, float yaw, float hp, float sp, bool air, float Maximum = 100, const Dictionary& Contract = Dictionary()) {
         // El estado 3D que llega DEFINE la dimensión del mundo: no dependemos del
         // is_2d cacheado (que puede no estar puesto si el jugador local aún no nació).
         is_2d = false;
@@ -1113,7 +1178,8 @@ private:
             pup->set_name(String("RemotePlayer_") + String::num_int64(key));
             wsp->add_child(pup);
             pup->set_global_position(pos);
-            pup->set_rotation(Vector3(0, yaw, 0));
+            Vector3 Rotation = pup->get_global_rotation(); Rotation.y = yaw; pup->set_global_rotation(Rotation);
+            if (!Contract.is_empty()) ApplyCharacterContract(Object::cast_to<RBXCharacter>(pup), Contract);
             // ── Personaje remoto REAL (1.14.11) ──────────────────────────
             // Antes esto era un muñeco: el rig entero colgaba de "Visual" y solo
             // se subía el HumanoidRootPart. Resultado: `hit.Parent:FindFirstChild
@@ -1129,14 +1195,17 @@ private:
             // Server birth retains native health. Only a validated server
             // snapshot can initialize a client's replica health.
             if (mode == 2) {
+                const uint64_t Identity = static_cast<uint64_t>(pup->get_instance_id());
                 Node* Health = CharacterHealth(pup);
                 if (Health) Health->call("set_max_health", Maximum);
+                if (LiveCharacter(Identity) != pup) return;
                 _apply_puppet_health(pup, key, hp);
+                if (LiveCharacter(Identity) != pup) return;
             }
             // Si el muñeco sale del árbol por fuera (Luau Destroy/ClearAllChildren),
             // quitar la entrada ANTES de que el puntero quede colgando.
             pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key, static_cast<uint64_t>(pup->get_instance_id())));
-            Puppet P; P.node = pup; P.tpos = pos; P.tyaw = yaw; P.has_target = true;
+            Puppet P; P.node = pup; P.tpos = pos; P.tyaw = yaw; P.has_target = true; P.Pose = pup->get_global_transform();
             P.anim_sp = sp; P.anim_air = air;
             if (Node3D* v = Object::cast_to<Node3D>(pup->get_node_or_null("Visual")))
                 P.vis_base_y = v->get_position().y;
@@ -1160,6 +1229,7 @@ private:
                 po->fire_character_added();
                 if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion() || !LiveCharacter(CharacterIdentity)) return;
             }
+            Object::cast_to<RBXCharacter>(pup)->SetObservedMovement(sp, air, Vector3());
             gl_mp_log(String("Player") + String::num_int64(idx) + " aparecio en tu mundo (pos " + String(pos) + ")");
             // Animación que ya estaba sonando antes de que naciera su muñeco (1.14.12).
             auto ait = peer_anim.find(key);
@@ -1179,12 +1249,18 @@ private:
             it->second.tpos = pos; it->second.tyaw = yaw; it->second.has_target = true;
             it->second.anim_sp = sp; it->second.anim_air = air;
             if (auto Body = Object::cast_to<Node3D>(it->second.node)) {
+                Vector3 Delta = pos - Body->get_global_position();
                 Body->set_global_position(pos);
                 Vector3 Rotation = Body->get_global_rotation(); Rotation.y = yaw; Body->set_global_rotation(Rotation);
+                if (!Contract.is_empty()) ApplyCharacterContract(Object::cast_to<RBXCharacter>(Body), Contract);
+                it->second.Pose = Body->get_global_transform();
+                Object::cast_to<RBXCharacter>(Body)->SetObservedMovement(sp, air, Delta);
             }
             if (mode == 2) {
+                const uint64_t Identity = static_cast<uint64_t>(it->second.node->get_instance_id());
                 if (Node* Health = CharacterHealth(it->second.node)) Health->call("set_max_health", Maximum);
-                _apply_puppet_health(it->second.node, key, hp);
+                Node* Current = LiveCharacter(Identity); if (!Current) return;
+                _apply_puppet_health(Current, key, hp);
             }
         }
     }
@@ -1193,9 +1269,9 @@ private:
     void _apply_puppet_health(Node* pup, int key, float hp) {
         (void)key;
         if (mode != 2 || !pup || !std::isfinite(hp) || hp < 0.0f) return;
-        Node* hn = pup->get_node_or_null(NodePath("Humanoid"));
+        Node* hn = CharacterHealth(pup);
         if (!hn) return;
-        if (auto Hum = Object::cast_to<Humanoid>(hn)) Hum->set_health(hp);
+        if (auto Hum = Object::cast_to<RBXCharacter>(hn)) Hum->set_health(hp);
         else if (auto Hum = Object::cast_to<Humanoid2D>(hn)) Hum->set_health(hp);
     }
     // Sample native authoritative health/corrections before presentation; the
@@ -1263,14 +1339,55 @@ private:
     }
     // El muñeco salió del árbol: quitar su entrada del mapa mientras el puntero
     // todavía es válido (evita is_instance_valid sobre un Node* colgante -> UAF).
-    void _on_puppet_gone(int key, uint64_t Identity) {
-        auto it = puppets.find(key);
-        if (it != puppets.end() && static_cast<uint64_t>(it->second.node->get_instance_id()) == Identity) {
-            peer_anim.erase(key);
-            puppets.erase(it);
+    void RevalidatePuppet(int Key, uint64_t Identity) {
+        auto Found = puppets.find(Key);
+        if (Found == puppets.end() || Found->second.node.GetIdentity() != Identity) return;
+        Found->second.CheckQueued = false;
+        Node* Character = Found->second.node.Get();
+        auto Pending = ReparentAnimations.find(Key);
+        if (Character && Character->is_inside_tree()) {
+            if (Pending != ReparentAnimations.end() && Pending->second.first == Identity && HasAnimationSession(Key) &&
+                Pending->second.second.UserIdentity == peer_seq_uid.at(Key)) {
+                auto Authority = CharacterAuthorities.find(Key);
+                auto Snapshot = CharacterSnapshots.find(Key);
+                int64_t Life = mode == 1 && Authority != CharacterAuthorities.end() ? Authority->second.Life :
+                    Snapshot != CharacterSnapshots.end() ? Snapshot->second.Life : 0;
+                if (!peer_anim.count(Key) && Pending->second.second.Life == Life) peer_anim[Key] = Pending->second.second;
+            }
+            ReparentAnimations.erase(Key);
+            return;
+        }
+        ReparentAnimations.erase(Key);
+        peer_anim.erase(Key);
+        puppets.erase(Found);
+        if (mode == 1) {
+            auto Authority = CharacterAuthorities.find(Key);
+            if (Authority != CharacterAuthorities.end() && Authority->second.Identity == Identity) {
+                const int64_t Epoch = Authority->second.Epoch, Life = Authority->second.Life;
+                Authority->second.Identity = 0;
+                if (auto Player = _peer_player(Key)) Player->set_character_silent(nullptr);
+                rpc("_character_removed", Key, Epoch, Life);
+            }
+        }
+    }
+    void _on_puppet_gone(int Key, uint64_t Identity) {
+        auto Found = puppets.find(Key);
+        if (Found == puppets.end() || Found->second.node.GetIdentity() != Identity) return;
+        auto Animation = peer_anim.find(Key);
+        if (Animation != peer_anim.end()) { ReparentAnimations[Key] = {Identity, Animation->second}; peer_anim.erase(Animation); }
+        if (!Found->second.node.Get()) {
+            const uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+            if (auto Player = _peer_player(Key)) Player->fire_character_removing();
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            RevalidatePuppet(Key, Identity); return;
+        }
+        if (!Found->second.CheckQueued) {
+            Found->second.CheckQueued = true;
+            call_deferred("RevalidatePuppet", Key, Identity);
         }
     }
     void _remove_puppet(int key) {
+        ReparentAnimations.erase(key);
         peer_anim.erase(key);
         auto it = puppets.find(key);
         if (it != puppets.end()) {
@@ -1307,10 +1424,7 @@ private:
                 Node3D* n = Object::cast_to<Node3D>(pu.node);
                 if (!n) continue;
                 Vector3 before = n->get_global_position();
-                n->set_global_position(pu.tpos);
-                Vector3 r = n->get_global_rotation();
-                r.y = pu.tyaw;
-                n->set_global_rotation(r);
+                n->set_global_transform(pu.Pose);
                 // Aplanado (1.14.11): el animador es hijo DIRECTO. Se conserva la
                 // ruta vieja para el caso sin rig (cápsula / StarterCharacter).
                 Node* anim = n->get_node_or_null(NodePath("R6Animator"));
@@ -1345,7 +1459,7 @@ private:
             if (!LocalCharacterGrant.Epoch) {
                 if (CharacterTime() >= CharacterReadyAt) {
                     CharacterReadyAt = CharacterTime() + 1;
-                    rpc_id(1, "_character_ready", 2);
+                    rpc_id(1, "_character_ready", 3);
                 }
                 return;
             }
@@ -1362,7 +1476,7 @@ private:
             }
             float Speed = 0;
             bool Air = false;
-            if (auto Hum = Object::cast_to<Humanoid>(CharacterHealth(lp))) { Speed = Hum->anim_speed01; Air = Hum->anim_airborne; }
+            if (auto Hum = Object::cast_to<RBXCharacter>(CharacterHealth(lp))) { Speed = Hum->anim_speed01; Air = Hum->anim_airborne; }
             else if (auto Body = Object::cast_to<CharacterBody2D>(lp)) Air = !Body->is_on_floor();
             rpc_id(1, "_relay_character", LocalCharacterGrant.Epoch, ++LocalCharacterSequence,
                 CharacterPosition(lp), CharacterYaw(lp), Speed, Air);
@@ -1380,7 +1494,7 @@ private:
             if (Hum) { State.Health = Hum->call("get_health"); State.Maximum = Hum->call("get_max_health"); }
             if (!FinitePose(State.Position, State.Yaw)) return;
             float Speed = 0; bool Air = false;
-            if (auto Health = Object::cast_to<Humanoid>(Hum)) { Speed = Health->anim_speed01; Air = Health->anim_airborne; }
+            if (auto Health = Object::cast_to<RBXCharacter>(Hum)) { Speed = Health->anim_speed01; Air = Health->anim_airborne; CaptureCharacterContract(State, Health); }
             if (std::isfinite(Speed) && Speed >= 0 && Speed <= 1.0f) PublishCharacter(1, Speed, Air);
             return;
         }
@@ -1412,7 +1526,7 @@ private:
             // el salto de otro jugador se veía más largo de lo que fue.
             float hp = -1.0f, sp = 0.0f;
             bool air = false;
-            if (Humanoid* hum = Object::cast_to<Humanoid>(lp->get_node_or_null(NodePath("Humanoid")))) {
+            if (RBXCharacter* hum = Object::cast_to<RBXCharacter>(CharacterHealth(lp))) {
                 hp  = hum->get_health();
                 sp  = hum->anim_speed01;
                 air = hum->anim_airborne;
@@ -1426,10 +1540,13 @@ protected:
     static void _bind_methods() {
         ClassDB::bind_method(D_METHOD("_on_peer_connected", "id"),    &NetworkService::_on_peer_connected);
         ClassDB::bind_method(D_METHOD("_character_ready", "version"), &NetworkService::_character_ready);
+        ClassDB::bind_method(D_METHOD("RequestCharacterReset"), &NetworkService::RequestCharacterReset);
+        ClassDB::bind_method(D_METHOD("_apply_local_reset", "identity"), &NetworkService::ApplyLocalReset);
+        ClassDB::bind_method(D_METHOD("_character_reset", "epoch"), &NetworkService::_character_reset);
         ClassDB::bind_method(D_METHOD("_character_sync", "epoch"), &NetworkService::_character_sync);
-        ClassDB::bind_method(D_METHOD("_character_grant", "epoch", "position", "yaw", "walk", "jump", "gravity", "is_2d", "respawn"), &NetworkService::_character_grant);
+        ClassDB::bind_method(D_METHOD("_character_grant", "epoch", "position", "yaw", "walk", "jump", "gravity", "is_2d", "respawn", "contract"), &NetworkService::_character_grant, DEFVAL(Dictionary()));
         ClassDB::bind_method(D_METHOD("_relay_character", "epoch", "sequence", "position", "yaw", "speed", "air"), &NetworkService::_relay_character);
-        ClassDB::bind_method(D_METHOD("_recv_character", "who", "epoch", "sequence", "position", "yaw", "health", "maximum", "speed", "air", "is_2d", "life"), &NetworkService::_recv_character);
+        ClassDB::bind_method(D_METHOD("_recv_character", "who", "epoch", "sequence", "position", "yaw", "health", "maximum", "speed", "air", "is_2d", "life", "contract"), &NetworkService::_recv_character, DEFVAL(Dictionary()));
         ClassDB::bind_method(D_METHOD("GetCharacterStates"), &NetworkService::GetCharacterStates);
         ClassDB::bind_method(D_METHOD("RespawnCharacter", "peer"), &NetworkService::SpawnCharacter);
         ClassDB::bind_method(D_METHOD("_on_peer_disconnected", "id"), &NetworkService::_on_peer_disconnected);
@@ -1453,6 +1570,9 @@ protected:
         ClassDB::bind_method(D_METHOD("_recv_state2d", "who", "pos", "rot", "idx"), &NetworkService::_recv_state2d);
         ClassDB::bind_method(D_METHOD("_relay_state2d", "pos", "rot", "idx"),       &NetworkService::_relay_state2d);
         ClassDB::bind_method(D_METHOD("_recv_remove", "who"),                       &NetworkService::_recv_remove);
+        ClassDB::bind_method(D_METHOD("_character_removed", "who", "epoch", "life"), &NetworkService::CharacterRemoved);
+        ClassDB::bind_method(D_METHOD("ApplyCharacterRemoval", "who", "epoch", "life"), &NetworkService::ApplyCharacterRemoval);
+        ClassDB::bind_method(D_METHOD("RevalidatePuppet", "key", "identity"), &NetworkService::RevalidatePuppet);
         ClassDB::bind_method(D_METHOD("_on_puppet_gone", "key", "identity"),        &NetworkService::_on_puppet_gone);
         ClassDB::bind_method(D_METHOD("gl_send_chat", "name", "text"),              &NetworkService::gl_send_chat);
         ClassDB::bind_method(D_METHOD("_relay_chat", "name", "text"),               &NetworkService::_relay_chat);
@@ -1587,7 +1707,7 @@ public:
     void _on_peer_disconnected(int id) {
         ChatBudgets.erase(id);
         AnimationBudgets.erase(id);
-        CharacterAuthorities.erase(id); CharacterSnapshots.erase(id);
+        CharacterAuthorities.erase(id); ResetRequests.erase(id); ReparentAnimations.erase(id); CharacterSnapshots.erase(id);
         peer_seq_uid.erase(id);
         _remove_puppet(id);
         if (is_server()) rpc("_recv_remove", id);   // que los clientes también lo quiten
@@ -1613,7 +1733,7 @@ public:
     void _on_server_disconnected() {
         net_connected = false;
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         _rf_fail_pending(0, "InvokeServer: lost connection to the server");
         _clear_puppets();
@@ -2286,16 +2406,47 @@ public:
             if (lp->get_character()) r.push_back(lp);
         for (auto& kv : peer_player_ids)
             if (PlayerObject* po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(kv.second)))
-                if (po->get_character()) r.push_back(po);   // solo peers con personaje (no el servidor)
+                r.push_back(po); // a connected Player remains present between Characters
         return r;
     }
 
     // ── RPCs de réplica ──────────────────────────────────────────────────
     void _character_ready(int Version) {
         int Sender = GetClientRpcSender();
-        if (!Sender || Version != 2 || CharacterAuthorities.count(Sender)) return;
-        SpawnCharacter(Sender);
+        if (!Sender || Version != 3 || CharacterAuthorities.count(Sender)) return;
+        Players* Service = _players_service();
+        if (!Service || Service->get_character_auto_loads()) SpawnCharacter(Sender);
     }
+
+    void RequestCharacterReset() {
+        Node* Character = _local_player();
+        if (!Character || LocalResetPending || (LocalResetAt >= 0 && CharacterTime() - LocalResetAt < 1)) return;
+        LocalResetAt = CharacterTime();
+        if (mode == 2) {
+            if (LocalCharacterGrant.Epoch > 0) rpc_id(1, "_character_reset", LocalCharacterGrant.Epoch);
+        } else {
+            LocalResetPending = true;
+            call_deferred("_apply_local_reset", static_cast<uint64_t>(Character->get_instance_id()));
+        }
+    }
+    void ApplyLocalReset(uint64_t Identity) {
+        LocalResetPending = false;
+        Node* Character = LiveCharacter(Identity);
+        if (mode == 2 || GLExecutionDomain::IsClientExecution() || !Character || Character != _local_player()) return;
+        if (Node* Health = CharacterHealth(Character)) Health->call("set_health", 0);
+    }
+    void _character_reset(int64_t Epoch) {
+        int Sender = GetClientRpcSender();
+        auto Found = CharacterAuthorities.find(Sender);
+        if (!Sender || Found == CharacterAuthorities.end() || Found->second.Epoch != Epoch ||
+            Found->second.Health <= 0 || !LiveCharacter(Found->second.Identity)) return;
+        auto Previous = ResetRequests.find(Sender);
+        if (Previous != ResetRequests.end() && CharacterTime() - Previous->second < 1) return;
+        ResetRequests[Sender] = CharacterTime();
+        Node* Health = CharacterHealth(LiveCharacter(Found->second.Identity));
+        if (Health) Health->call("set_health", 0);
+    }
+
     void _character_sync(int64_t Epoch) {
         int Sender = GetClientRpcSender();
         auto Found = CharacterAuthorities.find(Sender);
@@ -2307,14 +2458,24 @@ public:
         GrantCharacter(Sender, false, false); // resync cannot grant another airborne jump
     }
     void _character_grant(int64_t Epoch, Vector3 Position, double Yaw,
-        double Walk, double Jump, double Gravity, bool Is2D, bool Respawn) {
+        double Walk, double Jump, double Gravity, bool Is2D, bool Respawn, Dictionary Contract) {
         if (!AcceptServerRpc() || Epoch <= LocalCharacterGrant.Epoch || !FinitePose(Position, Yaw) ||
-            !std::isfinite(Walk) || Walk < 0 || !std::isfinite(Jump) || Jump < 0 || !std::isfinite(Gravity) || Gravity < 0) return;
+            !std::isfinite(Walk) || Walk < 0 || !std::isfinite(Jump) || Jump < 0 || !std::isfinite(Gravity) || Gravity < 0 ||
+            !ValidCharacterContract(Contract, Is2D, Position, Yaw) ||
+            (!Is2D && (static_cast<double>(Contract["WalkSpeed"]) != Walk || static_cast<double>(Contract["JumpPower"]) != Jump || static_cast<double>(Contract["Gravity"]) != Gravity))) return;
         bool HadCharacter = LocalCharacterGrant.Epoch != 0;
+
         LocalCharacterGrant.Epoch = Epoch;
         LocalCharacterGrant.Position = Position; LocalCharacterGrant.Yaw = Yaw;
         LocalCharacterGrant.Walk = Walk; LocalCharacterGrant.Jump = Jump; LocalCharacterGrant.Gravity = Gravity;
         LocalCharacterGrant.Is2D = Is2D;
+        if (!Is2D) {
+            LocalCharacterGrant.Pose = Contract["Pose"];
+            LocalCharacterGrant.Acceleration = Contract["Acceleration"];
+            LocalCharacterGrant.AirAcceleration = Contract["AirAcceleration"];
+            LocalCharacterGrant.TurnSpeed = Contract["TurnSpeed"];
+            LocalCharacterGrant.AutoRotate = Contract["AutoRotate"];
+        }
         LocalSyncPending = 0;
         LocalServerPosition = Position;
         LocalServerMovedAt = CharacterTime();
@@ -2323,7 +2484,7 @@ public:
         uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         // Initial grant uses the already constructed owner; subsequent server
         // respawns replace it. Corrections never replay CharacterAdded.
-        if (Respawn && HadCharacter) _do_load_character();
+        if ((Respawn && HadCharacter) || !_local_player()) _do_load_character();
         if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
         ApplyCharacterGrant();
         SyncLocalAnimation();
@@ -2340,12 +2501,12 @@ public:
             Body->set_global_rotation(Grant.Yaw); Body->set_velocity(Vector2());
             Body->call("set_walk_speed", Grant.Walk); Body->call("set_jump_power", -Grant.Jump); Body->call("set_gravity", Grant.Gravity);
         } else {
-            auto Body = Object::cast_to<CharacterBody3D>(Character);
+            auto Root = Object::cast_to<RBXCharacter>(Character);
+            auto Body = Root ? Root->GetPhysicsBody() : nullptr;
             if (!Body) return false;
-            Body->set_global_position(Grant.Position);
-            Vector3 Rotation = Body->get_global_rotation(); Rotation.y = Grant.Yaw; Body->set_global_rotation(Rotation);
+            ApplyCharacterContract(Root, CharacterContract(LocalCharacterGrant));
             Body->set_velocity(Vector3());
-            if (auto Health = Object::cast_to<Humanoid>(CharacterHealth(Character))) {
+            if (auto Health = Object::cast_to<RBXCharacter>(CharacterHealth(Character))) {
                 Health->set_walk_speed(Grant.Walk); Health->set_jump_power(Grant.Jump); Health->set_gravity_val(Grant.Gravity);
             }
         }
@@ -2410,17 +2571,53 @@ public:
         if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == Sender) {
             auto Current = Service->CharacterAuthorities.find(Sender);
             if (Current != Service->CharacterAuthorities.end() && Current->second.Identity == CharacterIdentity && Current->second.Epoch == Epoch)
-                Service->PublishCharacter(Sender, Speed, Air);
+                { if (auto Root = Object::cast_to<RBXCharacter>(LiveCharacter(CharacterIdentity))) Service->CaptureCharacterContract(Current->second, Root); Service->PublishCharacter(Sender, Speed, Air); }
+        }
+    }
+    void CharacterRemoved(int Who, int64_t Epoch, int64_t Life) {
+        if (!AcceptServerRpc() || Who <= 0 || !peer_seq_uid.count(Who) || Epoch <= 0 || Life <= 0 || Life > Epoch) return;
+        auto Found = CharacterSnapshots.find(Who);
+        if (Found != CharacterSnapshots.end() && (Epoch < Found->second.Epoch || Life < Found->second.Life ||
+            (Found->second.Removed && Life == Found->second.Life))) return;
+        if (Who == _my_peer_id() && Epoch < LocalCharacterGrant.Epoch) return;
+        CharacterSnapshots[Who] = {Epoch, 0, Life, true};
+        peer_anim.erase(Who); ReparentAnimations.erase(Who);
+        call_deferred("ApplyCharacterRemoval", Who, Epoch, Life);
+    }
+    void ApplyCharacterRemoval(int Who, int64_t Epoch, int64_t Life) {
+        auto Found = CharacterSnapshots.find(Who);
+        if (mode != 2 || Found == CharacterSnapshots.end() || !Found->second.Removed ||
+            Found->second.Epoch != Epoch || Found->second.Life != Life) return;
+        const uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+        PlayerObject* Player = Who == _my_peer_id() ? _local_player_obj() : _peer_player(Who);
+        Node* Character = Player ? Player->get_character() : nullptr;
+        const uint64_t CharacterIdentity = Character ? static_cast<uint64_t>(Character->get_instance_id()) : 0;
+        const uint64_t PlayerIdentity = Player ? static_cast<uint64_t>(Player->get_instance_id()) : 0;
+        if (Player) Player->fire_character_removing();
+        if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+        Found = CharacterSnapshots.find(Who);
+        if (Found == CharacterSnapshots.end() || !Found->second.Removed || Found->second.Epoch != Epoch || Found->second.Life != Life) return;
+        Player = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+        if (Player && !Player->is_queued_for_deletion() && Player->get_character() &&
+            static_cast<uint64_t>(Player->get_character()->get_instance_id()) == CharacterIdentity) Player->set_character_silent(nullptr);
+        if (Who != _my_peer_id()) _remove_puppet(Who);
+        else {
+            Character = Object::cast_to<Node>(ObjectDB::get_instance(CharacterIdentity));
+            if (Character && !Character->is_queued_for_deletion()) {
+                if (Character->get_parent()) Character->get_parent()->remove_child(Character);
+                Character->queue_free();
+            }
+            LocalGrantedCharacter = 0;
         }
     }
     void _recv_character(int Who, int64_t Epoch, int64_t Sequence, Vector3 Position, double Yaw,
-        float Health, float Maximum, float Speed, bool Air, bool Is2D, int64_t Life) {
+        float Health, float Maximum, float Speed, bool Air, bool Is2D, int64_t Life, Dictionary Contract) {
         if (!AcceptServerRpc() || Who <= 0 || !peer_seq_uid.count(Who) || Epoch <= 0 || Sequence <= 0 ||
             !FinitePose(Position, Yaw) || !std::isfinite(Health) || !std::isfinite(Maximum) || Maximum < 1 ||
             Health < 0 || Health > Maximum || !std::isfinite(Speed) || Speed < 0 || Speed > 1.0f ||
-            Life <= 0 || Life > Epoch || (Is2D && Position.z != 0)) return;
+            Life <= 0 || Life > Epoch || (Is2D && Position.z != 0) || !ValidCharacterContract(Contract, Is2D, Position, Yaw)) return;
         auto Found = CharacterSnapshots.find(Who);
-        if (Found != CharacterSnapshots.end() && (Epoch < Found->second.Epoch ||
+        if (Found != CharacterSnapshots.end() && ((Found->second.Removed && Life <= Found->second.Life) || Epoch < Found->second.Epoch ||
             (Epoch == Found->second.Epoch && Sequence <= Found->second.Sequence))) return;
         bool Replaced = Found != CharacterSnapshots.end() && Life != Found->second.Life;
         if (Who == _my_peer_id() && (Epoch != LocalCharacterGrant.Epoch || !ApplyCharacterGrant())) return;
@@ -2457,7 +2654,7 @@ public:
             if (HealthNode) HealthNode->call("set_max_health", Maximum);
             _apply_puppet_health(Puppet->second.node, Who, Health);
         }
-        else _update_puppet3d(Who, static_cast<int>(peer_seq_uid.at(Who)), Position, Yaw, Health, Speed, Air, Maximum);
+        else _update_puppet3d(Who, static_cast<int>(peer_seq_uid.at(Who)), Position, Yaw, Health, Speed, Air, Maximum, Contract);
     }
     Dictionary GetCharacterStates() {
         Dictionary Result;
@@ -2468,12 +2665,14 @@ public:
             State["CharacterId"] = static_cast<int64_t>(Entry.second.Identity);
             State["AcceptedInputs"] = static_cast<int64_t>(Entry.second.AcceptedInputs);
             State["RateRejectedInputs"] = static_cast<int64_t>(Entry.second.RateRejectedInputs);
+            State["Contract"] = CharacterContract(Entry.second);
             Result[Entry.first] = State;
         }
         if (mode == 2) {
             Dictionary Grant;
             Grant["Epoch"] = LocalCharacterGrant.Epoch; Grant["Sequence"] = LocalCharacterSequence;
             Grant["Position"] = LocalCharacterGrant.Position;
+            Grant["Contract"] = CharacterContract(LocalCharacterGrant);
             Result[_my_peer_id()] = Grant;
         }
         return Result;
@@ -2634,7 +2833,7 @@ public:
     void _recv_anim_v2(int who, int64_t Life, String anim_id, String anim_name, float speed, bool looped, bool play) {
         if (!AcceptServerRpc() || !HasAnimationSession(who) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
         auto Snapshot = CharacterSnapshots.find(who);
-        if (Life < 0 || (Snapshot != CharacterSnapshots.end() && Life < Snapshot->second.Life)) return;
+        if (Life < 0 || (Snapshot != CharacterSnapshots.end() && (Life < Snapshot->second.Life || (Snapshot->second.Removed && Life == Snapshot->second.Life)))) return;
         int myid = _my_peer_id();
         if (who == myid) return;   // ese soy yo
         if (Snapshot != CharacterSnapshots.end() && Life > Snapshot->second.Life) {
@@ -2649,7 +2848,7 @@ public:
         // entren después.
         if (!HasAnimationSession(who)) return false;
         auto it = puppets.find(who);
-        Node* Character = it != puppets.end() && _valid(it->second.node) && !it->second.node->is_queued_for_deletion() ? it->second.node : nullptr;
+        Node* Character = it != puppets.end() ? it->second.node.Get() : nullptr;
         Ref<Animation> Checked;
         GLPresentationPlayback Playback;
         auto Previous = peer_anim.find(who);
@@ -3282,7 +3481,7 @@ public:
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
         ChatBudgets.clear();
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
         peer_seq_uid.clear();
         Ref<MultiplayerAPI> m = _mp();
@@ -3313,7 +3512,7 @@ public:
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); target_address = ""; return false; }
         ChatBudgets.clear();
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0; CharacterReadyAt = 0;
+        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0; CharacterReadyAt = 0;
         LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();
         _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
         peer_seq_uid.clear(); gl_local_user_id() = 0;
@@ -3328,7 +3527,7 @@ public:
     }
     void disconnect_net() {
         AnimationBudgets.clear();
-        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+        CharacterAuthorities.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();
         LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         ChatBudgets.clear();

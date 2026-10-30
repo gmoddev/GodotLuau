@@ -264,9 +264,10 @@ that function does not install the metatable. Host environment and resume paths
 resolve ObjectIDs and call the facade synchronously. The metatable must already
 be installed for non-null wrappers.
 
-Host service/codec/error/runtime includes are now explicit. Humanoid must precede
-network implementation in host and workspace/network in registration; the latter
-include moves upward without changing any registration body or order. Native
+At this historical extraction checkpoint, host service/codec/error/runtime
+includes became explicit and Humanoid preceded network implementation. Character
+V2 now uses RBXCharacter in that position and registers Model/Animator/body before
+Character; see its ownership section below. Native
 service, network, core VM/scheduler, compatibility runtime, dispatch, stdlib and
 the previous four adapters otherwise remain unchanged. No TU is added.
 
@@ -406,7 +407,31 @@ character grants/snapshots, native server health, bounded pose admission, and a
 startup presentation-animation catalog. Its bounded contract and executed
 qualification are separated in [ADR-006](adr-006-character-authority.md) and the
 [qualification record](character-authority-validation.md). The historical main descriptions below
-still describe main's protocol 1 baseline. Character V2 has not started.
+still describe main's protocol 1 baseline.
+
+The stacked `runtime/character-v2-model` source replaces the 3D Humanoid with
+`RBXCharacter : RBXModel`, genuinely exposed as Character/Model. A single internal
+top-level CharacterBody3D drives the Character world pose; explicit Model
+transforms synchronize that body under a feedback guard. HumanoidRootPart is a
+direct identity-transform proxy. The root owns health and observed movement;
+the internal body retains camera/input behavior, and a real Animator owns tracks.
+Visual rig bodies are passive to prevent competing collision responses. R6 and
+StarterCharacter factories produce the same actual root as remote puppets.
+
+Protocol 3 extends existing grants/snapshots with exact full-pose/configuration
+dictionaries, preserves GL-007 admission and server health, and rejects legacy
+readiness/malformed contracts. Explicit removal creates a session/life tombstone
+before deferred lifecycle delivery; stale pose/animation cannot resurrect it.
+A trusted new life can replace it. ObjectID references and exact-clip playback
+leases protect Animator/track/rig destruction and late completions. Native Player
+lifecycle remains separate; reentrant spawning coalesces, and direct native
+Character deletion emits CharacterRemoving once before clearing Player.Character.
+2D keeps its existing controller/Humanoid2D path.
+
+See [ADR-007](adr-007-model-character.md), the [public API](character-v2-api.md),
+and the [qualification record](character-v2-validation.md). The branch is unmerged;
+qualification status must be read from that record, not inferred from this source
+description.
 
 `NetworkService` combines connection setup, ENet RPCs, players, puppet state,
 replication, remote invocation, physics ownership, chat, and coordinator/world

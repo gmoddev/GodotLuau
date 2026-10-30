@@ -301,6 +301,15 @@ def CharacterFixtures(Args, Output, Environment):
                 (Project / 'latency-proxy.json').write_text(json.dumps(Evidence, indent=2))
                 if any(Item['Dropped'] or Item['Forwarded'] == 0 or Item['MinimumObservedSeconds'] < .19 for Item in Evidence):
                     raise RuntimeError('Latency forwarding evidence incomplete')
+    if Args.character_modes == ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency']:
+        Project = Output / 'Model'
+        Prepare(Project, Args.extension)
+        Label = 'character-model'
+        Process = Start(Args.godot, Project, 'CharacterV2.gd', Label, [], Environment)
+        Results.append(Check(Process, time.monotonic() + Args.timeout, Project, Label, '[Character:V2] PASS'))
+        Errors = (Project / (Label + '.stderr.log')).read_text(errors='replace')
+        if 'ERROR:' in Errors:
+            raise RuntimeError('Character Model fixture emitted engine errors: ' + Errors[-4000:])
     return Results
 
 

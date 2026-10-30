@@ -11,6 +11,11 @@ func Summary(Values: Array) -> Dictionary:
     Ordered.sort()
     return {"Median": Ordered[Ordered.size() / 2], "P95": Ordered[int((Ordered.size() - 1) * 0.95)], "Samples": Ordered.size()}
 
+func CountNodes(Target: Node) -> int:
+    var Count := 1
+    for Child in Target.get_children(true): Count += CountNodes(Child)
+    return Count
+
 func Character() -> Node:
     return World.get_node("LocalPlayer")
 
@@ -109,7 +114,31 @@ func Run() -> void:
         await process_frame
     for Index in range(10): await process_frame
     Samples["After100Respawns"] = {"StaticMemoryDeltaBytes": Performance.get_monitor(Performance.MEMORY_STATIC) - BeforeMemory, "ObjectDelta": Performance.get_monitor(Performance.OBJECT_COUNT) - BeforeObjects}
-    Samples["CharacterNativeNodes"] = Character().find_children("*", "", true, false).size() + 1
+    Samples["CharacterNativeNodes"] = CountNodes(Character())
+    var Probe := Node3D.new()
+    Probe.name = "BenchmarkAnimationProbe"
+    Character().add_child(Probe)
+    var Playback := AnimationPlayer.new()
+    Character().add_child(Playback)
+    var Library := AnimationLibrary.new()
+    var Clip := Animation.new()
+    Clip.length = 1.0
+    Clip.loop_mode = Animation.LOOP_LINEAR
+    var Track := Clip.add_track(Animation.TYPE_POSITION_3D)
+    Clip.track_set_path(Track, NodePath("BenchmarkAnimationProbe"))
+    Clip.track_insert_key(Track, 0.0, Vector3.ZERO)
+    Clip.track_insert_key(Track, 1.0, Vector3.ONE)
+    Library.add_animation("Measure", Clip)
+    Playback.add_animation_library("", Library)
+    Playback.play("Measure")
+    var AnimationTimes := []
+    for Batch in range(35):
+        var Started := Time.get_ticks_usec()
+        for Tick in range(1000): Playback.advance(1.0 / 60.0)
+        if Batch >= 5: AnimationTimes.append((Time.get_ticks_usec()-Started)/1000.0)
+    Samples["NativeAnimationAdvanceMicroseconds"] = Summary(AnimationTimes)
+    Playback.free()
+    Probe.free()
     Samples["StaticMemoryBytes"] = Performance.get_monitor(Performance.MEMORY_STATIC)
     var Floor := StaticBody3D.new()
     var Shape := CollisionShape3D.new()

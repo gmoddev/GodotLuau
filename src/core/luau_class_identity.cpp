@@ -13,8 +13,8 @@ String GetLuauClassName(Object* n) {
     String c = n->get_class();
     struct M { const char* g; const char* r; };
     static const M map[] = {
-        {"RobloxPart","Part"},{"Folder","Folder"},{"Humanoid","Humanoid"},{"Humanoid2D","Humanoid"},
-        {"RobloxPlayer","Player"},{"RobloxPlayer2D","Player"},
+        {"RobloxPart","Part"},{"Folder","Folder"},{"RBXCharacter","Character"},{"RBXModel","Model"},{"RBXAnimator","Animator"},{"Humanoid2D","Humanoid"},
+        {"RobloxPlayer","CharacterPhysicsBody"},{"RobloxPlayer2D","Player"},
         {"OmniLight3D","PointLight"},{"SpotLight3D","SpotLight"},{"DirectionalLight3D","DirectionalLight"},
         {"RemoteEventNode","RemoteEvent"},{"RemoteFunctionNode","RemoteFunction"},{"BindableEventNode","BindableEvent"},
         {"RobloxSound","Sound"},{"RobloxSoundGroup","SoundGroup"},{"RobloxTween","Tween"},{"TweenService","TweenService"},
@@ -44,6 +44,7 @@ bool IsLuauClass(Object* n, const char* q) {
     const CharString ClassName = GetLuauClassName(n).utf8();
     const char* rc = ClassName.get_data();
     if (strcmp(rc, q) == 0) return true;
+    if (n->is_class("RBXModel") && (strcmp(q, "Model") == 0 || strcmp(q, "PVInstance") == 0)) return true;
     if (strcmp(rc, "Part") == 0 && (strcmp(q,"BasePart")==0 || strcmp(q,"PVInstance")==0)) return true;
     bool gui = (strcmp(rc,"Frame")==0||strcmp(rc,"TextLabel")==0||strcmp(rc,"TextButton")==0||
                 strcmp(rc,"TextBox")==0||strcmp(rc,"ImageLabel")==0||strcmp(rc,"ScrollingFrame")==0);

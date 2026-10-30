@@ -1,8 +1,8 @@
 # Character V2 preparation record
 
-Status: preparation only on `runtime/character-v2-model`. Production source is
-unchanged from the qualified GL-007 parent. No Character V2 runtime qualification
-is claimed. Both development branches remain unmerged; main is `4ea5311`.
+Status: runtime migration in progress on `runtime/character-v2-model`, following
+verified preparation CI at `9ec71c0`. No Character V2 runtime qualification is
+claimed yet. Both development branches remain unmerged; main is `4ea5311`.
 Release publication and updater distribution remain disabled.
 
 ## Gate and source identity
@@ -95,5 +95,130 @@ sanitizer, production-build and hosted matrices.
   Windows/Linux qualification, comparable candidate measurements, and a separate
   graphical observation or explicit graphical-access limitation.
 
-No production source, dependency, release workflow or updater policy changes are
-part of this preparation checkpoint.
+No production source, dependency, release workflow or updater policy changes were
+part of the preparation checkpoint.
+
+## Runtime migration work
+
+Preparation source `9ec71c024b012aada68750ab9bae3349115a165d` passed hosted core
+run `41039974670` and native run `41039974656`, each on Windows and Linux.
+The GL-007 branch remains at `514d12f`; its source/evidence is preserved.
+
+The first implementation pass introduces the actual Model-derived Character,
+its one internal top-level physics body, Character-owned health/movement state,
+an actual Animator child, native class identity, and migrated local/remote
+factories. Explicit transforms synchronize the body; physics drives the root
+under a feedback guard. Finite uniform positive scale is the initial supported
+physics transform contract; invalid/sheared/nonuniform poses are rejected.
+
+Source inspection also found that the legacy NPC direction update was inside
+the active-camera conditional. The candidate evaluates scripted NPC movement
+without requiring a camera. This is a controller correction requiring its own
+native check, separate from preserving the walking/jump/acceleration constants.
+Observed movement uses post-slide velocity, and collision/state callback delivery
+moves outside the physics step. These changes are not qualified by source review.
+
+The native/Luau binding and lifecycle migrations, explicit final API/protocol
+contract, focused integration fixtures, candidate measurements and full platform
+qualification remain in progress. No pass claim applies to this first candidate.
+
+The first builds caught a Luau void-error-return mismatch and two dangling
+property-binding lines after removal of stored-only compatibility fields; these
+compile failures were corrected without changing dependency pins or checks.
+An early native run passed 3D Local/Listen/Dedicated on both platforms, then a
+2D fixture lookup incorrectly read root health instead of Humanoid2D health.
+The fixture now selects the unchanged 2D health component explicitly.
+
+The initial dedicated Model fixture exercised native parent/uniform-transform,
+camera-component destruction and camera-free NPC walk/jump/fall on both workers
+(jump 20, fall approximately -19.75). Its ServerScript incorrectly used
+Players.LocalPlayer, which is correctly nil in a Server domain; it now uses the
+actual server roster. An attempted immediate GDScript free during a locked native
+signal was rejected by Godot; the fixture now uses the production-supported
+queued destruction contract and checks deletion after the frame. These failed
+preparation runs, warnings and exit diagnostics remain retained, not qualified.
+
+The next Model fixture passes all 38 initial native checks on both platforms.
+It covers real Model/Luau identity, pivot/bounds, synchronized parent transforms,
+first/third-person controller math, safe camera-component deletion, camera-free
+NPC walk/jump/fall, native Part contact identity, finite input, queued health
+callback destruction, actual StarterCharacter cloning and reentrant respawn.
+It remains headless evidence, not graphical correctness.
+
+Part contact testing exposed retained geometry/material resources at engine
+shutdown (GL-024). The candidate makes the inline caches canonical across
+translation units and releases all three during existing scene uninitialization.
+The Model rerun no longer reports those engine-exit resource diagnostics.
+
+Protocol-3 character regression passes all 16 actors on Linux in the V6 run.
+Windows passes the 3D scenarios but fails the 2D final-position admission
+comparison, while its native controller measures walk 200, jump -500 and falling
+431. The next fixture records the admitted final state and repeats final 2D
+samples as the existing 3D fixture already does; the position assertion is not
+weakened. This result is not labelled a qualified Windows pass.
+
+Animation migration also finds the source-verified GL-025 completion-signal
+shadowing and retained-pointer/cleanup gaps. The candidate uses live completion
+signals, ObjectIDs and an exact-clip playback lease. Puppet references likewise
+become ObjectID-backed, with bounded departure revalidation so a same-tree
+reparent can preserve native Character/Animator identity without retaining a
+freed pointer. These changes require focused native qualification.
+
+V9 passes 54 focused Model/Animator checks, all 16 character actors, all 10
+animation actors and all 10 authority actors on both Windows/Linux Debug.
+The immediate animation cache departure assertion caught an earlier deferred
+cleanup discrepancy; cache invalidation is now immediate, with restoration only
+after validating the identical reparented ObjectID/session/life. V10 passes 59
+focused checks, including passive rig Part collision and manual/automatic respawn
+and stale native reset behavior. These are development results, not full matrix
+qualification. The next revision adds explicit removal tombstones and actual
+owner/observer departure, stale packet and trusted replacement coverage.
+
+V13 passes all 17 character actors on both platforms, including 61 Model checks,
+native deletion/CharacterRemoving identity, initial CharacterAutoLoads=false,
+and explicit owner/observer removal/tombstone/trusted-replacement checks.
+A correction-contract assertion had raced the observer's unreliable snapshot;
+it now waits for the expected complete contract with a five-second deadline.
+No value/range/authority assertion was weakened.
+
+The first full regression pass found inherited identity fixtures expecting
+Instance.new('Model').ClassName == 'Node3D'. Those assertions now require the
+intentional genuine Model identity, including nested callback and GC checks.
+Other class/lifetime assertions remain. The failed V1/V2 runs are retained.
+V3 starts the complete six-core/five-native configuration matrix. The Model
+fixture additionally exercises the actual binary place importer on a disposable
+legacy Humanoid file and requires explicit migration rejection with unchanged
+source bytes.
+
+The first Linux full-native ASan/LSan run rejects an actual candidate leak:
+4,080 bytes/43 allocations in a Security Listen client, with allocation stacks
+in the new cached contract Dictionary/default construction. Normal functional
+PASS did not close this failure. The candidate now stores admitted full pose and
+configuration only in the existing native grant structure and materializes a
+dictionary at the protocol boundary, removing the duplicate retained builtin
+cache. Sanitizer reproduction and the final matrix must be rerun on this source.
+Windows/Linux Debug/Release V3 passed their 83 actors before this correction;
+those earlier source identities remain separate.
+
+Expanded device tests initially used a StarterCharacter configured for walk 12
+while expecting 16, and touch injection depended on an unspecified headless
+viewport/emulated mouse state. The fixture now sets its explicit walk-16 control,
+an isolated 1152x648 viewport and direct touch input without mouse emulation.
+All 72 expanded checks pass on Linux Debug, including native input, reload,
+custom visual template and legacy binary import rejection.
+
+The corrected grant cache passes the same three-actor sanitizer Security Listen
+reproduction. Full ASan then reaches the new Model fixture and exposes a separate
+576-byte/four-allocation importer reset leak (GL-026). Inspection identifies the
+pinned generated Dictionary move assignment's missing old-storage destructor;
+copy assignment releases it. The importer now uses distinct const-lvalue resets,
+without modifying the dependency or sharing report dictionaries. This corrects
+the earlier cache diagnosis from a generic lifetime suspicion to the exact
+rvalue-assignment mechanism. Original failure stacks remain retained.
+
+The importer workaround passes the complete 72-check Model fixture under the
+matching full-native ASan/LSan engine with clean exit. The final fixture repeats
+the same rejected legacy import three times (76 total checks) and starts V5
+qualification. No sanitizer suppression, leak waiver, dependency change or
+assertion removal is used. The native grant/cache correction and importer reset
+workaround are separate from GL-017's inherited inactive-ENet diagnostics.

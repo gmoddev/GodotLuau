@@ -16,6 +16,7 @@ def Main():
     Parser.add_argument('--extension', type=Path, required=True)
     Parser.add_argument('--output', type=Path, required=True)
     Parser.add_argument('--r6-assets', type=Path)
+    Parser.add_argument('--script', choices=['CharacterBenchmarks.gd', 'CharacterV2.gd'], default='CharacterBenchmarks.gd')
     Args = Parser.parse_args()
     if os.name == 'nt':
         ctypes.windll.kernel32.SetErrorMode(0x8003)
@@ -44,11 +45,15 @@ def Main():
             shutil.copytree(Import / '.godot/imported', Args.output / '.godot/imported')
             Uids = Import / '.godot/uid_cache.bin'
             if Uids.is_file(): shutil.copyfile(Uids, Args.output / '.godot/uid_cache.bin')
-        Process = Start(Args.godot.resolve(), Args.output.resolve(), 'CharacterBenchmarks.gd', 'benchmark', [], Environment)
-        Result = Check(Process, time.monotonic() + 60, Args.output, 'benchmark', '[Character:Benchmark] PASS')
+        Process = Start(Args.godot.resolve(), Args.output.resolve(), Args.script, 'benchmark', [], Environment)
+        Prefix = '[Character:V2]' if Args.script == 'CharacterV2.gd' else '[Character:Benchmark]'
+        Result = Check(Process, time.monotonic() + 60, Args.output, 'benchmark', Prefix + ' PASS')
+        Errors = (Args.output / 'benchmark.stderr.log').read_text(errors='replace')
+        if Args.script == 'CharacterV2.gd' and 'ERROR:' in Errors:
+            raise RuntimeError('Native Character V2 fixture emitted engine errors: ' + Errors[-4000:])
         Text = (Args.output / 'benchmark.stdout.log').read_text(errors='replace')
-        Line = next(Line for Line in Text.splitlines() if Line.startswith('[Character:Benchmark] {'))
-        Summary = json.loads(Line.removeprefix('[Character:Benchmark] '))
+        Line = next(Line for Line in Text.splitlines() if Line.startswith(Prefix + ' {'))
+        Summary = json.loads(Line.removeprefix(Prefix + ' '))
         if Args.r6_assets and Summary['Rig'] != 'R6':
             raise RuntimeError('Requested actual R6 workload fell back to a capsule')
         (Args.output / 'measurements.json').write_text(json.dumps(Summary, indent=2))

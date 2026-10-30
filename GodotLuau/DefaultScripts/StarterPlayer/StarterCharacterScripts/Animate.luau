@@ -4,24 +4,25 @@
 
 local RunService = game:GetService("RunService")
 
-local humanoid = script.Parent:FindFirstChild("Humanoid")
-if not humanoid then
-    dwarn("[Animate] Humanoid no encontrado")
+local Character = script.Parent
+local State = Character:IsA("Character") and Character or (Character:IsA("RobloxPlayer2D") and Character:FindFirstChild("Humanoid"))
+if not State then
+    dwarn("[Character:Animation] Character state unavailable")
     return
 end
 
-dprint("[Animate] Sistema de animacion listo")
+dprint("[Character:Animation] Sistema de animacion listo")
 
 -- ══ TU CÓDIGO DE ANIMACIÓN AQUÍ /// YOUR ANIMATION CODE HERE ══
--- Descomenta para reaccionar a eventos del Humanoid: /// Uncomment to react to Humanoid events:
+-- Descomenta para reaccionar a eventos del Character: /// Uncomment to react to Character events:
 
--- humanoid.Died:Connect(function()
---     print("[Animate] El personaje murio!")
+-- State.Died:Connect(function()
+--     print("[Character:Animation] El personaje murio!")
 -- end)
 
--- humanoid.HealthChanged:Connect(function(newHP)
---     if newHP < humanoid.MaxHealth * 0.3 then
---         print("[Animate] Salud baja!")
+-- State.HealthChanged:Connect(function(newHP)
+--     if newHP < State.MaxHealth * 0.3 then
+--         print("[Character:Animation] Salud baja!")
 --     end
 -- end)
 
