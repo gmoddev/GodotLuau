@@ -23,7 +23,7 @@ both platforms. These development results do not substitute for the final matrix
 ## Final configuration matrix
 
 Final native input fingerprint (88 LF-normalized production files):
-`db48047d9cac6e7f9f77f1fcf98e5ccacbf5435c145be22a402a6e0369bb881a`.
+`e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db`.
 The final Model fixture has 76 checks, including repeated import rejection,
 keyboard/gamepad/mobile input, script reload and a custom visual template.
 Three further actors exercise initial manual loading, independent Player

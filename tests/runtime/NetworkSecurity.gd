@@ -152,6 +152,10 @@ func Run() -> void:
     Create("TextChatService", "TextChatService")
     Game.get_node("TextChatService/ChatWindow").connect("MessageSent", Capture)
     Network = Create("NetworkService", "NetworkService")
+    # Explicit SendState owns protocol readiness in this fixture. Pause only the
+    # client's automatic broadcaster so PREINIT truly precedes admission, also
+    # after Connect re-enables the Node's process flag. ENet polling/RPCs stay real.
+    if Role == "client": Network.process_mode = Node.PROCESS_MODE_DISABLED
     await process_frame
     Script("Observations", """
 game:GetService('TextChatService').MessageReceived:Connect(function(Message)

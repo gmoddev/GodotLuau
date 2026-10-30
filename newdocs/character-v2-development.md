@@ -245,3 +245,18 @@ probe caught readiness still behind a root check; that gate now runs before
 Character discovery. Initial local PlayerAdded no longer waits for a root, and
 explicit early loads dispatch admission before birth without a duplicate tick.
 The full native requirement becomes 86 actors; SCons focus becomes 40.
+
+The final public-property check corrects MouseSensitivity's Lua setter still
+targeting the former body class rather than the new Character, and validates
+CameraMode before integer conversion. The actual Model Lua fixture now checks
+valid camera settings plus NaN/Infinity rejection. Physical movement algorithms
+and 2D setters remain unchanged. This final binding correction requires fresh
+compiled qualification and hosted source identity.
+
+The existing security fixture's PREINIT chat assertion had relied on automatic
+readiness being impossible without a local root. The new required root-free
+readiness can legitimately admit it before that packet. The fixture now disables
+only each client's automatic broadcaster through process_mode; its explicit
+SendState still uses actual readiness RPCs, and SceneMultiplayer continues actual
+polling/dispatch. The same pre-admission rejection and all existing chat/state
+assertions remain. The prior Windows V6 failure is retained, not waived.

@@ -4105,12 +4105,17 @@ static int godot_object_newindex_impl(lua_State* L) {
 
     if (strcmp(key, "CameraMode") == 0) {
         RBXCharacter* rp = Object::cast_to<RBXCharacter>(n);
-        if (rp) rp->set_camera_mode((int)luaL_checknumber(L, 3));
+        if (rp) {
+            double Mode = luaL_checknumber(L, 3);
+            if (std::isfinite(Mode) && Mode >= 1 && Mode <= 3 && std::floor(Mode) == Mode)
+                rp->set_camera_mode(static_cast<int>(Mode));
+        }
         RobloxPlayer2D* rp2d = Object::cast_to<RobloxPlayer2D>(n);
         if (rp2d) rp2d->set_camera_mode((int)luaL_checknumber(L, 3));
         return 0;
     }
     if (strcmp(key, "MouseSensitivity") == 0) {
+        if (auto Character = Object::cast_to<RBXCharacter>(n)) { Character->set_mouse_sensitivity(static_cast<float>(luaL_checknumber(L, 3))); return 0; }
         RobloxPlayer* rp = Object::cast_to<RobloxPlayer>(n);
         if (rp) rp->set_mouse_sensitivity((float)luaL_checknumber(L, 3));
         return 0;

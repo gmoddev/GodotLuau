@@ -275,6 +275,12 @@ func Run() -> void:
     Importer = null
     Script("ModelAPI", """
 local C = game:GetService('Players'):GetPlayers()[1].Character
+C.CameraMode = 2
+C.MouseSensitivity = 0.003
+assert(C.CameraMode == 2 and math.abs(C.MouseSensitivity - 0.003) < 0.000001)
+C.CameraMode = 0/0
+C.MouseSensitivity = math.huge
+assert(C.CameraMode == 2 and math.abs(C.MouseSensitivity - 0.003) < 0.000001)
 assert(C.ClassName == 'Character' and C:IsA('Character') and C:IsA('Model') and C:IsA('PVInstance'))
 assert(not C:IsA('Player') and not C:IsA('Humanoid'))
 assert(C.PrimaryPart.Name == 'HumanoidRootPart' and C:FindFirstChild('Humanoid') == nil)
