@@ -316,6 +316,7 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
 void uninitialize_luau_module(ModuleInitializationLevel p_level) {
     if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
         if (auto Host = GLGetDomainHost()) Host->Shutdown();
+        GLDataStoreManager::StopAll();
         if (Engine::get_singleton()->has_meta("_godotluau_wm"))
             Engine::get_singleton()->remove_meta("_godotluau_wm");
         // Caches estaticos de materiales: se sueltan AQUI, mientras el

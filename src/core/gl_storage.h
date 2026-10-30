@@ -22,6 +22,7 @@
 // Flat, pre-existing project user-data root. No VM pointers, ambient cwd,
 // directory creation or retained handles. Error strings never contain input.
 class GLStorage {
+    friend class GLDataStoreBackend;
 public:
     enum Permission : unsigned { Read=1, Write=2, Delete=4, List=8 };
     enum class Error { None, Denied, InvalidPath, Missing, Unavailable, IO, Limit };
@@ -154,7 +155,7 @@ private:
         BY_HANDLE_FILE_INFORMATION Info{};
         return GetFileInformationByHandle(Value,&Info) && !(Info.dwFileAttributes&(FILE_ATTRIBUTE_DIRECTORY|FILE_ATTRIBUTE_REPARSE_POINT)) && Info.nNumberOfLinks==1 && GetFileType(Value)==FILE_TYPE_DISK;
     }
-    static Handle OpenRelative(HANDLE Parent,const std::wstring& Name,DWORD Access,bool Create,bool Directory) {
+    static Handle OpenRelative(HANDLE Parent,const std::wstring& Name,DWORD Access,bool Create,bool Directory,bool Through=false) {
         using OpenFunction=NTSTATUS (NTAPI*)(PHANDLE,ACCESS_MASK,POBJECT_ATTRIBUTES,PIO_STATUS_BLOCK,PLARGE_INTEGER,ULONG,ULONG,ULONG,ULONG,PVOID,ULONG);
         auto Open=reinterpret_cast<OpenFunction>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"),"NtCreateFile"));
         if (!Open || Name.empty() || Name.size()>32760) { SetLastError(ERROR_NOT_SUPPORTED); return Handle(INVALID_HANDLE_VALUE); }
@@ -169,7 +170,7 @@ private:
         // FILE_OPEN_REPARSE_POINT | FILE_SYNCHRONOUS_IO_NONALERT plus directory
         // type. Each name is one component; no ambient absolute reopen follows.
         NTSTATUS Code=Open(&Result,Access|SYNCHRONIZE,&Attributes,&Status,nullptr,FILE_ATTRIBUTE_NORMAL,
-            FILE_SHARE_READ|FILE_SHARE_WRITE,Create?3:1,0x00200000|0x20|(Directory?1:0x40),nullptr,0);
+            FILE_SHARE_READ|FILE_SHARE_WRITE,Create?3:1,0x00200000|0x20|(Directory?1:0x40)|(Through?2:0),nullptr,0);
         if (Code<0) {
             SetLastError(ULONG(Code)==0xc0000034 || ULONG(Code)==0xc000003a ? ERROR_FILE_NOT_FOUND : ERROR_ACCESS_DENIED);
             return Handle(INVALID_HANDLE_VALUE);

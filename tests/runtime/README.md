@@ -567,6 +567,27 @@ These functional measurements are not a hard real-time or total-process-memory
 guarantee. See the [work record](../../newdocs/http-validation.md) and
 [authority/compatibility decision](../../newdocs/adr-004-asynchronous-http.md).
 
+### GL-009 transactional DataStore
+
+Build `GodotLuauAdapter DataStoreWorker DatastoreBackendProbe` with CMake, then
+run `RunQualification.py --godot <engine> --extension <library> --output
+<fresh-directory> --datastore --timeout 60`. The matching companion must reside
+beside the extension; the runner preserves its executable mode. An alternate
+probe location uses `--datastore-probe`. SCons produces both distribution products;
+qualify its library with the CMake-built native probe from the same sources.
+
+The group adds 23 Godot actors: CRUD/transform/precision, deterministic two-process
+Update-vs-Update/Set/Remove conflicts, independent increments, corrupt/legacy/cache
+behavior, owner/module/task/manual-resume/close/OOM cleanup, contention progress,
+and missing/incompatible companion rejection. Native probes inject failures and
+terminate owned processes at four actual commit stages, then recover in a fresh
+process. Kill tests are not power-loss tests. Baseline fixtures deliberately assert
+old failures and must use a preserved pre-GL-009 extension. Keep all 43 previous
+actors and 72 core cases required; native CI now requires 66 actors plus native
+interruption evidence and the companion's digest. See
+[ADR-005](../../newdocs/adr-005-transactional-datastore.md) and
+[the qualification record](../../newdocs/datastore-validation.md).
+
 ### GL-013 Instance reflection extraction
 
 `Integration.gd` exercises the production generic property bridge in both Server

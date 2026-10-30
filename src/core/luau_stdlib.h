@@ -611,17 +611,9 @@ DataStoreService.__index = DataStoreService
 local _ds_stores  = {}
 local _ds_ordered = {}
 
-local function _ds_safe_encode(v)
-    if not _JSON then return tostring(v) end
-    local ok, r = pcall(_JSON.encode, v)
-    return ok and r or "{}"
-end
-
-local function _ds_safe_decode(s)
-    if not s or s == "" then return nil end
-    if not _JSON then return nil end
-    local ok, r = pcall(_JSON.decode, s)
-    return ok and r or nil
+local function DataValue(Raw, Exists)
+    if not Exists then return nil end
+    return ServiceStorage.DataDecode(Raw)
 end
 
 -- En Roblox tocar un DataStore desde el cliente es error. Aquí ademas TODAS las
@@ -634,64 +626,83 @@ local function _ds_assert_server(what)
 end
 
 local function _make_datastore(name)
-    local store = { _name = name, _cache = {} }
+    local Cache = {}
+    local store = { _name = name, _cache = Cache }
 
     function store:GetAsync(key)
         _ds_assert_server("GetAsync")
         local sk = tostring(key)
-        -- Se lee SIEMPRE del archivo (1.14.16). Antes la cache en memoria ganaba
-        -- para siempre: con el coordinador y sus mundos compartiendo user://,
-        -- otra instancia podia haber guardado datos nuevos y esta seguiria
-        -- devolviendo los viejos sin que nada avisara. La cache queda solo como
-        -- respaldo por si el archivo no se puede leer.
-        if ServiceStorage then
-            local content = ServiceStorage.DataRead(self._name, sk)
-            if content and content ~= "" then
-                local v = _ds_safe_decode(content)
-                self._cache[sk] = v
-                return v
-            end
-        end
-        return self._cache[sk]
+        local Raw, Exists = ServiceStorage.DataRead(self._name, sk)
+        local Value = DataValue(Raw, Exists)
+        Cache[sk] = Value
+        return Value
     end
 
     function store:SetAsync(key, value)
         _ds_assert_server("SetAsync")
         local sk = tostring(key)
-        if ServiceStorage then
-            ServiceStorage.DataWrite(self._name, sk, _ds_safe_encode(value))
-        end
-        self._cache[sk] = value
+        local Name = self._name
+        local Encoded = ServiceStorage.DataEncode(value)
+        ServiceStorage.DataWrite(Name, sk, Encoded)
+        Cache[sk] = value
     end
 
     function store:UpdateAsync(key, transform)
-        local old = self:GetAsync(key)
-        local new_val = transform(old)
-        if new_val ~= nil then self:SetAsync(key, new_val) end
-        return new_val
+        _ds_assert_server("UpdateAsync")
+        if type(transform) ~= "function" then error("[Persistence:DataStore] Transform must be a function",2) end
+        local Key, Name = tostring(key), self._name
+        local MayRetry = ServiceStorage.CanYield()
+        for Attempt = 1, 8 do
+            local Raw, Exists = ServiceStorage.DataRead(Name, Key)
+            local Old = DataValue(Raw, Exists)
+            local Value = transform(Old) -- no OS lock held; yielding remains supported
+            if Value == nil then Cache[Key] = DataValue(Raw, Exists); return nil end
+            local Encoded = ServiceStorage.DataEncode(Value)
+            if ServiceStorage.DataCompare(Name, Key, Exists, Raw or "", Encoded) then
+                Cache[Key] = Value
+                return Value
+            end
+            if not MayRetry or Attempt == 8 then break end
+            task.wait(math.min(Attempt * 0.005, 0.025))
+        end
+        error("[Persistence:DataStore] Conflict retry limit exceeded",2)
     end
 
     function store:IncrementAsync(key, delta)
-        local val = (self:GetAsync(key) or 0) + (delta or 1)
-        self:SetAsync(key, val)
-        return val
+        local Delta = delta == nil and 1 or delta
+        if type(Delta) ~= "number" or Delta ~= Delta or math.abs(Delta) == math.huge then error("[Persistence:DataStore] Invalid increment",2) end
+        return self:UpdateAsync(key,function(Old)
+            if Old == nil then Old = 0 end
+            if type(Old) ~= "number" or Old ~= Old or math.abs(Old) == math.huge then error("[Persistence:DataStore] Stored increment value is not finite numeric",2) end
+            local Value = Old + Delta
+            if Value ~= Value or math.abs(Value) == math.huge then error("[Persistence:DataStore] Increment overflow",2) end
+            if Delta ~= 0 and Value == Old then error("[Persistence:DataStore] Increment precision overflow",2) end
+            if math.floor(Old) == Old and math.floor(Delta) == Delta and (math.abs(Old) > 9007199254740991 or math.abs(Value) > 9007199254740991 or Value - Old ~= Delta) then
+                error("[Persistence:DataStore] Increment precision overflow",2)
+            end
+            return Value
+        end)
     end
 
     function store:RemoveAsync(key)
         _ds_assert_server("RemoveAsync")
         local sk = tostring(key)
-        local old = self._cache[sk]
-        if ServiceStorage then
-            ServiceStorage.DataDelete(self._name, sk)
+        local Name = self._name
+        local MayRetry = ServiceStorage.CanYield()
+        for Attempt = 1, 8 do
+            local Raw, Exists = ServiceStorage.DataRead(Name, sk)
+            local Old = DataValue(Raw, Exists)
+            if ServiceStorage.DataCompare(Name, sk, Exists, Raw or "", "null") then Cache[sk] = nil; return Old end
+            if not MayRetry or Attempt == 8 then break end
+            task.wait(math.min(Attempt * 0.005, 0.025))
         end
-        self._cache[sk] = nil
-        return old
+        error("[Persistence:DataStore] Conflict retry limit exceeded",2)
     end
 
     function store:GetSortedAsync(ascending, pageSize, minValue, maxValue)
         -- Ordena las entradas numéricas del cache (antes devolvía páginas vacías)
         local entries = {}
-        for k, v in pairs(self._cache) do
+        for k, v in pairs(Cache) do
             if type(v) == "number"
                and (minValue == nil or v >= minValue)
                and (maxValue == nil or v <= maxValue) then

@@ -3,6 +3,7 @@
 
 #include "gl_execution_domain.h"
 #include "gl_http.h"
+#include "gl_datastore.h"
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/string.hpp>
@@ -35,6 +36,7 @@ class GLDomainHost : public godot::Node {
     std::array<std::unique_ptr<GLExecutionDomain>, 2> Domains;
     std::array<bool, 2> Initialized = {false, false};
     std::unique_ptr<GLHttpManager> Http;
+    std::unique_ptr<GLDataStoreManager> DataStore;
     std::vector<GLChildWait> ChildWaits;
     std::vector<GLInvokeWait> InvokeWaits;
     struct GLChildConnection {
@@ -66,6 +68,8 @@ public:
     void InstallHttp(lua_State* Thread,GLExecutionDomain& Domain);
     int BeginHttp(lua_State* Thread,GLExecutionDomain* Domain,int Operation);
     bool InterruptHttp(lua_State* Thread);
+    int BeginDataStore(lua_State* Thread,GLExecutionDomain* Domain,const std::string& Root,const std::string& Leaf,int Operation,bool Exists,const std::string& Expected,const std::string& Value);
+    bool InterruptDataStore(lua_State* Thread);
     bool ConnectChild(lua_State* Thread, godot::Node* Target, godot::Node* Receiver, bool Added, int Reference);
     void DisconnectChild(int Reference);
 #ifdef GL_RUNTIME_TESTS

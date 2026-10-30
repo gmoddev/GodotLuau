@@ -183,6 +183,8 @@ Dictionary GLDomainHost::GetResourceStats(bool Client) const {
     const auto& Limits = Domain->GetLimits();
     Stats["Closing"] = Domain->IsClosing();
     Stats["HttpPending"] = int64_t(Http?Http->Pending(Client):0);
+    Stats["DataStorePending"] = int64_t(!Client && DataStore?DataStore->Pending():0);
+    Stats["DataStorePeak"] = int64_t(!Client && DataStore?DataStore->Peak():0);
     Stats["HttpPeak"] = int64_t(!Client && Http?Http->Peak():0);
     Stats["MemoryFailed"] = Domain->HasMemoryFailure();
     Stats["HostOperationsAvailable"] = Domain->CanRunNative();
@@ -224,6 +226,11 @@ int GLDomainHost::BeginHttp(lua_State* Thread,GLExecutionDomain* Domain,int Oper
     return Http->Begin(Thread,Domain,Operation);
 }
 bool GLDomainHost::InterruptHttp(lua_State* Thread) { return Http && Http->Interrupt(Thread); }
+int GLDomainHost::BeginDataStore(lua_State* Thread,GLExecutionDomain* Domain,const std::string& Root,const std::string& Leaf,int Operation,bool Exists,const std::string& Expected,const std::string& Value) {
+    if (!DataStore) DataStore=std::make_unique<GLDataStoreManager>();
+    return DataStore->Begin(Thread,Domain,Root,Leaf,Operation,Exists,Expected,Value);
+}
+bool GLDomainHost::InterruptDataStore(lua_State* Thread) { return DataStore && DataStore->Interrupt(Thread); }
 void GLDomainHost::WaitForChild(lua_State* Thread, uint64_t Parent, const String& Name, double Timeout, int Reference) {
     ChildWaits.push_back({Thread, GLGetOwnerState(Thread), Parent, Name, Timeout, 0, Reference,
         String::utf8(lua_debugtrace(Thread))});
@@ -236,6 +243,7 @@ GLExecutionDomain* GLDomainHost::WaitingDomain(lua_State* Thread) const {
     return nullptr;
 }
 void GLDomainHost::InvalidateOwner(lua_State* Anchor) {
+    if (DataStore) DataStore->CancelOwner(Anchor);
     if (Http) Http->CancelOwner(Anchor);
     for (size_t Index = ChildConnections.size(); Index > 0; --Index)
         if (ChildConnections[Index - 1].Anchor == Anchor) DisconnectChild(ChildConnections[Index - 1].Reference);
@@ -307,6 +315,7 @@ void GLDomainHost::DisconnectChild(int Reference) {
     GLUnreference(nullptr, Reference);
 }
 void GLDomainHost::InvalidateThread(lua_State* Thread) {
+    if (DataStore) DataStore->CancelThread(Thread);
     if (Http) Http->CancelThread(Thread);
     ChildWaits.erase(std::remove_if(ChildWaits.begin(), ChildWaits.end(), [Thread](const GLChildWait& Wait) {
         if (Wait.Thread != Thread) return false;
@@ -344,6 +353,7 @@ void GLDomainHost::InvalidateThread(lua_State* Thread) {
     Visit(Tree->get_root());
 }
 void GLDomainHost::_process(double Delta) {
+    if (DataStore) DataStore->Tick();
     if (Http) Http->Tick();
     // Weak native targets may be destroyed while their script/module survives.
     // Reap those registrations before entering Lua, including detached targets.
@@ -432,8 +442,12 @@ void GLDomainHost::_process(double Delta) {
 }
 void GLDomainHost::Shutdown() {
     for (const auto& Domain : Domains) if (Domain) Domain->StopAdmission();
+    if (DataStore) DataStore->CancelAll();
     if (Http) Http->Shutdown();
+    GLDataStoreManager::DrainRetired();
     for (const auto& Domain : Domains) if (Domain) Domain->Shutdown();
+    if (DataStore) DataStore->CancelAll();
+    GLDataStoreManager::DrainRetired();
 }
 void GLDomainHost::_notification(int What) {
     if (What == NOTIFICATION_EXIT_TREE) Shutdown();

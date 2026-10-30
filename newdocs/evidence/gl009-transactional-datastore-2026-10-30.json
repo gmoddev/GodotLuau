@@ -1,0 +1,1718 @@
+{
+  "Objective": "GL-009 transactional DataStore persistence",
+  "DateUTC": "2026-10-30",
+  "Branch": "persistence/gl-009-transactional-datastore",
+  "Base": "bc8ca88771a2170350e539de48f2cff89044d924",
+  "DecisionRevision": "0792f6915f7c07ad6c4020985fac1cf772e8125b",
+  "InitialImplementation": "d987c8e571a06d36ac2ee91553b8a19305409952",
+  "QualifiedImplementation": "d4dfb32ee89aef0968725597371db753259acbac",
+  "Status": "Qualified within ADR-005 supported scope; not merged; no production distribution qualification",
+  "NativeSource": {
+    "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+    "Files": 87,
+    "Newlines": "LF normalized"
+  },
+  "EffectiveHarnessHashes": {
+    "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+    "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+    "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+    "CheckNativeCI.py": "4ba73b8d976d77d6f9ac3df0e63939c9275b3212f0ef4e64229c5d54a334d07b",
+    "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+    "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+    "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+    "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+    "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+    "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+    "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+    "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+    "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+    "ExecutionDomainTests.cpp": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+    "FilesystemIntegration.gd": "62b97405f675cc47dce9a371efd02cb27be64bc2ab9fe6b5c52085b48fff2229",
+    "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+    "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+    "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+    "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+    "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+    "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+    "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+    "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+    "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+    "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+    "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+    "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+    "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+    "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+    "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+    "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+    "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+    "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+    "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+    "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+    "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+    "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+    "RunQualification.py": "9c97b09b7f1c85bafcc14bf9380ef7501f9682100fe7e4d0e0256f4807e25346",
+    "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+    "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+    "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+    "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+    "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+  },
+  "LocalQualification": {
+    "Windows": {
+      "Platform": "Windows",
+      "NativeSource": {
+        "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+        "Files": 87,
+        "Newlines": "LF normalized"
+      },
+      "Base": "bc8ca88771a2170350e539de48f2cff89044d924",
+      "Implementation": "d4dfb32ee89aef0968725597371db753259acbac",
+      "Core": {
+        "debug": {
+          "Cases": 72,
+          "JUnitSHA256": "520ad99a00ef052eef37dca7697df1c4807b6cb6ef6dbcac17b022a62d86bdeb",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl009-qualified-v4-debug-core.xml"
+        },
+        "release": {
+          "Cases": 72,
+          "JUnitSHA256": "d2693d0c418760e8591f464d3b37f1a6f2d675f68e1a844eb35f1cfee624f974",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl009-qualified-v4-release-core.xml"
+        },
+        "asan": {
+          "Cases": 72,
+          "JUnitSHA256": "aa65362ed40efd4100dd7fa12ddf5ba1fc6f4265c59df84509428e500cb33210",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl009-qualified-v4-asan-core.xml"
+        }
+      },
+      "Native": {
+        "debug": {
+          "Actors": 66,
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+              "LogsSHA256": "5b92072f449d096a375a73b593e1090e0dfbc46b8527e316a636138ab97fc86f"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "40b1f3ac69359780ea48b408a24ac41ccfb4e289c59f14341283fd01d5a933dd",
+              "LogsSHA256": "b95df6cebb6283e09ce52b3a1d7c910ee7126811fefe7e3046b6bcafb40cd0ad"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+              "LogsSHA256": "a989054c17bc28e9ef8178a6cd0f9f695c53e6dbd4f23f5f61ed21c1f5789beb"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "2d59390afa21d253cc4a6034543c9e38a70f5ab0796beadaa0617047624576e9"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "772c0af68ece41cb23c7ba844e88226abd05a021870b276427aef79e0940b1af"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "8e2ba1910bab3d32cf8d4b03515aaec20893caaada14f2bcdaba01f1f4ee8e04"
+            },
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "231b3c782281f59fc60efdb6864d076d920fe683d76020b3dad7a678b148520b",
+              "LogsSHA256": "fb8d9f5b8d2a0b1e3584194cdcba23217ca3aaec1186957fbc862cdfda433010"
+            }
+          },
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-qualified-v4-windows-debug",
+          "ExtensionSHA256": "b713e143b18896126d04c43c06c88c054c2d92d167f7be433650b62c33169064",
+          "WorkerSHA256": "bc48d49174dbc515d846537569464d6cf9977e3164f944258228e65057adcbde",
+          "CommitInterruption": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "DataStoreMeasurements": [
+            {
+              "ElapsedMilliseconds": 3256,
+              "PeakFrameGapSeconds": 0.02382
+            },
+            {
+              "ElapsedMilliseconds": 1100,
+              "PeakFrameGapSeconds": 0.168482
+            }
+          ]
+        },
+        "release": {
+          "Actors": 66,
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+              "LogsSHA256": "32069a321729954c830e9a3e7fba72e273fb5ae6d1c7c9e58116845e448ca3f3"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "0888d09852055e915850226ebcfcc31b67d938a050a9d14bad56298ae71534d4",
+              "LogsSHA256": "9f44b14944e9cd4a3ef6fcddcb83b3bca7bd554a3a08a1c889a179178fabfffe"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+              "LogsSHA256": "b53d9f128b782defed733c4d51b65e8b73ebc7aef297ae87eb5fa7ab06e07f54"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "ce01f090cc3ddd352b9ee7067ae4a246d61e746d0f68a43fb48a1d5d2edc0ce6"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "2d6076ef1697ea0662fde0f8a4fb5fdaaf3738e5be2568d0e82873a57f700487"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "59494c11c846493af689a698866b0ba77a95c2ae1d83abfc0e82a5ddaa15674c"
+            },
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "231b3c782281f59fc60efdb6864d076d920fe683d76020b3dad7a678b148520b",
+              "LogsSHA256": "7ac741cb1757aa59fc05d435e2bb9b02126601a10f84bc1f1e225510476e6c66"
+            }
+          },
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-qualified-v4-windows-release",
+          "ExtensionSHA256": "cf1b2f855f1ab85ad20e0956ae97713dbbac17a0eeae99ee343cf16b322f4a0c",
+          "WorkerSHA256": "7d3db2519f06f7b42743faef278ec2c8fd76d35069a65845c98e11c245543ec8",
+          "CommitInterruption": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "DataStoreMeasurements": [
+            {
+              "ElapsedMilliseconds": 2162,
+              "PeakFrameGapSeconds": 0.009128
+            },
+            {
+              "ElapsedMilliseconds": 882,
+              "PeakFrameGapSeconds": 0.134169
+            }
+          ]
+        }
+      },
+      "SCons": {
+        "template_debug": {
+          "Actors": 38,
+          "Groups": {
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "231b3c782281f59fc60efdb6864d076d920fe683d76020b3dad7a678b148520b",
+              "LogsSHA256": "d488b5fe1015c78f81fda1f55b017a98c64e71d23ccf10836ef8a7e7bf747527"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "5f1f37f681e2d8dceb916d38e09aeeeeda465420687cbb653b2d63f71d40465e"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "f499b77a04cc513e171df1ae2488e94633b03ba08fec9319f0476d8d1ea1a5b8"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "6e9d33ddccf7e98ed8f40c8ae5cafcd8cccafd6c0913ed6924f9ae8562ba4cf0"
+            }
+          },
+          "ExtensionSHA256": "9b4723ace7b095143624bd532a53c823135271c7688b096fdaa083b8a208bdaf",
+          "WorkerSHA256": "3eac302c21d301b260d0bbda3e55536763ceb0a7d1978f13c193cfd399a79959",
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-qualified-v4-scons-windows-template_debug"
+        },
+        "template_release": {
+          "Actors": 38,
+          "Groups": {
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "231b3c782281f59fc60efdb6864d076d920fe683d76020b3dad7a678b148520b",
+              "LogsSHA256": "bcb6776aa4893fdf33f417c3e120996be06cb194e39f024f51cd15b4730f5a3d"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "5c5643db942ca72ae43b6b6f49cb6cd85dde33814bf7a4eee17c563e738bdec2"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "f01272ef73d1d18d7ee25ffd8aa182cafbd3fa9bf27a9a8ff2f06be45578930a"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "5486f990aba204029b5e3d4caff8efb924197bf90ff96fec5ec9c6ea9e51718d"
+            }
+          },
+          "ExtensionSHA256": "b1ae8bf149e63db21ae04d85f90fd26588bb2b060cf1b913135f6bfc24cbd30f",
+          "WorkerSHA256": "3f9b0fe179c37aa62ca251eb1ea7ad428ba91c8eb296e9fa24f761e3437bbf51",
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-qualified-v4-scons-windows-template_release"
+        }
+      },
+      "Engines": {
+        "official": {
+          "Path": "C:\\Sandbox\\Codex\\Tools\\Godot_v4.7.1-stable_win64.exe",
+          "SHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+        "CheckNativeCI.py": "4ba73b8d976d77d6f9ac3df0e63939c9275b3212f0ef4e64229c5d54a334d07b",
+        "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+        "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+        "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+        "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+        "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+        "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+        "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+        "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "ExecutionDomainTests.cpp": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+        "FilesystemIntegration.gd": "62b97405f675cc47dce9a371efd02cb27be64bc2ab9fe6b5c52085b48fff2229",
+        "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+        "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+        "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+        "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+        "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+        "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+        "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+        "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+        "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunQualification.py": "9c97b09b7f1c85bafcc14bf9380ef7501f9682100fe7e4d0e0256f4807e25346",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+      },
+      "Baseline": {
+        "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-baseline-v1",
+        "Result": {
+          "Source": {
+            "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+            "Files": 81,
+            "Newlines": "LF normalized"
+          },
+          "Actors": [
+            {
+              "Label": "seed-seed",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "writers-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "writers-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "verify-fresh-reader",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "failures-single",
+              "Exit": 0,
+              "Diagnostics": "ERROR: Parse JSON failed. Error at line 0: Expected '}'\n   at: parse_string (core/io/json.cpp:629)"
+            }
+          ],
+          "Interrupted": {
+            "Exit": 0,
+            "Prior": {
+              "Sentinel": 12345
+            },
+            "ResultBytes": 0,
+            "Disposition": "Real successful native truncation, controlled pause, then owned process termination; no power-loss claim"
+          }
+        },
+        "ResultsSHA256": "8cc988d4c8822018d41bb3f802f47796925769c5c69593c34f7de2631d06f17d",
+        "LogsSHA256": "44edfa576bde63c9d462aff999c4d270977aa8a39a6e5321572a1452d27d26a1",
+        "ExtensionSHA256": "9f886fae5431b186697644c465cd09242e78d2eab03157c7cb3f4f2a3d596332",
+        "SentinelSHA256": "4c6d55a9ffdd152dfbcaacdcb30a30f793bcbf16e69067ffd5f48a967ba4cccd"
+      },
+      "Dependencies": {
+        "godot-cpp": {
+          "Revision": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "SHA256": "88627d442827ebb09f0de875e59939216f74a09d2479104f00714b047548620c",
+          "Newlines": "LF normalized"
+        },
+        "luau": {
+          "Revision": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+          "SHA256": "fde7ed51588a364dcb97680fbe40e73106b3e4ce4b52d8652c36b1a2ba563391",
+          "Newlines": "LF normalized"
+        }
+      },
+      "ProcessTests": {
+        "LogSHA256": "6238ce1dcf4339f0b3258a49d9dcf9baf861e4424a9380d902822c3d6c23059c",
+        "Output": "test_disappearance_after_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_after_stat_read_reports_dead) ... skipped 'Linux /proc inspection'\ntest_disappearance_before_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_before_stat_read_reports_dead) ... skipped 'Linux /proc inspection'\ntest_failure_marker_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_failure_marker_cannot_be_hidden_by_pass) ... ok\ntest_forced_cleanup_terminates_descendants (__main__.FixtureProcessTests.test_forced_cleanup_terminates_descendants) ... ok\ntest_missing_pass_fails (__main__.FixtureProcessTests.test_missing_pass_fails) ... ok\ntest_nonzero_exit_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_nonzero_exit_cannot_be_hidden_by_pass) ... ok\ntest_normal_parent_exit_still_cleans_descendants (__main__.FixtureProcessTests.test_normal_parent_exit_still_cleans_descendants) ... ok\ntest_partial_startup_failure_cleans_prior_actor (__main__.FixtureProcessTests.test_partial_startup_failure_cleans_prior_actor) ... ok\ntest_running_process_reports_alive (__main__.FixtureProcessTests.test_running_process_reports_alive) ... skipped 'Linux /proc inspection'\ntest_sanitizer_finding_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_sanitizer_finding_cannot_be_hidden_by_pass) ... ok\ntest_stat_read_process_lookup_reports_dead (__main__.FixtureProcessTests.test_stat_read_process_lookup_reports_dead) ... skipped 'Linux /proc inspection'\ntest_timeout_cleans_tree (__main__.FixtureProcessTests.test_timeout_cleans_tree) ... ok\ntest_unexpected_inspection_errors_propagate (__main__.FixtureProcessTests.test_unexpected_inspection_errors_propagate) ... skipped 'Linux /proc inspection'\ntest_zombie_reports_dead (__main__.FixtureProcessTests.test_zombie_reports_dead) ... skipped 'Linux /proc inspection'\n\n----------------------------------------------------------------------\nRan 14 tests in 1.137s\n\nOK (skipped=6)\n"
+      },
+      "NativeInputs": {
+        "src\\characters\\gl_avatar.h": "4876ac669a827db1c161c11491ccd6c054768c1e5ecadb6a776b55e6629f558c",
+        "src\\characters\\humanoid.h": "1bccf598b3222a18fb21ca20aa2ac2e87bfeb258df307de525b0f7f002f0e8fd",
+        "src\\characters\\humanoid2d.h": "6f1f42052a418163d259a43ac59d969f5ca8f055e6cfc2983b38b977f65b32e2",
+        "src\\characters\\roblox_attachment.h": "53bc0ec63aac46d53f7cf5aee5d11734ddaba6af2be82e6bb51b390a8efb6cb2",
+        "src\\characters\\roblox_bodymovers.h": "eed2ce6b37d0f64990c782708f5f6e07ffd63b9084ddce49ef5e491962f0f7f0",
+        "src\\characters\\roblox_constraints.h": "1ba191fb601a0e5a7e2f8e37357804a4be5402d5f46e987699a48936d963ec29",
+        "src\\characters\\roblox_part.h": "deb7f298c8dfce4cf0a4715ad7b8ac8d9c8ae4fb5678c4c92f0fe25735f6fc3e",
+        "src\\characters\\roblox_player.h": "ec8edeca20cc147571f51bb53cfe3f3635c91c2f77831dd4147e43f9860b88e0",
+        "src\\characters\\roblox_player2d.h": "87c530ea4c0185313c03170b9829139bfbba855701b8fdf7f40d2abb5c5710d8",
+        "src\\characters\\roblox_terrain.h": "1ba7de814f71272882915dbeae1bc546f436c9002a6c041d3038e4d8c5618564",
+        "src\\core\\gl_asset.cpp": "688c6f5dc532518877a8c37cf620b38915d53ae5b3a3c644b5a3a95e0b8d8c6e",
+        "src\\core\\gl_asset.h": "f4a67256b3be488133b4034d35948647053c8717de94945c23d7c6b2febd2c7c",
+        "src\\core\\gl_datastore.cpp": "7780f9be245043971b1486fb296281fe4bc13c4d42185a5cdbf714238a853d22",
+        "src\\core\\gl_datastore.h": "76acd420f5e4e0856415a9e56433ccbc8275a2d9d0a9ecb988aced16a943bd7e",
+        "src\\core\\gl_datastore_backend.h": "d53b79c878b69e73b08d20cebd0c4f790491e82e739ab64d7ba1d0730e08a9a5",
+        "src\\core\\gl_datastore_process.h": "ef8a46331ec6c7a8fc2b60b3262707142eaff5a0edc8c190903ce57b75db80ee",
+        "src\\core\\gl_datastore_protocol.h": "7a7c21c371c62c880430b2935786a886e85a2210ca6acd505ad6cab51e3ca9dc",
+        "src\\core\\gl_debug.h": "d53997cccd029fe114f553a524cf18391f5ad0f338f85620617fc31ef6ac0dfd",
+        "src\\core\\gl_domain_host.cpp": "b59ebbc72b733b633f29eef481e2248825fb9d9ae1074e682b13a1697fdbc882",
+        "src\\core\\gl_domain_host.h": "fcf97f54be89cbd124e5a954b12419135fa1c51a8a37a74b3c525e0e6605250b",
+        "src\\core\\gl_errors.h": "d4b719a9a9bd07e228e774e7adb208ca7f6cac0afef3fb4856ebb386b122c117",
+        "src\\core\\gl_execution_domain.cpp": "487de760902dd42e8c577aad0c44c6bda11e221f66b401a9b7b033c43000d203",
+        "src\\core\\gl_execution_domain.h": "c5f069b32f255d7a87abce7ca743b32a32ac3815cda6f13b5c10c1e77eaf423c",
+        "src\\core\\gl_graphics.h": "12419be5f7c6b409b8fa90423e057aa2b0a6f1b1c581b8a918943f27d6fe5975",
+        "src\\core\\gl_http.cpp": "f2db21aa09319807bfe4f8f8071608d31fa074d9abb45b82e6f788052dcc77c8",
+        "src\\core\\gl_http.h": "2cd3194bb3f6fbe979c43303208404e00739129ef61d403b96cd5c640809120a",
+        "src\\core\\gl_http_policy.h": "fcdc4317fde8cdd6158c1a5e210e54cf4e6e1c18c62679d9298159e2eec933d5",
+        "src\\core\\gl_memory_account.h": "a4084a8b9735d9bf4560f64c588930effdb159bdee6a922e9d975594c7f093ef",
+        "src\\core\\gl_net_bridge.h": "3d825c403a60e09ee2a280c7d229878c684b43977d6685b9a41e54d6db7f8119",
+        "src\\core\\gl_runtime.h": "796566a98d410995bec9ef887114dbaad79c9781d6a541779280304fc177182a",
+        "src\\core\\gl_service_storage.h": "6b75a6c75012cc75256610b5fd185fe38da7dc2b31d47dad6f853fda33139bfe",
+        "src\\core\\gl_stackguard.h": "b4f1270b764d7dd5963f5e6088e6450baec098599e4a8a7c6407e79f60da5b49",
+        "src\\core\\gl_storage.h": "db8766ae41bdf3c69f876565a7b69e492dec47d8186d613c0bbf2bd9d79d69cb",
+        "src\\core\\luau_api.h": "f6287d5e297e54e5dfb6971015e1d51189f8a8b750823a471cde4beaf67fd94a",
+        "src\\core\\luau_class_identity.cpp": "850830a47d6b6c753acaf847e65198b3abba9ee893d24f1eab1b0b34fb30e66f",
+        "src\\core\\luau_class_identity.h": "f34312cd85de561b096a9fc12a17573d50acb9d55e508902c49d40bac8527391",
+        "src\\core\\luau_instance_access.h": "814d81bcdd4576b58660fe9b52ed15cefb3461939d7b6ba152b40304b2f5c14a",
+        "src\\core\\luau_instance_reflection.cpp": "21044d8109b16331bd3bf74db1d0aea166ca8b74bac9a45108b6a5b1eea7743a",
+        "src\\core\\luau_instance_reflection.h": "7500d99d8843051cd2701a0bce3bbf3ebbc9729ac5cd29b4ee3b73c759ac84bf",
+        "src\\core\\luau_language.h": "55a1391489d2aa39ab2f9aba10b3872875af28aad7823f65419057e7d25f4ec7",
+        "src\\core\\luau_script.cpp": "b5142ded1fe4fc8bf0c4171be6a96c14f43173ff95f426bf02067f671d91ef90",
+        "src\\core\\luau_script.h": "ac973800f7bbb483d3be4d4127e60e742df26456fd0573934390f341aea2633c",
+        "src\\core\\luau_stdlib.h": "20a3956cfe680f1ec58a259be898e15feba0a69fe7fb17aac97d77003304db46",
+        "src\\core\\luau_templates_gen.h": "c408755fc3446651e102eab8c7b9fcb39a7d08ac53bafaed723c55c47323d006",
+        "src\\core\\luau_value_bindings.cpp": "b71ba38d41251e4a0b12a079de03e1a4ce1d2a212b5bc7e61f63ae455a28defc",
+        "src\\core\\luau_value_bindings.h": "ffcc71b3d07452ca0305cb7d34dc1f1692fe14d73580ce8173546d037b4d0fed",
+        "src\\core\\luau_variant_bindings.cpp": "b316536110a6bb97e8c1b0510bb7998fc250f8299d30b2dcec2e880a45ad493a",
+        "src\\core\\luau_variant_bindings.h": "aa63d5356b04e6a67a2494131cdd87827209eaa959e0ed34f81e965c131c1ac4",
+        "src\\core\\menu_templates.h": "418e0a70c58bcd8504a2c0d7e71ef43843ce84178078cb6d44522f5b6b0c1073",
+        "src\\core\\register_types.cpp": "770eb4b1d3f896823b8dc685cbf2706fe15ee9d964cbc263cbdc73b801fcc592",
+        "src\\core\\register_types.h": "e56515c6940103fc2c3995be4b702f6e8211d1dd9e19f82def9aa6592b107e74",
+        "src\\core\\roblox_behavior.h": "dc597686dbc7a28a40993df1654efd6ac231515570bf59af8864f0aacca937a8",
+        "src\\core\\roblox_effects.h": "4dede9fafdf0b18f81f89d299ef32bf7133f120bb77c0c335e80f3f899464ae1",
+        "src\\core\\roblox_extra.h": "b8bd2bb9a72a53d468f9c46da4e9afec4d2bb76afe6a2a610a41324f9617685d",
+        "src\\editor\\luau_autocomplete.h": "8e06e5dfdf64339219a649f859ae2d19fa33113607026aa67348fefb1974fcdb",
+        "src\\editor\\luau_type_database.h": "33418835ae9cf8a5659c7782432adacc18aeacb995cd6c57acdfdbeaa1d23ee9",
+        "src\\gameplay\\roblox_animation.h": "157aee01e681fc33ae41f74cb4873ca34bcd9ed26704c035bc54eb8b7205b9f6",
+        "src\\gameplay\\roblox_input.h": "9077add9865e02dfd4e70a4cacb51b8d0d2764daaaa4025ae81ad9ba3a83a37d",
+        "src\\gameplay\\roblox_interactive.h": "453fa23f0092e56c335a0f55c0d02a99b422d4c12db2ca2862e972d0b0865d67",
+        "src\\gameplay\\roblox_remote.h": "9fc08a491cab888a7fc8edf2ff5ddef9f5ae17e92e6ab9131c0b99d941d0b0b2",
+        "src\\gameplay\\roblox_sound.h": "e41f9858897446d6e51a3de3bffd0e766fd129b12c15eae1070a33927df1ab7e",
+        "src\\gameplay\\roblox_tween.h": "f50c1ca4be6c65b02247b99b0413fbe6298d17ac6e3b0559f3580e902250053b",
+        "src\\importer\\rbx_classmap.h": "38955b34840433029baf487d9f0bca222cc1c9ec0571a9df38cfd56f3eebf70e",
+        "src\\importer\\rbx_import_plugin.h": "277fd321fbd2d3b70aa76dabd4e4d261eef91c5bfedca08e8746344ccf34a492",
+        "src\\importer\\rbx_importer.h": "511a8d2cd999e02a51cadfaa880fae41c7081a4a176f6863a8dbe117032b96b4",
+        "src\\importer\\rbx_instances.h": "b924251abb88c4d9f1aceb9bb584a98d03b778583cf4be86ee978b679cb46698",
+        "src\\importer\\rbx_prop.h": "e7e7eca63b8da5186b81cc6b6faefc8e54ad8119a4675df56e4761aab5a9226e",
+        "src\\importer\\rbx_reader.h": "10ee1a414bf2d31b25505c2715ee884ff1200993fba51c937015399a6386ae1c",
+        "src\\persistence\\worker_main.cpp": "3059bd5ae8433f20c553ebbd983a0d259cf800eb230f012dd029142d77b4659c",
+        "src\\services\\folder.h": "7a2076ef0395288813af25e54c4542dede2751f5d3d2d28db62ddb7ff610394c",
+        "src\\services\\gl_chunks.h": "bd0a54e0a61fad9dd66ba1ac3a03f8e97054df13b948c4380924f59b1b9a8f3d",
+        "src\\services\\roblox_datamodel.h": "feb803ac6424acb419e6fb364ede440e8b9dc998ec26a9c62b95a8ecf643ef1b",
+        "src\\services\\roblox_game2d.h": "9d1a29c5f0a4d032a434dfbf504646a86d04f1659329fb2067d88b3457ef178c",
+        "src\\services\\roblox_game3d.h": "f42c922f610a8f9485e77d3e9c4bb1840e21840ecfce3bb20229e61a9f839089",
+        "src\\services\\roblox_network.h": "b83661b7f9dff1c4571b6d8c7d9c4b1262059d2163c7d47f2ec7898c744b0b20",
+        "src\\services\\roblox_services.h": "95587fc34abd87d4f1a61dbad1e4f436a9df1962a925ece00947f60f146c857c",
+        "src\\services\\roblox_workspace.h": "35b2f7663acfa1cfffcea1ce95f3f26d31d99b2f938a5346e758628d192b12e5",
+        "src\\services\\roblox_workspace2d.h": "89758876f0d1ef3ead18fa1d7bfdceed6206830d76d9b5c529b6d11824ee83fb",
+        "src\\ui\\gl_gui_core.h": "c64368c82838273404b6d3005dda260cf8901d13131d24706a154aaa42431874",
+        "src\\ui\\gl_settings_menu.h": "40a6dbe68dc4e7a982955f64261b3546f0118ff744cdffc87058857c5e221ff5",
+        "src\\ui\\gl_ui_modifiers.h": "ce9852ddeb9621f1395efb38b2606f1d270e709491e3e2a454f217126c1df0dc",
+        "src\\ui\\gl_world_gui.h": "66d3367595d5cbefaf35252f9a1f76d19642a72744addad97fb219f7e0bf3bf7",
+        "src\\ui\\roblox_billboard.h": "d2da88ee7e8b26d0f99517dfb9314918581e73a870bcd214a6c019bc95bce723",
+        "src\\ui\\roblox_chat.h": "83953b20cd67bcf0c398ab6b8d0425d858e2055afc4ac2e3889118f75cb74a66",
+        "src\\ui\\roblox_gui.h": "a8169c1f31c77a980fd165b53aedbb2564bd4ca7aae0ec2d39eb58878ad1c851",
+        "src\\ui\\roblox_lighting_fx.h": "302e1085cca452b5c3411aff88de7ff5a2ad586aa47c33f9f40fe9e3afc54430"
+      },
+      "Limitations": [
+        "Local same-account cooperating writers; no mixed-old-writer/network filesystem/replica guarantee",
+        "OS file/namespace flush acknowledgment, no physical-power-loss test or Windows directory-fsync equivalence claim",
+        "Native serialization/process creation costs measured, not hard realtime or total-process-memory bounds",
+        "VM quotas exclude Godot/OS allocations; no aggregate persistent-disk quota or tombstone collection",
+        "Kernel-blocked children may outlast bounded termination/reaping; restore storage health before failed-device reload",
+        "Windows full native ASan GL-018 remains open; Windows core ASan passes",
+        "GL-017 engine diagnostics retained; GL-020 adversarial animation qualification remains open",
+        "No main merge, release publication or updater distribution"
+      ]
+    },
+    "Linux": {
+      "Platform": "Linux",
+      "NativeSource": {
+        "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+        "Files": 87,
+        "Newlines": "LF normalized"
+      },
+      "Base": "bc8ca88771a2170350e539de48f2cff89044d924",
+      "Implementation": "d4dfb32ee89aef0968725597371db753259acbac",
+      "Core": {
+        "debug": {
+          "Cases": 72,
+          "JUnitSHA256": "cc28049b08257750cd1e666f03781ac6c75753de22288daf79d6c90aae46c118",
+          "Report": "/work/logs/gl009-qualified-v4-debug-core.xml"
+        },
+        "release": {
+          "Cases": 72,
+          "JUnitSHA256": "3bbe6dea94d5e17d3623211b1b0f9a2de7c827c7c9c4515f8d7f06703f5c6bef",
+          "Report": "/work/logs/gl009-qualified-v4-release-core.xml"
+        },
+        "asan": {
+          "Cases": 72,
+          "JUnitSHA256": "ad76dd5161341d4ec6821d8e2805246eeac4b037e60a93385c83341549971f76",
+          "Report": "/work/logs/gl009-qualified-v4-asan-core.xml"
+        }
+      },
+      "Native": {
+        "debug": {
+          "Actors": 66,
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+              "LogsSHA256": "a39f7818ffea7c94c0579a120e8c3bb851a09f0d65a0d9c5176dc4cf17a71059"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "ad10550f61b5a2ded3acccb6c356891259f5ad22fabc08105d9802b9607ae236",
+              "LogsSHA256": "101b3d256e67100921495c2fbd365f0e27de5224dc99fbfafcb96a044c510d4e"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+              "LogsSHA256": "29fade60f10b49b29ba8b54d7f5e2839368605702a364346db19181d995aa8da"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "ddcc4fba7822847942a827fc59253c9e9bafac4af6874713fb66960931d5885e"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "7d135fb6bd2b0a40da06cfc09614bfb6b90c0646befffdea8997bcb5faaa4f6c"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "6a634d71c04cbccc64b7f90089b8e1ef119f6ab78d123134e0d8564fb44baf0a"
+            },
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "57776668edbc09c6b0302a2e845331ca7fca86fde48f3ecf88d291aa658774d8",
+              "LogsSHA256": "afb918c9c4e6f18a05ff0855969bfb10dc83f41a944a0958f83370929121cdff"
+            }
+          },
+          "Output": "/work/results/gl009-qualified-v4-linux-debug",
+          "ExtensionSHA256": "94ae954ad4b1f2249ebee6bbaf9757c6b4077a8fc7c696c37f665ab58b65787f",
+          "WorkerSHA256": "889de813a254905c4ef9bccf32d8e099df83f2a838bd97e3f85c02288807a675",
+          "CommitInterruption": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "DataStoreMeasurements": [
+            {
+              "ElapsedMilliseconds": 1468,
+              "PeakFrameGapSeconds": 0.040592
+            },
+            {
+              "ElapsedMilliseconds": 1621,
+              "PeakFrameGapSeconds": 0.068533
+            }
+          ]
+        },
+        "release": {
+          "Actors": 66,
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+              "LogsSHA256": "34bfd22ab80c97c705f5fa4ff0bd607e4526aed545e559d8d5c8d6221a3fff7f"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "948802dccb26ce5556979599f76709b709903f29bf0631f7737058d711c6f9ad",
+              "LogsSHA256": "5357b5b0c84f5331b1c68c07237ad999ee89dc3c0fdfa457390c630c4db46856"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+              "LogsSHA256": "d98410b1ac809e114ef570a5a16f87dad8e06ee31a0149158968abd3937fea1d"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "a551c5769ca5c5748c32037f56a216e71bc7cff726b49e6588992ee126925cde"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "582307519427fef2b82e9aeffe7bbdd44365ce37fed0511eb21908c5bf202932"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "6d4fdf97b542187bc999a5fc1f82d1d8ea401a3a457781005fc9105af3e977ab"
+            },
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "57776668edbc09c6b0302a2e845331ca7fca86fde48f3ecf88d291aa658774d8",
+              "LogsSHA256": "b4babb27f5fd9e12bff8b545ad58b76c362caf0f4b62d897e64bfca2cdcd7739"
+            }
+          },
+          "Output": "/work/results/gl009-qualified-v4-linux-release",
+          "ExtensionSHA256": "4f27e81ea5a686ae3726266052dbe2c015fad5f607b6e9de8accb48d03aada2a",
+          "WorkerSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0",
+          "CommitInterruption": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "DataStoreMeasurements": [
+            {
+              "ElapsedMilliseconds": 1421,
+              "PeakFrameGapSeconds": 0.013134
+            },
+            {
+              "ElapsedMilliseconds": 1601,
+              "PeakFrameGapSeconds": 0.047412
+            }
+          ]
+        },
+        "asan": {
+          "Actors": 66,
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "dfaabcdd0f54f89450cd2615dc6ea7c35df624de2017f0af082a45c0d3a712ff",
+              "LogsSHA256": "194a13f9508b8510262f806db5cd3d685790f53b0868a80ac85d42c6ad79f8d4"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "00b3530b2424c34d44fe9e36743b3b057601e6678f041d4ea8f49ab9c6903e1e",
+              "LogsSHA256": "0f57dec29af658aa443ce3019b8459309df83b086d9e39856294ddce646a312d"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "b57351616e7ee1bb26ed740e538c8b1cfe4e46c7c4cf36f917e46afa713a30b4",
+              "LogsSHA256": "88d4ec585aac8afb209bf126522c4ffb04eae07c0cfde779c85a898c16fdaa3c"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2d4e7fc7ef1aa62016b3b13050b838504b12eee81821733a111ccace7b77e60",
+              "LogsSHA256": "a94516a2f2de1f01b8c3970380710b355677f991958544854f56372edc6b63d4"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "64379acf96b1fbaa376e52b7d412482f9802d8762a4df5f15a2e5b3f26917a3c",
+              "LogsSHA256": "7d9f91b48d53087ec7177db9103da5d50696bde436913f75ca8b82e4bec51fa2"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "97af3b7884c7265b1d19fd5dbda2a8ac13bcd531c2789a68ada94c5e4231be16",
+              "LogsSHA256": "a27e8317eefe3867b07d5dd425c2422831caa0bca382d18fd34d10a86d881d85"
+            },
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "47a9a0884e8eda3ea2a652e041734f5c40cfd6cd3e6adb04453d3c03c549b1c2",
+              "LogsSHA256": "de3e1775d2da776b62176200fbd8ddbed9985994cc8bd54f5ff1ac221a7b2f89"
+            }
+          },
+          "Output": "/work/results/gl009-qualified-v4-linux-asan",
+          "ExtensionSHA256": "e6bc698bbed4df2fe8d61cdd012190e7a3efb6d9e71e6c70a470e208863e4c9c",
+          "WorkerSHA256": "384a1af10231096ca5d2c1a46ecd94b564de526acdaee559c2fb1dc9e75ce0ec",
+          "CommitInterruption": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "DataStoreMeasurements": [
+            {
+              "ElapsedMilliseconds": 1607,
+              "PeakFrameGapSeconds": 0.008188
+            },
+            {
+              "ElapsedMilliseconds": 2219,
+              "PeakFrameGapSeconds": 0.478938
+            }
+          ]
+        }
+      },
+      "SCons": {
+        "template_debug": {
+          "Actors": 38,
+          "Groups": {
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "57776668edbc09c6b0302a2e845331ca7fca86fde48f3ecf88d291aa658774d8",
+              "LogsSHA256": "c280f2f009e7cbc2e05e9e073246eef0d6da194be6ca3210121502e93ae2261a"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "156bd231afaf059771149e6147b324be893ab67b015456a338057d1c410cf1d9"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "e2d287687d417ca6b00e42e4f8626ebedf054c5b5680ac01031b70ed58ae3bd3"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "e151532f5bb3acbf82b0ee092c5c714e825716f6726152f14ed632630522b873"
+            }
+          },
+          "ExtensionSHA256": "3b768cdef437fd2c4745da23cd0bc833783405c1d0849536c8e73fcda588543f",
+          "WorkerSHA256": "7e2e0b1c7ca9e078f7a28f3a9950b6a9c114bedefca54325a4d1c21902823b91",
+          "Output": "/work/results/gl009-qualified-v4-scons-linux-template_debug"
+        },
+        "template_release": {
+          "Actors": 38,
+          "Groups": {
+            "datastore": {
+              "Actors": 23,
+              "ResultsSHA256": "57776668edbc09c6b0302a2e845331ca7fca86fde48f3ecf88d291aa658774d8",
+              "LogsSHA256": "6472dd5d42b74103d1389a45799b310a725383807a363114162062d5d7112f3d"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "1c60dfc43aff20315e7cb2c2ed4e1c9613d683c52e2572a85ab2a133d63e7f56"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "b7489d376a40fa56172cbfc89972bf0566b2b50cd87a4883ec82bca4a51218cc"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "1b3c867a27a158ed0ce2ed81857d3704e09b159a862b7bfabe75cad675fca978"
+            }
+          },
+          "ExtensionSHA256": "a4070aea523d777d7cc15365ccc88333b89ed5b4eaca9e12865e9c6c460a5871",
+          "WorkerSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Output": "/work/results/gl009-qualified-v4-scons-linux-template_release"
+        }
+      },
+      "Engines": {
+        "official": {
+          "Path": "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "SHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde"
+        },
+        "matching_asan": {
+          "Path": "/work/godot-asan/bin/godot.linuxbsd.template_debug.dev.x86_64.san",
+          "SHA256": "0223d0b034001f5bf9583e86bb76f7e96b9e816640ad11d526ba404ca5e34f73"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+        "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+        "CheckNativeCI.py": "4ba73b8d976d77d6f9ac3df0e63939c9275b3212f0ef4e64229c5d54a334d07b",
+        "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+        "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+        "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+        "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+        "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+        "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+        "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "ExecutionDomainTests.cpp": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+        "FilesystemIntegration.gd": "62b97405f675cc47dce9a371efd02cb27be64bc2ab9fe6b5c52085b48fff2229",
+        "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+        "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+        "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+        "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+        "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+        "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+        "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+        "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+        "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunQualification.py": "9c97b09b7f1c85bafcc14bf9380ef7501f9682100fe7e4d0e0256f4807e25346",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+      },
+      "Baseline": {
+        "Output": "/work/results/gl009-baseline-v1",
+        "Result": {
+          "Source": {
+            "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+            "Files": 81,
+            "Newlines": "LF normalized"
+          },
+          "Actors": [
+            {
+              "Label": "seed-seed",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "writers-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "writers-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "verify-fresh-reader",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "failures-single",
+              "Exit": 0,
+              "Diagnostics": "ERROR: Parse JSON failed. Error at line 0: Expected '}'\n   at: parse_string (core/io/json.cpp:629)"
+            }
+          ],
+          "Interrupted": {
+            "Exit": -9,
+            "Prior": {
+              "Sentinel": 12345
+            },
+            "ResultBytes": 0,
+            "Disposition": "Real successful native truncation, controlled pause, then owned process termination; no power-loss claim"
+          }
+        },
+        "ResultsSHA256": "766b60848b90a4fff44e16602e5953ad2f2c527bfc959aa9a7b3f42023c3fd56",
+        "LogsSHA256": "2607c49a789e22e77b5040426dc7302127f265e6c150b16b62210239f0f8f1bb",
+        "ExtensionSHA256": "6fd1f7854c80c7ac26703713cd31b1fcd538af2a8699baacb4fc5a6bf7ea8024",
+        "SentinelSHA256": "4c6d55a9ffdd152dfbcaacdcb30a30f793bcbf16e69067ffd5f48a967ba4cccd"
+      },
+      "Dependencies": {
+        "godot-cpp": {
+          "Revision": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "SHA256": "88627d442827ebb09f0de875e59939216f74a09d2479104f00714b047548620c",
+          "Newlines": "LF normalized"
+        },
+        "luau": {
+          "Revision": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+          "SHA256": "fde7ed51588a364dcb97680fbe40e73106b3e4ce4b52d8652c36b1a2ba563391",
+          "Newlines": "LF normalized"
+        }
+      },
+      "ProcessTests": {
+        "LogSHA256": "eced097be9b1eccdcfa6cd92c9e58e5a73e417196efd8afa88353bb3730c7b59",
+        "Output": "test_disappearance_after_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_after_stat_read_reports_dead) ... ok\ntest_disappearance_before_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_before_stat_read_reports_dead) ... ok\ntest_failure_marker_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_failure_marker_cannot_be_hidden_by_pass) ... ok\ntest_forced_cleanup_terminates_descendants (__main__.FixtureProcessTests.test_forced_cleanup_terminates_descendants) ... ok\ntest_missing_pass_fails (__main__.FixtureProcessTests.test_missing_pass_fails) ... ok\ntest_nonzero_exit_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_nonzero_exit_cannot_be_hidden_by_pass) ... ok\ntest_normal_parent_exit_still_cleans_descendants (__main__.FixtureProcessTests.test_normal_parent_exit_still_cleans_descendants) ... ok\ntest_partial_startup_failure_cleans_prior_actor (__main__.FixtureProcessTests.test_partial_startup_failure_cleans_prior_actor) ... ok\ntest_running_process_reports_alive (__main__.FixtureProcessTests.test_running_process_reports_alive) ... ok\ntest_sanitizer_finding_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_sanitizer_finding_cannot_be_hidden_by_pass) ... ok\ntest_stat_read_process_lookup_reports_dead (__main__.FixtureProcessTests.test_stat_read_process_lookup_reports_dead) ... ok\ntest_timeout_cleans_tree (__main__.FixtureProcessTests.test_timeout_cleans_tree) ... ok\ntest_unexpected_inspection_errors_propagate (__main__.FixtureProcessTests.test_unexpected_inspection_errors_propagate) ... ok\ntest_zombie_reports_dead (__main__.FixtureProcessTests.test_zombie_reports_dead) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.241s\n\nOK\n"
+      },
+      "NativeInputs": {
+        "src/characters/gl_avatar.h": "4876ac669a827db1c161c11491ccd6c054768c1e5ecadb6a776b55e6629f558c",
+        "src/characters/humanoid.h": "1bccf598b3222a18fb21ca20aa2ac2e87bfeb258df307de525b0f7f002f0e8fd",
+        "src/characters/humanoid2d.h": "6f1f42052a418163d259a43ac59d969f5ca8f055e6cfc2983b38b977f65b32e2",
+        "src/characters/roblox_attachment.h": "53bc0ec63aac46d53f7cf5aee5d11734ddaba6af2be82e6bb51b390a8efb6cb2",
+        "src/characters/roblox_bodymovers.h": "eed2ce6b37d0f64990c782708f5f6e07ffd63b9084ddce49ef5e491962f0f7f0",
+        "src/characters/roblox_constraints.h": "1ba191fb601a0e5a7e2f8e37357804a4be5402d5f46e987699a48936d963ec29",
+        "src/characters/roblox_part.h": "deb7f298c8dfce4cf0a4715ad7b8ac8d9c8ae4fb5678c4c92f0fe25735f6fc3e",
+        "src/characters/roblox_player.h": "ec8edeca20cc147571f51bb53cfe3f3635c91c2f77831dd4147e43f9860b88e0",
+        "src/characters/roblox_player2d.h": "87c530ea4c0185313c03170b9829139bfbba855701b8fdf7f40d2abb5c5710d8",
+        "src/characters/roblox_terrain.h": "1ba7de814f71272882915dbeae1bc546f436c9002a6c041d3038e4d8c5618564",
+        "src/core/gl_asset.cpp": "688c6f5dc532518877a8c37cf620b38915d53ae5b3a3c644b5a3a95e0b8d8c6e",
+        "src/core/gl_asset.h": "f4a67256b3be488133b4034d35948647053c8717de94945c23d7c6b2febd2c7c",
+        "src/core/gl_datastore.cpp": "7780f9be245043971b1486fb296281fe4bc13c4d42185a5cdbf714238a853d22",
+        "src/core/gl_datastore.h": "76acd420f5e4e0856415a9e56433ccbc8275a2d9d0a9ecb988aced16a943bd7e",
+        "src/core/gl_datastore_backend.h": "d53b79c878b69e73b08d20cebd0c4f790491e82e739ab64d7ba1d0730e08a9a5",
+        "src/core/gl_datastore_process.h": "ef8a46331ec6c7a8fc2b60b3262707142eaff5a0edc8c190903ce57b75db80ee",
+        "src/core/gl_datastore_protocol.h": "7a7c21c371c62c880430b2935786a886e85a2210ca6acd505ad6cab51e3ca9dc",
+        "src/core/gl_debug.h": "d53997cccd029fe114f553a524cf18391f5ad0f338f85620617fc31ef6ac0dfd",
+        "src/core/gl_domain_host.cpp": "b59ebbc72b733b633f29eef481e2248825fb9d9ae1074e682b13a1697fdbc882",
+        "src/core/gl_domain_host.h": "fcf97f54be89cbd124e5a954b12419135fa1c51a8a37a74b3c525e0e6605250b",
+        "src/core/gl_errors.h": "d4b719a9a9bd07e228e774e7adb208ca7f6cac0afef3fb4856ebb386b122c117",
+        "src/core/gl_execution_domain.cpp": "487de760902dd42e8c577aad0c44c6bda11e221f66b401a9b7b033c43000d203",
+        "src/core/gl_execution_domain.h": "c5f069b32f255d7a87abce7ca743b32a32ac3815cda6f13b5c10c1e77eaf423c",
+        "src/core/gl_graphics.h": "12419be5f7c6b409b8fa90423e057aa2b0a6f1b1c581b8a918943f27d6fe5975",
+        "src/core/gl_http.cpp": "f2db21aa09319807bfe4f8f8071608d31fa074d9abb45b82e6f788052dcc77c8",
+        "src/core/gl_http.h": "2cd3194bb3f6fbe979c43303208404e00739129ef61d403b96cd5c640809120a",
+        "src/core/gl_http_policy.h": "fcdc4317fde8cdd6158c1a5e210e54cf4e6e1c18c62679d9298159e2eec933d5",
+        "src/core/gl_memory_account.h": "a4084a8b9735d9bf4560f64c588930effdb159bdee6a922e9d975594c7f093ef",
+        "src/core/gl_net_bridge.h": "3d825c403a60e09ee2a280c7d229878c684b43977d6685b9a41e54d6db7f8119",
+        "src/core/gl_runtime.h": "796566a98d410995bec9ef887114dbaad79c9781d6a541779280304fc177182a",
+        "src/core/gl_service_storage.h": "6b75a6c75012cc75256610b5fd185fe38da7dc2b31d47dad6f853fda33139bfe",
+        "src/core/gl_stackguard.h": "b4f1270b764d7dd5963f5e6088e6450baec098599e4a8a7c6407e79f60da5b49",
+        "src/core/gl_storage.h": "db8766ae41bdf3c69f876565a7b69e492dec47d8186d613c0bbf2bd9d79d69cb",
+        "src/core/luau_api.h": "f6287d5e297e54e5dfb6971015e1d51189f8a8b750823a471cde4beaf67fd94a",
+        "src/core/luau_class_identity.cpp": "850830a47d6b6c753acaf847e65198b3abba9ee893d24f1eab1b0b34fb30e66f",
+        "src/core/luau_class_identity.h": "f34312cd85de561b096a9fc12a17573d50acb9d55e508902c49d40bac8527391",
+        "src/core/luau_instance_access.h": "814d81bcdd4576b58660fe9b52ed15cefb3461939d7b6ba152b40304b2f5c14a",
+        "src/core/luau_instance_reflection.cpp": "21044d8109b16331bd3bf74db1d0aea166ca8b74bac9a45108b6a5b1eea7743a",
+        "src/core/luau_instance_reflection.h": "7500d99d8843051cd2701a0bce3bbf3ebbc9729ac5cd29b4ee3b73c759ac84bf",
+        "src/core/luau_language.h": "55a1391489d2aa39ab2f9aba10b3872875af28aad7823f65419057e7d25f4ec7",
+        "src/core/luau_script.cpp": "b5142ded1fe4fc8bf0c4171be6a96c14f43173ff95f426bf02067f671d91ef90",
+        "src/core/luau_script.h": "ac973800f7bbb483d3be4d4127e60e742df26456fd0573934390f341aea2633c",
+        "src/core/luau_stdlib.h": "20a3956cfe680f1ec58a259be898e15feba0a69fe7fb17aac97d77003304db46",
+        "src/core/luau_templates_gen.h": "c408755fc3446651e102eab8c7b9fcb39a7d08ac53bafaed723c55c47323d006",
+        "src/core/luau_value_bindings.cpp": "b71ba38d41251e4a0b12a079de03e1a4ce1d2a212b5bc7e61f63ae455a28defc",
+        "src/core/luau_value_bindings.h": "ffcc71b3d07452ca0305cb7d34dc1f1692fe14d73580ce8173546d037b4d0fed",
+        "src/core/luau_variant_bindings.cpp": "b316536110a6bb97e8c1b0510bb7998fc250f8299d30b2dcec2e880a45ad493a",
+        "src/core/luau_variant_bindings.h": "aa63d5356b04e6a67a2494131cdd87827209eaa959e0ed34f81e965c131c1ac4",
+        "src/core/menu_templates.h": "418e0a70c58bcd8504a2c0d7e71ef43843ce84178078cb6d44522f5b6b0c1073",
+        "src/core/register_types.cpp": "770eb4b1d3f896823b8dc685cbf2706fe15ee9d964cbc263cbdc73b801fcc592",
+        "src/core/register_types.h": "e56515c6940103fc2c3995be4b702f6e8211d1dd9e19f82def9aa6592b107e74",
+        "src/core/roblox_behavior.h": "dc597686dbc7a28a40993df1654efd6ac231515570bf59af8864f0aacca937a8",
+        "src/core/roblox_effects.h": "4dede9fafdf0b18f81f89d299ef32bf7133f120bb77c0c335e80f3f899464ae1",
+        "src/core/roblox_extra.h": "b8bd2bb9a72a53d468f9c46da4e9afec4d2bb76afe6a2a610a41324f9617685d",
+        "src/editor/luau_autocomplete.h": "8e06e5dfdf64339219a649f859ae2d19fa33113607026aa67348fefb1974fcdb",
+        "src/editor/luau_type_database.h": "33418835ae9cf8a5659c7782432adacc18aeacb995cd6c57acdfdbeaa1d23ee9",
+        "src/gameplay/roblox_animation.h": "157aee01e681fc33ae41f74cb4873ca34bcd9ed26704c035bc54eb8b7205b9f6",
+        "src/gameplay/roblox_input.h": "9077add9865e02dfd4e70a4cacb51b8d0d2764daaaa4025ae81ad9ba3a83a37d",
+        "src/gameplay/roblox_interactive.h": "453fa23f0092e56c335a0f55c0d02a99b422d4c12db2ca2862e972d0b0865d67",
+        "src/gameplay/roblox_remote.h": "9fc08a491cab888a7fc8edf2ff5ddef9f5ae17e92e6ab9131c0b99d941d0b0b2",
+        "src/gameplay/roblox_sound.h": "e41f9858897446d6e51a3de3bffd0e766fd129b12c15eae1070a33927df1ab7e",
+        "src/gameplay/roblox_tween.h": "f50c1ca4be6c65b02247b99b0413fbe6298d17ac6e3b0559f3580e902250053b",
+        "src/importer/rbx_classmap.h": "38955b34840433029baf487d9f0bca222cc1c9ec0571a9df38cfd56f3eebf70e",
+        "src/importer/rbx_import_plugin.h": "277fd321fbd2d3b70aa76dabd4e4d261eef91c5bfedca08e8746344ccf34a492",
+        "src/importer/rbx_importer.h": "511a8d2cd999e02a51cadfaa880fae41c7081a4a176f6863a8dbe117032b96b4",
+        "src/importer/rbx_instances.h": "b924251abb88c4d9f1aceb9bb584a98d03b778583cf4be86ee978b679cb46698",
+        "src/importer/rbx_prop.h": "e7e7eca63b8da5186b81cc6b6faefc8e54ad8119a4675df56e4761aab5a9226e",
+        "src/importer/rbx_reader.h": "10ee1a414bf2d31b25505c2715ee884ff1200993fba51c937015399a6386ae1c",
+        "src/persistence/worker_main.cpp": "3059bd5ae8433f20c553ebbd983a0d259cf800eb230f012dd029142d77b4659c",
+        "src/services/folder.h": "7a2076ef0395288813af25e54c4542dede2751f5d3d2d28db62ddb7ff610394c",
+        "src/services/gl_chunks.h": "bd0a54e0a61fad9dd66ba1ac3a03f8e97054df13b948c4380924f59b1b9a8f3d",
+        "src/services/roblox_datamodel.h": "feb803ac6424acb419e6fb364ede440e8b9dc998ec26a9c62b95a8ecf643ef1b",
+        "src/services/roblox_game2d.h": "9d1a29c5f0a4d032a434dfbf504646a86d04f1659329fb2067d88b3457ef178c",
+        "src/services/roblox_game3d.h": "f42c922f610a8f9485e77d3e9c4bb1840e21840ecfce3bb20229e61a9f839089",
+        "src/services/roblox_network.h": "b83661b7f9dff1c4571b6d8c7d9c4b1262059d2163c7d47f2ec7898c744b0b20",
+        "src/services/roblox_services.h": "95587fc34abd87d4f1a61dbad1e4f436a9df1962a925ece00947f60f146c857c",
+        "src/services/roblox_workspace.h": "35b2f7663acfa1cfffcea1ce95f3f26d31d99b2f938a5346e758628d192b12e5",
+        "src/services/roblox_workspace2d.h": "89758876f0d1ef3ead18fa1d7bfdceed6206830d76d9b5c529b6d11824ee83fb",
+        "src/ui/gl_gui_core.h": "c64368c82838273404b6d3005dda260cf8901d13131d24706a154aaa42431874",
+        "src/ui/gl_settings_menu.h": "40a6dbe68dc4e7a982955f64261b3546f0118ff744cdffc87058857c5e221ff5",
+        "src/ui/gl_ui_modifiers.h": "ce9852ddeb9621f1395efb38b2606f1d270e709491e3e2a454f217126c1df0dc",
+        "src/ui/gl_world_gui.h": "66d3367595d5cbefaf35252f9a1f76d19642a72744addad97fb219f7e0bf3bf7",
+        "src/ui/roblox_billboard.h": "d2da88ee7e8b26d0f99517dfb9314918581e73a870bcd214a6c019bc95bce723",
+        "src/ui/roblox_chat.h": "83953b20cd67bcf0c398ab6b8d0425d858e2055afc4ac2e3889118f75cb74a66",
+        "src/ui/roblox_gui.h": "a8169c1f31c77a980fd165b53aedbb2564bd4ca7aae0ec2d39eb58878ad1c851",
+        "src/ui/roblox_lighting_fx.h": "302e1085cca452b5c3411aff88de7ff5a2ad586aa47c33f9f40fe9e3afc54430"
+      },
+      "Limitations": [
+        "Local same-account cooperating writers; no mixed-old-writer/network filesystem/replica guarantee",
+        "OS file/namespace flush acknowledgment, no physical-power-loss test or Windows directory-fsync equivalence claim",
+        "Native serialization/process creation costs measured, not hard realtime or total-process-memory bounds",
+        "VM quotas exclude Godot/OS allocations; no aggregate persistent-disk quota or tombstone collection",
+        "Kernel-blocked children may outlast bounded termination/reaping; restore storage health before failed-device reload",
+        "Windows full native ASan GL-018 remains open; Windows core ASan passes",
+        "GL-017 engine diagnostics retained; GL-020 adversarial animation qualification remains open",
+        "No main merge, release publication or updater distribution"
+      ]
+    }
+  },
+  "RetirementQualification": {
+    "Actors": 40,
+    "Mode": "Linux native ASan/LSan; scoped PR_SET_CHILD_SUBREAPER controller",
+    "ResultsSHA256": "ae8dca686d9e59ee81cc327dde439bd692f212f5a9f950d63afb3ab3a4fac01f",
+    "LogSHA256": "d56033df56516304451c77bc0148103e22739daa91a44199654072fce1f5e57b",
+    "AdoptedTerminatedChildren": [
+      {
+        "Pid": 474,
+        "Status": 9
+      },
+      {
+        "Pid": 504,
+        "Status": 9
+      }
+    ],
+    "FinalLiveOrDefunctDescendants": 0,
+    "PowerLossTest": false
+  },
+  "HostedCI": {
+    "Revision": "d4dfb32ee89aef0968725597371db753259acbac",
+    "Runs": {
+      "Core": {
+        "conclusion": "success",
+        "databaseId": 40999872768,
+        "headSha": "d4dfb32ee89aef0968725597371db753259acbac",
+        "jobs": [
+          {
+            "completedAt": "2026-10-30T03:55:02Z",
+            "conclusion": "success",
+            "databaseId": 123881522802,
+            "name": "Core (Windows, Debug)",
+            "startedAt": "2026-10-30T03:53:46Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T03:53:48Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T03:53:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:06Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T03:53:48Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:32Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-30T03:54:06Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:53Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-30T03:54:32Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:55Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-30T03:54:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:57Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-30T03:54:55Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:58Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-30T03:54:57Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:55:01Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-30T03:54:58Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:55:01Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-30T03:55:01Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40999872768/job/123881522802"
+          },
+          {
+            "completedAt": "2026-10-30T03:54:13Z",
+            "conclusion": "success",
+            "databaseId": 123881523093,
+            "name": "Core (Linux, Debug)",
+            "startedAt": "2026-10-30T03:53:46Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T03:53:47Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T03:53:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:53:53Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T03:53:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:53:55Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-30T03:53:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:09Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-30T03:53:55Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:09Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-30T03:54:09Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:10Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-30T03:54:09Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:11Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-30T03:54:10Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:12Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-30T03:54:11Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:12Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-30T03:54:12Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40999872768/job/123881523093"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40999872768"
+      },
+      "Native": {
+        "conclusion": "success",
+        "databaseId": 40999871845,
+        "headSha": "d4dfb32ee89aef0968725597371db753259acbac",
+        "jobs": [
+          {
+            "completedAt": "2026-10-30T04:13:39Z",
+            "conclusion": "success",
+            "databaseId": 123881517603,
+            "name": "Native (Windows, Debug)",
+            "startedAt": "2026-10-30T03:53:45Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T03:53:47Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T03:53:46Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:03Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T03:53:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:06Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-30T03:54:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:07Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-30T03:54:06Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:10Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-30T03:54:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:54:27Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 6,
+                "startedAt": "2026-10-30T03:54:10Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:11:53Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 7,
+                "startedAt": "2026-10-30T03:54:27Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:11:54Z",
+                "conclusion": "success",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 8,
+                "startedAt": "2026-10-30T04:11:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:12:05Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 9,
+                "startedAt": "2026-10-30T04:11:54Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:12:23Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 10,
+                "startedAt": "2026-10-30T04:12:05Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:12:39Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 11,
+                "startedAt": "2026-10-30T04:12:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:12:43Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 12,
+                "startedAt": "2026-10-30T04:12:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:12:49Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 13,
+                "startedAt": "2026-10-30T04:12:43Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:13:16Z",
+                "conclusion": "success",
+                "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                "number": 14,
+                "startedAt": "2026-10-30T04:12:49Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:13:33Z",
+                "conclusion": "success",
+                "name": "GL-009 transactional persistence and interrupted commit recovery",
+                "number": 15,
+                "startedAt": "2026-10-30T04:13:16Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:13:33Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 16,
+                "startedAt": "2026-10-30T04:13:33Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:13:35Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 17,
+                "startedAt": "2026-10-30T04:13:33Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:13:37Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 34,
+                "startedAt": "2026-10-30T04:13:35Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:13:37Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 35,
+                "startedAt": "2026-10-30T04:13:37Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40999871845/job/123881517603"
+          },
+          {
+            "completedAt": "2026-10-30T04:03:46Z",
+            "conclusion": "success",
+            "databaseId": 123881517871,
+            "name": "Native (Linux, Debug)",
+            "startedAt": "2026-10-30T03:53:45Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T03:53:46Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T03:53:46Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:53:52Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T03:53:46Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:53:53Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-30T03:53:52Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:53:53Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-30T03:53:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:53:54Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-30T03:53:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T03:53:56Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 6,
+                "startedAt": "2026-10-30T03:53:54Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:02:19Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 7,
+                "startedAt": "2026-10-30T03:53:56Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:02:19Z",
+                "conclusion": "skipped",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 8,
+                "startedAt": "2026-10-30T04:02:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:02:28Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 9,
+                "startedAt": "2026-10-30T04:02:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:02:45Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 10,
+                "startedAt": "2026-10-30T04:02:28Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:00Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 11,
+                "startedAt": "2026-10-30T04:02:45Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:03Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 12,
+                "startedAt": "2026-10-30T04:03:00Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:09Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 13,
+                "startedAt": "2026-10-30T04:03:03Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:30Z",
+                "conclusion": "success",
+                "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                "number": 14,
+                "startedAt": "2026-10-30T04:03:09Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:42Z",
+                "conclusion": "success",
+                "name": "GL-009 transactional persistence and interrupted commit recovery",
+                "number": 15,
+                "startedAt": "2026-10-30T04:03:30Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:42Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 16,
+                "startedAt": "2026-10-30T04:03:42Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:44Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 17,
+                "startedAt": "2026-10-30T04:03:42Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:44Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 34,
+                "startedAt": "2026-10-30T04:03:44Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:03:44Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 35,
+                "startedAt": "2026-10-30T04:03:44Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40999871845/job/123881517871"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40999871845"
+      }
+    },
+    "Artifacts": [
+      {
+        "ID": 12953435073,
+        "Name": "runtime-core-Linux-Debug",
+        "Bytes": 13533,
+        "Digest": "sha256:63f675c515a4e192208f1ca89b77b7fcc86bc860b05ac1f39d6ce180b5f6ca0e",
+        "Run": 40999872768,
+        "Revision": "d4dfb32ee89aef0968725597371db753259acbac"
+      },
+      {
+        "ID": 12953290492,
+        "Name": "runtime-core-Windows-Debug",
+        "Bytes": 12171,
+        "Digest": "sha256:e614a9fa0c130102e6bcb9f2f0fd582e84a3a4796905ea303fd2b086e1f7d925",
+        "Run": 40999872768,
+        "Revision": "d4dfb32ee89aef0968725597371db753259acbac"
+      },
+      {
+        "ID": 12954065721,
+        "Name": "runtime-native-Windows-Debug",
+        "Bytes": 101526,
+        "Digest": "sha256:d2c130b7fcd64e36c2d495be0633a68780604c19cb8109331d196cba132b6593",
+        "Run": 40999871845,
+        "Revision": "d4dfb32ee89aef0968725597371db753259acbac"
+      },
+      {
+        "ID": 12953496777,
+        "Name": "runtime-native-Linux-Debug",
+        "Bytes": 106585,
+        "Digest": "sha256:70148e7bd8e7e49d1974a319ee2c459abb5bae7cf117cdc8483f51287c606949",
+        "Run": 40999871845,
+        "Revision": "d4dfb32ee89aef0968725597371db753259acbac"
+      }
+    ],
+    "NativeVerified": {
+      "Linux": {
+        "SummarySHA256": "98a8c2da98c39861c262b70fd7fbf96165c39451f8c923490de9be776ef1cf7e",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "4ba73b8d976d77d6f9ac3df0e63939c9275b3212f0ef4e64229c5d54a334d07b",
+          "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+          "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+          "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+          "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+          "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+          "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+          "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "ExecutionDomainTests.cpp": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+          "FilesystemIntegration.gd": "62b97405f675cc47dce9a371efd02cb27be64bc2ab9fe6b5c52085b48fff2229",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+          "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "9c97b09b7f1c85bafcc14bf9380ef7501f9682100fe7e4d0e0256f4807e25346",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "WorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+        "ExtensionSHA256": "54b35730959494e7f5a087979fe11e186ae8d8feb514f956ac0bae39aec769ca",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992009,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+            "Bytes": 76056717,
+            "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+          },
+          "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 211,
+        "Actors": 66,
+        "CommitInterruption": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        }
+      },
+      "Windows": {
+        "SummarySHA256": "1c76d7e1946bfa50bbd4522f7a1e3ee420d3f17c5f8216c6baff01b27a97c25d",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "4ba73b8d976d77d6f9ac3df0e63939c9275b3212f0ef4e64229c5d54a334d07b",
+          "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+          "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+          "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+          "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+          "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+          "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+          "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+          "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "ExecutionDomainTests.cpp": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+          "FilesystemIntegration.gd": "62b97405f675cc47dce9a371efd02cb27be64bc2ab9fe6b5c52085b48fff2229",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+          "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "9c97b09b7f1c85bafcc14bf9380ef7501f9682100fe7e4d0e0256f4807e25346",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "WorkerSHA256": "d7aab807b63a0a46b034f3b919e81ab2cd1d0accf5b8fc0a3b0ed8d63e4c5335",
+        "ExtensionSHA256": "bb7f0303277e6badf846a8e8ddee90a05ea0ecc7e06713d9c18e86d966ab9abc",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992673,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+            "Bytes": 84198557,
+            "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "Executable": "Godot_v4.7.1-stable_win64.exe"
+          },
+          "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 212,
+        "Actors": 66,
+        "CommitInterruption": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        }
+      }
+    },
+    "Result": "Four successful hosted Debug jobs; four ZIP digests verified; core72/native66 per platform; exact source/harness/engine identities and 423 native log hashes checked"
+  },
+  "Guardrails": {
+    "Main": "bc8ca88771a2170350e539de48f2cff89044d924",
+    "Merged": false,
+    "ReleaseWorkflowChanged": false,
+    "ReleaseWorkflow": "Manual only; both jobs literal false; contents read",
+    "UpdaterChanged": false,
+    "Updater": "RuntimeUpdatesAllowed returns false",
+    "DependencyPinsChanged": false,
+    "WindowsOwnedHelpersRemaining": 0,
+    "LinuxOwnedQualificationContainer": "Stopped; persistent caches/logs retained; unrelated services unchanged",
+    "DuplicateArtifactReclamation": {
+      "RemovedCopies": 330,
+      "ReclaimedBytes": 20177328808,
+      "RecordSHA256": "6d5633336ae8ab5778ada1b7e22b75181eb52a1fd741a82a90f3df24ff401deb",
+      "WorkerRecord": "/opt/codex/godotluau/logs/gl009-duplicate-reclamation.json",
+      "Scope": "Only hash-identical generated GL-009 qualification library copies; canonical/baseline products, logs, profiles, evidence and build caches retained",
+      "RemainingWorkerDisk": "19GiB available; 81% used"
+    }
+  },
+  "Limitations": [
+    "Same-account cooperating local writers; stop old writers before upgrade; no mixed-writer/network-filesystem/replica guarantee",
+    "OS file/namespace flush acknowledgment; process-kill tests are not physical power-loss testing or Windows directory-fsync equivalence",
+    "Transforms may yield/repeat, at most8 attempts; arbitrary callback side effects are not exactly-once or rolled back",
+    "Ordered sorting is local cache; public historical-version APIs remain stubs; no cross-key transactions",
+    "16MiB/native lexical and traversal bounds, four requests per extension generation and two per owner; no aggregate disk quota",
+    "Native requests30s on host ticks, lock contention1s, synchronous native calls250ms, reap passes50ms; paused hosts defer deadline handling, yielding transforms have no new total wall-clock deadline; codecs/startup are not hard realtime",
+    "Host init/supervisor must reap orphaned terminated children; kernel-blocked I/O may outlast bounded retirement; native extension hot reload with unretired children is unqualified",
+    "Windows native ASan GL-018 remains open; core ASan passes; GL-017/GL-020 limitations unchanged"
+  ]
+}

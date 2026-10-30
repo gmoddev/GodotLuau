@@ -95,10 +95,23 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 - Persistent read/modify/write has one documented authority and cross-process
   concurrency semantics. Atomic file replacement alone does not prevent lost
-  updates. Gap: GL-009.
+  updates. GL-009's dedicated branch implements the per-record cooperating-local-
+  writer protocol in [ADR-005](adr-005-transactional-datastore.md); qualification
+  and main integration status remain explicit in the issue ledger.
 - Report persistence success only after the chosen durability point; propagate
   I/O failures and preserve the previous committed value on failed replacement.
   Test competing writers, process interruption, corruption, and restart.
+- DataStore transforms execute on the owning Lua coroutine outside the native
+  lock. A conflict may repeat the transform, at most eight attempts; nil/error
+  never commits a candidate. Do not promise exactly-once callback side effects.
+  Set/Remove/Increment participate in the same commit protocol. Cancellation
+  prevents stale delivery but cannot undo publication; indeterminate mutation
+  outcomes require application reconciliation against latest committed state.
+- Package the matching native DataStore companion beside the extension. Native
+  storage paths/handles/locks stay private; helper admission/completion revalidates
+  owner/domain authority. Missing/incompatible helper fails closed. Stage recovery
+  occurs only under the stable lock. Stop old writers before upgrade; network
+  filesystems, independent replicas and noncooperating writers are unsupported.
 - Gameplay network I/O must have explicit scheduling, cancellation, deadlines,
   and byte/request bounds. A synchronous helper named `Async` does not establish
   nonblocking behavior. Integrated GL-005 implements ADR-004: live native Server

@@ -464,11 +464,22 @@ no account authentication and no incoming connection validation against
 
 `DataStoreService` is embedded Luau in `src/core/luau_stdlib.h`.
 Before GL-003 it serializes local JSON through `_FileAccess`; integrated main
-uses typed native service storage instead. `UpdateAsync` remains read/transform/
-write, without a cross-process transaction or compare-and-swap. Worlds can share
-`user://`, so competing processes can lose updates. The write bridge overwrites
-the target directly. `backend/` contains an optional Nakama/PostgreSQL development
-stack and future integration plans; it is not the active persistence authority.
+uses typed native service storage instead. That main baseline still has the
+nontransactional read/transform/write implementation reproduced by GL-009.
+The dedicated GL-009 branch implements [ADR-005](adr-005-transactional-datastore.md):
+`gl_datastore.cpp` owns bounded, owner-aware requests on the existing host;
+`src/persistence/worker_main.cpp` performs only native I/O through the confined
+`gl_datastore_backend.h`. One stable root lock serializes cooperating local
+writers; raw-content conditional commits detect yielding-transform conflicts.
+Stage/sync/relative atomic replace/final flush precedes acknowledgment. Remove
+writes a null tombstone and returns committed previous data; Get no longer uses
+stale cache for missing/error cases. Strict DataStore-only codecs preserve legacy
+encoding while rejecting invalid/lossy candidate shapes. Ordered sorting remains
+local cache, and public version methods remain compatibility stubs. The branch
+has no cross-key transactions or mixed-old-writer guarantee. Qualification status
+and deployment/recovery limits are in the [work record](datastore-validation.md).
+MemoryStore/Messaging retain ADR-003's existing operations. `backend/` contains
+an optional Nakama/PostgreSQL development stack; it is not this authority.
 
 ## Editor and release path
 
@@ -530,9 +541,9 @@ provenance and runtime-gate gaps remain GL-010/011. See
 | --- | --- | --- |
 | VM, require, tasks, shutdown | `src/core/gl_execution_domain.h/.cpp`, `gl_domain_host.h/.cpp`, `luau_script.h/.cpp` | GL-001, GL-004, GL-014 |
 | Native object methods | `src/core/luau_api.h`, `gl_runtime.h` | GL-001, GL-002, GL-013 |
-| File/HTTP permissions | `src/core/gl_service_storage.h`, `gl_storage.cpp`, `gl_http.cpp`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
+| File/HTTP permissions | `src/core/gl_service_storage.h`, `gl_storage.h`, `gl_http.cpp`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
 | RPCs, players, replication | `src/services/roblox_network.h`, `src/core/gl_net_bridge.h`, `src/gameplay/roblox_remote.h` | GL-006, GL-007, GL-008 |
-| Persistence | DataStore section of `luau_stdlib.h`, native file bridge, `backend/README.md` | GL-009 |
+| Persistence | DataStore section of `luau_stdlib.h`, `gl_datastore*`, `src/persistence/worker_main.cpp`, ADR-005 | GL-009 |
 | Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `.github/workflows/runtime-native-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |
 | Editor updates and autocomplete | `addons/GodotLuauUpdater/plugin.gd`, `src/editor/luau_autocomplete.h` | GL-016 |
 | Imported/bundled assets | `src/importer/`, `GodotLuau/assets/`, `GodotLuau/licenses/` | GL-015 |

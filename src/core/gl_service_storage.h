@@ -3,6 +3,7 @@
 
 #include "gl_storage.h"
 #include "gl_execution_domain.h"
+#include "gl_domain_host.h"
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/dir_access.hpp>
@@ -15,7 +16,8 @@ struct GLServiceStorage {
     GLExecutionDomain* Domain;
     std::string Root;
     uint64_t Identity;
-    enum Operation { Enabled, Mailbox, Topic, DataRead, DataWrite, DataDelete, MemoryRead, MemoryWrite, MessageRead, MessageWrite, MessageList };
+    uint64_t Host;
+    enum Operation { Enabled, Mailbox, Topic, DataRead, DataWrite, DataDelete, MemoryRead, MemoryWrite, MessageRead, MessageWrite, MessageList, DataCompare, DataEncode, DataDecode, CanYield };
 
     // The inherited bridge used Godot String(const char*) (Latin-1) for both
     // filenames and writes. Preserve its physical encoding; do not silently
@@ -64,11 +66,14 @@ struct GLServiceStorage {
         if (Op==Mailbox) { auto Name=Capability.Sender(); lua_pushlstring(Thread,Name.data(),Name.size()); return 1; }
         if (Op==Topic) { Argument(Thread,1); return 0; }
         if (!Server) luaL_error(Thread,"[Runtime:Capabilities] Server storage authority required");
+        if (Op==DataEncode) return GLDataStoreEncode(Thread);
+        if (Op==DataDecode) return GLDataStoreDecode(Thread);
+        if (Op==CanYield) { lua_pushboolean(Thread,!Capability.Domain->IsClosing() && lua_isyieldable(Thread)); return 1; }
         std::string Name=Argument(Thread,1);
         std::string Leaf;
         unsigned Grant=0;
-        bool Writing=Op==DataWrite || Op==MemoryWrite || Op==MessageWrite;
-        if (Op==DataRead || Op==DataWrite || Op==DataDelete) Leaf="ds_"+Name+"_"+Argument(Thread,2)+".json";
+        bool Writing=Op==DataWrite || Op==DataCompare || Op==MemoryWrite || Op==MessageWrite;
+        if (Op==DataRead || Op==DataWrite || Op==DataDelete || Op==DataCompare) Leaf="ds_"+Name+"_"+Argument(Thread,2)+".json";
         else if (Op==MemoryRead || Op==MemoryWrite) Leaf="mem_"+Name+".json";
         else if (Op==MessageRead) {
             auto Sender=Argument(Thread,2);
@@ -81,7 +86,7 @@ struct GLServiceStorage {
         std::string Data;
         if (Writing) {
             size_t Size=0;
-            const char* Bytes=luaL_checklstring(Thread,Op==DataWrite?3:2,&Size);
+            const char* Bytes=luaL_checklstring(Thread,Op==DataWrite?3:Op==DataCompare?5:2,&Size);
             if (Size>GLStorage::MaxBytes) luaL_error(Thread,"[Runtime:Filesystem] Storage size limit exceeded");
             size_t PhysicalSize=0;
             for (size_t Index=0;Index<Size;++Index) PhysicalSize+=static_cast<unsigned char>(Bytes[Index])<128?1:2;
@@ -89,6 +94,20 @@ struct GLServiceStorage {
             Data=Legacy(std::string(Bytes,Size));
         }
         Leaf=Legacy(Leaf);
+        if (Op==DataRead || Op==DataWrite || Op==DataDelete || Op==DataCompare) {
+            if (Leaf.size()>240 || !GLStorage::Component(Leaf)) luaL_error(Thread,"[Runtime:Filesystem] Storage name length limit exceeded");
+            auto Host=godot::Object::cast_to<GLDomainHost>(godot::ObjectDB::get_instance(Capability.Host));
+            if (!Host) luaL_error(Thread,"[Persistence:DataStore] Host unavailable");
+            bool Exists=false; std::string Expected;
+            if (Op==DataCompare) {
+                luaL_checktype(Thread,3,LUA_TBOOLEAN); Exists=lua_toboolean(Thread,3)!=0;
+                size_t Size=0; const char* Bytes=luaL_checklstring(Thread,4,&Size);
+                if (Size>GLStorage::MaxBytes) luaL_error(Thread,"[Persistence:DataStore] Snapshot limit exceeded");
+                Expected.assign(Bytes,Size);
+            }
+            if (Op==DataDelete) Data="null";
+            return Host->BeginDataStore(Thread,Capability.Domain,Capability.Root,Leaf,Op==DataRead?0:Op==DataCompare?2:1,Exists,Expected,Data);
+        }
         GLStorage Storage(Capability.Root,Grant);
         GLStorage::Error Status;
         std::vector<std::string> Names;
@@ -128,13 +147,14 @@ struct GLServiceStorage {
         godot::String Root=godot::OS::get_singleton()->get_user_data_dir();
         godot::DirAccess::make_dir_recursive_absolute(Root);
         void* Bytes=lua_newuserdatadtor(Thread,sizeof(GLServiceStorage),[](void* Data) { static_cast<GLServiceStorage*>(Data)->~GLServiceStorage(); });
-        new (Bytes) GLServiceStorage{&Domain,Root.utf8().get_data(),GLStorageVmIdentity()};
+        auto Host=GLGetDomainHost();
+        new (Bytes) GLServiceStorage{&Domain,Root.utf8().get_data(),GLStorageVmIdentity(),Host?uint64_t(Host->get_instance_id()):0};
         int Context=lua_gettop(Thread);
         lua_newtable(Thread);
-        const char* Names[]={"Enabled","Mailbox","Topic","DataRead","DataWrite","DataDelete","MemoryRead","MemoryWrite","MessageRead","MessageWrite","MessageList"};
-        for (int Index=0;Index<=MessageList;++Index) {
+        const char* Names[]={"Enabled","Mailbox","Topic","DataRead","DataWrite","DataDelete","MemoryRead","MemoryWrite","MessageRead","MessageWrite","MessageList","DataCompare","DataEncode","DataDecode","CanYield"};
+        for (int Index=0;Index<=CanYield;++Index) {
             lua_pushvalue(Thread,Context); lua_pushinteger(Thread,Index);
-            lua_pushcclosure(Thread,Call,Names[Index],2); lua_setfield(Thread,-2,Names[Index]);
+            lua_pushcclosurek(Thread,Call,Names[Index],2,Continue); lua_setfield(Thread,-2,Names[Index]);
         }
         lua_setreadonly(Thread,-1,true);
         lua_setglobal(Thread,"_ServiceStorage"); lua_pop(Thread,1);
@@ -143,6 +163,13 @@ struct GLServiceStorage {
             lua_pushcfunction(Thread,RawDenied,Name); lua_setfield(Thread,-2,Name);
         }
         lua_setreadonly(Thread,-1,true); lua_setglobal(Thread,"_FileAccess");
+    }
+    static int Continue(lua_State* Thread,int Status) {
+        auto& Capability=*static_cast<GLServiceStorage*>(lua_touserdata(Thread,lua_upvalueindex(1)));
+        auto Host=godot::Object::cast_to<GLDomainHost>(godot::ObjectDB::get_instance(Capability.Host));
+        if (!Host || Host->InterruptDataStore(Thread)) luaL_error(Thread,"[Persistence:DataStore] Request resumed outside completion");
+        if (Status!=LUA_OK) lua_error(Thread);
+        return lua_tointeger(Thread,lua_upvalueindex(2))==DataRead?2:1;
     }
 };
 #endif
