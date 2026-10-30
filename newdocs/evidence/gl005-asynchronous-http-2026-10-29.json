@@ -1,0 +1,2356 @@
+{
+  "Base": "3d390a03d2f8078795333622e876ad1754202d58",
+  "Branch": "runtime/gl-005-async-http",
+  "Implementation": "4dbecc8ddf38a375457d5603f73184db6e061cf1",
+  "QualificationRevision": "fce3637b7625d9086e28d78314cb7ed50ae1aa34",
+  "LocalQualification": {
+    "Windows": {
+      "Platform": "Windows",
+      "NativeSource": {
+        "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+        "Files": 81,
+        "Newlines": "LF normalized"
+      },
+      "Base": "3d390a03d2f8078795333622e876ad1754202d58",
+      "Implementation": "4dbecc8ddf38a375457d5603f73184db6e061cf1",
+      "QualificationRevision": "fce3637b7625d9086e28d78314cb7ed50ae1aa34",
+      "Core": {
+        "debug": {
+          "Cases": 72,
+          "JUnitSHA256": "2fa7eaacbfcfdd838396f62e96d918b129c947331ed198eefa30884ff5bac007",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl005-qualified-v2-debug-core.xml"
+        },
+        "release": {
+          "Cases": 72,
+          "JUnitSHA256": "813605b277bec28bea1171652f6ef8d79b46150f4c59edccc7c8be95a60ca083",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl005-qualified-v2-release-core.xml"
+        },
+        "asan": {
+          "Cases": 72,
+          "JUnitSHA256": "86629516a4efa5d003e393beaa22a1d587a5a169e57bc38a2e82a2ab1def0ca0",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl005-qualified-v2-asan-core.xml"
+        }
+      },
+      "Native": {
+        "debug": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+              "LogsSHA256": "45aafb1b36b3fce14678745e9442dfbf6ecfd5c353f671094785acdea4b3238c"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "6404e70c6faff30fc7151229fee54829eaeab0bf4536d04bdedacb630c2ed03d",
+              "LogsSHA256": "5ccfd8df72f063d45b748863bf9cce728fa507171b7a00635f33fe9c14821bd8"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+              "LogsSHA256": "f62c624d8f32f9b59d1e41e3133835483f92442ad9066024c851df9fe70a845f"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "13500d0094b2aaa8720bc9490c49264c30c3b859f70bdf93e4b82f1f29e7d5b3"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "067a05c6b4773b561e01317c8ccce3c35587ecab5ef5a5f7100f589b228aa6fb"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "2b0996f1e95f0bd40cea6b988ed5b3c6b1ce18d70043988ee9afbe8327b4185d"
+            }
+          },
+          "Actors": 43,
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-windows-debug",
+          "ExtensionSHA256": "9f886fae5431b186697644c465cd09242e78d2eab03157c7cb3f4f2a3d596332",
+          "Http": {
+            "enabled": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/headers"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PUT",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PATCH",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "DELETE",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "OPTIONS",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/redirect"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-case"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-keepalive"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/no-content"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/large"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/truncated"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunk-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/header-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-header"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ambiguous"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/wire-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/stream"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "93a80e0c28ac4470ef37f8135e7bc675839ebe19d5b321aefa7341a59feae31e"
+            },
+            "denied": {
+              "Server": {
+                "Hits": [],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "181c0b79224ac95d062cd827ebba8c6f5f6df7280e95e3fca270b11fd7001635"
+            },
+            "lifecycle": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "82b148b0106eafdbd30be9f2e085b75b79d28d9252ef19b0e44fed23e4c93c98"
+            },
+            "tls": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  }
+                ],
+                "Connections": {
+                  "Tls": 3,
+                  "Untrusted": 1,
+                  "Stall": 1
+                }
+              },
+              "ServerResultsSHA256": "fda06f4e01617efe868d5a03d8553d4140ecae6ecea74a2f0bf591bd6340e0f0"
+            }
+          },
+          "EnabledPeakGapSeconds": 0.072591
+        },
+        "release": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+              "LogsSHA256": "4ef60c7b90e7727207da29a52f1dd6c14279796c477cb2c816dc3f9370da9719"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "05a336fa5e4864a53e5c7cfd53ca56091533434c8f27a06206715c7a6d773b29",
+              "LogsSHA256": "e9a6c3fc3e0b03af790b1e6d0a27be57e4953ff06dcf8cd80621a9118daa91fa"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+              "LogsSHA256": "57d6e94c44d129a47a4913a1653ac426ef8f0dbdfcc8d69d8db41eb4990c8b78"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "94d9503d943945760180d794baa2e73de0a3badc4378610b56dbdf499b2c44ca"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "d0e6003b7bd62ed5de65f420ceccaaa3f5b5f402e8006112cb80247915fd8507"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "3b910ef3de8ba437bf95234f96be01ea5c118f6b5b146ff853eb9ead3cd03540"
+            }
+          },
+          "Actors": 43,
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-windows-release",
+          "ExtensionSHA256": "fda4c17bd2731e3475ab61e1a8b55a7bd2281e706e19489d9f7232aa3b9e3605",
+          "Http": {
+            "enabled": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/headers"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PUT",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PATCH",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "DELETE",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "OPTIONS",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/redirect"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-case"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-keepalive"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/no-content"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/large"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/truncated"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunk-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/header-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-header"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ambiguous"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/wire-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/stream"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "93a80e0c28ac4470ef37f8135e7bc675839ebe19d5b321aefa7341a59feae31e"
+            },
+            "denied": {
+              "Server": {
+                "Hits": [],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "181c0b79224ac95d062cd827ebba8c6f5f6df7280e95e3fca270b11fd7001635"
+            },
+            "lifecycle": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "82b148b0106eafdbd30be9f2e085b75b79d28d9252ef19b0e44fed23e4c93c98"
+            },
+            "tls": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  }
+                ],
+                "Connections": {
+                  "Tls": 3,
+                  "Untrusted": 1,
+                  "Stall": 1
+                }
+              },
+              "ServerResultsSHA256": "fda06f4e01617efe868d5a03d8553d4140ecae6ecea74a2f0bf591bd6340e0f0"
+            }
+          },
+          "EnabledPeakGapSeconds": 0.01363
+        }
+      },
+      "SCons": {
+        "template_debug": {
+          "Actors": 15,
+          "Groups": {
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "0983949c5dcf0d42910a8dedff752404d15db13409dfa275a9cf1269076b32a3",
+              "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_debug\\http"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "0d0d46a6bb5aa1da6323af3702a92e3fdf7667ca531975b2be20480b717d299b",
+              "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_debug\\resources"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "e797b67fcdf081854a9e8a55f5d09ea4b414ee326d1cab9b37c816217781845f",
+              "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_debug\\filesystem-retry"
+            }
+          },
+          "ExtensionSHA256": "d7722a27ec26de9232caafb6182636b0b715e2429f3ee9347e1e37feec1d4170",
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_debug"
+        },
+        "template_release": {
+          "Actors": 15,
+          "Groups": {
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "4478bf53e87f0709a4d906feb3b3f68246e9dd3e997fcd5428b5e0dcb18a8167",
+              "LogsSHA256": "e39a46ec8b82bfba87396d5051bbe5dd69a067cd1a4a5730a463541c52e324a4",
+              "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_release\\http"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "d80923959c39c430468add860e3c715461a918cf3884fbfc411544fecfbed3e0",
+              "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_release\\resources"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+              "LogsSHA256": "704fd82c9da4dd9183fbd3e4050235885bd72d5df1227ed3c2635522d410ae2d",
+              "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_release\\filesystem"
+            }
+          },
+          "ExtensionSHA256": "461aa61a43000125fef2d4df76406c11e8ce18e59a7f7aed1d3dc064b87885a2",
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-qualified-v2-scons-windows-template_release"
+        }
+      },
+      "Engines": {
+        "official": {
+          "Path": "C:\\Sandbox\\Codex\\Tools\\Godot_v4.7.1-stable_win64.exe",
+          "SHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+        "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+        "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+        "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+        "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+        "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+        "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+        "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+        "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+      },
+      "Baseline": {
+        "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-baseline",
+        "ExtensionSHA256": "d3b27b71be3909ec797ae00350c4f191c6d0d506e968432f07c9ce3751c49cb6",
+        "LogsSHA256": "82ae3fd09024ea7e5b8d0714c54a6a3bfacd09540fb3242e703fbfbfec2d3f34",
+        "PeakGapSeconds": 0.952084,
+        "Results": {
+          "Process": {
+            "Label": "http-baseline",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          "Hits": [
+            {
+              "Method": "GET",
+              "Path": "/slow"
+            },
+            {
+              "Method": "GET",
+              "Path": "/ok"
+            },
+            {
+              "Method": "POST",
+              "Path": "/echo"
+            },
+            {
+              "Method": "GET",
+              "Path": "/truncated"
+            },
+            {
+              "Method": "GET",
+              "Path": "/slow"
+            },
+            {
+              "Method": "GET",
+              "Path": "/ok"
+            },
+            {
+              "Method": "POST",
+              "Path": "/echo"
+            },
+            {
+              "Method": "GET",
+              "Path": "/truncated"
+            }
+          ]
+        }
+      },
+      "Dependencies": {
+        "godot-cpp": {
+          "Revision": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "SHA256": "88627d442827ebb09f0de875e59939216f74a09d2479104f00714b047548620c",
+          "Newlines": "LF normalized"
+        },
+        "luau": {
+          "Revision": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+          "SHA256": "fde7ed51588a364dcb97680fbe40e73106b3e4ce4b52d8652c36b1a2ba563391",
+          "Newlines": "LF normalized"
+        }
+      },
+      "CoreTestSHA256": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+      "ProcessTests": {
+        "LogSHA256": "778551cb93263ad2efe00a804e8589f00b608f2be247f75cf0c548a80d457e74",
+        "Output": "test_disappearance_after_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_after_stat_read_reports_dead) ... skipped 'Linux /proc inspection'\ntest_disappearance_before_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_before_stat_read_reports_dead) ... skipped 'Linux /proc inspection'\ntest_failure_marker_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_failure_marker_cannot_be_hidden_by_pass) ... ok\ntest_forced_cleanup_terminates_descendants (__main__.FixtureProcessTests.test_forced_cleanup_terminates_descendants) ... ok\ntest_missing_pass_fails (__main__.FixtureProcessTests.test_missing_pass_fails) ... ok\ntest_nonzero_exit_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_nonzero_exit_cannot_be_hidden_by_pass) ... ok\ntest_normal_parent_exit_still_cleans_descendants (__main__.FixtureProcessTests.test_normal_parent_exit_still_cleans_descendants) ... ok\ntest_partial_startup_failure_cleans_prior_actor (__main__.FixtureProcessTests.test_partial_startup_failure_cleans_prior_actor) ... ok\ntest_running_process_reports_alive (__main__.FixtureProcessTests.test_running_process_reports_alive) ... skipped 'Linux /proc inspection'\ntest_sanitizer_finding_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_sanitizer_finding_cannot_be_hidden_by_pass) ... ok\ntest_stat_read_process_lookup_reports_dead (__main__.FixtureProcessTests.test_stat_read_process_lookup_reports_dead) ... skipped 'Linux /proc inspection'\ntest_timeout_cleans_tree (__main__.FixtureProcessTests.test_timeout_cleans_tree) ... ok\ntest_unexpected_inspection_errors_propagate (__main__.FixtureProcessTests.test_unexpected_inspection_errors_propagate) ... skipped 'Linux /proc inspection'\ntest_zombie_reports_dead (__main__.FixtureProcessTests.test_zombie_reports_dead) ... skipped 'Linux /proc inspection'\n\n----------------------------------------------------------------------\nRan 14 tests in 0.600s\n\nOK (skipped=6)\n"
+      },
+      "Limitations": [
+        "Not a hostile-project/OS sandbox or DNS-rebinding defense",
+        "Native TLS/engine allocations and 16MiB chunk parser buffer are not VM bytes or 4MiB API body bytes",
+        "Per-tick I/O budgets are not hard realtime/aggregate frame guarantees; paused host defers deadline handling",
+        "Windows full native ASan GL-018 remains open; Windows core ASan passes",
+        "GL-017 headless engine diagnostics retained; no sanitizer suppression",
+        "GL-009 persistence concurrency and GL-020 adversarial animation remain open",
+        "No main merge, release or updater enablement"
+      ]
+    },
+    "Linux": {
+      "Platform": "Linux",
+      "NativeSource": {
+        "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+        "Files": 81,
+        "Newlines": "LF normalized"
+      },
+      "Base": "3d390a03d2f8078795333622e876ad1754202d58",
+      "Implementation": "4dbecc8ddf38a375457d5603f73184db6e061cf1",
+      "QualificationRevision": "fce3637b7625d9086e28d78314cb7ed50ae1aa34",
+      "Core": {
+        "debug": {
+          "Cases": 72,
+          "JUnitSHA256": "1d37a5f9bf665d9878c3990fdbf812792234423e59bc3c3994189be733852f10",
+          "Report": "/work/logs/gl005-qualified-v2-debug-core.xml"
+        },
+        "release": {
+          "Cases": 72,
+          "JUnitSHA256": "d5292ec5c53dbdb453db3dceb2009a0c178041655a3a3a4896754431cd1fda78",
+          "Report": "/work/logs/gl005-qualified-v2-release-core.xml"
+        },
+        "asan": {
+          "Cases": 72,
+          "JUnitSHA256": "bef106224af10bbb6663d0bd4afc6f29e2141584422be23003a215c1cce11af9",
+          "Report": "/work/logs/gl005-qualified-v2-asan-core.xml"
+        }
+      },
+      "Native": {
+        "debug": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+              "LogsSHA256": "d8d89cd84f39f44801ad55feb728c9ec8516dedbc6f9fc0bbba255a41a67825f"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "7085547bb078beb906946e6e2d2ec4e7dbb915c0e0f888b433adfb233c003b21",
+              "LogsSHA256": "222aa285fff71967619074d0e4cff6d5a3f127b98e4e3f72d6d94f278444e13a"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+              "LogsSHA256": "70680d0b15ccd46dfaf442f2584adb6b4cbd0990de1a20a0951f8771866db047"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "e218cbaa08b12f16e3216eb27611b1add64789cb8376c9c954850bdf631f3df4"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "1ba7f4616c27ea9a1b8550c4b93976318864fad3083090cc8f7d61b74e2dde0f"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "81add1bb2bdfe51abda167ee3653f85cf9fab50225b2a013152866ddcac85d84"
+            }
+          },
+          "Actors": 43,
+          "Output": "/work/results/gl005-qualified-v2-linux-debug",
+          "ExtensionSHA256": "6fd1f7854c80c7ac26703713cd31b1fcd538af2a8699baacb4fc5a6bf7ea8024",
+          "Http": {
+            "enabled": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/headers"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PUT",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PATCH",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "DELETE",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "OPTIONS",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/redirect"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-case"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-keepalive"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/no-content"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/large"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/truncated"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunk-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/header-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-header"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ambiguous"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/wire-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/stream"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "485b7de689a6281bf21463e407b06b7b68bbe328e987bd833026165b329edc14"
+            },
+            "denied": {
+              "Server": {
+                "Hits": [],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "70c6d6440be291dfd94c81562526d7d7f527a67da17a0be597f8d66dc67c4af0"
+            },
+            "lifecycle": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "7ee4db62887691c4885ae9d541a7416ee15ead4d0b2bfbd054e5189cfb1380d4"
+            },
+            "tls": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  }
+                ],
+                "Connections": {
+                  "Tls": 3,
+                  "Untrusted": 1,
+                  "Stall": 1
+                }
+              },
+              "ServerResultsSHA256": "5cf592fc734bffb94e2ecef45c5fe3b455da50860b9cb77affdaaca99bbc6486"
+            }
+          },
+          "EnabledPeakGapSeconds": 0.026918
+        },
+        "release": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+              "LogsSHA256": "f00a488a983db9bab95b7323e9375a53d9c6029b345f642b94da26dc1fc18dcd"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "8d793fa1bbfe115b50179345ba32658f5aa1f2f424a39c0d8a789d666954110d",
+              "LogsSHA256": "044bd4962ac474285da2505339fd902f007c6f80d05bba3187217f26952b38f4"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+              "LogsSHA256": "c2794d0ae0117689cb518f8cde946154d2f0e9e6adf4e80511883fe0060e1320"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "76e040e0b9fb43807a4810f45b0eb5f9be3737f1e1eb1ef0153bcf8d7f013081"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "0bd10c87541e18993da2973b4e8fdbf878c0b3380aa6041cbf82643312548f3f"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "332d490118714e0032cc7fedc6eda15c67d8337751865a304192c9f5a67d0d54"
+            }
+          },
+          "Actors": 43,
+          "Output": "/work/results/gl005-qualified-v2-linux-release",
+          "ExtensionSHA256": "2877b4e5dc18f345f408bca27104f212575cf9e1342578369c40b6cdc777bd0d",
+          "Http": {
+            "enabled": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/headers"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PUT",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PATCH",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "DELETE",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "OPTIONS",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/redirect"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-case"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-keepalive"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/no-content"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/large"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/truncated"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunk-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/header-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-header"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ambiguous"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/wire-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/stream"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "485b7de689a6281bf21463e407b06b7b68bbe328e987bd833026165b329edc14"
+            },
+            "denied": {
+              "Server": {
+                "Hits": [],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "70c6d6440be291dfd94c81562526d7d7f527a67da17a0be597f8d66dc67c4af0"
+            },
+            "lifecycle": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "7ee4db62887691c4885ae9d541a7416ee15ead4d0b2bfbd054e5189cfb1380d4"
+            },
+            "tls": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  }
+                ],
+                "Connections": {
+                  "Tls": 3,
+                  "Untrusted": 1,
+                  "Stall": 1
+                }
+              },
+              "ServerResultsSHA256": "5cf592fc734bffb94e2ecef45c5fe3b455da50860b9cb77affdaaca99bbc6486"
+            }
+          },
+          "EnabledPeakGapSeconds": 0.008474
+        },
+        "asan": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "dfaabcdd0f54f89450cd2615dc6ea7c35df624de2017f0af082a45c0d3a712ff",
+              "LogsSHA256": "b0bcb30f264fa57b7bc8251332047d5b25fffc69d4dce7f24f0d03cc6ee9d9f1"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "e8da50cb7b2ef6f2285dbef92e441afc481c3f0613634806df2373fe730da7bf",
+              "LogsSHA256": "ca82e1e74b3a56650c5fedc366d3c4d9ebe1187aee41aa3ee79da0a062318b31"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "517bca9a46086bc6c16358ac46ac8d4a78b265fec3f7ded5bdc06608c7130311",
+              "LogsSHA256": "9fe1fe00768e5b8a8c76221bc107f7e9fb305354d490f8df6a76d17955b732ff"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2d4e7fc7ef1aa62016b3b13050b838504b12eee81821733a111ccace7b77e60",
+              "LogsSHA256": "f8592594d9c8fa978636b8ac712a5f19bf438899a9d5453c261fe78e7d374661"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "64379acf96b1fbaa376e52b7d412482f9802d8762a4df5f15a2e5b3f26917a3c",
+              "LogsSHA256": "ec248a8d5ac964c6c970dcf25831237216eb61713c408a5abcf5bb7224d6ab19"
+            },
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "97af3b7884c7265b1d19fd5dbda2a8ac13bcd531c2789a68ada94c5e4231be16",
+              "LogsSHA256": "2ca45123f1ea1d4e8dfd9ab6d2dbcc0de06a03b6f05de947759f74a273475469"
+            }
+          },
+          "Actors": 43,
+          "Output": "/work/results/gl005-qualified-v2-linux-asan",
+          "ExtensionSHA256": "1035d0aa7efa11327bc36c526636d17f9387435c7ef5155d2e36fc1d7b9a312e",
+          "Http": {
+            "enabled": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/headers"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PUT",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "PATCH",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "DELETE",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "OPTIONS",
+                    "Path": "/method"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/redirect"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-case"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunked-keepalive"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/no-content"
+                  },
+                  {
+                    "Method": "HEAD",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/large"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/truncated"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/oversized-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/chunk-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/header-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-header"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-length"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/invalid-status"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ambiguous"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/wire-overflow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/stream"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "485b7de689a6281bf21463e407b06b7b68bbe328e987bd833026165b329edc14"
+            },
+            "denied": {
+              "Server": {
+                "Hits": [],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "70c6d6440be291dfd94c81562526d7d7f527a67da17a0be597f8d66dc67c4af0"
+            },
+            "lifecycle": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/slow"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "GET",
+                    "Path": "/hold"
+                  }
+                ],
+                "Connections": {}
+              },
+              "ServerResultsSHA256": "7ee4db62887691c4885ae9d541a7416ee15ead4d0b2bfbd054e5189cfb1380d4"
+            },
+            "tls": {
+              "Server": {
+                "Hits": [
+                  {
+                    "Method": "GET",
+                    "Path": "/ok"
+                  },
+                  {
+                    "Method": "POST",
+                    "Path": "/echo"
+                  }
+                ],
+                "Connections": {
+                  "Tls": 3,
+                  "Untrusted": 1,
+                  "Stall": 1
+                }
+              },
+              "ServerResultsSHA256": "5cf592fc734bffb94e2ecef45c5fe3b455da50860b9cb77affdaaca99bbc6486"
+            }
+          },
+          "EnabledPeakGapSeconds": 0.058842
+        }
+      },
+      "SCons": {
+        "template_debug": {
+          "Actors": 15,
+          "Groups": {
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "e742c82c14adb641e3cd25004efe04487f764127b88e63774dfa955d7bc012cf",
+              "Output": "/work/results/gl005-qualified-v2-scons-linux-template_debug/http"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "07bfdab04e89ae1921c1bfa3b4778cdd6793484e257c235564a49fffe8c4b426",
+              "Output": "/work/results/gl005-qualified-v2-scons-linux-template_debug/resources"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "d9436dc00fa3605e382a2bc1cf1e7df8ac698404cf6a77aacd9a879e929ea0cb",
+              "Output": "/work/results/gl005-qualified-v2-scons-linux-template_debug/filesystem"
+            }
+          },
+          "ExtensionSHA256": "c6624a864563a603222f7a8e62c95c657791fd281f75bf92a3f2f6ccdf85020f",
+          "Output": "/work/results/gl005-qualified-v2-scons-linux-template_debug"
+        },
+        "template_release": {
+          "Actors": 15,
+          "Groups": {
+            "http": {
+              "Actors": 4,
+              "ResultsSHA256": "87540bdba80615911aece1f8f3cf5cf59f5376cc3913e22201e8cb44b09e9681",
+              "LogsSHA256": "7166d1aba6fcde417a8fc079786227a481c399e308c32e8261de92539dd361f5",
+              "Output": "/work/results/gl005-qualified-v2-scons-linux-template_release/http"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "d34dcb2faf4f23121b4bbb772f1bb891b6238661cdf00a43764f19371f87dcdb",
+              "Output": "/work/results/gl005-qualified-v2-scons-linux-template_release/resources"
+            },
+            "filesystem": {
+              "Actors": 3,
+              "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+              "LogsSHA256": "b9dcd5dd82f8a355cba84dd9a457e5c849189b90fb7f02bd303598dead76b266",
+              "Output": "/work/results/gl005-qualified-v2-scons-linux-template_release/filesystem"
+            }
+          },
+          "ExtensionSHA256": "b1e036d2116bb4f8fc9d78e18b4386fd55fccfe1545134268a893629c9dc82d1",
+          "Output": "/work/results/gl005-qualified-v2-scons-linux-template_release"
+        }
+      },
+      "Engines": {
+        "official": {
+          "Path": "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "SHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde"
+        },
+        "matching_asan": {
+          "Path": "/work/godot-asan/bin/godot.linuxbsd.template_debug.dev.x86_64.san",
+          "SHA256": "0223d0b034001f5bf9583e86bb76f7e96b9e816640ad11d526ba404ca5e34f73"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+        "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+        "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+        "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+        "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+        "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+        "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+        "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+        "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+      },
+      "Baseline": {
+        "Output": "/work/results/gl005-baseline",
+        "ExtensionSHA256": "eeb452c62030e90fe0a087c4f6572a6c17a330ffdd9cdb416a7ac9d5d0cca50e",
+        "LogsSHA256": "ce9196f0fc1891ab31e72331e9bedd9b2e76d6de6a8bf285419bfe4fa6b81e58",
+        "PeakGapSeconds": 0.836248,
+        "Results": {
+          "Process": {
+            "Label": "http-baseline",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          "Hits": [
+            {
+              "Method": "GET",
+              "Path": "/slow"
+            },
+            {
+              "Method": "GET",
+              "Path": "/ok"
+            },
+            {
+              "Method": "POST",
+              "Path": "/echo"
+            },
+            {
+              "Method": "GET",
+              "Path": "/truncated"
+            },
+            {
+              "Method": "GET",
+              "Path": "/slow"
+            },
+            {
+              "Method": "GET",
+              "Path": "/ok"
+            },
+            {
+              "Method": "POST",
+              "Path": "/echo"
+            },
+            {
+              "Method": "GET",
+              "Path": "/truncated"
+            }
+          ]
+        }
+      },
+      "Dependencies": {
+        "godot-cpp": {
+          "Revision": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "SHA256": "88627d442827ebb09f0de875e59939216f74a09d2479104f00714b047548620c",
+          "Newlines": "LF normalized"
+        },
+        "luau": {
+          "Revision": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+          "SHA256": "fde7ed51588a364dcb97680fbe40e73106b3e4ce4b52d8652c36b1a2ba563391",
+          "Newlines": "LF normalized"
+        }
+      },
+      "CoreTestSHA256": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+      "ProcessTests": {
+        "LogSHA256": "5812543a7942a51cf42427cba3b5581176e275f09696792f8e96d801ce4135f6",
+        "Output": "test_disappearance_after_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_after_stat_read_reports_dead) ... ok\ntest_disappearance_before_stat_read_reports_dead (__main__.FixtureProcessTests.test_disappearance_before_stat_read_reports_dead) ... ok\ntest_failure_marker_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_failure_marker_cannot_be_hidden_by_pass) ... ok\ntest_forced_cleanup_terminates_descendants (__main__.FixtureProcessTests.test_forced_cleanup_terminates_descendants) ... ok\ntest_missing_pass_fails (__main__.FixtureProcessTests.test_missing_pass_fails) ... ok\ntest_nonzero_exit_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_nonzero_exit_cannot_be_hidden_by_pass) ... ok\ntest_normal_parent_exit_still_cleans_descendants (__main__.FixtureProcessTests.test_normal_parent_exit_still_cleans_descendants) ... ok\ntest_partial_startup_failure_cleans_prior_actor (__main__.FixtureProcessTests.test_partial_startup_failure_cleans_prior_actor) ... ok\ntest_running_process_reports_alive (__main__.FixtureProcessTests.test_running_process_reports_alive) ... ok\ntest_sanitizer_finding_cannot_be_hidden_by_pass (__main__.FixtureProcessTests.test_sanitizer_finding_cannot_be_hidden_by_pass) ... ok\ntest_stat_read_process_lookup_reports_dead (__main__.FixtureProcessTests.test_stat_read_process_lookup_reports_dead) ... ok\ntest_timeout_cleans_tree (__main__.FixtureProcessTests.test_timeout_cleans_tree) ... ok\ntest_unexpected_inspection_errors_propagate (__main__.FixtureProcessTests.test_unexpected_inspection_errors_propagate) ... ok\ntest_zombie_reports_dead (__main__.FixtureProcessTests.test_zombie_reports_dead) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.257s\n\nOK\n"
+      },
+      "Limitations": [
+        "Not a hostile-project/OS sandbox or DNS-rebinding defense",
+        "Native TLS/engine allocations and 16MiB chunk parser buffer are not VM bytes or 4MiB API body bytes",
+        "Per-tick I/O budgets are not hard realtime/aggregate frame guarantees; paused host defers deadline handling",
+        "Windows full native ASan GL-018 remains open; Windows core ASan passes",
+        "GL-017 headless engine diagnostics retained; no sanitizer suppression",
+        "GL-009 persistence concurrency and GL-020 adversarial animation remain open",
+        "No main merge, release or updater enablement"
+      ]
+    }
+  },
+  "EffectiveHarnessHashes": {
+    "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+    "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+    "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+    "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+    "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+    "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+    "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+    "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+    "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+    "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+    "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+    "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+    "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+    "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+    "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+    "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+    "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+    "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+    "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+    "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+    "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+    "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+    "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+    "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+    "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+    "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+    "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+    "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+    "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+    "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+    "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+    "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+  },
+  "CoreTestSHA256": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+  "SanitizerBuildScriptSHA256": "5c2363e87d26964607ad5317a8144761373c783e553e34d4001570146fb86f52",
+  "ScopeNotes": [
+    "6 core configurations each pass72",
+    "5 native configurations each pass43 including unchanged GL-003/004 and other39",
+    "4 SCons products each pass HTTP4/resource8/filesystem3",
+    "Windows SCons Debug filesystem case passed fresh retry; failed original TTL assertion retained as counterevidence",
+    "Matching Linux Godot ASan/LSan engine includes existing mbedTLS; no leak suppression",
+    "Hosted core/native jobs and all four artifacts verified at fce3637",
+    "No main merge, release or updater enablement"
+  ],
+  "HostedCI": {
+    "Revision": "fce3637b7625d9086e28d78314cb7ed50ae1aa34",
+    "Runs": {
+      "Core": {
+        "conclusion": "success",
+        "databaseId": 40989908872,
+        "headSha": "fce3637b7625d9086e28d78314cb7ed50ae1aa34",
+        "jobs": [
+          {
+            "completedAt": "2026-10-30T02:09:34Z",
+            "conclusion": "success",
+            "databaseId": 123849525145,
+            "name": "Core (Windows, Debug)",
+            "startedAt": "2026-10-30T02:08:15Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T02:08:17Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T02:08:16Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:38Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T02:08:17Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:06Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-30T02:08:38Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:24Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-30T02:09:06Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:26Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-30T02:09:24Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:29Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-30T02:09:26Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:30Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-30T02:09:29Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:32Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-30T02:09:30Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:32Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-30T02:09:32Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40989908872/job/123849525145"
+          },
+          {
+            "completedAt": "2026-10-30T02:08:43Z",
+            "conclusion": "success",
+            "databaseId": 123849525373,
+            "name": "Core (Linux, Debug)",
+            "startedAt": "2026-10-30T02:08:15Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T02:08:17Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T02:08:16Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:23Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T02:08:17Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:25Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-30T02:08:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:38Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-30T02:08:25Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:39Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-30T02:08:38Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:40Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-30T02:08:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:41Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-30T02:08:40Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:41Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-30T02:08:41Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:41Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-30T02:08:41Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40989908872/job/123849525373"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40989908872"
+      },
+      "Native": {
+        "conclusion": "success",
+        "databaseId": 40989908863,
+        "headSha": "fce3637b7625d9086e28d78314cb7ed50ae1aa34",
+        "jobs": [
+          {
+            "completedAt": "2026-10-30T02:28:06Z",
+            "conclusion": "success",
+            "databaseId": 123849523659,
+            "name": "Native (Windows, Debug)",
+            "startedAt": "2026-10-30T02:08:14Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T02:08:16Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T02:08:15Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:31Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T02:08:16Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:34Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-30T02:08:31Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:36Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-30T02:08:34Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:38Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-30T02:08:36Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:09:00Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 6,
+                "startedAt": "2026-10-30T02:08:38Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:26:39Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 7,
+                "startedAt": "2026-10-30T02:09:00Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:26:40Z",
+                "conclusion": "success",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 8,
+                "startedAt": "2026-10-30T02:26:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:26:52Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 9,
+                "startedAt": "2026-10-30T02:26:40Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:27:09Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 10,
+                "startedAt": "2026-10-30T02:26:52Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:27:25Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 11,
+                "startedAt": "2026-10-30T02:27:09Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:27:29Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 12,
+                "startedAt": "2026-10-30T02:27:25Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:27:34Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 13,
+                "startedAt": "2026-10-30T02:27:29Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:28:01Z",
+                "conclusion": "success",
+                "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                "number": 14,
+                "startedAt": "2026-10-30T02:27:34Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:28:01Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 15,
+                "startedAt": "2026-10-30T02:28:01Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:28:02Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 16,
+                "startedAt": "2026-10-30T02:28:01Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:28:05Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 32,
+                "startedAt": "2026-10-30T02:28:02Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:28:05Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 33,
+                "startedAt": "2026-10-30T02:28:05Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40989908863/job/123849523659"
+          },
+          {
+            "completedAt": "2026-10-30T02:20:10Z",
+            "conclusion": "success",
+            "databaseId": 123849523909,
+            "name": "Native (Linux, Debug)",
+            "startedAt": "2026-10-30T02:08:14Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T02:08:16Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T02:08:15Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:22Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T02:08:16Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:22Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-30T02:08:22Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:23Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-30T02:08:22Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:24Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-30T02:08:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:08:27Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 6,
+                "startedAt": "2026-10-30T02:08:24Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:18:56Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 7,
+                "startedAt": "2026-10-30T02:08:27Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:18:56Z",
+                "conclusion": "skipped",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 8,
+                "startedAt": "2026-10-30T02:18:56Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:19:05Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 9,
+                "startedAt": "2026-10-30T02:18:56Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:19:23Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 10,
+                "startedAt": "2026-10-30T02:19:05Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:19:37Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 11,
+                "startedAt": "2026-10-30T02:19:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:19:41Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 12,
+                "startedAt": "2026-10-30T02:19:37Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:19:46Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 13,
+                "startedAt": "2026-10-30T02:19:41Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:20:06Z",
+                "conclusion": "success",
+                "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                "number": 14,
+                "startedAt": "2026-10-30T02:19:46Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:20:07Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 15,
+                "startedAt": "2026-10-30T02:20:06Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:20:08Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 16,
+                "startedAt": "2026-10-30T02:20:07Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:20:08Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 32,
+                "startedAt": "2026-10-30T02:20:08Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T02:20:08Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 33,
+                "startedAt": "2026-10-30T02:20:08Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40989908863/job/123849523909"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40989908863"
+      }
+    },
+    "Artifacts": {
+      "runtime-core-Windows-Debug": {
+        "ID": 12948876968,
+        "SHA256": "ca80aeccb1c5678ec8cbe72126375fefe407b6ec2169c6b4358738fec4480ca0",
+        "Bytes": 12177,
+        "Run": 40989908872,
+        "Cases": 72
+      },
+      "runtime-core-Linux-Debug": {
+        "ID": 12948448196,
+        "SHA256": "0c6ff54c6402a51a3931389021fadf5a4ca5f4083319a6ebab8327b8da298a4c",
+        "Bytes": 13528,
+        "Run": 40989908872,
+        "Cases": 72
+      },
+      "runtime-native-Windows-Debug": {
+        "ID": 12949775974,
+        "SHA256": "2d371699e9ad51428ab12442fbf390866925f02c72af09d00ea9cbadc09cf3fa",
+        "Bytes": 67607,
+        "Run": 40989908863,
+        "HttpActors": 4,
+        "ForbiddenHits": 0,
+        "Processes": 43,
+        "SummarySHA256": "8c97a5a684ea558eddfa5dc2cacca1e718fffeabb22db66f364d398965d5175e",
+        "NativeSource": {
+          "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+          "Files": 81,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "6ae3848e4379a3095c2a44ffc91e711c45246dc7316748222410fafc59c15b67",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992673,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+            "Bytes": 84198557,
+            "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "Executable": "Godot_v4.7.1-stable_win64.exe"
+          },
+          "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 115,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8,
+        "FilesystemMarkers": 3
+      },
+      "runtime-native-Linux-Debug": {
+        "ID": 12948699366,
+        "SHA256": "8049021808a2e33a22ca283f3443d7c5d65cc2c01aa92f5d0023f25ee983955b",
+        "Bytes": 72821,
+        "Run": 40989908863,
+        "HttpActors": 4,
+        "ForbiddenHits": 0,
+        "Processes": 43,
+        "SummarySHA256": "39227d6aff9d7ddd0f5dfff54c6ea6b0362d3087cc14fcf5184600fa0555f2d4",
+        "NativeSource": {
+          "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+          "Files": 81,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "8595df675c592ba578927c66be6d2ee5cbcf2b79f755b1ff9d38c4977e07e2f4",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992009,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+            "Bytes": 76056717,
+            "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+          },
+          "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 113,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8,
+        "FilesystemMarkers": 3
+      }
+    },
+    "Result": "Four successful hosted Debug jobs; all artifact digests, cases, source/harness/engine identities and native log hashes verified"
+  }
+}

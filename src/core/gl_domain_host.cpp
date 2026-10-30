@@ -182,6 +182,8 @@ Dictionary GLDomainHost::GetResourceStats(bool Client) const {
     const auto& Memory = Domain->GetMemoryAccount();
     const auto& Limits = Domain->GetLimits();
     Stats["Closing"] = Domain->IsClosing();
+    Stats["HttpPending"] = int64_t(Http?Http->Pending(Client):0);
+    Stats["HttpPeak"] = int64_t(!Client && Http?Http->Peak():0);
     Stats["MemoryFailed"] = Domain->HasMemoryFailure();
     Stats["HostOperationsAvailable"] = Domain->CanRunNative();
     Stats["Sandboxed"] = Domain->IsSandboxed();
@@ -213,6 +215,15 @@ bool GLDomainHost::ClaimInitialization(GLDomainKind Kind) {
     Initialized[Index] = true;
     return true;
 }
+void GLDomainHost::InstallHttp(lua_State* Thread,GLExecutionDomain& Domain) {
+    if (!Http) Http=std::make_unique<GLHttpManager>(*this);
+    GLHttpManager::Install(Thread,Domain,uint64_t(get_instance_id()));
+}
+int GLDomainHost::BeginHttp(lua_State* Thread,GLExecutionDomain* Domain,int Operation) {
+    if (!Http) luaL_error(Thread,"[Runtime:HTTP] Capability unavailable");
+    return Http->Begin(Thread,Domain,Operation);
+}
+bool GLDomainHost::InterruptHttp(lua_State* Thread) { return Http && Http->Interrupt(Thread); }
 void GLDomainHost::WaitForChild(lua_State* Thread, uint64_t Parent, const String& Name, double Timeout, int Reference) {
     ChildWaits.push_back({Thread, GLGetOwnerState(Thread), Parent, Name, Timeout, 0, Reference,
         String::utf8(lua_debugtrace(Thread))});
@@ -225,6 +236,7 @@ GLExecutionDomain* GLDomainHost::WaitingDomain(lua_State* Thread) const {
     return nullptr;
 }
 void GLDomainHost::InvalidateOwner(lua_State* Anchor) {
+    if (Http) Http->CancelOwner(Anchor);
     for (size_t Index = ChildConnections.size(); Index > 0; --Index)
         if (ChildConnections[Index - 1].Anchor == Anchor) DisconnectChild(ChildConnections[Index - 1].Reference);
     ChildWaits.erase(std::remove_if(ChildWaits.begin(), ChildWaits.end(), [Anchor](const GLChildWait& Wait) {
@@ -295,6 +307,7 @@ void GLDomainHost::DisconnectChild(int Reference) {
     GLUnreference(nullptr, Reference);
 }
 void GLDomainHost::InvalidateThread(lua_State* Thread) {
+    if (Http) Http->CancelThread(Thread);
     ChildWaits.erase(std::remove_if(ChildWaits.begin(), ChildWaits.end(), [Thread](const GLChildWait& Wait) {
         if (Wait.Thread != Thread) return false;
         GLUnreference(nullptr, Wait.Reference);
@@ -331,6 +344,7 @@ void GLDomainHost::InvalidateThread(lua_State* Thread) {
     Visit(Tree->get_root());
 }
 void GLDomainHost::_process(double Delta) {
+    if (Http) Http->Tick();
     // Weak native targets may be destroyed while their script/module survives.
     // Reap those registrations before entering Lua, including detached targets.
     for (size_t Index = ChildConnections.size(); Index > 0; --Index) {
@@ -418,6 +432,7 @@ void GLDomainHost::_process(double Delta) {
 }
 void GLDomainHost::Shutdown() {
     for (const auto& Domain : Domains) if (Domain) Domain->StopAdmission();
+    if (Http) Http->Shutdown();
     for (const auto& Domain : Domains) if (Domain) Domain->Shutdown();
 }
 void GLDomainHost::_notification(int What) {
