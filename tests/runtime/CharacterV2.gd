@@ -322,6 +322,7 @@ game:SetAttribute('ModelChecked', true)
     Check(Character.global_transform.is_equal_approx(Prior), "nonuniform scale rejected without pose mutation")
     Synchronized(Character, "reparent and rejected scale")
     var Body: CharacterBody3D = Character.call("GetPhysicsBody")
+    Character.call("set_camera_mode", 1) # exact-follow assertion uses the fixed camera style
     Body.set_process(true)
     Character.call("set_lock_first_person", true)
     await create_timer(0.1).timeout

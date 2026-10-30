@@ -49,6 +49,8 @@ state unchanged. Movement configuration lies in `[0, 1000000]`.
 | MoveDirection | Vector3 / zero | Read-only observed horizontal direction | Actual local/NPC post-slide movement; remote displacement observation |
 | Velocity | Vector3 / zero | Read-only | Native local/NPC velocity; inferred remote displacement rate |
 | Grounded | boolean / false | Read-only | Local/NPC floor result; remote admitted airborne presentation |
+| CameraMode | integer / 1 | Camera presentation setting; inherited Character authority guard applies | Local follow style; not replicated |
+| MouseSensitivity | number / 0.0022 | Finite nonnegative camera setting; same guard | Local presentation; not replicated |
 | DisplayName | string / empty | Overhead presentation | Local scene presentation; not a new identity protocol |
 | NameDisplayDistance | number / 100 | Finite nonnegative presentation setting | Local scene |
 | HealthDisplayDistance | number / 100 | Finite nonnegative presentation setting | Local scene |
@@ -69,9 +71,9 @@ an automatic distributed schema through this migration.
 | --- | --- |
 | TakeDamage(amount), Heal(amount) | Finite nonnegative Server health changes; healing cannot revive a dead life |
 | GetState() | Observed CharacterStateType: Idle 0, Running 1, Jumping 2, Landed 3, Dead 7, Freefall 8 |
-| ChangeState(state) | Requests supported movement/death actions; never directly claims arbitrary grounded/flight state |
+| ChangeState(state) | Return boolean admission for supported movement/death actions; never directly claim arbitrary grounded/flight state |
 | Move(direction, relativeToCamera?) | Continuous local/NPC movement request; a zero direction stops the scripted request |
-| Jump() | Request a physics jump; observed state changes through physics |
+| Jump() | Return boolean admission for a grounded jump; observed state changes through physics |
 | WalkToPoint(position) | Bounded horizontal target attempt, within 0.25 units, at most eight seconds; no pathfinding |
 | WalkToPart(part) | Same target attempt with a validated ObjectID; departure cancels it |
 | StopNPCMovement() | Cancel scripted movement; does not disable ordinary local input |
@@ -187,3 +189,8 @@ to late joiners. Server Player:LoadCharacter creates a positive life and deliver
 the actual owner/observer roots. PlayerAdded callbacks may request that load;
 birth events remain ordered and reentrant loads coalesce. Dedicated/editor
 observer windows are excluded as local Players.
+
+Supported Character parent chains must preserve a finite, invertible uniform
+world basis. Arbitrary singular/nonuniform scene ancestry is outside the physics
+composition contract; the supported parent-transform tests use valid uniform
+parents. Direct invalid Character poses are rejected by the qualified setters.
