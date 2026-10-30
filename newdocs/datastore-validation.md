@@ -154,3 +154,140 @@ so retired requests do not needlessly consume their admission slots. These are
 explicit changes to the selected bound, requiring final qualification again.
 Native normal calls still yield and native lock waiting stays off the frame
 thread. V3 is retained as preliminary/failed evidence, not the final matrix.
+
+## Final local candidate (2026-10-30)
+
+Implementation `d4dfb32ee89aef0968725597371db753259acbac` retains its preceding
+decision and implementation commits. Native inputs are87 files, LF-normalized
+SHA256 `c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c`.
+Both workers reproduce this identity and verify full pinned dependency contents.
+V4 replaces the preliminary matrices above; results below use this source.
+
+| Gate | Windows | Linux |
+|---|---|---|
+| Core Debug / Release / ASan | 72 /72 /72 pass | 72 /72 /72 pass |
+| Full native Debug / Release | 66 /66 pass | 66 /66 pass |
+| Matching native ASan/LSan | GL-018 gap; unrun | 66 pass; no suppressions |
+| SCons template_debug / template_release | Both build; 38 actors each pass | Both build; 38 actors each pass |
+| Owned process launcher | 14 tests, 6 platform skips | 14 tests pass |
+
+Each full native configuration retains all43 earlier actors and adds23 Godot
+DataStore actors plus native commit/fault/recovery probes. The backend rejects
+hard links at committed, stage and lock leaves on both platforms, retains an
+outside sentinel, and recovers after rejection. Linux also rejects leaf/root
+symlinks; existing core tests retain Windows junction/reparse/race checks on the
+shared pinned-root authority. Four genuine process-kill stages preserve old123
+before publication or valid new999 after it; a fresh process reacquires the lock
+and overwrites the validated stage. These are not OS/power-loss tests. SCons
+exercises DataStore, HTTP, resources and filesystem on each distribution product,
+including its matching independently built companion.
+
+### Observed latency and frame impact
+
+These are single controlled headless sequences, not a throughput distribution.
+The small sequence includes CRUD, yielding transforms, eight forced conflicts,
+precision rejection, scope aliases and ordered/version compatibility. The large
+sequence performs 4MiB Set/Get/Remove. An independent counter progresses across
+native I/O. Codecs/process creation still cost frame time; yielding alone is not
+used as proof that native disk I/O moved off the frame thread.
+
+| Configuration | Small sequence ms / peak frame gap ms | 4MiB sequence ms / peak frame gap ms |
+|---|---|---|
+| Windows Debug | 3256 /23.820 | 1100 /168.482 |
+| Windows Release | 2162 /9.128 | 882 /134.169 |
+| Linux Debug | 1468 /40.592 | 1621 /68.533 |
+| Linux Release | 1421 /13.134 | 1601 /47.412 |
+| Linux ASan/LSan | 1607 /8.188 | 2219 /478.938 |
+
+The small-sequence acceptance threshold is250ms. The large sequence records its
+cost; it does not assert a sub250ms codec bound. Per-operation limits are not hard
+real-time or total-process-memory caps. No aggregate disk quota/collector is added.
+
+### Execution and audit trail
+
+Windows reuses `C:\Sandbox\Codex\Workspaces\GodotLuau`, persistent
+`Builds\GodotLuau\runtime-msvc-{debug,release,asan}`, and
+`Logs\GodotLuau` / `Artifacts\GodotLuau`. Linux uses the owned
+`codex-godotluau-qualification` container, `/work/source`, persistent
+`/work/builds/linux-{debug,release,asan}`, `/work/logs` and `/work/results`, backed
+by `/opt/codex/godotluau`. Builds use two jobs. No controlling-PC native build,
+new installation, vendor edit, visible editor or crash dialog is required.
+
+Executed command families (absolute paths/configurations expanded in worker logs):
+
+```text
+cmake --build <configuration> --target ExecutionDomainTests GodotLuauAdapter DatastoreBackendProbe --parallel 2
+ctest --test-dir <configuration> --output-junit <report> --output-on-failure
+python tests/runtime/CheckCoreCI.py report <report>
+python tests/runtime/RunQualification.py --godot <engine> --extension <library> --output <fresh> --datastore --timeout 60
+python tests/runtime/RunQualification.py ... --http / --security / --animation / --resources / --filesystem
+python tests/runtime/RunQualification.py ... --teardown --coordinated-close
+scons platform=windows|linux target=template_debug|template_release -j2
+python tests/runtime/FixtureProcessTests.py
+```
+
+Windows uses the already approved portable SCons4.5.2 runner; Linux uses its
+existing SCons. A matching fully instrumented Godot4.7.1 hosts Linux native
+ASan/LSan. Windows core ASan is executed; native GL-018 is explicitly unrun. No
+GL-017 diagnostic or GL-020 adversarial gap is reclassified by functional passes.
+Worker records retain library/companion/engine digests, native inputs, harness
+hashes, result/log hashes, dependency identity and baseline sentinel/library.
+Early prototype log paths were reused; their narrative failures are not presented
+as a complete archived log corpus.
+
+Hosted core/native CI is green on both platforms at this implementation, with
+all four artifacts verified; final disposition follows below.
+Main, release publication and updater distribution remain unchanged.
+
+### Retirement follow-up
+
+After the matrix, inspection found one defunct helper predating V4 and no live
+helpers. A fresh-container 40-actor native ASan lifecycle/OOM stress passes but
+leaves one terminated helper adopted by the container's `sleep infinity` PID1.
+This exposes a cleanup-environment requirement: bounded runtime reaping does not
+promise to wait indefinitely, and that PID1 never reaps adopted children.
+
+A second fresh-container run uses a task-scoped Linux child-subreaper controller
+(`prctl(PR_SET_CHILD_SUBREAPER,1)`) without changing runtime source or disabling
+ASan/LSan. All40 lifecycle/OOM actors pass again. The controller adopts/reaps two
+terminated helpers (SIGKILL status9), and final process inspection finds no live
+or defunct Godot/helper descendants. Records remain in
+`/work/results/gl009-final-retirement-{stress,supervised}`. This qualifies bounded
+cancellation plus host reaping, not guaranteed immediate waitpid completion.
+ADR-005 explicitly requires an init/supervisor that reaps orphaned children;
+native extension hot reload with unretired children remains unqualified. The
+owned container is stopped after evidence collection; unrelated services stay up.
+
+## Final disposition
+
+**Implemented and qualified within ADR-005's supported scope; ready for a separate
+integration decision. No main merge or production distribution is performed.**
+Runtime `d4dfb32ee89aef0968725597371db753259acbac` preserves the decision commit
+`0792f69` and implementation `d987c8e`. Main remains `bc8ca88`.
+
+Fresh hosted [core run40999872768](https://github.com/gmoddev/GodotLuau/actions/runs/40999872768)
+and [native run40999871845](https://github.com/gmoddev/GodotLuau/actions/runs/40999871845)
+pass both Windows/Linux jobs: core72 and native66 per platform. All four downloaded
+ZIP digests match GitHub metadata. Native summaries match the exact implementation,
+87-file native fingerprint, 43-file harness map and verified official engine
+digests. All423 native log hashes and result groups match the archives, including
+the four-stage native commit evidence. The earlier `d987c8e` native run was
+cancelled as superseded; it is not substituted for the final run.
+
+The [machine-readable evidence](evidence/gl009-transactional-datastore-2026-10-30.json)
+records these artifacts plus local CMake/SCons/core/native/retirement results,
+baseline reproductions, product/helper/engine hashes and pinned dependencies.
+The final documentation-only commit does not change those native inputs or
+restart path-filtered runtime CI. Release workflow admission remains literal
+false/read-only; `RuntimeUpdatesAllowed()` remains false. No generated binary or
+release archive is published; no upstream message or PR is created. Caches and
+evidence are retained.
+
+Final capacity inspection found the Linux volume had no unreserved free space.
+Cleanup removes330 hash-identical generated GL-009 qualification library copies,
+reclaiming20,177,328,808 bytes (20.2GB). Each removal is verified against a retained
+identical library; baseline copies and canonical final CMake/SCons products,
+profiles, logs, evidence and build/dependency caches stay intact. The detailed
+removal manifest remains in `/opt/codex/godotluau/logs/gl009-duplicate-reclamation.json`
+with its digest in the evidence record. The volume now has19GiB available (81%
+used). The task-owned container is stopped; unrelated services are unchanged.

@@ -1,6 +1,6 @@
 # ADR-005: Confined transactional DataStore files
 
-Status: selected for implementation on the GL-009 branch; not qualified or merged.
+Status: accepted and qualified on the GL-009 branch at `d4dfb32`; not merged.
 Extends ADR-003's DataStore operations only. Execution, HTTP, MemoryStore and
 Messaging authority remain those of ADR-001/002/003/004. Executed results are in
 [the work record](datastore-validation.md).
@@ -30,6 +30,7 @@ must implement this protocol. Upgrade with old writer processes stopped; mixed
 old/noncooperating writers, hostile same-credential OS writers, network filesystems
 and independent replicas are unsupported. Existing name/scope/case collisions are
 preserved, not silently resolved by a new naming scheme.
+Participating processes use the same OS account and trusted root.
 
 Reads acquire the lock and capture existence plus exact committed bytes. Set
 validates and replaces under the same lock. Update reads a snapshot, releases the
@@ -38,6 +39,9 @@ encodes/validates the candidate and conditionally replaces only if existence and
 raw committed bytes still match, checking and publishing while holding one lock.
 An intervening change back to identical bytes is observationally equivalent and
 can linearize at conditional commit; this token is not a public history version.
+Set retains intentional last-serialized-write replacement semantics. An Update
+racing that Set must re-read/retry or fail, not commit against its stale snapshot.
+This is a per-record contract, not a transaction over arbitrary callback effects.
 
 Managed transforms retain their existing ability to yield, and never hold an OS
 lock while doing so. Nil aborts without writing; callback errors propagate without
@@ -130,21 +134,33 @@ Current admission is four native requests/helpers across live hosts in an
 extension generation and two per owner. IPC work is at most 1 MiB sent and 1 MiB
 received per request per host tick; at most one new helper starts per tick. Normal
 operations have a 30-second deadline, native lock contention a one-second bound,
-and non-yielding/close IPC a 250 ms bound per call. Conflict backoff is 5–25 ms,
+and non-yielding/close IPC a 250 ms bound per native call. Conflict backoff is 5–25 ms,
 with eight total attempts. JSON is bounded to 16 MiB physical bytes, depth20 and
 65,536 traversal nodes; lexical limits precede native parser allocation. Existing
 logical/physical filename limits remain 200/240 bytes. The companion also bounds
 its trusted root field to 4,096 bytes. These are finite capacities, not a claim
 that native serialization/process startup cannot stall a frame or that VM quotas
 account for Godot/OS allocations.
+Request deadlines are enforced on host ticks; a paused host defers deadline
+handling/delivery. Yielding user transforms retain the existing scheduler and
+GL-004 per-resume controls, not a new total UpdateAsync wall-clock deadline.
+There is no new aggregate persistent-disk quota or tombstone collector; operators
+must provision/monitor storage capacity. Per-operation byte/traversal/time and
+live-request bounds do not limit the lifetime number of legitimate stored keys.
 
-Shutdown kills delivery first, terminates owned children and spends at most50ms
-reaping retired processes. A failed device/kernel operation can outlast process
+Shutdown kills delivery first and terminates owned children. Each reap pass is
+bounded to50ms: once before close hooks, once after them, and on extension unload.
+A failed device/kernel operation can outlast process
 termination; there is no unbounded main-thread join and no worker executes Lua or
 extension code. Do not repeatedly unload/reload against a failed device while
 uninterruptible children remain: stop the host and restore storage health first.
 Normal process cleanup is an executed qualification fact, not a guarantee that
 user-mode cancellation can force completion of arbitrary kernel I/O.
+The host must reap orphaned children: ordinary OS init, a container init, or a
+scoped supervisor. Bounded retirement may hand a terminated child to that reaper
+when the engine exits. A container with a non-reaping `sleep infinity` PID1 is
+not a supported cleanup environment; it can retain defunct process entries.
+Native extension hot reload while children are unretired is not qualified.
 
 No import/migration is needed: existing leaves remain the committed authority.
 After all writers stop, back up the root before upgrade. Never delete the stable
@@ -166,3 +182,6 @@ and [native relative rename structure](https://github.com/MicrosoftDocs/windows-
 The implementation adds no volume-wide administrative flush and claims no
 Windows directory-fsync equivalence. Physical power-loss testing is outside the
 controlled process-interruption qualification.
+Executed filesystem qualification covers local NTFS and ext4. XFS/btrfs remain
+source-whitelisted under the same POSIX contract but were not independently
+executed here; do not present them as tested deployment configurations.
