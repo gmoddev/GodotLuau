@@ -325,9 +325,10 @@ resource access. See [ADR-003](adr-003-native-storage-authority.md) and its
 [qualification record](filesystem-capabilities-validation.md) for exact authority,
 compatibility and limits. Fresh main hosted CI status is in the integration record.
 
-Main `3d390a0` still uses synchronous `HTTPClient` polling and delays in
+Before GL-005, main `3d390a0` uses synchronous `HTTPClient` polling and delays in
 `luau_script.cpp`, with a nominal ten-second timeout checked incompletely during
-body reads. Dedicated branch `runtime/gl-005-async-http` replaces that path with
+body reads. Normal merge `b7d108b08b9b55c8333a1799743204441b424dba` integrates
+`runtime/gl-005-async-http` at `4a5ebbd`, with an identical tree, replacing that path with
 `GLHttpManager` in `gl_http.cpp`, owned by the existing scene domain host.
 Native HTTP is default-denied and requires a live Server owner, non-client native
 role and a trusted project exact-origin grant. Arguments/admission are checked
@@ -344,7 +345,7 @@ and no partial successful body on truncation/overflow/timeout. HTTP bodies prese
 binary/UTF-8 lengths; legacy storage encoding remains unchanged. No redirects,
 decompression or TLS bypass is enabled. Exact settings, bounds, compatibility and
 DNS/native-allocation limits are in [ADR-004](adr-004-asynchronous-http.md);
-executed results and branch-only status are in the [HTTP record](http-validation.md).
+executed results and fresh main integration status are in the [HTTP record](http-validation.md#main-integration-2026-10-29).
 After GL-004 integration on main, VM creation uses an allocator-backed domain
 account with a hard requested-byte quota. Trusted registration/stdlib bootstrap
 precedes sandbox sealing; intrinsic libraries/root globals become read-only,

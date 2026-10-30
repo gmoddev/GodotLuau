@@ -28,7 +28,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-005 is fixed and qualified on `runtime/gl-005-async-http`, with no main merge.
+GL-005 is integrated by normal merge `b7d108b08b9b55c8333a1799743204441b424dba`,
+preserving all three commits on `runtime/gl-005-async-http` at `4a5ebbd`.
+The merge tree exactly matches that qualified branch. Fresh Windows/Linux local
+integration and main core/native CI pass, with all four artifacts verified. See
+the [integration record](http-validation.md#main-integration-2026-10-29).
 The [HTTP work record](http-validation.md) separates source findings, controlled
 reproduction, design decisions and executed qualification as work proceeds.
 The [HTTP authority decision](adr-004-asynchronous-http.md) records the selected

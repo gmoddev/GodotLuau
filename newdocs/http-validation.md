@@ -299,8 +299,9 @@ make no HTTP requests. The earlier implementation-only core/native runs also pas
 the final receipt uses the fixture-corrected revision rather than substituting
 that earlier success.
 
-GL-005 is fixed and qualified within ADR-004 on this dedicated branch. This is
-not main integration: main remains `3d390a03d2f8078795333622e876ad1754202d58`.
+At this branch-qualification checkpoint GL-005 is fixed within ADR-004, and
+main remains `3d390a03d2f8078795333622e876ad1754202d58`. Main integration follows
+in its separate record below.
 The final follow-up changes only documentation/evidence; native, core-test and
 fixture input identities remain those qualified above. Release jobs still have
 false admission/read-only permissions; RuntimeUpdatesAllowed still returns false.
@@ -313,3 +314,61 @@ limits. The parser's native chunk bound can exceed the delivered API-body bound.
 GL-009, GL-017/018 and adversarial GL-020 remain separate. The observed Windows
 filesystem expiration failure and successful exact-case retry remain in this
 record; they are not reclassified as a resolved storage/TTL defect.
+
+## Main integration (2026-10-29)
+
+The user separately authorizes merging the qualified branch while preserving its
+commits and keeping release publication/runtime updates disabled. The checkout is
+clean with no competing claims. After fetching, origin/main is still `3d390a0`
+and the retained branch is `4a5ebbd0d91b6209ee14623e6c725b8003a46d9e`.
+Both qualified branch CI runs are read back as successful at `fce3637`; the final
+branch follow-up changes only documentation/evidence.
+
+Normal merge `b7d108b08b9b55c8333a1799743204441b424dba` has parents
+`3d390a03d2f8078795333622e876ad1754202d58` and
+`4a5ebbd0d91b6209ee14623e6c725b8003a46d9e`. It preserves `4dbecc8`, `fce3637`
+and `4a5ebbd` without squash/rebase and retains the branch. The merge tree is
+`f4b44b839d5cdc12574324fed50111c5d9e9d687`, exactly equal to the qualified tip.
+The native fingerprint remains `cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc`.
+Godot-cpp/Luau pins, GL-003 storage, GL-004 execution code, release workflow and
+updater admission are unchanged. The merge is pushed only to the user's fork.
+
+Fresh integration work checks effective native/test/dependency/engine identity,
+Windows/Linux core Debug/Release and all 43 Debug native actors. The already
+qualified source-identical sanitizer/SCons matrix remains branch evidence; it is
+not relabeled as a newly run main matrix. At the integration start, fresh main
+hosted core/native CI and artifact receipts are pending. Headless workers use existing caches,
+two build jobs and bounded logs/process cleanup, without changing global tools or
+unrelated workloads. No release workflow is dispatched or updater enabled.
+
+The fresh Windows/Linux local runs pass core72 in both Debug and Release, plus
+all 43 Debug native actors: regression8/security10/animation10/resource8/
+filesystem3/HTTP4. Both strict native checkers pass; source fingerprint, all 32
+effective fixtures, core CPP, pins and official engine hashes match the qualified
+manifest. The Linux tracked dependency digest is checked against its pinned
+file list, and Windows checks actual submodule revisions. Every local group
+passes on its first main-integration attempt, including the unchanged filesystem
+expiration case. This does not erase its earlier branch counterevidence.
+
+Both local native summaries retain 110 log hashes plus complete actor results.
+Main core CI [40992426532](https://github.com/gmoddev/GodotLuau/actions/runs/40992426532)
+passes on Windows/Linux; downloaded ZIP digests, discovery and core72 completion
+are verified. Main native CI
+[40992426547](https://github.com/gmoddev/GodotLuau/actions/runs/40992426547) passes
+43 actors per platform. All four main artifact ZIP digests are checked against
+GitHub metadata. Both native summaries match the qualified native fingerprint,
+all 32 fixture hashes and official engine hashes. Actual actor results, GL-022,
+resource, filesystem and HTTP markers, recorded log hashes and settled HTTP
+observations are verified, with zero forbidden HTTP hits. Local fixture processes have stopped and the owned
+Linux container is stopped with caches preserved; unrelated containers continue.
+
+The evidence manifest's MainIntegration section retains the merge/parents/tree,
+both fresh local receipts and the complete fresh hosted receipt. GL-005 is
+integrated and resolved within ADR-004 on main. All three source-branch commits
+remain ancestors, the branch remains at `4a5ebbd`, and GL-003/004 are preserved.
+The final follow-up changes documentation/evidence only; the runtime and test
+inputs are still those checked at merge `b7d108b`. No extra runtime qualification
+is inferred from that documentation commit. Release jobs remain read-only with
+false admission, RuntimeUpdatesAllowed still returns false, and no release,
+updater, tag, upstream publication or unrelated source change is introduced.
+Existing platform/TTL/concurrency limits and prior counterevidence remain intact.

@@ -1,8 +1,10 @@
 # ADR-004: Native asynchronous HTTP authority
 
-Status: implemented and qualified on `runtime/gl-005-async-http`; not merged into main.
+Status: implemented, qualified and integrated into main through normal merge
+`b7d108b08b9b55c8333a1799743204441b424dba`, preserving the qualified branch.
 Extends ADR-001/002 and preserves ADR-003. Actual evidence is in the
-[HTTP work record](http-validation.md). No main merge or distribution enablement.
+[HTTP work record](http-validation.md), including fresh main integration checks.
+Release publication and runtime updates remain disabled.
 
 ## Authority and configuration
 

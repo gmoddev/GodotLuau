@@ -2352,5 +2352,1600 @@
       }
     },
     "Result": "Four successful hosted Debug jobs; all artifact digests, cases, source/harness/engine identities and native log hashes verified"
+  },
+  "MainIntegration": {
+    "Merge": "b7d108b08b9b55c8333a1799743204441b424dba",
+    "Parents": [
+      "3d390a03d2f8078795333622e876ad1754202d58",
+      "4a5ebbd0d91b6209ee14623e6c725b8003a46d9e"
+    ],
+    "RetainedBranch": "runtime/gl-005-async-http",
+    "BranchTip": "4a5ebbd0d91b6209ee14623e6c725b8003a46d9e",
+    "Tree": "f4b44b839d5cdc12574324fed50111c5d9e9d687",
+    "PreservedCommits": [
+      "4dbecc8ddf38a375457d5603f73184db6e061cf1",
+      "fce3637b7625d9086e28d78314cb7ed50ae1aa34",
+      "4a5ebbd0d91b6209ee14623e6c725b8003a46d9e"
+    ],
+    "LocalIntegration": {
+      "Windows": {
+        "Revision": "b7d108b08b9b55c8333a1799743204441b424dba",
+        "Platform": "Windows",
+        "NativeSource": {
+          "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+          "Files": 81,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "CoreTestSHA256": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+        "Pins": {
+          "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+        },
+        "Core": {
+          "debug": {
+            "Cases": 72,
+            "JUnitSHA256": "579913c6ada96b96bb98402e8a1bb08f6f409f6b82f923f8cd33f3ccc0af92f9",
+            "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl005-main-b7d108b-debug-core.xml"
+          },
+          "release": {
+            "Cases": 72,
+            "JUnitSHA256": "b84b48a269f554009722e2b1cda52bcd1080a5ed24133c35401d2f3942e3de94",
+            "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl005-main-b7d108b-release-core.xml"
+          }
+        },
+        "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl005-main-b7d108b-windows",
+        "NativeSummary": {
+          "Revision": "b7d108b08b9b55c8333a1799743204441b424dba",
+          "NativeSource": {
+            "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+            "Files": 81,
+            "Newlines": "LF normalized"
+          },
+          "ExtensionSHA256": "9f886fae5431b186697644c465cd09242e78d2eab03157c7cb3f4f2a3d596332",
+          "Godot": {
+            "Version": "4.7.1-stable",
+            "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+            "Provenance": "Exact bytes checked against prior qualified official engine; provisioning evidence reused"
+          },
+          "Groups": {
+            "regression": [
+              {
+                "Label": "integration-0",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Listen-0-listen",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Dedicated-0-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Dedicated-0-client1",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              },
+              {
+                "Label": "Dedicated-0-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              },
+              {
+                "Label": "Editor-0-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Editor-0-client1",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              },
+              {
+                "Label": "Editor-0-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              }
+            ],
+            "security": [
+              {
+                "Label": "security-Local-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Listen-server",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Listen-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Listen-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 488866509. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Dedicated-server",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Dedicated-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Dedicated-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 20696290. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Handler-server",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 1943555910. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Handler-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Handler-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "animation": [
+              {
+                "Label": "animation-Local-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Listen-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Listen-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Listen-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Dedicated-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Dedicated-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Dedicated-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Editor-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Editor-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Editor-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "resources": [
+              {
+                "Label": "resource-execution",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-module",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-callback",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-invoke",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-memory",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-tasks",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-shutdown",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-configuration",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "filesystem": [
+              {
+                "Label": "filesystem-capabilities",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "filesystem-writer",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "filesystem-reader",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "http": [
+              {
+                "Label": "http-enabled",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "http-denied",
+                "Exit": 0,
+                "Diagnostics": "WARNING: [Runtime:HTTP] GetAsync failed\n   at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] PostAsync failed\n   at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] RequestAsync failed\n   at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] GetAsync failed\n   at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] PostAsync failed\n   at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] RequestAsync failed\n   at: push_warning (core/variant/variant_utility.cpp:1033)"
+              },
+              {
+                "Label": "http-lifecycle",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "http-tls",
+                "Exit": 0,
+                "Diagnostics": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+              }
+            ]
+          },
+          "HarnessHashes": {
+            "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+            "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+            "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+            "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+            "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+            "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+            "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+            "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+            "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+            "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+            "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+            "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+            "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+            "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+            "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+            "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+            "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+            "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+            "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+            "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+            "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+            "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+            "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+            "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+            "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+            "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+            "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+            "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+            "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+            "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+            "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+            "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+          },
+          "Processes": 43,
+          "LogHashes": {
+            "animation\\Dedicated\\animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Dedicated\\animation-Dedicated-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+            "animation\\Dedicated\\animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Dedicated\\animation-Dedicated-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+            "animation\\Dedicated\\animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Dedicated\\animation-Dedicated-server.stdout.log": "4da7d661d7bbf2d68cca84a51d1597fe1d9c8482d9ea4d0e78c4691a9509ab3b",
+            "animation\\Editor\\animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Editor\\animation-Editor-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+            "animation\\Editor\\animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Editor\\animation-Editor-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+            "animation\\Editor\\animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Editor\\animation-Editor-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+            "animation\\Listen\\animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Listen\\animation-Listen-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+            "animation\\Listen\\animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Listen\\animation-Listen-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+            "animation\\Listen\\animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Listen\\animation-Listen-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+            "animation\\Local\\animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation\\Local\\animation-Local-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+            "animation\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+            "animation\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.15.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+            "animation\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.19.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+            "animation\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.23.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+            "animation\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.24.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+            "filesystem\\filesystem-capabilities.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "filesystem\\filesystem-capabilities.stdout.log": "44455305cf769174fdc48d621c9f4643a96ee5a38dc511d5d872432173964cb8",
+            "filesystem\\filesystem-reader.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "filesystem\\filesystem-reader.stdout.log": "5f904341a46bf46aa25995e94e1873bac4de226d37d7336ddadfab8f60891aac",
+            "filesystem\\filesystem-writer.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "filesystem\\filesystem-writer.stdout.log": "89c7231183ee6b43a6ae8dbd2f0ed44773b0630af173049d8768baea34450f4f",
+            "filesystem\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "ab8472d280c91254c7d0b154daa9554143d258ed01e7d22f3058b9a4dabf727b",
+            "filesystem\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.32.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "http\\denied\\http-denied.stderr.log": "7ba72bff80561ded7b78cafca56c10d15b2cc74fc456740279c4b70c43163354",
+            "http\\denied\\http-denied.stdout.log": "9b181df503a267ff45208f886f203ec11d84c5febf575d533d76f3cd66183fda",
+            "http\\denied\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "870bbbbecf9d586029cef55f435f3566b8433cef9b5948c02b117c2da1a42deb",
+            "http\\enabled\\http-enabled.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "http\\enabled\\http-enabled.stdout.log": "b10dd3555a846e07665c1322012121ef1d09d0a2f114baa30f3605290a9a6671",
+            "http\\enabled\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "2e2de60a82d7cd00777edc6b0c142ce141d812be1ffdba05264cf3a5a71ecbbc",
+            "http\\lifecycle\\http-lifecycle.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "http\\lifecycle\\http-lifecycle.stdout.log": "a057625318ef4fa5451d1c1b0529b39a33b3558d1d2dee07fde0981a546e9b0e",
+            "http\\lifecycle\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "ddded32ee433b4da22d3934bf865093f9949d73c95149940df84e05d57838b2a",
+            "http\\tls\\http-tls.stderr.log": "d96f86c414064faec7fa3611a2de7bc31d8498d42fec8c6d30005942d00a6a95",
+            "http\\tls\\http-tls.stdout.log": "25f10d6d1e887be6335b3e096660d2e7404b555db5c4fe2759858c40a5478907",
+            "http\\tls\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "5d35d462a8b0d8dbac19628860922783b6dea16ed6c8be976579b2d284bfdf01",
+            "regression\\Dedicated-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+            "regression\\Dedicated-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+            "regression\\Dedicated-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+            "regression\\Dedicated-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+            "regression\\Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression\\Dedicated-0-server.stdout.log": "b25edf002067acea3302e8b270c87aa162d5353e6a7036130f4b51fc3997c221",
+            "regression\\Editor-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+            "regression\\Editor-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+            "regression\\Editor-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+            "regression\\Editor-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+            "regression\\Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression\\Editor-0-server.stdout.log": "030d97b2f54ee00a593a46c98512183ced3960343ded44b408abdda0451a4097",
+            "regression\\integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression\\integration-0.stdout.log": "06be90ab2cf40c74287665603a69662ea356a92fd17ca3382c8a2f91e6f41a65",
+            "regression\\Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression\\Listen-0-listen.stdout.log": "051ac184d863813f5710a0df6e87a8f4ea2544c191601d6815e1ddc57f09959b",
+            "regression\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "728393834523a741d01f0e70e0efa9921b9d354e46b8bc44b1840b5d351abbb5",
+            "regression\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.34.53.log": "baa3fd357e454cdf2e7575c5befe3d86eefcd85bcf665530d5f5c664521dfb4e",
+            "regression\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.34.54.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "regression\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.34.55.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "resources\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "c41725b934defbddfa9b6e18a8a26fe5ec0e02d0abe3ea66871aafdc00969b00",
+            "resources\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.28.log": "c2c03cd5f16c0caa855b39abbae4e87cc89b02af20ae03d82ad461315a454706",
+            "resources\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.29.log": "9671d3299a2f7fcd426f4601d4475a04fff125da5703bfd8f3a05f8a9ea97675",
+            "resources\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.30.log": "23897ebf8a0d2f30eac31b44606bf09a95620be3c8d07cbbd95a077255d7d59d",
+            "resources\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.31.log": "2c654cbabff5d833899c67ee0ec3f077e389dd09a1bce2368e7778aa030ea81d",
+            "resources\\resource-callback.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-callback.stdout.log": "2f61d7d3b8c5580c7a2140a896d7985382dbd2543958e0a489ab94e3c28c362a",
+            "resources\\resource-configuration.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-configuration.stdout.log": "26b287372e7971d1c82a72d766f7b112a62982b2b8e6a092a80a0850ac265f3f",
+            "resources\\resource-execution.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-execution.stdout.log": "75dd2caf46002fb475a19787eb5dcd7399180648efff3f0ba85b4dc8b519c9fe",
+            "resources\\resource-invoke.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-invoke.stdout.log": "b81a7ed9774dab9023baca819355276567bb2e3ab2aac7d8fd0192ce5ebbcb88",
+            "resources\\resource-memory.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-memory.stdout.log": "347c2e26b360df64166888dc6954adb4b5d06df3400b7c94e3eedeea93a2618c",
+            "resources\\resource-module.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-module.stdout.log": "08955e60f82b306a494eccef29feafbf9fce7ff950c335bcf22e335e8bc67fac",
+            "resources\\resource-shutdown.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-shutdown.stdout.log": "1eac85d4c67f239dd667a5288b59c08f2c6c302f149db694bae614c5913dfe94",
+            "resources\\resource-tasks.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources\\resource-tasks.stdout.log": "bdda02563bfd29b8fedb1c91f8df0d9a2f01d59de604ba586e780b1dfa0586b2",
+            "security\\Dedicated\\security-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security\\Dedicated\\security-Dedicated-client1.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+            "security\\Dedicated\\security-Dedicated-client2.stderr.log": "612b6e2b64e649c611394f9a278d57df13e58a6ef75ecc53d35dde3421359589",
+            "security\\Dedicated\\security-Dedicated-client2.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+            "security\\Dedicated\\security-Dedicated-server.stderr.log": "612b6e2b64e649c611394f9a278d57df13e58a6ef75ecc53d35dde3421359589",
+            "security\\Dedicated\\security-Dedicated-server.stdout.log": "21d1cf374a28a3ca55ede4167e163732ee00a255cc921805d6ba318442c8f357",
+            "security\\Handler\\security-Handler-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security\\Handler\\security-Handler-client1.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+            "security\\Handler\\security-Handler-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security\\Handler\\security-Handler-client2.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+            "security\\Handler\\security-Handler-server.stderr.log": "81b887cc1da4b3908c74d1290fa6cb0044fb83256a777ad652038fbb38472dfc",
+            "security\\Handler\\security-Handler-server.stdout.log": "bf75faca0e1d54c80087f59dda592787a6c13c1b4f760161f2704b7c0b0de1d5",
+            "security\\Listen\\security-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security\\Listen\\security-Listen-client1.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+            "security\\Listen\\security-Listen-client2.stderr.log": "6bc917813e17d1fe61944b8e2699355e2f38c40c6c4356dccaa3b57bf9140afc",
+            "security\\Listen\\security-Listen-client2.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+            "security\\Listen\\security-Listen-server.stderr.log": "6bc917813e17d1fe61944b8e2699355e2f38c40c6c4356dccaa3b57bf9140afc",
+            "security\\Listen\\security-Listen-server.stdout.log": "7872c9d55a87896bf445d89033ef567c3bb12a9c6c89e3ae9f07379da8184a36",
+            "security\\Local\\security-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security\\Local\\security-Local-server.stdout.log": "bda060f33bc87f9b70d39f28fa18a6d057868e2cf8a8480fdf30edb002413069",
+            "security\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot.log": "ebdfdf8af92a58e15a89f857ab45882f32ff5a4a302c9e4a192d0312e5a21ac2",
+            "security\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.34.56.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "security\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.02.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "security\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-10-29T22.35.08.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d"
+          },
+          "Scope": "Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification"
+        },
+        "NativeSummarySHA256": "13ac10c03b97b3a5f60ffc16d9b2defb3b4d48087832f14180037b702889a504"
+      },
+      "Linux": {
+        "Revision": "b7d108b08b9b55c8333a1799743204441b424dba",
+        "Platform": "Linux",
+        "NativeSource": {
+          "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+          "Files": 81,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "CoreTestSHA256": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+        "Pins": {
+          "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+          "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+        },
+        "DependencyHashes": {
+          "godot-cpp": {
+            "Files": 165,
+            "SHA256": "88627d442827ebb09f0de875e59939216f74a09d2479104f00714b047548620c",
+            "Newlines": "LF normalized"
+          },
+          "luau": {
+            "Files": 852,
+            "SHA256": "fde7ed51588a364dcb97680fbe40e73106b3e4ce4b52d8652c36b1a2ba563391",
+            "Newlines": "LF normalized"
+          }
+        },
+        "Core": {
+          "debug": {
+            "Cases": 72,
+            "JUnitSHA256": "26a971560193fd848172fa328f6ff37aed42cec78e7db3fbb8918a962a93872b",
+            "Report": "/work/logs/gl005-main-b7d108b-debug-core.xml"
+          },
+          "release": {
+            "Cases": 72,
+            "JUnitSHA256": "a078205fa6bc6747a9526ba4b6ff1130b0a4ee848460c9376df677cde170c136",
+            "Report": "/work/logs/gl005-main-b7d108b-release-core.xml"
+          }
+        },
+        "Output": "/work/results/gl005-main-b7d108b-linux",
+        "NativeSummary": {
+          "Revision": "b7d108b08b9b55c8333a1799743204441b424dba",
+          "NativeSource": {
+            "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+            "Files": 81,
+            "Newlines": "LF normalized"
+          },
+          "ExtensionSHA256": "6fd1f7854c80c7ac26703713cd31b1fcd538af2a8699baacb4fc5a6bf7ea8024",
+          "Godot": {
+            "Version": "4.7.1-stable",
+            "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+            "Provenance": "Exact bytes checked against prior qualified official engine; provisioning evidence reused"
+          },
+          "Groups": {
+            "regression": [
+              {
+                "Label": "integration-0",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Listen-0-listen",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Dedicated-0-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Dedicated-0-client1",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              },
+              {
+                "Label": "Dedicated-0-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              },
+              {
+                "Label": "Editor-0-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "Editor-0-client1",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              },
+              {
+                "Label": "Editor-0-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+              }
+            ],
+            "security": [
+              {
+                "Label": "security-Local-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Listen-server",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Listen-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Listen-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 168841228. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Dedicated-server",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Dedicated-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Dedicated-client2",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 469176952. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Handler-server",
+                "Exit": 0,
+                "Diagnostics": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 915633201. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+              },
+              {
+                "Label": "security-Handler-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "security-Handler-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "animation": [
+              {
+                "Label": "animation-Local-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Listen-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Listen-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Listen-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Dedicated-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Dedicated-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Dedicated-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Editor-server",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Editor-client1",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "animation-Editor-client2",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "resources": [
+              {
+                "Label": "resource-execution",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-module",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-callback",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-invoke",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-memory",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-tasks",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-shutdown",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "resource-configuration",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "filesystem": [
+              {
+                "Label": "filesystem-capabilities",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "filesystem-writer",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "filesystem-reader",
+                "Exit": 0,
+                "Diagnostics": ""
+              }
+            ],
+            "http": [
+              {
+                "Label": "http-enabled",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "http-denied",
+                "Exit": 0,
+                "Diagnostics": "WARNING: [Runtime:HTTP] GetAsync failed\n     at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] PostAsync failed\n     at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] RequestAsync failed\n     at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] GetAsync failed\n     at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] PostAsync failed\n     at: push_warning (core/variant/variant_utility.cpp:1033)\nWARNING: [Runtime:HTTP] RequestAsync failed\n     at: push_warning (core/variant/variant_utility.cpp:1033)"
+              },
+              {
+                "Label": "http-lifecycle",
+                "Exit": 0,
+                "Diagnostics": ""
+              },
+              {
+                "Label": "http-tls",
+                "Exit": 0,
+                "Diagnostics": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+              }
+            ]
+          },
+          "HarnessHashes": {
+            "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+            "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+            "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+            "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+            "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+            "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+            "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+            "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+            "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+            "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+            "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+            "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+            "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+            "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+            "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+            "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+            "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+            "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+            "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+            "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+            "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+            "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+            "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+            "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+            "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+            "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+            "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+            "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+            "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+            "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+            "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+            "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+          },
+          "Processes": 43,
+          "LogHashes": {
+            "animation/Dedicated/animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Dedicated/animation-Dedicated-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+            "animation/Dedicated/animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Dedicated/animation-Dedicated-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+            "animation/Dedicated/animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Dedicated/animation-Dedicated-server.stdout.log": "de0d68bf034a3d675853af8a1ed3d4b6df940a108f7ada3af6292a5751778cab",
+            "animation/Editor/animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Editor/animation-Editor-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+            "animation/Editor/animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Editor/animation-Editor-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+            "animation/Editor/animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Editor/animation-Editor-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+            "animation/Listen/animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Listen/animation-Listen-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+            "animation/Listen/animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Listen/animation-Listen-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+            "animation/Listen/animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Listen/animation-Listen-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+            "animation/Local/animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "animation/Local/animation-Local-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+            "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+            "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.21.log": "3d884d72ed38d397be9dc685f15941c0cb7f2b8594914d230f19f75ff9713949",
+            "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.22.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+            "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.25.log": "cb76d90eca948388ec1075daa10fae45b926bf58b967b25de80e3a13a4096aff",
+            "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.26.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+            "filesystem/filesystem-capabilities.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "filesystem/filesystem-capabilities.stdout.log": "1540b06bba391fd9613b60a39f12de670fbc2a1b6b8e9fea6ce1620f13f27ddc",
+            "filesystem/filesystem-reader.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "filesystem/filesystem-reader.stdout.log": "20a129d6fe8df4a859b88402398d01f3b44d932dff8f8aae911adf950d1bcea0",
+            "filesystem/filesystem-writer.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "filesystem/filesystem-writer.stdout.log": "ff422ba330628dc0d0655e707cd23ed0aa649b9facff133b186c450b6da06132",
+            "filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "6ee7437efcb998cfbdfbccb8219019fddb4583cfd1815f61dd94a582adf1609c",
+            "filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.33.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "http/denied/http-denied.stderr.log": "196e0f858c4bc278a67e18399d8b7b6e58c1ac3966e8361fb995a8604c3d2e73",
+            "http/denied/http-denied.stdout.log": "c4866646cd722e958c4ea4c6b35d883a7a2758e4325fb83961a661833f756460",
+            "http/denied/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "870bbbbecf9d586029cef55f435f3566b8433cef9b5948c02b117c2da1a42deb",
+            "http/enabled/http-enabled.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "http/enabled/http-enabled.stdout.log": "9a50465dbb839aca6f3cdc36f5981b8b1927e76f56c48d6105ceddd74b241507",
+            "http/enabled/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "9a50465dbb839aca6f3cdc36f5981b8b1927e76f56c48d6105ceddd74b241507",
+            "http/lifecycle/http-lifecycle.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "http/lifecycle/http-lifecycle.stdout.log": "ddded32ee433b4da22d3934bf865093f9949d73c95149940df84e05d57838b2a",
+            "http/lifecycle/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "ddded32ee433b4da22d3934bf865093f9949d73c95149940df84e05d57838b2a",
+            "http/tls/http-tls.stderr.log": "14b152cd108e4f7ad0e06cc6898928d8e5bbb6e6c54d0782b3384f51e25a928d",
+            "http/tls/http-tls.stdout.log": "a4c8ce5b3ac27f7469aa5edb874c087e1011ae9b5b1757ee73fd5ee34773ca05",
+            "http/tls/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "5d35d462a8b0d8dbac19628860922783b6dea16ed6c8be976579b2d284bfdf01",
+            "regression/Dedicated-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+            "regression/Dedicated-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+            "regression/Dedicated-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+            "regression/Dedicated-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+            "regression/Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression/Dedicated-0-server.stdout.log": "53fe040564ee537c1ecd03af2094e7645f95f33cffcd5e673cb1161538035ec5",
+            "regression/Editor-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+            "regression/Editor-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+            "regression/Editor-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+            "regression/Editor-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+            "regression/Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression/Editor-0-server.stdout.log": "0bd8e15a5232401211a42d3d3c4cd9fbce00c08121a254ecd56f417b2f54613a",
+            "regression/Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression/Listen-0-listen.stdout.log": "822a96e607e14626dee5da07d01a9becaf3e474987bb1e9086f7eda971cbb3b9",
+            "regression/integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "regression/integration-0.stdout.log": "42191b7facb5ab3a54b75314c895a504d05b8e702e10ac6049daafa33a575b79",
+            "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "728393834523a741d01f0e70e0efa9921b9d354e46b8bc44b1840b5d351abbb5",
+            "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.34.57.log": "83520f5b6aa06900f55a0c3b072e9dd13aec36e5c852a1d50ac342b4f3e744a6",
+            "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.34.58.log": "7b56d65196c461e2a9cba4cabf6bfb59f6ec2031a71c9cdfb6910f7f928b9cf0",
+            "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.34.59.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "resources/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "c41725b934defbddfa9b6e18a8a26fe5ec0e02d0abe3ea66871aafdc00969b00",
+            "resources/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.30.log": "cdd1164a7fd39b29cc927baeecd5ea1301c6f62e1120893963b7c20b0ac7f056",
+            "resources/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.31.log": "23897ebf8a0d2f30eac31b44606bf09a95620be3c8d07cbbd95a077255d7d59d",
+            "resources/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.32.log": "2c654cbabff5d833899c67ee0ec3f077e389dd09a1bce2368e7778aa030ea81d",
+            "resources/resource-callback.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-callback.stdout.log": "12fa1f248dbddbcaa8c08bd35e3bad6e92132e57203079d5872afd35239fb6e5",
+            "resources/resource-configuration.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-configuration.stdout.log": "8daff1a832193c7630297ddf451d0bf1bb94de6f3f3705db3f6b9f9578d44a58",
+            "resources/resource-execution.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-execution.stdout.log": "3690bdf1b5180a5a4cad328421018f0fb19430af9864324280a5190e1791d7e8",
+            "resources/resource-invoke.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-invoke.stdout.log": "3158b62cb43453d1e839a76bd24e7cb0f4b4ed54389e4e3b05e88a501ace748c",
+            "resources/resource-memory.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-memory.stdout.log": "23897ebf8a0d2f30eac31b44606bf09a95620be3c8d07cbbd95a077255d7d59d",
+            "resources/resource-module.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-module.stdout.log": "7d41ded6e585068efc2beac69319e6c51943afd4c6b6e093d9aff501fd92acff",
+            "resources/resource-shutdown.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-shutdown.stdout.log": "fe674dd2652f3652a846ba15e249d40045b631f5b4db76df03ab001ea61e3de3",
+            "resources/resource-tasks.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "resources/resource-tasks.stdout.log": "25614f83a9e35267ecc59107bfd23cc569a0b05714564af5586867ef3dc95051",
+            "security/Dedicated/security-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security/Dedicated/security-Dedicated-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+            "security/Dedicated/security-Dedicated-client2.stderr.log": "47dd0fc13c84a507586dfde3f6e046d9cc307e996c141a9558cecdf82ba3101d",
+            "security/Dedicated/security-Dedicated-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+            "security/Dedicated/security-Dedicated-server.stderr.log": "47dd0fc13c84a507586dfde3f6e046d9cc307e996c141a9558cecdf82ba3101d",
+            "security/Dedicated/security-Dedicated-server.stdout.log": "31d5f13a213a8ad4518020341444c40176f8ee2244165b393dd1535abd3c7e6b",
+            "security/Handler/security-Handler-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security/Handler/security-Handler-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+            "security/Handler/security-Handler-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security/Handler/security-Handler-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+            "security/Handler/security-Handler-server.stderr.log": "c9a64cbca2077cfc8147bc4028820e85f7fc1fa72531c10dd5a48e6fd73d1d6d",
+            "security/Handler/security-Handler-server.stdout.log": "67063869df0b3218febe8895fa4d30ced732b9219c46d68e885f55dc77273b5b",
+            "security/Listen/security-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security/Listen/security-Listen-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+            "security/Listen/security-Listen-client2.stderr.log": "ef8033915c5e468f85e9db1c16fb56790f8b1c4da920de87c79b2a3dd55e7bdc",
+            "security/Listen/security-Listen-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+            "security/Listen/security-Listen-server.stderr.log": "ef8033915c5e468f85e9db1c16fb56790f8b1c4da920de87c79b2a3dd55e7bdc",
+            "security/Listen/security-Listen-server.stdout.log": "c40c6e43137ebe6b98d4508c31bb135f47020d4e2ab4dff245b5cf37e2f0589c",
+            "security/Local/security-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security/Local/security-Local-server.stdout.log": "7b875a95513e299f05aeac4707bd3f586f9273db910d242fe1841144ece823cf",
+            "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "df25bbacaf6ed85d8bed8cf81c400918d9c0313a5af11c1b9746f7f3808377a2",
+            "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.00.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.05.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+            "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.10.log": "cf01a8957b395d6e6a55692709058e82dda15371281432c6c7b25300d1416c8b",
+            "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-30T02.35.11.log": "56365f66177c45017d344b81fc1439b61a65acb87c49739e033e7d2ca924fd4d"
+          },
+          "Scope": "Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification"
+        },
+        "NativeSummarySHA256": "d94dbd2984fe4fa08d40a9ed4fa94df79b6c8e9ed83f7b5324d01e48fd02f950"
+      }
+    },
+    "ReleaseWorkflowChanged": false,
+    "UpdaterChanged": false,
+    "HostedCoreRun": 40992426532,
+    "HostedNativeRun": 40992426547,
+    "Status": "Verified main integration: four fresh hosted jobs and artifacts plus fresh Windows/Linux local integration checks pass",
+    "HostedCI": {
+      "Revision": "b7d108b08b9b55c8333a1799743204441b424dba",
+      "Runs": {
+        "Core": {
+          "conclusion": "success",
+          "databaseId": 40992426532,
+          "headSha": "b7d108b08b9b55c8333a1799743204441b424dba",
+          "jobs": [
+            {
+              "completedAt": "2026-10-30T02:35:02Z",
+              "conclusion": "success",
+              "databaseId": 123857740919,
+              "name": "Core (Windows, Debug)",
+              "startedAt": "2026-10-30T02:34:11Z",
+              "status": "completed",
+              "steps": [
+                {
+                  "completedAt": "2026-10-30T02:34:13Z",
+                  "conclusion": "success",
+                  "name": "Set up job",
+                  "number": 1,
+                  "startedAt": "2026-10-30T02:34:12Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:26Z",
+                  "conclusion": "success",
+                  "name": "Run actions/checkout@v4",
+                  "number": 2,
+                  "startedAt": "2026-10-30T02:34:13Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:42Z",
+                  "conclusion": "success",
+                  "name": "Configure production core",
+                  "number": 3,
+                  "startedAt": "2026-10-30T02:34:26Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:54Z",
+                  "conclusion": "success",
+                  "name": "Build ExecutionDomainTests",
+                  "number": 4,
+                  "startedAt": "2026-10-30T02:34:42Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:56Z",
+                  "conclusion": "success",
+                  "name": "Require production regression discovery",
+                  "number": 5,
+                  "startedAt": "2026-10-30T02:34:54Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:57Z",
+                  "conclusion": "success",
+                  "name": "Run production core through CTest",
+                  "number": 6,
+                  "startedAt": "2026-10-30T02:34:56Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:59Z",
+                  "conclusion": "success",
+                  "name": "Retain qualification diagnostics",
+                  "number": 7,
+                  "startedAt": "2026-10-30T02:34:57Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:35:00Z",
+                  "conclusion": "success",
+                  "name": "Post Run actions/checkout@v4",
+                  "number": 14,
+                  "startedAt": "2026-10-30T02:34:59Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:35:00Z",
+                  "conclusion": "success",
+                  "name": "Complete job",
+                  "number": 15,
+                  "startedAt": "2026-10-30T02:35:00Z",
+                  "status": "completed"
+                }
+              ],
+              "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40992426532/job/123857740919"
+            },
+            {
+              "completedAt": "2026-10-30T02:34:26Z",
+              "conclusion": "success",
+              "databaseId": 123857741094,
+              "name": "Core (Linux, Debug)",
+              "startedAt": "2026-10-30T02:34:01Z",
+              "status": "completed",
+              "steps": [
+                {
+                  "completedAt": "2026-10-30T02:34:02Z",
+                  "conclusion": "success",
+                  "name": "Set up job",
+                  "number": 1,
+                  "startedAt": "2026-10-30T02:34:02Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:10Z",
+                  "conclusion": "success",
+                  "name": "Run actions/checkout@v4",
+                  "number": 2,
+                  "startedAt": "2026-10-30T02:34:02Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:12Z",
+                  "conclusion": "success",
+                  "name": "Configure production core",
+                  "number": 3,
+                  "startedAt": "2026-10-30T02:34:10Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:22Z",
+                  "conclusion": "success",
+                  "name": "Build ExecutionDomainTests",
+                  "number": 4,
+                  "startedAt": "2026-10-30T02:34:12Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:22Z",
+                  "conclusion": "success",
+                  "name": "Require production regression discovery",
+                  "number": 5,
+                  "startedAt": "2026-10-30T02:34:22Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:23Z",
+                  "conclusion": "success",
+                  "name": "Run production core through CTest",
+                  "number": 6,
+                  "startedAt": "2026-10-30T02:34:22Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:24Z",
+                  "conclusion": "success",
+                  "name": "Retain qualification diagnostics",
+                  "number": 7,
+                  "startedAt": "2026-10-30T02:34:23Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:25Z",
+                  "conclusion": "success",
+                  "name": "Post Run actions/checkout@v4",
+                  "number": 14,
+                  "startedAt": "2026-10-30T02:34:24Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:25Z",
+                  "conclusion": "success",
+                  "name": "Complete job",
+                  "number": 15,
+                  "startedAt": "2026-10-30T02:34:25Z",
+                  "status": "completed"
+                }
+              ],
+              "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40992426532/job/123857741094"
+            }
+          ],
+          "status": "completed",
+          "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40992426532"
+        },
+        "Native": {
+          "conclusion": "success",
+          "databaseId": 40992426547,
+          "headSha": "b7d108b08b9b55c8333a1799743204441b424dba",
+          "jobs": [
+            {
+              "completedAt": "2026-10-30T02:43:08Z",
+              "conclusion": "success",
+              "databaseId": 123857740679,
+              "name": "Native (Linux, Debug)",
+              "startedAt": "2026-10-30T02:34:01Z",
+              "status": "completed",
+              "steps": [
+                {
+                  "completedAt": "2026-10-30T02:34:02Z",
+                  "conclusion": "success",
+                  "name": "Set up job",
+                  "number": 1,
+                  "startedAt": "2026-10-30T02:34:01Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:09Z",
+                  "conclusion": "success",
+                  "name": "Run actions/checkout@v4",
+                  "number": 2,
+                  "startedAt": "2026-10-30T02:34:02Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:09Z",
+                  "conclusion": "success",
+                  "name": "Record source and dependency identity",
+                  "number": 3,
+                  "startedAt": "2026-10-30T02:34:09Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:09Z",
+                  "conclusion": "success",
+                  "name": "Verify fixture process ownership and failure handling",
+                  "number": 4,
+                  "startedAt": "2026-10-30T02:34:09Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:10Z",
+                  "conclusion": "success",
+                  "name": "Provision verified official Godot 4.7.1",
+                  "number": 5,
+                  "startedAt": "2026-10-30T02:34:09Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:12Z",
+                  "conclusion": "success",
+                  "name": "Configure production native adapter",
+                  "number": 6,
+                  "startedAt": "2026-10-30T02:34:10Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:41:57Z",
+                  "conclusion": "success",
+                  "name": "Build GodotLuauAdapter",
+                  "number": 7,
+                  "startedAt": "2026-10-30T02:34:12Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:41:57Z",
+                  "conclusion": "skipped",
+                  "name": "Expose installed MSVC Debug runtime",
+                  "number": 8,
+                  "startedAt": "2026-10-30T02:41:57Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:42:06Z",
+                  "conclusion": "success",
+                  "name": "Single-player listen dedicated and editor lifecycle",
+                  "number": 9,
+                  "startedAt": "2026-10-30T02:41:57Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:42:23Z",
+                  "conclusion": "success",
+                  "name": "GL-006 and GL-008 existing network regressions",
+                  "number": 10,
+                  "startedAt": "2026-10-30T02:42:06Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:42:37Z",
+                  "conclusion": "success",
+                  "name": "GL-020 existing functional animation lifecycle",
+                  "number": 11,
+                  "startedAt": "2026-10-30T02:42:23Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:42:40Z",
+                  "conclusion": "success",
+                  "name": "GL-004 isolated resource and recovery cases",
+                  "number": 12,
+                  "startedAt": "2026-10-30T02:42:37Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:42:45Z",
+                  "conclusion": "success",
+                  "name": "GL-003 confined filesystem and cross-process services",
+                  "number": 13,
+                  "startedAt": "2026-10-30T02:42:40Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:43:06Z",
+                  "conclusion": "success",
+                  "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                  "number": 14,
+                  "startedAt": "2026-10-30T02:42:45Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:43:06Z",
+                  "conclusion": "success",
+                  "name": "Require all native actors and retain identity",
+                  "number": 15,
+                  "startedAt": "2026-10-30T02:43:06Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:43:07Z",
+                  "conclusion": "success",
+                  "name": "Retain native qualification diagnostics",
+                  "number": 16,
+                  "startedAt": "2026-10-30T02:43:06Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:43:07Z",
+                  "conclusion": "success",
+                  "name": "Post Run actions/checkout@v4",
+                  "number": 32,
+                  "startedAt": "2026-10-30T02:43:07Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:43:07Z",
+                  "conclusion": "success",
+                  "name": "Complete job",
+                  "number": 33,
+                  "startedAt": "2026-10-30T02:43:07Z",
+                  "status": "completed"
+                }
+              ],
+              "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40992426547/job/123857740679"
+            },
+            {
+              "completedAt": "2026-10-30T02:54:13Z",
+              "conclusion": "success",
+              "databaseId": 123857740902,
+              "name": "Native (Windows, Debug)",
+              "startedAt": "2026-10-30T02:34:01Z",
+              "status": "completed",
+              "steps": [
+                {
+                  "completedAt": "2026-10-30T02:34:02Z",
+                  "conclusion": "success",
+                  "name": "Set up job",
+                  "number": 1,
+                  "startedAt": "2026-10-30T02:34:02Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:15Z",
+                  "conclusion": "success",
+                  "name": "Run actions/checkout@v4",
+                  "number": 2,
+                  "startedAt": "2026-10-30T02:34:02Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:18Z",
+                  "conclusion": "success",
+                  "name": "Record source and dependency identity",
+                  "number": 3,
+                  "startedAt": "2026-10-30T02:34:15Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:19Z",
+                  "conclusion": "success",
+                  "name": "Verify fixture process ownership and failure handling",
+                  "number": 4,
+                  "startedAt": "2026-10-30T02:34:18Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:22Z",
+                  "conclusion": "success",
+                  "name": "Provision verified official Godot 4.7.1",
+                  "number": 5,
+                  "startedAt": "2026-10-30T02:34:19Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:34:39Z",
+                  "conclusion": "success",
+                  "name": "Configure production native adapter",
+                  "number": 6,
+                  "startedAt": "2026-10-30T02:34:22Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:52:47Z",
+                  "conclusion": "success",
+                  "name": "Build GodotLuauAdapter",
+                  "number": 7,
+                  "startedAt": "2026-10-30T02:34:39Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:52:48Z",
+                  "conclusion": "success",
+                  "name": "Expose installed MSVC Debug runtime",
+                  "number": 8,
+                  "startedAt": "2026-10-30T02:52:47Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:52:59Z",
+                  "conclusion": "success",
+                  "name": "Single-player listen dedicated and editor lifecycle",
+                  "number": 9,
+                  "startedAt": "2026-10-30T02:52:48Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:53:17Z",
+                  "conclusion": "success",
+                  "name": "GL-006 and GL-008 existing network regressions",
+                  "number": 10,
+                  "startedAt": "2026-10-30T02:52:59Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:53:32Z",
+                  "conclusion": "success",
+                  "name": "GL-020 existing functional animation lifecycle",
+                  "number": 11,
+                  "startedAt": "2026-10-30T02:53:17Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:53:36Z",
+                  "conclusion": "success",
+                  "name": "GL-004 isolated resource and recovery cases",
+                  "number": 12,
+                  "startedAt": "2026-10-30T02:53:32Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:53:41Z",
+                  "conclusion": "success",
+                  "name": "GL-003 confined filesystem and cross-process services",
+                  "number": 13,
+                  "startedAt": "2026-10-30T02:53:36Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:54:08Z",
+                  "conclusion": "success",
+                  "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                  "number": 14,
+                  "startedAt": "2026-10-30T02:53:41Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:54:08Z",
+                  "conclusion": "success",
+                  "name": "Require all native actors and retain identity",
+                  "number": 15,
+                  "startedAt": "2026-10-30T02:54:08Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:54:10Z",
+                  "conclusion": "success",
+                  "name": "Retain native qualification diagnostics",
+                  "number": 16,
+                  "startedAt": "2026-10-30T02:54:08Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:54:12Z",
+                  "conclusion": "success",
+                  "name": "Post Run actions/checkout@v4",
+                  "number": 32,
+                  "startedAt": "2026-10-30T02:54:10Z",
+                  "status": "completed"
+                },
+                {
+                  "completedAt": "2026-10-30T02:54:12Z",
+                  "conclusion": "success",
+                  "name": "Complete job",
+                  "number": 33,
+                  "startedAt": "2026-10-30T02:54:12Z",
+                  "status": "completed"
+                }
+              ],
+              "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40992426547/job/123857740902"
+            }
+          ],
+          "status": "completed",
+          "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40992426547"
+        }
+      },
+      "Artifacts": {
+        "runtime-core-Windows-Debug": {
+          "ID": 12950006321,
+          "SHA256": "3dc7f058b062107213a9d0e63e73bc9e9788eca33c37dcd007d752e5a96daf5a",
+          "Bytes": 12161,
+          "Run": 40992426532,
+          "Cases": 72
+        },
+        "runtime-core-Linux-Debug": {
+          "ID": 12949588268,
+          "SHA256": "942ce034131d1eb8a93b2d0ab6730059f9bdef4395801a92a3b2cd4f9be1ec14",
+          "Bytes": 13525,
+          "Run": 40992426532,
+          "Cases": 72
+        },
+        "runtime-native-Windows-Debug": {
+          "ID": 12950273635,
+          "SHA256": "6b4002ea904eaf42a836322242f54bc9d0d2dea3a7657f4f79012d22b838a09a",
+          "Bytes": 67914,
+          "Run": 40992426547,
+          "HttpActors": 4,
+          "ForbiddenHits": 0,
+          "Processes": 43,
+          "SummarySHA256": "865172e26c84d4a70697a6533695f10bc50bad907cfa41ada3e881a7b2220e4f",
+          "NativeSource": {
+            "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+            "Files": 81,
+            "Newlines": "LF normalized"
+          },
+          "HarnessHashes": {
+            "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+            "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+            "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+            "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+            "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+            "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+            "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+            "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+            "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+            "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+            "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+            "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+            "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+            "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+            "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+            "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+            "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+            "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+            "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+            "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+            "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+            "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+            "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+            "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+            "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+            "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+            "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+            "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+            "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+            "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+            "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+            "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+          },
+          "ExtensionSHA256": "a40a67430c692e592bc57089ede01c60cf04410234b5a579de91e4d01e0d7a58",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992673,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+              "Bytes": 84198557,
+              "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "Executable": "Godot_v4.7.1-stable_win64.exe"
+            },
+            "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+            "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "VersionStderr": ""
+          },
+          "VerifiedLogCount": 116,
+          "GL022Markers": 4,
+          "ResourceMarkers": 8,
+          "FilesystemMarkers": 3
+        },
+        "runtime-native-Linux-Debug": {
+          "ID": 12949684344,
+          "SHA256": "f1e65cdc5701bbe9abfc28253cdbcc3085c1c97ed28786cebafe97ef947334d9",
+          "Bytes": 72405,
+          "Run": 40992426547,
+          "HttpActors": 4,
+          "ForbiddenHits": 0,
+          "Processes": 43,
+          "SummarySHA256": "9b4e10c7885f5b32b36cfe961d01e29a89a95c7eb61a61198ec4e77a9696ca9a",
+          "NativeSource": {
+            "SHA256": "cbb0115097636e91cac3f0228f6dd49abfb51a4c8dcc86f1a0189d58aeaf51cc",
+            "Files": 81,
+            "Newlines": "LF normalized"
+          },
+          "HarnessHashes": {
+            "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+            "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+            "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+            "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+            "CheckNativeCI.py": "e1f65b8e51eec153334fd8acfe5276160dc9f8b02c3e771086956d30a5baef28",
+            "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+            "FilesystemIntegration.gd": "c68589bd7911ef1516d3719f13f9c589d285c2bb8d6a3145b024811ca64466fb",
+            "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+            "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+            "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+            "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+            "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+            "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+            "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+            "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+            "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+            "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+            "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+            "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+            "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+            "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+            "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+            "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+            "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+            "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+            "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+            "RunQualification.py": "46c92d0de9d165fdb4b66bd3e931b9ea3e2271418cd4615d65ea412160dda88a",
+            "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+            "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+            "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+            "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+            "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+          },
+          "ExtensionSHA256": "8595df675c592ba578927c66be6d2ee5cbcf2b79f755b1ff9d38c4977e07e2f4",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992009,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+              "Bytes": 76056717,
+              "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+            },
+            "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+            "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "VersionStderr": ""
+          },
+          "VerifiedLogCount": 113,
+          "GL022Markers": 4,
+          "ResourceMarkers": 8,
+          "FilesystemMarkers": 3
+        }
+      },
+      "Result": "Four successful hosted Debug jobs; all artifact digests, cases, source/harness/engine identities and native log hashes verified"
+    },
+    "Limits": "Qualified source-identical sanitizer/SCons results remain branch evidence; GL-009/017/018 and adversarial GL-020 limits and prior filesystem retry counterevidence remain unchanged"
   }
 }

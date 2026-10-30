@@ -34,7 +34,7 @@ the inherited runtime already satisfies them. Baseline gaps link to
   confined filesystem roots, bounded input/output, cancellation, and accountable
   execution/memory limits. Integrated resource controls follow ADR-002;
   native storage authority follows ADR-003 on main; HTTP capability
-  and scheduling follow ADR-004 on the dedicated GL-005 branch (not merged).
+  and scheduling follow integrated ADR-004 on main.
   Trusted project assets are not hostile-package
   isolation or a race-resistant ResourceLoader sandbox.
 - One VM exists per applicable Server/Client domain in a running game process;
@@ -101,7 +101,7 @@ the inherited runtime already satisfies them. Baseline gaps link to
   Test competing writers, process interruption, corruption, and restart.
 - Gameplay network I/O must have explicit scheduling, cancellation, deadlines,
   and byte/request bounds. A synchronous helper named `Async` does not establish
-  nonblocking behavior. GL-005's branch implements ADR-004: live native Server
+  nonblocking behavior. Integrated GL-005 implements ADR-004: live native Server
   authority and explicit exact-origin grants before I/O; finite input, body,
   wire, concurrency and per-tick allowances; cancellation before VM reclamation;
   protected completion for the current wait only; and failure without a partial
