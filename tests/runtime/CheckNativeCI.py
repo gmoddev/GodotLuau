@@ -19,7 +19,10 @@ def Main():
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
-        'http': ['http-enabled','http-denied','http-lifecycle','http-tls']
+        'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],
+        'datastore': ['datastore-basic-basic-single',
+            *[Label for Case in ['update','set','remove','increment'] for Label in ['datastore-'+Case+'-seed-single','datastore-'+Case+'-'+Case+'-A','datastore-'+Case+'-'+Case+'-B','datastore-'+Case+'-verify-single']],
+            *['datastore-'+Case+'-'+Case+'-single' for Case in ['failures','lifecycle','memory','contention','unavailable','incompatible']]]
     }
     Groups = {}
     for Name, Labels in Expected.items():
@@ -47,14 +50,18 @@ def Main():
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
+        'DataStoreWorkerSHA256': hashlib.sha256((Args.extension.parent/('godot_luau_store_worker.exe' if Args.extension.suffix=='.dll' else 'godot_luau_store_worker')).read_bytes()).hexdigest(),
+        'DataStoreNative': json.loads((Args.output/'datastore/native-evidence.json').read_text()),
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
-        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
+        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
         'Scope': 'Debug native fixtures; functional animation only; no sanitizer configuration or GL-020 adversarial qualification'
     }
+    if Evidence['DataStoreNative']!={'FaultStages':4,'KillStages':4,'IndependentIncrements':40,'PowerLossTest':False}:
+        raise ValueError('Missing DataStore native interruption/recovery qualification')
     (Args.output / 'summary.json').write_text(json.dumps(Evidence, indent=2))
-    print('[Runtime:NativeCI] PASS 43 required process results')
+    print('[Runtime:NativeCI] PASS '+str(Evidence['Processes'])+' required process results')
 
 
 if __name__ == '__main__':

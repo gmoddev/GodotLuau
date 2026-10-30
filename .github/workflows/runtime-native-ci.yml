@@ -81,7 +81,7 @@ jobs:
       - name: Build GodotLuauAdapter
         timeout-minutes: 50
         run: |
-          cmake --build build/native --config Debug --target GodotLuauAdapter --parallel 2 \
+          cmake --build build/native --config Debug --target GodotLuauAdapter DatastoreBackendProbe --parallel 2 \
             2>&1 | tee build/native/build.log
 
       - name: Expose installed MSVC Debug runtime
@@ -145,6 +145,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/http" --http --timeout 60
 
+      - name: GL-009 transactional persistence and interrupted commit recovery
+        timeout-minutes: 4
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/datastore" --datastore --timeout 60
+
       - name: Require all native actors and retain identity
         timeout-minutes: 1
         run: |
@@ -164,6 +172,7 @@ jobs:
             ${{ runner.temp }}/native-ci/**/*.log
             ${{ runner.temp }}/native-ci/**/results.json
             ${{ runner.temp }}/native-ci/**/server-results.json
+            ${{ runner.temp }}/native-ci/**/native-evidence.json
             ${{ runner.temp }}/native-ci/source.json
             ${{ runner.temp }}/native-ci/summary.json
             ${{ runner.temp }}/godot-4.7.1/provenance.json

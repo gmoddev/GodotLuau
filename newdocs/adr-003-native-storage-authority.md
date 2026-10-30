@@ -149,3 +149,10 @@ This is not GL-009: read/modify/write can race with another authorized process,
 I/O failure can leave a partial write, and no atomicity/durability/locking improvement
 is claimed. Rejected authorization/path/size operations perform no filesystem
 mutation. GL-005, GL-017/018 and GL-020 adversarial qualification remain separate.
+
+That paragraph describes ADR-003's integrated baseline. The dedicated GL-009
+branch extends DataStore only with [ADR-005](adr-005-transactional-datastore.md)'s
+lock/stage/conditional-commit protocol and native companion. It retains this
+authority and legacy filenames/encoding. MemoryStore and Messaging retain the
+operations and limits above. Main integration and executed qualification remain
+separate facts in the [DataStore work record](datastore-validation.md).
