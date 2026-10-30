@@ -66,7 +66,7 @@ an optional compatibility layer would require separate approval. Full Roblox
 Humanoid compatibility is not a goal. HRP remains a direct transform-compatible
 child; it must not become a second physics body or authoritative position source.
 
-## Current checkpoint
+## Development checkpoints
 
 The independent read-only pre-patch investigation agrees that NetworkService is
 the shared inbound character-state boundary. It additionally identifies server
@@ -218,3 +218,18 @@ dependency files were verified on both workers. See the focused
 [qualification record](character-authority-validation.md) for exact identities,
 archive digests, commands and limits. Hosted CI remains the final gate before
 Character V2 implementation.
+
+## GL-007 final disposition
+
+Source `3bb641a822df288bf48fc6358baec389994b77f0` is published and qualified.
+Hosted core run `41032181619` and native run `41032181621` pass on Windows/Linux;
+all four downloaded artifact digests, core discovery/73-case reports, native
+82-actor summaries, 46 harness hashes per platform and all recorded log hashes
+are verified. Native source remains `20ecbfc...`. Packed binary/remap resources
+also pass an actual PCK mount/registration check on both platforms, with no
+original text resource present.
+
+The documentation attestation following the source commit changes no runtime or
+test input. Main is still `4ea5311`; releases and the updater remain disabled.
+GL-007's required gate is satisfied. Character V2 has not yet started and must
+stack from this retained qualified branch, preserving both commits and evidence.

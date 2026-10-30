@@ -1,7 +1,7 @@
 # ADR-006: Server character lifecycle and bounded prediction
 
-Status: implementation in progress on `security/gl-007-character-authority`;
-local qualification complete, hosted CI pending. Baseline and architecture map:
+Status: implemented and qualified on unmerged `security/gl-007-character-authority`
+at source `3bb641a`; main is not changed. Baseline and architecture map:
 [work record](character-development.md); exact checks and evidence:
 [qualification](character-authority-validation.md).
 
@@ -160,4 +160,6 @@ Actual local/listen/dedicated two-client fixtures must cover normal movement,
 irregular arrivals, corruption/rate/health attempts, server correction/respawn,
 stale generations, wrong roles/senders, and callback destruction. Windows/Linux
 core/native checks and appropriate sanitizer coverage must qualify the final
-input tree before this ADR is marked implemented.
+input tree before this ADR is marked implemented. These gates pass for native
+fingerprint `20ecbfc...`; the qualification record retains the complete matrix,
+four hosted jobs, downloaded artifact verification and remaining limits.

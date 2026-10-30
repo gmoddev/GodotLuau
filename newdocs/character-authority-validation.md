@@ -1,7 +1,8 @@
 # GL-007 character authority qualification
 
-Status: local final-input qualification complete; hosted CI not yet run. This record
-does not yet close GL-007 or authorize Character V2 implementation.
+Status: **qualified on the retained GL-007 branch**, including all four hosted
+jobs and downloaded artifacts. Main remains affected and unmerged. The required
+GL-007 gate for subsequent Character V2 implementation is satisfied.
 
 ## Scope and identity
 
@@ -129,6 +130,13 @@ The accepted instrumented engine is SHA256
 its matching adapter is
 `876a88f0c969d335bea7ed2d22aca0b9878b877608861dbceabd92a5dc21545a`.
 
+An additional bounded Windows/Linux native check mounts an actual asset PCK
+containing only a binary Animation and `.tres.remap`, with no original `.tres`.
+The unchanged final adapter registers and returns its plain catalog copy on both
+platforms. `CharacterPackedResources.gd`, its runner, PCK bytes and logs are
+retained in the same collection. This qualifies packed asset remapping; it does
+not claim a complete graphical exported-game qualification.
+
 The independent candidate review was performed once, read-only, and its six
 source-backed findings were confirmed and addressed with focused native checks.
 The work record distinguishes those source confirmations from actual bypass
@@ -142,7 +150,41 @@ anti-cheat or a full animation-security audit. GL-017's independent engine relay
 limitation and GL-018's Windows full-native sanitizer limitation remain visible.
 The bounded service-departure fixture retains inherited inactive-ENet diagnostics.
 
-Hosted core/native CI, artifact verification and final branch disposition remain
-pending. Main, release publication and updater distribution remain unchanged;
+## Hosted source revision
+
+Published source commit:
+`3bb641a822df288bf48fc6358baec389994b77f0`, verified against the remote branch.
+Its native fingerprint exactly matches the local qualified input above.
+
+- [Core run 41032181619](https://github.com/gmoddev/GodotLuau/actions/runs/41032181619):
+  Windows and Linux jobs pass. Both artifact ZIP digests, revision identities,
+  dependency pins, CTest discovery and all 73 distinct core cases were verified.
+- [Native run 41032181621](https://github.com/gmoddev/GodotLuau/actions/runs/41032181621):
+  Windows and Linux pass all 82 actors each. Both exact-source fingerprints,
+  all 46 harness-file hashes per platform, all 251 Windows/249 Linux recorded
+  log hashes, latency statistics and DataStore native evidence are verified.
+
+Core artifact digests are Linux
+`1b92794508f93464c8990cfbd3c5f4d7c743c8ee7903e84263faed1d4a2afda7` and Windows
+`ae0773a06cc124e0ea08228f5d340369791add0890f1a55d89be6d0ce0ccb3fa`.
+Native artifact digests are Linux
+`1991249b3102939b919c4035ce95122c03ac6d648bb593f201f3f6dda00df92c` and Windows
+`d19e1142134b672b2aedb280e57bfb328eb884a4fd88f4b361339796ecbacb89`.
+
+Artifacts are retained under the collection's `artifacts/hosted/` directory,
+alongside API metadata, `VerifyCharacterHosted.py` and
+`gl007-hosted-qualification.json` (SHA256
+`cb0df203a36177e9bef9698a2b967da5df6c5fc49e4220de9f0f6e63173486d9`).
+The verification checks ZIP/revision/discovery/core reports and exact native
+source/harness/log evidence, without claiming a downloaded native binary: the
+native binary/companion digests are recorded by the CI check in its summary.
+
+The subsequent documentation attestation preserves `3bb641a` and changes no
+runtime, harness, workflow or dependency input. Qualification attaches to that
+exact published source commit and fingerprint; a documentation-only tip does not
+claim a separate runtime execution. Main is verified at `4ea5311`.
+
+GL-007 is fixed and qualified within ADR-006's bounded authority contract on its
+unmerged branch. Main, release publication and updater distribution remain unchanged;
 the release workflow still has both jobs disabled and RuntimeUpdatesAllowed
 still returns false. Character V2 has not started.
