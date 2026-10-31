@@ -7,7 +7,9 @@ specific captures, GL-014 is integrated into main and source-qualified, and GL-0
 is optimized, qualified and integrated into main. GL-006/GL-008 are also integrated
 into main and resolved for their qualified endpoints; GL-020 records a
 separate animation authority gap. GL-022 is fixed and qualified on its dedicated
-branch and now integrated into main. Other entries remain open. This file does not
+branch and now integrated into main. GL-007 and the scoped GL-024/025 fixes are
+also integrated; GL-026's bounded workaround is integrated while its dependency
+follow-up remains open. Other entries retain their stated scope. This file does not
 create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
@@ -30,7 +32,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
 | GL-005 | P2 | Integrated and resolved within ADR-004 | Async HTTP with native origin grants, bounds and lifetime cleanup |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
-| GL-007 | P1 | Fix qualified on retained branch; main affected, unmerged | Client state overwrites server health and accepts impossible poses |
+| GL-007 | P1 | Integrated and resolved within ADR-006/007 | Server health, bounded prediction, freshness and checked presentation |
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Integrated; fixed and qualified within scope | Controlled main merge, stopped-writer gate, preserved data and verified companion packages |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
@@ -47,9 +49,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 | GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
 | GL-023 | P2 | Source-verified API discrepancies; follow-up only | HttpService errors, headers, optional arguments and JSON/GUID semantics |
-| GL-024 | P2 | Fix qualified on Character V2; unmerged | Part geometry caches retain resources beyond engine-server teardown |
-| GL-025 | P2 | Fix qualified on Character V2; unmerged | AnimationTrack completion signals are shadowed by inert bindings |
-| GL-026 | P2 | Bounded workaround qualified; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
+| GL-024 | P2 | Integrated and resolved within exercised scope | Part geometry caches retire before engine-server teardown |
+| GL-025 | P2 | Integrated and resolved within exercised scope | Actual AnimationTrack completion and ObjectID-backed lifetime |
+| GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -291,13 +293,21 @@ distinguishes fresh integrated-revision checks from retained branch qualificatio
 
 ## GL-007: Character relay trusts supplied movement and health
 
-**Status (2026-10-30): FIXED AND QUALIFIED ON RETAINED BRANCH; MAIN AFFECTED.**
+**Status (2026-10-31): INTEGRATED AND RESOLVED within ADR-006/007's bounded contract.**
+Normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead` preserves both qualified
+GL-007 commits with an identical tree. Subsequent Character V2 merge
+`1c3176c0d9331dc1fa6849b98f8ed8e90e59c110` preserves those checks on the actual
+Model-derived root and protocol 3. See the [integration record](character-main-integration.md)
+for fresh verification, source identity and CI evidence. GL-017/018, the broader
+GL-020 security gate, graphical correctness and collision-truth claims remain
+separate. The branch qualification history follows.
+
 [Source fix `3bb641a`](https://github.com/gmoddev/GodotLuau/commit/3bb641a822df288bf48fc6358baec389994b77f0)
-remains on `security/gl-007-character-authority`, unmerged. Actual
+remains on retained `security/gl-007-character-authority`. Actual
 Windows/Linux ENet baseline clients changed real server Humanoid health and
 overwrote server damage, as well as moving to X=100000. This supersedes the
 historical unproven gameplay-impact limitation below for character health only;
-economy/progression effects remain unproven. The unmerged GL-007 branch implements
+economy/progression effects remain unproven. The qualified GL-007 source implements
 [ADR-006](adr-006-character-authority.md). See the
 [work record](character-development.md) for baseline identities, development
 failures and final acceptance. Historical source-review limits below are retained;
@@ -308,7 +318,8 @@ native and production-build matrix, including Linux full-native ASan/LSan.
 The [qualification record](character-authority-validation.md) retains exact
 identities and limitations. Windows/Linux hosted core/native CI passes, and all
 four downloaded artifacts are verified for exact source `3bb641a`. This resolves
-the bounded finding on the retained branch; main remains affected until merge.
+the bounded finding on the retained branch; the subsequent integration and fresh
+main evidence are linked above.
 
 **Evidence:** `src/services/roblox_network.h:1813-1822` derives sender identity,
 then updates/relays supplied pose, display index, health, speed, and air state
@@ -1067,6 +1078,11 @@ that audit are classified independently; they are not blanket security claims.
 
 ## GL-024: Part geometry cache teardown
 
+**Integration (2026-10-31):** the qualified fix below is integrated on main by
+`1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`; see the
+[fresh verification record](character-main-integration.md). The original branch
+qualification below remains historical evidence for its exercised scope.
+
 Character V2's actual Part collision fixture emitted five ObjectDB leak warnings
 and late material/shape/mesh destruction diagnostics on Windows/Linux. The prior
 source defines the three shared caches as header-static functions; only the
@@ -1087,6 +1103,11 @@ until an authorized merge. The failed logs are retained in the
 
 ## GL-025: AnimationTrack completion/lifetime contract
 
+**Integration (2026-10-31):** the qualified fix below is integrated on main by
+`1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`; see the
+[fresh verification record](character-main-integration.md). GL-020's broader
+animation-security gate remains open; the original branch evidence follows.
+
 Source inspection during Character V2 finds that the AnimationTrack Luau getter
 returns an inert signal for Ended/Stopped before reaching their real native
 callback bindings. The later bindings also retain raw track/vector pointers;
@@ -1106,6 +1127,11 @@ and four hosted jobs/artifacts pass; see [qualification](character-v2-validation
 GL-020's independent broader animation-security qualification stays open.
 
 ## GL-026: Pinned Dictionary rvalue replacement leaks old storage
+
+**Integration (2026-10-31):** main now contains the qualified bounded workaround
+through `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`, with
+[fresh verification](character-main-integration.md). The dependency-wide
+follow-up remains open. The pinned dependency and original evidence below are unchanged.
 
 Linux full-native ASan/LSan finds 576 bytes in four allocations when the new
 Character scene-migration fixture calls actual RBXImporter.Begin. The four stacks

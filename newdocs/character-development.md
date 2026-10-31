@@ -1,5 +1,10 @@
 # Character authority and Character V2 work record
 
+Integration update (2026-10-31): both retained branches are now integrated into
+main by normal merges. See the [integration record](character-main-integration.md)
+for exact identities and fresh verification. The dated development history below,
+including its original authorization boundaries and failed attempts, is preserved.
+
 ## Baseline and acceptance
 
 Work starts from local and fetched `origin/main`

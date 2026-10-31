@@ -1,16 +1,20 @@
 # ADR-007: Model-based Character ownership
 
-Status: accepted, implemented and qualified for the documented source/headless
-scope on `runtime/character-v2-model`, unmerged. See the
+Status: accepted, implemented, qualified for the documented source/headless scope
+and integrated into main by normal merge `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`.
+Retained branch `runtime/character-v2-model` stays at `46f65e0`; qualified runtime
+and test inputs remain `d7905dd`. See the [integration record](character-main-integration.md),
 [qualification](character-v2-validation.md) and [work record](character-v2-development.md).
 
 ## Preparation and ancestry
 
 The branch starts at qualified GL-007 tip
 `514d12f1bf1add924214492248a459e0763d4ca0`, preserving source `3bb641a` and its
-[qualification evidence](character-authority-validation.md). Main remains
-`4ea5311`. Neither development branch is authorized for merge, release publication
-or updater distribution. GL-003/004/005/009/020/022 contracts remain in force.
+[qualification evidence](character-authority-validation.md). At preparation,
+main was `4ea5311` and neither branch was authorized for merge. The subsequent
+integration request authorizes the two normal merges recorded above; release
+publication and updater distribution remain disabled.
+GL-003/004/005/009/020/022 contracts remain in force.
 
 The source baseline is explicit: `RBXModel` is a Node3D in `rbx_instances.h`;
 `RobloxPlayer` is a CharacterBody3D containing camera/input behavior; `Humanoid`

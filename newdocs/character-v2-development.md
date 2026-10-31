@@ -3,7 +3,9 @@
 Status: runtime migration implemented and qualified for the documented
 source/headless scope at `d7905dd`, following verified preparation CI at `9ec71c0`.
 See the [final qualification record](character-v2-validation.md). Both development
-branches remain unmerged; main is `4ea5311`.
+branches are now integrated by normal merges; the
+[integration record](character-main-integration.md) records fresh checks.
+The preparation and development history below retains its original revisions.
 Release publication and updater distribution remain disabled.
 
 ## Gate and source identity

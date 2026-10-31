@@ -1,7 +1,9 @@
 # Character V2 API and migration
 
-Status: implemented and qualified for the documented source/headless scope on
-`runtime/character-v2-model`, unmerged. See the
+Status: implemented, qualified for the documented source/headless scope and
+integrated into main through `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`.
+The breaking contract below is unchanged from qualified `d7905dd`. See the
+[integration record](character-main-integration.md),
 [work record](character-v2-development.md) and [ADR-007](adr-007-model-character.md).
 
 ## Identity and ownership

@@ -1,8 +1,11 @@
 # Character V2 qualification
 
-Status: qualified for the documented source/headless scope on
-`runtime/character-v2-model`, stacked on qualified GL-007 tip `514d12f`.
-Both branches remain unmerged. Releases and updater distribution remain disabled.
+Status: qualified for the documented source/headless scope and integrated into
+main by normal merge `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`, preserving
+`runtime/character-v2-model` at `46f65e0`, stacked on GL-007 tip `514d12f`.
+The [main integration record](character-main-integration.md) separates fresh
+verification from the original branch matrix below.
+Releases and updater distribution remain disabled.
 See [development evidence](character-v2-development.md),
 [ADR-007](adr-007-model-character.md) and [API migration](character-v2-api.md).
 
@@ -16,7 +19,8 @@ Subsequent attestation edits documentation/evidence only.
 
 Preparation commit `9ec71c024b012aada68750ab9bae3349115a165d` passed both hosted
 core jobs in run `41039974670` and both native jobs in run `41039974656`.
-Main remains `4ea53113a98961a64347c672890f65bf9b5c8a54`; GL-007 remains
+At branch qualification, main was `4ea53113a98961a64347c672890f65bf9b5c8a54`;
+GL-007 remains
 `514d12f1bf1add924214492248a459e0763d4ca0`.
 
 The final native fingerprint is 88 LF-normalized production files:

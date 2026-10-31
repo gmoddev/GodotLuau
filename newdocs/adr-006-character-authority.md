@@ -1,7 +1,10 @@
 # ADR-006: Server character lifecycle and bounded prediction
 
-Status: implemented and qualified on unmerged `security/gl-007-character-authority`
-at source `3bb641a`; main is not changed. Baseline and architecture map:
+Status: implemented, qualified and integrated into main by normal merge
+`4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`, preserving qualified source `3bb641a`
+and retained tip `514d12f`. Character V2 subsequently carries these authority
+requirements into ADR-007's protocol 3 and Model ownership. See the
+[integration record](character-main-integration.md). Baseline and architecture map:
 [work record](character-development.md); exact checks and evidence:
 [qualification](character-authority-validation.md).
 

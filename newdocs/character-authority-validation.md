@@ -1,13 +1,16 @@
 # GL-007 character authority qualification
 
-Status: **qualified on the retained GL-007 branch**, including all four hosted
-jobs and downloaded artifacts. Main remains affected and unmerged. The required
-GL-007 gate for subsequent Character V2 implementation is satisfied.
+Status: **integrated and resolved on main within ADR-006's bounded contract**,
+through normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`. Fresh Windows/Linux
+main core/native jobs pass with all four artifacts verified. See the
+[integration record](character-main-integration.md). The original branch
+qualification and subsequent Character V2 preparation gate remain preserved below.
 
 ## Scope and identity
 
 Branch: `security/gl-007-character-authority`, based on main
-`4ea53113a98961a64347c672890f65bf9b5c8a54`. No merge is authorized.
+`4ea53113a98961a64347c672890f65bf9b5c8a54`. This section records the original
+branch qualification, before the subsequent integration authorization.
 The final native input fingerprint is
 `20ecbfcbb11cbdbef85480c41ec3cd4e1705bba210cb3ab290c84eab518b329a`
 (87 LF-normalized files). Dependencies remain godot-cpp
@@ -184,7 +187,8 @@ runtime, harness, workflow or dependency input. Qualification attaches to that
 exact published source commit and fingerprint; a documentation-only tip does not
 claim a separate runtime execution. Main is verified at `4ea5311`.
 
-GL-007 is fixed and qualified within ADR-006's bounded authority contract on its
+Original pre-integration disposition: GL-007 is fixed and qualified within
+ADR-006's bounded authority contract on its
 unmerged branch. Main, release publication and updater distribution remain unchanged;
 the release workflow still has both jobs disabled and RuntimeUpdatesAllowed
 still returns false. Character V2 has not started.

@@ -83,11 +83,11 @@ the inherited runtime already satisfies them. Baseline gaps link to
   playing clip or alter another character's loop configuration.
 - Validate finite values, legal ranges/transitions, size, and rate before
   accepting gameplay input. Define which state is authoritative versus visual.
-  Rejection has no partial gameplay mutation or broadcast. GL-007's protocol 2
-  grants, native health and checked presentation contract are qualified on the
-  retained, unmerged branch; main remains affected until an authorized merge.
+  Rejection has no partial gameplay mutation or broadcast. Integrated GL-007
+  supplies native health, bounded prediction and checked presentation; integrated
+  Character V2 carries those requirements into ADR-007's protocol 3 and Model root.
   See [ADR-006](adr-006-character-authority.md) and
-  [qualification](character-authority-validation.md).
+  [main integration evidence](character-main-integration.md).
 - Character V2 has one real Model-derived Character identity and one authoritative
   world pose. Its internal top-level physics body, direct root proxy, visual rig,
   camera and replicated world pose must stay synchronized. No Humanoid wrapper,

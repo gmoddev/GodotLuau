@@ -1,5 +1,11 @@
 # Current architecture
 
+Main integrates GL-007 through normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`
+and Model-based Character V2 through `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`.
+The latter tree equals retained `46f65e0`, with runtime/test inputs identical to
+qualified `d7905dd`. See the [integration record](character-main-integration.md)
+for fresh verification and the retained platform/graphical limitations.
+
 Current development baseline: optimized shared-domain `main` with GL-006/008's
 qualified state/removal/chat authority corrections, integrated on 2026-10-27.
 GL-020's functional animation/session implementation is integrated through normal
@@ -402,14 +408,15 @@ return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
 
 ## Networking and persistence
 
-The qualified, unmerged `security/gl-007-character-authority` source `3bb641a` implements protocol 2
-character grants/snapshots, native server health, bounded pose admission, and a
-startup presentation-animation catalog. Its bounded contract and executed
+Integrated `security/gl-007-character-authority` source `3bb641a` introduced
+protocol 2 character grants/snapshots, native server health, bounded pose admission,
+and a startup presentation-animation catalog. Its bounded contract and executed
 qualification are separated in [ADR-006](adr-006-character-authority.md) and the
-[qualification record](character-authority-validation.md). The historical main descriptions below
-still describe main's protocol 1 baseline.
+[qualification record](character-authority-validation.md). Character V2 extends
+that same authority mechanism with protocol 3 below; legacy state RPCs are inert.
 
-The stacked `runtime/character-v2-model` source replaces the 3D Humanoid with
+Normal merge `1c3176c` integrates the stacked `runtime/character-v2-model` source,
+replacing the 3D Humanoid with
 `RBXCharacter : RBXModel`, genuinely exposed as Character/Model. A single internal
 top-level CharacterBody3D drives the Character world pose; explicit Model
 transforms synchronize that body under a feedback guard. HumanoidRootPart is a
@@ -429,9 +436,9 @@ Character deletion emits CharacterRemoving once before clearing Player.Character
 2D keeps its existing controller/Humanoid2D path.
 
 See [ADR-007](adr-007-model-character.md), the [public API](character-v2-api.md),
-and the [qualification record](character-v2-validation.md). The branch is unmerged;
-qualification status must be read from that record, not inferred from this source
-description.
+and the [qualification record](character-v2-validation.md). The retained branch
+and its full qualification matrix are distinct from fresh main integration checks
+in the [integration record](character-main-integration.md).
 
 `NetworkService` combines connection setup, ENet RPCs, players, puppet state,
 replication, remote invocation, physics ownership, chat, and coordinator/world
@@ -444,29 +451,32 @@ before destruction. Retained ObjectID method closures cannot act on replacement
 services. Godot 4.7.1's independent simultaneous-disconnect relay send/leak remains
 reproducible without the extension (GL-017); production relay is still enabled.
 
-On main, state/removal/chat receive RPCs use RPC_MODE_AUTHORITY
-plus connected Client-role/transport-sender-1 checks. Their client-origin state
-and chat relays require a connected Server role and active assigned remote peer.
-State relays derive the presentation index from the server's session UserId;
-chat derives its name from the matching live server PlayerObject and validates
+Current character input uses `_relay_character` with transport-derived identity,
+live Server role/session, epoch/sequence freshness and bounded finite prediction.
+Server grants and snapshots require the connected Client-role/server-origin guard
+and the exact protocol-3 contract before mutation. The legacy `_relay_state`,
+`_relay_state2d`, `_recv_state` and `_recv_state2d` handlers do nothing.
+GL-006/008's removal/chat receive authority and assigned-session checks remain.
+Chat derives its name from the matching live server PlayerObject and validates
 original string Variants, message bounds and a per-session token bucket.
 The sender waits for accepted server echo. Explicit local/system chat remains
 available, including scenes without a Players service. See the
 [authority qualification record](network-authority-validation.md) for exact
 rules, compatibility, source identity and fresh integration transport evidence.
 Structural replication, RemoteFunction reply and owned-physics checks are
-preserved. Client-supplied movement values remain GL-007; independent animation
+preserved. Client-supplied movement follows ADR-006/007; independent animation
 RPC authority is addressed by the integrated GL-020 implementation below; its full
 security transport qualification remains independent. No general networking
 security claim is made.
 
-On main, `_relay_anim` keeps its reliable ANY_PEER
-client-to-server configuration and requires the existing Server-role/sender
-guard, current service/transport and assigned session. `_recv_anim` uses reliable
-AUTHORITY plus the Client-role/server-origin guard and a positive mapped target;
-the local target is ignored. Both reject nonfinite/out-of-range speed (0–20),
-IDs over 1,024 characters, names over 128 characters and empty play names before
-mutation. RPC names, arguments and wire shapes remain unchanged.
+GL-007 makes legacy `_relay_anim`/`_recv_anim` handlers inert and uses
+`_relay_anim_v2`/`_recv_anim_v2`. Sender/receiver role and session checks remain;
+client input also binds the correction epoch and server playback binds the life.
+Finite speed (0–20), identity/name bounds, per-peer rate limits, checked assets
+and active gameplay-timeline protection apply before cache mutation/relay.
+ADR-006 documents the epoch-zero pre-puppet case. Protocol-3 removal tombstones
+also reject stale animation for a removed life. This preserves GL-020's existing
+replication mechanism while explicitly versioning the character wire contract.
 
 `peer_anim` stores the assigned UserId with each transport peer's latest state,
 including stops. It admits mapped sessions before PlayerObject/puppet creation;
@@ -481,10 +491,15 @@ preconnection playback. No separate session authority is introduced.
 
 AnimationTrack resolves its AnimationPlayer ObjectID on use. Active speed/loop
 changes and natural completion notify the network; stop/completion notifications
-precede user callbacks, whose lists are copied for reentrant dispatch. Per-player
-Animation resources duplicate loaded clips so loop configuration is independent.
-The loader reuses the default library for clip replacement. Applying the current
-clip's settings preserves playback position. `GetAnimationStates()` is a native
+precede user callbacks, whose lists are copied for reentrant dispatch.
+Client-selected presentation uses plain checked copies from the startup catalog
+or validated named rig clips, with independent loop configuration. Trusted Server
+gameplay timelines retain their separate loading contract. Temporary playback slots
+restore the exact overwritten clip and preserve later trusted replacements.
+Character V2's Animator/track lease uses ObjectIDs and exact clip identity;
+retirement releases callbacks and cannot stop a newer gameplay timeline.
+Applying the current clip's settings preserves playback position.
+`GetAnimationStates()` is a native
 read-only diagnostic snapshot of the actual cache (including UserId), not an RPC.
 The [animation record](animation-lifecycle-validation.md) separates functional
 qualification from outstanding adversarial transport acceptance. Shared domains,
@@ -535,7 +550,7 @@ committed ZIP. Historical release/tag deletion has been removed by GL-012. No
 sanitizer workflow exists yet. Main integrates the qualified core CI branch via
 `f0199004d56485ec7a9de14d5454d1907822ba11`. The separate
 `runtime-core-ci.yml` builds the production `ExecutionDomainTests` target and
-runs its 39 cases through CTest on hosted Windows/Linux Debug. Read-only access,
+runs its current 73 cases through CTest on hosted Windows/Linux Debug. Read-only access,
 recursive pinned checkout, two build jobs, explicit deadlines and checked
 discovery/completion are independent of publication. Only diagnostic reports/logs
 are uploaded. Fresh hosted integration succeeds on Windows/Linux; outcomes and the continuing
@@ -547,12 +562,15 @@ manual dispatch does not bypass this interim policy.
 Main integrates `ci/gl-011-native-integration` at `cebc64919e4fbf67624b19e075f31ef25941d136`
 through normal merge `9029d01a24d904deaa1ecd7a9c30fc483e13757f`.
 `runtime-native-ci.yml` additionally
-builds the actual Debug CMake adapter on Windows/Linux and runs the unchanged
-single-player/listen/dedicated/editor fixtures plus GL-006/008 and functional
-animation groups (28 processes per platform). The runner owns child process
+builds the actual Debug CMake adapter on Windows/Linux and runs the qualified
+single-player/listen/dedicated/editor fixtures plus network, animation, Character,
+resource, filesystem, HTTP and DataStore groups (86 actors per platform).
+The [current integration record](character-main-integration.md) records the
+73-core/86-native main gates. The runner owns child process
 trees, isolates profiles, and requires complete actors and PASS outcomes. Official
 Godot 4.7.1 archive bytes/version are verified against pinned provenance before
-execution. Both fresh hosted Debug builds and all 28 actors per platform pass at
+execution. At the original native CI milestone, both hosted Debug builds and
+all 28 actors per platform passed at
 `216066131b64bdd81efdd48cedc04277e5a74919`; integrated runtime/build/test inputs
 were identical at integration. The subsequent Linux proc-stat liveness-test
 correction changes only process inspection in the launcher tests and adds

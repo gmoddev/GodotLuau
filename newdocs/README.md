@@ -28,8 +28,10 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-007 is fixed and qualified on retained `security/gl-007-character-authority`
-at source `3bb641a`, based on main `4ea5311`, and remains unmerged. The
+GL-007 is integrated and resolved within ADR-006's bounded authority contract by
+normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`. The retained branch
+`security/gl-007-character-authority` stays at `514d12f`, preserving qualified
+source `3bb641a` and an identical merge tree. The
 [qualification record](character-authority-validation.md) retains Windows/Linux
 Debug/Release, core ASan, Linux full-native ASan/LSan, both production products
 and all four verified hosted jobs/artifacts. The
@@ -37,13 +39,17 @@ and all four verified hosted jobs/artifacts. The
 reproductions, architecture mapping and development failures from those final
 results. [ADR-006](adr-006-character-authority.md) defines the bounded character
 authority and presentation catalog contract.
-Character V2 is implemented and qualified for its documented source/headless scope
-on the stacked branch `runtime/character-v2-model`,
-from qualified tip `514d12f`. Its [work record](character-v2-development.md) retains
+Character V2 is integrated by normal merge
+`1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`, with a tree identical to retained
+`runtime/character-v2-model` tip `46f65e0` and runtime/test inputs identical to
+qualified `d7905dd`. Its [work record](character-v2-development.md) retains
 the actual Windows/Linux R6 baseline and [design decision](adr-007-model-character.md).
 Its [API and migration contract](character-v2-api.md) describes the breaking 3D
 Model/Character change; [qualification](character-v2-validation.md) records actual
-completed configurations and remaining gaps. Neither branch is authorized for merge. The [scoped API audit](inherited-api-audit.md) records
+completed configurations and remaining gaps. The
+[main integration record](character-main-integration.md) separates fresh checks
+from retained branch qualification. Release publication and updater distribution
+remain disabled. The [scoped API audit](inherited-api-audit.md) records
 HttpService follow-up GL-023 without changing the qualified GL-005 transport.
 
 GL-009 is integrated by normal merge `fc923d2713c39e39fa8db87576bd8e7a5b91ef6d`,
