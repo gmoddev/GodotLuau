@@ -1,0 +1,343 @@
+{
+  "Scope": "Five alternating paired trials; statistics are medians of trial statistics, not pooled independent host populations. Bootstrap is descriptive for these five pairs only. Node-dispatch elapsed time is distinct from whole-process OS CPU and engine coarse monitors.",
+  "Rows": [
+    {
+      "Characters": 1,
+      "Statistics": {
+        "Baseline": {
+          "FrameSeconds": {
+            "Mean": 0.00833300000000001,
+            "Median": 0.008317,
+            "P95": 0.008519,
+            "P99": 0.008601
+          },
+          "PhysicsSeconds": {
+            "Mean": 5.71833333333333e-05,
+            "Median": 5.3e-05,
+            "P95": 9.1e-05,
+            "P99": 0.000107
+          },
+          "ProcessSeconds": {
+            "Mean": 3.08354166666667e-05,
+            "Median": 2e-05,
+            "P95": 5.6e-05,
+            "P99": 0.00025
+          },
+          "PerTrialPhysicsMedians": [
+            5.4e-05,
+            5.3e-05,
+            5.2e-05
+          ]
+        },
+        "Candidate": {
+          "FrameSeconds": {
+            "Mean": 0.008333,
+            "Median": 0.008358,
+            "P95": 0.008506,
+            "P99": 0.00855
+          },
+          "PhysicsSeconds": {
+            "Mean": 5.14333333333333e-05,
+            "Median": 4.9e-05,
+            "P95": 7e-05,
+            "P99": 0.0001
+          },
+          "ProcessSeconds": {
+            "Mean": 3.02625e-05,
+            "Median": 1.9e-05,
+            "P95": 5.3e-05,
+            "P99": 0.000255
+          },
+          "PerTrialPhysicsMedians": [
+            4.9e-05,
+            4.9e-05,
+            4.9e-05
+          ]
+        }
+      },
+      "PairedPhysicsPercentChanges": [
+        -9.259259259259256,
+        -7.547169811320764,
+        -5.769230769230771
+      ],
+      "MedianPairedPhysicsPercentChange": -7.547169811320764,
+      "ImprovedPairs": 3,
+      "DescriptiveBootstrapMedianInterval95Percent": [
+        -9.259259259259256,
+        -5.769230769230771
+      ]
+    },
+    {
+      "Characters": 16,
+      "Statistics": {
+        "Baseline": {
+          "FrameSeconds": {
+            "Mean": 0.00833300208333334,
+            "Median": 0.008429,
+            "P95": 0.009027,
+            "P99": 0.009248
+          },
+          "PhysicsSeconds": {
+            "Mean": 0.0004033125,
+            "Median": 0.000413,
+            "P95": 0.000488,
+            "P99": 0.000574
+          },
+          "ProcessSeconds": {
+            "Mean": 5.736875e-05,
+            "Median": 4.8e-05,
+            "P95": 9.7e-05,
+            "P99": 0.000297
+          },
+          "PerTrialPhysicsMedians": [
+            0.000408,
+            0.000421,
+            0.000413
+          ]
+        },
+        "Candidate": {
+          "FrameSeconds": {
+            "Mean": 0.008333,
+            "Median": 0.008502,
+            "P95": 0.009007,
+            "P99": 0.009168
+          },
+          "PhysicsSeconds": {
+            "Mean": 0.000401458333333334,
+            "Median": 0.000396,
+            "P95": 0.000483,
+            "P99": 0.00054
+          },
+          "ProcessSeconds": {
+            "Mean": 5.95791666666666e-05,
+            "Median": 4.9e-05,
+            "P95": 0.000103,
+            "P99": 0.000278
+          },
+          "PerTrialPhysicsMedians": [
+            0.000387,
+            0.000396,
+            0.000404
+          ]
+        }
+      },
+      "PairedPhysicsPercentChanges": [
+        -5.147058823529416,
+        -5.938242280285033,
+        -2.1791767554479424
+      ],
+      "MedianPairedPhysicsPercentChange": -5.147058823529416,
+      "ImprovedPairs": 3,
+      "DescriptiveBootstrapMedianInterval95Percent": [
+        -5.938242280285033,
+        -2.1791767554479424
+      ]
+    },
+    {
+      "Characters": 32,
+      "Statistics": {
+        "Baseline": {
+          "FrameSeconds": {
+            "Mean": 0.00833299999999999,
+            "Median": 0.00887,
+            "P95": 0.009505,
+            "P99": 0.009705
+          },
+          "PhysicsSeconds": {
+            "Mean": 0.000805208333333333,
+            "Median": 0.000802,
+            "P95": 0.000967,
+            "P99": 0.001059
+          },
+          "ProcessSeconds": {
+            "Mean": 8.6925e-05,
+            "Median": 7.7e-05,
+            "P95": 0.000146,
+            "P99": 0.000317
+          },
+          "PerTrialPhysicsMedians": [
+            0.0008,
+            0.000802,
+            0.000811
+          ]
+        },
+        "Candidate": {
+          "FrameSeconds": {
+            "Mean": 0.008333175,
+            "Median": 0.008805,
+            "P95": 0.009523,
+            "P99": 0.009775
+          },
+          "PhysicsSeconds": {
+            "Mean": 0.000772183333333333,
+            "Median": 0.000774,
+            "P95": 0.0009,
+            "P99": 0.001048
+          },
+          "ProcessSeconds": {
+            "Mean": 8.67208333333333e-05,
+            "Median": 7.6e-05,
+            "P95": 0.000164,
+            "P99": 0.000325
+          },
+          "PerTrialPhysicsMedians": [
+            0.000784,
+            0.000774,
+            0.00075
+          ]
+        }
+      },
+      "PairedPhysicsPercentChanges": [
+        -2.000000000000013,
+        -3.4912718204488824,
+        -7.521578298397036
+      ],
+      "MedianPairedPhysicsPercentChange": -3.4912718204488824,
+      "ImprovedPairs": 3,
+      "DescriptiveBootstrapMedianInterval95Percent": [
+        -7.521578298397036,
+        -2.000000000000013
+      ]
+    },
+    {
+      "Characters": 64,
+      "Statistics": {
+        "Baseline": {
+          "FrameSeconds": {
+            "Mean": 0.00833300416666667,
+            "Median": 0.009534,
+            "P95": 0.010635,
+            "P99": 0.010911
+          },
+          "PhysicsSeconds": {
+            "Mean": 0.00160225,
+            "Median": 0.001611,
+            "P95": 0.001938,
+            "P99": 0.002104
+          },
+          "ProcessSeconds": {
+            "Mean": 0.000147252083333333,
+            "Median": 0.000138,
+            "P95": 0.00026,
+            "P99": 0.000367
+          },
+          "PerTrialPhysicsMedians": [
+            0.001611,
+            0.001593,
+            0.001655
+          ]
+        },
+        "Candidate": {
+          "FrameSeconds": {
+            "Mean": 0.00833299791666666,
+            "Median": 0.009691,
+            "P95": 0.010607,
+            "P99": 0.010872
+          },
+          "PhysicsSeconds": {
+            "Mean": 0.00156587083333333,
+            "Median": 0.001577,
+            "P95": 0.001884,
+            "P99": 0.002031
+          },
+          "ProcessSeconds": {
+            "Mean": 0.00015005625,
+            "Median": 0.000138,
+            "P95": 0.000238,
+            "P99": 0.000392
+          },
+          "PerTrialPhysicsMedians": [
+            0.001546,
+            0.001586,
+            0.001577
+          ]
+        }
+      },
+      "PairedPhysicsPercentChanges": [
+        -4.034761018001243,
+        -0.439422473320783,
+        -4.712990936555883
+      ],
+      "MedianPairedPhysicsPercentChange": -4.034761018001243,
+      "ImprovedPairs": 3,
+      "DescriptiveBootstrapMedianInterval95Percent": [
+        -4.712990936555883,
+        -0.439422473320783
+      ]
+    }
+  ],
+  "Lifecycle": {
+    "Baseline": {
+      "CreationMicroseconds": {
+        "Mean": 7793.4,
+        "Median": 7208,
+        "P95": 9721,
+        "P99": 9944
+      },
+      "RespawnMicroseconds": {
+        "Mean": 493.766666666667,
+        "Median": 480,
+        "P95": 586,
+        "P99": 696
+      },
+      "RespawnMemory": [
+        {
+          "Trial": 0,
+          "ObjectDelta": 0.0,
+          "StaticMemoryDeltaBytes": 3048.0
+        },
+        {
+          "Trial": 1,
+          "ObjectDelta": 0.0,
+          "StaticMemoryDeltaBytes": 3048.0
+        },
+        {
+          "Trial": 2,
+          "ObjectDelta": 0.0,
+          "StaticMemoryDeltaBytes": 3048.0
+        }
+      ],
+      "ActorCpuTotalSeconds": [
+        12.0625,
+        11.234375,
+        11.953125
+      ]
+    },
+    "Candidate": {
+      "CreationMicroseconds": {
+        "Mean": 7568.03333333333,
+        "Median": 7146,
+        "P95": 9556,
+        "P99": 10157
+      },
+      "RespawnMicroseconds": {
+        "Mean": 459.166666666667,
+        "Median": 462,
+        "P95": 549,
+        "P99": 559
+      },
+      "RespawnMemory": [
+        {
+          "Trial": 0,
+          "ObjectDelta": 0.0,
+          "StaticMemoryDeltaBytes": 3048.0
+        },
+        {
+          "Trial": 1,
+          "ObjectDelta": 0.0,
+          "StaticMemoryDeltaBytes": 3048.0
+        },
+        {
+          "Trial": 2,
+          "ObjectDelta": 0.0,
+          "StaticMemoryDeltaBytes": 3048.0
+        }
+      ],
+      "ActorCpuTotalSeconds": [
+        11.890625,
+        10.796875,
+        11.65625
+      ]
+    }
+  }
+}

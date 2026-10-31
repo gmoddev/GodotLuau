@@ -19,7 +19,8 @@
       "LinuxNative": "7e8112568a0b7c6842feaa3c5554a83ce721e73d819c1a0259daa75802cb4e7a"
     }
   },
-  "LocalFreshMatrixAtWrap": {"WindowsDebug": "80 core and 110 native PASS", "WindowsRelease": "in progress at evidence preparation", "LinuxRelease": "ctest exits 0 but strict distinct-80-case report checker FAIL; native not reached", "FinalCoreASan": "not yet established", "FullNativeASanLSan": "unqualified"},
+  "LocalFreshMatrixAtWrap": {"WindowsDebug": "80 core and 110 native PASS", "WindowsRelease": "80 core and 110 native PASS", "LinuxRelease": "ctest exits 0 but strict distinct-80-case report checker FAIL; native not reached", "FinalCoreASan": "Windows 80 cases and strict report checker PASS; Linux not reached", "FullNativeASanLSan": "unqualified"},
+  "SelectedTaskArchive": {"File": "C:/Sandbox/Codex/CharacterGraphics/closing-character-evidence.zip", "SHA256": "3356910a0ee42411bc732954f86e3e94aa7d56fcb04bd5633654bf924e869046", "Bytes": 129262377, "Entries": 12654, "Scope": "Windows task evidence including failed attempts and selected Linux summaries; raw Linux evidence retained in task volume"},
   "Performance": {"WindowsPairs": 5, "LinuxPairs": 5, "GPUPairs": 3, "Counts": [1,16,32,64], "Physics16MedianPairedPercent": {"Windows": -3.23, "Linux": -4.90, "GPU": -5.15}, "FPSGainClaimed": false, "NetworkHostImprovementClaimed": false, "Caveats": ["Linux network host medians/tails worse", "GPU 64-character render CPU median worse", "creation and respawn results mixed", "allocation event counts unavailable"]},
   "EvidenceRootOnDockerPC": "C:/Sandbox/Codex/CharacterGraphics",
   "LinuxEvidenceRootOnDockerPC": "codex-character-linux:/work; retained task volume codex-character-qualification-linux-v1",

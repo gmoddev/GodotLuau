@@ -1,0 +1,7 @@
+{
+  "File": "closing-character-evidence.zip",
+  "Bytes": 129262377,
+  "SHA256": "3356910a0ee42411bc732954f86e3e94aa7d56fcb04bd5633654bf924e869046",
+  "Entries": 12654,
+  "Scope": "Windows task evidence and selected Linux summaries; includes failed attempts; excludes binaries, import/build caches and signed URL configurations; raw Linux evidence retained in task volume"
+}

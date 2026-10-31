@@ -1,0 +1,3086 @@
+{
+  "Graphical": true,
+  "Actors": 14,
+  "Evidence": [
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real Model inheritance",
+          "Passed": true
+        },
+        {
+          "Label": "no separate 3D Humanoid",
+          "Passed": true
+        },
+        {
+          "Label": "requested rig did not fall back",
+          "Passed": true
+        },
+        {
+          "Label": "local camera and physical grounding",
+          "Passed": true
+        },
+        {
+          "Label": "unchanged root repairs independently changed live body",
+          "Passed": true
+        },
+        {
+          "Label": "repaired body body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "repaired body root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image third-person",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail third-person",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot third-person",
+          "Passed": true
+        },
+        {
+          "Label": "keyboard walking actual physics",
+          "Passed": true
+        },
+        {
+          "Label": "walking animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image walking",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail walking",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot walking",
+          "Passed": true
+        },
+        {
+          "Label": "keyboard sprint",
+          "Passed": true
+        },
+        {
+          "Label": "mouse rotates production camera",
+          "Passed": true
+        },
+        {
+          "Label": "controller camera rotation",
+          "Passed": true
+        },
+        {
+          "Label": "controller movement",
+          "Passed": true
+        },
+        {
+          "Label": "Character rotates toward actual movement",
+          "Passed": true
+        },
+        {
+          "Label": "walking controller body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "walking controller root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "controller jump reaches real physics",
+          "Passed": true
+        },
+        {
+          "Label": "jumping state and velocity",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image jumping",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail jumping",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot jumping",
+          "Passed": true
+        },
+        {
+          "Label": "procedural animation enters airborne pose",
+          "Passed": true
+        },
+        {
+          "Label": "falling and landing state transitions",
+          "Passed": true
+        },
+        {
+          "Label": "procedural animation returns to grounded pose",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image landed",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail landed",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot landed",
+          "Passed": true
+        },
+        {
+          "Label": "first-person rig transparency and zoom",
+          "Passed": true
+        },
+        {
+          "Label": "first-person fade reaches fully invisible endpoint",
+          "Passed": true
+        },
+        {
+          "Label": "first-person body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "first-person root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "first-person Character faces camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image first-person",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail first-person",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot first-person",
+          "Passed": true
+        },
+        {
+          "Label": "wheel returns to third-person zoom",
+          "Passed": true
+        },
+        {
+          "Label": "third-person restores rig materials",
+          "Passed": true
+        },
+        {
+          "Label": "camera boom collides with wall",
+          "Passed": true
+        },
+        {
+          "Label": "camera stays in front of wall",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image camera-collision",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail camera-collision",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot camera-collision",
+          "Passed": true
+        },
+        {
+          "Label": "parent transform body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "parent transform root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image parent-transform",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail parent-transform",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot parent-transform",
+          "Passed": true
+        },
+        {
+          "Label": "public PivotTo executes",
+          "Passed": true
+        },
+        {
+          "Label": "teleport body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "teleport root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image teleported",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail teleported",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot teleported",
+          "Passed": true
+        },
+        {
+          "Label": "AnimationPlayer advances visual track",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image animation",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail animation",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot animation",
+          "Passed": true
+        },
+        {
+          "Label": "animation completion callback",
+          "Passed": true
+        },
+        {
+          "Label": "death latched",
+          "Passed": true
+        },
+        {
+          "Label": "automatic respawn replaces rendered life",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image respawn",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail respawn",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot respawn",
+          "Passed": true
+        },
+        {
+          "Label": "manual loading suppresses auto respawn",
+          "Passed": true
+        },
+        {
+          "Label": "manual LoadCharacter creates new life",
+          "Passed": true
+        },
+        {
+          "Label": "mobile simulation creates native controls",
+          "Passed": true
+        },
+        {
+          "Label": "touch simulation moves Character",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image mobile-simulation",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail mobile-simulation",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot mobile-simulation",
+          "Passed": true
+        },
+        {
+          "Label": "mobile simulation GUI jump reaches real physics",
+          "Passed": true
+        },
+        {
+          "Label": "processed respawns leave no live object growth",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image repeated-respawns",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail repeated-respawns",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot repeated-respawns",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 10.0)]",
+          "DrawCalls": 36.0,
+          "DrawnFrames": 175,
+          "Label": "third-person",
+          "PhysicsSeconds": 0.000215,
+          "ProcessSeconds": 0.001245,
+          "SampledColors": 287,
+          "Screenshot": "presentation-r6-single0-third-person.png",
+          "SHA256": "19f7a1ab71499ed6cba4eafdf458fe050f49da2f0665946560022b90ad8e2b92"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 1.699997)]",
+          "DrawCalls": 34.0,
+          "DrawnFrames": 236,
+          "Label": "walking",
+          "PhysicsSeconds": 0.000215,
+          "ProcessSeconds": 0.001245,
+          "SampledColors": 298,
+          "Screenshot": "presentation-r6-single0-walking.png",
+          "SHA256": "3df427f8573d54965e3060b31b0d36398989cec621243094224632c8a4dfef82"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 0.999032, -0.043986), Z: (0.0, 0.043986, 0.999032), O: (0.0, 2.903241, 9.990319)]",
+          "DrawCalls": 37.0,
+          "DrawnFrames": 693,
+          "Label": "jumping",
+          "PhysicsSeconds": 0.000274,
+          "ProcessSeconds": 0.001193,
+          "SampledColors": 310,
+          "Screenshot": "presentation-r6-single0-jumping.png",
+          "SHA256": "7ff82154833ba95816b10eabefe53207a011dd5d9c53b32635e67d92a84d3d14"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 0.999032, -0.043986), Z: (0.0, 0.043986, 0.999032), O: (0.0, 1.940327, 9.990319)]",
+          "DrawCalls": 37.0,
+          "DrawnFrames": 892,
+          "Label": "landed",
+          "PhysicsSeconds": 0.000289,
+          "ProcessSeconds": 0.001268,
+          "SampledColors": 290,
+          "Screenshot": "presentation-r6-single0-landed.png",
+          "SHA256": "8576e4bd174fc85abcffd7646b3cab2209b60fb1185b6346b79cf493a5526043"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 0.999032, -0.043986), Z: (0.0, 0.043986, 0.999032), O: (0.0, 1.522548, 0.50148)]",
+          "DrawCalls": 17.0,
+          "DrawnFrames": 979,
+          "Label": "first-person",
+          "PhysicsSeconds": 0.000266,
+          "ProcessSeconds": 0.077223,
+          "SampledColors": 297,
+          "Screenshot": "presentation-r6-single0-first-person.png",
+          "SHA256": "aceb6a1a2b6e5ad45ac586fa8ff5650eb8cb74886115c23facb0d36fbca59c0c"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.500469, 2.167882)]",
+          "DrawCalls": 26.0,
+          "DrawnFrames": 1079,
+          "Label": "camera-collision",
+          "PhysicsSeconds": 0.00031,
+          "ProcessSeconds": 0.088009,
+          "SampledColors": 340,
+          "Screenshot": "presentation-r6-single0-camera-collision.png",
+          "SHA256": "deaf034f7a44fcd2bb2929871150b84d8aa71e1fe16fd5c4f0c0ac67cf892ba8"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (5.0, 1.700514, 61.99781)]",
+          "DrawCalls": 26.0,
+          "DrawnFrames": 1079,
+          "Label": "parent-transform",
+          "PhysicsSeconds": 0.00031,
+          "ProcessSeconds": 0.088009,
+          "SampledColors": 287,
+          "Screenshot": "presentation-r6-single0-parent-transform.png",
+          "SHA256": "a22637a1181f6eefc2a7faa7bb1f6998bb881399e0d6853f166d9e1329386eb1"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.4625, 59.99945)]",
+          "DrawCalls": 34.0,
+          "DrawnFrames": 1081,
+          "Label": "teleported",
+          "PhysicsSeconds": 0.00031,
+          "ProcessSeconds": 0.088009,
+          "SampledColors": 275,
+          "Screenshot": "presentation-r6-single0-teleported.png",
+          "SHA256": "faf5aa4668c8bda791e985bfa6bcbe00c4b62a68b8c9c558d15c5e6607783af3"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.5875, 59.99997)]",
+          "DrawCalls": 37.0,
+          "DrawnFrames": 1102,
+          "Label": "animation",
+          "PhysicsSeconds": 0.00031,
+          "ProcessSeconds": 0.088009,
+          "SampledColors": 290,
+          "Screenshot": "presentation-r6-single0-animation.png",
+          "SHA256": "d85bc74487369093db5a60a7922874de2ac450a98e916bfc4b47862d46c7ea52"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.3375, 10.0)]",
+          "DrawCalls": 36.0,
+          "DrawnFrames": 1218,
+          "Label": "respawn",
+          "PhysicsSeconds": 0.006775,
+          "ProcessSeconds": 0.083471,
+          "SampledColors": 284,
+          "Screenshot": "presentation-r6-single0-respawn.png",
+          "SHA256": "dfb5ad6bad9759e890414a7fcdab7be7082985ca63a09c15e69bd3120d9f3a47"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (6.966669, 1.49974, 10.0)]",
+          "DrawCalls": 40.0,
+          "DrawnFrames": 1487,
+          "Label": "mobile-simulation",
+          "PhysicsSeconds": 0.002712,
+          "ProcessSeconds": 0.004908,
+          "SampledColors": 312,
+          "Screenshot": "presentation-r6-single0-mobile-simulation.png",
+          "SHA256": "d07ba086f240049ae6ce68b9573ab439cdcf5ba186b0e1d8af6b84a845e3a278"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 6.425, 10.0)]",
+          "DrawCalls": 38.0,
+          "DrawnFrames": 1594,
+          "Label": "repeated-respawns",
+          "PhysicsSeconds": 0.001629,
+          "ProcessSeconds": 0.070546,
+          "SampledColors": 325,
+          "Screenshot": "presentation-r6-single0-repeated-respawns.png",
+          "SHA256": "b923f5d8dec3d1521b49db9cf615b80461a0b3763ca55cbc95d9a7d4bca336a0"
+        }
+      ],
+      "Case": "r6",
+      "Checks": 83,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {
+        "BodyProcessEnabled": true,
+        "Graphical": true,
+        "ObjectDelta": 0.0,
+        "Respawns": 20,
+        "StaticMemoryDeltaBytes": 0.0
+      },
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "single0",
+      "Transforms": {
+        "FadeEndpoint": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "first-person": {
+          "Body": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.000469, 0.0)]",
+          "Character": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.000469, 0.0)]",
+          "RootPart": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.000469, 0.0)]"
+        },
+        "parent transform": {
+          "Body": "[X: (1.105273, 0.0, -0.467302), Y: (0.0, 1.2, 0.0), Z: (0.467302, 0.0, 1.105273), O: (5.0, 0.000563, 2.0)]",
+          "Character": "[X: (1.105273, 0.0, -0.467302), Y: (0.0, 1.2, 0.0), Z: (0.467302, 0.0, 1.105273), O: (5.0, 0.000563, 2.0)]",
+          "RootPart": "[X: (1.105273, 0.0, -0.467302), Y: (0.0, 1.2, 0.0), Z: (0.467302, 0.0, 1.105273), O: (5.0, 0.000563, 2.0)]"
+        },
+        "repaired body": {
+          "Body": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, -0.00026, 0.0)]",
+          "Character": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, -0.00026, 0.0)]",
+          "RootPart": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, -0.00026, 0.0)]"
+        },
+        "teleport": {
+          "Body": "[X: (1.0, 0.0, -0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 2.0, 0.0)]",
+          "Character": "[X: (1.0, 0.0, -0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 2.0, 0.0)]",
+          "RootPart": "[X: (1.0, 0.0, -0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 2.0, 0.0)]"
+        },
+        "walking controller": {
+          "Body": "[X: (0.006419, 0.0, 0.999979), Y: (0.0, 1.0, 0.0), Z: (-0.999979, 0.0, 0.006419), O: (6.966669, -0.00026, -20.09166)]",
+          "Character": "[X: (0.006419, 0.0, 0.999979), Y: (0.0, 1.0, 0.0), Z: (-0.999979, 0.0, 0.006419), O: (6.966669, -0.00026, -20.09166)]",
+          "RootPart": "[X: (0.006419, 0.0, 0.999979), Y: (0.0, 1.0, 0.0), Z: (-0.999979, 0.0, 0.006419), O: (6.966669, -0.00026, -20.09166)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real Model inheritance",
+          "Passed": true
+        },
+        {
+          "Label": "no separate 3D Humanoid",
+          "Passed": true
+        },
+        {
+          "Label": "requested rig did not fall back",
+          "Passed": true
+        },
+        {
+          "Label": "local camera and physical grounding",
+          "Passed": true
+        },
+        {
+          "Label": "unchanged root repairs independently changed live body",
+          "Passed": true
+        },
+        {
+          "Label": "repaired body body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "repaired body root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image third-person",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail third-person",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot third-person",
+          "Passed": true
+        },
+        {
+          "Label": "keyboard walking actual physics",
+          "Passed": true
+        },
+        {
+          "Label": "walking animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image walking",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail walking",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot walking",
+          "Passed": true
+        },
+        {
+          "Label": "keyboard sprint",
+          "Passed": true
+        },
+        {
+          "Label": "mouse rotates production camera",
+          "Passed": true
+        },
+        {
+          "Label": "controller camera rotation",
+          "Passed": true
+        },
+        {
+          "Label": "controller movement",
+          "Passed": true
+        },
+        {
+          "Label": "Character rotates toward actual movement",
+          "Passed": true
+        },
+        {
+          "Label": "walking controller body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "walking controller root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "controller jump reaches real physics",
+          "Passed": true
+        },
+        {
+          "Label": "jumping state and velocity",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image jumping",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail jumping",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot jumping",
+          "Passed": true
+        },
+        {
+          "Label": "procedural animation enters airborne pose",
+          "Passed": true
+        },
+        {
+          "Label": "falling and landing state transitions",
+          "Passed": true
+        },
+        {
+          "Label": "procedural animation returns to grounded pose",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image landed",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail landed",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot landed",
+          "Passed": true
+        },
+        {
+          "Label": "first-person rig transparency and zoom",
+          "Passed": true
+        },
+        {
+          "Label": "first-person fade reaches fully invisible endpoint",
+          "Passed": true
+        },
+        {
+          "Label": "first-person body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "first-person root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "first-person Character faces camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image first-person",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail first-person",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot first-person",
+          "Passed": true
+        },
+        {
+          "Label": "wheel returns to third-person zoom",
+          "Passed": true
+        },
+        {
+          "Label": "third-person restores rig materials",
+          "Passed": true
+        },
+        {
+          "Label": "camera boom collides with wall",
+          "Passed": true
+        },
+        {
+          "Label": "camera stays in front of wall",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image camera-collision",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail camera-collision",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot camera-collision",
+          "Passed": true
+        },
+        {
+          "Label": "parent transform body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "parent transform root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image parent-transform",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail parent-transform",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot parent-transform",
+          "Passed": true
+        },
+        {
+          "Label": "public PivotTo executes",
+          "Passed": true
+        },
+        {
+          "Label": "teleport body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "teleport root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image teleported",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail teleported",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot teleported",
+          "Passed": true
+        },
+        {
+          "Label": "AnimationPlayer advances visual track",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image animation",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail animation",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot animation",
+          "Passed": true
+        },
+        {
+          "Label": "animation completion callback",
+          "Passed": true
+        },
+        {
+          "Label": "death latched",
+          "Passed": true
+        },
+        {
+          "Label": "automatic respawn replaces rendered life",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image respawn",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail respawn",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot respawn",
+          "Passed": true
+        },
+        {
+          "Label": "manual loading suppresses auto respawn",
+          "Passed": true
+        },
+        {
+          "Label": "manual LoadCharacter creates new life",
+          "Passed": true
+        },
+        {
+          "Label": "mobile simulation creates native controls",
+          "Passed": true
+        },
+        {
+          "Label": "touch simulation moves Character",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image mobile-simulation",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail mobile-simulation",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot mobile-simulation",
+          "Passed": true
+        },
+        {
+          "Label": "mobile simulation GUI jump reaches real physics",
+          "Passed": true
+        },
+        {
+          "Label": "processed respawns leave no live object growth",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image repeated-respawns",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail repeated-respawns",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot repeated-respawns",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 10.0)]",
+          "DrawCalls": 36.0,
+          "DrawnFrames": 175,
+          "Label": "third-person",
+          "PhysicsSeconds": 0.000234,
+          "ProcessSeconds": 0.001229,
+          "SampledColors": 291,
+          "Screenshot": "presentation-custom-single0-third-person.png",
+          "SHA256": "444979175baa5f8ebc77de1a4df16a9a75b23aecb2d479fc0f005afe654393b0"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 1.699997)]",
+          "DrawCalls": 34.0,
+          "DrawnFrames": 237,
+          "Label": "walking",
+          "PhysicsSeconds": 0.000234,
+          "ProcessSeconds": 0.001229,
+          "SampledColors": 300,
+          "Screenshot": "presentation-custom-single0-walking.png",
+          "SHA256": "4aedeb42968a5076172073957260a8e60aa7ff35fa2d2bf39fbbf678d204c08f"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (-0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 2.903241, 9.990316)]",
+          "DrawCalls": 37.0,
+          "DrawnFrames": 693,
+          "Label": "jumping",
+          "PhysicsSeconds": 0.000255,
+          "ProcessSeconds": 0.001184,
+          "SampledColors": 312,
+          "Screenshot": "presentation-custom-single0-jumping.png",
+          "SHA256": "dc192543c931e13b2495a4c869d4b57e5659488e58a5f116514baad96fda9d21"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (-0.0, 0.999032, -0.043987), Z: (-0.0, 0.043987, 0.999032), O: (0.0, 1.940327, 9.990316)]",
+          "DrawCalls": 37.0,
+          "DrawnFrames": 892,
+          "Label": "landed",
+          "PhysicsSeconds": 0.000262,
+          "ProcessSeconds": 0.001036,
+          "SampledColors": 289,
+          "Screenshot": "presentation-custom-single0-landed.png",
+          "SHA256": "893207eac6751c7921e1f9db2cf4be4d0e41861169c573b235b95e0ad35c65b6"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (-0.0, 0.999032, -0.043987), Z: (-0.0, 0.043987, 0.999032), O: (0.0, 1.522543, 0.50135)]",
+          "DrawCalls": 19.0,
+          "DrawnFrames": 973,
+          "Label": "first-person",
+          "PhysicsSeconds": 0.000213,
+          "ProcessSeconds": 0.092272,
+          "SampledColors": 294,
+          "Screenshot": "presentation-custom-single0-first-person.png",
+          "SHA256": "64d4a36d47e04e5fc09dc5481dba9e5ca70e13418aeca7dfd3cf540b18f18f6c"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (-0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (0.0, 1.500469, 2.16784)]",
+          "DrawCalls": 22.0,
+          "DrawnFrames": 1075,
+          "Label": "camera-collision",
+          "PhysicsSeconds": 0.000236,
+          "ProcessSeconds": 0.072399,
+          "SampledColors": 290,
+          "Screenshot": "presentation-custom-single0-camera-collision.png",
+          "SHA256": "a2297c21e6ffbbe012d7e3c326f5a93baddc4b5558152a4dda330c7be14bc745"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (-0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (5.0, 1.697584, 61.99674)]",
+          "DrawCalls": 22.0,
+          "DrawnFrames": 1075,
+          "Label": "parent-transform",
+          "PhysicsSeconds": 0.000236,
+          "ProcessSeconds": 0.072399,
+          "SampledColors": 280,
+          "Screenshot": "presentation-custom-single0-parent-transform.png",
+          "SHA256": "9cd6eaf55a16fd85e588f32c18d55c6fef1d3bea0a0ec906782a74120a381212"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (-0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (0.0, 3.425, 59.99816)]",
+          "DrawCalls": 34.0,
+          "DrawnFrames": 1077,
+          "Label": "teleported",
+          "PhysicsSeconds": 0.000236,
+          "ProcessSeconds": 0.072399,
+          "SampledColors": 283,
+          "Screenshot": "presentation-custom-single0-teleported.png",
+          "SHA256": "1563f459831b0ea419f3193e40cbe9243f184f7d2b3e97cae73aa5b73dffd017"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (-0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (0.0, 1.3625, 59.99995)]",
+          "DrawCalls": 37.0,
+          "DrawnFrames": 1098,
+          "Label": "animation",
+          "PhysicsSeconds": 0.000236,
+          "ProcessSeconds": 0.072399,
+          "SampledColors": 277,
+          "Screenshot": "presentation-custom-single0-animation.png",
+          "SHA256": "d9c2285da5ca3609075c164609386f45278f390cb79d513cfeb241d8f66943f4"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.05, 10.0)]",
+          "DrawCalls": 36.0,
+          "DrawnFrames": 1214,
+          "Label": "respawn",
+          "PhysicsSeconds": 0.007084,
+          "ProcessSeconds": 0.076443,
+          "SampledColors": 290,
+          "Screenshot": "presentation-custom-single0-respawn.png",
+          "SHA256": "89a9b83a5ad4bbcb20e1132eefc8e12725c799ad0c8b1412dece5c1d4af77f2d"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (6.966669, 1.49974, 10.0)]",
+          "DrawCalls": 40.0,
+          "DrawnFrames": 1482,
+          "Label": "mobile-simulation",
+          "PhysicsSeconds": 0.003295,
+          "ProcessSeconds": 0.005327,
+          "SampledColors": 318,
+          "Screenshot": "presentation-custom-single0-mobile-simulation.png",
+          "SHA256": "f52c5031d182de90ca2f71ecea844655fef783bca97568115403883e22a54820"
+        },
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 6.425, 10.0)]",
+          "DrawCalls": 38.0,
+          "DrawnFrames": 1589,
+          "Label": "repeated-respawns",
+          "PhysicsSeconds": 0.00089,
+          "ProcessSeconds": 0.070582,
+          "SampledColors": 333,
+          "Screenshot": "presentation-custom-single0-repeated-respawns.png",
+          "SHA256": "612c5300ba2e13fac871cb66fe0b0184bce697897498929d2ec30e53f0758bca"
+        }
+      ],
+      "Case": "custom",
+      "Checks": 83,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {
+        "BodyProcessEnabled": true,
+        "Graphical": true,
+        "ObjectDelta": 0.0,
+        "Respawns": 20,
+        "StaticMemoryDeltaBytes": 0.0
+      },
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "single0",
+      "Transforms": {
+        "FadeEndpoint": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "first-person": {
+          "Body": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.000469, 0.0)]",
+          "Character": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.000469, 0.0)]",
+          "RootPart": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.000469, 0.0)]"
+        },
+        "parent transform": {
+          "Body": "[X: (1.105273, 0.0, -0.467302), Y: (0.0, 1.2, 0.0), Z: (0.467302, 0.0, 1.105273), O: (5.0, 0.000563, 2.0)]",
+          "Character": "[X: (1.105273, 0.0, -0.467302), Y: (0.0, 1.2, 0.0), Z: (0.467302, 0.0, 1.105273), O: (5.0, 0.000563, 2.0)]",
+          "RootPart": "[X: (1.105273, 0.0, -0.467302), Y: (0.0, 1.2, 0.0), Z: (0.467302, 0.0, 1.105273), O: (5.0, 0.000563, 2.0)]"
+        },
+        "repaired body": {
+          "Body": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, -0.00026, 0.0)]",
+          "Character": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, -0.00026, 0.0)]",
+          "RootPart": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, -0.00026, 0.0)]"
+        },
+        "teleport": {
+          "Body": "[X: (1.0, 0.0, -0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 2.0, 0.0)]",
+          "Character": "[X: (1.0, 0.0, -0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 2.0, 0.0)]",
+          "RootPart": "[X: (1.0, 0.0, -0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 2.0, 0.0)]"
+        },
+        "walking controller": {
+          "Body": "[X: (0.006419, 0.0, 0.999979), Y: (0.0, 1.0, 0.0), Z: (-0.999979, 0.0, 0.006419), O: (6.966669, -0.00026, -20.09166)]",
+          "Character": "[X: (0.006419, 0.0, 0.999979), Y: (0.0, 1.0, 0.0), Z: (-0.999979, 0.0, 0.006419), O: (6.966669, -0.00026, -20.09166)]",
+          "RootPart": "[X: (0.006419, 0.0, 0.999979), Y: (0.0, 1.0, 0.0), Z: (-0.999979, 0.0, 0.006419), O: (6.966669, -0.00026, -20.09166)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "native listen startup",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1186714768 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1186714768 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_135790737 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_135790737 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (40.5251, 1.500592, 10.0)]",
+          "DrawCalls": 74.0,
+          "DrawnFrames": 337,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.000825,
+          "ProcessSeconds": 0.001385,
+          "SampledColors": 293,
+          "Screenshot": "presentation-listen-server0-owner-camera.png",
+          "SHA256": "c3baf8496efc96d417012b314fc195ee4844f7fae9c072347273b521175391a1"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (52.5251, 10.00059, 22.0)]",
+          "DrawCalls": 73.0,
+          "DrawnFrames": 338,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.000825,
+          "ProcessSeconds": 0.001385,
+          "SampledColors": 350,
+          "Screenshot": "presentation-listen-server0-multiplayer-overview.png",
+          "SHA256": "08b05662956be3bf037368e472fa522982425baefa278826b605f3b5e7077888"
+        }
+      ],
+      "Case": "listen",
+      "Checks": 26,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "server0",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_1186714768 animation": {
+          "FinalPosition": "(42.6306, 0.000459, 0.0)",
+          "InitialPose": "(0.014805, 0.0, 0.0)",
+          "MaximumPoseDelta": 0.91439551115036
+        },
+        "RemotePlayer_135790737 animation": {
+          "FinalPosition": "(25.59206, 0.000064, -0.444925)",
+          "InitialPose": "(0.35, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.1993842124939
+        },
+        "replicated puppet RemotePlayer_1186714768": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (26.63062, 0.000459, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (26.63062, 0.000459, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (26.63062, 0.000459, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_135790737": {
+          "Body": "[X: (0.000854, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.000854), O: (9.592076, -0.406229, -0.444925)]",
+          "Character": "[X: (0.000854, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.000854), O: (9.592076, -0.406229, -0.444925)]",
+          "RootPart": "[X: (0.000854, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.000854), O: (9.592076, -0.406229, -0.444925)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_135790737 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_135790737 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (43.16394, 1.500459, 10.0)]",
+          "DrawCalls": 65.0,
+          "DrawnFrames": 334,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.00085,
+          "ProcessSeconds": 0.001375,
+          "SampledColors": 285,
+          "Screenshot": "presentation-listen-client1-owner-camera.png",
+          "SHA256": "290facc00602b8afb218fb91d0a3c0e9c49f8c5135f2d950ba45bd83feaa1126"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (55.16394, 10.00046, 22.0)]",
+          "DrawCalls": 65.0,
+          "DrawnFrames": 335,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.00085,
+          "ProcessSeconds": 0.001375,
+          "SampledColors": 360,
+          "Screenshot": "presentation-listen-client1-multiplayer-overview.png",
+          "SHA256": "734e085b717c661e3a509629a2b213d5fe021a147e1d80699176e1044fd52bf0"
+        }
+      ],
+      "Case": "listen",
+      "Checks": 25,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client1",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_1 animation": {
+          "FinalPosition": "(40.25843, 0.000592, 0.0)",
+          "InitialPose": "(0.848051, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.74787569046021
+        },
+        "RemotePlayer_135790737 animation": {
+          "FinalPosition": "(25.59206, 0.000064, -0.444925)",
+          "InitialPose": "(0.35, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.19938445091248
+        },
+        "replicated puppet RemotePlayer_1": {
+          "Body": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (24.25845, 0.000592, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (24.25845, 0.000592, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (24.25845, 0.000592, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_135790737": {
+          "Body": "[X: (0.000854, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.000854), O: (9.592076, -0.406229, -0.444925)]",
+          "Character": "[X: (0.000854, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.000854), O: (9.592076, -0.406229, -0.444925)]",
+          "RootPart": "[X: (0.000854, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.000854), O: (9.592076, -0.406229, -0.444925)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1186714768 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1186714768 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (25.85873, 1.500064, 9.555076)]",
+          "DrawCalls": 61.0,
+          "DrawnFrames": 337,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.00024,
+          "ProcessSeconds": 0.001348,
+          "SampledColors": 281,
+          "Screenshot": "presentation-listen-client2-owner-camera.png",
+          "SHA256": "b94d68e6996e0fa832bdc938151387500357c4c8897da2d627aa77d4dc42953f"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (37.85873, 10.00006, 21.55507)]",
+          "DrawCalls": 61.0,
+          "DrawnFrames": 338,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.00024,
+          "ProcessSeconds": 0.001348,
+          "SampledColors": 360,
+          "Screenshot": "presentation-listen-client2-multiplayer-overview.png",
+          "SHA256": "cf9c8817037adb9da2cd245a4ccdb6fe6c89de4987712c79e60c19cb4a1c8342"
+        }
+      ],
+      "Case": "listen",
+      "Checks": 25,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client2",
+      "Transforms": {
+        "Grounding": [
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(5.858743, 4.231271, -0.444925)",
+            "Time": 2458,
+            "Velocity": "(16.0, -14.25, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.12541, 3.981271, -0.444925)",
+            "Time": 2458,
+            "Velocity": "(16.0, -15.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.12541, 3.981271, -0.444925)",
+            "Time": 2466,
+            "Velocity": "(16.0, -15.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.392076, 3.718771, -0.444925)",
+            "Time": 2475,
+            "Velocity": "(16.0, -15.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.392076, 3.718771, -0.444925)",
+            "Time": 2483,
+            "Velocity": "(16.0, -15.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.658743, 3.443771, -0.444925)",
+            "Time": 2492,
+            "Velocity": "(16.0, -16.5, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.658743, 3.443771, -0.444925)",
+            "Time": 2500,
+            "Velocity": "(16.0, -16.5, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.92541, 3.156271, -0.444925)",
+            "Time": 2508,
+            "Velocity": "(16.0, -17.25, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(6.92541, 3.156271, -0.444925)",
+            "Time": 2517,
+            "Velocity": "(16.0, -17.25, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.192077, 2.856271, -0.444925)",
+            "Time": 2525,
+            "Velocity": "(16.0, -18.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.192077, 2.856271, -0.444925)",
+            "Time": 2533,
+            "Velocity": "(16.0, -18.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.458744, 2.543771, -0.444925)",
+            "Time": 2542,
+            "Velocity": "(16.0, -18.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.458744, 2.543771, -0.444925)",
+            "Time": 2550,
+            "Velocity": "(16.0, -18.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.72541, 2.218771, -0.444925)",
+            "Time": 2558,
+            "Velocity": "(16.0, -19.5, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.72541, 2.218771, -0.444925)",
+            "Time": 2566,
+            "Velocity": "(16.0, -19.5, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.992077, 1.881271, -0.444925)",
+            "Time": 2575,
+            "Velocity": "(16.0, -20.25, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(7.992077, 1.881271, -0.444925)",
+            "Time": 2583,
+            "Velocity": "(16.0, -20.25, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(8.258744, 1.531271, -0.444925)",
+            "Time": 2592,
+            "Velocity": "(16.0, -21.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(8.258744, 1.531271, -0.444925)",
+            "Time": 2600,
+            "Velocity": "(16.0, -21.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(8.525411, 1.168771, -0.444925)",
+            "Time": 2608,
+            "Velocity": "(16.0, -21.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(8.525411, 1.168771, -0.444925)",
+            "Time": 2617,
+            "Velocity": "(16.0, -21.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(8.792077, 0.793771, -0.444925)",
+            "Time": 2625,
+            "Velocity": "(16.0, -22.5, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(8.792077, 0.793771, -0.444925)",
+            "Time": 2633,
+            "Velocity": "(16.0, -22.5, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(9.058743, 0.406271, -0.444925)",
+            "Time": 2642,
+            "Velocity": "(16.0, -23.25, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(9.058743, 0.406271, -0.444925)",
+            "Time": 2650,
+            "Velocity": "(16.0, -23.25, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(9.32541, 0.006271, -0.444925)",
+            "Time": 2658,
+            "Velocity": "(16.0, -24.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(9.32541, 0.006271, -0.444925)",
+            "Time": 2667,
+            "Velocity": "(16.0, -24.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(9.592076, -0.406229, -0.444925)",
+            "Time": 2675,
+            "Velocity": "(16.0, -24.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(9.592076, -0.406229, -0.444925)",
+            "Time": 2683,
+            "Velocity": "(16.0, -24.75, 0.0)"
+          }
+        ],
+        "RemotePlayer_1 animation": {
+          "FinalPosition": "(39.7251, 0.000592, 0.0)",
+          "InitialPose": "(0.820088, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.71997714042664
+        },
+        "RemotePlayer_1186714768 animation": {
+          "FinalPosition": "(42.6306, 0.000459, 0.0)",
+          "InitialPose": "(-0.060107, 0.0, 0.0)",
+          "MaximumPoseDelta": 0.959595441818237
+        },
+        "replicated puppet RemotePlayer_1": {
+          "Body": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (24.25845, 0.000592, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (24.25845, 0.000592, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (24.25845, 0.000592, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_1186714768": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (26.63062, 0.000459, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (26.63062, 0.000459, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (26.63062, 0.000459, 0.0)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "native dedicated startup",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "dedicated observer has no local Character",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1564818432 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1564818432 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_891258058 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_891258058 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (0.882353, 0.0, -0.470588), Y: (-0.156621, 0.94299, -0.293665), Z: (0.44376, 0.33282, 0.83205), O: (8.0, 10.9875, 15.0)]",
+          "DrawCalls": 16.0,
+          "DrawnFrames": 311,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.001117,
+          "ProcessSeconds": 0.001228,
+          "SampledColors": 348,
+          "Screenshot": "presentation-dedicated-server0-owner-camera.png",
+          "SHA256": "70cc9345493a49a616c6356e7fb53b9c56b90f5997c25904416dffdf1d5dfeb3"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (50.25073, 10.00086, 22.0)]",
+          "DrawCalls": 16.0,
+          "DrawnFrames": 312,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.001117,
+          "ProcessSeconds": 0.001228,
+          "SampledColors": 345,
+          "Screenshot": "presentation-dedicated-server0-multiplayer-overview.png",
+          "SHA256": "c7b75bc44724df2f2529ad0d95fb08bfda79c55b8f476bf48076487a54a292d6"
+        }
+      ],
+      "Case": "dedicated",
+      "Checks": 25,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "server0",
+      "Transforms": {
+        "RemotePlayer_1564818432 animation": {
+          "FinalPosition": "(37.7174, 0.000857, 0.0)",
+          "InitialPose": "(-0.708369, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.60785758495331
+        },
+        "RemotePlayer_891258058 animation": {
+          "FinalPosition": "(40.63914, 0.000818, 0.308837)",
+          "InitialPose": "(-0.455038, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.35478782653809
+        },
+        "replicated puppet RemotePlayer_1564818432": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.71741, 0.000857, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.71741, 0.000857, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.71741, 0.000857, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_891258058": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (24.63916, 0.000818, 0.308837)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (24.63916, 0.000818, 0.308837)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (24.63916, 0.000818, 0.308837)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_891258058 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_891258058 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (38.25073, 1.500857, 10.0)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 306,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.001329,
+          "ProcessSeconds": 0.00118,
+          "SampledColors": 291,
+          "Screenshot": "presentation-dedicated-client1-owner-camera.png",
+          "SHA256": "42df7457412c839cbd628a7d97e92ddef36a72a1bf0869663848bfae9e0d1a3d"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (50.25073, 10.00086, 22.0)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 307,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.001329,
+          "ProcessSeconds": 0.00118,
+          "SampledColors": 343,
+          "Screenshot": "presentation-dedicated-client1-multiplayer-overview.png",
+          "SHA256": "041d22e053e776eb14f0405998b0cba0656ccc20de0fb87b62637e771db839ad"
+        }
+      ],
+      "Case": "dedicated",
+      "Checks": 19,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client1",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_891258058 animation": {
+          "FinalPosition": "(40.10581, 0.000818, 0.308837)",
+          "InitialPose": "(-0.389292, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.28697645664215
+        },
+        "replicated puppet RemotePlayer_891258058": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (24.10582, 0.000818, 0.308837)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (24.10582, 0.000818, 0.308837)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (24.10582, 0.000818, 0.308837)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual R6 rig",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1564818432 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1564818432 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (40.90581, 1.500818, 10.30884)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 309,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.000749,
+          "ProcessSeconds": 0.001147,
+          "SampledColors": 293,
+          "Screenshot": "presentation-dedicated-client2-owner-camera.png",
+          "SHA256": "e5bd3edded98953167d6fc340e6e7766887193c9b5a90342a044bb387da9aa38"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (52.90581, 10.00082, 22.30884)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 310,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.000749,
+          "ProcessSeconds": 0.001147,
+          "SampledColors": 350,
+          "Screenshot": "presentation-dedicated-client2-multiplayer-overview.png",
+          "SHA256": "27012c6c8d8526474eda8bb378197815d4c81ebb02796e5b33f5d25a687740b5"
+        }
+      ],
+      "Case": "dedicated",
+      "Checks": 19,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client2",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_1564818432 animation": {
+          "FinalPosition": "(37.7174, 0.000857, 0.0)",
+          "InitialPose": "(-0.708368, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.60689520835876
+        },
+        "replicated puppet RemotePlayer_1564818432": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.71741, 0.000857, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.71741, 0.000857, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.71741, 0.000857, 0.0)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "native listen startup",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_111027394 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_111027394 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1776006370 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1776006370 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (34.94284, 1.500531, 10.0)]",
+          "DrawCalls": 57.0,
+          "DrawnFrames": 310,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.001013,
+          "ProcessSeconds": 0.001233,
+          "SampledColors": 286,
+          "Screenshot": "presentation-listen-custom-server0-owner-camera.png",
+          "SHA256": "edf324fe7a02969521cf0197e6be78f4ed2b910e1d791168930990196740444e"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (46.94284, 10.00053, 22.0)]",
+          "DrawCalls": 57.0,
+          "DrawnFrames": 311,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.001013,
+          "ProcessSeconds": 0.001233,
+          "SampledColors": 367,
+          "Screenshot": "presentation-listen-custom-server0-multiplayer-overview.png",
+          "SHA256": "90672400453581bbca7023e4eb56efe41755c1a86c0dc6cdcef36e99e83d2f0f"
+        }
+      ],
+      "Case": "listen-custom",
+      "Checks": 28,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "server0",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_111027394 animation": {
+          "FinalPosition": "(54.50031, 0.000944, 0.0)",
+          "InitialPose": "(0.668023, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.5676121711731
+        },
+        "RemotePlayer_1776006370 animation": {
+          "FinalPosition": "(54.1815, 0.000942, 0.0)",
+          "InitialPose": "(0.794204, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.69322991371155
+        },
+        "replicated puppet RemotePlayer_111027394": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.94777, 0.000944, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.94777, 0.000944, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.94777, 0.000944, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_1776006370": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.62637, 0.000942, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.62637, 0.000942, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.62637, 0.000942, 0.0)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1776006370 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1776006370 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.17548, 1.500944, 10.0)]",
+          "DrawCalls": 65.0,
+          "DrawnFrames": 311,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.000781,
+          "ProcessSeconds": 0.001266,
+          "SampledColors": 297,
+          "Screenshot": "presentation-listen-custom-client1-owner-camera.png",
+          "SHA256": "8fdb33698915d63a3bb1e3d7f5127df1c62d9a2f498c8d64c8cc1f998c09d302"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.17548, 10.00094, 22.0)]",
+          "DrawCalls": 65.0,
+          "DrawnFrames": 312,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.000781,
+          "ProcessSeconds": 0.001266,
+          "SampledColors": 358,
+          "Screenshot": "presentation-listen-custom-client1-multiplayer-overview.png",
+          "SHA256": "90e6eb227aa42687efc1a5cb671a10800da6ade1af3805a1b6881ec65861a01a"
+        }
+      ],
+      "Case": "listen-custom",
+      "Checks": 27,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client1",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_1 animation": {
+          "FinalPosition": "(34.40951, 0.000531, 0.0)",
+          "InitialPose": "(0.777228, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.67717814445496
+        },
+        "RemotePlayer_1776006370 animation": {
+          "FinalPosition": "(54.1815, 0.000942, 0.0)",
+          "InitialPose": "(0.794204, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.69379353523254
+        },
+        "replicated puppet RemotePlayer_1": {
+          "Body": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (18.40953, 0.000531, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (18.40953, 0.000531, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (18.40953, 0.000531, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_1776006370": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.57417, 0.000942, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.57417, 0.000942, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.57417, 0.000942, 0.0)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_111027394 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_111027394 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.49375, 1.500942, 10.0)]",
+          "DrawCalls": 65.0,
+          "DrawnFrames": 310,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.000795,
+          "ProcessSeconds": 0.001399,
+          "SampledColors": 289,
+          "Screenshot": "presentation-listen-custom-client2-owner-camera.png",
+          "SHA256": "07c36f9de0077e43da79d6e6856e17695b994ba09d707ba7dc45222f4a84632d"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.49374, 10.00094, 22.0)]",
+          "DrawCalls": 65.0,
+          "DrawnFrames": 311,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.000795,
+          "ProcessSeconds": 0.001399,
+          "SampledColors": 361,
+          "Screenshot": "presentation-listen-custom-client2-multiplayer-overview.png",
+          "SHA256": "c3e3bedb94668b073293bdac9ade9534c18fb0261a3d0a22c49304764b87f427"
+        }
+      ],
+      "Case": "listen-custom",
+      "Checks": 27,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client2",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_1 animation": {
+          "FinalPosition": "(34.40951, 0.000531, 0.0)",
+          "InitialPose": "(0.77723, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.67523860931396
+        },
+        "RemotePlayer_111027394 animation": {
+          "FinalPosition": "(54.50031, 0.000944, 0.0)",
+          "InitialPose": "(0.668015, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.56760513782501
+        },
+        "replicated puppet RemotePlayer_1": {
+          "Body": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (18.40953, 0.000531, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (18.40953, 0.000531, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (18.40953, 0.000531, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_111027394": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.94777, 0.000944, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.94777, 0.000944, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (31.94777, 0.000944, 0.0)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "native dedicated startup",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "dedicated observer has no local Character",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_470924480 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_470924480 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1031284106 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1031284106 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (0.882353, 0.0, -0.470588), Y: (-0.156621, 0.94299, -0.293665), Z: (0.44376, 0.33282, 0.83205), O: (8.0, 11.0, 15.0)]",
+          "DrawCalls": 16.0,
+          "DrawnFrames": 312,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.000853,
+          "ProcessSeconds": 0.001186,
+          "SampledColors": 348,
+          "Screenshot": "presentation-dedicated-custom-server0-owner-camera.png",
+          "SHA256": "95bfdc18ad8ff6c45820ea65e3a4961265593977841b111f10264d83f68399af"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (49.24397, 10.00094, 22.17474)]",
+          "DrawCalls": 16.0,
+          "DrawnFrames": 313,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.000853,
+          "ProcessSeconds": 0.001186,
+          "SampledColors": 363,
+          "Screenshot": "presentation-dedicated-custom-server0-multiplayer-overview.png",
+          "SHA256": "d850bb167cb607882b377682e958088abc98bd516d6d8faed9622110322e3665"
+        }
+      ],
+      "Case": "dedicated-custom",
+      "Checks": 27,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "server0",
+      "Transforms": {
+        "RemotePlayer_1031284106 animation": {
+          "FinalPosition": "(39.6581, 0.000561, -0.326469)",
+          "InitialPose": "(0.851099, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.75012421607971
+        },
+        "RemotePlayer_470924480 animation": {
+          "FinalPosition": "(37.24397, 0.000938, 0.174744)",
+          "InitialPose": "(-0.409923, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.30740213394165
+        },
+        "replicated puppet RemotePlayer_1031284106": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (23.65812, 0.000561, -0.326469)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (23.65812, 0.000561, -0.326469)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (23.65812, 0.000561, -0.326469)]"
+        },
+        "replicated puppet RemotePlayer_470924480": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.24398, 0.000938, 0.174744)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.24398, 0.000938, 0.174744)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.24398, 0.000938, 0.174744)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_470924480 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_470924480 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (40.19144, 1.500561, 9.673531)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 311,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.000654,
+          "ProcessSeconds": 0.001083,
+          "SampledColors": 292,
+          "Screenshot": "presentation-dedicated-custom-client1-owner-camera.png",
+          "SHA256": "da97d2d38e1d3be25a649167365f939522d4d9f1b9494a7829e9537e800b8667"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (52.19144, 10.00056, 21.67353)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 312,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.000654,
+          "ProcessSeconds": 0.001083,
+          "SampledColors": 364,
+          "Screenshot": "presentation-dedicated-custom-client1-multiplayer-overview.png",
+          "SHA256": "dfae07ccb3f58345378b02a41ab6f6400d8b603b24d46d503f36a3790847bc1e"
+        }
+      ],
+      "Case": "dedicated-custom",
+      "Checks": 20,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client1",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_470924480 animation": {
+          "FinalPosition": "(37.24397, 0.000938, 0.174744)",
+          "InitialPose": "(-0.409936, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.3074164390564
+        },
+        "replicated puppet RemotePlayer_470924480": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.24398, 0.000938, 0.174744)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.24398, 0.000938, 0.174744)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (21.24398, 0.000938, 0.174744)]"
+        }
+      }
+    },
+    {
+      "Adapter": "NVIDIA GeForce GTX 1650 SUPER",
+      "Assertions": [
+        {
+          "Label": "real display required for graphical evidence",
+          "Passed": true
+        },
+        {
+          "Label": "extension loads",
+          "Passed": true
+        },
+        {
+          "Label": "real ENet remote Characters created",
+          "Passed": true
+        },
+        {
+          "Label": "participant owns a local Character",
+          "Passed": true
+        },
+        {
+          "Label": "walking observation starts from grounded owner",
+          "Passed": true
+        },
+        {
+          "Label": "remote has real Model identity",
+          "Passed": true
+        },
+        {
+          "Label": "remote uses actual custom rig",
+          "Passed": true
+        },
+        {
+          "Label": "remote custom geometry is not R6 fallback",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1031284106 body follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "replicated puppet RemotePlayer_1031284106 root proxy follows Model",
+          "Passed": true
+        },
+        {
+          "Label": "puppet has no local camera/input",
+          "Passed": true
+        },
+        {
+          "Label": "remote rig animation limbs are present",
+          "Passed": true
+        },
+        {
+          "Label": "owner or replicated Character moves during real transport",
+          "Passed": true
+        },
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot owner-camera",
+          "Passed": true
+        },
+        {
+          "Label": "GPU image multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "rendered scene has spatial detail multiplayer-overview",
+          "Passed": true
+        },
+        {
+          "Label": "write screenshot multiplayer-overview",
+          "Passed": true
+        }
+      ],
+      "Captures": [
+        {
+          "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (37.51064, 1.500938, 10.17474)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 311,
+          "Label": "owner-camera",
+          "PhysicsSeconds": 0.000547,
+          "ProcessSeconds": 0.001163,
+          "SampledColors": 294,
+          "Screenshot": "presentation-dedicated-custom-client2-owner-camera.png",
+          "SHA256": "6170126d6cbe9fb791c53a5a553714f2c62652204851dd3b3198e49805f98576"
+        },
+        {
+          "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (49.51064, 10.00094, 22.17474)]",
+          "DrawCalls": 54.0,
+          "DrawnFrames": 312,
+          "Label": "multiplayer-overview",
+          "PhysicsSeconds": 0.000547,
+          "ProcessSeconds": 0.001163,
+          "SampledColors": 357,
+          "Screenshot": "presentation-dedicated-custom-client2-multiplayer-overview.png",
+          "SHA256": "7de49a1ea6adc7e22019f491e12aee023e34b50d606daf9720511e455eb5286a"
+        }
+      ],
+      "Case": "dedicated-custom",
+      "Checks": 20,
+      "Display": "Windows",
+      "Driver": "opengl3",
+      "Graphical": true,
+      "LifecycleMemory": {},
+      "Renderer": "gl_compatibility",
+      "Result": "PASS",
+      "Role": "client2",
+      "Transforms": {
+        "Grounding": [],
+        "RemotePlayer_1031284106 animation": {
+          "FinalPosition": "(39.6581, 0.000561, -0.326469)",
+          "InitialPose": "(0.851095, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.7501208782196
+        },
+        "replicated puppet RemotePlayer_1031284106": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (23.65812, 0.000561, -0.326469)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (23.65812, 0.000561, -0.326469)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (23.65812, 0.000561, -0.326469)]"
+        }
+      }
+    }
+  ],
+  "AssetInputs": {
+    "GodotLuau/assets/avatars/r6/R6.mtl": "d1bc49ba06f03ce419633c57b2d1e52e33869b401aa1795c942b15a329d15824",
+    "GodotLuau/assets/avatars/r6/R6_Head.obj": "d71c5736ba8e38a9223dd346df16eadaa1ab1abcd1b7237764b647c9d3e8c72a",
+    "GodotLuau/assets/avatars/r6/R6_Head.obj.import": "eefb5e4e943ad59b4db6f7c43934c3cb878ad47fc4ab70409ae02b35b648801d",
+    "GodotLuau/assets/avatars/r6/R6_LeftArm.obj": "f80e9a50998b27f263fd438d7408ab88ee8fa272760dd63593d49a3756e5df49",
+    "GodotLuau/assets/avatars/r6/R6_LeftArm.obj.import": "b8f44522609cccb25b613a70d05d69860fd0b6e9217d56db97730f1bbffca394",
+    "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj": "ff4dd3712a02b2bf9340bd2ee6cf26874d2e6eb0fa9650586fddf420eb9265c4",
+    "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj.import": "49c9a264a5a6c8f71c1d9e7f8174e74f0818381126e76c1d6a6285ea22c796e4",
+    "GodotLuau/assets/avatars/r6/R6_RightArm.obj": "1aab9a15ed4002d94bc19f7af0fc82f91f0c8e2456b25b344d2319f366d9c67a",
+    "GodotLuau/assets/avatars/r6/R6_RightArm.obj.import": "0cf92f5052ee8c96d3dd513891720e0b3775db6860353948653f0b03db9d30b6",
+    "GodotLuau/assets/avatars/r6/R6_RightLeg.obj": "603241299830fddc8a796154c3850ee354f75bbf5866c6366ed36e0e55ac0549",
+    "GodotLuau/assets/avatars/r6/R6_RightLeg.obj.import": "e810bacc9cec35a94fc3138d6042a4165bb8085dd166a75d345994214ce311f0",
+    "GodotLuau/assets/avatars/r6/R6_Torso.obj": "3b74c114a547ed53abf3e110e6679af44bbc1a912a2569ea002e5da62c2bdeb7",
+    "GodotLuau/assets/avatars/r6/R6_Torso.obj.import": "689a7efcd3c985a8451fbdbd58927e922ba4a98c4b7b537ad1d0359a1d958b0d",
+    "GodotLuau/assets/avatars/r6/Rig1_diff.png": "f6ad52139deaef50f673cbb639f4bda531edb93c8babe42ec5b9cbfb065c3e02",
+    "GodotLuau/assets/avatars/r6/Rig1_diff.png.import": "3e191d5d8de8cc19a7abb7d0e937ba83db32711d4877048027c5b262b5d7fd38",
+    "GodotLuau/shaders/character_fade.gdshader": "87ca8506406339c274f1d75ec76e7b34f83e3c3c77c1e93e231ab3342bd17353"
+  },
+  "ExtensionSHA256": "8456a664da324621be9679dca1dd79ed679545947d42775ac9351d287ea4f86c",
+  "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+  "FixtureSHA256": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f"
+}

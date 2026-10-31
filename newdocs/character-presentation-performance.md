@@ -308,9 +308,9 @@ and both downloaded artifacts remain preserved: its custom remote assertion
 expected the incorrect container described above. Final fixtures correct that
 premise without changing the runtime factory or weakening geometry assertions.
 
-The final local fresh matrix passes Windows Debug's 80 core cases and 110 native
-actors. Windows Release and core ASan completion are recorded in the closing
-evidence supplement when available. The fresh Linux Release core ctest exits
+The final local fresh matrix passes Windows Debug and Release's 80 core cases
+and 110 native actors each. The Windows core ASan stage and its strict report
+checker also complete successfully with 80 cases. The fresh Linux Release core ctest exits
 successfully, but its JUnit has insufficient distinct-case evidence and the
 strict 80-case checker rejects it; subsequent local native and ASan stages were
 not reached. This local report gap is not counted as a passing 80-case run.
@@ -330,3 +330,17 @@ including 100 respawns, without treating object count as allocator events.
 Physical input-device ergonomics, arbitrary imported content, production scale,
 GL-017/018, broader GL-020 adversarial qualification and distribution remain
 separate limitations. No full-native Windows sanitizer result is invented.
+
+Closing publication includes selected raw [rendered Release evidence](evidence/character-graphics/rendered-release.json),
+[rendered Debug evidence](evidence/character-graphics/rendered-debug.json),
+[hosted artifact verification](evidence/character-graphics/hosted-verified.json),
+and [paired measurements](evidence/character-graphics/windows-performance.json).
+The complete selected task archive includes failed attempts, captures, logs and
+fixture copies (12,654 entries, 129,262,377 bytes), SHA-256
+`3356910a0ee42411bc732954f86e3e94aa7d56fcb04bd5633654bf924e869046`.
+It remains on DockerPC at `C:/Sandbox/Codex/CharacterGraphics/closing-character-evidence.zip`;
+raw Linux evidence remains in the retained task volume. No binary distribution
+or release is enabled. The final evidence commits change documentation only;
+the tested native and fixture identities above remain unchanged.
+
+![Final actual rendered custom first-person capture](evidence/character-graphics/custom-first-person.png)
