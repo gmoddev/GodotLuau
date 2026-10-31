@@ -254,6 +254,19 @@ func Single() -> void:
     for Mesh in Meshes:
         if Mesh.material_override is ShaderMaterial and float(Mesh.material_override.get_shader_parameter("dissolve")) > 0.95: Faded += 1
     Check(Faded >= 6 and Arm.spring_length < 0.6, "first-person rig transparency and zoom")
+    var FadeDeadline := Time.get_ticks_msec() + 2000
+    var Endpoint := false
+    while Time.get_ticks_msec() < FadeDeadline:
+        Endpoint = true
+        for Mesh in Meshes:
+            Endpoint = Endpoint and Mesh.material_override is ShaderMaterial and float(Mesh.material_override.get_shader_parameter("dissolve")) == 1.0
+        if Endpoint: break
+        await process_frame
+    var FadeValues := []
+    for Mesh in Meshes:
+        if Mesh.material_override is ShaderMaterial: FadeValues.append(float(Mesh.material_override.get_shader_parameter("dissolve")))
+    States["FadeEndpoint"] = FadeValues
+    Check(Endpoint and Meshes.size() >= 6, "first-person fade reaches fully invisible endpoint")
     Synchronized(Character, "first-person")
     Check(absf(Body.rotation.y - Pivot.rotation.y) < 0.01, "first-person Character faces camera")
     await Capture("first-person")
@@ -408,7 +421,7 @@ func Multiplayer() -> void:
     Game.set_meta("Port", Port)
     if Role == "server":
         var StartupDeadline := Time.get_ticks_msec() + 15000
-        if Case == "dedicated":
+        if Case.begins_with("dedicated"):
             # --glserver owns startup and removes the observer's local Character.
             while not Network.call("is_server") and Time.get_ticks_msec() < StartupDeadline: await process_frame
             Check(Network.call("is_server"), "native dedicated startup")
@@ -421,11 +434,11 @@ func Multiplayer() -> void:
         await Wait("ready")
         Script("Connect", "assert(game:GetService('NetworkService'):Connect('127.0.0.1',game:GetAttribute('Port')))")
     var Deadline := Time.get_ticks_msec() + 15000
-    var Expected := 2 if Case == "listen" or Role == "server" else 1
+    var Expected := 2 if Case.begins_with("listen") or Role == "server" else 1
     while World.find_children("RemotePlayer_*", "", true, false).size() < Expected and Time.get_ticks_msec() < Deadline: await process_frame
     Check(World.find_children("RemotePlayer_*", "", true, false).size() >= Expected, "real ENet remote Characters created")
     var Character: Node3D = World.get_node_or_null("LocalPlayer")
-    if Case == "dedicated" and Role == "server":
+    if Case.begins_with("dedicated") and Role == "server":
         Check(Character == null, "dedicated observer has no local Character")
         var Remotes := World.find_children("RemotePlayer_*", "", true, false)
         if Remotes.is_empty(): return
@@ -445,18 +458,20 @@ func Multiplayer() -> void:
     var RemoteLimbs := {}
     for Remote in World.find_children("RemotePlayer_*", "", true, false):
         Check(Remote.is_class("RBXCharacter") and Remote.is_class("RBXModel"), "remote has real Model identity")
-        Check(Remote.has_node("Torso") and Remote.has_node("R6Animator"), "remote uses actual R6 rig")
-        if Remote.has_node("Left Leg"): RemoteLimbs[Remote.get_instance_id()] = {"Rotation": Remote.get_node("Left Leg").rotation, "Position": Remote.global_position}
+        var RigPath := "Character/" if Case.ends_with("-custom") else ""
+        Check(Remote.has_node(RigPath+"Torso") and Remote.has_node(RigPath+"R6Animator"), "remote uses actual custom rig" if Case.ends_with("-custom") else "remote uses actual R6 rig")
+        if Remote.has_node(RigPath+"Left Leg"): RemoteLimbs[Remote.get_instance_id()] = {"Rotation": Remote.get_node(RigPath+"Left Leg").rotation, "Position": Remote.global_position, "Path": RigPath+"Left Leg"}
         Synchronized(Remote, "replicated puppet " + Remote.name)
         Check(not Remote.call("GetPhysicsBody").has_node("CameraPivotH"), "puppet has no local camera/input")
     var Start := Character.global_position
+    Check(RemoteLimbs.size() >= Expected, "remote rig animation limbs are present")
     var RemoteProgress := {}
     for Tick in range(60):
         await physics_frame
         for Identity in RemoteLimbs:
             var Remote: Node3D = instance_from_id(Identity)
             if is_instance_valid(Remote):
-                var Difference: float = (Remote.get_node("Left Leg").rotation-RemoteLimbs[Identity].Rotation).length()
+                var Difference: float = (Remote.get_node(RemoteLimbs[Identity].Path).rotation-RemoteLimbs[Identity].Rotation).length()
                 RemoteProgress[Identity] = maxf(float(RemoteProgress.get(Identity, 0)), Difference)
     Check(Character.global_position.distance_to(Start) > 10, "owner or replicated Character moves during real transport")
     for Identity in RemoteLimbs:
@@ -515,7 +530,7 @@ func Run() -> void:
     Create("RunService", "RunService")
     Network = Create("NetworkService", "NetworkService")
     Create("Node", "SettingsMenu")
-    if Case == "custom": CustomRig()
+    if Case == "custom" or Case.ends_with("-custom"): CustomRig()
     World = Create("RobloxWorkspace", "Workspace")
     World.set_process(false)
     FloorAndLighting()

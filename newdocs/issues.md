@@ -53,6 +53,20 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-025 | P2 | Integrated and resolved within exercised scope | Actual AnimationTrack completion and ObjectID-backed lifetime |
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
+| GL-028 | P2 | Rendered endpoint discrepancy; fix under qualification | Character fade cache can retain first-person dither pixels |
+
+## GL-028: Fade update tolerance can retain visible first-person dither
+
+**Status: fix under qualification on the graphical/performance branch.** Actual
+DockerPC NVIDIA custom first-person captures retain faint dither pixels near the
+bottom after the rig has mostly faded. `RobloxPlayer::_update_fade` returns when
+the uniform delta is below 0.002, while camera smoothing approaches the fully
+hidden endpoint. A cached value just below 1 can remain indefinitely; the shader
+correctly discards all pixels only at its full endpoint. The original `>0.95`
+fixture proves substantial fade, not complete invisibility. A stronger exact
+endpoint regression and bounded native correction are being qualified. See the
+[work record](character-presentation-performance.md); no new shader, authority
+or material ownership model is introduced.
 
 ## GL-027: StarterCharacter prototype geometry remains in the live render tree
 

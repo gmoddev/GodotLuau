@@ -582,8 +582,11 @@ and retained UUID samples; its [qualification record](httpservice-validation.md)
 verifies both platforms' hosted artifacts. The
 [HttpService integration](httpservice-main-integration.md) adds three published
 caller migration actors (95 native total) and records fresh main verification.
-The graphical/performance branch adds eight headless presentation actors and
-one performance-fixture execution actor (104 native total, 80 core cases).
+The graphical/performance branch initially adds eight headless presentation
+actors and one performance-fixture actor (104 native total); additional custom
+listen/dedicated coverage raises presentation to fourteen and native to 110.
+Core remains 80 cases. Its exact first-person endpoint check strengthens the
+earlier substantial-fade check (GL-028).
 Hosted fixture execution is distinct from the actual DockerPC NVIDIA captures
 and repeated comparable benchmarks in the
 [work record](character-presentation-performance.md); headless CI cannot qualify

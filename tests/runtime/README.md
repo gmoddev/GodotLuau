@@ -632,13 +632,16 @@ original 92 actors (95 total). Core remains 80. See the
 ## Character V2 presentation and repeated performance
 
 Run `RunCharacterPresentation.py --godot <engine> --extension <library> --output
-<fresh-directory>` for eight headless assertion actors (R6/custom, listen and
-dedicated). Native CI requires these in addition to the prior 95 actors, totaling
-103, plus one performance fixture actor (104 total); core remains 80. The fixture imports unchanged R6/shader assets in an
+<fresh-directory>` for fourteen headless assertion actors (R6/custom singles,
+and both rig types in listen and dedicated multiplayer). Native CI requires these
+in addition to the prior 95 actors and one performance actor (110 total); core
+remains 80. The fixture imports unchanged R6/shader assets in an
 asset-only project, asserts real Model/body/camera/input/animation/lifecycle and
 ENet behavior, and retains per-actor assertion records. The custom prototype is
 outside the playable view because source templates are not automatically hidden
 (GL-027). Mobile and controller events are synthetic, not physical-device tests.
+The exact first-person dissolve endpoint is mandatory; a nearly hidden rig does
+not satisfy that assertion (GL-028).
 
 On an allowed Windows graphical worker, append `--graphical` to require an actual
 display, NVIDIA/OpenGL readback, nonempty spatially detailed PNGs and screenshot

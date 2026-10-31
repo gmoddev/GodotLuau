@@ -23,7 +23,7 @@ def Main():
         'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],
         'httpservice': ['httpservice-' + Case for Case in ['api', 'denied', 'lifecycle', 'tls', 'utilities-A', 'utilities-B']],
         'callers': ['callers-' + Case for Case in ['status', 'empty', 'denied']],
-        'presentation': ['presentation-r6-single0', 'presentation-custom-single0', *['presentation-' + Case + '-' + Role for Case in ['listen', 'dedicated'] for Role in ['server0', 'client1', 'client2']]],
+        'presentation': ['presentation-r6-single0', 'presentation-custom-single0', *['presentation-' + Case + '-' + Role for Case in ['listen', 'dedicated', 'listen-custom', 'dedicated-custom'] for Role in ['server0', 'client1', 'client2']]],
         'performance': ['Candidate-0'],
         'datastore': ['datastore-basic-basic-single',
             *[Label for Case in ['update','set','remove','increment'] for Label in ['datastore-'+Case+'-seed-single','datastore-'+Case+'-'+Case+'-A','datastore-'+Case+'-'+Case+'-B','datastore-'+Case+'-verify-single']],
@@ -80,7 +80,7 @@ def Main():
         if '[Runtime:HttpCallers] PASS ' + Case not in Text or Hits != [{'Method': 'GET', 'Path': Path} for Path in Paths]:
             raise ValueError('Published caller migration fixture missing/failed: ' + Case)
     Presentation = json.loads((Args.output / 'presentation/native-evidence.json').read_text())
-    if Presentation['Graphical'] or Presentation['Actors'] != 8 or len(Presentation['Evidence']) != 8:
+    if Presentation['Graphical'] or Presentation['Actors'] != 14 or len(Presentation['Evidence']) != 14:
         raise ValueError('Missing headless presentation assertions or false graphical claim')
     for Item in Presentation['Evidence']:
         if Item['Graphical'] or Item['Result'] != 'PASS' or not Item['Assertions'] or not all(Assertion['Passed'] for Assertion in Item['Assertions']):
@@ -88,7 +88,7 @@ def Main():
         Labels = {Assertion['Label'] for Assertion in Item['Assertions']}
         Required = {'first-person rig transparency and zoom', 'AnimationPlayer advances visual track', 'automatic respawn replaces rendered life', 'touch simulation moves Character', 'Character rotates toward actual movement', 'controller jump reaches real physics', 'mobile simulation GUI jump reaches real physics', 'unchanged root repairs independently changed live body'} if Item['Case'] in ['r6', 'custom'] else {'real ENet remote Characters created', 'remote has real Model identity', 'puppet has no local camera/input', 'owner or replicated Character moves during real transport'}
         if not Required <= Labels: raise ValueError('Presentation case skipped required behavior')
-        Additional = {'procedural animation enters airborne pose', 'procedural animation returns to grounded pose', 'processed respawns leave no live object growth'} if Item['Case'] in ['r6', 'custom'] else {'remote uses actual R6 rig', 'remote procedural animation progresses'}
+        Additional = {'first-person fade reaches fully invisible endpoint', 'procedural animation enters airborne pose', 'procedural animation returns to grounded pose', 'processed respawns leave no live object growth'} if Item['Case'] in ['r6', 'custom'] else {'remote uses actual custom rig' if Item['Case'].endswith('-custom') else 'remote uses actual R6 rig', 'remote rig animation limbs are present', 'remote procedural animation progresses'}
         if not Additional <= Labels: raise ValueError('Presentation case skipped animation/lifetime assertions')
     Performance = json.loads((Args.output/'performance/measurements.json').read_text())
     PerformanceInputs = json.loads((Args.output/'performance/inputs.json').read_text())

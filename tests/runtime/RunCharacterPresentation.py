@@ -49,7 +49,7 @@ def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     for Name in ['godot', 'extension', 'output']: Parser.add_argument('--'+Name, type=Path, required=True)
     Parser.add_argument('--graphical', action='store_true')
-    Parser.add_argument('--cases', nargs='+', choices=['r6', 'custom', 'listen', 'dedicated'], default=['r6', 'custom', 'listen', 'dedicated'])
+    Parser.add_argument('--cases', nargs='+', choices=['r6', 'custom', 'listen', 'dedicated', 'listen-custom', 'dedicated-custom'], default=['r6', 'custom', 'listen', 'dedicated', 'listen-custom', 'dedicated-custom'])
     Args = Parser.parse_args()
     for Name in ['godot', 'extension', 'output']: setattr(Args, Name, getattr(Args, Name).resolve())
     if Args.output.exists(): raise ValueError('Use a fresh evidence output directory')
@@ -74,7 +74,7 @@ def Main():
                     Profile.mkdir(parents=True)
                     ActorEnvironment[Name] = str(Profile)
                 Extra = ['--case', Case, '--role', Role, '--index', Index, '--port', str(SelectedPort)]
-                if Case == 'dedicated' and Role == 'server': Extra += ['--glserver', str(SelectedPort)]
+                if Case.startswith('dedicated') and Role == 'server': Extra += ['--glserver', str(SelectedPort)]
                 Actor = Launch(Args, Directory, Label, Extra, ActorEnvironment)
                 Entries.append((Actor, Label, Role+Index))
             Deadline = time.monotonic() + 90
