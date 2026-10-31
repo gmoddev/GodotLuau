@@ -94,6 +94,22 @@ hierarchy cache. Correctness and repeated baseline/candidate measurements must
 qualify it before acceptance. Broader hierarchy/puppet/animation caching is not
 introduced merely to reduce call counts.
 
+Five alternating Windows Release pairs at the default 120 FPS headless cap
+reduce the 16-character median dispatch from 0.404 to 0.382 ms and the
+32-character median from 0.799 to 0.753 ms. Every pair improves at 1/16/32/64.
+This is a scoped dispatch improvement, not a demonstrated frame-rate or total
+CPU improvement. Whole-actor CPU (including startup, lifecycle and frame pacing)
+instead rises from a median 5.0625 to 5.53125 CPU-seconds in the roughly 37-second
+actor. That negative result is retained rather than discarded as noise.
+
+A second five-pair 16-character comparison at a 60 FPS cap still improves
+physics dispatch in all five pairs (median 0.398 to 0.385 ms). Whole-actor CPU
+is mixed: baseline 2.140625/2.21875/1.84375/2.421875/2.46875 seconds and candidate
+2.296875/1.890625/2.59375/1.875/2.125 seconds. Its median decreases, but only three
+pairs decrease. Thus this diagnostic does not establish the cause of the
+120-FPS CPU increase, nor a general process-CPU benefit. CPU attribution outside
+node dispatch and cap/engine scheduling sensitivity remain measurement limits.
+
 ## Qualification status
 
 Candidate builds, complete regression runs, repeated comparisons and hosted CI

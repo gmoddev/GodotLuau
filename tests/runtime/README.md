@@ -628,3 +628,40 @@ parse/schema/null/false/encoding failures in each actor. `CheckNativeCI.py`
 requires their markers, exact requests and snippet hashes in addition to the
 original 92 actors (95 total). Core remains 80. See the
 [integration record](../../newdocs/httpservice-main-integration.md).
+
+## Character V2 presentation and repeated performance
+
+Run `RunCharacterPresentation.py --godot <engine> --extension <library> --output
+<fresh-directory>` for eight headless assertion actors (R6/custom, listen and
+dedicated). Native CI requires these in addition to the prior 95 actors, totaling
+103; core remains 80. The fixture imports unchanged R6/shader assets in an
+asset-only project, asserts real Model/body/camera/input/animation/lifecycle and
+ENet behavior, and retains per-actor assertion records. The custom prototype is
+outside the playable view because source templates are not automatically hidden
+(GL-027). Mobile and controller events are synthetic, not physical-device tests.
+
+On an allowed Windows graphical worker, append `--graphical` to require an actual
+display, NVIDIA/OpenGL readback, nonempty spatially detailed PNGs and screenshot
+hashes. Its windows are offscreen/no-focus. A headless pass is never graphical
+qualification. See the [qualification record](../../newdocs/character-presentation-performance.md).
+
+`RunCharacterPerformance.py --godot <engine> --extension <candidate> --baseline
+<baseline> --output <fresh-directory> --trials 5 --counts 1,16,32,64` runs paired,
+alternating, identically capped actors. Both products and matching companions
+must be immutable and built comparably. `--max-fps` defaults to 120; record a
+different cap explicitly. `--graphical` additionally measures real Windows
+rendering. Serialized runs on the same machine avoid task-owned competing builds
+or benchmarks. Input/library/asset hashes, raw samples, trial summaries, lifecycle
+latencies, live object/static-byte monitors and whole-actor OS CPU remain separate.
+Priority probes bracket elapsed SceneTree node dispatch, not physics-server or
+renderer CPU outside dispatch. Built-in coarse monitor samples are historical
+context, not independent frame observations. The 16-character modes separate
+physics, animation and inactive roots; this NPC fixture is not a full gameplay
+server. Native allocator event counts are unavailable.
+
+`RunCharacterNetworkBenchmarks.py --godot <engine> --extension <library> --output
+<fresh-directory> --r6-assets` measures a real three-actor ENet workload and
+ordered disconnect, retaining independent frame/dispatch observations and coarse
+historical monitors. Its dispatch includes networking, Character and harness
+work; it does not isolate network CPU. Use repeated alternating products, not a
+single noisy run, before attributing a benefit.

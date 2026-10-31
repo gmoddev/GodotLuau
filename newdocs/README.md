@@ -47,6 +47,9 @@ the actual Windows/Linux R6 baseline and [design decision](adr-007-model-charact
 Its [API and migration contract](character-v2-api.md) describes the breaking 3D
 Model/Character change; [qualification](character-v2-validation.md) records actual
 completed configurations and remaining gaps. The
+[graphical/performance work record](character-presentation-performance.md) adds
+real rendered gameplay and repeated dispatch measurements on DockerPC, with
+template-authoring limitation GL-027 retained separately. The
 [main integration record](character-main-integration.md) separates fresh checks
 from retained branch qualification. Release publication and updater distribution
 remain disabled. The [scoped API audit](inherited-api-audit.md) records the original

@@ -35,6 +35,7 @@ def Main():
     Parser.add_argument('--trials', type=int, default=5)
     Parser.add_argument('--samples', type=int, default=240)
     Parser.add_argument('--counts', default='1,16,32,64')
+    Parser.add_argument('--max-fps', type=int, default=120)
     Parser.add_argument('--graphical', action='store_true')
     Args = Parser.parse_args()
     for Name in ['godot', 'extension', 'output', 'baseline']:
@@ -46,6 +47,7 @@ def Main():
     Source = Path(__file__).resolve().parents[2]
     Measurements = []
     Inputs = {'SourceAtInvocation': GetFingerprint(Source), 'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n',b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.py','.gd','.cpp','.pem'] or File.name in ['CMakeLists.txt','GodotDistribution.json']}, 'Trials': Args.trials, 'SamplesPerPhysicsWindow': Args.samples, 'Counts': Args.counts, 'Graphical': Args.graphical, 'GodotSHA256': hashlib.sha256(Args.godot.read_bytes()).hexdigest()}
+    Inputs['MaxFPS'] = Args.max_fps
     (Args.output/'inputs.json').write_text(json.dumps(Inputs,indent=2))
     try:
         Import = Assets(Args.godot, Source, Args.output, Environment)
@@ -63,7 +65,7 @@ def Main():
                     Profile = Directory / 'profile' / Name
                     Profile.mkdir(parents=True)
                     ActorEnvironment[Name] = str(Profile)
-                Command = [str(Args.godot), '--disable-crash-handler', '--single-threaded-scene', '--path', str(Directory), '--script', 'res://CharacterPerformance.gd', '--max-fps', '120']
+                Command = [str(Args.godot), '--disable-crash-handler', '--single-threaded-scene', '--path', str(Directory), '--script', 'res://CharacterPerformance.gd', '--max-fps', str(Args.max_fps)]
                 if Args.graphical: Command += ['--display-driver', 'windows', '--rendering-method', 'gl_compatibility', '--rendering-driver', 'opengl3', '--position', '-32000,-32000', '--resolution', '960x540']
                 else: Command += ['--headless']
                 Before = None

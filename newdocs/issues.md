@@ -52,6 +52,26 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-024 | P2 | Integrated and resolved within exercised scope | Part geometry caches retire before engine-server teardown |
 | GL-025 | P2 | Integrated and resolved within exercised scope | Actual AnimationTrack completion and ObjectID-backed lifetime |
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
+| GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
+
+## GL-027: StarterCharacter prototype geometry remains in the live render tree
+
+**Status: OPEN, rendered authoring limitation.** DockerPC's actual NVIDIA/OpenGL
+custom-rig first-person capture
+(`baseline-graphical-v4/custom/presentation-custom-single0-first-person.png`)
+shows prototype geometry after the owned Character has correctly faded. Source
+inspection confirms StarterPlayer is a native Node and its Node3D visual template
+remains in the live tree; the clone factory resets the copied Character position.
+There is no automatic render isolation for the original template. This is not
+evidence that the owned rig's first-person fade failed.
+
+The qualification fixture places the source prototype outside the playable view
+at `(10000, 10000, 10000)` and asserts that the actual cloned custom rig is used.
+That authoring workaround does not close this finding or implement template
+culling. Existing content must keep template geometry outside the playable view
+or explicitly manage visibility without hiding the playable clone. A general
+template-isolation change needs a separate compatibility decision. See the
+[rendered work and evidence record](character-presentation-performance.md).
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 

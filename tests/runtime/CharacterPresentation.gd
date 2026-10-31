@@ -16,6 +16,7 @@ var Checks := 0
 var Captures := []
 var States := {}
 var Assertions := []
+var LifecycleMemory := {}
 
 func Check(Value: bool, Label: String) -> void:
     Checks += 1
@@ -131,6 +132,9 @@ func CustomRig() -> void:
     var Holder := Create("StarterPlayer", "StarterPlayer")
     var Template := Node3D.new()
     Template.name = "StarterCharacter"
+    # StarterPlayer is a Node, not an automatic render-isolation container.
+    # The production factory resets a cloned visual root to the spawn origin.
+    Template.position = Vector3(10000, 10000, 10000)
     for Pair in [["Torso", Vector3.ZERO, Vector3(1.4, 1.8, 0.7)], ["Head", Vector3(0, 1.5, 0), Vector3.ONE], ["Left Arm", Vector3(1.2, 0.5, 0), Vector3(0.6, 1.6, 0.6)], ["Right Arm", Vector3(-1.2, 0.5, 0), Vector3(0.6, 1.6, 0.6)], ["Left Leg", Vector3(0.4, -1.2, 0), Vector3(0.6, 1.2, 0.6)], ["Right Leg", Vector3(-0.4, -1.2, 0), Vector3(0.6, 1.2, 0.6)]]:
         var Pivot := Node3D.new()
         Pivot.name = Pair[0]
@@ -232,6 +236,8 @@ func Single() -> void:
     Key(KEY_SPACE, false)
     Check(Body.velocity.y > 18 and Character.call("get_state") == 2, "jumping state and velocity")
     await Capture("jumping")
+    await process_frame
+    Check(absf(Rig.get_node("Left Arm").rotation.z + PI/2) > 0.1, "procedural animation enters airborne pose")
     var SawFall := false
     var SawLand := false
     for Tick in range(100):
@@ -239,6 +245,7 @@ func Single() -> void:
         SawFall = SawFall or Character.call("get_state") == 8
         SawLand = SawLand or Character.call("get_state") == 3
     Check(SawFall and SawLand and Character.call("IsGrounded"), "falling and landing state transitions")
+    Check(absf(Rig.get_node("Left Arm").rotation.z + PI/2) < 0.08, "procedural animation returns to grounded pose")
     await Capture("landed")
     Character.call("set_lock_first_person", true)
     await Ticks(45)
@@ -278,6 +285,7 @@ func Single() -> void:
     Character.reparent(Parent, true)
     Parent.transform = Transform3D(Basis(Vector3.UP, 0.4).scaled(Vector3.ONE * 1.2), Vector3(5, 0, 2))
     Synchronized(Character, "parent transform")
+    await Capture("parent-transform")
     Character.reparent(World, true)
     Parent.free()
     Script("Pivot", "local C=game:GetService('Players'):GetPlayers()[1].Character; C:PivotTo(CFrame.new(0,2,0)); game:SetAttribute('PivotDone',true)")
@@ -369,6 +377,20 @@ func Single() -> void:
     Click.pressed = false
     Input.parse_input_event(Click)
     Input.flush_buffered_events()
+    # Exercise real controller/fade/GUI teardown, rather than freezing each new
+    # body before its first process callback as the CPU microbenchmark does.
+    for Warmup in range(3):
+        Players.call("load_local_character")
+        for Frame in range(3): await process_frame
+    var BeforeObjects := Performance.get_monitor(Performance.OBJECT_COUNT)
+    var BeforeMemory := Performance.get_monitor(Performance.MEMORY_STATIC)
+    for Respawn in range(20):
+        Players.call("load_local_character")
+        for Frame in range(3): await process_frame
+    for Frame in range(3): await process_frame
+    LifecycleMemory = {"Respawns": 20, "ObjectDelta": Performance.get_monitor(Performance.OBJECT_COUNT)-BeforeObjects, "StaticMemoryDeltaBytes": Performance.get_monitor(Performance.MEMORY_STATIC)-BeforeMemory, "BodyProcessEnabled": true, "Graphical": Graphical}
+    Check(LifecycleMemory.ObjectDelta == 0, "processed respawns leave no live object growth")
+    await Capture("repeated-respawns")
     DirAccess.remove_absolute(ProjectSettings.globalize_path("res://.gl_mp_session"))
 
 func Mark(Name: String) -> void:
@@ -418,19 +440,29 @@ func Multiplayer() -> void:
         if Character == null: return
         Character.call("set_npc_move_dir", Vector3.RIGHT)
     await Ticks(90)
+    Mark(Role + Index + ".moving")
+    for Participant in ["server0", "client1", "client2"]: await Wait(Participant + ".moving")
     var RemoteLimbs := {}
     for Remote in World.find_children("RemotePlayer_*", "", true, false):
         Check(Remote.is_class("RBXCharacter") and Remote.is_class("RBXModel"), "remote has real Model identity")
         Check(Remote.has_node("Torso") and Remote.has_node("R6Animator"), "remote uses actual R6 rig")
-        if Remote.has_node("Left Leg"): RemoteLimbs[Remote.get_instance_id()] = Remote.get_node("Left Leg").rotation
+        if Remote.has_node("Left Leg"): RemoteLimbs[Remote.get_instance_id()] = {"Rotation": Remote.get_node("Left Leg").rotation, "Position": Remote.global_position}
         Synchronized(Remote, "replicated puppet " + Remote.name)
         Check(not Remote.call("GetPhysicsBody").has_node("CameraPivotH"), "puppet has no local camera/input")
     var Start := Character.global_position
-    await Ticks(60)
+    var RemoteProgress := {}
+    for Tick in range(60):
+        await physics_frame
+        for Identity in RemoteLimbs:
+            var Remote: Node3D = instance_from_id(Identity)
+            if is_instance_valid(Remote):
+                var Difference: float = (Remote.get_node("Left Leg").rotation-RemoteLimbs[Identity].Rotation).length()
+                RemoteProgress[Identity] = maxf(float(RemoteProgress.get(Identity, 0)), Difference)
     Check(Character.global_position.distance_to(Start) > 10, "owner or replicated Character moves during real transport")
     for Identity in RemoteLimbs:
         var Remote: Node3D = instance_from_id(Identity)
-        Check(is_instance_valid(Remote) and not Remote.get_node("Left Leg").rotation.is_equal_approx(RemoteLimbs[Identity]), "remote procedural animation progresses")
+        Check(is_instance_valid(Remote) and float(RemoteProgress.get(Identity, 0)) > 0.001, "remote procedural animation progresses")
+        if is_instance_valid(Remote): States[Remote.name + " animation"] = {"InitialPose": str(RemoteLimbs[Identity].Rotation), "MaximumPoseDelta": RemoteProgress.get(Identity, 0), "FinalPosition": str(Remote.global_position)}
     await Capture("owner-camera")
     # An explicit fixture spectator view captures every rendered participant.
     var OwnerCamera := root.get_camera_3d()
@@ -489,7 +521,7 @@ func Run() -> void:
     FloorAndLighting()
     if Role == "single": await Single()
     else: await Multiplayer()
-    var Evidence := {"Case": Case, "Role": Role+Index, "Graphical": Graphical, "Checks": Checks, "Result": "FAIL" if Failed else "PASS", "Display": DisplayServer.get_name(), "Adapter": RenderingServer.get_video_adapter_name(), "Renderer": RenderingServer.get_current_rendering_method(), "Driver": RenderingServer.get_current_rendering_driver_name(), "Captures": Captures, "Transforms": States, "Assertions": Assertions}
+    var Evidence := {"Case": Case, "Role": Role+Index, "Graphical": Graphical, "Checks": Checks, "Result": "FAIL" if Failed else "PASS", "Display": DisplayServer.get_name(), "Adapter": RenderingServer.get_video_adapter_name(), "Renderer": RenderingServer.get_current_rendering_method(), "Driver": RenderingServer.get_current_rendering_driver_name(), "Captures": Captures, "Transforms": States, "Assertions": Assertions, "LifecycleMemory": LifecycleMemory}
     FileAccess.open("res://evidence-" + Role + Index + ".json", FileAccess.WRITE).store_string(JSON.stringify(Evidence))
     Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
     Game.free()
