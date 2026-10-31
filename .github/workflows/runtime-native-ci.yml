@@ -177,6 +177,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/callers" --callers --timeout 30
 
+      - name: Character V2 presentation assertions (headless, not graphical qualification)
+        timeout-minutes: 4
+        run: |
+          python tests/runtime/RunCharacterPresentation.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/presentation"
+
       - name: GL-009 transactional persistence and interrupted commit recovery
         timeout-minutes: 4
         run: |

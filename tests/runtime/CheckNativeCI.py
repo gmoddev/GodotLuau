@@ -23,6 +23,7 @@ def Main():
         'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],
         'httpservice': ['httpservice-' + Case for Case in ['api', 'denied', 'lifecycle', 'tls', 'utilities-A', 'utilities-B']],
         'callers': ['callers-' + Case for Case in ['status', 'empty', 'denied']],
+        'presentation': ['presentation-r6-single0', 'presentation-custom-single0', *['presentation-' + Case + '-' + Role for Case in ['listen', 'dedicated'] for Role in ['server0', 'client1', 'client2']]],
         'datastore': ['datastore-basic-basic-single',
             *[Label for Case in ['update','set','remove','increment'] for Label in ['datastore-'+Case+'-seed-single','datastore-'+Case+'-'+Case+'-A','datastore-'+Case+'-'+Case+'-B','datastore-'+Case+'-verify-single']],
             *['datastore-'+Case+'-'+Case+'-single' for Case in ['failures','lifecycle','memory','contention','unavailable','incompatible']]]
@@ -77,6 +78,15 @@ def Main():
         Hits = json.loads((Project / 'server-results.json').read_text())['Hits']
         if '[Runtime:HttpCallers] PASS ' + Case not in Text or Hits != [{'Method': 'GET', 'Path': Path} for Path in Paths]:
             raise ValueError('Published caller migration fixture missing/failed: ' + Case)
+    Presentation = json.loads((Args.output / 'presentation/native-evidence.json').read_text())
+    if Presentation['Graphical'] or Presentation['Actors'] != 8 or len(Presentation['Evidence']) != 8:
+        raise ValueError('Missing headless presentation assertions or false graphical claim')
+    for Item in Presentation['Evidence']:
+        if Item['Graphical'] or Item['Result'] != 'PASS' or not Item['Assertions'] or not all(Assertion['Passed'] for Assertion in Item['Assertions']):
+            raise ValueError('Presentation assertions did not execute/pass')
+        Labels = {Assertion['Label'] for Assertion in Item['Assertions']}
+        Required = {'first-person rig transparency and zoom', 'AnimationPlayer advances visual track', 'automatic respawn replaces rendered life', 'touch simulation moves Character', 'Character rotates toward actual movement'} if Item['Case'] in ['r6', 'custom'] else {'real ENet remote Characters created', 'remote has real Model identity', 'puppet has no local camera/input', 'owner or replicated Character moves during real transport'}
+        if not Required <= Labels: raise ValueError('Presentation case skipped required behavior')
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
@@ -84,6 +94,7 @@ def Main():
         'DataStoreNative': json.loads((Args.output/'datastore/native-evidence.json').read_text()),
         'HttpServiceNative': HttpServiceNative,
         'CallerNative': CallerEvidence,
+        'PresentationNative': Presentation,
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
         'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),

@@ -7,6 +7,7 @@ from RunQualification import Prepare, Start, Check, Port
 def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     for Name in ['godot', 'extension', 'output']: Parser.add_argument('--'+Name, type=Path, required=True)
+    Parser.add_argument('--r6-assets', action='store_true')
     Args = Parser.parse_args()
     assert not Args.output.exists()
     if os.name == 'nt': ctypes.windll.kernel32.SetErrorMode(0x8003)
@@ -17,6 +18,13 @@ def Main():
         Directory.mkdir(parents=True)
         Environment[Name] = str(Directory.resolve())
     (Args.output/'profile/.gdignore').write_text('')
+    if Args.r6_assets:
+        import shutil
+        from RunCharacterPresentation import Assets
+        Imported = Assets(Args.godot.resolve(),Path(__file__).resolve().parents[2],Args.output,Environment)
+        shutil.copytree(Imported/'GodotLuau',Args.output/'GodotLuau')
+        shutil.copytree(Imported/'.godot/imported',Args.output/'.godot/imported')
+        if (Imported/'.godot/uid_cache.bin').exists(): shutil.copy2(Imported/'.godot/uid_cache.bin',Args.output/'.godot/uid_cache.bin')
     Selected = Port()
     Entries = []
     try:

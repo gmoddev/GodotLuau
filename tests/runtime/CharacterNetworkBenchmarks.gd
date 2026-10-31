@@ -7,6 +7,13 @@ var Network: Node
 var Role := "server"
 var Index := "0"
 var Port := 0
+var Recording := false
+var PhysicsBegin := 0
+var ProcessBegin := 0
+var LastProcess := 0
+var PhysicsDispatch := []
+var ProcessDispatch := []
+var ProcessFrames := []
 
 func Mark(Name: String) -> void:
     FileAccess.open("res://network-benchmark-" + Name, FileAccess.WRITE).store_string("ready")
@@ -33,7 +40,9 @@ func Script(Source: String) -> void:
 
 func Summary(Values: Array) -> Dictionary:
     Values.sort()
-    return {"Median": Values[Values.size() / 2], "P95": Values[int((Values.size()-1)*0.95)], "Samples": Values.size()}
+    var Total := 0.0
+    for Value in Values: Total += float(Value)
+    return {"Mean": Total/Values.size(), "Median": Values[Values.size() / 2], "P95": Values[int(ceil(Values.size()*0.95))-1], "P99": Values[int(ceil(Values.size()*0.99))-1], "Samples": Values.size(), "Raw": Values}
 
 func _initialize() -> void:
     var Args := OS.get_cmdline_user_args()
@@ -49,6 +58,13 @@ func Run() -> void:
     Game.name = "Game"
     root.add_child(Game)
     current_scene = Game
+    for Front in [true, false]:
+        var Probe: Node = preload("res://CharacterDispatchProbe.gd").new()
+        Probe.Host = self
+        Probe.Front = Front
+        Probe.process_priority = -100000 if Front else 100000
+        Probe.process_physics_priority = Probe.process_priority
+        Game.add_child(Probe)
     Game.set_meta("Port", Port)
     Create("Players", "Players")
     Create("RunService", "RunService")
@@ -81,11 +97,13 @@ func Run() -> void:
     for Tick in range(90): await physics_frame
     var Process := []
     var Physics := []
+    Recording = true
     for Tick in range(240):
         await physics_frame
         Process.append(Performance.get_monitor(Performance.TIME_PROCESS))
         Physics.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS))
-    print("[Character:NetworkBenchmark] ", JSON.stringify({"Architecture": "CharacterV2" if Character.is_class("RBXCharacter") else "GL007", "Role": Role+Index, "ProcessSeconds": Summary(Process), "PhysicsSeconds": Summary(Physics), "RemoteCharacters": World.find_children("RemotePlayer_*", "", true, false).size(), "Objects": Performance.get_monitor(Performance.OBJECT_COUNT), "StaticMemoryBytes": Performance.get_monitor(Performance.MEMORY_STATIC)}))
+    Recording = false
+    print("[Character:NetworkBenchmark] ", JSON.stringify({"Architecture": "CharacterV2" if Character.is_class("RBXCharacter") else "GL007", "Role": Role+Index, "ProcessSeconds": Summary(Process), "PhysicsSeconds": Summary(Physics), "DispatchProcessSeconds": Summary(ProcessDispatch), "DispatchPhysicsSeconds": Summary(PhysicsDispatch), "FrameSeconds": Summary(ProcessFrames), "TimingScope": "priority probes bracket SceneTree dispatch; engine monitor snapshots are coarse; dispatch includes networking/controller/harness and is not isolated networking CPU", "RemoteCharacters": World.find_children("RemotePlayer_*", "", true, false).size(), "Objects": Performance.get_monitor(Performance.OBJECT_COUNT), "StaticMemoryBytes": Performance.get_monitor(Performance.MEMORY_STATIC)}))
     Mark(Role + Index + ".measured")
     if Role == "server":
         await Wait("client1.measured")
