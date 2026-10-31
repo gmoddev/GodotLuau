@@ -57,14 +57,17 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 ## GL-028: Fade update tolerance can retain visible first-person dither
 
-**Status: fix under qualification on the graphical/performance branch.** Actual
+**Status: reproduced; fix under qualification on the graphical/performance branch.** Actual
 DockerPC NVIDIA custom first-person captures retain faint dither pixels near the
 bottom after the rig has mostly faded. `RobloxPlayer::_update_fade` returns when
 the uniform delta is below 0.002, while camera smoothing approaches the fully
 hidden endpoint. A cached value just below 1 can remain indefinitely; the shader
 correctly discards all pixels only at its full endpoint. The original `>0.95`
 fixture proves substantial fade, not complete invisibility. A stronger exact
-endpoint regression and bounded native correction are being qualified. See the
+endpoint regression fails on the immutable main Release DLL for both R6
+(`0.999400854110718`) and custom (`0.999045968055725`), with six equal mesh
+uniforms in each case after the bounded settling interval. Endpoint clamping and
+an endpoint exception to dirty-update suppression are being qualified. See the
 [work record](character-presentation-performance.md); no new shader, authority
 or material ownership model is introduced.
 

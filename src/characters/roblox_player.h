@@ -123,7 +123,10 @@ private:
     // (el caso normal) el override ni existe: el personaje se dibuja con su
     // material estandar y el pipeline del shader custom no entra en juego.
     void _update_fade(float d) {
-        if (Math::abs(d - last_dissolve) < 0.002f) return;
+        // Finish at the exact endpoints; the dirty-update tolerance must not
+        // retain a few visible dither pixels or a near-zero material override.
+        d = d <= 0.001f ? 0.0f : (d >= 0.999f ? 1.0f : d);
+        if (d == last_dissolve || (d > 0.0f && d < 1.0f && Math::abs(d - last_dissolve) < 0.002f)) return;
         last_dissolve = d;
         bool want = d > 0.001f;
         if (want != fade_applied) {

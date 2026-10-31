@@ -119,6 +119,18 @@ node dispatch and cap/engine scheduling sensitivity remain measurement limits.
 
 ## Qualification status
 
+Rendered review identifies GL-028: the old cache can retain first-person dither
+speckles. The stronger exact-endpoint test reproduces on the immutable main
+Release DLL: R6 retains dissolve `0.999400854110718` on all six meshes, custom
+retains `0.999045968055725`; both fail only the new endpoint assertion after a
+bounded settling interval. Captures/logs remain in `baseline-fade-r6` and
+`baseline-fade-custom`. The fix snaps only near-endpoint values to 0/1 and never
+lets the 0.002 dirty-update tolerance suppress an endpoint transition. Interior
+fade behavior, shader bytes, material ownership and native ObjectID checks stay
+unchanged. Final qualification includes the new assertion and both custom and
+default rigs in real listen/dedicated multiplayer (fourteen presentation actors,
+110 native total with the performance fixture).
+
 Candidate builds, complete regression runs, repeated comparisons and hosted CI
 are in progress. No pending execution is claimed as passing. Final results,
 exact source identities, screenshots and evidence digests will be recorded here.
