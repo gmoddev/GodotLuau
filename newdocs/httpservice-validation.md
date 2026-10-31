@@ -123,6 +123,84 @@ mutable build outputs are never linked into those evidence files.
 
 ## Qualification status
 
-Focused qualification complete; full matrix and hosted CI pending.
+Qualified source is `aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4`, retaining the
+regression commit `918db6611c745f95995007a2b2d2d4d74271ef50` and behavior commit
+`4066b02a2c5be531543cb95f44eb8a53c18a8c72`. The portability correction only splits
+an embedded literal: 127,863 assembled Luau bytes remain identical, SHA256
+`68175de14e3638d3f8f6c5e0be1e9c859b47c11b966891a4fc2b8eaa696f72cf`.
+Maximum individual literal falls from 20,379 to 14,465 bytes. The final 89-file
+native source fingerprint is
+`71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f`.
+Dependency pins remain godot-cpp `d5cc777a89d899665fb61f1650ef0dc0cf6488c4`
+and Luau `9e2984fd0334414a2ef62ceede0c06dab7574d55`.
+
+| Final source configuration | Core | Full native regression actors |
+| --- | --- | --- |
+| Windows Debug | 80 pass | 92 pass |
+| Windows Release | 80 pass | 92 pass |
+| Windows core ASan | 80 pass | Not claimed (GL-018) |
+| Linux Debug | 80 pass | 92 pass |
+| Linux Release | 80 pass | 92 pass |
+| Linux core/native ASan + LSan | 80 pass | 92 pass |
+
+The five full native configurations retain all eight previous groups (86 actors)
+and add the six GL-023 actors. Actual Model checks (76), manual Character actors,
+GL-007 delayed/reordered traffic, GL-022 relay lifecycle, GL-003 confinement,
+GL-004 quotas, GL-005 HTTP and GL-009 interruption/concurrency remain exercised.
+DataStore native evidence remains four fault stages, four killed-writer stages
+and 40 independent increments; hardware power loss is not claimed.
+
+Both SCons `template_debug` and `template_release` products on both platforms
+also pass all 10 old/new HTTP actors, plus the 14 process-ownership and five
+packaging cases. These are local qualification products, not released builds.
+The first full matrix at `4066b02` also passes its applicable configurations;
+the final source matrix above is separately executed, not inferred from identical
+Luau bytes. Final worker output roots use `gl023-aa5b765-<platform>-<mode>` and
+`gl023-aa5b765-scons-<platform>-<target>`.
+
+[Hosted core run 41175369764](https://github.com/gmoddev/GodotLuau/actions/runs/41175369764)
+passes 80 actual cases on each platform.
+[Hosted native run 41175369757](https://github.com/gmoddev/GodotLuau/actions/runs/41175369757)
+passes all 92 actors on each platform. All four ZIPs were downloaded through the
+GitHub connector and matched GitHub's SHA256 digests. JUnit cases, all six GL-023
+PASS markers per platform, JSON/UUID markers, the actual 4,000 UUID samples per
+platform, zero forbidden server hits, 55 harness hashes, and every one of 277 log
+hashes per native artifact were checked. Source, dependency, DataStore and
+Character evidence also match. Observation completed within a bounded 30-minute
+window from the final runtime push. Evidence-only commits do not change these
+qualified runtime, harness or workflow inputs.
+
+The original [native run 41175215037](https://github.com/gmoddev/GodotLuau/actions/runs/41175215037)
+also fails Windows C2026 at `4066b02` while Linux passes. Both failed hosted runs
+and all four original artifacts are retained separately from the passing runs.
+The first Windows diagnostic bundle omitted hashed Godot profile logs; the
+verifier rejected it. Its original ZIP remains retained, and complete v2 bundles
+include those logs without weakening verification. Linux collection initially
+assumed a Git checkout; that worker actually uses an exported source tree. Its
+dependency files are compared against the exact pinned Git trees: 165 godot-cpp
+and 852 Luau tracked files, zero missing/changed files after compiler-equivalent
+text newline normalization (841 Luau checkout files have CRLF). The initial raw
+blob mismatch is an export/line-ending distinction, not a dependency edit.
+
+The [evidence manifest](evidence/gl023-httpservice-2026-10-31.json) records exact
+revisions, configuration flags, artifact/worker archive digests, actual commands,
+per-configuration timing, binary identities and retained failures. Raw diagnostic
+bundles stay in `.runtime-tests/GL023` locally and the established worker results
+roots. Hosted artifacts have seven-day retention; the manifest retains their
+identities independently. No runtime binary is committed or distributed.
+
+Frame responsiveness passes the existing 250 ms maximum-gap assertions; the
+largest final worker gap is 83.774 ms (Windows Debug). Hosted maxima are 51.383 ms
+(Linux) and 50.291 ms (Windows). This includes
+the public slow-response checks advancing another script's counter by more than
+five ticks. Exact measured maxima are in the manifest. UUID sampling covers two
+independent processes per configuration; it establishes observed uniqueness, not
+a guarantee against future collisions. The Crypto failure branch is source
+checked but not forced by an entropy-provider fault injection. JSON traversal and
+VM budgets are independent limits, not production throughput measurements.
+
+GL-023 is qualified within the [documented compatibility contract](httpservice-api.md)
+on its dedicated branch. Main remains
+`0d8942aff3cd8554ef0e3f1fb970a91ac7b7dbdd`; integration requires a separate task.
 GL-017/018, broader GL-020 security and graphical limitations remain independent.
 No merge, release publication or updater distribution is authorized.

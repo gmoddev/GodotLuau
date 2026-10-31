@@ -576,7 +576,12 @@ builds the actual Debug CMake adapter on Windows/Linux and runs the qualified
 single-player/listen/dedicated/editor fixtures plus network, animation, Character,
 resource, filesystem, HTTP and DataStore groups (86 actors per platform).
 The [current integration record](character-main-integration.md) records the
-73-core/86-native main gates. The runner owns child process
+73-core/86-native main gates. GL-023's separate branch raises its gates to
+80 core cases and 92 native
+actors, adding six actual public HttpService fixtures and retained UUID samples;
+its [qualification record](httpservice-validation.md) verifies both platforms'
+hosted artifacts. This does not change main's integration status. The runner owns
+child process
 trees, isolates profiles, and requires complete actors and PASS outcomes. Official
 Godot 4.7.1 archive bytes/version are verified against pinned provenance before
 execution. At the original native CI milestone, both hosted Debug builds and

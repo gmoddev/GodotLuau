@@ -48,7 +48,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 | GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
-| GL-023 | P2 | Implemented on dedicated branch; full qualification pending | HttpService errors, headers, optional arguments and JSON/GUID semantics |
+| GL-023 | P2 | Qualified on dedicated branch; integration pending | HttpService errors, headers, optional arguments and JSON/GUID semantics |
 | GL-024 | P2 | Integrated and resolved within exercised scope | Part geometry caches retire before engine-server teardown |
 | GL-025 | P2 | Integrated and resolved within exercised scope | Actual AnimationTrack completion and ObjectID-backed lifetime |
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
@@ -1060,12 +1060,17 @@ preserved; no broader issue closure or distribution readiness is inferred.
 
 ## GL-023: HttpService facade and serialization contract discrepancies
 
-**Status: implementation on `fix/gl-023-httpservice-compatibility`; full
-qualification pending, not integrated into main.** The original source findings
-below remain historical evidence. Windows/Linux focused Debug checks now pass
-80 core cases and 10 existing/new HTTP actors, including public failure/header/
-JSON/UUID and cancellation coverage. See the [API and migration contract](httpservice-api.md)
-and [work record](httpservice-validation.md) for remaining matrix/CI requirements.
+**Status: qualified on `fix/gl-023-httpservice-compatibility` at
+`aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4`; not integrated into main.**
+The original findings below remain historical evidence. Windows/Linux
+Debug/Release and core ASan pass 80 cases; all five applicable full native
+configurations (including Linux ASan/LSan) pass 92 actors. Both production SCons
+targets pass HTTP qualification on each platform. Four hosted jobs and artifacts
+are verified, including actual JSON/UUID/header/error/options/cancellation actors
+and zero forbidden requests. See the [API and migration contract](httpservice-api.md),
+[qualification record](httpservice-validation.md) and [evidence manifest](evidence/gl023-httpservice-2026-10-31.json).
+This resolves the scoped API findings on the branch, not GL-017/018, broader
+GL-020, graphical correctness or release/updater qualification.
 
 At the audited revision,
 `src/core/luau_stdlib.h:782–847` hardcodes HttpEnabled, catches public HTTP errors,
