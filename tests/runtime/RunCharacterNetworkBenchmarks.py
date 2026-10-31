@@ -1,17 +1,19 @@
 """Measure the same native ENet/remote-character workload using a selected product."""
-import argparse, ctypes, json, os, time
+import argparse, ctypes, hashlib, json, os, time
 from pathlib import Path
-from FixtureProcesses import StopAll
-from RunQualification import Prepare, Start, Check, Port
+from FixtureProcesses import StartProcess, StopAll
+from RunQualification import Prepare, Check, Port
 
 def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     for Name in ['godot', 'extension', 'output']: Parser.add_argument('--'+Name, type=Path, required=True)
     Parser.add_argument('--r6-assets', action='store_true')
+    Parser.add_argument('--max-fps', type=int, default=120)
     Args = Parser.parse_args()
     assert not Args.output.exists()
     if os.name == 'nt': ctypes.windll.kernel32.SetErrorMode(0x8003)
     Prepare(Args.output, Args.extension)
+    (Args.output/'inputs.json').write_text(json.dumps({'ExtensionSHA256':hashlib.sha256(Args.extension.read_bytes()).hexdigest(),'GodotSHA256':hashlib.sha256(Args.godot.read_bytes()).hexdigest(),'FixtureSHA256':hashlib.sha256(Path(__file__).with_name('CharacterNetworkBenchmarks.gd').read_bytes().replace(b'\r\n',b'\n')).hexdigest(),'MaxFPS':Args.max_fps,'R6Assets':Args.r6_assets},indent=2))
     Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING='1')
     for Name in ['APPDATA','LOCALAPPDATA','XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME']:
         Directory = Args.output/'profile'/Name
@@ -30,7 +32,9 @@ def Main():
     try:
         for Role, Index in [('server','0'),('client','1'),('client','2')]:
             Label = Role+Index
-            Process = Start(Args.godot.resolve(),Args.output.resolve(),'CharacterNetworkBenchmarks.gd',Label,['--fixture-role',Role,'--fixture-port',str(Selected),'--fixture-client-index',Index],Environment)
+            Command=[str(Args.godot.resolve()),'--headless','--disable-crash-handler','--single-threaded-scene','--path',str(Args.output.resolve()),'--script','res://CharacterNetworkBenchmarks.gd','--max-fps',str(Args.max_fps),'--','--fixture-role',Role,'--fixture-port',str(Selected),'--fixture-client-index',Index]
+            with (Args.output/(Label+'.stdout.log')).open('w') as Out, (Args.output/(Label+'.stderr.log')).open('w') as Err:
+                Process=StartProcess(Command,Out,Err,Environment)
             Entries.append((Process,Label))
         Results = []
         Measurements = []

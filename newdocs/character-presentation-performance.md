@@ -87,14 +87,21 @@ Raw independent dispatch and process-frame observations retain mean/median/p95/p
 
 Source inspection identifies redundant synchronization of an already validated
 root/body pose and reflection calls on the known internal RobloxPlayer type.
-The candidate keeps ObjectID/type/parent/deletion resolution on every use, checks
-both live poses before skipping work, preserves repair of an independently moved
-body, and uses direct native camera queries. It adds no cross-frame pointer or
-hierarchy cache. Correctness and repeated baseline/candidate measurements must
+The candidate keeps ObjectID/type/parent/deletion resolution and full pose
+validation on every use, skips only equal live transform writes, preserves repair
+of an independently moved body, and uses direct native camera queries. It adds no
+cross-frame pointer or hierarchy cache. Correctness and repeated measurements must
 qualify it before acceptance. Broader hierarchy/puppet/animation caching is not
 introduced merely to reduce call counts.
 
-Five alternating Windows Release pairs at the default 120 FPS headless cap
+The **rejected first candidate** used `Pose == LastPose` as a shortcut around
+validation. Source review found that physics also assigns LastPose without first
+validating it, so that shortcut could suppress existing rejection/diagnostics.
+It is not accepted, regardless of measured speed. Its products, successful
+functional runs and negative measurements remain separate from the final
+candidate, which retains validation on every call.
+
+Five alternating Windows Release pairs of that rejected candidate at 120 FPS
 reduce the 16-character median dispatch from 0.404 to 0.382 ms and the
 32-character median from 0.799 to 0.753 ms. Every pair improves at 1/16/32/64.
 This is a scoped dispatch improvement, not a demonstrated frame-rate or total
@@ -116,12 +123,21 @@ Candidate builds, complete regression runs, repeated comparisons and hosted CI
 are in progress. No pending execution is claimed as passing. Final results,
 exact source identities, screenshots and evidence digests will be recorded here.
 
-Windows candidate Debug and Release pass 80 core cases and 103 native actors
+The validation-preserving implementation is `a09f10d55dcc212dd28e1c3f0a60f341689839c3`,
+native fingerprint `aec51cc5e25828b32990e85a297fc769f6c94da12347671ff9a1d62527c79ed2`
+(89 files). Its Windows Debug/Release and Linux Release adapters build, and its
+eight-actor Windows Release graphical run passes. Further runs remain pending.
+Hosted CI will require 80 core cases and 104 native actors per platform: the
+original 95, eight presentation actors, and one performance fixture execution
+actor. The last is an execution check, not a single-trial speed gate.
+
+The rejected first Windows candidate Debug and Release pass 80 core cases and 103 native actors
 each, including eight new headless presentation actors; core ASan passes 80.
 The newer rendered/assertion snapshots are recorded separately at final
 qualification. The DockerPC Linux container has built both the retained GL-007
 comparator and starting V2 source and passed the 80-case starting core suite.
-The optimized Linux adapter also builds successfully. Benchmark phases are
+That first Linux adapter also builds successfully. The validation-preserving
+candidate requires fresh builds, comparisons and native suites. Benchmark phases are
 serialized after task builds and functional suites stop, rather than measuring
 against a concurrently compiling task.
 

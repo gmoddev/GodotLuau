@@ -90,7 +90,8 @@ def Main():
                         Capture['SHA256'] = hashlib.sha256(File.read_bytes()).hexdigest()
                 Evidence.append(Item)
         (Args.output / 'results.json').write_text(json.dumps(Results, indent=2))
-        (Args.output / 'native-evidence.json').write_text(json.dumps({'Graphical': Args.graphical, 'Actors': len(Results), 'Evidence': Evidence, 'AssetInputs': json.loads((Import/'asset-inputs.json').read_text())}, indent=2))
+        Identity = {'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(), 'GodotSHA256': hashlib.sha256(Args.godot.read_bytes()).hexdigest(), 'FixtureSHA256': hashlib.sha256((Source/'tests/runtime/CharacterPresentation.gd').read_bytes().replace(b'\r\n', b'\n')).hexdigest()}
+        (Args.output / 'native-evidence.json').write_text(json.dumps({'Graphical': Args.graphical, 'Actors': len(Results), 'Evidence': Evidence, 'AssetInputs': json.loads((Import/'asset-inputs.json').read_text()), **Identity}, indent=2))
         print('[Character:Presentation] PASS', len(Results), 'actors; graphical=' + str(Args.graphical))
     finally: StopAll()
 

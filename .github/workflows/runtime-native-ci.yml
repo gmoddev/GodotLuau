@@ -185,6 +185,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/presentation"
 
+      - name: Character performance fixture execution (not a speed gate)
+        timeout-minutes: 3
+        run: |
+          python tests/runtime/RunCharacterPerformance.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/performance" --trials 1 --samples 120 --counts 1,16
+
       - name: GL-009 transactional persistence and interrupted commit recovery
         timeout-minutes: 4
         run: |
@@ -213,6 +221,8 @@ jobs:
             ${{ runner.temp }}/native-ci/**/results.json
             ${{ runner.temp }}/native-ci/**/server-results.json
             ${{ runner.temp }}/native-ci/**/native-evidence.json
+            ${{ runner.temp }}/native-ci/**/measurements.json
+            ${{ runner.temp }}/native-ci/**/inputs.json
             ${{ runner.temp }}/native-ci/**/guids.txt
             ${{ runner.temp }}/native-ci/**/latency-proxy.json
             ${{ runner.temp }}/native-ci/source.json

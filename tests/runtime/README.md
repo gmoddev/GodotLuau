@@ -634,7 +634,7 @@ original 92 actors (95 total). Core remains 80. See the
 Run `RunCharacterPresentation.py --godot <engine> --extension <library> --output
 <fresh-directory>` for eight headless assertion actors (R6/custom, listen and
 dedicated). Native CI requires these in addition to the prior 95 actors, totaling
-103; core remains 80. The fixture imports unchanged R6/shader assets in an
+103, plus one performance fixture actor (104 total); core remains 80. The fixture imports unchanged R6/shader assets in an
 asset-only project, asserts real Model/body/camera/input/animation/lifecycle and
 ENet behavior, and retains per-actor assertion records. The custom prototype is
 outside the playable view because source templates are not automatically hidden
@@ -658,6 +658,11 @@ renderer CPU outside dispatch. Built-in coarse monitor samples are historical
 context, not independent frame observations. The 16-character modes separate
 physics, animation and inactive roots; this NPC fixture is not a full gameplay
 server. Native allocator event counts are unavailable.
+
+Native CI executes one 120-sample 1/16-character performance actor, requires all
+five mode/count windows and records product/source hashes and raw observations.
+This checks fixture execution without imposing a speed threshold or treating a
+single hosted trial as a performance comparison.
 
 `RunCharacterNetworkBenchmarks.py --godot <engine> --extension <library> --output
 <fresh-directory> --r6-assets` measures a real three-actor ENet workload and

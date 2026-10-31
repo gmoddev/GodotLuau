@@ -46,6 +46,7 @@ def Main():
     Environment = dict(os.environ)
     Source = Path(__file__).resolve().parents[2]
     Measurements = []
+    Results = []
     Inputs = {'SourceAtInvocation': GetFingerprint(Source), 'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n',b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.py','.gd','.cpp','.pem'] or File.name in ['CMakeLists.txt','GodotDistribution.json']}, 'Trials': Args.trials, 'SamplesPerPhysicsWindow': Args.samples, 'Counts': Args.counts, 'Graphical': Args.graphical, 'GodotSHA256': hashlib.sha256(Args.godot.read_bytes()).hexdigest()}
     Inputs['MaxFPS'] = Args.max_fps
     (Args.output/'inputs.json').write_text(json.dumps(Inputs,indent=2))
@@ -75,7 +76,7 @@ def Main():
                 Started = time.monotonic()
                 with (Directory / (Label + '.stdout.log')).open('w') as Out, (Directory / (Label + '.stderr.log')).open('w') as Err:
                     Actor = StartProcess([*Command, '--', '--counts', Args.counts, '--samples', str(Args.samples), *(['--graphical'] if Args.graphical else [])], Out, Err, ActorEnvironment)
-                Check(Actor, time.monotonic()+180, Directory, Label, '[Character:Performance] PASS')
+                Results.append(Check(Actor, time.monotonic()+180, Directory, Label, '[Character:Performance] PASS'))
                 Data = json.loads((Directory / 'measurements.json').read_text())
                 Data['ProcessCpuSeconds'] = Cpu(Actor, Before)
                 Data['ActorWallSeconds'] = time.monotonic()-Started
@@ -88,6 +89,7 @@ def Main():
                 (Directory / ('godot_luau.dll' if os.name == 'nt' else 'godot_luau.so')).unlink()
                 print('[Character:Performance] PASS ' + Label, flush=True)
         (Args.output / 'measurements.json').write_text(json.dumps(Measurements, indent=2))
+        (Args.output / 'results.json').write_text(json.dumps(Results, indent=2))
         Summary = []
         for Variant in sorted(set(Item['Variant'] for Item in Measurements)):
             Trials = [Item for Item in Measurements if Item['Variant'] == Variant]
