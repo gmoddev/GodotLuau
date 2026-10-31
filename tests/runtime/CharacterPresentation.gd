@@ -453,6 +453,17 @@ func Multiplayer() -> void:
         if Character == null: return
         Character.call("set_npc_move_dir", Vector3.RIGHT)
     await Ticks(90)
+    # A walking-cycle observation requires an actually grounded owner. Startup
+    # spawn/contact motion can legitimately hold a static airborne leg pose.
+    if not (Case.begins_with("dedicated") and Role == "server"):
+        var GroundDeadline := Time.get_ticks_msec() + 15000
+        var GroundTrace := []
+        while not Character.call("IsGrounded") and Time.get_ticks_msec() < GroundDeadline:
+            var GroundBody: CharacterBody3D = Character.call("GetPhysicsBody")
+            GroundTrace.append({"Time": Time.get_ticks_msec(), "Position": str(Character.global_position), "Velocity": str(GroundBody.velocity), "PlatformVelocity": str(GroundBody.get_platform_velocity())})
+            await process_frame
+        States["Grounding"] = GroundTrace
+        Check(Character.call("IsGrounded"), "walking observation starts from grounded owner")
     Mark(Role + Index + ".moving")
     for Participant in ["server0", "client1", "client2"]: await Wait(Participant + ".moving")
     var RemoteLimbs := {}

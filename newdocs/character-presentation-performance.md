@@ -138,6 +138,15 @@ corrected assertion uses that exact remote path and additionally requires the
 custom BoxMesh geometry, so a default R6 fallback cannot satisfy it. No runtime
 factory/container contract is changed.
 
+The next custom run samples a host at Y=126–161 with a nearly constant airborne
+leg pose (about 0.35002 radians), while the other remotes animate normally. The
+walking-cycle premise was not established. The fixture now requires actual
+owner grounding before the shared walking observation and records bounded
+position/velocity/platform-velocity traces while waiting. The six-actor rendered
+custom listen/dedicated diagnostic passes with the original progress threshold.
+The earlier startup trajectory is retained as an unresolved spawn/contact
+observation, not silently called a fixed physics defect or a stuck Animator.
+
 Candidate builds, complete regression runs, repeated comparisons and hosted CI
 are in progress. No pending execution is claimed as passing. Final results,
 exact source identities, screenshots and evidence digests will be recorded here.
