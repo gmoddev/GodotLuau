@@ -90,6 +90,7 @@ def Main():
         if not Required <= Labels: raise ValueError('Presentation case skipped required behavior')
         Additional = {'first-person fade reaches fully invisible endpoint', 'procedural animation enters airborne pose', 'procedural animation returns to grounded pose', 'processed respawns leave no live object growth'} if Item['Case'] in ['r6', 'custom'] else {'remote uses actual custom rig' if Item['Case'].endswith('-custom') else 'remote uses actual R6 rig', 'remote rig animation limbs are present', 'remote procedural animation progresses'}
         if not Additional <= Labels: raise ValueError('Presentation case skipped animation/lifetime assertions')
+        if Item['Case'].endswith('-custom') and 'remote custom geometry is not R6 fallback' not in Labels: raise ValueError('Custom multiplayer fixture fell back to the default rig')
     Performance = json.loads((Args.output/'performance/measurements.json').read_text())
     PerformanceInputs = json.loads((Args.output/'performance/inputs.json').read_text())
     if len(Performance) != 1 or Performance[0]['Graphical'] or PerformanceInputs['Trials'] != 1 or PerformanceInputs['SamplesPerPhysicsWindow'] != 120 or PerformanceInputs['Counts'] != '1,16':

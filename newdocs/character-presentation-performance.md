@@ -131,6 +131,13 @@ unchanged. Final qualification includes the new assertion and both custom and
 default rigs in real listen/dedicated multiplayer (fourteen presentation actors,
 110 native total with the performance fixture).
 
+The first expanded custom multiplayer fixture incorrectly expected the local
+`Character/` container on remote puppets. Source confirms their established
+container is `Visual/`; the failed rendered run is preserved separately. The
+corrected assertion uses that exact remote path and additionally requires the
+custom BoxMesh geometry, so a default R6 fallback cannot satisfy it. No runtime
+factory/container contract is changed.
+
 Candidate builds, complete regression runs, repeated comparisons and hosted CI
 are in progress. No pending execution is claimed as passing. Final results,
 exact source identities, screenshots and evidence digests will be recorded here.

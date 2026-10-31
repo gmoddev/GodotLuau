@@ -458,8 +458,13 @@ func Multiplayer() -> void:
     var RemoteLimbs := {}
     for Remote in World.find_children("RemotePlayer_*", "", true, false):
         Check(Remote.is_class("RBXCharacter") and Remote.is_class("RBXModel"), "remote has real Model identity")
-        var RigPath := "Character/" if Case.ends_with("-custom") else ""
+        # Remote Node3D templates use the established Visual container; local
+        # templates use Character. Require the custom geometry, never fallback.
+        var RigPath := "Visual/" if Case.ends_with("-custom") else ""
         Check(Remote.has_node(RigPath+"Torso") and Remote.has_node(RigPath+"R6Animator"), "remote uses actual custom rig" if Case.ends_with("-custom") else "remote uses actual R6 rig")
+        if Case.ends_with("-custom"):
+            var CustomMesh: MeshInstance3D = Remote.get_node(RigPath+"Torso").get_child(0) if Remote.has_node(RigPath+"Torso") else null
+            Check(CustomMesh != null and CustomMesh.mesh is BoxMesh, "remote custom geometry is not R6 fallback")
         if Remote.has_node(RigPath+"Left Leg"): RemoteLimbs[Remote.get_instance_id()] = {"Rotation": Remote.get_node(RigPath+"Left Leg").rotation, "Position": Remote.global_position, "Path": RigPath+"Left Leg"}
         Synchronized(Remote, "replicated puppet " + Remote.name)
         Check(not Remote.call("GetPhysicsBody").has_node("CameraPivotH"), "puppet has no local camera/input")
