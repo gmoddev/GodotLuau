@@ -20,6 +20,7 @@ def Assets(Godot, Source, Output, Environment):
     Shader = Path('GodotLuau/shaders/character_fade.gdshader')
     (Import / Shader.parent).mkdir(parents=True)
     shutil.copyfile(Source / Shader, Import / Shader)
+    (Import / 'asset-inputs.json').write_text(json.dumps({File.relative_to(Source).as_posix(): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted((Source / Relative).rglob('*')) if File.is_file()} | {Shader.as_posix(): hashlib.sha256((Source / Shader).read_bytes()).hexdigest()}, indent=2))
     with (Import / 'stdout.log').open('w') as Out, (Import / 'stderr.log').open('w') as Err:
         Actor = StartProcess([str(Godot), '--headless', '--disable-crash-handler', '--editor', '--path', str(Import), '--import'], Out, Err, Environment)
         if Actor.wait(timeout=120) != 0: raise RuntimeError('Character fixture asset import failed')
@@ -89,7 +90,7 @@ def Main():
                         Capture['SHA256'] = hashlib.sha256(File.read_bytes()).hexdigest()
                 Evidence.append(Item)
         (Args.output / 'results.json').write_text(json.dumps(Results, indent=2))
-        (Args.output / 'native-evidence.json').write_text(json.dumps({'Graphical': Args.graphical, 'Actors': len(Results), 'Evidence': Evidence}, indent=2))
+        (Args.output / 'native-evidence.json').write_text(json.dumps({'Graphical': Args.graphical, 'Actors': len(Results), 'Evidence': Evidence, 'AssetInputs': json.loads((Import/'asset-inputs.json').read_text())}, indent=2))
         print('[Character:Presentation] PASS', len(Results), 'actors; graphical=' + str(Args.graphical))
     finally: StopAll()
 

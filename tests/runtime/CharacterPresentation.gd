@@ -183,6 +183,9 @@ func Single() -> void:
     Key(KEY_W, false)
     await Ticks(20)
     var Mouse := InputEventMouseButton.new()
+    # The dummy display cannot capture a mouse. Exercise the supported native
+    # first-person mouse path there; rendered runs retain third-person RMB drag.
+    if not Graphical: Character.call("set_lock_first_person", true)
     Mouse.button_index = MOUSE_BUTTON_RIGHT
     Mouse.pressed = true
     Input.parse_input_event(Mouse)
@@ -195,6 +198,7 @@ func Single() -> void:
     Mouse.pressed = false
     Input.parse_input_event(Mouse)
     Input.flush_buffered_events()
+    if not Graphical: Character.call("set_lock_first_person", false)
     Axis(JOY_AXIS_RIGHT_X, 1)
     var PriorYaw := Pivot.rotation.y
     await Ticks(20)
@@ -208,6 +212,18 @@ func Single() -> void:
     Synchronized(Character, "walking controller")
     Axis(JOY_AXIS_LEFT_X, 0)
     await Ticks(20)
+    var PadJump := InputEventJoypadButton.new()
+    PadJump.device = 0
+    PadJump.button_index = JOY_BUTTON_A
+    PadJump.pressed = true
+    Input.parse_input_event(PadJump)
+    Input.flush_buffered_events()
+    await Ticks(3)
+    Check(Body.velocity.y > 18, "controller jump reaches real physics")
+    PadJump.pressed = false
+    Input.parse_input_event(PadJump)
+    Input.flush_buffered_events()
+    await Ticks(100)
     Character.global_transform = Transform3D(Basis(), Vector3(0, 0.1, 0))
     Body.velocity = Vector3.ZERO
     await Ticks(10)
@@ -315,6 +331,8 @@ func Single() -> void:
     Character = World.get_node("LocalPlayer")
     Body = Character.call("GetPhysicsBody")
     Check(Body.has_node("TouchControls/JumpButton"), "mobile simulation creates native controls")
+    root.size = Vector2i(960, 540)
+    await process_frame
     Input.set_emulate_mouse_from_touch(false)
     var Touch := InputEventScreenTouch.new()
     Touch.index = 0
@@ -329,10 +347,27 @@ func Single() -> void:
     Input.parse_input_event(Drag)
     Input.flush_buffered_events()
     await Ticks(30)
+    print("[Character:Presentation] Touch diagnostic viewport=", root.get_visible_rect(), " velocity=", Body.velocity, " local=", Character.call("IsLocalControl"))
     Check(Vector2(Body.velocity.x, Body.velocity.z).length() > 15.9, "touch simulation moves Character")
     await Capture("mobile-simulation")
     Touch.pressed = false
     Input.parse_input_event(Touch)
+    Input.flush_buffered_events()
+    await Ticks(20)
+    var JumpButton: Button = Body.get_node("TouchControls/JumpButton")
+    var Click := InputEventMouseButton.new()
+    Click.button_index = MOUSE_BUTTON_LEFT
+    Click.position = JumpButton.get_global_rect().get_center()
+    Click.global_position = Click.position
+    Click.pressed = true
+    Input.parse_input_event(Click)
+    Input.flush_buffered_events()
+    var JumpDeadline := Time.get_ticks_msec() + 1000
+    while Body.velocity.y <= 0 and Time.get_ticks_msec() < JumpDeadline: await process_frame
+    print("[Character:Presentation] Mobile jump diagnostic rect=", JumpButton.get_global_rect(), " pressed=", JumpButton.button_pressed, " velocity=", Body.velocity)
+    Check(Body.velocity.y > 18, "mobile simulation GUI jump reaches real physics")
+    Click.pressed = false
+    Input.parse_input_event(Click)
     Input.flush_buffered_events()
     DirAccess.remove_absolute(ProjectSettings.globalize_path("res://.gl_mp_session"))
 
@@ -383,13 +418,19 @@ func Multiplayer() -> void:
         if Character == null: return
         Character.call("set_npc_move_dir", Vector3.RIGHT)
     await Ticks(90)
+    var RemoteLimbs := {}
     for Remote in World.find_children("RemotePlayer_*", "", true, false):
         Check(Remote.is_class("RBXCharacter") and Remote.is_class("RBXModel"), "remote has real Model identity")
+        Check(Remote.has_node("Torso") and Remote.has_node("R6Animator"), "remote uses actual R6 rig")
+        if Remote.has_node("Left Leg"): RemoteLimbs[Remote.get_instance_id()] = Remote.get_node("Left Leg").rotation
         Synchronized(Remote, "replicated puppet " + Remote.name)
         Check(not Remote.call("GetPhysicsBody").has_node("CameraPivotH"), "puppet has no local camera/input")
     var Start := Character.global_position
     await Ticks(60)
     Check(Character.global_position.distance_to(Start) > 10, "owner or replicated Character moves during real transport")
+    for Identity in RemoteLimbs:
+        var Remote: Node3D = instance_from_id(Identity)
+        Check(is_instance_valid(Remote) and not Remote.get_node("Left Leg").rotation.is_equal_approx(RemoteLimbs[Identity]), "remote procedural animation progresses")
     await Capture("owner-camera")
     # An explicit fixture spectator view captures every rendered participant.
     var OwnerCamera := root.get_camera_3d()
@@ -420,6 +461,7 @@ func Multiplayer() -> void:
     if Role == "client": Mark("client" + Index + ".closed")
 
 func _initialize() -> void:
+    root.size = Vector2i(960, 540)
     var Args := OS.get_cmdline_user_args()
     Graphical = "--graphical" in Args
     for Position in range(Args.size()-1):

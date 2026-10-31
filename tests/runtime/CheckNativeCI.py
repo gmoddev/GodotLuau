@@ -85,7 +85,7 @@ def Main():
         if Item['Graphical'] or Item['Result'] != 'PASS' or not Item['Assertions'] or not all(Assertion['Passed'] for Assertion in Item['Assertions']):
             raise ValueError('Presentation assertions did not execute/pass')
         Labels = {Assertion['Label'] for Assertion in Item['Assertions']}
-        Required = {'first-person rig transparency and zoom', 'AnimationPlayer advances visual track', 'automatic respawn replaces rendered life', 'touch simulation moves Character', 'Character rotates toward actual movement'} if Item['Case'] in ['r6', 'custom'] else {'real ENet remote Characters created', 'remote has real Model identity', 'puppet has no local camera/input', 'owner or replicated Character moves during real transport'}
+        Required = {'first-person rig transparency and zoom', 'AnimationPlayer advances visual track', 'automatic respawn replaces rendered life', 'touch simulation moves Character', 'Character rotates toward actual movement', 'controller jump reaches real physics', 'mobile simulation GUI jump reaches real physics', 'unchanged root repairs independently changed live body'} if Item['Case'] in ['r6', 'custom'] else {'real ENet remote Characters created', 'remote has real Model identity', 'puppet has no local camera/input', 'owner or replicated Character moves during real transport'}
         if not Required <= Labels: raise ValueError('Presentation case skipped required behavior')
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),

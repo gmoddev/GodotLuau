@@ -39,10 +39,11 @@ func Script(Source: String) -> void:
     Game.add_child(Executable)
 
 func Summary(Values: Array) -> Dictionary:
-    Values.sort()
+    var Ordered := Values.duplicate()
+    Ordered.sort()
     var Total := 0.0
     for Value in Values: Total += float(Value)
-    return {"Mean": Total/Values.size(), "Median": Values[Values.size() / 2], "P95": Values[int(ceil(Values.size()*0.95))-1], "P99": Values[int(ceil(Values.size()*0.99))-1], "Samples": Values.size(), "Raw": Values}
+    return {"Mean": Total/Values.size(), "Median": Ordered[Values.size() / 2], "P95": Ordered[int(ceil(Values.size()*0.95))-1], "P99": Ordered[int(ceil(Values.size()*0.99))-1], "Samples": Values.size(), "Raw": Values}
 
 func _initialize() -> void:
     var Args := OS.get_cmdline_user_args()

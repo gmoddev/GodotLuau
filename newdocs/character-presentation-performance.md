@@ -55,6 +55,14 @@ the bounded failure/timeout remains. V5 observes native dedicated startup,
 requires no local Character on the observer, and passes three rendered actors.
 Final assertions add explicit rotation and independently displaced-body repair.
 
+The first candidate headless input attempts failed mouse/touch assertions.
+The unchanged candidate passes after establishing the viewport extent after
+startup and using the native first-person mouse path on the dummy display.
+Rendered cases retain actual third-person captured RMB input. The final fixture
+also checks controller A and a synthetic click on the real mobile JumpButton;
+its focused headless diagnostic passes. These simulation controls do not replace
+rendered input evidence or establish physical-device ergonomics.
+
 Raw outputs remain under `C:/Sandbox/Codex/CharacterGraphics`, including all
 failed fixture attempts. The first Linux configure omitted the explicit C
 compiler name; its failed log is retained before the corrected Clang-19 retry.
@@ -91,6 +99,15 @@ introduced merely to reduce call counts.
 Candidate builds, complete regression runs, repeated comparisons and hosted CI
 are in progress. No pending execution is claimed as passing. Final results,
 exact source identities, screenshots and evidence digests will be recorded here.
+
+Windows candidate Debug and Release pass 80 core cases and 103 native actors
+each, including eight new headless presentation actors; core ASan passes 80.
+The newer rendered/assertion snapshots are recorded separately at final
+qualification. The DockerPC Linux container has built both the retained GL-007
+comparator and starting V2 source and passed the 80-case starting core suite.
+The optimized Linux adapter also builds successfully. Benchmark phases are
+serialized after task builds and functional suites stop, rather than measuring
+against a concurrently compiling task.
 
 Native allocation-event counts are not exposed by the available engine API;
 the harness records static allocated bytes and live objects/nodes/resources,
