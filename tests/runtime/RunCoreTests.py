@@ -35,10 +35,10 @@ for Case in ['normal', *Cases]:
     Text = (Output / (Case + '.stdout.log')).read_text(errors='replace')
     Errors = (Output / (Case + '.stderr.log')).read_text(errors='replace')
     print(Text, end='')
-    Marker = '[Runtime:Test] 57 passed, 0 failed' if Case == 'normal' else '[Runtime:LimitTest] PASS ' + Case
+    Marker = '[Runtime:Test] 64 passed, 0 failed' if Case == 'normal' else '[Runtime:LimitTest] PASS ' + Case
     if Result != 0 or Marker not in Text:
         print(Errors)
         raise SystemExit('[Runtime:Test] Failure or watchdog containment: ' + Case)
     if Case != 'normal':
         print('[Runtime:Test] PASS Isolated execution resource case ' + Case)
-print('[Runtime:Test] 73 passed, 0 failed')
+print('[Runtime:Test] 80 passed, 0 failed')

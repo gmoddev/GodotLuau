@@ -6,6 +6,11 @@ security scan. No HttpService implementation change is authorized in these stage
 
 ## HttpService: GL-023 follow-up recommendation
 
+Historical observations below describe the audited source. GL-023 now implements
+the bounded [public contract](httpservice-api.md) on its dedicated branch;
+[fresh qualification](httpservice-validation.md) is distinct from the original
+source review and from main integration. The original evidence is preserved.
+
 The [Roblox HttpService reference](https://create.roblox.com/docs/reference/engine/classes/HttpService)
 was checked on 2026-10-30 for public method signatures, response examples and the
 default `GenerateGUID` braces argument. It documents request methods as yielding,

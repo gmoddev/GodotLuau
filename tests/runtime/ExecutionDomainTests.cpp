@@ -1,6 +1,8 @@
 #include "gl_execution_domain.h"
 #include "gl_storage.h"
 #include "gl_http_policy.h"
+#include "gl_uuid.h"
+#include "luau_stdlib.h"
 #include "gl_stackguard.h"
 #include <cstdio>
 #include <functional>
@@ -109,6 +111,22 @@ struct Fixture {
     }
     void NoErrors() { if (!Errors.empty()) throw std::runtime_error(Errors.front()); }
 };
+void InstallHttpService(Fixture& F) {
+    Check(F.Domain.Bootstrap(R"(
+shared.HttpCalls=0; shared.Enabled=true
+_HTTP={enabled=function() return shared.Enabled end, guid=function(Braces) return Braces==false and 'bare' or '{wrapped}' end,
+request=function(Method,Url,Body,Headers)
+    shared.HttpCalls+=1; shared.Last={Method=Method,Url=Url,Body=Body,Headers=Headers}
+    if Url=='transport' then return {Success=false,StatusCode=0,StatusMessage='Connection failed',Body=''} end
+    return {Success=Url~='status',StatusCode=Url=='status' and 418 or 200,StatusMessage=Url=='status' and 'Teapot' or 'OK',Body=Body or '',Headers={test='value'}}
+end}
+)","=HttpNativeTestDouble"),"HTTP test setup failed");
+    std::string Source=LUAU_STDLIB_CODE;
+    auto Begin=Source.find("-- GL023_HTTP_SERVICE_BEGIN"),End=Source.find("-- GL023_HTTP_SERVICE_END");
+    Check(Begin!=std::string::npos && End>Begin,"Production HttpService fragment missing");
+    if (!F.Domain.Bootstrap(Source.substr(Begin,End-Begin)+"\nshared.HttpService=_G.__SVC_HttpService","=ProductionHttpService"))
+        throw std::runtime_error(F.Errors.empty() ? "Production HttpService bootstrap failed" : F.Errors.back());
+}
 }
 
 static int LimitCase(const std::string& Name) {
@@ -905,6 +923,107 @@ shared.Waited = true
             Check(GLExecutionDomain::IsClientExecution(), "Nested callback failed to restore client");
         }), "Client native call failed");
         Check(!GLExecutionDomain::IsClientExecution(), "Domain leaked beyond native return");
+    });
+    Test("HttpService strict JSON preserves scalars containers null and UTF8 bytes", [] {
+        Fixture F; InstallHttpService(F);
+        F.Run(1,R"(
+local H=shared.HttpService
+assert(H:JSONEncode({})=='[]' and H:JSONEncode(H:JSONDecode('{}'))=='{}')
+assert(H:JSONEncode(H:JSONDecode('[]'))=='[]' and H:JSONDecode('null')==H.JSONNull)
+assert(H:JSONEncode(nil)=='null' and H:JSONEncode(H.JSONNull)=='null')
+local A=H:JSONDecode('[null,false,0,"",{"x":null}]')
+assert(#A==5 and A[1]==H.JSONNull and A[2]==false and A[5].x==H.JSONNull)
+assert(H:JSONEncode(A)=='[null,false,0,"",{"x":null}]')
+local S='snow '..utf8.char(0x96ea)..string.char(0,10,31)..'"\\'
+assert(H:JSONDecode(H:JSONEncode(S))==S)
+assert(H:JSONDecode('"\\uD83D\\uDE00"')==utf8.char(0x1f600))
+assert(H:JSONDecode(' -1.25e+2 \n')==-125 and H:JSONDecode('true')==true)
+)"); F.NoErrors();
+    });
+    Test("HttpService strict JSON rejects malformed and ambiguous syntax", [] {
+        Fixture F; InstallHttpService(F);
+        F.Run(1,R"(
+local H=shared.HttpService
+for _,S in {'',' ', 'not-json','[1,]','{"x":1,}','{"x":1,"x":2}','{"x":null,"x":2}',
+    '01','+1','1.','1e','1e9999','NaN','Infinity','true false','[true','"\\x"','"\\uD800"','"\\uDC00"','"\\uD800\\u0041"','"a\nb"','null'..string.char(0),string.char(255)} do
+    assert(not pcall(H.JSONDecode,H,S),S)
+end
+assert(not pcall(H.JSONDecode,H,123) and not pcall(H.JSONDecode,H,nil))
+assert(H:JSONDecode('{"x":false}').x==false)
+)"); F.NoErrors();
+    });
+    Test("HttpService JSON rejects cycles sparse mixed and unsupported values", [] {
+        Fixture F; InstallHttpService(F);
+        F.Run(1,R"(
+local H=shared.HttpService
+local Cycle={}; Cycle.Self=Cycle
+for _,V in {Cycle,{[2]=1},{[1]=1,x=2},{[true]=1},function() end,math.huge,0/0,string.char(255)} do
+    assert(not pcall(H.JSONEncode,H,V))
+end
+local Shared={X=1}; assert(H:JSONDecode(H:JSONEncode({A=Shared,B=Shared})).A.X==1)
+local Calls=0
+local V=setmetatable({X=2},{__index=function() Calls+=1 end,__iter=function() error('metamethod') end})
+assert(H:JSONDecode(H:JSONEncode(V)).X==2 and Calls==0)
+local Object=H:JSONDecode('{}'); Object[1]=1; assert(not pcall(H.JSONEncode,H,Object))
+local Array=H:JSONDecode('[]'); Array.X=1; assert(not pcall(H.JSONEncode,H,Array))
+)"); F.NoErrors();
+    });
+    Test("HttpService JSON enforces byte node and depth bounds without stale state", [] {
+        Fixture F; InstallHttpService(F);
+        F.Run(1,R"(
+local H=shared.HttpService
+assert(not pcall(H.JSONDecode,H,string.rep(' ',1024*1024+1)))
+assert(not pcall(H.JSONEncode,H,string.rep('x',1024*1024)))
+assert(not pcall(H.JSONEncode,H,string.rep(string.char(0),200000)))
+assert(not pcall(H.JSONDecode,H,string.rep('[',34)..'0'..string.rep(']',34)))
+local Deep=0; for I=1,34 do Deep={Deep} end; assert(not pcall(H.JSONEncode,H,Deep))
+local Many={}; for I=1,16385 do Many[I]=I end; assert(not pcall(H.JSONEncode,H,Many))
+assert(not pcall(H.JSONDecode,H,'['..string.rep('0,',16384)..'0]'))
+assert(H:JSONDecode(H:JSONEncode({OK=true})).OK)
+)"); F.NoErrors();
+    });
+    Test("HttpService public facade propagates errors and validates options before transport", [] {
+        Fixture F; InstallHttpService(F);
+        F.Run(1,R"(
+local H=shared.HttpService
+assert(H.HttpEnabled and not pcall(function() H.HttpEnabled=true end) and not pcall(rawset,H,'HttpEnabled',true))
+_HTTP.enabled=function() return true end; shared.Enabled=false; assert(not H.HttpEnabled); shared.Enabled=true
+assert(not pcall(H.RequestAsync,H,{Url='transport'}))
+local R=H:RequestAsync({Url='status'}); assert(not R.Success and R.StatusCode==418 and R.Body=='' and R.Headers.test=='value')
+local OK,Error=pcall(H.GetAsync,H,'status'); assert(not OK and Error:find('418',1,true))
+local Headers={X='one'}; H:GetAsync('ok',true,Headers)
+assert(Headers['Cache-Control']==nil and shared.Last.Headers['Cache-Control']=='no-cache')
+H:PostAsync('ok','payload',3,false); assert(shared.Last.Body=='payload' and shared.Last.Headers['Content-Type']=='text/plain')
+H:PostAsync('ok','payload'); assert(shared.Last.Headers['Content-Type']=='application/json')
+local Before=shared.HttpCalls
+for _,Options in {{Url='ok',Timeout=1},{Url='ok',Compress=1},{Url='ok',Body=''},{Url='ok',Unknown=true},{Url='ok',Headers=false},{Method='GET'}} do assert(not pcall(H.RequestAsync,H,Options)) end
+assert(not pcall(H.PostAsync,H,'ok','x',99) and not pcall(H.PostAsync,H,'ok','x',nil,true))
+assert(not pcall(H.GetAsync,H,'ok','true') and not pcall(H.GetAsync,H,'ok',true,{['Cache-Control']='public'}))
+assert(shared.HttpCalls==Before)
+assert(H:GenerateGUID()=='{wrapped}' and H:GenerateGUID(false)=='bare' and not pcall(H.GenerateGUID,H,1))
+assert(H:UrlEncode(utf8.char(0x96ea)..string.char(0)..' /%')=='%E9%9B%AA%00%20%2F%25')
+assert(not pcall(H.UrlEncode,H,123) and not pcall(H.UrlEncode,H,nil))
+)"); F.NoErrors();
+    });
+    Test("HTTP response capture preserves duplicates and rejects bounds without mutation", [] {
+        std::vector<GLHttpPolicy::ResponseHeader> Headers;
+        Check(GLHttpPolicy::CaptureHeaders("HTTP/1.1 200 OK\r\nX-Test: one\r\nx-test:\t two \t\r\nSet-Cookie: a=1\r\nSet-Cookie: b=2\r\n\r\n",Headers),"Valid response capture failed");
+        Check(Headers.size()==4 && Headers[0].Name=="x-test" && Headers[1].Value=="two" && Headers[3].Value=="b=2","Header order, whitespace or duplicates lost");
+        for (const std::string& Wire:std::vector<std::string>{"HTTP/1.1 200 OK\r\n folded\r\n\r\n","HTTP/1.1 200 OK\r\nBad Name: x\r\n\r\n",std::string("HTTP/1.1 200 OK\r\nX: a\0b\r\n\r\n",27),"HTTP/1.1 200 OK\r\nX: "+std::string(16384,'x')+"\r\n\r\n"}) {
+            Check(!GLHttpPolicy::CaptureHeaders(Wire,Headers) && Headers.size()==4,"Invalid response mutated prior fields");
+        }
+        std::string Wire="HTTP/1.1 200 OK\r\n";
+        for (size_t Index=0;Index<128;++Index) Wire+="X: value\r\n";
+        Check(GLHttpPolicy::CaptureHeaders(Wire+"\r\n",Headers) && Headers.size()==128,"Exact field-count bound rejected");
+        Check(!GLHttpPolicy::CaptureHeaders(Wire+"X: value\r\n\r\n",Headers) && Headers.size()==128,"Oversized field count admitted");
+    });
+    Test("UUID v4 formatting fixes version variant braces and byte order", [] {
+        std::array<uint8_t,16> Bytes{};
+        Check(FormatGLUuid(Bytes,false)=="00000000-0000-4000-8000-000000000000","Zero UUID vector incorrect");
+        Bytes.fill(255);
+        Check(FormatGLUuid(Bytes,true)=="{ffffffff-ffff-4fff-bfff-ffffffffffff}","UUID version/variant or braces incorrect");
+        for (size_t Index=0;Index<Bytes.size();++Index) Bytes[Index]=uint8_t(Index);
+        Check(FormatGLUuid(Bytes,false)=="00010203-0405-4607-8809-0a0b0c0d0e0f","UUID octet order incorrect");
     });
     std::printf("[Runtime:Test] %d passed, %d failed\n", Passed, Failed);
     return Failed == 0 ? 0 : 1;

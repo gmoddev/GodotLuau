@@ -49,8 +49,11 @@ Model/Character change; [qualification](character-v2-validation.md) records actu
 completed configurations and remaining gaps. The
 [main integration record](character-main-integration.md) separates fresh checks
 from retained branch qualification. Release publication and updater distribution
-remain disabled. The [scoped API audit](inherited-api-audit.md) records
-HttpService follow-up GL-023 without changing the qualified GL-005 transport.
+remain disabled. The [scoped API audit](inherited-api-audit.md) records the original
+HttpService GL-023 findings. Its dedicated compatibility branch implements the
+[public API/migration contract](httpservice-api.md) while retaining the qualified
+GL-005 transport; [qualification status](httpservice-validation.md) remains
+separate from main integration.
 
 GL-009 is integrated by normal merge `fc923d2713c39e39fa8db87576bd8e7a5b91ef6d`,
 preserving all four commits at retained branch tip `d5e855b` and the qualified tree.

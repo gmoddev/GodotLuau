@@ -48,7 +48,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 | GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
-| GL-023 | P2 | Source-verified API discrepancies; follow-up only | HttpService errors, headers, optional arguments and JSON/GUID semantics |
+| GL-023 | P2 | Implemented on dedicated branch; full qualification pending | HttpService errors, headers, optional arguments and JSON/GUID semantics |
 | GL-024 | P2 | Integrated and resolved within exercised scope | Part geometry caches retire before engine-server teardown |
 | GL-025 | P2 | Integrated and resolved within exercised scope | Actual AnimationTrack completion and ObjectID-backed lifetime |
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
@@ -1060,7 +1060,14 @@ preserved; no broader issue closure or distribution readiness is inferred.
 
 ## GL-023: HttpService facade and serialization contract discrepancies
 
-**Status: OPEN; source-verified compatibility findings, runtime follow-up pending.**
+**Status: implementation on `fix/gl-023-httpservice-compatibility`; full
+qualification pending, not integrated into main.** The original source findings
+below remain historical evidence. Windows/Linux focused Debug checks now pass
+80 core cases and 10 existing/new HTTP actors, including public failure/header/
+JSON/UUID and cancellation coverage. See the [API and migration contract](httpservice-api.md)
+and [work record](httpservice-validation.md) for remaining matrix/CI requirements.
+
+At the audited revision,
 `src/core/luau_stdlib.h:782–847` hardcodes HttpEnabled, catches public HTTP errors,
 reconstructs RequestAsync with empty Headers, ignores noCache/compress, uses
 legacy JSON fallbacks and constructs timestamp/random GUIDs. Native

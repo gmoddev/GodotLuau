@@ -422,6 +422,56 @@ def Http(Args, Output, Environment):
     return Results
 
 
+def HttpService(Args, Output, Environment):
+    from HttpFixtureServer import Serve
+    Results, Samples = [], []
+    for Case in ['api', 'denied', 'lifecycle', 'tls', 'utilities-A', 'utilities-B']:
+        Project = Output / Case
+        Prepare(Project, Args.extension)
+        ActorEnvironment = dict(Environment)
+        for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
+            Directory = Project / 'profile' / Name
+            Directory.mkdir(parents=True)
+            ActorEnvironment[Name] = str(Directory)
+        if Case == 'tls':
+            shutil.copyfile(Path(__file__).with_name('HttpFixtureCA.pem'), Project / 'http-ca.pem')
+            with (Project / 'project.godot').open('a') as Config:
+                Config.write('\n[network]\ntls/certificate_bundle_override="res://http-ca.pem"\n')
+        Label, FixtureCase = 'httpservice-' + Case, Case.split('-')[0]
+        State = None
+        try:
+            with Serve(Tls=Case == 'tls') as (State, Origin):
+                Extra = ['--http-case', FixtureCase, '--http-origin', Origin]
+                for Name, Value in State.Origins.items():
+                    if Name != 'Http': Extra += ['--http-' + Name.lower(), Value]
+                Process = Start(Args.godot, Project, 'HttpServiceIntegration.gd', Label, Extra, ActorEnvironment)
+                Result = Check(Process, time.monotonic() + Args.timeout, Project, Label, '[Runtime:HttpServiceTest] PASS ' + FixtureCase)
+        finally:
+            if State is not None:
+                (Project / 'server-results.json').write_text(json.dumps({'Hits': State.Hits, 'Connections': State.Connections}, indent=2))
+        if any(Hit['Path'].startswith('/forbidden') for Hit in State.Hits):
+            raise RuntimeError('[Runtime:HttpServiceTest] Rejected request reached server: ' + Case)
+        if FixtureCase in ['denied', 'utilities'] and State.Hits:
+            raise RuntimeError('[Runtime:HttpServiceTest] Offline fixture performed HTTP I/O: ' + Case)
+        if Case == 'tls' and (State.Connections.get('Tls', 0) < 2 or any(State.Connections.get(Name, 0) == 0 for Name in ['Untrusted', 'Stall'])):
+            raise RuntimeError('[Runtime:HttpServiceTest] Missing native TLS rejection path')
+        for Kind in ['stdout', 'stderr']:
+            Text = (Project / (Label + '.' + Kind + '.log')).read_text(errors='replace')
+            if 'PrivateSentinel' in Text or '[Runtime:Script]' in Text:
+                raise RuntimeError('[Runtime:HttpServiceTest] Unexpected script failure or URL disclosure: ' + Case)
+        if FixtureCase == 'utilities':
+            Values = (Project / 'guids.txt').read_text().splitlines()
+            Pattern = r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
+            if len(Values) != 2000 or len(set(Values)) != 2000 or any(not re.fullmatch(Pattern, Value) for Value in Values):
+                raise RuntimeError('[Runtime:HttpServiceTest] Invalid native UUID sample: ' + Case)
+            Samples.extend(Values)
+        Results.append(Result)
+    if len(Samples) != 4000 or len(set(Samples)) != 4000:
+        raise RuntimeError('[Runtime:HttpServiceTest] Cross-process UUID collision')
+    (Output / 'native-evidence.json').write_text(json.dumps({'Actors': 6, 'GuidProcesses': 2, 'GuidSamples': 4000, 'UniqueGuids': 4000, 'UnauthorizedRequests': 0}, indent=2))
+    return Results
+
+
 def Main():
     Parser = argparse.ArgumentParser()
     Parser.add_argument("--godot", type=Path, required=True)
@@ -439,6 +489,7 @@ def Main():
     Parser.add_argument("--resources", action="store_true")
     Parser.add_argument("--filesystem", action="store_true")
     Parser.add_argument("--http", action="store_true")
+    Parser.add_argument("--httpservice", action="store_true")
     Parser.add_argument("--datastore", action="store_true")
     Parser.add_argument("--datastore-probe", type=Path)
     Parser.add_argument("--animation-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Editor"), default=["Local", "Listen", "Dedicated", "Editor"])
@@ -484,6 +535,8 @@ def Main():
         Results = Resources(Args, Args.output, Environment)
     elif Args.filesystem:
         Results = Filesystem(Args, Args.output, Environment)
+    elif Args.httpservice:
+        Results = HttpService(Args, Args.output, Environment)
     elif Args.http:
         Results = Http(Args, Args.output, Environment)
     elif Args.datastore:

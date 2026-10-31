@@ -135,6 +135,12 @@ the inherited runtime already satisfies them. Baseline gaps link to
   wire, concurrency and per-tick allowances; cancellation before VM reclamation;
   protected completion for the current wait only; and failure without a partial
   successful body. Qualification and main integration are distinct ledger states.
+- HttpService public failures must not masquerade as successful empty responses.
+  Response headers retain bounded actual values, including duplicate identity.
+  HttpEnabled reflects native availability and cannot be assigned to grant I/O.
+  JSON errors, null, container shape, finite numeric values and traversal/byte
+  limits follow the [GL-023 contract](httpservice-api.md). Offline helpers expose
+  no native authority, and do not replace GL-009's serialization codec.
 
 ## Distribution and evidence
 

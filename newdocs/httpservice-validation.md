@@ -75,8 +75,48 @@ Exact JSON null/container and migration differences require the API contract
 before implementation qualification. UUID randomness comes from Godot's existing
 Crypto provider; no transport backend or dependency is replaced.
 
+## Implementation and focused qualification
+
+The [public API/migration contract](httpservice-api.md) defines the implemented
+semantics and deliberate differences. Native request capture and UUID randomness
+are added to the existing native manager/facade. HttpService JSON stays in the
+existing caller VM; legacy private JSON and transactional DataStore codecs are
+unchanged. Dependency pins, transport scheduling, owner lifetimes and all grants
+remain unchanged. No assertion was removed to accommodate the new behavior:
+the retained GL-005 facade assertions now require errors/read-only availability
+and actual reason text instead of its documented old fallback behavior.
+
+Focused Windows/Linux Debug output roots:
+`gl023-candidate-v4-{windows,linux}-debug`. Both pass 80 distinct core cases and
+10 native actors (four retained GL-005 plus six GL-023). The GL-023 runner checks
+2,000 native UUIDs in each of two processes, 4,000 unique values overall, and
+retains all samples. Both fixture servers observe zero forbidden requests.
+The new six actors cover API/status/headers/options, default/Client denial,
+manual-resume/owner-reload/shutdown, TLS, and offline JSON/UUID in two processes.
+Core tests execute the production HttpService fragment with a transport double;
+native actors exercise the actual full bootstrap, VM, transport and Crypto.
+
+Retained candidate failures are part of this record:
+
+- v1/v2 Linux core: 59 pass, five fail because the new service tried to freeze
+  a table whose metatable was already protected. v2 exposes the exact bootstrap
+  diagnostic. Construction order was corrected before the passing v3 core.
+- v3 Linux native: API/denial/lifecycle/TLS pass, Utilities compilation fails
+  because GDScript consumed Luau string escapes. A raw fixture string fixes the
+  harness; v4 executes the JSON and UUID assertions. No production assertion
+  was weakened. The failed fixture output/logs remain in their v3 root.
+- The first Windows candidate driver could not quote its compiler setup through
+  cmd. A task-owned batch file captures the configured toolchain environment;
+  v4 builds/tests successfully. This was a launcher failure, not a runtime pass.
+
+The full matrix uses the established hidden Linux container and Windows worker,
+two build jobs, official Godot 4.7.1 for Debug/Release, and the existing matching
+Linux ASan/LSan engine for native sanitizers. Completed fixture library copies
+are deduplicated only after SHA256 equality against immutable evidence copies;
+mutable build outputs are never linked into those evidence files.
+
 ## Qualification status
 
-Baseline reproduction complete. Implementation and qualification pending.
+Focused qualification complete; full matrix and hosted CI pending.
 GL-017/018, broader GL-020 security and graphical limitations remain independent.
 No merge, release publication or updater distribution is authorized.
