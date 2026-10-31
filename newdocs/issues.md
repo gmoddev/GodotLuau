@@ -48,7 +48,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 | GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
-| GL-023 | P2 | Integrated; fresh main verification in progress | HttpService errors, headers, optional arguments and JSON/GUID semantics |
+| GL-023 | P2 | Integrated and resolved within the documented API contract | HttpService errors, headers, optional arguments and JSON/GUID semantics |
 | GL-024 | P2 | Integrated and resolved within exercised scope | Part geometry caches retire before engine-server teardown |
 | GL-025 | P2 | Integrated and resolved within exercised scope | Actual AnimationTrack completion and ObjectID-backed lifetime |
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
@@ -1065,6 +1065,13 @@ preserving the qualified implementation
 `aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4` and all four source commits.**
 The [main integration and caller migration record](httpservice-main-integration.md)
 distinguishes fresh verification from retained branch qualification below.
+Main input `0a66b4ab6c291917745c698728d952657b2d5abf` passes fresh hosted
+Windows/Linux core (80 each) and native (95 each) jobs with verified artifacts.
+The three added actors execute the migrated public HTTP example and strict JSON
+recipe. There are no other executable public HttpService JSON callers to migrate
+in the repository; private service codecs remain unchanged. External/imported
+scripts require their own migration. See the
+[integration manifest](evidence/gl023-main-integration-2026-10-31.json).
 The original findings below remain historical evidence. Windows/Linux
 Debug/Release and core ASan pass 80 cases; all five applicable full native
 configurations (including Linux ASan/LSan) pass 92 actors. Both production SCons

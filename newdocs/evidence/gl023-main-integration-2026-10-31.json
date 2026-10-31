@@ -1,0 +1,409 @@
+{
+  "BaseMain": "0d8942aff3cd8554ef0e3f1fb970a91ac7b7dbdd",
+  "Merge": "669feae9d0602ae385f295390d4e348d8d667e57",
+  "RetainedSourceBranch": "fix/gl-023-httpservice-compatibility",
+  "SourceTip": "479baa563b5f67c2f0a7e671ff9ccbad7265e4c5",
+  "QualifiedImplementation": "aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4",
+  "PreservedSourceCommits": [
+    "918db6611c745f95995007a2b2d2d4d74271ef50",
+    "4066b02a2c5be531543cb95f44eb8a53c18a8c72",
+    "aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4",
+    "479baa563b5f67c2f0a7e671ff9ccbad7265e4c5"
+  ],
+  "TestedIntegrationInput": "0a66b4ab6c291917745c698728d952657b2d5abf",
+  "NativeSource": {
+    "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "PureMergeTreeEqualsSourceTip": true,
+  "NativeSourceAndDependencyPathsEqualQualifiedImplementation": true,
+  "RetainedQualification": {
+    "Path": "newdocs/evidence/gl023-httpservice-2026-10-31.json",
+    "LFNormalizedSHA256": "31a1673d4a134f03f5571ab4953cae059b4e47eca9c0147457c9ac41013b86f3",
+    "Modified": false
+  },
+  "VerifiedAt": "2026-10-31T07:08:12.597003+00:00",
+  "FreshWorkers": [
+    {
+      "Platform": "windows",
+      "InputRevision": "0a66b4ab6c291917745c698728d952657b2d5abf",
+      "Archive": "gl023-main-windows.zip",
+      "ArchiveSHA256": "a640257bd64f8d72c70bb2df952c73d2835bc53ae2dcf7e3909356f54e2020c6",
+      "NativeSource": {
+        "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+        "Files": 89,
+        "Newlines": "LF normalized"
+      },
+      "CoreCases": 80,
+      "NativeActors": 13,
+      "Groups": {
+        "httpservice": 6,
+        "http": 4,
+        "callers": 3
+      },
+      "VerifiedLogCount": 39,
+      "ExtensionSHA256": "8d5fb1bc56ccb4470c489b1e8a9d91bc68444089c3994b7100d56d98fe017fb2",
+      "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+      "CallerNative": {
+        "Actors": 3,
+        "UnauthorizedRequests": 0,
+        "PublishedSnippetSHA256": {
+          "Http": "7669e12f21387d40f3a8d86efc9ebf821323bfcb29c6da96bebe19edbd5816f5",
+          "Json": "213e3fdb325c924848385a7fef858b13deec7624eeea19037dff3df939d42033"
+        }
+      },
+      "HttpServiceNative": {
+        "Actors": 6,
+        "GuidProcesses": 2,
+        "GuidSamples": 4000,
+        "UniqueGuids": 4000,
+        "UnauthorizedRequests": 0
+      },
+      "HttpServicePeakFrameGapSeconds": 0.033972,
+      "Result": "PASS",
+      "QualifiedAdapterAndEngineHashesMatch": true,
+      "HarnessFilesVerified": 57
+    },
+    {
+      "Platform": "linux",
+      "InputRevision": "0a66b4ab6c291917745c698728d952657b2d5abf",
+      "Archive": "gl023-main-linux.zip",
+      "ArchiveSHA256": "b132bc812cebd01f0cdcff3b579d90a60a756d034f79bd38565fa8fe40d77a7e",
+      "NativeSource": {
+        "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+        "Files": 89,
+        "Newlines": "LF normalized"
+      },
+      "CoreCases": 80,
+      "NativeActors": 13,
+      "Groups": {
+        "httpservice": 6,
+        "http": 4,
+        "callers": 3
+      },
+      "VerifiedLogCount": 39,
+      "ExtensionSHA256": "09df809f0b783ee568c422c3b82cd9f2fcbda1ee17dbc341af0bd53e424c4980",
+      "GodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+      "CallerNative": {
+        "Actors": 3,
+        "UnauthorizedRequests": 0,
+        "PublishedSnippetSHA256": {
+          "Http": "7669e12f21387d40f3a8d86efc9ebf821323bfcb29c6da96bebe19edbd5816f5",
+          "Json": "213e3fdb325c924848385a7fef858b13deec7624eeea19037dff3df939d42033"
+        }
+      },
+      "HttpServiceNative": {
+        "Actors": 6,
+        "GuidProcesses": 2,
+        "GuidSamples": 4000,
+        "UniqueGuids": 4000,
+        "UnauthorizedRequests": 0
+      },
+      "HttpServicePeakFrameGapSeconds": 0.031443,
+      "Result": "PASS",
+      "QualifiedAdapterAndEngineHashesMatch": true,
+      "HarnessFilesVerified": 57
+    }
+  ],
+  "Hosted": {
+    "Core": {
+      "Run": 41178250541,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41178250541",
+      "Revision": "0a66b4ab6c291917745c698728d952657b2d5abf",
+      "Result": "PASS",
+      "Jobs": [
+        {
+          "ID": 124470170347,
+          "Name": "Core (Windows, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T06:51:08Z",
+          "CompletedAt": "2026-10-31T06:52:11Z"
+        },
+        {
+          "ID": 124470170494,
+          "Name": "Core (Linux, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T06:51:08Z",
+          "CompletedAt": "2026-10-31T06:51:37Z"
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13034010985,
+          "Name": "runtime-core-Linux-Debug",
+          "SHA256": "2e61038f67e2739d6ef0c07cfef90be63a6fd711e494da6697baf56a8feb6f0c",
+          "VerifiedDistinctCases": 80
+        },
+        {
+          "ID": 13033916450,
+          "Name": "runtime-core-Windows-Debug",
+          "SHA256": "048ca228f5fa55d044e68e275cff717fa1c398c2b38e2c4e11bf9947c9a26262",
+          "VerifiedDistinctCases": 80
+        }
+      ]
+    },
+    "Native": {
+      "Run": 41178250647,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41178250647",
+      "Revision": "0a66b4ab6c291917745c698728d952657b2d5abf",
+      "Result": "PASS",
+      "Jobs": [
+        {
+          "ID": 124470170652,
+          "Name": "Native (Windows, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T06:51:18Z",
+          "CompletedAt": "2026-10-31T07:04:25Z"
+        },
+        {
+          "ID": 124470170780,
+          "Name": "Native (Linux, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T06:51:08Z",
+          "CompletedAt": "2026-10-31T07:03:55Z"
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13034500793,
+          "Name": "runtime-native-Linux-Debug",
+          "SHA256": "2d27854e8dd15e854b13d13a3e91bfa722c9b6d18a5f69273b81291d88fbfbfb",
+          "HttpServicePeakFrameGapSeconds": 0.051667,
+          "VerifiedGuids": 4000,
+          "VerifiedHttpServiceActors": 6,
+          "VerifiedCallerActors": 3,
+          "NativeSource": {
+            "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "NativeActors": 95,
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "callers": 3,
+            "datastore": 23
+          },
+          "HarnessFilesVerified": 57,
+          "LogFilesVerified": 285,
+          "CallerNative": {
+            "Actors": 3,
+            "UnauthorizedRequests": 0,
+            "PublishedSnippetSHA256": {
+              "Http": "7669e12f21387d40f3a8d86efc9ebf821323bfcb29c6da96bebe19edbd5816f5",
+              "Json": "213e3fdb325c924848385a7fef858b13deec7624eeea19037dff3df939d42033"
+            }
+          },
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "DataStoreNative": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "CharacterModelChecks": 76,
+          "CharacterManualActors": 3,
+          "CharacterLatency": [
+            {
+              "Received": 1107,
+              "Forwarded": 1107,
+              "Dropped": 0,
+              "PeakPending": 503,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.2000254249999216
+            },
+            {
+              "Received": 421,
+              "Forwarded": 420,
+              "Dropped": 0,
+              "PeakPending": 20,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.2000371000000314
+            }
+          ],
+          "ExtensionSHA256": "77da8a39a2f6e4a340c301336afd1ac889e92267901e2de6d9b7a4bbb4eb6a67",
+          "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992009,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+              "Bytes": 76056717,
+              "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+            },
+            "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+            "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "VersionStderr": ""
+          },
+          "SummarySHA256": "94d6e065fe3cf7cdbb7b98f3a6c35f17db16a3197f506fac288c3d40a85cc50d"
+        },
+        {
+          "ID": 13034002471,
+          "Name": "runtime-native-Windows-Debug",
+          "SHA256": "8be53fd5fe8759d751287f1ffdd91570ac31440b7ab3499cbfd8b72a6e7cec0c",
+          "HttpServicePeakFrameGapSeconds": 0.128116,
+          "VerifiedGuids": 4000,
+          "VerifiedHttpServiceActors": 6,
+          "VerifiedCallerActors": 3,
+          "NativeSource": {
+            "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "NativeActors": 95,
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "callers": 3,
+            "datastore": 23
+          },
+          "HarnessFilesVerified": 57,
+          "LogFilesVerified": 286,
+          "CallerNative": {
+            "Actors": 3,
+            "UnauthorizedRequests": 0,
+            "PublishedSnippetSHA256": {
+              "Http": "7669e12f21387d40f3a8d86efc9ebf821323bfcb29c6da96bebe19edbd5816f5",
+              "Json": "213e3fdb325c924848385a7fef858b13deec7624eeea19037dff3df939d42033"
+            }
+          },
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "DataStoreNative": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "CharacterModelChecks": 76,
+          "CharacterManualActors": 3,
+          "CharacterLatency": [
+            {
+              "Received": 1116,
+              "Forwarded": 1116,
+              "Dropped": 0,
+              "PeakPending": 503,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.20299999999997453
+            },
+            {
+              "Received": 418,
+              "Forwarded": 417,
+              "Dropped": 0,
+              "PeakPending": 19,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.20299999999997453
+            }
+          ],
+          "ExtensionSHA256": "8c6fb21e31d192a19f3e5a0407778e0e1e6f29aef2b9ade98024add4cb9c428c",
+          "DataStoreWorkerSHA256": "f167c21920ece2e7cb06a773bd075a5966754c84158087ce05a37d888975b2e0",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992673,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+              "Bytes": 84198557,
+              "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "Executable": "Godot_v4.7.1-stable_win64.exe"
+            },
+            "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+            "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "VersionStderr": ""
+          },
+          "SummarySHA256": "538dfbd8ff24050f5f9446324ec9d8a6e6a23be5804fb98e7846dcd3f6d95712"
+        }
+      ]
+    }
+  },
+  "Observation": {
+    "StartedAt": "2026-10-31T06:51:05Z",
+    "Deadline": "2026-10-31T07:21:05Z",
+    "BothNativeJobsObservedCompleteAt": "2026-10-31T07:05:42Z",
+    "Result": "Completed within bound; no pending jobs"
+  },
+  "CallerAudit": {
+    "BaselineRevision": "479baa563b5f67c2f0a7e671ff9ccbad7265e4c5",
+    "Scope": "Existing source-tip consumers before migration; the new JSON recipe is separately qualified by CallerNative",
+    "ExecutablePublicHttpConsumersOutsideTests": [
+      "backend/README.md"
+    ],
+    "ExecutablePublicJsonConsumersOutsideTests": [],
+    "UnchangedSeparateCodecs": [
+      "Teleport private _JSON",
+      "Messaging private _JSON",
+      "MemoryStore private _JSON",
+      "GL-009 native DataStore codec"
+    ],
+    "ExternalImportedScriptsQualified": false
+  },
+  "Limitations": [
+    "GL-017 engine limits",
+    "GL-018 Windows full native sanitizer limitation",
+    "Broader GL-020 adversarial/security qualification",
+    "Graphical qualification",
+    "External/imported caller migration remains application-specific",
+    "Fresh integration is Debug/core/focused-worker and hosted Debug; prior Release/ASan/LSan/SCons qualification retained for identical native implementation"
+  ],
+  "ReleasesAndUpdaterEnabled": false,
+  "UpstreamModified": false,
+  "VerificationHelpers": {
+    "Worker.py": "38506b2fa859aff3c709d9b77da7fa5234960b6f3ac3374d16258e391176f66b",
+    "CollectMain.py": "5c504c92130e9e07c2f2060d920a4959e18c7e827827becbdc2619207af24872",
+    "VerifyWorker.py": "7cbb363ea265e17a9daa0a36b52477a23b5567561470fc0bd67ef8c1859854f0",
+    "VerifyHosted.py": "899eb9826f7daaaf0e60a725478196e1bb728b5a1840c8e9a8f3a4930ee58009",
+    "BuildEvidence.py": "66f4e283e77d6a3eb3f83f0dc26b06f2f245f2603ba904d2a96008647e61ca2a"
+  }
+}

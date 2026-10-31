@@ -153,3 +153,12 @@ records the final worker matrix, native source/fixture/core-test identities,
 engine/product hashes and retained baseline log hashes. Its
 [work record](../filesystem-capabilities-validation.md) separates baseline,
 intermediate failures, local qualification and hosted CI status.
+
+GL-023's [branch manifest](gl023-httpservice-2026-10-31.json) and
+[qualification record](../httpservice-validation.md) remain unchanged. Its
+[main integration manifest](gl023-main-integration-2026-10-31.json) records the
+preserved four commits, identical native implementation, fresh worker/core/native
+results, migration snippet identities and verified hosted artifact digests.
+The [integration record](../httpservice-main-integration.md) distinguishes those
+fresh checks from retained Release/sanitizer/SCons qualification and documents
+external caller migration and remaining limits.

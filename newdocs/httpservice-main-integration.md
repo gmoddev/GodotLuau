@@ -27,7 +27,7 @@ dependency, upstream or unrelated runtime development is authorized here.
 
 ## Consumer audit and migration
 
-The repository search covers public GetAsync/PostAsync/RequestAsync,
+The retained source-tip audit covers public GetAsync/PostAsync/RequestAsync,
 JSONEncode/JSONDecode, HttpEnabled and `_HTTP`/`_JSON` usage in source, scripts,
 tests and documentation. The backend README is the only executable public HTTP
 usage example outside tests; there are no executable public HttpService JSON
@@ -59,6 +59,13 @@ actors remain; integration adds three, for 95 per platform. Core remains 80.
 
 ## Fresh verification
 
+The tested main input is `0a66b4ab6c291917745c698728d952657b2d5abf`, containing
+the pure merge plus caller migration/tests. The final evidence commit changes
+only documentation and this manifest; runtime, dependencies, workflows, test
+harness and both executed published snippets remain identical to the tested
+input. [Machine-readable integration evidence](evidence/gl023-main-integration-2026-10-31.json)
+records identities, archive digests, jobs, executed actor groups and limitations.
+
 Fresh Windows and Linux Debug worker runs at `gl023-main-v1` each pass 80 core
 cases and 13 focused native actors: GL-005 HTTP (4), GL-023 public API (6), and
 published caller migration (3). Both run the cached adapter after a successful
@@ -73,10 +80,51 @@ python Worker.py probe gl023-main-v1 debug
 The task-owned worker driver invokes CMake, CTest/CheckCoreCI, then
 `RunQualification.py --httpservice`, `--http` and `--callers` with headless Godot
 4.7.1, isolated profiles, captured diagnostics and process timeouts. Its output
-retains source/harness/library/engine and log hashes. Three caller cases pass
-on each platform and both report zero unauthorized requests; all 4,000 UUID
-samples per platform are unique. Hosted main verification remains pending.
-No pending run is claimed as passing.
+retains source/harness/library/engine and log hashes. All 57 harness files and
+39 native logs per worker match their collected hashes; adapter and engine
+hashes also match retained qualification. Three caller cases pass on each
+platform and both report zero unauthorized requests; all 4,000 UUID samples per
+platform are unique. Worker peak public HTTP frame gaps are 33.972 ms (Windows)
+and 31.443 ms (Linux), below the existing 250 ms fixture bound.
+
+Fresh hosted main jobs and downloaded artifacts both pass:
+
+| Workflow | Windows Debug | Linux Debug |
+| --- | --- | --- |
+| [Core 41178250541](https://github.com/gmoddev/GodotLuau/actions/runs/41178250541) | 80 distinct cases | 80 distinct cases |
+| [Native 41178250647](https://github.com/gmoddev/GodotLuau/actions/runs/41178250647) | 95 actors | 95 actors |
+
+The four ZIP digests match GitHub artifact metadata. Core XML/discovery confirms
+the actual 80 cases, including public HttpService coverage. Native artifacts
+match the 89-file runtime fingerprint, pins and all 57 committed harness hashes;
+286 Windows and 285 Linux log hashes are verified. Both contain actual PASS
+markers for all six GL-023 actors and all three caller actors, with matching
+published snippet hashes and exact expected server hits (none for denied
+origins). Each platform retains 4,000 unique valid UUID v4 samples. Hosted peak
+public HTTP frame gaps are 128.116 ms (Windows) and 51.667 ms (Linux), below
+250 ms; these fixture samples are not application performance guarantees.
+
+The retained Model fixture executes 76 checks, all three manual Character actors
+execute, and both real delay/reordering proxies forward traffic with zero drops.
+DataStore artifacts preserve four fault stages, four process-kill stages and
+40 independent increments; they do not establish power-loss durability.
+All original groups remain present, with no weakened assertions.
+
+Observation was bounded from 06:51:05 to 07:21:05 UTC on 2026-10-31. Both native
+jobs were observed successful by 07:05:42; artifact verification finished within
+that window. There are no pending integration jobs. Raw worker ZIPs and all four
+hosted ZIPs remain in ignored `.runtime-tests/GL023Main`; the manifest preserves
+their hashes and the worker locations below. Hosted artifacts expire after
+seven days and are not permanent distribution.
+
+Worker outputs remain at
+`DockerPC:C:/Sandbox/Codex/Artifacts/GodotLuau/gl023-main-v1-windows-debug` and
+`linuxbox:/opt/codex/godotluau/results/gl023-main-v1-linux-debug` (container
+`/work/results/...`). Worker archives are `C:/Sandbox/Codex/gl023-main-windows.zip`
+and `/opt/codex/godotluau/gl023-main-linux.zip`. Prior qualification records and
+failed attempts remain unchanged. No new runtime/test qualification failure
+occurred in this integration; an initial read-only Windows inspection used the
+wrong remote shell separators and was corrected before running tests.
 
 ## Retained limitations
 
