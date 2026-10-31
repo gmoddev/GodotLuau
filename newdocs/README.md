@@ -28,6 +28,19 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-007 is fixed and qualified on retained `security/gl-007-character-authority`
+at source `3bb641a`, based on main `4ea5311`, and remains unmerged. The
+[qualification record](character-authority-validation.md) retains Windows/Linux
+Debug/Release, core ASan, Linux full-native ASan/LSan, both production products
+and all four verified hosted jobs/artifacts. The
+[character work record](character-development.md) separates actual bypass
+reproductions, architecture mapping and development failures from those final
+results. [ADR-006](adr-006-character-authority.md) defines the bounded character
+authority and presentation catalog contract.
+Character V2 remains a proposed, subsequent stacked stage; neither stage is
+authorized for merge. The [scoped API audit](inherited-api-audit.md) records
+HttpService follow-up GL-023 without changing the qualified GL-005 transport.
+
 GL-009 is integrated by normal merge `fc923d2713c39e39fa8db87576bd8e7a5b91ef6d`,
 preserving all four commits at retained branch tip `d5e855b` and the qualified tree.
 The [work record](datastore-validation.md) separates reproduced baseline failures

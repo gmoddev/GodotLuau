@@ -32,7 +32,9 @@ class RobloxWorkspace2D : public Node2D {
     GDCLASS(RobloxWorkspace2D, Node2D);
 
 protected:
-    static void _bind_methods() {}
+    static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("build_local_character"), &RobloxWorkspace2D::build_local_character);
+    }
 
     void _notification(int p_what) {
         // ── Editor: create base floor ────────────────────────────
@@ -81,8 +83,7 @@ protected:
     }
 
 public:
-    void _ready() override {
-        if (Engine::get_singleton()->is_editor_hint()) return;
+    void build_local_character() {
 
         // ── Find StarterPlayer (sibling in the DataModel) ────────
         //// ── Buscar StarterPlayer (hermano en el DataModel) ────────
@@ -131,6 +132,11 @@ public:
             GL_DEBUG_PRINT("[GodotLuau] 2D player scripts loaded.");
         }
 
+    }
+
+    void _ready() override {
+        if (Engine::get_singleton()->is_editor_hint()) return;
+        build_local_character();
         // RunService oculto: como en Roblox, existe en runtime pero no en el editor
         if (get_parent() && !get_parent()->get_node_or_null("RunService")) {
             Node* rs = Object::cast_to<Node>(ClassDB::instantiate(StringName("RunService")));

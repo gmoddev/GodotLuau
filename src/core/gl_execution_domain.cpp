@@ -144,6 +144,10 @@ int GLCreateThread(lua_State* Anchor) {
 }
 }
 
+bool GLExecutionDomain::IsClientExecution() {
+    return GLActiveBudget && GLActiveBudget->GetKind() == GLDomainKind::Client;
+}
+
 GLExecutionDomain::BudgetScope::BudgetScope(GLExecutionDomain& Selected) : Domain(Selected) {
     if (Domain.BudgetDepth++ == 0) {
         Pushed = true;

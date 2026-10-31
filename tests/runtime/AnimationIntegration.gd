@@ -95,7 +95,16 @@ func LoadTrack(Name: String) -> Node:
     return Tracks.back() if not Tracks.is_empty() else null
 
 func SendState() -> void:
-    Network.rpc_id(1, "_relay_state", Vector3(Index * 10, 0, 0), 0.0, 999, 100.0, 0.0, false)
+    var Peer: int = Network.call("get_peer_id")
+    var Deadline := Time.get_ticks_msec() + 5000
+    var State: Dictionary = Network.call("GetCharacterStates").get(Peer, {})
+    while int(State.get("Epoch", 0)) == 0:
+        Check(Time.get_ticks_msec() < Deadline, "character grant deadline")
+        if Time.get_ticks_msec() >= Deadline: return
+        Network.rpc_id(1, "_character_ready", 2)
+        await create_timer(0.05).timeout
+        State = Network.call("GetCharacterStates").get(Peer, {})
+    Network.rpc_id(1, "_relay_character", State.Epoch, 1, State.Position, 0.0, 0.0, false)
 
 func Finish() -> void:
     print("[Network:AnimationTest] ", Role, " ", "FAIL" if Failed else "PASS")
@@ -120,6 +129,8 @@ func Run() -> void:
     Game.set_meta("Port", Port)
     Create("Players", "Players", Game)
     Create("RunService", "RunService", Game)
+    if Role == "client":
+        ProjectSettings.set_setting("godot_luau/character_animation_assets", PackedStringArray(["res://Wave.tres", "res://Dance.tres", "res://Once.tres"]))
     Network = Create("NetworkService", "NetworkService", Game)
     await process_frame
     Network.set_process(false) # Explicit state sends make pre-puppet ordering deterministic.
@@ -128,6 +139,7 @@ func Run() -> void:
             var Clip := Animation.new()
             Clip.length = 0.1 if Name == "Once" else 60.0
             Check(ResourceSaver.save(Clip, "res://" + Name + ".tres") == OK, "fixture clip")
+            Check(Network.call("RegisterCharacterAnimation", "res://" + Name + ".tres"), "server registers presentation clip before peers")
     if Mode == "Local":
         MakeCharacter()
         Track = await LoadTrack("Wave")
@@ -192,7 +204,10 @@ func RunServer() -> void:
     await Wait("client2.joined")
     Second = int(Read("client2.peer"))
     await Drain()
-    if Mode == "Listen": Network.rpc("_recv_state", 1, Vector3.ZERO, 0.0, 1, 100.0, 0.0, false)
+    if Mode == "Listen":
+        Network.set_process(true)
+        await create_timer(0.08).timeout
+        Network.set_process(false)
     Mark("spawn")
     await Wait("both.spawned")
     await Drain()
@@ -234,6 +249,8 @@ func RunServer() -> void:
     var Before := Cache().duplicate(true)
     Network.call("_relay_anim", "res://Wave.tres", "Wave", 1.0, true, true)
     Network.call("_recv_anim", Second, "res://Wave.tres", "Wave", 1.0, true, true)
+    Network.call("_relay_anim_v2", 0, "res://Wave.tres", "Wave", 1.0, true, true)
+    Network.call("_recv_anim_v2", Second, 0, "res://Wave.tres", "Wave", 1.0, true, true)
     Check(Cache() == Before, "wrong-role/sender-zero operations have no mutation")
     for Target in [0, -1, 2147483647]:
         Network.rpc("_recv_anim", Target, "res://Wave.tres", "Wave", 1.0, true, true)
@@ -295,7 +312,7 @@ func RunClient() -> void:
         MakeCharacter()
         Track = await LoadTrack("Dance")
         Track.call("play")
-    SendState()
+    await SendState()
     Mark("client" + str(Index) + ".spawned")
     if Index == 1:
         await Wait("client2.spawned")
@@ -318,6 +335,12 @@ func RunClient() -> void:
         Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "Wave", 21.0, true, true)
         Network.rpc_id(1, "_relay_anim", "x".repeat(1025), "Wave", 1.0, true, true)
         Network.rpc_id(1, "_relay_anim", "res://Wave.tres", "x".repeat(129), 1.0, true, true)
+        var Epoch: int = Network.call("GetCharacterStates")[Network.call("get_peer_id")].Epoch
+        for Invalid in [NAN, INF, -1.0, 21.0]:
+            Network.rpc_id(1, "_relay_anim_v2", Epoch, "res://Wave.tres", "Wave", Invalid, true, true)
+        Network.rpc_id(1, "_relay_anim_v2", Epoch - 1, "res://Wave.tres", "STALE_EPOCH", 1.0, true, true)
+        Network.rpc_id(1, "_relay_anim_v2", Epoch, "x".repeat(1025), "Wave", 1.0, true, true)
+        Network.rpc_id(1, "_relay_anim_v2", Epoch, "res://Wave.tres", "x".repeat(129), 1.0, true, true)
         Mark("settings.sent")
     await Wait("replace")
     if Index == 2:
@@ -388,7 +411,7 @@ func RunClient() -> void:
         await Wait("reconnect.play")
         Track = await LoadTrack("Dance")
         Track.call("play")
-        SendState()
+        await SendState()
         Mark("reconnect.play.sent")
     else:
         await Wait("reconnect")

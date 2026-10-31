@@ -39,8 +39,10 @@
 // ════════════════════════════════════════════════════════════════════
 
 #include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/classes/config_file.hpp>
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/node2d.hpp>
+#include <godot_cpp/classes/character_body2d.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/multiplayer_peer.hpp>
@@ -83,6 +85,7 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #include <vector>
 #include <map>
+#include <cmath>
 
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/dir_access.hpp>
@@ -97,6 +100,7 @@
 #include "roblox_services.h"   // RobloxValue (replicar subtipo IntValue/StringValue)
 #include "gl_debug.h"     // gl_debug_on (prints internos solo en Modo Debug)
 #include "gl_avatar.h"    // personaje R6 + animador (muñecos remotos)
+#include "humanoid2d.h"
 
 using namespace godot;
 
@@ -329,6 +333,175 @@ class NetworkService : public Node {
     // Réplica de jugadores
     bool   is_2d = false;
     double bcast_timer = 0.0;
+    struct CharacterAuthority {
+        uint64_t Identity = 0;
+        int64_t Epoch = 0, Life = 0, InputSequence = 0, OutputSequence = 0;
+        uint64_t AcceptedInputs = 0, RateRejectedInputs = 0;
+        Vector3 Position;
+        double Yaw = 0, Walk = 16, Jump = 20, Gravity = 45;
+        double Credit = 0, VerticalCredit = 0, AirTime = 0, Rise = 0;
+        double Tokens = 4, Updated = 0, Accepted = 0, DeadSince = -1, Synced = 0;
+        float Health = 100, Maximum = 100, Speed = 0;
+        double Published = 0;
+        bool Is2D = false, Air = false;
+    };
+    std::map<int, CharacterAuthority> CharacterAuthorities;
+    std::vector<int> CharacterTickPeers;
+    struct CharacterSnapshot { int64_t Epoch = 0, Sequence = 0, Life = 0; };
+    std::map<int, CharacterSnapshot> CharacterSnapshots;
+    int64_t NextCharacterEpoch = 1;
+    CharacterAuthority LocalCharacterGrant;
+    uint64_t LocalGrantedCharacter = 0;
+    int64_t LocalCharacterSequence = 0;
+    double CharacterReadyAt = 0;
+    Vector3 LocalServerPosition;
+    double LocalServerMovedAt = 0, LocalNextSync = 0;
+    int64_t LocalSyncPending = 0;
+
+    static Node* LiveCharacter(uint64_t Identity) {
+        Node* Result = Object::cast_to<Node>(ObjectDB::get_instance(Identity));
+        return Result && Result->is_inside_tree() && !Result->is_queued_for_deletion() ? Result : nullptr;
+    }
+    static double CharacterTime() { return Time::get_singleton()->get_ticks_usec() / 1000000.0; }
+    static bool FinitePose(const Vector3& Position, double Yaw) {
+        return Position.is_finite() && std::isfinite(Yaw) && Math::abs(Yaw) <= Math_PI * 2;
+    }
+    static Vector3 CharacterPosition(Node* Character) {
+        if (auto Body = Object::cast_to<Node3D>(Character)) return Body->get_global_position();
+        if (auto Body = Object::cast_to<Node2D>(Character)) {
+            Vector2 Position = Body->get_global_position();
+            return Vector3(Position.x, Position.y, 0);
+        }
+        return Vector3();
+    }
+    static double CharacterYaw(Node* Character) {
+        if (auto Body = Object::cast_to<Node3D>(Character)) return Body->get_global_rotation().y;
+        if (auto Body = Object::cast_to<Node2D>(Character)) return Body->get_global_rotation();
+        return 0;
+    }
+    static Node* CharacterHealth(Node* Character) {
+        return Character ? Character->get_node_or_null("Humanoid") : nullptr;
+    }
+    void PublishCharacter(int Peer, float Speed = -1, bool Air = false) {
+        auto Found = CharacterAuthorities.find(Peer);
+        if (Found == CharacterAuthorities.end() || !LiveCharacter(Found->second.Identity) || !peer_seq_uid.count(Peer)) return;
+        auto& State = Found->second;
+        if (Speed >= 0) { State.Speed = Speed; State.Air = Air; }
+        if (State.Health <= 0) { State.Speed = 0; State.Air = false; }
+        State.Published = CharacterTime();
+        rpc("_recv_character", Peer, State.Epoch, ++State.OutputSequence, State.Position, State.Yaw,
+            State.Health, State.Maximum, State.Speed, State.Air, State.Is2D, State.Life);
+    }
+    void GrantCharacter(int Peer, bool Respawn, bool ResetMotion = true) {
+        auto Found = CharacterAuthorities.find(Peer);
+        if (Found == CharacterAuthorities.end()) return;
+        auto& State = Found->second;
+        State.Epoch = NextCharacterEpoch++;
+        if (Respawn) State.Life = State.Epoch;
+        auto Animation = peer_anim.find(Peer);
+        if (Animation != peer_anim.end()) Animation->second.Life = State.Life;
+        State.InputSequence = 0;
+        State.OutputSequence = 0;
+        State.Accepted = State.Updated = CharacterTime();
+        State.Credit = State.Walk * 1.5 * 2.0 / Engine::get_singleton()->get_physics_ticks_per_second();
+        if (ResetMotion) {
+            State.VerticalCredit = 0;
+            State.AirTime = 0;
+            State.Rise = 0;
+            State.Air = false;
+        }
+        State.Tokens = 4;
+        State.Speed = 0;
+        rpc_id(Peer, "_character_grant", State.Epoch, State.Position, State.Yaw,
+            State.Walk, State.Jump, State.Gravity, State.Is2D, Respawn);
+        PublishCharacter(Peer);
+    }
+    void SpawnCharacter(int Peer) {
+        if (!is_server() || GLExecutionDomain::IsClientExecution() || !peer_seq_uid.count(Peer)) return;
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+        if (PlayerObject* Player = _peer_player(Peer)) {
+            uint64_t PlayerIdentity = static_cast<uint64_t>(Player->get_instance_id());
+            Player->fire_character_removing();
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            Player = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+            if (Player && !Player->is_queued_for_deletion()) Player->set_character_silent(nullptr);
+        }
+        CharacterAuthorities.erase(Peer);
+        if (puppets.count(Peer)) _remove_puppet(Peer); // retain GL-020 pre-puppet cache on first birth
+        Node* Root = get_tree()->get_root();
+        bool Is2D = _find_by_class(Root, "RobloxWorkspace2D") != nullptr;
+        is_2d = Is2D;
+        Vector3 Position = Is2D ? Vector3(200, 200, 0) : Vector3(0, 5, 0);
+        Node* World = _find_by_class(Root, Is2D ? "RobloxWorkspace2D" : "RobloxWorkspace");
+        PlayerObject* Player = _ensure_peer_player(Peer);
+        if (World && World->has_method("GetCharacterSpawn")) Position = World->call("GetCharacterSpawn", Player);
+        if (!FinitePose(Position, 0)) return;
+        int Index = static_cast<int>(peer_seq_uid.at(Peer));
+        if (Is2D) _update_puppet2d(Peer, Index, Vector2(Position.x, Position.y), 0);
+        else _update_puppet3d(Peer, Index, Position, 0, -1, 0, false);
+        if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion() || !peer_seq_uid.count(Peer)) return;
+        auto Puppet = puppets.find(Peer);
+        if (Puppet == puppets.end() || !_valid(Puppet->second.node) || Puppet->second.node->is_queued_for_deletion()) return;
+        Node* Character = Puppet->second.node;
+        Node* Health = CharacterHealth(Character);
+        if (!Health) return;
+        CharacterAuthority State;
+        State.Identity = static_cast<uint64_t>(Character->get_instance_id());
+        State.Position = CharacterPosition(Character);
+        State.Yaw = CharacterYaw(Character);
+        State.Is2D = Is2D;
+        // CharacterAdded may select a spawn or rotate the character. The
+        // presentation target must adopt that trusted result before its tick.
+        Puppet->second.tpos = State.Position;
+        Puppet->second.tpos2d = Vector2(State.Position.x, State.Position.y);
+        Puppet->second.tyaw = State.Yaw;
+        if (Is2D) { State.Walk = 200; State.Jump = 500; State.Gravity = 980; }
+        else if (auto Hum = Object::cast_to<Humanoid>(Health)) {
+            State.Walk = Hum->get_walk_speed(); State.Jump = Hum->get_jump_power(); State.Gravity = Hum->get_gravity_val();
+        }
+        State.Health = Health->call("get_health"); State.Maximum = Health->call("get_max_health");
+        CharacterAuthorities[Peer] = State;
+        GrantCharacter(Peer, true);
+    }
+    void RefreshCharacter(int Peer) {
+        auto Found = CharacterAuthorities.find(Peer);
+        if (Found == CharacterAuthorities.end()) return;
+        auto& State = Found->second;
+        Node* Character = LiveCharacter(State.Identity);
+        if (!Character) return;
+        Vector3 Position = CharacterPosition(Character);
+        double Yaw = CharacterYaw(Character);
+        Node* Health = CharacterHealth(Character);
+        if (!Health) return;
+        bool Changed = false;
+        if (State.Health != static_cast<float>(Health->call("get_health")) ||
+            State.Maximum != static_cast<float>(Health->call("get_max_health"))) {
+            State.Health = Health->call("get_health"); State.Maximum = Health->call("get_max_health");
+            Changed = true;
+        }
+        bool Corrected = Position != State.Position || !Math::is_equal_approx(Yaw, State.Yaw);
+        if (auto Hum = Object::cast_to<Humanoid>(Health)) {
+            if (State.Walk != Hum->get_walk_speed() || State.Jump != Hum->get_jump_power() || State.Gravity != Hum->get_gravity_val()) {
+                State.Walk = Hum->get_walk_speed(); State.Jump = Hum->get_jump_power(); State.Gravity = Hum->get_gravity_val();
+                Corrected = true;
+            }
+        }
+        if (Corrected && FinitePose(Position, Yaw)) {
+            State.Position = Position; State.Yaw = Yaw;
+            auto Puppet = puppets.find(Peer);
+            if (Puppet != puppets.end()) {
+                Puppet->second.tpos = Position; Puppet->second.tpos2d = Vector2(Position.x, Position.y); Puppet->second.tyaw = Yaw;
+            }
+            GrantCharacter(Peer, false);
+        } else if (Changed) PublishCharacter(Peer);
+        if (State.Health <= 0 && State.DeadSince < 0) State.DeadSince = CharacterTime();
+        auto Animation = peer_anim.find(Peer);
+        if (State.Health <= 0 && Animation != peer_anim.end() && Animation->second.play) {
+            Animation->second.play = false;
+            gl_anim_apply(Character, "", "", 1, false, false);
+            rpc("_recv_anim_v2", Peer, State.Life, "", "", 1.0f, false, false);
+        }
+    }
     std::map<int, Puppet> puppets;   // peerId -> muñeco visible
     std::map<int, uint64_t> peer_player_ids;   // peerId remoto -> ObjectID del objeto Player
 
@@ -358,15 +531,66 @@ class NetworkService : public Node {
 
     // Última salud que difundió cada peer (1.14.11). El servidor la compara con
     // la de su copia para saber si un ServerScript la cambió y avisar al dueño.
-    std::map<int, float> peer_net_health;
-    double health_auth_timer = 0.0;
 
     // Animación activa de cada peer (1.14.12). Sirve para dos cosas: aplicarla en
     // cuanto aparece su muñeco (la animación puede llegar ANTES que el primer
     // estado de posición) y para que el servidor se la cuente a quien entra tarde
     // —si no, una animación en bucle sería invisible para el recién llegado—.
-    struct AnimState { String id; String name; float speed = 1.0f; bool looped = false; bool play = false; int64_t UserIdentity = 0; };
+    struct AnimState { String id; String name; float speed = 1.0f; bool looped = false; bool play = false; int64_t UserIdentity = 0; int64_t Life = 0; Ref<Animation> Checked; GLPresentationPlayback Playback; };
     std::map<int, AnimState> peer_anim;
+    std::map<int, std::pair<double, double>> AnimationBudgets;
+    std::map<String, Ref<Animation>> CharacterAnimationCatalog;
+    std::map<String, String> CharacterAnimationAliases;
+    uint64_t CharacterAnimationBytes = 0;
+public:
+    Ref<Animation> GetCharacterAnimation(const String& Identity) const {
+        auto Alias = CharacterAnimationAliases.find(Identity);
+        if (Alias == CharacterAnimationAliases.end()) return Ref<Animation>();
+        auto Clip = CharacterAnimationCatalog.find(Alias->second);
+        return Clip == CharacterAnimationCatalog.end() ? Ref<Animation>() : GLCopyPresentationAnimation(Clip->second);
+    }
+    bool RegisterCharacterAnimation(const String& Identity) {
+        if (GLExecutionDomain::IsClientExecution() || mode == 2 || is_coordinator ||
+            !is_inside_tree() || is_queued_for_deletion() || Identity.length() > 1024) return false;
+        Ref<MultiplayerAPI> Multiplayer = _mp();
+        if (Multiplayer.is_valid() && Multiplayer->get_peers().size() > 0) return false;
+        String Path = gl_is_roblox_asset(Identity) ? gl_local_asset_path(Identity) : Identity;
+        if (!GLProjectResourcePath(Path)) return false;
+        if (CharacterAnimationCatalog.count(Path)) {
+            if (CharacterAnimationAliases.count(Identity)) return true;
+            if (CharacterAnimationAliases.size() >= 128) return false;
+            CharacterAnimationAliases.emplace(Identity, Path);
+            return true;
+        }
+        if (CharacterAnimationCatalog.size() >= 64) return false;
+        if (CharacterAnimationAliases.size() > 126) return false;
+        String StoredPath = Path;
+        uint64_t RemapBytes = 0;
+        // Exported text resources may exist only as a remapped binary inside
+        // the PCK. Bound the stored bytes without requiring the source .tres.
+        for (int Depth = 0; Depth < 4 && !FileAccess::file_exists(StoredPath); ++Depth) {
+            Ref<FileAccess> Remap = FileAccess::open(StoredPath + ".remap", FileAccess::READ);
+            if (Remap.is_null() || Remap->get_length() > 4096) return false;
+            RemapBytes += Remap->get_length();
+            Ref<ConfigFile> Config; Config.instantiate();
+            if (Config->parse(Remap->get_as_text()) != OK) return false;
+            String Next = Config->get_value("remap", "path", "");
+            if (!GLProjectResourcePath(Next) || Next == StoredPath) return false;
+            StoredPath = Next;
+        }
+        Ref<FileAccess> File = FileAccess::open(StoredPath, FileAccess::READ);
+        if (File.is_null()) return false;
+        uint64_t Bytes = File->get_length() + RemapBytes; File->close();
+        if (Bytes > 8 * 1024 * 1024 || CharacterAnimationBytes > 64 * 1024 * 1024 - Bytes) return false;
+        Ref<Animation> Clip = GLPresentationClip(Path, "");
+        if (Clip.is_null()) return false;
+        CharacterAnimationCatalog.emplace(Path, Clip);
+        CharacterAnimationAliases.emplace(Path, Path);
+        CharacterAnimationAliases.emplace(Identity, Path);
+        CharacterAnimationBytes += Bytes;
+        return true;
+    }
+private:
     uint64_t LocalAnimationCharacter = 0;
     AnimState LocalAnimation;
     bool AnimationShutdown = false;
@@ -404,9 +628,12 @@ class NetworkService : public Node {
         if (mode == 1) {
             peer_anim[Identity] = State;
             peer_anim[Identity].UserIdentity = peer_seq_uid.at(Identity);
-            rpc("_recv_anim", Identity, State.id, State.name, State.speed, State.looped, State.play);
+            auto Character = CharacterAuthorities.find(Identity);
+            int64_t Life = Character == CharacterAuthorities.end() ? 0 : Character->second.Life;
+            peer_anim[Identity].Life = Life;
+            rpc("_recv_anim_v2", Identity, Life, State.id, State.name, State.speed, State.looped, State.play);
         } else if (mode == 2 && net_connected) {
-            rpc_id(1, "_relay_anim", State.id, State.name, State.speed, State.looped, State.play);
+            rpc_id(1, "_relay_anim_v2", LocalCharacterGrant.Epoch, State.id, State.name, State.speed, State.looped, State.play);
         }
     }
     void OnAnimationCharacterGone(uint64_t CharacterIdentity) {
@@ -748,6 +975,11 @@ class NetworkService : public Node {
         rpc_config("_relay_state",   u);
         rpc_config("_recv_state2d",  ServerUnreliable);
         rpc_config("_relay_state2d", u);
+        rpc_config("_character_ready", r);
+        rpc_config("_character_sync", r);
+        rpc_config("_character_grant", ServerReliable);
+        rpc_config("_relay_character", u);
+        rpc_config("_recv_character", ServerUnreliable);
         rpc_config("_recv_remove",   ServerReliable);
         rpc_config("_relay_chat",    r);   // chat: confiable (no se pierde ningun mensaje)
         rpc_config("_recv_chat",     ServerReliable);
@@ -761,6 +993,8 @@ class NetworkService : public Node {
         rpc_config("_gl_teleport",   r);   // TeleportService: cambiar de mundo (1.14.17)
         rpc_config("_relay_anim",    r);   // animaciones: NO se pueden perder (1.14.12)
         rpc_config("_recv_anim",     ServerReliable);
+        rpc_config("_relay_anim_v2", r);
+        rpc_config("_recv_anim_v2", ServerReliable);
         // RemoteEvent por red (Fase 2): confiables y no-confiables, ambos sentidos
         rpc_config("_re_deliver_server",  r);
         rpc_config("_re_deliver_client",  r);
@@ -866,7 +1100,7 @@ class NetworkService : public Node {
         pup->add_child(hum);
     }
 
-    void _update_puppet3d(int key, int idx, Vector3 pos, float yaw, float hp, float sp, bool air) {
+    void _update_puppet3d(int key, int idx, Vector3 pos, float yaw, float hp, float sp, bool air, float Maximum = 100) {
         // El estado 3D que llega DEFINE la dimensión del mundo: no dependemos del
         // is_2d cacheado (que puede no estar puesto si el jugador local aún no nació).
         is_2d = false;
@@ -875,9 +1109,11 @@ class NetworkService : public Node {
             Node* wsp = _workspace();
             if (!wsp) return;
             Node3D* pup = _make_puppet3d(idx);
+            if (mode == 1) CharacterAuthorities[key].Identity = static_cast<uint64_t>(pup->get_instance_id());
             pup->set_name(String("RemotePlayer_") + String::num_int64(key));
             wsp->add_child(pup);
             pup->set_global_position(pos);
+            pup->set_rotation(Vector3(0, yaw, 0));
             // ── Personaje remoto REAL (1.14.11) ──────────────────────────
             // Antes esto era un muñeco: el rig entero colgaba de "Visual" y solo
             // se subía el HumanoidRootPart. Resultado: `hit.Parent:FindFirstChild
@@ -890,6 +1126,13 @@ class NetworkService : public Node {
             // aplanado no aplica y "Visual" sigue ahí: se sube al menos el HRP.
             gl_lift_hrp(pup, pup->get_node_or_null("Visual"));
             _ensure_puppet_humanoid(pup);
+            // Server birth retains native health. Only a validated server
+            // snapshot can initialize a client's replica health.
+            if (mode == 2) {
+                Node* Health = CharacterHealth(pup);
+                if (Health) Health->call("set_max_health", Maximum);
+                _apply_puppet_health(pup, key, hp);
+            }
             // Si el muñeco sale del árbol por fuera (Luau Destroy/ClearAllChildren),
             // quitar la entrada ANTES de que el puntero quede colgando.
             pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key, static_cast<uint64_t>(pup->get_instance_id())));
@@ -901,6 +1144,9 @@ class NetworkService : public Node {
             // El muñeco es el .Character del objeto Player de ese peer.
             // Primer personaje → PlayerAdded y LUEGO CharacterAdded (orden Roblox).
             if (PlayerObject* po = _ensure_peer_player(key)) {
+                uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+                uint64_t PlayerIdentity = static_cast<uint64_t>(po->get_instance_id());
+                uint64_t CharacterIdentity = static_cast<uint64_t>(pup->get_instance_id());
                 String pn = String("Player") + String::num_int64(idx);
                 po->set_name(pn); po->display_name = pn;
                 po->set_character_silent(pup);
@@ -908,57 +1154,75 @@ class NetworkService : public Node {
                     po->added_fired = true;
                     if (Players* ps = _players_service()) ps->fire_player_added(po);
                 }
+                if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion() || !LiveCharacter(CharacterIdentity)) return;
+                po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+                if (!po || po->is_queued_for_deletion() || po->get_character() != pup) return;
                 po->fire_character_added();
+                if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion() || !LiveCharacter(CharacterIdentity)) return;
             }
             gl_mp_log(String("Player") + String::num_int64(idx) + " aparecio en tu mundo (pos " + String(pos) + ")");
-            _apply_puppet_health(pup, key, hp);
             // Animación que ya estaba sonando antes de que naciera su muñeco (1.14.12).
             auto ait = peer_anim.find(key);
             if (ait != peer_anim.end() && ait->second.play && HasAnimationSession(key) &&
-                ait->second.UserIdentity == peer_seq_uid.at(key))
-                gl_anim_apply(pup, ait->second.id, ait->second.name, ait->second.speed, ait->second.looped, true);
+                ait->second.UserIdentity == peer_seq_uid.at(key)) {
+                uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+                AnimState State = ait->second;
+                gl_anim_apply(pup, State.id, State.name, State.speed, State.looped, true, State.Checked, &State.Playback);
+                if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+                ait = peer_anim.find(key);
+                if (ait != peer_anim.end() && ait->second.Life == State.Life && ait->second.UserIdentity == State.UserIdentity) {
+                    ait->second.Playback = State.Playback;
+                    if (State.Playback.Checked.is_valid()) ait->second.Checked = State.Playback.Checked;
+                }
+            }
         } else {
             it->second.tpos = pos; it->second.tyaw = yaw; it->second.has_target = true;
             it->second.anim_sp = sp; it->second.anim_air = air;
-            _apply_puppet_health(it->second.node, key, hp);
+            if (auto Body = Object::cast_to<Node3D>(it->second.node)) {
+                Body->set_global_position(pos);
+                Vector3 Rotation = Body->get_global_rotation(); Rotation.y = yaw; Body->set_global_rotation(Rotation);
+            }
+            if (mode == 2) {
+                if (Node* Health = CharacterHealth(it->second.node)) Health->call("set_max_health", Maximum);
+                _apply_puppet_health(it->second.node, key, hp);
+            }
         }
     }
-    // Salud del personaje remoto (1.14.11). La difunde su DUEÑO junto con la
-    // posición; se anota lo último recibido para poder distinguir después un
-    // cambio hecho por el SERVIDOR (ver _health_authority_tick).
+    // Only a validated server snapshot reaches replica health. Client input
+    // contains no health proposal and never enters this helper on the server.
     void _apply_puppet_health(Node* pup, int key, float hp) {
-        if (!pup || hp < 0.0f) return;
+        (void)key;
+        if (mode != 2 || !pup || !std::isfinite(hp) || hp < 0.0f) return;
         Node* hn = pup->get_node_or_null(NodePath("Humanoid"));
         if (!hn) return;
-        Humanoid* hum = Object::cast_to<Humanoid>(hn);
-        if (!hum) return;
-        hum->set_health(hp);
-        peer_net_health[key] = hp;
+        if (auto Hum = Object::cast_to<Humanoid>(hn)) Hum->set_health(hp);
+        else if (auto Hum = Object::cast_to<Humanoid2D>(hn)) Hum->set_health(hp);
     }
-    // (servidor) Si un ServerScript cambia la salud del personaje de un jugador
-    // (`hum:TakeDamage(10)`), ese cambio vive solo en la copia del servidor y su
-    // dueño lo pisaría con el próximo broadcast. Aquí se detecta la diferencia y
-    // se le ORDENA al dueño; su siguiente broadcast propaga el valor a todos.
+    // Sample native authoritative health/corrections before presentation; the
+    // owner is not needed to propagate server state or perform server respawn.
     void _health_authority_tick() {
         if (!is_server()) return;
-        for (auto& kv : puppets) {
-            if (!_valid(kv.second.node)) continue;
-            Humanoid* hum = Object::cast_to<Humanoid>(kv.second.node->get_node_or_null(NodePath("Humanoid")));
-            if (!hum) continue;
-            auto it = peer_net_health.find(kv.first);
-            if (it == peer_net_health.end()) continue;
-            if (Math::abs((double)(hum->get_health() - it->second)) < 0.01) continue;
-            it->second = hum->get_health();
-            rpc_id(kv.first, "_set_char_health", hum->get_health());
+        CharacterTickPeers.clear();
+        for (const auto& Entry : CharacterAuthorities) if (Entry.first > 1) CharacterTickPeers.push_back(Entry.first);
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+        for (int Peer : CharacterTickPeers) {
+            RefreshCharacter(Peer);
+            auto Found = CharacterAuthorities.find(Peer);
+            if (Found == CharacterAuthorities.end()) continue;
+            auto State = Found->second;
+            if (CharacterTime() - State.Published >= .25) PublishCharacter(Peer);
+            if (!LiveCharacter(State.Identity) || State.DeadSince < 0) continue;
+            Players* Service = _players_service();
+            if (Service && Service->get_character_auto_loads() && std::isfinite(Service->get_respawn_time()) &&
+                CharacterTime() - State.DeadSince >= Service->get_respawn_time()) {
+                SpawnCharacter(Peer);
+                if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            }
         }
     }
     // (dueño) El servidor manda la salud autoritativa de MI personaje.
     void _set_char_health(float hp) {
-        if (get_multiplayer()->get_remote_sender_id() != 1) return;
-        Node* lp = _local_player();
-        if (!lp) return;
-        if (Humanoid* hum = Object::cast_to<Humanoid>(lp->get_node_or_null(NodePath("Humanoid"))))
-            hum->set_health(hp);
+        (void)hp; // Protocol 1 correction has no character generation.
     }
     void _update_puppet2d(int key, int idx, Vector2 pos, float rot) {
         is_2d = true;
@@ -967,13 +1231,19 @@ class NetworkService : public Node {
             Node* wsp = _workspace();
             if (!wsp) return;
             Node2D* pup = _make_puppet2d(idx);
+            if (mode == 1) CharacterAuthorities[key].Identity = static_cast<uint64_t>(pup->get_instance_id());
             pup->set_name(String("RemotePlayer_") + String::num_int64(key));
             wsp->add_child(pup);
             pup->set_global_position(pos);
+            auto Health = memnew(Humanoid2D);
+            Health->set_name("Humanoid"); pup->add_child(Health);
             pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key, static_cast<uint64_t>(pup->get_instance_id())));
             Puppet P; P.node = pup; P.tpos2d = pos; P.tyaw = rot; P.has_target = true;
             puppets[key] = P;
             if (PlayerObject* po = _ensure_peer_player(key)) {
+                uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+                uint64_t PlayerIdentity = static_cast<uint64_t>(po->get_instance_id());
+                uint64_t CharacterIdentity = static_cast<uint64_t>(pup->get_instance_id());
                 String pn = String("Player") + String::num_int64(idx);
                 po->set_name(pn); po->display_name = pn;
                 po->set_character_silent(pup);
@@ -981,10 +1251,14 @@ class NetworkService : public Node {
                     po->added_fired = true;
                     if (Players* ps = _players_service()) ps->fire_player_added(po);
                 }
+                if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion() || !LiveCharacter(CharacterIdentity)) return;
+                po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+                if (!po || po->is_queued_for_deletion() || po->get_character() != pup) return;
                 po->fire_character_added();
             }
         } else {
             it->second.tpos2d = pos; it->second.tyaw = rot; it->second.has_target = true;
+            if (auto Body = Object::cast_to<Node2D>(it->second.node)) { Body->set_global_position(pos); Body->set_global_rotation(rot); }
         }
     }
     // El muñeco salió del árbol: quitar su entrada del mapa mientras el puntero
@@ -1000,8 +1274,12 @@ class NetworkService : public Node {
         peer_anim.erase(key);
         auto it = puppets.find(key);
         if (it != puppets.end()) {
-            if (_valid(it->second.node)) it->second.node->queue_free();
+            Node* Character = it->second.node;
             puppets.erase(it);
+            if (_valid(Character)) {
+                if (Character->get_parent()) Character->get_parent()->remove_child(Character);
+                Character->queue_free();
+            }
         }
     }
     void _clear_puppets() {
@@ -1024,15 +1302,15 @@ class NetworkService : public Node {
                 Node2D* n = Object::cast_to<Node2D>(pu.node);
                 if (!n) continue;
                 n->set_global_position(pu.tpos2d);
-                n->set_rotation(pu.tyaw);
+                n->set_global_rotation(pu.tyaw);
             } else {
                 Node3D* n = Object::cast_to<Node3D>(pu.node);
                 if (!n) continue;
                 Vector3 before = n->get_global_position();
                 n->set_global_position(pu.tpos);
-                Vector3 r = n->get_rotation();
+                Vector3 r = n->get_global_rotation();
                 r.y = pu.tyaw;
-                n->set_rotation(r);
+                n->set_global_rotation(r);
                 // Aplanado (1.14.11): el animador es hijo DIRECTO. Se conserva la
                 // ruta vieja para el caso sin rig (cápsula / StarterCharacter).
                 Node* anim = n->get_node_or_null(NodePath("R6Animator"));
@@ -1063,6 +1341,49 @@ class NetworkService : public Node {
         if (mode == 2 && !net_connected) return;   // cliente aún negociando: nada de RPC
         Node* lp = _local_player();
         if (!lp) return;   // la ventana del servidor no tiene personaje: no difunde
+        if (mode == 2) {
+            if (!LocalCharacterGrant.Epoch) {
+                if (CharacterTime() >= CharacterReadyAt) {
+                    CharacterReadyAt = CharacterTime() + 1;
+                    rpc_id(1, "_character_ready", 2);
+                }
+                return;
+            }
+            if (!ApplyCharacterGrant()) return;
+            double Now = CharacterTime();
+            double Slack = LocalCharacterGrant.Walk * 1.5 * 2 / Engine::get_singleton()->get_physics_ticks_per_second();
+            if (LocalSyncPending || (Now - LocalServerMovedAt > 1 && CharacterPosition(lp).distance_to(LocalServerPosition) > Slack)) {
+                if (Now >= LocalNextSync) {
+                    LocalNextSync = Now + 1;
+                    LocalSyncPending = LocalCharacterGrant.Epoch;
+                    rpc_id(1, "_character_sync", LocalCharacterGrant.Epoch);
+                }
+                return;
+            }
+            float Speed = 0;
+            bool Air = false;
+            if (auto Hum = Object::cast_to<Humanoid>(CharacterHealth(lp))) { Speed = Hum->anim_speed01; Air = Hum->anim_airborne; }
+            else if (auto Body = Object::cast_to<CharacterBody2D>(lp)) Air = !Body->is_on_floor();
+            rpc_id(1, "_relay_character", LocalCharacterGrant.Epoch, ++LocalCharacterSequence,
+                CharacterPosition(lp), CharacterYaw(lp), Speed, Air);
+            return;
+        }
+        if (mode == 1) {
+            auto& State = CharacterAuthorities[1];
+            uint64_t Identity = static_cast<uint64_t>(lp->get_instance_id());
+            if (Identity != State.Identity) {
+                State = CharacterAuthority(); State.Identity = Identity;
+                State.Epoch = State.Life = NextCharacterEpoch++;
+            }
+            State.Position = CharacterPosition(lp); State.Yaw = CharacterYaw(lp); State.Is2D = is_2d;
+            Node* Hum = CharacterHealth(lp);
+            if (Hum) { State.Health = Hum->call("get_health"); State.Maximum = Hum->call("get_max_health"); }
+            if (!FinitePose(State.Position, State.Yaw)) return;
+            float Speed = 0; bool Air = false;
+            if (auto Health = Object::cast_to<Humanoid>(Hum)) { Speed = Health->anim_speed01; Air = Health->anim_airborne; }
+            if (std::isfinite(Speed) && Speed >= 0 && Speed <= 1.0f) PublishCharacter(1, Speed, Air);
+            return;
+        }
         bool server = is_server();
         int display_num = (player_index >= 2) ? player_index - 1 : player_index;   // glindex 2..N+1 → Player1..N
         if (_diag_tick()) {
@@ -1104,6 +1425,13 @@ class NetworkService : public Node {
 protected:
     static void _bind_methods() {
         ClassDB::bind_method(D_METHOD("_on_peer_connected", "id"),    &NetworkService::_on_peer_connected);
+        ClassDB::bind_method(D_METHOD("_character_ready", "version"), &NetworkService::_character_ready);
+        ClassDB::bind_method(D_METHOD("_character_sync", "epoch"), &NetworkService::_character_sync);
+        ClassDB::bind_method(D_METHOD("_character_grant", "epoch", "position", "yaw", "walk", "jump", "gravity", "is_2d", "respawn"), &NetworkService::_character_grant);
+        ClassDB::bind_method(D_METHOD("_relay_character", "epoch", "sequence", "position", "yaw", "speed", "air"), &NetworkService::_relay_character);
+        ClassDB::bind_method(D_METHOD("_recv_character", "who", "epoch", "sequence", "position", "yaw", "health", "maximum", "speed", "air", "is_2d", "life"), &NetworkService::_recv_character);
+        ClassDB::bind_method(D_METHOD("GetCharacterStates"), &NetworkService::GetCharacterStates);
+        ClassDB::bind_method(D_METHOD("RespawnCharacter", "peer"), &NetworkService::SpawnCharacter);
         ClassDB::bind_method(D_METHOD("_on_peer_disconnected", "id"), &NetworkService::_on_peer_disconnected);
         ClassDB::bind_method(D_METHOD("_on_connected_ok"),            &NetworkService::_on_connected_ok);
         ClassDB::bind_method(D_METHOD("_on_connect_failed"),          &NetworkService::_on_connect_failed);
@@ -1116,7 +1444,11 @@ protected:
         ClassDB::bind_method(D_METHOD("net_anim_state", "character", "anim_id", "anim_name", "speed", "looped", "play"), &NetworkService::net_anim_state);
         ClassDB::bind_method(D_METHOD("_relay_anim", "anim_id", "anim_name", "speed", "looped", "play"),                 &NetworkService::_relay_anim);
         ClassDB::bind_method(D_METHOD("_recv_anim", "who", "anim_id", "anim_name", "speed", "looped", "play"),           &NetworkService::_recv_anim);
+        ClassDB::bind_method(D_METHOD("_relay_anim_v2", "epoch", "anim_id", "anim_name", "speed", "looped", "play"), &NetworkService::_relay_anim_v2);
+        ClassDB::bind_method(D_METHOD("_recv_anim_v2", "who", "life", "anim_id", "anim_name", "speed", "looped", "play"), &NetworkService::_recv_anim_v2);
         ClassDB::bind_method(D_METHOD("GetAnimationStates"), &NetworkService::GetAnimationStates);
+        ClassDB::bind_method(D_METHOD("RegisterCharacterAnimation", "asset"), &NetworkService::RegisterCharacterAnimation);
+        ClassDB::bind_method(D_METHOD("GetCharacterAnimation", "asset"), &NetworkService::GetCharacterAnimation);
         ClassDB::bind_method(D_METHOD("OnAnimationCharacterGone", "identity"), &NetworkService::OnAnimationCharacterGone);
         ClassDB::bind_method(D_METHOD("_recv_state2d", "who", "pos", "rot", "idx"), &NetworkService::_recv_state2d);
         ClassDB::bind_method(D_METHOD("_relay_state2d", "pos", "rot", "idx"),       &NetworkService::_relay_state2d);
@@ -1254,6 +1586,8 @@ public:
     }
     void _on_peer_disconnected(int id) {
         ChatBudgets.erase(id);
+        AnimationBudgets.erase(id);
+        CharacterAuthorities.erase(id); CharacterSnapshots.erase(id);
         peer_seq_uid.erase(id);
         _remove_puppet(id);
         if (is_server()) rpc("_recv_remove", id);   // que los clientes también lo quiten
@@ -1270,7 +1604,6 @@ public:
         // RemoteFunction en vuelo hacia ese peer: nunca va a contestar (1.14.9.1).
         _rf_fail_pending(id, "InvokeClient: the player left the game");
         peer_ping_ms.erase(id);
-        peer_net_health.erase(id);
         peer_anim.erase(id);
         _remove_peer_player(id);
         _fire(pd_cbs, true, id);
@@ -1279,6 +1612,8 @@ public:
     void _on_connect_failed()          { mode = 0; if (retry_left > 0) return; _fire(fail_cbs, false, 0); }
     void _on_server_disconnected() {
         net_connected = false;
+        AnimationBudgets.clear();
+        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         _rf_fail_pending(0, "InvokeServer: lost connection to the server");
         _clear_puppets();
@@ -1875,7 +2210,7 @@ public:
         for (auto& kv : peer_anim) {
             if (!kv.second.play || kv.first == id || !HasAnimationSession(kv.first) ||
                 kv.second.UserIdentity != peer_seq_uid.at(kv.first)) continue;
-            rpc_id(id, "_recv_anim", kv.first, kv.second.id, kv.second.name,
+            rpc_id(id, "_recv_anim_v2", kv.first, kv.second.Life, kv.second.id, kv.second.name,
                    kv.second.speed, kv.second.looped, true);
         }
     }
@@ -1956,41 +2291,219 @@ public:
     }
 
     // ── RPCs de réplica ──────────────────────────────────────────────────
+    void _character_ready(int Version) {
+        int Sender = GetClientRpcSender();
+        if (!Sender || Version != 2 || CharacterAuthorities.count(Sender)) return;
+        SpawnCharacter(Sender);
+    }
+    void _character_sync(int64_t Epoch) {
+        int Sender = GetClientRpcSender();
+        auto Found = CharacterAuthorities.find(Sender);
+        if (!Sender || Found == CharacterAuthorities.end() || Found->second.Epoch != Epoch ||
+            !LiveCharacter(Found->second.Identity)) return;
+        double Now = CharacterTime();
+        if (Found->second.Synced > 0 && Now - Found->second.Synced < 1) return;
+        Found->second.Synced = Now;
+        GrantCharacter(Sender, false, false); // resync cannot grant another airborne jump
+    }
+    void _character_grant(int64_t Epoch, Vector3 Position, double Yaw,
+        double Walk, double Jump, double Gravity, bool Is2D, bool Respawn) {
+        if (!AcceptServerRpc() || Epoch <= LocalCharacterGrant.Epoch || !FinitePose(Position, Yaw) ||
+            !std::isfinite(Walk) || Walk < 0 || !std::isfinite(Jump) || Jump < 0 || !std::isfinite(Gravity) || Gravity < 0) return;
+        bool HadCharacter = LocalCharacterGrant.Epoch != 0;
+        LocalCharacterGrant.Epoch = Epoch;
+        LocalCharacterGrant.Position = Position; LocalCharacterGrant.Yaw = Yaw;
+        LocalCharacterGrant.Walk = Walk; LocalCharacterGrant.Jump = Jump; LocalCharacterGrant.Gravity = Gravity;
+        LocalCharacterGrant.Is2D = Is2D;
+        LocalSyncPending = 0;
+        LocalServerPosition = Position;
+        LocalServerMovedAt = CharacterTime();
+        LocalCharacterSequence = 0;
+        LocalGrantedCharacter = 0;
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+        // Initial grant uses the already constructed owner; subsequent server
+        // respawns replace it. Corrections never replay CharacterAdded.
+        if (Respawn && HadCharacter) _do_load_character();
+        if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+        ApplyCharacterGrant();
+        SyncLocalAnimation();
+    }
+    bool ApplyCharacterGrant() {
+        Node* Character = _local_player();
+        if (!Character || !LocalCharacterGrant.Epoch || Character->is_queued_for_deletion()) return false;
+        if (LocalGrantedCharacter == static_cast<uint64_t>(Character->get_instance_id())) return true;
+        auto& Grant = LocalCharacterGrant;
+        if (Grant.Is2D) {
+            auto Body = Object::cast_to<CharacterBody2D>(Character);
+            if (!Body) return false;
+            Body->set_global_position(Vector2(Grant.Position.x, Grant.Position.y));
+            Body->set_global_rotation(Grant.Yaw); Body->set_velocity(Vector2());
+            Body->call("set_walk_speed", Grant.Walk); Body->call("set_jump_power", -Grant.Jump); Body->call("set_gravity", Grant.Gravity);
+        } else {
+            auto Body = Object::cast_to<CharacterBody3D>(Character);
+            if (!Body) return false;
+            Body->set_global_position(Grant.Position);
+            Vector3 Rotation = Body->get_global_rotation(); Rotation.y = Grant.Yaw; Body->set_global_rotation(Rotation);
+            Body->set_velocity(Vector3());
+            if (auto Health = Object::cast_to<Humanoid>(CharacterHealth(Character))) {
+                Health->set_walk_speed(Grant.Walk); Health->set_jump_power(Grant.Jump); Health->set_gravity_val(Grant.Gravity);
+            }
+        }
+        LocalGrantedCharacter = static_cast<uint64_t>(Character->get_instance_id());
+        return true;
+    }
+    void _relay_character(int64_t Epoch, int64_t Sequence, Vector3 Position, double Yaw, float Speed, bool Air) {
+        int Sender = GetClientRpcSender();
+        if (!Sender || !CharacterAuthorities.count(Sender)) return;
+        auto& Budget = CharacterAuthorities.at(Sender);
+        double Now = CharacterTime();
+        Budget.Tokens = Math::min(4.0, Budget.Tokens + Math::max(0.0, Now - Budget.Updated) * 60.0);
+        Budget.Updated = Now;
+        if (Budget.Tokens < 1) { ++Budget.RateRejectedInputs; return; }
+        Budget.Tokens -= 1; // malformed/stale packets consume admission too
+        RefreshCharacter(Sender); // synchronize trusted teleports before admission
+        auto& State = CharacterAuthorities.at(Sender);
+        Node* Character = LiveCharacter(State.Identity);
+        PlayerObject* Player = _peer_player(Sender);
+        if (!Character || !CharacterHealth(Character) || CharacterHealth(Character)->is_queued_for_deletion() ||
+            !Player || Player->get_character() != Character || State.Health <= 0 ||
+            Epoch != State.Epoch || Sequence <= State.InputSequence || !FinitePose(Position, Yaw) ||
+            !std::isfinite(Speed) || Speed < 0 || Speed > 1.0f || (State.Is2D && Position.z != 0)) return;
+        double Elapsed = Math::max(0.0, Now - State.Accepted);
+        if (Elapsed > 1.0) return; // only the explicit sync operation grants a fresh baseline
+        double Tick = 1.0 / Engine::get_singleton()->get_physics_ticks_per_second();
+        double MaximumSpeed = State.Walk * 1.5;
+        double Credit = Math::min(MaximumSpeed, State.Credit + MaximumSpeed * Elapsed);
+        Vector3 Delta = Position - State.Position;
+        double Horizontal = State.Is2D ? Math::abs(Delta.x) : Vector2(Delta.x, Delta.z).length();
+        double AirTime = State.AirTime + Elapsed;
+        double VerticalSpeed = State.Jump + State.Gravity * AirTime;
+        double Vertical = Math::abs(Delta.y);
+        double VerticalCredit = Math::min(VerticalSpeed * (Elapsed + 2 * Tick),
+            State.VerticalCredit + VerticalSpeed * Elapsed + State.Gravity * Tick * Tick);
+        double Slope = Horizontal * Math::tan(Math::deg_to_rad(50.0));
+        double Rising = State.Is2D ? -Delta.y : Delta.y;
+        if (Horizontal > Credit + 0.0001 || Vertical > Math::max(VerticalCredit, Slope) + 0.0001 ||
+            Rising > Math::max(State.Jump * (Elapsed + 2 * Tick), Slope) + 0.0001) return;
+        // A substantial vertical transition cannot be advertised as grounded
+        // unless it fits the controller's supported slope envelope.
+        if (!Air && Vertical > Slope + State.Gravity * Tick * Tick * 2 + 0.0001) return;
+        double Rise = Air ? State.Rise + Math::max(0.0, Rising) : 0;
+        if (!State.Is2D && Air && State.Gravity > 0 && Rise > State.Jump * State.Jump / (2 * State.Gravity) +
+            State.Jump * 2 * Tick + State.Gravity * Tick * Tick + 0.0001) return;
+        State.InputSequence = Sequence;
+        ++State.AcceptedInputs;
+        State.Accepted = Now;
+        State.Credit = Credit - Horizontal;
+        State.VerticalCredit = Math::max(0.0, VerticalCredit - Vertical);
+        State.AirTime = Air ? AirTime : 0;
+        State.Rise = Rise;
+        State.Position = Position; State.Yaw = Math::wrapf(Yaw, -Math_PI, Math_PI);
+        int Index = static_cast<int>(peer_seq_uid.at(Sender));
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+        uint64_t CharacterIdentity = State.Identity;
+        if (State.Is2D) _update_puppet2d(Sender, Index, Vector2(Position.x, Position.y), Yaw);
+        else _update_puppet3d(Sender, Index, Position, State.Yaw, -1, Speed, Air);
+        // Existing characters never dispatch gameplay callbacks here. Health
+        // belongs to the server and is read independently of client proposals.
+        auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == Sender) {
+            auto Current = Service->CharacterAuthorities.find(Sender);
+            if (Current != Service->CharacterAuthorities.end() && Current->second.Identity == CharacterIdentity && Current->second.Epoch == Epoch)
+                Service->PublishCharacter(Sender, Speed, Air);
+        }
+    }
+    void _recv_character(int Who, int64_t Epoch, int64_t Sequence, Vector3 Position, double Yaw,
+        float Health, float Maximum, float Speed, bool Air, bool Is2D, int64_t Life) {
+        if (!AcceptServerRpc() || Who <= 0 || !peer_seq_uid.count(Who) || Epoch <= 0 || Sequence <= 0 ||
+            !FinitePose(Position, Yaw) || !std::isfinite(Health) || !std::isfinite(Maximum) || Maximum < 1 ||
+            Health < 0 || Health > Maximum || !std::isfinite(Speed) || Speed < 0 || Speed > 1.0f ||
+            Life <= 0 || Life > Epoch || (Is2D && Position.z != 0)) return;
+        auto Found = CharacterSnapshots.find(Who);
+        if (Found != CharacterSnapshots.end() && (Epoch < Found->second.Epoch ||
+            (Epoch == Found->second.Epoch && Sequence <= Found->second.Sequence))) return;
+        bool Replaced = Found != CharacterSnapshots.end() && Life != Found->second.Life;
+        if (Who == _my_peer_id() && (Epoch != LocalCharacterGrant.Epoch || !ApplyCharacterGrant())) return;
+        CharacterSnapshots[Who] = {Epoch, Sequence, Life};
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+        if (Who == _my_peer_id()) {
+            if (Position != LocalServerPosition) { LocalServerPosition = Position; LocalServerMovedAt = CharacterTime(); }
+            Node* Character = _local_player();
+            Node* Hum = CharacterHealth(Character);
+            if (!Hum) return;
+            uint64_t HealthIdentity = static_cast<uint64_t>(Hum->get_instance_id());
+            Hum->call("set_max_health", Maximum);
+            Hum = LiveCharacter(HealthIdentity);
+            if (Hum) Hum->call("set_health", Health);
+            return;
+        }
+        if (Replaced) {
+            AnimState Pending;
+            auto Animation = peer_anim.find(Who);
+            bool PreservePending = Animation != peer_anim.end() && Animation->second.Life == Life;
+            if (PreservePending) Pending = Animation->second;
+            if (PlayerObject* Player = _peer_player(Who)) Player->fire_character_removing();
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            _remove_puppet(Who);
+            if (PreservePending) peer_anim[Who] = Pending;
+        }
+        is_2d = Is2D;
+        if (Is2D) {
+            _update_puppet2d(Who, static_cast<int>(peer_seq_uid.at(Who)), Vector2(Position.x, Position.y), Yaw);
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            auto Puppet = puppets.find(Who);
+            if (Puppet == puppets.end() || !_valid(Puppet->second.node)) return;
+            Node* HealthNode = CharacterHealth(Puppet->second.node);
+            if (HealthNode) HealthNode->call("set_max_health", Maximum);
+            _apply_puppet_health(Puppet->second.node, Who, Health);
+        }
+        else _update_puppet3d(Who, static_cast<int>(peer_seq_uid.at(Who)), Position, Yaw, Health, Speed, Air, Maximum);
+    }
+    Dictionary GetCharacterStates() {
+        Dictionary Result;
+        for (const auto& Entry : CharacterAuthorities) {
+            Dictionary State;
+            State["Epoch"] = Entry.second.Epoch; State["Life"] = Entry.second.Life; State["Sequence"] = Entry.second.InputSequence;
+            State["Position"] = Entry.second.Position; State["Health"] = Entry.second.Health;
+            State["CharacterId"] = static_cast<int64_t>(Entry.second.Identity);
+            State["AcceptedInputs"] = static_cast<int64_t>(Entry.second.AcceptedInputs);
+            State["RateRejectedInputs"] = static_cast<int64_t>(Entry.second.RateRejectedInputs);
+            Result[Entry.first] = State;
+        }
+        if (mode == 2) {
+            Dictionary Grant;
+            Grant["Epoch"] = LocalCharacterGrant.Epoch; Grant["Sequence"] = LocalCharacterSequence;
+            Grant["Position"] = LocalCharacterGrant.Position;
+            Result[_my_peer_id()] = Grant;
+        }
+        return Result;
+    }
+    bool CanWriteCharacter(Node* Target, bool Subtree = false) const {
+        if (!GLExecutionDomain::IsClientExecution() || mode != 1) return true;
+        if (!Target) return true;
+        if (Subtree) for (const auto& Entry : CharacterAuthorities) {
+            Node* Character = LiveCharacter(Entry.second.Identity);
+            if (Character && Target->is_ancestor_of(Character)) return false;
+        }
+        for (Node* Ancestor = Target; Ancestor; Ancestor = Ancestor->get_parent())
+            for (const auto& Entry : CharacterAuthorities)
+                if (static_cast<uint64_t>(Ancestor->get_instance_id()) == Entry.second.Identity) return false;
+        return true;
+    }
     // Cliente -> servidor: "aquí estoy". El servidor lo muestra y lo reenvía.
     void _relay_state(Vector3 pos, float yaw, int idx, float hp, float sp, bool air) {
-        int sid = GetClientRpcSender();
-        if (!sid) return;
-        idx = static_cast<int>(peer_seq_uid.at(sid)); // identity cannot come from the client's display index
-        if (_diag_tick()) { gl_mp_log(String("RX relay de peer ") + String::num_int64(sid) + " pos=" + String(pos)); diag_timer = 1.0; }
-        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
-        _update_puppet3d(sid, idx, pos, yaw, hp, sp, air);
-        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
-        if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == sid)
-            Service->rpc("_recv_state", sid, pos, yaw, idx, hp, sp, air);
+        // Protocol 1 has no lifecycle/correction freshness. Never downgrade.
+        (void)pos; (void)yaw; (void)idx; (void)hp; (void)sp; (void)air;
     }
     void _relay_state2d(Vector2 pos, float rot, int idx) {
-        int sid = GetClientRpcSender();
-        if (!sid) return;
-        idx = static_cast<int>(peer_seq_uid.at(sid));
-        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
-        _update_puppet2d(sid, idx, pos, rot);
-        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
-        if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == sid)
-            Service->rpc("_recv_state2d", sid, pos, rot, idx);
+        (void)pos; (void)rot; (void)idx;
     }
     // Servidor -> clientes: estado autoritativo de "who".
     void _recv_state(int who, Vector3 pos, float yaw, int idx, float hp, float sp, bool air) {
-        if (!AcceptServerRpc() || who <= 0 || !peer_seq_uid.count(who)) return;
-        int myid = _my_peer_id();
-        if (who == myid) return;              // ese soy yo
-        if (_diag_tick()) { gl_mp_log(String("RX estado de ") + String::num_int64(who) + " pos=" + String(pos)); diag_timer = 1.0; }
-        _update_puppet3d(who, idx, pos, yaw, hp, sp, air);
+        (void)who; (void)pos; (void)yaw; (void)idx; (void)hp; (void)sp; (void)air;
     }
     void _recv_state2d(int who, Vector2 pos, float rot, int idx) {
-        if (!AcceptServerRpc() || who <= 0 || !peer_seq_uid.count(who)) return;
-        int myid = _my_peer_id();
-        if (who == myid) return;
-        _update_puppet2d(who, idx, pos, rot);
+        (void)who; (void)pos; (void)rot; (void)idx;
     }
     void _recv_remove(int who) {
         // A legitimate removal arrives after transport membership has ended.
@@ -1998,6 +2511,7 @@ public:
         _remove_puppet(who);
         _remove_peer_player(who);
         peer_seq_uid.erase(who);
+        CharacterSnapshots.erase(who);
     }
 
     // ── CHAT EN RED (como Roblox: todos ven los mensajes de todos) ────────
@@ -2092,29 +2606,88 @@ public:
         SendLocalAnimation({ anim_id, anim_name, speed, looped, play });
     }
     void _relay_anim(String anim_id, String anim_name, float speed, bool looped, bool play) {
-        int sid = GetClientRpcSender();
-        if (!sid || !HasAnimationSession(sid) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
-        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
-        _apply_anim_puppet(sid, anim_id, anim_name, speed, looped, play);
-        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
-        if (Service && Service->HasAnimationSession(sid) && Service->GetClientRpcSender() == sid)
-            Service->rpc("_recv_anim", sid, anim_id, anim_name, speed, looped, play);
+        (void)anim_id; (void)anim_name; (void)speed; (void)looped; (void)play;
     }
     void _recv_anim(int who, String anim_id, String anim_name, float speed, bool looped, bool play) {
+        (void)who; (void)anim_id; (void)anim_name; (void)speed; (void)looped; (void)play;
+    }
+    void _relay_anim_v2(int64_t Epoch, String anim_id, String anim_name, float speed, bool looped, bool play) {
+        int sid = GetClientRpcSender();
+        if (!sid || !HasAnimationSession(sid) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
+        auto Character = CharacterAuthorities.find(sid);
+        if (Character == CharacterAuthorities.end()) { if (Epoch != 0) return; }
+        else if (Epoch != Character->second.Epoch || !LiveCharacter(Character->second.Identity) || Character->second.Health <= 0) return;
+        auto Budget = AnimationBudgets.find(sid);
+        double Now = CharacterTime();
+        if (Budget == AnimationBudgets.end()) Budget = AnimationBudgets.emplace(sid, std::make_pair(16.0, Now)).first;
+        Budget->second.first = Math::min(16.0, Budget->second.first + (Now - Budget->second.second) * 60);
+        Budget->second.second = Now;
+        if (Budget->second.first < 1) return;
+        Budget->second.first -= 1;
+        int64_t Life = Character == CharacterAuthorities.end() ? 0 : Character->second.Life;
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+        if (!_apply_anim_puppet(sid, anim_id, anim_name, speed, looped, play, Life)) return;
+        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && Service->HasAnimationSession(sid) && Service->GetClientRpcSender() == sid)
+            Service->rpc("_recv_anim_v2", sid, Life, anim_id, anim_name, speed, looped, play);
+    }
+    void _recv_anim_v2(int who, int64_t Life, String anim_id, String anim_name, float speed, bool looped, bool play) {
         if (!AcceptServerRpc() || !HasAnimationSession(who) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
+        auto Snapshot = CharacterSnapshots.find(who);
+        if (Life < 0 || (Snapshot != CharacterSnapshots.end() && Life < Snapshot->second.Life)) return;
         int myid = _my_peer_id();
         if (who == myid) return;   // ese soy yo
-        _apply_anim_puppet(who, anim_id, anim_name, speed, looped, play);
+        if (Snapshot != CharacterSnapshots.end() && Life > Snapshot->second.Life) {
+            peer_anim[who] = {anim_id, anim_name, speed, looped, play, peer_seq_uid.at(who), Life};
+            return; // reliable animation can precede its unreliable birth snapshot
+        }
+        _apply_anim_puppet(who, anim_id, anim_name, speed, looped, play, Life);
     }
-    void _apply_anim_puppet(int who, const String& anim_id, const String& anim_name, float speed, bool looped, bool play) {
+    bool _apply_anim_puppet(int who, const String& anim_id, const String& anim_name, float speed, bool looped, bool play, int64_t Life = 0) {
         // Se recuerda SIEMPRE, aunque el muñeco no exista todavía: se aplicará en
         // cuanto aparezca (_update_puppet3d) y sirve para contárselo a los que
         // entren después.
-        if (!HasAnimationSession(who)) return;
-        peer_anim[who] = { anim_id, anim_name, speed, looped, play, peer_seq_uid.at(who) };
+        if (!HasAnimationSession(who)) return false;
         auto it = puppets.find(who);
-        if (it == puppets.end() || !_valid(it->second.node) || it->second.node->is_queued_for_deletion()) return;
-        gl_anim_apply(it->second.node, anim_id, anim_name, speed, looped, play);
+        Node* Character = it != puppets.end() && _valid(it->second.node) && !it->second.node->is_queued_for_deletion() ? it->second.node : nullptr;
+        Ref<Animation> Checked;
+        GLPresentationPlayback Playback;
+        auto Previous = peer_anim.find(who);
+        if (Previous != peer_anim.end()) Playback = Previous->second.Playback;
+        AnimationPlayer* Player = nullptr;
+        if (Character) for (int Index = 0; Index < Character->get_child_count(); ++Index)
+            if ((Player = Object::cast_to<AnimationPlayer>(Character->get_child(Index)))) break;
+        if (!GLPresentationPlayer(Player, Character, anim_name, play)) return false;
+        if (play) {
+            if (Previous != peer_anim.end() && Previous->second.name == anim_name &&
+                (Previous->second.id == anim_id || anim_id.is_empty())) Checked = Previous->second.Checked;
+            if (Checked.is_null() && mode == 1 && !anim_id.is_empty()) {
+                // Packet handling performs no ResourceLoader lookup, including
+                // Roblox-ID resolution. Aliases were resolved during startup.
+                auto Alias = CharacterAnimationAliases.find(anim_id);
+                if (Alias == CharacterAnimationAliases.end()) return false;
+                auto Approved = CharacterAnimationCatalog.find(Alias->second);
+                if (Approved == CharacterAnimationCatalog.end()) return false;
+                Checked = GLCopyPresentationAnimation(Approved->second);
+            } else if (Checked.is_null()) Checked = GLPresentationClip(anim_id, anim_name, Character);
+            // A name-only request can wait for its character/library. It still
+            // undergoes presentation validation before any playback.
+            if (Checked.is_null() && (!anim_id.is_empty() || Character)) return false;
+            if (Checked.is_valid() && Character) {
+                if (!GLPresentationAnimation(Checked, Character, Player) || !GLPresentationName(anim_name, Player)) return false;
+            }
+        }
+        peer_anim[who] = { anim_id, anim_name, speed, looped, play, peer_seq_uid.at(who), Life, Checked, Playback };
+        if (Character) {
+            uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+            gl_anim_apply(Character, anim_id, anim_name, speed, looped, play, Checked, &Playback);
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return false;
+            auto Current = peer_anim.find(who);
+            if (Current == peer_anim.end() || Current->second.Life != Life || Current->second.id != anim_id || Current->second.name != anim_name) return false;
+            Current->second.Playback = Playback;
+            if (Playback.Checked.is_valid() && play) Current->second.Checked = Playback.Checked;
+        }
+        return true;
     }
 
     // Read-only diagnostic snapshot; not an RPC or an alternate session registry.
@@ -2224,16 +2797,17 @@ public:
     // Cada máquina construye su propio personaje, así que respawnear a OTRO
     // jugador es pedirle a SU cliente que lo rehaga.
     void net_load_character(Object* player_node) {
-        Node* pn = Object::cast_to<Node>(player_node);
+        if (GLExecutionDomain::IsClientExecution() || mode == 2) return;
+        Node* pn = Object::cast_to<PlayerObject>(player_node);
         if (!pn) return;
         int target = peer_for_player_node(pn);
         int myid = get_peer_id();
-        if (mode == 0 || target == 0 || target == myid) { _do_load_character(); return; }
-        if (is_server()) rpc_id(target, "_load_character");
+        if (mode == 0 || (target != 0 && target == myid)) { _do_load_character(); return; }
+        if (!target) return;
+        if (is_server()) SpawnCharacter(target);
     }
     void _load_character() {
-        if (get_multiplayer()->get_remote_sender_id() != 1) return;   // solo el servidor lo pide
-        _do_load_character();
+        // Unversioned protocol 1 command cannot authorize a replacement life.
     }
     void _do_load_character() {
         if (Players* ps = _players_service()) ps->load_local_character();
@@ -2390,6 +2964,14 @@ public:
         }
         _bind_mp_signals();
         _setup_rpcs();
+        auto Settings = ProjectSettings::get_singleton();
+        if (Settings && Settings->has_setting("godot_luau/character_animation_assets")) {
+            Variant Assets = Settings->get_setting("godot_luau/character_animation_assets");
+            if (Assets.get_type() == Variant::PACKED_STRING_ARRAY) {
+                PackedStringArray Paths = Assets;
+                for (int Index = 0; Index < Math::min(int64_t(64), Paths.size()); ++Index) RegisterCharacterAnimation(Paths[Index]);
+            }
+        }
         call_deferred("_auto_init");
     }
 
@@ -2498,6 +3080,9 @@ public:
                     }
                 }
             }
+            uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+            if (is_server()) _health_authority_tick();
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
             _lerp_puppets(dt);
             // Física en red (1.14.7): la autoridad transmite ~20Hz; todos interpolan.
             phys_timer += dt;
@@ -2510,10 +3095,6 @@ public:
             }
             // Salud autoritativa del servidor (1.14.11): ~4Hz, solo manda si un
             // ServerScript cambió la salud de alguien.
-            if (is_server()) {
-                health_auth_timer += dt;
-                if (health_auth_timer >= 0.25) { health_auth_timer = 0.0; _health_authority_tick(); }
-            }
             // Purga de RemoteFunction huérfanos (1.14.9.1): una respuesta que llega
             // cuando ya nadie la espera, o un pendiente que nunca se cerró, se
             // quedaba en el mapa PARA SIEMPRE. Nadie los espera pasado un minuto.
@@ -2700,6 +3281,8 @@ public:
         Error e = peer->create_server(port, max_players > 0 ? max_players : 32);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
         ChatBudgets.clear();
+        AnimationBudgets.clear();
+        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
         peer_seq_uid.clear();
         Ref<MultiplayerAPI> m = _mp();
@@ -2729,6 +3312,9 @@ public:
         Error e = peer->create_client(addr, port);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); target_address = ""; return false; }
         ChatBudgets.clear();
+        AnimationBudgets.clear();
+        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0; CharacterReadyAt = 0;
+        LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();
         _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
         peer_seq_uid.clear(); gl_local_user_id() = 0;
         Ref<MultiplayerAPI> m = _mp();
@@ -2741,6 +3327,9 @@ public:
         return true;
     }
     void disconnect_net() {
+        AnimationBudgets.clear();
+        CharacterAuthorities.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+        LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();
         LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         ChatBudgets.clear();
         _clear_puppets();
@@ -2753,7 +3342,6 @@ public:
         static_ids_done = false;   // al reconectar hay que volver a registrar el place (1.14.10)
         peer_seq_uid.clear(); next_seq_uid = 2; gl_local_user_id() = 0;   // UserId: reset al salir
         peer_ping_ms.clear(); ping_ms = -1.0;
-        peer_net_health.clear(); health_auth_timer = 0.0;
         peer_anim.clear();
         // RemoteFunction en vuelo: depositar el fallo (NO limpiar las respuestas,
         // que es justo lo que el invocador tiene que recoger para re-lanzarlo).

@@ -27,6 +27,8 @@
 #include "lualib.h"
 #include "gl_errors.h"
 #include "gl_runtime.h"   // gl_state_alive
+#include "gl_execution_domain.h"
+#include <cmath>
 
 using namespace godot;
 
@@ -320,27 +322,43 @@ protected:
 public:
     // ── Health ─────────────────────────────────────────────────────
     //// ── Salud ──────────────────────────────────────────────────────
+    ~Humanoid() {
+        for (const auto& Callback : died_cbs) GLUnreference(nullptr, Callback.ref);
+        for (const auto& Callback : health_changed_cbs) GLUnreference(nullptr, Callback.ref);
+        for (const auto& Callback : state_changed_cbs) GLUnreference(nullptr, Callback.ref);
+        for (int Signal = 0; Signal <= 8; ++Signal)
+            for (const auto& Callback : *move_signal_list(Signal)) GLUnreference(nullptr, Callback.ref);
+    }
     void set_health(float h) {
-        if (is_dead) return;
+        if (is_dead || !std::isfinite(h) || GLExecutionDomain::IsClientExecution()) return;
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         float old = health;
         health = Math::clamp(h, 0.0f, max_health);
+        bool Died = health <= 0.0f;
+        if (Died) is_dead = true; // latch before reentrant HealthChanged callbacks
 
         if (old != health) {
+            auto Callbacks = health_changed_cbs;
             emit_signal("HealthChanged", health, old);
-            fire_lua_health_changed(health_changed_cbs, health, old);
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+            fire_lua_health_changed(Callbacks, health, old);
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
             _update_overhead();
         }
 
-        if (health <= 0.0f) {
-            is_dead = true;
+        if (Died) {
             _set_state_internal(7); // Dead
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+            auto Callbacks = died_cbs;
             emit_signal("Died");
-            fire_lua_died(died_cbs);
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+            fire_lua_died(Callbacks);
         }
     }
     float get_health() const { return health; }
 
     void set_max_health(float h) {
+        if (!std::isfinite(h) || GLExecutionDomain::IsClientExecution()) return;
         max_health = Math::max(h, 1.0f);
         health = Math::min(health, max_health);
     }
@@ -349,13 +367,14 @@ public:
     // Equivalent to Roblox Humanoid:TakeDamage()
     //// Equivalente a Humanoid:TakeDamage() de Roblox
     void take_damage(float amount) {
+        if (!std::isfinite(amount) || amount < 0) return;
         set_health(health - amount);
     }
 
     // Restore health
     //// Curar salud
     void heal(float amount) {
-        if (is_dead) return;
+        if (is_dead || !std::isfinite(amount) || amount < 0) return;
         set_health(health + amount);
     }
 
@@ -381,15 +400,15 @@ public:
 
     // ── Movement ───────────────────────────────────────────────────
     //// ── Movimiento ─────────────────────────────────────────────────
-    void  set_walk_speed(float s)   { walk_speed = Math::max(s, 0.0f); }
+    void  set_walk_speed(float s)   { if (std::isfinite(s) && !GLExecutionDomain::IsClientExecution()) walk_speed = Math::max(s, 0.0f); }
     float get_walk_speed() const    { return walk_speed; }
-    void  set_jump_power(float p)   { jump_power = Math::max(p, 0.0f); }
+    void  set_jump_power(float p)   { if (std::isfinite(p) && !GLExecutionDomain::IsClientExecution()) jump_power = Math::max(p, 0.0f); }
     float get_jump_power() const    { return jump_power; }
     void  set_jump_height(float h)  { jump_height = Math::max(h, 0.0f); }
     float get_jump_height() const   { return jump_height; }
     void  set_hip_height(float h)   { hip_height = Math::max(h, 0.0f); }
     float get_hip_height() const    { return hip_height; }
-    void  set_gravity_val(float g)  { gravity = Math::max(g, 0.0f); }
+    void  set_gravity_val(float g)  { if (std::isfinite(g) && !GLExecutionDomain::IsClientExecution()) gravity = Math::max(g, 0.0f); }
     float get_gravity_val() const   { return gravity; }
 
     // ── Character ──────────────────────────────────────────────────
@@ -417,8 +436,11 @@ public:
         if (current_state == new_state) return;
         int old = current_state;
         current_state = new_state;
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        auto Callbacks = state_changed_cbs;
         emit_signal("StateChanged", new_state, old);
-        fire_lua_state_changed(state_changed_cbs, new_state, old);
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+        fire_lua_state_changed(Callbacks, new_state, old);
     }
 
     // ── _physics_process: all movement logic ───────────────────────

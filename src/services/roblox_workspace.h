@@ -224,6 +224,7 @@ private:
 protected:
     static void _bind_methods() {
         ClassDB::bind_method(D_METHOD("build_local_character"),                &RobloxWorkspace::build_local_character);   // LoadCharacter (1.14.10)
+        ClassDB::bind_method(D_METHOD("GetCharacterSpawn", "player"), &RobloxWorkspace::GetCharacterSpawn);
         ClassDB::bind_method(D_METHOD("_gl_apply_quality_deferred"),           &RobloxWorkspace::_gl_apply_quality_deferred);
         ClassDB::bind_method(D_METHOD("_gl_tune_for_map_size"),                &RobloxWorkspace::_gl_tune_for_map_size);
         ClassDB::bind_method(D_METHOD("_gl_rebuild_chunks"),                   &RobloxWorkspace::_gl_rebuild_chunks);
@@ -469,23 +470,16 @@ public:
     // aparecían en el mismo sitio y había que recolocarlos a mano. Regla de
     // Roblox: un spawn con Neutral=true acepta a cualquiera; con Neutral=false
     // solo a quien tenga su TeamColor. Entre los válidos se elige al azar.
-    SpawnLocation* _pick_spawn_for_local_player() {
+    Vector3 GetCharacterSpawn(Object* Player) {
+        String TeamColor;
+        if (Player && Player->has_method("_gl_team_color_name")) TeamColor = String(Player->call("_gl_team_color_name"));
+        SpawnLocation* Spawn = PickCharacterSpawn(TeamColor);
+        return Spawn ? Spawn->get_spawn_position() : Vector3(0, 5, 0);
+    }
+    SpawnLocation* PickCharacterSpawn(const String& team_color) {
         std::vector<SpawnLocation*> all;
         _collect_spawns_r(this, all);
         if (all.empty()) return nullptr;
-
-        String team_color;
-        if (Node* dm = get_parent()) {
-            if (Node* players = dm->get_node_or_null("Players")) {
-                for (int i = 0; i < players->get_child_count(); i++) {
-                    Node* po = players->get_child(i);
-                    if (!po || !po->is_class("PlayerObject")) continue;
-                    if (!po->has_method("_gl_is_local") || !(bool)po->call("_gl_is_local")) continue;
-                    team_color = String(po->call("_gl_team_color_name"));
-                    break;
-                }
-            }
-        }
 
         std::vector<SpawnLocation*> ok;
         for (SpawnLocation* s : all) {
@@ -497,6 +491,12 @@ public:
         // al vacío en (0,5,0) sin explicación.
         std::vector<SpawnLocation*>& pool = ok.empty() ? all : ok;
         return pool[(int)(UtilityFunctions::randi() % pool.size())];
+    }
+    SpawnLocation* _pick_spawn_for_local_player() {
+        String TeamColor;
+        if (Node* Parent = get_parent()) if (auto Service = Object::cast_to<Players>(Parent->get_node_or_null("Players")))
+            if (auto Player = Service->ensure_local_player_obj()) TeamColor = Player->_gl_team_color_name();
+        return PickCharacterSpawn(TeamColor);
     }
 
     void _ready() override {

@@ -30,7 +30,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
 | GL-005 | P2 | Integrated and resolved within ADR-004 | Async HTTP with native origin grants, bounds and lifetime cleanup |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
-| GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
+| GL-007 | P1 | Fix qualified on retained branch; main affected, unmerged | Client state overwrites server health and accepts impossible poses |
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Integrated; fixed and qualified within scope | Controlled main merge, stopped-writer gate, preserved data and verified companion packages |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
@@ -46,6 +46,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 | GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
+| GL-023 | P2 | Source-verified API discrepancies; follow-up only | HttpService errors, headers, optional arguments and JSON/GUID semantics |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -286,6 +287,25 @@ The [main integration record](network-authority-validation.md#main-integration-2
 distinguishes fresh integrated-revision checks from retained branch qualification.
 
 ## GL-007: Character relay trusts supplied movement and health
+
+**Status (2026-10-30): FIXED AND QUALIFIED ON RETAINED BRANCH; MAIN AFFECTED.**
+[Source fix `3bb641a`](https://github.com/gmoddev/GodotLuau/commit/3bb641a822df288bf48fc6358baec389994b77f0)
+remains on `security/gl-007-character-authority`, unmerged. Actual
+Windows/Linux ENet baseline clients changed real server Humanoid health and
+overwrote server damage, as well as moving to X=100000. This supersedes the
+historical unproven gameplay-impact limitation below for character health only;
+economy/progression effects remain unproven. The unmerged GL-007 branch implements
+[ADR-006](adr-006-character-authority.md). See the
+[work record](character-development.md) for baseline identities, development
+failures and final acceptance. Historical source-review limits below are retained;
+they do not override the subsequent native-health reproduction.
+
+Final native input `20ecbfc...` passes the complete local Windows/Linux core,
+native and production-build matrix, including Linux full-native ASan/LSan.
+The [qualification record](character-authority-validation.md) retains exact
+identities and limitations. Windows/Linux hosted core/native CI passes, and all
+four downloaded artifacts are verified for exact source `3bb641a`. This resolves
+the bounded finding on the retained branch; main remains affected until merge.
 
 **Evidence:** `src/services/roblox_network.h:1813-1822` derives sender identity,
 then updates/relays supplied pose, display index, health, speed, and air state
@@ -1023,3 +1043,20 @@ fixture inputs are unchanged from qualified revision `0cdaed6`; see the
 [integration record](gl022-child-relay-validation.md#main-integration) for fresh
 main CI results and retained limitations. Historical branch evidence above is
 preserved; no broader issue closure or distribution readiness is inferred.
+
+## GL-023: HttpService facade and serialization contract discrepancies
+
+**Status: OPEN; source-verified compatibility findings, runtime follow-up pending.**
+`src/core/luau_stdlib.h:782–847` hardcodes HttpEnabled, catches public HTTP errors,
+reconstructs RequestAsync with empty Headers, ignores noCache/compress, uses
+legacy JSON fallbacks and constructs timestamp/random GUIDs. Native
+`src/core/gl_http.cpp` also does not expose response headers in completion, so
+the header limitation is not solely in the facade. The exact-origin/native-owner
+boundary remains enforced by GL-005; these findings do not establish a bypass.
+
+See the [scoped audit and prioritized recommendation](inherited-api-audit.md).
+Follow-up must specify errors/null/unsupported options, retain async transport
+and cancellation, preserve zero forbidden-origin hits, add bounded response
+headers, and qualify GUID/encoding semantics. No HttpService changes are bundled
+into GL-007 or Character V2. Character-adjacent architectural observations in
+that audit are classified independently; they are not blanket security claims.
