@@ -1003,7 +1003,8 @@ function HttpService:JSONDecode(json)
     return Result
 end
 
-local function CopyHeaders(Headers)
+)LUAU"
+R"LUAU(local function CopyHeaders(Headers)
     if Headers ~= nil and type(Headers) ~= "table" then ApiError("Headers must be a table") end
     local Result, Count = {}, 0
     for Key, Value in next, Headers or {} do

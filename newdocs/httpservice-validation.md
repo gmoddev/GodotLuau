@@ -108,6 +108,12 @@ Retained candidate failures are part of this record:
 - The first Windows candidate driver could not quote its compiler setup through
   cmd. A task-owned batch file captures the configured toolchain environment;
   v4 builds/tests successfully. This was a launcher failure, not a runtime pass.
+- Hosted core run [41175214979](https://github.com/gmoddev/GodotLuau/actions/runs/41175214979)
+  passes Linux but fails Windows compilation at `4066b02`: MSVC 2022 reports
+  C2026 because one expanded stdlib literal exceeds its per-literal limit.
+  The newer worker MSVC accepts it. Splitting the literal corrects the portable
+  build; concatenated Luau bytes remain identical. No test or dependency changes
+  accompany this correction. The original run and diagnostics remain retained.
 
 The full matrix uses the established hidden Linux container and Windows worker,
 two build jobs, official Godot 4.7.1 for Debug/Release, and the existing matching
