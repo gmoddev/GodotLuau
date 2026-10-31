@@ -490,6 +490,7 @@ def Main():
     Parser.add_argument("--filesystem", action="store_true")
     Parser.add_argument("--http", action="store_true")
     Parser.add_argument("--httpservice", action="store_true")
+    Parser.add_argument("--callers", action="store_true")
     Parser.add_argument("--datastore", action="store_true")
     Parser.add_argument("--datastore-probe", type=Path)
     Parser.add_argument("--animation-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Editor"), default=["Local", "Listen", "Dedicated", "Editor"])
@@ -535,6 +536,9 @@ def Main():
         Results = Resources(Args, Args.output, Environment)
     elif Args.filesystem:
         Results = Filesystem(Args, Args.output, Environment)
+    elif Args.callers:
+        from RunHttpServiceCallers import Qualify
+        Results = Qualify(Args, Args.output, Environment)
     elif Args.httpservice:
         Results = HttpService(Args, Args.output, Environment)
     elif Args.http:

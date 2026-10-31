@@ -50,10 +50,10 @@ completed configurations and remaining gaps. The
 [main integration record](character-main-integration.md) separates fresh checks
 from retained branch qualification. Release publication and updater distribution
 remain disabled. The [scoped API audit](inherited-api-audit.md) records the original
-HttpService GL-023 findings. Its dedicated compatibility branch implements the
+HttpService GL-023 findings. Its integrated compatibility branch implements the
 [public API/migration contract](httpservice-api.md) while retaining the qualified
-GL-005 transport; [qualification status](httpservice-validation.md) remains
-separate from main integration.
+GL-005 transport. [Branch qualification](httpservice-validation.md) remains
+separate from [fresh main verification and caller migration](httpservice-main-integration.md).
 
 GL-009 is integrated by normal merge `fc923d2713c39e39fa8db87576bd8e7a5b91ef6d`,
 preserving all four commits at retained branch tip `d5e855b` and the qualified tree.

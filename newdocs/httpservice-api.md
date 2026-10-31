@@ -1,7 +1,8 @@
 # HttpService compatibility contract (GL-023)
 
-Applies to `fix/gl-023-httpservice-compatibility`; main integration is a separate
-decision. [Qualification and retained failures](httpservice-validation.md).
+Integrated on main from `fix/gl-023-httpservice-compatibility`, preserving its
+qualified implementation. [Qualification and retained failures](httpservice-validation.md)
+and [caller migration/integration](httpservice-main-integration.md).
 GL-005's [ADR-004](adr-004-asynchronous-http.md) still defines transport,
 authority, scheduling, cancellation, input/output limits and TLS. No new backend,
 VM, origin grant, dependency or distribution channel is introduced.
@@ -115,6 +116,40 @@ HeaderValues for repeated fields. Handle JSONNull explicitly rather than testing
 truthiness for null. Applications expecting empty-object fallbacks, nil holes,
 mixed-table filtering, numeric URL coercion or unbraced default GUIDs must change.
 Pass false to GenerateGUID to retain bare formatting.
+
+For example, validate application settings before applying them. Catching a
+parse failure must not manufacture an empty settings object; JSON null is a
+sentinel, not Lua nil, and valid JSON still needs an application schema check.
+This recipe accepts `Enabled=false` and rejects missing/incorrect fields:
+
+<!-- HttpServiceJsonCaller -->
+```lua
+local Http = game:GetService("HttpService")
+
+local function DecodeSettings(Body)
+    local Ok, Value = pcall(Http.JSONDecode, Http, Body)
+    if not Ok then return nil, "invalid-json" end
+    if Value == Http.JSONNull or type(Value) ~= "table" or type(Value.Enabled) ~= "boolean" then
+        return nil, "invalid-settings"
+    end
+    return Value
+end
+
+local function EncodePayload(Value)
+    local Ok, Body = pcall(Http.JSONEncode, Http, Value)
+    if not Ok then return nil, "invalid-payload" end
+    return Body
+end
+```
+
+Callers must check the returned value/error before applying settings or sending
+a payload. An encoding failure (including cycles or excessive size) is not a
+successful `{}` payload. If an application chooses defaults after an error,
+make that policy explicit at its recovery boundary. The backend's
+[HTTP example](../backend/README.md#phase-1-test--is-httpservice-alive) shows
+separate exception, empty-success and non-2xx handling. Imported games and
+external scripts require their own caller audit; repository tests cannot prove
+their compatibility.
 
 Compared against the official [HttpService reference](https://create.roblox.com/docs/reference/engine/classes/HttpService),
 [content types](https://create.roblox.com/docs/reference/engine/enums/HttpContentType)

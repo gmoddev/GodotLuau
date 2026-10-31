@@ -26,22 +26,50 @@ docker compose down -v            # stop AND wipe the database
 
 ## Phase 1 test — is `HttpService` alive?
 
-Once the extension is rebuilt, drop this into a **ServerScript** and press Play:
+The trusted host project must explicitly enable HTTP and grant each exact origin
+in `project.godot`. These example grants are opt-in development configuration;
+they are not installed by this repository or by the script:
 
+```ini
+[godot_luau]
+http/enabled=true
+http/allowed_origins=PackedStringArray("https://api.github.com", "http://127.0.0.1:7350")
+```
+
+Once the extension is rebuilt, run this in a **ServerScript** (start the local
+stack first). `HttpEnabled` reports native availability; assigning it cannot
+authorize an origin. Handle admission/transport errors separately from HTTP
+status responses:
+
+<!-- HttpServiceCaller -->
 ```lua
 local Http = game:GetService("HttpService")
 
--- 1) Any HTTPS endpoint proves real HTTP + TLS work (was returning "" before).
-print("GET zen:", Http:GetAsync("https://api.github.com/zen"))
+local GetOk, GetResult = pcall(Http.GetAsync, Http, "https://api.github.com/zen")
+if GetOk then
+    -- An empty body is still a successful response.
+    print("[Network:Example] GET bytes:", #GetResult)
+else
+    print("[Network:Example] GET failed:", tostring(GetResult):sub(1, 160))
+end
 
--- 2) Local Nakama proves the backend is reachable (start docker compose first).
-local r = Http:RequestAsync({ Url = "http://127.0.0.1:7350/", Method = "GET" })
-print("Nakama status:", r.StatusCode, r.StatusMessage)
+local RequestOk, Result = pcall(Http.RequestAsync, Http, {
+    Url = "http://127.0.0.1:7350/", Method = "GET"
+})
+if not RequestOk then
+    print("[Network:Example] Nakama request failed:", tostring(Result):sub(1, 160))
+elseif not Result.Success then
+    -- A non-2xx status is a normal RequestAsync result, not successful data.
+    print("[Network:Example] Nakama HTTP failure:", Result.StatusCode)
+else
+    print("[Network:Example] Nakama status:", Result.StatusCode, Result.StatusMessage)
+end
 ```
 
-Before Phase 1 both calls returned an empty string with a `[HttpService] … sin conexión`
-warning. Now `GetAsync` returns the real body and `RequestAsync` returns the real HTTP
-status code.
+GL-023 removes the old empty-string error fallback. `GetAsync` also raises for
+non-2xx; use `RequestAsync` when the caller needs that response's status, body or
+headers. No application fallback grants network access. See the
+[API and JSON migration contract](../newdocs/httpservice-api.md).
 
 ## Roadmap
 

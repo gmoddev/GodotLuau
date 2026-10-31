@@ -169,6 +169,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/httpservice" --httpservice --timeout 60
 
+      - name: GL-023 published HTTP and JSON caller migration
+        timeout-minutes: 2
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/callers" --callers --timeout 30
+
       - name: GL-009 transactional persistence and interrupted commit recovery
         timeout-minutes: 4
         run: |

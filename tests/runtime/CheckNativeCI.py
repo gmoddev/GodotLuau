@@ -22,6 +22,7 @@ def Main():
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
         'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],
         'httpservice': ['httpservice-' + Case for Case in ['api', 'denied', 'lifecycle', 'tls', 'utilities-A', 'utilities-B']],
+        'callers': ['callers-' + Case for Case in ['status', 'empty', 'denied']],
         'datastore': ['datastore-basic-basic-single',
             *[Label for Case in ['update','set','remove','increment'] for Label in ['datastore-'+Case+'-seed-single','datastore-'+Case+'-'+Case+'-A','datastore-'+Case+'-'+Case+'-B','datastore-'+Case+'-verify-single']],
             *['datastore-'+Case+'-'+Case+'-single' for Case in ['failures','lifecycle','memory','contention','unavailable','incompatible']]]
@@ -65,12 +66,24 @@ def Main():
     HttpServiceNative = json.loads((Args.output / 'httpservice/native-evidence.json').read_text())
     if len(set(GuidSamples)) != 4000 or HttpServiceNative != {'Actors': 6, 'GuidProcesses': 2, 'GuidSamples': 4000, 'UniqueGuids': 4000, 'UnauthorizedRequests': 0}:
         raise ValueError('GL-023 native/cross-process evidence incomplete')
+    from RunHttpServiceCallers import Snippets
+    CallerEvidence = json.loads((Args.output / 'callers/native-evidence.json').read_text())
+    SnippetHashes = {Name: hashlib.sha256(Value.encode()).hexdigest() for Name, Value in Snippets(Path(__file__).resolve().parents[2]).items()}
+    if CallerEvidence != {'Actors': 3, 'UnauthorizedRequests': 0, 'PublishedSnippetSHA256': SnippetHashes}:
+        raise ValueError('Published caller migration evidence incomplete')
+    for Case, Paths in [('status', ['/ok', '/status']), ('empty', ['/no-content', '/no-content']), ('denied', [])]:
+        Project = Args.output / 'callers' / Case
+        Text = (Project / ('callers-' + Case + '.stdout.log')).read_text(errors='replace')
+        Hits = json.loads((Project / 'server-results.json').read_text())['Hits']
+        if '[Runtime:HttpCallers] PASS ' + Case not in Text or Hits != [{'Method': 'GET', 'Path': Path} for Path in Paths]:
+            raise ValueError('Published caller migration fixture missing/failed: ' + Case)
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
         'DataStoreWorkerSHA256': hashlib.sha256((Args.extension.parent/('godot_luau_store_worker.exe' if Args.extension.suffix=='.dll' else 'godot_luau_store_worker')).read_bytes()).hexdigest(),
         'DataStoreNative': json.loads((Args.output/'datastore/native-evidence.json').read_text()),
         'HttpServiceNative': HttpServiceNative,
+        'CallerNative': CallerEvidence,
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
         'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),
