@@ -149,7 +149,9 @@ class GLSettingsMenu : public CanvasLayer {
     // ── Helpers ───────────────────────────────────────────────────────
     Node* _find_by_class(Node* n, const char* cls) {
         if (!n) return nullptr;
-        if (n->is_class(cls)) return n;
+        if (n->is_class(cls)) {
+            if (String(cls) != "RBXCharacter" || n->call("IsLocalControl") == Variant(true)) return n;
+        }
         for (int i = 0; i < n->get_child_count(); i++)
             if (Node* r = _find_by_class(n->get_child(i), cls)) return r;
         return nullptr;
@@ -755,13 +757,8 @@ public:
     }
     // Reset: mata al personaje local → auto-respawn (como "Reset Character").
     void _on_reset() {
-        if (is_inside_tree()) {
-            Node* p = _find_by_class((Node*)get_tree()->get_root(), "RobloxPlayer");
-            if (p) {
-                Node* hum = _find_by_class(p, "Humanoid");
-                if (hum && hum->has_method("set_health")) hum->call("set_health", 0.0);
-            }
-        }
+        if (Object* Service = ObjectDB::get_instance(gl_net_service_id()))
+            if (Service->is_class("NetworkService")) Service->call("RequestCharacterReset");
         _close_anim();
     }
 
@@ -877,7 +874,7 @@ public:
     void _on_invert_cam(bool on) {
         invert_cam = on;
         if (is_inside_tree()) {
-            Node* p = _find_by_class((Node*)get_tree()->get_root(), "RobloxPlayer");
+            Node* p = _find_by_class((Node*)get_tree()->get_root(), "RBXCharacter");
             if (p && p->has_method("set_invert_camera")) p->call("set_invert_camera", on);
         }
         _save_settings();
@@ -959,12 +956,12 @@ public:
     }
     void _apply_camera_lock() {
         if (!is_inside_tree()) return;
-        Node* p = _find_by_class((Node*)get_tree()->get_root(), "RobloxPlayer");
+        Node* p = _find_by_class((Node*)get_tree()->get_root(), "RBXCharacter");
         if (p && p->has_method("set_lock_first_person")) p->call("set_lock_first_person", cam_lock);
     }
     void _apply_sensitivity() {
         if (!is_inside_tree()) return;
-        Node* p = _find_by_class((Node*)get_tree()->get_root(), "RobloxPlayer");
+        Node* p = _find_by_class((Node*)get_tree()->get_root(), "RBXCharacter");
         if (p) p->call("set_mouse_sensitivity", 0.0022 * sensitivity);
     }
 

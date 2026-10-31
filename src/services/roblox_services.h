@@ -2,6 +2,7 @@
 #define ROBLOX_SERVICES_H
 
 #include "roblox_chat.h"
+#include "rbx_character.h"
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/node3d.hpp>
@@ -127,6 +128,7 @@ class PlayerObject : public Node {
 public:
     int64_t  user_id = 0;
     String   display_name;
+    uint64_t RemovingCharacterIdentity = 0;
     uint64_t character_id = 0;    // ObjectID del personaje/muñeco (sin puntero colgante)
     String   team_color = "Medium stone grey";   // nombre de BrickColor si no hay Team (1.15)
     int64_t  account_age = 0;
@@ -171,13 +173,13 @@ public:
     Node* get_character() const {
         return character_id ? Object::cast_to<Node>(ObjectDB::get_instance(character_id)) : nullptr;
     }
-    void _fire_char(std::vector<LuaCallback>& list, Node* character) {
+    void _fire_char(std::vector<LuaCallback>& list, Node* character, bool AllowQueued = false) {
         std::vector<LuaCallback> snap = list;
         uint64_t CharacterIdentity = character ? static_cast<uint64_t>(character->get_instance_id()) : 0;
         for (auto& cb : snap) {
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
             character = Object::cast_to<Node>(ObjectDB::get_instance(CharacterIdentity));
-            if (!character || character->is_queued_for_deletion()) break;
+            if (!character || (!AllowQueued && character->is_queued_for_deletion())) break;
             GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 if (character) {
                     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(Thread, sizeof(GodotObjectWrapper));
@@ -194,6 +196,7 @@ public:
     // ANTES que CharacterAdded, como garantiza Roblox).
     void set_character_silent(Node* c) {
         character_id = c ? (uint64_t)c->get_instance_id() : 0;
+        if (auto Character = Object::cast_to<RBXCharacter>(c)) Character->SetDepartureObserver(static_cast<uint64_t>(get_instance_id()));
     }
     // Dispara CharacterAdded + CharacterAppearanceLoaded del personaje actual.
     void fire_character_added() {
@@ -230,15 +233,25 @@ public:
     void set_character(Node* c) {
         uint64_t nid = c ? (uint64_t)c->get_instance_id() : 0;
         if (nid == character_id) return;
-        character_id = nid;
+        set_character_silent(c);
         if (c) fire_character_added();
     }
     void fire_character_removing() {
         Node* c = get_character();
-        if (c) _fire_char(char_removing_cbs, c);
+        if (!c || RemovingCharacterIdentity == character_id) return;
+        RemovingCharacterIdentity = character_id;
+        _fire_char(char_removing_cbs, c, true);
+    }
+    void CharacterDeparting(uint64_t Identity) {
+        if (character_id != Identity) return;
+        const uint64_t PlayerIdentity = static_cast<uint64_t>(get_instance_id());
+        fire_character_removing();
+        if (ObjectDB::get_instance(PlayerIdentity) == this && character_id == Identity) character_id = 0;
     }
 protected:
     static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("_character_departing", "identity"), &PlayerObject::CharacterDeparting);
+        ClassDB::bind_method(D_METHOD("get_character"), &PlayerObject::get_character);
         ClassDB::bind_method(D_METHOD("_gl_disconnect", "ref"), &PlayerObject::_gl_disconnect);
         ClassDB::bind_method(D_METHOD("_gl_team_color_name"), &PlayerObject::_gl_team_color_name);
         ClassDB::bind_method(D_METHOD("_gl_is_local"),        &PlayerObject::_gl_is_local);
@@ -467,6 +480,7 @@ protected:
 //// Servicio de jugadores — acceso via game:GetService("Players")
 class Players : public Node {
     GDCLASS(Players, Node);
+    bool LoadingCharacter = false;
 
 public:
     struct LuaCallback { lua_State* main_L; int ref; bool active = true; bool once = false; };
@@ -537,14 +551,23 @@ private:
     void _tick_player_added(double delta) {
         if (_gl_local_added_fired) return;
         Node* character = _find_local_character();
-        if (!character) { _gl_ready_time = 0.0; return; }  // esperar al personaje
+        if (!character && character_auto_loads) { _gl_ready_time = 0.0; return; }
+        Node* Network = is_inside_tree() ? _find_network_service(get_tree()->get_root()) : nullptr;
+        if (Network && !static_cast<bool>(Network->call("HasLocalParticipant"))) return;
         _gl_ready_time += delta;
         if (_gl_ready_time < 0.25) return;                 // margen para PlayerAdded:Connect
         _gl_local_added_fired = true;
         PlayerObject* po = ensure_local_player_obj();      // Player con .Character ya asignado (silencioso)
         if (po) {
-            fire_player_added(po);        // PlayerAdded PRIMERO (como Roblox)
-            po->fire_character_added();   // ...luego CharacterAdded (ya hay listeners)
+            const uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
+            const uint64_t PlayerIdentity = static_cast<uint64_t>(po->get_instance_id());
+            const uint64_t CharacterIdentity = character ? static_cast<uint64_t>(character->get_instance_id()) : 0;
+            fire_player_added(po);
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+            Node* Current = po && !po->is_queued_for_deletion() ? po->get_character() : nullptr;
+            if (Current && static_cast<uint64_t>(Current->get_instance_id()) == CharacterIdentity)
+                po->fire_character_added();
         }
     }
 
@@ -564,7 +587,7 @@ private:
             return;
         }
         Node* ch  = _find_local_character();
-        Node* hum = ch ? ch->get_node_or_null(NodePath("Humanoid")) : nullptr;
+        Node* hum = ch ? (ch->is_class("RBXCharacter") ? ch : ch->get_node_or_null(NodePath("Humanoid"))) : nullptr;
         if (!hum || !hum->has_method("get_health")) return;
         if ((double)hum->call("get_health") <= 0.0) _death_timer = 0.0;
     }
@@ -659,16 +682,22 @@ public:
     // Busca el PERSONAJE local (RobloxPlayer/2D) en Workspace.
     Node* _find_local_character() const {
         if (!is_inside_tree()) return nullptr;
-        Node* parent = get_parent(); // DataModel
-        if (!parent) return nullptr;
-        Node* ws = parent->get_node_or_null("Workspace");
-        if (!ws) return nullptr;
-        for (int i = 0; i < ws->get_child_count(); i++) {
-            Node* child = ws->get_child(i);
-            if (child && (child->is_class("RobloxPlayer") || child->is_class("RobloxPlayer2D")))
-                return child;
+        for (int Index = 0; Index < get_child_count(); ++Index) {
+            auto Player = Object::cast_to<PlayerObject>(get_child(Index));
+            Node* Character = Player && Player->is_local ? Player->get_character() : nullptr;
+            if (Character && Character->is_inside_tree() && !Character->is_queued_for_deletion()) return Character;
         }
-        return nullptr;
+        Node* World = get_parent() ? get_parent()->get_node_or_null("Workspace") : nullptr;
+        struct Finder {
+            static Node* Find(Node* Item) {
+                if (!Item || Item->is_queued_for_deletion()) return nullptr;
+                if ((Item->is_class("RBXCharacter") && Item->get_name() == StringName("LocalPlayer")) || Item->is_class("RobloxPlayer2D")) return Item;
+                for (int Index = 0; Index < Item->get_child_count(); ++Index)
+                    if (Node* Character = Find(Item->get_child(Index))) return Character;
+                return nullptr;
+            }
+        };
+        return Finder::Find(World);
     }
 
     // Crea/devuelve el objeto Player LOCAL (Player ≠ Character), hijo de Players.
@@ -708,11 +737,23 @@ public:
     // hace el Workspace (build_local_character), que es quien sabe del spawn,
     // el rig y los StarterCharacterScripts.
     void load_local_character() {
+        if (LoadingCharacter) return;
+        LoadingCharacter = true;
+        const uint64_t LoadingIdentity = static_cast<uint64_t>(get_instance_id());
+        struct LoadingGuard { uint64_t Identity; ~LoadingGuard() { if (auto Owner = Object::cast_to<Players>(ObjectDB::get_instance(Identity))) Owner->LoadingCharacter = false; } } Guard{LoadingIdentity};
         if (GLExecutionDomain::IsClientExecution()) return;
         if (!is_inside_tree()) return;
         uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         PlayerObject* po = ensure_local_player_obj();
         uint64_t PlayerIdentity = po ? static_cast<uint64_t>(po->get_instance_id()) : 0;
+        if (!_gl_local_added_fired && po) {
+            _gl_local_added_fired = true;
+            po->added_fired = true;
+            fire_player_added(po);
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
+            po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+            if (!po || po->is_queued_for_deletion()) return;
+        }
         if (Node* old = _find_local_character()) {
             uint64_t CharacterIdentity = static_cast<uint64_t>(old->get_instance_id());
             if (po) po->fire_character_removing();

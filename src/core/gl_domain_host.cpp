@@ -4,7 +4,7 @@
 #include "gl_runtime.h"
 #include "gl_errors.h"
 #include "gl_net_bridge.h"
-#include "humanoid.h"
+#include "rbx_character.h"
 #include "roblox_network.h"
 #include "roblox_services.h"
 #include "roblox_player.h"

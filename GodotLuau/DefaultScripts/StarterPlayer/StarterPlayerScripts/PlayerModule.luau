@@ -7,12 +7,12 @@
 
 local RunService = game:GetService("RunService")
 
--- El jugador tiene el Humanoid y la carpeta Modules/. /// The player holds the Humanoid and the Modules/ folder.
-local character = script.Parent
-local humanoid  = character:FindFirstChild("Humanoid")
+-- This engine template is cloned under the Character with its Modules folder.
+local Character = script.Parent
+local State = Character:IsA("Character") and Character or (Character:IsA("RobloxPlayer2D") and Character:FindFirstChild("Humanoid"))
 
-if not humanoid then
-    dwarn("[PlayerModule] Humanoid no encontrado en el jugador")
+if not State then
+    dwarn("[Character:PlayerModule] Character state unavailable")
     return
 end
 
@@ -36,26 +36,30 @@ pcall(function()
     Menu.Init(game:GetService("Players").LocalPlayer)
 end)
 
--- Pasar la velocidad y el salto del ControlModule al Humanoid.
--- /// Copy the ControlModule's walk speed and jump power to the Humanoid.
-humanoid.WalkSpeed = ControlModule.WalkSpeed
-humanoid.JumpPower = ControlModule.JumpPower
+-- Pasar la velocidad y el salto del ControlModule al Character.
+-- /// Copy the ControlModule's walk speed and jump power to the Character.
+-- 3D movement configuration is granted by the native Server authority.
+-- Existing 2D controller bindings keep their separate contract.
+if not Character:IsA("Character") then
+    State.WalkSpeed = ControlModule.WalkSpeed
+    State.JumpPower = ControlModule.JumpPower
+end
 
-dprint("[PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
+dprint("[Character:PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
 
-humanoid.Died:Connect(function()
-    dprint("[PlayerModule] El personaje ha muerto.")
+State.Died:Connect(function()
+    dprint("[Character:PlayerModule] El personaje ha muerto.")
 end)
 
 -- Cada frame: el ControlModule calcula la velocidad (sprint suave) y la aplica.
 -- /// Each frame: ControlModule computes the speed (smooth sprint) and applies it.
 RunService.Heartbeat:Connect(function(dt)
-    if humanoid.Health <= 0 then return end
+    if State.Health <= 0 then return end
 
     ControlModule:Update(dt)
     local speed = ControlModule:GetCurrentSpeed()
-    if math.abs(humanoid.WalkSpeed - speed) > 0.01 then
-        humanoid.WalkSpeed = speed
+    if not Character:IsA("Character") and math.abs(State.WalkSpeed - speed) > 0.01 then
+        State.WalkSpeed = speed
     end
 
     -- ══ TU CÓDIGO POR FRAME AQUÍ /// YOUR PER-FRAME CODE HERE ══

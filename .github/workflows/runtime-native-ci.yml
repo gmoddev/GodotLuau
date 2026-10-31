@@ -129,7 +129,7 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/animation" --animation --timeout 60
 
-      - name: GL-007 character authority and animation-health rejection
+      - name: Character V2 Model lifecycle and GL-007 authority regressions
         timeout-minutes: 5
         run: |
           python tests/runtime/RunQualification.py \

@@ -47,6 +47,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 | GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
 | GL-023 | P2 | Source-verified API discrepancies; follow-up only | HttpService errors, headers, optional arguments and JSON/GUID semantics |
+| GL-024 | P2 | Fix qualified on Character V2; unmerged | Part geometry caches retain resources beyond engine-server teardown |
+| GL-025 | P2 | Fix qualified on Character V2; unmerged | AnimationTrack completion signals are shadowed by inert bindings |
+| GL-026 | P2 | Bounded workaround qualified; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -1060,3 +1063,66 @@ and cancellation, preserve zero forbidden-origin hits, add bounded response
 headers, and qualify GUID/encoding semantics. No HttpService changes are bundled
 into GL-007 or Character V2. Character-adjacent architectural observations in
 that audit are classified independently; they are not blanket security claims.
+
+
+## GL-024: Part geometry cache teardown
+
+Character V2's actual Part collision fixture emitted five ObjectDB leak warnings
+and late material/shape/mesh destruction diagnostics on Windows/Linux. The prior
+source defines the three shared caches as header-static functions; only the
+registration translation unit's material cache is explicitly cleared. Geometry
+caches and translation-unit cache copies can survive until library unload,
+after RenderingServer/PhysicsServer teardown. This is a native resource-lifetime
+defect, not a security vulnerability or a newly reproduced baseline crash.
+
+The Character V2 candidate gives each inline cache one program-wide identity and
+clears materials, meshes and shapes during the existing scene uninitialization
+boundary. The subsequent Model fixture exits without those resource diagnostics
+on both workers. **Resolved for the exercised source scope on unmerged Character
+V2 at `d7905dd`:** final Windows/Linux Debug/Release, Linux full-native ASan/LSan,
+all four SCons products and all four hosted jobs/artifacts pass. See the
+[qualification record](character-v2-validation.md). Main retains the pre-fix implementation
+until an authorized merge. The failed logs are retained in the
+[Character V2 work record](character-v2-development.md).
+
+## GL-025: AnimationTrack completion/lifetime contract
+
+Source inspection during Character V2 finds that the AnimationTrack Luau getter
+returns an inert signal for Ended/Stopped before reaching their real native
+callback bindings. The later bindings also retain raw track/vector pointers;
+native callback vectors have no destruction cleanup. Existing GL-020 functional
+qualification does not establish actual Luau completion delivery or these
+retained-view destruction cases.
+
+Character V2 replaces the shadowed bindings with live ObjectID-backed signals,
+gives tracks an explicit Character/Animator playback lease, cancels playback
+when that owner retires, and releases callback references on retirement and
+destruction. Cleanup checks its exact owned clip so an older track cannot stop
+a later trusted gameplay timeline. Focused completion, replacement, destruction,
+retained-method and reload checks pass in the final 76-check native fixture,
+including actual R6 on both platforms. **Resolved for this scope on unmerged
+Character V2 at `d7905dd`:** all five native configurations, four SCons products
+and four hosted jobs/artifacts pass; see [qualification](character-v2-validation.md).
+GL-020's independent broader animation-security qualification stays open.
+
+## GL-026: Pinned Dictionary rvalue replacement leaks old storage
+
+Linux full-native ASan/LSan finds 576 bytes in four allocations when the new
+Character scene-migration fixture calls actual RBXImporter.Begin. The four stacks
+originate in its four Dictionary members. The pinned generated
+`godot-cpp/gen/src/variant/dictionary.cpp` move assignment constructs a new
+Dictionary over the old opaque storage without calling its destructor; the copy
+assignment does release it. This is a confirmed bounded native leak, not an
+exploitable memory-safety claim or proof about every generated builtin.
+
+The candidate importer resets through four distinct const lvalues, selecting
+copy assignment and retaining independent reports. The new protocol grant avoids
+a duplicate Dictionary cache entirely, storing configuration in its existing
+native grant structure. Dependencies remain pinned and unmodified. A broader
+dependency upgrade or repository-wide assignment audit is separate follow-up.
+**The bounded workaround is qualified on unmerged `d7905dd`:** three repeated
+actual legacy imports pass the matching full-native ASan/LSan fixture with clean
+exit, all platform/product checks and exact-source hosted CI pass. See
+[qualification](character-v2-validation.md) and [work record](character-v2-development.md).
+The dependency-wide follow-up remains open; no vendor change or repository-wide
+assignment safety guarantee is claimed.

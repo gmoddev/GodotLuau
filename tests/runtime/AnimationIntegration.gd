@@ -78,20 +78,21 @@ func Observe(Peer: int, Name: String, Speed: float, Looped: bool, Playing := tru
             Check(Animator.get_animation(Name).loop_mode == (Animation.LOOP_LINEAR if Looped else Animation.LOOP_NONE), "actual loop " + str(Peer))
 
 func MakeCharacter() -> void:
-    Character = Create("RobloxPlayer", "LocalPlayer", Game)
+    Character = Create("RBXCharacter", "LocalPlayer", Game)
     Character.set_process(false)
     Character.set_physics_process(false)
-    if not Character.has_node("Humanoid"): Create("Humanoid", "Humanoid", Character)
+    Character.call("SetLocalControl", true)
+    Character.call("EnsureRootPart")
 
 func LoadTrack(Name: String) -> Node:
     if not Game.has_node("Clip" + Name):
         var Clip := Create("AnimationObject", "Clip" + Name, Game)
         Clip.call("set_animation_id", "res://" + Name + ".tres")
         Clip.call("set_anim_name", Name)
-    Script("local Loaded = game.LocalPlayer.Humanoid:LoadAnimation(game.Clip" + Name + "); game:SetAttribute('Loaded" + Name + "', true)")
+    Script("local Loaded = game.LocalPlayer:LoadAnimation(game.Clip" + Name + "); game:SetAttribute('Loaded" + Name + "', true)")
     await process_frame
     Check(Game.has_meta("Loaded" + Name), "Humanoid LoadAnimation " + Name)
-    var Tracks := Character.get_node("Humanoid").find_children("*", "AnimationTrack", false, false)
+    var Tracks := Character.get_node("Animator").find_children("*", "AnimationTrack", false, false)
     return Tracks.back() if not Tracks.is_empty() else null
 
 func SendState() -> void:
@@ -101,7 +102,7 @@ func SendState() -> void:
     while int(State.get("Epoch", 0)) == 0:
         Check(Time.get_ticks_msec() < Deadline, "character grant deadline")
         if Time.get_ticks_msec() >= Deadline: return
-        Network.rpc_id(1, "_character_ready", 2)
+        Network.rpc_id(1, "_character_ready", 3)
         await create_timer(0.05).timeout
         State = Network.call("GetCharacterStates").get(Peer, {})
     Network.rpc_id(1, "_relay_character", State.Epoch, 1, State.Position, 0.0, 0.0, false)

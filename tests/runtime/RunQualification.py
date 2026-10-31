@@ -301,6 +301,49 @@ def CharacterFixtures(Args, Output, Environment):
                 (Project / 'latency-proxy.json').write_text(json.dumps(Evidence, indent=2))
                 if any(Item['Dropped'] or Item['Forwarded'] == 0 or Item['MinimumObservedSeconds'] < .19 for Item in Evidence):
                     raise RuntimeError('Latency forwarding evidence incomplete')
+    if Args.character_modes == ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency']:
+        Project = Output / 'Model'
+        Prepare(Project, Args.extension)
+        Label = 'character-model'
+        Process = Start(Args.godot, Project, 'CharacterV2.gd', Label, [], Environment)
+        Results.append(Check(Process, time.monotonic() + Args.timeout, Project, Label, '[Character:V2] PASS'))
+        Errors = (Project / (Label + '.stderr.log')).read_text(errors='replace')
+        if 'ERROR:' in Errors:
+            raise RuntimeError('Character Model fixture emitted engine errors: ' + Errors[-4000:])
+        Results += ManualCharacterFixtures(Args, Output / 'Manual', Environment)
+    return Results
+
+
+def ManualCharacterFixtures(Args, Project, Environment):
+    Prepare(Project, Args.extension)
+    Selected = Port()
+    Entries = []
+    Results = []
+    try:
+        for Role in ['server', 'client1', 'client2']:
+            FixtureRole = 'server' if Role == 'server' else 'client'
+            Extra = ['--fixture-role', FixtureRole, '--fixture-port', str(Selected)]
+            if Role == 'server': Extra += ['--glserver', str(Selected)]
+            else: Extra += ['--fixture-client-index', Role[-1]]
+            if Role == 'client2':
+                Deadline = time.monotonic() + Args.timeout
+                while not (Project / 'manual-client1.ready').exists():
+                    if time.monotonic() > Deadline:
+                        raise RuntimeError('Manual Character first-player admission failed')
+                    time.sleep(.02)
+            Label = 'character-manual-' + Role
+            Process = Start(Args.godot, Project, 'CharacterManual.gd', Label, Extra, Environment)
+            Entries.append((Process, Label))
+            if Role == 'server':
+                Deadline = time.monotonic() + Args.timeout
+                while not (Project / 'manual-ready').exists():
+                    if Process.poll() is not None or time.monotonic() > Deadline:
+                        raise RuntimeError('Manual Character server readiness failed')
+                    time.sleep(.02)
+        for Process, Label in Entries:
+            Results.append(Check(Process, time.monotonic() + Args.timeout, Project, Label, '[Character:Manual] PASS'))
+    finally:
+        for Process, _ in Entries: StopProcess(Process)
     return Results
 
 
@@ -391,6 +434,7 @@ def Main():
     Parser.add_argument("--security", action="store_true")
     Parser.add_argument("--animation", action="store_true")
     Parser.add_argument("--characters", action="store_true")
+    Parser.add_argument("--manual-characters", action="store_true")
     Parser.add_argument("--character-modes", nargs="+", choices=('Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'), default=['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'])
     Parser.add_argument("--resources", action="store_true")
     Parser.add_argument("--filesystem", action="store_true")
@@ -432,6 +476,8 @@ def Main():
         Results = SecurityFixtures(Args, Args.output, Environment)
     elif Args.animation:
         Results = AnimationFixtures(Args, Args.output, Environment)
+    elif Args.manual_characters:
+        Results = ManualCharacterFixtures(Args, Args.output, Environment)
     elif Args.characters:
         Results = CharacterFixtures(Args, Args.output, Environment)
     elif Args.resources:

@@ -54,15 +54,15 @@ func Script(Name: String, Source: String, Client := false) -> void:
 
 func Freeze() -> void:
     for Character in World.get_children():
-        if Character.is_class("RobloxPlayer") or Character.is_class("RobloxPlayer2D"):
+        if Character.is_class("RBXCharacter") or Character.is_class("RobloxPlayer2D"):
             Character.set_process(false)
             Character.set_physics_process(false)
-            if Character.has_node("Humanoid"):
-                Character.get_node("Humanoid").set_process(false)
-                Character.get_node("Humanoid").set_physics_process(false)
+            if Character.has_node("PhysicsBody"):
+                Character.get_node("PhysicsBody").set_process(false)
+                Character.get_node("PhysicsBody").set_physics_process(false)
 
 func Puppet(Peer: int) -> Node:
-    return World.get_node_or_null("RemotePlayer_" + str(Peer))
+    return World.find_child("RemotePlayer_" + str(Peer), true, false)
 
 func States() -> Dictionary:
     return Network.call("GetCharacterStates")
@@ -122,7 +122,7 @@ func Run() -> void:
     await process_frame
     Freeze()
     if Mode == "Local":
-        var Hum := World.get_node("LocalPlayer/Humanoid")
+        var Hum := World.get_node("LocalPlayer")
         Hum.call("take_damage", 25.0)
         Check(Hum.call("get_health") == 75.0, "native damage")
         Hum.call("heal", 5.0)
@@ -132,13 +132,13 @@ func Run() -> void:
         var GameplayClip := Animation.new()
         GameplayClip.length = 10.0
         var GameplayTrack := GameplayClip.add_track(Animation.TYPE_VALUE)
-        GameplayClip.track_set_path(GameplayTrack, NodePath("Humanoid:Health"))
+        GameplayClip.track_set_path(GameplayTrack, NodePath(".:Health"))
         GameplayClip.track_insert_key(GameplayTrack, 0.0, 1.0)
         Library.add_animation("TrustedHealth", GameplayClip)
         Player.add_animation_library("", Library)
         World.get_node("LocalPlayer").add_child(Player)
-        Script("ClientHealth", "local H = game:GetService('Players').LocalPlayer.Character.Humanoid; H.Health = 1; H:TakeDamage(10); H.MaxHealth = 1; game:SetAttribute('ClientDone', true)", true)
-        Script("ClientTimeline", "local H = game:GetService('Players').LocalPlayer.Character.Humanoid; H:LoadAnimation('TrustedHealth'):Play(); game:SetAttribute('ClientTimelineDone', true)", true)
+        Script("ClientHealth", "local H = game:GetService('Players').LocalPlayer.Character; H.Health = 1; H:TakeDamage(10); H.MaxHealth = 1; game:SetAttribute('ClientDone', true)", true)
+        Script("ClientTimeline", "local H = game:GetService('Players').LocalPlayer.Character; H:LoadAnimation('TrustedHealth'):Play(); game:SetAttribute('ClientTimelineDone', true)", true)
         Script("ClientCatalog", "assert(not game:GetService('NetworkService'):RegisterCharacterAnimation('res://CharacterAssetScript.gd')); game:SetAttribute('ClientCatalogDone', true)", true)
         await Drain()
         Check(Game.has_meta("ClientDone") and Hum.call("get_health") == 80.0 and Hum.call("get_max_health") == 100.0, "Client VM cannot mutate shared health")
@@ -148,15 +148,15 @@ func Run() -> void:
         Check(Hum.call("get_health") == 80.0, "invalid health rejects without effects")
         Check(Game.has_meta("ClientTimelineDone"), "client animation path exercised")
         Check(Game.has_meta("ClientCatalogDone"), "Client VM cannot register catalog assets")
-        Script("ServerTimeline", "game:GetService('Workspace').LocalPlayer.Humanoid:LoadAnimation('TrustedHealth'):Play()")
+        Script("ServerTimeline", "game:GetService('Workspace').LocalPlayer:LoadAnimation('TrustedHealth'):Play()")
         await Drain()
         Check(Hum.call("get_health") == 1.0, "trusted server gameplay timeline remains supported")
-        Script("ClientTrackControls", "local T = game:GetService('Players').LocalPlayer.Character.Humanoid:LoadAnimation('TrustedHealth'); T.Looped = true; T.Speed = 0; T:Stop(); game:SetAttribute('TrackControlsDone', true)", true)
+        Script("ClientTrackControls", "local T = game:GetService('Players').LocalPlayer.Character:LoadAnimation('TrustedHealth'); T.Looped = true; T.Speed = 0; T:Stop(); game:SetAttribute('TrackControlsDone', true)", true)
         await Drain()
         Check(Game.has_meta("TrackControlsDone") and Player.is_playing() and Player.speed_scale == 1.0 and GameplayClip.loop_mode == Animation.LOOP_NONE, "Client track settings cannot control a server gameplay timeline")
         Player.stop()
         var DeferredScript := GDScript.new()
-        DeferredScript.source_code = "extends Animation\nfunc _init():\n    var Tree = Engine.get_main_loop()\n    if Tree is SceneTree:\n        Tree.current_scene.call_deferred('set_meta', 'UntrustedInitializer', true)\n        var H = Tree.root.find_child('Humanoid', true, false)\n        if H != null: H.call_deferred('set_health', 1.0)\n"
+        DeferredScript.source_code = "extends Animation\nfunc _init():\n    var Tree = Engine.get_main_loop()\n    if Tree is SceneTree:\n        Tree.current_scene.call_deferred('set_meta', 'UntrustedInitializer', true)\n        var H = Tree.root.find_child('LocalPlayer', true, false)\n        if H != null: H.call_deferred('set_health', 1.0)\n"
         Check(ResourceSaver.save(DeferredScript, "res://CharacterDeferredScript.gd") == OK and DeferredScript.reload() == OK, "deferred initializer source")
         var DeferredClip := Animation.new()
         DeferredClip.set_script(DeferredScript)
@@ -166,7 +166,7 @@ func Run() -> void:
         Hum.call("set_health", 80.0)
         var DeferredObject := Create("AnimationObject", "DeferredClip")
         DeferredObject.call("set_animation_id", "res://CharacterDeferred.tres")
-        Script("ClientResourceLoad", "game:GetService('Players').LocalPlayer.Character.Humanoid:LoadAnimation(game.DeferredClip); game:SetAttribute('ClientLoadDone', true)", true)
+        Script("ClientResourceLoad", "game:GetService('Players').LocalPlayer.Character:LoadAnimation(game.DeferredClip); game:SetAttribute('ClientLoadDone', true)", true)
         await Drain()
         Check(Game.has_meta("ClientLoadDone") and not Game.has_meta("UntrustedInitializer") and Hum.call("get_health") == 80.0, "Client resource selection cannot execute deferred initializer effects")
         var ExportClip := Animation.new()
@@ -175,7 +175,7 @@ func Run() -> void:
         Remap.set_value("remap", "path", "res://CharacterExported.res")
         Check(Remap.save("res://CharacterExported.tres.remap") == OK, "export remap prepared")
         Check(not FileAccess.file_exists("res://CharacterExported.tres") and Network.call("RegisterCharacterAnimation", "res://CharacterExported.tres"), "catalog reads a remapped binary without the source text resource")
-        var Temporary := Create("Humanoid", "TemporaryHumanoid")
+        var Temporary := Create("RBXCharacter", "TemporaryHumanoid")
         Script("CallbackLifetime", "local H = game.TemporaryHumanoid; H.Died:Connect(function() end); H.HealthChanged:Connect(function() end); H.StateChanged:Connect(function() end); shared.RetainedHealthConnect = H.HealthChanged.Connect; game:SetAttribute('CallbacksRegistered', true)")
         await Drain()
         Check(Game.has_meta("CallbacksRegistered"), "native signal registrations exercised")
@@ -209,12 +209,12 @@ func Server() -> void:
     var Clip := Animation.new()
     Clip.length = 0.1
     var Track := Clip.add_track(Animation.TYPE_VALUE)
-    Clip.track_set_path(Track, NodePath("Humanoid:Health"))
+    Clip.track_set_path(Track, NodePath(".:Health"))
     Clip.track_insert_key(Track, 0.0, 1.0)
     Check(ResourceSaver.save(Clip, "res://CharacterHealthAttack.tres") == OK, "attack asset prepared")
     var MethodClip := Animation.new()
     Track = MethodClip.add_track(Animation.TYPE_METHOD)
-    MethodClip.track_set_path(Track, NodePath("Humanoid"))
+    MethodClip.track_set_path(Track, NodePath("."))
     MethodClip.track_insert_key(Track, 0.0, {"method": "take_damage", "args": [50.0]})
     Check(ResourceSaver.save(MethodClip, "res://CharacterMethodAttack.tres") == OK, "method asset prepared")
     var RootClip := Animation.new()
@@ -223,7 +223,7 @@ func Server() -> void:
     RootClip.track_insert_key(Track, 0.0, Vector3(9999, 0, 0))
     Check(ResourceSaver.save(RootClip, "res://CharacterRootAttack.tres") == OK, "root asset prepared")
     var Attached := GDScript.new()
-    Attached.source_code = "extends Animation\nfunc _init():\n    var Tree = Engine.get_main_loop()\n    if Tree is SceneTree:\n        Tree.current_scene.set_meta('ScriptedLoads', int(Tree.current_scene.get_meta('ScriptedLoads', 0)) + 1)\n        for Body in Tree.root.find_children('RemotePlayer_*', '', true, false):\n            var Hum = Body.get_node_or_null('Humanoid')\n            if Hum != null: Hum.call('set_health', 1.0)\n"
+    Attached.source_code = "extends Animation\nfunc _init():\n    var Tree = Engine.get_main_loop()\n    if Tree is SceneTree:\n        Tree.current_scene.set_meta('ScriptedLoads', int(Tree.current_scene.get_meta('ScriptedLoads', 0)) + 1)\n        for Body in Tree.root.find_children('RemotePlayer_*', '', true, false):\n            var Hum = Body\n            if Hum != null: Hum.call('set_health', 1.0)\n"
     Check(ResourceSaver.save(Attached, "res://CharacterAssetScript.gd") == OK, "scripted asset source prepared")
     Check(Attached.reload() == OK, "scripted asset compiled")
     var ScriptedClip := Animation.new()
@@ -242,6 +242,11 @@ func Server() -> void:
         Check(not Network.call("RegisterCharacterAnimation", "res://Character" + Asset + ".tres"), "unsafe catalog entry rejected " + Asset)
     var ScriptedLoads := int(Game.get_meta("ScriptedLoads", 0))
     Mark("ready")
+    await Wait("client1.protocol2")
+    await Wait("client2.protocol2")
+    await Drain()
+    Check(not States().has(int(Read("client1.protocol2"))) and not States().has(int(Read("client2.protocol2"))), "protocol 2 cannot activate a writer")
+    Mark("protocol.checked")
     await Wait("client1.ready")
     await Wait("client2.ready")
     First = int(Read("client1.ready"))
@@ -250,9 +255,15 @@ func Server() -> void:
     var Original: Vector3 = States()[First].Position
     var InitialEpoch: int = States()[First].Epoch
     var Character := Puppet(First)
-    var Health := Character.get_node("Humanoid")
+    var Health := HealthNode(Character)
+    if Mode != "TwoD":
+        Check(Character.is_class("RBXCharacter") and Character.is_class("RBXModel") and not Character.has_node("Humanoid") and Character.has_node("Animator"), "server remote has actual Character/Model identity")
     Health.call("take_damage", 25.0)
     await Drain()
+    var Invalid: Dictionary = States()[First].Contract.duplicate(true)
+    if Mode == "TwoD": Invalid.Version = 2
+    else: Invalid.Pose = Transform3D(Basis().scaled(Vector3(2, 1, 1)), Original)
+    Network.rpc("_recv_character", First, InitialEpoch + 999, 9999, Original, 0.0, 1.0, 100.0, 0.0, false, Mode == "TwoD", InitialEpoch, Invalid)
     Mark("attack")
     await Wait("attacked")
     await Drain()
@@ -265,9 +276,9 @@ func Server() -> void:
         var SharedId := Character.get_instance_id()
         var SharedYaw: Vector3 = Character.global_rotation
         Game.set_meta("SharedTarget", Character.name)
-        Script("SharedClientAuthority", "local C = game:GetService('Workspace')[game:GetAttribute('SharedTarget')]; C.Rotation = Vector3.new(0,90,0); C.Humanoid:Destroy(); C:ClearAllChildren(); C:Destroy(); game:SetAttribute('SharedAttacksDone', true)", true)
+        Script("SharedClientAuthority", "local C = game:GetService('Workspace')[game:GetAttribute('SharedTarget')]; C.Rotation = Vector3.new(0,90,0); C.Scale = Vector3.new(2,2,2); C:PivotTo(CFrame.new(2000,0,0)); C:MoveTo(Vector3.new(2000,0,0)); C:SetAttribute('ClientGameplay', 1); C.Animator:Destroy(); C:ClearAllChildren(); C:Destroy(); game:SetAttribute('SharedAttacksDone', true)", true)
         await Drain()
-        Check(Game.has_meta("SharedAttacksDone") and is_instance_id_valid(SharedId) and Character.has_node("Humanoid") and Character.global_rotation == SharedYaw, "shared Client cannot rotate or destroy a server character")
+        Check(Game.has_meta("SharedAttacksDone") and is_instance_id_valid(SharedId) and Character.is_class("RBXCharacter") and Character.has_node("Animator") and not Character.has_meta("ClientGameplay") and Character.global_rotation == SharedYaw, "shared Client cannot rotate or destroy a server character")
     Mark("valid")
     await Wait("valid.sent")
     await Drain()
@@ -298,7 +309,7 @@ func Server() -> void:
     var Gameplay := Animation.new()
     Gameplay.length = 20.0
     var GameplayTrack := Gameplay.add_track(Animation.TYPE_VALUE)
-    Gameplay.track_set_path(GameplayTrack, NodePath("Humanoid:Health"))
+    Gameplay.track_set_path(GameplayTrack, NodePath(".:Health"))
     Gameplay.track_insert_key(GameplayTrack, 0.0, 75.0)
     var GameplayLibrary := Animator.get_animation_library("")
     GameplayLibrary.add_animation("TrustedTimeline", Gameplay)
@@ -320,6 +331,7 @@ func Server() -> void:
         await Wait("plane.sent")
         await Drain()
         var Motion: Dictionary = JSON.parse_string(Read("plane.sent"))
+        print("[Network:CharacterTest] 2D final admitted ", States()[First], " measured ", Motion)
         Check(absf(States()[First].Position.y - float(Motion.LastY)) < 10 and float(Motion.LastY) < 0, "native 2D platformer and sustained top-down input remain admitted")
     if Mode == "Movement":
         var AscentStart: Vector3 = States()[First].Position
@@ -337,6 +349,13 @@ func Server() -> void:
     var BeforeEpoch: int = States()[First].Epoch
     var Correction := Before + Vector3(1000, 0, 0)
     Character.set("global_position", Vector2(Correction.x, Correction.y) if Mode == "TwoD" else Correction)
+    if Mode != "TwoD":
+        Character.global_transform = Transform3D(Basis.from_euler(Vector3(0.1, 0.2, 0.05)).scaled(Vector3.ONE * 1.25), Correction)
+        Character.call("SetAcceleration", 130.0)
+        Character.call("SetAirAcceleration", 55.0)
+        Character.call("SetTurnSpeed", 14.0)
+        Character.call("set_auto_rotate", false)
+        Character.call("set_max_health", 150.0)
     await Drain()
     Check(States()[First].Position == Correction and States()[First].Epoch > BeforeEpoch, "server correction changes baseline and epoch")
     Mark("corrected", str(BeforeEpoch))
@@ -356,7 +375,7 @@ func Server() -> void:
     Players.call("set_respawn_time", 0.05)
     Character = Puppet(First)
     OldId = Character.get_instance_id()
-    Health = Character.get_node("Humanoid")
+    Health = HealthNode(Character)
     Health.connect("Died", func() -> void: Game.set_meta("Died", int(Game.get_meta("Died", 0)) + 1))
     Health.call("set_health", 0.0)
     Health.call("set_health", 0.0)
@@ -369,6 +388,27 @@ func Server() -> void:
     await Drain()
     Mark("automatic")
     await Wait("automatic.checked")
+    var ResetLife: int = States()[First].Life
+    Mark("reset")
+    await Wait("reset.sent")
+    var ResetDeadline := Time.get_ticks_msec() + 4000
+    while States()[First].Life == ResetLife and Time.get_ticks_msec() < ResetDeadline: await process_frame
+    Check(States()[First].Life > ResetLife and States()[First].Health == 100.0 and States()[Second].Health == 100.0, "native reset requests only its own server-authorized new life")
+    var StableLife: int = States()[First].Life
+    Mark("reset.checked", str(States()[First].Epoch))
+    await Wait("reset.stale")
+    await Drain()
+    Check(States()[First].Life == StableLife and States()[First].Health == 100.0, "stale and immediate repeated reset cannot replace a fresh life")
+    Mark("reset.done")
+    Character = Puppet(First)
+    if Mode != "TwoD":
+        var Group := Node3D.new()
+        Group.name = "CharacterGroup"
+        World.add_child(Group)
+        var ReparentIdentity := Character.get_instance_id()
+        Character.reparent(Group, true)
+        await process_frame
+        Check(Puppet(First) != null and Puppet(First).get_instance_id() == ReparentIdentity, "same-tree reparent preserves native Character identity")
     Character = Puppet(First)
     Character.free()
     await process_frame
@@ -376,6 +416,20 @@ func Server() -> void:
     await Wait("destroyed.sent")
     await Drain()
     Check(Puppet(First) == null, "normal input and readiness cannot resurrect destroyed character")
+    await Wait("client1.absent")
+    await Wait("client2.absent")
+    var RemovedState: Dictionary = States()[First]
+    Network.rpc("_recv_character", First, RemovedState.Epoch, 99999, RemovedState.Position, 0.0, 100.0, 100.0, 0.0, false, Mode == "TwoD", RemovedState.Life, RemovedState.Contract)
+    Network.rpc("_recv_anim_v2", First, RemovedState.Life, "res://CharacterSafeRig.tres", "StaleRemoved", 1.0, true, true)
+    Mark("removed.stale")
+    await Wait("client1.tombstone")
+    await Wait("client2.tombstone")
+    Network.call("net_load_character", Network.call("player_node_for_peer", First))
+    await Drain()
+    Check(Puppet(First) != null and States()[First].Life > RemovedState.Life, "trusted LoadCharacter restores a removed life")
+    Mark("restored")
+    await Wait("client1.restored")
+    await Wait("client2.restored")
     Mark("done")
     await Wait("client1.closed")
     while Game.get_multiplayer().get_peers().has(First): await process_frame
@@ -419,11 +473,14 @@ func Client() -> void:
     while not Network.call("is_connected_net"): await process_frame
     Network.set_process(false)
     var Peer: int = Network.call("get_peer_id")
+    Network.rpc_id(1, "_character_ready", 2)
+    Mark("client" + str(Index) + ".protocol2", str(Peer))
+    await Wait("protocol.checked")
     var Deadline := Time.get_ticks_msec() + 8000
     while not States().has(Peer) or int(States()[Peer].Epoch) == 0:
         Check(Time.get_ticks_msec() < Deadline, "grant deadline")
         if Time.get_ticks_msec() >= Deadline: return
-        Network.rpc_id(1, "_character_ready", 2)
+        Network.rpc_id(1, "_character_ready", 3)
         await create_timer(0.05).timeout
     Freeze()
     Network.set_process(false)
@@ -546,6 +603,15 @@ func Client() -> void:
             Mark("ascent.sync.sent")
     await Wait("corrected")
     Freeze()
+    if Mode != "TwoD":
+        var Target: Node3D = World.get_node("LocalPlayer") if Index == 1 else Puppet(int(Read("client1.ready")))
+        var Expected := Basis.from_euler(Vector3(0.1, 0.2, 0.05)).scaled(Vector3.ONE * 1.25)
+        var ContractDeadline := Time.get_ticks_msec() + 5000
+        while (not Target.global_basis.is_equal_approx(Expected) or Target.call("GetAcceleration") != 130.0 or Target.call("get_max_health") != 150.0) and Time.get_ticks_msec() < ContractDeadline:
+            await process_frame
+        Check(Target.global_basis.is_equal_approx(Expected), "complete server orientation and uniform scale replicated")
+        Check(Target.call("GetAcceleration") == 130.0 and Target.call("GetAirAcceleration") == 55.0 and Target.call("GetTurnSpeed") == 14.0 and not Target.call("get_auto_rotate") and Target.call("get_max_health") == 150.0, "server movement configuration and maximum health replicated")
+        Check(Target.call("GetPhysicsBody").global_transform.is_equal_approx(Target.global_transform), "replica body shares Character world pose")
     if Index == 1:
         Send(Original, 0.0, false, int(Read("corrected")), 9999)
         Mark("stale.sent")
@@ -556,24 +622,50 @@ func Client() -> void:
         Check(is_instance_valid(Other), "observer character exists")
         if is_instance_valid(Other):
             Check(Other.get("global_position").x > 999, "observer sees server correction")
-            Check(Other.get_node("Humanoid").call("get_health") == 75.0, "observer sees server health")
+            Check(HealthNode(Other).call("get_health") == 75.0, "observer sees server health")
         Mark("client2.observed")
     await Wait("respawn")
     Freeze()
     if Index == 1:
-        Check(World.get_node("LocalPlayer/Humanoid").call("get_health") == 100.0, "owner receives fresh life health")
+        Check(HealthNode(World.get_node("LocalPlayer")).call("get_health") == 100.0, "owner receives fresh life health")
         Check(int(States()[Peer].Epoch) > OldEpoch, "owner receives new life epoch")
         Mark("respawn.checked")
     await Wait("automatic")
     Freeze()
     if Index == 1:
-        Check(World.get_node("LocalPlayer/Humanoid").call("get_health") == 100.0, "owner receives automatic server life")
+        Check(HealthNode(World.get_node("LocalPlayer")).call("get_health") == 100.0, "owner receives automatic server life")
         Mark("automatic.checked")
+    await Wait("reset")
+    if Index == 1:
+        Network.call("RequestCharacterReset")
+        Mark("reset.sent")
+    await Wait("reset.checked")
+    Freeze()
+    if Index == 1:
+        while int(States()[Peer].Epoch) < int(Read("reset.checked")): await process_frame
+        Network.rpc_id(1, "_character_reset", OldEpoch)
+        Network.rpc_id(1, "_character_reset", int(States()[Peer].Epoch))
+        Mark("reset.stale")
+    await Wait("reset.done")
+    Check(HealthNode(World.get_node("LocalPlayer")).call("get_health") == 100.0, "native reset receives fresh replica health")
     await Wait("destroyed")
     if Index == 1:
         Send(States()[Peer].Position)
-        Network.rpc_id(1, "_character_ready", 2)
+        Network.rpc_id(1, "_character_ready", 3)
         Mark("destroyed.sent")
+    await Drain()
+    Check(World.get_node_or_null("LocalPlayer") == null if Index == 1 else Puppet(int(Read("client1.ready"))) == null, "server removal removes owner and observer Character")
+    Mark("client" + str(Index) + ".absent")
+    await Wait("removed.stale")
+    await Drain()
+    Check(World.get_node_or_null("LocalPlayer") == null if Index == 1 else Puppet(int(Read("client1.ready"))) == null, "late pose cannot recreate a removed life")
+    Check(not Network.call("GetAnimationStates").has(int(Read("client1.ready"))), "late animation cannot recreate removed cache")
+    Mark("client" + str(Index) + ".tombstone")
+    await Wait("restored")
+    await Drain()
+    Check(World.get_node_or_null("LocalPlayer") != null if Index == 1 else Puppet(int(Read("client1.ready"))) != null, "trusted replacement reaches owner and observer")
+    Freeze()
+    Mark("client" + str(Index) + ".restored")
     await Wait("done")
     if Index == 2: await Wait("client2.close")
     Network.call("disconnect_net")
@@ -593,7 +685,7 @@ func Client() -> void:
             if Time.get_ticks_msec() > RejoinDeadline:
                 Check(false, "reconnect grant deadline")
                 return
-            Network.rpc_id(1, "_character_ready", 2)
+            Network.rpc_id(1, "_character_ready", 3)
             await create_timer(0.05).timeout
         Freeze()
         Network.set_process(false)
@@ -606,9 +698,12 @@ func Client() -> void:
         Network.call("disconnect_net")
     Mark("client" + str(Index) + ".done")
 
+func HealthNode(Character: Node) -> Node:
+    return Character if Character.is_class("RBXCharacter") else Character.get_node("Humanoid")
+
 func MoveNative() -> void:
-    var Body: CharacterBody3D = World.get_node("LocalPlayer")
-    var Hum := Body.get_node("Humanoid")
+    var Hum: Node = World.get_node("LocalPlayer")
+    var Body: CharacterBody3D = Hum.get_node("PhysicsBody")
     Hum.call("set_npc_move_dir", Vector3.RIGHT)
     Hum.set_physics_process(true)
     var Up := 0.0
@@ -675,7 +770,9 @@ func MoveNative2D() -> void:
     North.pressed = false
     Input.parse_input_event(North)
     Body.set_physics_process(false)
-    Send(Vector3(Body.global_position.x, Body.global_position.y, 0), 0.0, true)
+    for FinalSample in range(3):
+        Send(Vector3(Body.global_position.x, Body.global_position.y, 0), 0.0, true)
+        await create_timer(0.05).timeout
     var Motion := {"Walk": Walk, "Jump": Up, "Fall": Down, "LastY": Body.global_position.y}
     print("[Network:CharacterTest] native 2D movement ", JSON.stringify(Motion))
     Mark("plane.sent", JSON.stringify(Motion))

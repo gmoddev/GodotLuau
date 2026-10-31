@@ -55,7 +55,7 @@ inline String map_class(const String &c) {
         m["BindableEvent"] = "BindableEventNode";
         m["BindableFunction"] = "BindableEventNode";
         // Personaje y fisica
-        m["Humanoid"] = "Humanoid";        m["Motor6D"] = "Motor6D";
+        m["Character"] = "RBXCharacter"; m["Animator"] = "RBXAnimator"; m["Motor6D"] = "Motor6D";
         m["Attachment"] = "Attachment";
         m["WeldConstraint"] = "WeldConstraint";  m["Weld"] = "WeldConstraint";
         m["Snap"] = "WeldConstraint";            m["ManualWeld"] = "WeldConstraint";

@@ -1,5 +1,9 @@
 extends SceneTree
 
+func WireContract(Position: Vector3) -> Dictionary:
+    return {"Version": 3, "Pose": Transform3D(Basis(), Position), "WalkSpeed": 16.0, "JumpPower": 20.0, "Gravity": 45.0, "Acceleration": 110.0, "AirAcceleration": 45.0, "TurnSpeed": 11.0, "AutoRotate": true}
+
+
 # File barriers coordinate processes; every attack and positive network control
 # still traverses the real ENet / SceneMultiplayer RPC dispatch.
 var Game: Node
@@ -92,7 +96,7 @@ func SendState() -> void:
     while int(State.get("Epoch", 0)) == 0:
         Check(Time.get_ticks_msec() < Deadline, "character grant deadline")
         if Time.get_ticks_msec() >= Deadline: return
-        Network.rpc_id(1, "_character_ready", 2)
+        Network.rpc_id(1, "_character_ready", 3)
         await create_timer(0.05).timeout
         State = Network.call("GetCharacterStates").get(Peer, {})
     Network.rpc_id(1, "_relay_character", State.Epoch, 1, State.Position, 0.0, 0.0, false)
@@ -129,7 +133,7 @@ func ObserveStable() -> void:
             var Expected := 10.0 if str(SessionPlayer.name) == "Player2" else 20.0
             Check(is_equal_approx(Character.get("global_position").x, Expected), "presentation unchanged " + str(Peer))
             if Peer == First:
-                Check(is_equal_approx(float(Character.get_node("Humanoid").get("Health")), 100.0), "health unchanged")
+                Check(is_equal_approx(float(Character.get("Health")), 100.0), "health unchanged")
         Check(is_instance_valid(Network.call("player_node_for_peer", Peer)), "player registry retained")
     for Peer in [-1, 0, 2147483647]: Check(Puppet(Peer) == null, "no forged target " + str(Peer))
     Check(int(Game.get_meta("Removed", 0)) == 0, "no removal callback")
@@ -148,6 +152,10 @@ func Run() -> void:
     Create("TextChatService", "TextChatService")
     Game.get_node("TextChatService/ChatWindow").connect("MessageSent", Capture)
     Network = Create("NetworkService", "NetworkService")
+    # Explicit SendState owns protocol readiness in this fixture. Pause only the
+    # client's automatic broadcaster so PREINIT truly precedes admission, also
+    # after Connect re-enables the Node's process flag. ENet polling/RPCs stay real.
+    if Role == "client": Network.process_mode = Node.PROCESS_MODE_DISABLED
     await process_frame
     Script("Observations", """
 game:GetService('TextChatService').MessageReceived:Connect(function(Message)
@@ -240,8 +248,8 @@ game:SetAttribute('Observing', true)
                 break
             var FirstState: Dictionary = Network.call("GetCharacterStates")[First]
             var SecondState: Dictionary = Network.call("GetCharacterStates")[Second]
-            Network.rpc("_recv_character", First, FirstState.Epoch, 10000, Vector3(11, 0, 0), 0.0, 95.0, 100.0, 0.0, false, false, FirstState.Life)
-            Network.rpc("_recv_character", Second, SecondState.Epoch, 10000, Vector3(21, 0, 0), 0.0, 100.0, 100.0, 0.0, false, false, SecondState.Life)
+            Network.rpc("_recv_character", First, FirstState.Epoch, 10000, Vector3(11, 0, 0), 0.0, 95.0, 100.0, 0.0, false, false, FirstState.Life, WireContract(Vector3(11, 0, 0)))
+            Network.rpc("_recv_character", Second, SecondState.Epoch, 10000, Vector3(21, 0, 0), 0.0, 100.0, 100.0, 0.0, false, false, SecondState.Life, WireContract(Vector3(21, 0, 0)))
             await create_timer(0.05).timeout
         await Wait("client1.positive")
         await Wait("client2.positive")

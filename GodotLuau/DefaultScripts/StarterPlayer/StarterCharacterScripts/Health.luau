@@ -5,31 +5,32 @@
 
 local RunService = game:GetService("RunService")
 
-local humanoid = script.Parent:FindFirstChild("Humanoid")
-if not humanoid then
-    dwarn("[Health] Humanoid no encontrado en el personaje")
+local Character = script.Parent
+local State = Character:IsA("Character") and Character or (Character:IsA("RobloxPlayer2D") and Character:FindFirstChild("Humanoid"))
+if not State then
+    dwarn("[Character:Health] Character state unavailable")
     return
 end
 
-dprint("[Health] Regeneracion activa: " .. script.Parent.Name)
+dprint("[Character:Health] Regeneracion activa: " .. script.Parent.Name)
 
 -- La regeneración empieza REGEN_DELAY s tras el ÚLTIMO daño (recibir daño reinicia el contador).
 -- /// Regen starts REGEN_DELAY s after the LAST hit (taking damage resets the timer).
 local REGEN_DELAY = 3.0    -- s sin daño para regenerar /// seconds without damage before regen
 local REGEN_RATE  = 0.01   -- fracción de MaxHealth por segundo (1%) /// fraction of MaxHealth per second (1%)
 
-local last_health = humanoid.Health
+local last_health = State.Health
 local since_damage = REGEN_DELAY  -- permite regenerar desde el inicio /// allow regen from the start
 
-humanoid.HealthChanged:Connect(function(newHP)
+State.HealthChanged:Connect(function(newHP)
     if newHP < last_health then
         since_damage = 0.0  -- recibió daño → reinicia el contador /// took damage → reset the timer
     end
     last_health = newHP
 end)
 
-humanoid.Died:Connect(function()
-    dprint("[Health] " .. script.Parent.Name .. " ha muerto.")
+State.Died:Connect(function()
+    dprint("[Character:Health] " .. script.Parent.Name .. " ha muerto.")
 end)
 
 -- Cada frame: si pasó el retardo y falta vida, sube un poco hacia MaxHealth.
@@ -37,9 +38,9 @@ end)
 RunService.Heartbeat:Connect(function(dt)
     since_damage = since_damage + dt
     if since_damage < REGEN_DELAY then return end
-    if humanoid.Health > 0 and humanoid.Health < humanoid.MaxHealth then
-        local nuevo = humanoid.Health + humanoid.MaxHealth * REGEN_RATE * dt
-        humanoid.Health = math.min(humanoid.MaxHealth, nuevo)
-        last_health = humanoid.Health
+    if State.Health > 0 and State.Health < State.MaxHealth then
+        local nuevo = State.Health + State.MaxHealth * REGEN_RATE * dt
+        State.Health = math.min(State.MaxHealth, nuevo)
+        last_health = State.Health
     end
 end)

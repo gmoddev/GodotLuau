@@ -7,7 +7,7 @@
 #include "gl_errors.h"
 #include "gl_stackguard.h"
 #include "folder.h"
-#include "humanoid.h"
+#include "rbx_character.h"
 #include "humanoid2d.h"
 #include "roblox_player.h"
 #include "roblox_player2d.h"
@@ -490,6 +490,7 @@ static void gl_fire_attribute_changed(Node* n, const String& attr) {
 static int method_setattribute(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
+        if (gow_node(w)->is_class("RBXCharacter") && GLExecutionDomain::IsClientExecution()) return 0;
         const char* key = luaL_checkstring(L, 2);
         if (strcmp(key,"_gl_bridge")==0)
             luaL_error(L,"[Runtime:Capabilities] Native bridge metadata is host-owned");
@@ -657,6 +658,35 @@ static int method_getservice(lua_State* L) {
 ////
 //  godot_object_index — __index de GodotObject
 // ════════════════════════════════════════════════════════════════════
+
+static Vector3 ReadModelVector(lua_State* Thread, int Index) {
+    auto Value = check_vector3(Thread, Index);
+    if (!Value) { luaL_error(Thread, "Expected a Vector3"); return Vector3(); }
+    Vector3 Result(Value->x, Value->y, Value->z);
+    if (!Result.is_finite()) luaL_error(Thread, "Expected finite Vector3 coordinates");
+    return Result;
+}
+static Transform3D ReadModelCFrame(lua_State* Thread, int Index) {
+    luaL_checktype(Thread, Index, LUA_TTABLE);
+    Transform3D Result;
+    const char* Fields[] = {"X","Y","Z","m00","m01","m02","m10","m11","m12","m20","m21","m22"};
+    for (int Field = 0; Field < 12; ++Field) {
+        lua_getfield(Thread, Index, Fields[Field]);
+        double Value = luaL_checknumber(Thread, -1); lua_pop(Thread, 1);
+        if (!std::isfinite(Value)) luaL_error(Thread, "Expected a finite CFrame");
+        if (Field < 3) Result.origin[Field] = Value;
+        else Result.basis.rows[(Field - 3) / 3][(Field - 3) % 3] = Value;
+    }
+    return Result;
+}
+static void PushModelCFrame(lua_State* Thread, const Transform3D& Pose) {
+    lua_getglobal(Thread, "CFrame"); lua_getfield(Thread, -1, "new"); lua_remove(Thread, -2);
+    lua_pushnumber(Thread, Pose.origin.x); lua_pushnumber(Thread, Pose.origin.y); lua_pushnumber(Thread, Pose.origin.z);
+    for (int Row = 0; Row < 3; ++Row)
+        for (int Column = 0; Column < 3; ++Column) lua_pushnumber(Thread, Pose.basis.rows[Row][Column]);
+    lua_call(Thread, 12, 1);
+}
+
 static int godot_object_index(lua_State* L) {
     // Corta la recursion por el puente ANTES de quedarse sin pila (si no, el
     // proceso se cae con un segfault sin mensaje).
@@ -730,14 +760,14 @@ static int godot_object_index(lua_State* L) {
     // que trae un place importado es una instancia pelada, asi que se reenvia
     // al Humanoid (sin esto los NPC no animaban: "LoadAnimation is not a valid
     // member of RBXInstance").
-    if (n->get_name() == StringName("Animator") && !n->is_class("Humanoid")) {
+    if (n->is_class("RBXAnimator")) {
         static const char* kFwd[] = { "LoadAnimation", "GetPlayingAnimationTracks",
                                       "AnimationPlayed", "StepAnimation",
                                       "ApplyJointVelocities", nullptr };
         for (int i = 0; kFwd[i]; i++) {
             if (strcmp(key, kFwd[i]) != 0) continue;
             Node* p = n->get_parent();
-            if (p && p->is_class("Humanoid")) {
+            if (p && p->is_class("RBXCharacter")) {
                 wrap_node(L, p);
                 lua_replace(L, 1);
                 return godot_object_index(L);
@@ -1756,61 +1786,6 @@ static int godot_object_index(lua_State* L) {
         }
     }
 
-    // ── RobloxPlayer ──────────────────────────────────────────────
-    RobloxPlayer* rp = Object::cast_to<RobloxPlayer>(n);
-    if (rp) {
-        if (strcmp(key, "CameraMode")              == 0) { lua_pushnumber(L, rp->get_camera_mode());               return 1; }
-        if (strcmp(key, "MouseSensitivity")        == 0) { lua_pushnumber(L, rp->get_mouse_sensitivity());         return 1; }
-        if (strcmp(key, "UserId")                  == 0) { lua_pushnumber(L, rp->get_user_id());                   return 1; }
-        if (strcmp(key, "DisplayName")             == 0) { lua_pushstring(L, rp->get_display_name().utf8().get_data()); return 1; }
-        if (strcmp(key, "Name")                    == 0) { lua_pushstring(L, rp->get_display_name().utf8().get_data()); return 1; }
-        if (strcmp(key, "AccountAge")              == 0) { lua_pushnumber(L, rp->get_account_age());               return 1; }
-        if (strcmp(key, "AutoJumpEnabled")         == 0) { lua_pushboolean(L, rp->get_auto_jump_enabled());        return 1; }
-        if (strcmp(key, "DevCameraOcclusionMode")  == 0) { lua_pushnumber(L, rp->get_dev_camera_occlusion_mode()); return 1; }
-        if (strcmp(key, "DevComputerMovementMode") == 0) { lua_pushnumber(L, rp->get_dev_computer_movement_mode()); return 1; }
-        if (strcmp(key, "DevTouchMovementMode")    == 0) { lua_pushnumber(L, rp->get_dev_touch_movement_mode());   return 1; }
-        if (strcmp(key, "TeamColor") == 0) {
-            Color c = rp->get_team_color();
-            push_color3(L, c.r, c.g, c.b); return 1;
-        }
-        // Character: find the RobloxPlayer node itself as the character model
-        if (strcmp(key, "Character") == 0) {
-            // The RobloxPlayer IS the character in our implementation
-            wrap_node(L, rp); return 1;
-        }
-        if (strcmp(key, "GetCharacterAppearanceInfoAsync") == 0 ||
-            strcmp(key, "GetCharacterAppearanceAsync") == 0) {
-            lua_pushcfunction(L, [](lua_State* pL) -> int { lua_newtable(pL); return 1; }, key);
-            return 1;
-        }
-        if (strcmp(key, "GetFriendStatus") == 0) {
-            lua_pushcfunction(L, [](lua_State* pL) -> int { lua_pushnumber(pL, 0); return 1; }, "GetFriendStatus");
-            return 1;
-        }
-        if (strcmp(key, "GetFriendsOnline") == 0) {
-            lua_pushcfunction(L, [](lua_State* pL) -> int { lua_newtable(pL); return 1; }, "GetFriendsOnline");
-            return 1;
-        }
-        if (strcmp(key, "Kick") == 0) {
-            lua_pushlightuserdata(L, (void*)rp);
-            lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RobloxPlayer* p = (RobloxPlayer*)lua_touserdata(pL, lua_upvalueindex(1));
-                const char* reason = lua_isstring(pL,2) ? lua_tostring(pL,2) : "Kicked";
-                if (p) UtilityFunctions::print("[Player] Kicked: ", String(reason));
-                return 0;
-            }, "Kick", 1);
-            return 1;
-        }
-        if (strcmp(key, "CharacterAdded") == 0 || strcmp(key, "CharacterRemoving") == 0) {
-            const char* sig = key;
-            lua_newtable(L);
-            lua_pushcclosure(L, [](lua_State* pL) -> int { return 0; }, "Connect", 0);
-            lua_setfield(L, -2, "Connect");
-            gl_signal_lowercase_aliases(L);
-            return 1;
-        }
-    }
-
     // ── RobloxPlayer2D ────────────────────────────────────────────
     RobloxPlayer2D* rp2d = Object::cast_to<RobloxPlayer2D>(n);
     if (rp2d) {
@@ -1820,33 +1795,62 @@ static int godot_object_index(lua_State* L) {
         if (strcmp(key, "JumpPower")     == 0) { lua_pushnumber(L, rp2d->get_jump_power());     return 1; }
     }
 
+
+    if (auto Model = Object::cast_to<RBXModel>(n)) {
+        if (strcmp(key, "PrimaryPart") == 0) { wrap_node(L, Model->get_node_or_null(Model->get_primary_part())); return 1; }
+        if (strcmp(key, "WorldPivot") == 0) { PushModelCFrame(L, Model->get_world_pivot()); return 1; }
+        if (strcmp(key, "GetPivot") == 0 || strcmp(key, "PivotTo") == 0 || strcmp(key, "MoveTo") == 0 ||
+            strcmp(key, "GetBoundingBox") == 0 || strcmp(key, "GetExtentsSize") == 0) {
+            GLPushNodeHandle(L, Model); lua_pushstring(L, key);
+            lua_pushcclosure(L, [](lua_State* Thread) -> int {
+                auto Model = Object::cast_to<RBXModel>(GLNodeUpvalue(Thread, 1));
+                if (!Model || Model->is_queued_for_deletion()) return 0;
+                const char* Method = lua_tostring(Thread, lua_upvalueindex(2));
+                if (strcmp(Method, "GetPivot") == 0) { PushModelCFrame(Thread, Model->get_pivot()); return 1; }
+                if (strcmp(Method, "GetBoundingBox") == 0 || strcmp(Method, "GetExtentsSize") == 0) {
+                    AABB Bounds = Model->get_bounding_box();
+                    if (strcmp(Method, "GetBoundingBox") == 0) PushModelCFrame(Thread, Transform3D(Basis(), Bounds.get_center()));
+                    push_vector3(Thread, Bounds.size.x, Bounds.size.y, Bounds.size.z);
+                    return strcmp(Method, "GetBoundingBox") == 0 ? 2 : 1;
+                }
+                auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+                if (Service && !Service->CanWriteCharacter(Model, true)) return 0;
+                if (strcmp(Method, "PivotTo") == 0) {
+                    Transform3D Pose = ReadModelCFrame(Thread, 2);
+                    if (!Model->AcceptTransform(Pose)) { luaL_error(Thread, "Unsupported Model transform"); return 0; }
+                    Model->pivot_to(Pose);
+                } else Model->move_to(ReadModelVector(Thread, 2));
+                return 0;
+            }, key, 2); return 1;
+        }
+    }
+
     // ── Humanoid 3D ───────────────────────────────────────────────
-    Humanoid* hum = Object::cast_to<Humanoid>(n);
+    RBXCharacter* hum = Object::cast_to<RBXCharacter>(n);
     if (hum) {
+        if (strcmp(key, "CameraMode") == 0) { lua_pushnumber(L, hum->get_camera_mode()); return 1; }
+        if (strcmp(key, "MouseSensitivity") == 0) { lua_pushnumber(L, hum->get_mouse_sensitivity()); return 1; }
         if (strcmp(key, "Health")                 == 0) { lua_pushnumber(L, hum->get_health());                  return 1; }
         if (strcmp(key, "MaxHealth")              == 0) { lua_pushnumber(L, hum->get_max_health());              return 1; }
         if (strcmp(key, "WalkSpeed")              == 0) { lua_pushnumber(L, hum->get_walk_speed());              return 1; }
         if (strcmp(key, "JumpPower")              == 0) { lua_pushnumber(L, hum->get_jump_power());              return 1; }
-        if (strcmp(key, "JumpHeight")             == 0) { lua_pushnumber(L, hum->get_jump_height());             return 1; }
-        if (strcmp(key, "HipHeight")              == 0) { lua_pushnumber(L, hum->get_hip_height());              return 1; }
         if (strcmp(key, "Gravity")                == 0) { lua_pushnumber(L, hum->get_gravity_val());             return 1; }
         if (strcmp(key, "IsDead")                 == 0) { lua_pushboolean(L, hum->is_character_dead());          return 1; }
-        if (strcmp(key, "FloorMaterial")          == 0) { lua_pushnumber(L, 256);                               return 1; } // Plastic por defecto
+        if (strcmp(key, "Velocity") == 0) { Vector3 Value = hum->GetVelocity(); push_vector3(L, Value.x, Value.y, Value.z); return 1; }
+        if (strcmp(key, "Grounded") == 0) { lua_pushboolean(L, hum->IsGrounded()); return 1; }
+        if (strcmp(key, "Acceleration") == 0) { lua_pushnumber(L, hum->GetAcceleration()); return 1; }
+        if (strcmp(key, "AirAcceleration") == 0) { lua_pushnumber(L, hum->GetAirAcceleration()); return 1; }
+        if (strcmp(key, "TurnSpeed") == 0) { lua_pushnumber(L, hum->GetTurnSpeed()); return 1; }
         if (strcmp(key, "MoveDirection")          == 0) { Vector3 md = hum->get_move_direction(); push_vector3(L, md.x, md.y, md.z); return 1; }
         if (strcmp(key, "AutoRotate")             == 0) { lua_pushboolean(L, hum->get_auto_rotate());            return 1; }
-        if (strcmp(key, "AutoJumpEnabled")        == 0) { lua_pushboolean(L, hum->get_auto_jump_enabled());      return 1; }
         if (strcmp(key, "DisplayName")            == 0) { lua_pushstring(L, hum->get_display_name().utf8().get_data()); return 1; }
         if (strcmp(key, "NameDisplayDistance")    == 0) { lua_pushnumber(L, hum->get_name_display_distance());   return 1; }
         if (strcmp(key, "HealthDisplayDistance")  == 0) { lua_pushnumber(L, hum->get_health_display_distance()); return 1; }
-        if (strcmp(key, "RigType")                == 0) { lua_pushnumber(L, hum->get_rig_type());                return 1; }
-        if (strcmp(key, "EvaluateStateMachine")   == 0) { lua_pushboolean(L, hum->get_evaluate_state_machine()); return 1; }
-        if (strcmp(key, "BreakJointsOnDeath")     == 0) { lua_pushboolean(L, hum->get_break_joints_on_death());  return 1; }
-        if (strcmp(key, "RequiresNeck")           == 0) { lua_pushboolean(L, hum->get_requires_neck());          return 1; }
 
         if (strcmp(key, "TakeDamage") == 0) {
             lua_pushcfunction(L, [](lua_State* pL) -> int {
                 GodotObjectWrapper* w2 = (GodotObjectWrapper*)lua_touserdata(pL, 1);
-                Humanoid* h = w2 ? Object::cast_to<Humanoid>(gow_node(w2)) : nullptr;
+                RBXCharacter* h = w2 ? Object::cast_to<RBXCharacter>(gow_node(w2)) : nullptr;
                 if (h) h->take_damage((float)luaL_checknumber(pL, 2));
                 return 0;
             }, "TakeDamage");
@@ -1855,7 +1859,7 @@ static int godot_object_index(lua_State* L) {
         if (strcmp(key, "Heal") == 0) {
             lua_pushcfunction(L, [](lua_State* pL) -> int {
                 GodotObjectWrapper* w2 = (GodotObjectWrapper*)lua_touserdata(pL, 1);
-                Humanoid* h = w2 ? Object::cast_to<Humanoid>(gow_node(w2)) : nullptr;
+                RBXCharacter* h = w2 ? Object::cast_to<RBXCharacter>(gow_node(w2)) : nullptr;
                 if (h) h->heal((float)luaL_checknumber(pL, 2));
                 return 0;
             }, "Heal");
@@ -1863,35 +1867,39 @@ static int godot_object_index(lua_State* L) {
         }
         // ── Additional Humanoid methods ───────────────────────────
         //// ── Métodos adicionales de Humanoid ───────────────────────
-        if (strcmp(key, "Jump") == 0) {
-            lua_pushlightuserdata(L, (void*)hum);
-            lua_pushcclosure(L, [](lua_State* pL)->int{
-                Humanoid* h=(Humanoid*)lua_touserdata(pL,lua_upvalueindex(1));
-                if(h) h->change_state(2); // Jumping
+        if (strcmp(key, "RefreshRig") == 0) {
+            GLPushNodeHandle(L, hum);
+            lua_pushcclosure(L, [](lua_State* Thread) -> int {
+                auto Character = Object::cast_to<RBXCharacter>(GLNodeUpvalue(Thread, 1));
+                auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+                if (Character && !Character->is_queued_for_deletion() && (!Service || Service->CanWriteCharacter(Character))) Character->RefreshRig();
                 return 0;
+            }, "RefreshRig", 1); return 1;
+        }
+        if (strcmp(key, "Jump") == 0) {
+            GLPushNodeHandle(L, hum);
+            lua_pushcclosure(L, [](lua_State* pL)->int{
+                RBXCharacter* h = Object::cast_to<RBXCharacter>(GLNodeUpvalue(pL, 1));
+                lua_pushboolean(pL, h && h->RequestJump());
+                return 1;
             },"Jump",1); return 1;
         }
-        if (strcmp(key, "Sit") == 0) {
-            lua_pushlightuserdata(L, (void*)hum);
-            lua_pushcclosure(L, [](lua_State* pL)->int{
-                Humanoid* h=(Humanoid*)lua_touserdata(pL,lua_upvalueindex(1));
-                if(h) h->change_state(6); // Seated
-                return 0;
-            },"Sit",1); return 1;
-        }
+
         if (strcmp(key, "Move") == 0) {
-            lua_pushlightuserdata(L, (void*)hum);
-            lua_pushcclosure(L, [](lua_State* pL)->int{
-                // Humanoid:Move(direction, relativeToCamera)
-                // Apply movement direction — calls change_state(1)
-                Humanoid* h=(Humanoid*)lua_touserdata(pL,lua_upvalueindex(1));
-                if(h) h->change_state(1);
+            GLPushNodeHandle(L, hum);
+            lua_pushcclosure(L, [](lua_State* Thread) -> int {
+                auto Character = Object::cast_to<RBXCharacter>(GLNodeUpvalue(Thread, 1));
+                LuauVector3* Direction = check_vector3(Thread, 2);
+                if (Character && Direction) {
+                    Vector3 Value(Direction->x, Direction->y, Direction->z);
+                    if (lua_toboolean(Thread, 3) && Character->get_viewport()->get_camera_3d())
+                        Value = Character->get_viewport()->get_camera_3d()->get_global_basis().xform(Value);
+                    Value.y = 0; Character->set_npc_move_dir(Value);
+                }
                 return 0;
-            },"Move",1); return 1;
+            }, "Move", 1); return 1;
         }
-        if (strcmp(key, "ApplyDescription") == 0) {
-            lua_pushcfunction(L, [](lua_State* pL)->int{ return 0; }, "ApplyDescription"); return 1;
-        }
+
         if (strcmp(key, "GetAppliedDescription") == 0) {
             lua_pushcfunction(L, [](lua_State* pL)->int{ lua_pushnil(pL); return 1; }, "GetAppliedDescription"); return 1;
         }
@@ -1899,7 +1907,7 @@ static int godot_object_index(lua_State* L) {
         if (strcmp(key, "GetState") == 0) {
             lua_pushcfunction(L, [](lua_State* pL) -> int {
                 GodotObjectWrapper* w2 = (GodotObjectWrapper*)lua_touserdata(pL, 1);
-                Humanoid* h = w2 ? Object::cast_to<Humanoid>(gow_node(w2)) : nullptr;
+                RBXCharacter* h = w2 ? Object::cast_to<RBXCharacter>(gow_node(w2)) : nullptr;
                 lua_pushnumber(pL, h ? h->get_state() : 1);
                 return 1;
             }, "GetState");
@@ -1908,21 +1916,38 @@ static int godot_object_index(lua_State* L) {
         if (strcmp(key, "ChangeState") == 0) {
             lua_pushcfunction(L, [](lua_State* pL) -> int {
                 GodotObjectWrapper* w2 = (GodotObjectWrapper*)lua_touserdata(pL, 1);
-                Humanoid* h = w2 ? Object::cast_to<Humanoid>(gow_node(w2)) : nullptr;
-                if (h) h->change_state((int)luaL_checknumber(pL, 2));
-                return 0;
+                RBXCharacter* h = w2 ? Object::cast_to<RBXCharacter>(gow_node(w2)) : nullptr;
+                double State = luaL_checknumber(pL, 2);
+                bool Accepted = h && std::isfinite(State) && State >= 0 && State <= 14 && std::floor(State) == State && h->change_state(static_cast<int>(State));
+                lua_pushboolean(pL, Accepted); return 1;
             }, "ChangeState");
             return 1;
         }
+
+        if (strcmp(key, "GetPlayingAnimationTracks") == 0) {
+            GLPushNodeHandle(L, hum);
+            lua_pushcclosure(L, [](lua_State* Thread) -> int {
+                lua_newtable(Thread);
+                auto Character = Object::cast_to<RBXCharacter>(GLNodeUpvalue(Thread, 1));
+                Node* Animator = Character ? Character->get_node_or_null("Animator") : nullptr;
+                int Count = 0;
+                for (int Index = 0; Animator && Index < Animator->get_child_count(); ++Index) {
+                    auto Track = Object::cast_to<AnimationTrack>(Animator->get_child(Index));
+                    if (Track && Track->is_playing()) { wrap_node(Thread, Track); lua_rawseti(Thread, -2, ++Count); }
+                }
+                return 1;
+            }, "GetPlayingAnimationTracks", 1); return 1;
+        }
+
         if (strcmp(key, "LoadAnimation") == 0) {
             wrap_node(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
                 auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(pL, lua_upvalueindex(1)));
-                Humanoid* h = Wrapper ? Object::cast_to<Humanoid>(gow_node(Wrapper)) : nullptr;
+                RBXCharacter* h = Wrapper ? Object::cast_to<RBXCharacter>(gow_node(Wrapper)) : nullptr;
                 if (!h || h->is_queued_for_deletion()) { lua_pushnil(pL); return 1; }
                 uint64_t HumanoidIdentity = static_cast<uint64_t>(h->get_instance_id());
                 // Find or create AnimationPlayer in parent
-                Node* parent = h->get_parent();
+                Node* parent = h;
                 if (!parent) { lua_pushnil(pL); return 1; }
                 auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
                 if (Service && !Service->CanWriteCharacter(parent)) { lua_pushnil(pL); return 1; }
@@ -1964,7 +1989,10 @@ static int godot_object_index(lua_State* L) {
                 track->set_name("__anim_track__");
                 track->set_anim_id(anim_id_s);
                 track->setup(anim_name_s, ap);
-                h->add_child(track);
+                Node* Animator = h->get_node_or_null("Animator");
+                if (!Animator) { memdelete(track); lua_pushnil(pL); return 1; }
+                track->SetCharacterOwner(h, Animator);
+                Animator->add_child(track);
                 // Wrap and return
                 GodotObjectWrapper* tw = (GodotObjectWrapper*)lua_newuserdata(pL, sizeof(GodotObjectWrapper));
                 gow_set(tw, track);
@@ -1974,72 +2002,35 @@ static int godot_object_index(lua_State* L) {
             }, "LoadAnimation", 1);
             return 1;
         }
-        if (strcmp(key, "WalkToPoint") == 0) {
-            lua_pushlightuserdata(L, (void*)hum);
-            lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = (Humanoid*)lua_touserdata(pL, lua_upvalueindex(1));
-                if (!h) return 0;
-                float tx = 0; float ty = 0; float tz = 0;
-                if (lua_istable(pL,2)) {
-                    lua_getfield(pL,2,"X"); tx=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                    lua_getfield(pL,2,"Y"); ty=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                    lua_getfield(pL,2,"Z"); tz=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
+        if (strcmp(key, "WalkToPoint") == 0 || strcmp(key, "WalkToPart") == 0) {
+            GLPushNodeHandle(L, hum); lua_pushboolean(L, strcmp(key, "WalkToPart") == 0);
+            lua_pushcclosure(L, [](lua_State* Thread) -> int {
+                auto Character = Object::cast_to<RBXCharacter>(GLNodeUpvalue(Thread, 1));
+                bool Accepted = false;
+                if (Character && !Character->is_queued_for_deletion()) {
+                    if (lua_toboolean(Thread, lua_upvalueindex(2))) {
+                        auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(Thread, 2));
+                        Accepted = Character->WalkToPart(Wrapper ? Object::cast_to<Node3D>(gow_node(Wrapper)) : nullptr);
+                    } else Accepted = Character->WalkToPoint(ReadModelVector(Thread, 2));
                 }
-                Node* parent = h->get_parent();
-                Node3D* body3d = parent ? Object::cast_to<Node3D>(parent) : nullptr;
-                if (body3d) {
-                    Vector3 pos = body3d->get_global_position();
-                    Vector3 dir = Vector3(tx - pos.x, 0, tz - pos.z);
-                    if (dir.length_squared() > 0.01f) h->set_npc_move_dir(dir.normalized());
-                    else h->stop_npc_movement();
-                }
-                return 0;
-            }, "WalkToPoint", 1);
-            return 1;
+                lua_pushboolean(Thread, Accepted); return 1;
+            }, key, 2); return 1;
         }
-        if (strcmp(key, "WalkToPart") == 0) {
-            lua_pushlightuserdata(L, (void*)hum);
+        if (strcmp(key, "StopNPCMovement") == 0) {
+            GLPushNodeHandle(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = (Humanoid*)lua_touserdata(pL, lua_upvalueindex(1));
-                if (!h) return 0;
-                GodotObjectWrapper* pw = (GodotObjectWrapper*)lua_touserdata(pL, 2);
-                if (pw && gow_node(pw)) {
-                    Node3D* target = Object::cast_to<Node3D>(gow_node(pw));
-                    Node* parent = h->get_parent();
-                    Node3D* body3d = parent ? Object::cast_to<Node3D>(parent) : nullptr;
-                    if (target && body3d) {
-                        Vector3 dir = (target->get_global_position() - body3d->get_global_position());
-                        dir.y = 0;
-                        if (dir.length_squared() > 0.01f) h->set_npc_move_dir(dir.normalized());
-                        else h->stop_npc_movement();
-                    }
-                }
-                return 0;
-            }, "WalkToPart", 1);
-            return 1;
-        }
-        if (strcmp(key, "StopNPCMovement") == 0 || strcmp(key, "MoveTo") == 0) {
-            lua_pushlightuserdata(L, (void*)hum);
-            lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = (Humanoid*)lua_touserdata(pL, lua_upvalueindex(1));
+                RBXCharacter* h = Object::cast_to<RBXCharacter>(GLNodeUpvalue(pL, 1));
                 if (h) h->stop_npc_movement();
                 return 0;
             }, key, 1);
             return 1;
         }
-        if (strcmp(key, "GetHumanoidDescriptionFromUserId") == 0 ||
-            strcmp(key, "GetHumanoidDescriptionFromOutfitId") == 0) {
-            lua_pushcfunction(L, [](lua_State* pL) -> int { lua_newtable(pL); return 1; }, key);
-            return 1;
-        }
 
-        // ── Humanoid signals ──────────────────────────────────────
-        //// ── Señales del Humanoid ──────────────────────────────────
         if (strcmp(key, "Died") == 0) {
             lua_newtable(L);
             GLPushNodeHandle(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = Object::cast_to<Humanoid>(GLNodeUpvalue(pL, 1));
+                RBXCharacter* h = Object::cast_to<RBXCharacter>(GLNodeUpvalue(pL, 1));
                 int fn_pos = -1;
                 for (int ai = 1; ai <= lua_gettop(pL); ai++) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
@@ -2068,19 +2059,14 @@ static int godot_object_index(lua_State* L) {
             // El orden importa: el indice es la lista de callbacks del Humanoid
             // (ver move_signal_list). Las que no tienen disparador propio se
             // aceptan igual para que el script siga vivo, como en Roblox.
-            static const char* kMoveSig[] = { "Running", "Jumping", "FreeFalling",
-                                              "Climbing", "Swimming", "GettingUp",
-                                              "Seated", "MoveToFinished",
-                                              "FallingDown", "PlatformStanding",
-                                              "Strafing", "StateEnabledChanged",
-                                              "AnimationPlayed", "Touched", nullptr };
+            static const char* kMoveSig[] = { "Running", "Jumping", "FreeFalling", "MoveToFinished", nullptr };
             for (int mi = 0; kMoveSig[mi]; mi++) {
                 if (strcmp(key, kMoveSig[mi]) != 0) continue;
                 lua_newtable(L);
-                lua_pushlightuserdata(L, (void*)hum);
-                lua_pushinteger(L, mi);
+                GLPushNodeHandle(L, hum);
+                lua_pushinteger(L, mi == 3 ? 7 : mi);
                 lua_pushcclosure(L, [](lua_State* pL) -> int {
-                    Humanoid* h = static_cast<Humanoid*>(lua_touserdata(pL, lua_upvalueindex(1)));
+                    RBXCharacter* h = Object::cast_to<RBXCharacter>(GLNodeUpvalue(pL, 1));
                     const int which = (int)lua_tointeger(pL, lua_upvalueindex(2));
                     int fn_pos = -1;
                     for (int ai = 1; ai <= lua_gettop(pL); ai++)
@@ -2105,7 +2091,7 @@ static int godot_object_index(lua_State* L) {
             lua_newtable(L);
             GLPushNodeHandle(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = Object::cast_to<Humanoid>(GLNodeUpvalue(pL, 1));
+                RBXCharacter* h = Object::cast_to<RBXCharacter>(GLNodeUpvalue(pL, 1));
                 int fn_pos = -1;
                 for (int ai = 1; ai <= lua_gettop(pL); ai++) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
@@ -2129,7 +2115,7 @@ static int godot_object_index(lua_State* L) {
             lua_newtable(L);
             GLPushNodeHandle(L, hum);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                Humanoid* h = Object::cast_to<Humanoid>(GLNodeUpvalue(pL, 1));
+                RBXCharacter* h = Object::cast_to<RBXCharacter>(GLNodeUpvalue(pL, 1));
                 int fn_pos = -1;
                 for (int ai = 1; ai <= lua_gettop(pL); ai++) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
@@ -3330,16 +3316,6 @@ static int godot_object_index(lua_State* L) {
     // ── AnimationTrack ────────────────────────────────────────────────
     AnimationTrack* atrack = Object::cast_to<AnimationTrack>(n);
     if (atrack) {
-        // Senales de la pista. KeyframeReached lo usa el Animate.lua de todos los
-        // NPC de un place (herramientas, sonidos de paso): sin ella el script moria
-        // antes de arrancar las animaciones. Las animaciones importadas no traen
-        // marcas de keyframe, asi que se acepta la conexion y no dispara: el script
-        // sigue vivo y las animaciones se reproducen igual.
-        if (strcmp(key,"KeyframeReached") == 0 || strcmp(key,"Stopped") == 0 ||
-            strcmp(key,"DidLoop") == 0 || strcmp(key,"Ended") == 0) {
-            _gl_push_inert_signal(L);
-            return 1;
-        }
         if (strcmp(key,"IsPlaying")    == 0) { lua_pushboolean(L, atrack->is_playing()); return 1; }
         if (strcmp(key,"Looped")       == 0) { lua_pushboolean(L, atrack->get_looped()); return 1; }
         if (strcmp(key,"Speed")        == 0) { lua_pushnumber(L, atrack->get_speed());   return 1; }
@@ -3347,37 +3323,36 @@ static int godot_object_index(lua_State* L) {
         if (strcmp(key,"Length")       == 0) { lua_pushnumber(L, atrack->get_length());  return 1; }
         if (strcmp(key,"TimePosition") == 0) { lua_pushnumber(L, atrack->get_time_position()); return 1; }
         if (strcmp(key,"Play")  == 0) {
-            lua_pushlightuserdata(L,(void*)atrack);
-            lua_pushcclosure(L,[](lua_State* LL)->int{ AnimationTrack* t=(AnimationTrack*)lua_touserdata(LL,lua_upvalueindex(1)); if(t)t->play(); return 0; },"Play",1); return 1;
+            GLPushNodeHandle(L, atrack);
+            lua_pushcclosure(L,[](lua_State* LL)->int{ AnimationTrack* t=Object::cast_to<AnimationTrack>(GLNodeUpvalue(LL, 1)); if(t)t->play(); return 0; },"Play",1); return 1;
         }
         if (strcmp(key,"Stop")  == 0) {
-            lua_pushlightuserdata(L,(void*)atrack);
-            lua_pushcclosure(L,[](lua_State* LL)->int{ AnimationTrack* t=(AnimationTrack*)lua_touserdata(LL,lua_upvalueindex(1)); if(t)t->stop(); return 0; },"Stop",1); return 1;
+            GLPushNodeHandle(L, atrack);
+            lua_pushcclosure(L,[](lua_State* LL)->int{ AnimationTrack* t=Object::cast_to<AnimationTrack>(GLNodeUpvalue(LL, 1)); if(t)t->stop(); return 0; },"Stop",1); return 1;
         }
         if (strcmp(key,"AdjustSpeed")  == 0) {
-            lua_pushlightuserdata(L,(void*)atrack);
+            GLPushNodeHandle(L, atrack);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                AnimationTrack* t=(AnimationTrack*)lua_touserdata(LL,lua_upvalueindex(1));
+                AnimationTrack* t=Object::cast_to<AnimationTrack>(GLNodeUpvalue(LL, 1));
                 if(t&&lua_isnumber(LL,2)) t->adjust_speed((float)lua_tonumber(LL,2)); return 0;
             },"AdjustSpeed",1); return 1;
         }
-        auto make_atrack_sig = [&](std::vector<AnimationTrack::LuaCallback>& cbs) -> int {
+        auto MakeTrackSignal = [&](bool Ended) -> int {
             lua_newtable(L);
-            lua_pushlightuserdata(L,(void*)atrack);
-            lua_pushlightuserdata(L,(void*)&cbs);
-            lua_pushcclosure(L,[](lua_State* LL)->int{
-                AnimationTrack* d=(AnimationTrack*)lua_touserdata(LL,lua_upvalueindex(1));
-                auto* c=(std::vector<AnimationTrack::LuaCallback>*)lua_touserdata(LL,lua_upvalueindex(2));
-                if(!c||!lua_isfunction(LL,2)){lua_pushnil(LL);return 1;}
-                lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
-                c->push_back({gl_main_of(LL),ref,true}); _gl_push_connection(LL, d, ref); return 1;
-            },"Connect",2);
-            lua_setfield(L, -2, "Connect");
-            gl_signal_lowercase_aliases(L);
-            return 1;
+            GLPushNodeHandle(L, atrack); lua_pushboolean(L, Ended);
+            lua_pushcclosure(L, [](lua_State* Thread) -> int {
+                auto Track = Object::cast_to<AnimationTrack>(GLNodeUpvalue(Thread, 1));
+                if (!Track || Track->is_queued_for_deletion() || !Track->ValidCharacterOwner() || !lua_isfunction(Thread, 2)) { lua_pushnil(Thread); return 1; }
+                lua_pushvalue(Thread, 2); int Reference = GLReference(Thread, -1); lua_pop(Thread, 1);
+                if (lua_toboolean(Thread, lua_upvalueindex(2))) Track->add_ended_cb(gl_main_of(Thread), Reference);
+                else Track->add_stopped_cb(gl_main_of(Thread), Reference);
+                _gl_push_connection(Thread, Track, Reference); return 1;
+            }, "Connect", 2);
+            lua_setfield(L, -2, "Connect"); gl_signal_lowercase_aliases(L); return 1;
         };
-        if (strcmp(key,"Ended")   == 0) return make_atrack_sig(atrack->ended_cbs);
-        if (strcmp(key,"Stopped") == 0) return make_atrack_sig(atrack->stopped_cbs);
+        if (strcmp(key, "Ended") == 0) return MakeTrackSignal(true);
+        if (strcmp(key, "Stopped") == 0) return MakeTrackSignal(false);
+
     }
 
     // ── AnimationObject ───────────────────────────────────────────────
@@ -4129,13 +4104,18 @@ static int godot_object_newindex_impl(lua_State* L) {
     }
 
     if (strcmp(key, "CameraMode") == 0) {
-        RobloxPlayer* rp = Object::cast_to<RobloxPlayer>(n);
-        if (rp) rp->set_camera_mode((int)luaL_checknumber(L, 3));
+        RBXCharacter* rp = Object::cast_to<RBXCharacter>(n);
+        if (rp) {
+            double Mode = luaL_checknumber(L, 3);
+            if (std::isfinite(Mode) && Mode >= 1 && Mode <= 3 && std::floor(Mode) == Mode)
+                rp->set_camera_mode(static_cast<int>(Mode));
+        }
         RobloxPlayer2D* rp2d = Object::cast_to<RobloxPlayer2D>(n);
         if (rp2d) rp2d->set_camera_mode((int)luaL_checknumber(L, 3));
         return 0;
     }
     if (strcmp(key, "MouseSensitivity") == 0) {
+        if (auto Character = Object::cast_to<RBXCharacter>(n)) { Character->set_mouse_sensitivity(static_cast<float>(luaL_checknumber(L, 3))); return 0; }
         RobloxPlayer* rp = Object::cast_to<RobloxPlayer>(n);
         if (rp) rp->set_mouse_sensitivity((float)luaL_checknumber(L, 3));
         return 0;
@@ -4147,24 +4127,34 @@ static int godot_object_newindex_impl(lua_State* L) {
         return 0;
     }
 
-    Humanoid* hum = Object::cast_to<Humanoid>(n);
+
+    if (auto Model = Object::cast_to<RBXModel>(n)) {
+        if (strcmp(key, "PrimaryPart") == 0) {
+            if (lua_isnil(L, 3)) Model->set_primary_part(NodePath());
+            else {
+                auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(L, 3));
+                auto Part = Wrapper ? Object::cast_to<Node3D>(gow_node(Wrapper)) : nullptr;
+                if (!Part || !Model->is_ancestor_of(Part)) luaL_error(L, "PrimaryPart must be a descendant Node3D");
+                else Model->set_primary_part(Model->get_path_to(Part));
+            }
+            return 0;
+        }
+        if (strcmp(key, "WorldPivot") == 0) { Model->set_world_pivot(ReadModelCFrame(L, 3)); return 0; }
+    }
+    RBXCharacter* hum = Object::cast_to<RBXCharacter>(n);
     if (hum) {
+        if (strcmp(key, "Acceleration") == 0) { hum->SetAcceleration(luaL_checknumber(L, 3)); return 0; }
+        if (strcmp(key, "AirAcceleration") == 0) { hum->SetAirAcceleration(luaL_checknumber(L, 3)); return 0; }
+        if (strcmp(key, "TurnSpeed") == 0) { hum->SetTurnSpeed(luaL_checknumber(L, 3)); return 0; }
         if (strcmp(key, "Health")               == 0) { hum->set_health((float)luaL_checknumber(L, 3));               return 0; }
         if (strcmp(key, "MaxHealth")            == 0) { hum->set_max_health((float)luaL_checknumber(L, 3));            return 0; }
         if (strcmp(key, "WalkSpeed")            == 0) { hum->set_walk_speed((float)luaL_checknumber(L, 3));            return 0; }
         if (strcmp(key, "JumpPower")            == 0) { hum->set_jump_power((float)luaL_checknumber(L, 3));            return 0; }
-        if (strcmp(key, "JumpHeight")           == 0) { hum->set_jump_height((float)luaL_checknumber(L, 3));           return 0; }
-        if (strcmp(key, "HipHeight")            == 0) { hum->set_hip_height((float)luaL_checknumber(L, 3));            return 0; }
         if (strcmp(key, "Gravity")              == 0) { hum->set_gravity_val((float)luaL_checknumber(L, 3));           return 0; }
         if (strcmp(key, "AutoRotate")           == 0) { hum->set_auto_rotate(lua_toboolean(L, 3) != 0);                return 0; }
-        if (strcmp(key, "AutoJumpEnabled")      == 0) { hum->set_auto_jump_enabled(lua_toboolean(L, 3) != 0);          return 0; }
         if (strcmp(key, "DisplayName")          == 0) { hum->set_display_name(String(luaL_checkstring(L, 3)));         return 0; }
         if (strcmp(key, "NameDisplayDistance")  == 0) { hum->set_name_display_distance((float)luaL_checknumber(L, 3)); return 0; }
         if (strcmp(key, "HealthDisplayDistance")== 0) { hum->set_health_display_distance((float)luaL_checknumber(L,3));return 0; }
-        if (strcmp(key, "RigType")              == 0) { hum->set_rig_type((int)luaL_checknumber(L, 3));                return 0; }
-        if (strcmp(key, "EvaluateStateMachine") == 0) { hum->set_evaluate_state_machine(lua_toboolean(L, 3) != 0);    return 0; }
-        if (strcmp(key, "BreakJointsOnDeath")   == 0) { hum->set_break_joints_on_death(lua_toboolean(L, 3) != 0);     return 0; }
-        if (strcmp(key, "RequiresNeck")         == 0) { hum->set_requires_neck(lua_toboolean(L, 3) != 0);              return 0; }
     }
 
     Humanoid2D* hum2d = Object::cast_to<Humanoid2D>(n);
@@ -4253,50 +4243,6 @@ static int godot_object_newindex_impl(lua_State* L) {
         if (strcmp(key, "TouchesUseCollisionGroups") == 0) { ws->set_touches_use_collision_groups(lua_toboolean(L,3)!=0);        return 0; }
     }
 
-    // ── RobloxPlayer write ────────────────────────────────────────
-    RobloxPlayer* rp_w = Object::cast_to<RobloxPlayer>(n);
-    if (rp_w) {
-        if (strcmp(key, "UserId")                  == 0) { return 0; }   // inmutable: lo asigna el servidor (host=1, 2,3,...)
-        if (strcmp(key, "DisplayName")             == 0) { rp_w->set_display_name(String(luaL_checkstring(L,3)));            return 0; }
-        if (strcmp(key, "AccountAge")              == 0) { rp_w->set_account_age((int)luaL_checknumber(L,3));                return 0; }
-        if (strcmp(key, "AutoJumpEnabled")         == 0) { rp_w->set_auto_jump_enabled(lua_toboolean(L,3)!=0);               return 0; }
-        if (strcmp(key, "DevCameraOcclusionMode")  == 0) { rp_w->set_dev_camera_occlusion_mode((int)luaL_checknumber(L,3));  return 0; }
-        if (strcmp(key, "DevComputerMovementMode") == 0) { rp_w->set_dev_computer_movement_mode((int)luaL_checknumber(L,3)); return 0; }
-        if (strcmp(key, "DevTouchMovementMode")    == 0) { rp_w->set_dev_touch_movement_mode((int)luaL_checknumber(L,3));    return 0; }
-        if (strcmp(key, "TeamColor") == 0) {
-            LuauColor3* col = check_color3(L, 3);
-            if (col) rp_w->set_team_color(Color(col->r, col->g, col->b));
-            return 0;
-        }
-        // Móvil (1.15): el jugador (o el SettingsModule) puede modificar el joystick.
-        if (strcmp(key, "JoystickDynamic") == 0) { rp_w->set_joystick_dynamic(lua_toboolean(L,3)!=0);   return 0; }
-        if (strcmp(key, "JoystickRadius")  == 0) { rp_w->set_joystick_radius((float)luaL_checknumber(L,3)); return 0; }
-        if (strcmp(key, "JoystickOpacity") == 0) { rp_w->set_joystick_opacity((float)luaL_checknumber(L,3)); return 0; }
-    }
-
-    Lighting* light = Object::cast_to<Lighting>(n);
-    if (light) {
-        if (strcmp(key, "Brightness")               == 0) { light->set_brightness((float)luaL_checknumber(L,3));          return 0; }
-        if (strcmp(key, "ClockTime")                == 0) { light->set_clock_time((float)luaL_checknumber(L,3));          return 0; }
-        if (strcmp(key, "GeographicLatitude")       == 0) { light->set_geographic_latitude((float)luaL_checknumber(L,3)); return 0; }
-        if (strcmp(key, "GlobalShadows")            == 0) { light->set_global_shadows(lua_toboolean(L,3) != 0);          return 0; }
-        if (strcmp(key, "ShadowSoftness")           == 0) { light->set_shadow_softness((float)luaL_checknumber(L,3));    return 0; }
-        if (strcmp(key, "FogDensity")               == 0) { light->set_fog_density((float)luaL_checknumber(L,3));        return 0; }
-        if (strcmp(key, "FogStart")                 == 0) { light->set_fog_start((float)luaL_checknumber(L,3));          return 0; }
-        if (strcmp(key, "FogEnd")                   == 0) { light->set_fog_end((float)luaL_checknumber(L,3));            return 0; }
-        if (strcmp(key, "ExposureCompensation")     == 0) { light->set_exposure_comp((float)luaL_checknumber(L,3));      return 0; }
-        if (strcmp(key, "EnvironmentDiffuseScale")  == 0) { light->set_env_diffuse_scale((float)luaL_checknumber(L,3));  return 0; }
-        if (strcmp(key, "EnvironmentSpecularScale") == 0) { light->set_env_specular_scale((float)luaL_checknumber(L,3)); return 0; }
-        if (strcmp(key, "Technology")               == 0) { light->set_technology((int)luaL_checknumber(L,3)); return 0; }
-        if (strcmp(key, "Ambient")                  == 0) { LuauColor3* c = check_color3(L, 3); if(c) light->set_ambient(Color(c->r,c->g,c->b)); return 0; }
-        if (strcmp(key, "OutdoorAmbient")           == 0) { LuauColor3* c = check_color3(L, 3); if(c) light->set_outdoor_ambient(Color(c->r,c->g,c->b)); return 0; }
-        if (strcmp(key, "FogColor")                 == 0) { LuauColor3* c = check_color3(L, 3); if(c) light->set_fog_color(Color(c->r,c->g,c->b)); return 0; }
-        if (strcmp(key, "ColorShift_Top")           == 0) { LuauColor3* c = check_color3(L, 3); if(c) light->set_color_shift_top(Color(c->r,c->g,c->b)); return 0; }
-        if (strcmp(key, "ColorShift_Bottom")        == 0) { LuauColor3* c = check_color3(L, 3); if(c) light->set_color_shift_bottom(Color(c->r,c->g,c->b)); return 0; }
-        if (strcmp(key, "TimeOfDay")                == 0) { light->set_time_of_day(String(luaL_checkstring(L,3)));         return 0; }
-        if (strcmp(key, "DayNightCycle")            == 0) { light->set_day_night_cycle(lua_toboolean(L,3) != 0);           return 0; }
-        if (strcmp(key, "DayLengthMinutes")         == 0) { light->set_day_length_minutes((float)luaL_checknumber(L,3));   return 0; }
-    }
 
     // ── BodyMovers — newindex ──────────────────────────────────────
     BodyVelocity* bv_w = Object::cast_to<BodyVelocity>(n);
@@ -4704,7 +4650,16 @@ static NetworkService* gl_rep_service() {
 // ¿el nodo cuelga de un contenedor replicable (Workspace / ReplicatedStorage)?
 // Sube por los padres comparando por NOMBRE: los contenedores virtuales pueden
 // ser Node genérico, así que is_class no siempre basta.
+
+static bool IsPlayerCharacterNode(Node* Item) {
+    for (Node* Ancestor = Item; Ancestor; Ancestor = Ancestor->get_parent())
+        if (auto Character = Object::cast_to<RBXCharacter>(Ancestor))
+            return Character->IsLocalControl() || Character->IsPresentationOnly();
+    return false;
+}
+
 static bool gl_rep_is_replicable(Node* n) {
+    if (IsPlayerCharacterNode(n)) return false;
     for (Node* p = n ? n->get_parent() : nullptr; p; p = p->get_parent()) {
         StringName nm = p->get_name();
         if (nm == StringName("ServerStorage") || nm == StringName("ServerScriptService")) return false;
@@ -4729,7 +4684,7 @@ static String gl_rep_parent_ref(Node* parent) {
 // Replica el nodo y su subárbol como creaciones nuevas (asigna netId + snapshot
 // vía NetworkService::rep_build_props, que resuelve el transform global).
 static void gl_rep_replicate_subtree(NetworkService* ns, Node* n) {
-    if (!ns || !n || n->has_meta("_gl_netid")) return;
+    if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n)) return;
     int64_t id = ns->rep_next_id();
     n->set_meta("_gl_netid", id);
     ns->rep_map(id, n);
@@ -4774,7 +4729,7 @@ static void gl_rep_apply_prop(Node* target, const String& key, const Variant& en
     // the call outside a Client scope avoids granting an ambient permission
     // that a HealthChanged callback could inherit and reuse.
     if (!GLExecutionDomain::IsClientExecution() && (enc.get_type() == Variant::FLOAT || enc.get_type() == Variant::INT)) {
-        if (auto Health = Object::cast_to<Humanoid>(target)) {
+        if (auto Health = Object::cast_to<RBXCharacter>(target)) {
             if (key == "Health") { Health->set_health(static_cast<float>(enc)); return; }
             if (key == "MaxHealth") { Health->set_max_health(static_cast<float>(enc)); return; }
             if (key == "WalkSpeed") { Health->set_walk_speed(static_cast<float>(enc)); return; }
@@ -4851,8 +4806,10 @@ static int godot_instance_new(lua_State* L) {
         else if (strcmp(cls,"BoolValue")==0)   rv->set_value(false);
         nn = rv;
     }
-    else if (strcmp(cls, "Model")             == 0) nn = memnew(Node3D);
-    else if (strcmp(cls, "Humanoid")          == 0) nn = memnew(Humanoid);
+    else if (strcmp(cls, "Model")             == 0) nn = memnew(RBXModel);
+    else if (strcmp(cls, "Character")         == 0) nn = memnew(RBXCharacter);
+    else if (strcmp(cls, "Animator") == 0) nn = memnew(RBXAnimator);
+    else if (strcmp(cls, "Humanoid") == 0) { luaL_error(L, "Humanoid was removed; use Character properties and Animator"); }
     else if (strcmp(cls, "Humanoid2D")        == 0) nn = memnew(Humanoid2D);
     else if (strcmp(cls, "PointLight")        == 0 ||
              strcmp(cls, "SurfaceLight")      == 0) nn = memnew(OmniLight3D);

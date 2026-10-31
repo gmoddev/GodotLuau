@@ -537,7 +537,7 @@ local Light = Instance.new('PointLight', Folder)
 local Frame = Instance.new('Frame', Folder)
 local Value = Instance.new('IntValue', Folder)
 local Names = {Folder.ClassName, Beam.ClassName, Trail.ClassName, Model.ClassName, Light.ClassName, Frame.ClassName, Value.ClassName, script.ClassName}
-local Expected = {'Folder', 'Beam', 'Trail', 'Node3D', 'PointLight', 'Frame', 'IntValue', script:IsA('Script') and 'Script' or 'LocalScript'}
+local Expected = {'Folder', 'Beam', 'Trail', 'Model', 'PointLight', 'Frame', 'IntValue', script:IsA('Script') and 'Script' or 'LocalScript'}
 for Index, Name in ipairs(Names) do assert(Name == Expected[Index]) end
 assert(Folder:IsA('Folder') and Folder:IsA('Node') and Folder:IsA('Instance'))
 assert(Beam:IsA('Beam') and Beam:IsA('Node3D') and Beam:IsA('Node'))
@@ -551,7 +551,7 @@ end
 assert(Folder:FindFirstChildWhichIsA('Node3D') == Beam)
 assert(Beam:FindFirstAncestorWhichIsA('Folder') == Folder)
 for Index = 1, 40 do
-    assert(Beam.ClassName == 'Beam' and Trail.ClassName == 'Trail' and Model.ClassName == 'Node3D')
+    assert(Beam.ClassName == 'Beam' and Trail.ClassName == 'Trail' and Model.ClassName == 'Model')
     assert(Beam:IsA('Node3D') and not Trail:IsA('Beam'))
     for NameIndex, Name in ipairs(Names) do assert(Name == Expected[NameIndex]) end
 end
@@ -567,7 +567,7 @@ Folder:GetAttributeChangedSignal('IdentityProbe'):Connect(function()
     CallbackDone = true
 end)
 Folder:SetAttribute('IdentityProbe', 1)
-assert(CallbackDone and Folder:GetAttribute('NestedIdentity') == 'Node3D')
+assert(CallbackDone and Folder:GetAttribute('NestedIdentity') == 'Model')
 local RetainedIsA = Beam.IsA
 Beam:Destroy()
 for Index = 1, 10 do
