@@ -480,7 +480,12 @@ public:
             if (!TransformWarning) { UtilityFunctions::push_warning("[Character:Transform] Rejected nonfinite, singular, sheared or nonuniform Character transform."); TransformWarning = true; }
             set_global_transform(LastPose); force_update_transform();
         } else {
-            LastPose = Pose; Body->set_global_transform(Pose); Body->force_update_transform();
+            // Physics also publishes LastPose, so retain validation on every
+            // call. Skip only an equal live-body write; no pose cache grants it.
+            LastPose = Pose;
+            if (Body->get_global_transform() != Pose) {
+                Body->set_global_transform(Pose); Body->force_update_transform();
+            }
         }
         Synchronizing = false;
     }
@@ -805,7 +810,7 @@ public:
         if (is_dead) { _update_overhead(); return; }
         SynchronizeBody();
 
-        CharacterBody3D* body = GetPhysicsBody();
+        auto body = GetPhysicsBody();
         if (!body) return;
 
         // Config del cuerpo una sola vez: pegado al suelo (no rebota en rampas/
@@ -894,8 +899,7 @@ public:
             // la camara, tambien parado y andando hacia atras. Antes giraba hacia
             // la direccion del movimiento tambien aqui, asi que pulsar S te daba
             // la vuelta en vez de andar de espaldas.
-            bool first_person = body->has_method("_gl_is_first_person")
-                             && (bool)body->call("_gl_is_first_person");
+            bool first_person = body->_gl_is_first_person();
 
             // Velocidad horizontal OBJETIVO (0 si no hay input).
             Vector3 target_h(0.0f, 0.0f, 0.0f);
@@ -923,9 +927,9 @@ public:
 
             // En primera persona el giro es INSTANTANEO y va pegado a la camara
             // (Roblox lo bloquea ahi); suavizarlo se sentiria como un retraso.
-            if (auto_rotate && first_person && body->has_method("_gl_camera_yaw")) {
+            if (auto_rotate && first_person) {
                 Vector3 cur_rot = body->get_rotation();
-                cur_rot.y = (float)(double)body->call("_gl_camera_yaw");
+                cur_rot.y = (float)body->_gl_camera_yaw();
                 body->set_rotation(cur_rot);
             }
 
@@ -940,11 +944,14 @@ public:
         body->set_velocity(velocity);
         body->move_and_slide();
         velocity = body->get_velocity();
-        Synchronizing = true;
-        set_global_transform(body->get_global_transform());
-        force_update_transform();
-        LastPose = get_global_transform();
-        Synchronizing = false;
+        const Transform3D Pose = body->get_global_transform();
+        if (get_global_transform() != Pose) {
+            Synchronizing = true;
+            set_global_transform(Pose);
+            force_update_transform();
+            LastPose = get_global_transform();
+            Synchronizing = false;
+        }
 
         // ── 4. Detect collisions with RobloxParts (Touched event) ──
         //// ── 4. Detectar colisiones con RobloxParts (evento Touched) ─
