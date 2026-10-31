@@ -53,11 +53,11 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-025 | P2 | Integrated and resolved within exercised scope | Actual AnimationTrack completion and ObjectID-backed lifetime |
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
-| GL-028 | P2 | Rendered endpoint discrepancy; fix under qualification | Character fade cache can retain first-person dither pixels |
+| GL-028 | P2 | Fixed and rendered-qualified on development branch | Character fade cache can retain first-person dither pixels |
 
 ## GL-028: Fade update tolerance can retain visible first-person dither
 
-**Status: reproduced; fix under qualification on the graphical/performance branch.** Actual
+**Status: fixed and rendered-qualified on the graphical/performance branch; not merged.** Actual
 DockerPC NVIDIA custom first-person captures retain faint dither pixels near the
 bottom after the rig has mostly faded. `RobloxPlayer::_update_fade` returns when
 the uniform delta is below 0.002, while camera smoothing approaches the fully
@@ -67,7 +67,11 @@ fixture proves substantial fade, not complete invisibility. A stronger exact
 endpoint regression fails on the immutable main Release DLL for both R6
 (`0.999400854110718`) and custom (`0.999045968055725`), with six equal mesh
 uniforms in each case after the bounded settling interval. Endpoint clamping and
-an endpoint exception to dirty-update suppression are being qualified. See the
+an endpoint exception to dirty-update suppression pass actual rendered Debug
+and Release R6/custom regressions at runtime implementation
+`2bd43741f82fd5308e01e5bb88462e17ae256fb7`, with all six uniforms exactly 1.
+Both hosted platforms pass the final 110-actor native suite at fixture revision
+`6b6a8a29803d47687090b341019155fc770a81b6`. See the
 [work record](character-presentation-performance.md); no new shader, authority
 or material ownership model is introduced.
 

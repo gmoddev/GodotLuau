@@ -1,0 +1,29 @@
+{
+  "Branch": "perf/character-v2-graphical-qualification",
+  "MainUnchanged": "c562ba8b74226a15ffb5e18e6547cfccebac94dd",
+  "RuntimeImplementation": "2bd43741f82fd5308e01e5bb88462e17ae256fb7",
+  "QualifiedFixtures": "6b6a8a29803d47687090b341019155fc770a81b6",
+  "NativeSourceSHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+  "NativeSourceFiles": 89,
+  "LocalExecutionMachine": "DockerPC only; Linux is Docker Desktop on DockerPC",
+  "Graphical": {"Renderer": "GTX 1650 SUPER OpenGL 3.3", "Modes": ["Debug", "Release"], "ActorsPerMode": 14, "AssertionsPerMode": 454, "ScreenshotsPerMode": 48, "Result": "PASS"},
+  "Hosted": {
+    "CoreRun": "https://github.com/gmoddev/GodotLuau/actions/runs/41187871681",
+    "NativeRun": "https://github.com/gmoddev/GodotLuau/actions/runs/41187871716",
+    "Platforms": ["Windows", "Linux"], "CoreCasesPerPlatform": 80, "NativeActorsPerPlatform": 110,
+    "Result": "PASS; downloaded artifacts independently verified on DockerPC",
+    "ArtifactSHA256": {
+      "WindowsCore": "7342b55c7c0c23bf86cc6f4381979ab3f8b8bbf277384b2cc0d8f6aa61fe95cc",
+      "LinuxCore": "5724efad6a47be175e7b6d847b8afe16b4714c208e84d55e2d1244268c6e24c7",
+      "WindowsNative": "4de54b28a6ea5def83cc7bba5071cca04ff9465edf748900e8b6fa29f3fafc3b",
+      "LinuxNative": "7e8112568a0b7c6842feaa3c5554a83ce721e73d819c1a0259daa75802cb4e7a"
+    }
+  },
+  "LocalFreshMatrixAtWrap": {"WindowsDebug": "80 core and 110 native PASS", "WindowsRelease": "in progress at evidence preparation", "LinuxRelease": "ctest exits 0 but strict distinct-80-case report checker FAIL; native not reached", "FinalCoreASan": "not yet established", "FullNativeASanLSan": "unqualified"},
+  "Performance": {"WindowsPairs": 5, "LinuxPairs": 5, "GPUPairs": 3, "Counts": [1,16,32,64], "Physics16MedianPairedPercent": {"Windows": -3.23, "Linux": -4.90, "GPU": -5.15}, "FPSGainClaimed": false, "NetworkHostImprovementClaimed": false, "Caveats": ["Linux network host medians/tails worse", "GPU 64-character render CPU median worse", "creation and respawn results mixed", "allocation event counts unavailable"]},
+  "EvidenceRootOnDockerPC": "C:/Sandbox/Codex/CharacterGraphics",
+  "LinuxEvidenceRootOnDockerPC": "codex-character-linux:/work; retained task volume codex-character-qualification-linux-v1",
+  "FailedAttemptsPreserved": true,
+  "Remaining": ["GL-027 prototype visibility", "unattributed custom spawn/contact observation", "GL-017/018 and broader GL-020 limits", "physical input ergonomics and arbitrary custom content", "production scale and distribution unqualified"],
+  "Publication": "development branch only; main, dependency pins, releases and updater unchanged"
+}

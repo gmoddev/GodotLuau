@@ -119,6 +119,143 @@ node dispatch and cap/engine scheduling sensitivity remain measurement limits.
 
 ## Qualification status
 
+### Final rendered gameplay and repeated rendering measurements
+
+Implementation `2bd43741f82fd5308e01e5bb88462e17ae256fb7` retains the bounded
+physics changes from `a09f10d` and fixes GL-028. Qualification fixtures are
+`6b6a8a29803d47687090b341019155fc770a81b6`. The final 89-file native fingerprint is
+`559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0`.
+
+Windows **Debug and Release each pass fourteen actual NVIDIA/OpenGL actors,
+454 assertions and 48 captured PNGs**. Both default R6 and the box-based custom
+StarterCharacter run single-player input/camera/physics/animation/lifecycle
+checks and real local/remote listen/dedicated checks. Each owned rig reaches six
+exact `dissolve=1.0` uniforms, then restores its original third-person materials.
+The strict endpoint test fails on unchanged main as recorded below. Twenty
+processed respawns per rig/configuration leave zero live-object and static-byte
+growth after warmup. This is bounded evidence, not a universal leak guarantee.
+
+Three alternating graphical Release pairs use the same 960×540 scene, GPU,
+driver, assets and 120 FPS cap. All pairs improve physics dispatch at every count:
+
+| R6 roots | Baseline median, ms | Candidate median, ms | Median paired change | Candidate mean / p95 / p99, ms |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 0.053 | 0.049 | -7.55% | 0.0514 / 0.070 / 0.100 |
+| 16 | 0.413 | 0.396 | -5.15% | 0.4015 / 0.483 / 0.540 |
+| 32 | 0.802 | 0.774 | -3.49% | 0.7722 / 0.900 / 1.048 |
+| 64 | 1.611 | 1.577 | -4.03% | 1.5659 / 1.884 / 2.031 |
+
+Each summary cell is the median of the respective trial statistics. A paired
+percentage is calculated within each pair before taking its median; it need not
+equal the ratio of the two summary medians. The descriptive bootstrap intervals
+refer only to these trials, not independent host populations.
+
+Process-frame mean stays about 8.333 ms at the cap; no FPS gain is claimed.
+At 64 roots, candidate frame median/p95/p99 are 9.691/10.607/10.872 ms versus
+9.534/10.635/10.911 ms. Process dispatch and rendering are mixed: render-CPU
+median rises from 1.480 to 1.663 ms at 64 roots, while render-GPU median is nearly
+unchanged (2.045 to 2.054 ms). Raw mean/median/p95/p99 render observations are
+retained, without attributing a renderer improvement to these changes.
+[RenderingServer's measured CPU/GPU values are milliseconds](https://docs.godotengine.org/en/stable/classes/class_renderingserver.html).
+Whole-actor CPU decreases in all three pairs: baseline 12.0625/11.234375/11.953125
+seconds, candidate 11.890625/10.796875/11.65625. These include startup, rendering,
+factory/lifecycle work, scripting harness and frame pacing; dispatch timing is
+not isolated OS-thread CPU.
+
+Native factory-call creation medians are 7208→7146 microseconds and production
+respawn-call medians 480→462 microseconds in this rendered comparison. No general
+creation/respawn speedup is established. Their calls exclude render-ready and
+network-ready latency. The separate 100-respawn frozen-body monitor has zero
+object growth but **+3048 static bytes in both products**, including retained
+measurement dictionaries; it is not a zero-byte-growth assertion or allocation
+event count. The processed graphical lifecycle check above exercises fade/UI
+initialization as well.
+
+Performance roots are real factory R6 Characters in separate inactive Workspace
+containers with a common floor and observer camera. Their local body camera/UI
+process is disabled and native NPC movement drives the controllers. They measure
+Character dispatch and procedural animation, not 64 active network players or an
+entire production game. Camera/input/UI behavior is qualified separately by the
+rendered gameplay fixtures. Full raw samples distinguish engine monitors, native
+dispatch, harness intervals, rendering and whole-process accounting.
+
+### Final repeated headless comparisons
+
+Five alternating Release pairs per OS use the same starting-main and final
+products on DockerPC, with 240 physics-window samples and a 120 FPS process cap.
+Windows physics dispatch improves in all five pairs at every count. Linux
+improves in all five at 16/64 and four of five at 1/32; the latter descriptive
+intervals include a regression, so those counts do not establish a consistent
+Linux improvement.
+
+| OS | Roots | Baseline / candidate median, ms | Median paired change | Candidate mean / p95 / p99, ms |
+| --- | ---: | ---: | ---: | ---: |
+| Windows | 1 | 0.052 / 0.048 | -7.69% | 0.0493 / 0.071 / 0.096 |
+| Windows | 16 | 0.401 / 0.389 | -3.23% | 0.3819 / 0.451 / 0.535 |
+| Windows | 32 | 0.793 / 0.755 | -4.79% | 0.7521 / 0.882 / 1.044 |
+| Windows | 64 | 1.595 / 1.536 | -3.64% | 1.5142 / 1.792 / 1.937 |
+| Linux | 1 | 0.043 / 0.041 | -2.38% | 0.0465 / 0.080 / 0.103 |
+| Linux | 16 | 0.307 / 0.292 | -4.90% | 0.3057 / 0.420 / 0.521 |
+| Linux | 32 | 0.565 / 0.537 | -5.13% | 0.5666 / 0.770 / 0.822 |
+| Linux | 64 | 1.050 / 0.999 | -4.69% | 1.0669 / 1.483 / 1.605 |
+
+These are elapsed node-dispatch observations. Linux's 16-root p99 increases
+0.512→0.521 ms despite its lower median; process/renderer/tail behavior is not
+universally improved. Windows whole-actor CPU is mixed (three increases, two
+decreases; both medians 5.421875 CPU-seconds). Linux decreases in four of five
+pairs (median 2.113807→2.094837 CPU-seconds). The first rejected candidate's
+120-FPS CPU increase remains above and is not substituted for final results.
+
+Windows native creation median increases 6425→6602 microseconds, while respawn
+is 451→448 (p99 569→648). Linux creation increases 3528→3634, while respawn is
+257→226 (p99 417→345). Together with the rendering trials, these support a
+bounded physics-dispatch optimization and no general creation/respawn latency
+claim. Frame means remain near the cap. The 100-respawn monitor again has zero
+object delta and +3048 static bytes in both products in every trial.
+
+Three same-DockerPC Linux historical GL-007/V2 pairs retain the earlier R6
+factory/respawn/animation/coarse-monitor workload. Sixteen-root physics medians
+are GL-007 0.953/0.746/0.899 ms and V2 0.836/0.868/0.764 ms: one pair regresses,
+two improve. The previously reported Linux slowdown is not consistently
+reproduced on this permitted hardware. Those 120 polled monitor snapshots are
+coarse, not independent frames; they cannot establish a high-confidence tail
+regression or its resolution. Historical respawn medians are 193/201/232 versus
+213/220/209 microseconds. This does not reuse measurements from LinuxBox.
+
+### Network-host investigation
+
+Five alternating pairs per OS run three actual ENet actors, imported R6 rigs,
+240 physics-window samples after warmup and a 120 FPS cap. These include native
+networking, Character/controller/animation and fixture dispatch; they do not
+isolate network CPU.
+
+| Host / metric | Baseline median / p95 / p99, ms | Candidate median / p95 / p99, ms |
+| --- | ---: | ---: |
+| Windows physics dispatch | 0.059 / 0.074 / 0.106 | 0.055 / 0.065 / 0.091 |
+| Windows process dispatch | 0.047 / 0.116 / 0.276 | 0.050 / 0.113 / 0.227 |
+| Linux physics dispatch | 0.043 / 0.065 / 0.090 | 0.045 / 0.076 / 0.101 |
+| Linux process dispatch | 0.036 / 0.096 / 0.134 | 0.041 / 0.105 / 0.142 |
+
+The Linux host physics pairs are +104.88%, -4.88%, -4.35%, -8.16%, +11.63%;
+the first outlier remains in the evidence.
+Process has three increases, one tie and one decrease. Thus the isolated
+Character-dispatch benefit does **not** establish a general network-host win;
+Linux's adverse median/tail observations and Windows' increased process median
+remain explicit tradeoffs/measurement limitations. No network, authority or
+puppet ownership redesign is bundled to erase them. Host mean frame interval
+stays near 8.333 ms; all client roles and raw mean/median/p95/p99 observations
+remain in the evidence.
+
+Three additional historical GL-007/V2 pairs use this same capped network fixture
+on each OS. Windows host physics median rises 0.044→0.059 ms and process
+0.048→0.051; Linux physics rises 0.039→0.044 and process 0.039→0.040. This
+reproduces bounded per-host Character V2 overhead relative to GL-007, while
+preserving V2's required Model, lifetime and protocol contracts. It does not
+justify replacing them or comparing these capped independent windows directly
+to earlier uncapped/coarse monitor totals.
+
+### Development counterevidence and final verification
+
 Rendered review identifies GL-028: the old cache can retain first-person dither
 speckles. The stronger exact-endpoint test reproduces on the immutable main
 Release DLL: R6 retains dissolve `0.999400854110718` on all six meshes, custom
@@ -147,27 +284,45 @@ custom listen/dedicated diagnostic passes with the original progress threshold.
 The earlier startup trajectory is retained as an unresolved spawn/contact
 observation, not silently called a fixed physics defect or a stuck Animator.
 
-Candidate builds, complete regression runs, repeated comparisons and hosted CI
-are in progress. No pending execution is claimed as passing. Final results,
-exact source identities, screenshots and evidence digests will be recorded here.
+Final runtime implementation: `2bd43741f82fd5308e01e5bb88462e17ae256fb7`;
+fixture qualification revision: `6b6a8a29803d47687090b341019155fc770a81b6`.
+The 89-file LF-normalized native fingerprint is
+`559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0`.
+Windows Debug/Release and Linux Release adapters build. Final actual NVIDIA
+Debug and Release runs each pass fourteen actors, 454 assertions and 48 captures.
+All final repeated Windows, Linux-on-DockerPC and GPU comparisons above completed.
+Benchmark phases are serialized after task builds and functional suites stop.
 
-The validation-preserving implementation is `a09f10d55dcc212dd28e1c3f0a60f341689839c3`,
-native fingerprint `aec51cc5e25828b32990e85a297fc769f6c94da12347671ff9a1d62527c79ed2`
-(89 files). Its Windows Debug/Release and Linux Release adapters build, and its
-eight-actor Windows Release graphical run passes. Further runs remain pending.
-Hosted CI will require 80 core cases and 104 native actors per platform: the
-original 95, eight presentation actors, and one performance fixture execution
-actor. The last is an execution check, not a single-trial speed gate.
+Hosted qualification at that exact fixture revision succeeds on both Windows
+and Linux: [core run 41187871681](https://github.com/gmoddev/GodotLuau/actions/runs/41187871681)
+passes 80 distinct cases per platform; [native run 41187871716](https://github.com/gmoddev/GodotLuau/actions/runs/41187871716)
+passes 110 actors per platform (original 95, fourteen presentation actors and one
+performance execution actor). Downloaded artifact digests, native fingerprint,
+62 exact fixture hashes, logs and required assertion labels were independently
+checked on DockerPC. The performance smoke executes five profile modes for 1/16
+characters; it is not a speed gate. Hosted headless presentation is separate
+from the actual rendered DockerPC qualification.
 
-The rejected first Windows candidate Debug and Release pass 80 core cases and 103 native actors
-each, including eight new headless presentation actors; core ASan passes 80.
-The newer rendered/assertion snapshots are recorded separately at final
-qualification. The DockerPC Linux container has built both the retained GL-007
-comparator and starting V2 source and passed the 80-case starting core suite.
-That first Linux adapter also builds successfully. The validation-preserving
-candidate requires fresh builds, comparisons and native suites. Benchmark phases are
-serialized after task builds and functional suites stop, rather than measuring
-against a concurrently compiling task.
+The earlier [failed native run 41187189642](https://github.com/gmoddev/GodotLuau/actions/runs/41187189642)
+and both downloaded artifacts remain preserved: its custom remote assertion
+expected the incorrect container described above. Final fixtures correct that
+premise without changing the runtime factory or weakening geometry assertions.
+
+The final local fresh matrix passes Windows Debug's 80 core cases and 110 native
+actors. Windows Release and core ASan completion are recorded in the closing
+evidence supplement when available. The fresh Linux Release core ctest exits
+successfully, but its JUnit has insufficient distinct-case evidence and the
+strict 80-case checker rejects it; subsequent local native and ASan stages were
+not reached. This local report gap is not counted as a passing 80-case run.
+Hosted Linux Debug's independently verified 80/110 results remain valid. The
+user requested immediate committed/published shutdown preparation, so incomplete
+local qualification is retained explicitly rather than delaying publication.
+
+The rejected first candidate's Windows Debug/Release 80-core/103-native and
+80-core ASan results remain historical counterevidence, not substituted for
+final native sanitizer qualification. No final Linux Debug local execution or
+full-native ASan/LSan result is claimed. See the machine-readable closing
+[evidence manifest](evidence/character-presentation-performance-2026-10-31.json).
 
 Native allocation-event counts are not exposed by the available engine API;
 the harness records static allocated bytes and live objects/nodes/resources,

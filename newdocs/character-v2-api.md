@@ -174,6 +174,10 @@ actual DockerPC NVIDIA/OpenGL gameplay captures for the default R6 and a specifi
 box-based custom rig. StarterPlayer does not automatically hide source prototype
 geometry (GL-027); keep that geometry outside the playable view. This scoped
 qualification does not qualify arbitrary imported rigs or physical input devices.
+The branch also fixes GL-028's retained dither pixels: values close to the fade
+endpoints finish at exactly 0/1, and dirty-update suppression cannot retain a
+nearly hidden material. Public camera settings and interior fade behavior are
+unchanged; no API migration is required.
 
 The place importer rejects files containing a legacy 3D Humanoid before instance
 construction, returning an explicit migration error. It does not rename or
