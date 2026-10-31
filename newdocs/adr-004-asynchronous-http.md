@@ -101,6 +101,15 @@ not change the native snapshot. Other deployments must select their own origins.
 
 ## API and compatibility
 
+The following paragraph records GL-005's original qualified API. GL-023 on its
+dedicated branch supersedes the public fallback/headers/options/JSON behavior
+with the [HttpService API contract](httpservice-api.md), while retaining every
+authority, transport, scheduling and cancellation requirement above. Its native
+response capture adds a 128-field/128-byte-name bound inside the existing 16 KiB
+budget. Direct `_HTTP` transport failure/non-2xx dispositions remain compatible;
+response headers and actual reason text are additive/corrected output fields.
+GL-023 qualification is [recorded separately](httpservice-validation.md).
+
 Keep GetAsync/PostAsync/RequestAsync and direct `_HTTP.get/post/request` names.
 Successful GET/POST return byte strings, and RequestAsync retains its existing
 fields (including its existing empty Headers table). Non-2xx bodies remain

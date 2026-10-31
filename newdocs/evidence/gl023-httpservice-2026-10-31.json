@@ -1,0 +1,952 @@
+{
+  "Base": "0d8942aff3cd8554ef0e3f1fb970a91ac7b7dbdd",
+  "Branch": "fix/gl-023-httpservice-compatibility",
+  "BaselineRegression": "918db6611c745f95995007a2b2d2d4d74271ef50",
+  "BehaviorImplementation": "4066b02a2c5be531543cb95f44eb8a53c18a8c72",
+  "QualifiedSource": "aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4",
+  "NativeSource": {
+    "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "AssembledLuau": {
+    "BeforeMaximumLiteral": 20379,
+    "AfterMaximumLiteral": 14465,
+    "AssembledBytes": 127863,
+    "AssembledSHA256": "68175de14e3638d3f8f6c5e0be1e9c859b47c11b966891a4fc2b8eaa696f72cf",
+    "ByteIdentical": true
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "VerifiedAt": "2026-10-31T06:35:38.561417+00:00",
+  "LocalQualification": {
+    "windows": {
+      "Platform": "windows",
+      "Revision": "aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4",
+      "ArchiveSHA256": "7ed4d36d306168a002ff26fc3ba8b478c13dcd9802026218c5eceba703fe6650",
+      "Core": {
+        "debug": {
+          "Cases": 80,
+          "JUnitSHA256": "8b5f08a0c98dd315f4b553fa3d03370f2b06e60b530acfa1ea610c80e47d13b5",
+          "Configuration": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+            "CMAKE_CXX_FLAGS:STRING": "/DWIN32 /D_WINDOWS /EHsc",
+            "CMAKE_C_FLAGS:STRING": "/DWIN32 /D_WINDOWS",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "/machine:x64",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "/machine:x64"
+          }
+        },
+        "release": {
+          "Cases": 80,
+          "JUnitSHA256": "d053bf02dbb2c10440e707506ca17d1995588c7b0b9136ce2b51fb1ffc934a2a",
+          "Configuration": {
+            "CMAKE_BUILD_TYPE:STRING": "Release",
+            "CMAKE_CXX_COMPILER:FILEPATH": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+            "CMAKE_CXX_FLAGS:STRING": "/DWIN32 /D_WINDOWS /EHsc",
+            "CMAKE_C_FLAGS:STRING": "/DWIN32 /D_WINDOWS",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "/machine:x64",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "/machine:x64"
+          }
+        },
+        "asan": {
+          "Cases": 80,
+          "JUnitSHA256": "988475dc69ec5f32f3640b9a9aed07a6362b8b6f0c01e75c2662fdcf95c269ba",
+          "Configuration": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+            "CMAKE_CXX_FLAGS:STRING": "/fsanitize=address",
+            "CMAKE_C_FLAGS:STRING": "/DWIN32 /D_WINDOWS",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "/INCREMENTAL:NO",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "/machine:x64"
+          }
+        }
+      },
+      "Identity": {
+        "HistoricalWorkerGitHEAD": "8b163269cbe44cf7fcf7a9a0285620878a2345fd",
+        "Submodules": " d5cc777a89d899665fb61f1650ef0dc0cf6488c4 godot-cpp (d5cc777)\n 9e2984fd0334414a2ef62ceede0c06dab7574d55 luau (9e2984f)\n",
+        "DependencyWorktrees": {
+          "godot-cpp": "",
+          "luau": ""
+        },
+        "BuildConfiguration": {
+          "debug": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+            "CMAKE_CXX_FLAGS:STRING": "/DWIN32 /D_WINDOWS /EHsc",
+            "CMAKE_C_FLAGS:STRING": "/DWIN32 /D_WINDOWS",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "/machine:x64",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "/machine:x64"
+          },
+          "release": {
+            "CMAKE_BUILD_TYPE:STRING": "Release",
+            "CMAKE_CXX_COMPILER:FILEPATH": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+            "CMAKE_CXX_FLAGS:STRING": "/DWIN32 /D_WINDOWS /EHsc",
+            "CMAKE_C_FLAGS:STRING": "/DWIN32 /D_WINDOWS",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "/machine:x64",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "/machine:x64"
+          },
+          "asan": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+            "CMAKE_CXX_FLAGS:STRING": "/fsanitize=address",
+            "CMAKE_C_FLAGS:STRING": "/DWIN32 /D_WINDOWS",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "/INCREMENTAL:NO",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "/machine:x64"
+          }
+        },
+        "OverlaySource": {
+          "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+          "Files": 89,
+          "Newlines": "LF normalized"
+        }
+      },
+      "VerifiedEvidenceFiles": 7044,
+      "DistinctGuidsAcrossConfigurations": 16000,
+      "Native": {
+        "debug": {
+          "Processes": 92,
+          "QualificationSHA256": "3f95e277baa53b113d1b8577ba7921c3b42a996c91e86e264c77c148f81ebcad",
+          "ExtensionSHA256": "8d5fb1bc56ccb4470c489b1e8a9d91bc68444089c3994b7100d56d98fe017fb2",
+          "PeakFrameGapSeconds": 0.083774,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "datastore": 23
+          },
+          "LogFiles": 270,
+          "LogHashManifestSHA256": "3162cbaa3620d05155bed3e8430b6f29e4af8d0c3145d8da3568d0c1dddb93bf",
+          "Diagnostics": {
+            "regression": {
+              "Dedicated-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Dedicated-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+            },
+            "security": {
+              "security-Listen-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Listen-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 891400652. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 863440299. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Handler-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 9424454. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+            },
+            "characters": {
+              "character-Listen-server": "ERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:462)\n       [1] Wait (res://CharacterIntegration.gd:36)\nERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:466)\n       [1] Wait (res://CharacterIntegration.gd:36)",
+              "character-Listen-client1": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-Listen-client2": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-model": "WARNING: [Character:Transform] Rejected nonfinite, singular, sheared or nonuniform Character transform.\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] Run (res://CharacterV2.gd:320)"
+            },
+            "http": {
+              "http-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            },
+            "httpservice": {
+              "httpservice-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            }
+          },
+          "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ASAN_OPTIONS": null,
+          "HarnessSHA256": "498a45649caedeca99f87b43efc3f8fbc4b7ff3ac05b07aa05974750f16da6f1"
+        },
+        "release": {
+          "Processes": 92,
+          "QualificationSHA256": "3de574f705bf2b3f9112c8827226ce3f3b5993c66c2a31e018afacdc5637a092",
+          "ExtensionSHA256": "39251f89018f7298ef85c1b37df8c5c4c70516f62bfa9a79e31254393942bf0c",
+          "PeakFrameGapSeconds": 0.031055,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "datastore": 23
+          },
+          "LogFiles": 271,
+          "LogHashManifestSHA256": "2d25a9f3579a8435daa0ee55f779e003e42a190c1545709d322c437fd41b2de2",
+          "Diagnostics": {
+            "regression": {
+              "Dedicated-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Dedicated-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00c3\u00a2\u00c2\u20ac\u00c2\u201d este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+            },
+            "security": {
+              "security-Listen-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Listen-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 1084327219. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 838863638. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Handler-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 871886614. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+            },
+            "characters": {
+              "character-Listen-server": "ERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:462)\n       [1] Wait (res://CharacterIntegration.gd:36)\nERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:466)\n       [1] Wait (res://CharacterIntegration.gd:36)",
+              "character-Listen-client1": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-Listen-client2": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-model": "WARNING: [Character:Transform] Rejected nonfinite, singular, sheared or nonuniform Character transform.\n   at: push_warning (core/variant/variant_utility.cpp:1033)\n   GDScript backtrace (most recent call first):\n       [0] Run (res://CharacterV2.gd:320)"
+            },
+            "http": {
+              "http-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            },
+            "httpservice": {
+              "httpservice-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            }
+          },
+          "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ASAN_OPTIONS": null,
+          "HarnessSHA256": "498a45649caedeca99f87b43efc3f8fbc4b7ff3ac05b07aa05974750f16da6f1"
+        }
+      },
+      "Products": {
+        "template_debug": {
+          "Processes": 10,
+          "QualificationSHA256": "730143ce5fbc54550b18b810bc549f4cff41b719091875d65454cda9f1471201",
+          "ExtensionSHA256": "dc9e967a2fda5399ead565102912ac234ec4d633c33d6f4f3a91546f4659e686",
+          "PeakFrameGapSeconds": 0.067379,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          }
+        },
+        "template_release": {
+          "Processes": 10,
+          "QualificationSHA256": "ba7338dd465ea299ed483c62df4f7695b65fc759d61dbb3bf8cbd22fa42351a7",
+          "ExtensionSHA256": "6b5a798452fc130b62eea133d464fb03a6800fbde7597562f8787ed6b9872b89",
+          "PeakFrameGapSeconds": 0.031342,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          }
+        }
+      }
+    },
+    "linux": {
+      "Platform": "linux",
+      "Revision": "aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4",
+      "ArchiveSHA256": "e11b5aabdf8b86816a3c8e309b22ff379d90632da1ead12fcc563639882d683c",
+      "Core": {
+        "debug": {
+          "Cases": 80,
+          "JUnitSHA256": "96df14a5fd447b5169e9bba4808a0a75aa4bf4fc2be521e6e4a0c70a9b119da1",
+          "Configuration": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "/usr/bin/c++",
+            "CMAKE_CXX_FLAGS:STRING": "",
+            "CMAKE_C_FLAGS:STRING": "",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": ""
+          }
+        },
+        "release": {
+          "Cases": 80,
+          "JUnitSHA256": "66cfb6f77e8c1d41705a4a2255344fa112532791b1ae21d8f26b242e3bd6d210",
+          "Configuration": {
+            "CMAKE_BUILD_TYPE:STRING": "Release",
+            "CMAKE_CXX_COMPILER:FILEPATH": "/usr/bin/c++",
+            "CMAKE_CXX_FLAGS:STRING": "",
+            "CMAKE_C_FLAGS:STRING": "",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": ""
+          }
+        },
+        "asan": {
+          "Cases": 80,
+          "JUnitSHA256": "8fedf3961a746fd23478a53594c352473734cf79e0e486538cbce8f88b6ca1ec",
+          "Configuration": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "/usr/bin/c++",
+            "CMAKE_CXX_FLAGS:STRING": "-fsanitize=address -fno-omit-frame-pointer",
+            "CMAKE_C_FLAGS:STRING": "",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "-fsanitize=address",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "-fsanitize=address"
+          }
+        }
+      },
+      "Identity": {
+        "HistoricalWorkerGitHEAD": null,
+        "Submodules": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4 godot-cpp\n9e2984fd0334414a2ef62ceede0c06dab7574d55 luau",
+        "DependencyWorktrees": null,
+        "DependencyTreeVerification": {
+          "godot-cpp": {
+            "Revision": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+            "TrackedFiles": 165,
+            "Missing": [],
+            "Changed": [],
+            "NormalizedTextFiles": 0,
+            "PinnedTreeSHA256": "8d0107b65dfa420e1f6cb65262d858e2c226a813a514218382095ace02a20abd"
+          },
+          "luau": {
+            "Revision": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+            "TrackedFiles": 852,
+            "Missing": [],
+            "Changed": [],
+            "NormalizedTextFiles": 841,
+            "PinnedTreeSHA256": "4fde8b5300c67e9d7f2cbaf9d261cfad2e926b603883d55a254a636e0d278fa7"
+          }
+        },
+        "BuildConfiguration": {
+          "debug": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "/usr/bin/c++",
+            "CMAKE_CXX_FLAGS:STRING": "",
+            "CMAKE_C_FLAGS:STRING": "",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": ""
+          },
+          "release": {
+            "CMAKE_BUILD_TYPE:STRING": "Release",
+            "CMAKE_CXX_COMPILER:FILEPATH": "/usr/bin/c++",
+            "CMAKE_CXX_FLAGS:STRING": "",
+            "CMAKE_C_FLAGS:STRING": "",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": ""
+          },
+          "asan": {
+            "CMAKE_BUILD_TYPE:STRING": "Debug",
+            "CMAKE_CXX_COMPILER:FILEPATH": "/usr/bin/c++",
+            "CMAKE_CXX_FLAGS:STRING": "-fsanitize=address -fno-omit-frame-pointer",
+            "CMAKE_C_FLAGS:STRING": "",
+            "CMAKE_EXE_LINKER_FLAGS:STRING": "-fsanitize=address",
+            "CMAKE_SHARED_LINKER_FLAGS:STRING": "-fsanitize=address"
+          }
+        },
+        "OverlaySource": {
+          "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+          "Files": 89,
+          "Newlines": "LF normalized"
+        }
+      },
+      "VerifiedEvidenceFiles": 10202,
+      "DistinctGuidsAcrossConfigurations": 20000,
+      "Native": {
+        "debug": {
+          "Processes": 92,
+          "QualificationSHA256": "be99cd2c25ff2df36bad4bdefba9385314293d71f700b86b25f88a7bb882587b",
+          "ExtensionSHA256": "09df809f0b783ee568c422c3b82cd9f2fcbda1ee17dbc341af0bd53e424c4980",
+          "PeakFrameGapSeconds": 0.030299,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "datastore": 23
+          },
+          "LogFiles": 268,
+          "LogHashManifestSHA256": "ec91b3a723d106bb7614fe777acb9e724d037a161dda415e16323f00d93eb6da",
+          "Diagnostics": {
+            "regression": {
+              "Dedicated-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Dedicated-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+            },
+            "security": {
+              "security-Listen-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Listen-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 505290406. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 614728980. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Handler-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 799170674. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+            },
+            "characters": {
+              "character-Listen-server": "ERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:462)\n       [1] Wait (res://CharacterIntegration.gd:36)\nERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:466)\n       [1] Wait (res://CharacterIntegration.gd:36)",
+              "character-Listen-client1": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-Listen-client2": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-model": "WARNING: [Character:Transform] Rejected nonfinite, singular, sheared or nonuniform Character transform.\n     at: push_warning (core/variant/variant_utility.cpp:1033)\n     GDScript backtrace (most recent call first):\n         [0] Run (res://CharacterV2.gd:320)"
+            },
+            "http": {
+              "http-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            },
+            "httpservice": {
+              "httpservice-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            }
+          },
+          "GodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ASAN_OPTIONS": null,
+          "HarnessSHA256": "498a45649caedeca99f87b43efc3f8fbc4b7ff3ac05b07aa05974750f16da6f1"
+        },
+        "release": {
+          "Processes": 92,
+          "QualificationSHA256": "0c18773ff7e859667ecde5b9926b16fccf52e58aad416937e6df2b3e38b0ceee",
+          "ExtensionSHA256": "2b0cd0b1203b69ff2b8c066875c2693d08e6133ae98abb41850e8fd583210485",
+          "PeakFrameGapSeconds": 0.011231,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "datastore": 23
+          },
+          "LogFiles": 269,
+          "LogHashManifestSHA256": "a5cdbde974bc582e0a1f59b9763d88b0199289d6576a27167c5af235fdeefcc9",
+          "Diagnostics": {
+            "regression": {
+              "Dedicated-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Dedicated-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+            },
+            "security": {
+              "security-Listen-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Listen-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 527108857. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 1249583718. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Handler-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 339958135. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+            },
+            "characters": {
+              "character-Listen-server": "ERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:462)\n       [1] Wait (res://CharacterIntegration.gd:36)\nERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:466)\n       [1] Wait (res://CharacterIntegration.gd:36)",
+              "character-Listen-client1": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-Listen-client2": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-model": "WARNING: [Character:Transform] Rejected nonfinite, singular, sheared or nonuniform Character transform.\n     at: push_warning (core/variant/variant_utility.cpp:1033)\n     GDScript backtrace (most recent call first):\n         [0] Run (res://CharacterV2.gd:320)"
+            },
+            "http": {
+              "http-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            },
+            "httpservice": {
+              "httpservice-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            }
+          },
+          "GodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ASAN_OPTIONS": null,
+          "HarnessSHA256": "498a45649caedeca99f87b43efc3f8fbc4b7ff3ac05b07aa05974750f16da6f1"
+        },
+        "asan": {
+          "Processes": 92,
+          "QualificationSHA256": "6dc261bb2a300bfb75d177bdf1ed032cb0afc3272234ac659c7743a051e3c3ab",
+          "ExtensionSHA256": "ad0c83a572e69f429d368278a2fe22a0bee28801217409a0a25ee890dc41c3de",
+          "PeakFrameGapSeconds": 0.036866,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "datastore": 23
+          },
+          "LogFiles": 273,
+          "LogHashManifestSHA256": "f734362cd90ee55e2680818dbba837b16c9dd2ec087581987d62efa1f75035d5",
+          "Diagnostics": {
+            "regression": {
+              "Dedicated-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Dedicated-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client1": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)",
+              "Editor-0-client2": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' \u00e2\u0080\u0094 este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+            },
+            "security": {
+              "security-Listen-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Listen-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 256256011. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Dedicated-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 144999626. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Handler-server": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)",
+              "security-Handler-client2": "ERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_state2d' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_remove' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_character' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_character_grant' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)\nERROR: RPC '_recv_chat' is not allowed on node /root/Game/NetworkService from: 737287049. Mode is \"authority\", authority is 1.\n   at: _process_rpc (modules/multiplayer/scene_rpc_interface.cpp:263)"
+            },
+            "characters": {
+              "character-Listen-server": "ERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:462)\n       [1] Wait (res://CharacterIntegration.gd:36)\nERROR: No multiplayer peer is assigned. Assume no peers are connected.\n   at: get_peer_ids (modules/multiplayer/scene_multiplayer.cpp:546)\n   GDScript backtrace (most recent call first):\n       [0] Server (res://CharacterIntegration.gd:466)\n       [1] Wait (res://CharacterIntegration.gd:36)",
+              "character-Listen-client1": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-Listen-client2": "ERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)\nERROR: The multiplayer instance isn't currently active.\n   at: get_unique_id (modules/enet/enet_multiplayer_peer.cpp:438)",
+              "character-model": "WARNING: [Character:Transform] Rejected nonfinite, singular, sheared or nonuniform Character transform.\n     at: push_warning (core/variant/variant_utility.cpp:1033)\n     GDScript backtrace (most recent call first):\n         [0] Run (res://CharacterV2.gd:320)"
+            },
+            "http": {
+              "http-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            },
+            "httpservice": {
+              "httpservice-tls": "ERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)\nERROR: TLS handshake error: -9984\n   at: _do_handshake (modules/mbedtls/stream_peer_mbedtls.cpp:89)"
+            }
+          },
+          "GodotSHA256": "02f913eddb7069fe2c35319d74af10525752ab33c08ac2e1f4612e829a96853a",
+          "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+          "HarnessSHA256": "498a45649caedeca99f87b43efc3f8fbc4b7ff3ac05b07aa05974750f16da6f1"
+        }
+      },
+      "Products": {
+        "template_debug": {
+          "Processes": 10,
+          "QualificationSHA256": "f9f940a88077ebd4c0e3d921e9e92816df727f7b8d598cf41949c24813069db0",
+          "ExtensionSHA256": "e5a3d1576368b42f6b54b3b52990b26198a5bc162d7f1b39c60366b4cf698c35",
+          "PeakFrameGapSeconds": 0.014193,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          }
+        },
+        "template_release": {
+          "Processes": 10,
+          "QualificationSHA256": "b6c554a012b530655a48bf7ac301ed248c55655fd9a83d6ccef242c10f221fab",
+          "ExtensionSHA256": "78349af93e5ec78e10a48ce7f6b959fe8a4cce07fd328ece5a8273daa12cc8e7",
+          "PeakFrameGapSeconds": 0.011735,
+          "VerifiedGuids": 4000,
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          }
+        }
+      }
+    }
+  },
+  "HostedCI": {
+    "core": {
+      "Run": 41175369764,
+      "Revision": "aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41175369764",
+      "CreatedAt": "2026-10-31T06:08:36Z",
+      "UpdatedAt": "2026-10-31T06:09:50Z",
+      "VerifiedAt": "2026-10-31T06:11:26.164843+00:00",
+      "Jobs": [
+        {
+          "id": 124461702484,
+          "name": "Core (Linux, Debug)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-31T06:08:39Z",
+          "completed_at": "2026-10-31T06:09:09Z"
+        },
+        {
+          "id": 124461702560,
+          "name": "Core (Windows, Debug)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-31T06:08:39Z",
+          "completed_at": "2026-10-31T06:09:49Z"
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13032661461,
+          "Name": "runtime-core-Windows-Debug",
+          "SHA256": "ff7523b94785e771cc155cb90b9fcfc30b88a4ae44436c20c0553a1667910cb3",
+          "CoreCases": 80
+        },
+        {
+          "ID": 13032598950,
+          "Name": "runtime-core-Linux-Debug",
+          "SHA256": "42c2d33133fb61e3f777c74e0db0d74409fc62aefaaf1d9dc1855e6a073a7d0e",
+          "CoreCases": 80
+        }
+      ]
+    },
+    "native": {
+      "Run": 41175369757,
+      "Revision": "aa5b765adfe09e2b4f3c7ee998bdbbdbc9cbc8d4",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41175369757",
+      "CreatedAt": "2026-10-31T06:08:36Z",
+      "UpdatedAt": "2026-10-31T06:30:19Z",
+      "VerifiedAt": "2026-10-31T06:30:52.113921+00:00",
+      "Jobs": [
+        {
+          "id": 124461702386,
+          "name": "Native (Linux, Debug)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-31T06:08:39Z",
+          "completed_at": "2026-10-31T06:21:19Z"
+        },
+        {
+          "id": 124461702553,
+          "name": "Native (Windows, Debug)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-31T06:08:40Z",
+          "completed_at": "2026-10-31T06:30:18Z"
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13033061907,
+          "Name": "runtime-native-Linux-Debug",
+          "SHA256": "e1fa8a5f248a135be7c8a3e2b6db34b21c1ff160cc761e07cc411f5168a1ba29",
+          "NativeSource": {
+            "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "Processes": 92,
+          "ExtensionSHA256": "77da8a39a2f6e4a340c301336afd1ac889e92267901e2de6d9b7a4bbb4eb6a67",
+          "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992009,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+              "Bytes": 76056717,
+              "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+            },
+            "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+            "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "VersionStderr": ""
+          },
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "DataStoreNative": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "CharacterLatency": [
+            {
+              "Received": 1110,
+              "Forwarded": 1110,
+              "Dropped": 0,
+              "PeakPending": 503,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.20002842400003829
+            },
+            {
+              "Received": 409,
+              "Forwarded": 409,
+              "Dropped": 0,
+              "PeakPending": 19,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.20002954999995382
+            }
+          ],
+          "CharacterModelChecks": 76,
+          "ManualCharacterActors": 3,
+          "LogFiles": 277,
+          "LogHashManifestSHA256": "878af81966aec7e5a13e6cc9ddd80716352046892ca11c15194daed88e93af3b",
+          "HarnessSHA256": "498a45649caedeca99f87b43efc3f8fbc4b7ff3ac05b07aa05974750f16da6f1",
+          "HttpServicePeakFrameGapSeconds": 0.051383,
+          "VerifiedGuids": 4000,
+          "VerifiedHttpServiceActors": 6
+        },
+        {
+          "ID": 13032922080,
+          "Name": "runtime-native-Windows-Debug",
+          "SHA256": "4aafd0b634bf5bb48b8c3459eae71a709d0bdf588102e1c12a048898c4b37ace",
+          "NativeSource": {
+            "SHA256": "71c663fbb978b34559a00a92b5315a8d6ff637f6db09ec04867e6cf5ddd8149f",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "Processes": 92,
+          "ExtensionSHA256": "f9f581b30054e4e1d25db5641a3f9c8129d93e6a6013ff7ca27d50e2ab7c70a2",
+          "DataStoreWorkerSHA256": "403c51bc7fb398ccd6421aab48a43246a6c19744f103cd628234401dadc922d5",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992673,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+              "Bytes": 84198557,
+              "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "Executable": "Godot_v4.7.1-stable_win64.exe"
+            },
+            "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+            "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "VersionStderr": ""
+          },
+          "HttpServiceNative": {
+            "Actors": 6,
+            "GuidProcesses": 2,
+            "GuidSamples": 4000,
+            "UniqueGuids": 4000,
+            "UnauthorizedRequests": 0
+          },
+          "DataStoreNative": {
+            "FaultStages": 4,
+            "KillStages": 4,
+            "IndependentIncrements": 40,
+            "PowerLossTest": false
+          },
+          "CharacterLatency": [
+            {
+              "Received": 1105,
+              "Forwarded": 1105,
+              "Dropped": 0,
+              "PeakPending": 503,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.20299999999997453
+            },
+            {
+              "Received": 416,
+              "Forwarded": 414,
+              "Dropped": 0,
+              "PeakPending": 20,
+              "ConfiguredDelaySeconds": 0.2,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.20299999999997453
+            }
+          ],
+          "CharacterModelChecks": 76,
+          "ManualCharacterActors": 3,
+          "LogFiles": 277,
+          "LogHashManifestSHA256": "83a43a53b704697f22b72162036378aedf827edf8eec807b356bf7402c63c859",
+          "HarnessSHA256": "498a45649caedeca99f87b43efc3f8fbc4b7ff3ac05b07aa05974750f16da6f1",
+          "HttpServicePeakFrameGapSeconds": 0.050291,
+          "VerifiedGuids": 4000,
+          "VerifiedHttpServiceActors": 6
+        }
+      ]
+    }
+  },
+  "RetainedFailures": [
+    {
+      "Run": 41175214979,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41175214979",
+      "Revision": "4066b02a2c5be531543cb95f44eb8a53c18a8c72",
+      "Conclusion": "failure",
+      "Reason": "Windows MSVC 2022 C2026 oversized embedded literal; Linux passed. Fixed at aa5b765 without changing assembled Luau bytes.",
+      "Artifacts": [
+        {
+          "ID": 13032675876,
+          "Name": "runtime-core-Linux-Debug",
+          "SHA256": "3a5a2edbeb10a8e489f5750f00f2bbd1fd6d608728fe39987ce831b9e5bfcc49"
+        },
+        {
+          "ID": 13032648418,
+          "Name": "runtime-core-Windows-Debug",
+          "SHA256": "4d865fe0ef6c37f9b5d83354477cac647b3513879a7a0dd1156fc464d30357fd"
+        }
+      ]
+    },
+    {
+      "Run": 41175215037,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41175215037",
+      "Revision": "4066b02a2c5be531543cb95f44eb8a53c18a8c72",
+      "Conclusion": "failure",
+      "Reason": "Windows MSVC 2022 C2026 oversized embedded literal; Linux passed. Fixed at aa5b765 without changing assembled Luau bytes.",
+      "Artifacts": [
+        {
+          "ID": 13033112305,
+          "Name": "runtime-native-Windows-Debug",
+          "SHA256": "6f6da979d8af61e073d53324ad63ecc7729462dc836a2dcbc4c7126537e0b028"
+        },
+        {
+          "ID": 13033031755,
+          "Name": "runtime-native-Linux-Debug",
+          "SHA256": "49ed4b46a1c9ddf030e373f3cca401bd6dae514118534e579f2660c13f08ab2b"
+        }
+      ]
+    },
+    {
+      "Attempt": "Linux baseline v1",
+      "Reason": "Fixture scene omitted Game name; completion metadata absent, native parser diagnostic retained. Corrected v2 baseline executes unchanged qualified adapter."
+    },
+    {
+      "Attempt": "Windows baseline launcher",
+      "Reason": "Store Python alias; no runtime claimed. Explicit controlled Python and installed CRT correct the launcher. Original output retained in task transcript."
+    },
+    {
+      "Attempt": "Linux candidate v1/v2 core",
+      "Reason": "59 pass, five fail: Luau disallows freezing an already protected metatable. Corrected construction order; v2 retains exact diagnostic."
+    },
+    {
+      "Attempt": "Linux candidate v3 native",
+      "Reason": "Four public actors pass; utilities fixture string loses Luau escapes through GDScript. Raw string corrects harness before v4; failure source/logs retained."
+    },
+    {
+      "Attempt": "Windows candidate v3 launcher",
+      "Reason": "cmd compiler setup quoting failed before runtime. Corrected task-owned batch file; output retained in task transcript."
+    },
+    {
+      "Attempt": "Windows evidence bundle v1",
+      "Reason": "Verifier correctly rejects archive missing hashed Godot profile logs. Complete v2 preserves every log; original archive retained.",
+      "ArchiveSHA256": "3fc6f642d893423b3e98b50312adf83924497e100e312bc1ef3bf195bed36e32"
+    },
+    {
+      "Attempt": "Linux collector Git metadata",
+      "Reason": "The worker is an unversioned export. Collector initially fails git rev-parse. Source/harness fingerprints and direct pinned dependency tree verification provide actual identity; no repository HEAD is invented."
+    },
+    {
+      "Attempt": "Linux exported dependency raw blob comparison",
+      "Reason": "841 Luau text files differ only in CRLF checkout line endings. Compiler-equivalent newline normalization matches all 852 pinned Luau tracked blobs; all 165 godot-cpp blobs match directly. No dependency file was changed."
+    }
+  ],
+  "HarnessHashes": {
+    "AnimationIntegration.gd": "212970c1ee016c7b644233fcb1600a5bb15cf0afddf257a14dbdf440280ba177",
+    "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+    "CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+    "CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+    "CharacterIntegration.gd": "d55240cd898aa2a6889753aa95e1ecee883cf080f7220bde9663d43fce8876ef",
+    "CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+    "CharacterNetworkBenchmarks.gd": "b47b6cda51ef9b7606ffb25b467e2660076740f34a3882020cc4dbb10562b0fc",
+    "CharacterV2.gd": "08000a8307702721d6e951ad3ac2944709517f1c7d0c4db07639c7cccdb96859",
+    "CheckCoreCI.py": "a47e2bcd0bd0fe28897006859ff0169bb60e09ee03a6ae8753a7c0ea668fff24",
+    "CheckNativeCI.py": "6d7c6c90cca6157c76c864d752fabbdd98a46e151566221b2d2facb0b09ac303",
+    "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+    "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+    "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+    "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+    "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+    "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+    "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+    "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+    "DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+    "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+    "ExecutionDomainTests.cpp": "d023eef5af8635167bf9f76d2a1585a54b21468b9e9e3733926017cc030b730d",
+    "FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+    "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+    "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+    "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+    "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+    "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+    "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+    "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+    "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+    "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+    "HttpFixtureServer.py": "5c2559ebe6a41e4532fc9244c259ec3acbd5ef48be0b636f9f1c5c5b56749663",
+    "HttpIntegration.gd": "f6c1cafd5e930b84d7b918d2761775f0a228f0dd5ddf010a5a1b57ceeadb7d83",
+    "HttpServiceBaseline.gd": "d001b05eac5f8c3e1042cc51f97ce10a8a50beaf00383d32533313137739f429",
+    "HttpServiceIntegration.gd": "71371f4e642d0bfbab929c8c6aa8d4432498a3721542f722e3b8397093a74905",
+    "Integration.gd": "44426f90ae9e2fcbc71854cee70d5efbeaa008abfc93ca9c19fbc86054014a4a",
+    "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+    "NetworkSecurity.gd": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+    "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+    "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+    "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+    "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+    "RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+    "RunCharacterNetworkBenchmarks.py": "e73f969d4923f0ccb93dc92bfdd62f67bceb1ec23f1b1363d27bb1562a05a53c",
+    "RunCoreTests.py": "a7693433d239e5a4a64d9e065a891e05052be4a8cd7a72ab79cb1bf64d8c20d9",
+    "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+    "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+    "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+    "RunHttpServiceBaseline.py": "1128b038d7069434df6afd47f502fe0f797d0f05db9eddca04963564ecf7e980",
+    "RunQualification.py": "8d8b366cd249d1681e23a430a4911c29b4f3396d2b8775a6418829be4b4c95d7",
+    "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+    "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+    "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+    "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+    "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+  },
+  "Performance": {
+    "MaximumWorkerHttpServiceFrameGapSeconds": 0.083774,
+    "RequiredBoundSeconds": 0.25,
+    "Observation": "All public slow HTTP checks advance another script counter by more than five ticks. Timing covers bounded fixtures, not production throughput or a hard realtime guarantee."
+  },
+  "VerificationCommands": [
+    "cmake --build <configuration> --target ExecutionDomainTests GodotLuauAdapter DatastoreBackendProbe --parallel 2 (Windows ASan: ExecutionDomainTests only)",
+    "ctest --test-dir <configuration> --output-junit <report> --test-output-size-passed 65536 --test-output-size-failed 65536 --output-on-failure",
+    "python tests/runtime/CheckCoreCI.py report <report>",
+    "python tests/runtime/RunQualification.py --godot <matching-engine> --extension <adapter> --output <fresh-group> --<group> --timeout 60 (resources:15; regression: --teardown --coordinated-close)",
+    "scons platform=linux target=template_debug|template_release -j2",
+    "<controlled-python> tests/runtime/RunSConsPortable.py <portable-scons> platform=windows target=template_debug|template_release -j2",
+    "python tests/runtime/FixtureProcessTests.py (14 cases); python tests/packaging/PackagingTests.py (5 cases)",
+    "GitHub connector artifact download; ZIP SHA256 against GitHub digest; verify JUnit cases, native actor markers, harness/log hashes, server hits and actual UUID samples"
+  ],
+  "Sanitizers": {
+    "WindowsCore": "/fsanitize=address; ASAN_OPTIONS=halt_on_error=1",
+    "LinuxCoreAndNative": "Matching instrumented engine; ASAN_OPTIONS=detect_leaks=1:halt_on_error=1; inherited ASAN_OPTIONS/LSAN_OPTIONS/LD_PRELOAD/LD_LIBRARY_PATH absent; no suppressions added",
+    "LinuxEngineSHA256": "02f913eddb7069fe2c35319d74af10525752ab33c08ac2e1f4612e829a96853a"
+  },
+  "Limits": [
+    "GL-017 external engine defect remains open.",
+    "GL-018 Windows full-native ASan host remains unqualified; no Windows native sanitizer pass is claimed.",
+    "Broader GL-020 adversarial animation qualification remains open.",
+    "Headless fixtures do not qualify graphical output, production load, hostile projects or hard realtime timing.",
+    "Strict JSONNull/container/UTF8/finite-value and 1 MiB/16384 traversal/depth32 contract intentionally differs from Roblox extensions.",
+    "No gzip/per-request Timeout, redirect/cookie jar/decompression, IP/DNS isolation or complete Roblox parity.",
+    "UUID uniqueness is probabilistic; sampled cross-process generation does not prove future collisions impossible. Entropy-provider failure path was not fault-injected.",
+    "DataStore interruption evidence does not establish hardware power-loss/network-filesystem durability."
+  ],
+  "Publication": {
+    "MainUnchanged": "0d8942aff3cd8554ef0e3f1fb970a91ac7b7dbdd",
+    "Merged": false,
+    "UpstreamModified": false,
+    "ReleaseWorkflowUnchanged": true,
+    "ReleasesAndUpdater": "Disabled; no fork distribution channel qualified",
+    "CIObservation": "Bounded 30-minute observation from final runtime push; completed results recorded only after artifact verification."
+  },
+  "RecommendedNextTask": "Review API migration and qualification evidence, then separately authorize any main integration."
+}

@@ -1,5 +1,6 @@
 #include "gl_http.h"
 #include "gl_http_policy.h"
+#include "gl_uuid.h"
 #include "gl_domain_host.h"
 #include "gl_execution_domain.h"
 #include "gl_net_bridge.h"
@@ -11,6 +12,7 @@
 #include <godot_cpp/classes/tls_options.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/time.hpp>
+#include <godot_cpp/classes/crypto.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/packed_string_array.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -18,6 +20,7 @@
 #include <cstring>
 #include <cmath>
 #include <set>
+#include <map>
 
 using namespace godot;
 
@@ -131,6 +134,24 @@ int BeginRequest(lua_State* Thread) {
     if (!Host) luaL_error(Thread,"[Runtime:HTTP] Capability unavailable");
     return Host->BeginHttp(Thread,Context.Domain,Context.Operation);
 }
+int HttpAvailable(lua_State* Thread) {
+    auto& Context=*static_cast<struct Context*>(lua_touserdata(Thread,lua_upvalueindex(1)));
+    auto Host=Object::cast_to<GLDomainHost>(ObjectDB::get_instance(Context.Host));
+    lua_pushboolean(Thread,Host && !Host->is_queued_for_deletion() && Host->IsHttpAvailable(Thread,Context.Domain));
+    return 1;
+}
+int GenerateGuid(lua_State* Thread) {
+    if (!lua_isnoneornil(Thread,1) && lua_type(Thread,1)!=LUA_TBOOLEAN) luaL_error(Thread,"[Runtime:HttpService] GUID braces must be boolean");
+    bool Braces=lua_isnoneornil(Thread,1) || lua_toboolean(Thread,1);
+    Ref<Crypto> Provider; Provider.instantiate();
+    if (Provider.is_null()) luaL_error(Thread,"[Runtime:HttpService] UUID randomness unavailable");
+    PackedByteArray Random=Provider->generate_random_bytes(16);
+    if (Random.size()!=16) luaL_error(Thread,"[Runtime:HttpService] UUID randomness unavailable");
+    std::array<uint8_t,16> Bytes;
+    std::memcpy(Bytes.data(),Random.ptr(),Bytes.size());
+    std::string Guid=FormatGLUuid(Bytes,Braces);
+    lua_pushlstring(Thread,Guid.data(),Guid.size()); return 1;
+}
 int ContinueRequest(lua_State* Thread,int Status) {
     auto& Context=*static_cast<struct Context*>(lua_touserdata(Thread,lua_upvalueindex(1)));
     auto Host=Object::cast_to<GLDomainHost>(ObjectDB::get_instance(Context.Host));
@@ -158,6 +179,8 @@ struct GLHttpManager::State {
         int Reference=LUA_NOREF, Operation=0;
         GLHttpPolicy::Url Url;
         std::string Method, Body, Response;
+        std::string StatusMessage;
+        std::vector<GLHttpPolicy::ResponseHeader> ResponseHeaders;
         PackedStringArray Headers;
         Ref<HTTPClient> Transport, Parser;
         Ref<GLHttpStream> Stream;
@@ -168,7 +191,7 @@ struct GLHttpManager::State {
         const char* Error=nullptr;
         ~Request() { Close(); }
         void Close() { if (Parser.is_valid()) Parser->close(); if (Transport.is_valid()) Transport->close(); }
-        void Fail(const char* Reason) { Error=Reason; Done=true; Status=0; Response.clear(); Close(); }
+        void Fail(const char* Reason) { Error=Reason; Done=true; Status=0; Response.clear(); ResponseHeaders.clear(); StatusMessage.clear(); Close(); }
         void Poll() {
             if (Time::get_singleton()->get_ticks_msec()>=Deadline) { Fail("Request deadline exceeded"); return; }
             if (Transport.is_null()) {
@@ -202,6 +225,8 @@ struct GLHttpManager::State {
                     First[9]<'1' || First[9]>'5' || First[10]<'0' || First[10]>'9' || First[11]<'0' || First[11]>'9' || (First.size()>12 && First[12]!=' ') ||
                     Status!=(First[9]-'0')*100+(First[10]-'0')*10+First[11]-'0' || Status<200 ||
                     (Length>int64_t(GLHttpPolicy::MaxResponse) && Method!="HEAD" && Status!=304) || Length< -1) { Fail("Invalid or oversized response"); return; }
+                if (!GLHttpPolicy::CaptureHeaders(Stream->HeaderText,ResponseHeaders)) { Fail("Invalid or oversized response headers"); return; }
+                StatusMessage=First.size()>13?First.substr(13):"";
                 PackedStringArray Received=Parser->get_response_headers();
                 size_t Count=0;
                 bool SeenLength=false, SeenEncoding=false;
@@ -284,8 +309,18 @@ void GLHttpManager::Install(lua_State* Thread,GLExecutionDomain& Domain,uint64_t
         new(Value) Context{Host,&Domain,Index};
         lua_pushcclosurek(Thread,BeginRequest,Names[Index],1,ContinueRequest); lua_setfield(Thread,-2,Names[Index]);
     }
+    auto Value=static_cast<Context*>(lua_newuserdatadtor(Thread,sizeof(Context),[](void*) {}));
+    new(Value) Context{Host,&Domain,0};
+    lua_pushcclosure(Thread,HttpAvailable,"enabled",1); lua_setfield(Thread,-2,"enabled");
+    lua_pushcfunction(Thread,GenerateGuid,"guid"); lua_setfield(Thread,-2,"guid");
     // Retain the existing mutable facade. Its names/environment are not grants.
     lua_setglobal(Thread,"_HTTP");
+}
+bool GLHttpManager::Available(lua_State* Thread,GLExecutionDomain* Domain) const {
+    auto Owner=GLGetOwner(Thread);
+    return Data->Enabled && Owner && Owner->Alive && Owner->NativeId && Owner->Domain==Domain &&
+        Domain->GetKind()==GLDomainKind::Server && !Domain->IsClosing() && !Domain->HasMemoryFailure() &&
+        !Domain->GetMemoryAccount().Rejections && gl_net_role()!=2;
 }
 int GLHttpManager::Begin(lua_State* Thread,GLExecutionDomain* Domain,int Operation) {
     auto Owner=GLGetOwner(Thread);
@@ -359,9 +394,29 @@ void GLHttpManager::Tick() {
             lua_newtable(Thread);
             lua_pushboolean(Thread,!Complete->Error && Complete->Status>=200 && Complete->Status<300); lua_setfield(Thread,-2,"Success");
             lua_pushinteger(Thread,Complete->Status); lua_setfield(Thread,-2,"StatusCode");
-            std::string Message=Complete->Error?Complete->Error:Complete->Status>=200 && Complete->Status<300?"OK":"HTTP "+std::to_string(Complete->Status);
+            std::string Message=Complete->Error?Complete->Error:Complete->StatusMessage;
             lua_pushlstring(Thread,Message.data(),Message.size()); lua_setfield(Thread,-2,"StatusMessage");
             lua_pushlstring(Thread,Complete->Response.data(),Complete->Response.size()); lua_setfield(Thread,-2,"Body");
+            std::map<std::string,std::vector<std::string>> Fields;
+            for (const auto& Header:Complete->ResponseHeaders) Fields[Header.Name].push_back(Header.Value);
+            lua_newtable(Thread);
+            for (const auto& Field:Fields) {
+                std::string Joined=Field.second.front();
+                // Set-Cookie cannot be comma-folded. Headers presents its first
+                // field; HeaderValues retains every separate field in order.
+                if (Field.first!="set-cookie") for (size_t Index=1;Index<Field.second.size();++Index) Joined+=", "+Field.second[Index];
+                lua_pushlstring(Thread,Joined.data(),Joined.size()); lua_setfield(Thread,-2,Field.first.c_str());
+            }
+            lua_setfield(Thread,-2,"Headers");
+            lua_newtable(Thread);
+            for (const auto& Field:Fields) {
+                lua_newtable(Thread);
+                for (size_t Index=0;Index<Field.second.size();++Index) {
+                    lua_pushlstring(Thread,Field.second[Index].data(),Field.second[Index].size()); lua_rawseti(Thread,-2,int(Index+1));
+                }
+                lua_setfield(Thread,-2,Field.first.c_str());
+            }
+            lua_setfield(Thread,-2,"HeaderValues");
             return 1;
         },Complete->Operation!=0 && Complete->Error);
         GLUnreference(nullptr,Reference);

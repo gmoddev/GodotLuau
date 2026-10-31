@@ -67,6 +67,7 @@ public:
     bool ClaimInitialization(GLDomainKind Kind);
     void InstallHttp(lua_State* Thread,GLExecutionDomain& Domain);
     int BeginHttp(lua_State* Thread,GLExecutionDomain* Domain,int Operation);
+    bool IsHttpAvailable(lua_State* Thread,GLExecutionDomain* Domain) const;
     bool InterruptHttp(lua_State* Thread);
     int BeginDataStore(lua_State* Thread,GLExecutionDomain* Domain,const std::string& Root,const std::string& Leaf,int Operation,bool Exists,const std::string& Expected,const std::string& Value);
     bool InterruptDataStore(lua_State* Thread);

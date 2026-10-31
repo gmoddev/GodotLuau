@@ -21,6 +21,7 @@ def Main():
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
         'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],
+        'httpservice': ['httpservice-' + Case for Case in ['api', 'denied', 'lifecycle', 'tls', 'utilities-A', 'utilities-B']],
         'datastore': ['datastore-basic-basic-single',
             *[Label for Case in ['update','set','remove','increment'] for Label in ['datastore-'+Case+'-seed-single','datastore-'+Case+'-'+Case+'-A','datastore-'+Case+'-'+Case+'-B','datastore-'+Case+'-verify-single']],
             *['datastore-'+Case+'-'+Case+'-single' for Case in ['failures','lifecycle','memory','contention','unavailable','incompatible']]]
@@ -48,16 +49,33 @@ def Main():
         Server = json.loads((Args.output / 'http' / Case / 'server-results.json').read_text())
         if '[Runtime:HttpTest] PASS ' + Case not in Text or '[Runtime:HttpTest] FAIL' in Text or any(Hit['Path'].startswith('/forbidden') for Hit in Server['Hits']):
             raise ValueError('GL-005 HTTP regression missing/failed: ' + Case)
+    GuidSamples = []
+    for Case in ['api', 'denied', 'lifecycle', 'tls', 'utilities-A', 'utilities-B']:
+        Project = Args.output / 'httpservice' / Case
+        Text = (Project / ('httpservice-' + Case + '.stdout.log')).read_text(errors='replace')
+        Server = json.loads((Project / 'server-results.json').read_text())
+        if '[Runtime:HttpServiceTest] PASS ' + Case.split('-')[0] not in Text or any(Hit['Path'].startswith('/forbidden') for Hit in Server['Hits']):
+            raise ValueError('GL-023 native fixture missing/failed: ' + Case)
+        if Case.startswith('utilities'):
+            if '[Runtime:HttpServiceTest] JSON PASS; UUID v4 sample=2000' not in Text:
+                raise ValueError('GL-023 JSON/native UUID path was not executed: ' + Case)
+            Samples = (Project / 'guids.txt').read_text().splitlines()
+            if len(Samples) != 2000: raise ValueError('GL-023 UUID sample missing')
+            GuidSamples.extend(Samples)
+    HttpServiceNative = json.loads((Args.output / 'httpservice/native-evidence.json').read_text())
+    if len(set(GuidSamples)) != 4000 or HttpServiceNative != {'Actors': 6, 'GuidProcesses': 2, 'GuidSamples': 4000, 'UniqueGuids': 4000, 'UnauthorizedRequests': 0}:
+        raise ValueError('GL-023 native/cross-process evidence incomplete')
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
         'DataStoreWorkerSHA256': hashlib.sha256((Args.extension.parent/('godot_luau_store_worker.exe' if Args.extension.suffix=='.dll' else 'godot_luau_store_worker')).read_bytes()).hexdigest(),
         'DataStoreNative': json.loads((Args.output/'datastore/native-evidence.json').read_text()),
+        'HttpServiceNative': HttpServiceNative,
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
         'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
-        'Scope': 'Debug native fixtures including Model Character V2 and inherited GL-007 character/animation-health authority; no sanitizer configuration or full GL-020 security audit'
+        'Scope': 'Native fixtures including GL-023 public HTTP/JSON/native UUID, Model Character V2 and inherited GL-007 authority; sanitizer configuration is recorded by the invoking matrix, no full GL-020 security audit'
     }
     Latency = json.loads((Args.output / 'characters/Latency/latency-proxy.json').read_text())
     if len(Latency) != 2 or any(Item['Dropped'] or Item['Forwarded'] <= 0 or Item['MinimumObservedSeconds'] < .19 for Item in Latency):

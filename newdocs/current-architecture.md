@@ -260,7 +260,9 @@ JSON/HTTP helper text is unchanged. This changes compilation ownership, not VM,
 module, callback, service or persistence authority.
 That statement describes the integrated extraction. The later dedicated GL-005
 branch removes the blocking HTTP helper and installs the manager described below;
-its JSON helpers remain in this compilation unit.
+its legacy private JSON helpers remain in this compilation unit. GL-023's public
+HttpService JSON codec runs in the existing Luau VM instead; DataStore's GL-009
+codec remains separate.
 
 `luau_instance_access.h` forward-declares lua_State and Godot Node and exposes
 only `PushLuauInstance`. Its implementation delegates to the existing `wrap_node`
@@ -343,6 +345,14 @@ before DNS/send; admitted coroutines yield and complete through protected native
 host ticks. Owner/thread/module/scene retirement closes requests before VM close.
 Manual coroutine resumes cancel the old HTTP operation and raise an error.
 No worker Lua VM, generic capability registry or storage authority is introduced.
+
+GL-023's branch captures native request/availability/UUID functions in the frozen
+HttpService facade. Public HTTP failures raise, RequestAsync preserves actual
+reason text and bounded lowercase headers/duplicate arrays, HttpEnabled queries
+live native availability, and offline JSON uses a bounded strict Luau codec with
+an explicit null sentinel. UUID v4 uses Godot Crypto. The asynchronous manager,
+owner cancellation and grants above are retained. See the [API/migration contract](httpservice-api.md)
+and [qualification record](httpservice-validation.md); this branch is not merged.
 
 The manager uses Godot's nonblocking DNS/TCP/validated TLS and HTTPClient parser
 through an internal metered StreamPeer. Finite per-tick and cumulative wire/header
@@ -566,7 +576,12 @@ builds the actual Debug CMake adapter on Windows/Linux and runs the qualified
 single-player/listen/dedicated/editor fixtures plus network, animation, Character,
 resource, filesystem, HTTP and DataStore groups (86 actors per platform).
 The [current integration record](character-main-integration.md) records the
-73-core/86-native main gates. The runner owns child process
+73-core/86-native main gates. GL-023's separate branch raises its gates to
+80 core cases and 92 native
+actors, adding six actual public HttpService fixtures and retained UUID samples;
+its [qualification record](httpservice-validation.md) verifies both platforms'
+hosted artifacts. This does not change main's integration status. The runner owns
+child process
 trees, isolates profiles, and requires complete actors and PASS outcomes. Official
 Godot 4.7.1 archive bytes/version are verified against pinned provenance before
 execution. At the original native CI milestone, both hosted Debug builds and
