@@ -682,6 +682,17 @@ private:
         return Identity.length() <= 1024 && Name.length() <= 128 && (!Play || !Name.is_empty()) &&
             Math::is_finite(Speed) && Speed >= 0.0f && Speed <= 20.0f;
     }
+    static bool ValidAnimationWire(const Variant& Identity, const Variant& Name, const Variant& Speed,
+        const Variant& Looped, const Variant& Play) {
+        // Godot may report a conversion error and still call a typed native
+        // handler. Inspect the original wire values before any coercion.
+        if (Identity.get_type() != Variant::STRING || Name.get_type() != Variant::STRING ||
+            (Speed.get_type() != Variant::FLOAT && Speed.get_type() != Variant::INT) ||
+            Looped.get_type() != Variant::BOOL || Play.get_type() != Variant::BOOL) return false;
+        double Number = Speed;
+        return std::isfinite(Number) && Number >= 0.0 && Number <= 20.0 &&
+            ValidAnimation(Identity, Name, static_cast<float>(Number), Play);
+    }
     void SyncLocalAnimation() {
         Node* Character = _local_player();
         Node* HumanoidNode = Character ? Character->get_node_or_null("Animator") : nullptr;
@@ -2850,9 +2861,14 @@ public:
     void _recv_anim(int who, String anim_id, String anim_name, float speed, bool looped, bool play) {
         (void)who; (void)anim_id; (void)anim_name; (void)speed; (void)looped; (void)play;
     }
-    void _relay_anim_v2(int64_t Epoch, String anim_id, String anim_name, float speed, bool looped, bool play) {
+    void _relay_anim_v2(Variant EpochValue, Variant IdentityValue, Variant NameValue, Variant SpeedValue, Variant LoopedValue, Variant PlayValue) {
         int sid = GetClientRpcSender();
-        if (!sid || !HasAnimationSession(sid) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
+        if (!sid || !HasAnimationSession(sid) || EpochValue.get_type() != Variant::INT ||
+            !ValidAnimationWire(IdentityValue, NameValue, SpeedValue, LoopedValue, PlayValue)) return;
+        int64_t Epoch = EpochValue;
+        String anim_id = IdentityValue, anim_name = NameValue;
+        float speed = static_cast<double>(SpeedValue);
+        bool looped = LoopedValue, play = PlayValue;
         auto Character = CharacterAuthorities.find(sid);
         if (Character == CharacterAuthorities.end()) { if (Epoch != 0) return; }
         else if (Epoch != Character->second.Epoch || !LiveCharacter(Character->second.Identity) || Character->second.Health <= 0) return;
@@ -2870,8 +2886,17 @@ public:
         if (Service && Service->HasAnimationSession(sid) && Service->GetClientRpcSender() == sid)
             Service->rpc("_recv_anim_v2", sid, Life, anim_id, anim_name, speed, looped, play);
     }
-    void _recv_anim_v2(int who, int64_t Life, String anim_id, String anim_name, float speed, bool looped, bool play) {
-        if (!AcceptServerRpc() || !HasAnimationSession(who) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
+    void _recv_anim_v2(Variant WhoValue, Variant LifeValue, Variant IdentityValue, Variant NameValue, Variant SpeedValue, Variant LoopedValue, Variant PlayValue) {
+        if (!AcceptServerRpc() || WhoValue.get_type() != Variant::INT || LifeValue.get_type() != Variant::INT ||
+            !ValidAnimationWire(IdentityValue, NameValue, SpeedValue, LoopedValue, PlayValue)) return;
+        int64_t WhoNumber = WhoValue;
+        if (WhoNumber <= 0 || WhoNumber > 2147483647) return;
+        int who = static_cast<int>(WhoNumber);
+        int64_t Life = LifeValue;
+        String anim_id = IdentityValue, anim_name = NameValue;
+        float speed = static_cast<double>(SpeedValue);
+        bool looped = LoopedValue, play = PlayValue;
+        if (!HasAnimationSession(who)) return;
         auto Snapshot = CharacterSnapshots.find(who);
         if (Life < 0 || (Snapshot != CharacterSnapshots.end() && (Life < Snapshot->second.Life || (Snapshot->second.Removed && Life == Snapshot->second.Life)))) return;
         int myid = _my_peer_id();

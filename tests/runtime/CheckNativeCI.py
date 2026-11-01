@@ -43,6 +43,21 @@ def Main():
         Text = (Args.output / 'resources' / (Label + '.stdout.log')).read_text(errors='replace')
         if '[Runtime:Resource] PASS ' + Label.removeprefix('resource-') not in Text or '[Runtime:Resource] FAIL' in Text:
             raise ValueError('GL-004 native resource regression missing/failed: ' + Label)
+    AnimationAuthority = []
+    for Mode in ['Local', 'Listen', 'Dedicated', 'Editor']:
+        Roles = [('server', 0)] if Mode == 'Local' else [('server', 0), ('client', 1), ('client', 2)]
+        for Role, Index in Roles:
+            Record = json.loads((Args.output / 'animation' / Mode / f'animation-authority-{Role}{Index}.json').read_text())
+            Required = {'local-role', 'owner', 'callback', 'teardown'} if Mode == 'Local' else {'default-authority', 'relaxed-handler', 'invalid-input', 'server-input', 'post-server-input', 'replay', 'owner', 'life', 'reconnect', 'teardown'}
+            if Record['Mode'] != Mode or Record['Role'] != Role or Record['Index'] != Index or not Record['Complete'] or Record['Result'] != 'PASS':
+                raise ValueError('GL-020 authority actor incomplete: ' + Mode + '/' + Role)
+            if {Item['Phase'] for Item in Record['Cases']} != Required or any(not Item['Passed'] for Item in Record['Cases'] + Record['Assertions']):
+                raise ValueError('GL-020 authority phase/assertion missing or failed')
+            if Role == 'client' and Index == 1 and len([Name for Name in Record['Sent'] if Name.startswith('invalid-input-')]) != 23:
+                raise ValueError('GL-020 original wire Variant/bounds cases were skipped')
+            if Role == 'server' and Mode != 'Local' and len([Name for Name in Record['Sent'] if Name.startswith('server-input-')]) != 20:
+                raise ValueError('GL-020 actual server-origin receiver cases were skipped')
+            AnimationAuthority.append(Record)
     for Label,Marker in [('filesystem-capabilities','enforced'),('filesystem-writer','writer'),('filesystem-reader','reader')]:
         Text=(Args.output/'filesystem'/(Label+'.stdout.log')).read_text(errors='replace')
         if '[Runtime:FilesystemTest] PASS '+Marker not in Text or '[Runtime:FilesystemTest] FAIL' in Text:
@@ -108,13 +123,14 @@ def Main():
         'DataStoreNative': json.loads((Args.output/'datastore/native-evidence.json').read_text()),
         'HttpServiceNative': HttpServiceNative,
         'CallerNative': CallerEvidence,
+        'AnimationAuthority': AnimationAuthority,
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
         'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
-        'Scope': 'Native fixtures including GL-023 public HTTP/JSON/native UUID, Model Character V2 and inherited GL-007 authority; sanitizer configuration is recorded by the invoking matrix, no full GL-020 security audit'
+        'Scope': 'Native fixtures including actual GL-020 ENet authority/handler/life cases, GL-023 public HTTP/JSON/native UUID, Model Character V2 and inherited GL-007 authority; sanitizer configuration and remaining qualification limits are recorded by the invoking matrix'
     }
     Latency = json.loads((Args.output / 'characters/Latency/latency-proxy.json').read_text())
     if len(Latency) != 2 or any(Item['Dropped'] or Item['Forwarded'] <= 0 or Item['MinimumObservedSeconds'] < .19 for Item in Latency):

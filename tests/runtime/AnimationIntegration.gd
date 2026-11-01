@@ -12,8 +12,11 @@ var First := 0
 var Second := 0
 var Character: Node
 var Track: Node
+var Authority: RefCounted
+var Assertions: Array[Dictionary] = []
 
 func Check(Value: bool, Description: String) -> void:
+    Assertions.append({"Label": Description, "Passed": Value})
     if not Value:
         Failed = true
         print("[Network:AnimationTest] FAIL ", Role, " ", Description)
@@ -108,6 +111,7 @@ func SendState() -> void:
     Network.rpc_id(1, "_relay_character", State.Epoch, 1, State.Position, 0.0, 0.0, false)
 
 func Finish() -> void:
+    Authority.Finish()
     print("[Network:AnimationTest] ", Role, " ", "FAIL" if Failed else "PASS")
     quit(1 if Failed else 0)
 
@@ -141,6 +145,8 @@ func Run() -> void:
             Clip.length = 0.1 if Name == "Once" else 60.0
             Check(ResourceSaver.save(Clip, "res://" + Name + ".tres") == OK, "fixture clip")
             Check(Network.call("RegisterCharacterAnimation", "res://" + Name + ".tres"), "server registers presentation clip before peers")
+    Authority = load("res://AnimationAdversarial.gd").new(self)
+    Authority.Setup()
     if Mode == "Local":
         MakeCharacter()
         Track = await LoadTrack("Wave")
@@ -173,6 +179,7 @@ func Run() -> void:
         Track.connect("Ended", func() -> void: Completed.queue_free())
         await create_timer(0.2).timeout
         Check(not is_instance_valid(Completed), "completion callback may queue track destruction")
+        await Authority.LocalOwnership()
         Network.free()
         Network = Create("NetworkService", "NetworkService", Game)
         await process_frame
@@ -214,6 +221,7 @@ func RunServer() -> void:
     await Drain()
     Observe(First, "Wave", 1.0, true)
     Observe(Second, "Dance", 1.0, false)
+    await Authority.Spawned()
     Player(Puppet(First)).seek(4.0)
     Check(int(Cache()[First]["UserId"]) != int(Cache()[Second]["UserId"]), "independent sessions")
     Mark("settings")
@@ -270,6 +278,7 @@ func RunServer() -> void:
     await Drain()
     Observe(Replacement, "Dance", 1.0, false)
     Check(int(Cache()[Replacement]["UserId"]) != OldSession, "fresh assigned identity after reconnect")
+    await Authority.Reconnected(Replacement)
     Mark("close1")
     await Wait("client1.closed")
     await Drain()
@@ -318,6 +327,7 @@ func RunClient() -> void:
     if Index == 1:
         await Wait("client2.spawned")
         Mark("both.spawned")
+    await Authority.Spawned()
     await Wait("settings")
     if Index == 2 and Mode == "Listen": Observe(1, "Wave", 1.0, true)
     if Index == 1:
@@ -417,6 +427,7 @@ func RunClient() -> void:
     else:
         await Wait("reconnect")
         Check(not Cache().has(First), "server removal clears client animation cache")
+    await Authority.Reconnected(Identity if Index == 1 else int(Read("client1.newpeer")))
     await Wait("close" + str(Index))
     Network.call("disconnect_net")
     Check(Cache().is_empty(), "final local disconnect cache empty")
