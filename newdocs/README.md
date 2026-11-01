@@ -53,6 +53,9 @@ template-authoring limitation GL-027 retained separately. The
 subsequent [qualification follow-up](character-performance-followup.md) completes
 the truncated Linux reporting gap and retains repeated adverse-performance
 investigation, independent MainPC fallback evidence and remaining tradeoffs. The
+[presentation integration record](character-presentation-main-integration.md)
+records the authorized normal merge into main, accepted performance tradeoffs
+and fresh graphical/hosted verification. The earlier
 [main integration record](character-main-integration.md) separates fresh checks
 from retained branch qualification. Release publication and updater distribution
 remain disabled. The [scoped API audit](inherited-api-audit.md) records the original

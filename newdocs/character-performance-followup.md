@@ -1,5 +1,9 @@
 # Character V2 qualification follow-up
 
+This is the retained pre-integration qualification record. The subsequent
+authorized [main integration](character-presentation-main-integration.md)
+preserves these inputs, failed attempts, negative findings and limitations.
+
 This follow-up starts at development branch
 `5963f83737b17a7268610fa9ce3f4b646a7b8042`. Main remains
 `c562ba8b74226a15ffb5e18e6547cfccebac94dd`; no integration is authorized here.
