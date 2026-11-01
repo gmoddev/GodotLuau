@@ -33,6 +33,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
+matching Windows/Linux instrumented hosts, actual detection controls and retained
+full-profile failures. It is partially qualified; GL-018 remains open. Main,
+release publication, updater admission and GL-017 are unchanged by that branch.
+
 GL-007 is integrated and resolved within ADR-006's bounded authority contract by
 normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`. The retained branch
 `security/gl-007-character-authority` stays at `514d12f`, preserving qualified

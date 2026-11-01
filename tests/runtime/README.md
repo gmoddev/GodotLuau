@@ -1,5 +1,18 @@
 # Shared-domain regression fixtures
 
+## GL-018 matching native sanitizer hosts
+
+`BuildSanitizedGodot.py`, `BuildNativeSanitizers.py` and
+`RunNativeSanitizers.py` build pinned matching hosts, require actual UAF/LSan
+detection controls, preserve all native/core assertions and reject incomplete
+source/compiler/product identities. The dedicated read-only
+[`runtime-native-sanitizers.yml`](../../.github/workflows/runtime-native-sanitizers.yml)
+uploads failed as well as successful attempts. See the
+[qualification and reproduction record](../../newdocs/native-sanitizer-qualification.md).
+The initial full profiles are **partially qualified**, with production unload,
+HTTP/contention and template asset gaps retained. A successful control or
+functional PASS marker is not a complete full-native sanitizer qualification.
+
 ## GL-003 filesystem qualification branch
 
 `security/gl-003-filesystem-capabilities` extends the production core suite to

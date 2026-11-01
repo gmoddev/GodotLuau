@@ -44,7 +44,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
-| GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
+| GL-018 | P2 | Partially qualified; native sanitizer gaps retained | Matching hosts resolve loader/stock-exit controls; full reload/profile gates still fail |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Integrated scoped authority correction; sanitizer qualification partial | Canonical wire validation and ENet adversarial coverage; GL-017/018 remain separate |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
@@ -930,6 +930,17 @@ native fixtures pass; full native Linux ASan/LSan passes ordered lifecycle stres
 and rerun registration plus native lifecycle fixtures with bounded clean exit.
 Do not label the current timeout as successful native coverage, infer all Windows
 bindings safe from Linux evidence, or suppress the failure.
+
+**2026-11-01 follow-up:** The dedicated
+[GL-018 qualification record](native-sanitizer-qualification.md) preserves fresh
+stock-host reproductions, matching instrumented host builds and actual UAF/LSan
+detection controls. Minimal C ABI and production registration reloads now exit
+cleanly on the matching Windows host; Linux uses Godot's existing ASAN_ENABLED
+loader path without DEEPBIND overrides. Full production VM reload nevertheless
+fails after its functional marker, with an unloaded instance-binding callback
+in the Windows root Window destructor. Additional HTTP progress, utilities,
+contention and template-asset profile failures remain unqualified. GL-018 stays
+open; no runtime fix, GL-017 remediation or complete full-native pass is claimed.
 
 ## GL-019: Shared-domain cached require and task overhead regresses
 
