@@ -48,13 +48,15 @@ def Main():
         Roles = [('server', 0)] if Mode == 'Local' else [('server', 0), ('client', 1), ('client', 2)]
         for Role, Index in Roles:
             Record = json.loads((Args.output / 'animation' / Mode / f'animation-authority-{Role}{Index}.json').read_text())
-            Required = {'local-role', 'owner', 'callback', 'teardown'} if Mode == 'Local' else {'default-authority', 'relaxed-handler', 'invalid-input', 'replay', 'owner', 'life', 'reconnect', 'teardown'}
+            Required = {'local-role', 'owner', 'callback', 'teardown'} if Mode == 'Local' else {'default-authority', 'relaxed-handler', 'invalid-input', 'server-input', 'post-server-input', 'replay', 'owner', 'life', 'reconnect', 'teardown'}
             if Record['Mode'] != Mode or Record['Role'] != Role or Record['Index'] != Index or not Record['Complete'] or Record['Result'] != 'PASS':
                 raise ValueError('GL-020 authority actor incomplete: ' + Mode + '/' + Role)
             if {Item['Phase'] for Item in Record['Cases']} != Required or any(not Item['Passed'] for Item in Record['Cases'] + Record['Assertions']):
                 raise ValueError('GL-020 authority phase/assertion missing or failed')
             if Role == 'client' and Index == 1 and len([Name for Name in Record['Sent'] if Name.startswith('invalid-input-')]) != 23:
                 raise ValueError('GL-020 original wire Variant/bounds cases were skipped')
+            if Role == 'server' and Mode != 'Local' and len([Name for Name in Record['Sent'] if Name.startswith('server-input-')]) != 20:
+                raise ValueError('GL-020 actual server-origin receiver cases were skipped')
             AnimationAuthority.append(Record)
     for Label,Marker in [('filesystem-capabilities','enforced'),('filesystem-writer','writer'),('filesystem-reader','reader')]:
         Text=(Args.output/'filesystem'/(Label+'.stdout.log')).read_text(errors='replace')

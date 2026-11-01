@@ -134,6 +134,7 @@ func Spawned() -> void:
     ReceivePolicy(false)
     await Replay()
     await InvalidInput()
+    await InvalidServerInput()
     var Before := Snapshot()
     var Other: Node = R.Puppet(int(R.Read("client2.peer")) if R.Role == "client" and R.Index == 1 else int(R.Read("client1.peer")))
     R.Network.call("net_anim_state", Other, "res://Wave.tres", "WrongCharacter", 1.0, true, true)
@@ -160,7 +161,7 @@ func PositiveControl(Phase: String) -> void:
     elif R.Index == 1:
         await R.Wait(Phase + ".positive")
         var Epoch: int = R.Network.call("GetCharacterStates")[First].Epoch
-        Send(1, "_relay_anim_v2", [Epoch, "res://Wave.tres", "ControlWave", 1.0, true, true], "positive-current-owner")
+        Send(1, "_relay_anim_v2", [Epoch, "res://Wave.tres", "ControlWave", 1, true, true], "positive-current-owner")
         await R.Wait(Phase + ".restore")
         Send(1, "_relay_anim_v2", [Epoch, "res://Wave.tres", "Wave", 1.0, true, true], "positive-restore-owner")
         await R.Wait(Phase + ".done")
@@ -332,6 +333,57 @@ func Reconnected(Replacement: int) -> void:
         Check(Snapshot() == Before, "life", "out-of-order old-life play and stop have no effects")
         R.Mark("security-life.checked" + str(R.Index))
         await R.Wait("security-life.done")
+
+func InvalidServerPackets(First: int, Life: int) -> Array:
+    var Result: Array = []
+    var Packets := InvalidPackets(Life)
+    # Future reliable server lives and trusted server resource-loading authority
+    # are intentional contracts, not client-owned selection attempts.
+    for Position in [0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20, 21, 22]:
+        Result.append([First] + Packets[Position])
+    Result.append([float(First) + 0.25, Life, "res://Wave.tres", "MalformedWho", 1.0, true, false])
+    Result.append([First + 4294967296, Life, "res://Wave.tres", "OverflowWho", 1.0, true, false])
+    return Result
+
+func InvalidServerInput() -> void:
+    var First: int = int(R.Read("client1.peer"))
+    var Count: int = InvalidServerPackets(First, 0).size()
+    Observations["ServerInput"] = []
+    if R.Role == "server":
+        R.Mark("server-input.prepare")
+        await R.Wait("server-input.ready1")
+        await R.Wait("server-input.ready2")
+        var Life: int = R.Network.call("GetCharacterStates")[First].Life
+        var Packets := InvalidServerPackets(First, Life)
+        for Position in range(Count):
+            var Tag := "server-input." + str(Position)
+            R.Mark(Tag + ".next")
+            await R.Wait(Tag + ".ready1")
+            await R.Wait(Tag + ".ready2")
+            var Before := Snapshot()
+            Send(int(R.Read("client2.peer")), "_recv_anim_v2", Packets[Position], "server-input-" + str(Position))
+            R.Mark(Tag + ".sent")
+            await R.Wait(Tag + ".checked1")
+            await R.Wait(Tag + ".checked2")
+            Check(Snapshot() == Before, "server-input", "receiver packet " + str(Position) + " cannot affect server")
+        R.Mark("server-input.done")
+    else:
+        await R.Wait("server-input.prepare")
+        R.Mark("server-input.ready" + str(R.Index))
+        for Position in range(Count):
+            var Tag := "server-input." + str(Position)
+            await R.Wait(Tag + ".next")
+            var Before := Snapshot()
+            R.Mark(Tag + ".ready" + str(R.Index))
+            await R.Wait(Tag + ".sent")
+            await R.create_timer(0.08).timeout
+            var After := Snapshot()
+            Observations["ServerInput"].append({"Packet": Position, "Before": Before, "After": After})
+            Check(After == Before, "server-input", "receiver packet " + str(Position) + " has no effects")
+            R.Mark(Tag + ".checked" + str(R.Index))
+        await R.Wait("server-input.done")
+    # A valid owner update remains usable even after rejected server packets.
+    await PositiveControl("post-server-input")
 
 func LocalOwnership() -> void:
     R.Track = await R.LoadTrack("Wave")
