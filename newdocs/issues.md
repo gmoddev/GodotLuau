@@ -475,6 +475,11 @@ GL-017 engine diagnostics and GL-020 adversarial qualification remain separate.
 
 ## GL-010: Windows release binaries lack same-revision build evidence
 
+**GL-010/011 continuation:** The dedicated development branch implements the
+[non-publishing candidate contract](release-candidate-qualification.md), replacing
+committed Windows ZIP reuse with source-built profiles and provenance. Execution
+is under qualification; this is not yet a closure or production-distribution claim.
+
 **Evidence:** `.github/workflows/build-release.yml` builds Linux debug/release
 with SCons, then extracts Windows binaries from `GodotLuau.zip`. It does not
 compile Windows at the tagged source revision.
@@ -502,6 +507,12 @@ unqualified; publication stays disabled. See the
 [integration record](datastore-integration.md#companion-archive-follow-up).
 
 ## GL-011: Automated runtime qualification is missing from release gates
+
+**GL-010/011 continuation:** Required four-profile core/native, Linux core
+ASan/LSan, extracted-package and fail-closed admission gates are under
+[candidate qualification](release-candidate-qualification.md). Existing checks
+remain unchanged; no unrun configuration is claimed passing and publication
+stays disabled.
 
 **Original evidence:** One tracked Actions workflow performs build/package/release steps
 without runtime tests, multiplayer integration, or sanitizers. `test_chat/` has a

@@ -1,0 +1,20 @@
+{
+  "Schema": 1,
+  "Repository": "gmoddev/GodotLuau",
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "SCons": "4.10.0",
+  "Platforms": ["Windows", "Linux"],
+  "Configurations": ["Debug", "Release"],
+  "RequiredJobs": ["Policy", "Profiles", "Sanitizer", "Packages"],
+  "Limitations": [
+    "Candidate artifacts only; publication and runtime updater admission remain disabled",
+    "Recorded build inputs and hashes do not establish byte-for-byte reproducibility",
+    "Hosted presentation assertions are headless; no hosted GPU or physical-input qualification",
+    "Linux production-core ASan/LSan is required; Windows core and full-native sanitizer qualification are not automated by this candidate profile",
+    "GL-017 external engine defect, GL-018 native sanitizer host and broader GL-020 adversarial animation qualification remain open",
+    "GL-027 template authoring, arbitrary assets, production scale and asset redistribution rights remain separate limits"
+  ]
+}

@@ -562,9 +562,13 @@ The inherited `.github/workflows/build-release.yml` is disabled during fork
 integration: only manual dispatch remains, both jobs have literal false admission
 conditions, repository permissions are read-only, and checkout credentials are
 not persisted. Ordinary pushes cannot start its builds, archive commits or release
-publication. Its dormant implementation still extracts Windows binaries from a
-committed ZIP. Historical release/tag deletion has been removed by GL-012. No
-sanitizer workflow exists yet. Main integrates the qualified core CI branch via
+publication. On the GL-010/011 development branch its dormant build delegates
+to the separate non-publishing candidate workflow; no committed ZIP supplies
+Windows binaries or repository archive commits. The
+[candidate contract](release-candidate-qualification.md) records source-built
+four-profile qualification, provenance and required Linux core ASan/LSan gates;
+execution status remains in that record. Historical release/tag deletion stays
+removed by GL-012. Main integrates the qualified core CI branch via
 `f0199004d56485ec7a9de14d5454d1907822ba11`. The separate
 `runtime-core-ci.yml` builds the production `ExecutionDomainTests` target and
 runs its current 73 cases through CTest on hosted Windows/Linux Debug. Read-only access,
