@@ -92,6 +92,12 @@ Qualification commands, revisions, hosted runs, artifacts, failures and outcomes
 will be appended after execution. The existing failed CTest truncation and all
 Character performance/graphical evidence remain unchanged.
 
+The first hosted attempt at `2360e9ffcfac575574bb5bb7f8ae566bfd431669`,
+[run 41272667561](https://github.com/gmoddev/GodotLuau/actions/runs/41272667561),
+is rejected before any job executes: YAML treats the colon/space in the pip
+`--only-binary=:all:` command as syntax. That command is changed to a block
+scalar. This is a preserved workflow parsing failure, not runtime qualification.
+
 ## Remaining boundaries
 
 This gate does not automate Windows core/full-native sanitizers or qualify a

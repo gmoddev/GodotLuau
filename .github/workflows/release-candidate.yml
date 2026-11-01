@@ -100,7 +100,8 @@ jobs:
         shell: pwsh
         run: ./tools/InitializeReleaseToolchain.ps1
       - name: Provision pinned build tool
-        run: python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r tools/ReleaseBuildRequirements.txt
+        run: |
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r tools/ReleaseBuildRequirements.txt
       - name: Verify official Godot archive and executable
         timeout-minutes: 5
         run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
