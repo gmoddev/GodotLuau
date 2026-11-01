@@ -1,9 +1,7 @@
 name: Build & release (Windows + Linux)
 
-# Compila Linux en la nube, toma las DLL de Windows del GodotLuau.zip ya
-# commiteado, arma el zip UNIFICADO (ambos binarios, para el auto-updater de
-# Windows y Linux) + dos zips por plataforma, commitea el zip y crea el Release
-# "GodotLuau <version>" con los assets etiquetados por plataforma.
+# Dormant publication path. Source builds, qualification and packages belong to
+# the separate read-only release-candidate workflow. Neither job is enabled.
 
 on:
   workflow_dispatch:
@@ -22,24 +20,7 @@ concurrency:
 jobs:
   linux:
     if: ${{ false }}
-    # 22.04: glibc 2.35 — los binarios corren tambien en distros mas viejas
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          persist-credentials: false
-      - name: Install SCons
-        run: pip install scons
-      - name: Build template_debug
-        run: scons platform=linux target=template_debug -j4
-      - name: Build template_release
-        run: scons platform=linux target=template_release -j4
-      - name: Upload Linux binaries
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-bin
-          path: GodotLuau/bin/*.so
+    uses: ./.github/workflows/release-candidate.yml
 
   release:
     if: ${{ false }}
@@ -50,18 +31,11 @@ jobs:
         with:
           persist-credentials: false
 
-      # Las DLL de Windows viven dentro del GodotLuau.zip que subo yo. Se sacan
-      # de ahi (asi la CI no tiene que compilar Windows).
-      - name: Extraer binarios de Windows del zip actual
-        run: |
-          mkdir -p GodotLuau/bin
-          unzip -o GodotLuau.zip 'GodotLuau/bin/*' -d . || echo "zip sin bin (primera vez)"
-
-      - name: Traer binarios de Linux (recien compilados)
+      - name: Download qualified source-built candidate artifacts
         uses: actions/download-artifact@v4
         with:
-          name: linux-bin
-          path: GodotLuau/bin
+          pattern: candidate-*
+          path: candidates
 
       - name: Leer version
         id: ver
@@ -79,19 +53,10 @@ jobs:
           RELEASE_TAG: ${{ steps.ver.outputs.tag }}
         run: python3 tools/CheckReleaseIdentity.py
 
-      - name: Empaquetar zips (unificado + por plataforma)
+      - name: Select qualified platform packages
         run: |
-          python3 tools/generar_release.py
-          python3 tools/generar_release.py --only windows --out "Windows GodotLuau ${{ steps.ver.outputs.ver }}.zip"
-          python3 tools/generar_release.py --only linux   --out "Linux GodotLuau ${{ steps.ver.outputs.ver }}.zip"
-
-      - name: Commit GodotLuau.zip (auto-updater, Windows + Linux)
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add GodotLuau.zip GodotLuau.zip.sha256
-          git commit -m "CI: GodotLuau.zip con binarios Windows+Linux (${{ steps.ver.outputs.ver }}) [skip ci]" || echo "sin cambios en el zip"
-          git push
+          cp candidates/candidate-Windows/GodotLuau-Windows.zip "Windows GodotLuau ${{ steps.ver.outputs.ver }}.zip"
+          cp candidates/candidate-Linux/GodotLuau-Linux.zip "Linux GodotLuau ${{ steps.ver.outputs.ver }}.zip"
 
       - name: Publicar Release unificado
         uses: softprops/action-gh-release@v2

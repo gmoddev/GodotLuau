@@ -163,6 +163,7 @@ Source-identical hosted qualification is reused; see the bounded
 | [Network authority validation](network-authority-validation.md) | Integrated GL-006/008 trust boundaries, transport regressions, compatibility and remaining gaps |
 | [Animation lifecycle validation](animation-lifecycle-validation.md) | GL-020 development-branch execution/session rules, functional regressions and outstanding security qualification |
 | [Release retention](release-retention.md) | Integrated GL-012 retention, disabled publication and integration checks |
+| [Release-candidate qualification](release-candidate-qualification.md) | GL-010/011 source-built dry-run profiles, provenance, gates and actual qualification status |
 | [Fork updater isolation](fork-updater-isolation.md) | GL-016 fail-closed policy, manual recovery and headless editor verification |
 
 ## Documentation authority
