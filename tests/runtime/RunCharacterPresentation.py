@@ -21,6 +21,7 @@ def Assets(Godot, Source, Output, Environment):
     (Import / Shader.parent).mkdir(parents=True)
     shutil.copyfile(Source / Shader, Import / Shader)
     (Import / 'asset-inputs.json').write_text(json.dumps({File.relative_to(Source).as_posix(): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted((Source / Relative).rglob('*')) if File.is_file()} | {Shader.as_posix(): hashlib.sha256((Source / Shader).read_bytes()).hexdigest()}, indent=2))
+    (Import / 'asset-tool.json').write_text(json.dumps({'Executable': str(Godot), 'SHA256': hashlib.sha256(Path(Godot).read_bytes()).hexdigest(), 'Scope': 'Editor asset preprocessing only; no GDExtension is loaded here'}, indent=2))
     with (Import / 'stdout.log').open('w') as Out, (Import / 'stderr.log').open('w') as Err:
         Actor = StartProcess([str(Godot), '--headless', '--disable-crash-handler', '--editor', '--path', str(Import), '--import'], Out, Err, Environment)
         if Actor.wait(timeout=120) != 0: raise RuntimeError('Character fixture asset import failed')
@@ -48,6 +49,7 @@ def Launch(Args, Directory, Label, Extra, Environment):
 def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     for Name in ['godot', 'extension', 'output']: Parser.add_argument('--'+Name, type=Path, required=True)
+    Parser.add_argument('--asset-godot', type=Path, help='Separate verified editor for asset import when the runtime host is a sanitizer template')
     Parser.add_argument('--graphical', action='store_true')
     Parser.add_argument('--cases', nargs='+', choices=['r6', 'custom', 'listen', 'dedicated', 'listen-custom', 'dedicated-custom'], default=['r6', 'custom', 'listen', 'dedicated', 'listen-custom', 'dedicated-custom'])
     Args = Parser.parse_args()
@@ -60,7 +62,7 @@ def Main():
     Source = Path(__file__).resolve().parents[2]
     Results, Evidence = [], []
     try:
-        Import = Assets(Args.godot, Source, Args.output, Environment)
+        Import = Assets(Args.asset_godot.resolve() if Args.asset_godot else Args.godot, Source, Args.output, Environment)
         for Case in Args.cases:
             Directory = Args.output / Case
             Project(Directory, Args.extension, Import)

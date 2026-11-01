@@ -31,6 +31,7 @@ def Cpu(Process, Before):
 def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     for Name in ['godot', 'extension', 'output']: Parser.add_argument('--'+Name, type=Path, required=True)
+    Parser.add_argument('--asset-godot', type=Path, help='Separate verified editor for asset import when the runtime host is a sanitizer template')
     Parser.add_argument('--baseline', type=Path)
     Parser.add_argument('--trials', type=int, default=5)
     Parser.add_argument('--samples', type=int, default=240)
@@ -55,7 +56,7 @@ def Main():
     Inputs.update(Modes=Args.modes, LifecycleSamples=Args.lifecycle_samples, WarmupTicks=Args.warmup_ticks)
     (Args.output/'inputs.json').write_text(json.dumps(Inputs,indent=2))
     try:
-        Import = Assets(Args.godot, Source, Args.output, Environment)
+        Import = Assets(Args.asset_godot.resolve() if Args.asset_godot else Args.godot, Source, Args.output, Environment)
         for Trial in range(Args.trials):
             Variants = [('Candidate', Args.extension)]
             if Args.baseline: Variants.insert(0, ('Baseline', Args.baseline))
