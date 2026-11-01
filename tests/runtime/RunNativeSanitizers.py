@@ -34,8 +34,7 @@ def Main():
     Runtime = Source / 'tests/runtime'
     if os.name == 'nt': ctypes.windll.kernel32.SetErrorMode(0x8003)
     Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING='1')
-    # Relative log paths avoid the ASAN_OPTIONS separator in Windows drive names.
-    Environment['ASAN_OPTIONS'] = 'halt_on_error=1:log_path=asan-report'
+    Environment['ASAN_OPTIONS'] = 'halt_on_error=1'
     if os.name != 'nt': Environment['ASAN_OPTIONS'] += ':detect_leaks=1'
     for Name in ['LSAN_OPTIONS', 'GL_NATIVE_SANITIZER_CONTROL', 'LD_PRELOAD']:
         Environment.pop(Name, None)
@@ -47,7 +46,9 @@ def Main():
         Case = Args.output / Label
         Case.mkdir(exist_ok=True)
         ChildEnvironment = dict(Environment)
-        ChildEnvironment['ASAN_OPTIONS'] = Environment['ASAN_OPTIONS'].replace('log_path=asan-report', 'log_path=' + Label + '/asan-report')
+        # Godot changes its working directory to the fixture project. Absolute,
+        # quoted values also protect Windows drive separators in ASAN_OPTIONS.
+        ChildEnvironment['ASAN_OPTIONS'] = Environment['ASAN_OPTIONS'] + ':log_path="' + (Case/'asan-report').as_posix() + '"'
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
             Profile = Case / 'profile' / Name
             Profile.mkdir(parents=True)
@@ -76,6 +77,8 @@ def Main():
     def Lifecycle(Label, Mode, Cycles, Library=None, Entry='luau_extension_init', Extra=None, Expected=None):
         Project = Args.output / Label / 'project'
         Project.mkdir(parents=True)
+        (Project/'.godot').mkdir()
+        (Project/'.godot/global_script_class_cache.cfg').write_text('list=[]\n')
         (Project/'project.godot').write_text('config_version=5\n[application]\nconfig/name="NativeSanitizerLifecycle"\n[threading]\nworker_pool/max_threads=2\n')
         shutil.copy2(Runtime/'SanitizerLifecycle.gd', Project/'SanitizerLifecycle.gd')
         if Library:

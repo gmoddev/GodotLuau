@@ -38,9 +38,9 @@ def Main():
         Identity['Dependencies'][Name] = Actual
     Common = ['-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Debug', '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON']
     if os.name == 'nt':
-        Common += ['-DCMAKE_CXX_FLAGS=/fsanitize=address', '-DCMAKE_CXX_FLAGS_DEBUG=/Zi /Od', '-DCMAKE_EXE_LINKER_FLAGS=/INCREMENTAL:NO', '-DCMAKE_SHARED_LINKER_FLAGS=/INCREMENTAL:NO']
+        Common += ['-DCMAKE_CXX_FLAGS=/fsanitize=address', '-DCMAKE_C_FLAGS=/fsanitize=address', '-DCMAKE_CXX_FLAGS_DEBUG=/Zi /Od', '-DCMAKE_C_FLAGS_DEBUG=/Zi /Od', '-DCMAKE_EXE_LINKER_FLAGS=/INCREMENTAL:NO', '-DCMAKE_SHARED_LINKER_FLAGS=/INCREMENTAL:NO']
     else:
-        Common += ['-DCMAKE_CXX_COMPILER=clang++-19', '-DCMAKE_CXX_FLAGS=-fsanitize=address -fno-omit-frame-pointer', '-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address', '-DCMAKE_SHARED_LINKER_FLAGS=-fsanitize=address']
+        Common += ['-DCMAKE_CXX_COMPILER=clang++-19', '-DCMAKE_C_COMPILER=clang-19', '-DCMAKE_CXX_FLAGS=-fsanitize=address -fno-omit-frame-pointer', '-DCMAKE_C_FLAGS=-fsanitize=address -fno-omit-frame-pointer', '-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address', '-DCMAKE_SHARED_LINKER_FLAGS=-fsanitize=address']
 
     def Run(Command, Name, Timeout):
         Code = None
