@@ -107,6 +107,9 @@ the raw `ZipInfo.filename` after construction, keeping the same rejection and
 no-output assertions. Profiles/packages are skipped and acceptance fails; no
 candidate is accepted. The final job now checks required outcomes before trying
 to download missing candidate artifacts, preserving the same fail-closed policy.
+Windows also normalizes names while reading ZIP entries, so admission checks
+the preserved `orig_filename` as well as the normalized filename. Control/NUL
+characters are rejected before extraction. The hostile-path assertions remain.
 
 ## Remaining boundaries
 

@@ -153,7 +153,7 @@ def Build(Args):
 
 
 def SafePath(Name):
-    return bool(Name) and '\\' not in Name and ':' not in Name and not Name.startswith('/') and all(Part not in ['', '.', '..'] for Part in Name.split('/'))
+    return bool(Name) and not any(ord(Character) < 32 for Character in Name) and '\\' not in Name and ':' not in Name and not Name.startswith('/') and all(Part not in ['', '.', '..'] for Part in Name.split('/'))
 
 
 def Extract(ArchivePath, Directory):
@@ -162,7 +162,7 @@ def Extract(ArchivePath, Directory):
         Require(len(Archive.namelist()) == len(set(Archive.namelist())), 'Duplicate archive member')
         Require(sum(Item.file_size for Item in Archive.infolist()) < 1024*1024*1024, 'Oversized archive')
         for Item in Archive.infolist():
-            Require(SafePath(Item.filename) and not stat.S_ISLNK(Item.external_attr >> 16), 'Unsafe archive member')
+            Require(SafePath(Item.orig_filename) and SafePath(Item.filename) and not stat.S_ISLNK(Item.external_attr >> 16), 'Unsafe archive member')
         Directory.mkdir(parents=True)
         Archive.extractall(Directory)
         if os.name != 'nt':
@@ -330,7 +330,7 @@ def CheckPackage(Directory, Expected, Selected):
         for Name, Item in Package['Members'].items():
             Require(SafePath(Name) and hashlib.sha256(Archive.read(Name)).hexdigest() == Item['SHA256'], 'Candidate member mismatch')
             Entry = Archive.getinfo(Name)
-            Require(Entry.file_size == Item['Bytes'] and stat.S_IMODE(Entry.external_attr >> 16) == Item['Mode'] and not stat.S_ISLNK(Entry.external_attr >> 16), 'Candidate member size/mode mismatch')
+            Require(SafePath(Entry.orig_filename) and Entry.file_size == Item['Bytes'] and stat.S_IMODE(Entry.external_attr >> 16) == Item['Mode'] and not stat.S_ISLNK(Entry.external_attr >> 16), 'Candidate member size/mode mismatch')
         Provenance = json.loads(Archive.read('GodotLuau/release-provenance.json'))
         Require(Provenance['Platform'] == Selected and Provenance['Source'] == Expected and hashlib.sha256(Archive.read('GodotLuau/release-provenance.json')).hexdigest() == Record['ProvenanceSHA256'], 'Embedded provenance mismatch')
         for PlatformName, Configuration in Profiles: CheckProfile(Provenance['Profiles'][PlatformName+'-'+Configuration], Expected, PlatformName, Configuration)
