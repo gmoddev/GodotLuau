@@ -518,6 +518,15 @@ native Linux ASan/LSan evidence now exist under `tests/runtime`. They are manual
 qualification gates; the inherited release workflow still does not enforce them,
 so GL-011 remains open.
 
+**Character follow-up (2026-10-31):** The development branch's
+[qualification record](character-performance-followup.md) preserves the original
+truncated Linux CTest failure and completes fresh Linux Debug/Release core and
+core ASan/LSan (80 cases each), Release native (110 actors), and verified hosted
+Windows/Linux 80-core/110-native results. A complete-report local wrapper uses
+the already-qualified hosted output limits and the unchanged strict checker.
+Full-native sanitizer and release-enforcement limits remain; this does not close
+GL-011 or enable publication.
+
 **First CI milestone (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
 `f0199004d56485ec7a9de14d5454d1907822ba11` preserves source branch
 `ci/gl-011-core-qualification` at `95167299ad8a102b23fb3b25284a751483815779`.

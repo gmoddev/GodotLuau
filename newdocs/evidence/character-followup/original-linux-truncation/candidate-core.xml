@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="1"
+	timestamp="2026-10-31T09:37:41"
+	>
+	<testcase name="ExecutionDomains" classname="ExecutionDomains" time="1.01543" status="run">
+		<properties/>
+		<system-out>[Runtime:Test] PASS VM allocator accounts growth shrink rejection and frees
+[Runtime:Test] PASS VM allocator rejects invalid sizes and arithmetic overflow
+[Runtime:Test] PASS Actual VM allocation failure is protected and close releases accounting
+[Runtime:Test] PASS Sandbox preserves custom typeof shared facades and function environments
+[Runtime:Test] PASS Task quota rejects admission before creating extra coroutine and recovers after tick
+[Runtime:Test] PASS Reference quota and owner quota reject without replacing valid work
+[Runtime:Test] PASS Live coroutine quota includes untracked manual coroutines and frees on collection
+[Runtime:Test] PASS Memory quota retirement covers caught Lua failure and fresh domain recovery
+[Runtime:Test] PASS Memory failure during callback marshalling retires without unprotected unwind
+[Runtime:Test] PASS Insufficient VM bootstrap quota produces a controlled unavailable domain
+[Runtime:Test] PASS Shared module allocations use the domain quota and retire all owners on exhaustion...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

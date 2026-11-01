@@ -50,6 +50,9 @@ completed configurations and remaining gaps. The
 [graphical/performance work record](character-presentation-performance.md) adds
 real rendered gameplay and repeated dispatch measurements on DockerPC, with
 template-authoring limitation GL-027 retained separately. The
+subsequent [qualification follow-up](character-performance-followup.md) completes
+the truncated Linux reporting gap and retains repeated adverse-performance
+investigation, independent MainPC fallback evidence and remaining tradeoffs. The
 [main integration record](character-main-integration.md) separates fresh checks
 from retained branch qualification. Release publication and updater distribution
 remain disabled. The [scoped API audit](inherited-api-audit.md) records the original

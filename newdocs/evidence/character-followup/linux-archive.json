@@ -1,0 +1,8 @@
+{
+  "Platform": "dockerpc-linux",
+  "File": "followup-evidence-dockerpc-linux.zip",
+  "Bytes": 9658615,
+  "Entries": 2940,
+  "SHA256": "ab1e7e9cace154361e429eb979410ed8c3faed4e992e5687683d3e883258c06d",
+  "Scope": "task evidence, failed attempts, fixture copies, raw distributions and logs; native binaries, build/import caches and isolated user profiles excluded"
+}

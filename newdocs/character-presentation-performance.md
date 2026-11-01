@@ -1,5 +1,10 @@
 # Character V2 graphical and performance qualification
 
+The subsequent [qualification follow-up](character-performance-followup.md)
+closes the Linux truncated-report gap, corrects the three-pair metadata and
+records additional interleaved performance investigations. Results below retain
+their original execution scope and counterevidence.
+
 Work starts at main `c562ba8b74226a15ffb5e18e6547cfccebac94dd` on
 `perf/character-v2-graphical-qualification`. Main, dependency pins, release and
 updater settings remain unchanged. ADR-006/007 and the existing Model/physics,

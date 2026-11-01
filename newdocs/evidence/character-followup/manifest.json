@@ -1,0 +1,23 @@
+{
+  "Recommendation": "READY WITH ACCEPTED TRADEOFFS",
+  "RecommendationScope": "Recommend development integration with the documented uncertainty and qualification limits; no merge performed",
+  "Branch": "perf/character-v2-graphical-qualification",
+  "StartingBranchRevision": "5963f83737b17a7268610fa9ce3f4b646a7b8042",
+  "MainUnchanged": "c562ba8b74226a15ffb5e18e6547cfccebac94dd",
+  "RuntimeImplementationUnchanged": "2bd43741f82fd5308e01e5bb88462e17ae256fb7",
+  "QualifiedFixtureRevision": "432b06af6f5a9d43ad9c5961ed7f84de25266699",
+  "FollowupTestCommits": ["1bc5e054a2e60b731fa0ebe11c0fb1712b51d0a5", "210359a3a016b0d1ad408a56a28f87dfc393cfab", "432b06af6f5a9d43ad9c5961ed7f84de25266699"],
+  "NativeSource": {"SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0", "Files": 89, "Newlines": "LF normalized"},
+  "PinnedDependencies": {"godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4", "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"},
+  "LocalLinux": {"Machine": "DockerPC Docker Desktop", "DebugCore": {"Cases": 80, "Result": "PASS"}, "ReleaseCore": {"Cases": 80, "Result": "PASS"}, "CoreASanLSan": {"Cases": 80, "Result": "PASS", "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1"}, "ReleaseNative": {"Actors": 110, "Result": "PASS"}},
+  "Windows": {"FreshHostedDebug": "80 core and 110 native per platform", "FreshReleaseExecution": "Repeated performance and memory probes on DockerPC and MainPC", "RetainedFullMatrix": "Identical native inputs previously qualified 80 core/110 native in Debug and Release, 80 core ASan; separate from this follow-up"},
+  "Hosted": {"Core": "https://github.com/gmoddev/GodotLuau/actions/runs/41263214425", "Native": "https://github.com/gmoddev/GodotLuau/actions/runs/41263214446", "Platforms": ["Windows", "Linux"], "CoreCasesEach": 80, "NativeActorsEach": 110, "ArtifactsVerifiedOnDockerPC": 4, "RequiredPresentationActorsEach": 14, "PerformanceWindowsEach": 5, "Result": "PASS"},
+  "Performance": {"PrimaryMeasuredPairs": 8, "WarmupPairsRetainedAndExcluded": 1, "ExtendedPhysicsSamples": 1200, "ExtendedLifecycleCalls": 200, "SubsystemMeasuredPairs": 4, "AdditionalOriginalFullSequenceMeasuredPairs": 4, "MainPCSeparateHardware": true, "NumericalSummary": "performance-endpoints.json", "RawDistributionsRecomputed": true, "ExecutedFixtureCopiesVerified": true, "NoGlobalFPSGainOrEquivalenceClaim": true},
+  "EstablishedCauses": ["Original Linux successful-output report truncated at 1024 bytes; local runner lacked hosted output-size flags", "Original 30-call respawn p99 was each trial's maximum", "Retaining sampling dictionaries alone reproduces +3048 static bytes", "New diagnostic network fixture inference error corrected with explicit Node type"],
+  "Unresolved": ["No consistent causal attribution for the original adverse performance estimates", "DockerPC background CPU contention predates task and was left untouched", "Small adverse renderer/host/tail and Linux whole-actor CPU point estimates remain", "Common +1292 static-byte growth across 1500 respawns; zero live object/node growth; no universal leak-freedom claim", "Native allocation-event counts and full-native ASan/LSan unavailable", "GL-027 and existing GL-017/018/broader GL-020, input-ergonomics and arbitrary-content limits retained"],
+  "Archives": {"DockerPCWindows": {"File": "followup-evidence-dockerpc-windows.zip", "SHA256": "faa09be66122ad817117e5618680da74e2b983e3e76b47d11960787f2f5dde7f"}, "DockerPCLinux": {"File": "followup-evidence-dockerpc-linux.zip", "SHA256": "ab1e7e9cace154361e429eb979410ed8c3faed4e992e5687683d3e883258c06d"}, "MainPCWindows": {"File": "followup-evidence-mainpc-windows.zip", "SHA256": "dd88007902530c3c1de8b3c63c6b4b0972f130fceeef4bcac1b390109499652e"}, "InitialWindowsPreserved": {"File": "followup-evidence-dockerpc-windows-initial.zip", "SHA256": "2ad355ea4ebad4dd54309fae1ce88e6f530e286c36247bc5bf564b0dea2feefe"}},
+  "LocalArchiveDirectory": "C:/Users/aiden/.codex/artifacts/godotluau/character-followup",
+  "FailedEvidencePreserved": true,
+  "ReleasesAndUpdater": "disabled",
+  "Merged": false
+}

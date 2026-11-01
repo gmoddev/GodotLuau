@@ -1,0 +1,8 @@
+{
+  "Platform": "mainpc-windows",
+  "File": "followup-evidence-mainpc-windows.zip",
+  "Bytes": 9528099,
+  "Entries": 2086,
+  "SHA256": "dd88007902530c3c1de8b3c63c6b4b0972f130fceeef4bcac1b390109499652e",
+  "Scope": "task evidence, failed attempts, fixture copies, raw distributions and logs; native binaries, build/import caches and isolated user profiles excluded"
+}

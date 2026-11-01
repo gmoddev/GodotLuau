@@ -1,0 +1,6777 @@
+{
+  "Scope": "Trial 0 is retained warmup and excluded. Independent units are paired actors, not individual frames. Exact two-sided sign P is exploratory and unadjusted unless explicitly marked. Descriptive bootstrap is not a causal proof. Raw quantities retain original units.",
+  "Groups": {
+    "gpu-extended": {
+      "Rows": [
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.000317200833333333,
+            0.0003229925,
+            0.000319209166666667,
+            0.000309065833333333,
+            0.000309135833333334,
+            0.0003205875,
+            0.000304185833333333,
+            0.0003128975
+          ],
+          "Candidate": [
+            0.000317440833333334,
+            0.0003061525,
+            0.000313609166666666,
+            0.000309813333333334,
+            0.000313926666666667,
+            0.000317213333333334,
+            0.000303725,
+            0.000306785833333333
+          ],
+          "BaselineMedian": 0.0003150491666666665,
+          "CandidateMedian": 0.00031171125,
+          "MedianPairedPercentChange": -0.6019960358141174,
+          "PairedPercentChanges": [
+            0.07566184410012777,
+            -5.213743353173816,
+            -1.754335584556943,
+            0.2418578566058427,
+            1.549750244633441,
+            -1.0524947687186703,
+            -0.15149730290956454,
+            -1.9532488008587312
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.9532488008587312,
+            0.2418578566058427
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            0.000299,
+            0.000306,
+            0.000307,
+            0.000283,
+            0.000286,
+            0.000302,
+            0.000284,
+            0.000297
+          ],
+          "Candidate": [
+            0.000298,
+            0.00029,
+            0.000297,
+            0.000291,
+            0.000298,
+            0.000301,
+            0.000285,
+            0.00029
+          ],
+          "BaselineMedian": 0.000298,
+          "CandidateMedian": 0.000294,
+          "MedianPairedPercentChange": -0.33278699417485513,
+          "PairedPercentChanges": [
+            -0.33444816053512794,
+            -5.228758169934644,
+            -3.2573289902280034,
+            2.8268551236749317,
+            4.195804195804187,
+            -0.33112582781458233,
+            0.35211267605632646,
+            -2.3569023569023573
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.2573289902280034,
+            2.8268551236749317
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.000452,
+            0.000456,
+            0.000427,
+            0.00046,
+            0.000434,
+            0.000453,
+            0.00043,
+            0.000434
+          ],
+          "Candidate": [
+            0.000456,
+            0.000423,
+            0.000441,
+            0.000439,
+            0.000448,
+            0.000438,
+            0.000427,
+            0.000418
+          ],
+          "BaselineMedian": 0.000443,
+          "CandidateMedian": 0.0004385,
+          "MedianPairedPercentChange": -2.004466348375167,
+          "PairedPercentChanges": [
+            0.8849557522123908,
+            -7.236842105263164,
+            3.2786885245901454,
+            -4.565217391304355,
+            3.2258064516129004,
+            -3.31125827814569,
+            -0.6976744186046435,
+            -3.686635944700456
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -4.565217391304355,
+            3.2258064516129004
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000514,
+            0.000545,
+            0.000489,
+            0.000518,
+            0.000506,
+            0.000537,
+            0.000495,
+            0.000496
+          ],
+          "Candidate": [
+            0.000538,
+            0.000496,
+            0.000509,
+            0.000514,
+            0.000509,
+            0.000513,
+            0.000487,
+            0.000482
+          ],
+          "BaselineMedian": 0.00051,
+          "CandidateMedian": 0.000509,
+          "MedianPairedPercentChange": -1.194181194181193,
+          "PairedPercentChanges": [
+            4.6692607003890885,
+            -8.99082568807339,
+            4.089979550102263,
+            -0.7722007722007707,
+            0.5928853754940677,
+            -4.469273743016766,
+            -1.6161616161616155,
+            -2.822580645161288
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -4.469273743016766,
+            4.089979550102263
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            4.27645833333336e-05,
+            4.48637500000002e-05,
+            4.21916666666669e-05,
+            4.43692756036637e-05,
+            4.11020833333334e-05,
+            4.39050000000001e-05,
+            4.25341666666668e-05,
+            4.16004166666668e-05
+          ],
+          "Candidate": [
+            4.56333333333334e-05,
+            4.31812500000002e-05,
+            4.36091666666667e-05,
+            4.50916666666667e-05,
+            4.53300000000002e-05,
+            4.53695833333336e-05,
+            4.26095833333335e-05,
+            4.31270833333335e-05
+          ],
+          "BaselineMedian": 4.26493750000002e-05,
+          "CandidateMedian": 4.43504166666667e-05,
+          "MedianPairedPercentChange": 3.347734481455844,
+          "PairedPercentChanges": [
+            6.708237930529992,
+            -3.7502437937087185,
+            3.359668180919906,
+            1.6281335522713603,
+            10.286380455167832,
+            3.3358007819917823,
+            0.17730843831438303,
+            3.669835037710034
+          ],
+          "Improved": 1,
+          "Worse": 7,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.17730843831438303,
+            6.708237930529992
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            3.5e-05,
+            3.8e-05,
+            3.5e-05,
+            3.7e-05,
+            3.4e-05,
+            3.7e-05,
+            3.5e-05,
+            3.5e-05
+          ],
+          "Candidate": [
+            3.8e-05,
+            3.6e-05,
+            3.7e-05,
+            3.8e-05,
+            3.8e-05,
+            3.8e-05,
+            3.5e-05,
+            3.6e-05
+          ],
+          "BaselineMedian": 3.5e-05,
+          "CandidateMedian": 3.7500000000000003e-05,
+          "MedianPairedPercentChange": 2.7799227799227944,
+          "PairedPercentChanges": [
+            8.571428571428585,
+            -5.263157894736848,
+            5.714285714285716,
+            2.7027027027027195,
+            11.764705882352944,
+            2.7027027027027195,
+            0.0,
+            2.857142857142869
+          ],
+          "Improved": 1,
+          "Worse": 6,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.0,
+            8.571428571428585
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            8.9e-05,
+            9e-05,
+            8.3e-05,
+            9.2e-05,
+            8.4e-05,
+            8.9e-05,
+            9.2e-05,
+            8.5e-05
+          ],
+          "Candidate": [
+            9.4e-05,
+            8.7e-05,
+            8.7e-05,
+            9.5e-05,
+            9.5e-05,
+            9.1e-05,
+            8.4e-05,
+            8.7e-05
+          ],
+          "BaselineMedian": 8.9e-05,
+          "CandidateMedian": 8.9e-05,
+          "MedianPairedPercentChange": 2.806905370843993,
+          "PairedPercentChanges": [
+            5.617977528089879,
+            -3.3333333333333437,
+            4.819277108433728,
+            3.260869565217406,
+            13.095238095238116,
+            2.2471910112359605,
+            -8.695652173913048,
+            2.35294117647058
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.3333333333333437,
+            5.617977528089879
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000125,
+            0.000129,
+            0.000121,
+            0.000135,
+            0.000126,
+            0.000123,
+            0.000128,
+            0.000117
+          ],
+          "Candidate": [
+            0.00014,
+            0.000128,
+            0.000125,
+            0.000136,
+            0.000139,
+            0.000139,
+            0.00013,
+            0.000124
+          ],
+          "BaselineMedian": 0.00012550000000000001,
+          "CandidateMedian": 0.00013299999999999998,
+          "MedianPairedPercentChange": 4.644345553436469,
+          "PairedPercentChanges": [
+            11.99999999999999,
+            -0.7751937984496138,
+            3.3057851239669533,
+            0.7407407407407307,
+            10.317460317460302,
+            13.008130081300795,
+            1.5625,
+            5.982905982905984
+          ],
+          "Improved": 1,
+          "Worse": 7,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.7407407407407307,
+            11.99999999999999
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.00833300125000002,
+            0.00833300041666666,
+            0.00833299791666668,
+            0.008333006244796,
+            0.00833299999999999,
+            0.00833300291666668,
+            0.00833300291666665,
+            0.00833300041666666
+          ],
+          "Candidate": [
+            0.00833299833333333,
+            0.008333,
+            0.008333,
+            0.00833300166666669,
+            0.00833300166666667,
+            0.00833299583333334,
+            0.00833300833333332,
+            0.00833299666666665
+          ],
+          "BaselineMedian": 0.00833300083333334,
+          "CandidateMedian": 0.008333,
+          "MedianPairedPercentChange": -2.0000797390506975e-05,
+          "PairedPercentChanges": [
+            -3.5001395104483635e-05,
+            -5.000199676530315e-06,
+            2.5001006132008285e-05,
+            -5.493970813841287e-05,
+            2.0000800193820112e-05,
+            -8.50033704424824e-05,
+            6.50025774096008e-05,
+            -4.500179794364456e-05
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -5.493970813841287e-05,
+            2.5001006132008285e-05
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            0.008673,
+            0.008675,
+            0.008676,
+            0.008347,
+            0.008394,
+            0.008668,
+            0.00867,
+            0.008644
+          ],
+          "Candidate": [
+            0.008437,
+            0.008578,
+            0.008676,
+            0.008367,
+            0.008674,
+            0.008682,
+            0.008663,
+            0.008528
+          ],
+          "BaselineMedian": 0.008669,
+          "CandidateMedian": 0.0086205,
+          "MedianPairedPercentChange": -0.040369088811997855,
+          "PairedPercentChanges": [
+            -2.7210884353741527,
+            -1.1181556195965392,
+            0.0,
+            0.2396070444470988,
+            3.335715987610177,
+            0.16151361329026503,
+            -0.08073817762399571,
+            -1.3419713095788932
+          ],
+          "Improved": 4,
+          "Worse": 3,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.3419713095788932,
+            0.2396070444470988
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.009007,
+            0.009025,
+            0.008983,
+            0.009017,
+            0.008995,
+            0.009007,
+            0.009002,
+            0.008996
+          ],
+          "Candidate": [
+            0.009016,
+            0.008985,
+            0.009002,
+            0.00901,
+            0.009001,
+            0.009009,
+            0.008987,
+            0.00898
+          ],
+          "BaselineMedian": 0.009004499999999999,
+          "CandidateMedian": 0.009001499999999999,
+          "MedianPairedPercentChange": -0.02771309473676986,
+          "PairedPercentChanges": [
+            0.09992228266904046,
+            -0.4432132963988922,
+            0.21151063119224656,
+            -0.0776311411777808,
+            0.06670372429127269,
+            0.022204951704241083,
+            -0.16662963785825102,
+            -0.17785682525567337
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.17785682525567337,
+            0.09992228266904046
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.009145,
+            0.009164,
+            0.009082,
+            0.009126,
+            0.009093,
+            0.00912,
+            0.009103,
+            0.009101
+          ],
+          "Candidate": [
+            0.009158,
+            0.009094,
+            0.009114,
+            0.009133,
+            0.009141,
+            0.009145,
+            0.009089,
+            0.009074
+          ],
+          "BaselineMedian": 0.0091115,
+          "CandidateMedian": 0.0091235,
+          "MedianPairedPercentChange": 0.109429052735599,
+          "PairedPercentChanges": [
+            0.14215418261342982,
+            -0.7638585770405992,
+            0.35234529839243134,
+            0.07670392285776817,
+            0.5278785879247794,
+            0.27412280701755165,
+            -0.1537954520487772,
+            -0.29667069552795633
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.29667069552795633,
+            0.35234529839243134
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.909166666666667,
+            0.985,
+            0.976666666666667,
+            0.994166666666667,
+            0.8825,
+            0.938333333333333,
+            0.919166666666667,
+            0.88
+          ],
+          "Candidate": [
+            0.964166666666667,
+            0.960833333333333,
+            1.00833333333333,
+            0.975833333333333,
+            1.00666666666667,
+            0.979166666666667,
+            0.920833333333333,
+            0.990833333333333
+          ],
+          "BaselineMedian": 0.92875,
+          "CandidateMedian": 0.9775,
+          "MedianPairedPercentChange": 3.797004104049939,
+          "PairedPercentChanges": [
+            6.049495875343713,
+            -2.453468697123551,
+            3.2423208191122432,
+            -1.844090528080533,
+            14.06987724268216,
+            4.351687388987635,
+            0.1813236627379089,
+            12.594696969696928
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.844090528080533,
+            10.059686559012937
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "Candidate": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "BaselineMedian": 1.0,
+          "CandidateMedian": 1.0,
+          "MedianPairedPercentChange": 0.0,
+          "PairedPercentChanges": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Improved": 0,
+          "Worse": 0,
+          "Ties": 8,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1
+          ],
+          "Candidate": [
+            1,
+            1,
+            2,
+            1,
+            2,
+            1,
+            1,
+            1
+          ],
+          "BaselineMedian": 1.0,
+          "CandidateMedian": 1.0,
+          "MedianPairedPercentChange": 0.0,
+          "PairedPercentChanges": [
+            0.0,
+            -50.0,
+            100.0,
+            -50.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 4,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -50.0,
+            100.0
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            16,
+            17,
+            17,
+            15,
+            17,
+            17,
+            14,
+            16
+          ],
+          "Candidate": [
+            17,
+            17,
+            18,
+            16,
+            17,
+            17,
+            16,
+            17
+          ],
+          "BaselineMedian": 16.5,
+          "CandidateMedian": 17.0,
+          "MedianPairedPercentChange": 6.0661764705882355,
+          "PairedPercentChanges": [
+            6.25,
+            0.0,
+            5.882352941176472,
+            6.666666666666665,
+            0.0,
+            0.0,
+            14.28571428571428,
+            6.25
+          ],
+          "Improved": 0,
+          "Worse": 5,
+          "Ties": 3,
+          "ExactTwoSidedSignP": 0.0625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.0,
+            6.666666666666665
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            3828.545,
+            3997.32,
+            3893.48,
+            3779.61,
+            3726.43,
+            3884.69,
+            3813.48,
+            3806.475
+          ],
+          "Candidate": [
+            3991.215,
+            3903.095,
+            3875.135,
+            3969.085,
+            3859.54,
+            3936.96,
+            3988.955,
+            3856.985
+          ],
+          "BaselineMedian": 3821.0125,
+          "CandidateMedian": 3920.0275,
+          "MedianPairedPercentChange": 2.4587950230085753,
+          "PairedPercentChanges": [
+            4.248872613486321,
+            -2.3572043268990317,
+            -0.47117231885099864,
+            5.0130833604525415,
+            3.5720515345786685,
+            1.3455385114384821,
+            4.60144015439965,
+            1.3269494742511156
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.47117231885099864,
+            4.60144015439965
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            3595,
+            3672,
+            3604,
+            3561,
+            3530,
+            3624,
+            3558,
+            3571
+          ],
+          "Candidate": [
+            3701,
+            3628,
+            3652,
+            3653,
+            3578,
+            3664,
+            3670,
+            3608
+          ],
+          "BaselineMedian": 3583.0,
+          "CandidateMedian": 3652.5,
+          "MedianPairedPercentChange": 1.3458134336101213,
+          "PairedPercentChanges": [
+            2.948539638386638,
+            -1.1982570806100212,
+            1.3318534961154205,
+            2.5835439483291145,
+            1.359773371104822,
+            1.103752759381904,
+            3.1478358628442837,
+            1.0361243349201965
+          ],
+          "Improved": 1,
+          "Worse": 7,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            1.0361243349201965,
+            2.948539638386638
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            5189,
+            5161,
+            5090,
+            5161,
+            5055,
+            5210,
+            5065,
+            5156
+          ],
+          "Candidate": [
+            5208,
+            5201,
+            5010,
+            5076,
+            5196,
+            5112,
+            5071,
+            5153
+          ],
+          "BaselineMedian": 5158.5,
+          "CandidateMedian": 5132.5,
+          "MedianPairedPercentChange": 0.030137690244053106,
+          "PairedPercentChanges": [
+            0.36615918288687155,
+            0.775043596202285,
+            -1.5717092337917515,
+            -1.646967641929864,
+            2.7893175074183985,
+            -1.8809980806142046,
+            0.11846001974333831,
+            -0.058184639255232096
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.646967641929864,
+            0.775043596202285
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            5415,
+            5355,
+            5456,
+            5447,
+            5270,
+            5354,
+            5287,
+            5314
+          ],
+          "Candidate": [
+            5428,
+            5613,
+            5243,
+            5281,
+            5484,
+            5458,
+            5308,
+            5484
+          ],
+          "BaselineMedian": 5354.5,
+          "CandidateMedian": 5443.0,
+          "MedianPairedPercentChange": 1.1698367991801684,
+          "PairedPercentChanges": [
+            0.24007386888273974,
+            4.817927170868352,
+            -3.903958944281527,
+            -3.0475491096016105,
+            4.060721062618589,
+            1.942472917444893,
+            0.3972006809154438,
+            3.1990967256304126
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.0475491096016105,
+            4.060721062618589
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            260.305,
+            258.215,
+            253.12,
+            258.085,
+            249.47,
+            267.885,
+            253.26,
+            264.21
+          ],
+          "Candidate": [
+            268.11,
+            242.24,
+            255.825,
+            247.19,
+            255.395,
+            259.85,
+            261.315,
+            272.285
+          ],
+          "BaselineMedian": 258.15,
+          "CandidateMedian": 257.8375,
+          "MedianPairedPercentChange": 1.7218490795302688,
+          "PairedPercentChanges": [
+            2.9984057163711775,
+            -6.186704877718164,
+            1.0686630847029033,
+            -4.221477420229758,
+            2.3750350743576343,
+            -2.9994213935083947,
+            3.1805259417199805,
+            3.0562809886075737
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -4.221477420229758,
+            3.0562809886075737
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            244,
+            240,
+            233,
+            238,
+            232,
+            249,
+            238,
+            253
+          ],
+          "Candidate": [
+            253,
+            229,
+            237,
+            230,
+            231,
+            243,
+            242,
+            259
+          ],
+          "BaselineMedian": 239.0,
+          "CandidateMedian": 239.5,
+          "MedianPairedPercentChange": 0.6248188930744691,
+          "PairedPercentChanges": [
+            3.688524590163933,
+            -4.583333333333329,
+            1.716738197424883,
+            -3.361344537815125,
+            -0.4310344827586188,
+            -2.409638554216864,
+            1.680672268907557,
+            2.371541501976293
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.361344537815125,
+            2.371541501976293
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            363,
+            364,
+            378,
+            358,
+            357,
+            413,
+            362,
+            376
+          ],
+          "Candidate": [
+            388,
+            341,
+            370,
+            355,
+            359,
+            381,
+            354,
+            395
+          ],
+          "BaselineMedian": 363.5,
+          "CandidateMedian": 364.5,
+          "MedianPairedPercentChange": -1.4771954716088775,
+          "PairedPercentChanges": [
+            6.887052341597788,
+            -6.318681318681318,
+            -2.1164021164021163,
+            -0.8379888268156388,
+            0.5602240896358524,
+            -7.748184019370463,
+            -2.209944751381221,
+            5.053191489361697
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -6.318681318681318,
+            5.053191489361697
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            446,
+            471,
+            443,
+            393,
+            390,
+            476,
+            425,
+            472
+          ],
+          "Candidate": [
+            457,
+            401,
+            474,
+            462,
+            432,
+            433,
+            457,
+            492
+          ],
+          "BaselineMedian": 444.5,
+          "CandidateMedian": 457.0,
+          "MedianPairedPercentChange": 5.617515399625061,
+          "PairedPercentChanges": [
+            2.4663677130044803,
+            -14.861995753715496,
+            6.997742663656892,
+            17.557251908396942,
+            10.769230769230775,
+            -9.033613445378153,
+            7.529411764705873,
+            4.237288135593231
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -9.033613445378153,
+            10.769230769230775
+          ]
+        },
+        {
+          "Metric": "WholeActorCpuSeconds",
+          "Statistic": "Total",
+          "Pairs": 8,
+          "Baseline": [
+            2.2751119999999996,
+            2.3393909999999996,
+            2.3077049999999995,
+            2.2750499999999994,
+            2.2234779999999983,
+            2.280449000000001,
+            2.242969000000002,
+            2.269556999999999
+          ],
+          "Candidate": [
+            2.3363570000000005,
+            2.2636780000000014,
+            2.3139659999999997,
+            2.2770600000000005,
+            2.285191000000001,
+            2.32935,
+            2.2987889999999993,
+            2.2810120000000005
+          ],
+          "BaselineMedian": 2.2750809999999992,
+          "CandidateMedian": 2.29199,
+          "MedianPairedPercentChange": 1.3245412316497895,
+          "PairedPercentChanges": [
+            2.6919553850536015,
+            -3.236440595009482,
+            0.271308507803214,
+            0.08834970659989949,
+            2.7755165555945593,
+            2.1443584136281446,
+            2.4886656926599082,
+            0.5047240496714345
+          ],
+          "Improved": 1,
+          "Worse": 7,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.08834970659989949,
+            2.6919553850536015
+          ]
+        }
+      ],
+      "Memory": {
+        "Baseline": [
+          {
+            "Trial": 1,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 2,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 3,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 4,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 5,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 6,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 7,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 8,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          }
+        ],
+        "Candidate": [
+          {
+            "Trial": 1,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 2,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 3,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 4,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 5,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 6,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 7,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 8,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          }
+        ]
+      }
+    },
+    "gpu-original-repeat": {
+      "Rows": [
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.000312154166666667,
+            0.000349283333333333,
+            0.000301229166666667,
+            0.000320708333333333,
+            0.000316791666666667,
+            0.000315420833333333,
+            0.000311133333333333,
+            0.000336441666666667
+          ],
+          "Candidate": [
+            0.0003090625,
+            0.000310491666666667,
+            0.00030655,
+            0.0002999875,
+            0.00030995,
+            0.0003086125,
+            0.000334308333333333,
+            0.000314416666666667
+          ],
+          "BaselineMedian": 0.00031610625,
+          "CandidateMedian": 0.00030950625,
+          "MedianPairedPercentChange": -2.1590828873828127,
+          "PairedPercentChanges": [
+            -0.9904294085455678,
+            -11.106074342701532,
+            1.766373884777539,
+            -6.460958815122675,
+            -2.1596738129686543,
+            -2.158491961796971,
+            7.448575101778454,
+            -6.546454313526362
+          ],
+          "Improved": 6,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -6.546454313526362,
+            1.766373884777539
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            0.000302,
+            0.00034,
+            0.000279,
+            0.000302,
+            0.000302,
+            0.0003,
+            0.000295,
+            0.000325
+          ],
+          "Candidate": [
+            0.00029,
+            0.000296,
+            0.000298,
+            0.00028,
+            0.000296,
+            0.00028,
+            0.000329,
+            0.000303
+          ],
+          "BaselineMedian": 0.000302,
+          "CandidateMedian": 0.000296,
+          "MedianPairedPercentChange": -5.320088300220754,
+          "PairedPercentChanges": [
+            -3.9735099337748436,
+            -12.941176470588244,
+            6.810035842293893,
+            -7.284768211920545,
+            -1.9867549668874274,
+            -6.666666666666665,
+            11.525423728813555,
+            -6.769230769230772
+          ],
+          "Improved": 6,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -7.284768211920545,
+            6.810035842293893
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.000415,
+            0.000497,
+            0.000437,
+            0.000446,
+            0.000435,
+            0.000438,
+            0.000402,
+            0.000457
+          ],
+          "Candidate": [
+            0.000475,
+            0.000433,
+            0.00041,
+            0.00041,
+            0.000423,
+            0.000433,
+            0.000482,
+            0.000423
+          ],
+          "BaselineMedian": 0.0004375,
+          "CandidateMedian": 0.000428,
+          "MedianPairedPercentChange": -4.468555196086172,
+          "PairedPercentChanges": [
+            14.457831325301207,
+            -12.87726358148894,
+            -6.178489702517165,
+            -8.071748878923767,
+            -2.758620689655178,
+            -1.1415525114155334,
+            19.90049751243781,
+            -7.4398249452954035
+          ],
+          "Improved": 6,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -8.071748878923767,
+            14.457831325301207
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "PhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000485,
+            0.00058,
+            0.000496,
+            0.000525,
+            0.000479,
+            0.000482,
+            0.000449,
+            0.000492
+          ],
+          "Candidate": [
+            0.000544,
+            0.000534,
+            0.000444,
+            0.000459,
+            0.00047,
+            0.000506,
+            0.000622,
+            0.000498
+          ],
+          "BaselineMedian": 0.0004885,
+          "CandidateMedian": 0.0005020000000000001,
+          "MedianPairedPercentChange": -0.3297011049442522,
+          "PairedPercentChanges": [
+            12.164948453608249,
+            -7.931034482758625,
+            -10.483870967741938,
+            -12.571428571428566,
+            -1.8789144050104345,
+            4.9792531120331995,
+            38.53006681514477,
+            1.21951219512193
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -10.483870967741938,
+            12.164948453608249
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            4.30916666666666e-05,
+            4.53958333333332e-05,
+            4.21854166666666e-05,
+            4.293125e-05,
+            4.56229166666667e-05,
+            4.36979166666667e-05,
+            4.19958333333334e-05,
+            4.41854166666667e-05
+          ],
+          "Candidate": [
+            4.38479166666667e-05,
+            4.44e-05,
+            4.13062499999999e-05,
+            4.06041666666666e-05,
+            4.53916666666667e-05,
+            4.33770833333333e-05,
+            4.964375e-05,
+            4.49645833333334e-05
+          ],
+          "BaselineMedian": 4.339479166666665e-05,
+          "CandidateMedian": 4.4123958333333355e-05,
+          "MedianPairedPercentChange": -0.6205399248397581,
+          "PairedPercentChanges": [
+            1.754979694450065,
+            -2.1936668196417486,
+            -2.0840535335079013,
+            -5.420488183627093,
+            -0.5068724599296637,
+            -0.7342073897498524,
+            18.211132056751467,
+            1.7634023291999368
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.1936668196417486,
+            1.7634023291999368
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            3.6e-05,
+            3.9e-05,
+            3.4e-05,
+            3.6e-05,
+            3.8e-05,
+            3.6e-05,
+            3.5e-05,
+            3.6e-05
+          ],
+          "Candidate": [
+            3.4e-05,
+            3.6e-05,
+            3.4e-05,
+            3.3e-05,
+            3.8e-05,
+            3.3e-05,
+            4.1e-05,
+            3.8e-05
+          ],
+          "BaselineMedian": 3.6e-05,
+          "CandidateMedian": 3.5e-05,
+          "MedianPairedPercentChange": -2.777777777777779,
+          "PairedPercentChanges": [
+            -5.555555555555558,
+            -7.692307692307687,
+            0.0,
+            -8.333333333333325,
+            0.0,
+            -8.333333333333325,
+            17.14285714285715,
+            5.555555555555558
+          ],
+          "Improved": 4,
+          "Worse": 2,
+          "Ties": 2,
+          "ExactTwoSidedSignP": 0.6875,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -8.333333333333325,
+            5.555555555555558
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            8.4e-05,
+            8.8e-05,
+            9.3e-05,
+            8.3e-05,
+            9.6e-05,
+            9.1e-05,
+            8.6e-05,
+            9.3e-05
+          ],
+          "Candidate": [
+            0.0001,
+            9.3e-05,
+            8.1e-05,
+            8.2e-05,
+            8.7e-05,
+            9e-05,
+            0.000107,
+            8.5e-05
+          ],
+          "BaselineMedian": 8.950000000000001e-05,
+          "CandidateMedian": 8.850000000000001e-05,
+          "MedianPairedPercentChange": -1.1518601880047608,
+          "PairedPercentChanges": [
+            19.04761904761907,
+            5.681818181818188,
+            -12.903225806451601,
+            -1.2048192771084265,
+            -9.375,
+            -1.098901098901095,
+            24.418604651162788,
+            -8.602150537634401
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -9.375,
+            19.04761904761907
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "ProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000126,
+            0.000121,
+            0.000124,
+            0.000124,
+            0.000147,
+            0.00012,
+            0.000129,
+            0.000131
+          ],
+          "Candidate": [
+            0.00014,
+            0.000147,
+            0.000121,
+            0.000127,
+            0.000138,
+            0.000138,
+            0.000154,
+            0.00014
+          ],
+          "BaselineMedian": 0.000125,
+          "CandidateMedian": 0.000139,
+          "MedianPairedPercentChange": 8.990670059372329,
+          "PairedPercentChanges": [
+            11.111111111111093,
+            21.487603305785118,
+            -2.4193548387096864,
+            2.4193548387096753,
+            -6.1224489795918435,
+            14.999999999999991,
+            19.379844961240323,
+            6.870229007633566
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.4193548387096864,
+            19.379844961240323
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.00833302291666667,
+            0.00833294375,
+            0.00833300416666666,
+            0.00833291666666667,
+            0.00833299791666666,
+            0.00833302916666666,
+            0.00833302708333333,
+            0.00833299375000001
+          ],
+          "Candidate": [
+            0.00833301666666666,
+            0.00833302083333332,
+            0.00833301041666666,
+            0.00833296666666666,
+            0.00833301666666667,
+            0.00833292916666667,
+            0.00833296875,
+            0.00833301249999999
+          ],
+          "BaselineMedian": 0.00833300104166666,
+          "CandidateMedian": 0.008333011458333324,
+          "MedianPairedPercentChange": 0.00015000600968040345,
+          "PairedPercentChanges": [
+            -7.500279398664489e-05,
+            0.0009250432456253677,
+            7.50029626184201e-05,
+            0.0006000300013742077,
+            0.0002250090567423868,
+            -0.0012000438014858616,
+            -0.0007000257259082154,
+            0.0002250091688749123
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.0007000257259082154,
+            0.0006000300013742077
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            0.008624,
+            0.008692,
+            0.008671,
+            0.008696,
+            0.008722,
+            0.00868,
+            0.008694,
+            0.008722
+          ],
+          "Candidate": [
+            0.008674,
+            0.008645,
+            0.008662,
+            0.008683,
+            0.008705,
+            0.00867,
+            0.008676,
+            0.0087
+          ],
+          "BaselineMedian": 0.008693,
+          "CandidateMedian": 0.008674999999999999,
+          "MedianPairedPercentChange": -0.17220172234157505,
+          "PairedPercentChanges": [
+            0.5797773654916405,
+            -0.5407271053842644,
+            -0.10379425671780407,
+            -0.14949402023920477,
+            -0.19490942444394532,
+            -0.11520737327188613,
+            -0.20703933747412417,
+            -0.2522357257509933
+          ],
+          "Improved": 7,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.2522357257509933,
+            -0.10379425671780407
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.008959,
+            0.009061,
+            0.008995,
+            0.009,
+            0.009019,
+            0.009003,
+            0.00897,
+            0.009017
+          ],
+          "Candidate": [
+            0.008989,
+            0.008992,
+            0.008977,
+            0.008956,
+            0.009002,
+            0.009,
+            0.009058,
+            0.008991
+          ],
+          "BaselineMedian": 0.009001499999999999,
+          "CandidateMedian": 0.0089915,
+          "MedianPairedPercentChange": -0.1943010681976276,
+          "PairedPercentChanges": [
+            0.3348588012054954,
+            -0.7615053526100812,
+            -0.20011117287380698,
+            -0.48888888888887205,
+            -0.18849096352144823,
+            -0.033322225924703464,
+            0.981047937569679,
+            -0.28834423866030967
+          ],
+          "Improved": 6,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.48888888888887205,
+            0.3348588012054954
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.009133,
+            0.009197,
+            0.009112,
+            0.009134,
+            0.009157,
+            0.009114,
+            0.009063,
+            0.009129
+          ],
+          "Candidate": [
+            0.009142,
+            0.009159,
+            0.009036,
+            0.009083,
+            0.009109,
+            0.009101,
+            0.009244,
+            0.009065
+          ],
+          "BaselineMedian": 0.009131,
+          "CandidateMedian": 0.009105,
+          "MedianPairedPercentChange": -0.468683677601206,
+          "PairedPercentChanges": [
+            0.09854374247235675,
+            -0.41317821028595825,
+            -0.8340649692712865,
+            -0.5583534048609451,
+            -0.5241891449164537,
+            -0.1426377002413992,
+            1.9971311927617919,
+            -0.7010625479241916
+          ],
+          "Improved": 6,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.7010625479241916,
+            0.09854374247235675
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.858333333333333,
+            0.995833333333333,
+            0.920833333333333,
+            1.09583333333333,
+            1.05833333333333,
+            0.8875,
+            0.929166666666667,
+            0.966666666666667
+          ],
+          "Candidate": [
+            1.0125,
+            1.18333333333333,
+            0.895833333333333,
+            0.925,
+            1.04583333333333,
+            0.9875,
+            1.12083333333333,
+            0.983333333333333
+          ],
+          "BaselineMedian": 0.947916666666667,
+          "CandidateMedian": 1.0,
+          "MedianPairedPercentChange": 6.495871782418616,
+          "PairedPercentChanges": [
+            17.961165048543748,
+            18.8284518828449,
+            -2.714932126696823,
+            -15.589353612167045,
+            -1.1811023622047223,
+            11.267605633802823,
+            20.627802690582552,
+            1.7241379310344085
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.714932126696823,
+            18.8284518828449
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "Candidate": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "BaselineMedian": 1.0,
+          "CandidateMedian": 1.0,
+          "MedianPairedPercentChange": 0.0,
+          "PairedPercentChanges": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Improved": 0,
+          "Worse": 0,
+          "Ties": 8,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1
+          ],
+          "Candidate": [
+            2,
+            2,
+            1,
+            1,
+            2,
+            2,
+            2,
+            1
+          ],
+          "BaselineMedian": 1.0,
+          "CandidateMedian": 2.0,
+          "MedianPairedPercentChange": 100.0,
+          "PairedPercentChanges": [
+            100.0,
+            100.0,
+            0.0,
+            -50.0,
+            100.0,
+            100.0,
+            100.0,
+            0.0
+          ],
+          "Improved": 1,
+          "Worse": 5,
+          "Ties": 2,
+          "ExactTwoSidedSignP": 0.21875,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.0,
+            100.0
+          ]
+        },
+        {
+          "Characters": 16,
+          "Mode": "all",
+          "Metric": "HarnessMicroseconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            16,
+            17,
+            18,
+            23,
+            16,
+            18,
+            18,
+            16
+          ],
+          "Candidate": [
+            16,
+            22,
+            16,
+            18,
+            18,
+            15,
+            15,
+            16
+          ],
+          "BaselineMedian": 17.5,
+          "CandidateMedian": 16.0,
+          "MedianPairedPercentChange": -5.555555555555558,
+          "PairedPercentChanges": [
+            0.0,
+            29.41176470588236,
+            -11.111111111111116,
+            -21.739130434782606,
+            12.5,
+            -16.666666666666664,
+            -16.666666666666664,
+            0.0
+          ],
+          "Improved": 4,
+          "Worse": 2,
+          "Ties": 2,
+          "ExactTwoSidedSignP": 0.6875,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -16.666666666666664,
+            12.5
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            3606.23333333333,
+            3945.1,
+            3817.7,
+            4135.6,
+            3846.26666666667,
+            3831.0,
+            3795.2,
+            4249.2
+          ],
+          "Candidate": [
+            3566.36666666667,
+            3998.36666666667,
+            3904.76666666667,
+            3717.4,
+            3702.4,
+            4110.5,
+            3959.73333333333,
+            3689.66666666667
+          ],
+          "BaselineMedian": 3838.633333333335,
+          "CandidateMedian": 3811.083333333335,
+          "MedianPairedPercentChange": 0.12235243489788217,
+          "PairedPercentChanges": [
+            -1.1054932662887373,
+            1.3501981360845017,
+            2.280605250980172,
+            -10.112196537382733,
+            -3.740423614240729,
+            7.295745236230755,
+            4.335300730747527,
+            -13.167968872572011
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -10.112196537382733,
+            4.335300730747527
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            3474,
+            3802,
+            3576,
+            3873,
+            3673,
+            3560,
+            3626,
+            4352
+          ],
+          "Candidate": [
+            3494,
+            3742,
+            3680,
+            3523,
+            3599,
+            3688,
+            3647,
+            3544
+          ],
+          "BaselineMedian": 3649.5,
+          "CandidateMedian": 3623.0,
+          "MedianPairedPercentChange": -0.5012057708620454,
+          "PairedPercentChanges": [
+            0.5757052389176787,
+            -1.5781167806417695,
+            2.9082774049216997,
+            -9.036922282468375,
+            -2.0147018785733772,
+            3.5955056179775235,
+            0.5791505791505891,
+            -18.566176470588236
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -9.036922282468375,
+            2.9082774049216997
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            5214,
+            5112,
+            5052,
+            5183,
+            5107,
+            5019,
+            4963,
+            5156
+          ],
+          "Candidate": [
+            4407,
+            5123,
+            4959,
+            4962,
+            5146,
+            5490,
+            5251,
+            4796
+          ],
+          "BaselineMedian": 5109.5,
+          "CandidateMedian": 5042.5,
+          "MedianPairedPercentChange": -0.8128375690936385,
+          "PairedPercentChanges": [
+            -15.477560414269275,
+            0.2151799687010847,
+            -1.8408551068883616,
+            -4.263939803202776,
+            0.7636577246916021,
+            9.384339509862528,
+            5.8029417690912855,
+            -6.982156710628395
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -6.982156710628395,
+            5.8029417690912855
+          ]
+        },
+        {
+          "Metric": "CreationMicroseconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            5308,
+            5117,
+            5153,
+            5233,
+            5558,
+            5149,
+            5466,
+            5354
+          ],
+          "Candidate": [
+            5061,
+            5529,
+            5699,
+            4995,
+            5288,
+            5725,
+            5766,
+            5147
+          ],
+          "BaselineMedian": 5270.5,
+          "CandidateMedian": 5408.5,
+          "MedianPairedPercentChange": 0.8111029967438232,
+          "PairedPercentChanges": [
+            -4.653353428786733,
+            8.05159273011531,
+            10.595769454686588,
+            -4.5480603860118425,
+            -4.8578625404821825,
+            11.186638182171293,
+            5.488474204171245,
+            -3.866268210683599
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -4.653353428786733,
+            10.595769454686588
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            263.2,
+            233.366666666667,
+            280.7,
+            265.4,
+            266.633333333333,
+            283.5,
+            243.5,
+            248.966666666667
+          ],
+          "Candidate": [
+            258.5,
+            258.566666666667,
+            265.0,
+            265.366666666667,
+            261.233333333333,
+            244.633333333333,
+            249.833333333333,
+            297.2
+          ],
+          "BaselineMedian": 264.29999999999995,
+          "CandidateMedian": 259.9,
+          "MedianPairedPercentChange": -0.8991369720457165,
+          "PairedPercentChanges": [
+            -1.7857142857142794,
+            10.798457363233815,
+            -5.593159957249727,
+            -0.01255965837715367,
+            -2.0252531566445797,
+            -13.709582598471604,
+            2.6009582477753534,
+            19.37341009505942
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -5.593159957249727,
+            10.798457363233815
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            260,
+            223,
+            281,
+            255,
+            245,
+            268,
+            232,
+            238
+          ],
+          "Candidate": [
+            230,
+            253,
+            245,
+            241,
+            258,
+            234,
+            233,
+            257
+          ],
+          "BaselineMedian": 250.0,
+          "CandidateMedian": 243.0,
+          "MedianPairedPercentChange": -2.5295807978363727,
+          "PairedPercentChanges": [
+            -11.538461538461542,
+            13.452914798206272,
+            -12.811387900355875,
+            -5.490196078431375,
+            5.306122448979589,
+            -12.686567164179108,
+            0.4310344827586299,
+            7.983193277310918
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -12.686567164179108,
+            7.983193277310918
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            395,
+            322,
+            394,
+            362,
+            443,
+            431,
+            325,
+            316
+          ],
+          "Candidate": [
+            421,
+            329,
+            378,
+            523,
+            321,
+            330,
+            350,
+            441
+          ],
+          "BaselineMedian": 378.0,
+          "CandidateMedian": 364.0,
+          "MedianPairedPercentChange": 4.37809576224546,
+          "PairedPercentChanges": [
+            6.582278481012649,
+            2.1739130434782705,
+            -4.060913705583758,
+            44.475138121546955,
+            -27.539503386004515,
+            -23.4338747099768,
+            7.692307692307687,
+            39.556962025316466
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -23.4338747099768,
+            39.556962025316466
+          ]
+        },
+        {
+          "Metric": "RespawnMicroseconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            410,
+            426,
+            420,
+            447,
+            458,
+            470,
+            363,
+            381
+          ],
+          "Candidate": [
+            425,
+            342,
+            437,
+            566,
+            327,
+            337,
+            362,
+            525
+          ],
+          "BaselineMedian": 423.0,
+          "CandidateMedian": 393.5,
+          "MedianPairedPercentChange": 1.6915272458509711,
+          "PairedPercentChanges": [
+            3.658536585365857,
+            -19.718309859154925,
+            4.047619047619055,
+            26.62192393736018,
+            -28.602620087336238,
+            -28.297872340425535,
+            -0.27548209366391463,
+            37.79527559055118
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -28.297872340425535,
+            26.62192393736018
+          ]
+        },
+        {
+          "Metric": "WholeActorCpuSeconds",
+          "Statistic": "Total",
+          "Pairs": 8,
+          "Baseline": [
+            0.6245099999999996,
+            0.6520890000000004,
+            0.6432980000000001,
+            0.669999,
+            0.6863780000000004,
+            0.6620959999999987,
+            0.638472000000001,
+            0.6711069999999992
+          ],
+          "Candidate": [
+            0.6475830000000004,
+            0.6856329999999997,
+            0.6472090000000001,
+            0.6562050000000001,
+            0.650623,
+            0.6646160000000005,
+            0.6582309999999998,
+            0.670877
+          ],
+          "BaselineMedian": 0.6570924999999995,
+          "CandidateMedian": 0.657218,
+          "MedianPairedPercentChange": 0.49428515509164495,
+          "PairedPercentChanges": [
+            3.6945765480137727,
+            5.144083092951934,
+            0.6079608517358892,
+            -2.058809042998555,
+            -5.209228734021254,
+            0.3806094584474007,
+            3.094732423661295,
+            -0.034271733121438164
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.058809042998555,
+            3.6945765480137727
+          ]
+        }
+      ],
+      "Memory": {
+        "Baseline": [
+          {
+            "Trial": 1,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 2,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 3,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 4,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 5,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 6,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 7,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 8,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          }
+        ],
+        "Candidate": [
+          {
+            "Trial": 1,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 2,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 3,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 4,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 5,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 6,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 7,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          },
+          {
+            "Trial": 8,
+            "ObjectDelta": 0.0,
+            "ByteDelta": 3048.0
+          }
+        ]
+      }
+    },
+    "network-all": {
+      "Rows": [
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            4.58e-05,
+            5.43e-05,
+            3.93666666666666e-05,
+            3.64541666666667e-05,
+            4.08374999999999e-05,
+            5.975e-05,
+            4.98708333333333e-05,
+            3.95916666666667e-05
+          ],
+          "Candidate": [
+            5.03583333333333e-05,
+            5.00166666666666e-05,
+            3.97166666666667e-05,
+            6.86583333333334e-05,
+            4.665e-05,
+            4.475e-05,
+            3.77458333333333e-05,
+            4.01541666666667e-05
+          ],
+          "BaselineMedian": 4.331874999999995e-05,
+          "CandidateMedian": 4.57e-05,
+          "MedianPairedPercentChange": 1.154915289459213,
+          "PairedPercentChanges": [
+            9.952692867539948,
+            -7.888275015346968,
+            0.8890770533448666,
+            88.34152474568522,
+            14.233241505969051,
+            -25.10460251046026,
+            -24.312808087559546,
+            1.4207535255735593
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -24.312808087559546,
+            14.233241505969051
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            4.1e-05,
+            5e-05,
+            3.7e-05,
+            3.4e-05,
+            3.7e-05,
+            5e-05,
+            4.6e-05,
+            3.6e-05
+          ],
+          "Candidate": [
+            4.9e-05,
+            4.6e-05,
+            3.7e-05,
+            6.3e-05,
+            4.3e-05,
+            4.3e-05,
+            3.5e-05,
+            3.7e-05
+          ],
+          "BaselineMedian": 3.9e-05,
+          "CandidateMedian": 4.3e-05,
+          "MedianPairedPercentChange": 1.388888888888884,
+          "PairedPercentChanges": [
+            19.512195121951216,
+            -8.000000000000007,
+            0.0,
+            85.29411764705883,
+            16.216216216216228,
+            -14.000000000000002,
+            -23.913043478260875,
+            2.777777777777768
+          ],
+          "Improved": 3,
+          "Worse": 4,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -14.000000000000002,
+            19.512195121951216
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            6.7e-05,
+            8.7e-05,
+            5.4e-05,
+            5.3e-05,
+            6.6e-05,
+            0.000116,
+            8.4e-05,
+            5.4e-05
+          ],
+          "Candidate": [
+            6.6e-05,
+            7.4e-05,
+            6.1e-05,
+            0.000137,
+            6.7e-05,
+            6e-05,
+            5.3e-05,
+            6.2e-05
+          ],
+          "BaselineMedian": 6.65e-05,
+          "CandidateMedian": 6.400000000000001e-05,
+          "MedianPairedPercentChange": 0.01130710085934239,
+          "PairedPercentChanges": [
+            -1.492537313432829,
+            -14.942528735632187,
+            12.962962962962955,
+            158.49056603773585,
+            1.5151515151515138,
+            -48.275862068965516,
+            -36.9047619047619,
+            14.814814814814813
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -36.9047619047619,
+            14.814814814814813
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            8.1e-05,
+            0.000111,
+            9.4e-05,
+            6.8e-05,
+            8.8e-05,
+            0.000152,
+            0.000107,
+            9e-05
+          ],
+          "Candidate": [
+            0.000105,
+            0.000102,
+            8.6e-05,
+            0.000155,
+            0.000101,
+            8.1e-05,
+            9.3e-05,
+            0.000116
+          ],
+          "BaselineMedian": 9.2e-05,
+          "CandidateMedian": 0.0001015,
+          "MedianPairedPercentChange": 3.332309582309578,
+          "PairedPercentChanges": [
+            29.629629629629626,
+            -8.108108108108114,
+            -8.51063829787233,
+            127.94117647058823,
+            14.77272727272727,
+            -46.710526315789465,
+            -13.08411214953271,
+            28.888888888888875
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -13.08411214953271,
+            29.629629629629626
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            4.270625e-05,
+            4.99979166666667e-05,
+            4.64854166666667e-05,
+            4.85708333333333e-05,
+            5.1925e-05,
+            4.51416666666666e-05,
+            4.966875e-05,
+            4.60729166666667e-05
+          ],
+          "Candidate": [
+            5.40166666666667e-05,
+            4.86187499999999e-05,
+            5.24916666666666e-05,
+            5.165625e-05,
+            4.55333333333333e-05,
+            4.80354166666667e-05,
+            4.65541666666666e-05,
+            5.31770833333333e-05
+          ],
+          "BaselineMedian": 4.7528125e-05,
+          "CandidateMedian": 5.013749999999995e-05,
+          "MedianPairedPercentChange": 6.381390512829244,
+          "PairedPercentChanges": [
+            26.484218742377763,
+            -2.7584482686781375,
+            12.920718863442616,
+            6.352406279488787,
+            -12.309420638741841,
+            6.4103747461697,
+            -6.27071012121988,
+            15.419398598236334
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -6.27071012121988,
+            15.419398598236334
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            3.8e-05,
+            3.9e-05,
+            4e-05,
+            3.8e-05,
+            3.8e-05,
+            3.9e-05,
+            3.7e-05,
+            4e-05
+          ],
+          "Candidate": [
+            4.4e-05,
+            4.1e-05,
+            3.9e-05,
+            3.6e-05,
+            3.9e-05,
+            3.7e-05,
+            3.8e-05,
+            4e-05
+          ],
+          "BaselineMedian": 3.85e-05,
+          "CandidateMedian": 3.9e-05,
+          "MedianPairedPercentChange": 1.3157894736842035,
+          "PairedPercentChanges": [
+            15.78947368421051,
+            5.128205128205132,
+            -2.5000000000000133,
+            -5.263157894736848,
+            2.631578947368407,
+            -5.128205128205132,
+            2.7027027027027195,
+            0.0
+          ],
+          "Improved": 3,
+          "Worse": 4,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -5.128205128205132,
+            5.128205128205132
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            7.4e-05,
+            0.0001,
+            8.7e-05,
+            0.000101,
+            0.000116,
+            7.5e-05,
+            0.000101,
+            8.5e-05
+          ],
+          "Candidate": [
+            0.000105,
+            8.2e-05,
+            0.00011,
+            0.000106,
+            8.1e-05,
+            9.9e-05,
+            8.8e-05,
+            0.000109
+          ],
+          "BaselineMedian": 9.35e-05,
+          "CandidateMedian": 0.000102,
+          "MedianPairedPercentChange": 15.693638329350179,
+          "PairedPercentChanges": [
+            41.89189189189191,
+            -18.000000000000004,
+            26.436781609195403,
+            4.950495049504955,
+            -30.17241379310345,
+            32.00000000000001,
+            -12.871287128712872,
+            28.235294117647047
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -18.000000000000004,
+            32.00000000000001
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000111,
+            0.000126,
+            0.000111,
+            0.000135,
+            0.000175,
+            0.000121,
+            0.000139,
+            0.000116
+          ],
+          "Candidate": [
+            0.000136,
+            0.00012,
+            0.00017,
+            0.000156,
+            0.00012,
+            0.000126,
+            0.000114,
+            0.000154
+          ],
+          "BaselineMedian": 0.0001235,
+          "CandidateMedian": 0.00013099999999999999,
+          "MedianPairedPercentChange": 9.843893480257115,
+          "PairedPercentChanges": [
+            22.522522522522515,
+            -4.761904761904756,
+            53.15315315315316,
+            15.555555555555545,
+            -31.428571428571427,
+            4.132231404958686,
+            -17.985611510791355,
+            32.75862068965518
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -17.985611510791355,
+            32.75862068965518
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.00833295,
+            0.00833290625,
+            0.00833300833333333,
+            0.00833300833333334,
+            0.00833310208333333,
+            0.00833305208333333,
+            0.008333,
+            0.00833285
+          ],
+          "Candidate": [
+            0.00833300625000001,
+            0.00833300625,
+            0.00833308125,
+            0.00833306458333333,
+            0.00833309375,
+            0.00833297708333334,
+            0.00833311249999999,
+            0.00833302708333333
+          ],
+          "BaselineMedian": 0.008333004166666665,
+          "CandidateMedian": 0.00833304583333333,
+          "MedianPairedPercentChange": 0.0007750325889621656,
+          "PairedPercentChanges": [
+            0.00067503105154465,
+            0.0012000615031704243,
+            0.0008750341263796813,
+            0.0006750263259247546,
+            -0.00010000277504973454,
+            -0.0009000303759054695,
+            0.0013500540020361385,
+            0.002125123257101791
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.00010000277504973454,
+            0.0013500540020361385
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            0.008351,
+            0.008361,
+            0.008296,
+            0.008347,
+            0.008447,
+            0.00847,
+            0.008415,
+            0.008385
+          ],
+          "Candidate": [
+            0.008472,
+            0.008371,
+            0.008324,
+            0.008497,
+            0.008398,
+            0.008417,
+            0.008323,
+            0.008392
+          ],
+          "BaselineMedian": 0.008373,
+          "CandidateMedian": 0.008395,
+          "MedianPairedPercentChange": 0.10154266368750386,
+          "PairedPercentChanges": [
+            1.4489282720632213,
+            0.11960291831121239,
+            0.33751205400194273,
+            1.7970528333532965,
+            -0.5800876050668924,
+            -0.625737898465184,
+            -1.0932857991681533,
+            0.08348240906379534
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.625737898465184,
+            1.4489282720632213
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.008584,
+            0.008582,
+            0.008658,
+            0.008566,
+            0.008608,
+            0.008641,
+            0.008677,
+            0.008657
+          ],
+          "Candidate": [
+            0.008727,
+            0.008684,
+            0.008603,
+            0.008658,
+            0.008612,
+            0.008693,
+            0.008521,
+            0.008723
+          ],
+          "BaselineMedian": 0.0086245,
+          "CandidateMedian": 0.008671000000000002,
+          "MedianPairedPercentChange": 0.6820855097157352,
+          "PairedPercentChanges": [
+            1.665890027959005,
+            1.1885341412258388,
+            -0.6352506352506504,
+            1.0740135419098795,
+            0.04646840148698761,
+            0.6017822011341378,
+            -1.7978564019822452,
+            0.7623888182973326
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.6352506352506504,
+            1.1885341412258388
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.008643,
+            0.008651,
+            0.008715,
+            0.008617,
+            0.008665,
+            0.00871,
+            0.008771,
+            0.008734
+          ],
+          "Candidate": [
+            0.008825,
+            0.008784,
+            0.008685,
+            0.008726,
+            0.008692,
+            0.008782,
+            0.00855,
+            0.008883
+          ],
+          "BaselineMedian": 0.0086875,
+          "CandidateMedian": 0.008754,
+          "MedianPairedPercentChange": 1.0457887227168228,
+          "PairedPercentChanges": [
+            2.105750318176547,
+            1.5373945208646322,
+            -0.3442340791738441,
+            1.2649413949170185,
+            0.3115983843046566,
+            0.826636050516627,
+            -2.5196670847109637,
+            1.7059766430043588
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.3442340791738441,
+            1.7059766430043588
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            6.38166666666667e-05,
+            5.47916666666667e-05,
+            5.25791666666667e-05,
+            4.89833333333334e-05,
+            6.50833333333333e-05,
+            6.56166666666667e-05,
+            4.95375e-05,
+            5.29458333333333e-05
+          ],
+          "Candidate": [
+            6.44374999999999e-05,
+            6.3e-05,
+            4.57458333333333e-05,
+            6.55416666666667e-05,
+            5.4975e-05,
+            6.27583333333333e-05,
+            4.54583333333333e-05,
+            4.75625e-05
+          ],
+          "BaselineMedian": 5.386875e-05,
+          "CandidateMedian": 5.8866666666666656e-05,
+          "MedianPairedPercentChange": -6.295305596751399,
+          "PairedPercentChanges": [
+            0.9728388613212902,
+            14.98098859315582,
+            -12.996275457643359,
+            33.80401497107848,
+            -15.53137003841224,
+            -4.356108712217511,
+            -8.234502481285288,
+            -10.16762414417245
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -12.996275457643359,
+            14.98098859315582
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            6e-05,
+            4.9e-05,
+            5e-05,
+            4.7e-05,
+            6.2e-05,
+            6.3e-05,
+            4.7e-05,
+            4.9e-05
+          ],
+          "Candidate": [
+            6e-05,
+            6.1e-05,
+            4.3e-05,
+            6.6e-05,
+            5.4e-05,
+            5.8e-05,
+            4.1e-05,
+            4.5e-05
+          ],
+          "BaselineMedian": 4.95e-05,
+          "CandidateMedian": 5.6e-05,
+          "MedianPairedPercentChange": -8.049886621315183,
+          "PairedPercentChanges": [
+            0.0,
+            24.489795918367353,
+            -14.000000000000002,
+            40.42553191489364,
+            -12.903225806451623,
+            -7.9365079365079305,
+            -12.765957446808507,
+            -8.163265306122437
+          ],
+          "Improved": 5,
+          "Worse": 2,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 0.453125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -12.903225806451623,
+            24.489795918367353
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.000103,
+            9.3e-05,
+            7.3e-05,
+            6.8e-05,
+            9.2e-05,
+            9.8e-05,
+            6.7e-05,
+            8.8e-05
+          ],
+          "Candidate": [
+            9.9e-05,
+            8.4e-05,
+            6.9e-05,
+            0.000102,
+            8.2e-05,
+            8.2e-05,
+            6.6e-05,
+            6.6e-05
+          ],
+          "BaselineMedian": 8.999999999999999e-05,
+          "CandidateMedian": 8.2e-05,
+          "MedianPairedPercentChange": -7.578435704816616,
+          "PairedPercentChanges": [
+            -3.8834951456310662,
+            -9.677419354838712,
+            -5.47945205479452,
+            50.0,
+            -10.869565217391308,
+            -16.326530612244895,
+            -1.492537313432829,
+            -24.99999999999999
+          ],
+          "Improved": 7,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -16.326530612244895,
+            -1.492537313432829
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000131,
+            0.000105,
+            0.00011,
+            9.7e-05,
+            0.000111,
+            0.000121,
+            9.8e-05,
+            0.000119
+          ],
+          "Candidate": [
+            0.000125,
+            0.000116,
+            8.2e-05,
+            0.000121,
+            0.000101,
+            0.000113,
+            9e-05,
+            9e-05
+          ],
+          "BaselineMedian": 0.0001105,
+          "CandidateMedian": 0.000107,
+          "MedianPairedPercentChange": -7.38741777702816,
+          "PairedPercentChanges": [
+            -4.580152671755733,
+            10.47619047619046,
+            -25.454545454545453,
+            24.742268041237114,
+            -9.009009009009006,
+            -6.6115702479338845,
+            -8.163265306122437,
+            -24.369747899159666
+          ],
+          "Improved": 6,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -24.369747899159666,
+            10.47619047619046
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            3.885e-05,
+            3.48083333333333e-05,
+            3.76354166666667e-05,
+            3.52791666666667e-05,
+            3.6325e-05,
+            3.62854166666667e-05,
+            3.54416666666667e-05,
+            3.64770833333333e-05
+          ],
+          "Candidate": [
+            3.73583333333334e-05,
+            3.63375e-05,
+            3.659375e-05,
+            3.63958333333333e-05,
+            3.68791666666667e-05,
+            3.67770833333333e-05,
+            3.4225e-05,
+            3.63208333333334e-05
+          ],
+          "BaselineMedian": 3.630520833333335e-05,
+          "CandidateMedian": 3.649479166666665e-05,
+          "MedianPairedPercentChange": 0.46332342838325546,
+          "PairedPercentChanges": [
+            -3.8395538395536777,
+            4.393105099353711,
+            -2.7677830058124298,
+            3.1652297153653475,
+            1.5255792612985486,
+            1.354997990468898,
+            -3.432870914648567,
+            -0.4283511337023871
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.432870914648567,
+            3.1652297153653475
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            2.9e-05,
+            2.8e-05,
+            2.8e-05,
+            2.9e-05,
+            2.6e-05,
+            3e-05,
+            2.6e-05,
+            2.6e-05
+          ],
+          "Candidate": [
+            2.9e-05,
+            3e-05,
+            2.8e-05,
+            3.1e-05,
+            3e-05,
+            2.9e-05,
+            2.6e-05,
+            2.5e-05
+          ],
+          "BaselineMedian": 2.8e-05,
+          "CandidateMedian": 2.9e-05,
+          "MedianPairedPercentChange": 0.0,
+          "PairedPercentChanges": [
+            0.0,
+            7.14285714285714,
+            0.0,
+            6.896551724137945,
+            15.384615384615397,
+            -3.3333333333333326,
+            0.0,
+            -3.8461538461538325
+          ],
+          "Improved": 2,
+          "Worse": 3,
+          "Ties": 3,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.3333333333333326,
+            7.14285714285714
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            7.7e-05,
+            6.4e-05,
+            7.8e-05,
+            6.5e-05,
+            8.2e-05,
+            6.3e-05,
+            7.4e-05,
+            7.9e-05
+          ],
+          "Candidate": [
+            7.5e-05,
+            6.5e-05,
+            7.8e-05,
+            6.8e-05,
+            6.9e-05,
+            7.2e-05,
+            7e-05,
+            7.5e-05
+          ],
+          "BaselineMedian": 7.549999999999999e-05,
+          "CandidateMedian": 7.099999999999999e-05,
+          "MedianPairedPercentChange": -1.2987012987013047,
+          "PairedPercentChanges": [
+            -2.5974025974026094,
+            1.5625,
+            0.0,
+            4.615384615384621,
+            -15.85365853658537,
+            14.28571428571428,
+            -5.405405405405405,
+            -5.063291139240511
+          ],
+          "Improved": 4,
+          "Worse": 3,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -5.405405405405405,
+            4.615384615384621
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000111,
+            9e-05,
+            0.000106,
+            9.5e-05,
+            0.00012,
+            9.9e-05,
+            8.9e-05,
+            0.000124
+          ],
+          "Candidate": [
+            0.000125,
+            9.8e-05,
+            0.000112,
+            9.8e-05,
+            0.000107,
+            0.000105,
+            9.2e-05,
+            0.000125
+          ],
+          "BaselineMedian": 0.0001025,
+          "CandidateMedian": 0.000106,
+          "MedianPairedPercentChange": 4.515581937672253,
+          "PairedPercentChanges": [
+            12.612612612612617,
+            8.888888888888879,
+            5.660377358490565,
+            3.157894736842093,
+            -10.83333333333334,
+            6.060606060606077,
+            3.370786516853941,
+            0.8064516129032251
+          ],
+          "Improved": 1,
+          "Worse": 7,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.8064516129032251,
+            8.888888888888879
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.00833302083333334,
+            0.00833295625,
+            0.00833298541666666,
+            0.0083329125,
+            0.0083330625,
+            0.00833300416666667,
+            0.00833299791666666,
+            0.00833300416666667
+          ],
+          "Candidate": [
+            0.008333025,
+            0.00833296666666668,
+            0.008332975,
+            0.00833296666666666,
+            0.00833299375,
+            0.00833298958333333,
+            0.00833306041666667,
+            0.00833302708333334
+          ],
+          "BaselineMedian": 0.008333001041666665,
+          "CandidateMedian": 0.008332991666666664,
+          "MedianPairedPercentChange": 8.750376582211672e-05,
+          "PairedPercentChanges": [
+            5.0001874996041806e-05,
+            0.00012500565664819163,
+            -0.00012500521889835525,
+            0.0006500328265879318,
+            -0.0008250268133780381,
+            -0.00017500691285032843,
+            0.0007500301888452299,
+            0.00027501086297121446
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.00017500691285032843,
+            0.0006500328265879318
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            0.008437,
+            0.008442,
+            0.008371,
+            0.008404,
+            0.008473,
+            0.008427,
+            0.008443,
+            0.00828
+          ],
+          "Candidate": [
+            0.008496,
+            0.008426,
+            0.008378,
+            0.00849,
+            0.008396,
+            0.008426,
+            0.008337,
+            0.00838
+          ],
+          "BaselineMedian": 0.008432,
+          "CandidateMedian": 0.008411,
+          "MedianPairedPercentChange": 0.03587770461563888,
+          "PairedPercentChanges": [
+            0.6993006993007089,
+            -0.18952854773750527,
+            0.08362202843148481,
+            1.0233222275106924,
+            -0.9087690310397578,
+            -0.01186661920020704,
+            -1.2554779106952574,
+            1.2077294685990392
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.9087690310397578,
+            1.0233222275106924
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.00869,
+            0.008605,
+            0.008655,
+            0.008641,
+            0.00868,
+            0.008662,
+            0.008695,
+            0.008633
+          ],
+          "Candidate": [
+            0.008698,
+            0.008664,
+            0.00859,
+            0.008714,
+            0.008605,
+            0.00867,
+            0.008549,
+            0.008641
+          ],
+          "BaselineMedian": 0.0086585,
+          "CandidateMedian": 0.0086525,
+          "MedianPairedPercentChange": 0.0922086310615855,
+          "PairedPercentChanges": [
+            0.09205983889526426,
+            0.6856478791400278,
+            -0.7510109763142592,
+            0.8448096285152307,
+            -0.8640552995391793,
+            0.09235742322790674,
+            -1.6791259344450915,
+            0.09266767056641534
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.8640552995391793,
+            0.6856478791400278
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.008754,
+            0.008725,
+            0.00875,
+            0.008713,
+            0.008764,
+            0.008728,
+            0.008774,
+            0.008699
+          ],
+          "Candidate": [
+            0.008803,
+            0.008764,
+            0.008642,
+            0.008786,
+            0.008665,
+            0.008731,
+            0.008609,
+            0.008692
+          ],
+          "BaselineMedian": 0.008739,
+          "CandidateMedian": 0.0087115,
+          "MedianPairedPercentChange": -0.023048441886081017,
+          "PairedPercentChanges": [
+            0.5597441169751027,
+            0.4469914040114542,
+            -1.234285714285721,
+            0.8378285320784995,
+            -1.129621177544482,
+            0.03437213565535835,
+            -1.8805561887394573,
+            -0.08046901942752038
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.234285714285721,
+            0.5597441169751027
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            6.3525e-05,
+            5.15541666666667e-05,
+            5.35208333333333e-05,
+            5.25875e-05,
+            6.91083333333334e-05,
+            6.595e-05,
+            5.25958333333333e-05,
+            5.16333333333334e-05
+          ],
+          "Candidate": [
+            6.04291666666667e-05,
+            6.21583333333334e-05,
+            4.9775e-05,
+            4.72541666666667e-05,
+            5.69125e-05,
+            6.60541666666667e-05,
+            4.80291666666667e-05,
+            5.10125e-05
+          ],
+          "BaselineMedian": 5.30583333333333e-05,
+          "CandidateMedian": 5.3962500000000004e-05,
+          "MedianPairedPercentChange": -5.936120824651853,
+          "PairedPercentChanges": [
+            -4.873409418863906,
+            20.568980845389206,
+            -6.9988322304398,
+            -10.141827113540858,
+            -17.64741348124933,
+            0.15794794035890458,
+            -8.682563574427515,
+            -1.2023886378309867
+          ],
+          "Improved": 6,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -10.141827113540858,
+            0.15794794035890458
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            5.8e-05,
+            4.6e-05,
+            4.6e-05,
+            4.7e-05,
+            6.3e-05,
+            6.4e-05,
+            5e-05,
+            4.8e-05
+          ],
+          "Candidate": [
+            5.8e-05,
+            5.9e-05,
+            4.7e-05,
+            4.5e-05,
+            5.5e-05,
+            6.1e-05,
+            4.5e-05,
+            4.6e-05
+          ],
+          "BaselineMedian": 4.9e-05,
+          "CandidateMedian": 5.1e-05,
+          "MedianPairedPercentChange": -4.210992907801414,
+          "PairedPercentChanges": [
+            0.0,
+            28.260869565217384,
+            2.1739130434782483,
+            -4.255319148936154,
+            -12.698412698412698,
+            -4.6875,
+            -9.999999999999998,
+            -4.166666666666674
+          ],
+          "Improved": 5,
+          "Worse": 2,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 0.453125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -9.999999999999998,
+            2.1739130434782483
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.000104,
+            8e-05,
+            7.8e-05,
+            7.7e-05,
+            0.000117,
+            9.1e-05,
+            7.3e-05,
+            8.8e-05
+          ],
+          "Candidate": [
+            7.8e-05,
+            7.9e-05,
+            7.2e-05,
+            6.8e-05,
+            8.8e-05,
+            9.9e-05,
+            6.9e-05,
+            8.4e-05
+          ],
+          "BaselineMedian": 8.400000000000001e-05,
+          "CandidateMedian": 7.85e-05,
+          "MedianPairedPercentChange": -6.585879873551104,
+          "PairedPercentChanges": [
+            -25.0,
+            -1.2500000000000178,
+            -7.692307692307687,
+            -11.688311688311693,
+            -24.786324786324787,
+            8.791208791208781,
+            -5.47945205479452,
+            -4.545454545454552
+          ],
+          "Improved": 7,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -24.786324786324787,
+            -1.2500000000000178
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.000131,
+            0.000121,
+            0.000331,
+            0.000101,
+            0.000144,
+            0.000132,
+            0.000104,
+            0.000118
+          ],
+          "Candidate": [
+            9.8e-05,
+            0.000114,
+            8.9e-05,
+            0.0001,
+            0.000128,
+            0.000124,
+            8.8e-05,
+            0.000111
+          ],
+          "BaselineMedian": 0.000126,
+          "CandidateMedian": 0.0001055,
+          "MedianPairedPercentChange": -8.585858585858592,
+          "PairedPercentChanges": [
+            -25.190839694656496,
+            -5.785123966942141,
+            -73.1117824773414,
+            -0.990099009900991,
+            -11.111111111111116,
+            -6.060606060606066,
+            -15.384615384615385,
+            -5.932203389830503
+          ],
+          "Improved": 8,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0078125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -25.190839694656496,
+            -5.785123966942141
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            3.79645833333334e-05,
+            3.33020833333333e-05,
+            3.45958333333333e-05,
+            3.59770833333333e-05,
+            3.643125e-05,
+            3.893125e-05,
+            3.60375e-05,
+            3.384375e-05
+          ],
+          "Candidate": [
+            3.775e-05,
+            4.02145833333333e-05,
+            3.61970954356847e-05,
+            3.666875e-05,
+            3.71770833333334e-05,
+            3.59375e-05,
+            3.87729166666667e-05,
+            3.53458333333333e-05
+          ],
+          "BaselineMedian": 3.600729166666665e-05,
+          "CandidateMedian": 3.6922916666666696e-05,
+          "MedianPairedPercentChange": 3.242761896569979,
+          "PairedPercentChanges": [
+            -0.5652197772047951,
+            20.756959649671614,
+            4.6284825311855515,
+            1.9225201227634159,
+            2.0472350889233715,
+            -7.689837855193449,
+            7.590472887039046,
+            4.438288704216586
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.5652197772047951,
+            7.590472887039046
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            2.9e-05,
+            2.4e-05,
+            3e-05,
+            2.9e-05,
+            2.7e-05,
+            2.8e-05,
+            2.7e-05,
+            2.9e-05
+          ],
+          "Candidate": [
+            2.8e-05,
+            3e-05,
+            2.8e-05,
+            2.5e-05,
+            2.9e-05,
+            2.6e-05,
+            2.9e-05,
+            3e-05
+          ],
+          "BaselineMedian": 2.85e-05,
+          "CandidateMedian": 2.85e-05,
+          "MedianPairedPercentChange": 0.0,
+          "PairedPercentChanges": [
+            -3.4482758620689724,
+            25.0,
+            -6.666666666666665,
+            -13.793103448275856,
+            7.407407407407418,
+            -7.142857142857151,
+            7.407407407407418,
+            3.4482758620689724
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -7.142857142857151,
+            7.407407407407418
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            7.7e-05,
+            7.2e-05,
+            6.2e-05,
+            6.9e-05,
+            7.3e-05,
+            7.9e-05,
+            6.9e-05,
+            6.2e-05
+          ],
+          "Candidate": [
+            8.2e-05,
+            8.5e-05,
+            7.2e-05,
+            8.8e-05,
+            7e-05,
+            7.1e-05,
+            8.8e-05,
+            6.6e-05
+          ],
+          "BaselineMedian": 7.05e-05,
+          "CandidateMedian": 7.7e-05,
+          "MedianPairedPercentChange": 11.311269375785503,
+          "PairedPercentChanges": [
+            6.493506493506485,
+            18.055555555555557,
+            16.129032258064523,
+            27.536231884057983,
+            -4.109589041095896,
+            -10.126582278481,
+            27.536231884057983,
+            6.451612903225801
+          ],
+          "Improved": 2,
+          "Worse": 6,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.2890625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -4.109589041095896,
+            27.536231884057983
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.00011,
+            9.6e-05,
+            9.2e-05,
+            0.000108,
+            0.0001,
+            0.0001,
+            9.8e-05,
+            7.8e-05
+          ],
+          "Candidate": [
+            0.000125,
+            0.000111,
+            8.9e-05,
+            0.000129,
+            0.000101,
+            0.000121,
+            0.000126,
+            9.2e-05
+          ],
+          "BaselineMedian": 9.9e-05,
+          "CandidateMedian": 0.000116,
+          "MedianPairedPercentChange": 16.786858974358978,
+          "PairedPercentChanges": [
+            13.636363636363624,
+            15.625,
+            -3.2608695652173947,
+            19.444444444444443,
+            1.0000000000000009,
+            20.999999999999996,
+            28.57142857142858,
+            17.948717948717952
+          ],
+          "Improved": 1,
+          "Worse": 7,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            1.0000000000000009,
+            20.999999999999996
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 8,
+          "Baseline": [
+            0.00833299166666667,
+            0.0083329625,
+            0.00833300208333333,
+            0.00833301666666667,
+            0.00833247291666667,
+            0.00833297916666666,
+            0.00833287291666667,
+            0.00833304791666666
+          ],
+          "Candidate": [
+            0.00833309375,
+            0.00833298125,
+            0.00833299170124481,
+            0.00833296666666667,
+            0.00833297916666666,
+            0.00833299166666666,
+            0.00833301458333333,
+            0.00833300416666667
+          ],
+          "BaselineMedian": 0.008332985416666664,
+          "CandidateMedian": 0.008332991683955735,
+          "MedianPairedPercentChange": 0.00018750819410495723,
+          "PairedPercentChanges": [
+            0.0012250502270161334,
+            0.000225010012933069,
+            -0.00012459001469400377,
+            -0.0006000228008673503,
+            0.006075627308410603,
+            0.00015000637527684546,
+            0.0017000939301015094,
+            -0.0005250179817561929
+          ],
+          "Improved": 3,
+          "Worse": 5,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.0005250179817561929,
+            0.0017000939301015094
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 8,
+          "Baseline": [
+            0.008397,
+            0.008437,
+            0.008486,
+            0.008413,
+            0.008332,
+            0.008415,
+            0.008369,
+            0.008469
+          ],
+          "Candidate": [
+            0.008399,
+            0.008461,
+            0.008386,
+            0.008471,
+            0.008409,
+            0.008434,
+            0.00849,
+            0.008472
+          ],
+          "BaselineMedian": 0.008414000000000001,
+          "CandidateMedian": 0.0084475,
+          "MedianPairedPercentChange": 0.25512429301063344,
+          "PairedPercentChanges": [
+            0.02381803024891216,
+            0.28446130141044357,
+            -1.1784115012962615,
+            0.689409247592998,
+            0.9241478636581757,
+            0.2257872846108233,
+            1.44581192496116,
+            0.03542330853700815
+          ],
+          "Improved": 1,
+          "Worse": 7,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.0703125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.02381803024891216,
+            0.9241478636581757
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 8,
+          "Baseline": [
+            0.008603,
+            0.008618,
+            0.008717,
+            0.008639,
+            0.008643,
+            0.008679,
+            0.008583,
+            0.008621
+          ],
+          "Candidate": [
+            0.008596,
+            0.008655,
+            0.008613,
+            0.008634,
+            0.008614,
+            0.008685,
+            0.008676,
+            0.008637
+          ],
+          "BaselineMedian": 0.00863,
+          "CandidateMedian": 0.0086355,
+          "MedianPairedPercentChange": 0.005627659709400712,
+          "PairedPercentChanges": [
+            -0.08136696501220841,
+            0.42933395219306725,
+            -1.1930710106688114,
+            -0.05787706910523882,
+            -0.3355316441050471,
+            0.06913238852404024,
+            1.083537224746589,
+            0.1855933186405423
+          ],
+          "Improved": 4,
+          "Worse": 4,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.3355316441050471,
+            0.42933395219306725
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 8,
+          "Baseline": [
+            0.008651,
+            0.008674,
+            0.008869,
+            0.008703,
+            0.008735,
+            0.00881,
+            0.008676,
+            0.008674
+          ],
+          "Candidate": [
+            0.008629,
+            0.008726,
+            0.008679,
+            0.008699,
+            0.008668,
+            0.008748,
+            0.008738,
+            0.008713
+          ],
+          "BaselineMedian": 0.0086895,
+          "CandidateMedian": 0.008706,
+          "MedianPairedPercentChange": -0.15013351170579115,
+          "PairedPercentChanges": [
+            -0.2543058605941617,
+            0.5994927369149083,
+            -2.142293381440985,
+            -0.045961162817420576,
+            -0.7670291929021134,
+            -0.7037457434733163,
+            0.7146150299677245,
+            0.449619552686209
+          ],
+          "Improved": 5,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.7265625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.7670291929021134,
+            0.5994927369149083
+          ]
+        }
+      ]
+    },
+    "network-physics-only": {
+      "Rows": [
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            5.14833333333334e-05,
+            4.7925e-05,
+            5.38625e-05,
+            7.36625000000001e-05
+          ],
+          "Candidate": [
+            8.65708333333333e-05,
+            4.77458333333333e-05,
+            3.62291666666667e-05,
+            4.87041666666667e-05
+          ],
+          "BaselineMedian": 5.26729166666667e-05,
+          "CandidateMedian": 4.8225e-05,
+          "MedianPairedPercentChange": -16.55576442475683,
+          "PairedPercentChanges": [
+            68.15312398834546,
+            -0.37384802643025683,
+            -32.7376808230834,
+            -33.88200690084285
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -33.88200690084285,
+            68.15312398834546
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            4.7e-05,
+            4.5e-05,
+            5e-05,
+            6e-05
+          ],
+          "Candidate": [
+            7.9e-05,
+            4.6e-05,
+            3.2e-05,
+            4.7e-05
+          ],
+          "BaselineMedian": 4.85e-05,
+          "CandidateMedian": 4.65e-05,
+          "MedianPairedPercentChange": -9.722222222222232,
+          "PairedPercentChanges": [
+            68.08510638297874,
+            2.2222222222222143,
+            -36.00000000000001,
+            -21.66666666666668
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -36.00000000000001,
+            68.08510638297874
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            7.5e-05,
+            6.9e-05,
+            8e-05,
+            0.000158
+          ],
+          "Candidate": [
+            0.00015,
+            6.1e-05,
+            6.1e-05,
+            6.5e-05
+          ],
+          "BaselineMedian": 7.75e-05,
+          "CandidateMedian": 6.3e-05,
+          "MedianPairedPercentChange": -17.672101449275363,
+          "PairedPercentChanges": [
+            100.0,
+            -11.594202898550721,
+            -23.750000000000004,
+            -58.86075949367089
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -58.86075949367089,
+            100.0
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.000113,
+            0.000105,
+            0.000113,
+            0.000226
+          ],
+          "Candidate": [
+            0.000199,
+            8.8e-05,
+            9.3e-05,
+            9.1e-05
+          ],
+          "BaselineMedian": 0.000113,
+          "CandidateMedian": 9.2e-05,
+          "MedianPairedPercentChange": -16.94479561736199,
+          "PairedPercentChanges": [
+            76.1061946902655,
+            -16.1904761904762,
+            -17.699115044247783,
+            -59.73451327433628
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -59.73451327433628,
+            76.1061946902655
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            4.575e-05,
+            4.676875e-05,
+            4.94541666666667e-05,
+            4.37625e-05
+          ],
+          "Candidate": [
+            4.32354166666667e-05,
+            4.345625e-05,
+            3.99770833333333e-05,
+            4.63229166666666e-05
+          ],
+          "BaselineMedian": 4.6259375e-05,
+          "CandidateMedian": 4.3345833333333355e-05,
+          "MedianPairedPercentChange": -6.289538923320265,
+          "PairedPercentChanges": [
+            -5.496357012750385,
+            -7.082720833890144,
+            -19.16336675372832,
+            5.850709321146175
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -19.16336675372832,
+            5.850709321146175
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            3.7e-05,
+            3.4e-05,
+            3.7e-05,
+            3.1e-05
+          ],
+          "Candidate": [
+            3.5e-05,
+            3.7e-05,
+            3.6e-05,
+            3.3e-05
+          ],
+          "BaselineMedian": 3.5499999999999996e-05,
+          "CandidateMedian": 3.5499999999999996e-05,
+          "MedianPairedPercentChange": 1.8744551002615517,
+          "PairedPercentChanges": [
+            -5.405405405405405,
+            8.823529411764696,
+            -2.7027027027026973,
+            6.451612903225801
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -5.405405405405405,
+            8.823529411764696
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            8.9e-05,
+            0.0001,
+            0.0001,
+            9.4e-05
+          ],
+          "Candidate": [
+            8.2e-05,
+            8.3e-05,
+            7e-05,
+            0.000103
+          ],
+          "BaselineMedian": 9.7e-05,
+          "CandidateMedian": 8.25e-05,
+          "MedianPairedPercentChange": -12.432584269662922,
+          "PairedPercentChanges": [
+            -7.86516853932584,
+            -17.000000000000004,
+            -30.000000000000004,
+            9.57446808510638
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -30.000000000000004,
+            9.57446808510638
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.000116,
+            0.000144,
+            0.000142,
+            0.000123
+          ],
+          "Candidate": [
+            0.000115,
+            0.000105,
+            9.3e-05,
+            0.00016
+          ],
+          "BaselineMedian": 0.00013250000000000002,
+          "CandidateMedian": 0.00011,
+          "MedianPairedPercentChange": -13.972701149425287,
+          "PairedPercentChanges": [
+            -0.8620689655172376,
+            -27.083333333333336,
+            -34.507042253521135,
+            30.081300813008127
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -34.507042253521135,
+            30.081300813008127
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            0.00833298958333334,
+            0.00833298124999999,
+            0.008332975,
+            0.00833297291666667
+          ],
+          "Candidate": [
+            0.008333075,
+            0.00833294375,
+            0.00833300833333333,
+            0.00833299791666667
+          ],
+          "BaselineMedian": 0.008332978124999994,
+          "CandidateMedian": 0.008333003125,
+          "MedianPairedPercentChange": 0.00035001508813525817,
+          "PairedPercentChanges": [
+            0.0010250422829205519,
+            -0.00045001901316510384,
+            0.00040001720071902724,
+            0.0003000129755514891
+          ],
+          "Improved": 1,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.00045001901316510384,
+            0.0010250422829205519
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            0.008419,
+            0.00848,
+            0.008489,
+            0.008406
+          ],
+          "Candidate": [
+            0.008351,
+            0.008389,
+            0.008343,
+            0.008362
+          ],
+          "BaselineMedian": 0.008449499999999999,
+          "CandidateMedian": 0.0083565,
+          "MedianPairedPercentChange": -0.94040504183035,
+          "PairedPercentChanges": [
+            -0.8076968761135395,
+            -1.0731132075471606,
+            -1.719872776534337,
+            -0.5234356412086694
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.719872776534337,
+            -0.5234356412086694
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            0.008661,
+            0.008683,
+            0.008714,
+            0.008731
+          ],
+          "Candidate": [
+            0.008664,
+            0.00866,
+            0.008661,
+            0.008637
+          ],
+          "BaselineMedian": 0.0086985,
+          "CandidateMedian": 0.0086605,
+          "MedianPairedPercentChange": -0.436551035555216,
+          "PairedPercentChanges": [
+            0.03463803255974174,
+            -0.2648854082690333,
+            -0.6082166628413987,
+            -1.076623525369358
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.076623525369358,
+            0.03463803255974174
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.008739,
+            0.00876,
+            0.008802,
+            0.008831
+          ],
+          "Candidate": [
+            0.008717,
+            0.00873,
+            0.008733,
+            0.008718
+          ],
+          "BaselineMedian": 0.008781,
+          "CandidateMedian": 0.008723999999999999,
+          "MedianPairedPercentChange": -0.5631892502638014,
+          "PairedPercentChanges": [
+            -0.2517450509211483,
+            -0.3424657534246589,
+            -0.7839127471029439,
+            -1.2795832861510648
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.2795832861510648,
+            -0.2517450509211483
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            6.06291666666667e-05,
+            6.06625e-05,
+            5.47875e-05,
+            6.05416666666667e-05
+          ],
+          "Candidate": [
+            6.30875e-05,
+            5.895e-05,
+            4.81208333333333e-05,
+            6.28458333333333e-05
+          ],
+          "BaselineMedian": 6.0585416666666695e-05,
+          "CandidateMedian": 6.0897916666666655e-05,
+          "MedianPairedPercentChange": 0.4914613519084843,
+          "PairedPercentChanges": [
+            4.054704144045029,
+            -2.8229960848959346,
+            -12.168225720587166,
+            3.805918788712903
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -12.168225720587166,
+            4.054704144045029
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            6e-05,
+            5.8e-05,
+            5e-05,
+            6e-05
+          ],
+          "Candidate": [
+            5.9e-05,
+            5.6e-05,
+            4.5e-05,
+            5.9e-05
+          ],
+          "BaselineMedian": 5.9e-05,
+          "CandidateMedian": 5.75e-05,
+          "MedianPairedPercentChange": -2.5574712643678224,
+          "PairedPercentChanges": [
+            -1.6666666666666718,
+            -3.4482758620689724,
+            -9.999999999999998,
+            -1.6666666666666718
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -9.999999999999998,
+            -1.6666666666666718
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            7.9e-05,
+            8.8e-05,
+            8.9e-05,
+            8.8e-05
+          ],
+          "Candidate": [
+            8.7e-05,
+            7.8e-05,
+            6.9e-05,
+            0.000108
+          ],
+          "BaselineMedian": 8.8e-05,
+          "CandidateMedian": 8.25e-05,
+          "MedianPairedPercentChange": -0.6185270425776714,
+          "PairedPercentChanges": [
+            10.126582278481022,
+            -11.363636363636365,
+            -22.47191011235955,
+            22.72727272727273
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -22.47191011235955,
+            22.72727272727273
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.0001,
+            0.00011,
+            0.000134,
+            0.000109
+          ],
+          "Candidate": [
+            0.000122,
+            0.000107,
+            9.2e-05,
+            0.000142
+          ],
+          "BaselineMedian": 0.0001095,
+          "CandidateMedian": 0.00011449999999999999,
+          "MedianPairedPercentChange": 9.636363636363631,
+          "PairedPercentChanges": [
+            21.999999999999996,
+            -2.7272727272727337,
+            -31.343283582089555,
+            30.27522935779816
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -31.343283582089555,
+            30.27522935779816
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            3.14083333333333e-05,
+            3.508125e-05,
+            3.599375e-05,
+            3.13804573804574e-05
+          ],
+          "Candidate": [
+            3.65145833333333e-05,
+            3.43375e-05,
+            3.30791666666667e-05,
+            2.94104166666666e-05
+          ],
+          "BaselineMedian": 3.324479166666665e-05,
+          "CandidateMedian": 3.370833333333335e-05,
+          "MedianPairedPercentChange": -4.199000316143564,
+          "PairedPercentChanges": [
+            16.257628018041935,
+            -2.1200783894530617,
+            -8.097470625687231,
+            -6.277922242834066
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -8.097470625687231,
+            16.257628018041935
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            2.5e-05,
+            2.4e-05,
+            2.7e-05,
+            2.6e-05
+          ],
+          "Candidate": [
+            2.4e-05,
+            2.3e-05,
+            2.6e-05,
+            2.3e-05
+          ],
+          "BaselineMedian": 2.55e-05,
+          "CandidateMedian": 2.3500000000000002e-05,
+          "MedianPairedPercentChange": -4.083333333333339,
+          "PairedPercentChanges": [
+            -4.0000000000000036,
+            -4.166666666666674,
+            -3.703703703703709,
+            -11.538461538461531
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -11.538461538461531,
+            -3.703703703703709
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            6.3e-05,
+            8.1e-05,
+            7.4e-05,
+            6.5e-05
+          ],
+          "Candidate": [
+            8.9e-05,
+            7.7e-05,
+            6.2e-05,
+            5.8e-05
+          ],
+          "BaselineMedian": 6.95e-05,
+          "CandidateMedian": 6.950000000000001e-05,
+          "MedianPairedPercentChange": -7.853751187084518,
+          "PairedPercentChanges": [
+            41.26984126984126,
+            -4.938271604938271,
+            -16.216216216216207,
+            -10.769230769230765
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -16.216216216216207,
+            41.26984126984126
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            8.7e-05,
+            0.000122,
+            0.000114,
+            9.2e-05
+          ],
+          "Candidate": [
+            0.00015,
+            0.00013,
+            8.8e-05,
+            8.3e-05
+          ],
+          "BaselineMedian": 0.00010300000000000001,
+          "CandidateMedian": 0.00010899999999999999,
+          "MedianPairedPercentChange": -1.6126158232359296,
+          "PairedPercentChanges": [
+            72.41379310344827,
+            6.557377049180313,
+            -22.807017543859654,
+            -9.782608695652172
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -22.807017543859654,
+            72.41379310344827
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            0.00833301458333333,
+            0.00833301875000001,
+            0.00833301249999999,
+            0.00833292515592516
+          ],
+          "Candidate": [
+            0.00833303333333333,
+            0.00833299791666666,
+            0.00833296041666667,
+            0.00833298750000001
+          ],
+          "BaselineMedian": 0.00833301354166666,
+          "CandidateMedian": 0.008332992708333334,
+          "MedianPairedPercentChange": -1.2500415735861026e-05,
+          "PairedPercentChanges": [
+            0.00022500860659135924,
+            -0.0002500094380630813,
+            -0.0006250240632610371,
+            0.0007481655443175583
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.0006250240632610371,
+            0.0007481655443175583
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            0.008454,
+            0.008378,
+            0.008453,
+            0.008357
+          ],
+          "Candidate": [
+            0.008411,
+            0.008428,
+            0.008445,
+            0.008448
+          ],
+          "BaselineMedian": 0.0084155,
+          "CandidateMedian": 0.0084365,
+          "MedianPairedPercentChange": 0.2510800949922676,
+          "PairedPercentChanges": [
+            -0.5086349656967082,
+            0.5968011458582057,
+            -0.0946409558736705,
+            1.0889075026923711
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.5086349656967082,
+            1.0889075026923711
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            0.008647,
+            0.00868,
+            0.008624,
+            0.008647
+          ],
+          "Candidate": [
+            0.008696,
+            0.008654,
+            0.008606,
+            0.008604
+          ],
+          "BaselineMedian": 0.008647,
+          "CandidateMedian": 0.00863,
+          "MedianPairedPercentChange": -0.25412951104194503,
+          "PairedPercentChanges": [
+            0.56667052156818,
+            -0.2995391705069128,
+            -0.20871985157697726,
+            -0.4972822944373734
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.4972822944373734,
+            0.56667052156818
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.008716,
+            0.008751,
+            0.008695,
+            0.008718
+          ],
+          "Candidate": [
+            0.00884,
+            0.008709,
+            0.008661,
+            0.008695
+          ],
+          "BaselineMedian": 0.008716999999999999,
+          "CandidateMedian": 0.008702,
+          "MedianPairedPercentChange": -0.3274256523586594,
+          "PairedPercentChanges": [
+            1.4226709499770562,
+            -0.47994514912581554,
+            -0.39102932719953243,
+            -0.26382197751778635
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.47994514912581554,
+            1.4226709499770562
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            5.90375e-05,
+            6.31083333333333e-05,
+            5.03291666666667e-05,
+            6.57416666666667e-05
+          ],
+          "Candidate": [
+            6.45166666666667e-05,
+            5.85375e-05,
+            4.99583333333333e-05,
+            6.20375e-05
+          ],
+          "BaselineMedian": 6.107291666666665e-05,
+          "CandidateMedian": 6.0287499999999995e-05,
+          "MedianPairedPercentChange": -3.18562182285177,
+          "PairedPercentChanges": [
+            9.280824334815495,
+            -7.242836392446805,
+            -0.7368159615863568,
+            -5.634427684117183
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -7.242836392446805,
+            9.280824334815495
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            5.6e-05,
+            5.7e-05,
+            4.6e-05,
+            6.1e-05
+          ],
+          "Candidate": [
+            6.1e-05,
+            5.5e-05,
+            4.5e-05,
+            6.1e-05
+          ],
+          "BaselineMedian": 5.6500000000000005e-05,
+          "CandidateMedian": 5.8e-05,
+          "MedianPairedPercentChange": -1.0869565217391297,
+          "PairedPercentChanges": [
+            8.92857142857142,
+            -3.508771929824561,
+            -2.1739130434782594,
+            0.0
+          ],
+          "Improved": 2,
+          "Worse": 1,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.508771929824561,
+            8.92857142857142
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            8e-05,
+            0.000105,
+            7.3e-05,
+            9.7e-05
+          ],
+          "Candidate": [
+            9.4e-05,
+            7.9e-05,
+            7.8e-05,
+            8.7e-05
+          ],
+          "BaselineMedian": 8.850000000000001e-05,
+          "CandidateMedian": 8.3e-05,
+          "MedianPairedPercentChange": -1.7299816410111526,
+          "PairedPercentChanges": [
+            17.499999999999982,
+            -24.761904761904773,
+            6.849315068493156,
+            -10.309278350515461
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -24.761904761904773,
+            17.499999999999982
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.000104,
+            0.000138,
+            9.7e-05,
+            0.000115
+          ],
+          "Candidate": [
+            0.000122,
+            0.00011,
+            0.000108,
+            0.000117
+          ],
+          "BaselineMedian": 0.0001095,
+          "CandidateMedian": 0.0001135,
+          "MedianPairedPercentChange": 6.5396683101748065,
+          "PairedPercentChanges": [
+            17.307692307692314,
+            -20.28985507246376,
+            11.340206185567014,
+            1.7391304347825987
+          ],
+          "Improved": 1,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -20.28985507246376,
+            17.307692307692314
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            3.114375e-05,
+            3.27645833333333e-05,
+            3.34833333333333e-05,
+            3.11083333333333e-05
+          ],
+          "Candidate": [
+            3.46374999999999e-05,
+            3.22833333333333e-05,
+            3.38416666666667e-05,
+            3.12333333333333e-05
+          ],
+          "BaselineMedian": 3.1954166666666646e-05,
+          "CandidateMedian": 3.30625e-05,
+          "MedianPairedPercentChange": 0.7360028812215758,
+          "PairedPercentChanges": [
+            11.218141681717508,
+            -1.4688115978889638,
+            1.07018417122966,
+            0.4018215912134915
+          ],
+          "Improved": 1,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.4688115978889638,
+            11.218141681717508
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            2.1e-05,
+            2.4e-05,
+            2.3e-05,
+            2.6e-05
+          ],
+          "Candidate": [
+            2.6e-05,
+            2.7e-05,
+            2.3e-05,
+            2.1e-05
+          ],
+          "BaselineMedian": 2.3500000000000002e-05,
+          "CandidateMedian": 2.45e-05,
+          "MedianPairedPercentChange": 6.25,
+          "PairedPercentChanges": [
+            23.809523809523814,
+            12.5,
+            0.0,
+            -19.23076923076923
+          ],
+          "Improved": 1,
+          "Worse": 2,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -19.23076923076923,
+            23.809523809523814
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            6.9e-05,
+            6.8e-05,
+            7.6e-05,
+            6.1e-05
+          ],
+          "Candidate": [
+            6.8e-05,
+            6.1e-05,
+            7.6e-05,
+            6.6e-05
+          ],
+          "BaselineMedian": 6.85e-05,
+          "CandidateMedian": 6.7e-05,
+          "MedianPairedPercentChange": -0.724637681159418,
+          "PairedPercentChanges": [
+            -1.449275362318836,
+            -10.29411764705882,
+            0.0,
+            8.196721311475418
+          ],
+          "Improved": 2,
+          "Worse": 1,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -10.29411764705882,
+            8.196721311475418
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.000115,
+            0.000106,
+            0.000113,
+            8.6e-05
+          ],
+          "Candidate": [
+            9.3e-05,
+            8.7e-05,
+            0.000116,
+            8.3e-05
+          ],
+          "BaselineMedian": 0.0001095,
+          "CandidateMedian": 8.999999999999999e-05,
+          "MedianPairedPercentChange": -10.706450197455025,
+          "PairedPercentChanges": [
+            -19.130434782608695,
+            -17.924528301886788,
+            2.6548672566371723,
+            -3.488372093023262
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -19.130434782608695,
+            2.6548672566371723
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            0.00833282708333334,
+            0.00833298541666667,
+            0.008333,
+            0.0083331
+          ],
+          "Candidate": [
+            0.00833301666666666,
+            0.00833301666666667,
+            0.00833297083333333,
+            0.00833304166666667
+          ],
+          "BaselineMedian": 0.008332992708333334,
+          "CandidateMedian": 0.008333016666666665,
+          "MedianPairedPercentChange": 1.2500828150407983e-05,
+          "PairedPercentChanges": [
+            0.0022751382144914345,
+            0.00037501565690600813,
+            -0.00035001400060519217,
+            -0.0007000196005080284
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.0007000196005080284,
+            0.0022751382144914345
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            0.008465,
+            0.008411,
+            0.008388,
+            0.008471
+          ],
+          "Candidate": [
+            0.008445,
+            0.008335,
+            0.008415,
+            0.008362
+          ],
+          "BaselineMedian": 0.008438000000000001,
+          "CandidateMedian": 0.0083885,
+          "MedianPairedPercentChange": -0.5699228143495882,
+          "PairedPercentChanges": [
+            -0.23626698168931481,
+            -0.9035786470098617,
+            0.32188841201716833,
+            -1.2867430055483409
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.2867430055483409,
+            0.32188841201716833
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            0.008619,
+            0.008676,
+            0.008656,
+            0.008655
+          ],
+          "Candidate": [
+            0.0087,
+            0.008649,
+            0.00868,
+            0.008621
+          ],
+          "BaselineMedian": 0.0086555,
+          "CandidateMedian": 0.0086645,
+          "MedianPairedPercentChange": -0.016969497089297514,
+          "PairedPercentChanges": [
+            0.9397841977027532,
+            -0.3112033195020625,
+            0.27726432532346745,
+            -0.3928365106874554
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.3928365106874554,
+            0.9397841977027532
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.008689,
+            0.008763,
+            0.008715,
+            0.008728
+          ],
+          "Candidate": [
+            0.008766,
+            0.008898,
+            0.008762,
+            0.00868
+          ],
+          "BaselineMedian": 0.0087215,
+          "CandidateMedian": 0.008764000000000001,
+          "MedianPairedPercentChange": 0.7127389917429117,
+          "PairedPercentChanges": [
+            0.8861779261134739,
+            1.540568298527889,
+            0.5393000573723494,
+            -0.5499541704857891
+          ],
+          "Improved": 1,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.5499541704857891,
+            1.540568298527889
+          ]
+        }
+      ]
+    },
+    "network-network-only": {
+      "Rows": [
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            7.98333333333333e-06,
+            9.72083333333332e-06,
+            9.26666666666666e-06,
+            1e-05
+          ],
+          "Candidate": [
+            9.69583333333334e-06,
+            1.08625e-05,
+            9.48333333333333e-06,
+            8.90416666666666e-06
+          ],
+          "BaselineMedian": 9.49374999999999e-06,
+          "CandidateMedian": 9.589583333333334e-06,
+          "MedianPairedPercentChange": 7.041332214982498,
+          "PairedPercentChanges": [
+            21.450939457202622,
+            11.74453493356209,
+            2.3381294964029076,
+            -10.958333333333403
+          ],
+          "Improved": 1,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -10.958333333333403,
+            21.450939457202622
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            8e-06,
+            9e-06,
+            9e-06,
+            9e-06
+          ],
+          "Candidate": [
+            9e-06,
+            1e-05,
+            9e-06,
+            8e-06
+          ],
+          "BaselineMedian": 9e-06,
+          "CandidateMedian": 9e-06,
+          "MedianPairedPercentChange": 5.555555555555558,
+          "PairedPercentChanges": [
+            12.5,
+            11.111111111111116,
+            0.0,
+            -11.111111111111116
+          ],
+          "Improved": 1,
+          "Worse": 2,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -11.111111111111116,
+            12.5
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            1.1e-05,
+            1.3e-05,
+            1.3e-05,
+            1.5e-05
+          ],
+          "Candidate": [
+            1.6e-05,
+            1.6e-05,
+            1.5e-05,
+            1.2e-05
+          ],
+          "BaselineMedian": 1.3e-05,
+          "CandidateMedian": 1.55e-05,
+          "MedianPairedPercentChange": 19.23076923076924,
+          "PairedPercentChanges": [
+            45.45454545454546,
+            23.076923076923084,
+            15.384615384615397,
+            -19.999999999999996
+          ],
+          "Improved": 1,
+          "Worse": 3,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -19.999999999999996,
+            45.45454545454546
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            1.7e-05,
+            1.8e-05,
+            2.2e-05,
+            2.1e-05
+          ],
+          "Candidate": [
+            2.2e-05,
+            3.2e-05,
+            2.1e-05,
+            1.7e-05
+          ],
+          "BaselineMedian": 1.95e-05,
+          "CandidateMedian": 2.15e-05,
+          "MedianPairedPercentChange": 12.433155080213904,
+          "PairedPercentChanges": [
+            29.41176470588236,
+            77.77777777777777,
+            -4.545454545454552,
+            -19.047619047619047
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -19.047619047619047,
+            77.77777777777777
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            4.22895833333334e-05,
+            4.02104166666667e-05,
+            4.04583333333333e-05,
+            3.8575e-05
+          ],
+          "Candidate": [
+            3.79083333333333e-05,
+            4.34083333333333e-05,
+            3.31270833333333e-05,
+            3.60729166666667e-05
+          ],
+          "BaselineMedian": 4.0334375e-05,
+          "CandidateMedian": 3.6990625e-05,
+          "MedianPairedPercentChange": -8.423199198127618,
+          "PairedPercentChanges": [
+            -10.360116261885043,
+            7.9529558053985205,
+            -18.12049433573637,
+            -6.4862821343701915
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -18.12049433573637,
+            7.9529558053985205
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            2.9e-05,
+            2.7e-05,
+            2.8e-05,
+            3.2e-05
+          ],
+          "Candidate": [
+            2.5e-05,
+            3.1e-05,
+            2.8e-05,
+            2.4e-05
+          ],
+          "BaselineMedian": 2.85e-05,
+          "CandidateMedian": 2.65e-05,
+          "MedianPairedPercentChange": -6.896551724137928,
+          "PairedPercentChanges": [
+            -13.793103448275856,
+            14.814814814814813,
+            0.0,
+            -25.0
+          ],
+          "Improved": 2,
+          "Worse": 1,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -25.0,
+            14.814814814814813
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            9e-05,
+            8.7e-05,
+            8.8e-05,
+            7.4e-05
+          ],
+          "Candidate": [
+            8.1e-05,
+            0.000101,
+            6e-05,
+            7.8e-05
+          ],
+          "BaselineMedian": 8.75e-05,
+          "CandidateMedian": 7.950000000000001e-05,
+          "MedianPairedPercentChange": -2.2972972972972907,
+          "PairedPercentChanges": [
+            -9.999999999999998,
+            16.09195402298851,
+            -31.818181818181813,
+            5.405405405405417
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -31.818181818181813,
+            16.09195402298851
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.00012,
+            0.000122,
+            0.00012,
+            9.8e-05
+          ],
+          "Candidate": [
+            0.000114,
+            0.000135,
+            8.3e-05,
+            0.000117
+          ],
+          "BaselineMedian": 0.00012,
+          "CandidateMedian": 0.0001155,
+          "MedianPairedPercentChange": 2.8278688524590203,
+          "PairedPercentChanges": [
+            -4.999999999999993,
+            10.655737704918034,
+            -30.833333333333336,
+            19.387755102040828
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -30.833333333333336,
+            19.387755102040828
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            0.00833302708333333,
+            0.00833281666666666,
+            0.00833302916666667,
+            0.00833303333333333
+          ],
+          "Candidate": [
+            0.00833297291666666,
+            0.0083329875,
+            0.00833276041666666,
+            0.00833291458333334
+          ],
+          "BaselineMedian": 0.008333028125,
+          "CandidateMedian": 0.00833294375,
+          "MedianPairedPercentChange": -0.00103753759506664,
+          "PairedPercentChanges": [
+            -0.0006500238884155074,
+            0.002050127107966482,
+            -0.0032251177169317913,
+            -0.0014250513017177724
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.0032251177169317913,
+            0.002050127107966482
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            0.008348,
+            0.008437,
+            0.008437,
+            0.008371
+          ],
+          "Candidate": [
+            0.008336,
+            0.008324,
+            0.008355,
+            0.008325
+          ],
+          "BaselineMedian": 0.008404,
+          "CandidateMedian": 0.008330500000000001,
+          "MedianPairedPercentChange": -0.7607128166606081,
+          "PairedPercentChanges": [
+            -0.14374700527072237,
+            -1.3393386274742292,
+            -0.9719094464857192,
+            -0.549516186835497
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.3393386274742292,
+            -0.14374700527072237
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            0.008543,
+            0.008638,
+            0.008648,
+            0.008643
+          ],
+          "Candidate": [
+            0.0084,
+            0.008492,
+            0.008411,
+            0.008417
+          ],
+          "BaselineMedian": 0.008640499999999999,
+          "CandidateMedian": 0.008414,
+          "MedianPairedPercentChange": -2.1525194394499128,
+          "PairedPercentChanges": [
+            -1.673885052089441,
+            -1.6902060662190355,
+            -2.7405180388529016,
+            -2.6148328126807896
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.7405180388529016,
+            -1.673885052089441
+          ]
+        },
+        {
+          "Role": "server0",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.008609,
+            0.008682,
+            0.008705,
+            0.008712
+          ],
+          "Candidate": [
+            0.008445,
+            0.008591,
+            0.008477,
+            0.008465
+          ],
+          "BaselineMedian": 0.0086935,
+          "CandidateMedian": 0.008471,
+          "MedianPairedPercentChange": -2.262083766978029,
+          "PairedPercentChanges": [
+            -1.904983157161122,
+            -1.0481455885740676,
+            -2.6191843767949363,
+            -2.8351698806244108
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.8351698806244108,
+            -1.0481455885740676
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            9.5625e-06,
+            8.77916666666665e-06,
+            8.3375e-06,
+            8.39166666666667e-06
+          ],
+          "Candidate": [
+            8.75833333333333e-06,
+            9.21666666666667e-06,
+            9.59999999999999e-06,
+            8.03749999999999e-06
+          ],
+          "BaselineMedian": 8.58541666666666e-06,
+          "CandidateMedian": 8.9875e-06,
+          "MedianPairedPercentChange": 0.38146595096784663,
+          "PairedPercentChanges": [
+            -8.409586056644914,
+            4.983388704319158,
+            15.142428785607077,
+            -4.220456802383465
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -8.409586056644914,
+            15.142428785607077
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            9e-06,
+            8e-06,
+            8e-06,
+            8e-06
+          ],
+          "Candidate": [
+            8e-06,
+            9e-06,
+            9e-06,
+            7e-06
+          ],
+          "BaselineMedian": 8e-06,
+          "CandidateMedian": 8.5e-06,
+          "MedianPairedPercentChange": 0.694444444444442,
+          "PairedPercentChanges": [
+            -11.111111111111116,
+            12.5,
+            12.5,
+            -12.5
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -12.5,
+            12.5
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            1.3e-05,
+            1.1e-05,
+            1.2e-05,
+            1.1e-05
+          ],
+          "Candidate": [
+            1.3e-05,
+            1.3e-05,
+            1.4e-05,
+            1.2e-05
+          ],
+          "BaselineMedian": 1.15e-05,
+          "CandidateMedian": 1.3e-05,
+          "MedianPairedPercentChange": 12.878787878787877,
+          "PairedPercentChanges": [
+            0.0,
+            18.181818181818187,
+            16.66666666666665,
+            9.090909090909104
+          ],
+          "Improved": 0,
+          "Worse": 3,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 0.25,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            0.0,
+            18.181818181818187
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            3.9e-05,
+            1.8e-05,
+            1.8e-05,
+            2.5e-05
+          ],
+          "Candidate": [
+            1.9e-05,
+            1.9e-05,
+            2e-05,
+            2e-05
+          ],
+          "BaselineMedian": 2.15e-05,
+          "CandidateMedian": 1.95e-05,
+          "MedianPairedPercentChange": -7.22222222222222,
+          "PairedPercentChanges": [
+            -51.28205128205128,
+            5.555555555555558,
+            11.111111111111116,
+            -19.999999999999996
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -51.28205128205128,
+            11.111111111111116
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            2.66291666666667e-05,
+            2.9475e-05,
+            2.784375e-05,
+            3.04375e-05
+          ],
+          "Candidate": [
+            2.44541666666667e-05,
+            2.82208333333334e-05,
+            2.74708333333333e-05,
+            2.37416666666667e-05
+          ],
+          "BaselineMedian": 2.8659375e-05,
+          "CandidateMedian": 2.59625e-05,
+          "MedianPairedPercentChange": -6.211377127867401,
+          "PairedPercentChanges": [
+            -8.16773587857924,
+            -4.255018377155562,
+            -1.3393191170970042,
+            -21.998631074606322
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -21.998631074606322,
+            -1.3393191170970042
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            1.8e-05,
+            2e-05,
+            1.8e-05,
+            1.9e-05
+          ],
+          "Candidate": [
+            1.7e-05,
+            1.7e-05,
+            2.1e-05,
+            1.5e-05
+          ],
+          "BaselineMedian": 1.8500000000000002e-05,
+          "CandidateMedian": 1.7e-05,
+          "MedianPairedPercentChange": -10.27777777777778,
+          "PairedPercentChanges": [
+            -5.555555555555558,
+            -15.000000000000002,
+            16.66666666666665,
+            -21.052631578947366
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -21.052631578947366,
+            16.66666666666665
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            6.2e-05,
+            6.4e-05,
+            6.7e-05,
+            7e-05
+          ],
+          "Candidate": [
+            5.6e-05,
+            6.7e-05,
+            6e-05,
+            5.6e-05
+          ],
+          "BaselineMedian": 6.549999999999999e-05,
+          "CandidateMedian": 5.8e-05,
+          "MedianPairedPercentChange": -10.06259027443428,
+          "PairedPercentChanges": [
+            -9.677419354838712,
+            4.6875,
+            -10.447761194029848,
+            -19.999999999999996
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -19.999999999999996,
+            4.6875
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            8.6e-05,
+            0.00011,
+            0.000104,
+            0.000125
+          ],
+          "Candidate": [
+            8.2e-05,
+            9.5e-05,
+            8.8e-05,
+            0.000102
+          ],
+          "BaselineMedian": 0.000107,
+          "CandidateMedian": 9.15e-05,
+          "MedianPairedPercentChange": -14.51048951048951,
+          "PairedPercentChanges": [
+            -4.651162790697672,
+            -13.636363636363635,
+            -15.384615384615385,
+            -18.400000000000006
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -18.400000000000006,
+            -4.651162790697672
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            0.00833296041666667,
+            0.00833301666666667,
+            0.00833286458333333,
+            0.00833306041666667
+          ],
+          "Candidate": [
+            0.00833294375000001,
+            0.00833302708333334,
+            0.00833311041666667,
+            0.00833284375000001
+          ],
+          "BaselineMedian": 0.00833298854166667,
+          "CandidateMedian": 0.008332985416666674,
+          "MedianPairedPercentChange": -3.7502100047603903e-05,
+          "PairedPercentChanges": [
+            -0.00020000895031291321,
+            0.0001250047502177054,
+            0.00295016594691333,
+            -0.002600085152715259
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.002600085152715259,
+            0.00295016594691333
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            0.008451,
+            0.008491,
+            0.008385,
+            0.008426
+          ],
+          "Candidate": [
+            0.008333,
+            0.008312,
+            0.008313,
+            0.008332
+          ],
+          "BaselineMedian": 0.0084385,
+          "CandidateMedian": 0.0083225,
+          "MedianPairedPercentChange": -1.2559395257782713,
+          "PairedPercentChanges": [
+            -1.3962844633771176,
+            -2.108114474149103,
+            -0.8586762075134313,
+            -1.115594588179425
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.108114474149103,
+            -0.8586762075134313
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            0.008638,
+            0.00863,
+            0.00856,
+            0.008611
+          ],
+          "Candidate": [
+            0.008388,
+            0.00846,
+            0.008425,
+            0.008405
+          ],
+          "BaselineMedian": 0.0086205,
+          "CandidateMedian": 0.008414999999999999,
+          "MedianPairedPercentChange": -2.1810807352098784,
+          "PairedPercentChanges": [
+            -2.8941884695531384,
+            -1.969872537659323,
+            -1.5771028037383172,
+            -2.3922889327604335
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.8941884695531384,
+            -1.5771028037383172
+          ]
+        },
+        {
+          "Role": "client1",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.008674,
+            0.008672,
+            0.008623,
+            0.008663
+          ],
+          "Candidate": [
+            0.008421,
+            0.008522,
+            0.008482,
+            0.00845
+          ],
+          "BaselineMedian": 0.0086675,
+          "CandidateMedian": 0.008466,
+          "MedianPairedPercentChange": -2.0942186688691358,
+          "PairedPercentChanges": [
+            -2.9167627392206574,
+            -1.7297047970479595,
+            -1.6351617766438675,
+            -2.4587325406903116
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -2.9167627392206574,
+            -1.6351617766438675
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            9.87499999999999e-06,
+            8.72916666666667e-06,
+            8.35416666666665e-06,
+            8.92499999999999e-06
+          ],
+          "Candidate": [
+            8.875e-06,
+            9.30833333333334e-06,
+            9.26249999999999e-06,
+            8.61666666666666e-06
+          ],
+          "BaselineMedian": 8.827083333333329e-06,
+          "CandidateMedian": 9.068749999999995e-06,
+          "MedianPairedPercentChange": 1.5900648246570337,
+          "PairedPercentChanges": [
+            -10.12658227848091,
+            6.634844868735135,
+            10.872817955112325,
+            -3.4547152194210673
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -10.12658227848091,
+            10.872817955112325
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            9e-06,
+            8e-06,
+            8e-06,
+            8e-06
+          ],
+          "Candidate": [
+            8e-06,
+            8e-06,
+            8e-06,
+            8e-06
+          ],
+          "BaselineMedian": 8e-06,
+          "CandidateMedian": 8e-06,
+          "MedianPairedPercentChange": 0.0,
+          "PairedPercentChanges": [
+            -11.111111111111116,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Improved": 1,
+          "Worse": 0,
+          "Ties": 3,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -11.111111111111116,
+            0.0
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            1.5e-05,
+            1.3e-05,
+            1.2e-05,
+            1.3e-05
+          ],
+          "Candidate": [
+            1.4e-05,
+            1.6e-05,
+            1.5e-05,
+            1.2e-05
+          ],
+          "BaselineMedian": 1.3e-05,
+          "CandidateMedian": 1.45e-05,
+          "MedianPairedPercentChange": 8.20512820512821,
+          "PairedPercentChanges": [
+            -6.666666666666665,
+            23.076923076923084,
+            25.0,
+            -7.692307692307687
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -7.692307692307687,
+            25.0
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchPhysicsSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            2.1e-05,
+            4e-05,
+            1.9e-05,
+            1.9e-05
+          ],
+          "Candidate": [
+            1.6e-05,
+            2.3e-05,
+            2.1e-05,
+            1.8e-05
+          ],
+          "BaselineMedian": 1.9999999999999998e-05,
+          "CandidateMedian": 1.95e-05,
+          "MedianPairedPercentChange": -14.53634085213033,
+          "PairedPercentChanges": [
+            -23.809523809523814,
+            -42.50000000000001,
+            10.526315789473673,
+            -5.263157894736848
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -42.50000000000001,
+            10.526315789473673
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            2.82604166666667e-05,
+            2.59604166666667e-05,
+            2.83104166666667e-05,
+            2.81708333333333e-05
+          ],
+          "Candidate": [
+            2.41708333333333e-05,
+            3.02270833333334e-05,
+            2.82479166666667e-05,
+            2.47854166666667e-05
+          ],
+          "BaselineMedian": 2.8215625e-05,
+          "CandidateMedian": 2.65166666666667e-05,
+          "MedianPairedPercentChange": -6.1191099180823825,
+          "PairedPercentChanges": [
+            -14.47106524143037,
+            16.435278067570923,
+            -0.22076679667377697,
+            -12.017453039490988
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -14.47106524143037,
+            16.435278067570923
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            1.9e-05,
+            1.7e-05,
+            1.8e-05,
+            2.1e-05
+          ],
+          "Candidate": [
+            1.4e-05,
+            1.7e-05,
+            1.6e-05,
+            1.7e-05
+          ],
+          "BaselineMedian": 1.8500000000000002e-05,
+          "CandidateMedian": 1.65e-05,
+          "MedianPairedPercentChange": -15.079365079365083,
+          "PairedPercentChanges": [
+            -26.315789473684216,
+            0.0,
+            -11.111111111111116,
+            -19.047619047619047
+          ],
+          "Improved": 3,
+          "Worse": 0,
+          "Ties": 1,
+          "ExactTwoSidedSignP": 0.25,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -26.315789473684216,
+            0.0
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            6.3e-05,
+            5.8e-05,
+            6.9e-05,
+            6.1e-05
+          ],
+          "Candidate": [
+            5.9e-05,
+            7.8e-05,
+            7.4e-05,
+            5.7e-05
+          ],
+          "BaselineMedian": 6.2e-05,
+          "CandidateMedian": 6.649999999999999e-05,
+          "MedianPairedPercentChange": 0.448585231193932,
+          "PairedPercentChanges": [
+            -6.349206349206349,
+            34.48275862068966,
+            7.246376811594213,
+            -6.5573770491803245
+          ],
+          "Improved": 2,
+          "Worse": 2,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 1.0,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -6.5573770491803245,
+            34.48275862068966
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "DispatchProcessSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.000104,
+            8.9e-05,
+            0.0001,
+            9.6e-05
+          ],
+          "Candidate": [
+            9.5e-05,
+            0.000123,
+            9.6e-05,
+            9.2e-05
+          ],
+          "BaselineMedian": 9.8e-05,
+          "CandidateMedian": 9.55e-05,
+          "MedianPairedPercentChange": -4.083333333333339,
+          "PairedPercentChanges": [
+            -8.653846153846146,
+            38.20224719101126,
+            -4.0000000000000036,
+            -4.166666666666674
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -8.653846153846146,
+            38.20224719101126
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "Mean",
+          "Pairs": 4,
+          "Baseline": [
+            0.00833300416666668,
+            0.00833307083333333,
+            0.00833302916666667,
+            0.00833304583333334
+          ],
+          "Candidate": [
+            0.00833294166666667,
+            0.00833300416666667,
+            0.00833299375,
+            0.00833313125
+          ],
+          "BaselineMedian": 0.008333037500000005,
+          "CandidateMedian": 0.008332998958333334,
+          "MedianPairedPercentChange": -0.0005875225697060671,
+          "PairedPercentChanges": [
+            -0.0007500296262952233,
+            -0.000800025200708987,
+            -0.0004250155131169109,
+            0.0010250353636331866
+          ],
+          "Improved": 3,
+          "Worse": 1,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.625,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -0.000800025200708987,
+            0.0010250353636331866
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "Median",
+          "Pairs": 4,
+          "Baseline": [
+            0.00848,
+            0.008368,
+            0.008379,
+            0.008348
+          ],
+          "Candidate": [
+            0.008331,
+            0.008312,
+            0.008314,
+            0.008335
+          ],
+          "BaselineMedian": 0.008373499999999999,
+          "CandidateMedian": 0.0083225,
+          "MedianPairedPercentChange": -0.7224824786175532,
+          "PairedPercentChanges": [
+            -1.7570754716981107,
+            -0.6692160611854736,
+            -0.7757488960496328,
+            -0.15572592237660388
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -1.7570754716981107,
+            -0.15572592237660388
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "P95",
+          "Pairs": 4,
+          "Baseline": [
+            0.008642,
+            0.008602,
+            0.008639,
+            0.008587
+          ],
+          "Candidate": [
+            0.008381,
+            0.008458,
+            0.00842,
+            0.00841
+          ],
+          "BaselineMedian": 0.0086205,
+          "CandidateMedian": 0.008415,
+          "MedianPairedPercentChange": -2.298135506428661,
+          "PairedPercentChanges": [
+            -3.0201342281879318,
+            -1.674029295512669,
+            -2.5350156268086677,
+            -2.061255386048655
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.0201342281879318,
+            -1.674029295512669
+          ]
+        },
+        {
+          "Role": "client2",
+          "Metric": "FrameSeconds",
+          "Statistic": "P99",
+          "Pairs": 4,
+          "Baseline": [
+            0.008711,
+            0.008653,
+            0.00871,
+            0.008647
+          ],
+          "Candidate": [
+            0.008414,
+            0.008543,
+            0.008485,
+            0.00846
+          ],
+          "BaselineMedian": 0.0086815,
+          "CandidateMedian": 0.0084725,
+          "MedianPairedPercentChange": -2.3729187017205167,
+          "PairedPercentChanges": [
+            -3.4094822638043865,
+            -1.2712354096844902,
+            -2.5832376578645344,
+            -2.162599745576499
+          ],
+          "Improved": 4,
+          "Worse": 0,
+          "Ties": 0,
+          "ExactTwoSidedSignP": 0.125,
+          "DescriptiveBootstrapMedianInterval95Percent": [
+            -3.4094822638043865,
+            -1.2712354096844902
+          ]
+        }
+      ]
+    }
+  },
+  "RawSHA256": {
+    "gpu-extended/measurements.json": "7b069062170a84fd1a17c8e5c5004f52d4921c5bcb758c3f818d10b1ebb82806",
+    "gpu-original-repeat/measurements.json": "d33790285dafdebefe6433df32a203f6688894c2f2627a8f5ac46aece20750a0"
+  }
+}
