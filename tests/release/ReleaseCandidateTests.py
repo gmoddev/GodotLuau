@@ -128,7 +128,11 @@ class CandidateTests(unittest.TestCase):
         with self.assertRaises(OSError): Candidate.CheckSanitizer(self.Root, self.Expected)
         for Index, Name in enumerate(['../escape', '/absolute', 'C:/drive', 'a\\b']):
             Archive = self.Root/(str(Index)+'.zip')
-            with zipfile.ZipFile(Archive, 'w') as Zip: Zip.writestr(Name, b'bad')
+            # ZipInfo normally converts Windows separators while constructing
+            # a ZIP. Assign the raw name afterward to exercise hostile input.
+            with zipfile.ZipFile(Archive, 'w') as Zip:
+                Entry = zipfile.ZipInfo('placeholder'); Entry.filename = Name
+                Zip.writestr(Entry, b'bad')
             with self.subTest(Name=Name), self.assertRaises(ValueError): Candidate.Extract(Archive, self.Root/str(Index))
             self.assertFalse((self.Root/str(Index)).exists())
 

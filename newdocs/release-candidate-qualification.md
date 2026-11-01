@@ -98,6 +98,16 @@ is rejected before any job executes: YAML treats the colon/space in the pip
 `--only-binary=:all:` command as syntax. That command is changed to a block
 scalar. This is a preserved workflow parsing failure, not runtime qualification.
 
+At `fa58c436f6d7260c2948f54c384ee4a30062135f`,
+[run 41272716651](https://github.com/gmoddev/GodotLuau/actions/runs/41272716651),
+Linux rejection/retention checks and the 80-case core ASan/LSan gate pass.
+The Windows rejection test fails because Python's Windows ZIP writer normalizes
+the fixture's backslash name before the extractor sees it. The test now assigns
+the raw `ZipInfo.filename` after construction, keeping the same rejection and
+no-output assertions. Profiles/packages are skipped and acceptance fails; no
+candidate is accepted. The final job now checks required outcomes before trying
+to download missing candidate artifacts, preserving the same fail-closed policy.
+
 ## Remaining boundaries
 
 This gate does not automate Windows core/full-native sanitizers or qualify a
