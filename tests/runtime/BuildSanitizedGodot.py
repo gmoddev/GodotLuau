@@ -28,6 +28,10 @@ def Main():
     if not 1 <= Args.jobs <= 4 or not 1 <= Args.timeout <= 10800:
         Parser.error('Use 1–4 jobs and a finite timeout of at most three hours')
     Platform = 'Windows' if os.name == 'nt' else 'Linux'
+    if Platform == 'Linux':
+        ResourceDirectory = Path(subprocess.check_output(['clang++-19', '-print-resource-dir'], text=True, timeout=15).strip())
+        if not (ResourceDirectory/'include/sanitizer/asan_interface.h').is_file():
+            raise ValueError('Clang 19 sanitizer headers/runtime are required (libclang-rt-19-dev)')
     PolicyFile = Path(__file__).with_name('SanitizerHosts.json')
     Policy = json.loads(PolicyFile.read_text())
     Output = Args.output.resolve()

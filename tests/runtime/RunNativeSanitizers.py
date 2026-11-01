@@ -115,8 +115,9 @@ def Main():
             if len(Commands) < 100 or any(('fsanitize=address' not in Item.get('command', ' '.join(Item.get('arguments', [])))) for Item in Commands):
                 raise ValueError('Entire native build, bindings and Luau must be instrumented')
             Cache = (Args.build/'CMakeCache.txt').read_text()
-            Compiler = re.search(r'CMAKE_CXX_COMPILER:(?:FILEPATH|STRING)=(.+)', Cache)
-            if not Compiler or Hash(Compiler[1].strip()) != Host['CompilerSHA256']:
+            Compiler = re.search(r'CMAKE_CXX_COMPILER:[^=]+=(.+)', Cache)
+            CompilerPath = shutil.which(Compiler[1].strip()) if Compiler else None
+            if not CompilerPath or Hash(CompilerPath) != Host['CompilerSHA256']:
                 raise ValueError('Engine and extension compiler identities differ')
             BuildIdentity = json.loads(Args.build_identity.read_text())
             if BuildIdentity['Source'] != GetFingerprint(Source) or BuildIdentity['CompilerSHA256'] != Host['CompilerSHA256'] or BuildIdentity['CompileCommandsSHA256'] != Hash(Args.build/'compile_commands.json'):
