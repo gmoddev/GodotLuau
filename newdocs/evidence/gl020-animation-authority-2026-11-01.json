@@ -1,0 +1,127 @@
+{
+  "Schema": 1,
+  "Issue": "GL-020",
+  "Classification": "PARTIALLY QUALIFIED",
+  "Branch": "security/gl-020-animation-qualification",
+  "StartingMain": "3d1cf07cd44c999450b1e611b1435e64403103c0",
+  "Implementation": "358d6ffc491303e498d512792d09bdb62332bb25",
+  "ImplementationTree": "32ae6ddf15c7a6aa115ab4bea327bff4275a0e50",
+  "TestCommits": [
+    "edaaa670bdfdfc875e01ad50fafa8d450178481b",
+    "ede79e449b27b37e1697be386d86d598660c57ae"
+  ],
+  "NativeSource": {
+    "SHA256": "c651c1ff730bb2de8c16da996c09d2567e26d45865dfa25118df812d1f51d91f",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55",
+    "LinuxVerifiedTrackedFiles": 1017,
+    "TrackedInputManifestSHA256": "ab90721864ae6031959e200da5083aeb6aa2ea18ccb8bfc594ffd852024cb219"
+  },
+  "Baseline": {
+    "NativeSourceSHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+    "ProductsSourceRun": "https://github.com/gmoddev/GodotLuau/actions/runs/41276341255",
+    "ProductsArchiveSHA256": "344a6bf636aba0fec213510e585fea219f9dd30a9295f58e8bad27dd6ea5b7c4",
+    "ProductsMatchStartingMainNativeInputs": true,
+    "TestOnlyTree": "de991451a7db9677948db8c7438d57fb5e108818",
+    "FirstRecordedSourceArchiveSHA256": "5df454c7d80908d02c57ac98d7e2f9c5f33d23230f08f9d7c26887cebe378d80",
+    "FinalReproductionSourceArchiveSHA256": "d828c8bbc785a410d9881f31fafe189e0f845b536a2a3cdb9f4a4e15d8771cba",
+    "ClientRelayMalformedMutationPackets": [17, 18, 19, 20, 21, 22],
+    "ServerReceiveMalformedMutationPackets": [12, 13, 14, 15, 16, 17, 18, 19],
+    "Reproduced": "Godot typed native binder reports conversion errors but still invokes animation handlers with coerced values; malformed state mutates actual cache/playback and client relay replication",
+    "RejectedHypotheses": [
+      "Current role and transport-sender guards accept forged server traffic",
+      "Callback-owner retirement failure survives an explicit executable-start barrier",
+      "Malformed input demonstrated cross-owner health or movement authority bypass"
+    ],
+    "PreservedFailedAttempts": [
+      "baseline-Local-first: fixture retires executable before deferred startup; unchanged baseline passes after explicit readiness barrier",
+      "baseline-Dedicated-first: positive-control insertion moves original seek observation; original assertion retained after correct relocation",
+      "baseline-Dedicated-snapshots: incorrectly relocated seek executes on client without Puppet; script error and timeout preserved",
+      "baseline-Dedicated-packet-cases: six individually reproduced client-relay coercion mutations",
+      "baseline-Dedicated-receive-packet-cases: eight individually reproduced receiver coercion mutations",
+      "linux-animation-asan-candidate-1: stock host RTLD_DEEPBIND load rejected by sanitizer before fixture assertions"
+    ]
+  },
+  "Local": {
+    "Worker": "DockerPC",
+    "MainPCUsed": false,
+    "OtherWorkersUsed": false,
+    "Toolchains": {"Windows": "MSVC 14.51.36231", "Linux": "Clang 19.1.1; glibc 2.39"},
+    "Engine": "Official Godot 4.7.1; platform distribution hashes verified",
+    "FrozenSourceArchiveSHA256": "f1f6c0a0bcc679dbc7ce5fcabf70f0d32a7407e4d10c53190dd5cb8f6371f59e",
+    "Profiles": [
+      {"Platform": "Windows", "Configuration": "Debug", "CoreCases": 80, "NativeActors": 110, "Result": "PASS"},
+      {"Platform": "Windows", "Configuration": "Release", "CoreCases": 80, "NativeActors": 110, "Result": "PASS"},
+      {"Platform": "Linux", "Configuration": "Debug", "CoreCases": 80, "NativeActors": 0, "NativeScope": "Hosted Debug instead", "Result": "PASS core"},
+      {"Platform": "Linux", "Configuration": "Release", "CoreCases": 80, "NativeActors": 110, "Result": "PASS"},
+      {"Platform": "Windows", "Configuration": "Core ASan", "CoreCases": 80, "ASAN_OPTIONS": "halt_on_error=1", "Result": "PASS"},
+      {"Platform": "Linux", "Configuration": "Core ASan/LSan", "CoreCases": 80, "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1", "Result": "PASS"}
+    ],
+    "NativeSanitizer": {
+      "Linux": "BLOCKED before assertions: RTLD_DEEPBIND incompatible with AddressSanitizer in stock host; asan-report.2101 retained",
+      "Windows": "UNQUALIFIED: existing GL-018 stock-host gap; no native sanitizer pass claimed",
+      "SuppressedDiagnostics": false
+    },
+    "ProductsSHA256": {
+      "WindowsDebugAdapter": "bde522f31624de4c7136ac05fe4819d301efb0a5ad4d68930c2c7669c6a8413d",
+      "WindowsDebugCompanion": "bc48d49174dbc515d846537569464d6cf9977e3164f944258228e65057adcbde",
+      "WindowsReleaseAdapter": "dfc28efedad4c93546da64aba9ddd929cd23fb50abf8fb252d7e058a1bb4d6ce",
+      "WindowsReleaseCompanion": "7d3db2519f06f7b42743faef278ec2c8fd76d35069a65845c98e11c245543ec8",
+      "LinuxReleaseAdapter": "0082d8a646e6b4d1c28127244ea09b11768d967cf60fc0dc2efd46095a20ffca",
+      "LinuxReleaseCompanion": "84f33a211861cdae7eb7b46758512f2303e9cda0c639357510229320a9987e09"
+    },
+    "EvidenceArchive": ".runtime-tests/AnimationSecurity/animation-authority-local-evidence.zip",
+    "EvidenceArchiveSHA256": "2c37badc51249298c7287f63970a7cd9d72d832b02f181d6d3978b516272c577",
+    "EvidenceFiles": 1123,
+    "EmbeddedLinuxEvidenceSHA256": "4d189b17e58a5e832653e030c2d038b3f89f2bfe6c68983e3e0efd99e3323d90",
+    "EmbeddedLinuxEvidenceFiles": 494,
+    "ArchiveContents": "Successful and failed raw logs, snapshots, complete CTest reports, source/fixture/compiler/product identities, commands and per-file SHA256 indexes; input ZIPs also retained separately",
+    "ProcessesCleaned": true,
+    "OwnedContainer": "codex-character-linux stopped; volume and caches retained"
+  },
+  "AnimationProfile": {
+    "Actors": 10,
+    "Modes": ["Local", "Listen", "Dedicated", "Editor"],
+    "AuthorityChecks": 510,
+    "TotalAssertions": 1003,
+    "ClientPacketsPerNetworkMode": 23,
+    "ServerPacketsPerNetworkMode": 20,
+    "ActualENetAndProductionHandlers": true,
+    "DefaultAndRelaxedReceiveFiltering": true,
+    "CanonicalIntegerSpeedAccepted": true,
+    "SameLifeOwnerReplay": "Idempotent accepted state; no playback restart or callbacks",
+    "OldLifeAndEpochReordering": "Rejected after replacement; no new sequence protocol",
+    "RejectedPacketSnapshots": "Cache, actual player/clip/resource/loop/speed, health, animation signals and controlled initializer remain unchanged"
+  },
+  "Hosted": {
+    "Revision": "358d6ffc491303e498d512792d09bdb62332bb25",
+    "Core": {"URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41287591306", "Result": "PASS Windows/Linux Debug; 80 cases each"},
+    "Native": {"URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41287591371", "Result": "PASS Windows/Linux Debug; 110 actors, 510 authority checks and 1003 animation assertions each"},
+    "Artifacts": [
+      {"ID": 13075843488, "Name": "runtime-core-Windows-Debug", "SHA256": "26d6443fdc6ade238f9de3c87624d5eaa8a7267adbf7e74ea4a697f6b0dab6cf"},
+      {"ID": 13075158564, "Name": "runtime-core-Linux-Debug", "SHA256": "84acafa63edf259617e3e29d9976192ba5d2d4eabe5c03a8481053c200987ffc"},
+      {"ID": 13076501126, "Name": "runtime-native-Linux-Debug", "SHA256": "42460e62a3429bdb40018945b12ddf7a547862916e97171b94c3a16a9c29cb16", "ExtensionSHA256": "292feecbf7ef7d24074cda920a31b835446924f7913ae0aeafdcbd01e39fc798", "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980"},
+      {"ID": 13076138577, "Name": "runtime-native-Windows-Debug", "SHA256": "194e21d8ae5c1c71e88070a870f5b1e7fdd1b94b8d7e150825dcab53503ca4b9", "ExtensionSHA256": "2b219456d5214458a983f9f317cec7cec7a2e3d2a4a162c15a1644f59e612dba", "CompanionSHA256": "e085e6119e44b51d3f497e140469598027c9fff75855af2d24a85fa8310aeee8"}
+    ],
+    "FullArtifactInspection": "PASS all four downloaded artifact digests, source/pins, complete core reports, 64 harness hashes, raw log hashes, all 110 native actors and all ten embedded animation records/no-mutation matrices/stdout markers per platform",
+    "InspectionRecordSHA256": "e58b75bc12ecaec562a96b919d359c1a14e14d17ab03c3f5f416afdb8aef0fba",
+    "InspectionCorrection": "Initial observer expected standalone actor JSON absent from inherited upload glob; full actor records already embedded in summary.json, then independently verified against stdout and snapshots without changing tests"
+  },
+  "Limitations": [
+    "GL-017 external engine simultaneous-disconnect relay defect remains open",
+    "Windows full-native sanitizer GL-018 and current Linux stock-host sanitizer load are unqualified",
+    "Headless assertions do not establish graphical/device coverage",
+    "No hostile-project, general engine-security, production transport or allocation-profiling guarantee",
+    "No dependency-pin, protocol-3, release publication or updater-admission change",
+    "No byte-for-byte reproducibility claim"
+  ],
+  "BoundedAuthorityClosureCriteria": "Satisfied on the dedicated branch; full native sanitizer qualification remains incomplete",
+  "EvidenceOnlyFollowupPreservesQualifiedInputs": true,
+  "MainMerged": false,
+  "PublicationEnabled": false,
+  "ExternalSecurityServiceUsed": false
+}

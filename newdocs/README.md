@@ -13,8 +13,11 @@ corrections, and is the canonical development baseline.
 GL-020's functionally qualified animation/session lifecycle is now integrated by
 normal merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`, preserving source
 branch `fix/gl-020-animation-lifecycle` at `8e21d18a5504e0d703efbcf2a71a53d56314058e`.
-Its animation security qualification remains pending; see the
+That integration deferred animation security qualification; see the
 [integration record](animation-lifecycle-validation.md#main-integration-2026-10-27).
+The dedicated [authority follow-up](animation-authority-qualification.md) records
+new ENet adversarial evidence and original-wire validation; its implementation
+is not merged into main. Native sanitizer limitations remain explicit there.
 The preceding security runtime
 merge is `2e69d8ac703d3f968e42054871511111ab8471be`, identical to qualified source
 `462969bd967bd26fcbeccdca1bd6ae60335347f4`. The retained historical branch is
@@ -161,7 +164,8 @@ Source-identical hosted qualification is reused; see the bounded
 | [Shared-domain work log](shared-domains-work-log.md) | Baseline, ongoing implementation checkpoints, and executed qualification evidence |
 | [Shared-domain validation](shared-domains-validation.md) | Reproduction commands, acceptance coverage and remaining gaps |
 | [Network authority validation](network-authority-validation.md) | Integrated GL-006/008 trust boundaries, transport regressions, compatibility and remaining gaps |
-| [Animation lifecycle validation](animation-lifecycle-validation.md) | GL-020 development-branch execution/session rules, functional regressions and outstanding security qualification |
+| [Animation lifecycle validation](animation-lifecycle-validation.md) | GL-020 historical functional regressions and integration; original qualification scope preserved |
+| [Animation authority qualification](animation-authority-qualification.md) | GL-020 ENet adversarial follow-up, native coercion reproduction, correction and scoped qualification |
 | [Release retention](release-retention.md) | Integrated GL-012 retention, disabled publication and integration checks |
 | [Release-candidate qualification](release-candidate-qualification.md) | GL-010/011 source-built dry-run profiles, provenance, gates and actual qualification status |
 | [Fork updater isolation](fork-updater-isolation.md) | GL-016 fail-closed policy, manual recovery and headless editor verification |

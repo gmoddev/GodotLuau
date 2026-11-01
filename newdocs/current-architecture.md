@@ -17,8 +17,9 @@ Current development baseline: optimized shared-domain `main` with GL-006/008's
 qualified state/removal/chat authority corrections, integrated on 2026-10-27.
 GL-020's functional animation/session implementation is integrated through normal
 merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`, with the same tree as qualified
-branch `8e21d18a5504e0d703efbcf2a71a53d56314058e`. Full animation-specific
-adversarial transport/handler qualification remains pending. See the
+branch `8e21d18a5504e0d703efbcf2a71a53d56314058e`. The dedicated
+[adversarial follow-up](animation-authority-qualification.md) records current
+branch transport/handler evidence and remaining sanitizer boundaries. See the
 [animation integration record](animation-lifecycle-validation.md#main-integration-2026-10-27).
 Security runtime merge `2e69d8ac703d3f968e42054871511111ab8471be` equals qualified
 source `462969bd967bd26fcbeccdca1bd6ae60335347f4`. See the
@@ -523,8 +524,9 @@ retirement releases callbacks and cannot stop a newer gameplay timeline.
 Applying the current clip's settings preserves playback position.
 `GetAnimationStates()` is a native
 read-only diagnostic snapshot of the actual cache (including UserId), not an RPC.
-The [animation record](animation-lifecycle-validation.md) separates functional
-qualification from outstanding adversarial transport acceptance. Shared domains,
+The [animation record](animation-lifecycle-validation.md) preserves historical
+functional qualification; the [authority follow-up](animation-authority-qualification.md)
+records the subsequent adversarial scope. Shared domains,
 GL-019 paths and owner-based coroutine cancellation are unchanged.
 
 The coordinator uses local process discovery/heartbeat files. Upstream documents
