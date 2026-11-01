@@ -103,7 +103,9 @@ func Run() -> void:
         ProfileCharacters.append(Character)
         for Item in ProfileCharacters:
             var Animator := Item.get_node_or_null("R6Animator")
-            if Animator: Animator.set_process(false)
+            if not Animator: Animator = Item.get_node_or_null("Visual/R6Animator")
+            assert(Animator != null, "diagnostic mode requires each actual local/remote R6 animator")
+            Animator.set_process(false)
             if ProfileMode == "network-only":
                 Item.set_process(false)
                 Item.set_physics_process(false)
