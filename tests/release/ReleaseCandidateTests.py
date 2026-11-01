@@ -101,9 +101,17 @@ class CandidateTests(unittest.TestCase):
         def Git(*Arguments):
             if Arguments == ('rev-parse', 'HEAD'): return self.Expected['Revision']
             if Arguments[0] == 'status': return ''
+            if Arguments[0] == 'ls-files': return ''
             return Candidate.Policy['Dependencies']['godot-cpp']
         with patch.object(Candidate, 'Source', self.Root), patch.object(Candidate, 'Git', Git):
             with self.assertRaisesRegex(ValueError, 'Missing pinned dependency'): Candidate.Identity(self.Expected['Revision'])
+
+    def test_only_generated_objects_are_excluded_from_source_dirtiness(self):
+        Tracked = {'VM/src/lvmexecute.cpp', 'src/core/register_types.cpp'}
+        for Name in ['?? VM/src/lvmexecute.os', '?? VM/src/lvmexecute.windows.template_release.x86_64.obj', '?? src/core/register_types.linux.template_debug.x86_64.o']:
+            self.assertTrue(Candidate.GeneratedObject(Name, Tracked))
+        for Name in [' M VM/src/lvmexecute.cpp', '?? VM/src/injected.cpp', '?? VM/src/unknown.os', ' M VM/src/lvmexecute.os', '?? VM/src/lvmexecute.h']:
+            self.assertFalse(Candidate.GeneratedObject(Name, Tracked))
 
     def test_real_zip_roundtrip_admission(self):
         self.Package()

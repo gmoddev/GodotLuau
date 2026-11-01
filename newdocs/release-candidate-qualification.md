@@ -111,6 +111,21 @@ Windows also normalizes names while reading ZIP entries, so admission checks
 the preserved `orig_filename` as well as the normalized filename. Control/NUL
 characters are rejected before extraction. The hostile-path assertions remain.
 
+The intermediate `35a578ee4f78a035a5163ec8e10da6508d5bdb49` run
+[41272811593](https://github.com/gmoddev/GodotLuau/actions/runs/41272811593)
+retains the Windows original-name failure; profiles remain skipped. At
+`fea42f459a40f4e634fba8f48c66f29edcb5a724`,
+[41272852559](https://github.com/gmoddev/GodotLuau/actions/runs/41272852559),
+both policy jobs and core ASan/LSan pass and all four source builds begin.
+That task-owned run is intentionally cancelled after source inspection identifies
+a later preflight false positive: SCons object outputs beside Luau sources are
+not covered by Luau's own ignore file. This is not presented as a reproduced
+runtime failure or completed profile qualification. Clean-input checks now allow
+only untracked `.o`/`.os`/`.obj` files corresponding to tracked C++ inputs, including
+the explicit profile suffix. Modified tracked files and new source/header inputs
+still reject. A focused regression preserves both sides of that boundary; the
+same identity check also runs immediately after the production build.
+
 ## Remaining boundaries
 
 This gate does not automate Windows core/full-native sanitizers or qualify a

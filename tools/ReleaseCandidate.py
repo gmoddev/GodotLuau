@@ -38,20 +38,32 @@ def Git(*Arguments):
     return subprocess.check_output(['git', '-C', str(Source), *Arguments], timeout=30).decode().strip()
 
 
+def GeneratedObject(Line, Tracked):
+    """Allow only untracked compiler outputs beside an existing tracked C++ input."""
+    if not Line.startswith('?? '): return False
+    Name = Line[3:]
+    if not re.search(r'\.(?:o|os|obj)$', Name): return False
+    Stem = Name.rsplit('.', 1)[0]
+    Stem = re.sub(r'\.(?:windows|linux)\.template_(?:debug|release)\.x86_64$', '', Stem)
+    return Stem+'.cpp' in Tracked
+
+
 def Identity(Revision):
     Require(re.fullmatch('[0-9a-f]{40}', Revision), 'An immutable full source revision is required')
     Require(Git('rev-parse', 'HEAD') == Revision, 'Checkout is not the requested immutable revision')
     # SCons outputs are ignored except its extensionless companion, checked below.
-    Dirty = Git('status', '--porcelain', '--untracked-files=all')
+    Dirty = Git('status', '--porcelain', '--untracked-files=all', '--ignore-submodules=untracked')
     Allowed = {'?? GodotLuau/bin/godot_luau_store_worker', '?? GodotLuau/bin/godot_luau_store_worker.exe'}
-    Require(all(Line in Allowed for Line in Dirty.splitlines()), 'Dirty or untracked source inputs')
+    Tracked = set(Git('ls-files', '*.cpp').splitlines())
+    Require(all(Line in Allowed or GeneratedObject(Line, Tracked) for Line in Dirty.splitlines()), 'Dirty or untracked source inputs')
     Dependencies = {}
     for Name, Expected in Policy['Dependencies'].items():
         Require(Git('rev-parse', Revision+':'+Name) == Expected, 'Changed dependency pin: '+Name)
         Require((Source/Name/'.git').exists(), 'Missing pinned dependency: '+Name)
         Actual = subprocess.check_output(['git', '-C', str(Source/Name), 'rev-parse', 'HEAD'], timeout=15).decode().strip()
         DirtyDependency = subprocess.check_output(['git', '-C', str(Source/Name), 'status', '--porcelain', '--untracked-files=all'], timeout=15).decode().strip()
-        Require(Actual == Expected and not DirtyDependency, 'Missing, dirty or mismatched dependency: '+Name)
+        TrackedDependency = set(subprocess.check_output(['git', '-C', str(Source/Name), 'ls-files', '*.cpp'], timeout=15).decode().splitlines())
+        Require(Actual == Expected and all(GeneratedObject(Line, TrackedDependency) for Line in DirtyDependency.splitlines()), 'Missing, dirty or mismatched dependency: '+Name)
         Dependencies[Name] = Actual
     Harness = {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.gd', '.py', '.cpp', '.pem'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']}
     return {'Revision': Revision, 'Tree': Git('rev-parse', Revision+'^{tree}'), 'Dependencies': Dependencies,
@@ -127,6 +139,7 @@ def Build(Args):
     for Name in [LibraryName, WorkerName]:
         Require((Source/'GodotLuau/bin'/Name).is_file(), 'Missing source-built product: '+Name)
         shutil.copy2(Source/'GodotLuau/bin'/Name, Products/Name)
+    Require(Identity(Args.revision) == Before, 'Source inputs changed during the production build')
     BuildDirectory = Output/'build'
     Generator = 'Visual Studio 17 2022' if Selected == 'Windows' else 'Ninja'
     Commands.append(Execute(['cmake', '-S', Source/'tests/runtime', '-B', BuildDirectory, '-G', Generator, '-DCMAKE_BUILD_TYPE='+Args.configuration, '-DGL_BUILD_GODOT_ADAPTER=ON', '-DGL_BUILD_CORE_TESTS=ON'], Output/'configure.log', 300))
