@@ -1,0 +1,335 @@
+[
+  {
+    "Prefix": "v3-network-",
+    "Result": {
+      "Baseline": {
+        "server0": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.63416666666666e-05,
+            "Median": 4.3e-05,
+            "P95": 6.5e-05,
+            "P99": 9e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 4.68395833333334e-05,
+            "Median": 3.6e-05,
+            "P95": 9.6e-05,
+            "P99": 0.000134
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833302083333334,
+            "Median": 0.008486,
+            "P95": 0.008679,
+            "P99": 0.008746
+          }
+        },
+        "client1": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 5.00541666666667e-05,
+            "Median": 4.8e-05,
+            "P95": 6.9e-05,
+            "P99": 9.6e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.54208333333333e-05,
+            "Median": 2.9e-05,
+            "P95": 6.9e-05,
+            "P99": 0.000106
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833302083333333,
+            "Median": 0.008439,
+            "P95": 0.008653,
+            "P99": 0.008709
+          }
+        },
+        "client2": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.95083333333334e-05,
+            "Median": 4.6e-05,
+            "P95": 6.8e-05,
+            "P99": 0.000101
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.461875e-05,
+            "Median": 2.6e-05,
+            "P95": 7.1e-05,
+            "P99": 9.5e-05
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833298541666666,
+            "Median": 0.008431,
+            "P95": 0.008603,
+            "P99": 0.008665
+          }
+        },
+        "Trials": 5
+      },
+      "Candidate": {
+        "server0": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.8875e-05,
+            "Median": 4.5e-05,
+            "P95": 7.6e-05,
+            "P99": 0.000101
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 5.01312499999999e-05,
+            "Median": 4.1e-05,
+            "P95": 0.000105,
+            "P99": 0.000142
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833300208333333,
+            "Median": 0.008387,
+            "P95": 0.008686,
+            "P99": 0.008737
+          }
+        },
+        "client1": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 5.47500000000001e-05,
+            "Median": 4.5e-05,
+            "P95": 8.9e-05,
+            "P99": 0.000114
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.81166666666667e-05,
+            "Median": 2.9e-05,
+            "P95": 8.1e-05,
+            "P99": 0.000127
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833298125,
+            "Median": 0.008445,
+            "P95": 0.008652,
+            "P99": 0.00871
+          }
+        },
+        "client2": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 5.0025e-05,
+            "Median": 4.5e-05,
+            "P95": 9e-05,
+            "P99": 0.000119
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.66875e-05,
+            "Median": 2.8e-05,
+            "P95": 7.4e-05,
+            "P99": 0.000112
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833298541666667,
+            "Median": 0.008422,
+            "P95": 0.008659,
+            "P99": 0.008755
+          }
+        },
+        "Trials": 5
+      }
+    },
+    "HostPairs": {
+      "DispatchPhysicsSeconds": {
+        "Before": [
+          4.1e-05,
+          4.1e-05,
+          4.6e-05,
+          4.9e-05,
+          4.3e-05
+        ],
+        "After": [
+          8.4e-05,
+          3.9e-05,
+          4.4e-05,
+          4.5e-05,
+          4.8e-05
+        ],
+        "PercentChanges": [
+          104.8780487804878,
+          -4.878048780487809,
+          -4.347826086956519,
+          -8.163265306122437,
+          11.627906976744185
+        ]
+      },
+      "DispatchProcessSeconds": {
+        "Before": [
+          3.6e-05,
+          3.6e-05,
+          3.5e-05,
+          3.6e-05,
+          4.2e-05
+        ],
+        "After": [
+          4.1e-05,
+          3.6e-05,
+          4.2e-05,
+          3.7e-05,
+          4.1e-05
+        ],
+        "PercentChanges": [
+          13.888888888888884,
+          0.0,
+          19.999999999999996,
+          2.777777777777768,
+          -2.3809523809523725
+        ]
+      },
+      "FrameSeconds": {
+        "Before": [
+          0.008509,
+          0.008364,
+          0.008362,
+          0.008486,
+          0.008492
+        ],
+        "After": [
+          0.008387,
+          0.008333,
+          0.008482,
+          0.008496,
+          0.008382
+        ],
+        "PercentChanges": [
+          -1.4337760018803491,
+          -0.37063605930176546,
+          1.4350633819660397,
+          0.11784115012962726,
+          -1.2953367875647603
+        ]
+      }
+    }
+  },
+  {
+    "Prefix": "history-network-",
+    "Result": {
+      "GL007": {
+        "server0": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.15041666666667e-05,
+            "Median": 3.9e-05,
+            "P95": 5.9e-05,
+            "P99": 8.2e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 4.66895833333333e-05,
+            "Median": 3.9e-05,
+            "P95": 8.9e-05,
+            "P99": 0.000126
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833300625,
+            "Median": 0.008408,
+            "P95": 0.008675,
+            "P99": 0.008744
+          }
+        },
+        "client1": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.28125e-05,
+            "Median": 3.9e-05,
+            "P95": 7.2e-05,
+            "P99": 9.3e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.41479166666666e-05,
+            "Median": 2.5e-05,
+            "P95": 7e-05,
+            "P99": 9.3e-05
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833298333333333,
+            "Median": 0.008464,
+            "P95": 0.008648,
+            "P99": 0.008703
+          }
+        },
+        "client2": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 3.9475e-05,
+            "Median": 3.6e-05,
+            "P95": 6.5e-05,
+            "P99": 8.2e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.46833333333333e-05,
+            "Median": 2.5e-05,
+            "P95": 7.6e-05,
+            "P99": 0.000107
+          },
+          "FrameSeconds": {
+            "Mean": 0.0083330125,
+            "Median": 0.00841,
+            "P95": 0.00859,
+            "P99": 0.008649
+          }
+        },
+        "Trials": 3
+      },
+      "V2": {
+        "server0": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.61916666666666e-05,
+            "Median": 4.4e-05,
+            "P95": 6e-05,
+            "P99": 8e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 4.47416666666666e-05,
+            "Median": 4e-05,
+            "P95": 8.2e-05,
+            "P99": 0.000123
+          },
+          "FrameSeconds": {
+            "Mean": 0.0083330125,
+            "Median": 0.008467,
+            "P95": 0.008672,
+            "P99": 0.008746
+          }
+        },
+        "client1": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.96875e-05,
+            "Median": 4.7e-05,
+            "P95": 7e-05,
+            "P99": 9.3e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.57604166666667e-05,
+            "Median": 2.9e-05,
+            "P95": 7.1e-05,
+            "P99": 9.9e-05
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833305833333334,
+            "Median": 0.008388,
+            "P95": 0.008613,
+            "P99": 0.00868
+          }
+        },
+        "client2": {
+          "DispatchPhysicsSeconds": {
+            "Mean": 4.78583333333333e-05,
+            "Median": 4.5e-05,
+            "P95": 7e-05,
+            "P99": 9.6e-05
+          },
+          "DispatchProcessSeconds": {
+            "Mean": 3.52770833333334e-05,
+            "Median": 2.8e-05,
+            "P95": 7.2e-05,
+            "P99": 0.000107
+          },
+          "FrameSeconds": {
+            "Mean": 0.00833299791666666,
+            "Median": 0.008486,
+            "P95": 0.008657,
+            "P99": 0.00873
+          }
+        },
+        "Trials": 3
+      }
+    }
+  }
+]

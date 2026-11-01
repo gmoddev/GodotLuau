@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/work/source/tests/runtime/RunCharacterNetworkBenchmarks.py", line 54, in <module>
+    if __name__=='__main__': Main()
+                             ^^^^^^
+  File "/work/source/tests/runtime/RunCharacterNetworkBenchmarks.py", line 46, in Main
+    Results.append(Check(Process,time.monotonic()+60,Args.output,Label,'[Character:NetworkBenchmark] PASS'))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/source/tests/runtime/RunQualification.py", line 74, in Check
+    raise RuntimeError(f"{Label} exit={Result}\n{Text[-4000:]}\n{Errors[-6000:]}")
+RuntimeError: server0 exit=1
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+
+libfontconfig.so.1: cannot open shared object file: No such file or directory
+SCRIPT ERROR: Parse Error: Cannot infer the type of "Animator" variable because the value doesn't have a set type.
+          at: GDScript::reload (res://CharacterNetworkBenchmarks.gd:105)
+ERROR: Failed to load script "res://CharacterNetworkBenchmarks.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+

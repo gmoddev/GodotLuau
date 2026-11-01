@@ -1,0 +1,12 @@
+{
+  "windows-performance": {
+    "Pairs": 5,
+    "Rows": 4,
+    "Result": "PASS"
+  },
+  "rendered-performance": {
+    "Pairs": 3,
+    "Rows": 4,
+    "Result": "PASS"
+  }
+}

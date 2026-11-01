@@ -1,0 +1,33 @@
+{
+  "Command": [
+    "ctest",
+    "--test-dir",
+    "/work/build-release",
+    "-R",
+    "^ExecutionDomains$",
+    "--no-tests=error",
+    "--timeout",
+    "30",
+    "--output-on-failure",
+    "--verbose",
+    "--test-output-size-passed",
+    "65536",
+    "--test-output-size-failed",
+    "65536",
+    "--output-junit",
+    "/work/followup/core-release/core-results.xml"
+  ],
+  "NativeSource": {
+    "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Cases": 80,
+  "Result": "PASS",
+  "ASAN_OPTIONS": null,
+  "Files": {
+    "discovery.json": "246eb8ab6d51778ff803afe3ec98da48e2911bdec255571ccd3ba8b83be0f694",
+    "core-results.xml": "7eaebd43f754ba3423d69d12343130938f2ef133efe95482531daf00fc16289c",
+    "ctest.log": "0105b6b00ae26d21fc28fa91a42ee7b84ea89efb74d4c16496a565b0f7f33176"
+  }
+}

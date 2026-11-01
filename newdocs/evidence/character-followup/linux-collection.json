@@ -1,0 +1,497 @@
+{
+  "Platform": "dockerpc-linux",
+  "NativeSource": {
+    "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Comparisons": {
+    "gpu-original-repeat": {
+      "Actors": 18,
+      "Graphical": false,
+      "Adapter": "",
+      "Inputs": {
+        "SourceAtInvocation": {
+          "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+          "Files": 89,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "212970c1ee016c7b644233fcb1600a5bb15cf0afddf257a14dbdf440280ba177",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+          "CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+          "CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+          "CharacterDispatchProbe.gd": "2e58edaa60b956daff1181a36cdbf7107f0ff68024187f3324c525378dcd9ae5",
+          "CharacterIntegration.gd": "d55240cd898aa2a6889753aa95e1ecee883cf080f7220bde9663d43fce8876ef",
+          "CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+          "CharacterNetworkBenchmarks.gd": "dcb3d161aec0e6e383821d26bab153b7a29df4981557bda26695bbd1f7432d61",
+          "CharacterPerformance.gd": "76b6431487b0691de069f517b0bb09b6716f691841214660c7ab0f54df74fd67",
+          "CharacterPresentation.gd": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f",
+          "CharacterV2.gd": "08000a8307702721d6e951ad3ac2944709517f1c7d0c4db07639c7cccdb96859",
+          "CheckCoreCI.py": "a47e2bcd0bd0fe28897006859ff0169bb60e09ee03a6ae8753a7c0ea668fff24",
+          "CheckNativeCI.py": "e603f5bb39dbce743ed880f328d762e13b5b4cf19052c154ec17a53d6cb20b52",
+          "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+          "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+          "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+          "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+          "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+          "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+          "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+          "DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "ExecutionDomainTests.cpp": "d023eef5af8635167bf9f76d2a1585a54b21468b9e9e3733926017cc030b730d",
+          "FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "5c2559ebe6a41e4532fc9244c259ec3acbd5ef48be0b636f9f1c5c5b56749663",
+          "HttpIntegration.gd": "f6c1cafd5e930b84d7b918d2761775f0a228f0dd5ddf010a5a1b57ceeadb7d83",
+          "HttpServiceBaseline.gd": "d001b05eac5f8c3e1042cc51f97ce10a8a50beaf00383d32533313137739f429",
+          "HttpServiceCallers.gd": "231b96bbd3e40f9469686cbce72a11b2da1c0b942385af05c14a143d454bc4d6",
+          "HttpServiceIntegration.gd": "71371f4e642d0bfbab929c8c6aa8d4432498a3721542f722e3b8397093a74905",
+          "Integration.gd": "44426f90ae9e2fcbc71854cee70d5efbeaa008abfc93ca9c19fbc86054014a4a",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+          "RunCharacterNetworkBenchmarks.py": "0727ab7c1c180d37ec0250cb4aa0d8af0deac0d3a82fdc06fc2e8a39ad029e0b",
+          "RunCharacterPerformance.py": "339f0e3ca7da21870e06238a45e75b77dc64b8819eded119f81efece2576e69d",
+          "RunCharacterPresentation.py": "5256f4294849982da80f8a7e155167963d08348641d0bc68e993e47c3a3e1bd8",
+          "RunCoreQualification.py": "640bd280768b212f9312b340e7fae42e58d418d68dd85fe0480e22b1cbdef1f9",
+          "RunCoreTests.py": "a7693433d239e5a4a64d9e065a891e05052be4a8cd7a72ab79cb1bf64d8c20d9",
+          "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+          "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunHttpServiceBaseline.py": "1128b038d7069434df6afd47f502fe0f797d0f05db9eddca04963564ecf7e980",
+          "RunHttpServiceCallers.py": "a999d6eaa0fd6bfdf1ed3cc9242a3a57983fce07ced8bad28ebf2d5200714462",
+          "RunQualification.py": "bad51b6a4c6e7081b47333ed4c55bfd688ff76c12f5bdf2baa7f4cc121d9ce7f",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "Trials": 9,
+        "SamplesPerPhysicsWindow": 240,
+        "Counts": "16",
+        "Graphical": false,
+        "GodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+        "MaxFPS": 120,
+        "Modes": "all",
+        "LifecycleSamples": 30,
+        "WarmupTicks": 60
+      },
+      "Products": {
+        "Baseline": "477e80350f2385a2a49f763705efe8e0b78e523be79e1afce585e1df48625f78",
+        "Candidate": "7e0de8d98cab5005ad93533bbe72177eb765bbc8e91e261989c9bfa8e3991288"
+      },
+      "RawSHA256": "d33790285dafdebefe6433df32a203f6688894c2f2627a8f5ac46aece20750a0",
+      "RawDistributionsVerified": true,
+      "ExecutedFixtureCopiesVerified": true
+    },
+    "gpu-extended": {
+      "Actors": 18,
+      "Graphical": false,
+      "Adapter": "",
+      "Inputs": {
+        "SourceAtInvocation": {
+          "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+          "Files": 89,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "212970c1ee016c7b644233fcb1600a5bb15cf0afddf257a14dbdf440280ba177",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+          "CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+          "CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+          "CharacterDispatchProbe.gd": "2e58edaa60b956daff1181a36cdbf7107f0ff68024187f3324c525378dcd9ae5",
+          "CharacterIntegration.gd": "d55240cd898aa2a6889753aa95e1ecee883cf080f7220bde9663d43fce8876ef",
+          "CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+          "CharacterNetworkBenchmarks.gd": "dcb3d161aec0e6e383821d26bab153b7a29df4981557bda26695bbd1f7432d61",
+          "CharacterPerformance.gd": "76b6431487b0691de069f517b0bb09b6716f691841214660c7ab0f54df74fd67",
+          "CharacterPresentation.gd": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f",
+          "CharacterV2.gd": "08000a8307702721d6e951ad3ac2944709517f1c7d0c4db07639c7cccdb96859",
+          "CheckCoreCI.py": "a47e2bcd0bd0fe28897006859ff0169bb60e09ee03a6ae8753a7c0ea668fff24",
+          "CheckNativeCI.py": "e603f5bb39dbce743ed880f328d762e13b5b4cf19052c154ec17a53d6cb20b52",
+          "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+          "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+          "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+          "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+          "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+          "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+          "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+          "DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "ExecutionDomainTests.cpp": "d023eef5af8635167bf9f76d2a1585a54b21468b9e9e3733926017cc030b730d",
+          "FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "5c2559ebe6a41e4532fc9244c259ec3acbd5ef48be0b636f9f1c5c5b56749663",
+          "HttpIntegration.gd": "f6c1cafd5e930b84d7b918d2761775f0a228f0dd5ddf010a5a1b57ceeadb7d83",
+          "HttpServiceBaseline.gd": "d001b05eac5f8c3e1042cc51f97ce10a8a50beaf00383d32533313137739f429",
+          "HttpServiceCallers.gd": "231b96bbd3e40f9469686cbce72a11b2da1c0b942385af05c14a143d454bc4d6",
+          "HttpServiceIntegration.gd": "71371f4e642d0bfbab929c8c6aa8d4432498a3721542f722e3b8397093a74905",
+          "Integration.gd": "44426f90ae9e2fcbc71854cee70d5efbeaa008abfc93ca9c19fbc86054014a4a",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+          "RunCharacterNetworkBenchmarks.py": "0727ab7c1c180d37ec0250cb4aa0d8af0deac0d3a82fdc06fc2e8a39ad029e0b",
+          "RunCharacterPerformance.py": "339f0e3ca7da21870e06238a45e75b77dc64b8819eded119f81efece2576e69d",
+          "RunCharacterPresentation.py": "5256f4294849982da80f8a7e155167963d08348641d0bc68e993e47c3a3e1bd8",
+          "RunCoreQualification.py": "640bd280768b212f9312b340e7fae42e58d418d68dd85fe0480e22b1cbdef1f9",
+          "RunCoreTests.py": "a7693433d239e5a4a64d9e065a891e05052be4a8cd7a72ab79cb1bf64d8c20d9",
+          "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+          "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunHttpServiceBaseline.py": "1128b038d7069434df6afd47f502fe0f797d0f05db9eddca04963564ecf7e980",
+          "RunHttpServiceCallers.py": "a999d6eaa0fd6bfdf1ed3cc9242a3a57983fce07ced8bad28ebf2d5200714462",
+          "RunQualification.py": "bad51b6a4c6e7081b47333ed4c55bfd688ff76c12f5bdf2baa7f4cc121d9ce7f",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "Trials": 9,
+        "SamplesPerPhysicsWindow": 1200,
+        "Counts": "16",
+        "Graphical": false,
+        "GodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+        "MaxFPS": 120,
+        "Modes": "all",
+        "LifecycleSamples": 200,
+        "WarmupTicks": 120
+      },
+      "Products": {
+        "Baseline": "477e80350f2385a2a49f763705efe8e0b78e523be79e1afce585e1df48625f78",
+        "Candidate": "7e0de8d98cab5005ad93533bbe72177eb765bbc8e91e261989c9bfa8e3991288"
+      },
+      "RawSHA256": "7b069062170a84fd1a17c8e5c5004f52d4921c5bcb758c3f818d10b1ebb82806",
+      "RawDistributionsVerified": true,
+      "ExecutedFixtureCopiesVerified": true
+    }
+  },
+  "Network": {
+    "all": {
+      "Pairs": 9,
+      "WarmupPairs": 1,
+      "Actors": 54,
+      "Result": "PASS"
+    },
+    "physics-only": {
+      "Pairs": 5,
+      "WarmupPairs": 1,
+      "Actors": 30,
+      "Result": "PASS"
+    },
+    "network-only": {
+      "Pairs": 5,
+      "WarmupPairs": 1,
+      "Actors": 30,
+      "Result": "PASS"
+    }
+  },
+  "Core": {
+    "debug": {
+      "Command": [
+        "ctest",
+        "--test-dir",
+        "/work/build-debug",
+        "-R",
+        "^ExecutionDomains$",
+        "--no-tests=error",
+        "--timeout",
+        "30",
+        "--output-on-failure",
+        "--verbose",
+        "--test-output-size-passed",
+        "65536",
+        "--test-output-size-failed",
+        "65536",
+        "--output-junit",
+        "/work/followup/core-debug/core-results.xml"
+      ],
+      "NativeSource": {
+        "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+        "Files": 89,
+        "Newlines": "LF normalized"
+      },
+      "Cases": 80,
+      "Result": "PASS",
+      "ASAN_OPTIONS": null,
+      "Files": {
+        "discovery.json": "39f49f11aa831a3c48d182deac4580d3b7e1840bad546113e4dc919bf1666e2f",
+        "core-results.xml": "8712759add9b98587ac3f6b481f0c1a1e403639182156827b06ed89f308c10eb",
+        "ctest.log": "b415c077ed4a050fc09f8d4ad79ab8c203ffe1529e447dc1049534fbada8e342"
+      }
+    },
+    "release": {
+      "Command": [
+        "ctest",
+        "--test-dir",
+        "/work/build-release",
+        "-R",
+        "^ExecutionDomains$",
+        "--no-tests=error",
+        "--timeout",
+        "30",
+        "--output-on-failure",
+        "--verbose",
+        "--test-output-size-passed",
+        "65536",
+        "--test-output-size-failed",
+        "65536",
+        "--output-junit",
+        "/work/followup/core-release/core-results.xml"
+      ],
+      "NativeSource": {
+        "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+        "Files": 89,
+        "Newlines": "LF normalized"
+      },
+      "Cases": 80,
+      "Result": "PASS",
+      "ASAN_OPTIONS": null,
+      "Files": {
+        "discovery.json": "246eb8ab6d51778ff803afe3ec98da48e2911bdec255571ccd3ba8b83be0f694",
+        "core-results.xml": "7eaebd43f754ba3423d69d12343130938f2ef133efe95482531daf00fc16289c",
+        "ctest.log": "0105b6b00ae26d21fc28fa91a42ee7b84ea89efb74d4c16496a565b0f7f33176"
+      }
+    },
+    "asan": {
+      "Command": [
+        "ctest",
+        "--test-dir",
+        "/work/build-asan",
+        "-R",
+        "^ExecutionDomains$",
+        "--no-tests=error",
+        "--timeout",
+        "30",
+        "--output-on-failure",
+        "--verbose",
+        "--test-output-size-passed",
+        "65536",
+        "--test-output-size-failed",
+        "65536",
+        "--output-junit",
+        "/work/followup/core-asan/core-results.xml"
+      ],
+      "NativeSource": {
+        "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+        "Files": 89,
+        "Newlines": "LF normalized"
+      },
+      "Cases": 80,
+      "Result": "PASS",
+      "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+      "Files": {
+        "discovery.json": "a331229a9cb27e281f98c441e01d388c5cdaca9cbc890168e82508f1490085e6",
+        "core-results.xml": "7a393cf33e683e10588d17679b99381f8f952dfed0a39980f183200d34008acf",
+        "ctest.log": "b2f5362759a5bf31c961dc418a4646b41a21c6ef38988ba18cd8117340a26a4c"
+      }
+    }
+  },
+  "Native": {
+    "Actors": 110,
+    "RawSummarySHA256": "2ccc38eab7298d651c27bfdc6c8300bfd2fb42f4e53de45f893be38533ed8396",
+    "HarnessHashes": {
+      "AnimationIntegration.gd": "212970c1ee016c7b644233fcb1600a5bb15cf0afddf257a14dbdf440280ba177",
+      "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+      "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+      "CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+      "CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+      "CharacterDispatchProbe.gd": "2e58edaa60b956daff1181a36cdbf7107f0ff68024187f3324c525378dcd9ae5",
+      "CharacterIntegration.gd": "d55240cd898aa2a6889753aa95e1ecee883cf080f7220bde9663d43fce8876ef",
+      "CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+      "CharacterNetworkBenchmarks.gd": "dcb3d161aec0e6e383821d26bab153b7a29df4981557bda26695bbd1f7432d61",
+      "CharacterPerformance.gd": "76b6431487b0691de069f517b0bb09b6716f691841214660c7ab0f54df74fd67",
+      "CharacterPresentation.gd": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f",
+      "CharacterV2.gd": "08000a8307702721d6e951ad3ac2944709517f1c7d0c4db07639c7cccdb96859",
+      "CheckCoreCI.py": "a47e2bcd0bd0fe28897006859ff0169bb60e09ee03a6ae8753a7c0ea668fff24",
+      "CheckNativeCI.py": "e603f5bb39dbce743ed880f328d762e13b5b4cf19052c154ec17a53d6cb20b52",
+      "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+      "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+      "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+      "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+      "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+      "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+      "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+      "DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+      "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+      "ExecutionDomainTests.cpp": "d023eef5af8635167bf9f76d2a1585a54b21468b9e9e3733926017cc030b730d",
+      "FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+      "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+      "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+      "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+      "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+      "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+      "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+      "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+      "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+      "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+      "HttpFixtureServer.py": "5c2559ebe6a41e4532fc9244c259ec3acbd5ef48be0b636f9f1c5c5b56749663",
+      "HttpIntegration.gd": "f6c1cafd5e930b84d7b918d2761775f0a228f0dd5ddf010a5a1b57ceeadb7d83",
+      "HttpServiceBaseline.gd": "d001b05eac5f8c3e1042cc51f97ce10a8a50beaf00383d32533313137739f429",
+      "HttpServiceCallers.gd": "231b96bbd3e40f9469686cbce72a11b2da1c0b942385af05c14a143d454bc4d6",
+      "HttpServiceIntegration.gd": "71371f4e642d0bfbab929c8c6aa8d4432498a3721542f722e3b8397093a74905",
+      "Integration.gd": "44426f90ae9e2fcbc71854cee70d5efbeaa008abfc93ca9c19fbc86054014a4a",
+      "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+      "NetworkSecurity.gd": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+      "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+      "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+      "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+      "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+      "RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+      "RunCharacterNetworkBenchmarks.py": "0727ab7c1c180d37ec0250cb4aa0d8af0deac0d3a82fdc06fc2e8a39ad029e0b",
+      "RunCharacterPerformance.py": "339f0e3ca7da21870e06238a45e75b77dc64b8819eded119f81efece2576e69d",
+      "RunCharacterPresentation.py": "5256f4294849982da80f8a7e155167963d08348641d0bc68e993e47c3a3e1bd8",
+      "RunCoreQualification.py": "640bd280768b212f9312b340e7fae42e58d418d68dd85fe0480e22b1cbdef1f9",
+      "RunCoreTests.py": "a7693433d239e5a4a64d9e065a891e05052be4a8cd7a72ab79cb1bf64d8c20d9",
+      "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+      "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+      "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+      "RunHttpServiceBaseline.py": "1128b038d7069434df6afd47f502fe0f797d0f05db9eddca04963564ecf7e980",
+      "RunHttpServiceCallers.py": "a999d6eaa0fd6bfdf1ed3cc9242a3a57983fce07ced8bad28ebf2d5200714462",
+      "RunQualification.py": "bad51b6a4c6e7081b47333ed4c55bfd688ff76c12f5bdf2baa7f4cc121d9ce7f",
+      "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+      "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+      "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+      "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+      "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+    },
+    "RecordedRevision": "character-qualification-overlay-based-on-c562ba8"
+  },
+  "RuntimeImplementation": "2bd43741f82fd5308e01e5bb88462e17ae256fb7",
+  "CurrentBranchFixtureRevision": "432b06af6f5a9d43ad9c5961ed7f84de25266699",
+  "InputScope": "Per-campaign invocation snapshots; actual executed fixture copies verified. MainPC source export is 1bc5e05; later changes affect the unused network diagnostic script only. Native overlay hash records remain their actual invocation state.",
+  "NewRuntimeChanges": false,
+  "Memory": {
+    "Baseline": {
+      "LibrarySHA256": "477e80350f2385a2a49f763705efe8e0b78e523be79e1afce585e1df48625f78",
+      "Snapshots": [
+        {
+          "Bytes": 33168149.0,
+          "Label": "warm",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33168301.0,
+          "Label": "respawns-500",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33168861.0,
+          "Label": "respawns-1000",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33169441.0,
+          "Label": "respawns-1500",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33170037.0,
+          "Label": "before-retaining-samples",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33173809.0,
+          "Label": "retained-five-samples",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 3048.0,
+          "Label": "original-sampler-delta",
+          "Objects": 0.0
+        },
+        {
+          "Bytes": 33170305.0,
+          "Label": "released-samples",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        }
+      ]
+    },
+    "Candidate": {
+      "LibrarySHA256": "7e0de8d98cab5005ad93533bbe72177eb765bbc8e91e261989c9bfa8e3991288",
+      "Snapshots": [
+        {
+          "Bytes": 33168157.0,
+          "Label": "warm",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33168309.0,
+          "Label": "respawns-500",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33168869.0,
+          "Label": "respawns-1000",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33169449.0,
+          "Label": "respawns-1500",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33170045.0,
+          "Label": "before-retaining-samples",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 33173817.0,
+          "Label": "retained-five-samples",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        },
+        {
+          "Bytes": 3048.0,
+          "Label": "original-sampler-delta",
+          "Objects": 0.0
+        },
+        {
+          "Bytes": 33170313.0,
+          "Label": "released-samples",
+          "Nodes": 35.0,
+          "Objects": 1554.0
+        }
+      ]
+    }
+  }
+}

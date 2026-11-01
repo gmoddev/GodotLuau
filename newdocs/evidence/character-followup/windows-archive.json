@@ -1,0 +1,8 @@
+{
+  "Platform": "dockerpc-windows",
+  "File": "followup-evidence-dockerpc-windows.zip",
+  "Bytes": 12240225,
+  "Entries": 2519,
+  "SHA256": "faa09be66122ad817117e5618680da74e2b983e3e76b47d11960787f2f5dde7f",
+  "Scope": "task evidence, failed attempts, fixture copies, raw distributions and logs; native binaries, build/import caches and isolated user profiles excluded"
+}

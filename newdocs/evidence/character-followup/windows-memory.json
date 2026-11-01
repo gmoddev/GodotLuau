@@ -1,0 +1,106 @@
+{
+  "Baseline": {
+    "LibrarySHA256": "39251f89018f7298ef85c1b37df8c5c4c70516f62bfa9a79e31254393942bf0c",
+    "Snapshots": [
+      {
+        "Bytes": 33217953.0,
+        "Label": "warm",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33218105.0,
+        "Label": "respawns-500",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33218665.0,
+        "Label": "respawns-1000",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33219245.0,
+        "Label": "respawns-1500",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33219841.0,
+        "Label": "before-retaining-samples",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33223613.0,
+        "Label": "retained-five-samples",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 3048.0,
+        "Label": "original-sampler-delta",
+        "Objects": 0.0
+      },
+      {
+        "Bytes": 33220109.0,
+        "Label": "released-samples",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      }
+    ]
+  },
+  "Candidate": {
+    "LibrarySHA256": "8456a664da324621be9679dca1dd79ed679545947d42775ac9351d287ea4f86c",
+    "Snapshots": [
+      {
+        "Bytes": 33217961.0,
+        "Label": "warm",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33218113.0,
+        "Label": "respawns-500",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33218673.0,
+        "Label": "respawns-1000",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33219253.0,
+        "Label": "respawns-1500",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33219849.0,
+        "Label": "before-retaining-samples",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 33223621.0,
+        "Label": "retained-five-samples",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      },
+      {
+        "Bytes": 3048.0,
+        "Label": "original-sampler-delta",
+        "Objects": 0.0
+      },
+      {
+        "Bytes": 33220117.0,
+        "Label": "released-samples",
+        "Nodes": 35.0,
+        "Objects": 1554.0
+      }
+    ]
+  }
+}

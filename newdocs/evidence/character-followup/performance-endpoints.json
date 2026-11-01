@@ -1,0 +1,257 @@
+{
+  "Scope": "Medians of trial statistics; warmup pair excluded. Exploratory significance is not equivalence, a predefined performance budget, or causal attribution.",
+  "Endpoints": {
+    "DockerPC64RenderCPU": {
+      "Units": "ms",
+      "SelectedStatistic": "Median",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 1.525398750454185,
+          "Candidate": 1.5335370820264052
+        },
+        "Median": {
+          "Baseline": 1.51800000667572,
+          "Candidate": 1.55900001525879
+        },
+        "P95": {
+          "Baseline": 1.8625000119209298,
+          "Candidate": 1.856000006198885
+        },
+        "P99": {
+          "Baseline": 1.992499947547915,
+          "Candidate": 1.989000022411345
+        }
+      },
+      "Pairs": 8,
+      "MedianPairedPercentChange": 1.196164943464384,
+      "DescriptiveBootstrapInterval95Percent": [
+        -0.6993000580452713,
+        4.3052827834100915
+      ],
+      "ExactTwoSidedSignP": 0.7265625,
+      "Improved": 3,
+      "Worse": 5,
+      "FourPrimaryEndpointsHolmAdjustedP": 1
+    },
+    "LinuxNetworkHost": {
+      "Units": "ms",
+      "SelectedStatistic": "Median",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 0.047528125,
+          "Candidate": 0.05013749999999995
+        },
+        "Median": {
+          "Baseline": 0.0385,
+          "Candidate": 0.039
+        },
+        "P95": {
+          "Baseline": 0.0935,
+          "Candidate": 0.102
+        },
+        "P99": {
+          "Baseline": 0.1235,
+          "Candidate": 0.13099999999999998
+        }
+      },
+      "Pairs": 8,
+      "MedianPairedPercentChange": 1.3157894736842035,
+      "DescriptiveBootstrapInterval95Percent": [
+        -5.128205128205132,
+        5.128205128205132
+      ],
+      "ExactTwoSidedSignP": 1.0,
+      "Improved": 3,
+      "Worse": 4,
+      "FourPrimaryEndpointsHolmAdjustedP": 1
+    },
+    "Linux16Physics": {
+      "Units": "ms",
+      "SelectedStatistic": "P99",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 0.3150491666666665,
+          "Candidate": 0.31171125
+        },
+        "Median": {
+          "Baseline": 0.298,
+          "Candidate": 0.294
+        },
+        "P95": {
+          "Baseline": 0.443,
+          "Candidate": 0.4385
+        },
+        "P99": {
+          "Baseline": 0.51,
+          "Candidate": 0.509
+        }
+      },
+      "Pairs": 8,
+      "MedianPairedPercentChange": -1.194181194181193,
+      "DescriptiveBootstrapInterval95Percent": [
+        -4.469273743016766,
+        4.089979550102263
+      ],
+      "ExactTwoSidedSignP": 0.7265625,
+      "Improved": 5,
+      "Worse": 3,
+      "FourPrimaryEndpointsHolmAdjustedP": 1
+    },
+    "WindowsRespawn": {
+      "Units": "us",
+      "SelectedStatistic": "P99",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 457.015,
+          "Candidate": 455.48
+        },
+        "Median": {
+          "Baseline": 448.5,
+          "Candidate": 448.0
+        },
+        "P95": {
+          "Baseline": 558.5,
+          "Candidate": 549.0
+        },
+        "P99": {
+          "Baseline": 661.0,
+          "Candidate": 637.0
+        }
+      },
+      "Pairs": 8,
+      "MedianPairedPercentChange": -2.308377778367432,
+      "DescriptiveBootstrapInterval95Percent": [
+        -12.303290414878399,
+        2.14395099540583
+      ],
+      "ExactTwoSidedSignP": 0.2890625,
+      "Improved": 6,
+      "Worse": 2,
+      "FourPrimaryEndpointsHolmAdjustedP": 1
+    },
+    "MainPC64RenderCPU": {
+      "Units": "ms",
+      "SelectedStatistic": "Median",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 0.48799791655192803,
+          "Candidate": 0.490464583349725
+        },
+        "Median": {
+          "Baseline": 0.47449998557567596,
+          "Candidate": 0.47750000655651104
+        },
+        "P95": {
+          "Baseline": 0.623999983072281,
+          "Candidate": 0.5934999883174895
+        },
+        "P99": {
+          "Baseline": 0.7170000076293945,
+          "Candidate": 0.6974999904632565
+        }
+      },
+      "Pairs": 8,
+      "MedianPairedPercentChange": 0.20486509337405145,
+      "DescriptiveBootstrapInterval95Percent": [
+        -1.2765983350138788,
+        2.5477759399326727
+      ],
+      "ExactTwoSidedSignP": 1.0,
+      "Improved": 4,
+      "Worse": 4
+    },
+    "MainPCRespawn": {
+      "Units": "us",
+      "SelectedStatistic": "P99",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 380.66499999999996,
+          "Candidate": 374.2275
+        },
+        "Median": {
+          "Baseline": 366.5,
+          "Candidate": 358.5
+        },
+        "P95": {
+          "Baseline": 522.0,
+          "Candidate": 498.5
+        },
+        "P99": {
+          "Baseline": 601.5,
+          "Candidate": 562.0
+        }
+      },
+      "Pairs": 8,
+      "MedianPairedPercentChange": -2.472172058000405,
+      "DescriptiveBootstrapInterval95Percent": [
+        -8.414239482200648,
+        6.0194174757281615
+      ],
+      "ExactTwoSidedSignP": 0.2890625,
+      "Improved": 6,
+      "Worse": 2
+    },
+    "MainPC64Physics": {
+      "Units": "ms",
+      "SelectedStatistic": "P99",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 1.43741666666667,
+          "Candidate": 1.435590000000005
+        },
+        "Median": {
+          "Baseline": 1.212,
+          "Candidate": 1.2014999999999998
+        },
+        "P95": {
+          "Baseline": 1.4125,
+          "Candidate": 1.4135
+        },
+        "P99": {
+          "Baseline": 1.5275,
+          "Candidate": 1.602
+        }
+      },
+      "Pairs": 8,
+      "MedianPairedPercentChange": 2.7011550013044228,
+      "DescriptiveBootstrapInterval95Percent": [
+        -1.8217306441119074,
+        11.023622047244096
+      ],
+      "ExactTwoSidedSignP": 0.2890625,
+      "Improved": 2,
+      "Worse": 6
+    },
+    "FullSequence64RenderCPU": {
+      "Units": "ms",
+      "SelectedStatistic": "Median",
+      "Statistics": {
+        "Mean": {
+          "Baseline": 1.5525437481701352,
+          "Candidate": 1.542872913678485
+        },
+        "Median": {
+          "Baseline": 1.565500020980835,
+          "Candidate": 1.511500000953675
+        },
+        "P95": {
+          "Baseline": 1.892000019550325,
+          "Candidate": 1.878499984741215
+        },
+        "P99": {
+          "Baseline": 2.02250003814697,
+          "Candidate": 1.991999983787535
+        }
+      },
+      "Pairs": 4,
+      "MedianPairedPercentChange": -2.9663987949840713,
+      "DescriptiveBootstrapInterval95Percent": [
+        -12.552050350146027,
+        9.597735545180242
+      ],
+      "ExactTwoSidedSignP": 0.625,
+      "Improved": 3,
+      "Worse": 1
+    }
+  }
+}
