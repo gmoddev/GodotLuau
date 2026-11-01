@@ -1,0 +1,60 @@
+[
+  {
+    "ArtifactID": 13079057269,
+    "Name": "runtime-core-Linux-Debug",
+    "ArchiveSHA256": "06c8c121117bb5f06c9b77f1d7fee0190086802aab6cbaa5843b33faf72f47d9",
+    "Revision": "055d8f07440cbe9035937a2e8b22dba476e7356b",
+    "Result": "PASS",
+    "DistinctCoreCases": 80,
+    "CompleteReportVerified": true
+  },
+  {
+    "ArtifactID": 13078519396,
+    "Name": "runtime-core-Windows-Debug",
+    "ArchiveSHA256": "de2c360bb5022bd81b290b616b94b0424fcd361f83434b77502aa8ba9febb9ec",
+    "Revision": "055d8f07440cbe9035937a2e8b22dba476e7356b",
+    "Result": "PASS",
+    "DistinctCoreCases": 80,
+    "CompleteReportVerified": true
+  },
+  {
+    "ArtifactID": 13079166625,
+    "Name": "runtime-native-Linux-Debug",
+    "ArchiveSHA256": "0613c3eca113f194fdbd3cd1c2e56bcffe12800a21dc2a525d12289f9c348b4c",
+    "Revision": "055d8f07440cbe9035937a2e8b22dba476e7356b",
+    "Result": "PASS",
+    "NativeActors": 110,
+    "AnimationActors": 10,
+    "AnimationAuthorityChecks": 510,
+    "AnimationAssertions": 1003,
+    "NativeSource": {
+      "SHA256": "c651c1ff730bb2de8c16da996c09d2567e26d45865dfa25118df812d1f51d91f",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "ExtensionSHA256": "292feecbf7ef7d24074cda920a31b835446924f7913ae0aeafdcbd01e39fc798",
+    "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+    "HarnessInputs": 68,
+    "VerifiedLogHashes": 334
+  },
+  {
+    "ArtifactID": 13079600790,
+    "Name": "runtime-native-Windows-Debug",
+    "ArchiveSHA256": "6c005c7ab85dfb1cd78dc7be01ad08b8e9a09bc1af7e97b94c10ed95066de4d7",
+    "Revision": "055d8f07440cbe9035937a2e8b22dba476e7356b",
+    "Result": "PASS",
+    "NativeActors": 110,
+    "AnimationActors": 10,
+    "AnimationAuthorityChecks": 510,
+    "AnimationAssertions": 1003,
+    "NativeSource": {
+      "SHA256": "c651c1ff730bb2de8c16da996c09d2567e26d45865dfa25118df812d1f51d91f",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "ExtensionSHA256": "8c669448e5a43cd99b10c20274171ef7ceb635991db3418209d14f1d532c433e",
+    "DataStoreWorkerSHA256": "45cfc9a540f29277468f9811f5e5ff249149d23f4cb62b3fe631ffbb4dc06879",
+    "HarnessInputs": 68,
+    "VerifiedLogHashes": 334
+  }
+]

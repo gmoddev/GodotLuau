@@ -157,6 +157,8 @@ failed reports, actual actor evidence, compilation identities and build logs.
 **PARTIALLY QUALIFIED; GL-018 remains open.** Implementation input revision is
 `055d8f07440cbe9035937a2e8b22dba476e7356b`. The matching Windows host is
 SHA-256 `ac5c5977f282c7c0b500357cbf10fb5d513dfc094beaac21ec2806ddea50a153`.
+The Linux host is SHA-256
+`bbfe7aabcd410ea9493eb9dec7ce9ffe74bf26803926be9072f0ef3d89692409`.
 Both platforms pass the engine-only, five-cycle minimal C ABI reload, standalone
 UAF and in-Godot UAF controls. Linux additionally detects the intentional leak.
 These are actual detection/exit checks, not just successful compilations.
@@ -175,10 +177,10 @@ Other first Windows full-profile failures remain visible:
 
 - GL-005's existing 250 ms HTTP frame-progress assertion rejects a 330.418 ms
   observed peak. Its bound and production transport are unchanged.
-- The GL-023 utilities actor fails the existing line-15 invalid-byte URL assertion.
+- The GL-023 utilities actor fails the existing line-15 URL-encoding assertion.
   Its later diagnostic banner is not evidence that the incomplete actor passed.
-  Locale/CRT interactions need isolation; this is not attributed to JSON or fixed
-  by weakening the assertion.
+  The host/CRT interaction needs isolation; this is not attributed to JSON or
+  fixed by weakening the assertion.
 - GL-009's competing increment actor reaches the existing conflict retry bound.
   Retry, admission and timeout limits are unchanged.
 - Character presentation cannot load the imported R6 OBJ resources through this
@@ -186,19 +188,88 @@ Other first Windows full-profile failures remain visible:
   insufficient in the tested profile. Export/remap preparation or an instrumented
   editor needs qualification; this is not a proven Character V2 runtime defect.
 
+The completed local Linux attempt also exposes a qualification workspace error:
+its output/profile root `/evidence` is a Docker Windows bind mount, reported by
+`statfs` as **v9fs**. Existing `GLDataStoreBackend::Local()` deliberately admits
+only ext-family, XFS and Btrfs filesystems on Linux. The persistence actor's
+`Storage/helper unavailable` disposition is therefore required for that root.
+Tmpfs is outside the whitelist too. Linux persistence, filesystem/persistence
+integration and the HTTP final-close persistence assertions require a supported
+filesystem rerun; the current attempt does not qualify them. This is a test
+workspace mistake, not evidence of a new persistence defect or a reason to relax
+the production filesystem admission check. See the
+[filesystem record](evidence/gl018/filesystem-profile.json).
+
+Linux VM reload exits with signal 11 after its PASS marker, with no ASan report;
+that is a failed teardown, not sanitizer-clean execution. The failed Linux
+performance fixture also emits a real LSan report: **29,400 bytes in 135
+allocations**, alongside missing-rig script errors and 15 leaked ObjectDB instances.
+The incomplete fixture prevents attributing that finding to an otherwise valid
+gameplay run. The original report is retained without suppression or attribution
+to GL-017.
+
+| Completed local check | Windows | Linux |
+| --- | --- | --- |
+| Core ASan, complete strict report | 80 PASS | 80 PASS, LSan enabled |
+| Engine/minimal load-unload/detection controls | PASS | PASS, including LSan detection |
+| Production registration, five actual loads/unloads | PASS | PASS |
+| Production VM/module reload, five cycles | ASan access violation after PASS | SIGSEGV after PASS |
+| Fully recorded passing native actors | 62 | 59 |
+| GL-020 adversarial actors / authority checks | 10 / 510 | 10 / 510 |
+| Observed GL-020 assertions, all passed | 1,008 | 1,006 |
+| Complete 110-actor sanitizer gate | FAIL | FAIL |
+
+The passing groups and partial attempts are recorded in
+[local results](evidence/gl018/local-results.json); they do not replace the
+failed complete gate. Assertion totals can vary with exercised update callbacks;
+the raw per-actor records remain in the archive.
+
 The original
 [hosted failure](https://github.com/gmoddev/GodotLuau/actions/runs/41294066758),
 [setup follow-up](https://github.com/gmoddev/GodotLuau/actions/runs/41294189593),
 [prerequisite follow-up](https://github.com/gmoddev/GodotLuau/actions/runs/41294439976)
 and [current full-native run](https://github.com/gmoddev/GodotLuau/actions/runs/41294973654)
-are separate attempts, not substituted passes. Current ordinary
-[core CI](https://github.com/gmoddev/GodotLuau/actions/runs/41294973673) succeeds;
-[native CI](https://github.com/gmoddev/GodotLuau/actions/runs/41294973588) and
-the full sanitizer run are still being observed. Pending/failed required checks
-do not satisfy the 80-core/110-native full-profile gate.
+are separate attempts, not substituted passes. Ordinary
+[core CI](https://github.com/gmoddev/GodotLuau/actions/runs/41294973673) and
+[native CI](https://github.com/gmoddev/GodotLuau/actions/runs/41294973588) both
+pass on Windows/Linux at implementation revision `055d8f0`. All four downloaded
+artifact digests, complete 80-case core reports, 110 native actors, 68 harness
+inputs and 334 log hashes per native platform were independently verified on
+DockerPC. Each hosted native platform contains ten GL-020 actors, 510 authority
+checks and 1,003 observed assertions. Exact artifact IDs/digests and product hashes
+are in the [artifact verification record](evidence/gl018/hosted-artifact-check.json).
+At the bounded final observation, both full sanitizer jobs were executing their
+fixture step. The [recorded job states](evidence/gl018/hosted-sanitizers-observed.json)
+are pending, not passing. Documentation/evidence follow-ups preserve the
+implementation, native inputs, fixtures and workflow at `055d8f0`.
+
+## Evidence retention and cleanup
+
+The [manifest](evidence/gl018/manifest.json) indexes **3,456** preserved files.
+The exact-byte raw text/source archive is SHA-256
+`b9c63552e80b391c1db09896a9ca862b463057e5199dad4815b8c09e80b29aeb`
+(9,304,659 bytes), retained on DockerPC at
+`E:/Sandbox/Codex/NativeSanitizers/qualification-raw-text.zip` and copied to the
+controlling checkout's ignored `.runtime-tests/NativeSanitizers/` directory.
+Selected readable original diagnostics, host identities, full gate results and
+core reports are versioned beside the manifest; Git may normalize their text
+newlines. Original raw bytes and all failed attempts remain in the hashed archive.
+No generated production binaries or dependency changes are committed.
+
+The task-owned Linux host/native build caches, source and probes were archived
+before container cleanup: SHA-256
+`863890114d8aa5df26f0f78b5b03d04b9b09e96204f82706fbe6c131c2e071ba`
+(565,183,833 bytes). Both task containers were stopped and removed. The existing
+Character container was restored to its original stopped state, its shared volume
+was read-only throughout the replacement runs, and caches/evidence on E: remain.
+See the [cleanup record](evidence/gl018/cleanup.json).
 
 No complete Windows/Linux full-native sanitizer pass is claimed. GL-017,
 rendered/device/editor coverage, other toolchains/configurations, Windows LSan,
 broader adversarial/security claims and release/updater qualification remain
 separate. No suppression, leak-disable option, changed gameplay bound or unrelated
 runtime correction is included.
+
+Integration recommendation: **HOLD**. Continue GL-018 with supported Linux
+persistence storage, an appropriate instrumented asset/runtime host and isolated
+binding-unload/Windows utilities controls before claiming complete closure.

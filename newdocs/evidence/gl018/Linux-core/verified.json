@@ -1,0 +1,33 @@
+{
+  "Command": [
+    "ctest",
+    "--test-dir",
+    "/work/fresh-asan",
+    "-R",
+    "^ExecutionDomains$",
+    "--no-tests=error",
+    "--timeout",
+    "30",
+    "--output-on-failure",
+    "--verbose",
+    "--test-output-size-passed",
+    "65536",
+    "--test-output-size-failed",
+    "65536",
+    "--output-junit",
+    "/evidence/linux-full-fresh/core/core-results.xml"
+  ],
+  "NativeSource": {
+    "SHA256": "c651c1ff730bb2de8c16da996c09d2567e26d45865dfa25118df812d1f51d91f",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Cases": 80,
+  "Result": "PASS",
+  "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/evidence/linux-full-fresh/suite-core/asan-report\"",
+  "Files": {
+    "discovery.json": "15debfe652e5bbad10845b3ca0df2e1b356f3408119c8be6cf6b5b8f801a53b7",
+    "core-results.xml": "7982952aaaf1d235d35646fba6863ee83eec7b05d5d92240c1c7cf78b9c08077",
+    "ctest.log": "23fbdbda6245ec054f1f2dc1c5f1f3c732e0f4bae47ce5ce7d48cb67eddafac4"
+  }
+}
