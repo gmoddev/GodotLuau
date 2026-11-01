@@ -37,6 +37,9 @@ def Main():
     Parser.add_argument('--counts', default='1,16,32,64')
     Parser.add_argument('--max-fps', type=int, default=120)
     Parser.add_argument('--graphical', action='store_true')
+    Parser.add_argument('--modes', default='', help='Optional matched dispatch modes; empty preserves the original workload')
+    Parser.add_argument('--lifecycle-samples', type=int, default=30)
+    Parser.add_argument('--warmup-ticks', type=int, default=60)
     Args = Parser.parse_args()
     for Name in ['godot', 'extension', 'output', 'baseline']:
         if getattr(Args, Name): setattr(Args, Name, getattr(Args, Name).resolve())
@@ -49,6 +52,7 @@ def Main():
     Results = []
     Inputs = {'SourceAtInvocation': GetFingerprint(Source), 'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n',b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.py','.gd','.cpp','.pem'] or File.name in ['CMakeLists.txt','GodotDistribution.json']}, 'Trials': Args.trials, 'SamplesPerPhysicsWindow': Args.samples, 'Counts': Args.counts, 'Graphical': Args.graphical, 'GodotSHA256': hashlib.sha256(Args.godot.read_bytes()).hexdigest()}
     Inputs['MaxFPS'] = Args.max_fps
+    Inputs.update(Modes=Args.modes, LifecycleSamples=Args.lifecycle_samples, WarmupTicks=Args.warmup_ticks)
     (Args.output/'inputs.json').write_text(json.dumps(Inputs,indent=2))
     try:
         Import = Assets(Args.godot, Source, Args.output, Environment)
@@ -75,7 +79,7 @@ def Main():
                     Before = resource.getrusage(resource.RUSAGE_CHILDREN)
                 Started = time.monotonic()
                 with (Directory / (Label + '.stdout.log')).open('w') as Out, (Directory / (Label + '.stderr.log')).open('w') as Err:
-                    Actor = StartProcess([*Command, '--', '--counts', Args.counts, '--samples', str(Args.samples), *(['--graphical'] if Args.graphical else [])], Out, Err, ActorEnvironment)
+                    Actor = StartProcess([*Command, '--', '--counts', Args.counts, '--samples', str(Args.samples), '--lifecycle-samples', str(Args.lifecycle_samples), '--warmup-ticks', str(Args.warmup_ticks), *(['--modes', Args.modes] if Args.modes else []), *(['--graphical'] if Args.graphical else [])], Out, Err, ActorEnvironment)
                 Results.append(Check(Actor, time.monotonic()+180, Directory, Label, '[Character:Performance] PASS'))
                 Data = json.loads((Directory / 'measurements.json').read_text())
                 Data['ProcessCpuSeconds'] = Cpu(Actor, Before)

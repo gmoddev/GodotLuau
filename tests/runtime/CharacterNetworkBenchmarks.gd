@@ -7,6 +7,7 @@ var Network: Node
 var Role := "server"
 var Index := "0"
 var Port := 0
+var ProfileMode := "all"
 var Recording := false
 var PhysicsBegin := 0
 var ProcessBegin := 0
@@ -51,6 +52,7 @@ func _initialize() -> void:
         if Args[Position] == "--fixture-role": Role = Args[Position+1]
         if Args[Position] == "--fixture-port": Port = int(Args[Position+1])
         if Args[Position] == "--fixture-client-index": Index = Args[Position+1]
+        if Args[Position] == "--profile-mode": ProfileMode = Args[Position+1]
     call_deferred("Run")
 
 func Run() -> void:
@@ -95,6 +97,18 @@ func Run() -> void:
     var Character: Node = World.get_node("LocalPlayer")
     var Health: Node = Character if Character.is_class("RBXCharacter") else Character.get_node("Humanoid")
     Health.call("set_npc_move_dir", Vector3.RIGHT)
+    assert(ProfileMode in ["all", "physics-only", "network-only"])
+    if ProfileMode != "all":
+        var ProfileCharacters: Array = World.find_children("RemotePlayer_*", "", true, false)
+        ProfileCharacters.append(Character)
+        for Item in ProfileCharacters:
+            var Animator := Item.get_node_or_null("R6Animator")
+            if Animator: Animator.set_process(false)
+            if ProfileMode == "network-only":
+                Item.set_process(false)
+                Item.set_physics_process(false)
+                var Body: Node = Item.call("GetPhysicsBody")
+                if Body: Body.set_process(false)
     for Tick in range(90): await physics_frame
     var Process := []
     var Physics := []

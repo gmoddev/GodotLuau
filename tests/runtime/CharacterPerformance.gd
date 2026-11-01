@@ -7,6 +7,9 @@ var LastProcess := 0
 var PhysicsDispatch := []
 var ProcessDispatch := []
 var ProcessFrames := []
+var SelectedModes := []
+var LifecycleSamples := 30
+var WarmupTicks := 60
 
 func Distribution(Values: Array) -> Dictionary:
     var Ordered := Values.duplicate()
@@ -41,12 +44,13 @@ func ProfileCount(Count: int, SampleCount: int) -> Array:
     Observer.look_at(Vector3(28, 0, 24))
     Observer.make_current()
     var Results := []
-    for Mode in (["all", "physics-only", "animation-only", "inactive"] if Count == 16 else ["all"]):
+    var Modes: Array = SelectedModes if not SelectedModes.is_empty() else (["all", "physics-only", "animation-only", "inactive"] if Count == 16 else ["all"])
+    for Mode in Modes:
         for Character in Characters:
             Character.set_physics_process(Mode in ["all", "physics-only"])
             Character.set_process(Mode != "inactive")
             Character.get_node("R6Animator").set_process(Mode in ["all", "animation-only"])
-        await Ticks(60)
+        await Ticks(WarmupTicks)
         var Physics := []
         var Process := []
         var Frame := []
@@ -76,7 +80,7 @@ func ProfileCount(Count: int, SampleCount: int) -> Array:
             Harness.append(Time.get_ticks_usec()-Start)
         Recording = false
         Check(PhysicsDispatch.size() >= SampleCount-2 and ProcessDispatch.size() >= SampleCount-2, "independent dispatch timing samples")
-        Results.append({"Characters": Count, "Mode": Mode, "FrameSeconds": Distribution(ProcessFrames), "PhysicsTickWallSeconds": Distribution(Frame), "PhysicsSeconds": Distribution(PhysicsDispatch), "ProcessSeconds": Distribution(ProcessDispatch), "EnginePhysicsMonitorSeconds": Distribution(Physics), "EngineProcessMonitorSeconds": Distribution(Process), "HarnessMicroseconds": Distribution(Harness), "RenderCpuMilliseconds": Distribution(CpuRender) if RenderTimes else null, "RenderGpuMilliseconds": Distribution(GpuRender) if RenderTimes else null, "DrawCalls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), "Objects": Performance.get_monitor(Performance.OBJECT_COUNT), "Nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT), "Resources": Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT), "StaticMemoryBytes": Performance.get_monitor(Performance.MEMORY_STATIC)})
+        Results.append({"Characters": Count, "Mode": Mode, "FrameSeconds": Distribution(ProcessFrames), "PhysicsTickWallSeconds": Distribution(Frame), "PhysicsSeconds": Distribution(PhysicsDispatch), "ProcessSeconds": Distribution(ProcessDispatch), "EnginePhysicsMonitorSeconds": Distribution(Physics), "EngineProcessMonitorSeconds": Distribution(Process), "HarnessMicroseconds": Distribution(Harness), "RenderCpuMilliseconds": Distribution(CpuRender) if RenderTimes else null, "RenderGpuMilliseconds": Distribution(GpuRender) if RenderTimes else null, "DrawCalls": Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), "Objects": Performance.get_monitor(Performance.OBJECT_COUNT), "Nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT), "Resources": Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT), "StaticMemoryBytes": Performance.get_monitor(Performance.MEMORY_STATIC), "CharacterPosition": Characters[0].global_position, "CharacterVelocity": Characters[0].call("GetVelocity")})
     Observer.free()
     for Added in Worlds:
         if Added != World: Added.free()
@@ -93,6 +97,13 @@ func Run() -> void:
             Counts = []
             for Item in Args[Position+1].split(","): Counts.append(int(Item))
         if Args[Position] == "--samples": SampleCount = int(Args[Position+1])
+        if Args[Position] == "--modes":
+            for Mode in Args[Position+1].split(","):
+                assert(Mode in ["all", "physics-only", "animation-only", "inactive"])
+                SelectedModes.append(Mode)
+        if Args[Position] == "--lifecycle-samples": LifecycleSamples = int(Args[Position+1])
+        if Args[Position] == "--warmup-ticks": WarmupTicks = int(Args[Position+1])
+    assert(LifecycleSamples > 0 and LifecycleSamples <= 1000 and WarmupTicks >= 60 and WarmupTicks <= 600)
     Check(GDExtensionManager.load_extension("res://godot_luau.gdextension") in [GDExtensionManager.LOAD_STATUS_OK, GDExtensionManager.LOAD_STATUS_ALREADY_LOADED], "load")
     Game = Node.new()
     Game.name = "Game"
@@ -114,7 +125,7 @@ func Run() -> void:
     Freeze(World.get_node("LocalPlayer"))
     var Creation := []
     var Respawn := []
-    for Attempt in range(35):
+    for Attempt in range(LifecycleSamples+5):
         World.get_node("LocalPlayer").free()
         var Start := Time.get_ticks_usec()
         World.call("build_local_character")
@@ -122,7 +133,7 @@ func Run() -> void:
         Freeze(World.get_node("LocalPlayer"))
         if Attempt >= 5: Creation.append(Duration)
         await process_frame
-    for Attempt in range(35):
+    for Attempt in range(LifecycleSamples+5):
         var Start := Time.get_ticks_usec()
         Players.call("load_local_character")
         var Duration := Time.get_ticks_usec()-Start

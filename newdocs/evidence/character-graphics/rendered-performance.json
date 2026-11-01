@@ -1,5 +1,5 @@
 {
-  "Scope": "Five alternating paired trials; statistics are medians of trial statistics, not pooled independent host populations. Bootstrap is descriptive for these five pairs only. Node-dispatch elapsed time is distinct from whole-process OS CPU and engine coarse monitors.",
+  "Scope": "Three alternating paired trials; statistics are medians of trial statistics, not pooled independent host populations. Bootstrap is descriptive for these three pairs only. Node-dispatch elapsed time is distinct from whole-process OS CPU and engine coarse monitors.",
   "Rows": [
     {
       "Characters": 1,
