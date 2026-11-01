@@ -77,6 +77,8 @@ the inherited runtime already satisfies them. Baseline gaps link to
   GL-020's integrated implementation applies the same execution/session rules to animation;
   full animation security qualification remains pending.
 - Animation state binds the current assigned session before puppet creation.
+  Original wire types are checked before coercion; conversion diagnostics must
+  not permit malformed animation state to reach cache, playback or relay.
   Stops replace active state; character/session/service departure invalidates old
   state. Legitimate server state can wait for a puppet, but stale state must not
   cross into a replacement session. Animation settings must not restart the same

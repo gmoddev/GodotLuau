@@ -491,6 +491,11 @@ GL-007 makes legacy `_relay_anim`/`_recv_anim` handlers inert and uses
 client input also binds the correction epoch and server playback binds the life.
 Finite speed (0–20), identity/name bounds, per-peer rate limits, checked assets
 and active gameplay-timeline protection apply before cache mutation/relay.
+The GL-020 follow-up receives raw Variants and validates canonical field types
+before conversion, including integer epoch/life and positive 32-bit target peers.
+Normal AnimationTrack packet shapes remain unchanged; implicit malformed-field
+coercion is rejected. Qualification is recorded in the
+[authority follow-up](animation-authority-qualification.md).
 ADR-006 documents the epoch-zero pre-puppet case. Protocol-3 removal tombstones
 also reject stale animation for a removed life. This preserves GL-020's existing
 replication mechanism while explicitly versioning the character wire contract.
