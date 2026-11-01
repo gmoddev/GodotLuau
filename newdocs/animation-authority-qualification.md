@@ -1,5 +1,11 @@
 # GL-020 animation authority qualification
 
+This is the retained branch qualification record before integration. The
+[controlled main integration](animation-authority-main-integration.md) records
+the subsequent authorized normal merge, fresh main CI and unchanged sanitizer
+limitations. Statements below about main remaining unchanged describe that
+earlier qualification phase.
+
 Starting main: `3d1cf07cd44c999450b1e611b1435e64403103c0`.
 Branch: `security/gl-020-animation-qualification`. Qualified implementation input:
 `358d6ffc491303e498d512792d09bdb62332bb25`; final execution results are recorded

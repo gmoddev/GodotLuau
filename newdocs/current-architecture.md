@@ -19,7 +19,11 @@ GL-020's functional animation/session implementation is integrated through norma
 merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`, with the same tree as qualified
 branch `8e21d18a5504e0d703efbcf2a71a53d56314058e`. The dedicated
 [adversarial follow-up](animation-authority-qualification.md) records current
-branch transport/handler evidence and remaining sanitizer boundaries. See the
+transport/handler evidence and remaining sanitizer boundaries. Its four commits
+are integrated by normal merge `9f4a4d165abcc5e8b97af65fe7fda1eb191eba8f`, with
+a tree identical to retained source tip `83e498b7c7ffd203857806488c8c3790439e9560`.
+The [authority integration record](animation-authority-main-integration.md) records
+fresh main checks separately from retained branch qualification. See the
 [animation integration record](animation-lifecycle-validation.md#main-integration-2026-10-27).
 Security runtime merge `2e69d8ac703d3f968e42054871511111ab8471be` equals qualified
 source `462969bd967bd26fcbeccdca1bd6ae60335347f4`. See the
