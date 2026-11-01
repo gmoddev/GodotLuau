@@ -54,7 +54,9 @@ jobs:
           $Installation = & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
           if ($LASTEXITCODE -ne 0 -or -not $Installation) { throw 'MSVC toolchain unavailable' }
           $Setup = Join-Path $Installation 'VC\Auxiliary\Build\vcvars64.bat'
-          $Lines = cmd /d /s /c "`"`"$Setup`" >nul && set`""
+          $Batch = Join-Path $env:RUNNER_TEMP 'sanitizer-compiler-environment.cmd'
+          @('@echo off', "call `"$Setup`" >nul", 'if errorlevel 1 exit /b 1', 'set') | Set-Content -LiteralPath $Batch -Encoding ascii
+          $Lines = cmd /d /c $Batch
           if ($LASTEXITCODE -ne 0) { throw 'MSVC environment failed' }
           foreach ($Line in $Lines) {
             if ($Line -match '^([^=]+)=(.*)$') { "$($Matches[1])=$($Matches[2])" | Out-File $env:GITHUB_ENV -Append -Encoding utf8 }
