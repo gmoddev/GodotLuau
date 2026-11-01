@@ -1,7 +1,9 @@
 # GL-010/011 release-candidate qualification
 
 Starting main: `34ab42ee4e160a6d8ba85bded00bd9dce1c1cd93`.
-Development branch: `ci/gl-010-011-release-qualification`. Main remains unchanged.
+Development branch: `ci/gl-010-011-release-qualification`. Main remained unchanged
+during branch qualification; the subsequent authorized integration is recorded
+under [Main integration](#main-integration-2026-11-01).
 **PARTIALLY QUALIFIED overall; the bounded non-publishing candidate profiles are
 qualified.** Qualified implementation:
 `ca8cefbafbe6012e6ae0699ae433b7d5355edfa6`. Production publication/updater admission
@@ -237,10 +239,11 @@ No Linux GPU, Vulkan, other GPU or physical-device ergonomics qualification is
 inferred. Hosted presentation remains explicitly headless. No new performance
 comparison or general FPS/reproducibility claim is made.
 
-## Integration readiness and closure boundaries
+## Branch integration readiness and closure boundaries
 
-Ready for review/integration of this **candidate-only** pipeline within the
-documented profiles. No merge is performed. GL-010's inherited Windows ZIP reuse
+At the end of branch qualification, this **candidate-only** pipeline is ready for
+review/integration within the documented profiles. No merge is performed during
+that branch task. GL-010's inherited Windows ZIP reuse
 is corrected and candidate source/build provenance is exercised, but this does
 not retroactively establish historical binary provenance or qualify an enabled
 production publishing channel. GL-011's candidate admission is now enforced and
@@ -262,3 +265,127 @@ and adapter product hash, configuration/compiler details, actual package and
 startup identities, graphical capture hashes, local tooling inputs and preserved
 failed/cancelled attempts. The graphical archive transfer digest is independently
 verified on the controlling PC; no builds or runtime tests execute there.
+
+## Main integration (2026-11-01)
+
+Starting local and remote main both resolve to
+`34ab42ee4e160a6d8ba85bded00bd9dce1c1cd93`. The retained source branch resolves
+to `1ce5018e1aa3e216ced2ba56bf17aff48e4e0aa8`. Its six commits, in order, are
+`2360e9ffcfac575574bb5bb7f8ae566bfd431669`,
+`fa58c436f6d7260c2948f54c384ee4a30062135f`,
+`35a578ee4f78a035a5163ec8e10da6508d5bdb49`,
+`fea42f459a40f4e634fba8f48c66f29edcb5a724`,
+`ca8cefbafbe6012e6ae0699ae433b7d5355edfa6` and
+`1ce5018e1aa3e216ced2ba56bf17aff48e4e0aa8`.
+The last commit changes five documentation/evidence files only; qualified
+pipeline inputs match `ca8cefb`. Runtime, existing runtime fixtures, dependency
+gitlinks and updater inputs match starting main. All historical failed attempts
+and qualification boundaries above are retained.
+
+Normal merge `b88a88b64c3f576d8b51e51908c0141ac9231a18` has those main/source
+tips as its two parents and tree `4031c533e2ea23835920c4e72ef3e2a5bc754fb0`,
+identical to the final source branch. No conflict, squash or history rewrite is
+needed. The pushed remote merge SHA is independently checked with `ls-remote`.
+
+Fresh focused checks execute on DockerPC against a frozen `git archive` of the
+merge's `tools`, `tests` and `.github` inputs. All 95 file hashes match its Git
+blobs after LF normalization. Commands are the four existing Python test files:
+`tests/release/ReleaseCandidateTests.py` (14 PASS),
+`tests/release/ReleaseRetentionTests.py` (12 PASS),
+`tests/packaging/PackagingTests.py` (5 PASS) and
+`tests/runtime/FixtureProcessTests.py` (8 applicable PASS; 6 Linux-only cases
+not applicable on Windows). Transfer archive SHA256 is
+`742cbdc3e4dabd8c54608212dc4273e9af8a01cd2a15067a73f40c0f80b83e5a`.
+Windows child-error UI is suppressed; each suite owns its child process tree
+and has a 90-second deadline. No new local native build or dependency install
+is needed for this integration-only change.
+
+Workflow review confirms immutable `github.sha` checkouts, recursive dependency
+pins, read-only permissions, non-persisted credentials, bounded build parallelism,
+same-run artifacts and fail-closed acceptance. Both inherited publishing jobs
+remain literal false; dispatch is their only trigger. GL-012's new-identity
+preflight, serialized publication, no-overwrite setting and retained history
+remain intact. `RuntimeUpdatesAllowed()` remains false. The candidate workflow
+is manually dispatched on integrated main because its automatic push trigger
+is deliberately restricted to the development branch. Ordinary core/native
+workflows are also dispatched explicitly at the merge revision.
+
+Fresh [candidate run 41276341255](https://github.com/gmoddev/GodotLuau/actions/runs/41276341255)
+passes **all ten jobs** at the exact merge revision: both rejection/retention
+jobs, four source-build profiles, Linux core ASan/LSan, both extracted-package
+jobs and final acceptance. Every profile executes 80 distinct core cases and
+110 zero-exit native actors. Linux core ASan/LSan executes all 80 cases, verifies
+two instrumented translation units and `__asan_init`, and uses
+`detect_leaks=1:halt_on_error=1`. Both extracted Debug/Release configurations run
+the public persistence fixture with the packaged Release companion. Linux mode
+`0755` survives extraction. No required gate is skipped or pending.
+
+Fresh ordinary [core run 41276343797](https://github.com/gmoddev/GodotLuau/actions/runs/41276343797)
+and [native run 41276346183](https://github.com/gmoddev/GodotLuau/actions/runs/41276346183)
+also pass both platforms at the merge revision. All four downloaded diagnostic
+artifacts verify their GitHub digests; actual reports establish 80 core cases
+and 110 native actors per platform. Native fixture/log hashes, presentation
+assertions, real ENet latency records, GL-022 relay, GL-023 GUID/denied-origin
+records and persistence fault/kill records verify through the existing observer.
+
+All eight candidate Actions artifacts are downloaded and independently matched
+to GitHub's SHA256 digests. Every declared production/adapter product, native
+log, package member and startup log hash verifies. All four profile source trees
+equal the merge tree above; both dependency pins and all 63 fixture hashes match
+the frozen Git inputs. The 89-file native fingerprint remains
+`559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0`.
+Both final packages contain exactly 133 members and matching embedded provenance:
+
+| Integrated package | Bytes | SHA256 |
+| --- | --- | --- |
+| `GodotLuau-Windows.zip` | 8,055,447 | `3b6c574eb3373664e64584fb9ecf6b39a9987bb81272abefcaf27123092b4893` |
+| `GodotLuau-Linux.zip` | 10,849,132 | `836a66ee1264df8a0e0eb25f6ff31df16e48b84036e1f5b10417baa039fd6c3c` |
+
+Embedded provenance SHA256 is
+`8b1dfa0c697a4158acd1ff4370e745702bcc607f9fbb1aad5484ca9628d581f9`
+for Windows and
+`f478f614ef14b95d1ee05be00976c424be04b35cb102b27d6c8aa814801dd9d7`
+for Linux. Final acceptance is `ACCEPTED_NONPUBLISHING_CANDIDATE`. These package
+digests include revision-specific provenance and do not establish independent
+byte-for-byte build reproducibility.
+
+Fresh actual rendered validation uses the extracted integrated Windows package
+on DockerPC's NVIDIA GTX 1650 SUPER/OpenGL setup. Both Debug and Release pass
+14 actors, 454 assertions and 48 hashed PNG captures each. All six first-person
+fade uniforms reach exactly 1 for both R6/custom checks. Packaged DLL SHA256 is
+`6a70d3726bf58723a196a04885b4897734b2359723723604d6906c9a8a68432e`
+for Debug and
+`709e0322fccf3e6cba596ef63a1f79f63164934c5465bcb37c83e9a429b6c2ff`
+for Release. Fixture and asset hashes match the package's recorded inputs.
+Fresh R6 third-person and custom first-person images are also visually inspected;
+the expected visible rig and fully faded first-person endpoint are present.
+
+The preserved 96-capture collection, original candidate ZIP and observer helpers
+are `graphical-packages-b88a88b.zip` (33,953,806 bytes, 1,018 entries), SHA256
+`52ad4b45aad6b15b7c0ebc447e0fb30e1481a33df44379ab974ee9de699d4629`.
+The transferred archive independently matches that digest. Two collection-only
+errors are retained in the integration evidence: an optional remote directory
+listing's shell quoting, and an oversized JSON observer output rejected before
+writing. Neither changes runtime/test inputs, reruns a test or weakens assertions.
+
+Disposition: **INTEGRATED WITH LIMITATIONS**. No implementation change is needed
+during integration. The subsequent main evidence commit changes documentation
+and evidence only; qualification and packages identify the exact merge revision,
+rather than claiming a build of that later documentation commit. All six source
+commits and the development branch are retained. No task-owned runtime process
+remains on DockerPC; the existing Linux container is stopped and caches/evidence
+are preserved. No other worker, dependency installation, release publication,
+updater distribution or unrelated development is used.
+
+GL-017/018, deferred broader GL-020 adversarial qualification, older-glibc
+portability, pristine consumer environments, full-native sanitizer gaps,
+graphical/device coverage, allocation-event profiling and byte reproducibility
+remain limited as documented above. Headless hosted checks and the scoped
+Windows GPU results do not expand platform or production support claims.
+
+The [integration evidence](evidence/release-candidate-main-integration-2026-11-01.json)
+records exact jobs/artifact IDs/digests, production and adapter hashes, provenance,
+startup logs, local input hashes, ordinary CI verification and graphical captures.
+Raw downloaded artifacts remain under the run-specific evidence directory; the
+local capture archive remains under its `local` sibling. Earlier qualification
+and failed/truncated evidence are unchanged.

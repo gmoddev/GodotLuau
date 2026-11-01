@@ -35,8 +35,8 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-007 | P1 | Integrated and resolved within ADR-006/007 | Server health, bounded prediction, freshness and checked presentation |
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Integrated; fixed and qualified within scope | Controlled main merge, stopped-writer gate, preserved data and verified companion packages |
-| GL-010 | P1 | Candidate correction qualified on development branch; publication unqualified | Same-revision source-built candidate provenance replaces Windows ZIP reuse |
-| GL-011 | P1 | Candidate gates qualified; broader qualification incomplete | Required automated profiles; remaining sanitizer/production boundaries |
+| GL-010 | P1 | Candidate correction integrated and verified; publication unqualified | Same-revision source-built candidate provenance replaces Windows ZIP reuse |
+| GL-011 | P1 | Candidate gates integrated and verified; broader qualification incomplete | Required automated profiles; remaining sanitizer/production boundaries |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
 | GL-013 | P2 | Open; five extractions integrated | API/stdlib fan-out three to one; bootstrap owned by script CPP |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
@@ -475,12 +475,16 @@ GL-017 engine diagnostics and GL-020 adversarial qualification remain separate.
 
 ## GL-010: Windows release binaries lack same-revision build evidence
 
-**GL-010/011 continuation:** The dedicated development branch qualifies the
-[non-publishing candidate contract](release-candidate-qualification.md), replacing
-committed Windows ZIP reuse with four source-built profiles and provenance at
+**GL-010/011 continuation:** Normal merge `b88a88b64c3f576d8b51e51908c0141ac9231a18`
+integrates all six qualified source commits. The
+[non-publishing candidate contract](release-candidate-qualification.md) replaces
+committed Windows ZIP reuse with four source-built profiles and provenance
+qualified at
 `ca8cefbafbe6012e6ae0699ae433b7d5355edfa6`. All ten hosted jobs, both extracted
-packages and eight downloaded artifacts verify. Main remains unchanged and
-publication stays disabled; historical/published provenance is not retroactively
+packages and eight downloaded artifacts verify. Fresh main
+[integration verification](release-candidate-qualification.md#main-integration-2026-11-01)
+passes all ten candidate gates plus ordinary core/native CI with exact artifacts.
+Publication stays disabled; historical/published provenance is not retroactively
 established. This is bounded candidate qualification, not full production closure.
 
 **Original evidence (starting main):** `.github/workflows/build-release.yml` builds Linux debug/release
@@ -517,7 +521,10 @@ ASan/LSan, extracted-package and fail-closed admission gates pass
 checks remain unchanged. Failed/skipped required jobs demonstrably prevent
 acceptance; all four final profiles execute 80 core/110 native cases. Unsupported
 graphical/sanitizer configurations and production distribution retain explicit
-limits. The correction is not merged and publication stays disabled.
+limits. The correction is integrated by normal merge `b88a88b`; fresh main
+candidate/core/native gates and downloaded artifacts verify in the
+[integration record](release-candidate-qualification.md#main-integration-2026-11-01).
+Publication stays disabled.
 
 **Original evidence:** One tracked Actions workflow performs build/package/release steps
 without runtime tests, multiplayer integration, or sanitizers. `test_chat/` has a

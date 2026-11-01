@@ -1,7 +1,9 @@
 # GL-012 nondestructive release retention
 
 The later [GL-010/011 candidate qualification](release-candidate-qualification.md)
-changes the dormant source-build/package path on its dedicated branch. Both
+changes the dormant source-build/package path and is now integrated by normal
+merge `b88a88b64c3f576d8b51e51908c0141ac9231a18`; see its
+[fresh main verification](release-candidate-qualification.md#main-integration-2026-11-01). Both
 publishing jobs remain disabled/read-only. The new-tag/release preflight,
 no-overwrite and historical-retention protections remain and all twelve
 retention tests pass on both hosted platforms and DockerPC. The record below
