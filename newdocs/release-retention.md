@@ -1,5 +1,12 @@
 # GL-012 nondestructive release retention
 
+The later [GL-010/011 candidate qualification](release-candidate-qualification.md)
+changes the dormant source-build/package path on its dedicated branch. Both
+publishing jobs remain disabled/read-only. The new-tag/release preflight,
+no-overwrite and historical-retention protections remain and all twelve
+retention tests pass on both hosted platforms and DockerPC. The record below
+retains its historical source, commands and continuation assessment.
+
 Date: 2026-10-27. Base/main: `34edaa2adfe698d6527e5c5b9bc0159428b5db64`.
 Branch: `maintenance/gl-012-release-retention`, independently based on verified
 main, not the unmerged GL-016 updater branch. The following branch qualification

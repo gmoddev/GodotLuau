@@ -2,7 +2,10 @@
 
 Starting main: `34ab42ee4e160a6d8ba85bded00bd9dce1c1cd93`.
 Development branch: `ci/gl-010-011-release-qualification`. Main remains unchanged.
-Status: implementation under qualification; no candidate result is claimed yet.
+**PARTIALLY QUALIFIED overall; the bounded non-publishing candidate profiles are
+qualified.** Qualified implementation:
+`ca8cefbafbe6012e6ae0699ae433b7d5355edfa6`. Production publication/updater admission
+and the remaining qualification boundaries below are not enabled or closed.
 
 ## Baseline and bounded correction
 
@@ -88,6 +91,23 @@ DockerPC; no other worker is substituted and no infrastructure is changed.
 Hosted Actions are explicitly permitted and will supply the source builds,
 tests and package startup qualification. Unrun local checks are not called passing.
 
+DockerPC subsequently becomes reachable without infrastructure changes. On
+immutable tooling revision `ca8cefbafbe6012e6ae0699ae433b7d5355edfa6`, its isolated
+Windows execution passes all 14 candidate rejection tests, 12 retention tests,
+five packaging tests and eight applicable process-ownership tests. Six existing
+Linux `/proc` cases are not applicable on Windows; the Linux policy job runs
+those cases. No required core/native case is omitted by that platform distinction.
+All 95 executed source/tool/fixture inputs match that revision's Git blobs after
+LF normalization, and the transferred tooling/log archive verifies SHA256
+`2a0ab04b82af85db5886e5b375cf1b37c0099408dc936adb73c4b329da1af2e9`.
+
+The initial local metadata collector includes one derived `__pycache__` file
+after importing the process helper, so Git-blob verification rejects that extra
+entry. The original record is retained. A corrected collection uses the exact
+95 source-archive members, retains the original record's hash and passes the
+source comparison; no test is rerun or assertion weakened. This is a collection
+failure rather than a runtime/test failure.
+
 Qualification commands, revisions, hosted runs, artifacts, failures and outcomes
 will be appended after execution. The existing failed CTest truncation and all
 Character performance/graphical evidence remain unchanged.
@@ -134,3 +154,111 @@ security, GL-027 template authoring and GL-015 asset redistribution rights remai
 independent. Headless presentation does not establish GPU rendering or physical
 input ergonomics. Production-scale performance and arbitrary assets remain
 unqualified. No release/updater admission or byte reproducibility claim is added.
+Hosted Windows qualification has the installed MSVC runtimes available; pristine
+consumer machines are not qualified here. Linux candidates target the existing
+Ubuntu 24.04 CI profile, not a demonstrated older-glibc compatibility floor.
+Compiler/SDK image availability is not a hermetic toolchain guarantee. The
+legacy manual `tools/release.ps1` is not invoked or admitted by this pipeline;
+future publication must use separately authorized, verified candidate inputs.
+Existing Character allocation-event profiling and sanitizer limitations remain
+in their retained qualification records.
+
+## Completed hosted qualification
+
+[Run 41273217042](https://github.com/gmoddev/GodotLuau/actions/runs/41273217042)
+passes all ten jobs at the exact qualified implementation revision above:
+
+| Required profile | Production SCons extension + companion | Existing core | Existing native |
+| --- | --- | --- | --- |
+| Windows Debug | Built from source | 80 PASS | 110 PASS |
+| Windows Release | Built from source | 80 PASS | 110 PASS |
+| Linux Debug | Built from source | 80 PASS | 110 PASS |
+| Linux Release | Built from source | 80 PASS | 110 PASS |
+
+Both platform policy jobs pass all 14 candidate tests, 12 retention tests and
+five packaging tests. The process suite executes all 14 Linux cases and eight
+applicable Windows cases. The independent Linux Clang 18.1.3 ASan/LSan job
+passes 80 cases; its downloaded record verifies two instrumented translation
+units, `__asan_init` and `detect_leaks=1:halt_on_error=1`.
+
+Each native profile runs lifecycle 8, network 10, animation 10, Character 20,
+resources 8, filesystem 3, HTTP 4, HttpService 6, caller migration 3,
+presentation 14, performance 1 and persistence 23 actors. The strict unchanged
+checkers are rerun against all four reports during both package jobs. Source,
+all 63 runtime-fixture hashes, both dependency pins and actual product/log
+hashes match. No full native suite is claimed against the SCons production
+library: the existing CMake adapter is explicitly identified, while the actual
+SCons libraries receive extracted-package startup and separate graphical checks.
+
+Both platform package jobs pass actual Debug/Release public DataStore startup,
+including the yielding transform, large payload, frame progress and close-write
+checks with the single packaged Release companion. Linux ZIP executable mode
+`0755` is checked before and after extraction. Both packages contain 133 members,
+including the source layout, dependency notices and embedded provenance.
+
+| Package | Bytes | SHA256 |
+| --- | --- | --- |
+| `GodotLuau-Windows.zip` | 8,055,437 | `e2e1ca74ed5af0ccb6748d43d760867258788cf2270f8c8af471875179f9c0bd` |
+| `GodotLuau-Linux.zip` | 10,849,126 | `5096ef1cb8609535f00577120fe088b80b724dcaceb0d8d73e3c014bfedc3681` |
+
+All eight Actions ZIPs are downloaded and verified against GitHub's artifact
+digests. Read-only inspection also verifies every declared profile product,
+native log, candidate member and startup-log hash, the 80 distinct core markers
+per profile, 110 zero-exit actors per profile and final accepted source identity.
+An initial observer reads raw XML with a line regex and reports incomplete
+markers; parsing the actual JUnit `system-out` fixes that observer and verifies
+all 80. The hosted strict checker already parsed XML and was not changed.
+
+The accepted artifact is explicitly `ACCEPTED_NONPUBLISHING_CANDIDATE`.
+No GitHub Release, source tag, repository archive commit, updater installation
+or deployment occurs. All raw reports, source-built profiles, packages, accepted
+manifest and earlier failed/cancelled artifacts are retained under
+`C:/Users/aiden/.codex/artifacts/godotluau/release-qualification/`.
+
+## Fresh actual rendered package qualification
+
+DockerPC runs the existing graphical fixture on the actual extracted Windows
+candidate DLLs using cached official Godot 4.7.1, the packaged rig/shader assets
+and the packaged Release companion. Both Debug and Release pass **14 real
+NVIDIA/OpenGL actors, 454 assertions and 48 hashed PNG captures each** on the
+GTX 1650 SUPER. Source fixture and asset hashes match embedded candidate inputs.
+Local/default R6/custom rigs, listen/dedicated peers, camera/input simulation,
+movement/body synchronization, animation, death and respawn execute. All six
+first-person fade uniforms finish exactly at 1. Fresh R6 third-person and custom
+first-person captures are visually inspected separately from numeric assertions.
+
+The actual packaged Debug DLL SHA256 is
+`6a6a818f693c3ace0eff260f031055125525f38e39c4de8ac868b9fc63385e65`;
+Release is `9324792e571d0c58021316e309708b1b3bfdc2c4feed1b72d8c3969c2c547b49`.
+The complete 96-capture/rendering collection, including original candidate ZIP
+and helper/diagnostic records, is `graphical-packages-ca8cefb.zip`, SHA256
+`2007ad8310133181f22781e15f114fbb30cc8ed447b900f67fa907a414d1cf46`.
+No Linux GPU, Vulkan, other GPU or physical-device ergonomics qualification is
+inferred. Hosted presentation remains explicitly headless. No new performance
+comparison or general FPS/reproducibility claim is made.
+
+## Integration readiness and closure boundaries
+
+Ready for review/integration of this **candidate-only** pipeline within the
+documented profiles. No merge is performed. GL-010's inherited Windows ZIP reuse
+is corrected and candidate source/build provenance is exercised, but this does
+not retroactively establish historical binary provenance or qualify an enabled
+production publishing channel. GL-011's candidate admission is now enforced and
+rejects failed/skipped jobs, with the stated sanitizer and platform limits.
+Production release enforcement remains dormant and must not be enabled merely
+by changing a job condition. Any future publishing path must consume verified
+immutable candidate inputs and retain GL-012's fail-closed new-tag/release guard
+and no-overwrite/history policy.
+
+The evidence publication follow-up changes documentation/evidence only.
+Packages and CI results claim the exact qualified implementation revision,
+not a build of the later documentation-only commit. Native runtime, fixtures,
+dependency pins, updater admission and qualified Character/HTTP contracts remain
+unchanged from starting main.
+
+The [machine-readable evidence](evidence/release-candidate-2026-11-01.json)
+records all ten job identities, eight artifact IDs/digests, every production
+and adapter product hash, configuration/compiler details, actual package and
+startup identities, graphical capture hashes, local tooling inputs and preserved
+failed/cancelled attempts. The graphical archive transfer digest is independently
+verified on the controlling PC; no builds or runtime tests execute there.

@@ -571,7 +571,7 @@ execution status remains in that record. Historical release/tag deletion stays
 removed by GL-012. Main integrates the qualified core CI branch via
 `f0199004d56485ec7a9de14d5454d1907822ba11`. The separate
 `runtime-core-ci.yml` builds the production `ExecutionDomainTests` target and
-runs its current 73 cases through CTest on hosted Windows/Linux Debug. Read-only access,
+runs its current 80 cases through CTest on hosted Windows/Linux Debug. Read-only access,
 recursive pinned checkout, two build jobs, explicit deadlines and checked
 discovery/completion are independent of publication. Only diagnostic reports/logs
 are uploaded. Fresh hosted integration succeeds on Windows/Linux; outcomes and the continuing
