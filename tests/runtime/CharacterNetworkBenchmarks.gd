@@ -102,7 +102,7 @@ func Run() -> void:
         var ProfileCharacters: Array = World.find_children("RemotePlayer_*", "", true, false)
         ProfileCharacters.append(Character)
         for Item in ProfileCharacters:
-            var Animator := Item.get_node_or_null("R6Animator")
+            var Animator: Node = Item.get_node_or_null("R6Animator")
             if not Animator: Animator = Item.get_node_or_null("Visual/R6Animator")
             assert(Animator != null, "diagnostic mode requires each actual local/remote R6 animator")
             Animator.set_process(false)
