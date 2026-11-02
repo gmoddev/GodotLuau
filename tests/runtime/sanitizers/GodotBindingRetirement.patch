@@ -1,0 +1,28 @@
+diff --git a/core/extension/gdextension.cpp b/core/extension/gdextension.cpp
+--- a/core/extension/gdextension.cpp
++++ b/core/extension/gdextension.cpp
+@@ -825,6 +825,24 @@
+ 
+ void GDExtension::close_library() {
+ 	ERR_FAIL_COND(!is_library_open());
++	// Qualification-host correction: retire callbacks while their library is
++	// mapped. Template hosts do not have editor reload's binding registry.
++	// Snapshot IDs only under ObjectDB's lock; invoke callbacks outside it and
++	// resolve every ID again because an earlier callback can destroy an object.
++	Vector<ObjectID> BindingObjects;
++	ObjectDB::debug_objects([](Object *Object, void *Data) {
++		static_cast<Vector<ObjectID> *>(Data)->push_back(Object->get_instance_id());
++	}, &BindingObjects);
++	uint32_t RetiredBindings = 0;
++	for (ObjectID Identity : BindingObjects) {
++		Object *Instance = ObjectDB::get_instance(Identity);
++		if (Instance && Instance->has_instance_binding(this)) {
++			Instance->free_instance_binding(this);
++			RetiredBindings++;
++		}
++	}
++	print_line(vformat("[Runtime:BindingRetirement] Retired %d bindings before library close", RetiredBindings));
++
+ 	loader->close_library();
+ 
+ 	class_icon_paths.clear();

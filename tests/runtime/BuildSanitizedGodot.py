@@ -1,4 +1,4 @@
-"""Build a pinned, instrumented headless Godot host without changing engine source."""
+"""Build a pinned instrumented host with one hash-verified qualification correction."""
 import argparse
 import ctypes
 import hashlib
@@ -60,7 +60,14 @@ def Main():
             Tar.extractall(Temporary, filter='data')
         (Temporary / Prefix[:-1]).rename(Output)
         Temporary.rmdir()
-    # Reused source/build caches must still match every original archive file.
+    Patch = Policy['QualificationPatch']
+    PatchFile = Path(__file__).parent / Patch['File']
+    PatchBytes = PatchFile.read_bytes().replace(b'\r\n', b'\n')
+    if hashlib.sha256(PatchBytes).hexdigest() != Patch['SHA256LF']:
+        raise ValueError('Qualification host patch hash mismatch')
+    # Every archive file remains exact, except this one explicitly admitted
+    # corrected file. A reused cache must contain either exact original bytes
+    # or the exact reviewed result, never arbitrary engine edits.
     SourceHashes = {}
     with tarfile.open(Archive) as Tar:
         for Member in Tar:
@@ -68,9 +75,30 @@ def Main():
                 continue
             Name = Member.name.removeprefix(Prefix)
             Expected = hashlib.sha256(Tar.extractfile(Member).read()).hexdigest()
-            if Hash(Output / Name) != Expected:
+            Actual = Hash(Output / Name)
+            if Name == Patch['Path']:
+                Actual = hashlib.sha256((Output / Name).read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+                if Expected != Patch['OriginalSHA256'] or Actual not in [Expected, Patch['PatchedSHA256']]:
+                    raise ValueError('Unrecognized qualification host source: ' + Name)
+            elif Actual != Expected:
                 raise ValueError('Modified engine source: ' + Name)
             SourceHashes[Name] = Expected
+    PatchAttempts = Output.parent / (Output.name + '-attempts')
+    PatchAttempts.mkdir(exist_ok=True)
+    PatchSource = Output / Patch['Path']
+    def PatchSourceHash(): return hashlib.sha256(PatchSource.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+    if PatchSourceHash() == Patch['OriginalSHA256']:
+        if Hash(PatchSource) != Patch['OriginalSHA256']:
+            PatchSource.write_bytes(PatchSource.read_bytes().replace(b'\r\n', b'\n'))
+        # Pass LF bytes on stdin so checkout newline settings cannot alter the
+        # pinned patch identity. git apply also checks the complete hunk context.
+        for Arguments in [['--check'], []]:
+            Result = subprocess.run(['git', '-c', 'core.autocrlf=false', 'apply', *Arguments, '-'], input=PatchBytes,
+                                    cwd=Output, capture_output=True, timeout=30)
+            (PatchAttempts / ('patch-' + str(time.time_ns()) + '.log')).write_bytes(Result.stdout + Result.stderr)
+            if Result.returncode: raise ValueError('Qualification host patch rejected; attempt retained')
+    if PatchSourceHash() != Patch['PatchedSHA256']:
+        raise ValueError('Qualification host patched output hash mismatch')
     Environment = dict(os.environ)
     Version = subprocess.check_output([sys.executable, '-c', 'import SCons; print(SCons.__version__)'], env=Environment, timeout=30).decode().strip()
     if Version != Policy['SCons']:
@@ -88,6 +116,9 @@ def Main():
                 'ArchiveSHA256': Hash(Archive), 'PolicySHA256': Hash(PolicyFile),
                 'OriginalSourceFiles': len(SourceHashes),
                 'OriginalSourceIndexSHA256': hashlib.sha256(json.dumps(SourceHashes, sort_keys=True).encode()).hexdigest(),
+                'QualificationPatch': Patch,
+                'QualificationPatchSourceSHA256': Hash(PatchSource),
+                'QualificationPatchSourceSHA256LF': PatchSourceHash(),
                 'Compiler': Compiler, 'CompilerSHA256': Hash(Compiler), 'SCons': Version,
                 'Command': Command, 'Timeout': Args.timeout, 'Scope': Policy['Scope']}
     (Attempt / 'inputs.json').write_text(json.dumps(Identity, indent=2))

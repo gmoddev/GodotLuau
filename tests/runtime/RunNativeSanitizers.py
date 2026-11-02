@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import sys
 import time
-from FixtureProcesses import StartProcess, StopProcess, StopAll
+from FixtureProcesses import StartProcess, StopProcess, StopAll, GetProfileFolder
 from SourceFingerprint import GetFingerprint
 
 
@@ -50,8 +50,7 @@ def Main():
         # quoted values also protect Windows drive separators in ASAN_OPTIONS.
         ChildEnvironment['ASAN_OPTIONS'] = Environment['ASAN_OPTIONS'] + ':log_path="' + (Case/'asan-report').as_posix() + '"'
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
-            Profile = Case / 'profile' / Name
-            Profile.mkdir(parents=True)
+            Profile = GetProfileFolder(Case, Name)
             ChildEnvironment[Name] = str(Profile)
         if Extra: ChildEnvironment.update(Extra)
         Code, TimedOut = None, False
@@ -98,9 +97,10 @@ def Main():
 
     try:
         Identity = {'Revision': Args.revision, 'NativeSource': GetFingerprint(Source),
+                    'ProfileRoot': Environment.get('GL_QUALIFICATION_PROFILE_ROOT'),
                     'GodotSHA256': Hash(Args.godot), 'ProbeSHA256': Hash(Args.probe), 'LoaderSHA256': Hash(Args.loader),
                     'Scope': 'controls only' if Args.controls_only else 'headless full-native ASan; Linux LSan enabled; Windows LSan unsupported',
-                    'Harness': {str(File.relative_to(Runtime)): Hash(File) for File in sorted(Runtime.rglob('*')) if File.is_file() and (File.suffix in ['.py','.gd','.cpp','.json'] or File.name == 'CMakeLists.txt') and '__pycache__' not in File.parts}}
+                    'Harness': {str(File.relative_to(Runtime)): Hash(File) for File in sorted(Runtime.rglob('*')) if File.is_file() and (File.suffix in ['.py','.gd','.cpp','.json','.patch'] or File.name == 'CMakeLists.txt') and '__pycache__' not in File.parts}}
         if not Args.controls_only:
             if any(Value is None for Value in [Args.extension, Args.build, Args.build_identity, Args.host_manifest, Args.asset_godot, Args.asset_provenance]):
                 raise ValueError('Full qualification requires host/build and verified asset-editor identities')
@@ -108,6 +108,9 @@ def Main():
             Policy = json.loads((Runtime/'SanitizerHosts.json').read_text())
             if Host['Exit'] != 0 or Host['ExecutableSHA256'] != Hash(Args.godot) or Host['PolicySHA256'] != Hash(Runtime/'SanitizerHosts.json') or Host['EngineRevision'] != Policy['EngineRevision']:
                 raise ValueError('Stale or mismatched instrumented host')
+            Patch = Policy['QualificationPatch']
+            if Host.get('QualificationPatch') != Patch or hashlib.sha256((Runtime / Patch['File']).read_bytes().replace(b'\r\n', b'\n')).hexdigest() != Patch['SHA256LF']:
+                raise ValueError('Missing or mismatched qualification host correction')
             for Name, Digest in Host['RuntimeDLLs'].items():
                 if Hash(Args.godot.parent/Name) != Digest: raise ValueError('Sanitizer runtime DLL mismatch')
             Editor = json.loads(Args.asset_provenance.read_text())
