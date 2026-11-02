@@ -163,6 +163,8 @@ Source-identical hosted qualification is reused; see the bounded
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
 | [Current architecture](current-architecture.md) | Implemented ownership and subsystem entry points |
+| [Networking architecture assessment](networking-architecture-assessment.md) | Source-pinned GodotLuau/Gargantuan comparison, ranked adoption plan and future qualification gates; research only |
+| [Unified RemoteEvent proposal](remoteevent-delivery-proposal.md) | Proposed EventDeliveryType, frozen Server configuration, sequencing, migration and separate RemoteFunction contract; not implemented |
 | [GL-013 boundary assessment](gl013-boundary-assessment.md) | Measured source/dependency inventory and ranked future boundaries; assessment only |
 | [Invariants](invariants.md) | Required properties for new/touched behavior, with known baseline gaps |
 | [Issue ledger](issues.md) | Stable IDs, evidence, priorities, proof gaps, and closure criteria |
