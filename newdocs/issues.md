@@ -44,7 +44,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
-| GL-018 | P2 | Partially qualified; native sanitizer gaps retained | C ABI controls isolate binding unload failure; URL/asset corrections do not close full profiles |
+| GL-018 | P2 | Resolved within admitted matching-host profile; unmerged | Verified Windows ASan/Linux ASan-LSan, 80 core and 110 native actors each |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Integrated scoped authority correction; sanitizer qualification partial | Canonical wire validation and ENet adversarial coverage; GL-017/018 remain separate |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
@@ -919,6 +919,14 @@ ASan/LSan clean exit, then pass native two-client teardown. Preserve the exact
 engine/source reproduction in [validation](shared-domains-validation.md).
 
 ## GL-018: Windows full-native sanitizer host remains unqualified
+
+**Current disposition: RESOLVED within the admitted matching-host profile at
+`46427d0`; unmerged.** All six hosted core/native/sanitizer jobs pass, with exact
+source/harness, actual cases, instrumented builds and retained logs independently
+checked. See [closure and proof limits](gl018-closure.md). Stock-host unload safety,
+Windows LSan and arbitrary custom/device profiles remain outside this closure.
+The historical OPEN dispositions and failed attempts below are superseded by
+this scoped closure and preserved as evidence.
 
 **Frame-progress follow-up:** the
 [HTTP timing investigation](gl018-http-frame-investigation.md) attributes the

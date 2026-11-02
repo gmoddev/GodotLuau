@@ -1,5 +1,11 @@
 # Current architecture
 
+GL-018's development branch qualifies the admitted matching headless sanitizer
+hosts and production extension at `46427d0`: Windows ASan and Linux ASan/LSan each
+pass 80 core cases and 110 native actors. See [closure and retained limits](gl018-closure.md).
+The derived engine binding-retirement correction does not establish stock-host
+unload safety, and the branch remains unmerged.
+
 Main integrates GL-007 through normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`
 and Model-based Character V2 through `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`.
 The latter tree equals retained `46f65e0`, with runtime/test inputs identical to

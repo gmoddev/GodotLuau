@@ -1,0 +1,102 @@
+{
+  "Revision": "46427d0e9ec10eb066202742255ef1881394f348",
+  "NativeSource": {
+    "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Core": [
+    {
+      "Platform": "runtime-core-Linux-Debug",
+      "Cases": 80,
+      "XMLSHA256": "864e9e37fb8438771a79d59ab0c477415aa66e70c80a071a4580cae67b6c2ffe"
+    },
+    {
+      "Platform": "runtime-core-Windows-Debug",
+      "Cases": 80,
+      "XMLSHA256": "153f981edcf920632f9436f2246d516ade4686172e1716851f87207e45671019"
+    }
+  ],
+  "Native": [
+    {
+      "Path": "native\\runtime-native-Linux-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 110,
+      "LogHashes": 332,
+      "HarnessHashes": 73,
+      "AnimationCases": 510,
+      "AnimationAssertions": 1003,
+      "ExtensionSHA256": "4cb7ebd1857880906bea32e917416f9c5dc1e389816bf1a4dca41efb5da2b42f",
+      "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+      "SummarySHA256": "254940e26711bdab4371282ed50e07d4ca826ea88bc45c124d8510f50b6232de"
+    },
+    {
+      "Path": "native\\runtime-native-Windows-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 110,
+      "LogHashes": 334,
+      "HarnessHashes": 73,
+      "AnimationCases": 510,
+      "AnimationAssertions": 1004,
+      "ExtensionSHA256": "fcd65db9e7326b44e5d40ceca6a998bc062eb6c988739d9d8fba0f6e803f0a30",
+      "CompanionSHA256": "b878869b1eec8e7658269977e509c9e6236e08564eb4cfa8a1b56d3777cb2756",
+      "SummarySHA256": "6825334043c606068a40c008f2dff763ec7f22a013e2b43020d32d17c546c245"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+      "Actors": 110,
+      "LogHashes": 336,
+      "HarnessHashes": 73,
+      "AnimationCases": 510,
+      "AnimationAssertions": 1005,
+      "ExtensionSHA256": "c3cd0ec4d3ea1f0c981fc9a322d9ca9505bcbeceea2c9f79b5e0061b8421992c",
+      "CompanionSHA256": "1bc0970cfd2d847a6fa0d116e15892de880b8183eb8d24df0f10b2989f98402a",
+      "SummarySHA256": "fdf5d62eda7163836f479a82bb3d6911ef6739fff44f5b2fb2436edfe0ee6e8c"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+      "Actors": 110,
+      "LogHashes": 336,
+      "HarnessHashes": 73,
+      "AnimationCases": 510,
+      "AnimationAssertions": 1007,
+      "ExtensionSHA256": "fca65958a10646457fefc1ddecc15e7f3ef242dfd269b524f09e4b5cc16a5ae1",
+      "CompanionSHA256": "70d3d8b9280be94d455b4554258d6c9288ccdaabfc303da2c7017bb06fd0c8a3",
+      "SummarySHA256": "c0705e494d1de94da7b4ae0dd1cfbf71dabcb01379b5465a0cbd9535c724cd4c"
+    }
+  ],
+  "Sanitizers": [
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "PASS",
+      "FilesVerified": 520,
+      "MissingEphemeralData": [
+        {
+          "Path": "native/filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/msg_GL003-shared__6ae8e0f8-2db6-4a9d-a33a-000a3905a33a_1.json",
+          "ExpectedSHA256": "90101eb1fce90e65a78175644a6cde77c45fbd4fedee03287fb7fd7e580f4cd3",
+          "Scope": "ephemeral fixture mailbox; not a log, result or qualification input"
+        }
+      ],
+      "CoreCases": 80,
+      "HarnessFiles": 75,
+      "InstrumentedTranslationUnits": [
+        1160,
+        3
+      ],
+      "CompilerSHA256": "f6d5286a52de10b1e3e8841457c9903a1ea28f222ac0f58cd616697d0dcd9db3",
+      "SummarySHA256": "11dc088869b77abf96789ae57485ca2318e9ca72010094564516eeb59c98f423"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "PASS",
+      "FilesVerified": 516,
+      "MissingEphemeralData": [],
+      "CoreCases": 80,
+      "HarnessFiles": 75,
+      "InstrumentedTranslationUnits": [
+        1160,
+        3
+      ],
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "SummarySHA256": "0520725fdcc92e6d7aea108e06793548b39869879dd7431c444d0d1d6e98748b"
+    }
+  ]
+}

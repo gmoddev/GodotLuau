@@ -1,5 +1,10 @@
 # GL-018 Windows frame-progress follow-up
 
+**Final disposition:** [GL-018 is qualified and resolved within its admitted
+matching-host scope](gl018-closure.md) at `46427d0`; all six exact-source hosted
+jobs pass and their evidence is checked. The work-in-progress and failed local
+observations below are historical and retained unchanged in scope.
+
 Work in progress, 2026-11-02. Starting fix branch revision `74ca1d1` retains
 the passing DataStore correction and the failed hosted Windows sanitizer profile
 at runtime/test revision `bf3bb3f`. Main, GL-029, release publication and updater

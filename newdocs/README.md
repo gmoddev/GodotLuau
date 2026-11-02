@@ -33,6 +33,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-018 is [qualified and resolved on its development branch](gl018-closure.md)
+within the admitted matching-host headless Debug ASan/LSan scope. All six hosted
+jobs and their required evidence pass at `46427d0`; this is not a main merge or
+distribution authorization.
+
 The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
 matching Windows/Linux instrumented hosts, actual detection controls and retained
 full-profile failures. It is partially qualified; GL-018 remains open. Main,
