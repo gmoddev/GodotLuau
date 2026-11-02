@@ -74,7 +74,7 @@ jobs:
       - name: Provision matching verified asset editor
         timeout-minutes: 5
         run: python tests/runtime/ProvisionGodot.py --output "$env:RUNNER_TEMP/sanitizer-editor"
-      - name: Build unchanged pinned instrumented Godot host
+      - name: Build pinned instrumented Godot host with admitted correction
         timeout-minutes: 120
         run: python tests/runtime/BuildSanitizedGodot.py --output "$env:RUNNER_TEMP/sanitizer-host" --jobs 2 --timeout 7000
       - name: Build instrumented production extension and detection probes

@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path
 import time
 from RunQualification import Prepare, Start, Check
-from FixtureProcesses import StartProcess, StopProcess, StopAll
+from FixtureProcesses import StartProcess, StopProcess, StopAll, GetProfileFolder
 
 
 def Qualify(Args, Output, Environment):
@@ -19,7 +19,7 @@ def Qualify(Args, Output, Environment):
         if Case=='incompatible': shutil.copy2(Args.probe,Worker)
         Env=dict(Environment)
         for Name in ['APPDATA','LOCALAPPDATA','XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME']:
-            Directory=Project/'profile'/Name; Directory.mkdir(parents=True,exist_ok=True); Env[Name]=str(Directory)
+            Directory=GetProfileFolder(Project,Name); Env[Name]=str(Directory)
         def Actor(Mode,Role='single',Expected=2):
             Label='datastore-'+Case+'-'+Mode+'-'+Role
             Script='DatastoreIntegration.gd' if Case=='basic' else 'DatastoreLifecycle.gd' if Case in ['lifecycle','memory'] else 'DatastoreTransactions.gd'
@@ -70,6 +70,7 @@ def Qualify(Args, Output, Environment):
 
 def Native(Probe,Output,Environment):
     Output.mkdir(parents=True,exist_ok=True)
+    Storage=GetProfileFolder(Output,'NativeStorage') if Environment.get('GL_QUALIFICATION_PROFILE_ROOT') else Output
     def StartProbe(Root,Mode,*Extra):
         Root.mkdir(parents=True,exist_ok=True)
         Label=Root.name+'-'+Mode+('-'+Extra[0] if Extra else '')
@@ -79,9 +80,9 @@ def Native(Probe,Output,Environment):
         try:
             if Process.wait(timeout=30): raise RuntimeError('Native DataStore probe failed')
         finally: StopProcess(Process)
-    Finish(StartProbe(Output/'faults','contract'))
+    Finish(StartProbe(Storage/'faults','contract'))
     for Stage in range(1,5):
-        Root=Output/('kill-'+str(Stage))
+        Root=Storage/('kill-'+str(Stage))
         Finish(StartProbe(Root,'seed'))
         Child=StartProbe(Root,'pause',str(Stage))
         Deadline=time.monotonic()+5
@@ -93,7 +94,7 @@ def Native(Probe,Output,Environment):
         if Current!=('123' if Stage<3 else '999'): raise RuntimeError('Interrupted commit state mismatch')
         # A fresh process must reacquire the dead holder's lock and recover stage.
         Finish(StartProbe(Root,'contract'))
-    Root=Output/'increments'
+    Root=Storage/'increments'
     Entries=[StartProbe(Root,'increment',Role) for Role in ['A','B']]
     for Child in Entries: Finish(Child)
     Finish(StartProbe(Root,'verify-increments'))

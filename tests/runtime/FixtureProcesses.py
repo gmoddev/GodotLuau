@@ -21,7 +21,7 @@ def GetProfileFolder(Project, Name):
         Identity = hashlib.sha256(str(Path(Project).resolve()).encode()).hexdigest()
         Directory = Path(Root).resolve() / Identity
     Directory = Directory / Name
-    Directory.mkdir(parents=True, exist_ok=True)
+    Directory.mkdir(parents=True, exist_ok=Name == '')
     return Directory
 
 

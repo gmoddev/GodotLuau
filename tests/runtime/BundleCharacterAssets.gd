@@ -23,7 +23,9 @@ func _initialize() -> void:
         if not Name.ends_with(".obj"): continue
         var Mesh := load(Directory + Name) as ArrayMesh
         assert(Mesh != null)
-        var Target := "res://.godot/imported/Sanitizer-" + Name + ".tres"
+        # Binary serialization avoids text-parser overhead under the sanitizer
+        # host. The round-trip checks below retain every original asset byte.
+        var Target := "res://.godot/imported/Sanitizer-" + Name + ".res"
         var Before := Describe(Mesh)
         # Imported CompressedTexture2D stores an external file path. Embed the
         # decoded original image in an ImageTexture so the exported mesh has
