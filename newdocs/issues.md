@@ -920,6 +920,14 @@ engine/source reproduction in [validation](shared-domains-validation.md).
 
 ## GL-018: Windows full-native sanitizer host remains unqualified
 
+**2026-11-02 bounded-conflict correction:** the
+[focused work record](gl018-increment-qualification.md) identifies the increment
+fixture's unsupported fair-completion assumption. A small fixture-only change
+checks exact acknowledgment accounting while permitting only ADR-005's definite
+conflict exhaustion. Windows ASan DataStore passes 23 actors and unchanged native
+controls; GL-018 stays OPEN pending complete profile verification. No runtime or
+retry-policy change and no refactor is included.
+
 **Status: OPEN; bounded qualification gap.** MSVC-instrumented adapter/bindings/
 Luau reaches functional PASS under stock Godot, then times out at exit. A
 registration-only inherited baseline and candidate both reproduce the timeout
