@@ -75,6 +75,28 @@ GL-018-combined source, other configurations or the full 116-actor suite.
 `python tests/release/ReleaseCandidateTests.py` also passes all 14 admission/
 rejection cases. Fresh combined hosted native/sanitizer evidence remains required.
 
+### Retained evidence and fresh hosted gates
+
+Fix `78897d3c22cc13ce1603761759dad416f0be2a2e` changes eight fixture lines and
+documentation; no production networking or other runtime source is modified.
+The passing focused record contains six actors and **193 passing assertions**.
+All 335 indexed retained files rehash after download, including prior failures;
+the executed fixture matches the committed file after explicit LF normalization.
+Archive SHA-256: `4e9915f5a651c4723e928ea9869af47b1f4e19ff73088e25ee26ce69159cafcf`.
+Copies: `C:/Sandbox/Codex/GL029Continuation/resume-evidence.zip` on DockerPC and
+`C:/Users/aiden/.codex/artifacts/godotluau/gl029-resume/resume-evidence.zip` locally.
+
+Exact-fix hosted jobs have started; none is reported passing at this observation:
+
+- [Core 41518022846](https://github.com/gmoddev/GodotLuau/actions/runs/41518022846).
+- [Native 41518023025](https://github.com/gmoddev/GodotLuau/actions/runs/41518023025).
+- [Full-native sanitizers 41518023028](https://github.com/gmoddev/GodotLuau/actions/runs/41518023028).
+
+Require fresh combined-source runtime verification, remaining platform/build
+configurations and artifact checks before accepting GL-029 Phase 1. GL-018's
+qualified branch remains preserved and main stays unchanged. Release publication
+and updater distribution are disabled. No refactor has been performed.
+
 Status: **PARTIALLY QUALIFIED; WIP checkpoint at the user's request on 2026-11-02.
 Not ready for integration.** No merge or distribution authorization. The
 [handoff](remoteevent-phase1-handoff.md) records restart steps and exact final

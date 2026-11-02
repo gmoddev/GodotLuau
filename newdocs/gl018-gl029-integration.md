@@ -1,5 +1,12 @@
 # GL-018 and GL-029 branch combination
 
+**Current status:** [GL-018 is closed within the admitted matching-host scope](gl018-closure.md)
+after exact-source hosted core/native/sanitizer verification. Its fixes and
+closure are retained by normal merge `a6bd710`. GL-029 remains open; the
+[resumed qualification record](remoteevent-phase1-qualification.md#resumed-after-gl-018-closure)
+documents its reproduced failures and small fixture corrections. The original
+integration assessment below retains its publication-time conclusions.
+
 Date: 2026-11-02. **Combined development branch; not ready to merge into main.**
 This combines existing work at the user's request. It does not complete either
 issue's outstanding qualification or authorize release/updater distribution.
