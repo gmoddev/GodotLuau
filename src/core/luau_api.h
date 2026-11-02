@@ -275,11 +275,19 @@ static void gl_strip_netid_recursive(Node* n) {
     for (int i = 0; i < n->get_child_count(); i++) gl_strip_netid_recursive(n->get_child(i));
 }
 
+static void CopyRemoteConfigurations(Node* Source, Node* Destination) {
+    if (auto Original = Object::cast_to<RemoteEventNode>(Source))
+        if (auto Copy = Object::cast_to<RemoteEventNode>(Destination)) Copy->CopyConfiguration(Original);
+    for (int Index = 0; Index < Source->get_child_count() && Index < Destination->get_child_count(); ++Index)
+        CopyRemoteConfigurations(Source->get_child(Index), Destination->get_child(Index));
+}
+
 static int method_clone(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
         Node* cloned = gow_node(w)->duplicate();
         if (cloned) {
+            CopyRemoteConfigurations(gow_node(w), cloned);
             gl_strip_netid_recursive(cloned);   // el clon nace SIN netId (se le asigna uno nuevo al replicarse)
             wrap_node(L, cloned); return 1;
         }
@@ -695,6 +703,10 @@ static int godot_object_index(lua_State* L) {
     const char* key = luaL_checkstring(L, 2);
     if (!wrapper || !gow_node(wrapper)) { lua_pushnil(L); return 1; }
     Node* n = gow_node(wrapper);
+
+    if (strcmp(key, "DeliveryType") == 0) {
+        if (auto Remote = Object::cast_to<RemoteEventNode>(n)) { lua_pushinteger(L, Remote->GetDeliveryType()); return 1; }
+    }
 
     // ── Utilidades de Instance (Ola 2) ────────────────────────────────
     if (strcmp(key, "GetDebugId") == 0) {
@@ -2793,9 +2805,9 @@ static int godot_object_index(lua_State* L) {
     RemoteEventNode* re = Object::cast_to<RemoteEventNode>(n);
     if (re) {
         if (strcmp(key, "FireServer") == 0) {
-            lua_pushlightuserdata(L, (void*)re);
+            _gl_push_node(L, re);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RemoteEventNode* rev = (RemoteEventNode*)lua_touserdata(pL, lua_upvalueindex(1));
+                auto rev = Object::cast_to<RemoteEventNode>(_gl_node_from_lua(pL, lua_upvalueindex(1)));
                 if (!rev) return 0;
                 int nargs = lua_gettop(pL) - 1;
                 rev->fire_server(pL, 2, nargs < 0 ? 0 : nargs);
@@ -2804,9 +2816,9 @@ static int godot_object_index(lua_State* L) {
             return 1;
         }
         if (strcmp(key, "FireClient") == 0) {
-            lua_pushlightuserdata(L, (void*)re);
+            _gl_push_node(L, re);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RemoteEventNode* rev = (RemoteEventNode*)lua_touserdata(pL, lua_upvalueindex(1));
+                auto rev = Object::cast_to<RemoteEventNode>(_gl_node_from_lua(pL, lua_upvalueindex(1)));
                 if (!rev) return 0;
                 // Como Roblox: el 1er argumento DEBE ser un Player (1.14.9).
                 Node* fc_plr = _gl_node_from_lua(pL, 2);
@@ -2818,9 +2830,9 @@ static int godot_object_index(lua_State* L) {
             return 1;
         }
         if (strcmp(key, "FireAllClients") == 0) {
-            lua_pushlightuserdata(L, (void*)re);
+            _gl_push_node(L, re);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RemoteEventNode* rev = (RemoteEventNode*)lua_touserdata(pL, lua_upvalueindex(1));
+                auto rev = Object::cast_to<RemoteEventNode>(_gl_node_from_lua(pL, lua_upvalueindex(1)));
                 if (!rev) return 0;
                 int nargs = lua_gettop(pL) - 1;
                 rev->fire_all_clients(pL, 2, nargs < 0 ? 0 : nargs);
@@ -2833,17 +2845,19 @@ static int godot_object_index(lua_State* L) {
             lua_newtable(L);
             // Connect(fn) / Once(fn) comparten closure (upvalue2 = ¿once?)
             for (int variant = 0; variant < 2; variant++) {
-                lua_pushlightuserdata(L, (void*)re);
+                _gl_push_node(L, re);
                 lua_pushboolean(L, variant);            // 0 = Connect, 1 = Once
                 lua_pushboolean(L, is_server ? 1 : 0);  // lado
                 lua_pushcclosure(L, [](lua_State* pL) -> int {
-                    RemoteEventNode* rev = (RemoteEventNode*)lua_touserdata(pL, lua_upvalueindex(1));
+                    auto rev = Object::cast_to<RemoteEventNode>(_gl_node_from_lua(pL, lua_upvalueindex(1)));
                     bool once = lua_toboolean(pL, lua_upvalueindex(2));
                     bool srv  = lua_toboolean(pL, lua_upvalueindex(3));
+                    if (GLIsClient(pL) == srv) luaL_error(pL, "[Network:Remote] Signal belongs to the other execution domain");
                     int fn_pos = -1;
                     for (int ai = 1; ai <= lua_gettop(pL); ai++)
                         if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                     if (fn_pos == -1 || !rev) return 0;
+                    if (rev->is_queued_for_deletion() || !rev->CanSubscribe(srv)) luaL_error(pL, "[Network:Remote] Subscription admission rejected");
                     GLPushOwnerState(pL);
                     lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                     lua_pop(pL, 1);
@@ -2856,12 +2870,14 @@ static int godot_object_index(lua_State* L) {
                 lua_setfield(L, -2, variant ? "Once" : "Connect");
             }
             // Wait() — cede la corrutina hasta el próximo disparo; devuelve los args
-            lua_pushlightuserdata(L, (void*)re);
+            _gl_push_node(L, re);
             lua_pushboolean(L, is_server ? 1 : 0);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RemoteEventNode* rev = (RemoteEventNode*)lua_touserdata(pL, lua_upvalueindex(1));
+                auto rev = Object::cast_to<RemoteEventNode>(_gl_node_from_lua(pL, lua_upvalueindex(1)));
                 bool srv = lua_toboolean(pL, lua_upvalueindex(2));
+                if (GLIsClient(pL) == srv) luaL_error(pL, "[Network:Remote] Signal belongs to the other execution domain");
                 if (!rev) { lua_pushnil(pL); return 1; }
+                if (rev->is_queued_for_deletion() || !rev->CanSubscribe(srv, true)) luaL_error(pL, "[Network:Remote] Wait admission rejected");
                 GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                 lua_pop(pL, 1);
@@ -3923,6 +3939,14 @@ static int godot_object_newindex_impl(lua_State* L) {
     const char* key = luaL_checkstring(L, 2);
     if (!wrapper || !gow_node(wrapper)) return 0;
 
+    if (strcmp(key, "DeliveryType") == 0) {
+        if (auto Remote = Object::cast_to<RemoteEventNode>(gow_node(wrapper))) {
+            if (lua_type(L, 3) != LUA_TNUMBER || !Remote->SetDeliveryType(Variant(lua_tonumber(L, 3))))
+                luaL_error(L, "[Network:Remote] DeliveryType requires an unpublished Server-owned Remote and a supported exact enum value");
+            return 0;
+        }
+    }
+
     // Listen/single-process Client VM references share native objects with the
     // server. A client write must not be mistaken for a trusted correction.
     if (GLExecutionDomain::IsClientExecution() && gl_net_role() == 1) {
@@ -4685,6 +4709,7 @@ static String gl_rep_parent_ref(Node* parent) {
 // vía NetworkService::rep_build_props, que resuelve el transform global).
 static void gl_rep_replicate_subtree(NetworkService* ns, Node* n) {
     if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n)) return;
+    if (auto Remote = Object::cast_to<RemoteEventNode>(n)) if (!Remote->IsServerAdmitted()) return;
     int64_t id = ns->rep_next_id();
     n->set_meta("_gl_netid", id);
     ns->rep_map(id, n);
@@ -4701,6 +4726,7 @@ static void gl_rep_on_newindex(lua_State* L) {
     Node* n = w ? gow_node(w) : nullptr;
     if (!n || !lua_isstring(L, 2)) return;
     String key = String(lua_tostring(L, 2));
+    if (key == "DeliveryType" && Object::cast_to<RemoteEventNode>(n)) return; // Frozen descriptor owns this property, not generic deltas.
     if (key == "Parent") {
         if (gl_rep_is_replicable(n)) {
             if (n->has_meta("_gl_netid"))
@@ -4724,6 +4750,7 @@ static void gl_rep_on_newindex(lua_State* L) {
 // Instalado en gl_apply_prop_hook(). Hilo Luau fresco: el impl lee índices 1/2/3.
 static void gl_rep_apply_prop(Node* target, const String& key, const Variant& enc) {
     if (!target) return;
+    if (key == "DeliveryType" && Object::cast_to<RemoteEventNode>(target)) return;
     // Server-admitted generic replication must apply native character setters
     // before entering the Client VM. Gameplay cannot obtain this hook. Keeping
     // the call outside a Client scope avoids granting an ambient permission

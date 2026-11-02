@@ -17,6 +17,7 @@ def Main():
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
+        'remote': [f'remote-{Mode}-{Role}' for Mode in ['Listen', 'Dedicated'] for Role in ['server', 'client1', 'client2']],
         'characters': [*[f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])], 'character-model', 'character-manual-server', 'character-manual-client1', 'character-manual-client2'],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
@@ -35,6 +36,21 @@ def Main():
         if [Result['Label'] for Result in Results] != Labels or any(Result['Exit'] != 0 for Result in Results):
             raise ValueError('Missing or failed native fixture results: ' + Name)
         Groups[Name] = Results
+    Remote = json.loads((Args.output / 'remote/native-evidence.json').read_text())
+    if Remote['Actors'] != 6 or Remote['Transport'] != 'ENet' or len(Remote['Evidence']) != 6:
+        raise ValueError('GL-029 real ENet actors missing')
+    if {(Record['Mode'], Record['Role'], Record['Index']) for Record in Remote['Evidence']} != {(Mode, Role, Index) for Mode in ['Listen', 'Dedicated'] for Role, Index in [('server', 0), ('client', 1), ('client', 2)]}:
+        raise ValueError('GL-029 actor identity inventory mismatch')
+    for Record in Remote['Evidence']:
+        Labels = {Item['Label'] for Item in Record['Cases'] if Item['Passed']}
+        Required = {'malformed, oversized, stale, mode and role rejection has no dispatch', 'old endpoint packets never target replacement at same path', 'new assigned sessions preserve legitimate delivery'} if Record['Role'] == 'server' else {'Server descriptors and peer readiness acknowledged', 'Client authority, payload bounds, Once, Wait, mixed tables and nil arguments', 'same-path Client replacement cannot inherit publication readiness', 'retained methods and exact Wait cancellation survive native destruction', 'fresh session legitimate delivery and stale-session rejection'}
+        Required |= {'private ancestor prevents publication through a nested scope name'} if Record['Role'] == 'server' else {'reliable stream preserves accepted send and callback-start order', 'large reliable payload completes through ENet fragmentation', 'wrong transport sender reaches the other real ENet Client'}
+        Required.add('serialized configuration survives a fresh native instance')
+        Required.add('failed server bind preserves the active publication epoch' if Record['Role'] == 'server' else 'failed native connection attempt preserves current publication and transport')
+        Required |= {'native private service type remains private after rename', 'Player identity is reserved before reentrant native child callbacks', 'existing RemoteFunction disconnect outcomes preserved'} if Record['Role'] == 'server' else {'accepted queued Wait cannot resume after service disconnect; sibling callback survives', 'real event and invocation execute within the controlled ENet poll'}
+        if Record['Role'] == 'server' and Record['Mode'] == 'Listen': Required |= {'listen Client creation cannot publish a native endpoint', 'listen local FireServer receives the real Player', 'local validation precedes broadcast side effects'}
+        if not Record['Complete'] or Record['Result'] != 'PASS' or not Required <= Labels or not all(Item['Passed'] for Item in Record['Cases']):
+            raise ValueError('GL-029 required assertions missing or failed')
     Lifecycle = (Args.output / 'regression' / 'integration-0.stdout.log').read_text(errors='replace')
     for Marker in ['[Runtime:ChildRelay] PASS', '[Runtime:ChildRelay] Independent domain destruction and replacement checked', '[Runtime:ChildRelay] Scene generations PASS', '[Runtime:ChildRelay] Dispatch shutdown PASS']:
         if Marker not in Lifecycle:
@@ -123,6 +139,7 @@ def Main():
         'DataStoreNative': json.loads((Args.output/'datastore/native-evidence.json').read_text()),
         'HttpServiceNative': HttpServiceNative,
         'CallerNative': CallerEvidence,
+        'RemoteEvents': Remote,
         'AnimationAuthority': AnimationAuthority,
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},

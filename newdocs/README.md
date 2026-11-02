@@ -158,6 +158,10 @@ Source-identical hosted qualification is reused; see the bounded
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
 | [Current architecture](current-architecture.md) | Implemented ownership and subsystem entry points |
+| [GL-029 Phase 1 contract](adr-008-remoteevent-publication.md) | Unified reliable/unordered configuration, native publication/admission, wire and migration decision |
+| [GL-029 Phase 1 qualification](remoteevent-phase1-qualification.md) | Development attempts and actual qualification status; no merge/distribution authorization |
+| [GL-029 checkpoint handoff](remoteevent-phase1-handoff.md) | Published WIP, exact build identities, retained failures and remaining qualification steps |
+| [Networking research](networking-architecture-assessment.md) | Pinned GodotLuau/Gargantuan comparison and later-phase adoption plan |
 | [GL-013 boundary assessment](gl013-boundary-assessment.md) | Measured source/dependency inventory and ranked future boundaries; assessment only |
 | [Invariants](invariants.md) | Required properties for new/touched behavior, with known baseline gaps |
 | [Issue ledger](issues.md) | Stable IDs, evidence, priorities, proof gaps, and closure criteria |

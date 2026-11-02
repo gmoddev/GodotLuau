@@ -456,6 +456,7 @@ static const std::vector<RobloxMember>& roblox_get_members(const std::string& p_
     }},
 
     {"RemoteEvent", {
+        {"DeliveryType", "Enum.EventDeliveryType", "Server-owned; configure before publication. ReliableOrdered or UnreliableUnordered", 0},
         {"OnServerEvent",  "RBXScriptSignal<Player, ...>", "Server-side: receives :FireServer() calls", 2},
         {"OnClientEvent",  "RBXScriptSignal<...>",         "Client-side: receives :FireClient() calls", 2},
         {"FireServer",     "(...: any) -> ()",             "Send data from client to server", 1},

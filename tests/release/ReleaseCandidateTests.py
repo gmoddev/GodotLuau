@@ -32,7 +32,7 @@ class CandidateTests(unittest.TestCase):
         Library, Worker = Candidate.Names(Platform, Configuration)
         return {'Schema': 1, 'Platform': Platform, 'Configuration': Configuration, 'Source': self.Expected,
                 'Toolchain': {'SCons': Candidate.Policy['SCons'], 'CompilerVersion': 'unit-fixture'}, 'Commands': [{'Exit': 0}],
-                'Gates': {'Core': {'Result': 'PASS', 'Cases': 80}, 'Native': {'Result': 'PASS', 'Actors': 110}},
+                'Gates': {'Core': {'Result': 'PASS', 'Cases': 80}, 'Native': {'Result': 'PASS', 'Actors': 116}},
                 'Files': {'products/'+Library: {'SHA256': Digest(Configuration.encode())}, 'products/'+Worker: {'SHA256': Digest(b'worker')}, 'evidence.zip': {}}}
 
     def Package(self, Change=None):

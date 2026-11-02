@@ -8,11 +8,13 @@
 #include "gl_errors.h"
 #include "gl_runtime.h"   // gl_state_alive, GodotObjectWrapper, gow_set
 #include "gl_net_bridge.h" // serializador Lua<->red (Fase 2)
+#include "gl_remote_payload.h"
 #include "roblox_services.h" // LuauPendingResume + get_pending_resumes (para :Wait)
 #include <vector>
 #include <algorithm>
 #include <functional>
 #include <cstring>
+#include <set>
 
 using namespace godot;
 
@@ -21,7 +23,8 @@ using namespace godot;
 // handler OnServerEvent (en Roblox el server recibe SIEMPRE el player que disparó).
 static inline Node* _gl_find_local_player(Node* from) {
     if (!from || !from->is_inside_tree()) return nullptr;
-    Node* root = (Node*)from->get_tree()->get_root();
+    Node* root = from->get_tree()->get_current_scene();
+    if (!root) root = (Node*)from->get_tree()->get_root();
     // Preferir el OBJETO Player local (Player ≠ Character): OnServerEvent debe
     // recibir un Player real con UserId/Name/.Character, no el nodo-personaje.
     std::function<Node*(Node*)> rec_players = [&](Node* n) -> Node* {
@@ -219,8 +222,8 @@ struct LuaWait { lua_State* th; lua_State* main_L; int Guard = GLCaptureWait(th)
 // Empaqueta un nodo como referencia de red (para pasar el Player en :Wait server).
 static inline Dictionary _gl_inst_dict(Node* nd) {
     Dictionary d;
-    d["__glnet"] = "inst";
-    d["p"] = (nd && nd->is_inside_tree()) ? String(nd->get_path()) : String();
+    d["__glnet"] = "remoteinst";
+    d["oid"] = nd ? int64_t(nd->get_instance_id()) : int64_t(0);
     return d;
 }
 
@@ -233,16 +236,143 @@ static inline Dictionary _gl_inst_dict(Node* nd) {
 //    .OnServerEvent:Connect(fn) server subscribes
 //    .OnClientEvent:Connect(fn) client subscribes
 // ════════════════════════════════════════════════════════════════════
+class NetworkService;
 class RemoteEventNode : public Node {
     GDCLASS(RemoteEventNode, Node);
+    friend class NetworkService;
+    int Delivery = 0;
+    bool Frozen = false;
+    bool BootstrapEligible = false;
+    bool ServerAdmitted = false;
+    uint64_t Scope = 0;
+    uint64_t Generation = 1;
+    static std::set<uint64_t>& Registry() { static std::set<uint64_t> Entries; return Entries; }
+    void ApplyDescriptor(int Value) { Delivery = Value; Frozen = true; ServerAdmitted = true; }
 protected:
-    static void _bind_methods() { ClassDB::bind_method(D_METHOD("_gl_disconnect","ref"), &RemoteEventNode::_gl_disconnect); }
+    static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("_gl_disconnect","ref"), &RemoteEventNode::_gl_disconnect);
+        ClassDB::bind_method(D_METHOD("SetDeliveryType", "value"), &RemoteEventNode::SetDeliveryType);
+        ClassDB::bind_method(D_METHOD("GetDeliveryType"), &RemoteEventNode::GetDeliveryType);
+        ADD_PROPERTY(PropertyInfo(Variant::INT, "DeliveryType", PROPERTY_HINT_ENUM, "ReliableOrdered,UnreliableUnordered"), "SetDeliveryType", "GetDeliveryType");
+    }
+    void SetLegacyDelivery() { Delivery = 1; }
+    void _notification(int What) {
+        if (What == NOTIFICATION_ENTER_TREE && Generation) {
+            uint64_t Current = GetScope();
+            if (Scope && Scope != Current) { ++Generation; CancelWaits(); }
+            Scope = Current;
+        }
+    }
 public:
+    RemoteEventNode() {
+        BootstrapEligible = !GLExecutionDomain::IsClientExecution() && gl_net_role() != 2;
+        ServerAdmitted = BootstrapEligible;
+        if (Registry().size() < 4096) Registry().insert(uint64_t(get_instance_id()));
+    }
+    ~RemoteEventNode() {
+        Registry().erase(uint64_t(get_instance_id())); CancelWaits();
+        for (const auto& Callback : server_cbs) if (GLReferenceAlive(Callback.L, Callback.ref)) GLUnreference(Callback.L, Callback.ref);
+        for (const auto& Callback : client_cbs) if (GLReferenceAlive(Callback.L, Callback.ref)) GLUnreference(Callback.L, Callback.ref);
+    }
+    uint64_t GetScope() const {
+        if (!Generation || !is_inside_tree() || is_queued_for_deletion()) return 0;
+        uint64_t Result = 0;
+        for (Node* Ancestor = get_parent(); Ancestor; Ancestor = Ancestor->get_parent()) {
+            StringName Name = Ancestor->get_name();
+            if (Name == StringName("ServerStorage") || Name == StringName("ServerScriptService") ||
+                Ancestor->is_class("ServerStorage") || Ancestor->is_class("ServerScriptService")) return 0;
+            if (Name == StringName("ReplicatedStorage") || Name == StringName("Workspace") || Name == StringName("Teams") ||
+                Ancestor->is_class("RobloxWorkspace") || Ancestor->is_class("RobloxWorkspace2D")) {
+                if (!Result) Result = uint64_t(Ancestor->get_instance_id());
+            }
+        }
+        return Result;
+    }
+    int GetDeliveryType() const { return Delivery; }
+    bool IsServerAdmitted() const { return ServerAdmitted; }
+    uint64_t GetPublicationGeneration() const { return Generation; }
+    bool SetDeliveryType(const Variant& Value) {
+        bool Numeric = Value.get_type() == Variant::INT || Value.get_type() == Variant::FLOAT;
+        double Number = Numeric ? double(Value) : -1;
+        if (!Numeric || (Number != 0 && Number != 1) || Frozen || !ServerAdmitted || GLExecutionDomain::IsClientExecution() || gl_net_role() == 2 ||
+            (is_class("UnreliableRemoteEventNode") && Number != 1)) return false;
+        Delivery = int(Number); return true;
+    }
+    void CopyConfiguration(const RemoteEventNode* Source) { Delivery = Source->Delivery; }
+    Node* RemoteService() const {
+        Node* Service = Object::cast_to<Node>(ObjectDB::get_instance(gl_net_service_id()));
+        return Service && Service->is_class("NetworkService") && Service->is_inside_tree() && !Service->is_queued_for_deletion() &&
+            is_inside_tree() && Service->get_tree() == get_tree() ? Service : nullptr;
+    }
+    void CancelWaits() {
+        if (Generation) ++Generation; // Zero permanently retires an exhausted local generation.
+        // Cancel exact threads, not all work belonging to a shared owner.
+        auto Snapshot = server_wait_cbs;
+        Snapshot.insert(Snapshot.end(), client_wait_cbs.begin(), client_wait_cbs.end());
+        server_wait_cbs.clear(); client_wait_cbs.clear();
+        for (const auto& Wait : Snapshot) if (GLReferenceAlive(Wait.main_L, Wait.Guard)) {
+            auto Owner = GLGetOwner(Wait.th);
+            if (Owner) Owner->Domain->CancelThread(Wait.th);
+        }
+    }
+    bool CanSubscribe(bool Server, bool Waiting = false) {
+        auto& Callbacks = Server ? server_cbs : client_cbs;
+        auto& Waits = Server ? server_wait_cbs : client_wait_cbs;
+        _compact_cbs(Callbacks);
+        Waits.erase(std::remove_if(Waits.begin(), Waits.end(), [](const LuaWait& Wait) {
+            return !GLReferenceAlive(Wait.main_L, Wait.Guard);
+        }), Waits.end());
+        return Waiting ? Waits.size() < 256 : Callbacks.size() < 256;
+    }
+    Array Prepare(lua_State* State, int Base, int Count) {
+        if (!is_inside_tree() || is_queued_for_deletion() || !ServerAdmitted || !GetScope()) luaL_error(State, "[Network:Remote] Remote retired or unpublished");
+        if (Count > GLRemotePayload::MaxArguments) luaL_error(State, "[Network:Remote] Too many arguments");
+        int Nodes = 0; size_t Bytes = 0;
+        for (int Index = Base; Index < Base + Count; ++Index)
+            if (!GLRemotePayload::CheckLua(State, Index, Nodes, Bytes)) luaL_error(State, "[Network:Remote] Invalid or oversized payload");
+        Array Arguments = gl_net_encode_args(State, Base, Count, true);
+        GLRemotePayload::Codec Codec; Codec.Value(Arguments);
+        if (!Codec.Valid) luaL_error(State, "[Network:Remote] Unsupported or excessive encoded payload");
+        int64_t LegacyBytes = Delivery == 1 ? UtilityFunctions::var_to_bytes(Arguments).size() : 0;
+        if (Codec.Bytes.size() > GLRemotePayload::MaxBytes - 40 || (Delivery == 1 && (Codec.Bytes.size() > GLRemotePayload::UnreliableBytes || LegacyBytes > 900)))
+            luaL_error(State, "[Network:Remote] Payload exceeds delivery limits (mode %d, body %d bytes, legacy measure %d bytes)", Delivery, int(Codec.Bytes.size()), int(LegacyBytes));
+        return Arguments;
+    }
+    bool CaptureLocalReferences(Variant& Value, bool Tagged = true) {
+        if (Value.get_type() == Variant::ARRAY) {
+            Array Items = Value;
+            for (int Index = 0; Index < Items.size(); ++Index) {
+                Variant Item = Items[Index]; if (!CaptureLocalReferences(Item)) return false; Items[Index] = Item;
+            }
+        } else if (Value.get_type() == Variant::DICTIONARY) {
+            Dictionary Items = Value;
+            String Tag = Tagged && Items.has("__glnet") ? String(Items["__glnet"]) : String();
+            if (Tag == "inst") {
+                Node* Reference = get_node_or_null(NodePath(String(Items.get("p", String()))));
+                if (!Reference || !Reference->is_inside_tree() || Reference->is_queued_for_deletion()) return false;
+                for (Node* Parent = Reference; Parent; Parent = Parent->get_parent())
+                    if (Parent->get_name() == StringName("ServerStorage") || Parent->get_name() == StringName("ServerScriptService") ||
+                        Parent->is_class("ServerStorage") || Parent->is_class("ServerScriptService")) return false;
+                Value = _gl_inst_dict(Reference); return true;
+            }
+            Array Keys = Items.keys();
+            for (int Index = 0; Index < Keys.size(); ++Index) {
+                Variant Key = Keys[Index], Item = Items[Key];
+                bool Inner = !((Tag == "rawdict" && Key == Variant("d")) || (Tag == "typed" && Key == Variant("f")));
+                if (!CaptureLocalReferences(Item, Inner)) return false; Items[Key] = Item;
+            }
+        }
+        return true;
+    }
+    Array PrepareLocal(lua_State* State, const Array& Arguments) {
+        Variant Result = Arguments.duplicate(true);
+        if (!CaptureLocalReferences(Result)) luaL_error(State, "[Network:Remote] Invalid or private local reference");
+        return Result;
+    }
     std::vector<LuaCB> server_cbs;
     std::vector<LuaCB> client_cbs;
     std::vector<LuaWait> server_wait_cbs;   // OnServerEvent:Wait()
     std::vector<LuaWait> client_wait_cbs;   // OnClientEvent:Wait()
-    bool reliable = true;   // false en UnreliableRemoteEvent (canal no confiable)
 
     void add_server_cb(lua_State* L, int ref, bool once = false) { server_cbs.push_back({L, ref, true, once}); }
     void add_client_cb(lua_State* L, int ref, bool once = false) { client_cbs.push_back({L, ref, true, once}); }
@@ -258,6 +388,7 @@ public:
             LuauPendingResume pr;
             pr.thread = w.th; pr.main_L = w.main_L; pr.delta = 0; pr.Guard = w.Guard;
             pr.args = args_arr; pr.ctx_id = ctx_id; pr.use_args = true;
+            pr.RemoteGeneration = Generation;
             get_pending_resumes().push_back(pr);
         }
         waits.clear();
@@ -267,7 +398,7 @@ public:
     // que :Once y Connection:Disconnect no acumulen entradas muertas ni fuguen refs.
     static void _compact_cbs(std::vector<LuaCB>& v) {
         for (int i = (int)v.size() - 1; i >= 0; --i) {
-            if (!v[i].active) {
+            if (!v[i].active || !GLReferenceAlive(v[i].L, v[i].ref)) {
                 if (gl_state_alive(v[i].L)) GLUnreference(v[i].L, v[i].ref);
                 v.erase(v.begin() + i);
             }
@@ -278,6 +409,7 @@ public:
     // Cada listener corre en su propio hilo (como el resto del motor) para que
     // pueda usar wait/task.wait sin "yield across C-call boundary".
     void _run_server_cbs(lua_State* L, int stack_base, int nargs, Node* player) {
+        uint64_t Identity = uint64_t(get_instance_id());
         std::vector<LuaCB> snapshot = server_cbs;  // copia defensiva: un :Connect dentro del handler no invalida el bucle
         for (auto& cb : snapshot) {
             if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
@@ -288,6 +420,7 @@ public:
                 if (cb.once) _gl_disconnect(cb.ref);    // :Once → desconectar ANTES de invocar (como Roblox)
                 return 1 + nargs;
             });
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion() || !is_inside_tree()) return;
         }
         _compact_cbs(server_cbs);
         if (!server_wait_cbs.empty()) {                 // OnServerEvent:Wait() → (player, ...)
@@ -298,6 +431,7 @@ public:
         }
     }
     void _run_client_cbs(lua_State* L, int stack_base, int nargs) {
+        uint64_t Identity = uint64_t(get_instance_id());
         std::vector<LuaCB> snapshot = client_cbs;  // copia defensiva (ver _run_server_cbs)
         for (auto& cb : snapshot) {
             if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
@@ -307,6 +441,7 @@ public:
                 if (cb.once) _gl_disconnect(cb.ref);    // :Once → desconectar ANTES de invocar (como Roblox)
                 return nargs;
             });
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion() || !is_inside_tree()) return;
         }
         _compact_cbs(client_cbs);
         if (!client_wait_cbs.empty()) {                 // OnClientEvent:Wait() → (...)
@@ -318,76 +453,85 @@ public:
     // ── Entrega desde la RED (args ya llegaron como Array) ──────────────────
     // Las invoca el NetworkService al recibir el RPC en la máquina destino.
     void deliver_to_server_cbs(const Array& args, Node* player, Node* ctx) {
+        uint64_t Identity = uint64_t(get_instance_id());
         std::vector<LuaCB> snapshot = server_cbs;  // copia defensiva (ver _run_server_cbs)
         for (auto& cb : snapshot) {
             if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
+            if (cb.once) _gl_disconnect(cb.ref);
             GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 _gl_push_node(Thread, player);
-                int n = gl_net_decode_args(Thread, args, ctx);
-                if (cb.once) _gl_disconnect(cb.ref);
+                int n = gl_net_decode_args(Thread, args, ctx, true);
                 return 1 + n;
             });
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion() || !is_inside_tree()) return;
         }
         _compact_cbs(server_cbs);
         if (!server_wait_cbs.empty()) {
             Array wa; wa.push_back(_gl_inst_dict(player));
             for (int i = 0; i < args.size(); i++) wa.push_back(args[i]);
-            _queue_waits(server_wait_cbs, wa, ctx);
+            _queue_waits(server_wait_cbs, wa, this);
         }
     }
     void deliver_to_client_cbs(const Array& args, Node* ctx) {
+        uint64_t Identity = uint64_t(get_instance_id());
         std::vector<LuaCB> snapshot = client_cbs;  // copia defensiva (ver _run_server_cbs)
         for (auto& cb : snapshot) {
             if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
+            if (cb.once) _gl_disconnect(cb.ref);
             GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
-                int n = gl_net_decode_args(Thread, args, ctx);
-                if (cb.once) _gl_disconnect(cb.ref);
+                int n = gl_net_decode_args(Thread, args, ctx, true);
                 return n;
             });
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion() || !is_inside_tree()) return;
         }
         _compact_cbs(client_cbs);
-        if (!client_wait_cbs.empty()) _queue_waits(client_wait_cbs, args, ctx);
+        if (!client_wait_cbs.empty()) _queue_waits(client_wait_cbs, args, this);
     }
 
     // ── API pública (desde Luau) — decide red vs local según el modo ────────
     // FireServer: cliente → servidor. En host/single entrega localmente.
     void fire_server(lua_State* L, int stack_base, int nargs) {
-        Node* ns = _gl_find_network_service(this);
+        if (!GLIsClient(L)) luaL_error(L, "[Network:Remote] FireServer requires Client execution");
+        Array args = Prepare(L, stack_base, nargs);
+        Node* ns = RemoteService();
         if (_gl_net_mode(ns) == 2 && is_inside_tree()) {
-            Array args = gl_net_encode_args(L, stack_base, nargs);
-            _gl_check_unreliable_size(L, args, reliable);
-            ns->call("net_send_event", String(get_path()), args, 0, reliable);
+            String Error = ns->call("NetSendRemote", this, args, 0);
+            if (!Error.is_empty()) luaL_error(L, "%s", Error.utf8().get_data());
             return;
         }
-        _run_server_cbs(L, stack_base, nargs, _gl_find_local_player(this));
+        Array Local = PrepareLocal(L, args); Frozen = true;
+        deliver_to_server_cbs(Local, _gl_find_local_player(this), this);
     }
     // FireClient(player, ...): servidor → un cliente concreto.
     void fire_client(lua_State* L, int player_idx, int stack_base, int nargs) {
-        Node* ns = _gl_find_network_service(this);
+        if (GLIsClient(L)) luaL_error(L, "[Network:Remote] FireClient requires Server authority");
+        Array args = Prepare(L, stack_base, nargs);
+        Node* ns = RemoteService();
         int mode = _gl_net_mode(ns);
-        if (mode == 0 || !ns || !is_inside_tree()) { _run_client_cbs(L, stack_base, nargs); return; }
+        if (mode == 0 || !ns || !is_inside_tree()) { Array Local = PrepareLocal(L, args); Frozen = true; deliver_to_client_cbs(Local, this); return; }
         if (mode == 2) return;   // un cliente no puede FireClient
         Node* player = _gl_node_from_lua(L, player_idx);
         if (!player) return;     // FireClient(nil/no-nodo): descartar (Roblox lo trataría como error)
         int peer = (int)(ns->call("peer_for_player_node", player));
         int myid = (int)(ns->call("get_peer_id"));
-        if (peer == myid && myid != 0) { _run_client_cbs(L, stack_base, nargs); return; }  // el jugador del host: local
-        if (peer == 0) return;   // destino no resuelto o referencia obsoleta: NO entregar local ni enviar
-        Array args = gl_net_encode_args(L, stack_base, nargs);
-        _gl_check_unreliable_size(L, args, reliable);
-        ns->call("net_send_event", String(get_path()), args, peer, reliable);
+        if (peer == myid && myid != 0) { Array Local = PrepareLocal(L, args); Frozen = true; deliver_to_client_cbs(Local, this); return; }
+        if (peer == 0) luaL_error(L, "[Network:Remote] Player is not in a live session");
+        String Error = ns->call("NetSendRemote", this, args, peer);
+        if (!Error.is_empty()) luaL_error(L, "%s", Error.utf8().get_data());
     }
     // FireAllClients(...): servidor → todos los clientes (incl. el host).
     void fire_all_clients(lua_State* L, int stack_base, int nargs) {
-        Node* ns = _gl_find_network_service(this);
+        if (GLIsClient(L)) luaL_error(L, "[Network:Remote] FireAllClients requires Server authority");
+        Array args = Prepare(L, stack_base, nargs);
+        Array Local = PrepareLocal(L, args); // Validate all local references before any destination sees this broadcast.
+        Node* ns = RemoteService();
         int mode = _gl_net_mode(ns);
         if (mode == 2) return;   // un cliente no puede FireAllClients
-        _run_client_cbs(L, stack_base, nargs);   // host/single: entrega local
         if (mode == 1 && is_inside_tree()) {
-            Array args = gl_net_encode_args(L, stack_base, nargs);
-            _gl_check_unreliable_size(L, args, reliable);
-            ns->call("net_send_event", String(get_path()), args, -1, reliable);
+            String Error = ns->call("NetSendRemote", this, args, -1);
+            if (!Error.is_empty()) luaL_error(L, "%s", Error.utf8().get_data());
         }
+        Frozen = true; deliver_to_client_cbs(Local, this);
     }
 
     void cleanup_state(lua_State* L) {
@@ -413,7 +557,7 @@ class UnreliableRemoteEventNode : public RemoteEventNode {
 protected:
     static void _bind_methods() {}
 public:
-    UnreliableRemoteEventNode() { reliable = false; }
+    UnreliableRemoteEventNode() { SetLegacyDelivery(); }
 };
 
 // ════════════════════════════════════════════════════════════════════

@@ -121,6 +121,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/security" --security --timeout 60
 
+      - name: GL-029 unified RemoteEvent ENet admission and lifecycle
+        timeout-minutes: 4
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/remote" --remote --timeout 90
+
       - name: GL-020 existing functional animation lifecycle
         timeout-minutes: 5
         run: |
