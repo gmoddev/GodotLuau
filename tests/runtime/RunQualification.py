@@ -11,7 +11,7 @@ import socket
 import subprocess
 import sys
 import time
-from FixtureProcesses import StartProcess, StopProcess, StopAll
+from FixtureProcesses import StartProcess, StopProcess, StopAll, GetProfileFolder
 
 
 def Rss(Process):
@@ -384,8 +384,7 @@ def Http(Args, Output, Environment):
         Prepare(Project, Args.extension)
         ActorEnvironment = dict(Environment)
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
-            Directory = Project / 'profile' / Name
-            Directory.mkdir(parents=True)
+            Directory = GetProfileFolder(Project, Name)
             ActorEnvironment[Name] = str(Directory)
         if Case == 'tls':
             shutil.copyfile(Path(__file__).with_name('HttpFixtureCA.pem'), Project / 'http-ca.pem')
@@ -430,8 +429,7 @@ def HttpService(Args, Output, Environment):
         Prepare(Project, Args.extension)
         ActorEnvironment = dict(Environment)
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
-            Directory = Project / 'profile' / Name
-            Directory.mkdir(parents=True)
+            Directory = GetProfileFolder(Project, Name)
             ActorEnvironment[Name] = str(Directory)
         if Case == 'tls':
             shutil.copyfile(Path(__file__).with_name('HttpFixtureCA.pem'), Project / 'http-ca.pem')
@@ -515,10 +513,9 @@ def Main():
             shutil.copyfile(Library, Args.output / Library.name)
     Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING="1")
     for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
-        Directory = Args.output / 'profile' / Name
-        Directory.mkdir(parents=True)
+        Directory = GetProfileFolder(Args.output, Name)
         Environment[Name] = str(Directory)
-    (Args.output / 'profile/.gdignore').write_text('')
+    GetProfileFolder(Args.output, '').joinpath('.gdignore').write_text('')
     if Args.asan_runtime:
         Environment["LD_PRELOAD"] = str(Args.asan_runtime.resolve())
     if Args.load_only:

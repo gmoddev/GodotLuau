@@ -1,11 +1,28 @@
 """Own fixture process trees: POSIX sessions or Windows kill-on-close jobs."""
 import atexit
 import ctypes
+import hashlib
 import os
+from pathlib import Path
 import signal
 import subprocess
 
 Processes = []
+
+
+def GetProfileFolder(Project, Name):
+    """Select isolated user-data storage without moving large fixture products.
+
+    This is a harness setting; native filesystem admission is unchanged.
+    """
+    Root = os.environ.get('GL_QUALIFICATION_PROFILE_ROOT')
+    Directory = Path(Project) / 'profile'
+    if Root:
+        Identity = hashlib.sha256(str(Path(Project).resolve()).encode()).hexdigest()
+        Directory = Path(Root).resolve() / Identity
+    Directory = Directory / Name
+    Directory.mkdir(parents=True, exist_ok=True)
+    return Directory
 
 
 def WindowsJob():
