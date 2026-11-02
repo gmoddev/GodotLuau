@@ -23,8 +23,15 @@ func _initialize() -> void:
         if not Name.ends_with(".obj"): continue
         var Mesh := load(Directory + Name) as ArrayMesh
         assert(Mesh != null)
-        var Target := "res://.godot/imported/Sanitizer-" + Name + ".res"
+        var Target := "res://.godot/imported/Sanitizer-" + Name + ".tres"
         var Before := Describe(Mesh)
+        # Imported CompressedTexture2D stores an external file path. Embed the
+        # decoded original image in an ImageTexture so the exported mesh has
+        # no template-loader dependency on a generic Texture2D type hint.
+        for Index in Mesh.get_surface_count():
+            var Material := Mesh.surface_get_material(Index) as StandardMaterial3D
+            Material.albedo_texture = ImageTexture.create_from_image(Material.albedo_texture.get_image())
+        assert(Describe(Mesh) == Before)
         assert(ResourceSaver.save(Mesh, Target, ResourceSaver.FLAG_BUNDLE_RESOURCES) == OK)
         var After := Describe(ResourceLoader.load(Target, "ArrayMesh", ResourceLoader.CACHE_MODE_IGNORE))
         assert(Before == After)

@@ -142,7 +142,12 @@ def Main():
         ControlsPassed = all(Item['Passed'] for Item in Results)
         if not Args.controls_only and ControlsPassed:
             Lifecycle('production-registration', 'registration', 5, Args.extension)
-            Lifecycle('production-vm-reload', 'vm-cycles', 5, Args.extension)
+            if not Lifecycle('production-vm-reload', 'vm-cycles', 5, Args.extension):
+                # Keep the failed production gate. Collect a binding-only C ABI
+                # comparison for attribution; diagnostic completion is no pass
+                # for the unload failure or its unexpected sanitizer reports.
+                Observe([sys.executable, Runtime/'InvestigateSanitizerBindings.py', '--godot', Args.godot,
+                         '--probe', Args.probe, '--output', Args.output/'binding-controls'], 'binding-investigation', 180)
             Native = Args.output/'native'
             for Group, Flags in [('regression',['--teardown','--coordinated-close']),('security',['--security']),('animation',['--animation']),('characters',['--characters']),('resources',['--resources']),('filesystem',['--filesystem']),('http',['--http']),('httpservice',['--httpservice']),('callers',['--callers']),('datastore',['--datastore'])]:
                 Observe([sys.executable, Runtime/'RunQualification.py', '--godot', Args.godot, '--extension', Args.extension, '--output', Native/Group, '--timeout', '15' if Group=='resources' else '60', *Flags], 'suite-'+Group, 360)

@@ -29,7 +29,7 @@ def Assets(Godot, Source, Output, Environment, RuntimeRemaps=False):
     if RuntimeRemaps:
         shutil.copy2(Source/'tests/runtime/BundleCharacterAssets.gd', Import/'BundleCharacterAssets.gd')
         with (Import/'bundle.stdout.log').open('w') as Out, (Import/'bundle.stderr.log').open('w') as Err:
-            Actor = StartProcess([str(Godot), '--headless', '--disable-crash-handler', '--editor', '--path', str(Import), '--script', 'res://BundleCharacterAssets.gd'], Out, Err, Environment)
+            Actor = StartProcess([str(Godot), '--headless', '--disable-crash-handler', '--path', str(Import), '--script', 'res://BundleCharacterAssets.gd'], Out, Err, Environment)
             if Actor.wait(timeout=120) != 0: raise RuntimeError('Character fixture asset bundling failed')
         Bundled = json.loads((Import/'bundled-assets.json').read_text())
         # Template hosts resolve exported .remap files, not editor .import files.
