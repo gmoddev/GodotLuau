@@ -59,25 +59,25 @@ its separate scoped [closure](gl018-closure.md); GL-029 remains open.
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
-| GL-029 | P2 | Phase 1 WIP checkpoint; partially qualified; later phases open | Unified reliable/unordered configuration, generation-checked publication and bounded admission |
+| GL-029 | P2 | Phase 1 qualified; unmerged; later phases open | Unified reliable/unordered configuration, generation-checked publication and bounded admission |
 | GL-030 | P2 | Open; source-verified terminal-outcome gap | Default RemoteFunction waits are infinite while aged correlation records are erased |
 
 ## GL-029: Application Remote delivery has no unified bounded publication contract
 
-**Resumed correction:** [qualification](remoteevent-phase1-qualification.md)
-records passing ordinary 116-actor Windows/Linux CI and failed sanitizer
-profiles. Controlled ENet throttle/readiness fixtures address transport-level
-loss/startup assumptions. A production probe also confirms valid Unicode event
-dictionary keys are misencoded by the legacy Latin-1 constructor; a one-line
-StrictRemote-only UTF-8 correction and real ENet round-trip assertions pass the
-20-actor focused Windows ASan selection. Fresh full hosted/platform qualification
-is pending on `integration/gl-018-gl-029-remoteevents`. Other carriers and
-persistence encoding remain unchanged. GL-029 stays OPEN; no refactor or main
-merge is included.
+**Phase 1 qualified:** [qualification](remoteevent-phase1-qualification.md) and
+the [versioned receipt](evidence/gl029-phase1-ci-verification.json) verify source
+`eec2397`: Windows/Linux Debug/Release (80 core/116 native each), hosted ordinary
+native and full-native sanitizer profiles, plus exact SCons products and both
+extracted companion packages with non-publishing acceptance. Controlled ENet
+throttle/readiness fixtures address transport loss/startup assumptions without
+changing production carrier defaults. A reproduced Unicode dictionary-key defect
+is fixed by one StrictRemote-only UTF-8 conversion line; actual ENet Server/echo/
+Wait assertions pass. Other carriers and persistence encoding remain unchanged.
+No refactor or main merge is included. Earlier failures remain in the record.
 
-**Status: OPEN; Phase 1 WIP is partially qualified on
-`network/gl-029-unified-remoteevents`, not ready for integration.** The user requested
-publication of a checkpoint; see the [handoff](remoteevent-phase1-handoff.md).
+**Status: OPEN for later phases; Phase 1 qualified and unmerged on
+`integration/gl-018-gl-029-remoteevents`.** The original checkpoint remains
+preserved; see the [handoff](remoteevent-phase1-handoff.md).
 Main remains unchanged. Baseline assessment
 source is `83cd0887968d73d61d050650718d8ada6e124579`; research is retained at
 `9ea782bb739cc35deba06474a82582a12529df6d`.
@@ -98,9 +98,8 @@ legacy behavior. Native constructor/domain provenance prevents Client-created
 listen-host endpoints from acquiring publication authority. No general mutation
 gateway or unrelated replication redesign is implied.
 
-**Remaining closure:** complete the recorded Phase 1 platform/hosted gates;
-separately implement/qualify bounded queues, sequenced stale rejection and unsent
-supersession. Native ENet reliable-retention/admission proof remains independent
+**Remaining closure:** separately implement/qualify bounded queues, sequenced
+stale rejection and unsent supersession. Native ENet reliable-retention/admission proof remains independent
 of application queue bounds. Keep this issue open until the accepted later-phase
 facts exist. No unreliable RemoteFunction modes or GL-030 timeout changes belong
 to this work.

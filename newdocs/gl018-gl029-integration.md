@@ -2,9 +2,11 @@
 
 **Current status:** [GL-018 is closed within the admitted matching-host scope](gl018-closure.md)
 after exact-source hosted core/native/sanitizer verification. Its fixes and
-closure are retained by normal merge `a6bd710`. GL-029 remains open; the
+closure are retained by normal merge `a6bd710`. GL-029 Phase 1 is now qualified at
+`eec2397`; later phases remain open. The
 [resumed qualification record](remoteevent-phase1-qualification.md#resumed-after-gl-018-closure)
-documents its reproduced failures and small fixture corrections. The original
+documents reproduced failures, the one-line UTF-8 correction and the completed
+Windows/Linux Debug/Release, native/sanitizer and non-publishing package gates. The original
 integration assessment below retains its publication-time conclusions.
 
 Date: 2026-11-02. **Combined development branch; not ready to merge into main.**

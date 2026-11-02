@@ -2,6 +2,13 @@
 
 ## Current hosted result at `eec2397`
 
+**Phase 1 QUALIFIED within ADR-008's exercised contract; unmerged.** Qualified
+source is `eec239779e873c54982c81ec9984c7ff98b8f6b8`; subsequent commits only
+document the same runtime/test inputs. GL-018 and the original research/GL-029
+commits remain ancestors. Main stays `83cd0887968d73d61d050650718d8ada6e124579`.
+No refactor, release publication or updater distribution is included. GL-029
+remains OPEN for the separately scoped later phases described below.
+
 Core [41531861167](https://github.com/gmoddev/GodotLuau/actions/runs/41531861167),
 ordinary native [41531861106](https://github.com/gmoddev/GodotLuau/actions/runs/41531861106)
 and full-native sanitizers [41531861175](https://github.com/gmoddev/GodotLuau/actions/runs/41531861175)
@@ -23,11 +30,36 @@ the sample claim there. Ordinary native and candidate artifacts separately retai
 and verify all 4,000 UUID samples per profile.
 
 The [non-publishing candidate matrix](https://github.com/gmoddev/GodotLuau/actions/runs/41532697897)
-has passed Linux Debug/Release and Linux core ASan/LSan. Both Linux profile
-archives verify source/tree/dependency/policy/harness identities, all six indexed
-products/evidence files, 80 core cases and 116 native actors. Windows candidate
-Debug/Release and extracted-package acceptance remain pending. Phase 1 therefore
-remains partially qualified; GL-029's later phases remain open independently.
+passes all ten jobs: policy checks on both platforms, all four Windows/Linux
+Debug/Release source-build profiles, Linux core ASan/LSan, both extracted-package
+startup jobs and final acceptance. Each profile archive verifies source/tree/
+dependency/policy/harness identities, all six indexed products/evidence files,
+80 core cases, 116 native actors and 209 Remote case records. Every required
+native log hash and all 4,000 UUID samples per profile match.
+
+The production SCons products are distinguished from the full-regression CMake
+test adapters. Each platform package contains the exact Debug/Release production
+extensions and Release persistence companion. All 133 members, sizes, modes,
+hashes, embedded provenance and both actual extracted startup actors per platform
+verify with the existing `ReleaseCandidate.CheckPackage` checker. Linux companion
+executable mode is preserved. Final accepted record SHA-256:
+`f1baecd45b5403d3eadc38a69365922284f558c269492afcf0f7e5d3f180323f`.
+Its result is `ACCEPTED_NONPUBLISHING_CANDIDATE`, with every required job successful.
+
+The [versioned receipt](evidence/gl029-phase1-ci-verification.json) records exact
+summary/product/package hashes and the two transient mailbox omissions. Raw
+downloads and verification scripts remain under
+`C:/Users/aiden/.codex/artifacts/godotluau/gl029-ci-eec2397`.
+The inherited candidate policy's generic GL-018-open limitation is historical;
+its independently qualified matching-host scope remains in [GL-018 closure](gl018-closure.md).
+Default-throttle/congestion, induced-loss, sequencing/supersession, full-packet MTU,
+retention and broader fairness are not established by these functional profiles.
+
+## Historical investigation and qualification snapshots
+
+The observations below retain their original pending/failed status at each
+checkpoint. The completed matrix above supersedes their acceptance status; it
+does not convert a failed attempt into a pass.
 
 ## Sanitizer follow-up from `78897d3`
 

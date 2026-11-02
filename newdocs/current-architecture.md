@@ -436,7 +436,7 @@ return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
 
 ## Networking and persistence
 
-On `network/gl-029-unified-remoteevents`, Phase 1 adds native RemoteEvent
+On `integration/gl-018-gl-029-remoteevents`, qualified Phase 1 adds native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen
 configuration, per-session descriptors/readiness and ObjectID-bound publication.
 Event bodies use a bounded event-only byte codec; RemoteFunction and generic
@@ -444,7 +444,9 @@ replication keep their existing wire behavior. No sequenced mode, general
 scheduler or new execution domain is added. This development branch is not
 integrated into main; see [ADR-008](adr-008-remoteevent-publication.md) and the
 [qualification record](remoteevent-phase1-qualification.md) for status and exact
-compatibility changes, including preserved native legacy class identity.
+compatibility changes, including preserved native legacy class identity and
+strict UTF-8 event dictionary keys. Functional loopback qualification uses the
+explicit carrier profile in ADR-008; production ENet defaults remain unchanged.
 
 Integrated `security/gl-007-character-authority` source `3bb641a` introduced
 protocol 2 character grants/snapshots, native server health, bounded pose admission,

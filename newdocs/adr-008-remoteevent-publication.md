@@ -1,7 +1,7 @@
 # ADR-008: RemoteEvent configuration and publication
 
-Status: Phase 1 decision authorized for implementation; qualification continues
-on `integration/gl-018-gl-029-remoteevents`, preserving the original
+Status: Phase 1 qualified at `eec2397` within the documented functional profiles;
+unmerged on `integration/gl-018-gl-029-remoteevents`, preserving the original
 `network/gl-029-unified-remoteevents` checkpoint. Main remains
 `83cd0887968d73d61d050650718d8ada6e124579`. This is not release authorization.
 

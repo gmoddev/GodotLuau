@@ -1,5 +1,11 @@
 # GL-029 Phase 1 checkpoint handoff
 
+**Superseded qualification status:** Phase 1 is now qualified at `eec2397` on
+`integration/gl-018-gl-029-remoteevents`; see the completed
+[qualification record](remoteevent-phase1-qualification.md). This original handoff
+preserves checkpoint identities and failed attempts. Later GL-029 phases remain
+open; no main merge, release or updater distribution is authorized.
+
 Date: 2026-11-02. **PARTIALLY QUALIFIED / WIP; NOT READY FOR INTEGRATION.**
 The user requested cleanup, a handoff, commit and publication before completing
 qualification. Resume this phase only; do not merge, implement sequenced delivery,

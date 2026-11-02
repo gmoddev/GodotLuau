@@ -39,9 +39,11 @@ jobs and their required evidence pass at `46427d0`; this is not a main merge or
 distribution authorization.
 
 The [GL-018/GL-029 integration review](gl018-gl029-integration.md) preserves the
-sanitizer, research and RemoteEvent Phase 1 commits. GL-029 qualification resumes
-on that combined development branch with the qualified GL-018 fixes retained.
-GL-029 remains unqualified; neither branch is merged into main.
+sanitizer, research and RemoteEvent Phase 1 commits. GL-029 Phase 1 is
+[qualified](remoteevent-phase1-qualification.md) at `eec2397` on that combined
+development branch, with Windows/Linux Debug/Release, hosted native/sanitizer and
+non-publishing package gates verified. Later sequencing/retention/MTU/fairness
+phases remain open; neither branch is merged into main.
 
 The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
 matching Windows/Linux instrumented hosts, actual detection controls and retained
