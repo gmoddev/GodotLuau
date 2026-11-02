@@ -1,5 +1,34 @@
 # GL-029 Phase 1 qualification
 
+## Current hosted result at `eec2397`
+
+Core [41531861167](https://github.com/gmoddev/GodotLuau/actions/runs/41531861167),
+ordinary native [41531861106](https://github.com/gmoddev/GodotLuau/actions/runs/41531861106)
+and full-native sanitizers [41531861175](https://github.com/gmoddev/GodotLuau/actions/runs/41531861175)
+pass on both Windows and Linux. Downloaded records verify all 80 core cases and
+116 native actors per applicable profile, six real ENet Remote actors and 209
+passing Remote case records in each native profile. All 74 harness hashes match.
+The sanitizer builds each instrument 1,160 production translation units and three
+probe units; compiler/source/compile-command/product/host identities, detection
+controls and all required log/result/input hashes match. No unexpected sanitizer
+report is present. The admitted corrected-host, headless Debug ASan scope and
+Windows LSan limitation remain; this does not qualify stock-host hot unload.
+
+Sanitizer manifests rehash 551 files on Linux and 546 on Windows. Each artifact
+omits one transient GL-003 mailbox JSON listed by its manifest; both exact paths
+and expected hashes are retained in the local receipt. These are not missing
+qualification logs, results or inputs. Sanitizer artifacts do not upload the UUID
+sample text files, so only their executed strict check/embedded summary establishes
+the sample claim there. Ordinary native and candidate artifacts separately retain
+and verify all 4,000 UUID samples per profile.
+
+The [non-publishing candidate matrix](https://github.com/gmoddev/GodotLuau/actions/runs/41532697897)
+has passed Linux Debug/Release and Linux core ASan/LSan. Both Linux profile
+archives verify source/tree/dependency/policy/harness identities, all six indexed
+products/evidence files, 80 core cases and 116 native actors. Windows candidate
+Debug/Release and extracted-package acceptance remain pending. Phase 1 therefore
+remains partially qualified; GL-029's later phases remain open independently.
+
 ## Sanitizer follow-up from `78897d3`
 
 ### Strict UTF-8 dictionary-key correction
@@ -56,6 +85,17 @@ The candidate workflow has read-only contents permissions and qualifies source
 products, extracted companion packaging and runtime checks; it does not enable
 the dormant publication workflow or updater distribution.
 
+The Linux Debug native job in 41531861106 subsequently completes successfully.
+Downloaded evidence verifies all 116 actor exits, six real ENet Remote actors
+with 209 passing case records, the functional carrier assertion in every actor,
+347 log hashes, all 74 LF-normalized harness hashes and 4,000 unique UUID samples.
+The summary matches revision `eec2397` and native fingerprint `ac670637...`;
+summary SHA-256 is
+`bc4d27f962c9779c8c668d42150c8986ab34b90dc33d236babd75c7100b05b38`.
+Both downloaded core XML reports independently contain all 80 passing cases.
+Local receipt: `C:/Users/aiden/.codex/artifacts/godotluau/gl029-ci-eec2397/verification.json`.
+These completed profiles do not substitute for the remaining matrix.
+
 The locally rebuilt matching Windows ASan diagnostic confirms ENet's adaptive
 unreliable throttle reaches 0/32 during startup, with further reductions around
 reconnect. It also reproduces the missing reconnect echo, without an application
@@ -89,6 +129,19 @@ All four focused HTTP actors pass after that setup correction.
 The local broad regression attempt separately reaches the existing identity-GC
 stress loop's resume deadline on this compiler profile; it is retained as a
 failure, without changing resource policy or calling the full suite qualified.
+
+A bounded same-host comparison subsequently runs the unchanged `Integration.gd`
+against preserved GL-018 DLL `82aded0415266a64dc93918e0a586e7edef8619c7c36742d6b47110ee1116f34`
+and corrected GL-029 DLL `5721e209...`. Both reproduce the IdentityServer and
+IdentityClient resume deadline at line 54 (34.969 and 35.610 seconds overall).
+This is counterevidence to attributing that local compiler/profile failure to
+GL-029. It does not qualify either local full suite or extend GL-018's admitted
+hosted/compiler scope. No resource limit or GC assertion is changed.
+Archive `gc-comparison-evidence.zip` is retained in the same remote/local evidence
+directories above; SHA-256
+`9d58cffb45b29c60e5779055a5f1aeb62731917e0ccb7817984379b4d51060ab`.
+All ten indexed files rehash after download; both executed fixtures match the
+committed file after LF normalization.
 
 Ordinary hosted native CI `41518023025` passes all 116 actors on Windows and
 Linux. Sanitizer CI `41518023028` fails both platforms: Remote listen completion
