@@ -928,6 +928,13 @@ conflict exhaustion. Windows ASan DataStore passes 23 actors and unchanged nativ
 controls; GL-018 stays OPEN pending complete profile verification. No runtime or
 retry-policy change and no refactor is included.
 
+**Completed hosted follow-up:** exact-fix core/ordinary native CI and Linux
+full-native sanitizers pass. Windows DataStore also passes all 23 actors, but
+HTTP and HttpService frame-progress assertions fail at 0.332602/0.334151 seconds.
+All 520 Linux and 495 Windows summary-indexed artifact files rehash correctly;
+no unexpected sanitizer report is recorded. GL-018 remains OPEN for those Windows
+timing failures; see the [completed observation](gl018-increment-qualification.md#completed-hosted-observation).
+
 **Status: OPEN; bounded qualification gap.** MSVC-instrumented adapter/bindings/
 Luau reaches functional PASS under stock Godot, then times out at exit. A
 registration-only inherited baseline and candidate both reproduce the timeout

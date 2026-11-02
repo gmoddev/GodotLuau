@@ -84,3 +84,25 @@ matching instrumented hosts are building at this observation. No release
 workflow is dispatched. DockerPC C: has only about 3 GiB free after the focused
 run, so a further full local matrix is not started there. No caches are removed
 and no unrelated work is stopped. Local task test processes completed.
+
+### Completed hosted observation
+
+The exact-fix jobs above are now terminal: core and ordinary native CI pass on
+both platforms. Full-native Linux ASan/LSan passes; full-native Windows ASan
+fails. Both sanitizer artifacts were downloaded, and every summary-indexed file
+was independently rehashed: Linux 520/520, Windows 495/495, no missing files or
+mismatches. Both artifacts contain the complete passing 23-actor DataStore
+result. The increment correction therefore clears its original hosted blocker.
+
+Windows now fails `http-enabled` at the existing bounded-frame-progress check
+(peak 0.332602 seconds), and `httpservice-utilities-A` at public-API frame progress
+(peak 0.334151 seconds). The strict native checker correctly rejects the missing
+complete HTTP group. The sanitizer summary has no unexpected reports; these
+failures do not establish a memory defect or identify the cause of the frame
+stalls. No deadline or assertion is relaxed, and no rerun-until-green is used.
+
+**GL-018 remains OPEN.** Investigate the Windows HTTP/utility frame stalls and
+establish a complete passing profile before closure. The user's conditional
+instruction to begin GL-029 is not triggered. No GL-029 code, main, release or
+updater changes are made by this status check. Downloaded artifacts are retained
+under the local evidence directory above as `hosted-Windows` and `hosted-Linux`.
