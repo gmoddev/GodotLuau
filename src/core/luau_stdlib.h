@@ -1074,7 +1074,8 @@ end
 function HttpService:UrlEncode(input)
     RequireString(input, "URL input")
     if #input > MaxJsonBytes then ApiError("URL encoding input limit exceeded") end
-    return (input:gsub("[^%w%-_%.~]", function(Character)
+    -- URI unreserved bytes are ASCII, independent of the host C locale.
+    return (input:gsub("[^A-Za-z0-9%-_%.~]", function(Character)
         return string.format("%%%02X", string.byte(Character))
     end))
 end

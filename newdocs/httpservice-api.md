@@ -107,6 +107,12 @@ strings remain supported. The proven byte behavior is retained; automatic
 an intentional difference from examples that escape a dot. This is component
 encoding, not URL authorization or a full-URL builder.
 
+GL-018's Windows instrumented-host investigation reproduced locale-dependent
+`%w` matching: bytes `AA`, `E9` and `FF` were incorrectly left unescaped.
+The encoder now uses explicit ASCII ranges. This corrects the existing byte
+contract; callers relying on those raw bytes must use the percent-encoded form.
+Native transport, origin admission, cancellation and limits are unchanged.
+
 ## Migration and scope
 
 Remove assignments to HttpEnabled and monkey patches to this service. Configure
