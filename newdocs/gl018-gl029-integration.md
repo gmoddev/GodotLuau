@@ -9,7 +9,7 @@ issue's outstanding qualification or authorize release/updater distribution.
 - Main: `83cd0887968d73d61d050650718d8ada6e124579`.
 - GL-018: `0e61db4a418c606deff50fad27f9831dc6204981`.
 - Research: `9ea782bb739cc35deba06474a82582a12529df6d`.
-- GL-029: `1e5e2f6` (the retained Phase 1 checkpoint).
+- GL-029: `1e5e2f62b6b85f97e29bd03bacf469182fa4467d` (Phase 1 checkpoint).
 - Destination: `integration/gl-018-gl-029-remoteevents`.
 
 The sanitizer branch was fetched, checked out with origin tracking and pulled
@@ -59,7 +59,9 @@ GL-029's enum installation both survive their automatic source merge.
 - `python tests/release/ReleaseCandidateTests.py`: 14 pass.
 - `python tests/release/ReleaseRetentionTests.py`: 12 pass.
 - `python tests/packaging/PackagingTests.py`: 5 pass.
-- GL-018 raw evidence archive SHA-256 and all 12 selected manifest hashes match.
+- GL-018 raw evidence archive SHA-256, all 8,895 indexed ZIP entries and all
+  12 selected manifest hashes match.
+- Merged runner/checker Python syntax, review links and final diff checks pass.
 - Dependency pins remain godot-cpp `d5cc777a89d899665fb61f1650ef0dc0cf6488c4`
   and Luau `9e2984fd0334414a2ef62ceede0c06dab7574d55`.
 
@@ -68,3 +70,23 @@ qualification of the combined source. Hosted results must be assessed against
 the combined revision; the source-branch results above do not transfer to it.
 Releases and updater admission remain disabled; no tag, release, upstream write
 or main merge is performed.
+
+## Published combination
+
+Merge `084d29fac658d27e40811a9854b0a1bddc1d6b58` preserves all three exact
+input tips as ancestors, confirmed with `git merge-base --is-ancestor`.
+The combined native fingerprint is
+`d5c7c67af9f03686bc0235365dcba7dbfe26aa8f6031e10dfdbd3329d1d1ffcf`
+(90 inputs, LF normalized). The remote tip was verified after push; main and
+source branch tips remain unchanged. Release workflow and updater source have
+no difference against main.
+
+Initial hosted observation for this merge (not completed qualification):
+
+- [Core 41440952721](https://github.com/gmoddev/GodotLuau/actions/runs/41440952721): in progress.
+- [Native 41440952582](https://github.com/gmoddev/GodotLuau/actions/runs/41440952582): in progress.
+- [Sanitizers 41440952693](https://github.com/gmoddev/GodotLuau/actions/runs/41440952693): queued.
+
+These states are a publication-time snapshot and must not be reported as passes.
+Use explicit `--repo gmoddev/GodotLuau` or the fork API path for GitHub checks:
+this checkout's default GitHub CLI repository resolves to the upstream project.
