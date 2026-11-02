@@ -629,9 +629,12 @@ See the [correction record](shared-domains-validation.md#linux-process-liveness-
 for fresh results. The source branch is retained.
 Sanitizers and release enforcement
 remain separate. See the [native CI record](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
-The [GL-018 follow-up](native-sanitizer-qualification.md) changes host/build/test
-configuration only. Matching instrumented hosts resolve the minimal loader/exit
-controls, while production unload and other profile gates remain unqualified.
+The [GL-018 follow-up](native-sanitizer-qualification.md#follow-up-from-66362c7)
+adds host/build/test controls and a bounded public URL-encoding correction: ASCII
+unreserved bytes no longer depend on the process C locale. Matching instrumented
+hosts resolve the minimal loader/exit controls. C ABI controls reproduce surviving
+instance-binding callbacks after explicit library unload without GodotLuau;
+production unload and complete profile gates remain unqualified.
 It introduces no runtime ownership, capability, networking or distribution change.
 
 GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at

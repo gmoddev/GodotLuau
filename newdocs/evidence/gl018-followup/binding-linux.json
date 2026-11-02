@@ -1,0 +1,93 @@
+{
+  "Scope": "Investigation only; crashes remain qualification failures",
+  "GodotSHA256": "bbfe7aabcd410ea9493eb9dec7ce9ffe74bf26803926be9072f0ef3d89692409",
+  "ProbeSHA256": "5c4d17e985b595049504042cf7e673e340af228a0a2553811e10d22e178f9045",
+  "Results": [
+    {
+      "Mode": "clean",
+      "Exit": 0,
+      "TimedOut": false,
+      "ElapsedSeconds": 0.916487768990919,
+      "Command": [
+        "/work/godot-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--path",
+        "/qualification/followup/bindings-get-api/clean",
+        "--script",
+        "res://SanitizerLifecycle.gd",
+        "--",
+        "--mode",
+        "minimal",
+        "--cycles",
+        "5"
+      ],
+      "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/qualification/followup/bindings-get-api/clean/asan-report\"",
+      "BindingsInstalled": 0,
+      "BindingsFreed": 0,
+      "LifecyclePASS": true
+    },
+    {
+      "Mode": "binding-clean",
+      "Exit": 0,
+      "TimedOut": false,
+      "ElapsedSeconds": 1.0677533469861373,
+      "Command": [
+        "/work/godot-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--path",
+        "/qualification/followup/bindings-get-api/binding-clean",
+        "--script",
+        "res://SanitizerLifecycle.gd",
+        "--",
+        "--mode",
+        "minimal",
+        "--cycles",
+        "5"
+      ],
+      "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/qualification/followup/bindings-get-api/binding-clean/asan-report\"",
+      "BindingsInstalled": 5,
+      "BindingsFreed": 5,
+      "LifecyclePASS": true
+    },
+    {
+      "Mode": "binding",
+      "Exit": -11,
+      "TimedOut": false,
+      "ElapsedSeconds": 0.7160772589268163,
+      "Command": [
+        "/work/godot-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--path",
+        "/qualification/followup/bindings-get-api/binding",
+        "--script",
+        "res://SanitizerLifecycle.gd",
+        "--",
+        "--mode",
+        "minimal",
+        "--cycles",
+        "5"
+      ],
+      "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/qualification/followup/bindings-get-api/binding/asan-report\"",
+      "BindingsInstalled": 5,
+      "BindingsFreed": 0,
+      "LifecyclePASS": true
+    }
+  ],
+  "Files": {
+    "binding/sanitizer-lifecycle.json": "b95a3280f47e3c34658e45cb146db60b4e20cd6a56c230924293d6fb9ca87ca1",
+    "binding/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "binding/stdout.log": "bc52fd8537c43cbaaf9cb8ea205c102c7cbba8584b164d62096f8cb836f75a12",
+    "binding-clean/sanitizer-lifecycle.json": "b95a3280f47e3c34658e45cb146db60b4e20cd6a56c230924293d6fb9ca87ca1",
+    "binding-clean/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "binding-clean/stdout.log": "d0771047f891cffdb4505f22c0f432fbb771ecb2493d981d6581cc3d374ee313",
+    "clean/sanitizer-lifecycle.json": "b95a3280f47e3c34658e45cb146db60b4e20cd6a56c230924293d6fb9ca87ca1",
+    "clean/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "clean/stdout.log": "85c9b0b9a4dfbdbc1e4545a0d273b46bf385dad379f174b1837de41d3f47b2a6"
+  }
+}

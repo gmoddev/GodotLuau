@@ -1,0 +1,18 @@
+[
+  {
+    "ArtifactID": 13116825836,
+    "Name": "runtime-core-Windows-Debug",
+    "SHA256": "9752c18fc04b3c63a4b9a59cb795583cb17be0f9de00e6814bf560be95818c33",
+    "Revision": "246601599e581bd1c34cc403adcafcc404f89ae7",
+    "Cases": 80,
+    "CompleteReportVerified": true
+  },
+  {
+    "ArtifactID": 13116183921,
+    "Name": "runtime-core-Linux-Debug",
+    "SHA256": "6542c8035044c65bd0573a226dbb5220ba62bf18f13c8215966405076320f615",
+    "Revision": "246601599e581bd1c34cc403adcafcc404f89ae7",
+    "Cases": 80,
+    "CompleteReportVerified": true
+  }
+]

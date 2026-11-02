@@ -1,0 +1,94 @@
+{
+  "Scope": "Investigation only; crashes remain qualification failures",
+  "GodotSHA256": "ac5c5977f282c7c0b500357cbf10fb5d513dfc094beaac21ec2806ddea50a153",
+  "ProbeSHA256": "71f572fef31fe8c1f486c9639f78295be39fa50ff6ac1c524302b1b480b0101c",
+  "Results": [
+    {
+      "Mode": "clean",
+      "Exit": 0,
+      "TimedOut": false,
+      "ElapsedSeconds": 3.5780000002123415,
+      "Command": [
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\godot-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--path",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\windows-bindings-get-api\\clean",
+        "--script",
+        "res://SanitizerLifecycle.gd",
+        "--",
+        "--mode",
+        "minimal",
+        "--cycles",
+        "5"
+      ],
+      "ASAN_OPTIONS": "halt_on_error=1:log_path=\"E:/Sandbox/Codex/NativeSanitizers/followup/windows-bindings-get-api/clean/asan-report\"",
+      "BindingsInstalled": 0,
+      "BindingsFreed": 0,
+      "LifecyclePASS": true
+    },
+    {
+      "Mode": "binding-clean",
+      "Exit": 0,
+      "TimedOut": false,
+      "ElapsedSeconds": 2.5470000002533197,
+      "Command": [
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\godot-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--path",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\windows-bindings-get-api\\binding-clean",
+        "--script",
+        "res://SanitizerLifecycle.gd",
+        "--",
+        "--mode",
+        "minimal",
+        "--cycles",
+        "5"
+      ],
+      "ASAN_OPTIONS": "halt_on_error=1:log_path=\"E:/Sandbox/Codex/NativeSanitizers/followup/windows-bindings-get-api/binding-clean/asan-report\"",
+      "BindingsInstalled": 5,
+      "BindingsFreed": 5,
+      "LifecyclePASS": true
+    },
+    {
+      "Mode": "binding",
+      "Exit": 1,
+      "TimedOut": false,
+      "ElapsedSeconds": 3.0469999997876585,
+      "Command": [
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\godot-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--path",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\windows-bindings-get-api\\binding",
+        "--script",
+        "res://SanitizerLifecycle.gd",
+        "--",
+        "--mode",
+        "minimal",
+        "--cycles",
+        "5"
+      ],
+      "ASAN_OPTIONS": "halt_on_error=1:log_path=\"E:/Sandbox/Codex/NativeSanitizers/followup/windows-bindings-get-api/binding/asan-report\"",
+      "BindingsInstalled": 5,
+      "BindingsFreed": 0,
+      "LifecyclePASS": true
+    }
+  ],
+  "Files": {
+    "binding\\asan-report.60260": "024656e58b9d4006784bcb877268dcbeead382b93ffaaee866cbeb769dbf95f0",
+    "binding\\sanitizer-lifecycle.json": "b95a3280f47e3c34658e45cb146db60b4e20cd6a56c230924293d6fb9ca87ca1",
+    "binding\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "binding\\stdout.log": "63aadd9e45a902f9df46b5ffb2bdf46a1612deb8bba6549b35cf92548e8cfb56",
+    "binding-clean\\sanitizer-lifecycle.json": "b95a3280f47e3c34658e45cb146db60b4e20cd6a56c230924293d6fb9ca87ca1",
+    "binding-clean\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "binding-clean\\stdout.log": "08f77cbe4aafef9feef2532da4dee1593c4864861633c831641c42335d0adec0",
+    "clean\\sanitizer-lifecycle.json": "b95a3280f47e3c34658e45cb146db60b4e20cd6a56c230924293d6fb9ca87ca1",
+    "clean\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "clean\\stdout.log": "509439bd07b7e5df0a566a24585eef57632758c2327e3e381de486c7441adcdc"
+  }
+}

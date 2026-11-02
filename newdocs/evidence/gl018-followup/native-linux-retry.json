@@ -1,0 +1,22 @@
+[
+  {
+    "ArtifactID": 13117414498,
+    "Name": "runtime-native-Linux-Debug",
+    "SHA256": "d1a6ed59239038e8c961381e589ffa02cd74a25bb0de38dbe7845e795142a44e",
+    "Revision": "246601599e581bd1c34cc403adcafcc404f89ae7",
+    "Scope": "Current source, ordinary native Linux retry; initial failure retained",
+    "Actors": 110,
+    "AnimationActors": 10,
+    "AuthorityCases": 510,
+    "AnimationAssertions": 1003,
+    "VerifiedLogHashes": 335,
+    "VerifiedHarnessInputs": 71,
+    "NativeSource": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "ReportedExtensionSHA256": "4cb7ebd1857880906bea32e917416f9c5dc1e389816bf1a4dca41efb5da2b42f",
+    "ReportedCompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980"
+  }
+]

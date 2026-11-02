@@ -1,0 +1,22 @@
+[
+  {
+    "ArtifactID": 13117471093,
+    "Name": "runtime-native-Windows-Debug",
+    "SHA256": "2049238c3d4ada6f5c66ab9fcbf8c2a6121b477244396bd8f0bf48f9bbe2c9ec",
+    "Revision": "246601599e581bd1c34cc403adcafcc404f89ae7",
+    "Scope": "Current source, ordinary native CI; no sanitizer qualification claim",
+    "Actors": 110,
+    "AnimationActors": 10,
+    "AuthorityCases": 510,
+    "AnimationAssertions": 1003,
+    "VerifiedLogHashes": 335,
+    "VerifiedHarnessInputs": 71,
+    "NativeSource": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "ReportedExtensionSHA256": "f5f1095bbc22717941d141b420c8be512205aeb9f848bb466adfce3d17408103",
+    "ReportedCompanionSHA256": "a73b825878fc330b98a7e7c1f91b570c7917b60eaffe8e1909233d942be13c95"
+  }
+]

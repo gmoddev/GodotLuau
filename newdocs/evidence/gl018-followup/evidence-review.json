@@ -1,0 +1,13 @@
+{
+  "RuntimeTestsRunByThisCheck": false,
+  "NativeSource": {
+    "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "VerifiedCandidateHarnessInputs": 71,
+  "VerifiedArchiveFiles": 6573,
+  "ParsedJSON": 19,
+  "ResolvedLinks": 160,
+  "RemainingTaskRuntimeOrCompilerProcesses": 0
+}

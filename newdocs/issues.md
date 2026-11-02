@@ -44,7 +44,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
-| GL-018 | P2 | Partially qualified; native sanitizer gaps retained | Matching hosts resolve loader/stock-exit controls; full reload/profile gates still fail |
+| GL-018 | P2 | Partially qualified; native sanitizer gaps retained | C ABI controls isolate binding unload failure; URL/asset corrections do not close full profiles |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Integrated scoped authority correction; sanitizer qualification partial | Canonical wire validation and ENet adversarial coverage; GL-017/018 remain separate |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
@@ -942,6 +942,27 @@ in the Windows root Window destructor. Additional HTTP progress, utilities,
 contention and template-asset profile failures remain unqualified. GL-018 stays
 open; no runtime fix, GL-017 remediation or complete full-native pass is claimed.
 
+**2026-11-02 follow-up:** [Binding-only controls and qualification records](native-sanitizer-qualification.md#follow-up-from-66362c7)
+reproduce the unload failure on both matching hosts without godot-cpp, Luau or
+GodotLuau. Explicit binding retirement exits cleanly; leaving callbacks attached
+fails after PASS. The branch corrects a demonstrated locale-dependent UrlEncode
+defect and prepares original Character assets for template hosts. It does not
+patch the engine or change authority, persistence or execution bounds. Supported
+Linux ext-family storage exercises the earlier denied groups, but backing-disk
+exhaustion interrupts the full local attempt; its evidence and authorized worker
+recovery are retained. Fresh source profiles and required hosted states remain
+separate from old passes. Closure still requires clean production unload, all
+80 core cases and 110 native actors on both supported sanitizer platforms with
+actual detection controls and no unexpected reports, crashes or timeouts.
+The final source-`2466015` hosted core/native jobs pass 80/110 on each platform
+(one ordinary Linux retry; its original failure is retained). Both fresh full
+sanitizer jobs fail: core ASan passes 80 each, but only 52 Windows/95 Linux native
+actors complete in whole passing groups, with production unload still failing,
+dedicated presentation incomplete and performance actors timing out. Linux's
+hosted 23-actor DataStore group closes that supported-filesystem proof gap;
+the local disk failure, GDB record loss, Windows timing/contention limits and
+historical Linux leak remain explicit limitations. No full GL-018 closure is claimed.
+
 ## GL-019: Shared-domain cached require and task overhead regresses
 
 **Original status: OPEN; measured P2 performance tradeoff.** Three counterbalanced Linux
@@ -1213,6 +1234,14 @@ and zero forbidden requests. See the [API and migration contract](httpservice-ap
 [qualification record](httpservice-validation.md) and [evidence manifest](evidence/gl023-httpservice-2026-10-31.json).
 This resolves the scoped API findings, not GL-017/018, broader
 GL-020, graphical correctness or release/updater qualification.
+
+The GL-018 follow-up reproduces a narrower host-locale counterexample to URL
+encoding: `%w` leaves non-ASCII bytes unescaped on its Windows host. Branch
+correction `241396b` replaces that class with explicit ASCII ranges and extends
+existing core/native assertions to all 256 byte values. See the
+[follow-up record](native-sanitizer-qualification.md#follow-up-from-66362c7) for
+fresh verification and remaining sanitizer failures. This correction is not yet
+integrated into main; GL-005's transport and authorization are unchanged.
 
 At the audited revision,
 `src/core/luau_stdlib.h:782–847` hardcodes HttpEnabled, catches public HTTP errors,

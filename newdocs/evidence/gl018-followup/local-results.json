@@ -1,0 +1,367 @@
+{
+  "Source": {
+    "Revision": "241396b46f193ea48e63294594bce2d7104f6966",
+    "Source": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+    "Commands": [
+      {
+        "Command": [
+          "C:\\Sandbox\\Codex\\Tools\\cmake-3.31.10\\cmake-3.31.10-windows-x86_64\\bin\\cmake.exe",
+          "--build",
+          "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-asan",
+          "--target",
+          "GodotLuauAdapter",
+          "ExecutionDomainTests",
+          "DatastoreBackendProbe",
+          "--parallel",
+          "2"
+        ],
+        "Exit": 0,
+        "LogSHA256": "c0ad32c8b0d818090098853dd2b7d866ea49dfee532e0adc53755bbe2db9526c"
+      }
+    ],
+    "CoreTestSHA256": "e6108393207a91bc62940f8e0022df0df5a641fea86f46d8bae1212828e220f2",
+    "Products": {
+      "godot_luau.dll": "82aded0415266a64dc93918e0a586e7edef8619c7c36742d6b47110ee1116f34",
+      "ExecutionDomainTests.exe": "04c3020c6614d489ab79c97a901bcb2c41facec20e9b11c472a29fef3ea58405",
+      "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+      "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+    },
+    "CompileCommandsSHA256": "c4627313de211f03c8ea771ac06e0135c7f9fc84b132e413e0a84d998ecd2c93"
+  },
+  "WindowsCandidateResult": "FAIL",
+  "WindowsCandidateCoreCases": 80,
+  "WindowsCandidateCoreComplete": true,
+  "WindowsCandidateResults": [
+    {
+      "Label": "standalone-clean",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 0.0940000000409782
+    },
+    {
+      "Label": "standalone-uaf",
+      "Exit": 1,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 0.29700000025331974
+    },
+    {
+      "Label": "engine-only",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 2.905999999959022
+    },
+    {
+      "Label": "minimal-reload",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 2.875
+    },
+    {
+      "Label": "host-uaf",
+      "Exit": 1,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 2.5779999997466803
+    },
+    {
+      "Label": "production-registration",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 5.578999999910593
+    },
+    {
+      "Label": "production-vm-reload",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 8.296999999787658
+    },
+    {
+      "Label": "binding-investigation",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 10.484000000171363
+    },
+    {
+      "Label": "suite-regression",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 37.45300000021234
+    },
+    {
+      "Label": "suite-security",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 58.21900000004098
+    },
+    {
+      "Label": "suite-animation",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 151.56199999991804
+    },
+    {
+      "Label": "suite-characters",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 169.93699999991804
+    },
+    {
+      "Label": "suite-resources",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 35.688000000081956
+    },
+    {
+      "Label": "suite-filesystem",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 20.29700000025332
+    },
+    {
+      "Label": "suite-http",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 48.2660000002943
+    },
+    {
+      "Label": "suite-httpservice",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 36.592999999877065
+    },
+    {
+      "Label": "suite-callers",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 19.561999999918044
+    },
+    {
+      "Label": "suite-datastore",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 95.09299999987707
+    },
+    {
+      "Label": "suite-presentation",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 171.34299999987707
+    },
+    {
+      "Label": "suite-performance",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 193.18699999991804
+    },
+    {
+      "Label": "suite-core",
+      "Exit": 0,
+      "Passed": true,
+      "TimedOut": false,
+      "ElapsedSeconds": 9.563000000081956
+    },
+    {
+      "Label": "strict-native-check",
+      "Exit": 1,
+      "Passed": false,
+      "TimedOut": false,
+      "ElapsedSeconds": 0.125
+    }
+  ],
+  "UnexpectedReports": [
+    "production-vm-reload\\asan-report.19464",
+    "binding-controls\\binding\\asan-report.56464"
+  ],
+  "IdleFollowup": [
+    {
+      "Group": "regression",
+      "Exit": 1,
+      "Command": [
+        "C:\\Sandbox\\Codex\\Tools\\python-3.12.6-controlled-v1\\python.exe",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\source\\tests\\runtime\\RunQualification.py",
+        "--godot",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\godot-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+        "--extension",
+        "C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-asan/godot_luau.dll",
+        "--output",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\windows-idle-followup\\regression",
+        "--timeout",
+        "60",
+        "--teardown",
+        "--coordinated-close"
+      ]
+    },
+    {
+      "Group": "animation",
+      "Exit": 0,
+      "Command": [
+        "C:\\Sandbox\\Codex\\Tools\\python-3.12.6-controlled-v1\\python.exe",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\source\\tests\\runtime\\RunQualification.py",
+        "--godot",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\godot-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+        "--extension",
+        "C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-asan/godot_luau.dll",
+        "--output",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\windows-idle-followup\\animation",
+        "--timeout",
+        "60",
+        "--animation"
+      ]
+    },
+    {
+      "Group": "http",
+      "Exit": 1,
+      "Command": [
+        "C:\\Sandbox\\Codex\\Tools\\python-3.12.6-controlled-v1\\python.exe",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\source\\tests\\runtime\\RunQualification.py",
+        "--godot",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\godot-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+        "--extension",
+        "C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-asan/godot_luau.dll",
+        "--output",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\windows-idle-followup\\http",
+        "--timeout",
+        "60",
+        "--http"
+      ]
+    },
+    {
+      "Group": "datastore",
+      "Exit": 1,
+      "Command": [
+        "C:\\Sandbox\\Codex\\Tools\\python-3.12.6-controlled-v1\\python.exe",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\source\\tests\\runtime\\RunQualification.py",
+        "--godot",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\godot-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+        "--extension",
+        "C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-asan/godot_luau.dll",
+        "--output",
+        "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\windows-idle-followup\\datastore",
+        "--timeout",
+        "60",
+        "--datastore"
+      ]
+    }
+  ],
+  "Comparison": [
+    {
+      "Variant": "Baseline",
+      "Trial": 0,
+      "ExtensionSHA256": "a280dfcb4e8834c6a3aede06a93b0e91ec831d7468ebd2464adc4154f9cefeb3",
+      "GodotSHA256": "ac5c5977f282c7c0b500357cbf10fb5d513dfc094beaac21ec2806ddea50a153",
+      "Exit": 1,
+      "Passed": false,
+      "Seconds": 35.10900000017136
+    },
+    {
+      "Variant": "Candidate",
+      "Trial": 1,
+      "ExtensionSHA256": "82aded0415266a64dc93918e0a586e7edef8619c7c36742d6b47110ee1116f34",
+      "GodotSHA256": "ac5c5977f282c7c0b500357cbf10fb5d513dfc094beaac21ec2806ddea50a153",
+      "Exit": 1,
+      "Passed": false,
+      "Seconds": 35.25
+    },
+    {
+      "Variant": "Candidate",
+      "Trial": 2,
+      "ExtensionSHA256": "82aded0415266a64dc93918e0a586e7edef8619c7c36742d6b47110ee1116f34",
+      "GodotSHA256": "ac5c5977f282c7c0b500357cbf10fb5d513dfc094beaac21ec2806ddea50a153",
+      "Exit": 1,
+      "Passed": false,
+      "Seconds": 35.15599999995902
+    },
+    {
+      "Variant": "Baseline",
+      "Trial": 3,
+      "ExtensionSHA256": "a280dfcb4e8834c6a3aede06a93b0e91ec831d7468ebd2464adc4154f9cefeb3",
+      "GodotSHA256": "ac5c5977f282c7c0b500357cbf10fb5d513dfc094beaac21ec2806ddea50a153",
+      "Exit": 1,
+      "Passed": false,
+      "Seconds": 34.938000000081956
+    }
+  ],
+  "ComparisonFinding": "Both baseline and candidate reproduce the Identity resume-budget failure in two trials each; no candidate-exclusive cause established",
+  "PresentationRecords": [
+    {
+      "File": "windows-candidate-full\\native\\presentation\\custom\\evidence-single0.json",
+      "Result": "PASS",
+      "Graphical": false,
+      "Checks": 47
+    },
+    {
+      "File": "windows-candidate-full\\native\\presentation\\dedicated\\evidence-client1.json",
+      "Result": "FAIL",
+      "Graphical": false,
+      "Checks": 7
+    },
+    {
+      "File": "windows-candidate-full\\native\\presentation\\dedicated\\evidence-client2.json",
+      "Result": "FAIL",
+      "Graphical": false,
+      "Checks": 14
+    },
+    {
+      "File": "windows-candidate-full\\native\\presentation\\dedicated\\evidence-server0.json",
+      "Result": "FAIL",
+      "Graphical": false,
+      "Checks": 19
+    },
+    {
+      "File": "windows-candidate-full\\native\\presentation\\listen\\evidence-client1.json",
+      "Result": "PASS",
+      "Graphical": false,
+      "Checks": 19
+    },
+    {
+      "File": "windows-candidate-full\\native\\presentation\\listen\\evidence-client2.json",
+      "Result": "PASS",
+      "Graphical": false,
+      "Checks": 19
+    },
+    {
+      "File": "windows-candidate-full\\native\\presentation\\listen\\evidence-server0.json",
+      "Result": "PASS",
+      "Graphical": false,
+      "Checks": 20
+    },
+    {
+      "File": "windows-candidate-full\\native\\presentation\\r6\\evidence-single0.json",
+      "Result": "PASS",
+      "Graphical": false,
+      "Checks": 47
+    }
+  ],
+  "FreeC": 5274443776,
+  "FailedNativeLinuxArtifact": {
+    "ArtifactID": 13116608407,
+    "SHA256": "fe6cd9549a0b28fd6d80312aac352f0d0a5dee4627f7eb5113286e4e696647c0",
+    "RecordedRegressionActors": 8,
+    "RequiredGateFailure": "security-Dedicated-server positive state delivery deadline",
+    "Complete110ActorEvidence": false
+  }
+}
