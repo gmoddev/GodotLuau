@@ -60,7 +60,36 @@ func Run() -> void:
     elif Mode=="verify":
         Script(Prefix+"assert(Store:GetAsync('Counter')=="+str(Expected)+"); game:SetAttribute('Done',true)")
     elif Mode=="increment":
-        Script(Prefix+"for I=1,20 do Store:IncrementAsync('Counter') end; game:SetAttribute('Done',true)")
+        Script(Prefix+"""
+local Conflicts=0
+local Successes=0
+for I=1,20 do
+    local Ok,Value=pcall(Store.IncrementAsync,Store,'Counter')
+    if Ok then
+        assert(type(Value)=='number' and Value>=1 and Value<=40 and Value%1==0)
+        Successes+=1
+        game:SetAttribute('Receipt'..Successes,Value)
+    else
+        -- Only exhausted compare conflicts are definite noncommits. Never
+        -- accept timeout, durability, indeterminate or other storage failures.
+        assert(type(Value)=='string' and Value:match('%[Persistence:DataStore%] Conflict retry limit exceeded$'))
+        Conflicts+=1
+    end
+end
+game:SetAttribute('Successes',Successes)
+game:SetAttribute('Conflicts',Conflicts)
+game:SetAttribute('Done',true)
+""")
+        await Until("Done")
+        var Successes := int(Game.get_meta("Successes",-1))
+        var Receipts: Array = []
+        for Index in range(maxi(0,Successes)):
+            Receipts.append(Game.get_meta("Receipt"+str(Index+1),0))
+        var Conflicts := int(Game.get_meta("Conflicts",-1))
+        Check(Successes>=0 and Successes<=20 and Conflicts>=0,"increment outcomes recorded")
+        Check(Receipts.size()+Conflicts==20,"all increment calls accounted")
+        var Record := FileAccess.open("res://increments-"+Role+".json",FileAccess.WRITE)
+        Record.store_string(JSON.stringify({"Receipts":Receipts,"Conflicts":Conflicts})); Record.close()
     elif Mode in ["update","set","remove"]:
         if Role=="A" and Mode!="update":
             var Action := "Store:SetAsync('Counter',99)" if Mode=="set" else "assert(Store:RemoveAsync('Counter')==0)"

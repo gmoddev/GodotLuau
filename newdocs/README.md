@@ -33,14 +33,21 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-The [GL-018/GL-029 integration review](gl018-gl029-integration.md) combines the
-sanitizer, RemoteEvent research and Phase 1 branches on a dedicated development
-branch. Both issues retain outstanding qualification; this is not a main merge.
+GL-018 is [qualified and resolved on its development branch](gl018-closure.md)
+within the admitted matching-host headless Debug ASan/LSan scope. All six hosted
+jobs and their required evidence pass at `46427d0`; this is not a main merge or
+distribution authorization.
+
+The [GL-018/GL-029 integration review](gl018-gl029-integration.md) preserves the
+sanitizer, research and RemoteEvent Phase 1 commits. GL-029 qualification resumes
+on that combined development branch with the qualified GL-018 fixes retained.
+GL-029 remains unqualified; neither branch is merged into main.
 
 The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
 matching Windows/Linux instrumented hosts, actual detection controls and retained
-full-profile failures. It is partially qualified; GL-018 remains open. Main,
-release publication, updater admission and GL-017 are unchanged by that branch.
+full-profile failures. Its historical partial outcomes are superseded by the
+scoped closure above. Main, release publication, updater admission and GL-017
+are unchanged by that branch.
 
 GL-007 is integrated and resolved within ADR-006's bounded authority contract by
 normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`. The retained branch

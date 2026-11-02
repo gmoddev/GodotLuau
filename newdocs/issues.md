@@ -47,7 +47,7 @@ preserves both issues as open and lists the remaining acceptance gates.
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
-| GL-018 | P2 | Partially qualified; native sanitizer gaps retained | C ABI controls isolate binding unload failure; URL/asset corrections do not close full profiles |
+| GL-018 | P2 | Resolved within admitted matching-host profile; unmerged | Verified Windows ASan/Linux ASan-LSan, 80 core and 110 native actors each |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Integrated scoped authority correction; sanitizer qualification partial | Canonical wire validation and ENet adversarial coverage; GL-017/018 remain separate |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
@@ -978,6 +978,38 @@ ASan/LSan clean exit, then pass native two-client teardown. Preserve the exact
 engine/source reproduction in [validation](shared-domains-validation.md).
 
 ## GL-018: Windows full-native sanitizer host remains unqualified
+
+**Current disposition: RESOLVED within the admitted matching-host profile at
+`46427d0`; unmerged.** All six hosted core/native/sanitizer jobs pass, with exact
+source/harness, actual cases, instrumented builds and retained logs independently
+checked. See [closure and proof limits](gl018-closure.md). Stock-host unload safety,
+Windows LSan and arbitrary custom/device profiles remain outside this closure.
+The historical OPEN dispositions and failed attempts below are superseded by
+this scoped closure and preserved as evidence.
+
+**Frame-progress follow-up:** the
+[HTTP timing investigation](gl018-http-frame-investigation.md) attributes the
+original failures to measured domain startup and an uninterrupted 2,000-UUID
+stress loop. A small fixture correction preserves 250 ms assertions, warms the
+measured domains and batches the sample workload. The corrected utility passes;
+an injected 350 ms stall is rejected at 441.823 ms. Local full groups still fail
+unchanged close-time storage assertions, so complete hosted qualification remains
+required. No production change or refactor is included; GL-018 remains OPEN.
+
+**2026-11-02 bounded-conflict correction:** the
+[focused work record](gl018-increment-qualification.md) identifies the increment
+fixture's unsupported fair-completion assumption. A small fixture-only change
+checks exact acknowledgment accounting while permitting only ADR-005's definite
+conflict exhaustion. Windows ASan DataStore passes 23 actors and unchanged native
+controls; GL-018 stays OPEN pending complete profile verification. No runtime or
+retry-policy change and no refactor is included.
+
+**Completed hosted follow-up:** exact-fix core/ordinary native CI and Linux
+full-native sanitizers pass. Windows DataStore also passes all 23 actors, but
+HTTP and HttpService frame-progress assertions fail at 0.332602/0.334151 seconds.
+All 520 Linux and 495 Windows summary-indexed artifact files rehash correctly;
+no unexpected sanitizer report is recorded. GL-018 remains OPEN for those Windows
+timing failures; see the [completed observation](gl018-increment-qualification.md#completed-hosted-observation).
 
 **Status: OPEN; bounded qualification gap.** MSVC-instrumented adapter/bindings/
 Luau reaches functional PASS under stock Godot, then times out at exit. A

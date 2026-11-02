@@ -64,6 +64,21 @@ def Qualify(Args, Output, Environment):
                 Finish(Entry,Case)
         else:
             for Entry in Entries: Finish(Entry,Case)
+            # ADR-005 permits definite conflict exhaustion, not silent loss or
+            # ambiguous failures. No caller retries: account for every call and
+            # every committed value across both independent processes.
+            Receipts=[]
+            for Role in ['A','B']:
+                Record=json.loads((Project/('increments-'+Role+'.json')).read_text())
+                Values,Conflicts=Record['Receipts'],Record['Conflicts']
+                if type(Conflicts) is not int or not 0<=Conflicts<=20 or len(Values)+Conflicts!=20:
+                    raise RuntimeError('Increment outcomes incomplete: '+Role)
+                if any(type(Value) not in (int,float) or not 1<=Value<=40 or Value!=int(Value) for Value in Values):
+                    raise RuntimeError('Invalid increment acknowledgment: '+Role)
+                Receipts.extend(Values)
+            Expected=len(Receipts)
+            if not Expected or sorted(Receipts)!=list(range(1,Expected+1)):
+                raise RuntimeError('Lost or duplicate increment acknowledgments')
         Finish(Actor('verify',Expected=Expected),'verify')
     return Results
 

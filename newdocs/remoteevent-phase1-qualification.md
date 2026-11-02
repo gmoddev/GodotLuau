@@ -1,5 +1,17 @@
 # GL-029 Phase 1 qualification
 
+## Resumed after GL-018 closure
+
+2026-11-02: the [GL-018 closure](gl018-closure.md) independently verifies all six
+core/native/sanitizer jobs at `46427d0`. Its fixes are carried forward by normal
+merge on `integration/gl-018-gl-029-remoteevents`, preserving original GL-029 tip
+`1e5e2f62b6b85f97e29bd03bacf469182fa4467d` and every research/source commit.
+Main remains unchanged. This does not transfer GL-018 qualification to the new
+90-input combined source. Resume actual six-actor ENet coverage first, make only
+necessary small fixes, and obtain permission before refactoring. Preserve the
+116-actor strict checker and existing release/updater denial. Phase 2 and GL-030
+remain out of scope. The checkpoint history below retains its original status.
+
 Status: **PARTIALLY QUALIFIED; WIP checkpoint at the user's request on 2026-11-02.
 Not ready for integration.** No merge or distribution authorization. The
 [handoff](remoteevent-phase1-handoff.md) records restart steps and exact final

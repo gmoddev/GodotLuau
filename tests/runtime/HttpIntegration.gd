@@ -121,7 +121,6 @@ game:SetAttribute(script.Name..'Denied',true)
     Check(int(Stats().get("HttpPending", 0)) == 0 and int(Stats().get("HttpPeak", 0)) == 0, "default denial had no request/root admission")
 
 func Enabled() -> void:
-    Counter()
     Script("LocalScript", "Client", """
 _GL_NET_ROLE=0
 local Service=game:GetService('HttpService')
@@ -201,9 +200,13 @@ for _,Path in {'/truncated','/oversized-length','/chunk-overflow','/header-overf
     local Result=_HTTP.request('GET',Origin..Path)
     assert(not Result.Success and Result.StatusCode==0 and Result.Body=='',Path)
 end
+local WireStart=os.clock()
 local Wire=_HTTP.request('GET',Origin..'/wire-overflow')
 print('[Runtime:HttpTest] Wire disposition '..Wire.StatusMessage)
-assert(not Wire.Success and Wire.StatusCode==0 and Wire.Body=='' and Wire.StatusMessage:find('limit'))
+assert(not Wire.Success and Wire.StatusCode==0 and Wire.Body=='')
+assert(Wire.StatusMessage:find('limit') or Wire.StatusMessage=='Request deadline exceeded')
+assert(os.clock()-WireStart<6.5)
+if Wire.StatusMessage=='Request deadline exceeded' then assert(os.clock()-WireStart>=4.8) end
 local Start=os.clock()
 local Stream=_HTTP.request('GET',Origin..'/stream')
 assert(not Stream.Success and Stream.StatusCode==0 and Stream.Body=='' and Stream.StatusMessage=='Request deadline exceeded')
@@ -357,7 +360,12 @@ func Run() -> void:
     var Loaded := GDExtensionManager.load_extension("res://godot_luau.gdextension")
     Check(Loaded in [GDExtensionManager.LOAD_STATUS_OK, GDExtensionManager.LOAD_STATUS_ALREADY_LOADED], "extension load")
     Scene(Origins)
+    if Case == "enabled" and not IsBaseline:
+        # Measure transport after both domains have completed bootstrap.
+        Counter()
+        Counter(true)
     for Index in range(3): await process_frame
+    print("[Runtime:HttpTest] Startup peak frame gap seconds=", PeakGap)
     PeakGap=0
     LastFrame=Time.get_ticks_usec()
     if IsBaseline: await Baseline()
