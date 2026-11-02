@@ -1,7 +1,8 @@
 # ADR-008: RemoteEvent configuration and publication
 
-Status: Phase 1 decision authorized for implementation; WIP checkpoint, not yet qualified
-on `network/gl-029-unified-remoteevents`. Main remains
+Status: Phase 1 decision authorized for implementation; qualification continues
+on `integration/gl-018-gl-029-remoteevents`, preserving the original
+`network/gl-029-unified-remoteevents` checkpoint. Main remains
 `83cd0887968d73d61d050650718d8ada6e124579`. This is not release authorization.
 
 The [source-pinned research](networking-architecture-assessment.md) and
@@ -149,6 +150,14 @@ memory bound, traffic scheduler, lossless overload promise or priority policy is
 claimed. Phase 2 must qualify those measurements/admission boundaries explicitly.
 
 ## Lifecycle and qualification
+
+Functional ENet fixtures explicitly use `throttle_configure(5000, 32, 0)` on
+actual loopback links, including replacement connections. They assert the
+configured profile rather than assuming adaptive unreliable delivery remains
+unthrottled under instrumented startup. Production carrier defaults are unchanged.
+This profile establishes functional admission/lifecycle behavior, not default
+congestion, induced-loss, retention or guaranteed unreliable delivery. Those
+remain separate Phase 2 qualification requirements.
 
 Retained event/signal closures use ObjectID wrappers. Dispatch checks liveness
 between callbacks, Once disconnects before invocation, and waits carry exact

@@ -26,7 +26,8 @@ the baseline; preserve IDs when a refactor moves the implementation.
 ## Index
 
 The [combined GL-018/GL-029 development review](gl018-gl029-integration.md)
-preserves both issues as open and lists the remaining acceptance gates.
+preserves both histories and lists the remaining acceptance gates. GL-018 now has
+its separate scoped [closure](gl018-closure.md); GL-029 remains open.
 
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
@@ -68,9 +69,11 @@ records passing ordinary 116-actor Windows/Linux CI and failed sanitizer
 profiles. Controlled ENet throttle/readiness fixtures address transport-level
 loss/startup assumptions. A production probe also confirms valid Unicode event
 dictionary keys are misencoded by the legacy Latin-1 constructor; a one-line
-StrictRemote-only UTF-8 correction and real ENet round-trip assertions are under
-qualification. Other carriers and persistence encoding remain unchanged. GL-029
-stays OPEN; no refactor or main merge is included.
+StrictRemote-only UTF-8 correction and real ENet round-trip assertions pass the
+20-actor focused Windows ASan selection. Fresh full hosted/platform qualification
+is pending on `integration/gl-018-gl-029-remoteevents`. Other carriers and
+persistence encoding remain unchanged. GL-029 stays OPEN; no refactor or main
+merge is included.
 
 **Status: OPEN; Phase 1 WIP is partially qualified on
 `network/gl-029-unified-remoteevents`, not ready for integration.** The user requested

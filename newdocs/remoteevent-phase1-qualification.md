@@ -19,7 +19,42 @@ RemoteFunction/replication legacy conversion remains unchanged. Actual ENet
 fixtures add U+96EA keys with U+1F600 values to Server, echo and Wait assertions
 for all delivery classes. This conforms to the existing version-1 UTF-8 contract;
 no wire-format, public API, storage encoding or ownership refactor is introduced.
-Positive execution and fresh combined CI are required before accepting the fix.
+The same public probe passes after the correction (`ASCII=ascii Unicode=snow`,
+exit 0, empty stderr). The final non-diagnostic matching Windows ASan run passes
+all 20 focused actors: six RemoteEvents, seven existing network actors, three 2D
+Character actors and four HTTP actors. The RemoteEvent actors include the new
+Unicode Server/echo/Wait assertions. This focused run excludes the separately
+retained identity-GC stress failure and does not constitute full-suite acceptance.
+
+Fix `eec239779e873c54982c81ec9984c7ff98b8f6b8` has native source fingerprint
+`ac6706375ad4dfa912b6424bf9c17d767262e51ed62dbc5ebfeaf614e8ec2ffc`
+(90 LF-normalized inputs), DLL SHA-256
+`5721e2092827dba585e817192a9b4fbe0ceff23b0769112d78b3b542658c68e5`
+and corrected matching host SHA-256
+`96a64e425ae1aac600014e6fbe8489b3178c8d09b210c47fd4a03f18edcafdb0`.
+Outputs: `C:/Sandbox/Codex/GL029Continuation/asan-final-focused-utf8-v1`.
+Fresh complete hosted native, sanitizer and non-publishing Debug/Release candidate
+gates remain required; core CI 41531861167 passes both platforms at this revision.
+
+Retained archive: `C:/Sandbox/Codex/GL029Continuation/utf8-qualification-evidence.zip`,
+copied to `C:/Users/aiden/.codex/artifacts/godotluau/gl029-working/utf8-qualification-evidence.zip`.
+SHA-256: `2ec1db7e4cac1ef24bc074bc610ad8d3223d7868df774d5e0c772e5e058fe18d`.
+All 565 indexed files rehash after download. The four executed final fixture
+files match the committed inputs after LF normalization. The archive retains
+diagnostic/failing attempts, build/product identities, the negative and positive
+Unicode probes and the final focused results. No unexpected ASan report is
+present in that final focused output; it does not erase the separate broad
+regression failure. Core tests were disabled in this local native rebuild.
+
+Exact-source hosted gates (in progress at this observation):
+
+- [Native 41531861106](https://github.com/gmoddev/GodotLuau/actions/runs/41531861106).
+- [Full-native sanitizers 41531861175](https://github.com/gmoddev/GodotLuau/actions/runs/41531861175).
+- [Non-publishing Debug/Release candidate 41532697897](https://github.com/gmoddev/GodotLuau/actions/runs/41532697897).
+
+The candidate workflow has read-only contents permissions and qualifies source
+products, extracted companion packaging and runtime checks; it does not enable
+the dormant publication workflow or updater distribution.
 
 The locally rebuilt matching Windows ASan diagnostic confirms ENet's adaptive
 unreliable throttle reaches 0/32 during startup, with further reductions around
@@ -30,7 +65,7 @@ and checks the configured deceleration. Production transport defaults are not
 changed. This explicitly qualifies an unthrottled functional loopback profile;
 default-throttle/congestion/induced-loss behavior remains separate Phase 2 work.
 No delivery assertion, native admission, retry policy or timeout is relaxed.
-Fresh execution of this controlled profile is required before acceptance.
+The focused Windows ASan execution above passes this controlled profile.
 
 The diagnostic and subsequent non-diagnostic Windows ASan Remote groups both
 pass six actors with that profile on the combined `d5c7c67...` native source.
@@ -42,11 +77,15 @@ varying 24–32. That is counterevidence to a universal 2D runtime defect. The 2
 functional fixture nevertheless assumes its finite pose samples arrive, and
 its hosted failure is retained. Apply the same explicit functional carrier
 profile only to its TwoD mode; keep movement/authority assertions and all other
-modes unchanged. Fresh local/hosted results are still required for this change.
+modes unchanged. The focused Windows ASan execution passes; hosted verification
+remains required.
 
 HTTP diagnostics reproduce a 428.698 ms frame while the replacement scene starts
 both cold domains. Stagger Client setup over three frames before the fresh Server
 script: no clock/peak reset, raised threshold or removed lifecycle assertion.
+Initialize the initial domain counters before the existing three-frame warmup
+as well, preserving the close-hook owner order and the baseline blocking probe.
+All four focused HTTP actors pass after that setup correction.
 The local broad regression attempt separately reaches the existing identity-GC
 stress loop's resume deadline on this compiler profile; it is retained as a
 failure, without changing resource policy or calling the full suite qualified.
