@@ -60,6 +60,16 @@ func PlayerEntering(Child: Node) -> void:
         var Peer := int(str(Child.name).trim_prefix("Player_"))
         Check(Network.call("player_node_for_peer", Peer) == Child, "Player identity is reserved before reentrant native child callbacks")
 
+func ConfigurePeer(Peer: int) -> void:
+    # Functional loopback probes need an unthrottled carrier. Instrumented
+    # startup can otherwise legitimately throttle one-shot unreliable sends.
+    var Transport = Network.get_multiplayer().get_multiplayer_peer()
+    if Transport is ENetMultiplayerPeer and (Transport.get_unique_id() == 1 or Peer == 1):
+        var Link = Transport.get_peer(Peer)
+        if Link:
+            Link.throttle_configure(5000, 32, 0)
+            Check(int(Link.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE_DECELERATION)) == 0, "functional carrier throttle profile applied to fresh peer")
+
 func ScriptRun(Name: String, Source: String, Client := false) -> Node:
     var Object: Node = ClassDB.instantiate("LocalScript" if Client else "ServerScript")
     var Resource: Script = ClassDB.instantiate("LuauScript")
@@ -147,6 +157,7 @@ func Run() -> void:
     var HiddenFolder := Create("Node", "ReplicatedStorage", Game.get_node("ServerStorage"))
     Create("RemoteEventNode", "Hidden", HiddenFolder)
     Network = Create("NetworkService", "NetworkService", Game)
+    Network.get_multiplayer().peer_connected.connect(ConfigurePeer)
     var Module := Create("ModuleScript", "DeliveryModule", Storage)
     var ModuleSource: Script = ClassDB.instantiate("LuauScript")
     ModuleSource.source_code = "return function(Remote) return pcall(function() Remote.DeliveryType = 1 end) end"
@@ -209,6 +220,7 @@ for _, Name in ipairs({'Reliable','Unordered','Legacy'}) do
         assert(Label ~= 'Unauthorized')
         if Label == 'Legit' then
             assert(A == nil and B == 12 and C.foo == 9 and C[1] == 3)
+            assert(C[utf8.char(0x96ea)] == utf8.char(0x1f600))
             assert(C.Vector.X == 1 and math.abs(C.Colour.R - 0.1) < 0.000001)
             if Remote.DeliveryType == 0 then assert(C.Frame.Position.X == 4) else assert(C.Frame == nil) end
             assert(C.Player == Player and C.Parent == game.ReplicatedStorage)
@@ -336,6 +348,7 @@ for _, Name in ipairs({'Reliable','Unordered','Legacy'}) do
     end)
     R.OnClientEvent:Once(function(Label, A, B, C)
         assert(Label == 'Echo' and A == nil and B == 12 and C.foo == 9 and C[1] == 3)
+        assert(C[utf8.char(0x96ea)] == utf8.char(0x1f600))
         assert(C.Vector.X == 1 and math.abs(C.Colour.R - 0.1) < 0.000001)
         if R.DeliveryType == 0 then assert(C.Frame.Position.X == 4) else assert(C.Frame == nil) end
         assert(C.Player == game:GetService('Players').LocalPlayer and C.Parent == game.ReplicatedStorage)
@@ -344,6 +357,7 @@ for _, Name in ipairs({'Reliable','Unordered','Legacy'}) do
     task.spawn(function()
         local Label, A, B, C = R.OnClientEvent:Wait()
         assert(Label == 'Echo' and A == nil and B == 12 and C.foo == 9)
+        assert(C[utf8.char(0x96ea)] == utf8.char(0x1f600))
         Waited += 1; if Waited == 3 then game:SetAttribute('Waits', true) end
     end)
     assert(not pcall(function() R:FireServer(function() end) end))
@@ -357,6 +371,7 @@ for _, Name in ipairs({'Reliable','Unordered','Legacy'}) do
     assert(not pcall(function() R:FireServer(string.rep('x', 65537)) end))
     if R.DeliveryType == 1 then assert(not pcall(function() R:FireServer(string.rep('x', 901)) end)) end
     local Payload = {3, foo = 9, Vector = Vector3.new(1,2,3), Colour = Color3.new(0.1,0.2,0.3), Player = game:GetService('Players').LocalPlayer, Parent = game.ReplicatedStorage}
+    Payload[utf8.char(0x96ea)] = utf8.char(0x1f600)
     if R.DeliveryType == 0 then Payload.Frame = CFrame.new(4,5,6) end
     R:FireServer('Legit', nil, 12, Payload)
     if R.DeliveryType == 0 then

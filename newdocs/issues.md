@@ -63,6 +63,15 @@ preserves both issues as open and lists the remaining acceptance gates.
 
 ## GL-029: Application Remote delivery has no unified bounded publication contract
 
+**Resumed correction:** [qualification](remoteevent-phase1-qualification.md)
+records passing ordinary 116-actor Windows/Linux CI and failed sanitizer
+profiles. Controlled ENet throttle/readiness fixtures address transport-level
+loss/startup assumptions. A production probe also confirms valid Unicode event
+dictionary keys are misencoded by the legacy Latin-1 constructor; a one-line
+StrictRemote-only UTF-8 correction and real ENet round-trip assertions are under
+qualification. Other carriers and persistence encoding remain unchanged. GL-029
+stays OPEN; no refactor or main merge is included.
+
 **Status: OPEN; Phase 1 WIP is partially qualified on
 `network/gl-029-unified-remoteevents`, not ready for integration.** The user requested
 publication of a checkpoint; see the [handoff](remoteevent-phase1-handoff.md).

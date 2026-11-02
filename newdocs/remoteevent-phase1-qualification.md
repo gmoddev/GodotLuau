@@ -1,5 +1,80 @@
 # GL-029 Phase 1 qualification
 
+## Sanitizer follow-up from `78897d3`
+
+### Strict UTF-8 dictionary-key correction
+
+A separate production-API probe reproduces an encoding defect on the combined
+Windows ASan runtime: local RemoteEvent delivery preserves ASCII `foo='ascii'`,
+but lookup by a valid U+96EA key returns nil. The same encoder serves network
+events. The first probe attempt had a GDScript type-inference error and is not
+runtime evidence; the corrected probe completes with `ASCII=ascii Unicode=nil`
+and exit 1, without script/sanitizer errors. Outputs are retained under
+`C:/Sandbox/Codex/GL029Continuation/unicode-baseline-v2`.
+
+Source confirms dictionary keys use `String(const char*)`, whose pinned
+implementation calls the Latin-1 constructor. Strict event values already use
+UTF-8. The one-line correction uses `String::utf8` only for StrictRemote keys;
+RemoteFunction/replication legacy conversion remains unchanged. Actual ENet
+fixtures add U+96EA keys with U+1F600 values to Server, echo and Wait assertions
+for all delivery classes. This conforms to the existing version-1 UTF-8 contract;
+no wire-format, public API, storage encoding or ownership refactor is introduced.
+Positive execution and fresh combined CI are required before accepting the fix.
+
+The locally rebuilt matching Windows ASan diagnostic confirms ENet's adaptive
+unreliable throttle reaches 0/32 during startup, with further reductions around
+reconnect. It also reproduces the missing reconnect echo, without an application
+rejection or sanitizer finding. A fixture-only connected-peer callback configures
+`throttle_configure(5000, 32, 0)` on both ends, including replacement connections,
+and checks the configured deceleration. Production transport defaults are not
+changed. This explicitly qualifies an unthrottled functional loopback profile;
+default-throttle/congestion/induced-loss behavior remains separate Phase 2 work.
+No delivery assertion, native admission, retry policy or timeout is relaxed.
+Fresh execution of this controlled profile is required before acceptance.
+
+The diagnostic and subsequent non-diagnostic Windows ASan Remote groups both
+pass six actors with that profile on the combined `d5c7c67...` native source.
+The callback ignores relayed client IDs, configuring only real ENet links; the
+strict native checker now requires its profile assertion for every actor.
+
+The local original 2D diagnostic passes all three actors with default throttle
+varying 24–32. That is counterevidence to a universal 2D runtime defect. The 2D
+functional fixture nevertheless assumes its finite pose samples arrive, and
+its hosted failure is retained. Apply the same explicit functional carrier
+profile only to its TwoD mode; keep movement/authority assertions and all other
+modes unchanged. Fresh local/hosted results are still required for this change.
+
+HTTP diagnostics reproduce a 428.698 ms frame while the replacement scene starts
+both cold domains. Stagger Client setup over three frames before the fresh Server
+script: no clock/peak reset, raised threshold or removed lifecycle assertion.
+The local broad regression attempt separately reaches the existing identity-GC
+stress loop's resume deadline on this compiler profile; it is retained as a
+failure, without changing resource policy or calling the full suite qualified.
+
+Ordinary hosted native CI `41518023025` passes all 116 actors on Windows and
+Linux. Sanitizer CI `41518023028` fails both platforms: Remote listen completion
+fails on each; Windows additionally fails the old dedicated network startup,
+2D Character admission and HTTP lifecycle timing. Both sanitizer summaries
+record no unexpected sanitizer finding. These are failed profiles, not memory
+safety passes inferred from functional markers.
+
+The Windows legacy network client calls FireServer after transport connection
+but before the new RemoteEvent publication activates, raising `Remote not ready`.
+The fixture now waits for the Event's actual Ready state within its existing
+600-frame connection loop. Native readiness enforcement and deadlines are not
+weakened. The remaining Remote Once failure and separate timing/admission cases
+need instrumented attribution before further changes.
+
+DockerPC starts an incremental Windows native ASan build against immutable
+combined source `348c5e9`, using the existing matching corrected host and pinned
+dependencies, two compiler jobs and captured logs. A preparation guard detects
+that the shared driver checkout's core-test CPP differs; it is preserved, and
+this local build selects only the native adapter/probe, with core tests off.
+No shared source or dependency is overwritten. Existing GL-018 native products
+are copied aside before the cache is reconfigured. Build success alone will not
+be reported as runtime qualification. Current work remains on the integration
+development branch, without a main merge, publication, updater or refactor.
+
 ## Resumed after GL-018 closure
 
 2026-11-02: the [GL-018 closure](gl018-closure.md) independently verifies all six

@@ -156,7 +156,7 @@ static Variant gl_net_encode(lua_State* L, int idx, int depth = 0, bool StrictRe
             while (lua_next(L, idx) != 0) {
                 Variant key;
                 int kt = lua_type(L, -2);
-                if (kt == LUA_TSTRING)      key = String(lua_tostring(L, -2));
+                if (kt == LUA_TSTRING)      key = StrictRemote ? String::utf8(lua_tostring(L, -2)) : String(lua_tostring(L, -2));
                 else if (kt == LUA_TNUMBER) {
                     double kn = lua_tonumber(L, -2);   // preservar claves no enteras como FLOAT (no truncar)
                     bool FitsInteger = !StrictRemote || (kn >= -9223372036854775808.0 && kn < 9223372036854775808.0);

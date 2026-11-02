@@ -224,7 +224,6 @@ game:SetAttribute('ServerDone',true)
     print("[Runtime:HttpTest] Candidate peak frame gap seconds=", PeakGap)
 
 func Lifecycle(Origins: Dictionary) -> void:
-    Counter(false, true)
     Script("ServerScript", "TaskCancel", """
 local Pending=task.spawn(function() _HTTP.get(game:GetAttribute('HttpOrigin')..'/hold'); game:SetAttribute('TaskLate',true) end)
 task.defer(function() task.cancel(Pending); game:SetAttribute('TaskCancelled',true) end)
@@ -297,6 +296,9 @@ game:SetAttribute('LimitB',true)
     ProjectSettings.set_setting("godot_luau/server_limits/vm_memory_bytes", 8 * 1024 * 1024)
     Scene(Origins)
     Counter(true)
+    # Keep independent cold Client/Server VM setup on separate fixture frames.
+    # The unchanged peak still includes both bootstraps and all HTTP work.
+    for Index in range(3): await process_frame
     Script("ServerScript", "Fresh", "assert(not pcall(_FileAccess.read,'user://ds_GL005_Close.json')); assert(game:GetService('DataStoreService'):GetDataStore('GL005'):GetAsync('Close')==7); assert(_HTTP.get(game:GetAttribute('HttpOrigin')..'/ok')=='ok'); game:SetAttribute('FreshDone',true)")
     await Until("FreshDone")
     await Pending(0)
@@ -314,7 +316,6 @@ game:SetAttribute('LimitB',true)
     Check(PeakGap < 0.25, "lifecycle frame progress")
 
 func Tls() -> void:
-    Counter()
     Script("ServerScript", "Tls", """
 local Origin=game:GetAttribute('TlsOrigin')
 local Before=game:GetAttribute('Counter') or 0
@@ -360,10 +361,10 @@ func Run() -> void:
     var Loaded := GDExtensionManager.load_extension("res://godot_luau.gdextension")
     Check(Loaded in [GDExtensionManager.LOAD_STATUS_OK, GDExtensionManager.LOAD_STATUS_ALREADY_LOADED], "extension load")
     Scene(Origins)
-    if Case == "enabled" and not IsBaseline:
-        # Measure transport after both domains have completed bootstrap.
-        Counter()
-        Counter(true)
+    if not IsBaseline:
+        # Bootstrap applicable domains before measuring transport work.
+        Counter(false, Case == "lifecycle")
+        if Case in ["enabled", "denied"]: Counter(true)
     for Index in range(3): await process_frame
     print("[Runtime:HttpTest] Startup peak frame gap seconds=", PeakGap)
     PeakGap=0
