@@ -62,3 +62,25 @@ No new tool installation, native compilation, retry-policy or host modification.
 
 These match the retained GL-018 production profile. Full-profile rerun remains
 required; the focused suite alone does not close GL-018.
+
+### Retention and hosted rerun
+
+Fix commit: `bf3bb3fe6322204d22f7842c30bc4432fd58fcd2`.
+The focused archive is retained at
+`C:/Users/aiden/.codex/artifacts/godotluau/gl018-conflicts/focused-evidence.zip`
+and on DockerPC under `C:/Sandbox/Codex/GL018ConflictFix`. SHA-256:
+`9ed67fe4aa12a6348c390e741cf8373ba2ada53faed82318c5fd92c0eb3da7db`.
+All 87 indexed entries were independently rehashed after download. The results
+contain all 23 successful actors and native controls, with no power-loss claim.
+
+Fresh exact-fix hosted jobs are started, not reported passing:
+
+- [Core 41441971998](https://github.com/gmoddev/GodotLuau/actions/runs/41441971998).
+- [Native 41441972046](https://github.com/gmoddev/GodotLuau/actions/runs/41441972046).
+- [Full-native sanitizers 41441973787](https://github.com/gmoddev/GodotLuau/actions/runs/41441973787).
+
+The sanitizer run is manually dispatched on the fix branch; its Windows/Linux
+matching instrumented hosts are building at this observation. No release
+workflow is dispatched. DockerPC C: has only about 3 GiB free after the focused
+run, so a further full local matrix is not started there. No caches are removed
+and no unrelated work is stopped. Local task test processes completed.
