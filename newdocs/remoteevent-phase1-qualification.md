@@ -12,6 +12,69 @@ necessary small fixes, and obtain permission before refactoring. Preserve the
 116-actor strict checker and existing release/updater denial. Phase 2 and GL-030
 remain out of scope. The checkpoint history below retains its original status.
 
+### First resumed runtime reproduction
+
+DockerPC Windows runs the original immutable candidate13 Debug product before
+changing production code. Source fingerprint `22b690a...` and every product hash
+match the checkpoint handoff. The actual ENet listen group fails late-join
+completion; Client2 reports `ClientAPI:18`, while Server subsequently fails its
+late-join and rejection-count checks. Outputs are retained under
+`C:/Sandbox/Codex/GL029Continuation/baseline-candidate13`, including input/product
+identities and the original logs. This is baseline evidence, not qualification
+of the GL-018-combined fingerprint `d5c7c67...`.
+
+A diagnostic fixture copy keeps the same native products and assertions while
+printing event labels/recipient IDs. Reliable Echo retains nil, mixed-table keys
+and values. The expected unordered echoes are absent; a later ReconnectEcho
+reaches a still-pending Once callback and fails its expected Echo assertion.
+Determine rejection versus permitted unreliable loss before selecting a fix;
+the first script assertion is downstream evidence, not proof of a codec defect.
+Additional admission diagnostics are pending. No timeout/assertion is weakened
+and no production networking change or refactor has been made at this point.
+
+Fresh combined core CI passes at `a6bd710`; native and sanitizer builds are
+running. Those builds/results must be assessed separately from candidate13.
+
+The admission diagnostic narrows this failure: in the failed dedicated run each
+Client delivers exactly 19 reliable events (Legit, sixteen ordered events, large
+fragmented payload and numeric sample), with **zero native rejections** before
+adversarial traffic. The two unordered events do not reach the native handler.
+The listen diagnostic in the same attempt delivers all 21 with zero rejections.
+This is counterevidence to the suspected receiver-size mismatch; that production
+check remains unchanged. No dictionary corruption is established by this failure.
+
+A five-line fixture correction waits, within ten seconds of the existing
+fifteen-second outer bound, for reliable order/fragment/numeric echoes before
+sending the one-shot unordered functional probes. No retries, longer deadline,
+removed assertion, delivery-mode change or networking refactor is introduced.
+It separates functional validation from congestion/loss behavior; it does not
+claim guaranteed delivery of unreliable events. Fresh execution is required.
+
+The barrier candidate clears the listen group's late-join/payload checks but
+still fails the immediate adversarial rejection-count assertion. Client-side
+file completion marks submission, not server-side processing. Wait for the same
+26 native rejections within the existing 15-second bound before checking that
+dispatch stayed unchanged; retain the exact count and report the observed delta.
+Do not lower the count or assume this resolves a lost unreliable attack packet.
+This follow-up remains unqualified until fresh runtime results are checked.
+
+### Focused correction result
+
+The bounded-barrier plus server-observation fixture passes all **six real ENet
+actors** on the original candidate13 Windows Debug runtime: Listen and Dedicated,
+each Server and two Clients including late join. The listen server observes 27
+native adversarial rejections, satisfying the unchanged minimum of 26; all
+original case records are complete and pass. No caller retries or production
+networking changes are involved. Candidate fixture SHA-256 (original Windows
+bytes): `a821a5cf2e38f34bfe87873e0f72a6f8f39be421fe044314b7c73d9e944d3214`.
+Outputs: `C:/Sandbox/Codex/GL029Continuation/barrier2-candidate13`.
+
+The earlier failure histories remain separate and retained. This focused pass
+qualifies the fixture correction against candidate13; it does not qualify the
+GL-018-combined source, other configurations or the full 116-actor suite.
+`python tests/release/ReleaseCandidateTests.py` also passes all 14 admission/
+rejection cases. Fresh combined hosted native/sanitizer evidence remains required.
+
 Status: **PARTIALLY QUALIFIED; WIP checkpoint at the user's request on 2026-11-02.
 Not ready for integration.** No merge or distribution authorization. The
 [handoff](remoteevent-phase1-handoff.md) records restart steps and exact final

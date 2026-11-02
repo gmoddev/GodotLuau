@@ -279,8 +279,9 @@ game:SetAttribute('LocalValidated', true)
     var Rejected := int(Network.call("GetRemoteState", null).Rejected)
     Mark("attack")
     await Until(func(): return FileAccess.file_exists("res://remote-client1-attacked") and FileAccess.file_exists("res://remote-client2-attacked"), "both peers exercised adversarial production handlers")
+    await Until(func(): return int(Network.call("GetRemoteState", null).Rejected) >= Rejected + 26, "native admission rejects malformed and unauthorized traffic")
+    print("[Network:RemoteTest] Rejected adversarial frames=", int(Network.call("GetRemoteState", null).Rejected) - Rejected)
     Check(int(Network.call("GetRemoteState", null).Delivered) == Before, "malformed, oversized, stale, mode and role rejection has no dispatch")
-    Check(int(Network.call("GetRemoteState", null).Rejected) >= Rejected + 26, "native admission rejects malformed and unauthorized traffic")
     var Old: Node = Storage.get_node("Dynamic")
     var OldIdentity := Old.get_instance_id()
     ScriptRun("Replace", """
@@ -362,6 +363,11 @@ for _, Name in ipairs({'Reliable','Unordered','Legacy'}) do
         for Number = 1, 16 do R:FireServer('Order', Number) end
         R:FireServer('Large', string.rep('x', 65000))
         R:FireServer('Numeric', 1e100, -1e100)
+        -- Functional unordered probes must not compete with this reliable
+        -- fragmentation burst: their contract permits loss under congestion.
+        local Deadline = os.clock() + 10
+        while not (game:GetAttribute('Ordered') and game:GetAttribute('LargeEcho') and game:GetAttribute('NumericEcho')) and os.clock() < Deadline do task.wait() end
+        assert(game:GetAttribute('Ordered') and game:GetAttribute('LargeEcho') and game:GetAttribute('NumericEcho'))
     end
 end
 game:SetAttribute('ClientConfigured', true)
