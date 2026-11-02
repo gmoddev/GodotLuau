@@ -1,0 +1,411 @@
+{
+  "Kind": "Static networking architecture research",
+  "ReviewedUTCDate": "2026-11-02",
+  "Status": "PROPOSAL_NOT_IMPLEMENTED",
+  "GodotLuauMain": "83cd0887968d73d61d050650718d8ada6e124579",
+  "GargantuanMain": "e682be08df84d776bfa455137728265c6494b5e8",
+  "GodotEngine": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+  "Normalization": "UTF-8 source bytes, CRLF to LF, terminal LF normalized to one; hashes identify inspected file versions, not build provenance. Relevant sections/symbols inspected, not an exhaustive repository audit.",
+  "Execution": "No builds, engine tests, benchmarks, sanitizer or external security scans executed. Qualification results are attributed to retained records and their exact sources.",
+  "RetainedGargantuanQualification": {
+    "Scope": "CORE_ENGINE_CORRECTNESS",
+    "FreshlyExecutedOrArtifactReverifiedHere": false,
+    "Contract": "POOLED_CORRECTNESS_V1",
+    "Receipt": "tests/Foundation3LCoreAcceptance20261021.json",
+    "ExecutionSource": "b420a7fd1567632b376760e65fc71386c9bddcf4"
+  },
+  "SeparateUnmergedGL018Evidence": "0e61db4a418c606deff50fad27f9831dc6204981",
+  "Repositories": [
+    {
+      "Files": [
+        {
+          "Path": "AGENTS.md",
+          "SHA256NormalizedText": "53979cd3103472aa33b790fd84ec8c9b8e80e7ca9ec06a3e5257ba2ac22fa9ca"
+        },
+        {
+          "Path": "newdocs/README.md",
+          "SHA256NormalizedText": "2cce07a426bbea7c3a99b3cddb24f3d8fe189389e2edc0fb0eda42a2c3805400"
+        },
+        {
+          "Path": "newdocs/adr-001-shared-execution-domains.md",
+          "SHA256NormalizedText": "13f66b94bad24fe1d5214cf0cfab2002a2e52270ba42dfc4e1c2a8ca04bdc169"
+        },
+        {
+          "Path": "newdocs/adr-002-domain-resource-policy.md",
+          "SHA256NormalizedText": "8d172314f3bbd44d6b66cf294b6b7e0b0e505c9b295d26049c99a384b6d34b31"
+        },
+        {
+          "Path": "newdocs/adr-006-character-authority.md",
+          "SHA256NormalizedText": "f561eae554a308195389ba4b75a0de8927be9b881f5ca54709df75c15b18a1e3"
+        },
+        {
+          "Path": "newdocs/adr-007-model-character.md",
+          "SHA256NormalizedText": "31312053c3cf82442d8d924f665c82c0e800304b014649fc61d5dcd28d31c5dd"
+        },
+        {
+          "Path": "newdocs/animation-authority-main-integration.md",
+          "SHA256NormalizedText": "0be991f62266e77633b3191bf1c2aafb369ae71888ef2e1fc0c519373e6c4037"
+        },
+        {
+          "Path": "newdocs/animation-authority-qualification.md",
+          "SHA256NormalizedText": "d14adfa4a3b05fdfa8c7a85b3a9b08585f152a334b8289769a8dd614b4eea4c4"
+        },
+        {
+          "Path": "newdocs/character-authority-validation.md",
+          "SHA256NormalizedText": "ae343e8885b76aa461fb99009b5e32cf88d69add2edb18e0d319018e66c44eb9"
+        },
+        {
+          "Path": "newdocs/current-architecture.md",
+          "SHA256NormalizedText": "5d96f7fb0ebae7672cc91b2a818b24e5b368aa99972cd861a0b58f2a03c96cc1"
+        },
+        {
+          "Path": "newdocs/invariants.md",
+          "SHA256NormalizedText": "760ccaace41dc60ca8d59c7955f796c4806e6959906c8d953c0df5f2fc5cf269"
+        },
+        {
+          "Path": "newdocs/issues.md",
+          "SHA256NormalizedText": "3677eb05720b369b0dc4d42a9ed18cd601fa1795471a381363c2763aa227d6db"
+        },
+        {
+          "Path": "newdocs/network-authority-validation.md",
+          "SHA256NormalizedText": "079a9efb308621f2f0ccf8fcd86a101536a8fad53ebbcca4bb22eccd8a85c717"
+        },
+        {
+          "Path": "src/core/gl_domain_host.cpp",
+          "SHA256NormalizedText": "8e361427df00b8887837dcc51315fde4a97360799714501918a103c3ba4a8203"
+        },
+        {
+          "Path": "src/core/gl_net_bridge.h",
+          "SHA256NormalizedText": "3d825c403a60e09ee2a280c7d229878c684b43977d6685b9a41e54d6db7f8119"
+        },
+        {
+          "Path": "src/core/luau_api.h",
+          "SHA256NormalizedText": "369f8ab0abb3329424415ab1dc10dfa3bdf5512ffceba48cf752cd4ad64a706f"
+        },
+        {
+          "Path": "src/core/luau_instance_access.h",
+          "SHA256NormalizedText": "814d81bcdd4576b58660fe9b52ed15cefb3461939d7b6ba152b40304b2f5c14a"
+        },
+        {
+          "Path": "src/core/luau_instance_reflection.cpp",
+          "SHA256NormalizedText": "21044d8109b16331bd3bf74db1d0aea166ca8b74bac9a45108b6a5b1eea7743a"
+        },
+        {
+          "Path": "src/core/luau_script.cpp",
+          "SHA256NormalizedText": "b5142ded1fe4fc8bf0c4171be6a96c14f43173ff95f426bf02067f671d91ef90"
+        },
+        {
+          "Path": "src/core/luau_stdlib.h",
+          "SHA256NormalizedText": "5fc4ac19c28b34659a70bd7869a3366eb28ef042f15a84bf5455912df6c60180"
+        },
+        {
+          "Path": "src/core/register_types.cpp",
+          "SHA256NormalizedText": "544b6459d919a0868109c7c6ed830305e219e13d79ce8f4e220f410958de2c2c"
+        },
+        {
+          "Path": "src/editor/luau_type_database.h",
+          "SHA256NormalizedText": "a0fc141024e61e4d973040968bdf28dd5b40783cbc9b3707cd64408901808fd5"
+        },
+        {
+          "Path": "src/gameplay/roblox_remote.h",
+          "SHA256NormalizedText": "848b48e86e41ac340e6023df25f92d00c0b8a7264c0dd8797a9da3ebb22929c8"
+        },
+        {
+          "Path": "src/importer/rbx_instances.h",
+          "SHA256NormalizedText": "37ea87b1b22f9c180c94c7b121ccce109743ad83662318e9b606458161059fef"
+        },
+        {
+          "Path": "src/services/roblox_network.h",
+          "SHA256NormalizedText": "68e5637185fcbf3d842293b9b7c67f7ab5f2fa8420f63cd049edc1b1a3d98252"
+        },
+        {
+          "Path": "tests/runtime/AnimationAdversarial.gd",
+          "SHA256NormalizedText": "166969d2464706ef185b9981095815f253d4f94901fb5dae6ccdf019d4f4a0a1"
+        },
+        {
+          "Path": "tests/runtime/AnimationIntegration.gd",
+          "SHA256NormalizedText": "44c78472024515d86feb439c5f92bb66a1935b1a75e4a46456671922d99c5e3a"
+        },
+        {
+          "Path": "tests/runtime/CharacterPresentation.gd",
+          "SHA256NormalizedText": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f"
+        },
+        {
+          "Path": "tests/runtime/CheckCoreCI.py",
+          "SHA256NormalizedText": "a47e2bcd0bd0fe28897006859ff0169bb60e09ee03a6ae8753a7c0ea668fff24"
+        },
+        {
+          "Path": "tests/runtime/CheckNativeCI.py",
+          "SHA256NormalizedText": "e4edad5801d9a08bf5071f48f5d28ac7b1b0185196e8c0e2abe8a6c4dbcffc25"
+        },
+        {
+          "Path": "tests/runtime/NetworkIntegration.gd",
+          "SHA256NormalizedText": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae"
+        },
+        {
+          "Path": "tests/runtime/NetworkSecurity.gd",
+          "SHA256NormalizedText": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79"
+        },
+        {
+          "Path": "tests/runtime/RunCharacterNetworkBenchmarks.py",
+          "SHA256NormalizedText": "0727ab7c1c180d37ec0250cb4aa0d8af0deac0d3a82fdc06fc2e8a39ad029e0b"
+        },
+        {
+          "Path": "tests/runtime/RunQualification.py",
+          "SHA256NormalizedText": "bad51b6a4c6e7081b47333ed4c55bfd688ff76c12f5bdf2baa7f4cc121d9ce7f"
+        }
+      ],
+      "Repository": "gmoddev/GodotLuau",
+      "Revision": "83cd0887968d73d61d050650718d8ada6e124579"
+    },
+    {
+      "Files": [
+        {
+          "Path": "AGENTS.md",
+          "SHA256NormalizedText": "7da87c96e8d623836a15fd3c532a771e60679b52f5447e5c53701ce07101112b"
+        },
+        {
+          "Path": "AICONTEXT.md",
+          "SHA256NormalizedText": "5c1d7ca7a9e894bbb7be1e3a02e29ad56c8bb0788cb917b63039132b1b9c9eed"
+        },
+        {
+          "Path": "KNOWN_ISSUES.md",
+          "SHA256NormalizedText": "ab53a1d3f985d5b5f631472b025b7293c5c833b21609270e46c4a7e541c9b6cf"
+        },
+        {
+          "Path": "assets/classes/RemoteEvent.luau",
+          "SHA256NormalizedText": "d89d47988f9f5a4df4d3f87ea47f3b98246660d59087834741a847d8de266268"
+        },
+        {
+          "Path": "assets/classes/UnreliableRemoteEvent.luau",
+          "SHA256NormalizedText": "e93c2184477deb173e3adc5fd923b478d37574398655002befb6bec724bc4a39"
+        },
+        {
+          "Path": "assets/classes/UnreliableSequencedRemoteEvent.luau",
+          "SHA256NormalizedText": "758086406f83709031454c4bc7c88a275ec30e9765492e5155d7ef3c880f8be2"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/BasicClientReplication.md",
+          "SHA256NormalizedText": "2a622a240eda570cfc8dc2947703d148f43d9dd7f16744f019faa0000c73c490"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/CharacterNetworkingFoundation3C.md",
+          "SHA256NormalizedText": "1fbcaf05b6ab8e64432379c32f12240214fa840e8398320f311b8966294baffa"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/CharacterNetworkingFoundation3G.md",
+          "SHA256NormalizedText": "3789d690e9e4fa2bf8466fe27ff61d441602c39dda27b7ea4141bfedd5392c18"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/CharacterReplicationFoundation3E.md",
+          "SHA256NormalizedText": "505528416d45df49838770ed9c38b8b32935a255dbf2b6469b23b3899292ee4a"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/LoopbackReplication.md",
+          "SHA256NormalizedText": "39bfa65e446d1cfca5962073981e5d76766b4ee516811a1d28f847b6572beece"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/LuauRemotes.md",
+          "SHA256NormalizedText": "9b3a036444285743ebe56d2e0f2c707d91629a177072a70927f9d6e380f4fcc9"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/NetworkSchedulerContract.md",
+          "SHA256NormalizedText": "b8fc831d4ed70a0c2b9a19721c46b9d306befc356caf165a61880db348dc0d6d"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/NetworkingContracts.md",
+          "SHA256NormalizedText": "7bfc4b02ce051ffbb769519a10861c51b063c4fe3c545067e209caf799916607"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/NetworkingFoundationValidation.md",
+          "SHA256NormalizedText": "f15db326b96bae95605443502f22b0822a1d80a9e3e3d74556689f80c50c005e"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/NetworkingFoundations1To7Validation.md",
+          "SHA256NormalizedText": "ca3a1762a728cd9090e8a12fff3724222836f38af8e22e9541ed50ae31f5a81f"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/ProtocolInputHardening.md",
+          "SHA256NormalizedText": "4db85bfec3975b8a02b35465844e6ea5d285b49ae2e8eb2dc3d2bda8661206b5"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/RealGameTransport.md",
+          "SHA256NormalizedText": "451b0edc576248261da512d2310c731201ebab00f2eaa8692758adaf95770347"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/ReplicationFoundation3J.md",
+          "SHA256NormalizedText": "148b01155db8ece837711ff1b85da817c7fd4798b847933fd2aed612ab69ef50"
+        },
+        {
+          "Path": "devdocs/CurrentArchitecture/SimulatedTransport.md",
+          "SHA256NormalizedText": "7b93849dc19ce4728bdffaa833323c1b4e23980f3508139d9c5f028bffb7171f"
+        },
+        {
+          "Path": "docs/adr/D03-hybrid-pooled-service-and-permit-ownership.md",
+          "SHA256NormalizedText": "822a129642ef08e8631f9630bdaefdc5decba1f455029d25fe60c0b7c3dd37ee"
+        },
+        {
+          "Path": "docs/architecture/README.md",
+          "SHA256NormalizedText": "77b6fd5d5c37a17db0e752dec6b687e1a166d5b7ed7fefe56f92117a0e01bbd2"
+        },
+        {
+          "Path": "docs/invariants/Core.md",
+          "SHA256NormalizedText": "f2186b19c36bec11062e28b42c64199bc28c7fc52735e0791637b35750bf5a89"
+        },
+        {
+          "Path": "docs/src/content/docs/developing/networking-architecture.mdx",
+          "SHA256NormalizedText": "e4f90c824a832ac56457ffb3c06400cd77a1a3d6e9d4df7d57c6614cd7470c25"
+        },
+        {
+          "Path": "include/gargantuan/classes/RemoteBase.hpp",
+          "SHA256NormalizedText": "c8eb7bbb34639e0843942abe04b2a37dccfd89f8a03d4fbbd24faea8cf3f3f16"
+        },
+        {
+          "Path": "include/gargantuan/classes/RemoteEventBase.hpp",
+          "SHA256NormalizedText": "1f7de8fae34bc3354c23f7d5df5759d6c9be9fe95bb65623d13412e6122b30ee"
+        },
+        {
+          "Path": "include/gargantuan/network/BinaryCodec.hpp",
+          "SHA256NormalizedText": "8c0d907d1ae718f52b886c4b2c8bcc5fb2fde9858e50a43f7c60cba459fe210c"
+        },
+        {
+          "Path": "include/gargantuan/network/Delivery.hpp",
+          "SHA256NormalizedText": "dea6fa706110a0a8a0eb5f409a6beb155ab147136c668ef98a2261cd542a4011"
+        },
+        {
+          "Path": "include/gargantuan/network/Limits.hpp",
+          "SHA256NormalizedText": "b9144e003ca7493c0d43f43e24d96dcff8ac27974c6713cf9e6119161b97dced"
+        },
+        {
+          "Path": "include/gargantuan/network/MessageIntent.hpp",
+          "SHA256NormalizedText": "d61188d358b4677e1878fc0d4a747bdbd0514513e7446425f133ee4c0b232371"
+        },
+        {
+          "Path": "include/gargantuan/network/Remote.hpp",
+          "SHA256NormalizedText": "bb6b707da6dbeb76ffa712143152d6b74b6250cafce35c32ddb0b336d7a8d543"
+        },
+        {
+          "Path": "include/gargantuan/network/RemoteManager.hpp",
+          "SHA256NormalizedText": "3945d133956ae3dfa8ecaf251fd960ab4ec695f9db555d19b46f8696edd4474f"
+        },
+        {
+          "Path": "include/gargantuan/network/RemoteProtocol.hpp",
+          "SHA256NormalizedText": "1585a774800b0e4ee98b9f6f42c520adc6c9a0b131af354aeda1bad0db59e2ed"
+        },
+        {
+          "Path": "include/gargantuan/network/ReplicationRelevance.hpp",
+          "SHA256NormalizedText": "3b382a38b352466ebf4f305428daff59ed352691e4dc5472008045fe55ed62a6"
+        },
+        {
+          "Path": "include/gargantuan/network/Sequence.hpp",
+          "SHA256NormalizedText": "4cfb191cce40365825e8217ef6ae0eb7577534c33f37acddd76d36c27fb8013c"
+        },
+        {
+          "Path": "include/gargantuan/network/Statistics.hpp",
+          "SHA256NormalizedText": "4527f7c3045f501bd39d528848ec00c5c4c6da793b320d6d2cc0e0471429ca2a"
+        },
+        {
+          "Path": "src/classes/RemoteEventBase.cpp",
+          "SHA256NormalizedText": "1c98e3b67f468a5efd8df9b7cdad730a7aec080a8f8d0c24f9e7ad8694bac6ef"
+        },
+        {
+          "Path": "src/classes/RemoteFunction.cpp",
+          "SHA256NormalizedText": "798808acc9af74aa2ae986bc992b83d71cadecaa0f9e7f2c68099ebb1f150eb6"
+        },
+        {
+          "Path": "src/network/BinaryCodec.cpp",
+          "SHA256NormalizedText": "a1363dd695a94179900bdb2c3490c9db5e9232169f5a1e395a72c700a65d9023"
+        },
+        {
+          "Path": "src/network/CharacterNetwork.cpp",
+          "SHA256NormalizedText": "0e9e636584ac27471d55e9201e0abeccaa5b5dea84fad1c0baf78d438bdaf07b"
+        },
+        {
+          "Path": "src/network/GameNetworkingSocketsTransport.cpp",
+          "SHA256NormalizedText": "b5b1d46fa577489acf2756e899490499c6abc3f754b83f122a90064a940d90f1"
+        },
+        {
+          "Path": "src/network/Remote.cpp",
+          "SHA256NormalizedText": "998453d72eaded42ce2cc64d18c1d610369c31991b7f5b0c3bc6e47c8e3e4554"
+        },
+        {
+          "Path": "src/network/RemoteLuau.cpp",
+          "SHA256NormalizedText": "ee24dff73ac2879ee5f56f66aad0dad6b88dcd1abd058a80872540902c64f9a2"
+        },
+        {
+          "Path": "src/network/RemoteManager.cpp",
+          "SHA256NormalizedText": "8b0d448650d85df40a60eb38d3ee54619bf55e3b4b28d042468959a1dc46e079"
+        },
+        {
+          "Path": "src/network/RemoteProtocol.cpp",
+          "SHA256NormalizedText": "7c3b2f6e0e50c0458b7aa5c32416330f9d2844e754b0bb84c7227e7fb9e855a9"
+        },
+        {
+          "Path": "src/network/ReplicationCoordinator.cpp",
+          "SHA256NormalizedText": "dfb2570cf897a1d94a5b09459d1318bfe2c4559ec23f0d109d3a196df95b9964"
+        },
+        {
+          "Path": "src/network/ReplicationProtocol.cpp",
+          "SHA256NormalizedText": "7fdd486de14738aa90d07949b2f4ee7cb1e7202434c99327be365f20e6d96eb3"
+        },
+        {
+          "Path": "src/network/ReplicationRelevance.cpp",
+          "SHA256NormalizedText": "91c2b8ed0a7133a9d26759e05351d328136d2715da54bf5afb0bc21105aace49"
+        },
+        {
+          "Path": "src/network/Scheduler.cpp",
+          "SHA256NormalizedText": "239bfd2929b51e62e7bb1401abc74c2c63cf934c937466806d619166d568ea6e"
+        },
+        {
+          "Path": "src/network/Statistics.cpp",
+          "SHA256NormalizedText": "6159a6c8c96a2b74cbeb7fa9b3049603c2e02f24d7efa09e2e9fbeffd517f364"
+        },
+        {
+          "Path": "tests/Foundation3LCoreAcceptance20261021.json",
+          "SHA256NormalizedText": "28a97a812e59177631d91069cf319757d2329b82b53d474b4a068ddb9080edf1"
+        },
+        {
+          "Path": "tests/RemoteTests.cpp",
+          "SHA256NormalizedText": "4e2dd545703305ba6a3e5c99455c63612fc91a9b4cc2244b7830adcb9b83365d"
+        }
+      ],
+      "Repository": "gmoddev/gargantuan",
+      "Revision": "e682be08df84d776bfa455137728265c6494b5e8"
+    },
+    {
+      "Files": [
+        {
+          "Path": "modules/enet/enet_multiplayer_peer.cpp",
+          "SHA256NormalizedText": "972c0f8aaeffc200683a16c8d2ca1364588b77c897eb30aa6f76e715c7ed97f1"
+        },
+        {
+          "Path": "modules/enet/enet_multiplayer_peer.h",
+          "SHA256NormalizedText": "b1eb9bbb4d674bfd5b4f12d6b422b930bb2cf7af664fa117fd7ed99fa4858321"
+        },
+        {
+          "Path": "modules/enet/enet_packet_peer.cpp",
+          "SHA256NormalizedText": "15d77c8fec6da4877674c5db322a27a664ad96392790c2aa1f55d5da6185cde0"
+        },
+        {
+          "Path": "modules/enet/enet_packet_peer.h",
+          "SHA256NormalizedText": "c6c2d48d7220c33899cab4dc8cbdee52a8afe98c134fc1a3355b3955b32d4567"
+        },
+        {
+          "Path": "modules/multiplayer/scene_rpc_interface.cpp",
+          "SHA256NormalizedText": "cca1423803e1f1cc58570ba9d0c6bd39be22ebaa39a283551aa984889659c6c7"
+        },
+        {
+          "Path": "thirdparty/enet/peer.c",
+          "SHA256NormalizedText": "a967be4d6b03e8059838587f6f0e13fe092109121f51bec4ed039721ddc1a157"
+        },
+        {
+          "Path": "thirdparty/enet/protocol.c",
+          "SHA256NormalizedText": "af36993d4ac9babd21e7887aec00c53700bcc7d060b1b2cb061a6da55354fb8e"
+        }
+      ],
+      "Repository": "godotengine/godot",
+      "Revision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+      "Source": "GitHub connector immutable-revision file reads"
+    }
+  ]
+}
