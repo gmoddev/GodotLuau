@@ -85,3 +85,28 @@ No production latency improvement, stock-host unload safety, Windows LSan,
 device/editor coverage or guarantee for arbitrary synchronous script loops is
 claimed. GL-018 remains OPEN; GL-029 work is not started. No deadline, shutdown
 assertion, UUID sample count or runtime policy is weakened by this change.
+
+## Published candidate and retained evidence
+
+Candidate `46427d0e9ec10eb066202742255ef1881394f348` is pushed to
+`fix/gl-018-increment-qualification`. Fresh jobs are started, not passing evidence:
+
+- [Core 41505018403](https://github.com/gmoddev/GodotLuau/actions/runs/41505018403).
+- [Native 41505018353](https://github.com/gmoddev/GodotLuau/actions/runs/41505018353).
+- [Full-native sanitizers 41505018104](https://github.com/gmoddev/GodotLuau/actions/runs/41505018104).
+
+The focused utility peak is **0.084417 seconds**; the injected-stall control peak
+is **0.441823 seconds**. Raw diagnostic, positive, negative and failed-group logs
+are retained in `C:/Sandbox/Codex/GL018ConflictFix/http-evidence-v1.zip` on DockerPC
+and `C:/Users/aiden/.codex/artifacts/godotluau/gl018-conflicts/http-evidence-v1.zip`
+on the controller. Archive SHA-256:
+`6c2ca1d33571f9ca26003bb16dd229316a7e47dfb742f7dea398af25b24a1683`.
+All 64 indexed files rehash correctly after download. The two executed fixture
+inputs match this commit after explicit LF normalization. `review.json` retains
+the positive/control records, and `hashes.json` indexes original bytes. No
+unexpected candidate ASan report is present. This archive is focused evidence,
+not a complete sanitizer profile or an independently rebuilt product.
+
+No production files, workflows, dependency pins or updater code differ from the
+starting revision. Main and GL-029 branches remain untouched; release publication
+and updater distribution remain disabled. There is no native rebuild or refactor.
