@@ -1,5 +1,15 @@
 # GL-018: full-native sanitizer qualification
 
+**Latest outcome: PARTIALLY QUALIFIED; GL-018 remains OPEN.** The
+[binding-retirement follow-up](#binding-retirement-follow-up-from-dfa700a)
+resolves the reproduced production unload crash in narrowly admitted instrumented
+hosts. Linux completes 80 core cases and 110 native actors locally and in hosted
+ASan/LSan CI. Windows hosted ASan still rejects competing DataStore increments;
+its full native profile is not accepted. See the
+[final outcomes and concrete next step](#qualification-outcome-and-remaining-blocker).
+Earlier failures below are historical evidence, not discarded or retroactively
+reclassified as passes.
+
 ## Scope and source identity
 
 This work starts at main `83cd0887968d73d61d050650718d8ada6e124579` on
@@ -525,3 +535,319 @@ storage. The current work stops without an engine patch or acceptance workaround
 GL-017, Windows LSan, rendered/device/editor coverage and other toolchains remain
 outside closure. Main stays at `83cd0887968d73d61d050650718d8ada6e124579`;
 release publication and updater distribution remain disabled.
+
+## Binding retirement follow-up from dfa700a
+
+Investigation commit `44fe8c2fe635cbce3a8d8385b839ca783913799d` adds a
+diagnostic loader and durable Linux child-debugger capture. Host correction
+`0119017696b60901a7f0af981387446d82833230` admits one explicit qualification-host
+patch. The GodotLuau production source remains identical to `dfa700a`:
+89 LF-normalized inputs, SHA-256
+`2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8`.
+Neither commit changes gameplay, VM ownership, the transport, persistence, runtime
+limits or pinned submodules. Main remains unchanged. Full GL-018 acceptance still
+requires both complete, clean 80-core/110-native sanitizer profiles.
+
+### Ownership and reproduced mechanism
+
+The engine stores binding tokens and raw free/reference callbacks on each Object
+(`core/object/object.cpp`, `get_instance_binding`, `free_instance_binding`, and
+`Object::~Object`). Pinned godot-cpp uses the library token and creates wrappers
+for native objects lazily. These wrappers are distinct from the Luau ObjectID
+wrappers and from the native objects themselves. The godot-cpp native-class free
+callback destroys/frees its C++ wrapper; it does not destroy the engine object.
+Production's scene/domain shutdown and language unregistration therefore do not
+retire every wrapper attached to a longer-lived engine object.
+
+The stock explicit `GDExtensionManager::unload_extension` deinitializes the
+extension and removes its library reference. It does not invoke the binding
+cleanup used by editor reload. That registry/cleanup is under `TOOLS_ENABLED`
+and additionally depends on extension-reload admission. It is unavailable in
+the tested template hosts. `GDExtension::close_library` consequently unmaps the
+library while its callbacks can remain on live engine objects. Correct ObjectID
+resolution inside GodotLuau cannot repair that engine callback pointer.
+
+The diagnostic loader forwards the unchanged production entry point and records
+get/create binding calls. It observes exactly seven surviving native bindings per
+cycle on both platforms: Engine, OS, ProjectSettings, ResourceLoader,
+ResourceSaver, SceneTree and the root Window. Registration without domain work
+exits cleanly. Direct VM/module reload and observation through the loader both
+print PASS then fail: Windows ASan violation; Linux SIGSEGV, exit -11. Retiring
+the surviving library-token bindings after production deinitialization makes all
+five cycles exit cleanly on both platforms. This rejects a VM-only or
+godot-cpp-only explanation; the independent C ABI control remains counterevidence
+against attributing the engine boundary solely to GodotLuau.
+
+The loader's retirement mode is a diagnostic intervention, **not a production
+fix or a qualification substitute**. Its dispatch and library lifetime differ
+from the normal loader. The corrected-host direct-production comparison is the
+separate acceptance evidence for the host change.
+
+### Durable Linux teardown diagnosis
+
+The diagnostic relink uses the existing instrumented engine objects and removes
+only the linker's `-s`. It changes no engine source or compile instrumentation.
+Original stripped host SHA-256 remains
+`bbfe7aabcd410ea9493eb9dec7ce9ffe74bf26803926be9072f0ef3d89692409`;
+the symbol-retaining diagnostic binary is
+`d02ad8a32227f82d54c7713d66f26863f0cd34afe26436e815c54dca59bfe187`.
+The original executable is restored after relinking. Function symbols resolve
+the production failure through `Object::~Object`, `Node::~Node`,
+`Viewport::~Viewport`, `Window::~Window`, `SceneTree::finalize`,
+`OS_LinuxBSD::run` and `main`, with the callback PC unmapped. Other threads and
+library mappings are captured too. Line/local-variable DWARF is unavailable in
+these reused objects; no source-line debugging claim is made.
+
+`DiagnoseSanitizerUnload.py` opens the durable destination before launching its
+bounded child debugger, flushes/fsyncs its log, and records source/binary/log and
+loaded-library identities. New original-byte logs live on DockerPC's E: under
+`E:/Sandbox/Codex/NativeSanitizers/retirement/`, outside the disposable container.
+GDB uses `handle_segv=0` only for diagnosis, with leak detection still enabled.
+LSan is unsupported under ptrace: a successful GDB command exit is never a
+sanitizer-clean process result. The separate ordinary execution still exits -11.
+The earlier empty GDB files and transcribed excerpt remain retained as failures.
+
+### Narrow host correction and admission
+
+The demonstrated C ABI and production failures justify a qualification-host
+correction to pinned Godot's `GDExtension::close_library`. The patch snapshots
+ObjectIDs under ObjectDB's lock, then releases that lock, resolves every ID again
+and invokes `free_instance_binding(this)` while the library is still mapped.
+This avoids retaining raw object pointers across callbacks or invoking them
+under ObjectDB's lock. Only bindings using that library token are retired; other
+libraries' tokens are untouched. No callback is suppressed or replaced by a
+no-op, and no engine-owned object is destroyed by the host scan.
+
+The scope is the standard library-token bindings exercised by pinned godot-cpp
+and the repository's C ABI probe, after production work and native extension
+instances have retired. It does not establish safe arbitrary hot-unload with
+live extension instances, active callbacks, custom binding tokens, other
+providers, editor reload or other engine versions. The host patch is maintained
+here for qualification; it is not an upstream submission or a production engine
+distribution, and it does not remediate GL-017.
+
+`SanitizerHosts.json` pins the original engine revision/archive plus the patch
+and exact admitted result. `BuildSanitizedGodot.py` checks all 13,985 original
+archive inputs; only `core/extension/gdextension.cpp` may be original or the exact
+reviewed patched result. Patch bytes and that file's admitted result use LF
+normalization to account for Git's Windows checkout conversion. The manifest
+also records the actual patched-file bytes separately. Unknown patch/source
+results fail before compilation; both rejection paths are exercised and retained.
+The full runner requires the matching patch policy in the host manifest.
+
+| Qualification host input | SHA-256 |
+| --- | --- |
+| Original engine file | `a7f2f64bd1b05461f430ab499a5d2e4d87913179b2cbca223b9aa90a9c7a1d8b` |
+| Patch, LF | `adfde942eb64b8f99e5a4dab4075678e201693cf3069a01675697c64b49b3fa1` |
+| Patched engine file, LF | `1160e48c8bbf5dc9c22c3d70062dbe3ebd18fc6bd67886f1363d4ff115b51aa8` |
+| Windows corrected executable | `96a64e425ae1aac600014e6fbe8489b3178c8d09b210c47fd4a03f18edcafdb0` |
+| Linux corrected executable | `4e2a235ab539a164fac338f1e236dec52e4d2b26540bd5f7af6b2a7b2d6b7bd8` |
+
+Both corrected hosts pass the direct unchanged-production five-cycle
+registration and VM/module unload controls, and the clean/binding-only controls.
+Linux intentional UAF and leak controls still detect their injected defects.
+This resolves the reproduced unload mechanism in these hosts; it does not
+qualify the complete native profile.
+
+### Capacity and remaining qualification
+
+DockerPC is the only local execution worker in this follow-up. Capacity is
+checked before extraction/building; large products, logs and cache archives
+remain on E:. A bounded tmpfs contains the reused build cache. The task-owned
+ext-family profile volume contains user data only. The harness's optional
+`GL_QUALIFICATION_PROFILE_ROOT` separates those profiles from repeated library
+copies; the default layout and native ADR-005 filesystem restrictions are
+unchanged. Original caches, failed setup attempts and source/binary comparisons
+remain retained. No unrelated container or workload is modified.
+
+Fresh source-`0119017` core CI passes all 80 cases on Windows/Linux. Both downloaded
+artifacts are independently hashed and checked with the existing discovery/XML
+checker on DockerPC. Native and full-native sanitizer CI are observed separately;
+pending jobs cannot supply acceptance. The local complete Windows attempt again
+rejects HTTP frame progress and DataStore conflict exhaustion while its unload
+gates pass. Neither the 250 ms frame bound nor eight-attempt transaction contract
+is increased. Current full-profile results and the remaining focused diagnostic
+findings are recorded below as they complete. Historical failed-rig leaks and
+timeouts remain unresolved until an actual complete clean run establishes more.
+
+### Asset and storage follow-through
+
+Fixture correction `92659bae6cc5d7b321b075848b905e9d660b47df` follows actual
+phase/lifetime diagnostics. With the text bundles, the Windows performance actor
+reaches only ten process frames in 171.6 seconds, before entering any measured
+character-count window. Dedicated clients lose their peer connections while the
+server constructs the rigs. This is distinct from the unload callback defect.
+
+A no-extension control on the same corrected ASan host loads all six original
+meshes in three interleaved text/binary pairs. It uses deep cache bypass, records
+load time before identity hashing, and verifies all geometry-array hashes,
+bounds, decoded texture hashes and integer dimensions. Total six-mesh times:
+
+| Serialization | Three trial totals, milliseconds | Median |
+| --- | --- | --- |
+| Text | 15,672.038; 15,007.454; 14,570.402 | 15,007.454 |
+| Binary | 150.430; 166.311; 143.468 | 150.430 |
+
+Binary bundles contain the same explicitly embedded ImageTexture of the original
+decoded image. The earlier failed binary attempt retained an external compressed
+texture; that failure is not discarded or equated with this corrected bundle.
+Only the fixture serialization extension changes from `.tres` to `.res`.
+Existing original/round-trip assertions remain unchanged. The first comparison
+control incorrectly compared JSON float dimensions to integer Dictionary values
+and stalled after its assertion; its source, logs and 180-second failure are
+retained. A separate type report verifies all actual identities, and the corrected
+comparison explicitly checks integer dimensions and every original hash.
+
+On the unchanged Windows production DLL and corrected host, all 14 headless
+presentation actors now pass, including dedicated/custom/listen cases. The
+unchanged performance workload (1/16 characters, 120 samples, original lifecycle
+samples and 180-second actor bound) also completes. No graphical or allocator
+event-count qualification is inferred from these headless results.
+
+The first local Linux full attempt still fails DataStore admission because its
+separate sub-runner overrides the selected profile root. `92659b` routes both
+Godot writer profiles and native interruption-probe storage through the same
+optional supported-storage selector. Logs/products stay on E:, and native
+filesystem admission stays unchanged. Default paths are preserved, separate
+projects are isolated, and reused named profiles fail rather than admitting
+stale state; dedicated directory controls verify those properties. The original
+failed attempt remains separate from the corrected full rerun.
+
+### Qualification outcome and remaining blocker
+
+**PARTIALLY QUALIFIED; GL-018 remains OPEN.** Qualified fixture/host inputs are
+`92659bae6cc5d7b321b075848b905e9d660b47df`, with the same 89-input native source
+fingerprint as starting branch tip `dfa700a`. This follow-up adds no production
+GodotLuau source change. The [evidence manifest](evidence/gl018-binding-retirement/manifest.json)
+indexes original-byte logs, diagnostic sources, failed attempts, downloaded CI
+archives, host/build identities and independently verified reports. The raw ZIP
+contains `raw-files.json`; every indexed entry was rehashed after collection.
+
+| Fresh profile | Core | Native acceptance | Result |
+| --- | --- | --- | --- |
+| DockerPC Linux, corrected host, ASan/LSan, ext-family data | 80 | 110, strict checker passes | PASS |
+| DockerPC Windows, corrected host, original Debug ASan DLL | 80 | Full attempt fails HTTP/utilities, DataStore and old text-asset presentation/performance | FAIL retained |
+| DockerPC Windows, corrected binary-asset follow-up | Existing 80-case evidence | 14 presentation actors and original performance workload pass | Focused PASS |
+| Hosted Linux, `92659b`, full-native ASan/LSan | 80 | 110, strict checker passes | PASS |
+| Hosted Windows, `92659b`, full-native ASan | 80 | 87 actors in complete passing groups; DataStore group incomplete | FAIL |
+| Hosted ordinary Windows/Linux Debug, `92659b` | 80 each | 110 each | PASS |
+
+Local Linux verification checks all 406 summary-file hashes, 73 normalized fixture
+inputs and 280 native log hashes. All ten animation authority actors complete:
+510 cases and 1,006 assertions, including actual ENet transport. The injected
+UAF and Linux leak controls are detected; engine-only, minimal reload, direct
+production registration and five VM/module unload cycles exit cleanly. No
+unexpected sanitizer report, leak, script failure, crash or timeout remains in
+that complete profile. This is headless qualification, with no GPU/device claim.
+Expected wrong-role RPC, ServerStorage and TLS rejection diagnostics remain
+visible. Local asset preprocessing also reports unavailable fontconfig and ignored
+OBJ ambient material settings; system-font/rendered appearance is not qualified.
+
+The fresh hosted Windows profile passes its detection/unload gates, all HTTP and
+HttpService groups, all Character/animation/presentation/performance groups and
+all 80 core cases. Its increment B actor exhausts the eight-attempt conflict
+budget, then fails its completion assertion. The strict checker rejects the
+missing complete DataStore result; neither the group nor the full profile is
+accepted. Its ten GL-020 actors still execute all 510 authority cases; their raw
+JSON assertions are checked separately without changing that strict rejection.
+
+A focused Windows diagnostic wraps the existing public `UpdateAsync` transform
+to print attempts while leaving the original `IncrementAsync`, comparison,
+backoff, helper and eight-attempt limit intact. One writer reads values 12
+through 19 on eight consecutive attempts while the other commits. It then
+raises `Conflict retry limit exceeded`; the other writer finishes. The wrapper
+alters scheduling and is diagnostic evidence, not a qualification substitute.
+This supports a bounded-conflict/fairness explanation. It does not establish a
+lost update, memory fault, helper crash or incorrect successful acknowledgment.
+
+ADR-005 explicitly permits conflict exhaustion. The current fixture nevertheless
+requires both unsynchronized twenty-increment writers to complete all operations
+and reach 40. Arbitrary interleaving cannot guarantee that with eight attempts.
+Guaranteeing fair completion would require a separately reviewed persistence
+admission/protocol change, or a separately approved qualification-contract change.
+Neither belongs in this host-lifetime correction, and weakening the fixture,
+increasing retries or rerunning until green would not resolve that conflict.
+**The smallest next investigation is the two-writer increment fairness/acceptance
+contract, followed by a complete Windows sanitizer rerun after its resolution.**
+
+An investigative Windows Debug `/O1` build instruments all 1,160 translation
+units with the matching compiler and keeps assertions enabled. Compared with
+the unchanged `/Od` build on the same selected local data filesystem, both
+DataStore groups pass, but both HTTP and HttpService groups fail frame/timing
+checks. An earlier comparison omitted the compiler environment and caused
+companion startup failures; that attempt is retained separately. The first
+experimental core run also exceeds the unchanged ten-second watchdog while
+writing its file-stress data on E:. A private diagnostic runner selecting C:
+working data passes all 80 cases with the same watchdogs. Neither `/O1` nor that
+private core-runner change is adopted: they do not demonstrate a reliable fix for
+the remaining qualification failure. The 250 ms frame bound, helper deadlines,
+retry count, test assertions and admitted build profile stay unchanged.
+
+### Historical leak and diagnostic limitations
+
+The original Linux report still records **29,400 bytes in 135 allocations**, with
+15 leaked ObjectDB instances, after missing imported meshes and a null
+`R6Animator` script error. Historical function symbolization identifies Node3D
+construction, metadata and instance-binding allocation paths. Extension frames
+are unavailable after unload; this does not identify one responsible source line.
+The complete corrected Linux profile does not reproduce the leak. Two additional
+sixteen-world controls, one with no rig assets and one with the original broken
+remaps, free the worlds, drain deferred work and exit without LSan findings or
+orphan-node output. Those controls explicitly clean up; they do not reproduce
+every early script-error exit path of the historical performance fixture.
+The historical leak remains unexplained beyond that narrowed setup/lifetime
+association and is not suppressed or declared universally fixed.
+
+A bounded GNU `objcopy` attempt on E: damaged a disposable diagnostic symbol copy.
+The original cache and raw GDB logs were preserved. Recovery uses the original
+host from the retained cache plus the complete GNU temporary symbol output;
+read-only ELF parsing verifies identical `.text` virtual addresses, 110,388,560
+text bytes and text SHA-256
+`541cb19d172caed5b613f1e936599a989508574175b212de7f6fb058244a44bb2`.
+Distinct full-file hashes and failed diagnostic attempts remain recorded.
+This recovery supplies function names only, not fresh execution or DWARF lines.
+An initial downloaded-harness audit also rejected Windows CRLF checkout bytes;
+the final audit checks the exact Git input or its explicit Windows CRLF conversion
+and separately verifies the normalized fixture identities. No runtime checker
+or acceptance assertion is relaxed by either diagnostic correction.
+
+### Hosted verification and retention
+
+All observations are terminal, rather than pending jobs labeled successful:
+
+| Source | Workflow | Actual outcome |
+| --- | --- | --- |
+| `0119017` | [Core 41396797875](https://github.com/gmoddev/GodotLuau/actions/runs/41396797875) | Windows/Linux 80 each |
+| `0119017` | [Native 41396797859](https://github.com/gmoddev/GodotLuau/actions/runs/41396797859) | Windows/Linux 110 each |
+| `0119017` | [Sanitizers 41396797854](https://github.com/gmoddev/GodotLuau/actions/runs/41396797854) | Both fail; unload controls pass; old asset/time/contention failures retained; Windows also rejects an old-life animation assertion |
+| `92659b` | [Core 41400476513](https://github.com/gmoddev/GodotLuau/actions/runs/41400476513) | Windows/Linux 80 each |
+| `92659b` | [Native 41400476618](https://github.com/gmoddev/GodotLuau/actions/runs/41400476618) | Windows/Linux 110 each |
+| `92659b` | [Sanitizers 41400476522](https://github.com/gmoddev/GodotLuau/actions/runs/41400476522) | Linux full PASS; Windows FAIL at DataStore increments |
+
+[Downloaded artifact verification](evidence/gl018-binding-retirement/latest-ci-verified.json)
+records all eight new artifact IDs/archive hashes, complete report/log hashes,
+source and fixture identities, ASan flags for every translation unit, matching
+host/extension compiler identity, actual GL-020 case execution and reported
+product hashes. Both core XML reports pass the existing strict discovery/output
+checker. Both ordinary native artifacts and the full Linux sanitizer artifact
+contain all 110 successful actor results. These evidence artifacts contain logs
+and provenance, not distributable native binaries: reported hosted binary hashes
+are not independently rehashed binaries or a reproducible-build claim.
+
+Windows LSan, stock-host unload safety, arbitrary live hot-unload/custom binding
+tokens, other engine/compiler profiles, GL-017, rendered/device/editor coverage,
+allocation-event profiling and complete historical early-error leak attribution
+remain outside acceptance. No fresh Windows/Linux Release profile is inferred
+from these Debug sanitizer runs. Existing normal Release evidence stays separate.
+
+All local execution uses DockerPC. Current warmed Linux host/native caches and
+ext-family profile data are archived with hashes on E: before removal of only
+the task-owned container and profile volume. Existing caches and failed attempts
+remain. Task native build/test processes are stopped; unrelated container IDs and
+states are checked unchanged. The recovered Docker backend had inherited the
+task's SSH job. Exact job membership/handle checks allow clearing only that job's
+kill-on-close dependency before closing the SSH control; Docker remains running.
+No persistent SSH/service policy or fixture process-job limit changes. Main stays
+`83cd0887968d73d61d050650718d8ada6e124579`, publication/updater remain disabled,
+and upstream is untouched. Work stops at this partial qualification and concrete
+persistence acceptance blocker, without merging or starting GL-017.

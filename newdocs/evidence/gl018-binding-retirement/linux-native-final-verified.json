@@ -1,0 +1,15 @@
+{
+  "Revision": "92659bae6cc5d7b321b075848b905e9d660b47df",
+  "NativeSource": {
+    "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "NativeActors": 110,
+  "VerifiedHarnessInputs": 73,
+  "VerifiedLogHashes": 280,
+  "UnexpectedLeaksSanitizersOrScriptErrors": [],
+  "ExtensionSHA256": "3886aca57e1314168651f0ac126fda5f556a92d75dc7d808b2135f620e6c87ce",
+  "WorkerSHA256": "9edfaac2bc5a91801cda3978bfda448ce21760c8832b67bdd004f7a86f794593",
+  "DiagnosticsScope": "The earlier broad ERROR audit also matched intentional RPC/ServerStorage/TLS rejection, teardown peer queries and unavailable fontconfig in official preprocessing. Full messages retained in linux-diagnostics-review.json and original logs; no checker or diagnostics were suppressed."
+}

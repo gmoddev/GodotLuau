@@ -963,6 +963,31 @@ hosted 23-actor DataStore group closes that supported-filesystem proof gap;
 the local disk failure, GDB record loss, Windows timing/contention limits and
 historical Linux leak remain explicit limitations. No full GL-018 closure is claimed.
 
+**Binding-retirement follow-up:** diagnostics `44fe8c2` and qualification-host
+correction `0119017` preserve the production tree and reproduce seven surviving
+engine-owned bindings on both platforms. A durable symbol-retaining Linux trace
+resolves the root Window teardown into an unmapped binding callback. The narrowly
+admitted host patch retires library-token bindings before unmapping; direct
+production registration/VM reload now exits cleanly on both corrected hosts,
+with intentional sanitizer detection retained. This is a derived qualification
+host correction, not an upstream/production engine change or a GL-017 fix.
+See the [mechanism and scope](native-sanitizer-qualification.md#binding-retirement-follow-up-from-dfa700a).
+Fixture correction `92659b` preserves all original rig identities in binary
+bundles and routes Linux storage through the admitted ext-family profile root.
+The corrected Linux full-native ASan/LSan profile passes all 80 core cases and
+110 native actors locally and in hosted CI. Windows hosted ASan passes 80 core
+and 87 actors in complete passing groups, including actual GL-020 transport
+fixtures; its 23-actor DataStore group fails at competing increments. A diagnostic
+trace captures eight consecutive conflicts while the other writer commits,
+matching ADR-005's bounded-retry failure rather than a sanitizer memory finding.
+The assertion still fails; no fairness guarantee or larger retry budget is added.
+Windows HTTP timing failures persist in separate local attempts even though the
+fresh hosted HTTP groups pass. Historical failures, including the 29,400-byte
+missing-rig leak report and an earlier hosted animation assertion, remain retained.
+GL-018 is **PARTIALLY QUALIFIED, OPEN**. Closure requires a separately reviewed
+resolution of the increment acceptance/fairness conflict and a complete clean
+Windows profile; see the [final outcomes and next step](native-sanitizer-qualification.md#qualification-outcome-and-remaining-blocker).
+
 ## GL-019: Shared-domain cached require and task overhead regresses
 
 **Original status: OPEN; measured P2 performance tradeoff.** Three counterbalanced Linux

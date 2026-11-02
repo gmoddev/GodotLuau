@@ -637,6 +637,18 @@ instance-binding callbacks after explicit library unload without GodotLuau;
 production unload and complete profile gates remain unqualified.
 It introduces no runtime ownership, capability, networking or distribution change.
 
+The subsequent [binding-retirement investigation](native-sanitizer-qualification.md#binding-retirement-follow-up-from-dfa700a)
+keeps the GodotLuau production tree unchanged and admits one hash-pinned patch
+to the instrumented qualification host. It retires surviving library-token
+bindings before unmapping the DLL/SO. These derived hosts are distinct from
+unmodified Godot and from any distributed engine; production distribution stays
+disabled. Direct production unload controls pass on both derived hosts. The
+corrected Linux profile passes 80 core cases and 110 native actors locally and
+in hosted CI. Windows remains incomplete because competing increments exhaust
+GL-009's existing eight-attempt conflict budget; no persistence semantics or
+qualification assertions were changed to obtain acceptance. Other retained
+sanitizer and graphical limitations remain separate.
+
 GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at
 `169fd98be216c4322f4c820c7d77f3081761982b`. A bounded read-only release/tag-absence
 preflight rejects reused identities before package/commit/publish; workflow

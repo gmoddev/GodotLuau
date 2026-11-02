@@ -1,0 +1,9 @@
+{
+  "Result": "PASS",
+  "RawArchiveFilesRehashed": 8895,
+  "RawArchiveSHA256": "ec6c5d4fd9ba61bef5bee41817543eaeaa06ea17c17de80b5fe20860cfe43312",
+  "SelectedFileHashesVerified": 12,
+  "ChangedMarkdownLinksResolved": true,
+  "JSONParsed": true,
+  "RuntimeTestsRunByThisCheck": false
+}

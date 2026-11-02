@@ -1,0 +1,34 @@
+{
+  "Issue": "GL-018",
+  "Classification": "PARTIALLY QUALIFIED",
+  "Closure": "OPEN",
+  "StartingBranch": "dfa700a833f1972b090e645df32e0eee1ccf2f82",
+  "Implementation": "92659bae6cc5d7b321b075848b905e9d660b47df",
+  "MainUnchanged": "83cd0887968d73d61d050650718d8ada6e124579",
+  "NativeSourceSHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+  "Scope": "Headless matching-host full-native ASan; Linux LSan enabled; Windows LSan unsupported. Qualification-host patch only; no production runtime source change from starting branch. Windows 110-actor acceptance is still blocked by bounded GL-009 conflicts.",
+  "Archive": {
+    "File": "raw-evidence.zip",
+    "SHA256": "ec6c5d4fd9ba61bef5bee41817543eaeaa06ea17c17de80b5fe20860cfe43312",
+    "Bytes": 25813507,
+    "VerifiedFiles": 8895,
+    "IndexEntry": "raw-files.json"
+  },
+  "DurableRoot": "E:\\Sandbox\\Codex\\NativeSanitizers\\retirement",
+  "ReleasesAndUpdater": "disabled",
+  "CollectedUTC": "2026-11-02T07:32:19Z",
+  "SelectedFiles": {
+    "final-cache-identities.json": "842ca85148cadeb372d255424b66e32df387e8de813574dd696a222efdf97a36",
+    "historical-leak-functions.txt": "9381b8beac0965f606bd0b7156a5815e16bf64aa0622349b1a844eb36ff3a047",
+    "historical-symbol-verification.json": "d137f40eb4d4d29c3a9417d483954b4ccd1f3898c3c38ead2cfe7554640ad22a",
+    "latest-ci-verified.json": "d87670fd687e481668fd5e92ada0b1dd40e7f5028853861fbe93b87ba5c3b9bf",
+    "linux-corrected-bindings.json": "0dde4617be24e633f1316e4fcff07f93445265bb483ea6f5682cfacd84b53a18",
+    "linux-native-final-verified.json": "df6ca46aaa2dbb165c5e7dd0b97ced5010a29489cc83cd2b1f2c3847ace00dcd",
+    "linux-original-bindings.json": "13324087bfa23d2e39d88d22a30eabe4571f0ba86373e0c88bf1d026b5ded8e6",
+    "linux-production-diagnostic.json": "287e8a76791e9625e5ab2b68e646d0ce49674de93b9bba9775d46c41b064932a",
+    "linux-production-gdb.log": "d9e326743e7854f87473fec5e4bf266258c63929508f56002f393e274fb565de",
+    "local-profile-verification.json": "c190b27e67326e1b8c62cd475578015737735ddb4700988ac3264811923b8cda",
+    "windows-corrected-bindings.json": "4ddb98c399314e450c121edc8e08dd10a6d5d12d70d9c854577eab5e0695149d",
+    "windows-original-bindings.json": "a566a88553e76c08fea343d83272c4fc9430438470865991b39bf7e24653cbe5"
+  }
+}

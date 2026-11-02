@@ -1,0 +1,55 @@
+{
+  "CapacityBefore": {
+    "C:/": {
+      "total": 998957592576,
+      "used": 993317392384,
+      "free": 5640200192
+    },
+    "E:/": {
+      "total": 2000396320768,
+      "used": 239335374848,
+      "free": 1761060945920
+    }
+  },
+  "Archives": [
+    {
+      "File": "linux-retirement-final-cache.tar.gz",
+      "SHA256": "6953cc1e9a62b5f119069c86df3fb625fb9e535e859a3ec88f041f961346d3f4",
+      "Bytes": 566076738,
+      "Command": [
+        "docker",
+        "exec",
+        "codex-gl018-retirement",
+        "tar",
+        "--use-compress-program=gzip -1",
+        "-cf",
+        "/evidence/linux-retirement-final-cache.tar.gz",
+        "-C",
+        "/work",
+        "fresh-asan",
+        "godot-host",
+        "godot-host-attempts",
+        "probes",
+        "retirement-probes",
+        "source"
+      ]
+    },
+    {
+      "File": "linux-profile-data.tar.gz",
+      "SHA256": "6089ba79f0a7254820a4ef9e4f00cc1a52c548d8bf33a3f7e7274efc9ec34170",
+      "Bytes": 13082791,
+      "Command": [
+        "docker",
+        "exec",
+        "codex-gl018-retirement",
+        "tar",
+        "--use-compress-program=gzip -1",
+        "-cf",
+        "/evidence/linux-profile-data.tar.gz",
+        "-C",
+        "/profiles",
+        "."
+      ]
+    }
+  ]
+}
