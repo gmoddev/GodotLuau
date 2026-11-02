@@ -920,6 +920,15 @@ engine/source reproduction in [validation](shared-domains-validation.md).
 
 ## GL-018: Windows full-native sanitizer host remains unqualified
 
+**Frame-progress follow-up:** the
+[HTTP timing investigation](gl018-http-frame-investigation.md) attributes the
+original failures to measured domain startup and an uninterrupted 2,000-UUID
+stress loop. A small fixture correction preserves 250 ms assertions, warms the
+measured domains and batches the sample workload. The corrected utility passes;
+an injected 350 ms stall is rejected at 441.823 ms. Local full groups still fail
+unchanged close-time storage assertions, so complete hosted qualification remains
+required. No production change or refactor is included; GL-018 remains OPEN.
+
 **2026-11-02 bounded-conflict correction:** the
 [focused work record](gl018-increment-qualification.md) identifies the increment
 fixture's unsupported fair-completion assumption. A small fixture-only change

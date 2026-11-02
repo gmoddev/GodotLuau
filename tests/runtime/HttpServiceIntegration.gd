@@ -138,6 +138,9 @@ for I=1,2000 do
     local G=H:GenerateGUID(false)
     assert(#G==36 and G:match('^%x%x%x%x%x%x%x%x%-%x%x%x%x%-4%x%x%x%-[89ab]%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$') and not Seen[G])
     GUIDs[I]=G; Seen[G]=true
+    -- This is a sample-size stress loop, not one indivisible API operation.
+    -- Keep measuring real frames without monopolizing one with 2,000 calls.
+    if I%32==0 then task.wait() end
 end
 assert(#H:GenerateGUID()==38 and H:GenerateGUID(true):sub(1,1)=='{' and not pcall(H.GenerateGUID,H,1))
 game:SetAttribute('GUIDs',table.concat(GUIDs,'\n'))
@@ -222,7 +225,11 @@ func Run() -> void:
         # Create this owner before its host, so it remains live during host exit.
         Prefix = "local H=game:GetService('HttpService'); local Store=game:GetService('DataStoreService'):GetDataStore('GL023'); game:BindToClose(function() assert(not H.HttpEnabled); assert(not pcall(H.GetAsync,H,game:GetAttribute('Origin')..'/forbidden/close')); Store:SetAsync('Close',23) end); "
     Script("Counter", Prefix + "while true do game:SetAttribute('Counter',(game:GetAttribute('Counter') or 0)+1); task.wait() end")
+    if Case == "denied":
+        Script("ClientWarmup", "game:SetAttribute('ClientWarm',true)", true)
     for Index in range(3): await process_frame
+    print("[Runtime:HttpServiceTest] Startup peak frame gap seconds=", PeakGap)
+    PeakGap = 0.0
     LastFrame = Time.get_ticks_usec()
     if Case == "api": await Api()
     elif Case == "denied": await Denied()
