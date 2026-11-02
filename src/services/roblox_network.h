@@ -306,6 +306,23 @@ class NetworkService : public Node {
     Ref<ENetMultiplayerPeer> peer;
     int  mode = 0;   // 0 = SinglePlayer, 1 = Host/Server, 2 = Client
     bool signals_bound = false;
+    struct RemotePeer { int64_t User = 0; bool Ready = false; };
+    struct RemotePublication {
+        uint64_t Object = 0, LocalGeneration = 0, Scope = 0;
+        int64_t Endpoint = 0, Generation = 0, NetId = 0;
+        int Delivery = 0;
+        String Path;
+        bool Bound = false, Active = false, Legacy = false;
+        std::map<int, RemotePeer> Peers;
+    };
+    std::map<int64_t, RemotePublication> RemotePublications;
+    std::map<String, uint64_t> RemoteBootstrap;
+    uint64_t RemoteScopeRoots[3] = {};
+    int64_t RemoteEpoch = 0, NextRemoteEndpoint = 1, HighestRemoteEndpoint = 0;
+    uint64_t RemoteRejected = 0, RemoteDelivered = 0;
+    struct RemoteBudget { int Messages = 0, Bytes = 0; };
+    std::map<int, RemoteBudget> RemoteBudgets;
+    RemoteBudget RemoteAggregate;
     std::vector<NCB> pc_cbs, pd_cbs, conn_cbs, fail_cbs;
 
     // Auto-arranque local
@@ -900,9 +917,20 @@ private:
         String pname = String("Player_") + String::num_int64(peer);
         po->set_name(pname);
         po->display_name = pname;
+        const uint64_t ServiceIdentity = uint64_t(get_instance_id()), PlayersIdentity = uint64_t(ps->get_instance_id());
+        const uint64_t PlayerIdentity = uint64_t(po->get_instance_id());
+        // Native child callbacks may reenter lookup or retire this service.
+        // Reserve the existing map identity before publishing the child.
+        peer_player_ids[peer] = PlayerIdentity;
         ps->add_child(po);
+        if (ObjectDB::get_instance(ServiceIdentity) != this) return nullptr;
+        po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+        ps = Object::cast_to<Players>(ObjectDB::get_instance(PlayersIdentity));
+        if (!po || !ps || po->is_queued_for_deletion() || !po->is_inside_tree()) return nullptr;
         ps->ensure_player_containers(po);   // PlayerGui/Backpack/PlayerScripts (1.14.10)
-        peer_player_ids[peer] = (uint64_t)po->get_instance_id();
+        if (ObjectDB::get_instance(ServiceIdentity) != this) return nullptr;
+        po = Object::cast_to<PlayerObject>(ObjectDB::get_instance(PlayerIdentity));
+        if (!po || po->is_queued_for_deletion() || !po->is_inside_tree() || !peer_player_ids.count(peer) || peer_player_ids.at(peer) != PlayerIdentity) return nullptr;
         return po;
     }
 
@@ -1087,9 +1115,13 @@ private:
         rpc_config("_recv_anim_v2", ServerReliable);
         // RemoteEvent por red (Fase 2): confiables y no-confiables, ambos sentidos
         rpc_config("_re_deliver_server",  r);
-        rpc_config("_re_deliver_client",  r);
+        rpc_config("_re_deliver_client",  ServerReliable);
         rpc_config("_ure_deliver_server", u);
-        rpc_config("_ure_deliver_client", u);
+        rpc_config("_ure_deliver_client", ServerUnreliable);
+        rpc_config("_remote_descriptor", ServerReliable);
+        rpc_config("_remote_ack", r);
+        rpc_config("_remote_active", ServerReliable);
+        rpc_config("_remote_retire", ServerReliable);
         rpc_config("_gl_assign",          r);   // coordinador → cliente: ve a este mundo
         rpc_config("_rep_new",            r);   // replicación (1.14.5): crear instancia
         rpc_config("_rep_prop",           r);   // replicación: cambio de propiedad
@@ -1633,14 +1665,19 @@ protected:
         ClassDB::bind_method(D_METHOD("is_client"),                                 &NetworkService::is_client);
         ClassDB::bind_method(D_METHOD("get_mode"),                                  &NetworkService::get_mode);
         ClassDB::bind_method(D_METHOD("get_peer_id"),                               &NetworkService::get_peer_id);
-        ClassDB::bind_method(D_METHOD("net_send_event", "path", "args", "target", "reliable"), &NetworkService::net_send_event);
+        ClassDB::bind_method(D_METHOD("NetSendRemote", "remote", "args", "target"), &NetworkService::NetSendRemote);
+        ClassDB::bind_method(D_METHOD("GetRemoteState", "remote"), &NetworkService::GetRemoteState);
         ClassDB::bind_method(D_METHOD("player_node_for_peer", "peer"),              &NetworkService::player_node_for_peer);
         ClassDB::bind_method(D_METHOD("peer_for_player_node", "player"),            &NetworkService::peer_for_player_node);
         ClassDB::bind_method(D_METHOD("get_players_roster"),                        &NetworkService::get_players_roster);
-        ClassDB::bind_method(D_METHOD("_re_deliver_server", "path", "args"),        &NetworkService::_re_deliver_server);
-        ClassDB::bind_method(D_METHOD("_re_deliver_client", "path", "args"),        &NetworkService::_re_deliver_client);
-        ClassDB::bind_method(D_METHOD("_ure_deliver_server", "path", "args"),       &NetworkService::_ure_deliver_server);
-        ClassDB::bind_method(D_METHOD("_ure_deliver_client", "path", "args"),       &NetworkService::_ure_deliver_client);
+        ClassDB::bind_method(D_METHOD("_re_deliver_server", "frame"), &NetworkService::_re_deliver_server);
+        ClassDB::bind_method(D_METHOD("_re_deliver_client", "frame"), &NetworkService::_re_deliver_client);
+        ClassDB::bind_method(D_METHOD("_ure_deliver_server", "frame"), &NetworkService::_ure_deliver_server);
+        ClassDB::bind_method(D_METHOD("_ure_deliver_client", "frame"), &NetworkService::_ure_deliver_client);
+        ClassDB::bind_method(D_METHOD("_remote_descriptor", "descriptor"), &NetworkService::_remote_descriptor);
+        ClassDB::bind_method(D_METHOD("_remote_ack", "epoch", "user", "endpoint", "generation"), &NetworkService::_remote_ack);
+        ClassDB::bind_method(D_METHOD("_remote_active", "epoch", "user", "endpoint", "generation"), &NetworkService::_remote_active);
+        ClassDB::bind_method(D_METHOD("_remote_retire", "epoch", "user", "endpoint", "generation"), &NetworkService::_remote_retire);
         // Replicación automática (1.14.5)
         ClassDB::bind_method(D_METHOD("_rep_new", "id", "gclass", "name", "parent_ref", "props"), &NetworkService::_rep_new);
         ClassDB::bind_method(D_METHOD("_rep_prop", "id", "key", "enc"),             &NetworkService::_rep_prop);
@@ -1724,6 +1761,8 @@ public:
         peer_player_ids.erase(id);
     }
     void _on_peer_disconnected(int id) {
+        RemoteBudgets.erase(id);
+        for (auto& Entry : RemotePublications) Entry.second.Peers.erase(id);
         ChatBudgets.erase(id);
         AnimationBudgets.erase(id);
         CharacterAuthorities.erase(id); ReadyAdmissions.erase(id); ResetRequests.erase(id); ReparentAnimations.erase(id); CharacterSnapshots.erase(id);
@@ -1764,49 +1803,381 @@ public:
     // ── RemoteEvent por red (Fase 2) ─────────────────────────────────────
     // Lo llama RemoteEventNode vía call(). target: 0 = al servidor,
     // -1 = a todos los clientes, >0 = a un peer concreto.
-    void net_send_event(const String& path, const Array& args, int target, bool reliable) {
-        const char* m_srv = reliable ? "_re_deliver_server" : "_ure_deliver_server";
-        const char* m_cli = reliable ? "_re_deliver_client" : "_ure_deliver_client";
-        // La red puede no estar lista cuando un script dispara un RemoteEvent al
-        // arrancar: en Roblox el cliente ya está replicado antes de correr scripts,
-        // pero aquí los scripts corren mientras ENet aún negocia la conexión. Sin
-        // esta guarda, rpc_id lanzaría "peer not connected". Ignoramos el envío.
-        Ref<MultiplayerAPI> m = _mp();
-        if (m.is_null() || !m->has_multiplayer_peer()) return;
-        if (target == 0) {
-            if (mode == 2 && !net_connected) return;   // cliente aún conectándose al host
-            rpc_id(1, m_srv, path, args);
-        } else if (target == -1) {
-            rpc(m_cli, path, args);                     // servidor → todos (0 peers = no-op)
-        } else {
-            if (!m->get_peers().has(target)) return;    // ese peer ya no está conectado
-            rpc_id(target, m_cli, path, args);
+    static int64_t NewRemoteEpoch() {
+        static int64_t Serial = int64_t(Time::get_singleton()->get_ticks_usec());
+        return Serial < INT64_MAX ? ++Serial : 0;
+    }
+    bool RemoteServiceActive() {
+        Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+        return gl_net_service_id() == uint64_t(get_instance_id()) && Scene && Scene->is_ancestor_of(this) && !is_queued_for_deletion();
+    }
+    RemoteEventNode* LiveRemote(const RemotePublication& Publication) {
+        auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Publication.Object));
+        Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+        return RemoteServiceActive() && Remote && Scene && Scene->is_ancestor_of(Remote) && Remote->GetScope() && Remote->GetScope() == Publication.Scope &&
+            Remote->Generation == Publication.LocalGeneration && Remote->GetDeliveryType() == Publication.Delivery ? Remote : nullptr;
+    }
+    bool ResetRemotes() {
+        auto Retired = std::move(RemotePublications);
+        RemotePublications.clear(); RemoteBootstrap.clear(); RemoteBudgets.clear(); RemoteAggregate = RemoteBudget();
+        for (auto& Root : RemoteScopeRoots) Root = 0;
+        RemoteEpoch = 0; NextRemoteEndpoint = 1; HighestRemoteEndpoint = 0;
+        uint64_t ServiceIdentity = uint64_t(get_instance_id());
+        for (auto& Entry : Retired) {
+            if (auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Entry.second.Object))) Remote->CancelWaits();
+            if (ObjectDB::get_instance(ServiceIdentity) != this) return false;
+        }
+        return true;
+    }
+    void CaptureRemoteBootstrap() {
+        Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+        const char* Names[] = {"ReplicatedStorage", "Workspace", "Teams"};
+        for (int Index = 0; Scene && Index < 3; ++Index) {
+            Node* Root = Scene->get_node_or_null(NodePath(Names[Index]));
+            if (!Root && Index == 1 && (Scene->is_class("RobloxWorkspace") || Scene->is_class("RobloxWorkspace2D"))) Root = Scene;
+            RemoteScopeRoots[Index] = Root ? uint64_t(Root->get_instance_id()) : 0;
+        }
+        for (auto Identity : RemoteEventNode::Registry()) {
+            auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Identity));
+            Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+            if (Remote && Scene && Scene->is_ancestor_of(Remote) && Remote->BootstrapEligible && Remote->GetScope()) RemoteBootstrap[String(Remote->get_path())] = Identity;
         }
     }
-    void _deliver_event(const String& path, const Array& args, bool to_server) {
-        if (!is_inside_tree()) return;
-        // Autoridad (como Roblox): OnServerEvent solo se dispara en el servidor;
-        // OnClientEvent solo si el emisor es el servidor (peer 1). Evita que un
-        // cliente modificado falsifique eventos por RPC crudo saltándose el sandbox.
-        if (to_server) { if (!is_server()) return; }
-        else           { if (get_multiplayer()->get_remote_sender_id() != 1) return; }
-        RemoteEventNode* rev = Object::cast_to<RemoteEventNode>(get_node_or_null(NodePath(path)));
-        if (!rev) return;
-        if (to_server) {
-            int sid = get_multiplayer()->get_remote_sender_id();
-            // Como Roblox: OnServerEvent SIEMPRE recibe un Player válido. El objeto
-            // Player de un peer se crea perezosamente al llegar su personaje, pero un
-            // cliente puede FireServer antes de eso (p.ej. "ClienteListo" al arrancar).
-            // _ensure_peer_player lo crea en el acto para que el emisor nunca sea nil.
-            rev->deliver_to_server_cbs(args, _ensure_peer_player(sid), this);
-        } else {
-            rev->deliver_to_client_cbs(args, this);
+    bool BindRemote(RemotePublication& Publication) {
+        if (Publication.Bound) return LiveRemote(Publication) != nullptr;
+        Node* Candidate = Publication.NetId ? _rep_node(uint64_t(Publication.NetId)) : nullptr;
+        if (!Publication.NetId) {
+            auto Found = RemoteBootstrap.find(Publication.Path);
+            if (Found != RemoteBootstrap.end()) Candidate = Object::cast_to<Node>(ObjectDB::get_instance(Found->second));
+        }
+        auto Remote = Object::cast_to<RemoteEventNode>(Candidate);
+        if (!Remote || !Remote->GetScope() || Remote->is_class("UnreliableRemoteEventNode") != Publication.Legacy) return false;
+        if (Publication.Legacy && Publication.Delivery != 1) return false;
+        Remote->ApplyDescriptor(Publication.Delivery);
+        Publication.Object = uint64_t(Remote->get_instance_id()); Publication.Scope = Remote->GetScope();
+        Publication.LocalGeneration = Remote->Generation; Publication.Bound = true;
+        rpc_id(1, "_remote_ack", RemoteEpoch, gl_local_user_id(), Publication.Endpoint, Publication.Generation);
+        return true;
+    }
+    void TickRemotes() {
+        if (mode == 0 || !RemoteServiceActive() || is_coordinator) return;
+        std::vector<uint64_t> Retired;
+        for (auto Iterator = RemotePublications.begin(); Iterator != RemotePublications.end();) {
+            auto& Publication = Iterator->second;
+            if (mode == 1) {
+                auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Publication.Object));
+                if (Remote && !Remote->Frozen) Publication.Delivery = Remote->GetDeliveryType();
+            }
+            if (mode == 2 && !Publication.Bound) { BindRemote(Publication); ++Iterator; continue; }
+            if (!LiveRemote(Publication)) {
+                if (mode == 1) for (const auto& Peer : Publication.Peers)
+                    if (_mp()->get_peers().has(Peer.first)) rpc_id(Peer.first, "_remote_retire", RemoteEpoch, Peer.second.User, Publication.Endpoint, Publication.Generation);
+                Retired.push_back(Publication.Object);
+                Iterator = RemotePublications.erase(Iterator);
+            } else ++Iterator;
+        }
+        uint64_t ServiceIdentity = uint64_t(get_instance_id());
+        for (auto Identity : Retired) {
+            if (auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Identity))) Remote->CancelWaits();
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+        }
+        if (mode != 1 || !is_server() || !RemoteEpoch) return;
+        std::unordered_set<uint64_t> Published;
+        for (const auto& Entry : RemotePublications) Published.insert(Entry.second.Object);
+        for (auto Identity : RemoteEventNode::Registry()) {
+            auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Identity));
+            if (!Remote || !Remote->ServerAdmitted || !Remote->GetScope()) continue;
+            if (Published.count(Identity) || RemotePublications.size() >= 4096 || NextRemoteEndpoint == INT64_MAX) continue;
+            // Only this service's scene may publish endpoints.
+            Node* Scene = get_tree()->get_current_scene();
+            if (!Scene || !Scene->is_ancestor_of(Remote)) continue;
+            RemotePublication Publication;
+            Publication.Object = Identity; Publication.Scope = Remote->GetScope(); Publication.LocalGeneration = Remote->Generation;
+            Publication.Endpoint = NextRemoteEndpoint++; Publication.Generation = Publication.Endpoint;
+            Publication.Delivery = Remote->GetDeliveryType(); Publication.Legacy = Remote->is_class("UnreliableRemoteEventNode");
+            Publication.NetId = Remote->has_meta("_gl_netid") ? int64_t(Remote->get_meta("_gl_netid")) : 0;
+            Publication.Path = String(Remote->get_path()); Publication.Bound = true;
+            RemotePublications.emplace(Publication.Endpoint, Publication);
+        }
+        int Offered = 0;
+        for (auto& Entry : RemotePublications) for (const auto& Peer : peer_seq_uid) {
+            if (Peer.first <= 1 || !_mp()->get_peers().has(Peer.first) || Entry.second.Peers.count(Peer.first)) continue;
+            if (++Offered > 64) return; // Bounded descriptor production per tick.
+            auto& Publication = Entry.second;
+            if (auto Remote = LiveRemote(Publication)) Remote->Frozen = true;
+            Publication.Peers[Peer.first] = {Peer.second, false};
+            Array Descriptor;
+            Descriptor.push_back(RemoteEpoch); Descriptor.push_back(Peer.second); Descriptor.push_back(Publication.Endpoint);
+            Descriptor.push_back(Publication.Generation); Descriptor.push_back(Publication.NetId); Descriptor.push_back(Publication.Path);
+            Descriptor.push_back(Publication.Delivery); Descriptor.push_back(Publication.Legacy);
+            rpc_id(Peer.first, "_remote_descriptor", Descriptor);
         }
     }
-    void _re_deliver_server(String path, Array args)  { _deliver_event(path, args, true); }
-    void _re_deliver_client(String path, Array args)  { _deliver_event(path, args, false); }
-    void _ure_deliver_server(String path, Array args) { _deliver_event(path, args, true); }
-    void _ure_deliver_client(String path, Array args) { _deliver_event(path, args, false); }
+    static bool PositiveRemoteInteger(const Variant& Value) { return Value.get_type() == Variant::INT && int64_t(Value) > 0; }
+    void _remote_descriptor(const Variant& Input) {
+        if (!RemoteServiceActive() || !AcceptServerRpc() || Input.get_type() != Variant::ARRAY) { ++RemoteRejected; return; }
+        Array Descriptor = Input;
+        if (Descriptor.size() != 8) { ++RemoteRejected; return; }
+        for (int Index = 0; Index < 4; ++Index) if (!PositiveRemoteInteger(Descriptor[Index])) { ++RemoteRejected; return; }
+        if (Descriptor[4].get_type() != Variant::INT || Descriptor[5].get_type() != Variant::STRING ||
+            Descriptor[6].get_type() != Variant::INT || Descriptor[7].get_type() != Variant::BOOL ||
+            String(Descriptor[5]).length() > 1024 || (int64_t(Descriptor[6]) != 0 && int64_t(Descriptor[6]) != 1) ||
+            int64_t(Descriptor[1]) != gl_local_user_id() || (RemoteEpoch && RemoteEpoch != int64_t(Descriptor[0]))) { ++RemoteRejected; return; }
+        RemoteEpoch = Descriptor[0];
+        int64_t Endpoint = Descriptor[2];
+        // No replay or replacement may rebind an existing publication.
+        if (Endpoint <= HighestRemoteEndpoint || RemotePublications.size() >= 4096) { ++RemoteRejected; return; }
+        HighestRemoteEndpoint = Endpoint;
+        RemotePublication Publication;
+        Publication.Endpoint = Endpoint; Publication.Generation = Descriptor[3]; Publication.NetId = Descriptor[4];
+        Publication.Path = Descriptor[5]; Publication.Delivery = int64_t(Descriptor[6]); Publication.Legacy = Descriptor[7];
+        RemotePublications.emplace(Endpoint, Publication);
+        BindRemote(RemotePublications.at(Endpoint));
+    }
+    bool MatchRemoteControl(const Variant& Epoch, const Variant& User, const Variant& Endpoint, const Variant& Generation) {
+        if (!PositiveRemoteInteger(Epoch) || !PositiveRemoteInteger(User) || !PositiveRemoteInteger(Endpoint) || !PositiveRemoteInteger(Generation) ||
+            int64_t(Epoch) != RemoteEpoch) return false;
+        auto Found = RemotePublications.find(int64_t(Endpoint));
+        return Found != RemotePublications.end() && Found->second.Generation == int64_t(Generation) && LiveRemote(Found->second);
+    }
+    void _remote_ack(const Variant& Epoch, const Variant& User, const Variant& Endpoint, const Variant& Generation) {
+        int Sender = GetClientRpcSender();
+        if (!Sender || !MatchRemoteControl(Epoch, User, Endpoint, Generation) || peer_seq_uid.at(Sender) != int64_t(User)) { ++RemoteRejected; return; }
+        auto& Publication = RemotePublications.at(int64_t(Endpoint));
+        auto Found = Publication.Peers.find(Sender);
+        if (Found == Publication.Peers.end() || Found->second.User != int64_t(User) || Found->second.Ready) { ++RemoteRejected; return; }
+        Found->second.Ready = true;
+        rpc_id(Sender, "_remote_active", Epoch, User, Endpoint, Generation);
+    }
+    void _remote_active(const Variant& Epoch, const Variant& User, const Variant& Endpoint, const Variant& Generation) {
+        if (!AcceptServerRpc() || !MatchRemoteControl(Epoch, User, Endpoint, Generation) || int64_t(User) != gl_local_user_id()) { ++RemoteRejected; return; }
+        RemotePublications.at(int64_t(Endpoint)).Active = true;
+    }
+    void _remote_retire(const Variant& Epoch, const Variant& User, const Variant& Endpoint, const Variant& Generation) {
+        if (!RemoteServiceActive() || !AcceptServerRpc() || !PositiveRemoteInteger(Epoch) || !PositiveRemoteInteger(User) || !PositiveRemoteInteger(Endpoint) ||
+            !PositiveRemoteInteger(Generation) || int64_t(Epoch) != RemoteEpoch || int64_t(User) != gl_local_user_id()) { ++RemoteRejected; return; }
+        auto Found = RemotePublications.find(int64_t(Endpoint));
+        if (Found == RemotePublications.end() || Found->second.Generation != int64_t(Generation)) { ++RemoteRejected; return; }
+        uint64_t Identity = Found->second.Object;
+        RemotePublications.erase(Found);
+        if (auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Identity))) Remote->CancelWaits();
+    }
+    bool VisibleRemoteReference(Node* Reference) {
+        Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+        if (!Reference || !Scene || (Reference != Scene && !Scene->is_ancestor_of(Reference)) || !Reference->is_inside_tree() || Reference->is_queued_for_deletion()) return false;
+        bool Visible = false;
+        for (Node* Parent = Reference; Parent; Parent = Parent->get_parent()) {
+            StringName Name = Parent->get_name();
+            if (Name == StringName("ServerStorage") || Name == StringName("ServerScriptService") ||
+                Parent->is_class("ServerStorage") || Parent->is_class("ServerScriptService")) return false;
+            if (Name == StringName("ReplicatedStorage") || Name == StringName("Workspace") || Name == StringName("Teams") ||
+                Parent->is_class("RobloxWorkspace") || Parent->is_class("RobloxWorkspace2D")) Visible = true;
+        }
+        return Visible;
+    }
+    PlayerObject* RemotePlayer(int Peer, int64_t User, bool Materialize = false) {
+        if (!peer_seq_uid.count(Peer) || peer_seq_uid.at(Peer) != User || (mode == 1 && is_dedicated && Peer == 1)) return nullptr;
+        Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+        Players* PlayersService = _players_service();
+        if (!Scene || !PlayersService || !Scene->is_ancestor_of(PlayersService)) return nullptr;
+        PlayerObject* Player = _peer_player(Peer);
+        if (Peer == _my_peer_id()) {
+            for (int Index = 0; Index < PlayersService->get_child_count(); ++Index) {
+                auto Candidate = Object::cast_to<PlayerObject>(PlayersService->get_child(Index));
+                if (Candidate && Candidate->is_local) { Player = Candidate; break; }
+            }
+        } else if (!Player && Materialize) Player = _ensure_peer_player(Peer);
+        return Player && Player->is_inside_tree() && !Player->is_queued_for_deletion() && Player->user_id == User ? Player : nullptr;
+    }
+    bool RemoteReferences(Variant& Value, bool Receiving, int Depth = 0, bool Tagged = true, bool CapturePlayers = false) {
+        if (Depth >= GLRemotePayload::MaxDepth) return false;
+        if (Value.get_type() == Variant::ARRAY) {
+            Array Values = Value;
+            for (int Index = 0; Index < Values.size(); ++Index) {
+                Variant Item = Values[Index]; if (!RemoteReferences(Item, Receiving, Depth + 1, true, CapturePlayers)) return false; Values[Index] = Item;
+            }
+        } else if (Value.get_type() == Variant::DICTIONARY) {
+            Dictionary Values = Value;
+            String Tag;
+            if (Tagged && Values.has("__glnet")) {
+                if (Values["__glnet"].get_type() != Variant::STRING) return false;
+                Tag = Values["__glnet"];
+                if (CapturePlayers && Tag == "remoteinst") return true; // Already validated and captured, never accepted from wire.
+                if (CapturePlayers && Tag == "remoteplayer") {
+                    uint64_t ServiceIdentity = uint64_t(get_instance_id());
+                    Node* Player = RemotePlayer(int64_t(Values["peer"]), int64_t(Values["user"]), true);
+                    if (ObjectDB::get_instance(ServiceIdentity) != this || !Player) return false;
+                    Value = _gl_inst_dict(Player); return true;
+                }
+                if (Tag == "scope") {
+                    if (Values.size() != 2 || Values["index"].get_type() != Variant::INT) return false;
+                    int64_t Index = Values["index"];
+                    if (Index < 0 || Index >= 3) return false;
+                    Node* Root = Object::cast_to<Node>(ObjectDB::get_instance(RemoteScopeRoots[Index]));
+                    if (!VisibleRemoteReference(Root)) return false;
+                    if (Receiving) Value = _gl_inst_dict(Root);
+                    return true;
+                }
+                if (Tag == "player") {
+                    if (Values.size() != 3 || !PositiveRemoteInteger(Values["peer"]) || !PositiveRemoteInteger(Values["user"]) || int64_t(Values["peer"]) > INT32_MAX) return false;
+                    int Peer = int64_t(Values["peer"]); int64_t User = Values["user"];
+                    if (!peer_seq_uid.count(Peer) || peer_seq_uid.at(Peer) != User || (mode == 1 && is_dedicated && Peer == 1)) return false;
+                    if (Receiving) {
+                        // Materialization happens only after the entire payload
+                        // validates. A later invalid reference cannot create Players.
+                        Dictionary Pending; Pending["__glnet"] = "remoteplayer"; Pending["peer"] = Peer; Pending["user"] = User;
+                        Value = Pending;
+                    }
+                    return true;
+                }
+                if (Tag == "inst") {
+                    if (!Values.has("id") || Values["id"].get_type() != Variant::INT) return false;
+                    if (!int64_t(Values["id"])) {
+                        if (Receiving || Values["p"].get_type() != Variant::STRING) return false;
+                        Node* Reference = get_node_or_null(NodePath(String(Values["p"])));
+                        if (!Reference || !Reference->is_inside_tree() || Reference->is_queued_for_deletion()) return false;
+                        for (int Index = 0; Index < 3; ++Index) if (RemoteScopeRoots[Index] && RemoteScopeRoots[Index] == uint64_t(Reference->get_instance_id())) {
+                            if (!VisibleRemoteReference(Reference)) return false;
+                            Dictionary Scope; Scope["__glnet"] = "scope"; Scope["index"] = Index; Value = Scope; return true;
+                        }
+                        if (auto Player = Object::cast_to<PlayerObject>(Reference)) for (const auto& Peer : peer_seq_uid)
+                            if (RemotePlayer(Peer.first, Peer.second) == Player) {
+                                Dictionary Encoded; Encoded["__glnet"] = "player"; Encoded["peer"] = Peer.first; Encoded["user"] = Peer.second;
+                                Value = Encoded; return true;
+                            }
+                        return false;
+                    }
+                    Node* Reference = _rep_node(uint64_t(int64_t(Values["id"])));
+                    if (!VisibleRemoteReference(Reference)) return false;
+                    Dictionary Encoded;
+                    if (Receiving) { Encoded["__glnet"] = "remoteinst"; Encoded["oid"] = int64_t(Reference->get_instance_id()); }
+                    else { Encoded["__glnet"] = "inst"; Encoded["id"] = Values["id"]; }
+                    Value = Encoded; return true;
+                }
+                if (Tag != "typed" && Tag != "rawdict") return false;
+                if (Tag == "typed" && (!Values.has("t") || Values["t"].get_type() != Variant::STRING || String(Values["t"]).length() > 64 ||
+                    !GLRemotePayload::SupportedType(String(Values["t"])) ||
+                    !Values.has("f") || Values["f"].get_type() != Variant::DICTIONARY)) return false;
+                if (Tag == "rawdict" && (!Values.has("d") || Values["d"].get_type() != Variant::DICTIONARY)) return false;
+            }
+            Array Keys = Values.keys();
+            for (int Index = 0; Index < Keys.size(); ++Index) {
+                Variant Key = Keys[Index], Item = Values[Key];
+                bool Inner = !((Tag == "rawdict" && Key == Variant("d")) || (Tag == "typed" && Key == Variant("f")));
+                if (!RemoteReferences(Item, Receiving, Depth + 1, Inner, CapturePlayers)) return false; Values[Key] = Item;
+            }
+        }
+        return true;
+    }
+    String NetSendRemote(Object* ObjectValue, const Array& Arguments, int Target) {
+        auto Remote = Object::cast_to<RemoteEventNode>(ObjectValue);
+        if (!RemoteServiceActive() || !Remote || !Remote->GetScope() ||
+            ((Target != 0) && (mode != 1 || GLExecutionDomain::IsClientExecution())) || ((Target == 0) && mode != 2)) return "[Network:Remote] Invalid sender role or endpoint";
+        TickRemotes();
+        RemotePublication* Publication = nullptr;
+        for (auto& Entry : RemotePublications) if (Entry.second.Object == uint64_t(Remote->get_instance_id()) && LiveRemote(Entry.second)) { Publication = &Entry.second; break; }
+        if (!Publication) return "[Network:Remote] Remote not ready";
+        if (Arguments.size() > GLRemotePayload::MaxArguments) return "[Network:Remote] Too many arguments";
+        GLRemotePayload::Codec Preflight; Preflight.Value(Arguments);
+        if (!Preflight.Valid) return "[Network:Remote] Invalid or oversized payload";
+        Variant Body = Arguments.duplicate(true);
+        if (!RemoteReferences(Body, false)) return "[Network:Remote] Invalid or unpublished reference";
+        GLRemotePayload::Codec Payload; Payload.Value(Body);
+        if (!Payload.Valid || Payload.Bytes.size() > GLRemotePayload::MaxBytes - 40 || (Publication->Delivery == 1 && Payload.Bytes.size() > GLRemotePayload::UnreliableBytes)) return "[Network:Remote] Payload exceeds delivery limits";
+        std::vector<int> Targets;
+        if (mode == 2) {
+            if (!net_connected || !Publication->Active) return "[Network:Remote] Remote not ready";
+            Targets.push_back(1);
+        } else for (const auto& Peer : peer_seq_uid) {
+            if (Peer.first <= 1 || (Target > 0 && Target != Peer.first)) continue;
+            auto Found = Publication->Peers.find(Peer.first);
+            if (Found == Publication->Peers.end() || !Found->second.Ready || Found->second.User != Peer.second || !_mp()->get_peers().has(Peer.first))
+                return "[Network:Remote] Remote peer not ready";
+            Targets.push_back(Peer.first);
+        }
+        if (Target > 0 && Targets.empty()) return "[Network:Remote] Remote peer unavailable";
+        for (int Peer : Targets) {
+            GLRemotePayload::Codec Frame;
+            Frame.Word(0x31524547, 4); Frame.Word(Publication->Delivery, 4); Frame.Word(RemoteEpoch);
+            Frame.Word(mode == 2 ? gl_local_user_id() : peer_seq_uid.at(Peer)); Frame.Word(Publication->Endpoint); Frame.Word(Publication->Generation);
+            Frame.Bytes.append_array(Payload.Bytes);
+            const char* Method = mode == 2 ? (Publication->Delivery ? "_ure_deliver_server" : "_re_deliver_server") :
+                (Publication->Delivery ? "_ure_deliver_client" : "_re_deliver_client");
+            if (rpc_id(Peer, Method, Frame.Bytes) != OK) return "[Network:Remote] Transport rejected event";
+        }
+        return String();
+    }
+    void ReceiveRemote(const Variant& Input, bool Server, int Delivery) {
+        if (!RemoteServiceActive()) { ++RemoteRejected; return; }
+        int Sender = Server ? GetClientRpcSender() : (AcceptServerRpc() ? 1 : 0);
+        if (!Sender || Input.get_type() != Variant::PACKED_BYTE_ARRAY) { ++RemoteRejected; return; }
+        PackedByteArray Bytes = Input;
+        if (Bytes.size() < 45 || Bytes.size() > GLRemotePayload::MaxBytes || (Delivery && Bytes.size() > GLRemotePayload::UnreliableBytes + 40)) { ++RemoteRejected; return; }
+        GLRemotePayload::Codec Frame; Frame.Bytes = Bytes; Frame.Reading = true;
+        int64_t AdmittedEpoch = RemoteEpoch, AdmittedUser = Server ? peer_seq_uid.at(Sender) : gl_local_user_id();
+        if (Frame.Word(0, 4) != 0x31524547 || Frame.Word(0, 4) != uint64_t(Delivery) || Frame.Word() != uint64_t(AdmittedEpoch) ||
+            Frame.Word() != uint64_t(AdmittedUser)) { ++RemoteRejected; return; }
+        int64_t Endpoint = int64_t(Frame.Word()), Generation = int64_t(Frame.Word());
+        auto Found = RemotePublications.find(Endpoint);
+        if (Found == RemotePublications.end() || Found->second.Generation != Generation || Found->second.Delivery != Delivery || !LiveRemote(Found->second)) { ++RemoteRejected; return; }
+        auto& Publication = Found->second;
+        if (Server) {
+            auto Peer = Publication.Peers.find(Sender);
+            if (Peer == Publication.Peers.end() || !Peer->second.Ready || Peer->second.User != peer_seq_uid.at(Sender)) { ++RemoteRejected; return; }
+        } else if (!Publication.Active) { ++RemoteRejected; return; }
+        auto& Budget = RemoteBudgets[Sender];
+        if (Budget.Messages >= 256 || Budget.Bytes > 1024 * 1024 - Bytes.size() || RemoteAggregate.Messages >= 2048 || RemoteAggregate.Bytes > 8 * 1024 * 1024 - Bytes.size()) {
+            ++RemoteRejected;
+            // Phase 1 has no reliable retry queue. A receiver unable to admit
+            // reliable work terminates that connection, rather than silently
+            // losing accepted events on a supposedly healthy stream.
+            if (!Delivery && peer.is_valid()) peer->disconnect_peer(Sender);
+            return;
+        }
+        ++Budget.Messages; Budget.Bytes += Bytes.size(); ++RemoteAggregate.Messages; RemoteAggregate.Bytes += Bytes.size();
+        Variant Body = Frame.Value();
+        if (!Frame.Valid || Frame.Position != Bytes.size() || Body.get_type() != Variant::ARRAY || Array(Body).size() > GLRemotePayload::MaxArguments ||
+            (Delivery && UtilityFunctions::var_to_bytes(Body).size() > 900) ||
+            !RemoteReferences(Body, true)) { ++RemoteRejected; return; }
+        // Resolve immediately before dispatch; no path lookup occurs for data.
+        auto Remote = LiveRemote(Publication);
+        if (!Remote) { ++RemoteRejected; return; }
+        uint64_t ServiceIdentityBeforeReferences = uint64_t(get_instance_id());
+        if (!RemoteReferences(Body, true, 0, true, true)) { if (ObjectDB::get_instance(ServiceIdentityBeforeReferences) == this) ++RemoteRejected; return; }
+        if (ObjectDB::get_instance(ServiceIdentityBeforeReferences) != this || is_queued_for_deletion()) return;
+        // Reference materialization may enter native child callbacks.
+        auto CurrentPublication = RemotePublications.find(Endpoint);
+        if (RemoteEpoch != AdmittedEpoch || mode != (Server ? 1 : 2) ||
+            (Server ? (!peer_seq_uid.count(Sender) || peer_seq_uid.at(Sender) != AdmittedUser) : gl_local_user_id() != AdmittedUser) ||
+            CurrentPublication == RemotePublications.end() || CurrentPublication->second.Generation != Generation || !(Remote = LiveRemote(CurrentPublication->second))) return;
+        ++RemoteDelivered;
+        if (Server) {
+            uint64_t Identity = uint64_t(Remote->get_instance_id());
+            uint64_t ServiceIdentity = uint64_t(get_instance_id());
+            int64_t Epoch = RemoteEpoch, User = peer_seq_uid.at(Sender);
+            Node* Player = _ensure_peer_player(Sender);
+            if (ObjectDB::get_instance(ServiceIdentity) != this || is_queued_for_deletion()) return;
+            auto Current = RemotePublications.find(Endpoint);
+            if (RemoteEpoch != Epoch || !peer_seq_uid.count(Sender) || peer_seq_uid.at(Sender) != User || Current == RemotePublications.end() ||
+                Current->second.Object != Identity || Current->second.Generation != Generation) return;
+            Remote = LiveRemote(Current->second);
+            if (Remote) Remote->deliver_to_server_cbs(Array(Body), Player, this);
+        }
+        else Remote->deliver_to_client_cbs(Array(Body), this);
+    }
+    Dictionary GetRemoteState(Object* ObjectValue) {
+        Dictionary State; State["Epoch"] = RemoteEpoch; State["Rejected"] = int64_t(RemoteRejected); State["Delivered"] = int64_t(RemoteDelivered);
+        State["User"] = gl_local_user_id(); State["Publications"] = int64_t(RemotePublications.size());
+        for (const auto& Entry : RemotePublications) if (Entry.second.Object == (ObjectValue ? uint64_t(ObjectValue->get_instance_id()) : 0)) {
+            State["Endpoint"] = Entry.first; State["Generation"] = Entry.second.Generation; State["Delivery"] = Entry.second.Delivery;
+            State["Ready"] = mode == 2 ? Entry.second.Active : true;
+        }
+        return State;
+    }
+    void _re_deliver_server(const Variant& Frame) { ReceiveRemote(Frame, true, 0); }
+    void _re_deliver_client(const Variant& Frame) { ReceiveRemote(Frame, false, 0); }
+    void _ure_deliver_server(const Variant& Frame) { ReceiveRemote(Frame, true, 1); }
+    void _ure_deliver_client(const Variant& Frame) { ReceiveRemote(Frame, false, 1); }
 
     // ── RemoteFunction por red (1.14.6) ──────────────────────────────────
     // El invocador (InvokeServer/InvokeClient en luau_api.h) llama estos net_*
@@ -3240,6 +3611,8 @@ public:
     }
 
     void _process(double dt) override {
+        RemoteBudgets.clear(); RemoteAggregate = RemoteBudget();
+        TickRemotes();
         // 0-. Instancia (mundo lanzado por el coordinador): publica su latido
         //     (puerto + nº de jugadores) para que el coordinador sepa su estado.
         if (is_instance) {
@@ -3540,10 +3913,14 @@ public:
 
     // ── API para Luau ────────────────────────────────────────────────────
     bool start_server(int port, int max_players) {
+        if (!is_inside_tree() || is_queued_for_deletion()) return false;
         _bind_mp_signals();
-        peer.instantiate();
-        Error e = peer->create_server(port, max_players > 0 ? max_players : 32);
+        Ref<ENetMultiplayerPeer> Candidate; Candidate.instantiate();
+        Error e = Candidate->create_server(port, max_players > 0 ? max_players : 32);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
+        if (!ResetRemotes() || is_queued_for_deletion()) return false;
+        peer = Candidate;
+        RemoteEpoch = NewRemoteEpoch(); CaptureRemoteBootstrap();
         ChatBudgets.clear();
         AnimationBudgets.clear();
         CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
@@ -3563,8 +3940,8 @@ public:
         return true;
     }
     bool connect_server(const String& ip, int port) {
+        if (!is_inside_tree() || is_queued_for_deletion()) return false;
         _bind_mp_signals();
-        peer.instantiate();
         // ENet exige una IP numérica: si llega un hostname, se resuelve por DNS.
         String addr = ip;
         if (!ip.is_valid_ip_address()) {
@@ -3572,9 +3949,12 @@ public:
             if (!resolved.is_empty()) addr = resolved;
             else { UtilityFunctions::push_warning(String("[NetworkService] No se pudo resolver el host ") + ip); return false; }
         }
+        Ref<ENetMultiplayerPeer> Candidate; Candidate.instantiate();
+        Error e = Candidate->create_client(addr, port);
+        if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); return false; }
+        if (!ResetRemotes() || is_queued_for_deletion()) return false;
+        CaptureRemoteBootstrap(); peer = Candidate;
         target_address = ip + String(":") + String::num_int64(port);
-        Error e = peer->create_client(addr, port);
-        if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); target_address = ""; return false; }
         ChatBudgets.clear();
         AnimationBudgets.clear();
         CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0; CharacterReadyAt = 0;
@@ -3591,6 +3971,7 @@ public:
         return true;
     }
     void disconnect_net() {
+        if (!ResetRemotes()) return;
         AnimationBudgets.clear();
         CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();

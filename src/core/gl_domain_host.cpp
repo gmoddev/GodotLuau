@@ -399,10 +399,16 @@ void GLDomainHost::_process(double Delta) {
         }
         GLUnreference(nullptr, Resume.Guard);
         auto Domain = GLGetOwner(Resume.thread)->Domain;
+        if (Resume.RemoteGeneration) {
+            auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Resume.ctx_id));
+            if (!Remote || !Remote->is_inside_tree() || Remote->is_queued_for_deletion() || Remote->GetPublicationGeneration() != Resume.RemoteGeneration) {
+                Domain->CancelThread(Resume.thread); continue;
+            }
+        }
         Domain->ResumePrepared(Resume.thread, [&](lua_State* Thread) -> int {
             if (Resume.use_args) {
                 Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(Resume.ctx_id));
-                return gl_net_decode_args(Thread, Resume.args, Context);
+                return gl_net_decode_args(Thread, Resume.args, Context, Resume.RemoteGeneration != 0);
             }
             if (Resume.NodeId) PushLuauInstance(Thread, Object::cast_to<Node>(ObjectDB::get_instance(Resume.NodeId)));
             else lua_pushnumber(Thread, Resume.delta);

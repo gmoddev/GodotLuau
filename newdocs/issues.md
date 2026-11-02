@@ -25,6 +25,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 ## Index
 
+The [combined GL-018/GL-029 development review](gl018-gl029-integration.md)
+preserves both issues as open and lists the remaining acceptance gates.
+
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
@@ -55,64 +58,62 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
-| GL-029 | P2 | Source-verified architecture/qualification gap; not reproduced here | Application Remote carrier, publication, payload and lifetime admission need an explicit unified contract |
-| GL-030 | P2 | Source-verified terminal-outcome gap; runtime unexercised | Default RemoteFunction waits are infinite while aged correlation records are silently erased |
+| GL-029 | P2 | Phase 1 WIP checkpoint; partially qualified; later phases open | Unified reliable/unordered configuration, generation-checked publication and bounded admission |
+| GL-030 | P2 | Open; source-verified terminal-outcome gap | Default RemoteFunction waits are infinite while aged correlation records are erased |
 
 ## GL-029: Application Remote delivery has no unified bounded publication contract
 
-**Status: OPEN; source-verified architecture and qualification gap.** Assessment
-source `83cd0887968d73d61d050650718d8ada6e124579`. This is not a reproduced
-exploit, crash or denial-of-service result.
+**Status: OPEN; Phase 1 WIP is partially qualified on
+`network/gl-029-unified-remoteevents`, not ready for integration.** The user requested
+publication of a checkpoint; see the [handoff](remoteevent-phase1-handoff.md).
+Main remains unchanged. Baseline assessment
+source is `83cd0887968d73d61d050650718d8ada6e124579`; research is retained at
+`9ea782bb739cc35deba06474a82582a12529df6d`.
 
-`RemoteEventNode` uses a reliable boolean; both reliable/unreliable receive pairs
-converge on `NetworkService::_deliver_event`. That path checks direction but not
-the target's delivery mode, a peer-specific endpoint publication generation,
-the outbound-only 900-byte limit, or aggregate Remote dispatch budgets. NodePath
-resolution does not distinguish a replacement at the same path or prove reference
-visibility. `FireAllClients` also runs local callbacks before network encoding
-and size validation. Several retained Remote closures capture raw Remote pointers.
-The scope of GL-001/002's already qualified capture fixes remains unchanged.
+The baseline boolean/path RPC converged reliable/unreliable event handlers without
+target-mode, publication-generation or receive-size/aggregate admission checks.
+FireAllClients ran local callbacks before encoding/size validation; retained event
+closures captured raw native pointers. Existing role checks, GL-004 budgets and
+qualified GL-006/007/020 paths remain counterevidence to a blanket networking
+failure claim. The original findings were source verified, not new exploit proofs.
 
-Existing role checks, ObjectID userdata, GL-004 execution limits and qualified
-GL-006/007/020 handlers are counterevidence to a blanket “networking has no
-security” claim; none establishes the missing application Remote contracts.
-See the [source comparison](networking-architecture-assessment.md#verified-gaps-and-counterevidence)
-and [proposed API](remoteevent-delivery-proposal.md). Both are planning documents,
-not an approved implementation or authorization to replace ENet.
+Phase 1 replaces those event boundaries with the narrower
+[ADR-008 contract](adr-008-remoteevent-publication.md). The
+[qualification record](remoteevent-phase1-qualification.md) preserves failed
+attempts, an actual same-named-child precedence failure and the correction to
+the research's assumed legacy identity. ClassName/IsA keep their actual native
+legacy behavior. Native constructor/domain provenance prevents Client-created
+listen-host endpoints from acquiring publication authority. No general mutation
+gateway or unrelated replication redesign is implied.
 
-**Closure:** approve a bounded delivery/publication contract, implement canonical
-mode/native session and reference admission, lifetime-safe closures and explicit
-resource behavior, and qualify local plus actual ENet success/rejection/overload/
-replacement cases. Do not claim total native ENet egress bounds from an extension
-queue alone. This research change leaves the finding open and all runtime/tests
-unchanged.
+**Remaining closure:** complete the recorded Phase 1 platform/hosted gates;
+separately implement/qualify bounded queues, sequenced stale rejection and unsent
+supersession. Native ENet reliable-retention/admission proof remains independent
+of application queue bounds. Keep this issue open until the accepted later-phase
+facts exist. No unreliable RemoteFunction modes or GL-030 timeout changes belong
+to this work.
 
 ## GL-030: Default RemoteFunction waits have no finite terminal deadline
 
-**Status: OPEN; source-verified terminal-outcome gap, runtime unexercised.**
-Assessment source `83cd0887968d73d61d050650718d8ada6e124579`.
+**Status: OPEN; source-verified, runtime nonresponse/exhaustion unexercised.**
+Baseline source `83cd0887968d73d61d050650718d8ada6e124579` is unchanged by the
+event-only Phase 1 behavior.
 
-`luau_api.h` registers network InvokeServer/InvokeClient waits with timeout 0.0.
-`GLDomainHost` warns after ten seconds but only expires a positive timeout.
-`NetworkService` separately erases expectation/response records older than sixty
-seconds at its periodic GC without completing the wait. The int64 counter from
-`gl_net_new_call_id` is also narrowed to int on RPC transmission, with no checked
-exhaustion rule. A finite exactly-one-terminal-outcome contract is therefore not
-currently established. No prolonged-wait or exhaustion reproduction was run in
-this documentation task.
+Public invokes pass timeout 0.0. GLDomainHost warns after ten seconds but expires
+only positive deadlines. NetworkService separately erases expectation/response
+records older than sixty seconds without completing that waiting coroutine.
+The global int64 request counter is narrowed to int for RPC transmission and has
+no checked exhaustion rule. Expected-peer response validation, guarded owner
+cancellation, disconnect/service failure completion and legitimate yielding
+handlers already exist and must be preserved.
 
-Expected-peer response validation, guarded owner cancellation, disconnect/service
-failure completion and legitimate yielding handlers already exist and must be
-preserved. This does not reclassify those qualified paths as failed.
-
-**Closure:** separately approve finite deadline compatibility, retain reliable
+**Closure:** separately approve finite-deadline compatibility, preserve reliable
 request/response and current Player/handler APIs, use checked session-scoped
-full-width correlation, and settle/detach each request once before callbacks.
-Qualify missing replies past the GC horizon, timeout/response/cancellation races,
-manual resume, disconnect/reconnect and owner/Remote/service retirement. See the
-[RemoteFunction design](remoteevent-delivery-proposal.md#remotefunction-stays-separate).
-Do not implement unreliable RemoteFunction modes or silently change timeout
-semantics in the RemoteEvent property slice.
+full-width correlation and detach/settle each request once before callbacks.
+Qualify missing replies past GC, timeout/response/cancel races, manual resume,
+disconnect/reconnect and owner/Remote/service retirement. See the
+[research design](remoteevent-delivery-proposal.md#remotefunction-stays-separate).
+Phase 1 does not claim this target is already implemented.
 
 ## GL-028: Fade update tolerance can retain visible first-person dither
 

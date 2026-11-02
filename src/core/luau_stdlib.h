@@ -47,6 +47,7 @@ end
 --  Enum — constantes de enumeración exactas de Roblox
 -- ══════════════════════════════════════════════════════════════════════
 Enum = {
+    EventDeliveryType = { ReliableOrdered = 0, UnreliableUnordered = 1 }, -- 2 reserved; sequencing is not implemented.
     EasingStyle = {
         Linear = 0, Sine = 1, Quad = 2, Cubic = 3,
         Quart = 4, Quint = 5, Bounce = 6, Elastic = 7,

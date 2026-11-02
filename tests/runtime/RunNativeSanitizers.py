@@ -152,7 +152,7 @@ def Main():
                 Observe([sys.executable, Runtime/'InvestigateSanitizerBindings.py', '--godot', Args.godot,
                          '--probe', Args.probe, '--output', Args.output/'binding-controls'], 'binding-investigation', 180)
             Native = Args.output/'native'
-            for Group, Flags in [('regression',['--teardown','--coordinated-close']),('security',['--security']),('animation',['--animation']),('characters',['--characters']),('resources',['--resources']),('filesystem',['--filesystem']),('http',['--http']),('httpservice',['--httpservice']),('callers',['--callers']),('datastore',['--datastore'])]:
+            for Group, Flags in [('regression',['--teardown','--coordinated-close']),('security',['--security']),('animation',['--animation']),('remote',['--remote']),('characters',['--characters']),('resources',['--resources']),('filesystem',['--filesystem']),('http',['--http']),('httpservice',['--httpservice']),('callers',['--callers']),('datastore',['--datastore'])]:
                 Observe([sys.executable, Runtime/'RunQualification.py', '--godot', Args.godot, '--extension', Args.extension, '--output', Native/Group, '--timeout', '15' if Group=='resources' else '60', *Flags], 'suite-'+Group, 360)
             for Group, Script, Flags in [('presentation','RunCharacterPresentation.py',[]),('performance','RunCharacterPerformance.py',['--trials','1','--samples','120','--counts','1,16'])]:
                 Observe([sys.executable, Runtime/Script, '--godot', Args.godot, '--asset-godot', Args.asset_godot, '--extension', Args.extension, '--output', Native/Group, *Flags], 'suite-'+Group, 360)

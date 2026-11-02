@@ -70,6 +70,15 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 ## Multiplayer authority
 
+- Application RemoteEvent delivery configuration is native Server authority.
+  Publication/readiness binds the current native transport session, endpoint
+  generation, delivery carrier and local ObjectID; neither a payload path nor a
+  mutable Lua enum establishes authority. Private or Client-created endpoints
+  cannot become public through a listen host's shared native tree. Supported
+  Phase 1 bounds and compatibility are defined by [ADR-008](adr-008-remoteevent-publication.md).
+  This does not claim sequenced delivery, total ENet retention bounds, general
+  replication relevance or finite RemoteFunction defaults (GL-030).
+
 - Every inbound RPC checks allowed receiver role, actual transport sender, and
   target authority before mutating state or relaying. Do not trust a payload's
   `who`, name, role, or owner claim. GL-006/008's endpoint-specific corrections

@@ -2,7 +2,7 @@ name: Runtime full-native sanitizers
 
 on:
   push:
-    branches: [qualification/gl-018-native-sanitizers]
+    branches: [qualification/gl-018-native-sanitizers, integration/gl-018-gl-029-remoteevents]
     paths:
       - "src/**"
       - "tests/runtime/**"
@@ -80,7 +80,7 @@ jobs:
       - name: Build instrumented production extension and detection probes
         timeout-minutes: 65
         run: python tests/runtime/BuildNativeSanitizers.py --output build/sanitizers --jobs 2
-      - name: Require detection controls, lifecycle reloads, 80 core cases and 110 native actors
+      - name: Require detection controls, lifecycle reloads, 80 core cases and 116 native actors
         timeout-minutes: 35
         run: |
           $HostRecord = Get-Content "$env:RUNNER_TEMP/sanitizer-host/sanitizer-host.json" -Raw | ConvertFrom-Json
