@@ -129,6 +129,10 @@ for _,V in {Cycle,{[2]=1},{[1]=1,x=1},function() end,math.huge,0/0,string.char(2
 assert(H:JSONDecode(H:JSONEncode({OK=true})).OK)
 assert(H:UrlEncode(utf8.char(0x96ea)..string.char(0)..' /%?#&=+~._-')=='%E9%9B%AA%00%20%2F%25%3F%23%26%3D%2B~._-')
 assert(H:UrlEncode(string.char(255))=='%FF' and not pcall(H.UrlEncode,H,123))
+for Byte=0,255 do
+    local Unreserved=(Byte>=65 and Byte<=90) or (Byte>=97 and Byte<=122) or (Byte>=48 and Byte<=57) or Byte==45 or Byte==46 or Byte==95 or Byte==126
+    assert(H:UrlEncode(string.char(Byte))==(Unreserved and string.char(Byte) or string.format('%%%02X',Byte)))
+end
 local GUIDs,Seen={},{}
 for I=1,2000 do
     local G=H:GenerateGUID(false)

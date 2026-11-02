@@ -56,7 +56,7 @@ def Main():
     Inputs.update(Modes=Args.modes, LifecycleSamples=Args.lifecycle_samples, WarmupTicks=Args.warmup_ticks)
     (Args.output/'inputs.json').write_text(json.dumps(Inputs,indent=2))
     try:
-        Import = Assets(Args.asset_godot.resolve() if Args.asset_godot else Args.godot, Source, Args.output, Environment)
+        Import = Assets(Args.asset_godot.resolve() if Args.asset_godot else Args.godot, Source, Args.output, Environment, RuntimeRemaps=bool(Args.asset_godot))
         for Trial in range(Args.trials):
             Variants = [('Candidate', Args.extension)]
             if Args.baseline: Variants.insert(0, ('Baseline', Args.baseline))

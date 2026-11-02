@@ -1002,6 +1002,10 @@ assert(not pcall(H.GetAsync,H,'ok','true') and not pcall(H.GetAsync,H,'ok',true,
 assert(shared.HttpCalls==Before)
 assert(H:GenerateGUID()=='{wrapped}' and H:GenerateGUID(false)=='bare' and not pcall(H.GenerateGUID,H,1))
 assert(H:UrlEncode(utf8.char(0x96ea)..string.char(0)..' /%')=='%E9%9B%AA%00%20%2F%25')
+for Byte=0,255 do
+    local Unreserved=(Byte>=65 and Byte<=90) or (Byte>=97 and Byte<=122) or (Byte>=48 and Byte<=57) or Byte==45 or Byte==46 or Byte==95 or Byte==126
+    assert(H:UrlEncode(string.char(Byte))==(Unreserved and string.char(Byte) or string.format('%%%02X',Byte)))
+end
 assert(not pcall(H.UrlEncode,H,123) and not pcall(H.UrlEncode,H,nil))
 )"); F.NoErrors();
     });
