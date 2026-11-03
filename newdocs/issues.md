@@ -81,8 +81,12 @@ preserved; see the [handoff](remoteevent-phase1-handoff.md).
 The [completion investigation](remoteevent-completion-work.md) and
 [native admission decision](remoteevent-native-admission-decision.md) reproduce
 finite native retention on the stock host. Stronger native-backpressure closure
-requires choosing the patched-host contract or retaining an explicit stock-host
-limitation before expanding the production implementation.
+uses the narrow patched-host contract approved on 2026-11-03, recorded in
+[ADR-009](adr-009-bounded-remote-delivery.md). Bounded queues, native call-context
+validation and sequencing are now candidate implementations under qualification.
+Windows matching-host ASan core (81 cases), native byte/command/RPC boundaries
+and the initial six RemoteEvent actors pass. Pressure, MTU, independent profiles,
+performance and hosted evidence remain required; this does not close GL-029.
 Main remains unchanged. Baseline assessment
 source is `83cd0887968d73d61d050650718d8ada6e124579`; research is retained at
 `9ea782bb739cc35deba06474a82582a12529df6d`.
@@ -103,7 +107,7 @@ legacy behavior. Native constructor/domain provenance prevents Client-created
 listen-host endpoints from acquiring publication authority. No general mutation
 gateway or unrelated replication redesign is implied.
 
-**Remaining closure:** separately implement/qualify bounded queues, sequenced
+**Remaining closure:** finish qualification of bounded queues, sequenced
 stale rejection and unsent supersession. Native ENet reliable-retention/admission proof remains independent
 of application queue bounds. Keep this issue open until the accepted later-phase
 facts exist. No unreliable RemoteFunction modes or GL-030 timeout changes belong

@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "EngineRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+  "File": "native/GodotRemoteAdmission.patch",
+  "SHA256LF": "df10215b62e125d3595972e5f16e0c7b45a9b0b9141564a91f1741b413f7568b",
+  "Files": {
+    "modules/enet/enet_connection.cpp": {
+      "OriginalSHA256": "91c46ac50b489e9f55b30fce12412ce552f43275a1a82c8ea45263945f5e18c8",
+      "PatchedSHA256": "8de44e933c302fe0860e92e5ac852bd96ad104285fb4bee238f45f6303df0c2c"
+    },
+    "modules/enet/enet_connection.h": {
+      "OriginalSHA256": "f724e8858bda8577203fe03739b724beb506e1879244f8cc370d4c557377eb3f",
+      "PatchedSHA256": "8b6b962792c2d8b1d1975e7247b628ec991531c3d9eeb758215b9d7f9017e5fc"
+    },
+    "modules/enet/enet_multiplayer_peer.cpp": {
+      "OriginalSHA256": "972c0f8aaeffc200683a16c8d2ca1364588b77c897eb30aa6f76e715c7ed97f1",
+      "PatchedSHA256": "e891170e04d70bfbeaf5199be76946b72fdf99a6cbc8cf2c5e5bdf6da9fae89c"
+    },
+    "modules/enet/enet_packet_peer.cpp": {
+      "OriginalSHA256": "15d77c8fec6da4877674c5db322a27a664ad96392790c2aa1f55d5da6185cde0",
+      "PatchedSHA256": "febf78ebba0bcd271e7a62edc9d7ca66ecc5f3887d3351322a02d57fc997f332"
+    },
+    "modules/enet/enet_packet_peer.h": {
+      "OriginalSHA256": "c6c2d48d7220c33899cab4dc8cbdee52a8afe98c134fc1a3355b3955b32d4567",
+      "PatchedSHA256": "92f93aa66ea947226c0fd9638b648d108cfe8de4582ff2b39626cfb1d414e813"
+    },
+    "modules/enet/godot_luau_admission.h": {
+      "OriginalSHA256": null,
+      "PatchedSHA256": "c9c068c0971ca4902cea3621475c46eab88f982d2a3a2a83328149c7449bb49e"
+    },
+    "modules/multiplayer/scene_multiplayer.cpp": {
+      "OriginalSHA256": "71d62fede101f834482346f1066023dbc126596012fcf7d2cb7689480b254494",
+      "PatchedSHA256": "7905b65b0163912bfbc61954b169de55b54dd79fce5dad235085aa4258e60cfd"
+    },
+    "modules/multiplayer/scene_multiplayer.h": {
+      "OriginalSHA256": "4b8c589bf37ae9679e8f124c811b65890e5cde7d8fc779d8faba899cb4c90247",
+      "PatchedSHA256": "32cfdae070864b4ecb83d35594d7621f95659fcd129e1094b5afafdffcd4b36d"
+    },
+    "modules/multiplayer/scene_rpc_interface.cpp": {
+      "OriginalSHA256": "cca1423803e1f1cc58570ba9d0c6bd39be22ebaa39a283551aa984889659c6c7",
+      "PatchedSHA256": "2411a9a0aa7ce47dc28f269f404bbe1670725df45a8bfa2bed568e6ee044a8db"
+    },
+    "modules/multiplayer/scene_rpc_interface.h": {
+      "OriginalSHA256": "1b305eacae476013d8ff928ea1d3687820bbc5f02855ce4f4ed8a95b3bcfa132",
+      "PatchedSHA256": "108af44d0aa9f9b6389b976bc53c984300de5704cab248103ad5538b08a6ca67"
+    }
+  },
+  "PeerBytes": 4194304,
+  "PeerCommands": 4096,
+  "HostBytes": 16777216,
+  "HostCommands": 16384,
+  "Scope": "Native retained data packets and their data-command counts; not total engine memory or protocol-control storage"
+}

@@ -76,11 +76,11 @@ jobs:
         run: python tests/runtime/ProvisionGodot.py --output "$env:RUNNER_TEMP/sanitizer-editor"
       - name: Build pinned instrumented Godot host with admitted correction
         timeout-minutes: 120
-        run: python tests/runtime/BuildSanitizedGodot.py --output "$env:RUNNER_TEMP/sanitizer-host" --jobs 2 --timeout 7000
+        run: python tests/runtime/BuildSanitizedGodot.py --output "$env:RUNNER_TEMP/sanitizer-host" --remote-admission --jobs 2 --timeout 7000
       - name: Build instrumented production extension and detection probes
         timeout-minutes: 65
         run: python tests/runtime/BuildNativeSanitizers.py --output build/sanitizers --jobs 2
-      - name: Require detection controls, lifecycle reloads, 80 core cases and 116 native actors
+      - name: Require detection controls, lifecycle reloads, 81 core cases and 116 native actors
         timeout-minutes: 35
         run: |
           $HostRecord = Get-Content "$env:RUNNER_TEMP/sanitizer-host/sanitizer-host.json" -Raw | ConvertFrom-Json

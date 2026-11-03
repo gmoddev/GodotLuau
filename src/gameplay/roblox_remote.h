@@ -253,7 +253,7 @@ protected:
         ClassDB::bind_method(D_METHOD("_gl_disconnect","ref"), &RemoteEventNode::_gl_disconnect);
         ClassDB::bind_method(D_METHOD("SetDeliveryType", "value"), &RemoteEventNode::SetDeliveryType);
         ClassDB::bind_method(D_METHOD("GetDeliveryType"), &RemoteEventNode::GetDeliveryType);
-        ADD_PROPERTY(PropertyInfo(Variant::INT, "DeliveryType", PROPERTY_HINT_ENUM, "ReliableOrdered,UnreliableUnordered"), "SetDeliveryType", "GetDeliveryType");
+        ADD_PROPERTY(PropertyInfo(Variant::INT, "DeliveryType", PROPERTY_HINT_ENUM, "ReliableOrdered,UnreliableUnordered,UnreliableSequenced"), "SetDeliveryType", "GetDeliveryType");
     }
     void SetLegacyDelivery() { Delivery = 1; }
     void _notification(int What) {
@@ -294,7 +294,7 @@ public:
     bool SetDeliveryType(const Variant& Value) {
         bool Numeric = Value.get_type() == Variant::INT || Value.get_type() == Variant::FLOAT;
         double Number = Numeric ? double(Value) : -1;
-        if (!Numeric || (Number != 0 && Number != 1) || Frozen || !ServerAdmitted || GLExecutionDomain::IsClientExecution() || gl_net_role() == 2 ||
+        if (!Numeric || (Number != 0 && Number != 1 && Number != 2) || Frozen || !ServerAdmitted || GLExecutionDomain::IsClientExecution() || gl_net_role() == 2 ||
             (is_class("UnreliableRemoteEventNode") && Number != 1)) return false;
         Delivery = int(Number); return true;
     }
@@ -333,8 +333,8 @@ public:
         Array Arguments = gl_net_encode_args(State, Base, Count, true);
         GLRemotePayload::Codec Codec; Codec.Value(Arguments);
         if (!Codec.Valid) luaL_error(State, "[Network:Remote] Unsupported or excessive encoded payload");
-        int64_t LegacyBytes = Delivery == 1 ? UtilityFunctions::var_to_bytes(Arguments).size() : 0;
-        if (Codec.Bytes.size() > GLRemotePayload::MaxBytes - 40 || (Delivery == 1 && (Codec.Bytes.size() > GLRemotePayload::UnreliableBytes || LegacyBytes > 900)))
+        int64_t LegacyBytes = Delivery ? UtilityFunctions::var_to_bytes(Arguments).size() : 0;
+        if (Codec.Bytes.size() > GLRemotePayload::MaxBytes - GLRemotePayload::HeaderBytes || (Delivery && (Codec.Bytes.size() > GLRemotePayload::UnreliableBytes || LegacyBytes > 900)))
             luaL_error(State, "[Network:Remote] Payload exceeds delivery limits (mode %d, body %d bytes, legacy measure %d bytes)", Delivery, int(Codec.Bytes.size()), int(LegacyBytes));
         return Arguments;
     }

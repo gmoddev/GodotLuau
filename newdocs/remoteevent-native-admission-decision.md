@@ -1,6 +1,7 @@
 # GL-029 native admission decision
 
-Status: proposed; compatibility decision required before implementation.
+Status: native host adapter APPROVED by the user on 2026-11-03 ("continue,
+approved"). Implementation and independent qualification are pending.
 Date: 2026-11-03. Baseline `cda423a`, qualified Phase 1 runtime `eec2397`.
 
 ## Established boundary
@@ -74,9 +75,9 @@ never-released lifetime send quota would bound submissions by disconnecting
 healthy long-lived sessions at the quota; it is not a transparent substitute.
 Process-wide memory killing would violate peer failure isolation.
 
-Requiring a patched production host is interpreted as wider than a routine fix
-under the user's continuing no-refactor instruction, so that compatibility/
-ownership choice is pending before expanding into the engine boundary.
+Requiring a patched production host was treated as wider than a routine fix
+under the user's no-refactor instruction. The user has now approved that narrow
+compatibility/ownership expansion; do not request that approval again.
 The project policy requires a recorded dependency/ownership decision; it does not
 independently impose an approval rule. The choices above are a concrete scope
 decision, not a claim that an unimplemented adapter is qualified.

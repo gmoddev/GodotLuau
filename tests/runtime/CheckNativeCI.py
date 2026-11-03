@@ -11,8 +11,15 @@ def Main():
     Parser.add_argument('--output', type=Path, required=True)
     Parser.add_argument('--extension', type=Path, required=True)
     Parser.add_argument('--godot-evidence', type=Path, required=True)
+    Parser.add_argument('--remote-host-evidence', type=Path, required=True)
+    Parser.add_argument('--remote-host-qualification', type=Path, required=True)
     Parser.add_argument('--revision', required=True)
     Args = Parser.parse_args()
+    from RemoteHostIdentity import VerifyRemoteHost
+    Host = VerifyRemoteHost(json.loads(Args.remote_host_evidence.read_text()))
+    HostQualification = json.loads((Args.remote_host_qualification/'summary.json').read_text())
+    if HostQualification.get('Result') != 'PASS' or HostQualification.get('Host') != Host or HostQualification.get('UnexpectedReports') or [Record.get('Name') for Record in HostQualification.get('Records', [])] != ['ownership','rpc'] or any(not Record.get('Passed') for Record in HostQualification['Records']):
+        raise ValueError('GL-029 admitted host runtime qualification missing or failed')
     Expected = {
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
@@ -48,7 +55,11 @@ def Main():
         Required.add('serialized configuration survives a fresh native instance')
         Required.add('functional carrier throttle profile applied to fresh peer')
         Required.add('failed server bind preserves the active publication epoch' if Record['Role'] == 'server' else 'failed native connection attempt preserves current publication and transport')
-        Required |= {'native private service type remains private after rename', 'Player identity is reserved before reentrant native child callbacks', 'existing RemoteFunction disconnect outcomes preserved'} if Record['Role'] == 'server' else {'accepted queued Wait cannot resume after service disconnect; sibling callback survives', 'real event and invocation execute within the controlled ENet poll'}
+        Required |= {'native private service type remains private after rename', 'Player identity is reserved before reentrant native child callbacks', 'existing RemoteFunction disconnect outcomes preserved'} if Record['Role'] == 'server' else {'accepted queued Wait cannot resume after service disconnect; sibling callback survives', 'real event admission and invocation execute within the controlled ENet poll', 'real poll admits event without running its pending Wait', 'controlled native drain queues the accepted Wait resume'}
+        Required |= {'only sequences three and four from each peer enter the dispatch queue', 'admitted three and four each execute once per independent peer', 'native watermark and unsent replacement preserve stream order'} if Record['Role'] == 'server' else {'sequenced stream retains only newest unsent sample'}
+        Required |= {'wrong native carriers and invalid high sequences reject before freshness; duplicates remain stale', 'healthy peer progresses while slow peer retains its exact reliable FIFO', 'exact unordered record ceiling admits and one-over drops without evicting old work', 'publication destruction retires exact queued ownership'} if Record['Role'] == 'server' else {'sequence exhaustion preserves accepted candidate and independent Remote counter', 'failed reliable admission retains old bounded work until explicit peer failure', 'reliable exhaustion terminates its session and releases exact queue ownership'}
+        Required |= {'unordered duplicate/reorder injection preserves each peer\'s actual submitted payload order', 'targeted and broadcast egress share each peer stream without sharing ingress freshness'} if Record['Role'] == 'server' else {'client sequenced callback starts match independent targeted/broadcast admission'}
+        if Record['Role'] == 'client': Required |= {'expired unreliable work drops with accounting while its session remains healthy', 'aged reliable work ends its session explicitly instead of silently expiring'}
         if Record['Role'] == 'server' and Record['Mode'] == 'Listen': Required |= {'listen Client creation cannot publish a native endpoint', 'listen local FireServer receives the real Player', 'local validation precedes broadcast side effects'}
         if not Record['Complete'] or Record['Result'] != 'PASS' or not Required <= Labels or not all(Item['Passed'] for Item in Record['Cases']):
             raise ValueError('GL-029 required assertions missing or failed')
@@ -141,6 +152,8 @@ def Main():
         'HttpServiceNative': HttpServiceNative,
         'CallerNative': CallerEvidence,
         'RemoteEvents': Remote,
+        'RemoteHost': Host,
+        'RemoteHostQualification': HostQualification,
         'AnimationAuthority': AnimationAuthority,
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},

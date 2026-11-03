@@ -22,6 +22,7 @@ from CheckCoreCI import CheckDiscovery, CheckReport
 from FixtureProcesses import StartProcess, StopProcess, StopAll
 from SourceFingerprint import GetFingerprint
 from RunQualification import Start, Check
+from RemoteHostIdentity import VerifyRemoteHost
 
 Policy = json.loads(Path(__file__).with_name('ReleaseCandidatePolicy.json').read_text())
 Profiles = [(Platform, Configuration) for Platform in Policy['Platforms'] for Configuration in Policy['Configurations']]
@@ -108,12 +109,13 @@ def Names(Selected, Configuration):
             'godot_luau_store_worker'+('.exe' if Selected == 'Windows' else ''))
 
 
-def Native(Engine, Library, Output, Revision):
+def Native(Engine, Library, Output, Revision, HostManifest, AssetEngine):
+    Execute([sys.executable, Source/'tests/runtime/RunRemoteHostQualification.py', '--godot', Engine, '--host-manifest', HostManifest, '--output', Output/'hostqualification'], Output.parent/'remote-host-check.log', 300)
     for Group, Flags in [('regression', ['--teardown', '--coordinated-close']), ('security', ['--security']), ('animation', ['--animation']), ('remote', ['--remote']), ('characters', ['--characters']), ('resources', ['--resources']), ('filesystem', ['--filesystem']), ('http', ['--http']), ('httpservice', ['--httpservice']), ('callers', ['--callers']), ('datastore', ['--datastore'])]:
         Execute([sys.executable, Source/'tests/runtime/RunQualification.py', '--godot', Engine, '--extension', Library, '--output', Output/Group, '--timeout', '15' if Group == 'resources' else '60', *Flags], Output.parent/(Group+'.log'), 300)
-    Execute([sys.executable, Source/'tests/runtime/RunCharacterPresentation.py', '--godot', Engine, '--extension', Library, '--output', Output/'presentation'], Output.parent/'presentation.log', 300)
-    Execute([sys.executable, Source/'tests/runtime/RunCharacterPerformance.py', '--godot', Engine, '--extension', Library, '--output', Output/'performance', '--trials', '1', '--samples', '120', '--counts', '1,16'], Output.parent/'performance.log', 180)
-    Execute([sys.executable, Source/'tests/runtime/CheckNativeCI.py', '--output', Output, '--extension', Library, '--godot-evidence', Output.parent/'godot/provenance.json', '--revision', Revision], Output.parent/'native-check.log', 60)
+    Execute([sys.executable, Source/'tests/runtime/RunCharacterPresentation.py', '--godot', Engine, '--asset-godot', AssetEngine, '--extension', Library, '--output', Output/'presentation'], Output.parent/'presentation.log', 300)
+    Execute([sys.executable, Source/'tests/runtime/RunCharacterPerformance.py', '--godot', Engine, '--asset-godot', AssetEngine, '--extension', Library, '--output', Output/'performance', '--trials', '1', '--samples', '120', '--counts', '1,16'], Output.parent/'performance.log', 180)
+    Execute([sys.executable, Source/'tests/runtime/CheckNativeCI.py', '--output', Output, '--extension', Library, '--godot-evidence', Output.parent/'godot/provenance.json', '--remote-host-evidence', HostManifest, '--remote-host-qualification', Output/'hostqualification', '--revision', Revision], Output.parent/'native-check.log', 60)
 
 
 def Build(Args):
@@ -122,6 +124,12 @@ def Build(Args):
     Before = Identity(Args.revision)
     Require(importlib.metadata.version('SCons') == Policy['SCons'], 'Wrong SCons version')
     Engine, EngineEvidence = GodotIdentity(Args.godot.resolve())
+    Require(Args.remote_host is not None, 'GL-029 requires an admitted runtime host manifest')
+    Host = VerifyRemoteHost(Load(Args.remote_host))
+    VerifyRemoteHost(Host, Host['Executable'])
+    Require(Host.get('Configuration') == Args.configuration and Host.get('Platform') == Selected, 'GL-029 host profile mismatch')
+    (Output/'host').mkdir()
+    Save(Output/'host/remote-host.json', Host)
     shutil.copytree(Args.godot, Output/'godot', ignore=shutil.ignore_patterns('official.zip', '*.exe', 'Godot_v*'))
     # Preserve only the verified engine evidence, never distribute Godot here.
     Save(Output/'godot/provenance.json', EngineEvidence)
@@ -149,19 +157,19 @@ def Build(Args):
     Adapter = Output/'adapter'; Adapter.mkdir()
     for Name in [AdapterName, WorkerName, 'DatastoreBackendProbe'+('.exe' if Selected == 'Windows' else '')]: shutil.copy2(AdapterDirectory/Name, Adapter/Name)
     Commands.append(Execute([sys.executable, Source/'tests/runtime/RunCoreQualification.py', '--build', BuildDirectory, '--config', Args.configuration, '--output', Output/'core'], Output/'core-check.log', 150))
-    Native(Engine, Adapter/AdapterName, Output/'native', Args.revision)
+    Native(Host['Executable'], Adapter/AdapterName, Output/'native', Args.revision, Output/'host/remote-host.json', Engine)
     Require(Identity(Args.revision) == Before, 'Source inputs changed during build/qualification')
     Summary = Load(Output/'native/summary.json')
     Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 116 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')
     Payload = Output/'evidence.zip'
     with zipfile.ZipFile(Payload, 'w', zipfile.ZIP_DEFLATED) as Archive:
-        for Directory in [Output/'core', Output/'native', Output/'godot']:
+        for Directory in [Output/'core', Output/'native', Output/'godot', Output/'host']:
             for File in sorted(Directory.rglob('*')):
                 if File.is_file() and File.suffix in ['.json', '.log', '.xml', '.txt']: Archive.write(File, File.relative_to(Output).as_posix())
         for File in sorted(Output.glob('*.log')): Archive.write(File, File.name)
     Files = {File.relative_to(Output).as_posix(): {'SHA256': Hash(File), 'Bytes': File.stat().st_size} for Directory in [Products, Adapter] for File in sorted(Directory.iterdir())}
     Files['evidence.zip'] = {'SHA256': Hash(Payload), 'Bytes': Payload.stat().st_size}
-    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 80}, 'Native': {'Result': 'PASS', 'Actors': 116}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
+    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'RemoteHost': Host, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 81}, 'Native': {'Result': 'PASS', 'Actors': 116}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
     print('[Release:Candidate] PASS source-built '+Selected+' '+Args.configuration, flush=True)
 
 
@@ -186,7 +194,9 @@ def Extract(ArchivePath, Directory):
 def CheckProfile(Record, Expected, Selected, Configuration):
     Require(Record['Schema'] == 1 and Record['Platform'] == Selected and Record['Configuration'] == Configuration, 'Missing or mismatched build profile')
     Require(Record['Source'] == Expected, 'Stale or mixed source/fixture/dependency inputs')
-    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 80}, 'Native': {'Result': 'PASS', 'Actors': 116}}, 'Failed, skipped or incomplete qualification gate')
+    VerifyRemoteHost(Record.get('RemoteHost', {}))
+    Require(Record['RemoteHost'].get('Platform') == Selected and Record['RemoteHost'].get('Configuration') == Configuration, 'GL-029 host profile mismatch')
+    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 81}, 'Native': {'Result': 'PASS', 'Actors': 116}}, 'Failed, skipped or incomplete qualification gate')
     Require(Record['Commands'] and all(Item['Exit'] == 0 for Item in Record['Commands']), 'Failed build/qualification command')
     Require(Record['Toolchain']['SCons'] == Policy['SCons'] and Record['Toolchain']['CompilerVersion'], 'Missing toolchain identity')
     LibraryName, WorkerName = Names(Selected, Configuration)
@@ -216,7 +226,8 @@ def ProfilesAt(Inputs, Expected, Output):
         EngineEvidence = Load(Evidence/'godot/provenance.json')
         Require(Record['Godot'] == EngineEvidence == Summary['Godot'] and EngineEvidence['Asset'] == Distribution[Selected] and EngineEvidence['SourceRevision'] == Distribution['SourceRevision'] and EngineEvidence['ArchiveSHA256'] == Distribution[Selected]['SHA256'] and EngineEvidence['Version'] == Distribution['ExpectedVersionOutput'], 'Native Godot dependency identity mismatch')
         AdapterName = 'godot_luau'+('.dll' if Selected == 'Windows' else '.so')
-        Execute([sys.executable, Source/'tests/runtime/CheckNativeCI.py', '--output', Evidence/'native', '--extension', Directory/'adapter'/AdapterName, '--godot-evidence', Evidence/'godot/provenance.json', '--revision', Expected['Revision']], Output/('check-'+Selected+'-'+Configuration+'.log'), 60)
+        Require(Record['RemoteHost'] == Summary['RemoteHost'] == Load(Evidence/'host/remote-host.json'), 'GL-029 runtime host evidence mismatch')
+        Execute([sys.executable, Source/'tests/runtime/CheckNativeCI.py', '--output', Evidence/'native', '--extension', Directory/'adapter'/AdapterName, '--godot-evidence', Evidence/'godot/provenance.json', '--remote-host-evidence', Evidence/'host/remote-host.json', '--remote-host-qualification', Evidence/'native/hostqualification', '--revision', Expected['Revision']], Output/('check-'+Selected+'-'+Configuration+'.log'), 60)
         Rechecked = Load(Evidence/'native/summary.json')
         Rechecked['LogHashes'] = {Name.replace('\\', '/'): Digest for Name, Digest in Rechecked['LogHashes'].items()}
         Require(Rechecked == Summary, 'Strict native verification changed the recorded evidence')
@@ -226,7 +237,7 @@ def ProfilesAt(Inputs, Expected, Output):
 
 def CheckSanitizer(Directory, Expected):
     Record = Load(Directory/'sanitizer.json')
-    Require(Record['Source'] == Expected and Record['Result'] == 'PASS' and Record['Cases'] == 80, 'Missing or failed core sanitizer qualification')
+    Require(Record['Source'] == Expected and Record['Result'] == 'PASS' and Record['Cases'] == 81, 'Missing or failed core sanitizer qualification')
     Require(Record['ASAN_OPTIONS'] == 'detect_leaks=1:halt_on_error=1' and Record['InstrumentedFiles'] >= 2 and Record['ASanSymbolVerified'], 'Sanitizer instrumentation not established')
     for Name, Digest in Record['Files'].items(): Require(SafePath(Name) and Hash(Directory/Name) == Digest, 'Sanitizer evidence hash mismatch')
     CheckDiscovery(Directory/'core/discovery.json'); CheckReport(Directory/'core/core-results.xml')
@@ -247,7 +258,7 @@ def Sanitize(Args):
     Symbols = subprocess.check_output(['nm', str(BuildDirectory/'ExecutionDomainTests')], text=True, timeout=30)
     Require('__asan_init' in Symbols and Identity(Args.revision) == Before, 'ASan symbol/source identity mismatch')
     Files = {str(File.relative_to(Output)): Hash(File) for File in (Output/'core').iterdir() if File.is_file()}
-    Save(Output/'sanitizer.json', {'Source': Before, 'Result': 'PASS', 'Cases': 80, 'ASAN_OPTIONS': Environment['ASAN_OPTIONS'], 'InstrumentedFiles': len(Commands), 'ASanSymbolVerified': True, 'Compiler': subprocess.check_output(['clang++', '--version'], text=True, timeout=15), 'Commands': Commands, 'Files': Files})
+    Save(Output/'sanitizer.json', {'Source': Before, 'Result': 'PASS', 'Cases': 81, 'ASAN_OPTIONS': Environment['ASAN_OPTIONS'], 'InstrumentedFiles': len(Commands), 'ASanSymbolVerified': True, 'Compiler': subprocess.check_output(['clang++', '--version'], text=True, timeout=15), 'Commands': Commands, 'Files': Files})
 
 
 def Stage(Revision, Output):
@@ -347,7 +358,7 @@ def CheckPackage(Directory, Expected, Selected):
         Provenance = json.loads(Archive.read('GodotLuau/release-provenance.json'))
         Require(Provenance['Platform'] == Selected and Provenance['Source'] == Expected and hashlib.sha256(Archive.read('GodotLuau/release-provenance.json')).hexdigest() == Record['ProvenanceSHA256'], 'Embedded provenance mismatch')
         for PlatformName, Configuration in Profiles: CheckProfile(Provenance['Profiles'][PlatformName+'-'+Configuration], Expected, PlatformName, Configuration)
-        Require(Provenance['Sanitizer']['Source'] == Expected and Provenance['Sanitizer']['Result'] == 'PASS' and Provenance['Sanitizer']['Cases'] == 80 and Provenance['Sanitizer']['ASanSymbolVerified'], 'Missing sanitizer gate in candidate')
+        Require(Provenance['Sanitizer']['Source'] == Expected and Provenance['Sanitizer']['Result'] == 'PASS' and Provenance['Sanitizer']['Cases'] == 81 and Provenance['Sanitizer']['ASanSymbolVerified'], 'Missing sanitizer gate in candidate')
         for Configuration in Policy['Configurations']:
             LibraryName, WorkerName = Names(Selected, Configuration)
             Build = Provenance['Profiles'][Selected+'-'+Configuration]
@@ -390,6 +401,7 @@ def Main():
     Parser.add_argument('--output', type=Path, required=True)
     Parser.add_argument('--inputs', type=Path)
     Parser.add_argument('--godot', type=Path)
+    Parser.add_argument('--remote-host', type=Path)
     Parser.add_argument('--configuration', choices=Policy['Configurations'])
     Args = Parser.parse_args()
     try:

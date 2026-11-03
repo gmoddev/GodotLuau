@@ -14,6 +14,9 @@ constexpr int MaxNodes = 4096;
 constexpr int MaxArguments = 64;
 constexpr int MaxDepth = 16;
 constexpr int UnreliableBytes = 768; // Body + 40-byte identity header; leaves RPC/ENet overhead.
+constexpr uint32_t Magic = 0x32524547; // GER2: explicit event protocol, including a native sequence.
+constexpr int HeaderBytes = 48;
+constexpr int RpcAllowance = 384; // Qualified full-RPC allowance with NetworkService path <=256 UTF-8 bytes.
 
 inline bool ValidUtf8(const char* Text, size_t Length) {
     for (size_t Index = 0; Index < Length;) {

@@ -78,6 +78,10 @@ the inherited runtime already satisfies them. Baseline gaps link to
   Phase 1 bounds and compatibility are defined by [ADR-008](adr-008-remoteevent-publication.md).
   This does not claim sequenced delivery, total ENet retention bounds, general
   replication relevance or finite RemoteFunction defaults (GL-030).
+  The later-phase candidate must additionally satisfy [ADR-009](adr-009-bounded-remote-delivery.md):
+  actual native RPC context, bounded ownership across queue/native handoff,
+  explicit terminal reliable failure, independent checked sequencing and exact
+  generation retirement. Its pending qualification is not a main guarantee.
 
 - Every inbound RPC checks allowed receiver role, actual transport sender, and
   target authority before mutating state or relaying. Do not trust a payload's

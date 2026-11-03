@@ -45,6 +45,12 @@ development branch, with Windows/Linux Debug/Release, hosted native/sanitizer an
 non-publishing package gates verified. Later sequencing/retention/MTU/fairness
 phases remain open; neither branch is merged into main.
 
+The approved [ADR-009 candidate](adr-009-bounded-remote-delivery.md) implements the
+later bounded-queue/sequencing contract with an admitted Godot/ENet host adapter.
+The [completion work record](remoteevent-completion-work.md) tracks actual initial
+Windows passes, failed attempts and remaining hosted/platform/performance gates.
+This candidate is not yet qualified or integrated into main.
+
 The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
 matching Windows/Linux instrumented hosts, actual detection controls and retained
 full-profile failures. Its historical partial outcomes are superseded by the

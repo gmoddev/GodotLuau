@@ -1,5 +1,41 @@
 # Shared-domain regression fixtures
 
+## GL-029 admitted network host (candidate under qualification)
+
+The later-phase RemoteEvent candidate requires the hash-pinned native adapter in
+`RemoteAdmissionHost.json`; a stock host fails network startup closed. Keep the
+official pinned editor for asset preprocessing. Build a matching headless runtime
+with `python tests/runtime/BuildSanitizedGodot.py --output <fresh-host-directory>
+--remote-admission --configuration Debug --jobs 2` (or `Release`). Omit
+`--configuration` for the matching GL-018 ASan/LSan profile. This does not change
+the engine or submodule pins, and does not qualify rendered/editor/device builds.
+
+Run `RunRemoteHostQualification.py --godot <executable> --host-manifest <manifest>
+--output <fresh-evidence-directory>` for actual native byte/command admission,
+partial/full ACK, reset/destroy, partial fanout, RPC WouldBlock propagation and
+complete-RPC MTU checks. The API separates retained ownership from last successful
+submission size; submission and application receipt are not ACK retirement.
+Required source/patch/executable identities are checked by `RemoteHostIdentity.py`.
+
+The existing `RunQualification.py --remote` six-actor fixture additionally covers
+GER2 sequencing, actual wrong carriers, peer/Remote/direction isolation, targeted
+and broadcast streams, unsent supersession, queue pressure/fairness, record caps,
+retirement, age outcomes and terminal reliable overflow. Test barriers are bound
+only by `GL_RUNTIME_TESTS` and reject both Server and Client Lua execution. They
+are absent from the SCons product. The core suite requires **81 cases**, preserving
+the prior 80. The existing native actor inventory remains **116**, with the two
+host-boundary fixtures required separately by ordinary native/sanitizer/candidate
+gates. See [ADR-009](../../newdocs/adr-009-bounded-remote-delivery.md) and the
+[work record](../../newdocs/remoteevent-completion-work.md) for qualification status.
+
+`RunRemoteDeliveryBenchmarks.py` interleaves immutable baseline/candidate libraries
+and matching hosts with 1/16/32/64 real peer processes. Supply both product identity
+and host manifests. It reports actual Fire/echo timing, dispatch/frame windows,
+callback counts, queue diagnostics, sampled native ownership and teardown memory.
+Two trials are the default; a one-trial smoke run is not repeated performance
+qualification. Physics/rendering/Character work is deliberately absent from this
+network-only workload. There is no automatic speed threshold or graphical claim.
+
 ## GL-018 matching native sanitizer hosts
 
 `BuildSanitizedGodot.py`, `BuildNativeSanitizers.py` and

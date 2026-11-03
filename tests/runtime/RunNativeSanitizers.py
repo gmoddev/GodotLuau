@@ -105,6 +105,8 @@ def Main():
             if any(Value is None for Value in [Args.extension, Args.build, Args.build_identity, Args.host_manifest, Args.asset_godot, Args.asset_provenance]):
                 raise ValueError('Full qualification requires host/build and verified asset-editor identities')
             Host = json.loads(Args.host_manifest.read_text())
+            from RemoteHostIdentity import VerifyRemoteHost
+            VerifyRemoteHost(Host, Args.godot)
             Policy = json.loads((Runtime/'SanitizerHosts.json').read_text())
             if Host['Exit'] != 0 or Host['ExecutableSHA256'] != Hash(Args.godot) or Host['PolicySHA256'] != Hash(Runtime/'SanitizerHosts.json') or Host['EngineRevision'] != Policy['EngineRevision']:
                 raise ValueError('Stale or mismatched instrumented host')
@@ -152,13 +154,16 @@ def Main():
                 Observe([sys.executable, Runtime/'InvestigateSanitizerBindings.py', '--godot', Args.godot,
                          '--probe', Args.probe, '--output', Args.output/'binding-controls'], 'binding-investigation', 180)
             Native = Args.output/'native'
+            Observe([sys.executable, Runtime/'RunRemoteHostQualification.py', '--godot', Args.godot,
+                     '--host-manifest', Args.host_manifest, '--output', Args.output/'remote-host'], 'remote-host-qualification', 300)
             for Group, Flags in [('regression',['--teardown','--coordinated-close']),('security',['--security']),('animation',['--animation']),('remote',['--remote']),('characters',['--characters']),('resources',['--resources']),('filesystem',['--filesystem']),('http',['--http']),('httpservice',['--httpservice']),('callers',['--callers']),('datastore',['--datastore'])]:
                 Observe([sys.executable, Runtime/'RunQualification.py', '--godot', Args.godot, '--extension', Args.extension, '--output', Native/Group, '--timeout', '15' if Group=='resources' else '60', *Flags], 'suite-'+Group, 360)
             for Group, Script, Flags in [('presentation','RunCharacterPresentation.py',[]),('performance','RunCharacterPerformance.py',['--trials','1','--samples','120','--counts','1,16'])]:
                 Observe([sys.executable, Runtime/Script, '--godot', Args.godot, '--asset-godot', Args.asset_godot, '--extension', Args.extension, '--output', Native/Group, *Flags], 'suite-'+Group, 360)
             Observe([sys.executable, Runtime/'RunCoreQualification.py', '--build', Args.build, '--output', Args.output/'core'], 'suite-core', 150)
             (Args.output/'host-provenance.json').write_text(json.dumps(Identity['Host'], indent=2))
-            Observe([sys.executable, Runtime/'CheckNativeCI.py', '--output', Native, '--extension', Args.extension, '--godot-evidence', Args.output/'host-provenance.json', '--revision', Args.revision], 'strict-native-check', 60)
+            Observe([sys.executable, Runtime/'CheckNativeCI.py', '--output', Native, '--extension', Args.extension, '--godot-evidence', Args.output/'host-provenance.json',
+                     '--remote-host-evidence', Args.host_manifest, '--remote-host-qualification', Args.output/'remote-host', '--revision', Args.revision], 'strict-native-check', 60)
         Passed = all(Item['Passed'] for Item in Results)
         # Detect reports written by any grandchild; expected controls are isolated.
         Unexpected = [str(File.relative_to(Args.output)) for File in Args.output.rglob('asan-report*') if File.is_file() and File.parts[len(Args.output.parts)] not in ['standalone-uaf','host-uaf','host-leak']]
