@@ -273,3 +273,33 @@ profile upload path to remain beneath the profile root. No gate or integrity
 check is relaxed. The known-invalid queued candidate run is stopped and a fresh
 non-publishing run will verify the corrected layout. Ordinary core/native and
 full-native source checks continue independently.
+
+## Final evidence collection
+
+The unchanged Linux-only rerun of ordinary native run `41611084362` passes;
+its original failed Character observer assertions remain retained. The final
+allocation-guard source `6e29c86` now passes hosted core run `41618226624`:
+downloaded discovery/JUnit reports independently verify all 81 distinct cases
+on Windows and Linux. Fresh native `41618227155` and full-native sanitizer
+`41618226865` remain in progress. Corrected non-publishing candidate
+`41620026268` runs at `3c552e6`, with the same runtime fingerprint and separate
+host diagnostics artifacts. Known-invalid layout run `41618230530` is cancelled.
+
+All final local stages pass on the allocation-guard product: six Remote actors,
+the actual UDP fault/maximum native-RPC fixture, and twelve comparative datasets
+(two alternating trials at 1/16/32 peers). The
+[completion qualification record](remoteevent-completion-qualification.md)
+records source/product hashes, retained archive identity, slower response latency,
+better frame progression in this workload, and the failed 64-peer attempts.
+The archive contains 2,865 independently hash-verified files. These local results
+do not substitute for the remaining hosted and package gates; GL-029 stays open
+until those gates and their downloaded artifacts verify.
+
+The final ordinary native run `41618227155` and full-native sanitizer run
+`41618226865` now both complete successfully on Windows and Linux. Independent
+download checks verify 116 actors per profile, 459/460 Remote assertions, both
+host fixtures, exact runtime/harness identities, native logs, compiler/product
+identities and instrumentation. Full-native detection/reload controls pass;
+557 Windows / 562 Linux indexed files match, with the same explicitly retained
+one-transient-mailbox omission per platform. The non-publishing candidate remains
+the final outstanding gate. Its Linux Debug source-product profile has passed.

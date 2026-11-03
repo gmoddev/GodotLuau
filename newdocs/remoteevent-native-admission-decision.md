@@ -1,7 +1,8 @@
 # GL-029 native admission decision
 
 Status: native host adapter APPROVED by the user on 2026-11-03 ("continue,
-approved"). Implementation and independent qualification are pending.
+approved"). Implementation is committed; final independent hosted/package
+qualification is tracked in the [completion record](remoteevent-completion-qualification.md).
 Date: 2026-11-03. Baseline `cda423a`, qualified Phase 1 runtime `eec2397`.
 
 ## Established boundary
@@ -59,7 +60,8 @@ This introduces a **patched-host dependency for the stronger contract**. It is
 not an ordinary GDExtension-only fix and must be qualified alongside both
 Windows/Linux Debug/Release products, packaging and sanitizer hosts. It needs a
 focused ADR and explicit project/deployment migration documentation. No host
-patch, dependency change, pipeline replacement or runtime refactor has been made.
+patch or dependency change had been made at this decision checkpoint. The approved
+implementation is described in [ADR-009](adr-009-bounded-remote-delivery.md).
 No scheduler, replication or RemoteFunction redesign is part of this option.
 
 ## Stock-host alternative

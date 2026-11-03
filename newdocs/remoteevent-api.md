@@ -98,10 +98,17 @@ the same candidate protocol. Other qualified RPC payloads remain unchanged.
 NetworkService's absolute node path is limited to 256 UTF-8 bytes. The candidate
 reserves 384 bytes above the event frame for complete RPC framing and checks the
 actual negotiated ENet budget. Initial Windows ASan measurements at MTU 1,392
-observe 1,066 uncached / 819 cached native packet bytes for an 816-byte frame,
-each one command, below the 1,364-byte unfragmented budget. Final independent
+observe 1,066 uncached / 819 cached script-method packet bytes for an 816-byte
+frame. The supplemental real UDP fixture observes an actual native NetworkService
+method submitting that frame as an 820-byte cached packet at the maximum path.
+Each uses one command, below the 1,364-byte unfragmented budget. Final independent
 Debug/Release qualification is still required. This is the existing UDP path,
 not an unqualified DTLS, relay or arbitrary network MTU guarantee.
+
+The [qualification record](remoteevent-completion-qualification.md) reports the
+measured cost of deferred dispatch: higher response latency and better frame
+progression in the bounded Debug ASan echo workload. It does not promise a
+Release speed improvement or successful 64-peer performance qualification.
 
 `NetworkService:GetRemoteState(Remote)` and `GetRemotePeerState(Peer)` expose
 read-only queue/counter/identity diagnostics. Queued, submitted, superseded,
