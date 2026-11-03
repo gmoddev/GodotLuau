@@ -211,3 +211,51 @@ reference is older (`4ea53113a98961a64347c672890f65bf9b5c8a54`); neither is chan
 The sole worktree stays on the integration branch. Pins, dormant release workflow
 and updater admission are unchanged. [API/migration](remoteevent-api.md) describes
 candidate behavior separately from qualification and deployment authorization.
+
+## Hosted checkpoint and allocation guard follow-up
+
+Runtime commit `6c04b20d262ae37910b01f2ec499bf47f5734a70` is pushed without
+merging. Hosted core run `41611084323` passes both platforms; downloaded strict
+discovery/JUnit reports verify 81 distinct cases each. Full-native run
+`41611084329` passes Windows ASan and Linux ASan/LSan, with detection controls,
+81 core cases, 116 native actors and both admitted-host fixtures. Independent
+download verification matches 557 Windows / 562 Linux manifest files. Each
+manifest retains one missing transient GL-003 mailbox file; no required log,
+result or input is missing. Raw GUID text remains outside that upload pattern,
+as in the retained Phase 1 evidence; the hosted strict checker verifies it there.
+
+Ordinary native run `41611084362` initially passes Windows and fails Linux's
+existing Dedicated Character observer orientation/configuration/correction/
+replacement assertions. Its failed artifacts are preserved. The same runtime's
+Linux Debug and Release candidate profiles and full-native Linux profile pass
+those assertions. One unchanged Linux-only rerun is in progress; this records
+counterevidence and does not identify a reproduced GL-029 defect or suppress an
+assertion. Non-publishing candidate run `41611086886` remains in progress.
+
+Subsequent source review finds target-vector growth outside the sender's
+allocation catch. The smallest correction includes target enumeration in the
+existing pre-admission `bad_alloc` boundary. No normal delivery, limits or ownership
+model changes. This is a source-verified guard correction, not a reproduced
+process OOM. New native fingerprint is
+`27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa`;
+the matching Windows ASan adapter compiles in 41.172 seconds, SHA-256
+`c9faa2dad570cb1032aa10d0dc1317032a5aadaba07e409f0dc6700466079498`.
+Its six Remote actors pass again in 54.843 seconds. Fresh hosted qualification
+is required for this source revision before closure.
+
+The supplemental [wire fixture](../tests/qualification/remote-delivery/README.md)
+passes on that corrected adapter in 7.937 seconds. Two real UDP proxies each
+drop one reliable datagram and observe its native retransmission, permanently
+drop one unordered datagram, delay two datagrams and duplicate one. There are no
+capacity drops or unexpected ASan reports. Native freshness rejects delayed old
+sequenced data. The actual native NetworkService at a 256-byte UTF-8 path submits
+an 816-byte frame as an 820-byte cached RPC packet, one native command. This
+complements the separate uncached host-only encoding measurements.
+
+The first paired performance campaign completes two alternating baseline/
+candidate trials at 1, 16 and 32 real peers. The baseline 64-peer attempt stops
+at its bounded deadline with 59 warmups complete; an independent candidate-only
+64-peer attempt also stops before completing. Neither is a 64-peer pass or a
+proven new regression. The practical comparative profile is bounded at 32 peers;
+raw failed attempts remain retained. Repeated measurements on the allocation-
+guard revision are in progress. No broader networking/scaling refactor is added.

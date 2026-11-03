@@ -2200,22 +2200,23 @@ public:
         GLRemotePayload::Codec Payload; Payload.Value(Body);
         if (!Payload.Valid || Payload.Bytes.size() > GLRemotePayload::MaxBytes - GLRemotePayload::HeaderBytes || (Publication->Delivery && Payload.Bytes.size() > GLRemotePayload::UnreliableBytes)) return "[Network:Remote] Payload exceeds delivery limits";
         std::vector<int> Targets;
-        if (mode == 2) {
-            if (!net_connected || !Publication->Active) return "[Network:Remote] Remote not ready";
-            Targets.push_back(1);
-        } else for (const auto& Peer : peer_seq_uid) {
-            if (Peer.first <= 1 || (Target > 0 && Target != Peer.first)) continue;
-            auto Found = Publication->Peers.find(Peer.first);
-            if (Found == Publication->Peers.end() || !Found->second.Ready || Found->second.User != Peer.second || !_mp()->get_peers().has(Peer.first))
-                return "[Network:Remote] Remote peer not ready";
-            Targets.push_back(Peer.first);
-        }
-        if (Target > 0 && Targets.empty()) return "[Network:Remote] Remote peer unavailable";
-        std::sort(Targets.begin(), Targets.end());
         std::vector<GLRemoteDelivery::Message<PackedByteArray>> Candidates;
         std::map<int, int64_t> Failures;
         uint64_t Replacements = 0, Drops = 0;
         try {
+            // Target enumeration also allocates; reject it before committing any fanout.
+            if (mode == 2) {
+                if (!net_connected || !Publication->Active) return "[Network:Remote] Remote not ready";
+                Targets.push_back(1);
+            } else for (const auto& Peer : peer_seq_uid) {
+                if (Peer.first <= 1 || (Target > 0 && Target != Peer.first)) continue;
+                auto Found = Publication->Peers.find(Peer.first);
+                if (Found == Publication->Peers.end() || !Found->second.Ready || Found->second.User != Peer.second || !_mp()->get_peers().has(Peer.first))
+                    return "[Network:Remote] Remote peer not ready";
+                Targets.push_back(Peer.first);
+            }
+            if (Target > 0 && Targets.empty()) return "[Network:Remote] Remote peer unavailable";
+            std::sort(Targets.begin(), Targets.end());
             auto Encoded = std::make_shared<const PackedByteArray>(Payload.Bytes);
             Candidates.reserve(Targets.size());
             for (int Peer : Targets) {
