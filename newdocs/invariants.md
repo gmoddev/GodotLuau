@@ -80,7 +80,9 @@ the inherited runtime already satisfies them. Baseline gaps link to
   actual native RPC context, bounded ownership across queue/native handoff,
   explicit terminal reliable failure, independent checked sequencing and exact
   generation retirement. Its [qualification](remoteevent-completion-qualification.md)
-  requires the admitted host and remains an unmerged branch guarantee. Native
+  requires the admitted host. Main preserves the qualified source through
+  `6a7fedf`; [fresh integration verification](gl018-gl029-main-integration.md)
+  is recorded separately. Native
   data caps do not bound total process RAM or receive/control storage. Neither
   phase supplies general replication relevance or finite RemoteFunction defaults
   (GL-030).

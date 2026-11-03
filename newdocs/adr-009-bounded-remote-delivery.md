@@ -1,12 +1,13 @@
 # ADR-009: Bounded native RemoteEvent delivery
 
-Status: accepted, implemented and qualified on the unmerged development branch
+Status: accepted, implemented, qualified and integrated through main merge `6a7fedf`
 within the [documented profile](remoteevent-completion-qualification.md). User approval
 on 2026-11-03 covers the narrow Godot/ENet admission adapter described in the
 [decision record](remoteevent-native-admission-decision.md). This ADR extends
 [ADR-008](adr-008-remoteevent-publication.md). The qualification record retains
 source/product identities, failed attempts, performance costs and supported
-limits. Main/publication/updater remain unchanged. No new VM, general traffic
+limits. [Fresh main verification](gl018-gl029-main-integration.md) is recorded
+separately; publication and updater admission remain disabled. No new VM, general traffic
 scheduler or RemoteFunction contract.
 
 ## Native admission authority

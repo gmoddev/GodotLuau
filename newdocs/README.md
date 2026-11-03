@@ -33,10 +33,17 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-018 is [qualified and resolved on its development branch](gl018-closure.md)
+GL-018 / GL-029 are integrated through normal merge
+`6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851`, preserving all 39 integration-branch
+commits and the exact qualified tree. The
+[main integration record](gl018-gl029-main-integration.md) separates source
+integration and retained branch evidence from fresh main CI, currently pending.
+Release publication and updater distribution remain disabled.
+
+GL-018 is [qualified and resolved](gl018-closure.md)
 within the admitted matching-host headless Debug ASan/LSan scope. All six hosted
-jobs and their required evidence pass at `46427d0`; this is not a main merge or
-distribution authorization.
+jobs and their required evidence pass at `46427d0`; this historical branch
+qualification is not distribution authorization.
 
 The [GL-018/GL-029 integration review](gl018-gl029-integration.md) preserves the
 sanitizer, research and RemoteEvent Phase 1 commits. GL-029 Phase 1 is
@@ -44,7 +51,7 @@ sanitizer, research and RemoteEvent Phase 1 commits. GL-029 Phase 1 is
 development branch, with Windows/Linux Debug/Release, hosted native/sanitizer and
 non-publishing package gates verified. The later sequencing/retention/MTU/fairness
 phases are now [qualified](remoteevent-completion-qualification.md) on the same
-development branch; neither branch is merged into main.
+development branch. Its retained tip is `d6afbe6`; main now preserves that tree.
 
 The qualified [ADR-009 contract](adr-009-bounded-remote-delivery.md) implements the
 later bounded-queue/sequencing contract with an admitted Godot/ENet host adapter.
@@ -60,8 +67,8 @@ disabled.
 The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
 matching Windows/Linux instrumented hosts, actual detection controls and retained
 full-profile failures. Its historical partial outcomes are superseded by the
-scoped closure above. Main, release publication, updater admission and GL-017
-are unchanged by that branch.
+scoped closure above and the main integration record. Release publication,
+updater admission and GL-017 remain unchanged.
 
 GL-007 is integrated and resolved within ADR-006's bounded authority contract by
 normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`. The retained branch

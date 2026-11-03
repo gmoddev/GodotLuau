@@ -1,5 +1,11 @@
 # GL-018 qualified closure
 
+Main integration (2026-11-03): normal merge `6a7fedf` preserves the combined
+qualified source and this original evidence. The
+[integration record](gl018-gl029-main-integration.md) tracks fresh main checks
+separately. Release publication and updater distribution remain disabled.
+The original branch qualification below retains its checkpoint disposition.
+
 2026-11-02: **RESOLVED within the admitted matching-host headless Debug sanitizer
 profile, on the development branch; not merged into main.** Qualified revision:
 `46427d0e9ec10eb066202742255ef1881394f348`. All six hosted jobs are terminal

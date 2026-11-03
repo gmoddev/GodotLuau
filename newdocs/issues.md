@@ -28,8 +28,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 The [combined GL-018/GL-029 development review](gl018-gl029-integration.md)
 preserves both histories and lists the remaining acceptance gates. GL-018 now has
 its separate scoped [closure](gl018-closure.md); GL-029 has a separate
-[admitted-host closure](remoteevent-completion-qualification.md). Both remain
-unmerged into main.
+[admitted-host closure](remoteevent-completion-qualification.md). Normal merge
+`6a7fedf` integrates both; [fresh main verification](gl018-gl029-main-integration.md)
+is pending separately from retained branch qualification.
 
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
@@ -50,7 +51,7 @@ unmerged into main.
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
-| GL-018 | P2 | Resolved within admitted matching-host profile; unmerged | Verified Windows ASan/Linux ASan-LSan, 80 core and 110 native actors each |
+| GL-018 | P2 | Integrated; resolved within admitted matching-host profile | Headless Windows ASan/Linux ASan-LSan qualification; retained host/platform limits |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Integrated scoped authority correction; sanitizer qualification partial | Canonical wire validation and ENet adversarial coverage; GL-017/018 remain separate |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
@@ -61,7 +62,7 @@ unmerged into main.
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
-| GL-029 | P2 | Resolved within ADR-008/009 admitted-host scope; unmerged | Three-mode RemoteEvent publication and bounded application/native admission |
+| GL-029 | P2 | Integrated; resolved within ADR-008/009 admitted-host scope | Three-mode RemoteEvent publication and bounded application/native admission |
 | GL-030 | P2 | Open; source-verified terminal-outcome gap | Default RemoteFunction waits are infinite while aged correlation records are erased |
 
 ## GL-029: Application Remote delivery has no unified bounded publication contract
@@ -77,8 +78,10 @@ is fixed by one StrictRemote-only UTF-8 conversion line; actual ENet Server/echo
 Wait assertions pass. Other carriers and persistence encoding remain unchanged.
 No refactor or main merge is included. Earlier failures remain in the record.
 
-**Status: RESOLVED within ADR-008/009's admitted-host qualification scope; unmerged on
-`integration/gl-018-gl-029-remoteevents`.** The original checkpoint remains
+**Status: INTEGRATED AND RESOLVED within ADR-008/009's admitted-host qualification scope.**
+Normal main merge `6a7fedf` preserves retained
+`integration/gl-018-gl-029-remoteevents` at `d6afbe6`; see
+[fresh main verification](gl018-gl029-main-integration.md). The original checkpoint remains
 preserved; see the [handoff](remoteevent-phase1-handoff.md).
 The [completion investigation](remoteevent-completion-work.md) and
 [native admission decision](remoteevent-native-admission-decision.md) reproduce
@@ -94,7 +97,8 @@ ordinary native, matching-host full-native sanitizer, exact packet/ownership
 boundaries and both extracted packages. Actual UDP loss/reorder and two paired
 1/16/32-peer performance trials are retained. Response latency increases; 64-peer
 performance is unqualified. Earlier Character observation failures pass unchanged
-replays without an asserted root-cause fix. Main remains unchanged. Baseline assessment
+replays without an asserted root-cause fix. Main integration preserves this
+qualified tree; fresh CI is tracked separately. Baseline assessment
 source is `83cd0887968d73d61d050650718d8ada6e124579`; research is retained at
 `9ea782bb739cc35deba06474a82582a12529df6d`.
 
@@ -1009,8 +1013,11 @@ engine/source reproduction in [validation](shared-domains-validation.md).
 
 ## GL-018: Windows full-native sanitizer host remains unqualified
 
-**Current disposition: RESOLVED within the admitted matching-host profile at
-`46427d0`; unmerged.** All six hosted core/native/sanitizer jobs pass, with exact
+**Current disposition: INTEGRATED AND RESOLVED within the admitted matching-host profile.**
+Normal merge `6a7fedf` preserves the combined qualified source;
+[fresh main verification](gl018-gl029-main-integration.md) is pending separately.
+The retained branch qualification at `46427d0` passes all six hosted
+core/native/sanitizer jobs, with exact
 source/harness, actual cases, instrumented builds and retained logs independently
 checked. See [closure and proof limits](gl018-closure.md). Stock-host unload safety,
 Windows LSan and arbitrary custom/device profiles remain outside this closure.

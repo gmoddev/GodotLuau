@@ -2,7 +2,9 @@
 
 Status: **GL-029 RESOLVED within ADR-008/009's admitted-host qualification scope.**
 Local, hosted and extracted-package checks pass with independently verified
-artifacts. The branch is unmerged; distribution remains disabled.
+artifacts. The retained branch is now integrated by main merge `6a7fedf`;
+[fresh main verification](gl018-gl029-main-integration.md) is recorded separately.
+Distribution remains disabled. The evidence below retains its branch checkpoint.
 The [work record](remoteevent-completion-work.md) preserves development failures;
 [ADR-009](adr-009-bounded-remote-delivery.md) and the
 [API/migration contract](remoteevent-api.md) define supported behavior. The

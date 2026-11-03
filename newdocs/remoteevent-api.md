@@ -1,7 +1,9 @@
 # RemoteEvent API and migration
 
 Status: qualified within the [documented admitted-host profile](remoteevent-completion-qualification.md) on
-`integration/gl-018-gl-029-remoteevents`; unmerged, not a distribution channel.
+retained `integration/gl-018-gl-029-remoteevents` at `d6afbe6`, integrated into
+main by `6a7fedf`. [Fresh main checks](gl018-gl029-main-integration.md) remain
+separate; this is not a distribution channel.
 [ADR-008](adr-008-remoteevent-publication.md) defines publication/authority and
 [ADR-009](adr-009-bounded-remote-delivery.md) extends native admission/delivery.
 The [work record](remoteevent-completion-work.md) retains development attempts;
