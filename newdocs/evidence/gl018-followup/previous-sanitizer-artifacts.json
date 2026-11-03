@@ -1,0 +1,280 @@
+[
+  {
+    "Artifact": 13080425872,
+    "SHA256": "c782a218079a0b09415155fdd777121d804d3dc6b1300c343abd205174f2604e",
+    "VerifiedReports": 349,
+    "Result": "FAIL",
+    "ControlsPassed": true,
+    "FullQualification": false,
+    "Results": [
+      {
+        "Label": "standalone-clean",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "standalone-uaf",
+        "Exit": 1,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "engine-only",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "minimal-reload",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "host-uaf",
+        "Exit": 1,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "production-registration",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "production-vm-reload",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-regression",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-security",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-animation",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-characters",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-resources",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-filesystem",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-http",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-httpservice",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-callers",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-datastore",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-presentation",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-performance",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-core",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "strict-native-check",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      }
+    ]
+  },
+  {
+    "Artifact": 13079900738,
+    "SHA256": "b26ac173de9703fc91f45d52dc56e152e52db21dd750a730876308d5adc83cc1",
+    "VerifiedReports": 451,
+    "Result": "FAIL",
+    "ControlsPassed": true,
+    "FullQualification": false,
+    "Results": [
+      {
+        "Label": "standalone-clean",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "standalone-uaf",
+        "Exit": 1,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "engine-only",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "minimal-reload",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "host-uaf",
+        "Exit": 1,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "host-leak",
+        "Exit": 1,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "production-registration",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "production-vm-reload",
+        "Exit": -11,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-regression",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-security",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-animation",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-characters",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-resources",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-filesystem",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-http",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-httpservice",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-callers",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-datastore",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-presentation",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-performance",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      },
+      {
+        "Label": "suite-core",
+        "Exit": 0,
+        "Passed": true,
+        "TimedOut": false
+      },
+      {
+        "Label": "strict-native-check",
+        "Exit": 1,
+        "Passed": false,
+        "TimedOut": false
+      }
+    ]
+  }
+]

@@ -1,0 +1,805 @@
+{
+  "Status": "GL-029 resolved within ADR-008/009 admitted-host headless qualification; unmerged",
+  "DateUTC": "2026-11-03",
+  "Branch": "integration/gl-018-gl-029-remoteevents",
+  "RuntimeRevision": "6e29c8681adef414c2911e25e7f6414a210c6b15",
+  "PackagingRevision": "3c552e63950a3f1d293c2a9994c0ccc734c4f6d7",
+  "NativeSource": {
+    "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+    "Files": 91,
+    "Newlines": "LF normalized"
+  },
+  "MainUnchanged": "83cd0887968d73d61d050650718d8ada6e124579",
+  "EngineRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+  "AdmissionPatchSHA256LF": "df10215b62e125d3595972e5f16e0c7b45a9b0b9141564a91f1741b413f7568b",
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "Workflows": [
+    {
+      "Run": 41618226624,
+      "Attempt": 1,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618226624",
+      "Revision": "6e29c8681adef414c2911e25e7f6414a210c6b15",
+      "Result": "success",
+      "LatestJobs": [
+        {
+          "Name": "Core (Windows, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618226624/job/125856952608"
+        },
+        {
+          "Name": "Core (Linux, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618226624/job/125856952941"
+        }
+      ]
+    },
+    {
+      "Run": 41618227155,
+      "Attempt": 1,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618227155",
+      "Revision": "6e29c8681adef414c2911e25e7f6414a210c6b15",
+      "Result": "success",
+      "LatestJobs": [
+        {
+          "Name": "Native (Linux, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618227155/job/125856953660"
+        },
+        {
+          "Name": "Native (Windows, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618227155/job/125856953941"
+        }
+      ]
+    },
+    {
+      "Run": 41618226865,
+      "Attempt": 1,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618226865",
+      "Revision": "6e29c8681adef414c2911e25e7f6414a210c6b15",
+      "Result": "success",
+      "LatestJobs": [
+        {
+          "Name": "Full-native ASan (Linux)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618226865/job/125856952986"
+        },
+        {
+          "Name": "Full-native ASan (Windows)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41618226865/job/125856953452"
+        }
+      ]
+    },
+    {
+      "Run": 41620026268,
+      "Attempt": 2,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268",
+      "Revision": "3c552e63950a3f1d293c2a9994c0ccc734c4f6d7",
+      "Result": "success",
+      "LatestJobs": [
+        {
+          "Name": "Source build and qualify (Linux, Release)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125891541601"
+        },
+        {
+          "Name": "Candidate rejection and retention checks (ubuntu-24.04)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125891541639"
+        },
+        {
+          "Name": "Linux production core ASan and LSan",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125891542013"
+        },
+        {
+          "Name": "Source build and qualify (Windows, Release)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125891542456"
+        },
+        {
+          "Name": "Source build and qualify (Windows, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125891542763"
+        },
+        {
+          "Name": "Source build and qualify (Linux, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125891542887"
+        },
+        {
+          "Name": "Candidate rejection and retention checks (windows-2022)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125891609473"
+        },
+        {
+          "Name": "Extract and start candidate (Linux)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125910821915"
+        },
+        {
+          "Name": "Extract and start candidate (Windows)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125910822137"
+        },
+        {
+          "Name": "Require every candidate gate (no publication)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41620026268/job/125911277223"
+        }
+      ]
+    }
+  ],
+  "DownloadedVerification": {
+    "Revision": "6e29c8681adef414c2911e25e7f6414a210c6b15",
+    "NativeSource": {
+      "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+      "Files": 91,
+      "Newlines": "LF normalized"
+    },
+    "Core": [
+      {
+        "Path": "core\\runtime-core-Linux-Debug\\core-results.xml",
+        "Cases": 81,
+        "SHA256": "7dd2a223c55f81126d4ec91e07bf55309a5378fcf4557e367d2d19fc208d17ae"
+      },
+      {
+        "Path": "core\\runtime-core-Windows-Debug\\core-results.xml",
+        "Cases": 81,
+        "SHA256": "e634984c26b83afb3405f295b9e0c45750fd8e93549feeb534698758f0143ee1"
+      }
+    ],
+    "Native": [
+      {
+        "Path": "native\\runtime-native-Linux-Debug\\_temp\\native-ci\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 459,
+        "HostFixtures": 2,
+        "LogHashes": 360,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 4000,
+        "SummarySHA256": "0105d0ea0a7f642bfe5f8381684262bc1afc6242a765c95ee47cb9550be71e0d",
+        "ExtensionSHA256": "5f421923d690fd60a8e27b2c9a444a322a825fe08b22e0fbd561b2ab3bc45d6e",
+        "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+        "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99"
+      },
+      {
+        "Path": "native\\runtime-native-Windows-Debug\\_temp\\native-ci\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 459,
+        "HostFixtures": 2,
+        "LogHashes": 363,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 4000,
+        "SummarySHA256": "e3ded71fad04a1d0972f1c193129d462cc8d87c7f5944081c8b9d91819822343",
+        "ExtensionSHA256": "edfd4d32621fe92a256dc4cc4d39986b65d858ca4ea5600c14e71db11008520d",
+        "CompanionSHA256": "d0797943ccc457fe49b734b5322c4795f6fd4178c203bd385b82440ed1f0afab",
+        "HostSHA256": "2994bcef54e6a09726a44dea51037d770806d5c084277ec4f98a089acbf12cf1"
+      },
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 459,
+        "HostFixtures": 2,
+        "LogHashes": 353,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 0,
+        "SummarySHA256": "d38bd4e3c78f13d15d8a19cd8857c2edb401eba688ff28956cf1fcb2ee786c03",
+        "ExtensionSHA256": "9a2e3463ec1f633b5f8e7439253e339ae17acdbbc6fc81c723d0e7b0de34f39b",
+        "CompanionSHA256": "1bc0970cfd2d847a6fa0d116e15892de880b8183eb8d24df0f10b2989f98402a",
+        "HostSHA256": "72645b0eb1d30afde108c1604cb5377d662770b2f922d7def37f92f58602d711"
+      },
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 460,
+        "HostFixtures": 2,
+        "LogHashes": 353,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 0,
+        "SummarySHA256": "662a0e33492e8a170127b51266ecac771fde709c1fcedc8c524f121628587bfc",
+        "ExtensionSHA256": "a2d26093adcb1d22751b761ebcc0275a8904948c8e1c4198f595fc60bdfab727",
+        "CompanionSHA256": "937919efe4360888223dff03410c2a77966d059716345641fef5be5522ed5e8b",
+        "HostSHA256": "4214832789818959e4a02905c5c4facf8b6ec9611cc4d7fd6c30a078697d7324"
+      }
+    ],
+    "Sanitizers": [
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+        "Result": "PASS",
+        "Checks": 24,
+        "FilesVerified": 562,
+        "MissingEphemeralData": [
+          {
+            "Path": "native/filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/msg_GL003-shared__6ae9bb44-abbd-41b1-9615-000e4f285615_1.json",
+            "ExpectedSHA256": "c3ba927880aed047251e741b1351f1317d6f45faa1fda03b8e59d7b9990c2520",
+            "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+          }
+        ],
+        "CoreCases": 81,
+        "InstrumentedTranslationUnits": [
+          1160,
+          3
+        ],
+        "SummarySHA256": "f7cf350c01e0522866e30279966d02c778f2fbff79bfa84ac20cf7f3d1294e19"
+      },
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+        "Result": "PASS",
+        "Checks": 23,
+        "FilesVerified": 557,
+        "MissingEphemeralData": [
+          {
+            "Path": "native\\filesystem\\profile\\APPDATA\\GodotLuauRuntimeQualification\\msg_GL003-shared__6ae9bc46-a1c5-479e-819f-00274a23819f_1.json",
+            "ExpectedSHA256": "68a856ca60efbc5316b8fbb4b8dda4d12145ee61c12f77696dca5f193f5d551a",
+            "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+          }
+        ],
+        "CoreCases": 81,
+        "InstrumentedTranslationUnits": [
+          1160,
+          3
+        ],
+        "SummarySHA256": "1e1fbeebcf0b0c19c74e52f203ae85226d51187299c9b687329ee4e215c6863e"
+      }
+    ],
+    "Scope": "Downloaded completed artifacts only; absent profiles are not passing."
+  },
+  "CandidateVerification": {
+    "Revision": "3c552e63950a3f1d293c2a9994c0ccc734c4f6d7",
+    "Profiles": [
+      {
+        "Profile": "Windows-Debug",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 459,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 355,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "1fba8b417949cca76eca8c98f2fa4e5bd13ab8058ed71997d0776befdfe1e17a",
+        "HostSHA256": "11dd5b7d3e82c4ce2aef27b0021af5ef89ddd2ff0f453d543de3e1ef75b0c9b7",
+        "ExtensionSHA256": "d9d7a7db533ae6ec8e32478e76a840d6f98702cd858705840c8fcc3961b360cb",
+        "CompanionSHA256": "f8eb24de4fecb32f19d7955b05f002e61e1d5e45a559a71c49398a2c60aec580"
+      },
+      {
+        "Profile": "Windows-Release",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 459,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 351,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "74c41afe1b591ce61748ccafada4725489834626d6c527d4c815e5de49b3ac93",
+        "HostSHA256": "bd1ac20cad9291d0920659f5befb78e550c0990699af5d0d39c60e92980ceccc",
+        "ExtensionSHA256": "fad65fedf4227a421cdfd11d712d09c6f7324593d9f2ef34adb313d1bc68d92d",
+        "CompanionSHA256": "a7e460ade76f30da402af2a0f528f60285643e3879fc0b5f0c062ed76db53f5f"
+      },
+      {
+        "Profile": "Linux-Debug",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 461,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 355,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "7a1a542ef2b8ae9d5e6d802a47af1a854597957496f0066111528cb4c265bbb4",
+        "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99",
+        "ExtensionSHA256": "00b013936d4ed942ee1636aadccf5ec983126243879b53b27440d3e650833da7",
+        "CompanionSHA256": "f495e3f37dc32616a6df6951d9f9d7515213a4c00decbe1e8a7246bb8e5d83fc"
+      },
+      {
+        "Profile": "Linux-Release",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 457,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 351,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "99d075277c7d052f56b36297765a307afbbdc3091de7731493f66ff0bf522dc8",
+        "HostSHA256": "5ceeff3881483604aa60e194fc5be46f9e1009241632b82203ea1867ef17ea6e",
+        "ExtensionSHA256": "8ce6ca67bb351a0fd142e40eb3b9bb1b6621e42062e8b0c072aa60f21135b1fc",
+        "CompanionSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0"
+      }
+    ],
+    "Scope": "Downloaded profile products, strict native rechecks, exact packages and acceptance.",
+    "CoreSanitizer": {
+      "Result": "PASS",
+      "Cases": 81
+    },
+    "Packages": [
+      {
+        "Platform": "Linux",
+        "Result": "PASS",
+        "StartupActors": 2,
+        "Members": 133,
+        "PackageSHA256": "fbfb96cd553228fa1e8a70d075b66b9bbd3365c1c86f1b4fadfbe1c92bf4c32e",
+        "RecordSHA256": "01394105b271c68d4b8ce2fd4310363158f36cfcd970a9d409a12da88e559ed5"
+      },
+      {
+        "Platform": "Windows",
+        "Result": "PASS",
+        "StartupActors": 2,
+        "Members": 133,
+        "PackageSHA256": "e3b15b9ace451da6447c0f5c98a1b8a85f8add23cc8682557efd6b7f000f73cc",
+        "RecordSHA256": "74aa9a18d3a0809031abacfdbc1b74d66b131e8fba6c3e7a939c859cb9fffd83"
+      }
+    ],
+    "Acceptance": {
+      "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+      "SHA256": "37ea3192676751b0504848f8501757203fbade4aa16948e8a9de1f3a3cea6490"
+    }
+  },
+  "LocalEvidence": {
+    "Archive": "completion-evidence-v1.zip",
+    "SHA256": "798ae18690f7f14fede266ddebb90f68309d7d9bfbc483dbc86daff6e866dfaf",
+    "Bytes": 13347725,
+    "IndexedFiles": 2865,
+    "AllMemberHashesVerified": true,
+    "AnalysisSHA256": "5f18e03d73e5fce16e90bb6760f21d0c94e13471240ada73737e700bf33b006f",
+    "Configuration": "Windows MSVC Debug ASan, matching original/admitted hosts, two compiler jobs",
+    "Remote": {
+      "Source": {
+        "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "Products": {
+        "godot_luau.dll": "c9faa2dad570cb1032aa10d0dc1317032a5aadaba07e409f0dc6700466079498",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "FixtureSHA256": "2d4090395f9493dfdba4c97a60deac08e81e453ef35c140d9ce80978895e2a0f",
+      "Result": "PASS",
+      "Actors": 6,
+      "Seconds": 54.40599999995902,
+      "UnexpectedReports": []
+    },
+    "Wire": {
+      "Result": "PASS",
+      "Seconds": 7.936999999918044,
+      "Datagrams": [
+        {
+          "Received": 62,
+          "Forwarded": 61,
+          "ReliableDropped": 1,
+          "ReliableMatchingDatagrams": 2,
+          "UnorderedDropped": 1,
+          "Delayed": 2,
+          "Duplicated": 1,
+          "CapacityDrops": 0,
+          "PeakPending": 4,
+          "PeakPendingBytes": 830
+        },
+        {
+          "Received": 65,
+          "Forwarded": 64,
+          "ReliableDropped": 1,
+          "ReliableMatchingDatagrams": 2,
+          "UnorderedDropped": 1,
+          "Delayed": 2,
+          "Duplicated": 1,
+          "CapacityDrops": 0,
+          "PeakPending": 4,
+          "PeakPendingBytes": 830
+        }
+      ],
+      "Measurements": [
+        {},
+        {
+          "AbsolutePathUTF8Bytes": 256,
+          "EventFrameBytes": 816,
+          "MTU": 1392,
+          "SubmittedCommands": 1,
+          "SubmittedPacketBytes": 820,
+          "UnfragmentedPacketBytes": 1364
+        },
+        {
+          "AbsolutePathUTF8Bytes": 256,
+          "EventFrameBytes": 816,
+          "MTU": 1392,
+          "SubmittedCommands": 1,
+          "SubmittedPacketBytes": 820,
+          "UnfragmentedPacketBytes": 1364
+        }
+      ]
+    },
+    "Performance": {
+      "Runs": 12,
+      "Trials": 2,
+      "Peers": [
+        1,
+        16,
+        32
+      ],
+      "WarmupsPerPeer": 16,
+      "MeasuredEchoesPerPeer": 64,
+      "Rows": [
+        {
+          "Peers": 1,
+          "Product": "Baseline",
+          "RTTMilliseconds": {
+            "Samples": 128,
+            "Mean": 13.144382079190104,
+            "Median": 15.6791000626981,
+            "P95": 16.6641999967396,
+            "P99": 16.9544001109898
+          },
+          "ClientFireMicroseconds": {
+            "Samples": 128,
+            "Mean": 1491.7797088855823,
+            "Median": 1610.24997942149,
+            "P95": 1840.80004692077,
+            "P99": 2212.40008249878
+          },
+          "ServerFireMicroseconds": {
+            "Samples": 128,
+            "Mean": 1793.4320603671897,
+            "Median": 1937.1502567082598,
+            "P95": 2092.29998290538,
+            "P99": 2132.89959356188
+          },
+          "ServerDispatchMilliseconds": {
+            "Samples": 218,
+            "Mean": 0.6281788990825689,
+            "Median": 0.5860000000000001,
+            "P95": 1.05,
+            "P99": 1.2
+          },
+          "ServerFrameMilliseconds": {
+            "Samples": 218,
+            "Mean": 8.376435779816514,
+            "Median": 8.422999999999998,
+            "P95": 12.141,
+            "P99": 13.317
+          },
+          "ClientCallbacks": 160,
+          "ServerCallbacks": 160,
+          "MaxNodesAfterTeardown": 1,
+          "MaxObjectsAfterTeardown": 1123,
+          "MaxStaticByteChange": -18060,
+          "ObservedNativeHostBytes": null,
+          "ObservedNativeHostCommands": null,
+          "ApplicationOutgoingHighBytes": null,
+          "ApplicationIncomingHighBytes": null,
+          "Dropped": null,
+          "Superseded": null
+        },
+        {
+          "Peers": 1,
+          "Product": "Candidate",
+          "RTTMilliseconds": {
+            "Samples": 128,
+            "Mean": 29.03613050148123,
+            "Median": 31.1690003145486,
+            "P95": 33.7686003185809,
+            "P99": 33.9800999499857
+          },
+          "ClientFireMicroseconds": {
+            "Samples": 128,
+            "Mean": 1717.683597235004,
+            "Median": 1840.8999312669,
+            "P95": 2017.4998790025697,
+            "P99": 2209.7998298704597
+          },
+          "ServerFireMicroseconds": {
+            "Samples": 128,
+            "Mean": 2044.5312220544974,
+            "Median": 2203.400013968345,
+            "P95": 2457.60008692741,
+            "P99": 2880.50016388297
+          },
+          "ServerDispatchMilliseconds": {
+            "Samples": 455,
+            "Mean": 1.7244549450549451,
+            "Median": 1.15,
+            "P95": 4.0489999999999995,
+            "P99": 4.498
+          },
+          "ServerFrameMilliseconds": {
+            "Samples": 455,
+            "Mean": 8.35249010989011,
+            "Median": 8.358,
+            "P95": 9.185,
+            "P99": 10.42
+          },
+          "ClientCallbacks": 160,
+          "ServerCallbacks": 160,
+          "MaxNodesAfterTeardown": 1,
+          "MaxObjectsAfterTeardown": 1123,
+          "MaxStaticByteChange": -6380,
+          "ObservedNativeHostBytes": 1104,
+          "ObservedNativeHostCommands": 1,
+          "ApplicationOutgoingHighBytes": 1100,
+          "ApplicationIncomingHighBytes": 1100,
+          "Dropped": 0,
+          "Superseded": 0
+        },
+        {
+          "Peers": 16,
+          "Product": "Baseline",
+          "RTTMilliseconds": {
+            "Samples": 2048,
+            "Mean": 72.39679433860147,
+            "Median": 70.6342998892069,
+            "P95": 93.6612002551556,
+            "P99": 110.80289958044901
+          },
+          "ClientFireMicroseconds": {
+            "Samples": 2048,
+            "Mean": 2005.8739739852122,
+            "Median": 1705.9999518096402,
+            "P95": 2738.69978263974,
+            "P99": 9351.89984738826
+          },
+          "ServerFireMicroseconds": {
+            "Samples": 2048,
+            "Mean": 2734.5308049007094,
+            "Median": 2535.79998388886,
+            "P95": 3158.49995240569,
+            "P99": 7190.000265836709
+          },
+          "ServerDispatchMilliseconds": {
+            "Samples": 160,
+            "Mean": 2.71729375,
+            "Median": 2.6805,
+            "P95": 3.306,
+            "P99": 5.078
+          },
+          "ServerFrameMilliseconds": {
+            "Samples": 160,
+            "Mean": 60.74423125,
+            "Median": 64.143,
+            "P95": 79.769,
+            "P99": 87.38
+          },
+          "ClientCallbacks": 2560,
+          "ServerCallbacks": 2560,
+          "MaxNodesAfterTeardown": 1,
+          "MaxObjectsAfterTeardown": 1123,
+          "MaxStaticByteChange": -6320,
+          "ObservedNativeHostBytes": null,
+          "ObservedNativeHostCommands": null,
+          "ApplicationOutgoingHighBytes": null,
+          "ApplicationIncomingHighBytes": null,
+          "Dropped": null,
+          "Superseded": null
+        },
+        {
+          "Peers": 16,
+          "Product": "Candidate",
+          "RTTMilliseconds": {
+            "Samples": 2048,
+            "Mean": 114.56130673514053,
+            "Median": 113.7250002939255,
+            "P95": 135.725600179285,
+            "P99": 149.293900001794
+          },
+          "ClientFireMicroseconds": {
+            "Samples": 2048,
+            "Mean": 2310.3100629668866,
+            "Median": 1971.999881789085,
+            "P95": 3409.5998853445003,
+            "P99": 10251.1001750827
+          },
+          "ServerFireMicroseconds": {
+            "Samples": 2048,
+            "Mean": 2982.0652378020845,
+            "Median": 2872.79998883605,
+            "P95": 3336.60002797842,
+            "P99": 5095.59968486428
+          },
+          "ServerDispatchMilliseconds": {
+            "Samples": 1203,
+            "Mean": 10.206168744804655,
+            "Median": 10.803999999999998,
+            "P95": 12.288,
+            "P99": 14.229000000000001
+          },
+          "ServerFrameMilliseconds": {
+            "Samples": 1203,
+            "Mean": 12.515390689941812,
+            "Median": 12.843,
+            "P95": 15.421000000000001,
+            "P99": 19.004
+          },
+          "ClientCallbacks": 2560,
+          "ServerCallbacks": 2560,
+          "MaxNodesAfterTeardown": 1,
+          "MaxObjectsAfterTeardown": 1123,
+          "MaxStaticByteChange": 29068,
+          "ObservedNativeHostBytes": 1104,
+          "ObservedNativeHostCommands": 5,
+          "ApplicationOutgoingHighBytes": 1100,
+          "ApplicationIncomingHighBytes": 16500,
+          "Dropped": 0,
+          "Superseded": 0
+        },
+        {
+          "Peers": 32,
+          "Product": "Baseline",
+          "RTTMilliseconds": {
+            "Samples": 4096,
+            "Mean": 210.04837942166432,
+            "Median": 212.92360010556848,
+            "P95": 307.664799969643,
+            "P99": 360.065300017595
+          },
+          "ClientFireMicroseconds": {
+            "Samples": 4096,
+            "Mean": 2749.94782762405,
+            "Median": 1770.700095221395,
+            "P95": 7010.70018112659,
+            "P99": 28369.9999563396
+          },
+          "ServerFireMicroseconds": {
+            "Samples": 4096,
+            "Mean": 4425.034154905911,
+            "Median": 3420.9000878036,
+            "P95": 15343.7000699341,
+            "P99": 20086.8998654187
+          },
+          "ServerDispatchMilliseconds": {
+            "Samples": 163,
+            "Mean": 5.18919018404908,
+            "Median": 4.7,
+            "P95": 5.5649999999999995,
+            "P99": 30.123
+          },
+          "ServerFrameMilliseconds": {
+            "Samples": 163,
+            "Mean": 173.09179141104295,
+            "Median": 171.37199999999999,
+            "P95": 244.45600000000002,
+            "P99": 251.917
+          },
+          "ClientCallbacks": 5120,
+          "ServerCallbacks": 5120,
+          "MaxNodesAfterTeardown": 1,
+          "MaxObjectsAfterTeardown": 1123,
+          "MaxStaticByteChange": 18220,
+          "ObservedNativeHostBytes": null,
+          "ObservedNativeHostCommands": null,
+          "ApplicationOutgoingHighBytes": null,
+          "ApplicationIncomingHighBytes": null,
+          "Dropped": null,
+          "Superseded": null
+        },
+        {
+          "Peers": 32,
+          "Product": "Candidate",
+          "RTTMilliseconds": {
+            "Samples": 4096,
+            "Mean": 505.6472098572158,
+            "Median": 503.02854995243246,
+            "P95": 574.318000115454,
+            "P99": 634.407199919224
+          },
+          "ClientFireMicroseconds": {
+            "Samples": 4096,
+            "Mean": 3298.3902082150917,
+            "Median": 2070.10004669427,
+            "P95": 13344.199862331201,
+            "P99": 31544.500030577197
+          },
+          "ServerFireMicroseconds": {
+            "Samples": 4096,
+            "Mean": 6056.305081074238,
+            "Median": 3963.7999143451398,
+            "P95": 18983.299843966997,
+            "P99": 26189.099997282
+          },
+          "ServerDispatchMilliseconds": {
+            "Samples": 4108,
+            "Mean": 13.386273369036028,
+            "Median": 9.628,
+            "P95": 26.541999999999998,
+            "P99": 37.013999999999996
+          },
+          "ServerFrameMilliseconds": {
+            "Samples": 4108,
+            "Mean": 16.0689476630964,
+            "Median": 11.2845,
+            "P95": 30.588,
+            "P99": 43.062999999999995
+          },
+          "ClientCallbacks": 5120,
+          "ServerCallbacks": 5120,
+          "MaxNodesAfterTeardown": 1,
+          "MaxObjectsAfterTeardown": 1123,
+          "MaxStaticByteChange": 172712,
+          "ObservedNativeHostBytes": 1104,
+          "ObservedNativeHostCommands": 4,
+          "ApplicationOutgoingHighBytes": 1100,
+          "ApplicationIncomingHighBytes": 34100,
+          "Dropped": 0,
+          "Superseded": 0
+        }
+      ]
+    }
+  },
+  "RetainedFailures": [
+    {
+      "Run": 41611086886,
+      "Disposition": "All four source-product profiles passed; both packages rejected changed artifact common root. Fixed by separate host artifacts in 3c552e6; strict integrity gates preserved."
+    },
+    {
+      "Run": 41611084362,
+      "Disposition": "Initial Linux Character Dedicated observer assertions failed; unchanged Linux-only rerun and independent source/full-native profiles pass. No root-cause fix inferred."
+    },
+    {
+      "Run": 41618230530,
+      "Disposition": "Cancelled known-invalid layout run; not a pass."
+    },
+    {
+      "Run": 41620026268,
+      "Attempt": 1,
+      "Disposition": "Linux Release custom-rig presentation leg-progress assertion failed on three listen actors after every earlier group passed. Failed logs and artifact retained; per-actor presentation JSON omitted by failed upload pattern. No root-cause fix inferred from an unchanged replay."
+    },
+    {
+      "Local": "64-peer baseline and candidate-only campaigns",
+      "Disposition": "Both bounded attempts incomplete; no 64-peer performance qualification."
+    }
+  ],
+  "Limitations": [
+    "Requires admitted hash-pinned host; stock Godot network startup fails closed. Engine binaries are not distributed in extension packages.",
+    "Native data bytes/command limits exclude total RAM, allocator overhead, predecode receive storage and native control/ACK queues.",
+    "GL-018 matching-host headless sanitizer scope preserved; no Windows LSan or graphical/editor/device qualification inferred.",
+    "One consumed transient GL-003 mailbox file absent from each sanitizer upload; all required input/result/log hashes verify. Raw sanitizer GUID text not uploaded; hosted strict checks verify its summary.",
+    "Performance scope is two Debug ASan echo trials at 1/16/32 real peers; latency worsens while frame progression improves. Fire timings combine codec, validation and admission; no isolated codec/fanout CPU or Release speed claim.",
+    "GL-030 finite RemoteFunction deadline/correlation redesign remains separate and open.",
+    "Releases and updater distribution remain disabled; this record does not authorize merging or distribution."
+  ]
+}

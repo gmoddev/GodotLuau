@@ -1,0 +1,15 @@
+Godot Engine v4.7.1.stable.custom_build - https://godotengine.org
+
+[GodotLuau] ////////////////////////////////////////////////////
+[GodotLuau]   GodotLuau ? - by PimpoliDev
+[GodotLuau]   Luau System for Godot [Active]
+[GodotLuau] ////////////////////////////////////////////////////
+[Luau] [Runtime:HttpUtilities] UTF8=	é%9Bª%00%20%2F%25%3F%23%26%3D%2B~._-
+[Luau] [Runtime:HttpUtilities] Byte=	0	 Encoded=	%00
+[Luau] [Runtime:HttpUtilities] Byte=	65	 Encoded=	A
+[Luau] [Runtime:HttpUtilities] Byte=	126	 Encoded=	~
+[Luau] [Runtime:HttpUtilities] Byte=	128	 Encoded=	%80
+[Luau] [Runtime:HttpUtilities] Byte=	170	 Encoded=	ª
+[Luau] [Runtime:HttpUtilities] Byte=	233	 Encoded=	é
+[Luau] [Runtime:HttpUtilities] Byte=	255	 Encoded=	ÿ
+

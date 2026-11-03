@@ -1,0 +1,31 @@
+=================================================================
+==60260==ERROR: AddressSanitizer: access-violation on unknown address 0x7ffe62771050 (pc 0x7ffe62771050 bp 0x000000000000 sp 0x0011fd9fec38 T0)
+==60260==The signal is caused by a UNKNOWN memory access.
+    #0 0x7ffe6277104f  (<unknown module>)
+    #1 0x7ff6a090e961 in Object::~Object(void) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\object\object.cpp:2363
+    #2 0x7ff6a0f24ce2 in CoreBind::Engine::~Engine(void) (E:\Sandbox\Codex\NativeSanitizers\godot-host\bin\godot.windows.template_debug.dev.x86_64.san.exe+0x147d44ce2)
+    #3 0x7ff6a0f25b36 in CoreBind::Engine::`scalar deleting dtor'(unsigned int) (E:\Sandbox\Codex\NativeSanitizers\godot-host\bin\godot.windows.template_debug.dev.x86_64.san.exe+0x147d45b36)
+    #4 0x7ff6a0effb31 in memdelete<class CoreBind::Engine>(class CoreBind::Engine *) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\os\memory.h:163
+    #5 0x7ff6a0eeebe0 in unregister_core_types(void) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\register_core_types.cpp:425
+    #6 0x7ff6994278ff in Main::cleanup(bool) E:\Sandbox\Codex\NativeSanitizers\godot-host\main\main.cpp:5392
+    #7 0x7ff6993716c0 in widechar_main(int, wchar_t **) E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:102
+    #8 0x7ff699371987 in _main(void) E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:125
+    #9 0x7ff699371a01 in main E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:139
+    #10 0x7ff699370eac in WinMain E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:152
+    #11 0x7ff6a24a5f91 in invoke_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:102
+    #12 0x7ff6a24a5eb1 in __scrt_common_main_seh D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+    #13 0x7ff6a24a5d6d in __scrt_common_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:330
+    #14 0x7ff6a24a600d in WinMainCRTStartup D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_winmain.cpp:16
+    #15 0x7ff6991f849f in ShimMainCRTStartup E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\cpu_feature_validation.c:74
+    #16 0x7ffe7e23cd86  (C:\WINDOWS\System32\KERNEL32.DLL+0x18002cd86)
+    #17 0x7ffe8020caeb  (C:\WINDOWS\SYSTEM32\ntdll.dll+0x1800acaeb)
+
+==60260==Register values:
+rax = 118cad395bd8  rbx = a180800  rcx = 1194ad3b4c90  rdx = 118cad2c6750  
+rdi = 0  rsi = 0  rbp = 0  rsp = 11fd9fec38  
+r8  = 116cad2a7950  r9  = 118cad395bd8  r10 = 0  r11 = 7fffffffffff  
+r12 = 0  r13 = 0  r14 = 0  r15 = 0  
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: access-violation (<unknown module>) 
+==60260==ABORTING
+

@@ -1,0 +1,11 @@
+{
+  "Result": "PASS",
+  "JSONFilesParsed": 21,
+  "ChangedMarkdownLinksResolved": true,
+  "RawArchiveSHA256": "b9c63552e80b391c1db09896a9ca862b463057e5199dad4815b8c09e80b29aeb",
+  "RawArchiveFilesRehashed": 3456,
+  "ExecutionMachine": "DockerPC",
+  "RuntimeTestsRunByThisCheck": false,
+  "ProtectedInputsUnchanged": ["src", "SConstruct", ".gitmodules", "godot-cpp", "luau", "godot_luau.gdextension", "addons/GodotLuauUpdater", ".github/workflows/build-release.yml", ".github/workflows/release-candidate.yml"],
+  "WhitespaceReview": "Changed source/document text checked; verbatim diagnostic evidence excluded from whitespace normalization."
+}

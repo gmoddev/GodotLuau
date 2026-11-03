@@ -38,6 +38,14 @@ func Wait(Name: String) -> void:
 func Drain() -> void:
     await create_timer(1.0 if Mode == "Latency" else 0.25).timeout
 
+func ConfigurePeer(Peer: int) -> void:
+    var Transport = Network.get_multiplayer().get_multiplayer_peer()
+    if Transport is ENetMultiplayerPeer and (Transport.get_unique_id() == 1 or Peer == 1):
+        var Link = Transport.get_peer(Peer)
+        if Link:
+            Link.throttle_configure(5000, 32, 0)
+            Check(int(Link.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE_DECELERATION)) == 0, "functional 2D carrier throttle profile configured")
+
 func Create(Type: String, Name: String, Parent: Node = null) -> Node:
     var Result: Node = ClassDB.instantiate(Type)
     Result.name = Name
@@ -95,6 +103,7 @@ func Run() -> void:
     Create("Players", "Players")
     Create("RunService", "RunService")
     Network = Create("NetworkService", "NetworkService")
+    if Mode == "TwoD": Network.get_multiplayer().peer_connected.connect(ConfigurePeer)
     # Suppress unrelated menu construction without replacing native characters.
     var Settings := Node.new()
     Settings.name = "SettingsMenu"

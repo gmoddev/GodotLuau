@@ -33,6 +33,36 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-018 is [qualified and resolved on its development branch](gl018-closure.md)
+within the admitted matching-host headless Debug ASan/LSan scope. All six hosted
+jobs and their required evidence pass at `46427d0`; this is not a main merge or
+distribution authorization.
+
+The [GL-018/GL-029 integration review](gl018-gl029-integration.md) preserves the
+sanitizer, research and RemoteEvent Phase 1 commits. GL-029 Phase 1 is
+[qualified](remoteevent-phase1-qualification.md) at `eec2397` on that combined
+development branch, with Windows/Linux Debug/Release, hosted native/sanitizer and
+non-publishing package gates verified. The later sequencing/retention/MTU/fairness
+phases are now [qualified](remoteevent-completion-qualification.md) on the same
+development branch; neither branch is merged into main.
+
+The qualified [ADR-009 contract](adr-009-bounded-remote-delivery.md) implements the
+later bounded-queue/sequencing contract with an admitted Godot/ENet host adapter.
+The [completion qualification](remoteevent-completion-qualification.md) and
+[versioned receipt](evidence/gl029-completion-verification-2026-11-03.json) verify
+Windows/Linux Debug/Release, core/native sanitizer and non-publishing package
+gates. The [work record](remoteevent-completion-work.md) preserves failed attempts
+and unchanged replays. Stock-host incompatibility, higher measured response
+latency and the bounded 32-peer comparative scope remain explicit. GL-029 is
+resolved within that admitted-host scope; releases and updater distribution stay
+disabled.
+
+The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
+matching Windows/Linux instrumented hosts, actual detection controls and retained
+full-profile failures. Its historical partial outcomes are superseded by the
+scoped closure above. Main, release publication, updater admission and GL-017
+are unchanged by that branch.
+
 GL-007 is integrated and resolved within ADR-006's bounded authority contract by
 normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`. The retained branch
 `security/gl-007-character-authority` stays at `514d12f`, preserving qualified
@@ -158,6 +188,11 @@ Source-identical hosted qualification is reused; see the bounded
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
 | [Current architecture](current-architecture.md) | Implemented ownership and subsystem entry points |
+| [GL-029 Phase 1 contract](adr-008-remoteevent-publication.md) | Unified reliable/unordered configuration, native publication/admission, wire and migration decision |
+| [GL-029 Phase 1 qualification](remoteevent-phase1-qualification.md) | Development attempts and actual qualification status; no merge/distribution authorization |
+| [GL-029 checkpoint handoff](remoteevent-phase1-handoff.md) | Published WIP, exact build identities, retained failures and remaining qualification steps |
+| [Networking research](networking-architecture-assessment.md) | Pinned GodotLuau/Gargantuan comparison and later-phase adoption plan |
+| [Unified RemoteEvent proposal](remoteevent-delivery-proposal.md) | Original proposal; ADR-008 defines implemented Phase 1 and later phases remain proposals |
 | [GL-013 boundary assessment](gl013-boundary-assessment.md) | Measured source/dependency inventory and ranked future boundaries; assessment only |
 | [Invariants](invariants.md) | Required properties for new/touched behavior, with known baseline gaps |
 | [Issue ledger](issues.md) | Stable IDs, evidence, priorities, proof gaps, and closure criteria |

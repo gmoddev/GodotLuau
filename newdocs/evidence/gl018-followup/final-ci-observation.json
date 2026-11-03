@@ -1,0 +1,80 @@
+{
+  "ObservedAtUTC": "2026-11-02 05:12:14 UTC",
+  "Source": "246601599e581bd1c34cc403adcafcc404f89ae7",
+  "FullQualification": false,
+  "Runs": [
+    {
+      "ID": 41388787592,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41388787592",
+      "Revision": "246601599e581bd1c34cc403adcafcc404f89ae7",
+      "Status": "completed",
+      "Conclusion": "success",
+      "Attempt": 1,
+      "Jobs": [
+        {
+          "ID": 125095415087,
+          "Name": "Core (Linux, Debug)",
+          "Status": "completed",
+          "Conclusion": "success"
+        },
+        {
+          "ID": 125095415428,
+          "Name": "Core (Windows, Debug)",
+          "Status": "completed",
+          "Conclusion": "success"
+        }
+      ]
+    },
+    {
+      "ID": 41388787434,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41388787434",
+      "Revision": "246601599e581bd1c34cc403adcafcc404f89ae7",
+      "Status": "completed",
+      "Conclusion": "success",
+      "Attempt": 2,
+      "Jobs": [
+        {
+          "ID": 125102036393,
+          "Name": "Native (Linux, Debug)",
+          "Status": "completed",
+          "Conclusion": "success"
+        },
+        {
+          "ID": 125102037315,
+          "Name": "Native (Windows, Debug)",
+          "Status": "completed",
+          "Conclusion": "success"
+        }
+      ]
+    },
+    {
+      "ID": 41388787401,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41388787401",
+      "Revision": "246601599e581bd1c34cc403adcafcc404f89ae7",
+      "Status": "completed",
+      "Conclusion": "failure",
+      "Attempt": 1,
+      "Jobs": [
+        {
+          "ID": 125095414701,
+          "Name": "Full-native ASan (Linux)",
+          "Status": "completed",
+          "Conclusion": "failure"
+        },
+        {
+          "ID": 125095415005,
+          "Name": "Full-native ASan (Windows)",
+          "Status": "completed",
+          "Conclusion": "failure"
+        }
+      ]
+    }
+  ],
+  "OrdinaryNativeLinuxInitialFailurePreserved": {
+    "Job": 125095414979,
+    "Artifact": 13116608407,
+    "SHA256": "fe6cd9549a0b28fd6d80312aac352f0d0a5dee4627f7eb5113286e4e696647c0"
+  },
+  "OneNativeLinuxRetryCompleted": true,
+  "Classification": "PARTIALLY QUALIFIED; HOLD"
+}

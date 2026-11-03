@@ -11,7 +11,7 @@ import socket
 import subprocess
 import sys
 import time
-from FixtureProcesses import StartProcess, StopProcess, StopAll
+from FixtureProcesses import StartProcess, StopProcess, StopAll, GetProfileFolder
 
 
 def Rss(Process):
@@ -243,6 +243,43 @@ def AnimationFixtures(Args, Output, Environment):
     return Results
 
 
+def RemoteFixtures(Args, Output, Environment):
+    Results = []
+    Evidence = []
+    for Mode in ['Listen', 'Dedicated']:
+        Project = Output / Mode
+        Prepare(Project, Args.extension)
+        Entries = []
+        try:
+            SelectedPort = Port()
+            for Role in ['server', 'client1', 'client2']:
+                FixtureRole = 'client' if Role.startswith('client') else 'server'
+                Extra = ['--fixture-role', FixtureRole, '--fixture-port', str(SelectedPort), '--remote-mode', Mode]
+                if FixtureRole == 'client': Extra += ['--fixture-client-index', Role[-1]]
+                elif Mode == 'Dedicated': Extra += ['--glserver', str(SelectedPort)]
+                Label = f'remote-{Mode}-{Role}'
+                Process = Start(Args.godot, Project, 'RemoteEvents.gd', Label, Extra, Environment)
+                Entries.append((Process, Label, FixtureRole, Role[-1] if FixtureRole == 'client' else '0'))
+                if Role in ['server', 'client1']:
+                    Marker = Project / ('remote-ready' if Role == 'server' else 'remote-client1-ready')
+                    Deadline = time.monotonic() + Args.timeout
+                    while not Marker.exists():
+                        if Process.poll() is not None or time.monotonic() > Deadline:
+                            raise RuntimeError('Remote fixture readiness failed: ' + Label)
+                        time.sleep(0.02)
+            Deadline = time.monotonic() + Args.timeout
+            for Process, Label, Role, Index in Entries:
+                Results.append(Check(Process, Deadline, Project, Label, f'[Network:RemoteTest] {Role} PASS'))
+                Record = json.loads((Project / f'remote-{Role}{Index}.json').read_text())
+                if Record['Result'] != 'PASS' or not Record['Complete'] or not Record['Cases'] or not all(Item['Passed'] for Item in Record['Cases']):
+                    raise RuntimeError('Remote fixture incomplete: ' + Label)
+                Evidence.append(Record)
+        finally:
+            for Process, _, _, _ in Entries: StopProcess(Process)
+    (Output / 'native-evidence.json').write_text(json.dumps({'Actors': 6, 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
+    return Results
+
+
 def Probes(Args, Output, Environment):
     Output = Output / "engine-only"
     Output.mkdir(exist_ok=True)
@@ -384,8 +421,7 @@ def Http(Args, Output, Environment):
         Prepare(Project, Args.extension)
         ActorEnvironment = dict(Environment)
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
-            Directory = Project / 'profile' / Name
-            Directory.mkdir(parents=True)
+            Directory = GetProfileFolder(Project, Name)
             ActorEnvironment[Name] = str(Directory)
         if Case == 'tls':
             shutil.copyfile(Path(__file__).with_name('HttpFixtureCA.pem'), Project / 'http-ca.pem')
@@ -430,8 +466,7 @@ def HttpService(Args, Output, Environment):
         Prepare(Project, Args.extension)
         ActorEnvironment = dict(Environment)
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
-            Directory = Project / 'profile' / Name
-            Directory.mkdir(parents=True)
+            Directory = GetProfileFolder(Project, Name)
             ActorEnvironment[Name] = str(Directory)
         if Case == 'tls':
             shutil.copyfile(Path(__file__).with_name('HttpFixtureCA.pem'), Project / 'http-ca.pem')
@@ -483,6 +518,7 @@ def Main():
     Parser.add_argument("--teardown", action="store_true")
     Parser.add_argument("--security", action="store_true")
     Parser.add_argument("--animation", action="store_true")
+    Parser.add_argument("--remote", action="store_true")
     Parser.add_argument("--characters", action="store_true")
     Parser.add_argument("--manual-characters", action="store_true")
     Parser.add_argument("--character-modes", nargs="+", choices=('Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'), default=['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'])
@@ -515,10 +551,9 @@ def Main():
             shutil.copyfile(Library, Args.output / Library.name)
     Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING="1")
     for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
-        Directory = Args.output / 'profile' / Name
-        Directory.mkdir(parents=True)
+        Directory = GetProfileFolder(Args.output, Name)
         Environment[Name] = str(Directory)
-    (Args.output / 'profile/.gdignore').write_text('')
+    GetProfileFolder(Args.output, '').joinpath('.gdignore').write_text('')
     if Args.asan_runtime:
         Environment["LD_PRELOAD"] = str(Args.asan_runtime.resolve())
     if Args.load_only:
@@ -528,6 +563,8 @@ def Main():
         Results = SecurityFixtures(Args, Args.output, Environment)
     elif Args.animation:
         Results = AnimationFixtures(Args, Args.output, Environment)
+    elif Args.remote:
+        Results = RemoteFixtures(Args, Args.output, Environment)
     elif Args.manual_characters:
         Results = ManualCharacterFixtures(Args, Args.output, Environment)
     elif Args.characters:

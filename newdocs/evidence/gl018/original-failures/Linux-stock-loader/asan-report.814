@@ -1,0 +1,2 @@
+==814==You are trying to dlopen a /evidence/linux-stock-loader-first/load/godot_luau.so shared library with RTLD_DEEPBIND flag which is incompatible with sanitizer runtime (see https://github.com/google/sanitizers/issues/611 for details). If you want to run /evidence/linux-stock-loader-first/load/godot_luau.so library under sanitizers please remove RTLD_DEEPBIND from dlopen flags.
+

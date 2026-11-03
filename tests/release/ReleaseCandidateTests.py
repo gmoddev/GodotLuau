@@ -30,14 +30,21 @@ class CandidateTests(unittest.TestCase):
 
     def Record(self, Platform='Linux', Configuration='Release'):
         Library, Worker = Candidate.Names(Platform, Configuration)
+        HostPolicy = Candidate.Load(Source/'tests/runtime/SanitizerHosts.json')
+        Host = {'Exit': 0, 'Platform': Platform, 'Configuration': Configuration,
+                **{Name: HostPolicy[Name] for Name in ['EngineRevision','ArchiveSHA256','SCons','QualificationPatch']},
+                'RemoteAdmission': Candidate.Load(Source/'tests/runtime/RemoteAdmissionHost.json'),
+                'QualificationPatchSourceSHA256LF': HostPolicy['QualificationPatch']['PatchedSHA256'],
+                'ExecutableSHA256': Digest(b'unit-host')}
         return {'Schema': 1, 'Platform': Platform, 'Configuration': Configuration, 'Source': self.Expected,
+                'RemoteHost': Host,
                 'Toolchain': {'SCons': Candidate.Policy['SCons'], 'CompilerVersion': 'unit-fixture'}, 'Commands': [{'Exit': 0}],
-                'Gates': {'Core': {'Result': 'PASS', 'Cases': 80}, 'Native': {'Result': 'PASS', 'Actors': 110}},
+                'Gates': {'Core': {'Result': 'PASS', 'Cases': 81}, 'Native': {'Result': 'PASS', 'Actors': 116}},
                 'Files': {'products/'+Library: {'SHA256': Digest(Configuration.encode())}, 'products/'+Worker: {'SHA256': Digest(b'worker')}, 'evidence.zip': {}}}
 
     def Package(self, Change=None):
         Provenance = {'Source': self.Expected, 'Platform': 'Linux', 'Profiles': {Platform+'-'+Configuration: self.Record(Platform, Configuration) for Platform, Configuration in Candidate.Profiles},
-                      'Sanitizer': {'Source': self.Expected, 'Result': 'PASS', 'Cases': 80, 'ASanSymbolVerified': True}, 'Limitations': Candidate.Policy['Limitations']}
+                      'Sanitizer': {'Source': self.Expected, 'Result': 'PASS', 'Cases': 81, 'ASanSymbolVerified': True}, 'Limitations': Candidate.Policy['Limitations']}
         Files = {'GodotLuau/bin/'+Candidate.Names('Linux', Configuration)[0]: Configuration.encode() for Configuration in Candidate.Policy['Configurations']}
         Files['GodotLuau/bin/godot_luau_store_worker'] = b'worker'
         Files['GodotLuau/release-provenance.json'] = json.dumps(Provenance).encode()
@@ -65,6 +72,13 @@ class CandidateTests(unittest.TestCase):
         return Record
 
     def test_complete_profile(self): Candidate.CheckProfile(self.Record(), self.Expected, 'Linux', 'Release')
+
+    def test_stock_wrong_patch_and_profile_hosts_rejected(self):
+        for Field in ['RemoteAdmission', 'EngineRevision', 'QualificationPatchSourceSHA256LF', 'Configuration']:
+            Record = self.Record(); Record['RemoteHost'][Field] = 'wrong'
+            with self.subTest(Field=Field), self.assertRaises(ValueError): Candidate.CheckProfile(Record, self.Expected, 'Linux', 'Release')
+        Record = self.Record(); del Record['RemoteHost']
+        with self.assertRaises(ValueError): Candidate.CheckProfile(Record, self.Expected, 'Linux', 'Release')
 
     def test_stale_mixed_revision_and_fixture_inputs(self):
         for Field in ['Revision', 'Tree', 'Dependencies', 'NativeSource', 'HarnessHashes', 'PolicySHA256']:
@@ -159,6 +173,15 @@ class CandidateTests(unittest.TestCase):
         self.assertIn('Configuration: [Debug, Release]', Workflow)
         self.assertIn('Platform: [Windows, Linux]', Workflow)
         self.assertIn('ref: ${{ github.sha }}', Workflow)
+
+    def test_profile_artifact_preserves_packaging_input_root(self):
+        Workflow = (Source/'.github/workflows/release-candidate.yml').read_text()
+        Upload = Workflow.split('name: Retain profile products and complete diagnostics\n', 1)[1].split('      - name:', 1)[0]
+        Paths = Upload.split('          path: |\n', 1)[1].splitlines()
+        self.assertTrue(Paths)
+        self.assertTrue(all(Line.strip().startswith('${{ runner.temp }}/profile/') for Line in Paths if Line.strip()),
+                        'Outside paths change the artifact common root and break profile.json admission')
+        self.assertIn('name: host-${{ matrix.Platform }}-${{ matrix.Configuration }}', Workflow)
 
 
 if __name__ == '__main__': unittest.main(verbosity=2)

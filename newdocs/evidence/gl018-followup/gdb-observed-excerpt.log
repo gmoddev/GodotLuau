@@ -1,0 +1,21 @@
+Observed console excerpt from the FollowupGdb.py invocation before disk failure.
+This is a transcription of tool output, not the original process-log bytes.
+The recovered per-process GDB files are empty; see gdb-recovery.json.
+
+Binding-only child:
+[Runtime:SanitizerLifecycle] PASS mode=minimal
+Thread 1 "godot.linuxbsd." received signal SIGSEGV, Segmentation fault.
+0x0000726f05b1ac00 in ?? ()
+Thread 1 (Thread 0x726f0803d500 (LWP 2266) "godot.linuxbsd."):
+#0  0x0000726f05b1ac00 in ?? ()
+#1  0x00005a217c150c8b in ?? ()
+#2  0x00005a217ae4d635 in ?? ()
+
+Production child:
+[Runtime:SanitizerLifecycle] PASS mode=vm-cycles
+Thread 1 "godot.linuxbsd." received signal SIGSEGV, Segmentation fault.
+0x0000768ad83534d0 in ?? ()
+Thread 1 (Thread 0x768ae3a00500 (LWP 2292) "godot.linuxbsd."):
+#0  0x0000768ad83534d0 in ?? ()
+#1  0x00005d6e68dcbc8b in ?? ()
+#2  0x00005d6e639089e0 in ?? ()

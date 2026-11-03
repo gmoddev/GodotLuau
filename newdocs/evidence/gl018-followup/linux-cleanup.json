@@ -1,0 +1,14 @@
+{
+  "ContainerRemoved": "codex-gl018-followup",
+  "VolumeRemoved": "codex-gl018-followup-evidence",
+  "PreservedEvidence": "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\linux-salvage",
+  "VerifiedBindingFilesAndProducts": 25,
+  "RecoveredArchiveSHA256": "35a1a99db4666c01aef607ca07a8fcfc037395f74a24dae66f5c2d78a276b2c1",
+  "PriorRunningContainers": {
+    "/drycreek-bot": "running",
+    "/directus-db": "running",
+    "/codex-character-linux": "exited"
+  },
+  "FreeC": 5523439616,
+  "CacheJunctionPreserved": true
+}

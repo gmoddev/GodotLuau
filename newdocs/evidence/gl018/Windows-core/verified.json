@@ -1,0 +1,33 @@
+{
+  "Command": [
+    "ctest",
+    "--test-dir",
+    "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-asan",
+    "-R",
+    "^ExecutionDomains$",
+    "--no-tests=error",
+    "--timeout",
+    "30",
+    "--output-on-failure",
+    "--verbose",
+    "--test-output-size-passed",
+    "65536",
+    "--test-output-size-failed",
+    "65536",
+    "--output-junit",
+    "E:\\Sandbox\\Codex\\NativeSanitizers\\windows-full-first\\core\\core-results.xml"
+  ],
+  "NativeSource": {
+    "SHA256": "c651c1ff730bb2de8c16da996c09d2567e26d45865dfa25118df812d1f51d91f",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Cases": 80,
+  "Result": "PASS",
+  "ASAN_OPTIONS": "halt_on_error=1:log_path=\"E:/Sandbox/Codex/NativeSanitizers/windows-full-first/suite-core/asan-report\"",
+  "Files": {
+    "discovery.json": "c3fc081fddd9dc1c60f98e8fe90164999abf84760bdd4bf00ebf9f5efd232d17",
+    "core-results.xml": "a48a972ecfbf28ffec8226660c631912b7d4bfe9c4ba1ea472d0dca54433d3e4",
+    "ctest.log": "22f8a711a99e2e44c36e03efa41412644395ced7a278781963dfb59996334cf4"
+  }
+}

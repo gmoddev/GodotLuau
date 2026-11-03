@@ -1,0 +1,115 @@
+name: Runtime full-native sanitizers
+
+on:
+  push:
+    branches: [qualification/gl-018-native-sanitizers, integration/gl-018-gl-029-remoteevents]
+    paths:
+      - "src/**"
+      - "tests/runtime/**"
+      - "godot-cpp"
+      - "luau"
+      - ".github/workflows/runtime-native-sanitizers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  Sanitizers:
+    name: Full-native ASan (${{ matrix.Platform }})
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+            Executable: Godot_v4.7.1-stable_win64.exe
+            Library: godot_luau.dll
+            Loader: NativeSanitizerLoader.exe
+            Probe: NativeSanitizerProbe.dll
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Executable: Godot_v4.7.1-stable_linux.x86_64
+            Library: godot_luau.so
+            Loader: NativeSanitizerLoader
+            Probe: NativeSanitizerProbe.so
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare matching Windows compiler and runtime
+        if: runner.os == 'Windows'
+        timeout-minutes: 2
+        run: |
+          $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $Installation = & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if ($LASTEXITCODE -ne 0 -or -not $Installation) { throw 'MSVC toolchain unavailable' }
+          $Setup = Join-Path $Installation 'VC\Auxiliary\Build\vcvars64.bat'
+          $Batch = Join-Path $env:RUNNER_TEMP 'sanitizer-compiler-environment.cmd'
+          @('@echo off', "call `"$Setup`" >nul", 'if errorlevel 1 exit /b 1', 'set') | Set-Content -LiteralPath $Batch -Encoding ascii
+          $Lines = cmd /d /c $Batch
+          if ($LASTEXITCODE -ne 0) { throw 'MSVC environment failed' }
+          foreach ($Line in $Lines) {
+            if ($Line -match '^([^=]+)=(.*)$') { "$($Matches[1])=$($Matches[2])" | Out-File $env:GITHUB_ENV -Append -Encoding utf8 }
+          }
+      - name: Prepare Linux compiler prerequisites
+        if: runner.os == 'Linux'
+        shell: bash
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y clang-19 libclang-rt-19-dev lld-19 pkg-config ninja-build
+      - name: Install hash-pinned build frontend
+        timeout-minutes: 3
+        run: python -m pip install --require-hashes --no-deps -r tools/ReleaseBuildRequirements.txt
+      - name: Provision matching verified asset editor
+        timeout-minutes: 5
+        run: python tests/runtime/ProvisionGodot.py --output "$env:RUNNER_TEMP/sanitizer-editor"
+      - name: Build pinned instrumented Godot host with admitted correction
+        timeout-minutes: 120
+        run: python tests/runtime/BuildSanitizedGodot.py --output "$env:RUNNER_TEMP/sanitizer-host" --remote-admission --jobs 2 --timeout 7000
+      - name: Build instrumented production extension and detection probes
+        timeout-minutes: 65
+        run: python tests/runtime/BuildNativeSanitizers.py --output build/sanitizers --jobs 2
+      - name: Require detection controls, lifecycle reloads, 81 core cases and 116 native actors
+        timeout-minutes: 35
+        run: |
+          $HostRecord = Get-Content "$env:RUNNER_TEMP/sanitizer-host/sanitizer-host.json" -Raw | ConvertFrom-Json
+          python tests/runtime/RunNativeSanitizers.py --godot $HostRecord.Executable `
+            --host-manifest "$env:RUNNER_TEMP/sanitizer-host/sanitizer-host.json" `
+            --extension "build/sanitizers/native/${{ matrix.Library }}" --build build/sanitizers/native `
+            --build-identity build/sanitizers/build-identity.json `
+            --probe "build/sanitizers/probes/${{ matrix.Probe }}" --loader "build/sanitizers/probes/${{ matrix.Loader }}" `
+            --asset-godot "$env:RUNNER_TEMP/sanitizer-editor/${{ matrix.Executable }}" `
+            --asset-provenance "$env:RUNNER_TEMP/sanitizer-editor/provenance.json" `
+            --revision $env:GITHUB_SHA --output "$env:RUNNER_TEMP/native-sanitizer-evidence"
+      - name: Retain successful and failed sanitizer evidence
+        if: always()
+        timeout-minutes: 5
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-native-sanitizers-${{ matrix.Platform }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/native-sanitizer-evidence/**/*.log
+            ${{ runner.temp }}/native-sanitizer-evidence/**/*.json
+            ${{ runner.temp }}/native-sanitizer-evidence/**/*.xml
+            ${{ runner.temp }}/native-sanitizer-evidence/**/asan-report*
+            ${{ runner.temp }}/sanitizer-host/sanitizer-host.json
+            ${{ runner.temp }}/sanitizer-host-attempts/**
+            ${{ runner.temp }}/sanitizer-editor/provenance.json
+            build/sanitizers/build-identity.json
+            build/sanitizers/attempt-*/**
+            build/sanitizers/native/compile_commands.json
+            build/sanitizers/native/CMakeCache.txt
+            build/sanitizers/probes/compile_commands.json

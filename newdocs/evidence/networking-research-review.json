@@ -1,0 +1,24 @@
+{
+  "Result": "PASS",
+  "ReviewedUTCDate": "2026-11-02",
+  "Worker": "DockerPC",
+  "Scope": "Static documentation and pinned source references only",
+  "SourceVersionsVerified": 93,
+  "ImmutableSourceLinksResolvedFromSnapshots": 43,
+  "LocalLinksResolved": 168,
+  "NewProposalAnchorsResolved": true,
+  "CodeFencesBalanced": true,
+  "Procedure": [
+    "Compare normalized SHA-256 for each research-input manifest entry with immutable Git/source snapshots.",
+    "Resolve immutable source links and any cited line numbers against those snapshots.",
+    "Resolve local document links against the tracked repository inventory and intended new documents.",
+    "Check new proposal section anchors and code-fence balance; inspect final diff and workflow triggers separately."
+  ],
+  "Limits": "Static reference integrity and source inspection, not runtime qualification, an exhaustive security audit or independently repeated historical tests.",
+  "RuntimeTestsRun": false,
+  "BuildsOrBenchmarksRun": false,
+  "MainRevision": "83cd0887968d73d61d050650718d8ada6e124579",
+  "GargantuanRevision": "e682be08df84d776bfa455137728265c6494b5e8",
+  "PublicationWorkflow": "Unchanged; contents: read and both release jobs disabled",
+  "CoreNativeCI": "Not dispatched for documentation-only inputs; existing push paths do not match newdocs/"
+}

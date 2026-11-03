@@ -1,0 +1,8 @@
+{
+  "Source": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-asan\\godot-cpp",
+  "Target": "E:\\Sandbox\\Codex\\NativeSanitizers\\followup\\relocated-godot-cpp-cache",
+  "BytesPreserved": 1024409044,
+  "FreeBefore": 39583744,
+  "FreeAfter": 4435755008,
+  "Junction": true
+}
