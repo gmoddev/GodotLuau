@@ -174,5 +174,14 @@ class CandidateTests(unittest.TestCase):
         self.assertIn('Platform: [Windows, Linux]', Workflow)
         self.assertIn('ref: ${{ github.sha }}', Workflow)
 
+    def test_profile_artifact_preserves_packaging_input_root(self):
+        Workflow = (Source/'.github/workflows/release-candidate.yml').read_text()
+        Upload = Workflow.split('name: Retain profile products and complete diagnostics\n', 1)[1].split('      - name:', 1)[0]
+        Paths = Upload.split('          path: |\n', 1)[1].splitlines()
+        self.assertTrue(Paths)
+        self.assertTrue(all(Line.strip().startswith('${{ runner.temp }}/profile/') for Line in Paths if Line.strip()),
+                        'Outside paths change the artifact common root and break profile.json admission')
+        self.assertIn('name: host-${{ matrix.Platform }}-${{ matrix.Configuration }}', Workflow)
+
 
 if __name__ == '__main__': unittest.main(verbosity=2)

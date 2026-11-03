@@ -259,3 +259,17 @@ at its bounded deadline with 59 warmups complete; an independent candidate-only
 proven new regression. The practical comparative profile is bounded at 32 peers;
 raw failed attempts remain retained. Repeated measurements on the allocation-
 guard revision are in progress. No broader networking/scaling refactor is added.
+
+## Candidate artifact layout correction
+
+The initial candidate run completes all four source-build/runtime profiles, then
+both package jobs reject a missing top-level `profile.json`. Adding host build
+diagnostics outside the profile directory changed the upload action's common
+root, nesting the expected payload. This is a qualification packaging-layout
+defect; the build/runtime profiles themselves passed. The smallest correction
+retains host diagnostics in a separate artifact, preserving the existing flat
+profile input contract. A focused workflow-contract regression requires every
+profile upload path to remain beneath the profile root. No gate or integrity
+check is relaxed. The known-invalid queued candidate run is stopped and a fresh
+non-publishing run will verify the corrected layout. Ordinary core/native and
+full-native source checks continue independently.
