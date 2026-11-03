@@ -1,11 +1,13 @@
 # ADR-009: Bounded native RemoteEvent delivery
 
-Status: approved scope, implementation/qualification in progress. User approval
+Status: accepted, implemented and qualified on the unmerged development branch
+within the [documented profile](remoteevent-completion-qualification.md). User approval
 on 2026-11-03 covers the narrow Godot/ENet admission adapter described in the
 [decision record](remoteevent-native-admission-decision.md). This ADR extends
-[ADR-008](adr-008-remoteevent-publication.md); the qualified Phase 1 remains the
-baseline until new evidence establishes the candidate. Main/publication/updater
-remain unchanged. No new VM, general traffic scheduler or RemoteFunction contract.
+[ADR-008](adr-008-remoteevent-publication.md). The qualification record retains
+source/product identities, failed attempts, performance costs and supported
+limits. Main/publication/updater remain unchanged. No new VM, general traffic
+scheduler or RemoteFunction contract.
 
 ## Native admission authority
 
@@ -18,7 +20,7 @@ the packet's full charge while any native command still owns it. Retransmission
 must not create a second packet charge; native destruction/reset releases it.
 Shared broadcast packets are conservatively charged independently to each peer.
 
-Initial candidate ceilings, subject to runtime boundary/performance qualification:
+Qualified native data ceilings for the admitted profile:
 4 MiB retained payload and 4,096 retained data commands per peer; 16 MiB and
 16,384 commands per host. The ceilings cover admitted data packets, not total
 process RAM, allocator overhead, Godot RPC predecode storage or ENet control/ACK

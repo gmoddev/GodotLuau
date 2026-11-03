@@ -1,10 +1,11 @@
-# RemoteEvent candidate API and migration
+# RemoteEvent API and migration
 
-Status: implementation under qualification on
+Status: qualified within the [documented admitted-host profile](remoteevent-completion-qualification.md) on
 `integration/gl-018-gl-029-remoteevents`; unmerged, not a distribution channel.
 [ADR-008](adr-008-remoteevent-publication.md) defines publication/authority and
 [ADR-009](adr-009-bounded-remote-delivery.md) extends native admission/delivery.
-The [work record](remoteevent-completion-work.md) is the verification source.
+The [work record](remoteevent-completion-work.md) retains development attempts;
+the qualification record and its versioned receipt establish completed checks.
 
 | API | Contract |
 | --- | --- |
@@ -59,7 +60,7 @@ discard application-queued work older than 250 ms, with accounting.
 
 ## Limits and execution
 
-| Ownership boundary | Candidate ceiling |
+| Ownership boundary | Qualified profile ceiling |
 | --- | --- |
 | Event frame / codec | 65,536 bytes including 48-byte GER2 header; 64 arguments, 4,096 nodes, depth 16 |
 | Unreliable encoded body | 768 bytes, additionally checked against negotiated native unfragmented budget |
@@ -101,8 +102,9 @@ actual negotiated ENet budget. Initial Windows ASan measurements at MTU 1,392
 observe 1,066 uncached / 819 cached script-method packet bytes for an 816-byte
 frame. The supplemental real UDP fixture observes an actual native NetworkService
 method submitting that frame as an 820-byte cached packet at the maximum path.
-Each uses one command, below the 1,364-byte unfragmented budget. Final independent
-Debug/Release qualification is still required. This is the existing UDP path,
+Each uses one command, below the 1,364-byte unfragmented budget. Independent
+Windows/Linux Debug/Release host fixtures verify the uncached/cached bounds.
+This is the existing UDP path,
 not an unqualified DTLS, relay or arbitrary network MTU guarantee.
 
 The [qualification record](remoteevent-completion-qualification.md) reports the

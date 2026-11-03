@@ -1,8 +1,8 @@
 # GL-029 native admission decision
 
 Status: native host adapter APPROVED by the user on 2026-11-03 ("continue,
-approved"). Implementation is committed; final independent hosted/package
-qualification is tracked in the [completion record](remoteevent-completion-qualification.md).
+approved"). Implementation and independent hosted/package qualification are
+complete within the [documented admitted-host scope](remoteevent-completion-qualification.md).
 Date: 2026-11-03. Baseline `cda423a`, qualified Phase 1 runtime `eec2397`.
 
 ## Established boundary

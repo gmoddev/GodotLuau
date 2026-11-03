@@ -448,17 +448,20 @@ compatibility changes, including preserved native legacy class identity and
 strict UTF-8 event dictionary keys. Functional loopback qualification uses the
 explicit carrier profile in ADR-008; production ENet defaults remain unchanged.
 
-The later-phase branch candidate adds [ADR-009](adr-009-bounded-remote-delivery.md)
+The qualified later-phase branch adds [ADR-009](adr-009-bounded-remote-delivery.md)
 bounded Remote-owned send/dispatch queues, fair peer service, GER2 sequencing and
 unsent supersession. A hash-pinned Godot/ENet host adapter bounds native retained
 data packets/commands and propagates RPC admission failures. It also provides
 read-only actual RPC call context; NetworkService checks target/method/carrier/
 channel before accepting event traffic. Stock hosts fail closed at network
-startup. The candidate preserves the native storage, HTTP, character/animation,
-replication and RemoteFunction authorities. It remains under qualification and
-unmerged; the [work record](remoteevent-completion-work.md) separates initial
-Windows passes from required hosted/platform/performance evidence. Native data
-ceilings do not bound total RAM, receive predecode or native control/ACK storage.
+startup. It preserves the native storage, HTTP, character/animation, replication
+and RemoteFunction authorities. It remains unmerged; the
+[qualification record](remoteevent-completion-qualification.md) verifies the
+Windows/Linux profiles and extracted packages, and records latency costs and
+the bounded 32-peer comparative performance scope. The
+[work record](remoteevent-completion-work.md) preserves earlier failed attempts.
+Native data ceilings do not bound total RAM, receive predecode or native
+control/ACK storage.
 
 Integrated `security/gl-007-character-authority` source `3bb641a` introduced
 protocol 2 character grants/snapshots, native server health, bounded pose admission,

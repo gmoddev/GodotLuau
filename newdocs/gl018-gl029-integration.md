@@ -99,3 +99,15 @@ Initial hosted observation for this merge (not completed qualification):
 These states are a publication-time snapshot and must not be reported as passes.
 Use explicit `--repo gmoddev/GodotLuau` or the fork API path for GitHub checks:
 this checkout's default GitHub CLI repository resolves to the upstream project.
+
+## Completed later-phase qualification, 2026-11-03
+
+The historical snapshots above remain retained. GL-029's subsequent three-mode,
+bounded application/native delivery is now
+[qualified](remoteevent-completion-qualification.md), with exact
+[versioned evidence](evidence/gl029-completion-verification-2026-11-03.json).
+Fresh Windows/Linux core/native/sanitizer, all four source-product profiles and
+both extracted packages pass. The approved ADR-009 host adapter is required;
+performance costs, bounded comparative scope and unchanged Character replays are
+explicit. GL-018's separate scoped closure is preserved. Both histories remain
+unmerged into main, with release publication and updater distribution disabled.

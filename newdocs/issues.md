@@ -27,7 +27,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 The [combined GL-018/GL-029 development review](gl018-gl029-integration.md)
 preserves both histories and lists the remaining acceptance gates. GL-018 now has
-its separate scoped [closure](gl018-closure.md); GL-029 remains open.
+its separate scoped [closure](gl018-closure.md); GL-029 has a separate
+[admitted-host closure](remoteevent-completion-qualification.md). Both remain
+unmerged into main.
 
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
@@ -59,7 +61,7 @@ its separate scoped [closure](gl018-closure.md); GL-029 remains open.
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
-| GL-029 | P2 | Phase 1 qualified; unmerged; later phases open | Unified reliable/unordered configuration, generation-checked publication and bounded admission |
+| GL-029 | P2 | Resolved within ADR-008/009 admitted-host scope; unmerged | Three-mode RemoteEvent publication and bounded application/native admission |
 | GL-030 | P2 | Open; source-verified terminal-outcome gap | Default RemoteFunction waits are infinite while aged correlation records are erased |
 
 ## GL-029: Application Remote delivery has no unified bounded publication contract
@@ -75,7 +77,7 @@ is fixed by one StrictRemote-only UTF-8 conversion line; actual ENet Server/echo
 Wait assertions pass. Other carriers and persistence encoding remain unchanged.
 No refactor or main merge is included. Earlier failures remain in the record.
 
-**Status: OPEN for later phases; Phase 1 qualified and unmerged on
+**Status: RESOLVED within ADR-008/009's admitted-host qualification scope; unmerged on
 `integration/gl-018-gl-029-remoteevents`.** The original checkpoint remains
 preserved; see the [handoff](remoteevent-phase1-handoff.md).
 The [completion investigation](remoteevent-completion-work.md) and
@@ -83,11 +85,16 @@ The [completion investigation](remoteevent-completion-work.md) and
 finite native retention on the stock host. Stronger native-backpressure closure
 uses the narrow patched-host contract approved on 2026-11-03, recorded in
 [ADR-009](adr-009-bounded-remote-delivery.md). Bounded queues, native call-context
-validation and sequencing are now candidate implementations under qualification.
-Windows matching-host ASan core (81 cases), native byte/command/RPC boundaries
-and the initial six RemoteEvent actors pass. Pressure, MTU, independent profiles,
-performance and hosted evidence remain required; this does not close GL-029.
-Main remains unchanged. Baseline assessment
+validation and sequencing are implemented and qualified at runtime `6e29c86`,
+with the packaging correction at `3c552e6`. The
+[completion record](remoteevent-completion-qualification.md) and
+[receipt](evidence/gl029-completion-verification-2026-11-03.json) verify all four
+Windows/Linux Debug/Release source profiles (81 core / 116 native actors each),
+ordinary native, matching-host full-native sanitizer, exact packet/ownership
+boundaries and both extracted packages. Actual UDP loss/reorder and two paired
+1/16/32-peer performance trials are retained. Response latency increases; 64-peer
+performance is unqualified. Earlier Character observation failures pass unchanged
+replays without an asserted root-cause fix. Main remains unchanged. Baseline assessment
 source is `83cd0887968d73d61d050650718d8ada6e124579`; research is retained at
 `9ea782bb739cc35deba06474a82582a12529df6d`.
 
@@ -107,11 +114,14 @@ legacy behavior. Native constructor/domain provenance prevents Client-created
 listen-host endpoints from acquiring publication authority. No general mutation
 gateway or unrelated replication redesign is implied.
 
-**Remaining closure:** finish qualification of bounded queues, sequenced
-stale rejection and unsent supersession. Native ENet reliable-retention/admission proof remains independent
-of application queue bounds. Keep this issue open until the accepted later-phase
-facts exist. No unreliable RemoteFunction modes or GL-030 timeout changes belong
-to this work.
+**Closure:** bounded queues, sequenced stale rejection/unsent supersession,
+native retained-data admission, complete-RPC MTU and lifecycle/failure outcomes
+pass the linked qualification. Application queue and native ownership evidence
+remain distinct. Deployment requires the admitted patched host and GER2 peers;
+native caps exclude total RAM, receive predecode and control/ACK storage. GL-018's
+sanitizer limits remain intact. No unreliable RemoteFunction modes or GL-030
+timeout changes belong to this work. Releases and updater distribution remain
+disabled.
 
 ## GL-030: Default RemoteFunction waits have no finite terminal deadline
 

@@ -1,10 +1,13 @@
 # GL-029 later-phase qualification
 
-Status: local qualification complete; final hosted and package verification in
-progress. GL-029 remains OPEN until those gates pass. The branch is unmerged.
+Status: **GL-029 RESOLVED within ADR-008/009's admitted-host qualification scope.**
+Local, hosted and extracted-package checks pass with independently verified
+artifacts. The branch is unmerged; distribution remains disabled.
 The [work record](remoteevent-completion-work.md) preserves development failures;
 [ADR-009](adr-009-bounded-remote-delivery.md) and the
-[API/migration contract](remoteevent-api.md) define candidate behavior.
+[API/migration contract](remoteevent-api.md) define supported behavior. The
+[versioned receipt](evidence/gl029-completion-verification-2026-11-03.json)
+records exact workflow, product, package and evidence identities.
 
 ## Source and retained local evidence
 
@@ -47,7 +50,7 @@ application exactly-once guarantee. The separate host-only fixture measures
 1,066-byte uncached / 819-byte cached script-method RPC packets. Native-method
 identifiers use the larger encoding; the actual native event measurement above
 exercises it. All remain below the measured 1,364-byte unfragmented budget at
-MTU 1,392. Final hosted Debug/Release packet gates remain required.
+MTU 1,392. All four final hosted Debug/Release packet gates also pass.
 
 ## Comparative network performance
 
@@ -114,7 +117,7 @@ comparative scope is 32 actual peers, consistent with the assessment's bounded-
 equivalent allowance. Existing engine/resource ceilings are not silently changed
 into a larger performance qualification. No scaling refactor is included.
 
-## Hosted verification status
+## Verified hosted and package gates
 
 Initial runtime `6c04b20` passes hosted Windows/Linux core, ordinary native (Linux
 after one unchanged rerun), both full-native sanitizer jobs and all four source
@@ -146,8 +149,30 @@ GL-018's admitted matching-host/headless scope, Windows-LSan and renderer/device
 limitations remain unchanged.
 
 The non-publishing [candidate run 41620026268](https://github.com/gmoddev/GodotLuau/actions/runs/41620026268)
-at `3c552e6` verifies the artifact-layout correction and exact package inputs.
-Its source-product/package/acceptance checks remain in progress; they must finish
-and the downloaded artifacts must verify before closing GL-029.
+at `3c552e6` passes all ten jobs. Its initial Linux Release attempt fails the
+existing custom-rig procedural-animation progress assertion; all earlier groups,
+including six Remote actors, pass. The failed logs/artifacts are retained. A single
+unchanged Linux Release replay passes, followed by both package jobs and final
+acceptance. This does not identify or fix the earlier Character observation's
+root cause. The work record links pre-GL-029 startup/contact counterevidence.
+
+Independent downloaded-artifact rechecks invoke the production profile/native
+verifiers again. All four Windows/Linux Debug/Release profiles pass 81 core cases,
+116 actors and both host fixtures, with exact runtime/harness identities, six
+hashed product/evidence files and 4,000 rechecked GUIDs per profile. Their actual
+256-byte-path/816-byte-frame RPC measurements are identical: 1,066 uncached /
+819 cached packet bytes, one command, MTU 1,392 / unfragmented budget 1,364.
+
+Both packages pass exact ZIP/member/provenance hashes, executable permissions and
+Debug/Release companion startup after extraction. Each contains 133 verified
+members and runs two startup actors. Archive SHA-256:
+
+- Linux: `fbfb96cd553228fa1e8a70d075b66b9bbd3365c1c86f1b4fadfbe1c92bf4c32e`.
+- Windows: `e3b15b9ace451da6447c0f5c98a1b8a85f8add23cc8682557efd6b7f000f73cc`.
+
+Final outcome is `ACCEPTED_NONPUBLISHING_CANDIDATE`; its receipt SHA-256 is
+`37ea3192676751b0504848f8501757203fbade4aa16948e8a9de1f3a3cea6490`.
+No tag, release, updater channel or main merge is created. Documentation follows
+the qualified runtime without changing its fingerprint or harness inputs.
 
 Main remains unchanged. Releases and updater distribution remain disabled.

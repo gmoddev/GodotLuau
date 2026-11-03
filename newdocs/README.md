@@ -42,14 +42,20 @@ The [GL-018/GL-029 integration review](gl018-gl029-integration.md) preserves the
 sanitizer, research and RemoteEvent Phase 1 commits. GL-029 Phase 1 is
 [qualified](remoteevent-phase1-qualification.md) at `eec2397` on that combined
 development branch, with Windows/Linux Debug/Release, hosted native/sanitizer and
-non-publishing package gates verified. Later sequencing/retention/MTU/fairness
-phases remain open; neither branch is merged into main.
+non-publishing package gates verified. The later sequencing/retention/MTU/fairness
+phases are now [qualified](remoteevent-completion-qualification.md) on the same
+development branch; neither branch is merged into main.
 
-The approved [ADR-009 candidate](adr-009-bounded-remote-delivery.md) implements the
+The qualified [ADR-009 contract](adr-009-bounded-remote-delivery.md) implements the
 later bounded-queue/sequencing contract with an admitted Godot/ENet host adapter.
-The [completion work record](remoteevent-completion-work.md) tracks actual initial
-Windows passes, failed attempts and remaining hosted/platform/performance gates.
-This candidate is not yet qualified or integrated into main.
+The [completion qualification](remoteevent-completion-qualification.md) and
+[versioned receipt](evidence/gl029-completion-verification-2026-11-03.json) verify
+Windows/Linux Debug/Release, core/native sanitizer and non-publishing package
+gates. The [work record](remoteevent-completion-work.md) preserves failed attempts
+and unchanged replays. Stock-host incompatibility, higher measured response
+latency and the bounded 32-peer comparative scope remain explicit. GL-029 is
+resolved within that admitted-host scope; releases and updater distribution stay
+disabled.
 
 The [GL-018 sanitizer investigation](native-sanitizer-qualification.md) records
 matching Windows/Linux instrumented hosts, actual detection controls and retained

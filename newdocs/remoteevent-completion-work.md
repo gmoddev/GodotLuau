@@ -303,3 +303,51 @@ identities and instrumentation. Full-native detection/reload controls pass;
 557 Windows / 562 Linux indexed files match, with the same explicitly retained
 one-transient-mailbox omission per platform. The non-publishing candidate remains
 the final outstanding gate. Its Linux Debug source-product profile has passed.
+
+Candidate `41620026268` passes both Debug source-product profiles, then its Linux
+Release profile fails the existing custom-rig presentation assertion `remote
+procedural animation progresses` on the listen host and both clients. Source
+products, core, RemoteEvent, animation authority/lifecycle, Character authority,
+HTTP and persistence groups pass before that presentation failure. The failed
+artifact and complete job log are retained separately. The workflow's failed
+profile upload retains logs/results but omits per-actor presentation measurement
+JSON, so it cannot establish whether the observed static leg pose was airborne,
+idle or an animation defect. Do not label that uncertainty a fixed GL-029 bug.
+The original Linux Release profile, fresh Linux Debug and full-native profiles
+pass the same assertion. A controlled unchanged comparison is justified; it
+must preserve this failure and cannot suppress or weaken the assertion.
+
+The Docker worker accepts SSH/hostname probes but its bounded Docker version
+query times out. Only task-owned read-query SSH clients are stopped; no Docker
+daemon, unrelated workload or host configuration is changed. GitHub refuses a
+job-only rerun while the containing workflow is still active. Its Windows
+Release profile continues independently; no passing job is cancelled.
+
+The [earlier Character qualification](character-presentation-performance.md#development-counterevidence-and-final-verification)
+already retains an unresolved startup/contact trajectory with Y=126–161 and a
+nearly static airborne leg pose, before the GL-029 host adapter. It explains why
+owner grounding was added to this fixture. That is relevant counterevidence to
+an automatic GL-029 regression attribution; it does not identify the new failed
+attempt's cause without its missing per-actor measurements. Windows Release now
+passes, all attempt-one artifacts are downloaded, and the single Linux Release
+job is replaying unchanged at `3c552e6`. No assertion or runtime source is changed.
+
+## Completed qualification and closure
+
+The single unchanged Linux Release replay passes, including the prior failed
+custom-rig progress assertion. Both extracted-package jobs and final acceptance
+then pass: candidate `41620026268`, attempt two, is terminal success with all ten
+jobs successful. This is counterevidence and a completed qualification result,
+not a claimed root-cause correction for the original Character observation.
+
+Downloaded artifacts pass the unchanged production profile/native verifiers for
+all four configurations. Exact product/member/provenance hashes, 81 core cases,
+116 native actors, both host fixtures and 4,000 GUIDs per profile verify. Both
+133-member packages run their Debug/Release companion actors after extraction.
+Acceptance is `ACCEPTED_NONPUBLISHING_CANDIDATE`. The
+[qualification record](remoteevent-completion-qualification.md) and
+[versioned receipt](evidence/gl029-completion-verification-2026-11-03.json)
+preserve source identities, native MTU measurements, all final workflow outcomes,
+retained failures and performance costs/limits. GL-029 is resolved within that
+admitted-host scope; GL-030 stays open. Neither branch is merged into main.
+Releases and updater distribution remain disabled.
