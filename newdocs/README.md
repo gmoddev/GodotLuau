@@ -37,7 +37,11 @@ GL-018 / GL-029 are integrated through normal merge
 `6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851`, preserving all 39 integration-branch
 commits and the exact qualified tree. The
 [main integration record](gl018-gl029-main-integration.md) separates source
-integration and retained branch evidence from fresh main CI, currently pending.
+integration and retained branch evidence from fresh main CI. All four fresh
+workflows and their downloaded artifacts verify at `ac119bc`, including both
+platforms' core/native/sanitizer and extracted-package gates. The
+[versioned main receipt](evidence/gl018-gl029-main-verification-2026-11-03.json)
+retains exact identities and outcomes.
 Release publication and updater distribution remain disabled.
 
 GL-018 is [qualified and resolved](gl018-closure.md)

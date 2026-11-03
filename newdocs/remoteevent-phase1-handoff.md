@@ -1,5 +1,10 @@
 # GL-029 Phase 1 checkpoint handoff
 
+Current integration status: later GL-029 phases are qualified and integrated by
+normal main merge `6a7fedf`; [fresh main verification](gl018-gl029-main-integration.md)
+passes at `ac119bc`. This file preserves the historical checkpoint and its
+then-current instructions below; use the integration record for current status.
+
 **Superseded qualification status:** Phase 1 is now qualified at `eec2397` on
 `integration/gl-018-gl-029-remoteevents`; see the completed
 [qualification record](remoteevent-phase1-qualification.md). This original handoff

@@ -456,7 +456,8 @@ read-only actual RPC call context; NetworkService checks target/method/carrier/
 channel before accepting event traffic. Stock hosts fail closed at network
 startup. It preserves the native storage, HTTP, character/animation, replication
 and RemoteFunction authorities. Normal merge `6a7fedf` preserves the qualified
-tree; [fresh main verification](gl018-gl029-main-integration.md) is pending. The
+tree; [fresh main verification](gl018-gl029-main-integration.md) passes at
+`ac119bc`, including downloaded evidence and both extracted packages. The
 [qualification record](remoteevent-completion-qualification.md) verifies the
 Windows/Linux profiles and extracted packages, and records latency costs and
 the bounded 32-peer comparative performance scope. The

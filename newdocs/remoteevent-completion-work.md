@@ -351,3 +351,13 @@ preserve source identities, native MTU measurements, all final workflow outcomes
 retained failures and performance costs/limits. GL-029 is resolved within that
 admitted-host scope; GL-030 stays open. Neither branch is merged into main.
 Releases and updater distribution remain disabled.
+
+## Subsequent main integration
+
+Normal merge `6a7fedf` now preserves qualified tip `d6afbe6` and all 39 branch
+commits on main. [Fresh main verification](gl018-gl029-main-integration.md) and
+its [receipt](evidence/gl018-gl029-main-verification-2026-11-03.json) verify all
+four workflows and downloaded artifacts at `ac119bc`, without retries. The
+branch checkpoints and failed attempts above remain retained. Releases and
+updater distribution stay disabled; host, sanitizer and performance limits are
+unchanged.

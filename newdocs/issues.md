@@ -30,7 +30,9 @@ preserves both histories and lists the remaining acceptance gates. GL-018 now ha
 its separate scoped [closure](gl018-closure.md); GL-029 has a separate
 [admitted-host closure](remoteevent-completion-qualification.md). Normal merge
 `6a7fedf` integrates both; [fresh main verification](gl018-gl029-main-integration.md)
-is pending separately from retained branch qualification.
+passes at `ac119bc`, separately from retained branch qualification. The
+[main receipt](evidence/gl018-gl029-main-verification-2026-11-03.json) records all
+four successful workflows and independently checked artifacts.
 
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
@@ -1015,7 +1017,10 @@ engine/source reproduction in [validation](shared-domains-validation.md).
 
 **Current disposition: INTEGRATED AND RESOLVED within the admitted matching-host profile.**
 Normal merge `6a7fedf` preserves the combined qualified source;
-[fresh main verification](gl018-gl029-main-integration.md) is pending separately.
+[fresh main verification](gl018-gl029-main-integration.md) passes at `ac119bc`,
+including Windows/Linux ordinary native, matching-host full-native sanitizer,
+all four source-product profiles and both extracted packages. The original qualification
+limits remain unchanged.
 The retained branch qualification at `46427d0` passes all six hosted
 core/native/sanitizer jobs, with exact
 source/harness, actual cases, instrumented builds and retained logs independently

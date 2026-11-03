@@ -113,3 +113,13 @@ both extracted packages pass. The approved ADR-009 host adapter is required;
 performance costs, bounded comparative scope and unchanged Character replays are
 explicit. GL-018's separate scoped closure is preserved. Both histories remain
 unmerged into main, with release publication and updater distribution disabled.
+
+## Main integration, 2026-11-03
+
+The preceding branch checkpoint is now superseded for integration status by
+normal main merge `6a7fedf`, preserving qualified tip `d6afbe6` and all 39 commits.
+[Fresh main verification](gl018-gl029-main-integration.md) and its
+[receipt](evidence/gl018-gl029-main-verification-2026-11-03.json) verify all four
+workflows and downloaded artifacts at `ac119bc`. Branch evidence and earlier
+failures remain retained. Release publication and updater distribution stay
+disabled; admitted-host and performance/sanitizer limits remain explicit.
