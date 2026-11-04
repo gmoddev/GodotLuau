@@ -160,7 +160,7 @@ def Build(Args):
     Native(Host['Executable'], Adapter/AdapterName, Output/'native', Args.revision, Output/'host/remote-host.json', Engine)
     Require(Identity(Args.revision) == Before, 'Source inputs changed during build/qualification')
     Summary = Load(Output/'native/summary.json')
-    Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 122 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')
+    Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 130 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')
     Payload = Output/'evidence.zip'
     with zipfile.ZipFile(Payload, 'w', zipfile.ZIP_DEFLATED) as Archive:
         for Directory in [Output/'core', Output/'native', Output/'godot', Output/'host']:
@@ -169,7 +169,7 @@ def Build(Args):
         for File in sorted(Output.glob('*.log')): Archive.write(File, File.name)
     Files = {File.relative_to(Output).as_posix(): {'SHA256': Hash(File), 'Bytes': File.stat().st_size} for Directory in [Products, Adapter] for File in sorted(Directory.iterdir())}
     Files['evidence.zip'] = {'SHA256': Hash(Payload), 'Bytes': Payload.stat().st_size}
-    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'RemoteHost': Host, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 81}, 'Native': {'Result': 'PASS', 'Actors': 122}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
+    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'RemoteHost': Host, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 130}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
     print('[Release:Candidate] PASS source-built '+Selected+' '+Args.configuration, flush=True)
 
 
@@ -196,7 +196,7 @@ def CheckProfile(Record, Expected, Selected, Configuration):
     Require(Record['Source'] == Expected, 'Stale or mixed source/fixture/dependency inputs')
     VerifyRemoteHost(Record.get('RemoteHost', {}))
     Require(Record['RemoteHost'].get('Platform') == Selected and Record['RemoteHost'].get('Configuration') == Configuration, 'GL-029 host profile mismatch')
-    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 81}, 'Native': {'Result': 'PASS', 'Actors': 122}}, 'Failed, skipped or incomplete qualification gate')
+    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 130}}, 'Failed, skipped or incomplete qualification gate')
     Require(Record['Commands'] and all(Item['Exit'] == 0 for Item in Record['Commands']), 'Failed build/qualification command')
     Require(Record['Toolchain']['SCons'] == Policy['SCons'] and Record['Toolchain']['CompilerVersion'], 'Missing toolchain identity')
     LibraryName, WorkerName = Names(Selected, Configuration)
@@ -237,7 +237,7 @@ def ProfilesAt(Inputs, Expected, Output):
 
 def CheckSanitizer(Directory, Expected):
     Record = Load(Directory/'sanitizer.json')
-    Require(Record['Source'] == Expected and Record['Result'] == 'PASS' and Record['Cases'] == 81, 'Missing or failed core sanitizer qualification')
+    Require(Record['Source'] == Expected and Record['Result'] == 'PASS' and Record['Cases'] == 85, 'Missing or failed core sanitizer qualification')
     Require(Record['ASAN_OPTIONS'] == 'detect_leaks=1:halt_on_error=1' and Record['InstrumentedFiles'] >= 2 and Record['ASanSymbolVerified'], 'Sanitizer instrumentation not established')
     for Name, Digest in Record['Files'].items(): Require(SafePath(Name) and Hash(Directory/Name) == Digest, 'Sanitizer evidence hash mismatch')
     CheckDiscovery(Directory/'core/discovery.json'); CheckReport(Directory/'core/core-results.xml')
@@ -258,7 +258,7 @@ def Sanitize(Args):
     Symbols = subprocess.check_output(['nm', str(BuildDirectory/'ExecutionDomainTests')], text=True, timeout=30)
     Require('__asan_init' in Symbols and Identity(Args.revision) == Before, 'ASan symbol/source identity mismatch')
     Files = {str(File.relative_to(Output)): Hash(File) for File in (Output/'core').iterdir() if File.is_file()}
-    Save(Output/'sanitizer.json', {'Source': Before, 'Result': 'PASS', 'Cases': 81, 'ASAN_OPTIONS': Environment['ASAN_OPTIONS'], 'InstrumentedFiles': len(Commands), 'ASanSymbolVerified': True, 'Compiler': subprocess.check_output(['clang++', '--version'], text=True, timeout=15), 'Commands': Commands, 'Files': Files})
+    Save(Output/'sanitizer.json', {'Source': Before, 'Result': 'PASS', 'Cases': 85, 'ASAN_OPTIONS': Environment['ASAN_OPTIONS'], 'InstrumentedFiles': len(Commands), 'ASanSymbolVerified': True, 'Compiler': subprocess.check_output(['clang++', '--version'], text=True, timeout=15), 'Commands': Commands, 'Files': Files})
 
 
 def Stage(Revision, Output):
@@ -358,7 +358,7 @@ def CheckPackage(Directory, Expected, Selected):
         Provenance = json.loads(Archive.read('GodotLuau/release-provenance.json'))
         Require(Provenance['Platform'] == Selected and Provenance['Source'] == Expected and hashlib.sha256(Archive.read('GodotLuau/release-provenance.json')).hexdigest() == Record['ProvenanceSHA256'], 'Embedded provenance mismatch')
         for PlatformName, Configuration in Profiles: CheckProfile(Provenance['Profiles'][PlatformName+'-'+Configuration], Expected, PlatformName, Configuration)
-        Require(Provenance['Sanitizer']['Source'] == Expected and Provenance['Sanitizer']['Result'] == 'PASS' and Provenance['Sanitizer']['Cases'] == 81 and Provenance['Sanitizer']['ASanSymbolVerified'], 'Missing sanitizer gate in candidate')
+        Require(Provenance['Sanitizer']['Source'] == Expected and Provenance['Sanitizer']['Result'] == 'PASS' and Provenance['Sanitizer']['Cases'] == 85 and Provenance['Sanitizer']['ASanSymbolVerified'], 'Missing sanitizer gate in candidate')
         for Configuration in Policy['Configurations']:
             LibraryName, WorkerName = Names(Selected, Configuration)
             Build = Provenance['Profiles'][Selected+'-'+Configuration]

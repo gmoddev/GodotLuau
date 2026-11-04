@@ -38,6 +38,9 @@ Networking Foundation 2 is in progress on `foundation/networking-2` from main
 milestones and failures. [ADR-010](adr-010-remotefunction-terminal-outcomes.md)
 defines the authorized GL-030 implementation contract; development builds do
 not establish qualification or authorize a main merge/publication.
+GL-030 is qualified at `2296c96` with exact-revision receipts in the journal.
+[ADR-011](adr-011-peer-replication-relevance.md) defines the experimental,
+default-disabled runtime relevance/batching slice and its compatibility limits.
 
 GL-018 / GL-029 are integrated through normal merge
 `6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851`, preserving all 39 integration-branch

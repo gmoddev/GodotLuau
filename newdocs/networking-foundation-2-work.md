@@ -27,6 +27,69 @@ case evidence and sanitizer reports/controls remain independently checked.
 
 ## Phase 2/3 implementation checkpoint — qualification in progress
 
+The expanded six-actor Listen/Dedicated relevance fixture now passes Windows
+Debug ASan in 25.188 seconds on snapshot `v18`, native fingerprint
+`a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7`,
+DLL `962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec`.
+Actual fixture overlay hash is
+`c80be53a8acd4dc468784ab7148dc64343e9df324e222a7d3088ddf0a6eac2f8`.
+It exercises source/replica identity, spatial enter/leave/reentry, independent
+peer state, wrong-session/future ACK rejection, shared Client mutation denial,
+64-write coalescing, deterministic native WouldBlock and healthy-peer progress,
+both reparent barriers, reference closure/clearing/cycles, sticky global pin,
+generation-tagged server/owned physics, forged physics rejection by effects,
+same-name replacement, reconnect and cancellation inside a property callback.
+No unexpected ASan report occurs. The full platform matrix remains pending.
+
+At the same native source, the selected follow-up passes 20 Character actors
+(144.703 s), ten animation actors (92.984 s), six Function actors (19.484 s),
+and the two legacy replication actors (7.219 s). A further six-actor run adds
+explicit 9,000-byte snapshot overflow and verifies terminal rejection without
+partial materialization or retained queue ownership (24.703 s). Latest relevance
+fixture hash is `ae1c93acecd62334c24a79867ca0e90fb9a2e8673fef7436d5a8756b5f94c526`.
+The [checkpoint receipt](evidence/networking2-projection-checkpoint.json) records
+50 selected process executions, including the six repeated relevance actors;
+this is not a 130-actor complete native gate. Raw checkpoint 5 contains 1,877
+members, 3,077,527 bytes, SHA-256
+`887ab8a28504d8c7e570f71ed8b19f9bbac97d87e957b50443eaeb60c9a10f78`.
+The [Phase 1 benchmark receipt](evidence/networking2-phase1-benchmark.json)
+preserves all eight completed paired configurations, raw summary metrics,
+six allocator/mapping reports and nonempty teardown stderr. It compares GL-030
+with exact main, not the later relevance implementation.
+
+Four new exact production-core index test bodies separately pass MSVC ASan:
+spatial/global queries, cyclic/missing dependency closure, invalid-input
+nonmutation and 16,384-source/4,096-view boundaries. This focused execution is
+not the complete core suite. Required hosted gates increase from 81 to 85 core
+cases and from 122 to 130 native actors; existing cases are retained.
+
+Development failures are preserved. New-frame queue age initially subtracted a
+later enqueue timestamp from the tick's earlier unsigned timestamp; saturating
+comparison fixes immediate false expiry. Same-name replacement initially
+created before retirement; canonical retirement and receiver teardown now
+precede replacement attachment. Listen Client attribute protection initially
+treated Game attributes as subtree mutations and suppressed the fixture marker;
+protect the actual attribute owner without conflating it with destruction.
+ObjectValue's inherited scalar bridge omitted Instance read/write (GL-032), so
+native source references remained nil despite a legacy shadow. Add a focused
+live Instance/nil path, retain scalar-converter boundaries, and qualify actual
+native reference closure. An unsupported Changed:Once test assumption was
+corrected to the existing Connect interface. The successful cancellation check
+still requires disconnect during the actual production callback.
+
+Local RemoteEvent pressure replays fail at unrelated readiness/final-sequence
+steps on both candidate and the qualified GL-030 binary; GL-033 tracks the
+unresolved attribution. They are not suppressed or reported passing. Earlier
+GL-030 hosted successes remain exact-revision counterevidence.
+
+The 32-peer benchmark archive contains six ASan allocator exhaustion/failed
+mapping reports on the baseline. This identifies resource exhaustion in that
+profile rather than an established lifetime report. No 32-peer candidate result
+exists. Preserve the negative run and do not retry the same oversized ASan
+workload without a resource-supported profile. Completed 1/16-peer measurements
+remain narrow network-only evidence, with two candidate teardown channel errors
+also retained; they do not establish the complete Phase 4 acceptance matrix.
+
 An opt-in native projection now compiles on DockerPC Windows Debug ASan as
 snapshot `v9`, fingerprint `b8f2ff1faef41ac544cd8cf5c20f1a7d1a67648fc0ffe63d372437628a07d685`.
 It is not yet runtime-qualified. It uses the existing native/application queue,

@@ -278,6 +278,73 @@ def RemoteFixtures(Args, Output, Environment):
             for Process, _, _, _ in Entries: StopProcess(Process)
     (Output / 'native-evidence.json').write_text(json.dumps({'Actors': 6, 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
     Results.extend(FunctionFixtures(Args, Output, Environment))
+    Results.extend(ReplicationFixtures(Args, Output, Environment))
+    Results.extend(RelevanceFixtures(Args, Output, Environment))
+    return Results
+
+
+def RelevanceFixtures(Args, Output, Environment):
+    Results, Evidence = [], []
+    for Mode in ['Listen', 'Dedicated']:
+        Project = Output / ('Relevance-' + Mode)
+        Prepare(Project, Args.extension)
+        Entries = []
+        Selected = Port()
+        try:
+            for Role, Index in [('server', 0), ('client', 1), ('client', 2)]:
+                Label = 'relevance-' + Mode + '-' + Role + str(Index)
+                Extra = ['--fixture-role', Role, '--fixture-client-index', str(Index), '--fixture-port', str(Selected), '--relevance-mode', Mode]
+                if Role == 'client': Extra += ['--glconnect', '127.0.0.1:' + str(Selected)]
+                elif Mode == 'Dedicated': Extra += ['--glserver', str(Selected)]
+                Process = Start(Args.godot, Project, 'RelevanceIntegration.gd', Label, Extra, Environment)
+                Entries.append((Process, Label, Role, Index))
+                if Role == 'server':
+                    Deadline = time.monotonic() + Args.timeout
+                    while not (Project / 'replication-server.ready').exists():
+                        if Process.poll() is not None or time.monotonic() >= Deadline:
+                            raise RuntimeError('Relevance server readiness failed')
+                        time.sleep(.02)
+            Deadline = time.monotonic() + Args.timeout
+            for Process, Label, Role, Index in Entries:
+                Results.append(Check(Process, Deadline, Project, Label, f'[Network:RelevanceTest] {Role}{Index} PASS'))
+                Record = json.loads((Project / f'replication-evidence-{Role}{Index}.json').read_text())
+                if Record['Result'] != 'PASS' or not Record['Complete'] or not Record['Cases'] or not all(Item['Passed'] for Item in Record['Cases']):
+                    raise RuntimeError('Relevance fixture incomplete: ' + Label)
+                Evidence.append(Record)
+        finally:
+            for Process, _, _, _ in Entries: StopProcess(Process)
+    (Output / 'relevance-evidence.json').write_text(json.dumps({'Actors': 6, 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
+    return Results
+
+
+def ReplicationFixtures(Args, Output, Environment):
+    Project = Output / 'Replication'
+    Prepare(Project, Args.extension)
+    Results, Evidence, Entries = [], [], []
+    Selected = Port()
+    try:
+        for Role in ['server', 'client']:
+            Label = 'replication-' + Role
+            Extra = ['--fixture-role', Role]
+            Extra += ['--glserver', str(Selected)] if Role == 'server' else ['--glconnect', '127.0.0.1:' + str(Selected)]
+            Process = Start(Args.godot, Project, 'ReplicationIntegration.gd', Label, Extra, Environment)
+            Entries.append((Process, Label, Role))
+            if Role == 'server':
+                Deadline = time.monotonic() + Args.timeout
+                while not (Project / 'replication-server.ready').exists():
+                    if Process.poll() is not None or time.monotonic() >= Deadline:
+                        raise RuntimeError('Replication server readiness failed')
+                    time.sleep(.02)
+        Deadline = time.monotonic() + Args.timeout
+        for Process, Label, Role in Entries:
+            Results.append(Check(Process, Deadline, Project, Label, '[Network:ReplicationTest] ' + Role + ' PASS'))
+            Record = json.loads((Project / ('replication-evidence-' + Role + '.json')).read_text())
+            if Record['Result'] != 'PASS' or not Record['Complete'] or not Record['Cases'] or not all(Item['Passed'] for Item in Record['Cases']):
+                raise RuntimeError('Replication fixture incomplete: ' + Role)
+            Evidence.append(Record)
+    finally:
+        for Process, _, _ in Entries: StopProcess(Process)
+    (Output / 'replication-evidence.json').write_text(json.dumps({'Actors': 2, 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
     return Results
 
 

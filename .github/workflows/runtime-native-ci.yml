@@ -268,6 +268,8 @@ jobs:
             ${{ runner.temp }}/native-ci/**/server-results.json
             ${{ runner.temp }}/native-ci/**/native-evidence.json
             ${{ runner.temp }}/native-ci/**/function-evidence.json
+            ${{ runner.temp }}/native-ci/**/replication-evidence.json
+            ${{ runner.temp }}/native-ci/**/relevance-evidence.json
             ${{ runner.temp }}/native-ci/**/measurements.json
             ${{ runner.temp }}/native-ci/**/inputs.json
             ${{ runner.temp }}/native-ci/**/guids.txt

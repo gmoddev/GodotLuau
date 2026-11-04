@@ -24,7 +24,7 @@ def Main():
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
-        'remote': [f'{Kind}-{Mode}-{Role}' for Kind in ['remote', 'function'] for Mode in ['Listen', 'Dedicated'] for Role in ['server', 'client1', 'client2']],
+        'remote': [*[f'{Kind}-{Mode}-{Role}' for Kind in ['remote', 'function'] for Mode in ['Listen', 'Dedicated'] for Role in ['server', 'client1', 'client2']], 'replication-server', 'replication-client', *[f'relevance-{Mode}-{Role}' for Mode in ['Listen', 'Dedicated'] for Role in ['server0', 'client1', 'client2']]],
         'characters': [*[f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])], 'character-model', 'character-manual-server', 'character-manual-client1', 'character-manual-client2'],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
@@ -45,6 +45,19 @@ def Main():
         Groups[Name] = Results
     Remote = json.loads((Args.output / 'remote/native-evidence.json').read_text())
     Functions = json.loads((Args.output / 'remote/function-evidence.json').read_text())
+    Replication = json.loads((Args.output / 'remote/replication-evidence.json').read_text())
+    Relevance = json.loads((Args.output / 'remote/relevance-evidence.json').read_text())
+    if Relevance.get('Actors') != 6 or Relevance.get('Transport') != 'ENet' or {(Actor.get('Mode'), Actor.get('Role')) for Actor in Relevance.get('Evidence', [])} != {(Mode, Role) for Mode in ['Listen', 'Dedicated'] for Role in ['server0', 'client1', 'client2']} or any(not Actor.get('Complete') or Actor.get('Result') != 'PASS' or not Actor.get('Cases') or any(not Case.get('Passed') for Case in Actor['Cases']) for Actor in Relevance['Evidence']):
+        raise ValueError('Relevance lifecycle/authority qualification incomplete')
+    if Replication.get('Actors') != 2 or Replication.get('Transport') != 'ENet' or {Item['Role'] for Item in Replication.get('Evidence', [])} != {'server', 'client'}:
+        raise ValueError('GL-031 actual ENet replication actors missing')
+    for Record in Replication['Evidence']:
+        Labels = {Item['Label'] for Item in Record['Cases'] if Item['Passed']}
+        Required = {'static parent native identity preserved'}
+        if Record['Role'] == 'server': Required.add('runtime parent has a later network identity than its child')
+        else: Required |= {'late-join static and runtime parent closure arrives', 'static parent full-width identity matches the server', 'late-join value snapshot decoded', 'reparent preserves native runtime identity', 'descendant identity survives reparent', 'removed subtree identities are forgotten', 'replacement has fresh native and network identities'}
+        if not Record['Complete'] or Record['Result'] != 'PASS' or not Required <= Labels or not all(Item['Passed'] for Item in Record['Cases']):
+            raise ValueError('GL-031 parent/materialization regression incomplete')
     if Functions.get('Actors') != 6 or Functions.get('Transport') != 'ENet' or len(Functions.get('Evidence', [])) != 6:
         raise ValueError('GL-030 real ENet actor evidence missing')
     if {(Record['Mode'], Record['Role'], Record['ClientIndex']) for Record in Functions['Evidence']} != {(Mode, Role, Index) for Mode in ['Listen', 'Dedicated'] for Role, Index in [('server', 0), ('client', 1), ('client', 2)]}:
@@ -175,6 +188,8 @@ def Main():
         'RemoteHost': Host,
         'RemoteHostQualification': HostQualification,
         'RemoteFunctions': Functions,
+        'ReplicationNative': Replication,
+        'RelevanceNative': Relevance,
         'AnimationAuthority': AnimationAuthority,
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},

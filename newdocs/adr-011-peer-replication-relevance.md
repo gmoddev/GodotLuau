@@ -97,3 +97,91 @@ Reference concepts: Gargantuan `e682be08df84d776bfa455137728265c6494b5e8`,
 `src/network/ReplicationRelevance.cpp` and
 `devdocs/CurrentArchitecture/ReplicationFoundation3J.md`. GodotLuau does not adopt
 its GNS, DataModel, mutation gateway or deployment model.
+
+## Implemented opt-in contract
+
+The trusted project boolean `godot_luau/network/replication_relevance` defaults
+to false and is captured at session creation on both server and client. Matching
+builds and settings are required. An opted-in client rejects legacy structural
+RPCs before its first frame and fails explicitly if the new protocol does not
+begin within ten seconds. This is an experimental campaign branch contract,
+not a distribution or main integration approval.
+Enable it at project startup in a fresh scene; in-place conversion of an active
+legacy world, including prior Client-written native state, is not qualified.
+
+Only native server registrations enter the source catalog. A runtime anchored
+leaf Part under Workspace is spatial; its native mesh/collider components stay
+Part-owned. Registered gameplay descendants conservatively make that hierarchy
+global. Other objects and unanchored Parts are globally relevant. Global status
+is sticky for that canonical identity. `SetReplicationGlobal(Object)` is a
+trusted native host operation, guarded against Client execution; this first
+slice does not add an arbitrary Luau reflection/capability API. The native
+registry retains live runtime ObjectID registrations and global pins across
+same-scope service replacement. Runtime IDs use a checked process-lifetime
+counter below the static-place bit. Client metadata never registers an object.
+
+Listen-host Client writes to registered objects, their native descendants, and
+structural ancestors are denied through the existing write boundary, including
+attributes, impulses, destruction and ownership assignment. Ordinary attributes
+on Game are not structural subtree mutations. Client-local additions cannot
+promote an object into the source global set. Focus uses existing validated
+Character authority, with a fixed 250-unit selection radius.
+
+The source uses bounded immutable property snapshots: 8 KiB/512 codec nodes/128
+properties per record and 8 MiB encoded catalog data. The existing bounded queue
+owns reliable batches of at most 64 operations, 60 KiB and 4,096 codec nodes.
+Per-peer application admission is 256 KiB/256 messages; service totals are 16 MiB/
+16,384 messages across at most 64 peers. Incoming structural work is bounded to
+4 MiB/64 frames and shares the existing Remote receive rate budget. These are
+encoded payload bounds; source/view/commit metadata and Godot allocations are
+additional bounded state, not part of a claimed 16 MiB process-memory ceiling.
+
+Planned state advances at application queue acceptance; Known advances only at
+successful native handoff. Materialized records mean the exact peer/session
+reported cumulative application of an accepted sequence. An ACK is not evidence
+of an honest client, an ENet ACK or an independent ownership decision. At most
+64 structural frames remain application-unacknowledged per peer. A ten-second
+backlog/materialization deadline fails that peer explicitly and retires its
+owned state. Failed sessions do not re-enter planning or produce unbounded logs.
+
+Wire carriers are reliable channel-zero `GRV1` frames and `GRA1` application
+ACKs. Enter generation is that peer/session's checked batch sequence; update and
+leave must match it. Canonical retirement is distinct from relevance departure.
+Same-name replacement retires the old identity first. Every required creation
+and reference closure must fit one admitted group. Receiver validation precedes
+allocation; all new identities exist before reference properties apply. This
+is admission atomicity, not a claim that arbitrary SceneTree callbacks observe
+a transactional scene. Revalidate service, session and native objects after
+callbacks; an interrupted application receives no ACK. Bounded reference cycles
+can retire together, with native child removal ordered before its parent.
+
+Property writes coalesce before admission. Already accepted reparent barriers
+remain immutable FIFO work, including two changes in one Luau turn. Cached
+property bytes are reused with per-peer headers. NetworkService's existing tick
+does at most eight peer turns or four milliseconds of submission work, round
+robin. Catalog refresh/query and native property application have their own
+finite object/byte bounds; the four milliseconds is not a whole-frame time bound
+or a proof of fairness under every mixed traffic workload.
+
+Runtime physics uses a 180-byte unreliable channel-zero `GRP1` carrier with
+epoch, user session, canonical ID and materialization generation. Validate actual
+sender/carrier, current native identity, server ownership, current visibility,
+control acknowledgment and finite pose/velocity before application. Ownership
+requests wait for materialization; automatic ownership considers eligible views.
+Static-place physics retains its existing contract. Non-anchored bodies stay
+global rather than acquiring ambiguous selective ownership.
+
+Public Remote Instance arguments referring to selective runtime objects return
+an explicit not-ready error. They require a sticky global pin and that target's
+global-state application ACK; existing Player/scope/static reference behavior
+continues. This avoids stale cross-channel reentry aliases without changing
+GER2 or introducing a second Remote system. ObjectValue now has a focused live
+Instance/nil getter/setter; its projection encodes authorized native identity,
+normalizes unavailable weak targets to nil, and preserves dependency closure.
+
+Remaining qualification includes larger-world cost, mixed-traffic fairness,
+loss/reordering workloads, server service replacement, mixed-mode rejection,
+and full graphical behavior. Static-place removal history before a peer joins
+is not introduced by this runtime-only slice. Unsupported arbitrary attached
+script getters and oversized groups fail explicitly. No general performance,
+full world paging, native ACK retirement or 64-player support is claimed.

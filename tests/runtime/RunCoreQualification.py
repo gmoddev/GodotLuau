@@ -32,11 +32,11 @@ def Main():
         subprocess.run(Command, stdout=Log, stderr=subprocess.STDOUT, check=True, timeout=120, **Flags)
     CheckReport(Report)
     Evidence = {'Command': Command, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
-                'Cases': 81, 'Result': 'PASS', 'ASAN_OPTIONS': os.environ.get('ASAN_OPTIONS'),
+                'Cases': 85, 'Result': 'PASS', 'ASAN_OPTIONS': os.environ.get('ASAN_OPTIONS'),
                 'Files': {File.name: hashlib.sha256(File.read_bytes()).hexdigest()
                           for File in [Discovery, Report, Args.output/'ctest.log']}}
     (Args.output/'verified.json').write_text(json.dumps(Evidence, indent=2))
-    print('[Runtime:CoreQualification] PASS 81 distinct cases; complete report retained', flush=True)
+    print('[Runtime:CoreQualification] PASS 85 distinct cases; complete report retained', flush=True)
 
 
 if __name__ == '__main__': Main()

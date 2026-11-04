@@ -67,10 +67,48 @@ four successful workflows and independently checked artifacts.
 | GL-029 | P2 | Integrated; resolved within ADR-008/009 admitted-host scope | Three-mode RemoteEvent publication and bounded application/native admission |
 | GL-030 | P2 | Closed on campaign branch; qualified at 2296c96 | Bounded RemoteFunction terminal outcomes; integration remains unmerged |
 | GL-031 | P2 | Open; reproduced late-join omission | Runtime child under a static place parent is not synchronized |
+| GL-032 | P2 | Fixed in campaign; platform qualification pending | ObjectValue's scalar bridge omits Instance assignment/readback |
+| GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
+
+## GL-032: ObjectValue lacks an Instance bridge
+
+**Status: fixed in the unmerged campaign; complete platform gates pending.**
+`WriteLuauInstanceProperty` delegates to the intentionally scalar/Vector3/Color3
+converter. It cannot assign a Godot Instance to ObjectValue.Value; the matching
+generic getter cannot return an Instance either. Legacy shadow encoding could
+still carry the write, so this is not a claim that every historical wire
+reference failed. The new source projection exposed the discrepancy when the
+native value remained nil despite its encoded shadow.
+
+The focused fix handles ObjectValue's live Instance/nil property in its existing
+API owner; it does not broaden the generic converter or expose reflection.
+Native projection reads the live authorized target identity, normalizes missing
+or unavailable weak targets to nil and tracks registration changes. The actual
+ENet relevance fixture asserts source Luau assignment/readback, cross-peer
+reference closure, clearing and cyclic reference creation/retirement. Windows
+Debug ASan passes the expanded six-actor fixture at native fingerprint
+`a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7`.
+
+## GL-033: Local RemoteEvent pressure replay loses readiness
+
+**Status: OPEN; test/runtime attribution remains under investigation.**
+DockerPC replay of the pressure/queue-age fixture fails after the pressure stage,
+then cascades into final-sequence/replacement assertions. A control replay on
+the previously qualified GL-030 binary also fails: native fingerprint
+`3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc`,
+DLL `677df7f2d71e8941a16d3c72a2de4f4bcc86c26fb8b54bf7ece90c952a072310`.
+No unexpected ASan report occurs in these runs. This does not establish a new
+relevance regression or a security defect. Exact-revision GL-030 hosted gates
+remain successful counterevidence. Preserve the failed logs, investigate actual
+native session/readiness transitions, and keep all assertions required.
 
 ## GL-031: Late join omits runtime children of static parents
 
 **Status: OPEN; reproduced in two independent admitted-host ENet processes.**
+The campaign seeds existing static prerequisites and adds a production two-actor
+fixture covering deeper/later-ID ancestry, identity-preserving reparenting,
+removal and replacement. Windows Debug ASan passes; hosted qualification remains
+pending. The opted-in relevance fixture separately exercises reconnect.
 The existing `_rep_sync_peer` collects static identities separately, but starts
 its topological `sent` set empty. A runtime child whose parent is in
 `net_instances` waits for that parent to enter `sent`; static parents never do.

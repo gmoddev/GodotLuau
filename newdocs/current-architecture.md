@@ -445,6 +445,19 @@ separates executed development coverage, retained failures and pending platform
 qualification. This branch is unmerged; statements below about earlier main
 integration remain historical scope, not qualification of this candidate.
 
+The same branch implements the opt-in [ADR-011 projection and batching
+contract](adr-011-peer-replication-relevance.md). The native catalog and spatial
+index feed bounded desired/planned/known/materialized peer views through the
+existing NetworkService tick and GL-029 queue/admission capability. Immutable
+reliable structural groups, cached property snapshots and explicit application
+ACKs are distinct from native transport ACKs. Runtime physics carries view
+generation/session identity; unanchored bodies remain global. This is a narrow
+runtime anchored-leaf-Part slice, disabled by default, with matching-build/setting
+requirements and explicit Remote-reference restrictions. Full campaign and
+performance qualification remain pending; the journal records actual coverage.
+GL-031 fixes static-parent late join; GL-032 adds the missing ObjectValue Instance
+getter/setter without broadening scalar conversion or reflection authority.
+
 Main includes the qualified Phase 1 native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen
 configuration, per-session descriptors/readiness and ObjectID-bound publication.

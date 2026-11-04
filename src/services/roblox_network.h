@@ -281,6 +281,7 @@ public:
 
 #include "roblox_remote.h"   // RemoteEventNode (entrega de eventos que llegan por red)
 #include "gl_remote_delivery.h"
+#include "gl_replication_state.h"
 #include <godot_cpp/classes/e_net_packet_peer.hpp>
 #include "roblox_part.h"     // RobloxPart (física en red / Network Ownership 1.14.7)
 #include "roblox_animation.h" // gl_anim_apply (animaciones replicadas 1.14.12)
@@ -776,6 +777,14 @@ private:
     // netId (asignado por el servidor) -> ObjectID del nodo replicado. En el
     // servidor se llena al replicar; en el cliente al recibir _rep_new.
     std::map<uint64_t, uint64_t> net_instances;
+    GLReplication::State Replication;
+    bool ReplicationTransition = false;
+    bool ReplicationApplying = false;
+    struct ReplicationTransitionScope {
+        uint64_t Identity;
+        explicit ReplicationTransitionScope(NetworkService* Owner) : Identity(uint64_t(Owner->get_instance_id())) { Owner->ReplicationTransition = true; }
+        ~ReplicationTransitionScope() { if (auto Owner = Object::cast_to<NetworkService>(ObjectDB::get_instance(Identity))) Owner->ReplicationTransition = false; }
+    };
     uint64_t next_net_id_ctr = 1;   // servidor: contador de netId
     bool static_ids_done = false;   // los nodos del place ya llevan netId determinista (1.14.10)
 
@@ -1154,6 +1163,9 @@ private:
         rpc_config("_remote_retire", ServerReliable);
         rpc_config("_gl_assign",          r);   // coordinador → cliente: ve a este mundo
         rpc_config("_rep_new",            r);   // replicación (1.14.5): crear instancia
+        rpc_config("_replication_frame", ServerReliable);
+        rpc_config("_replication_ack", r);
+        rpc_config("_replication_physics", u);
         rpc_config("_rep_prop",           r);   // replicación: cambio de propiedad
         rpc_config("_rep_reparent",       r);   // replicación: mover de padre
         rpc_config("_rep_destroy",        r);   // replicación: destruir instancia
@@ -1716,6 +1728,11 @@ protected:
         ClassDB::bind_method(D_METHOD("_remote_retire", "epoch", "user", "endpoint", "generation"), &NetworkService::_remote_retire);
         // Replicación automática (1.14.5)
         ClassDB::bind_method(D_METHOD("_rep_new", "id", "gclass", "name", "parent_ref", "props"), &NetworkService::_rep_new);
+        ClassDB::bind_method(D_METHOD("_replication_frame", "frame"), &NetworkService::_replication_frame);
+        ClassDB::bind_method(D_METHOD("_replication_ack", "frame"), &NetworkService::_replication_ack);
+        ClassDB::bind_method(D_METHOD("_replication_physics", "frame"), &NetworkService::_replication_physics);
+        ClassDB::bind_method(D_METHOD("GetReplicationState", "peer"), &NetworkService::GetReplicationState, DEFVAL(0));
+        ClassDB::bind_method(D_METHOD("SetReplicationGlobal", "object"), &NetworkService::SetReplicationGlobal);
         ClassDB::bind_method(D_METHOD("_rep_prop", "id", "key", "enc"),             &NetworkService::_rep_prop);
         ClassDB::bind_method(D_METHOD("_rep_reparent", "id", "parent_ref"),         &NetworkService::_rep_reparent);
         ClassDB::bind_method(D_METHOD("_rep_destroy", "id"),                        &NetworkService::_rep_destroy);
@@ -1830,15 +1847,21 @@ public:
         _remove_peer_player(id);
         _fire(pd_cbs, true, id);
     }
-    void _on_connected_ok()            { net_connected = true; gl_mp_log("conectado al host! sesion compartida activa"); _fire(conn_cbs, false, 0); }
+    void _on_connected_ok()            { net_connected = true; Replication.ConnectedAt = RemoteNow(); gl_mp_log("conectado al host! sesion compartida activa"); _fire(conn_cbs, false, 0); }
     void _on_connect_failed()          { mode = 0; if (retry_left > 0) return; _fire(fail_cbs, false, 0); }
     void _on_server_disconnected() {
-        net_connected = false;
-        AnimationBudgets.clear();
-        CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
-        LocalAnimationCharacter = 0; LocalAnimation = AnimState();
-        _rf_fail_pending(0, "InvokeServer: lost connection to the server");
-        _clear_puppets();
+        if (ReplicationTransition) return;
+        const uint64_t Identity = uint64_t(get_instance_id());
+        if (Replication.Receiving) disconnect_net();
+        else {
+            net_connected = false;
+            AnimationBudgets.clear();
+            CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
+            LocalAnimationCharacter = 0; LocalAnimation = AnimState();
+            _rf_fail_pending(0, "InvokeServer: lost connection to the server");
+            _clear_puppets();
+        }
+        if (ObjectDB::get_instance(Identity) != this) return;
         // Cliente local: si el host (editor) se detiene, cerrar esta ventana para
         // que no queden ventanas huérfanas conectándose a la nada.
         if (player_index >= 2 && is_inside_tree()) get_tree()->quit();
@@ -2253,7 +2276,7 @@ public:
         GLRemotePayload::Codec Preflight; Preflight.Value(Arguments);
         if (!Preflight.Valid) return "[Network:Remote] Invalid or oversized payload";
         Variant Body = Arguments.duplicate(true);
-        if (!RemoteReferences(Body, false)) return "[Network:Remote] Invalid or unpublished reference";
+        if (!ReplicationPayloadReady(Body, 0) || !RemoteReferences(Body, false)) return "[Network:Remote] Invalid or unpublished reference";
         GLRemotePayload::Codec Payload; Payload.Value(Body);
         if (!Payload.Valid || Payload.Bytes.size() > GLRemotePayload::MaxBytes - GLRemotePayload::HeaderBytes || (Publication->Delivery && Payload.Bytes.size() > GLRemotePayload::UnreliableBytes)) return "[Network:Remote] Payload exceeds delivery limits";
         std::vector<int> Targets;
@@ -2274,6 +2297,7 @@ public:
             }
             if (Target > 0 && Targets.empty()) return "[Network:Remote] Remote peer unavailable";
             std::sort(Targets.begin(), Targets.end());
+            for (int Peer : Targets) if (!ReplicationPayloadReady(Body, Peer)) return "[Network:Remote] Instance not globally materialized for target";
             auto Encoded = std::make_shared<const PackedByteArray>(Payload.Bytes);
             Candidates.reserve(Targets.size());
             for (int Peer : Targets) {
@@ -2463,7 +2487,7 @@ public:
         Variant Body = Frame.Value();
         if (!Frame.Valid || Frame.Position != Bytes.size() || Body.get_type() != Variant::ARRAY ||
             Array(Body).size() > GLRemotePayload::MaxArguments || (Delivery && UtilityFunctions::var_to_bytes(Body).size() > 900) ||
-            !RemoteReferences(Body, true)) { ++RemoteRejected; return; }
+            !ReplicationPayloadReady(Body, Sender) || !RemoteReferences(Body, true)) { ++RemoteRejected; return; }
         uint64_t& Watermark = Server ? Publication.Peers.at(Sender).ReceivedSequence : Publication.ReceivedSequence;
         if (Delivery == 2) {
             if (Sequence <= Watermark) { CountRemote(RemoteStale); return; }
@@ -2698,12 +2722,12 @@ public:
             Found->second.Generation == Request.Generation && Found->second.Object == Request.Object &&
             Found->second.LocalGeneration == Request.LocalGeneration && LiveEndpoint(Found->second);
     }
-    bool FunctionPayload(Array& Arguments, bool Receiving) {
+    bool FunctionPayload(Array& Arguments, bool Receiving, int Peer = 0) {
         if (Arguments.size() > GLRemotePayload::MaxArguments) return false;
         GLRemotePayload::Codec Codec; Codec.Value(Arguments);
         if (!Codec.Valid || Codec.Bytes.size() > 65536 - 128) return false;
         Variant Values = Arguments.duplicate(true);
-        if (!RemoteReferences(Values, Receiving)) return false;
+        if (!ReplicationPayloadReady(Values, Peer) || !RemoteReferences(Values, Receiving)) return false;
         if (Receiving && !RemoteReferences(Values, true, 0, true, true)) return false;
         Arguments = Values; return true;
     }
@@ -2731,7 +2755,7 @@ public:
         size_t Count = 0;
         for (const auto& Entry : rf_expect) if (Entry.second.peer == Peer) ++Count;
         if (Count >= 64) return "[Network:Function] Peer pending limit reached";
-        if (!FunctionPayload(Arguments, false)) return "[Network:Function] Invalid or oversized payload";
+        if (!FunctionPayload(Arguments, false, Peer)) return "[Network:Function] Invalid, unmaterialized or oversized payload";
         RFPending Request;
         Request.peer = Peer; Request.User = mode == 2 ? gl_local_user_id() : peer_seq_uid.at(Peer);
         Request.Epoch = RemoteEpoch; Request.Endpoint = Publication->Endpoint; Request.Generation = Publication->Generation;
@@ -2783,7 +2807,7 @@ public:
     void RespondFunction(lua_State* Thread, int64_t Token, bool Ok, Array Returns) {
         auto Found = FunctionServing.find(Token);
         if (Found == FunctionServing.end() || Found->second.Thread != Thread || !GLReferenceAlive(Found->second.Anchor, Found->second.Guard)) return;
-        if (!FunctionPayload(Returns, false)) { Ok = false; Returns = Array::make("[Network:Function] Invalid or oversized handler result"); }
+        if (!FunctionPayload(Returns, false, Found->second.Request.peer)) { Ok = false; Returns = Array::make("[Network:Function] Invalid or oversized handler result"); }
         FinishFunction(Token, Ok, Returns);
     }
     void ReceiveFunction(const Variant& Input, bool Server) {
@@ -2796,7 +2820,7 @@ public:
         int64_t CallId = Frame[5];
         if (CallId <= FunctionReceived[Sender]) { ++FunctionRejected; return; }
         Array Arguments = Frame[6];
-        bool Valid = FunctionPayload(Arguments, true);
+        bool Valid = FunctionPayload(Arguments, true, Sender);
         if (ObjectDB::get_instance(ServiceIdentity) != this) return;
         if (!Valid) { ++FunctionRejected; return; }
         if (!LiveFunctionRequest(Request)) { ++FunctionRejected; return; }
@@ -2840,7 +2864,7 @@ public:
         if (RemoteNow() >= Found->second.Deadline) return; // Tick owns the terminal timeout.
         Array Returns = Frame[7];
         if (!bool(Frame[6]) && (Returns.size() != 1 || Returns[0].get_type() != Variant::STRING)) { ++FunctionRejected; return; }
-        bool Valid = FunctionPayload(Returns, true);
+        bool Valid = FunctionPayload(Returns, true, Sender);
         if (ObjectDB::get_instance(ServiceIdentity) != this) return;
         if (!Valid) { ++FunctionRejected; return; }
         Found = rf_expect.find(int64_t(Frame[5]));
@@ -2910,7 +2934,33 @@ public:
     // (puesto en el editor) NO se replica: cada ventana ya cargó el mismo place;
     // esto es una capa de deltas de runtime. Los envíos los dispara luau_api.h
     // (godot_object_newindex/method_destroy) llamando estos métodos por tipo.
-    int64_t rep_next_id() { return (int64_t)(next_net_id_ctr++); }
+    int64_t rep_next_id() {
+        // Process-lifetime native identity: service replacement cannot alias an
+        // earlier runtime object. Bit 62 remains reserved for place identities.
+        static uint64_t Next = 1;
+        if (!Next || Next >= GL_STATIC_ID_BIT) { Replication.Failed = true; return 0; }
+        return int64_t(Next++);
+    }
+    void TouchReplication(uint64_t Id);
+    bool RefreshReplication();
+    void TickReplication();
+    bool ResetReplication();
+    void RestoreReplication();
+    bool SetReplicationGlobal(Object* ObjectValue);
+    Dictionary GetReplicationState(int Peer = 0) const;
+    bool ReplicationReferenceReady(uint64_t Id, int Peer = 0) const;
+    bool IsReplicationEnabled() const { return Replication.Enabled; }
+    bool ReplicationPhysicsReady(uint64_t Id, int Peer) const;
+    bool ReplicationPayloadReady(const Variant& Body, int Peer, int Depth = 0, bool Tagged = true) const;
+    void _replication_frame(PackedByteArray Frame);
+    void _replication_ack(PackedByteArray Frame);
+    void _replication_physics(PackedByteArray Frame);
+    bool ApplyReplicationFrame(const PackedByteArray& Frame);
+    void SendReplicationPhysics(int Peer, uint64_t Id, const Transform3D& Pose, const Vector3& Linear, const Vector3& Angular);
+    bool SendReplicationPeer(int Peer);
+    bool QueueReplication(int Peer, const std::vector<std::pair<int, uint64_t>>& Operations);
+    void QueueReplicationReparent(uint64_t Id);
+    bool FailReplicationPeer(int Peer, const char* Reason);
 
     // ── netId de los nodos del PLACE (1.14.10) ───────────────────────────
     // Hasta ahora solo lo creado en RUNTIME tenía netId, así que una parte
@@ -2977,7 +3027,14 @@ public:
     }
     void rep_map(int64_t id, Object* node) {
         Node* n = Object::cast_to<Node>(node);
-        if (n) net_instances[(uint64_t)id] = (uint64_t)n->get_instance_id();
+        if (!n || id <= 0 || (Replication.Enabled && GLExecutionDomain::IsClientExecution())) return;
+        if (Replication.Enabled && net_instances.size() >= GLReplication::Index::MaximumObjects) { Replication.Failed = true; return; }
+        net_instances[uint64_t(id)] = uint64_t(n->get_instance_id());
+        if (Replication.Enabled && mode == 1 && !gl_is_static_netid(uint64_t(id))) {
+            auto& Registry = GLReplication::Registry();
+            if (Registry.Objects.size() >= GLReplication::Index::MaximumObjects) { Replication.Failed = true; return; }
+            Registry.Objects[uint64_t(id)] = uint64_t(n->get_instance_id());
+        }
     }
     Node* _rep_node(uint64_t id) {
         auto it = net_instances.find(id);
@@ -3006,7 +3063,16 @@ public:
     Object* net_node_by_id(int64_t netId) { return _rep_node((uint64_t)netId); }
     // Fijar dueño (SetNetworkOwner/Auto, solo servidor): aplicar local + difundir.
     void net_set_owner(int64_t netId, int owner_peer, bool is_auto) {
+        if (mode != 1 || !is_server() || GLExecutionDomain::IsClientExecution() || owner_peer < 0) return;
+        if (Replication.Enabled && !gl_is_static_netid(uint64_t(netId)) && owner_peer > 1 && !ReplicationPhysicsReady(uint64_t(netId), owner_peer)) {
+            Node* Value = _rep_node(uint64_t(netId));
+            if (Value && peer_seq_uid.count(owner_peer) && Replication.Owners.size() < GLReplication::Index::MaximumObjects)
+                Replication.Owners[uint64_t(netId)] = {uint64_t(Value->get_instance_id()), owner_peer, peer_seq_uid.at(owner_peer), is_auto};
+            return;
+        }
+        Replication.Owners.erase(uint64_t(netId));
         _apply_owner((uint64_t)netId, owner_peer, is_auto);
+        if (Replication.Enabled) TouchReplication(uint64_t(netId));
         rpc("_phys_owner", netId, owner_peer, is_auto);
     }
     void _apply_owner(uint64_t netId, int owner_peer, bool is_auto) {
@@ -3023,6 +3089,7 @@ public:
         }
     }
     void _phys_owner(int64_t netId, int owner_peer, bool is_auto) {
+        if (!NativeRemoteCall("_phys_owner") || !AcceptServerRpc()) return;
         if (get_multiplayer()->get_remote_sender_id() != 1) return;   // solo el servidor
         _apply_owner((uint64_t)netId, owner_peer, is_auto);
     }
@@ -3033,12 +3100,14 @@ public:
         pt.age = 0.0;   // llegó estado fresco: reiniciar la ventana de extrapolación
     }
     void _phys_state(int64_t netId, Transform3D t, Vector3 lv, Vector3 av) {
+        if (Replication.Receiving && !gl_is_static_netid(uint64_t(netId))) return;
         if (get_multiplayer()->get_remote_sender_id() != 1) return;   // autoridad-relay = servidor
         RobloxPart* part = Object::cast_to<RobloxPart>(_rep_node((uint64_t)netId));
         if (!part || _phys_authority(part)) return;
         _phys_apply_remote(part, (uint64_t)netId, t, lv, av);
     }
     void _phys_owned(int64_t netId, Transform3D t, Vector3 lv, Vector3 av) {
+        if (Replication.Enabled && !gl_is_static_netid(uint64_t(netId))) return;
         if (!is_server()) return;
         int sender = get_multiplayer()->get_remote_sender_id();
         RobloxPart* part = Object::cast_to<RobloxPart>(_rep_node((uint64_t)netId));
@@ -3079,6 +3148,9 @@ public:
         for (int i = 0; i < peers.size(); i++) {
             int pid = peers[i];
             if (pid == skip_peer) continue;
+            if (Replication.Enabled && !gl_is_static_netid(netId)) {
+                SendReplicationPhysics(pid, netId, t, lv, av); continue;
+            }
             bool found = false, near_it = false;
             for (auto& pp : plrs) {
                 if (pp.peer != pid) continue;
@@ -3102,6 +3174,7 @@ public:
                 Transform3D t = part->get_global_transform();
                 Vector3 lv = part->get_linear_velocity(), av = part->get_angular_velocity();
                 if (is_server()) _phys_send_culled(kv.first, t, lv, av, plrs, 0);
+                else if (Replication.Receiving && !gl_is_static_netid(kv.first)) SendReplicationPhysics(1, kv.first, t, lv, av);
                 else             rpc_id(1, "_phys_owned", (int64_t)kv.first, t, lv, av);
             } else if (!part->is_freeze_enabled()) {
                 part->set_freeze_mode(RigidBody3D::FREEZE_MODE_KINEMATIC);
@@ -3152,7 +3225,10 @@ public:
             if (!is_auto) continue;   // dueño fijado a mano → no tocar
             Vector3 pp = part->get_global_position();
             int best = 0; float best_d = RANGE2;
-            for (auto& pl : plrs) { float d = pl.pos.distance_squared_to(pp); if (d < best_d) { best_d = d; best = pl.peer; } }
+            for (auto& pl : plrs) {
+                if (Replication.Enabled && !gl_is_static_netid(kv.first) && pl.peer > 1 && !ReplicationPhysicsReady(kv.first, pl.peer)) continue;
+                float d = pl.pos.distance_squared_to(pp); if (d < best_d) { best_d = d; best = pl.peer; }
+            }
             int cur = part->has_meta("_gl_owner") ? (int)part->get_meta("_gl_owner") : 0;
             if (best == cur) continue;
             // Histéresis: si ya hay un dueño-jugador, solo cambiar si el nuevo está
@@ -3164,8 +3240,7 @@ public:
                 }
             }
             if (best == cur) continue;
-            _apply_owner(kv.first, best, true);
-            rpc("_phys_owner", (int64_t)kv.first, best, true);
+            net_set_owner(int64_t(kv.first), best, true);
         }
     }
 
@@ -3234,14 +3309,22 @@ public:
     // (servidor) difundir creación / propiedad / re-parent / destrucción
     void rep_send_new(int64_t id, const String& gclass, const String& name, const String& parent_ref, const Dictionary& props) {
         if (mode != 1) return;
+        if (Replication.Enabled) { TouchReplication(uint64_t(id)); return; }
         rpc("_rep_new", id, gclass, name, parent_ref, props);
     }
     void rep_send_prop(int64_t id, const String& key, const Variant& enc) {
         if (mode != 1) return;
+        if (Replication.Enabled) {
+            TouchReplication(uint64_t(id));
+            for (const char* Control : {"Anchored", "CanCollide", "CanTouch", "Size", "Massless", "CustomPhysicalProperties", "Position", "Rotation", "Scale", "CFrame"})
+                if (key == Control) Replication.Controls[uint64_t(id)] = Replication.Dirty[uint64_t(id)];
+            return;
+        }
         rpc("_rep_prop", id, key, enc);
     }
     void rep_send_reparent(int64_t id, const String& parent_ref) {
         if (mode != 1) return;
+        if (Replication.Enabled) { TouchReplication(uint64_t(id)); QueueReplicationReparent(uint64_t(id)); return; }
         rpc("_rep_reparent", id, parent_ref);
     }
     // Olvida el netId de TODO el subárbol (raíz + hijos) y quita sus metas.
@@ -3260,6 +3343,7 @@ public:
         if (mode != 1 || !n || !n->has_meta("_gl_netid")) return;
         int64_t root = (int64_t)n->get_meta("_gl_netid");
         _rep_collect_forget(n);
+        if (Replication.Enabled) { Replication.LastRefresh = 0; return; }
         rpc("_rep_destroy", root);
     }
 
@@ -3267,6 +3351,7 @@ public:
     // clientes ya no corren ServerScripts → dependen de esto para ver lo que el
     // servidor creó ANTES de que ellos conectaran (late-join).
     void _rep_sync_peer(int id) {
+        if (Replication.Enabled) { Replication.LastRefresh = 0; return; }
         // Orden TOPOLÓGICO (padre replicado antes que hijo), no por netId: un nodo
         // re-parentado bajo un padre de netId mayor rompería el orden ascendente y
         // el cliente lo descartaría por padre inexistente. Punto fijo multipasada.
@@ -3282,6 +3367,7 @@ public:
             else                              live.push_back(std::pair<uint64_t, Node*>(kv.first, n));
         }
         std::unordered_set<uint64_t> sent;
+        for (const auto& Existing : statics) sent.insert(Existing.first); // Already materialized by the matching place.
         bool progress = true;
         while (progress) {
             progress = false;
@@ -3316,6 +3402,9 @@ public:
             for (int i = 0; i < keys.size(); i++)
                 rpc_id(id, "_rep_prop", (int64_t)pr.first, String(keys[i]), p[keys[i]]);
         }
+        SyncReplicationPresentation(id);
+    }
+    void SyncReplicationPresentation(int id) {
         // Equipos (1.14.10): el que entra necesita saber en qué equipo está cada
         // uno; los Team ya le llegaron arriba como instancias replicadas.
         TypedArray<Node> roster = get_players_roster();
@@ -3338,6 +3427,7 @@ public:
 
     // (cliente) receptores — solo aceptan del servidor (peer 1)
     void _rep_new(int64_t id, String gclass, String name, String parent_ref, Dictionary props) {
+        if (Replication.Expected || Replication.Receiving || ReplicationTransition || mode != 2 || !NativeRemoteCall("_rep_new")) return;
         if (get_multiplayer()->get_remote_sender_id() != 1) return;
         if (net_instances.count((uint64_t)id)) return;   // ya existe (idempotente ante re-sync)
         Object* o = ClassDB::instantiate(StringName(gclass));
@@ -3362,11 +3452,13 @@ public:
         }
     }
     void _rep_prop(int64_t id, String key, Variant enc) {
+        if (Replication.Expected || Replication.Receiving || ReplicationTransition || mode != 2 || !NativeRemoteCall("_rep_prop")) return;
         if (get_multiplayer()->get_remote_sender_id() != 1) return;
         Node* n = _rep_node((uint64_t)id);
         if (n && gl_apply_prop_hook()) gl_apply_prop_hook()(n, key, enc);
     }
     void _rep_reparent(int64_t id, String parent_ref) {
+        if (Replication.Expected || Replication.Receiving || ReplicationTransition || mode != 2 || !NativeRemoteCall("_rep_reparent")) return;
         if (get_multiplayer()->get_remote_sender_id() != 1) return;
         Node* n = _rep_node((uint64_t)id);
         if (!n) return;
@@ -3376,6 +3468,7 @@ public:
         parent->add_child(n);
     }
     void _rep_destroy(int64_t id) {
+        if (Replication.Expected || Replication.Receiving || ReplicationTransition || mode != 2 || !NativeRemoteCall("_rep_destroy")) return;
         if (get_multiplayer()->get_remote_sender_id() != 1) return;
         Node* n = _rep_node((uint64_t)id);
         if (n) { _rep_collect_forget(n); if (n->get_parent()) n->get_parent()->remove_child(n); n->queue_free(); }
@@ -3722,6 +3815,17 @@ public:
     bool CanWriteCharacter(Node* Target, bool Subtree = false) const {
         if (!GLExecutionDomain::IsClientExecution() || mode != 1) return true;
         if (!Target) return true;
+        if (Replication.Enabled) {
+            // Listen-host Client VMs share this SceneTree. Only native server
+            // registrations confer projection ownership; editable metadata does
+            // not. Protect registered descendants and their structural parents.
+            for (const auto& Entry : net_instances) {
+                Node* Registered = Object::cast_to<Node>(ObjectDB::get_instance(Entry.second));
+                if (!Registered) continue;
+                if (Registered == Target || Registered->is_ancestor_of(Target) || (Subtree && Target->is_ancestor_of(Registered))) return false;
+            }
+            for (uint64_t Scope : RemoteScopeRoots) if (Scope == uint64_t(Target->get_instance_id())) return false;
+        }
         if (Subtree) for (const auto& Entry : CharacterAuthorities) {
             Node* Character = LiveCharacter(Entry.second.Identity);
             if (Character && Target->is_ancestor_of(Character)) return false;
@@ -4085,7 +4189,10 @@ public:
         // despues. Por eso "player.Team = equipo" nunca se quedaba puesto.
         if (PlayerObject* po = Object::cast_to<PlayerObject>(pn))
             po->team_id = tn ? (uint64_t)tn->get_instance_id() : 0;
-        if (is_server()) rpc("_set_team", target, tid);
+        if (is_server()) {
+            if (Replication.Enabled) { for (auto& Entry : Replication.Peers) Entry.second.TailDirty = true; }
+            else rpc("_set_team", target, tid);
+        }
     }
     void _apply_team(int peer, int64_t team_netid) {
         // _ensure_peer_player, NO _peer_player: en el late-join el objeto Player
@@ -4240,6 +4347,8 @@ public:
         DrainRemoteOutgoing();
         if (ObjectDB::get_instance(RemoteServiceIdentity) != this || is_queued_for_deletion()) return;
         DrainRemoteIncoming();
+        if (ObjectDB::get_instance(RemoteServiceIdentity) != this || is_queued_for_deletion()) return;
+        TickReplication();
         if (ObjectDB::get_instance(RemoteServiceIdentity) != this || is_queued_for_deletion()) return;
         // 0-. Instancia (mundo lanzado por el coordinador): publica su latido
         //     (puerto + nº de jugadores) para que el coordinador sepa su estado.
@@ -4525,7 +4634,8 @@ public:
 
     // ── API para Luau ────────────────────────────────────────────────────
     bool start_server(int port, int max_players) {
-        if (!is_inside_tree() || is_queued_for_deletion()) return false;
+        if (!is_inside_tree() || is_queued_for_deletion() || ReplicationTransition || ReplicationApplying) return false;
+        ReplicationTransitionScope Transition(this);
         if (!HasNativeRemoteAdmission() || String(get_path()).utf8().length() > 256) {
             UtilityFunctions::print("[Network:Remote] Patched native admission host and a NetworkService path of at most 256 UTF-8 bytes are required");
             return false;
@@ -4535,6 +4645,7 @@ public:
         Error e = Candidate->create_server(port, max_players > 0 ? max_players : 32);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
         if (!ResetRemotes() || is_queued_for_deletion()) return false;
+        if (!ResetReplication()) return false;
         peer = Candidate;
         RemoteEpoch = NewRemoteEpoch(); CaptureRemoteBootstrap();
         ChatBudgets.clear();
@@ -4545,6 +4656,11 @@ public:
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 1;
+        if (auto Settings = ProjectSettings::get_singleton()) {
+            Variant Enabled = Settings->get_setting("godot_luau/network/replication_relevance", false);
+            Replication.Enabled = Enabled.get_type() == Variant::BOOL && bool(Enabled);
+        }
+        if (Replication.Enabled) RestoreReplication();
         gl_net_role() = 1; gl_net_service_id() = (uint64_t)get_instance_id();   // replicación: somos servidor
         // UserId secuencial: el host es SIEMPRE el jugador 1; los peers toman 2,3,...
         peer_seq_uid[1] = 1; next_seq_uid = 2; gl_local_user_id() = 1;
@@ -4556,7 +4672,8 @@ public:
         return true;
     }
     bool connect_server(const String& ip, int port) {
-        if (!is_inside_tree() || is_queued_for_deletion()) return false;
+        if (!is_inside_tree() || is_queued_for_deletion() || ReplicationTransition || ReplicationApplying) return false;
+        ReplicationTransitionScope Transition(this);
         if (!HasNativeRemoteAdmission() || String(get_path()).utf8().length() > 256) {
             UtilityFunctions::print("[Network:Remote] Patched native admission host and a NetworkService path of at most 256 UTF-8 bytes are required");
             return false;
@@ -4573,6 +4690,7 @@ public:
         Error e = Candidate->create_client(addr, port);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); return false; }
         if (!ResetRemotes() || is_queued_for_deletion()) return false;
+        if (!ResetReplication()) return false;
         CaptureRemoteBootstrap(); peer = Candidate;
         target_address = ip + String(":") + String::num_int64(port);
         ChatBudgets.clear();
@@ -4584,6 +4702,10 @@ public:
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 2;
+        if (auto Settings = ProjectSettings::get_singleton()) {
+            Variant Enabled = Settings->get_setting("godot_luau/network/replication_relevance", false);
+            Replication.Expected = Enabled.get_type() == Variant::BOOL && bool(Enabled);
+        }
         gl_net_role() = 2; gl_net_service_id() = (uint64_t)get_instance_id();   // replicación: somos cliente
         _strip_server_only();  // lo que solo ve el servidor, fuera de esta ventana (1.14.17)
         _stamp_static_ids();   // mismo place → mismos netId que el servidor (1.14.10)
@@ -4591,7 +4713,10 @@ public:
         return true;
     }
     void disconnect_net() {
+        if (ReplicationTransition) return;
+        ReplicationTransitionScope Transition(this);
         if (!ResetRemotes()) return;
+        if (!ResetReplication()) return;
         AnimationBudgets.clear();
         CharacterAuthorities.clear(); ReadyAdmissions.clear(); ResetRequests.clear(); ReparentAnimations.clear(); CharacterSnapshots.clear(); LocalCharacterGrant = CharacterAuthority(); LocalGrantedCharacter = 0;
         LocalSyncPending = 0; LocalNextSync = 0; LocalServerMovedAt = 0; LocalServerPosition = Vector3();

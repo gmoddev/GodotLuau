@@ -499,6 +499,10 @@ static void gl_fire_attribute_changed(Node* n, const String& attr) {
 static int method_setattribute(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
+        if (GLExecutionDomain::IsClientExecution() && gl_net_role() == 1) {
+            auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+            if (Service && !Service->CanWriteCharacter(gow_node(w))) return 0;
+        }
         if (gow_node(w)->is_class("RBXCharacter") && GLExecutionDomain::IsClientExecution()) return 0;
         const char* key = luaL_checkstring(L, 2);
         if (strcmp(key,"_gl_bridge")==0)
@@ -1079,6 +1083,9 @@ static int godot_object_index(lua_State* L) {
     }
 
     // ── RobloxValue (NumberValue/IntValue/StringValue/…): .Changed, ClassName, IsA ─
+    if (auto Value = Object::cast_to<RobloxValue>(n)) if (Value->roblox_class == "ObjectValue" && strcmp(key, "Value") == 0) {
+        Value->_push_value(L); return 1;
+    }
     // .Value se resuelve por el puente _gl_bridge más abajo; aquí solo lo específico.
     {
         RobloxValue* rval = Object::cast_to<RobloxValue>(n);
@@ -2619,6 +2626,8 @@ static int godot_object_index(lua_State* L) {
             lua_pushcclosure(L, [](lua_State* pL) -> int {
                 RobloxPart* p = (RobloxPart*)lua_touserdata(pL, lua_upvalueindex(1));
                 if (!p) return 0;
+                if (auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
+                    if (!Service->CanWriteCharacter(p)) return 0;
                 float ix = 0; float iy = 0; float iz = 0;
                 if (lua_istable(pL,2)) {
                     lua_getfield(pL,2,"X"); ix=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
@@ -2635,6 +2644,8 @@ static int godot_object_index(lua_State* L) {
             lua_pushcclosure(L, [](lua_State* pL) -> int {
                 RobloxPart* p = (RobloxPart*)lua_touserdata(pL, lua_upvalueindex(1));
                 if (!p) return 0;
+                if (auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
+                    if (!Service->CanWriteCharacter(p)) return 0;
                 float ix = 0; float iy = 0; float iz = 0;
                 if (lua_istable(pL,2)) {
                     lua_getfield(pL,2,"X"); ix=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
@@ -4681,6 +4692,16 @@ static int godot_object_newindex_impl(lua_State* L) {
         return 0;
     }
 
+    if (auto Value = Object::cast_to<RobloxValue>(n)) if (Value->roblox_class == "ObjectValue" && strcmp(key, "Value") == 0) {
+        if (lua_isnil(L, 3)) Value->set_value(Variant());
+        else {
+            auto Wrapped = static_cast<GodotObjectWrapper*>(luaL_checkudata(L, 3, "GodotObject"));
+            Node* Target = Wrapped ? gow_node(Wrapped) : nullptr;
+            if (!Target || Target->is_queued_for_deletion()) luaL_error(L, "[Runtime:Instance] ObjectValue requires a live Instance or nil");
+            Value->set_value(Target);
+        }
+        return 0;
+    }
     // ── Puente genérico de escritura (solo clases nuevas con meta _gl_bridge) ──
     WriteLuauInstanceProperty(L, n, key);
     return 0;
@@ -4697,7 +4718,9 @@ static int godot_object_newindex_impl(lua_State* L) {
 
 static NetworkService* gl_rep_service() {
     if (gl_net_role() != 1) return nullptr;
-    return Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+    auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+    if (Service && Service->IsReplicationEnabled() && GLExecutionDomain::IsClientExecution()) return nullptr;
+    return Service;
 }
 
 // ¿el nodo cuelga de un contenedor replicable (Workspace / ReplicatedStorage)?
@@ -4740,6 +4763,7 @@ static void gl_rep_replicate_subtree(NetworkService* ns, Node* n) {
     if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n)) return;
     if (auto Remote = Object::cast_to<RemoteEventNode>(n)) if (!Remote->IsServerAdmitted()) return;
     int64_t id = ns->rep_next_id();
+    if (id <= 0) return; // Checked exhaustion never enters the static ID namespace.
     n->set_meta("_gl_netid", id);
     ns->rep_map(id, n);
     ns->rep_send_new(id, n->get_class(), String(n->get_name()), gl_rep_parent_ref(n->get_parent()), ns->rep_build_props(n));
