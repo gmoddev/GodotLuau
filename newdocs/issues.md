@@ -66,8 +66,8 @@ four successful workflows and independently checked artifacts.
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
 | GL-029 | P2 | Integrated; resolved within ADR-008/009 admitted-host scope | Three-mode RemoteEvent publication and bounded application/native admission |
 | GL-030 | P2 | Closed on campaign branch; qualified at 2296c96 | Bounded RemoteFunction terminal outcomes; integration remains unmerged |
-| GL-031 | P2 | Open; reproduced late-join omission | Runtime child under a static place parent is not synchronized |
-| GL-032 | P2 | Fixed in campaign; platform qualification pending | ObjectValue's scalar bridge omits Instance assignment/readback |
+| GL-031 | P2 | Closed on campaign branch; qualified at 532650f | Static prerequisite seeding restores runtime-child late join |
+| GL-032 | P2 | Closed on campaign branch; qualified at 532650f | ObjectValue Instance/nil bridge and native reference projection |
 | GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
 | GL-034 | P2 | Open; reproduced mixed-workload regression | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
 
@@ -90,7 +90,7 @@ reliable structural ordering, resource bounds and test assertions remain require
 
 ## GL-032: ObjectValue lacks an Instance bridge
 
-**Status: fixed in the unmerged campaign; complete platform gates pending.**
+**Status: closed on the unmerged campaign at `532650f`.**
 `WriteLuauInstanceProperty` delegates to the intentionally scalar/Vector3/Color3
 converter. It cannot assign a Godot Instance to ObjectValue.Value; the matching
 generic getter cannot return an Instance either. Legacy shadow encoding could
@@ -106,6 +106,10 @@ ENet relevance fixture asserts source Luau assignment/readback, cross-peer
 reference closure, clearing and cyclic reference creation/retirement. Windows
 Debug ASan passes the expanded six-actor fixture at native fingerprint
 `a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7`.
+Windows/Linux Debug/Release, ordinary native and full-native sanitizer gates
+also pass, with exact-revision [runtime](evidence/networking2-532650f-runtime-verification.json)
+and [candidate](evidence/networking2-532650f-candidate-verification.json) receipts.
+This scoped fix does not close the broader relevance/performance campaign.
 
 ## GL-033: Local RemoteEvent pressure replay loses readiness
 
@@ -122,11 +126,15 @@ native session/readiness transitions, and keep all assertions required.
 
 ## GL-031: Late join omits runtime children of static parents
 
-**Status: OPEN; reproduced in two independent admitted-host ENet processes.**
+**Status: closed on the unmerged campaign at `532650f`; original failure
+reproduced in two independent admitted-host ENet processes.**
 The campaign seeds existing static prerequisites and adds a production two-actor
 fixture covering deeper/later-ID ancestry, identity-preserving reparenting,
-removal and replacement. Windows Debug ASan passes; hosted qualification remains
-pending. The opted-in relevance fixture separately exercises reconnect.
+removal and replacement. All four Windows/Linux Debug/Release profiles and both
+full-native sanitizer profiles pass the two-actor fixture; the six-actor opted-in
+relevance fixture separately exercises reconnect. Exact [runtime](evidence/networking2-532650f-runtime-verification.json)
+and [candidate](evidence/networking2-532650f-candidate-verification.json) receipts
+retain product/source/host and packaging identities.
 The existing `_rep_sync_peer` collects static identities separately, but starts
 its topological `sent` set empty. A runtime child whose parent is in
 `net_instances` waits for that parent to enter `sent`; static parents never do.

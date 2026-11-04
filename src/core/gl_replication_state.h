@@ -109,6 +109,9 @@ struct State {
     uint64_t Desired = 0, Known = 0, Materialized = 0, Deferred = 0, Submitted = 0, Bytes = 0;
     uint64_t Enters = 0, Leaves = 0, Retired = 0, Updates = 0, Coalesced = 0;
     uint64_t QueryCells = 0, QueryCandidates = 0, Rejected = 0, Failures = 0;
+    uint64_t RefreshCalls = 0, RefreshUsec = 0, RefreshMaximumUsec = 0;
+    uint64_t RefreshVisited = 0, RefreshRebuilt = 0;
+    uint64_t RefreshScanUsec = 0, RefreshMetadataUsec = 0, RefreshEncodeUsec = 0, RefreshIndexUsec = 0;
 };
 }
 #endif

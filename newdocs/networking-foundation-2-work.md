@@ -1,5 +1,67 @@
 # Networking Foundation 2 campaign journal
 
+## Targeted refresh correction
+
+Stage probe `v20` records 81.21 s total refresh time, with 0.79 s encoding,
+5.49 s index work, 11.33 s metadata and 16.55 s admitted-record visibility
+checks. Excluded components are outside those stage subtotals; all work remains
+inside total refresh timing. Only 585 snapshots rebuild across 256 refreshes,
+so wholesale re-encoding is not the measured bottleneck.
+
+The bounded correction excludes Part-owned geometry before visibility traversal,
+verifies the three captured scope roots once per refresh, and checks the direct
+child's own server-only exclusions rather than repeatedly traversing the same
+verified ancestry. Deeper objects retain the existing full visibility check.
+Reuse the resolved parent and Part pose origin. No dirty-only source cache,
+new scheduler, authority grant or structural ordering change is introduced.
+
+Snapshot `v21` passes all six relevance actors, including a new direct-root and
+descendant server-only-name exclusion check; fixture hash is
+`7ebfa5ec995f6649f7768923646813d10670f8293335ffa2c8fee31cd5f2f295`.
+The one-peer 512-object probe passes both products: candidate refresh total is
+23.26 s / 280 calls (maximum 149.7 ms), versus the preceding probe's 81.21 s /
+256 calls. Candidate whole-server user CPU is 40.80 s and frame p95 148.2 ms;
+paired main is 24.80 s and 11.8 ms. These are diagnostic probes with changing
+worker background load, not repeated general performance qualification. GL-034
+remains open. The earlier write-boundary timing experiment is removed from the
+final correction; final snapshot `v22` requires its own tests and hosted gates.
+
+Final native fingerprint
+`738a60cf761be0b691f67d689cb2016cf9260af5f68282f66a3e192f206eccbc`
+builds on DockerPC and passes the six-actor relevance fixture in 23.75 s, with
+the exact committed fixture and no unexpected ASan report. DLL SHA-256 is
+`53a1f38f7c986b7aea7580f065f2305de18a768aa2db2a4ee57dbb78bf2beeb9`.
+Legacy replication, Function, Character and animation follow-ups are running;
+fresh hosted qualification is required for this source change.
+
+The exact-main baseline candidate replay `41773880784` is rejected because Linux
+Release's Dedicated observer fails orientation/configuration/correction and
+replacement checks. Captured `characters.log` SHA-256 is
+`213f6c7b099b57797528e7905d199ba0f0cb7dc72ceef50fd34c500ff46f086f`.
+This is retained baseline counterevidence, not a new candidate regression.
+Windows Release at that same run passes and is independently strict-rechecked
+against the frozen main worktree for a possible Windows-only Release comparison.
+Do not describe the whole baseline candidate as qualified.
+
+## Platform checkpoint completed at `532650f`
+
+All four hosted workflows finish successfully: [core](https://github.com/gmoddev/GodotLuau/actions/runs/41771508468),
+[ordinary native](https://github.com/gmoddev/GodotLuau/actions/runs/41771508432),
+[full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/41771578913)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41771581733).
+Independent frozen-revision verification establishes 85 core cases and 130 native
+actors per Windows/Linux Debug/Release candidate profile, both sanitizer profiles
+and their detection controls, matching source/product/host/log/harness hashes,
+4,000 rehashed unique UUIDs per candidate profile, and both extracted 133-member
+packages with Debug/Release companion startup. Nonpublishing acceptance hash is
+`30aed5118e66f0ef5d8d6fdc339adf89d7278f61b8ceb987b25a5ae823dc7412`.
+The [runtime](evidence/networking2-532650f-runtime-verification.json) and
+[candidate](evidence/networking2-532650f-candidate-verification.json) receipts
+preserve exact identities. One ephemeral GL-003 mailbox per sanitizer archive
+is absent; required captured logs are checked. GL-031 and GL-032 close within
+their exercised scope. GL-033 and GL-034 remain open, and the broader Phase 2–4
+qualification remains partial. No main merge or publication follows this gate.
+
 ## Mixed-workload regression — investigation, not qualification
 
 The complete ordinary core/native and full-native sanitizer workflows for

@@ -2,6 +2,8 @@
 
 Status: implementation decision for Networking Foundation 2; qualification pending.
 This document is not a claim that the runtime or complete campaign is qualified.
+The `532650f` vertical slice passes the recorded Windows/Linux platform matrix;
+GL-034 performance and the explicit broader coverage gaps remain open.
 
 ## Authority and deployment
 
@@ -162,6 +164,15 @@ does at most eight peer turns or four milliseconds of submission work, round
 robin. Catalog refresh/query and native property application have their own
 finite object/byte bounds; the four milliseconds is not a whole-frame time bound
 or a proof of fairness under every mixed traffic workload.
+
+Refresh diagnostics report cumulative calls, visited/rebuilt records, elapsed
+wall time and maximum duration, with visibility/metadata/encoding/index stage
+subtotals. Excluded-record and cleanup work remain in the total, so stage sums
+are not the total. These are elapsed timings, not isolated CPU measurements.
+Part-owned geometry is excluded before ancestry traversal. Each captured scope
+root is verified once per refresh; direct children retain their own server-only
+name/class exclusions, and deeper objects retain the full visibility path.
+This reduces duplicate queries without making Client metadata authoritative.
 
 Runtime physics uses a 180-byte unreliable channel-zero `GRP1` carrier with
 epoch, user session, canonical ID and materialization generation. Validate actual

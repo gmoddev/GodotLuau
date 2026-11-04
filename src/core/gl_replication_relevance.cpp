@@ -84,6 +84,14 @@ void NetworkService::RestoreReplication() {
 
 bool NetworkService::RefreshReplication() {
     using namespace GLReplication;
+    struct RefreshObservation {
+        State& Value; uint64_t Started;
+        ~RefreshObservation() {
+            uint64_t Elapsed = Time::get_singleton()->get_ticks_usec() - Started;
+            CountRemote(Value.RefreshCalls); CountRemote(Value.RefreshUsec, Elapsed);
+            Value.RefreshMaximumUsec = std::max(Value.RefreshMaximumUsec, Elapsed);
+        }
+    } Observation{Replication, Time::get_singleton()->get_ticks_usec()};
     auto Reject = [&](int Line) { if (!Replication.FailureLine) Replication.FailureLine = Line; return false; };
     for (auto Iterator = net_instances.begin(); Iterator != net_instances.end();) {
         if (!ObjectDB::get_instance(Iterator->second)) Iterator = net_instances.erase(Iterator); else ++Iterator;
@@ -93,14 +101,38 @@ bool NetworkService::RefreshReplication() {
     std::map<Identity, CatalogRecord> Catalog;
     size_t Bytes = 0;
     std::set<Identity> Removed;
+    // Verify each captured scope once. A direct child needs only its own
+    // exclusion checks; its already verified ancestry cannot differ per child.
+    std::array<uint64_t, 3> VisibleRoots{};
+    for (size_t Scope = 0; Scope < VisibleRoots.size(); ++Scope)
+        if (auto Root = Object::cast_to<Node>(ObjectDB::get_instance(RemoteScopeRoots[Scope])))
+            if (VisibleRemoteReference(Root)) VisibleRoots[Scope] = RemoteScopeRoots[Scope];
     for (const auto& Old : Replication.Catalog) if (!net_instances.count(Old.first) || !ObjectDB::get_instance(net_instances.at(Old.first))) Removed.insert(Old.first);
     for (const auto& Entry : net_instances) {
+        uint64_t Checkpoint = Time::get_singleton()->get_ticks_usec();
+        auto Observe = [&](uint64_t& Total) {
+            uint64_t Now = Time::get_singleton()->get_ticks_usec();
+            CountRemote(Total, Now - Checkpoint); Checkpoint = Now;
+        };
+        CountRemote(Replication.RefreshVisited);
         Node* NodeValue = Object::cast_to<Node>(ObjectDB::get_instance(Entry.second));
-        if (!NodeValue || !NodeValue->is_inside_tree() || NodeValue->is_queued_for_deletion() || !VisibleRemoteReference(NodeValue)) continue;
+        if (!NodeValue) continue;
+        Node* NativeParent = NodeValue->get_parent();
         // Native components remain constructed and owned by RobloxPart.
-        if (Object::cast_to<RobloxPart>(NodeValue->get_parent()) &&
+        // Exclusion grants nothing, so avoid traversing their visibility path.
+        if (Object::cast_to<RobloxPart>(NativeParent) &&
             (NodeValue->is_class("MeshInstance3D") || NodeValue->is_class("CollisionShape3D") || NodeValue->is_class("OccluderInstance3D"))) continue;
+        if (!NodeValue->is_inside_tree() || NodeValue->is_queued_for_deletion()) continue;
+        uint64_t ParentObject = NativeParent ? uint64_t(NativeParent->get_instance_id()) : 0;
+        bool Direct = false;
+        for (uint64_t Root : VisibleRoots) if (Root && ParentObject == Root) Direct = true;
+        if (Direct) {
+            StringName Name = NodeValue->get_name();
+            if (Name == StringName("ServerStorage") || Name == StringName("ServerScriptService") ||
+                NodeValue->is_class("ServerStorage") || NodeValue->is_class("ServerScriptService")) continue;
+        } else if (!VisibleRemoteReference(NodeValue)) continue;
         if (NodeValue->get_script().get_type() != Variant::NIL) return Reject(__LINE__);
+        Observe(Replication.RefreshScanUsec);
         CatalogRecord Record;
         Record.Object = Entry.second; Record.Static = gl_is_static_netid(Entry.first);
         Variant NativeReference;
@@ -123,20 +155,22 @@ bool NetworkService::RefreshReplication() {
         }
         if (auto Transform = Object::cast_to<Node3D>(NodeValue)) Record.Pose = Transform->get_global_transform();
         int64_t Parent = 0;
-        Node* NativeParent = NodeValue->get_parent();
         if (NativeParent && NativeParent->has_meta("_gl_netid")) {
             int64_t Candidate = NativeParent->get_meta("_gl_netid");
             if (Candidate > 0 && _rep_node(uint64_t(Candidate)) == NativeParent) Parent = Candidate;
         }
         else for (int Scope = 0; Scope < 3; ++Scope) if (NativeParent && uint64_t(NativeParent->get_instance_id()) == RemoteScopeRoots[Scope]) Parent = -(Scope + 1);
         if (!Parent) return Reject(__LINE__);
-        RobloxPart* SpatialPart = nullptr;
-        Node* Ancestor = NodeValue;
-        bool Workspace = false;
-        for (int Depth = 0; Ancestor && Depth <= 64; ++Depth, Ancestor = Ancestor->get_parent()) {
-            if (Ancestor->is_class("RBXCharacter") || Ancestor->is_class("RobloxPlayer2D")) { SpatialPart = nullptr; break; }
-            if (!SpatialPart) SpatialPart = Object::cast_to<RobloxPart>(Ancestor);
-            if (uint64_t(Ancestor->get_instance_id()) == RemoteScopeRoots[1]) { Workspace = true; break; }
+        RobloxPart* SpatialPart = Object::cast_to<RobloxPart>(NodeValue);
+        bool Workspace = VisibleRoots[1] && ParentObject == VisibleRoots[1];
+        if (!Workspace) {
+            Node* Ancestor = NodeValue;
+            SpatialPart = nullptr;
+            for (int Depth = 0; Ancestor && Depth <= 64; ++Depth, Ancestor = Ancestor->get_parent()) {
+                if (Ancestor->is_class("RBXCharacter") || Ancestor->is_class("RobloxPlayer2D")) { SpatialPart = nullptr; break; }
+                if (!SpatialPart) SpatialPart = Object::cast_to<RobloxPart>(Ancestor);
+                if (uint64_t(Ancestor->get_instance_id()) == RemoteScopeRoots[1]) { Workspace = true; break; }
+            }
         }
         bool Eligible = !Record.Static && Workspace && SpatialPart && SpatialPart->get_anchored();
         // Internal geometry follows its anchored Part. Gameplay descendants
@@ -152,7 +186,7 @@ bool NetworkService::RefreshReplication() {
         if (!Record.Static && Replication.Globals.count(Entry.first)) Registry().Globals.insert(Entry.first);
         Record.Global = !Eligible || Replication.Globals.count(Entry.first);
         Vector3 Point;
-        if (SpatialPart) Point = SpatialPart->get_global_position();
+        if (SpatialPart) Point = SpatialPart == NodeValue ? Record.Pose.origin : SpatialPart->get_global_position();
         if (!Point.is_finite()) return Reject(__LINE__);
         auto Previous = Replication.Catalog.find(Entry.first);
         auto Dirty = Replication.Dirty.find(Entry.first);
@@ -168,7 +202,9 @@ bool NetworkService::RefreshReplication() {
             if (Moved && (!SpatialPart || SpatialPart->get_anchored())) Semantic = true;
             for (auto Reference : Previous->second.Data->References) if (Removed.count(Reference)) Rebuild = Semantic = true;
         }
+        Observe(Replication.RefreshMetadataUsec);
         if (Rebuild) {
+            CountRemote(Replication.RefreshRebuilt);
             Dictionary Properties = (Record.Static ? rep_build_shadow_props(NodeValue) : rep_build_props(NodeValue)).duplicate(true);
             Properties.erase("Name"); // Structural metadata owns the actual native name.
             if (auto Typed = Object::cast_to<RobloxValue>(NodeValue)) if (Typed->get_value().get_type() == Variant::NIL) Properties["Value"] = Variant();
@@ -214,10 +250,12 @@ bool NetworkService::RefreshReplication() {
             }
             Record.Data = std::make_shared<const Snapshot>(NodeValue->get_class(), String(NodeValue->get_name()), Parent, Encoded.Bytes, Encoded.Nodes, Refs);
         } else Record.Data = Previous->second.Data;
+        Observe(Replication.RefreshEncodeUsec);
         Record.Revision = Revision;
         Bytes += size_t(Record.Data->Bytes.size());
         if (Bytes > MaximumCatalogBytes || !Spatial.Set({Entry.first, Record.Object, Parent > 0 ? uint64_t(Parent) : 0, {Point.x, Point.y, Point.z}, Record.Global, Record.Data->References})) return Reject(__LINE__);
         Catalog.emplace(Entry.first, std::move(Record));
+        Observe(Replication.RefreshIndexUsec);
     }
     Replication.Catalog.swap(Catalog); Replication.Spatial = std::move(Spatial); Replication.CatalogBytes = Bytes;
     for (auto Iterator = Registry().Objects.begin(); Iterator != Registry().Objects.end();) {
@@ -331,6 +369,10 @@ Dictionary NetworkService::GetReplicationState(int PeerValue) const {
     Result["Updates"] = int64_t(Replication.Updates); Result["Coalesced"] = int64_t(Replication.Coalesced);
     Result["QueryCells"] = int64_t(Replication.QueryCells); Result["QueryCandidates"] = int64_t(Replication.QueryCandidates);
     Result["Rejected"] = int64_t(Replication.Rejected); Result["Failures"] = int64_t(Replication.Failures);
+    Result["RefreshCalls"] = int64_t(Replication.RefreshCalls); Result["RefreshUsec"] = int64_t(Replication.RefreshUsec); Result["RefreshMaximumUsec"] = int64_t(Replication.RefreshMaximumUsec);
+    Result["RefreshVisited"] = int64_t(Replication.RefreshVisited); Result["RefreshRebuilt"] = int64_t(Replication.RefreshRebuilt);
+    Result["RefreshScanUsec"] = int64_t(Replication.RefreshScanUsec); Result["RefreshMetadataUsec"] = int64_t(Replication.RefreshMetadataUsec);
+    Result["RefreshEncodeUsec"] = int64_t(Replication.RefreshEncodeUsec); Result["RefreshIndexUsec"] = int64_t(Replication.RefreshIndexUsec);
     Result["PendingMessages"] = int64_t(Replication.Outgoing.GetTotals().Messages);
     Result["PendingBytes"] = int64_t(Replication.Outgoing.GetTotals().Bytes);
     auto Peer = Replication.Peers.find(PeerValue);

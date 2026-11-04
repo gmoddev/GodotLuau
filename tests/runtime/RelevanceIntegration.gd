@@ -78,6 +78,11 @@ local Counter = Instance.new('IntValue'); Counter.Name = 'Counter'; Counter.Valu
 local A = Instance.new('Folder'); A.Name = 'ParentA'; A.Parent = game.ReplicatedStorage
 local B = Instance.new('Folder'); B.Name = 'ParentB'; B.Parent = game.ReplicatedStorage
 local Child = Instance.new('Folder'); Child.Name = 'Child'; Child.Parent = A
+local Hidden = Instance.new('Folder'); Hidden.Name = 'HiddenDirect'; Hidden.Parent = World
+local Inner = Instance.new('Folder'); Inner.Name = 'HiddenChild'; Inner.Parent = Hidden
+Hidden.Name = 'ServerStorage'
+local Scripts = Instance.new('Folder'); Scripts.Name = 'HiddenScripts'; Scripts.Parent = game.ReplicatedStorage
+Scripts.Name = 'ServerScriptService'
 game:SetAttribute('Created',true)
 """)
     await Until(func(): return Game.has_meta("Created"), "world created through production Luau")
@@ -167,6 +172,7 @@ func Client() -> void:
     if not World.has_node("Near"): return
     var Identity := World.get_node("Near").get_instance_id()
     Check(not World.has_node("Far"), "out-of-range Part is absent")
+    Check(not World.has_node("ServerStorage") and not Storage.has_node("ServerScriptService"), "direct scope children and their descendants retain server-only name exclusions")
     var ChildIdentity := Storage.get_node("ParentA/Child").get_instance_id()
     var ParentA := Storage.get_node("ParentA"); var ParentB := Storage.get_node("ParentB")
     var Structural: Array = []
