@@ -66,6 +66,25 @@ four successful workflows and independently checked artifacts.
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
 | GL-029 | P2 | Integrated; resolved within ADR-008/009 admitted-host scope | Three-mode RemoteEvent publication and bounded application/native admission |
 | GL-030 | P2 | Open; source-verified terminal-outcome gap | Default RemoteFunction waits are infinite while aged correlation records are erased |
+| GL-031 | P2 | Open; reproduced late-join omission | Runtime child under a static place parent is not synchronized |
+
+## GL-031: Late join omits runtime children of static parents
+
+**Status: OPEN; reproduced in two independent admitted-host ENet processes.**
+The existing `_rep_sync_peer` collects static identities separately, but starts
+its topological `sent` set empty. A runtime child whose parent is in
+`net_instances` waits for that parent to enter `sent`; static parents never do.
+The controlled [fixture](evidence/gl031-baseline/ReplicationBaseline.gd) creates
+one runtime Folder under a static Folder before join and another directly under
+ReplicatedStorage. Only the direct child arrives. The
+[receipt](evidence/gl031-baseline/evidence.json) records matching static identity,
+native/product/host hashes and clean actor exits. The generic replication source
+is unchanged from main; this experiment uses the GL-030 native snapshot rather
+than an exact-main binary. This is a correctness defect, not a security claim.
+
+**Closure:** seed existing static prerequisites, preserve parent-before-child
+ordering and verify both children, deeper ancestry, reconnect and destruction
+through actual native transport. The per-peer campaign must retain this case.
 
 ## GL-029: Application Remote delivery has no unified bounded publication contract
 

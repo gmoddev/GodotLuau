@@ -94,6 +94,13 @@ def Main():
                 raise ValueError('GL-020 authority actor incomplete: ' + Mode + '/' + Role)
             if {Item['Phase'] for Item in Record['Cases']} != Required or any(not Item['Passed'] for Item in Record['Cases'] + Record['Assertions']):
                 raise ValueError('GL-020 authority phase/assertion missing or failed')
+            if Role == 'client':
+                OldLife = Record['Observations'].get('OldLife', {})
+                Replica = OldLife.get('NativeReplica', {})
+                if not OldLife.get('ObservedReplacement') or Replica.get('Removed', True) or Replica.get('Life', 0) <= OldLife.get('RetiredLife', 0):
+                    raise ValueError('GL-020 stale-life test did not establish the actual replacement receive life')
+                if not any(Item['Label'] == 'replacement life is received before stale-life attack' for Item in Record['Cases']):
+                    raise ValueError('GL-020 replacement receive barrier was skipped')
             if Role == 'client' and Index == 1 and len([Name for Name in Record['Sent'] if Name.startswith('invalid-input-')]) != 23:
                 raise ValueError('GL-020 original wire Variant/bounds cases were skipped')
             if Role == 'server' and Mode != 'Local' and len([Name for Name in Record['Sent'] if Name.startswith('server-input-')]) != 20:

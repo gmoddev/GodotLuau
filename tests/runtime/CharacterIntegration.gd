@@ -291,9 +291,15 @@ func Server() -> void:
     Mark("valid")
     await Wait("valid.sent")
     await Drain()
+    var MovementDeadline := Time.get_ticks_msec() + 5000
+    while States()[First].Position.x <= Original.x and Time.get_ticks_msec() < MovementDeadline:
+        await process_frame
     Check(States()[First].Position.x > Original.x and States()[First].Position.x < Original.x + (40 if Mode in ["Movement", "Latency"] else 2), "bounded movement admitted")
+    Mark("valid.received")
     if Mode in ["Movement", "Latency"]:
         var Measured: Dictionary = JSON.parse_string(Read("valid.sent"))
+        while absf(States()[First].Position.x - float(Measured.LastX)) >= 1 and Time.get_ticks_msec() < MovementDeadline:
+            await process_frame
         Check(absf(States()[First].Position.x - float(Measured.LastX)) < 1, "native controller samples reach observer baseline")
     var RateBefore: int = States()[First].RateRejectedInputs
     Mark("rate")
@@ -533,6 +539,10 @@ func Client() -> void:
                 Send(Original + Vector3(0.5, 0, 0))
                 await create_timer(0.05).timeout
             Mark("valid.sent")
+            var DeliveryDeadline := Time.get_ticks_msec() + 5000
+            while not FileAccess.file_exists("res://character-valid.received") and Time.get_ticks_msec() < DeliveryDeadline:
+                Send(Original + Vector3(0.5, 0, 0))
+                await create_timer(0.05).timeout
     await Wait("rate")
     if Index == 1:
         for Count in range(500): Send(LastSent)
@@ -669,9 +679,17 @@ func Client() -> void:
     await Drain()
     Check(World.get_node_or_null("LocalPlayer") == null if Index == 1 else Puppet(int(Read("client1.ready"))) == null, "late pose cannot recreate a removed life")
     Check(not Network.call("GetAnimationStates").has(int(Read("client1.ready"))), "late animation cannot recreate removed cache")
+    # A file barrier does not establish receipt of an unreliable snapshot.
+    # Exercise delayed receipt before requiring bounded positive convergence.
+    if Mode == "Listen" and Index == 2: multiplayer_poll = false
     Mark("client" + str(Index) + ".tombstone")
     await Wait("restored")
-    await Drain()
+    if Mode == "Listen" and Index == 2:
+        await create_timer(0.35).timeout
+        multiplayer_poll = true
+    var ReplacementDeadline := Time.get_ticks_msec() + 5000
+    while (World.get_node_or_null("LocalPlayer") == null if Index == 1 else Puppet(int(Read("client1.ready"))) == null) and Time.get_ticks_msec() < ReplacementDeadline:
+        await process_frame
     Check(World.get_node_or_null("LocalPlayer") != null if Index == 1 else Puppet(int(Read("client1.ready"))) != null, "trusted replacement reaches owner and observer")
     Freeze()
     Mark("client" + str(Index) + ".restored")

@@ -1627,6 +1627,7 @@ protected:
         ClassDB::bind_method(D_METHOD("_relay_character", "epoch", "sequence", "position", "yaw", "speed", "air"), &NetworkService::_relay_character);
         ClassDB::bind_method(D_METHOD("_recv_character", "who", "epoch", "sequence", "position", "yaw", "health", "maximum", "speed", "air", "is_2d", "life", "contract"), &NetworkService::_recv_character, DEFVAL(Dictionary()));
         ClassDB::bind_method(D_METHOD("GetCharacterStates"), &NetworkService::GetCharacterStates);
+        ClassDB::bind_method(D_METHOD("GetCharacterReplicaState", "peer"), &NetworkService::GetCharacterReplicaState);
         ClassDB::bind_method(D_METHOD("RespawnCharacter", "peer"), &NetworkService::SpawnCharacter);
         ClassDB::bind_method(D_METHOD("_on_peer_disconnected", "id"), &NetworkService::_on_peer_disconnected);
         ClassDB::bind_method(D_METHOD("_on_connected_ok"),            &NetworkService::_on_connected_ok);
@@ -3687,6 +3688,15 @@ public:
             _apply_puppet_health(Puppet->second.node, Who, Health);
         }
         else _update_puppet3d(Who, static_cast<int>(peer_seq_uid.at(Who)), Position, Yaw, Health, Speed, Air, Maximum, Contract);
+    }
+    Dictionary GetCharacterReplicaState(int Peer) const {
+        Dictionary Result;
+        auto Found = CharacterSnapshots.find(Peer);
+        if (Found != CharacterSnapshots.end()) {
+            Result["Epoch"] = Found->second.Epoch; Result["Life"] = Found->second.Life;
+            Result["Sequence"] = Found->second.Sequence; Result["Removed"] = Found->second.Removed;
+        }
+        return Result; // Read-only receive state; never a writer/visibility grant.
     }
     Dictionary GetCharacterStates() {
         Dictionary Result;

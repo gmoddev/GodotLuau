@@ -42,8 +42,8 @@ new qualification are pending.
 
 | Phase | Status | Evidence |
 | --- | --- | --- |
-| GL-030 | IN PROGRESS; not qualified | Source inspection above |
-| Relevance | NOT STARTED | Pending GL-030 milestone |
+| GL-030 | IMPLEMENTED; latest full qualification pending | Local and hosted attempts below; not closed |
+| Relevance | PREPARATION ONLY; runtime not implemented | GL-031 baseline and ADR-011; policy prototype is not runtime evidence |
 | Structural replication | NOT STARTED | Pending relevance milestone |
 | Performance/scalability | NOT STARTED | No new measurements |
 
@@ -211,3 +211,98 @@ Hosted core Windows/Linux at `2f08e44` is downloaded and independently verified:
 its failed artifacts are preserved. Full-native `41746182521` and candidate
 `41746187100` are separate pending runs at that revision, not passing evidence
 for the corrected fixture. Final hosted qualification must use the new checkpoint.
+
+## Phase 2 preparation while GL-030 hosted gates run
+
+Both latest core artifacts at `eadad8d` verify independently (81 cases each).
+Ordinary native `41750229974`, full-native `41750260756`, and candidate
+`41750264823` remain pending. The ordinary Linux remote group has passed;
+pending later groups and other profiles are not yet qualification.
+
+A private two-process probe reproduces GL-031: the root control arrives and a
+runtime child under a matching static parent does not. The versioned
+[receipt](evidence/gl031-baseline/evidence.json) and
+[fixture](evidence/gl031-baseline/ReplicationBaseline.gd) preserve that baseline.
+No phase-2 production behavior is active at this checkpoint.
+
+Reference inspection uses Gargantuan `e682be08df84d776bfa455137728265c6494b5e8`,
+`src/network/ReplicationRelevance.cpp` and
+`devdocs/CurrentArchitecture/ReplicationFoundation3J.md`. Relevant concepts are
+trusted focus, bounded spatial memberships, complete dependency selection,
+Desired versus Known, and acceptance-only state changes. GodotLuau retains its
+SceneTree/ObjectID hooks, service tick and admitted ENet boundary; Gargantuan's
+DataModel, GNS and mutation gateway are not imported.
+
+Latest ordinary Linux native CI completes all 122 actors and its downloaded
+summary, 373 log hashes, 82 harness identities, 4,000 unique UUID samples and
+admitted host proofs verify. Windows fails an existing Listen observer check
+`trusted replacement reaches owner and observer`. The fixture checks 250 ms
+after a file barrier, while `_recv_character` is an unreliable presentation
+snapshot refreshed every 250 ms. That file cannot prove packet receipt. Earlier
+GL-029 qualification also retained this transient observation. No GL-030 source
+cause is established by the logs.
+
+Use a finite five-second positive-convergence barrier, retaining the exact
+replacement assertion and all negative stale-life checks. Deliberately pause
+Listen observer native polling for 350 ms during restoration to exercise delayed
+receipt. This changes the fixture, not the carrier, authority, refresh interval
+or runtime limit. Exact revision `eadad8d` remains in an isolated read-only
+verification worktree while its original full-native/profile artifacts finish;
+their outcomes remain separately identified. A corrected-fixture checkpoint
+requires fresh qualification.
+
+The Windows full-native run also fails existing positive movement admission and
+the animation stale-life comparison, with detection controls passing and no
+unexpected sanitizer reports. Linux full-native completes all required checks.
+Movement used only three unreliable inputs after an adversarial flood; add a
+bounded valid-input resend/actual-admission barrier without changing native
+tokens, accepted motion bounds or rejection checks. Animation froze the native
+service tick and relied on a file/200-ms delay to assume a replacement birth
+snapshot had arrived. Temporarily allow ordinary periodic refresh until the
+receiver reports its newer native life, then freeze dispatch before the same
+old-life play/stop no-effects comparison. A first ObjectID-only precondition did
+not establish this fixture's receive life and is retained as a failed attempt.
+
+Add read-only `GetCharacterReplicaState(Peer)` diagnostics for the existing
+native snapshot's epoch/life/sequence/removal. This grants no mutation or client
+authority. Record before/after state and the actual received life, and require
+that precondition in the strict checker. The earlier corrected replacement
+fixture alone passes all 20 local Character actors (146.25 seconds) on unchanged
+`7a4af3b...` runtime. The newer animation/movement corrections still need their
+own focused and complete qualification.
+
+The stronger native diagnostic exposes a concrete second fixture race:
+`AnimationIntegration.RunClient` lets the observer read `client1.newpeer` after
+the server's `reconnect` marker, before the reconnecting client has written its
+new peer ID. The resulting argument is zero; later waits cannot repair that
+captured value. Add the missing file barrier before reading the identity. The
+first stronger native-life attempt correctly fails this observer precondition
+and reports an empty snapshot for peer zero. Preserve the failure and retain
+the exact native-life check; do not hide it with longer unconditional sleeps.
+
+With the peer-read barrier, all ten focused animation actors pass on diagnostic
+runtime fingerprint `3ba6543...` (92.187 seconds), including the stronger life
+precondition. The same attempt exposes a fixture edit regression: replacing the
+existing movement drain with an early positive sample lets the Latency assertion
+run before the final controller samples arrive. Restore the existing drain and
+retain a finite final-position convergence check. The original final-position
+and motion bounds remain required; that failed attempt is not qualification.
+
+The corrected checkpoint passes ten animation, twenty Character and six Function
+actors on DockerPC Windows Debug ASan; the
+[receipt](evidence/gl030-convergence-checkpoint-2026-11-03.json) records actual
+fixture overlays, source/product identities and raw archive SHA-256
+`2223893064da009f048cc4ed4d63451a4269fd53d7bcb20966abe3c6f0a899ec`
+(877 members). This selected 36-actor evidence does not replace a complete
+122-actor platform gate. Function assertions remain 109 across six actors.
+
+At preceding exact revision `eadad8d`, candidate workflow `41750264823` completes
+successfully. All four downloaded source profiles independently recheck 81 core
+cases and 122 native actors each, all log/product/harness hashes, 4,000 unique
+UUIDs each, admitted host ownership/RPC proof, and both 133-member extracted
+packages with Debug/Release companion startups. Non-publishing acceptance hash
+is `3ce874537ed6f83671a08ccbf16fd1aca3a509d98720df50d98ba789db2dbf97`.
+The [versioned verification](evidence/gl030-eadad8d-candidate-verification.json)
+retains all product/host/package hashes. Ordinary native Windows and full-native
+Windows at that revision remain failed attempts, independently of the passing
+candidate workflow. Fresh corrected-checkpoint gates are still required.
