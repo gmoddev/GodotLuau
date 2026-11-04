@@ -1720,8 +1720,8 @@ protected:
         ClassDB::bind_method(D_METHOD("_rep_destroy", "id"),                        &NetworkService::_rep_destroy);
         ClassDB::bind_method(D_METHOD("_gl_peer_uid", "peer", "uid"),               &NetworkService::_gl_peer_uid);
         // RemoteFunction por red (1.14.6)
-        ClassDB::bind_method(D_METHOD("net_invoke_server", "remote", "call_id", "args"), &NetworkService::net_invoke_server);
-        ClassDB::bind_method(D_METHOD("net_invoke_client", "peer", "remote", "call_id", "args"), &NetworkService::net_invoke_client);
+        // Submission is a private C++ boundary reached only after capturing the
+        // live Lua wait. Reflection must not allocate ownerless response slots.
         ClassDB::bind_method(D_METHOD("GetInvokeTimeout"), &NetworkService::GetInvokeTimeout);
         ClassDB::bind_method(D_METHOD("GetFunctionState"), &NetworkService::GetFunctionState);
 #ifdef GL_RUNTIME_TESTS
@@ -2890,7 +2890,10 @@ public:
         if (peer) FunctionReceived.erase(peer); else FunctionReceived.clear();
         std::vector<int64_t> Retired;
         for (const auto& Entry : FunctionServing) if (!peer || Entry.second.Request.peer == peer) Retired.push_back(Entry.first);
-        for (int64_t Token : Retired) FinishFunction(Token, false, Array::make(msg), true);
+        // Retire transport ownership, not unrelated application work. Existing
+        // running handlers may finish in their live domain after disconnect;
+        // their detached tokens cannot reply through a replacement service.
+        for (int64_t Token : Retired) FinishFunction(Token, false, Array::make(msg));
     }
 
     // ── Replicación automática de instancias/propiedades (1.14.5) ─────────

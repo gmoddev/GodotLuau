@@ -66,7 +66,7 @@ func Run() -> void:
         ScriptNode("LocalScript", "Waiting", "game:SetAttribute('Started',true); local Ok, Value=pcall(function() return game.ReplicatedStorage.Function:InvokeServer() end); game:SetAttribute('Completed',true); game:SetAttribute('Succeeded',Ok)")
         Passed = await Until(func(): return FileAccess.file_exists("res://handler-entered")) and Passed
         var Started := Time.get_ticks_msec()
-        await create_timer(70).timeout
+        while Time.get_ticks_msec() - Started < 70000: await process_frame
         var Elapsed := Time.get_ticks_msec() - Started
         var Completed := Game.has_meta("Completed")
         Passed = Passed and Game.has_meta("Started") and not Completed and Elapsed >= 70000

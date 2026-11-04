@@ -133,3 +133,23 @@ This test is about identity surviving collection and deletion, not non-yielding
 throughput. The production 25 ms limits and dedicated execution/sanitizer controls
 stay unchanged. Retain the original candidate and exact-main failures above;
 this fixture change does not claim a runtime speed improvement.
+
+v5's six function actors pass with handler-side authority coverage, but the
+existing GL-029 regression exposes a contract conflict: disconnect cancelled its
+already running Function handler used as an independent sibling callback.
+Correct transport retirement to detach that serving token while allowing the
+live domain's application callback to finish. It cannot reply through a new
+session/service. Active-request timeout/caller cancellation and endpoint
+retirement still cancel exact serving work; owner/domain retirement remains
+authoritative. This preserves the existing assertion instead of weakening it.
+
+Source review also finds reflected submission helpers could reserve bounded but
+ownerless response slots. Public Invoke now uses a private C++ submission call
+after live-wait capture; remove those internal ClassDB bindings and require their
+absence in the native fixture. Public InvokeServer/InvokeClient shapes stay the
+same. These corrections need fresh qualification.
+
+The exact-main nonresponse observation reaches 69,994 ms with `Completed=false`;
+the fixture's 70,000 ms threshold correctly remains a failed run. Godot timer time
+is not the monotonic wall barrier needed here. Replace the timer with a checked
+monotonic frame barrier and repeat, retaining the original observation.

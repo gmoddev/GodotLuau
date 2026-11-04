@@ -2921,7 +2921,7 @@ static int godot_object_index(lua_State* L) {
                         if (!GLRemotePayload::CheckLua(pL, Index, Nodes, Bytes)) luaL_error(pL, "[Network:Function] Invalid or oversized payload");
                     Array args = gl_net_encode_args(pL, 2, nargs, true);
                     int ref = GLCaptureWait(pL);
-                    String Error = ns->call("net_invoke_server", rfn, call_id, args);
+                    String Error = Object::cast_to<NetworkService>(ns)->net_invoke_server(rfn, call_id, args);
                     if (!Error.is_empty()) { GLUnreference(nullptr, ref); luaL_error(pL, "%s", Error.utf8().get_data()); }
                     gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, double(ns->call("GetInvokeTimeout")));
                     lua_settop(pL, 0); // Continuation returns only received values, never the original self/arguments.
@@ -2968,7 +2968,7 @@ static int godot_object_index(lua_State* L) {
                         if (!GLRemotePayload::CheckLua(pL, Index, Nodes, Bytes)) luaL_error(pL, "[Network:Function] Invalid or oversized payload");
                     Array args = gl_net_encode_args(pL, 3, nargs, true);
                     int ref = GLCaptureWait(pL);
-                    String Error = ns->call("net_invoke_client", peer, rfn, call_id, args);
+                    String Error = Object::cast_to<NetworkService>(ns)->net_invoke_client(peer, rfn, call_id, args);
                     if (!Error.is_empty()) { GLUnreference(nullptr, ref); luaL_error(pL, "%s", Error.utf8().get_data()); }
                     gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, double(ns->call("GetInvokeTimeout")));
                     lua_settop(pL, 0);

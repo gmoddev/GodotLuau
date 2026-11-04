@@ -25,8 +25,14 @@ handlers: choose a finite project limit and handle timeout with `pcall`.
 
 Timeout/cancellation does not roll back completed gameplay effects or guarantee
 the other machine immediately stops work. There are no automatic application
-retries. The serving process also bounds handler lifetime by its own snapshotted
-deadline; it cancels the exact owned handler task when possible. Existing domain
+retries. While its session remains active, the serving process bounds request
+handling by its own snapshotted deadline and cancels the exact handler task.
+On disconnect/service retirement it detaches transport ownership; already
+running application handlers may finish in their live domain, preserving GL-029's
+sibling-callback contract. Their retired tokens cannot respond through another
+session or service. These detached application tasks remain subject to existing
+domain coroutine/task/memory admission, not the correlated-serving count.
+Owner/domain shutdown still cancels their scheduler tasks. Existing domain
 execution/memory limits continue to apply to every resume. Local synchronous
 fallback retains its existing non-yielding contract and return shapes.
 
@@ -50,6 +56,9 @@ Client-created/private Functions cannot become Server publications. Bootstrap
 handler assignment also enforces Server-owned OnServerInvoke and Client-owned
 OnClientInvoke at the native Luau setter, including listen/shared-tree execution.
 Only a function or nil is accepted; nil clears that side's handler.
+The former internal reflected `net_invoke_server/client` submission helpers are
+private C++ calls, reached after native live-owner wait capture. They are not
+public RemoteFunction APIs; reflection cannot reserve ownerless response slots.
 Bootstrap
 paths bind only the captured native ObjectID, and data requests contain no path.
 Runtime Functions use the existing replicated net-ID map. A function leaving

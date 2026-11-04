@@ -115,6 +115,7 @@ func Run() -> void:
     if Role == "client":
         ScriptNode("LocalScript", "Prewarm", "game:SetAttribute('Prewarmed', true)")
     Network = Create("NetworkService", "NetworkService", Game)
+    Check(not Network.has_method("net_invoke_server") and not Network.has_method("net_invoke_client"), "reflection cannot allocate ownerless request slots")
     await process_frame
     if Role == "server":
         if Mode == "Listen":
