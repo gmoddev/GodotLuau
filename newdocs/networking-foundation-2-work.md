@@ -2,6 +2,26 @@
 
 ## Campaign checkpoint — 2026-11-04
 
+Final evidence follow-up: Windows full-native ASan at `cbd91d0` completes all
+23 checks, 85 core cases and 131 native actors. Independent verification checks
+636 files, 383 captured native logs, source/harness/product identities and
+1,161 instrumented native translation units plus three core units. One ephemeral
+GL-003 mailbox is absent, with its expected hash recorded. The
+[Windows receipt](evidence/networking2-cbd91d0-windows-sanitizer-verification.json)
+does not erase the Linux failure or establish complete cross-platform acceptance.
+
+Fixture/evidence checkpoint `6ae1b9784e881c2c448f20b86ee19df425e41ac0`
+preserves the same native fingerprint and passes fresh
+[core CI](https://github.com/gmoddev/GodotLuau/actions/runs/41785670768).
+Fresh [native](https://github.com/gmoddev/GodotLuau/actions/runs/41785670839),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41785760383)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41785763061)
+qualification remain running/queued. Final documentation validation found the
+older Phase 1 receipt contained a truncated tool rendering. Regenerate its
+compact valid JSON directly from the original hashed archive, retaining all eight
+measurements, six exhaustion reports and nonempty stderr; measurements do not
+change. All versioned JSON and local documentation links are checked afterward.
+
 | Phase | Classification | Established scope |
 | --- | --- | --- |
 | 1 — GL-030 | QUALIFIED | Exact `2296c96` four-workflow qualification; finite terminal outcomes and real ENet lifecycle/adversarial checks |

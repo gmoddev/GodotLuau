@@ -1,0 +1,48 @@
+{
+  "Revision": "cbd91d08c4384348b4b29cf91dc461fff109e120",
+  "NativeSource": {
+    "SHA256": "c702c86c162bc4c9f655052fbcefb4f99a5460c1a7ea22d87724022bbe065c85",
+    "Files": 94,
+    "Newlines": "LF normalized"
+  },
+  "Core": [],
+  "Native": [
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+      "Actors": 131,
+      "RemoteActors": 6,
+      "RemoteCases": 461,
+      "HostFixtures": 2,
+      "LogHashes": 383,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 88,
+      "UUIDSamplesRehashed": 0,
+      "SummarySHA256": "6ab9f6d260762d866dd94b3e7b808ac4677142ba44f05757eca23cb4683b143f",
+      "ExtensionSHA256": "6ec8c5c0c20cb64e026df8f56d93f50393caafd342ac6ff37eb223666f3523a7",
+      "CompanionSHA256": "e78a13d74accde9280e6d5264ab4c56da44460a24ba77329d174c5b0d6780348",
+      "HostSHA256": "441f9895df94b4794c606eae201d9c29577f9e462375df71db04dfdf12324e44"
+    }
+  ],
+  "Sanitizers": [
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "PASS",
+      "Checks": 23,
+      "FilesVerified": 636,
+      "MissingEphemeralData": [
+        {
+          "Path": "native\\filesystem\\profile\\APPDATA\\GodotLuauRuntimeQualification\\msg_GL003-shared__6aeacf47-4b89-4955-bb04-00289e103b04_1.json",
+          "ExpectedSHA256": "e67f3801abc8802c75ecd6896aadcd3551bb1e1e15ed0e1fd33ccbcd23a72d12",
+          "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+        }
+      ],
+      "CoreCases": 85,
+      "InstrumentedTranslationUnits": [
+        1161,
+        3
+      ],
+      "SummarySHA256": "30e94474d1c8ef2393e8f8e3796858860449f543a5eb19fee0ad6e268f8909a7"
+    }
+  ],
+  "Scope": "Only Windows full-native sanitizer profile at cbd91d0. Linux failed; complete cross-platform/candidate qualification is not established."
+}
