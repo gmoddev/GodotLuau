@@ -132,6 +132,10 @@ disabled.
 ## GL-030: Default RemoteFunction waits have no finite terminal deadline
 
 **Status: OPEN; source-verified, runtime nonresponse/exhaustion unexercised.**
+Networking Foundation 2 is implementing the separately authorized
+[ADR-010 terminal contract](adr-010-remotefunction-terminal-outcomes.md) on
+`foundation/networking-2`. See the [running journal](networking-foundation-2-work.md).
+This remains open pending actual qualification; the baseline below is retained.
 Baseline source `83cd0887968d73d61d050650718d8ada6e124579` is unchanged by the
 event-only Phase 1 behavior.
 

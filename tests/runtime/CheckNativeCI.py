@@ -24,7 +24,7 @@ def Main():
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
-        'remote': [f'remote-{Mode}-{Role}' for Mode in ['Listen', 'Dedicated'] for Role in ['server', 'client1', 'client2']],
+        'remote': [f'{Kind}-{Mode}-{Role}' for Kind in ['remote', 'function'] for Mode in ['Listen', 'Dedicated'] for Role in ['server', 'client1', 'client2']],
         'characters': [*[f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])], 'character-model', 'character-manual-server', 'character-manual-client1', 'character-manual-client2'],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
@@ -44,6 +44,17 @@ def Main():
             raise ValueError('Missing or failed native fixture results: ' + Name)
         Groups[Name] = Results
     Remote = json.loads((Args.output / 'remote/native-evidence.json').read_text())
+    Functions = json.loads((Args.output / 'remote/function-evidence.json').read_text())
+    if Functions.get('Actors') != 6 or Functions.get('Transport') != 'ENet' or len(Functions.get('Evidence', [])) != 6:
+        raise ValueError('GL-030 real ENet actor evidence missing')
+    if {(Record['Mode'], Record['Role'], Record['ClientIndex']) for Record in Functions['Evidence']} != {(Mode, Role, Index) for Mode in ['Listen', 'Dedicated'] for Role, Index in [('server', 0), ('client', 1), ('client', 2)]}:
+        raise ValueError('GL-030 actor identity inventory mismatch')
+    for Record in Functions['Evidence']:
+        Labels = {Item['Label'] for Item in Record['Cases'] if Item['Passed']}
+        Required = {'server yielding handler installed', 'both clients published function endpoints', 'both clients completed success error timeout manual-resume cases', 'InvokeClient preserves yielding success', 'both requests reached handlers before endpoint retirement', 'same path replacement has fresh native identity', 'retirement completes exact pending requests on both peers', 'server retires all serving and pending records'} if Record['Role'] == 'server' else {'function publication acknowledged and activated', 'request identity seeded above exact Lua number range', 'success nil slots nested payload error timeout manual-resume and bounds', 'client terminal outcomes release exact correlation records', 'reflected response cannot establish transport provenance', 'endpoint retirement and retained closure reject replacement', 'request identity exhaustion fails before wrap or reuse'}
+        Required |= {'duplicate requests cannot execute a second handler', 'both actual ENet peers submitted adversarial responses', 'wrong sender session and generation cannot settle an invocation', 'expected peer submitted duplicate late responses', 'wrong-peer stale-session generation and duplicate late frames rejected'} if Record['Role'] == 'server' else {'exact pending ceiling admits and one-over rejects', 'per-peer pending accounting retains exactly sixty-four requests', 'task cancellation detaches all pending records'}
+        if not Record['Complete'] or Record['Result'] != 'PASS' or not Required <= Labels or not all(Item['Passed'] for Item in Record['Cases']):
+            raise ValueError('GL-030 terminal-outcome qualification incomplete')
     if Remote['Actors'] != 6 or Remote['Transport'] != 'ENet' or len(Remote['Evidence']) != 6:
         raise ValueError('GL-029 real ENet actors missing')
     if {(Record['Mode'], Record['Role'], Record['Index']) for Record in Remote['Evidence']} != {(Mode, Role, Index) for Mode in ['Listen', 'Dedicated'] for Role, Index in [('server', 0), ('client', 1), ('client', 2)]}:
@@ -154,6 +165,7 @@ def Main():
         'RemoteEvents': Remote,
         'RemoteHost': Host,
         'RemoteHostQualification': HostQualification,
+        'RemoteFunctions': Functions,
         'AnimationAuthority': AnimationAuthority,
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},

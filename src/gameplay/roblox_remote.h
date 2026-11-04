@@ -570,9 +570,41 @@ public:
 // ════════════════════════════════════════════════════════════════════
 class RemoteFunctionNode : public Node {
     GDCLASS(RemoteFunctionNode, Node);
+    friend class NetworkService;
+    bool BootstrapEligible = !GLExecutionDomain::IsClientExecution() && gl_net_role() != 2;
+    bool ServerAdmitted = BootstrapEligible;
+    uint64_t Scope = 0, Generation = 1;
+    static std::set<uint64_t>& Registry() { static std::set<uint64_t> Entries; return Entries; }
 protected:
     static void _bind_methods() {}
+    void _notification(int What) {
+        if (What == NOTIFICATION_ENTER_TREE && Generation) {
+            uint64_t Current = GetScope();
+            if (Scope && Scope != Current) Generation = Generation < UINT64_MAX ? Generation + 1 : 0;
+            Scope = Current;
+        }
+        if (What == NOTIFICATION_EXIT_TREE && Generation) Generation = Generation < UINT64_MAX ? Generation + 1 : 0;
+    }
 public:
+    RemoteFunctionNode() { if (Registry().size() < 4096) Registry().insert(uint64_t(get_instance_id())); }
+    uint64_t GetPublicationGeneration() const { return Generation; }
+    ~RemoteFunctionNode() {
+        Registry().erase(uint64_t(get_instance_id()));
+        if (GLReferenceAlive(server_invoke_L, server_invoke_ref)) GLUnreference(server_invoke_L, server_invoke_ref);
+        if (GLReferenceAlive(client_invoke_L, client_invoke_ref)) GLUnreference(client_invoke_L, client_invoke_ref);
+    }
+    uint64_t GetScope() const {
+        if (!Generation || !is_inside_tree() || is_queued_for_deletion()) return 0;
+        uint64_t Result = 0;
+        for (Node* Ancestor = get_parent(); Ancestor; Ancestor = Ancestor->get_parent()) {
+            StringName Name = Ancestor->get_name();
+            if (Name == StringName("ServerStorage") || Name == StringName("ServerScriptService") ||
+                Ancestor->is_class("ServerStorage") || Ancestor->is_class("ServerScriptService")) return 0;
+            if (!Result && (Name == StringName("ReplicatedStorage") || Name == StringName("Workspace") || Name == StringName("Teams") ||
+                Ancestor->is_class("RobloxWorkspace") || Ancestor->is_class("RobloxWorkspace2D"))) Result = uint64_t(Ancestor->get_instance_id());
+        }
+        return Result;
+    }
     lua_State* server_invoke_L = nullptr;
     int        server_invoke_ref = LUA_NOREF;
 

@@ -237,7 +237,15 @@ void GLDomainHost::WaitForChild(lua_State* Thread, uint64_t Parent, const String
         String::utf8(lua_debugtrace(Thread))});
 }
 void GLDomainHost::WaitForInvoke(lua_State* Thread, int64_t CallId, double Timeout, int Reference) {
-    InvokeWaits.push_back({Thread, GLGetOwnerState(Thread), CallId, Timeout, 0, Reference});
+    InvokeWaits.push_back({Thread, GLGetOwnerState(Thread), CallId, gl_net_service_id(), Timeout, 0, Reference});
+}
+bool GLDomainHost::InterruptInvoke(lua_State* Thread) {
+    auto Found = std::find_if(InvokeWaits.begin(), InvokeWaits.end(), [Thread](const GLInvokeWait& Wait) { return Wait.Thread == Thread; });
+    if (Found == InvokeWaits.end()) return false;
+    GLInvokeWait Wait = *Found; InvokeWaits.erase(Found);
+    if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(Wait.Service))) Network->CancelInvoke(Wait.CallId);
+    gl_net_responses().erase(Wait.CallId); GLUnreference(nullptr, Wait.Reference);
+    return true;
 }
 GLExecutionDomain* GLDomainHost::WaitingDomain(lua_State* Thread) const {
     for (const auto& Domain : Domains) if (Domain && Domain->CanResume(Thread)) return Domain.get();
@@ -253,7 +261,7 @@ void GLDomainHost::InvalidateOwner(lua_State* Anchor) {
     }), ChildWaits.end());
     InvokeWaits.erase(std::remove_if(InvokeWaits.begin(), InvokeWaits.end(), [Anchor](const GLInvokeWait& Wait) {
         if (Wait.Anchor != Anchor) return false;
-        if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
+        if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(Wait.Service)))
             Network->CancelInvoke(Wait.CallId);
         gl_net_responses().erase(Wait.CallId);
         return true;
@@ -325,7 +333,7 @@ void GLDomainHost::InvalidateThread(lua_State* Thread) {
     }), ChildWaits.end());
     InvokeWaits.erase(std::remove_if(InvokeWaits.begin(), InvokeWaits.end(), [Thread](const GLInvokeWait& Wait) {
         if (Wait.Thread != Thread) return false;
-        if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()))) Network->CancelInvoke(Wait.CallId);
+        if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(Wait.Service))) Network->CancelInvoke(Wait.CallId);
         GLUnreference(nullptr, Wait.Reference);
         return true;
     }), InvokeWaits.end());
@@ -418,7 +426,7 @@ void GLDomainHost::_process(double Delta) {
     for (size_t Index = 0; Index < InvokeWaits.size();) {
         InvokeWaits[Index].Elapsed += Delta;
         GLInvokeWait Wait = InvokeWaits[Index];
-        GLExecutionDomain* Domain = WaitingDomain(Wait.Thread);
+        GLExecutionDomain* Domain = GLReferenceAlive(Wait.Anchor, Wait.Reference) ? WaitingDomain(Wait.Thread) : nullptr;
         auto Found = gl_net_responses().find(Wait.CallId);
         bool Ready = Found != gl_net_responses().end() && Found->second.ready;
         bool TimedOut = Wait.Timeout > 0 && Wait.Elapsed >= Wait.Timeout;
@@ -430,9 +438,22 @@ void GLDomainHost::_process(double Delta) {
         InvokeWaits.erase(InvokeWaits.begin() + Index);
         GLNetResponse Response;
         if (Ready) { Response = Found->second; gl_net_responses().erase(Found); }
+        if (Ready && Response.ok) {
+            auto Remote = Object::cast_to<RemoteFunctionNode>(ObjectDB::get_instance(Response.Object));
+            auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(Wait.Service));
+            if (!Network || !Network->is_inside_tree() || Network->is_queued_for_deletion() || !Network->ValidateFunctionResponse(Response) || !Remote || !Remote->GetScope() ||
+                Remote->GetPublicationGeneration() != Response.Generation) {
+                Response.ok = false; Response.rets = Array::make("[Network:Function] Endpoint or service retired before completion");
+            }
+        }
+        // Detach correlation and the old wait before arbitrary resumed code can
+        // start another invoke, destroy the endpoint or replace the service.
+        if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(Wait.Service))) Network->CancelInvoke(Wait.CallId);
+        gl_net_responses().erase(Wait.CallId);
+        GLUnreference(nullptr, Wait.Reference);
         if (Domain) {
             if (Ready && Response.ok) {
-                Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(gl_net_service_id()));
+                Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(Wait.Service));
                 Domain->ResumePrepared(Wait.Thread, [&](lua_State* Thread) -> int {
                     return gl_net_decode_args(Thread, Response.rets, Context);
                 });
@@ -443,7 +464,6 @@ void GLDomainHost::_process(double Delta) {
                 }, true);
             }
         }
-        GLUnreference(nullptr, Wait.Reference);
     }
     for (const auto& Domain : Domains) if (Domain) Domain->Tick(Delta);
 }

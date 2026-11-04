@@ -28,6 +28,7 @@ class GLDomainHost : public godot::Node {
         lua_State* Thread;
         lua_State* Anchor;
         int64_t CallId;
+        uint64_t Service;
         double Timeout;
         double Elapsed;
         int Reference;
@@ -71,6 +72,7 @@ public:
     bool InterruptHttp(lua_State* Thread);
     int BeginDataStore(lua_State* Thread,GLExecutionDomain* Domain,const std::string& Root,const std::string& Leaf,int Operation,bool Exists,const std::string& Expected,const std::string& Value);
     bool InterruptDataStore(lua_State* Thread);
+    bool InterruptInvoke(lua_State* Thread);
     bool ConnectChild(lua_State* Thread, godot::Node* Target, godot::Node* Receiver, bool Added, int Reference);
     void DisconnectChild(int Reference);
 #ifdef GL_RUNTIME_TESTS

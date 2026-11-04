@@ -277,6 +277,43 @@ def RemoteFixtures(Args, Output, Environment):
         finally:
             for Process, _, _, _ in Entries: StopProcess(Process)
     (Output / 'native-evidence.json').write_text(json.dumps({'Actors': 6, 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
+    Results.extend(FunctionFixtures(Args, Output, Environment))
+    return Results
+
+
+def FunctionFixtures(Args, Output, Environment):
+    Results, Evidence = [], []
+    for Mode in ['Listen', 'Dedicated']:
+        Project = Output / 'Functions' / Mode
+        Prepare(Project, Args.extension)
+        Entries = []
+        try:
+            SelectedPort = Port()
+            for Role in ['server', 'client1', 'client2']:
+                FixtureRole = 'client' if Role.startswith('client') else 'server'
+                Index = Role[-1] if FixtureRole == 'client' else '0'
+                Extra = ['--fixture-role', FixtureRole, '--fixture-port', str(SelectedPort), '--fixture-client-index', Index, '--remote-mode', Mode]
+                if FixtureRole == 'client': Extra += ['--glconnect', f'127.0.0.1:{SelectedPort}']
+                elif Mode == 'Dedicated': Extra += ['--glserver', str(SelectedPort)]
+                Label = f'function-{Mode}-{Role}'
+                Process = Start(Args.godot, Project, 'RemoteFunctions.gd', Label, Extra, Environment)
+                Entries.append((Process, Label, FixtureRole, Index))
+                if Role == 'server':
+                    Deadline = time.monotonic() + Args.timeout
+                    while not (Project / 'server.ready').exists():
+                        if Process.poll() is not None or time.monotonic() > Deadline:
+                            raise RuntimeError('RemoteFunction readiness failed: ' + Label)
+                        time.sleep(0.02)
+            Deadline = time.monotonic() + Args.timeout
+            for Process, Label, Role, Index in Entries:
+                Results.append(Check(Process, Deadline, Project, Label, f'[Network:FunctionTest] {Role} PASS'))
+                Record = json.loads((Project / f'function-{Role}{Index}-result.json').read_text())
+                if Record['Result'] != 'PASS' or not Record['Complete'] or not Record['Cases'] or not all(Item['Passed'] for Item in Record['Cases']):
+                    raise RuntimeError('RemoteFunction fixture incomplete: ' + Label)
+                Evidence.append(Record)
+        finally:
+            for Process, _, _, _ in Entries: StopProcess(Process)
+    (Output / 'function-evidence.json').write_text(json.dumps({'Actors': 6, 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
     return Results
 
 

@@ -33,6 +33,12 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+Networking Foundation 2 is in progress on `foundation/networking-2` from main
+`9f52b27`. The [campaign journal](networking-foundation-2-work.md) records actual
+milestones and failures. [ADR-010](adr-010-remotefunction-terminal-outcomes.md)
+defines the authorized GL-030 implementation contract; development builds do
+not establish qualification or authorize a main merge/publication.
+
 GL-018 / GL-029 are integrated through normal merge
 `6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851`, preserving all 39 integration-branch
 commits and the exact qualified tree. The
