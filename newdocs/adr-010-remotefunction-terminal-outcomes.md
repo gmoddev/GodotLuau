@@ -1,7 +1,9 @@
 # ADR-010: Bounded RemoteFunction terminal outcomes
 
 Status: accepted for implementation by the Networking Foundation 2 campaign;
-development qualification pending. Branch `foundation/networking-2`, baseline
+qualified at `2296c966937223994a94cc2f15af29e9f829557b` on the unmerged
+branch `foundation/networking-2`; see the GL-030 closure and artifact limitations
+in [issues](issues.md#gl-030-default-remotefunction-waits-have-no-finite-terminal-deadline). Baseline
 main `9f52b273cf977dce9c0541ff718cfb44dfb54c31`. Actual executions and failures:
 [campaign journal](networking-foundation-2-work.md). This extends ADR-002/008/009
 without a new VM, scheduler, transport, dependency or host patch.

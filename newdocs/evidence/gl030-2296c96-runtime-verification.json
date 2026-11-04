@@ -1,0 +1,234 @@
+{
+  "Revision": "2296c966937223994a94cc2f15af29e9f829557b",
+  "NativeSource": {
+    "SHA256": "3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc",
+    "Files": 91,
+    "Newlines": "LF normalized"
+  },
+  "Core": [
+    {
+      "Path": "core\\runtime-core-Linux-Debug\\core-results.xml",
+      "Cases": 81,
+      "SHA256": "394c3d859c241f084aa4f36d6841d86fda3afca89ca875bc897e5ba1501278c7"
+    },
+    {
+      "Path": "core\\runtime-core-Windows-Debug\\core-results.xml",
+      "Cases": 81,
+      "SHA256": "35efc751066ea5a64112e1df32a567b2a3a24a0c82220d3dd09c32efd3d10061"
+    }
+  ],
+  "Native": [
+    {
+      "Path": "native\\runtime-native-Linux-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 461,
+      "HostFixtures": 2,
+      "LogHashes": 374,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "41a8214072927fc19f71f1a0a3fd0632879757039b5ed7e47f493421313d169f",
+      "ExtensionSHA256": "1be33ed51295d9b9d21f195ba3e713dccbfa6bf7cd446f69d785a0f1a78dc26f",
+      "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+      "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99"
+    },
+    {
+      "Path": "native\\runtime-native-Windows-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 461,
+      "HostFixtures": 2,
+      "LogHashes": 377,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "a625e30f023adcb19fc01f882d60ee2feb198072dc1b544fa5738d0bde7ac9a1",
+      "ExtensionSHA256": "dfb80cf89772df65d8ce313a232d83905c12423cb6459032495d7dafa436a55f",
+      "CompanionSHA256": "68e7ff567729909db5e275858e14a3ae0e3ffe0dbe80aa53e03bc1a3e4e5ac13",
+      "HostSHA256": "92271976aa1960eb1fd56295c5a431e271355c18df34415adff8437419525690"
+    },
+    {
+      "Path": "rechecked\\evidence-Linux-Debug\\native\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 459,
+      "HostFixtures": 2,
+      "LogHashes": 368,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "9804988a0cf0d7e574f29514aff32ab8678899b32cda28d733156700838852ab",
+      "ExtensionSHA256": "286f99db11d3557d202bf4cff23fc5708b6a11e9ae7881a366f87ef51708be24",
+      "CompanionSHA256": "f495e3f37dc32616a6df6951d9f9d7515213a4c00decbe1e8a7246bb8e5d83fc",
+      "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99"
+    },
+    {
+      "Path": "rechecked\\evidence-Linux-Release\\native\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 459,
+      "HostFixtures": 2,
+      "LogHashes": 366,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "5405a1f6470093f98588e20d95428542bcf44bb0618b0e15437af756efbc90e5",
+      "ExtensionSHA256": "8dedd7d7331196ea5750254efd66f4f686dc8d2a22ba235859717ba5f32d101e",
+      "CompanionSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0",
+      "HostSHA256": "5ceeff3881483604aa60e194fc5be46f9e1009241632b82203ea1867ef17ea6e"
+    },
+    {
+      "Path": "rechecked\\evidence-Windows-Debug\\native\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 461,
+      "HostFixtures": 2,
+      "LogHashes": 371,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "92cf04ba449e8c89842bea453bae78709948dc3e9f5244633ff1d3fa514487ba",
+      "ExtensionSHA256": "587b03be45eb66ac63f11ba92bdf6d6610df3e864b7360462af2b3a8ad5d4c8a",
+      "CompanionSHA256": "9b460da92a91968fb698e65839d34b50d420b1682b4428622382bcf2c3703d3e",
+      "HostSHA256": "ba95cdb9cfa59a358716e1c7cb6c712b04694bcef3b7a2a371c9d59c0b3c9119"
+    },
+    {
+      "Path": "rechecked\\evidence-Windows-Release\\native\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 458,
+      "HostFixtures": 2,
+      "LogHashes": 367,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "5d4d316d46d67542fcd64651eff50ae75e14ebb5a99c09e66bb09444534eaf0e",
+      "ExtensionSHA256": "93311ea1569edc974abe8a5ac2cc95ec8a314b273ea686faf192a5b8d0e977ed",
+      "CompanionSHA256": "40537c71b26d6e42b80426a24e4b35313f296cca6aedc2cd6a85a19dacf38477",
+      "HostSHA256": "59dcb4f88d0c23658fed93ccea21385a7dce4596d0de55bc4cdac30a6e677ae7"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 460,
+      "HostFixtures": 2,
+      "LogHashes": 360,
+      "MissingGeneratedLogs": [
+        {
+          "Path": "datastore/increment/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-11-04T02.15.29.log",
+          "ExpectedSHA256": "c56f4a1b21aee8473c68c803f5c5253fbf40e03e3969f976ffdc7b1d83901e6c",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "datastore/increment/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-11-04T02.15.32.log",
+          "ExpectedSHA256": "80ca788bfaeb0e17be4218889c0bdc21602da894707a5263fe9edb52b76dc4d8",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "presentation/dedicated-custom/profile-client1/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log",
+          "ExpectedSHA256": "0c701c478612f55bda0bdeed0ee45e20efd53b250634d9d3c7c964b7ef3f3456",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "presentation/dedicated-custom/profile-client2/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log",
+          "ExpectedSHA256": "d5bed3b4a93c038f4c0b8d763d6ff69420ef9f082f60be556257c0433aefc5d3",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "presentation/dedicated-custom/profile-server0/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log",
+          "ExpectedSHA256": "94fe4b9b6724187a1bbaa74170ee58e48f8ac34e2d37489eabeec468c63a1eb9",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        }
+      ],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 0,
+      "SummarySHA256": "6058d4c4b77b02ccda389ffbe4a21a536ea23865b86e9648176f6fc28c86581a",
+      "ExtensionSHA256": "44afb1bee319df03280c29de9dffe0704c7ad1e1b2839e39297964061c224122",
+      "CompanionSHA256": "1bc0970cfd2d847a6fa0d116e15892de880b8183eb8d24df0f10b2989f98402a",
+      "HostSHA256": "72645b0eb1d30afde108c1604cb5377d662770b2f922d7def37f92f58602d711"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+      "Actors": 122,
+      "RemoteActors": 6,
+      "RemoteCases": 460,
+      "HostFixtures": 2,
+      "LogHashes": 365,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 82,
+      "UUIDSamplesRehashed": 0,
+      "SummarySHA256": "e6ac85ba4810332c82b675da841310d33dc9e4ecbfef62b43c07d8b1a7d2f3f6",
+      "ExtensionSHA256": "4fa98cf72736a0a10f6c39dd376f063d71a791fb8cd658be6950dfaaf43adfd9",
+      "CompanionSHA256": "d563cfdf19382881c8c4d8a4a00d768e64da4e9856613d0452c1305918a5691a",
+      "HostSHA256": "f28045f46eab37ac6ddba6a245f63f18c1e4ffd85fab1ef243589335cbb7f8e3"
+    }
+  ],
+  "Sanitizers": [
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "PASS",
+      "Checks": 24,
+      "FilesVerified": 604,
+      "MissingEphemeralData": [
+        {
+          "Path": "native/datastore/increment/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-11-04T02.15.29.log",
+          "ExpectedSHA256": "c56f4a1b21aee8473c68c803f5c5253fbf40e03e3969f976ffdc7b1d83901e6c",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "native/datastore/increment/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-11-04T02.15.32.log",
+          "ExpectedSHA256": "80ca788bfaeb0e17be4218889c0bdc21602da894707a5263fe9edb52b76dc4d8",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "native/filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/msg_GL003-shared__6aea9504-f182-49b7-8714-000d9ac04714_1.json",
+          "ExpectedSHA256": "0cb9629698513c7a57ffbbb0a2936a4e3d4c4a22a5997d7abc69d9ee1b1eb324",
+          "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+        },
+        {
+          "Path": "native/presentation/dedicated-custom/profile-client1/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log",
+          "ExpectedSHA256": "0c701c478612f55bda0bdeed0ee45e20efd53b250634d9d3c7c964b7ef3f3456",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "native/presentation/dedicated-custom/profile-client2/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log",
+          "ExpectedSHA256": "d5bed3b4a93c038f4c0b8d763d6ff69420ef9f082f60be556257c0433aefc5d3",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        },
+        {
+          "Path": "native/presentation/dedicated-custom/profile-server0/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log",
+          "ExpectedSHA256": "94fe4b9b6724187a1bbaa74170ee58e48f8ac34e2d37489eabeec468c63a1eb9",
+          "Scope": "Missing generated Godot profile log; required captured actor stdout/stderr and result remain verified."
+        }
+      ],
+      "CoreCases": 81,
+      "InstrumentedTranslationUnits": [
+        1160,
+        3
+      ],
+      "SummarySHA256": "3a55fdbefcc34634cbf408999b0ad77182508d8e3665a7cca4f65dd63d6a5645"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "PASS",
+      "Checks": 23,
+      "FilesVerified": 604,
+      "MissingEphemeralData": [
+        {
+          "Path": "native\\filesystem\\profile\\APPDATA\\GodotLuauRuntimeQualification\\msg_GL003-shared__6aea9635-3a2d-4d19-9945-002a03315945_1.json",
+          "ExpectedSHA256": "656cc5a603c29795620faa1bddbb81033d4e298eedce17569cd3fb6260a0d1f7",
+          "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+        }
+      ],
+      "CoreCases": 81,
+      "InstrumentedTranslationUnits": [
+        1160,
+        3
+      ],
+      "SummarySHA256": "4b6ab4ff133323e4a3dcac09c2d425c8478db229640257b21b985625179dbcd1"
+    }
+  ],
+  "Scope": "Downloaded completed artifacts only; absent profiles are not passing."
+}

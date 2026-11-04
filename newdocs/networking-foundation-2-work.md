@@ -1,5 +1,50 @@
 # Networking Foundation 2 campaign journal
 
+## Qualified Phase 1 checkpoint — 2026-11-04 UTC
+
+GL-030 is QUALIFIED at `2296c966937223994a94cc2f15af29e9f829557b`, native
+fingerprint `3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc`.
+Hosted [core](https://github.com/gmoddev/GodotLuau/actions/runs/41756648637),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41756648640),
+[full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/41756776065)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41756783923)
+all finish successfully. Downloaded artifacts were checked against the frozen
+exact-revision worktree, not the later relevance working tree. Both sanitizer
+profiles pass their detection controls and all checks (Linux 24, Windows 23),
+with no unexpected report; each includes 81 core cases and 122 native actors.
+Candidate Windows/Linux Debug/Release each pass 81 core cases and 122 actors;
+both extracted 133-member packages pass Debug/Release companion startup.
+Acceptance `f305340f807ac88cae0325fa25f5475a972f3b828b15eefec1b061508a3e8883`
+remains nonpublishing. Versioned receipts record products, host admission,
+compiler instrumentation and required log/harness hashes:
+[runtime](evidence/gl030-2296c96-runtime-verification.json),
+[candidate](evidence/gl030-2296c96-candidate-verification.json).
+
+Archive limitation: five generated Linux Godot profile logs and two transient
+GL-003 mailbox files are missing. Their exact paths and expected hashes are
+preserved, rather than asserted verified. Required captured actor stdout/stderr,
+case evidence and sanitizer reports/controls remain independently checked.
+
+## Phase 2/3 implementation checkpoint — qualification in progress
+
+An opt-in native projection now compiles on DockerPC Windows Debug ASan as
+snapshot `v9`, fingerprint `b8f2ff1faef41ac544cd8cf5c20f1a7d1a67648fc0ffe63d372437628a07d685`.
+It is not yet runtime-qualified. It uses the existing native/application queue,
+cached bounded snapshots, per-peer desired/planned/known/materialized state,
+generation-tagged physics and a server-owned index. Listen Client mutations of
+registered server projection objects are denied through the existing write
+boundary. Character/Player authority and the qualified animation path remain
+separate. ADR-011 will record the final exercised contract and limitations.
+
+Two comparable 1/16-peer RemoteEvent-only trials per baseline/candidate finish
+successfully. The 32-peer baseline exits before readiness; no 32-peer candidate
+result or general performance improvement is established. These are partial
+measurements, not the Phase 4 workload matrix. A prior attempt exhausted worker
+C: space. Only hash-verified task-created fixture DLL/companion copies were
+removed (174 files, 4,242,457,088 bytes), preserving original products, logs,
+sources and shared caches. Subsequent benchmark cleanup retires verified fixture
+copies after their owned processes stop. Negative attempts remain retained.
+
 Started 2026-11-03 from verified local and remote main
 `9f52b273cf977dce9c0541ff718cfb44dfb54c31`, on
 `foundation/networking-2`. Initial checkout clean, sole worktree, no active

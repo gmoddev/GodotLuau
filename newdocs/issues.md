@@ -65,7 +65,7 @@ four successful workflows and independently checked artifacts.
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
 | GL-029 | P2 | Integrated; resolved within ADR-008/009 admitted-host scope | Three-mode RemoteEvent publication and bounded application/native admission |
-| GL-030 | P2 | Open; source-verified terminal-outcome gap | Default RemoteFunction waits are infinite while aged correlation records are erased |
+| GL-030 | P2 | Closed on campaign branch; qualified at 2296c96 | Bounded RemoteFunction terminal outcomes; integration remains unmerged |
 | GL-031 | P2 | Open; reproduced late-join omission | Runtime child under a static place parent is not synchronized |
 
 ## GL-031: Late join omits runtime children of static parents
@@ -150,7 +150,23 @@ disabled.
 
 ## GL-030: Default RemoteFunction waits have no finite terminal deadline
 
-**Status: OPEN pending campaign qualification; baseline nonresponse reproduced.**
+**Status: CLOSED on `foundation/networking-2`, qualified at `2296c966937223994a94cc2f15af29e9f829557b`; unmerged.**
+Fix commits `a7339e0`, `513faec`, `9192bd1` and `2f08e44` establish
+ADR-010's finite monotonic deadlines, full-width checked identities and exact
+wait/session/publication retirement. Regression strengthening and fixture
+precondition corrections are retained through `2296c96`. All four exact-revision
+hosted workflows pass: core `41756648637`, native `41756648640`, full-native
+sanitizers `41756776065`, candidate `41756783923`. The
+[runtime verification](evidence/gl030-2296c96-runtime-verification.json) and
+[candidate verification](evidence/gl030-2296c96-candidate-verification.json)
+record independent artifact/source/product checks, 81 core cases, 122 native
+actors per profile and 109 focused Function assertions. Five generated Linux
+profile logs and two ephemeral filesystem mailboxes are absent from the
+downloaded sanitizer archives; their exact names and expected hashes remain in
+the receipt. Required captured actor logs, outcomes and sanitizer controls were
+verified. This closure does not qualify subsequent relevance changes.
+
+Historical baseline and earlier pending status follow for counterevidence.
 Exact main's valid ENet handler leaves its caller uncompleted after 70,006 ms in
 the controlled [campaign baseline](networking-foundation-2-work.md). Candidate
 full-width/exhaustion and terminal-outcome fixtures pass in development; complete
