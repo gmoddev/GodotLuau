@@ -73,16 +73,22 @@ public:
         _value = v;
         if (changed) fire_changed();
     }
-    Variant get_value() const { return _value; }
+    Variant get_value() const {
+        // Validate the engine Variant before godot-cpp asks a dead object for
+        // its instance binding. Node-valued Variants do not retain the Node.
+        if (_value.get_type() == Variant::OBJECT && !UtilityFunctions::is_instance_valid(_value)) return Variant();
+        return _value;
+    }
 
     void _push_value(lua_State* th) {
-        switch (_value.get_type()) {
-            case Variant::BOOL:   lua_pushboolean(th, (bool)_value); break;
-            case Variant::INT:    lua_pushnumber(th, (double)(int64_t)_value); break;
-            case Variant::FLOAT:  lua_pushnumber(th, (double)_value); break;
-            case Variant::STRING: { String s = _value; lua_pushstring(th, s.utf8().get_data()); } break;
+        const Variant Value = get_value();
+        switch (Value.get_type()) {
+            case Variant::BOOL:   lua_pushboolean(th, (bool)Value); break;
+            case Variant::INT:    lua_pushnumber(th, (double)(int64_t)Value); break;
+            case Variant::FLOAT:  lua_pushnumber(th, (double)Value); break;
+            case Variant::STRING: { String s = Value; lua_pushstring(th, s.utf8().get_data()); } break;
             case Variant::OBJECT: {
-                Node* nd = Object::cast_to<Node>((Object*)(_value.operator Object*()));
+                Node* nd = Object::cast_to<Node>((Object*)(Value.operator Object*()));
                 if (nd) {
                     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_newuserdata(th, sizeof(GodotObjectWrapper));
                     gow_set(w, nd);

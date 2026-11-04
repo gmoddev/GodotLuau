@@ -83,6 +83,9 @@ the inherited runtime already satisfies them. Baseline gaps link to
   Incremental source maintenance must not admit partial dependency groups or
   overwrite newer accepted structural barriers. Retire its owned cursor/cache
   work on service reset; bound turns and unresolved source-dependency waits.
+  ObjectValue targets are weak Node references: validate the engine Variant
+  before asking godot-cpp to convert its pointer or obtain an instance binding.
+  Expired targets read as nil through both native and Luau getters (GL-038).
 
 - Application RemoteEvent delivery configuration is native Server authority.
   Publication/readiness binds the current native transport session, endpoint

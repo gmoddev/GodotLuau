@@ -1,5 +1,29 @@
 # Networking Foundation 2 campaign journal
 
+## Bounded catalog first execution — GL-038
+
+Candidate `6b6ee8b93caa88898b80875fc5929c5e6899eb2c` compiles on the existing
+worker MSVC Debug ASan toolchain in 35.656 seconds with two jobs; DLL SHA-256 is
+`8b9373158642305af2457296f69556adc4a550e13a51bacb23bff95e2c474751`.
+Its first strengthened relevance execution fails after the forced unfinished
+sweep mutation and produces an actual ASan heap-use-after-free report in the
+ObjectValue target conversion. Preserve report SHA-256
+`8e56bc427561db8776b75cbfb319858b869cf6d7244168ec290e449b299024e5`.
+GL-038 records the stack/source attribution. The shared value getter now validates
+the engine Variant before godot-cpp pointer conversion, and Luau value pushing
+uses that getter. Native/Luau nil assertions are added; they are not yet run.
+
+The new coordinator profile exits 1 without timeout/output error and the outer
+owned Job is checked empty. No benchmark profile starts. The worker is released
+early to the next chat, and there is no uncoordinated retry. Fresh source
+[core CI](https://github.com/gmoddev/GodotLuau/actions/runs/41800928567) passes;
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41800928440),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41801098115)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41801102051)
+qualification at the failing source remain running/queued and cannot qualify
+the subsequent lifetime correction. GL-034/038 remain open. The earlier GL-037
+closure applies to its independently verified `bd18580` checkpoint.
+
 ## Verified resumed checkpoint — bd18580
 
 The narrow patch is published as `bd18580d65d29a60fa90a2fc53f2fccfec0febea`.

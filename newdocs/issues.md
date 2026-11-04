@@ -73,6 +73,34 @@ four successful workflows and independently checked artifacts.
 | GL-035 | P1 | Closed on unmerged campaign; native matrix verified | Empty-catalog listen Client can remove structural scope-root ancestor |
 | GL-036 | P2 | Closed on campaign within exercised profiles | Benchmark setup and assertions were omitted by Release GDScript |
 | GL-037 | P2 | Closed on unmerged campaign; native/sanitizer matrix verified | Follow-up full-native runs fail Character/legacy barriers; fixture races corrected |
+| GL-038 | P1 | Confirmed runtime lifetime defect; focused fix under qualification | Live ObjectValue can convert a destroyed target through a stale instance binding |
+
+## GL-038: ObjectValue read after target destruction
+
+**Status: confirmed heap use-after-free; focused correction not yet qualified.**
+The strengthened GL-034 native fixture retains an ObjectValue, destroys its
+target after the source sweep cursor passes, and preserves the value for later
+native/Luau reads. Windows Debug ASan on native fingerprint `34e4ff3d...`, DLL
+`8b937315...`, fixture `c78993cf...` reports heap-use-after-free in
+`godot::Variant::operator Object*()` / `get_object_instance_binding`, reached from
+`RefreshReplicationRecord` at source line 143. The target was freed by the
+SceneTree delete queue on the same main thread. Raw report SHA-256 is
+`8e56bc427561db8776b75cbfb319858b869cf6d7244168ec290e449b299024e5`.
+The coordinator stops the failed relevance profile and does not start benchmarks;
+its entire owned Job is verified empty. This is an actual sanitizer finding,
+separate from GL-037's historical fixture barriers.
+
+Source inspection verifies the earlier projection and `RobloxValue::_push_value`
+also convert the stored Variant without first validating its weak Node target;
+an independent older-build crash has not been reproduced. The focused correction
+validates in the shared `get_value()` method and uses that method for Luau reads,
+so expired object values read as nil before pointer conversion. No ownership,
+storage format, scheduler or automatic Changed-signal behavior is added.
+The pinned engine's [Variant validity utility](https://github.com/godotengine/godot/blob/a13da4feb8d8aefc283c3763d33a2f170a18d541/core/variant/variant_utility.cpp)
+uses `get_validated_object()`; the pinned godot-cpp conversion accesses instance
+binding after extracting the raw object pointer. Preserve the target-destruction
+case and verify both native and Luau getter paths under fresh sanitizers before
+closing this issue or GL-034.
 
 ## GL-036: Release benchmark omits setup and checks
 
