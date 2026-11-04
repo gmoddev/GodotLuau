@@ -1,5 +1,73 @@
 # Networking Foundation 2 campaign journal
 
+## Verified resumed checkpoint — bd18580
+
+The narrow patch is published as `bd18580d65d29a60fa90a2fc53f2fccfec0febea`.
+Fresh hosted [core](https://github.com/gmoddev/GodotLuau/actions/runs/41789098795),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41789098680), and
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41789196521)
+workflows all pass Windows/Linux. Independent frozen-revision verification checks
+85 core cases and 131 native actors per profile; full-native controls require
+23 Windows/24 Linux checks, with 1,161 instrumented native translation units and
+three core units per platform. Required logs, actual harnesses, host/compiler,
+products and instrumentation hashes verify; two missing ephemeral GL-003
+mailboxes are listed explicitly. GL-037 and GL-035 close on this unmerged branch
+with the [runtime receipt](evidence/networking2-bd18580-runtime-verification.json).
+
+The earlier `cbd91d0` [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41781834809)
+also completes: all four 85-core/131-actor profiles, Linux core sanitizer, both
+extracted 133-member packages and startup processes verify independently
+([receipt](evidence/networking2-cbd91d0-candidate-verification.json)). The newer
+`6ae1b9` candidate completes as well, but its separate receipt is pending.
+The exact `bd18580` [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41789199528)
+is now running; it is not yet accepted.
+
+All eight new paired ASan benchmark configurations pass, but 512-object server
+frame p95 is still 98–101 ms versus baseline 14–16 ms, with full catalog refresh
+dominant. See the [measurements](networking2-benchmarks.md#focused-refresh-correction--bd18580).
+GL-034 remains open. Rechecking the original campaign attachment confirms explicit
+bounded-refactor authority; the approval question was unnecessary. A bounded
+catalog candidate is now implemented locally and awaits compilation/execution.
+It reuses the private cache/index across 64-item/two-ms cooperative sweep turns,
+drains accepted immutable frames while withholding new incomplete selection, and
+refreshes only a published barrier's bounded dependency closure. The expanded
+production relevance fixture covers mutation/reference-target destruction after
+the sweep cursor passes, same-turn reparent ordering, and server service
+replacement with unfinished work. These changes are not yet qualified.
+
+Following the user's cross-chat worker coordination, prepare a project-local
+adapter pinned to coordinator `cf1628de...`, three fixed numeric profiles, hashed
+inputs, fresh UUIDs, loopback bootstrap, bounded output/deadlines, and checked
+owned Job cleanup. Its static schema preparation passes; no endpoint or recipe
+ran during preparation. After the coordinated release, both fresh profiles pass
+(seven relevance and 34 Character/legacy/Function actors), with no timeout or
+output errors and checked empty owned Jobs. Window
+`39a6360a-0dda-4070-b681-bb93569a57ba` retires successfully; the worker is released
+to Steward, with Studio queued afterward. The new catalog candidate has not run.
+The installed input lock seals 176 files; four static schema/denial tests pass.
+After Studio's checked release, a second five-minute window starts at 08:36 UTC.
+Final review produces snapshot `v29`, native fingerprint
+`34e4ff3d1e4d6bfe97ed01bdc16f1e1da47c12030591c67a25fa40f472f15d97`;
+its source archive SHA-256 is
+`29f75ce7f93722da5f72cda0a90b53e22cac3174244a72a200aa7476ce806774`.
+Intermediate v27/v28 snapshots were not executed. The candidate also verifies
+live source identity/visibility before new frame admission and catches barrier
+allocation failure. Unchanged dependency traversal stops only at prerequisites
+already accepted by every affected view, avoiding an accidental new ancestry
+limit or treating an unfinished source record as accepted proof. The build and
+new fixture/measurement runs must establish the result.
+Intermittent SSH pre-authentication failures are retained, with bounded retries;
+no machine settings, services, tooling, coordinator wire format or other
+repository files change. Main, release publication and updater admission remain
+unchanged and disabled.
+
+Raw archive 9 retains 14,806 members / 50,931,527 bytes, SHA-256
+`4402b57d182ea7fb30bfc2ce8db918d60ebe286fe1733542c9d496c47467e69a`.
+It includes the 41 focused v26 actors, eight paired ASan configurations and
+coordinator preparation/inputs. The later coordinator execution needs its next
+archive. Actual Movement ascent is 5.0999998 units before the strengthened
+post-sync rejection probe; required actor logs pass.
+
 ## Resumed qualification — 2026-11-04
 
 At resume, `6ae1b9` core CI passes; native/full-native sanitizer qualification

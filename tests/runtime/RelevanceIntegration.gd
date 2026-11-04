@@ -83,6 +83,13 @@ local Inner = Instance.new('Folder'); Inner.Name = 'HiddenChild'; Inner.Parent =
 Hidden.Name = 'ServerStorage'
 local Scripts = Instance.new('Folder'); Scripts.Name = 'HiddenScripts'; Scripts.Parent = game.ReplicatedStorage
 Scripts.Name = 'ServerScriptService'
+local Target = Instance.new('Folder'); Target.Name = 'SweepTarget'; Target.Parent = game.ReplicatedStorage
+local Ref = Instance.new('ObjectValue'); Ref.Name = 'SweepReference'; Ref.Value = Target; Ref.Parent = game.ReplicatedStorage
+for N=1,96 do
+    local Part = Instance.new('Part'); Part.Name = 'SweepDistant_'..N
+    Part.Anchored=true; Part.Position=Vector3.new(20000+N*16,0,0); Part.Parent=World
+    if N % 4 == 0 then task.wait() end
+end
 game:SetAttribute('Created',true)
 """)
     await Until(func(): return Game.has_meta("Created"), "world created through production Luau")
@@ -120,7 +127,9 @@ game:SetAttribute('Created',true)
     Character.global_position = Vector3(0,5,0)
     Mark("back.go"); await Wait("client1.back")
     await Until(func(): return int(Entry(FirstPeer, NearId).get("Generation", 0)) > Generation, "reentry has a fresh materialization generation")
-    ScriptNode("MoveTwice", "local C=game.ReplicatedStorage.ParentA.Child; C.Parent=game.ReplicatedStorage.ParentB; C.Parent=game.ReplicatedStorage.ParentA; game:SetAttribute('Reparented',true)")
+    var SweepReferenceId: int = Storage.get_node("SweepReference").get_meta("_gl_netid")
+    await Until(func(): return int(View(0).RefreshStage) == 1 and int(View(0).RefreshCursor) > SweepReferenceId, "unfinished source sweep has captured the reference before mutation")
+    ScriptNode("MoveTwice", "local C=game.ReplicatedStorage.ParentA.Child; C.Parent=game.ReplicatedStorage.ParentB; C.Parent=game.ReplicatedStorage.ParentA; game.ReplicatedStorage.SweepTarget:Destroy(); game:SetAttribute('Reparented',true)")
     await Until(func(): return Game.has_meta("Reparented"), "two structural barriers submitted")
     Mark("reparent.go"); await Wait("client1.reparent"); await Wait("client2.reparent")
     ScriptNode("AddReference", "local Ref=Instance.new('ObjectValue'); Ref.Name='Reference'; Ref.Value=game.Workspace.Far; assert(Ref.Value==game.Workspace.Far); Ref.Parent=game.ReplicatedStorage; game:SetAttribute('Referenced',true)")
@@ -160,6 +169,25 @@ game:SetAttribute('Created',true)
     await Until(func(): return View(NewPeer).Entries.is_empty(), "cancelled peer releases its exact accepted view")
     Check(not View(FirstPeer).Entries.is_empty(), "callback cancellation preserves another peer's projection")
     Check(int(View(0).Failures) == 0 and not bool(View(0).Failed), "no structural failure during valid lifecycle")
+    await Until(func(): return int(View(0).RefreshStage) != 0, "service replacement interrupts owned catalog work")
+    var PersistentNear := World.get_node("Near")
+    var PersistentId: int = PersistentNear.get_meta("_gl_netid")
+    var PersistentObject := PersistentNear.get_instance_id()
+    Mark("service.retire"); await Wait("client1.service.closed")
+    await Until(func(): return Network.get_multiplayer().get_peers().is_empty(), "old server carrier retires its peers")
+    var OldService := Network.get_instance_id()
+    Network.free()
+    Network = Create("NetworkService", "NetworkService", Game)
+    await process_frame
+    if Mode == "Listen":
+        ScriptNode("ReplacementListen", "assert(game:GetService('NetworkService'):StartServer(game:GetAttribute('Port'),6)); game:SetAttribute('ReplacementListening',true)")
+        await Until(func(): return Game.has_meta("ReplacementListening"), "replacement listen server started")
+    await Until(func(): return int(Network.call("get_mode")) == 1 and bool(View(0).Enabled), "replacement server restores opted-in authority")
+    Check(Network.get_instance_id() != OldService and is_instance_id_valid(PersistentObject) and PersistentNear.get_meta("_gl_netid") == PersistentId, "service replacement preserves canonical native identity without reusing the service")
+    Mark("service.reconnect"); await Wait("client1.service.ready")
+    FirstPeer = int(FileAccess.get_file_as_string("res://replication-client1.service.ready"))
+    await Until(func(): return bool(Entry(FirstPeer, PersistentId).get("Materialized", false)), "fresh service/session acknowledges the retained canonical source")
+    Check(int(View(0).Failures) == 0 and not bool(View(0).Failed), "retired sweep cannot deliver into the replacement service")
     ScriptNode("OversizedSnapshot", "local V=Instance.new('StringValue'); V.Name='Oversized'; V.Value=string.rep('x',9000); V.Parent=game.ReplicatedStorage; game:SetAttribute('OversizedSubmitted',true)")
     await Until(func(): return Game.has_meta("OversizedSubmitted") and bool(View(0).Failed), "oversized source snapshot fails explicitly")
     Mark("oversize.go"); await Wait("client1.oversize")
@@ -209,6 +237,7 @@ func Client() -> void:
     await Wait("reparent.go")
     await Until(func(): return Structural == ["A-","B+","B-","A+"], "reparent barriers preserve every structural transition")
     Check(Storage.get_node("ParentA/Child").get_instance_id() == ChildIdentity, "reparent preserves child native identity")
+    await Until(func(): return Storage.has_node("SweepReference") and Storage.get_node("SweepReference").get("Value") == null and not Storage.has_node("SweepTarget"), "destruction during an unfinished sweep clears references and retires the exact target")
     Mark("client" + str(ClientIndex) + ".reparent")
     await Wait("reference.go")
     await Until(func(): return World.has_node("Far") and Storage.has_node("Reference") and Storage.get_node("Reference").get("Value") == World.get_node("Far"), "create/reference group materializes its spatial dependency")
@@ -266,6 +295,15 @@ func Client() -> void:
         Check(int(Network.call("get_mode")) == 0 and not Storage.has_node("Counter"), "interrupted frame does not retain runtime replicas")
         Mark("client2.cancelled")
     if ClientIndex == 1:
+        await Wait("service.retire")
+        Network.call("disconnect_net")
+        await Until(func(): return not World.has_node("Near") and not Storage.has_node("Counter"), "service replacement starts after exact replica retirement")
+        Mark("client1.service.closed")
+        await Wait("service.reconnect")
+        Game.set_meta("Port", int(Address.get_slice(":", 1)))
+        ClientScript("ServiceReconnect", "assert(game:GetService('NetworkService'):Connect('127.0.0.1',game:GetAttribute('Port'))); game:SetAttribute('ServiceReconnecting',true)")
+        await Until(func(): return Game.has_meta("ServiceReconnecting") and World.has_node("Near") and World.has_node("Far") and Storage.has_node("Counter"), "replacement service restores the retained global pin and fresh spatial view")
+        Mark("client1.service.ready", str(Network.call("get_peer_id")))
         await Wait("oversize.go")
         await Until(func(): return not bool(Network.call("is_connected_net")), "oversized source ends its peer session")
         Check(not Storage.has_node("Oversized"), "rejected snapshot never partially materializes")

@@ -80,6 +80,9 @@ the inherited runtime already satisfies them. Baseline gaps link to
   references must respect current materialization; ACKs do not prove an honest
   client or manufacture an ownership decision. Explicit limits/timeout failure
   retire exact state without silently dropping accepted reliable work.
+  Incremental source maintenance must not admit partial dependency groups or
+  overwrite newer accepted structural barriers. Retire its owned cursor/cache
+  work on service reset; bound turns and unresolved source-dependency waits.
 
 - Application RemoteEvent delivery configuration is native Server authority.
   Publication/readiness binds the current native transport session, endpoint

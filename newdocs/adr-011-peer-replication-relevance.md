@@ -141,12 +141,29 @@ Per-peer application admission is 256 KiB/256 messages; service totals are 16 Mi
 encoded payload bounds; source/view/commit metadata and Godot allocations are
 additional bounded state, not part of a claimed 16 MiB process-memory ceiling.
 
-Periodic catalog scans are separated by at least 100 ms measured from scan
-completion. The existing per-tick eight-peer/four-ms submission budget starts
-after catalog maintenance; it does not bound that scan's frame cost. An edit to
-an identity absent from every accepted peer view needs no synchronous reparent
-barrier: its eventual enter snapshot captures the latest parent. Published
-reparent transitions retain their synchronous refreshed, ordered admission.
+The GL-034 candidate reuses the private catalog/index across sweep turns of at
+most 64 items or a two-ms cooperative quantum. Each native record still performs
+the existing scope, identity, snapshot and size validation. A single bounded
+native call/record can exceed that quantum; this is not a hard whole-frame
+deadline. `RefreshCalls`/`RefreshMaximumUsec` now count/time sweep turns, rather
+than whole-catalog rebuilds; `RefreshStage`/`RefreshGeneration`/`RefreshCursor`
+expose progress. Encoded catalog/index limits remain unchanged.
+
+New peer selection waits until the sweep finishes; already accepted immutable
+frames continue draining. Periodic sweeps are separated by at least 100 ms from
+completion. Mutation across turns can expose a missing prerequisite, so selection
+retries a projection within the existing ten-second deadline and admits no
+incomplete group. A new frame revalidates the live native source identity and
+visibility. Canonical unregistration immediately removes its private cache/index
+entry. Sweep state belongs to NetworkService and retires with its existing reset.
+
+The existing per-tick eight-peer/four-ms submission budget starts after catalog
+maintenance. An unpublished edit needs no synchronous reparent barrier: its
+eventual enter captures the latest parent. A published reparent refreshes only
+its affected parent/reference closure, bounded by the existing 64-operation
+group, and retains every ordered accepted transition. There is no older staged
+record to roll a newer barrier backward. This candidate needs fresh qualification;
+the prior `bd18580` receipt does not qualify these changed scheduling semantics.
 
 Planned state advances at application queue acceptance; Known advances only at
 successful native handoff. Materialized records mean the exact peer/session

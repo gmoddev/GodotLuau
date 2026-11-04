@@ -458,6 +458,12 @@ requirements and explicit Remote-reference restrictions. Full campaign and
 performance qualification remain pending; the journal records actual coverage.
 GL-031 fixes static-parent late join; GL-032 adds the missing ObjectValue Instance
 getter/setter without broadening scalar conversion or reflection authority.
+The GL-034 candidate extracts the existing record validator into bounded private
+cache/index sweep turns and refreshes only affected published reparent closures.
+New peer selection waits for sweep completion while accepted immutable frames
+drain; native identity/visibility is revalidated before new admission. Sweep state
+retires with NetworkService reset. This scheduling change is under qualification;
+the earlier `bd18580` cross-platform proof does not qualify it automatically.
 
 Main includes the qualified Phase 1 native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen

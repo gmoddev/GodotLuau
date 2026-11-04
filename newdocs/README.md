@@ -42,9 +42,13 @@ GL-030 is qualified at `2296c96` with exact-revision receipts in the journal.
 [ADR-011](adr-011-peer-replication-relevance.md) defines the experimental,
 default-disabled runtime relevance/batching slice and its compatibility limits.
 The journal's campaign checkpoint classifies relevance, structural admission and
-scalability as partially qualified. Current Debug native gates pass 131 actors;
-full-native follow-up failures and large-world limits remain visible as
-GL-034/035/037. This branch is not ready for automatic integration or distribution.
+scalability as partially qualified. At `bd18580`, Windows/Linux core, 131-actor
+native and full-native sanitizer gates pass and independently verify; GL-035/037
+close on this unmerged branch. Current package qualification is running. GL-034
+still reproduces a catalog-cost regression; its
+[bounded maintenance candidate](gl-034-catalog-proposal.md) is being implemented
+under the campaign's existing authorization and requires fresh qualification.
+This branch is not ready for automatic integration or distribution.
 
 GL-018 / GL-029 are integrated through normal merge
 `6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851`, preserving all 39 integration-branch

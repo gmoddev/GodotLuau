@@ -2942,6 +2942,9 @@ public:
         return int64_t(Next++);
     }
     void TouchReplication(uint64_t Id);
+    void RemoveReplicationRecord(uint64_t Id);
+    std::array<uint64_t, 3> ReplicationRoots();
+    bool RefreshReplicationRecord(uint64_t Id, const std::array<uint64_t, 3>& Roots, bool& Included);
     bool RefreshReplication();
     void TickReplication();
     bool ResetReplication();
@@ -3331,7 +3334,9 @@ public:
     void _rep_collect_forget(Node* n) {
         if (!n) return;
         if (n->has_meta("_gl_netid")) {
-            net_instances.erase((uint64_t)(int64_t)n->get_meta("_gl_netid"));
+            const uint64_t Id = (uint64_t)(int64_t)n->get_meta("_gl_netid");
+            net_instances.erase(Id);
+            if (Replication.Enabled && mode == 1) RemoveReplicationRecord(Id);
             n->remove_meta("_gl_netid");
         }
         for (int i = 0; i < n->get_child_count(); i++) _rep_collect_forget(n->get_child(i));

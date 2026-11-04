@@ -70,9 +70,9 @@ four successful workflows and independently checked artifacts.
 | GL-032 | P2 | Closed on campaign branch; qualified at 532650f | ObjectValue Instance/nil bridge and native reference projection |
 | GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
 | GL-034 | P2 | Open; reproduced mixed-workload regression | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
-| GL-035 | P1 | Fixed in campaign; qualification pending | Empty-catalog listen Client can remove structural scope-root ancestor |
+| GL-035 | P1 | Closed on unmerged campaign; native matrix verified | Empty-catalog listen Client can remove structural scope-root ancestor |
 | GL-036 | P2 | Closed on campaign within exercised profiles | Benchmark setup and assertions were omitted by Release GDScript |
-| GL-037 | P2 | Open; qualification repeatability gap | Follow-up full-native runs fail Character/legacy barriers; Function JSON publication race corrected |
+| GL-037 | P2 | Closed on unmerged campaign; native/sanitizer matrix verified | Follow-up full-native runs fail Character/legacy barriers; fixture races corrected |
 
 ## GL-036: Release benchmark omits setup and checks
 
@@ -89,7 +89,17 @@ functional failures rather than silently passing them. See the
 
 ## GL-037: Full-native follow-up assertion failures
 
-**Status: OPEN; complete current-source sanitizer qualification is not established.**
+**Status: CLOSED on the unmerged campaign at `bd18580`.**
+The focused fixture corrections pass 41 local ASan actors and fresh Windows/Linux
+core, native and full-native sanitizer workflows. Independent exact-revision
+verification checks 85 core cases per profile, 131 native actors per profile,
+23 Windows/24 Linux sanitizer checks, 1,161 instrumented native units and three
+core units per platform, with no unexpected reports. The
+[receipt](evidence/networking2-bd18580-runtime-verification.json) preserves
+missing ephemeral GL-003 mailbox identities separately from required logs.
+Package/scalability acceptance remains separate; GL-034 is still open.
+
+Historical failures and attribution:
 At `0428413`, Linux fails Movement's airborne resynchronization comparison;
 Windows fails its final native movement sample comparison and a Function
 adversarial-response barrier. At `cbd91d0`, Linux passes Character and Function
@@ -118,7 +128,12 @@ fresh native/sanitizer results are required before closing this repeatability ga
 
 ## GL-035: Empty-catalog listen Client can remove scope-root ancestor
 
-**Status: confirmed runtime authority defect; focused correction being qualified.**
+**Status: CLOSED on the unmerged campaign; exact-revision matrix verified.**
+The `cbd91d0` fix passes all four 85-core/131-actor package profiles and extracted
+Windows/Linux packages ([receipt](evidence/networking2-cbd91d0-candidate-verification.json)).
+The subsequent `bd18580` revision also passes both ordinary native and full-native
+sanitizer matrices, including the empty-catalog guard
+([receipt](evidence/networking2-bd18580-runtime-verification.json)).
 On native fingerprint `738a60cf...` / DLL `53a1f38f...`, an actual LocalScript in
 an opted-in listen host with no registered instances or Character authority can
 execute `game:Destroy()` and remove the server's shared scene. The headless
@@ -134,8 +149,8 @@ catalog population. Ordinary Client attribute writes retain their existing path.
 The [required native regression](../tests/runtime/RelevanceRootGuard.gd) checks
 the empty precondition, actual Client mutation, preserved scene identity and
 ordinary callback completion after rejection. The required native matrix grows
-from 130 to 131 actors; no existing actor/assertion is removed. Full qualification
-is required before closure. This experimental protocol remains unmerged.
+from 130 to 131 actors; no existing actor/assertion is removed. This experimental
+protocol remains unmerged.
 
 ## GL-034: Opt-in relevance mixed-world performance regression
 
@@ -162,6 +177,15 @@ corrections avoid full refresh on unpublished reparent, measure periodic cadence
 from refresh completion, and start the unchanged peer submission budget after
 maintenance. Published barriers still refresh synchronously. New paired
 measurements, larger-world admission and complete qualification remain required.
+
+A bounded maintenance candidate now reuses source records/index memberships
+across 64-item/two-ms cooperative turns. Selection waits for a completed sweep;
+accepted frames still drain. Published reparent refreshes its bounded affected
+closure, and native unregistration removes its cache immediately. Expanded actual
+ENet coverage targets mutation/reference destruction after cursor advance and
+service replacement during unfinished work. The original campaign explicitly
+authorizes this necessary bounded refactoring; the later approval question was
+unnecessary. This new source is not yet qualified and GL-034 stays open.
 
 ## GL-032: ObjectValue lacks an Instance bridge
 

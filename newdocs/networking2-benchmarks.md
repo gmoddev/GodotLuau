@@ -3,6 +3,36 @@
 These experiments do not establish 64-player support or a general speedup.
 Runtime/source qualification and performance evidence are separate gates.
 
+## Focused refresh correction — bd18580
+
+The [new paired receipt](evidence/networking2-bd18580-asandebug-benchmark.json)
+records eight passing configurations with the same admitted Windows Debug ASan
+host/compiler, 64 measured samples and 16 warmups. Candidate native fingerprint
+is `554af399...`; baseline is exact main `9f52b27`. The three narrow changes skip
+unpublished reparent refreshes, measure periodic cadence after completion, and
+exclude maintenance from the unchanged peer submission budget.
+
+| Objects | Product | Server frame p95, trials 0/1 | Fire/echo RTT p95, trials 0/1 |
+| --- | --- | --- | --- |
+| 64 | Main | 11.64 / 11.87 ms | 34.33 / 37.93 ms |
+| 64 | Candidate | 20.12 / 22.25 ms | 76.49 / 100.69 ms |
+| 512 | Main | 13.92 / 16.21 ms | 42.74 / 41.51 ms |
+| 512 | Candidate | 100.64 / 98.30 ms | 331.50 / 333.91 ms |
+
+At 512 objects, candidate refresh consumes 11.41/10.77 seconds across 145/146
+calls; maximum refresh is 136.85/110.93 ms, with zero recorded replication
+failures. Early exclusion and the new cadence improve the original 414–426 ms
+frame regression substantially, but still do not establish acceptable baseline
+parity. GL-034 remains open. The source still scans the full native catalog and
+refreshes published structural barriers synchronously. A broader incremental
+candidate now uses the campaign's explicit bounded-refactor authorization;
+the earlier approval question was unnecessary. Its new implementation remains
+unqualified and is not substituted into these measurements.
+
+The current Release and larger-peer measurements remain pending. Another chat's
+coordinated native-test window temporarily holds new shared-worker performance
+runs; hosted qualification continues independently.
+
 ## Release follow-up
 
 The [Release receipt](evidence/networking2-release-benchmark.json) preserves

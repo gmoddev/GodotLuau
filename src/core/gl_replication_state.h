@@ -36,6 +36,7 @@ struct CatalogRecord {
     Identity Object = 0;
     Identity ReferenceObject = 0, ReferenceId = 0;
     uint64_t Revision = 0;
+    uint64_t Scan = 0;
     bool Static = false, Global = true;
     godot::Transform3D Pose;
     std::shared_ptr<const Snapshot> Data;
@@ -49,6 +50,7 @@ struct Accepted {
 };
 struct Peer {
     int64_t Session = 0;
+    uint64_t DependencySince = 0;
     uint64_t Sent = 0, Acked = 0, WaitingSince = 0, BlockedSince = 0;
     uint64_t PlannedSequence = 0;
     bool TailDirty = true;
@@ -91,6 +93,8 @@ struct State {
     uint64_t ConnectedAt = 0;
     int FailureLine = 0;
     uint64_t NextRevision = 0, LastRefresh = 0, ReceivedSequence = 0;
+    uint64_t RefreshGeneration = 0, RefreshCursor = 0;
+    int RefreshStage = 0;
     uint64_t ReceivedQueued = 0;
     int64_t ReceivedEpoch = 0, ReceivedSession = 0;
     int Cursor = 0;
