@@ -1,5 +1,50 @@
 # Networking Foundation 2 campaign journal
 
+## Complete current CI and package verification — 436850a
+
+The [candidate workflow](https://github.com/gmoddev/GodotLuau/actions/runs/41807864382)
+passes all gates. Independent frozen-source checks establish four Windows/Linux
+Debug/Release profiles with 85 core cases and 131 native actors each, required
+log/product/harness hashes, actual ownership/RPC admission proof, 4,000 unique
+UUID samples per profile, Linux core ASan/LSan, and both 133-member packages with
+two extracted startup actors each. Nonpublishing acceptance SHA-256 is
+`48833621d1db5af55e2e7ba49c94840f1ff805c507b238519b01e106e3237af2`;
+the [receipt](evidence/networking2-436850a-candidate-verification.json) retains the
+exact profile/host/extension/companion/package hashes. Together with the current
+runtime receipt below, all four hosted workflows are independently qualified.
+
+The current Windows Release qualification adapter matches the existing admitted
+Release host's compiler hash. Its immutable benchmark input archive SHA-256 is
+`266901c2e85d49a52eed765f46015feb66457112b1bfd0a92ca05af3848ee6bc`.
+The larger-peer worker window is queued after other chats' checked handoffs;
+no worker execution or transfer has started. GL-034 stays open for those actual
+performance/admission trials. Releases/updater remain disabled and main unchanged.
+
+## Release qualification preparation — 2026-11-04
+
+The current `436850a` candidate's Linux Debug and Release profiles pass, as does
+its Linux core sanitizer; Windows Debug/Release remain running. Core, ordinary
+native and full-native sanitizer matrices already independently verify below.
+Documentation checkpoint `61b9ee5` preserves that evidence without changing the
+runtime or triggering new native builds. Remote main remains `9f52b27`.
+
+Prepare a separate local fixed-profile coordinator installation for the exact
+current CI Release adapter, baseline `9f52b27`, and the existing admitted Release
+host/compiler. Stage only after independent artifact verification. Six profiles
+cover repeated paired 1/16/32-peer, 64/512-object workloads; separate profiles can
+retain a current candidate result when an older baseline fails. The finite outer
+window is 1,100 seconds with checked task-owned Job retirement. No worker recipe
+has executed during this preparation or other chats' reserved timing windows.
+
+Two separate impaired-link profiles use one task-owned UDP proxy with a fixed
+every-17th-datagram loss pattern and 40-ms delay plus 0/35/70-ms jitter. Other
+clients remain direct, and production assertions/admission/settings are unchanged.
+A bounded socket-only preparation check passes with 86 echoes, ten intentional
+drops, 114 reordered forwards, no overflow and checked shutdown. This is helper
+evidence, not real ENet qualification. Current larger-peer, impaired-link and
+package acceptance remain pending; no performance or scalability closure follows
+from preparation.
+
 ## Current native matrix verified — 436850a
 
 All current [core](https://github.com/gmoddev/GodotLuau/actions/runs/41807722427),

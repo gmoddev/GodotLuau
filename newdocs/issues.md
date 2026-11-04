@@ -84,8 +84,9 @@ and full-native sanitizer matrices independently verify: 85 core cases and 131
 native actors per profile, with 23 Windows/24 Linux sanitizer checks and no
 unexpected reports. The [receipt](evidence/networking2-436850a-runtime-verification.json)
 preserves required log/source/product/instrumentation hashes and separately lists
-two absent ephemeral GL-003 mailboxes. Larger-peer/performance/package acceptance
-is distinct and remains pending under GL-034.
+two absent ephemeral GL-003 mailboxes. All four source profiles and both extracted
+packages also [verify](evidence/networking2-436850a-candidate-verification.json).
+Larger-peer performance/admission remains pending under GL-034.
 
 Historical reproduced failure:
 The strengthened GL-034 native fixture retains an ObjectValue, destroys its
@@ -202,7 +203,8 @@ protocol remains unmerged.
 ## GL-034: Opt-in relevance mixed-world performance regression
 
 **Status: OPEN; one-peer frame-cost correction verified at `436850a`; current
-complete matrix and larger-peer/Release admission remain pending.** Fresh paired
+larger-peer/Release admission remains pending.** Current four-profile/package,
+core/native and full-native sanitizer matrices independently verify. Fresh paired
 512-object Windows ASan trials now give candidate frame p95 9.61/9.98 ms versus
 main 9.34/9.45 ms, with zero replication failures. Final client structural
 convergence is 711.104/84.991 ms, an explicit asynchronous tradeoff. All seven

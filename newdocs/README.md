@@ -46,7 +46,8 @@ scalability as partially qualified. At `bd18580`, Windows/Linux core, 131-actor
 native and full-native sanitizer gates pass and independently verify; GL-035/037
 close on this unmerged branch. At `436850a`, the new catalog/getter/control
 corrections pass both platforms' core/native/full-native sanitizer matrices;
-GL-038 closes with linked evidence. Current package qualification is running.
+GL-038 closes with linked evidence. All four current source profiles and both
+extracted packages independently verify at `436850a`.
 GL-034's [bounded maintenance correction](gl-034-catalog-proposal.md) restores
 one-peer frame cost close to the paired baseline; larger-peer Release admission
 and performance qualification remain pending.
