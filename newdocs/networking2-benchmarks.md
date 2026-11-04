@@ -3,6 +3,40 @@
 These experiments do not establish 64-player support or a general speedup.
 Runtime/source qualification and performance evidence are separate gates.
 
+## Release follow-up
+
+The [Release receipt](evidence/networking2-release-benchmark.json) preserves
+18 passing measured configurations, two passing smoke configurations, one failed
+setup smoke, and three retained large-world failures. Immutable products are
+exact main and the original `532650f` relevance implementation, with the same
+qualified Release host/compiler. These do not measure the newer native refresh
+and GL-035 corrections. Host hashes and actual ownership/RPC checks are in the
+[host receipt](evidence/networking2-release-host-verification.json).
+
+| Peers / world | Outcome | Server frame p95, main / relevance | Combined client RTT p95, main / relevance |
+| --- | --- | --- | --- |
+| 1 / 64 | Both products, two trials pass | 8.4–8.5 / 8.5–8.7 ms | 25.1 / 25.1–33.4 ms |
+| 1 / 512 | Both products, two trials pass | 8.5 / 11.5–12.0 ms | 25.0–25.1 / 41.7–50.1 ms |
+| 16 / 64 | Both products, two trials pass | 10.9–11.0 / 10.2–11.6 ms | 42.0–47.8 / 41.7–41.8 ms |
+| 32 / 64 | Both products, two trials pass | 70.3–74.4 / 53.6–66.1 ms | 974–1,294 / 275–659 ms |
+| 16 / 512 | Main warmup fails; relevance passes twice | Unavailable / 46.3–49.3 ms | Unavailable / 174–224 ms |
+| 32 / 512 | Both products fail warmup | Unavailable | Unavailable |
+
+At 32/512 the relevance source logs explicit backlog/dependency and reliable
+admission failures; both products produce invalid-target errors after peers
+leave. The resource guard does not trigger: minimum observed commit headroom
+is about 6.8 GB for the candidate failure. No valid steady-state comparison
+exists for the failed configurations. Do not raise native limits or call this
+32-player large-world support. The exact causal split remains under investigation.
+
+The first Release attempt exposed GL-036: GDScript
+[omits assert expressions in non-debug builds](https://docs.godotengine.org/en/4.3/tutorials/scripting/gdscript/gdscript_basics.html#assert-keyword).
+Setup and checks now execute in ordinary calls, including bounded deadlines.
+Independent configuration selection preserves failed baselines while allowing
+separately labeled candidate/32-peer scenarios; it cannot create a paired result
+where the baseline failed. Raw archive 8 SHA-256 is
+`f30e914a718451c4202563d62478724817562eff8c5533dee935dd4c61db1d3f`.
+
 The [Phase 1 receipt](evidence/networking2-phase1-benchmark.json) compares exact
 main `9f52b27` with the GL-030 runtime under the same DockerPC MSVC Debug ASan
 host/compiler. Eight 1/16-peer configurations complete, with two interleaved
@@ -67,8 +101,9 @@ candidates, skip their gates or grant publication. It avoids waiting for a
 complete candidate build merely to obtain the executable needed for a bounded
 Release memory profile.
 
-Remaining performance coverage includes Release 16/32 peers, an impaired-link
-profile, mixed traffic fairness/starvation, more sustained churn and repeated
+Remaining performance coverage includes the current native correction in Release,
+successful larger-world scalability, an impaired-link profile, mixed traffic
+fairness/starvation, more sustained churn and repeated
 disconnect/reconnect storms. Phase 2/3 correctness fixtures cover deterministic
 WouldBlock, independent healthy-peer progress, reconnect and callback-driven
 cancellation; those facts are not substituted for performance measurements.

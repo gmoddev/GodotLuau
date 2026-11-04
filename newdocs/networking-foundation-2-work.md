@@ -1,5 +1,62 @@
 # Networking Foundation 2 campaign journal
 
+## Campaign checkpoint — 2026-11-04
+
+| Phase | Classification | Established scope |
+| --- | --- | --- |
+| 1 — GL-030 | QUALIFIED | Exact `2296c96` four-workflow qualification; finite terminal outcomes and real ENet lifecycle/adversarial checks |
+| 2 — Relevance | PARTIALLY QUALIFIED | Default-disabled anchored-leaf slice; cross-platform Debug gates and scoped native evidence; broader lifecycle and current complete matrix outstanding |
+| 3 — Structural admission | PARTIALLY QUALIFIED | Bounded batching/coalescing, dependency closure, exact accepted state, WouldBlock/healthy-peer and cancellation checks; larger mixed-load admission remains limited |
+| 4 — Scalability | PARTIALLY QUALIFIED | Repeated 1/16/32-peer small-world Release comparisons and isolated large-world attempts; large-world failures, loss/fairness/memory-rate gaps remain |
+
+Runtime checkpoint `cbd91d08c4384348b4b29cf91dc461fff109e120`, native fingerprint
+`c702c86c...`, passes [core](https://github.com/gmoddev/GodotLuau/actions/runs/41781831570)
+(85 cases each) and [ordinary native](https://github.com/gmoddev/GodotLuau/actions/runs/41781831679)
+(131 actors each) on Windows/Linux Debug. Independent frozen-source verification
+checks required logs/harness/product hashes, host proofs, the new root guard and
+4,000 UUIDs per platform in the [receipt](evidence/networking2-cbd91d0-ordinary-verification.json).
+Its [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41781834809)
+remains in progress. Its [full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41781831880)
+Linux profile fails legacy Dedicated barriers; Windows was still running at this
+checkpoint. Do not equate ordinary-native success with complete qualification.
+GL-037 records this and the preceding failed matrix, without suppressing checks.
+
+The [local receipt](evidence/networking2-scopeguard-checkpoint.json) records 43
+selected native actors at this source, six repeated Function actors after the
+verified JSON publication-race fix, and the corrected two-product Debug ASan
+benchmark smoke. No unexpected ASan report occurs in these selected runs.
+Atomic Function fixture hash is `4ba5d63b...`. The temporary-file publication
+change preserves every adversarial assertion and avoids the actual empty-JSON
+reader failure. Character/legacy follow-up attribution remains open.
+
+The original relevance checkpoint additionally completes candidate workflow
+`41774926042`: all four 85-core/130-actor profiles and both extracted packages
+verify independently, with acceptance hash
+`a33bfc47e9dcec5fc0e170427fe63f079ee5f32de615e254a621670c42bb1f19`
+([receipt](evidence/networking2-9884bf7-candidate-verification.json)). This is
+historical `9884bf7`, not current-source acceptance. The queued `0428413`
+candidate was superseded by the newer request and cancelled without profiles.
+
+The [Release measurements](networking2-benchmarks.md#release-follow-up) preserve
+18 measured passing configurations, two passing smoke configurations, one
+failed setup smoke and three large-world failures. They use immutable main and
+`532650f` products; the newer native correction is not silently substituted.
+GL-036 fixes Release-elided benchmark setup/checks. A local compiler lookup finds
+a different executable hash from the CI toolchain; no compiler installation,
+mixed-toolchain comparison or fabricated current Release result is performed.
+
+Raw archive 8 contains 13,508 members / 46,843,412 bytes, SHA-256
+`f30e914a718451c4202563d62478724817562eff8c5533dee935dd4c61db1d3f`.
+It retains baseline root removal, corrected actor logs, failed and successful
+benchmarks, exact fixtures/helpers, worker host admission and product identities.
+
+**Integration recommendation:** retain the experimental opt-in branch unmerged.
+Finish GL-037 attribution/current complete qualification, GL-034 larger-world
+cost/admission work, server service replacement and impaired-link/fairness,
+reconnect-storm, allocation/retained-memory and graphical evidence before wider
+adoption. Main stays `9f52b27`; all commits are retained, dependency/host patches
+are unchanged, releases and updater distribution remain disabled.
+
 ## Empty-catalog authority follow-up — GL-035
 
 A separate actual listen-host LocalScript probe reproduces removal of the shared

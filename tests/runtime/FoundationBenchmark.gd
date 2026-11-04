@@ -31,9 +31,10 @@ func _initialize() -> void:
     super._initialize()
 
 func Run() -> void:
-    assert(WorldCount in [64, 512])
+    if not Check(WorldCount in [64, 512], "bounded world size"): return
     ProjectSettings.set_setting("godot_luau/network/replication_relevance", Relevance)
     await super.Run()
+    if Failed: return
     var File := "res://bench-" + Role + str(Index) + ".json"
     var Record: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(File))
     Record["Foundation"] = Supplement
@@ -112,7 +113,7 @@ func Script(Name: String, Source: String) -> void:
         var Track := Clip.add_track(Animation.TYPE_SCALE_3D)
         Clip.track_set_path(Track, NodePath("Visual"))
         Clip.track_insert_key(Track, 0, Vector3.ONE); Clip.track_insert_key(Track, 0.5, Vector3(0.98,0.98,0.98))
-        assert(ResourceSaver.save(Clip, "res://FoundationLoop.tres") == OK)
+        if not Check(ResourceSaver.save(Clip, "res://FoundationLoop.tres") == OK, "native animation fixture saved"): return
         Source = Source.replace("CharacterAutoLoads = false", "CharacterAutoLoads = true")
         Source = Source.replace("assert(#Payload == 1024)", """
 assert(#Payload == 1024)

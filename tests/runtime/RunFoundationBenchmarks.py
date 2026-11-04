@@ -69,6 +69,7 @@ def Main():
     Parser.add_argument('--trials', type=int, default=2)
     Parser.add_argument('--samples', type=int, default=64)
     Parser.add_argument('--configuration', choices=['ASanDebug', 'Release'], default='ASanDebug')
+    Parser.add_argument('--configurations', nargs='+', choices=['Baseline', 'Candidate'], default=['Baseline', 'Candidate'], help='Run independent retained configurations when a failed baseline prevents a paired comparison')
     Args = Parser.parse_args()
     Counts, Worlds = [int(Value) for Value in Args.counts.split(',')], [int(Value) for Value in Args.worlds.split(',')]
     if not Counts or any(Value not in [1, 16, 32] for Value in Counts) or not Worlds or any(Value not in [64, 512] for Value in Worlds) or not 1 <= Args.trials <= 2 or Args.samples not in [32, 64]:
@@ -84,9 +85,9 @@ def Main():
         if Args.configuration == 'Release' and (Host.get('Configuration') != 'Release' or Identity.get('Configuration') != 'Release'): raise ValueError('Release resource profile requires verified uninstrumented Release products/host')
         Configurations[Name] = {'Product': str(Product.resolve()), 'Identity': Identity}
     Runtime = Path(__file__).parent
-    Inputs = {'Configurations': Configurations, 'Configuration': Args.configuration, 'Host': Host, 'Hardware': platform.uname()._asdict(), 'Counts': Counts, 'Worlds': Worlds, 'Trials': Args.trials, 'Samples': Args.samples,
+    Inputs = {'Configurations': Configurations, 'SelectedConfigurations': Args.configurations, 'Configuration': Args.configuration, 'Host': Host, 'Hardware': platform.uname()._asdict(), 'Counts': Counts, 'Worlds': Worlds, 'Trials': Args.trials, 'Samples': Args.samples,
               'HarnessHashes': {Name: Hash(Runtime / Name) for Name in ['FoundationBenchmark.gd', 'RemoteDeliveryBenchmark.gd', 'CharacterDispatchProbe.gd', 'RunFoundationBenchmarks.py']},
-              'Scope': 'Headless ASan Debug mixed Fire/echo, Functions, anchored world selection, native Characters, approved rig animation, property/reparent/create/destroy and relevance churn; no simulated packet loss or slow-link profile. CPU includes the entire owned actor lifecycle. Native occupancy samples are not exact peaks. ENet pop_statistic counters include protocol/resends; see Godot ENetConnection documentation.'}
+              'Scope': 'Headless ' + Args.configuration + ' mixed Fire/echo, Functions, anchored world selection, native Characters, approved rig animation, property/reparent/create/destroy and relevance churn; no simulated packet loss or slow-link profile. CPU includes the entire owned actor lifecycle. Native occupancy samples are not exact peaks. ENet pop_statistic counters include protocol/resends; see Godot ENetConnection documentation.'}
     (Args.output / 'inputs.json').write_text(json.dumps(Inputs, indent=2))
     Results = []
     def Save(): (Args.output / 'measurements.json').write_text(json.dumps(Results, indent=2))
@@ -94,6 +95,7 @@ def Main():
         for World in Worlds:
             for Trial in range(Args.trials):
                 for Name in (['Baseline', 'Candidate'] if Trial % 2 == 0 else ['Candidate', 'Baseline']):
+                    if Name not in Args.configurations: continue
                     Resource = Resources()
                     # The prior 33-actor ASan run exhausted this worker. Require
                     # measured headroom; never repeat it as an unbounded probe.

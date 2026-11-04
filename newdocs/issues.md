@@ -71,6 +71,41 @@ four successful workflows and independently checked artifacts.
 | GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
 | GL-034 | P2 | Open; reproduced mixed-workload regression | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
 | GL-035 | P1 | Fixed in campaign; qualification pending | Empty-catalog listen Client can remove structural scope-root ancestor |
+| GL-036 | P2 | Closed on campaign within exercised profiles | Benchmark setup and assertions were omitted by Release GDScript |
+| GL-037 | P2 | Open; qualification repeatability gap | Follow-up full-native runs fail Character/legacy barriers; Function JSON publication race corrected |
+
+## GL-036: Release benchmark omits setup and checks
+
+**Status: corrected and checked on Windows Debug ASan and Release hosts.** The
+first uninstrumented Release smoke exits before readiness: extension loading
+and animation saving occur inside GDScript `assert` expressions, which Release
+omits. This is a fixture defect, not failure to load the qualified native DLL.
+Move those operations and input/sample/deadline checks into ordinary checked
+calls. Luau payload/API assertions remain intact. Corrected Debug and Release
+smokes pass both immutable products; subsequent Release comparisons retain
+functional failures rather than silently passing them. See the
+[release receipt](evidence/networking2-release-benchmark.json) and
+[local checkpoint](evidence/networking2-scopeguard-checkpoint.json).
+
+## GL-037: Full-native follow-up assertion failures
+
+**Status: OPEN; complete current-source sanitizer qualification is not established.**
+At `0428413`, Linux fails Movement's airborne resynchronization comparison;
+Windows fails its final native movement sample comparison and a Function
+adversarial-response barrier. At `cbd91d0`, Linux passes Character and Function
+groups but fails the legacy Dedicated `BothClients`/`BothClosed` barriers.
+Detection controls pass and these retained attempts report no unexpected
+sanitizer finding. Ordinary Windows/Linux native gates pass at both revisions;
+the earlier `532650f` sanitizer matrix passes. Preserve this counterevidence and
+the [failed receipts](evidence/networking2-sanitizer-follow-up-failures.json).
+
+Windows Function client stderr proves a separate fixture race: the attack JSON
+file exists while still empty, and the reader sets its one-shot flag before
+parsing fails. Stage the complete metadata in a temporary file, close it, then
+publish the final path. The corrected fixture passes six local ASan actors;
+this does not resolve or suppress the Character/legacy barrier failures.
+Do not classify the remaining failures as fixture-only or close them without
+attribution and complete fresh checks.
 
 ## GL-035: Empty-catalog listen Client can remove scope-root ancestor
 

@@ -22,6 +22,14 @@ var NativeHighBytes := 0
 var NativeHighCommands := 0
 var NativeObservationAvailable := false
 var Observations := 0
+var Failed := false
+
+func Check(Condition: bool, Label: String) -> bool:
+    if Condition: return true
+    Failed = true
+    printerr("[Network:DeliveryBenchmark] FAIL ", Label)
+    quit(1)
+    return false
 
 func Mark(Name: String) -> void:
     FileAccess.open("res://bench-" + Name, FileAccess.WRITE).store_string("ready")
@@ -29,7 +37,7 @@ func Mark(Name: String) -> void:
 func Until(Test: Callable, Label: String) -> void:
     var Deadline := Time.get_ticks_msec() + 120000
     while not Test.call():
-        assert(Time.get_ticks_msec() < Deadline, Label)
+        if not Check(Time.get_ticks_msec() < Deadline, Label): return
         await process_frame
 
 func Script(Name: String, Source: String) -> void:
@@ -83,8 +91,8 @@ func AllMarked(Prefix: String) -> bool:
     return true
 
 func Run() -> void:
-    assert(Count >= 1 and Count <= 64 and Samples >= 32 and Samples <= 256)
-    assert(GDExtensionManager.load_extension("res://godot_luau.gdextension") in [GDExtensionManager.LOAD_STATUS_OK, GDExtensionManager.LOAD_STATUS_ALREADY_LOADED])
+    if not Check(Count >= 1 and Count <= 64 and Samples >= 32 and Samples <= 256, "bounded workload inputs"): return
+    if not Check(GDExtensionManager.load_extension("res://godot_luau.gdextension") in [GDExtensionManager.LOAD_STATUS_OK, GDExtensionManager.LOAD_STATUS_ALREADY_LOADED], "extension loaded"): return
     Game = Node.new(); Game.name = "Game"; root.add_child(Game); current_scene = Game
     for Type in ["Players", "RunService", "ReplicatedStorage", "NetworkService"]:
         var Object: Node = ClassDB.instantiate(Type); Object.name = Type; Game.add_child(Object)
@@ -160,7 +168,7 @@ game:SetAttribute('Stats', game:GetService('HttpService'):JSONEncode({RTT = _G.B
     Recording = false
     var Stats: Dictionary = JSON.parse_string(str(Game.get_meta("Stats")))
     if Role == "client":
-        assert(Stats.RTT.size() == Samples and Stats.Fire.size() == Samples)
+        if not Check(Stats.RTT.size() == Samples and Stats.Fire.size() == Samples, "all measured echo and Fire samples recorded"): return
         Mark("done-" + str(Index))
         await Until(func(): return FileAccess.file_exists("res://bench-close"), "coordinated close")
     var Queue: Dictionary = Network.call("GetRemoteState", null)
