@@ -48,9 +48,11 @@ close on this unmerged branch. At `436850a`, the new catalog/getter/control
 corrections pass both platforms' core/native/full-native sanitizer matrices;
 GL-038 closes with linked evidence. All four current source profiles and both
 extracted packages independently verify at `436850a`.
-GL-034's [bounded maintenance correction](gl-034-catalog-proposal.md) restores
-one-peer frame cost close to the paired baseline; larger-peer Release admission
-and performance qualification remain pending.
+GL-034's [bounded maintenance correction](gl-034-catalog-proposal.md) is qualified
+at `436850a`: repeated current 1/16/32-peer Release worlds and separate impaired
+profiles pass. The [receipt](evidence/networking2-436850a-release-qualification.json)
+retains baseline failures and limits. GL-034 closes within those profiles;
+GL-039 records approximately seven-second structural convergence at 32 peers.
 This branch is not ready for automatic integration or distribution.
 
 GL-018 / GL-029 are integrated through normal merge

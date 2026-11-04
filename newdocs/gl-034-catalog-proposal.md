@@ -1,6 +1,14 @@
-# GL-034 bounded catalog maintenance proposal
+# GL-034 bounded catalog maintenance
 
-**Status: bounded implementation candidate; qualification pending.**
+**Status: implemented and qualified at `436850a` within the recorded profiles.**
+All four hosted workflows independently verify. Repeated current Release
+1/16/32-peer small/large worlds and separate loss/reordering/fairness trials
+pass; the [receipt](evidence/networking2-436850a-release-qualification.json)
+preserves exact identities, baseline failures and cleanup. The reproduced
+frame-cost regression is closed as GL-034. Approximately seven-second 32-peer
+structural convergence is tracked separately as GL-039. Broader campaign limits
+remain in the [measurement record](networking2-benchmarks.md).
+
 The campaign attachment explicitly authorizes bounded refactoring necessary for
 implementation and continuation without routine approval. The earlier approval
 question was unnecessary; no additional approval is assumed. ADR-011 remains
@@ -15,13 +23,13 @@ but the 512-object candidate still has 98–101 ms server frame p95 versus
 individual maxima reach 111–137 ms. See the
 [receipt](evidence/networking2-bd18580-asandebug-benchmark.json).
 
-`RefreshReplication()` currently validates every native registration, constructs
+At the earlier `bd18580` checkpoint, `RefreshReplication()` validates every native registration, constructs
 a fresh bounded catalog/index and swaps them together. `TickReplication()` calls
 it periodically; a published `QueueReplicationReparent()` calls it synchronously
 to preserve accepted structural transitions. Merely increasing the refresh
 interval, queue bounds or ten-second failure deadline would not fix this cost.
 
-## Proposed bounded change
+## Implemented bounded change
 
 1. Reuse the private catalog/index in place, marking records with a checked sweep
    generation. Suspend new peer selection while a sweep is unfinished; already
@@ -46,10 +54,10 @@ interval, queue bounds or ten-second failure deadline would not fix this cost.
    destruction using the established owner-aware lifecycle. Keep the existing
    scheduler, native authority, delivery queues, wire format and dependencies.
 
-This candidate extracts the existing record-validation path and adds a small
+This implementation extracts the existing record-validation path and adds a small
 owned sweep cursor/generation/stage. It is larger than the already
 published 14-line runtime patch. No unrelated header extraction, VM change,
-transport replacement or public API migration is proposed.
+transport replacement or public API migration is included.
 
 ## Acceptance facts
 

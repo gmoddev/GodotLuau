@@ -3,6 +3,70 @@
 These experiments do not establish 64-player support or a general speedup.
 Runtime/source qualification and performance evidence are separate gates.
 
+## Release qualification — 436850a
+
+The [current receipt](evidence/networking2-436850a-release-qualification.json)
+compares exact main `9f52b27` with native fingerprint `770c9ff5...`, using the
+independently qualified current Windows Release adapter and the same admitted
+Release host/compiler. Each measured configuration uses 16 warmups, 64 samples
+and two interleaved trials. Sixteen candidate configurations and twelve baseline
+configurations pass: 392 successful actor process runs. Three baseline warmup
+failures remain failures. Successful cases have zero stderr files, report files,
+candidate replication failures and resource-guard aborts.
+
+| Peers / objects | Main server frame p95, trials 0/1 | Candidate server frame p95, trials 0/1 | Candidate maximum final convergence, trials 0/1 |
+| --- | --- | --- | --- |
+| 1 / 64 | 8.487 / 8.444 ms | 8.471 / 8.455 ms | 0.233 / 0.101 ms |
+| 1 / 512 | 8.444 / 8.450 ms | 8.502 / 8.441 ms | 683.273 / 691.569 ms |
+| 16 / 64 | 9.116 / 8.834 ms | 8.757 / 9.336 ms | 125.170 / 133.302 ms |
+| 16 / 512 | Warmup fails | 9.436 / 9.169 ms | 591.485 / 466.716 ms |
+| 32 / 64 | 17.270 / 17.279 ms | 11.444 / 10.865 ms | 6,657.999 / 6,608.137 ms |
+| 32 / 512 | Warmup fails | 12.133 / 11.122 ms | 6,958.075 / 6,833.060 ms |
+
+This closes GL-034's reproduced frame/CPU regression within the exercised
+profiles. All current large-world candidate trials admit and converge under the
+unchanged queue/native/time limits. Baseline 16/32-peer large worlds fail all-peer
+warmup with invalid-target errors; the separate candidate-only trials are not
+paired speedups. The 32-peer convergence result is a material limitation, tracked
+as GL-039. At 64 objects, baseline final convergence is 0.096–0.399 ms. Preserve
+required reparent ordering while investigating that difference.
+
+In the paired 32-peer small world, whole-server user CPU is 3.844/3.547 seconds
+for the candidate versus 7.891/9.422 seconds for main; measured sent bytes are
+28.96/30.01 MB versus 96.11/94.62 MB. These are workload-specific observations:
+CPU includes the entire actor lifecycle and ENet bytes include resends/protocol
+traffic. One-peer sent bytes increase, so this is no general bandwidth claim.
+Maximum observed Release sweep turn is 0.762 ms across the candidate cases;
+this excludes synchronous affected reparent capture, which frame times include.
+
+Separate actual ENet impaired-link pairs pass at one peer/512 objects and
+16 peers/64 objects. A task-owned UDP proxy drops every seventeenth datagram and
+adds 40-ms delay with 0/35/70-ms jitter to the last client. All eight configurations
+observe intentional loss and reordered forwards with zero overflow. At 16 peers,
+the candidate's 15 healthy peers have maximum per-peer RTT p95 of 33.426/33.432 ms,
+while the impaired peer has 516.711/516.563 ms; all 64 measured callbacks and
+eight Function calls per client complete. This establishes finite progress in
+this workload, not a general starvation bound. A separate impaired 16-peer/512
+baseline fails warmup and is retained without a candidate comparison.
+
+Both sealed coordinator installations use exact `cf1628de...`, fixed numeric
+profiles, fresh run IDs and checked nested/outer owned Jobs. The first window's
+nonzero result preserves baseline failures; it is not relabeled success. A fresh
+six-minute follow-up supplies the missing supported-world fairness comparison
+without mutating the first input seal. Final census finds zero owned processes
+or listeners. Collection/transfers complete before checked early release at
+11:26:11 UTC, inside the 11:08:48–11:28:48 reservation. Raw archive 10 contains
+19,469 members/67,818,845 bytes; ZIP integrity passes and SHA-256 is
+`886d2c136c1d2998a7a4adc8684c80879a99a75bfba8854b26e860bc2018dec3`.
+It retains actual fixtures, reports, failed logs, helpers, identities and journals.
+
+Release `MEMORY_STATIC` returns zero and is unavailable; it does not show zero
+memory growth. Object/node counters, sampled native occupancy, staged payload
+bytes and machine commit headroom are recorded. Allocation rates, total process
+RSS, long-duration reconnect storms, broader 32-peer impairment and graphical
+behavior remain separate coverage. The current full native sanitizer and
+four-profile/package receipts establish their own exact configurations.
+
 ## Bounded sweep measurements — 436850a
 
 The [fresh paired receipt](evidence/networking2-436850a-asandebug-benchmark.json)
@@ -62,9 +126,8 @@ candidate now uses the campaign's explicit bounded-refactor authorization;
 the earlier approval question was unnecessary. Its new implementation remains
 unqualified and is not substituted into these measurements.
 
-The current Release and larger-peer measurements remain pending. Another chat's
-coordinated native-test window temporarily holds new shared-worker performance
-runs; hosted qualification continues independently.
+These earlier measurements preceded the qualified current Release/larger-peer
+results above; they remain negative evidence for that earlier source.
 
 ## Release follow-up
 
@@ -164,10 +227,10 @@ candidates, skip their gates or grant publication. It avoids waiting for a
 complete candidate build merely to obtain the executable needed for a bounded
 Release memory profile.
 
-Remaining performance coverage includes the current native correction in Release,
-successful larger-world scalability, an impaired-link profile, mixed traffic
-fairness/starvation, more sustained churn and repeated
-disconnect/reconnect storms. Phase 2/3 correctness fixtures cover deterministic
+Current Release/larger-world and bounded impaired-link/fairness results are
+recorded above. Remaining coverage includes longer sustained churn, repeated
+disconnect/reconnect storms, broader impairment and allocation instrumentation.
+Phase 2/3 correctness fixtures cover deterministic
 WouldBlock, independent healthy-peer progress, reconnect and callback-driven
 cancellation; those facts are not substituted for performance measurements.
 

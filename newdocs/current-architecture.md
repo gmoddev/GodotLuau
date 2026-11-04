@@ -442,8 +442,8 @@ The development branch `foundation/networking-2` adds the
 finite request/handler deadlines, full-width correlation, existing native
 publication/session admission, exact serving-task cancellation and protected
 terminal completion. The [campaign journal](networking-foundation-2-work.md)
-separates executed development coverage, retained failures and pending platform
-qualification. This branch is unmerged; statements below about earlier main
+separates exact-revision qualification, retained failures and broader coverage
+limits. This branch is unmerged; statements below about earlier main
 integration remain historical scope, not qualification of this candidate.
 
 The same branch implements the opt-in [ADR-011 projection and batching
@@ -454,16 +454,21 @@ reliable structural groups, cached property snapshots and explicit application
 ACKs are distinct from native transport ACKs. Runtime physics carries view
 generation/session identity; unanchored bodies remain global. This is a narrow
 runtime anchored-leaf-Part slice, disabled by default, with matching-build/setting
-requirements and explicit Remote-reference restrictions. Full campaign and
-performance qualification remain pending; the journal records actual coverage.
+requirements and explicit Remote-reference restrictions. At `436850a`, all four
+hosted workflows and targeted repeated 1/16/32-peer Release workloads verify;
+broader campaign coverage remains distinct. The journal records actual limits.
 GL-031 fixes static-parent late join; GL-032 adds the missing ObjectValue Instance
 getter/setter without broadening scalar conversion or reflection authority.
-The GL-034 candidate extracts the existing record validator into bounded private
+The GL-034 implementation extracts the existing record validator into bounded private
 cache/index sweep turns and refreshes only affected published reparent closures.
 New peer selection waits for sweep completion while accepted immutable frames
 drain; native identity/visibility is revalidated before new admission. Sweep state
-retires with NetworkService reset. This scheduling change is under qualification;
-the earlier `bd18580` cross-platform proof does not qualify it automatically.
+retires with NetworkService reset. GL-034 closes with exact current
+[runtime](evidence/networking2-436850a-runtime-verification.json),
+[candidate](evidence/networking2-436850a-candidate-verification.json) and
+[Release](evidence/networking2-436850a-release-qualification.json) receipts.
+GL-039 records approximately seven-second structural convergence in the 32-peer
+burst workload; no general latency or 64-player guarantee is established.
 
 Main includes the qualified Phase 1 native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen

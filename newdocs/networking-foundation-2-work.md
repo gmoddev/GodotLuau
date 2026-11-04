@@ -1,5 +1,42 @@
 # Networking Foundation 2 campaign journal
 
+## GL-034/037 qualification complete within recorded profiles — 436850a
+
+GL-037 remains closed by its corrected fixture/actual native matrix. GL-034 now
+closes on this unmerged campaign: the bounded catalog source passes all four
+hosted workflows and current repeated Release 1/16/32-peer small/large workloads.
+The [Release receipt](evidence/networking2-436850a-release-qualification.json)
+independently checks 16 passing candidate configurations, twelve passing baseline
+configurations and three retained baseline large-world warmup failures. There
+are 392 actor runs in successful configurations, zero successful-case stderr
+files, zero candidate replication failures and no resource-guard/report failures.
+No comparison is invented where the baseline failed.
+
+Separate real ENet loss/reordering pairs pass at one peer/512 objects and
+16 peers/64 objects, with one impaired peer alongside 15 healthy peers in the
+latter. The [measurement record](networking2-benchmarks.md#release-qualification--436850a)
+preserves frame, CPU, wire, convergence and memory-observation limits. GL-039
+records the measured 6.58–6.96-second structural convergence at 32 peers; it is
+not hidden by the frame-cost closure. Broader long-duration/graphical/allocation
+coverage remains distinct from this targeted qualification.
+
+The worker reservation starts 11:08:48 UTC with a hard 11:28:48 bound. Current
+Release products are verified/staged/sealed before execution. Window
+`2b6ef821-205c-4989-9f68-f154b82cb1de` retains failed baseline cases and retires
+all Jobs. Fresh sealed follow-up
+`b7cdd6fc-5325-4bec-9de0-c0525c98a591` passes the supported-world fairness pair
+and skips its unnecessary candidate-only repeat. Final census at 11:24:10 finds
+zero owned processes/listeners; archive/transfers exit before checked release at
+11:26:11. Raw archive SHA-256 is
+`886d2c136c1d2998a7a4adc8684c80879a99a75bfba8854b26e860bc2018dec3`,
+19,469 members with ZIP integrity verified. Earlier GL-038 ASan failure and the
+subsequent current v31 proof are retained in the same archive.
+
+This final checkpoint changes documentation/evidence only; qualified runtime
+remains `436850a` / native fingerprint `770c9ff5...`. Main, dependency pins,
+admitted host patch and release/updater controls remain unchanged. The campaign
+stays unmerged. No further worker job or broad refactor is queued.
+
 ## Complete current CI and package verification — 436850a
 
 The [candidate workflow](https://github.com/gmoddev/GodotLuau/actions/runs/41807864382)

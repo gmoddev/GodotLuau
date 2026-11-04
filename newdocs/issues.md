@@ -69,11 +69,31 @@ four successful workflows and independently checked artifacts.
 | GL-031 | P2 | Closed on campaign branch; qualified at 532650f | Static prerequisite seeding restores runtime-child late join |
 | GL-032 | P2 | Closed on campaign branch; qualified at 532650f | ObjectValue Instance/nil bridge and native reference projection |
 | GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
-| GL-034 | P2 | Open; one-peer correction verified, wider qualification pending | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
+| GL-034 | P2 | Closed on unmerged campaign; qualified at 436850a | Bounded catalog maintenance removes the reproduced mixed-world frame/CPU regression |
 | GL-035 | P1 | Closed on unmerged campaign; native matrix verified | Empty-catalog listen Client can remove structural scope-root ancestor |
 | GL-036 | P2 | Closed on campaign within exercised profiles | Benchmark setup and assertions were omitted by Release GDScript |
 | GL-037 | P2 | Closed on unmerged campaign; native/sanitizer matrix verified | Follow-up full-native runs fail Character/legacy barriers; fixture races corrected |
 | GL-038 | P1 | Closed on unmerged campaign; verified at 436850a | Live ObjectValue can convert a destroyed target through a stale instance binding |
+| GL-039 | P3 | Open; measured performance limitation | 32-peer structural burst takes about seven seconds to converge |
+
+## GL-039: Structural convergence under a 32-peer burst
+
+**Status: OPEN; measured performance limitation, not a reproduced ordering or
+admission failure.** At `436850a`, both 32-peer Release trials pass the mixed
+workload in 64- and 512-object worlds with zero replication failures. Final
+structural convergence nevertheless takes 6.58–6.96 seconds after coordinated
+close; the 64-object baseline takes 0.096–0.399 ms. Required reparent barriers
+remain ordered. Frame p95 improves in that paired small world, so frame cost
+and structural convergence must be assessed separately.
+
+The [receipt](evidence/networking2-436850a-release-qualification.json) retains
+all cases, source/product identities, wire/queue diagnostics and actual cleanup.
+Convergence stays inside the existing ten-second failure policy in these runs.
+No exact bottleneck attribution or general latency guarantee follows from this
+measurement. A follow-up should profile barrier production/draining and the
+coalesced tail before selecting an optimization; preserve every required
+transition, native admission, fairness and existing limits. Do not increase
+limits or drop barriers to improve this number.
 
 ## GL-038: ObjectValue read after target destruction
 
@@ -86,7 +106,8 @@ unexpected reports. The [receipt](evidence/networking2-436850a-runtime-verificat
 preserves required log/source/product/instrumentation hashes and separately lists
 two absent ephemeral GL-003 mailboxes. All four source profiles and both extracted
 packages also [verify](evidence/networking2-436850a-candidate-verification.json).
-Larger-peer performance/admission remains pending under GL-034.
+Larger-peer performance/admission also verifies within the GL-034 profiles below;
+GL-039 records the measured convergence limitation.
 
 Historical reproduced failure:
 The strengthened GL-034 native fixture retains an ObjectValue, destroys its
@@ -202,10 +223,26 @@ protocol remains unmerged.
 
 ## GL-034: Opt-in relevance mixed-world performance regression
 
-**Status: OPEN; one-peer frame-cost correction verified at `436850a`; current
-larger-peer/Release admission remains pending.** Current four-profile/package,
-core/native and full-native sanitizer matrices independently verify. Fresh paired
-512-object Windows ASan trials now give candidate frame p95 9.61/9.98 ms versus
+**Status: CLOSED on the unmerged campaign at `436850a`, within the documented
+qualification profiles.** Current four-profile/package, core/native and
+full-native sanitizer matrices independently verify. The
+[Release receipt](evidence/networking2-436850a-release-qualification.json)
+establishes 16 passing candidate configurations: repeated 1/16/32-peer,
+64/512-object worlds, plus impaired one-peer/512-object and 16-peer/64-object
+workloads. There are zero candidate replication failures, unexpected report
+files, successful-case stderr files or resource-guard aborts. Twelve baseline
+configurations pass; three unchanged-baseline large-world warmup failures are
+retained separately. Those failures do not produce paired speedup claims.
+
+Release candidate server frame p95 is 8.44–9.44 ms at 1/16 peers and
+10.87–12.14 ms at 32 peers. All four hosted workflows independently verify at
+this source. See the [measurement record](networking2-benchmarks.md) for exact
+trials, CPU/wire/convergence data and the GL-039 follow-up. This closes the
+reproduced catalog frame-cost regression; it does not establish general
+64-player, graphical or long-duration performance qualification.
+
+The earlier fresh paired
+512-object Windows ASan trials give candidate frame p95 9.61/9.98 ms versus
 main 9.34/9.45 ms, with zero replication failures. Final client structural
 convergence is 711.104/84.991 ms, an explicit asynchronous tradeoff. All seven
 strengthened relevance actors pass locally, including unfinished-sweep mutation,
@@ -222,9 +259,9 @@ qualify scalability. The [measurement record](networking2-benchmarks.md) retains
 resource-blocked larger configurations separately. Raw archive 6 SHA-256 is
 `f183c5a502d82e6dea71ea4bff4c8ecd9ab5000f2785b9d8c62de2aa32ca00e3`.
 
-Candidate hypotheses include the shared Client write-boundary world scan and
-catalog refresh work. Added focused timings and a denial-order probe must
-establish attribution before a performance fix is claimed. Native authority,
+Initial candidate hypotheses included the shared Client write-boundary world
+scan and catalog refresh work. Focused timings and a denial-order probe were
+required to establish attribution. Native authority,
 reliable structural ordering, resource bounds and test assertions remain required.
 
 Profiling excludes the write-boundary hypothesis and attributes the dominant
@@ -233,8 +270,9 @@ cost to catalog refresh; early exclusion and ancestry reuse already reduce the
 seconds/280 calls, without establishing acceptable paired performance. Resume
 corrections avoid full refresh on unpublished reparent, measure periodic cadence
 from refresh completion, and start the unchanged peer submission budget after
-maintenance. Published barriers still refresh synchronously. New paired
-measurements, larger-world admission and complete qualification remain required.
+maintenance. Published barriers still refresh synchronously. At that checkpoint,
+new paired measurements, larger-world admission and full qualification remained
+required; the current proof above supplies the targeted acceptance facts.
 
 A bounded maintenance candidate now reuses source records/index memberships
 across 64-item/two-ms cooperative turns. Selection waits for a completed sweep;
@@ -242,8 +280,8 @@ accepted frames still drain. Published reparent refreshes its bounded affected
 closure, and native unregistration removes its cache immediately. Expanded actual
 ENet coverage passes mutation/reference destruction after cursor advance and
 service replacement during unfinished work at `436850a`. The original campaign
-explicitly authorizes this necessary bounded refactoring. GL-034 stays open for
-the larger-peer Release and package checks described above.
+explicitly authorizes this necessary bounded refactoring. Current qualification
+above supersedes the earlier pending state while preserving its negative results.
 
 ## GL-032: ObjectValue lacks an Instance bridge
 

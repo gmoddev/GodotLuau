@@ -226,9 +226,14 @@ GER2 or introducing a second Remote system. ObjectValue now has a focused live
 Instance/nil getter/setter; its projection encodes authorized native identity,
 normalizes unavailable weak targets to nil, and preserves dependency closure.
 
-Remaining qualification includes larger-world cost, mixed-traffic fairness,
-loss/reordering workloads, server service replacement, mixed-mode rejection,
-and full graphical behavior. Static-place removal history before a peer joins
+Exact `436850a` qualification includes the four hosted workflows, actual server
+service replacement during an unfinished sweep, repeated 1/16/32-peer Release
+small/large worlds, and separate bounded loss/reordering/fairness workloads.
+See the [measurement record](networking2-benchmarks.md) and linked receipts.
+GL-034's frame-cost correction is qualified within those profiles; GL-039 retains
+approximately seven-second 32-peer structural convergence. Remaining coverage
+includes broader impairment/churn, mixed-mode rejection and full graphical
+behavior. Static-place removal history before a peer joins
 is not introduced by this runtime-only slice. Unsupported arbitrary attached
 script getters and oversized groups fail explicitly. No general performance,
 full world paging, native ACK retirement or 64-player support is claimed.
