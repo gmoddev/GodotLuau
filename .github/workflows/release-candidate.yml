@@ -116,6 +116,17 @@ jobs:
         run: python tests/runtime/BuildSanitizedGodot.py --output "$RUNNER_TEMP/remote-host" --remote-admission --configuration "${{ matrix.Configuration }}" --jobs 2 --timeout 7000
       - name: Source-built production products and existing complete qualification
         run: python tools/ReleaseCandidate.py build --revision "$GITHUB_SHA" --configuration "${{ matrix.Configuration }}" --godot "$RUNNER_TEMP/godot" --remote-host "$RUNNER_TEMP/remote-host/remote-host.json" --output "$RUNNER_TEMP/profile"
+      - name: Export qualified Windows Release host for bounded worker benchmarks
+        if: ${{ success() && matrix.Platform == 'Windows' && matrix.Configuration == 'Release' }}
+        run: python tests/runtime/ExportRemoteHost.py --manifest "$RUNNER_TEMP/remote-host/remote-host.json" --output "$RUNNER_TEMP/benchmark-host"
+      - name: Retain qualification-only benchmark host
+        if: ${{ success() && matrix.Platform == 'Windows' && matrix.Configuration == 'Release' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-host-Windows-Release
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{ runner.temp }}/benchmark-host/*
       - name: Retain profile products and complete diagnostics
         if: ${{ always() }}
         uses: actions/upload-artifact@v4

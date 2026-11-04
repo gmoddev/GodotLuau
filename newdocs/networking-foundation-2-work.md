@@ -1,5 +1,28 @@
 # Networking Foundation 2 campaign journal
 
+## Hosted checkpoint and mixed measurement follow-up
+
+Implementation checkpoint `532650f926723b588b04559ec242d8fa20e07239` is pushed;
+main remains `9f52b273cf977dce9c0541ff718cfb44dfb54c31`. Fresh core workflow
+`41771508468` passes 85 cases on Windows/Linux; candidate `41771581733` also
+passes Linux core ASan/LSan. Linux ordinary native `41771508432` and Linux
+full-native sanitizer `41771578913` pass their complete exercised matrices;
+other profiles were still running at this checkpoint. Do not infer their
+outcomes from the successful Linux records. Baseline nonpublishing candidate
+`41773880784` is dispatched against exact main to obtain comparable Release
+products; no main source is modified.
+
+The [mixed benchmark method](networking2-benchmarks.md) adds actual worlds,
+Character/animation, Functions, property/structural and relevance churn.
+One-peer 64/512-world comparisons pass both products in two interleaved trials
+of 64 samples each. All sixteen/32-peer ASan configurations are explicitly
+resource-blocked before launch, with about 9 GB available commit. The first
+smoke attempt correctly rejected a TYPE_VALUE animation track; switch the
+fixture to the existing approved TYPE_SCALE_3D presentation contract. Do not
+weaken GL-007 animation policy. Exporting a qualified, nonpublishing Release host
+provides a lighter experiment profile without a dependency/host patch or machine
+configuration change. Full campaign qualification remains incomplete.
+
 ## Qualified Phase 1 checkpoint — 2026-11-04 UTC
 
 GL-030 is QUALIFIED at `2296c966937223994a94cc2f15af29e9f829557b`, native
