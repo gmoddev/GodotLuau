@@ -107,6 +107,15 @@ this does not resolve or suppress the Character/legacy barrier failures.
 Do not classify the remaining failures as fixture-only or close them without
 attribution and complete fresh checks.
 
+Resume investigation identifies `RemoteFunction not ready` in the retained
+Linux legacy client: its startup barrier checked only Event publication. The
+focused correction requires both endpoints. Character functional transport now
+uses the existing unthrottled profile in 3D as well as 2D, retries the final pose
+until the observer comparison completes, and first measures near-ceiling ascent
+before testing a proposal larger than remaining headroom. The old 0.2-unit
+proposal could still be valid. Production Character authority is unchanged;
+fresh native/sanitizer results are required before closing this repeatability gap.
+
 ## GL-035: Empty-catalog listen Client can remove scope-root ancestor
 
 **Status: confirmed runtime authority defect; focused correction being qualified.**
@@ -144,6 +153,15 @@ Candidate hypotheses include the shared Client write-boundary world scan and
 catalog refresh work. Added focused timings and a denial-order probe must
 establish attribution before a performance fix is claimed. Native authority,
 reliable structural ordering, resource bounds and test assertions remain required.
+
+Profiling excludes the write-boundary hypothesis and attributes the dominant
+cost to catalog refresh; early exclusion and ancestry reuse already reduce the
+512-object ASan diagnostic refresh cost from about 81 seconds/256 calls to 23
+seconds/280 calls, without establishing acceptable paired performance. Resume
+corrections avoid full refresh on unpublished reparent, measure periodic cadence
+from refresh completion, and start the unchanged peer submission budget after
+maintenance. Published barriers still refresh synchronously. New paired
+measurements, larger-world admission and complete qualification remain required.
 
 ## GL-032: ObjectValue lacks an Instance bridge
 

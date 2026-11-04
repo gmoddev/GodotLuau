@@ -141,6 +141,13 @@ Per-peer application admission is 256 KiB/256 messages; service totals are 16 Mi
 encoded payload bounds; source/view/commit metadata and Godot allocations are
 additional bounded state, not part of a claimed 16 MiB process-memory ceiling.
 
+Periodic catalog scans are separated by at least 100 ms measured from scan
+completion. The existing per-tick eight-peer/four-ms submission budget starts
+after catalog maintenance; it does not bound that scan's frame cost. An edit to
+an identity absent from every accepted peer view needs no synchronous reparent
+barrier: its eventual enter snapshot captures the latest parent. Published
+reparent transitions retain their synchronous refreshed, ordered admission.
+
 Planned state advances at application queue acceptance; Known advances only at
 successful native handoff. Materialized records mean the exact peer/session
 reported cumulative application of an accepted sequence. An ACK is not evidence

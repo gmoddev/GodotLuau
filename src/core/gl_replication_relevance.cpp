@@ -498,6 +498,11 @@ bool NetworkService::QueueReplication(int PeerValue, const std::vector<std::pair
 
 void NetworkService::QueueReplicationReparent(uint64_t Id) {
     using namespace GLReplication;
+    // No accepted view can observe this transition. Its eventual enter captures
+    // the current parent without rebuilding the catalog once per unpublished edit.
+    bool Published = false;
+    for (const auto& Entry : Replication.Peers) if (Entry.second.Planned.count(Id)) { Published = true; break; }
+    if (!Published) return;
     if (!RefreshReplication()) { Replication.Failed = true; return; }
     std::vector<int> Failures;
     for (auto& Entry : Replication.Peers) {
@@ -638,11 +643,11 @@ void NetworkService::TickReplication() {
         return;
     }
     if (!Replication.Enabled || mode != 1 || !RemoteServiceActive()) return;
-    const uint64_t Identity = uint64_t(get_instance_id()), Now = RemoteNow(), Started = Time::get_singleton()->get_ticks_usec();
+    const uint64_t Identity = uint64_t(get_instance_id()), RefreshNow = RemoteNow();
     try {
-        if (!Replication.LastRefresh || Now - Replication.LastRefresh >= 100000) {
+        if (!Replication.LastRefresh || RefreshNow - Replication.LastRefresh >= 100000) {
             if (!RefreshReplication()) Replication.Failed = true;
-            Replication.LastRefresh = Now;
+            Replication.LastRefresh = RemoteNow();
         }
         for (auto Iterator = Replication.Peers.begin(); Iterator != Replication.Peers.end();) {
             if (!peer_seq_uid.count(Iterator->first) || peer_seq_uid.at(Iterator->first) != Iterator->second.Session || !_mp()->get_peers().has(Iterator->first) || RemotePendingFailures.count(Iterator->first)) {
@@ -659,6 +664,9 @@ void NetworkService::TickReplication() {
             if (Replication.Peers.size() >= MaximumPeers) { QueueRemoteFailure(Entry.first, Entry.second); continue; }
             Peer Value; Value.Session = Entry.second; Replication.Peers.emplace(Entry.first, std::move(Value));
         }
+        // The peer submission budget excludes catalog maintenance. Start it
+        // here so an expensive refresh cannot consume every peer's turn.
+        const uint64_t Now = RemoteNow(), Started = Time::get_singleton()->get_ticks_usec();
         std::vector<int> Failures;
         for (size_t Turn = 0; Turn < std::min(size_t(8), Replication.Peers.size()); ++Turn) {
             auto Iterator = Replication.Peers.upper_bound(Replication.Cursor);

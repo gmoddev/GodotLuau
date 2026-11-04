@@ -1,5 +1,43 @@
 # Networking Foundation 2 campaign journal
 
+## Resumed qualification — 2026-11-04
+
+At resume, `6ae1b9` core CI passes; native/full-native sanitizer qualification
+is running and its candidate is queued behind `cbd91d0`. The latter candidate
+has passed Linux Debug/Release and Windows Debug; Windows Release is running.
+These partial results are not complete acceptance.
+
+Retained Linux legacy stderr identifies `RemoteFunction not ready`: the fixture
+waited only for Event publication before invoking the separately published
+Function. Require both identities with an explicit wall-clock deadline. Character
+functional profiles previously disabled ENet unreliable throttling only in 2D;
+apply the same carrier profile in 3D, retaining the impaired latency proxy. Retry
+the final positive movement sample until the observer comparison completes.
+The airborne negative test must first approach the ascent ceiling, then request
+more than its remaining headroom; the previous 0.2-unit proposal could legally
+fit below that ceiling. Keep the exact no-movement comparison and strengthen
+the measured precondition. These fixture corrections need fresh execution.
+
+GL-034 source inspection finds three narrow costs: unpublished reparent edits
+unnecessarily rebuild the full catalog, refresh cadence starts before a costly
+refresh, and that refresh consumes the peer submission budget. Skip rebuilding
+only when no accepted peer view contains the identity, measure the next refresh
+interval from completion, and start the unchanged 4-ms/eight-peer submission
+budget after catalog maintenance. Published reparent barriers, admission bounds
+and native authority remain intact. Measurements and full qualification follow;
+GL-034/037 stay open until their acceptance evidence exists.
+
+The first worker run of this patch passes 41 Windows Debug ASan actors: 20
+Character (143.375 s), eight legacy regression (57.937 s), seven relevance
+(28.765 s) and six Functions (18.797 s), with no unexpected ASan report. Native
+fingerprint is `554af399b8ea76a9934c9d3b7d1bc3d398b9be3099f103f6ff2bb81226d8a728`;
+DLL SHA-256 is `851e48e7b0566e0b0a0c60d1bdfa5f3de1cd6bfaf9bfdd65b30643b1a6fadc90`.
+Source snapshot `v26` SHA-256 is
+`311557ff04bb0ddc89d7a1969eaab32e59669c448759f32428f0e4132d183859`.
+Actual harness hashes and per-actor logs are retained in the worker's unique
+`focused-v26-first` output. Paired 64/512-object ASan measurements are running.
+This focused result is not a substitute for hosted Windows/Linux qualification.
+
 ## Campaign checkpoint — 2026-11-04
 
 Final evidence follow-up: Windows full-native ASan at `cbd91d0` completes all
