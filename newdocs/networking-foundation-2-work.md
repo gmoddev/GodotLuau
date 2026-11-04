@@ -1,6 +1,68 @@
 # Networking Foundation 2 campaign journal
 
+## Current native matrix verified — 436850a
+
+All current [core](https://github.com/gmoddev/GodotLuau/actions/runs/41807722427),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41807722519), and
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41807859581)
+workflows pass Windows/Linux. Independent frozen-source verification establishes
+85 core cases and 131 native actors per profile, 23 Windows/24 Linux sanitizer
+checks, and 1,161 native plus three core instrumented units per platform.
+Required captured logs and source/harness/product/host/compiler identities verify.
+The [receipt](evidence/networking2-436850a-runtime-verification.json) separately
+records two absent ephemeral GL-003 mailbox hashes. No unexpected sanitizer
+finding occurs. GL-038 closes at this exact unmerged source; GL-037 remains closed.
+
+The [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41807864382)
+four-profile/package matrix still runs. GL-034's one-peer frame correction is
+measured, but larger-peer Release acceptance remains pending. The branch stays
+unmerged with distribution disabled. No further runtime changes are justified
+by the established current acceptance facts unless qualification exposes a new
+failure.
+
+## v31 worker qualification — 436850a
+
+The explicitly released five-minute worker window completes successfully: two-job
+build in 25.25 s, all seven strengthened relevance actors, then all eight paired
+one-peer 64/512-object ASan configurations. Native fingerprint is `770c9ff5...`;
+DLL SHA-256 is `47cf79e9faa6fd7eb90479ec1a91dee2ea4932ccacc02533297ad4aee792ea6d`.
+Both fresh coordinator profiles exit zero without timeout/output errors; outer
+owned Jobs are checked empty and window
+`4421afe7-792d-4ed6-ac9a-584e8a73e0f6` retires before release to Studio at 09:46 UTC.
+No additional worker job is queued.
+
+At 512 objects, fresh candidate frame p95 is 9.61/9.98 ms versus main 9.34/9.45 ms,
+with no replication failure. Maximum sweep turn is 2.706/2.813 ms; final client
+structural convergence is 711.104/84.991 ms. Preserve the convergence tradeoff
+and changed worker background context in the
+[measurement record](networking2-benchmarks.md#bounded-sweep-measurements--436850a)
+and [receipt](evidence/networking2-436850a-asandebug-benchmark.json). This resolves
+the reproduced one-peer frame-cost symptom, but GL-034 remains open pending
+current complete matrix and larger-world admission/Release qualification.
+
 ## Bounded catalog first execution — GL-038
+
+Both `712ea47` full-native sanitizer jobs now pass and independently verify:
+23 Windows/24 Linux checks, 85 core cases and 131 native actors per platform,
+1,161 native plus three core instrumented units. All required captured logs and
+source/harness/product/host identities verify; the two absent ephemeral GL-003
+mailbox hashes are recorded in the
+[receipt](evidence/networking2-712ea47-sanitizer-verification.json). No unexpected
+report occurs in this corrected matrix. Ordinary Linux's physical-owner failure
+remains separate evidence, so the campaign is not qualified by this pass alone.
+
+The subsequent source-control correction is `436850aca89e87e6ee8bc2e520740318ba0be27c`,
+snapshot v31 / native fingerprint `770c9ff5...`. Fresh
+[core](https://github.com/gmoddev/GodotLuau/actions/runs/41807722427),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41807722519),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41807859581)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41807864382)
+workflows are running/queued. The next worker reservation is explicitly retained
+after Studio Recovery04 and Steward's bounded tail; v31 preparation is staged,
+with no uncoordinated execution. Other chats report retiring stale SSH child
+processes while preserving service/configuration and live sessions; new paired
+measurements must record their own fresh resource context rather than treating
+old absolute timings as a controlled before/after across that environment change.
 
 At `712ea47`, Linux ordinary native qualification passes the expired-value and
 new service-replacement assertions, but fails the authorized client-physics

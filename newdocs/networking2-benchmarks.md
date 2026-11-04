@@ -3,6 +3,39 @@
 These experiments do not establish 64-player support or a general speedup.
 Runtime/source qualification and performance evidence are separate gates.
 
+## Bounded sweep measurements — 436850a
+
+The [fresh paired receipt](evidence/networking2-436850a-asandebug-benchmark.json)
+records eight passing one-peer Windows Debug ASan configurations, 64 measured
+samples/16 warmups, with native fingerprint `770c9ff5...`, the same admitted
+host/compiler and exact main baseline. The separately sealed coordinator first
+passes all seven strengthened relevance actors, then both paired world sizes.
+
+| Objects | Product | Server frame p95, trials 0/1 | Fire/echo RTT p95, trials 0/1 |
+| --- | --- | --- | --- |
+| 64 | Main | 9.17 / 9.55 ms | 33.71 / 26.11 ms |
+| 64 | Candidate | 9.51 / 9.32 ms | 34.07 / 33.30 ms |
+| 512 | Main | 9.34 / 9.45 ms | 34.07 / 25.67 ms |
+| 512 | Candidate | 9.61 / 9.98 ms | 33.08 / 33.98 ms |
+
+At 512 objects, measured sweep work totals 0.751/0.742 seconds across 761/766
+turns; maximum turn is 2.706/2.813 ms. These counters now describe bounded turns,
+not whole rebuilds, and exclude synchronous affected barrier capture. Final
+client structural convergence is 711.104/84.991 ms, versus baseline
+0.463/0.409 ms; the test waits for the exact final value and records that latency.
+No replication failure or unexpected ASan report occurs. This establishes the
+one-peer frame-cost correction, with asynchronous convergence as an explicit
+tradeoff. It does not establish larger-peer, Release, loss/fairness or allocation
+rate acceptance.
+
+Other chats retired stale SSH worker processes before this window. Therefore use
+the fresh within-window baseline/candidate comparison; do not attribute an
+absolute before/after timing change across environments solely to source code.
+The two-job build takes 25.25 seconds; DLL SHA-256 is
+`47cf79e9faa6fd7eb90479ec1a91dee2ea4932ccacc02533297ad4aee792ea6d`.
+Both coordinator profiles exit zero and their outer owned Jobs are verified
+empty before checked release to the next project.
+
 ## Focused refresh correction — bd18580
 
 The [new paired receipt](evidence/networking2-bd18580-asandebug-benchmark.json)

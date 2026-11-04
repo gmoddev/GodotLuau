@@ -69,15 +69,25 @@ four successful workflows and independently checked artifacts.
 | GL-031 | P2 | Closed on campaign branch; qualified at 532650f | Static prerequisite seeding restores runtime-child late join |
 | GL-032 | P2 | Closed on campaign branch; qualified at 532650f | ObjectValue Instance/nil bridge and native reference projection |
 | GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
-| GL-034 | P2 | Open; reproduced mixed-workload regression | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
+| GL-034 | P2 | Open; one-peer correction verified, wider qualification pending | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
 | GL-035 | P1 | Closed on unmerged campaign; native matrix verified | Empty-catalog listen Client can remove structural scope-root ancestor |
 | GL-036 | P2 | Closed on campaign within exercised profiles | Benchmark setup and assertions were omitted by Release GDScript |
 | GL-037 | P2 | Closed on unmerged campaign; native/sanitizer matrix verified | Follow-up full-native runs fail Character/legacy barriers; fixture races corrected |
-| GL-038 | P1 | Confirmed runtime lifetime defect; focused fix under qualification | Live ObjectValue can convert a destroyed target through a stale instance binding |
+| GL-038 | P1 | Closed on unmerged campaign; verified at 436850a | Live ObjectValue can convert a destroyed target through a stale instance binding |
 
 ## GL-038: ObjectValue read after target destruction
 
-**Status: confirmed heap use-after-free; focused correction not yet qualified.**
+**Status: CLOSED on the unmerged campaign at `436850a`.** The focused shared
+getter correction passes actual native/Luau target-destruction reads, unfinished
+sweep mutation and server replacement. Fresh Windows/Linux core, ordinary native
+and full-native sanitizer matrices independently verify: 85 core cases and 131
+native actors per profile, with 23 Windows/24 Linux sanitizer checks and no
+unexpected reports. The [receipt](evidence/networking2-436850a-runtime-verification.json)
+preserves required log/source/product/instrumentation hashes and separately lists
+two absent ephemeral GL-003 mailboxes. Larger-peer/performance/package acceptance
+is distinct and remains pending under GL-034.
+
+Historical reproduced failure:
 The strengthened GL-034 native fixture retains an ObjectValue, destroys its
 target after the source sweep cursor passes, and preserves the value for later
 native/Luau reads. Windows Debug ASan on native fingerprint `34e4ff3d...`, DLL
@@ -191,7 +201,16 @@ protocol remains unmerged.
 
 ## GL-034: Opt-in relevance mixed-world performance regression
 
-**Status: OPEN; reproduced, root cause under investigation.** Two paired
+**Status: OPEN; one-peer frame-cost correction verified at `436850a`; current
+complete matrix and larger-peer/Release admission remain pending.** Fresh paired
+512-object Windows ASan trials now give candidate frame p95 9.61/9.98 ms versus
+main 9.34/9.45 ms, with zero replication failures. Final client structural
+convergence is 711.104/84.991 ms, an explicit asynchronous tradeoff. All seven
+strengthened relevance actors pass locally, including unfinished-sweep mutation,
+exact ownership, expired values and server replacement. See the
+[receipt](evidence/networking2-436850a-asandebug-benchmark.json).
+
+Historical baseline: two paired
 one-peer Windows Debug ASan trials compare exact main `9f52b27` with relevance
 fingerprint `a7c63d0...`, using the same admitted host/compiler and public/native
 workload. At 512 objects the candidate server frame p95 is 414.5/426.2 ms versus
@@ -219,10 +238,10 @@ A bounded maintenance candidate now reuses source records/index memberships
 across 64-item/two-ms cooperative turns. Selection waits for a completed sweep;
 accepted frames still drain. Published reparent refreshes its bounded affected
 closure, and native unregistration removes its cache immediately. Expanded actual
-ENet coverage targets mutation/reference destruction after cursor advance and
-service replacement during unfinished work. The original campaign explicitly
-authorizes this necessary bounded refactoring; the later approval question was
-unnecessary. This new source is not yet qualified and GL-034 stays open.
+ENet coverage passes mutation/reference destruction after cursor advance and
+service replacement during unfinished work at `436850a`. The original campaign
+explicitly authorizes this necessary bounded refactoring. GL-034 stays open for
+the larger-peer Release and package checks described above.
 
 ## GL-032: ObjectValue lacks an Instance bridge
 

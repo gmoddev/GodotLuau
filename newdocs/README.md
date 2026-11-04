@@ -44,10 +44,12 @@ default-disabled runtime relevance/batching slice and its compatibility limits.
 The journal's campaign checkpoint classifies relevance, structural admission and
 scalability as partially qualified. At `bd18580`, Windows/Linux core, 131-actor
 native and full-native sanitizer gates pass and independently verify; GL-035/037
-close on this unmerged branch. Current package qualification is running. GL-034
-still reproduces a catalog-cost regression; its
-[bounded maintenance candidate](gl-034-catalog-proposal.md) is being implemented
-under the campaign's existing authorization and requires fresh qualification.
+close on this unmerged branch. At `436850a`, the new catalog/getter/control
+corrections pass both platforms' core/native/full-native sanitizer matrices;
+GL-038 closes with linked evidence. Current package qualification is running.
+GL-034's [bounded maintenance correction](gl-034-catalog-proposal.md) restores
+one-peer frame cost close to the paired baseline; larger-peer Release admission
+and performance qualification remain pending.
 This branch is not ready for automatic integration or distribution.
 
 GL-018 / GL-029 are integrated through normal merge
