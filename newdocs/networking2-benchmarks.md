@@ -64,3 +64,23 @@ profile, mixed traffic fairness/starvation, more sustained churn and repeated
 disconnect/reconnect storms. Phase 2/3 correctness fixtures cover deterministic
 WouldBlock, independent healthy-peer progress, reconnect and callback-driven
 cancellation; those facts are not substituted for performance measurements.
+
+## Negative mixed-ASan result
+
+Both paired one-peer trials pass functional checks but reproduce GL-034:
+
+| World objects | Product | Server frame p95, trials 0/1 | Fire/echo RTT p95, trials 0/1 |
+| --- | --- | --- | --- |
+| 64 | Main | 11.2 / 10.7 ms | 34.4 / 38.0 ms |
+| 64 | Relevance | 56.8 / 57.1 ms | 173.8 / 181.7 ms |
+| 512 | Main | 12.2 / 12.9 ms | 37.4 / 41.1 ms |
+| 512 | Relevance | 426.2 / 414.5 ms | 1,440.6 / 1,440.1 ms |
+
+Candidate native fingerprint is `a7c63d0...`; main is `27822f8...`. At 512 objects,
+whole-server user CPU increases from 23.6/24.4 s to 108.0/108.3 s and measured
+sent bytes from 63,405/65,611 to 213,029/213,007. Spatial presentation reduces
+client Parts to 64–128, but these observations establish no overall speedup.
+Startup/workload durations differ, so whole-process CPU is not a per-frame CPU
+comparison. Raw archive 6 preserves the exact driver, prepared fixtures,
+identity receipts and all completed/blocked configurations; its SHA-256 is
+`f183c5a502d82e6dea71ea4bff4c8ecd9ab5000f2785b9d8c62de2aa32ca00e3`.

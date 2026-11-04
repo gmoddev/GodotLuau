@@ -69,6 +69,24 @@ four successful workflows and independently checked artifacts.
 | GL-031 | P2 | Open; reproduced late-join omission | Runtime child under a static place parent is not synchronized |
 | GL-032 | P2 | Fixed in campaign; platform qualification pending | ObjectValue's scalar bridge omits Instance assignment/readback |
 | GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
+| GL-034 | P2 | Open; reproduced mixed-workload regression | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
+
+## GL-034: Opt-in relevance mixed-world performance regression
+
+**Status: OPEN; reproduced, root cause under investigation.** Two paired
+one-peer Windows Debug ASan trials compare exact main `9f52b27` with relevance
+fingerprint `a7c63d0...`, using the same admitted host/compiler and public/native
+workload. At 512 objects the candidate server frame p95 is 414.5/426.2 ms versus
+12.2/12.9 ms, and Fire/echo RTT p95 is approximately 1.44 s versus 37.4/41.1 ms.
+The 64-object candidate also regresses. Functional assertions pass; this does not
+qualify scalability. The [measurement record](networking2-benchmarks.md) retains
+resource-blocked larger configurations separately. Raw archive 6 SHA-256 is
+`f183c5a502d82e6dea71ea4bff4c8ecd9ab5000f2785b9d8c62de2aa32ca00e3`.
+
+Candidate hypotheses include the shared Client write-boundary world scan and
+catalog refresh work. Added focused timings and a denial-order probe must
+establish attribution before a performance fix is claimed. Native authority,
+reliable structural ordering, resource bounds and test assertions remain required.
 
 ## GL-032: ObjectValue lacks an Instance bridge
 

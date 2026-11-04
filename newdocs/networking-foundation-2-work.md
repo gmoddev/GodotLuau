@@ -1,5 +1,40 @@
 # Networking Foundation 2 campaign journal
 
+## Mixed-workload regression — investigation, not qualification
+
+The complete ordinary core/native and full-native sanitizer workflows for
+`532650f` now pass on Windows and Linux. Downloaded artifacts independently
+verify 85 core cases, 130 native actors, matching source/products and admitted
+hosts ([receipt](evidence/networking2-532650f-runtime-verification.json)).
+Candidate Windows Release remains running; package acceptance is pending.
+
+The two paired one-peer mixed-world ASan trials expose a substantial performance
+regression, tracked as GL-034. At 512 objects the candidate server frame p95 is
+414.5/426.2 ms versus main's 12.2/12.9 ms; Fire/echo RTT p95 is approximately
+1.44 s versus 37.4/41.1 ms. Both products satisfy the workload's functional
+assertions. Fewer candidate replicas do not establish an optimization when CPU,
+frame time and wire traffic worsen. Preserve the negative result. Raw archive 6
+contains 8,368 members / 26,021,928 bytes, SHA-256
+`f183c5a502d82e6dea71ea4bff4c8ecd9ab5000f2785b9d8c62de2aa32ca00e3`.
+The [versioned mixed receipt](evidence/networking2-mixed-asandebug.json) records
+all eight passing and sixteen resource-blocked configurations separately.
+
+A focused probe moves the existing Character-authority denial before the new
+world projection scan in `CanWriteCharacter`; the same denial predicates remain
+required. Read-only cumulative/max timings separately observe this boundary and
+catalog refresh. Snapshot `v19`, fingerprint
+`d68590d1e22aee4358d7b0b88aa5360dbeb11d09435b4fd44b9cd377ac56edf9`,
+builds on DockerPC Windows Debug ASan. It is an investigation product, not a
+qualified replacement for `532650f`. Its measured outcome and any further fix
+require their own evidence. No main merge or publication is authorized.
+
+The `v19` probe reproduces the cost: 254 catalog refreshes total 85.26 s of
+wall time, maximum 836.5 ms, versus 91.69 s of whole-server user CPU. The shared
+Client guard has zero observed calls in this dedicated-server workload. Revert
+the unhelpful denial-order experiment; retain focused stage timings to isolate
+refresh work. This timing attribution does not establish a fix or a comparable
+before/after speedup. Other worker builds are active during follow-up probes.
+
 ## Hosted checkpoint and mixed measurement follow-up
 
 Implementation checkpoint `532650f926723b588b04559ec242d8fa20e07239` is pushed;
