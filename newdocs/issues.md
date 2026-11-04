@@ -79,7 +79,13 @@ four successful workflows and independently checked artifacts.
 ## GL-039: Structural convergence under a 32-peer burst
 
 **Status: OPEN; measured performance limitation, not a reproduced ordering or
-admission failure.** At `436850a`, both 32-peer Release trials pass the mixed
+admission failure.** A minimal bounded FIFO-drain candidate is pushed as
+`01ec4eb`; 41 focused Windows Debug ASan actors pass, including exact ordering
+of sixteen same-turn barriers. Full hosted and repeated 32-peer latency evidence
+remain pending; see the [journal](networking-foundation-2-work.md). No refactor,
+wire change, queue/native-cap increase or timeout increase is included.
+
+At `436850a`, both 32-peer Release trials pass the mixed
 workload in 64- and 512-object worlds with zero replication failures. Final
 structural convergence nevertheless takes 6.58–6.96 seconds after coordinated
 close; the 64-object baseline takes 0.096–0.399 ms. Required reparent barriers

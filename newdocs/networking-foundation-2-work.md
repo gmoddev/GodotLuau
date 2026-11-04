@@ -1,5 +1,39 @@
 # Networking Foundation 2 campaign journal
 
+## GL-039 interrupted-turn collection — 01ec4eb
+
+Minimal runtime source `01ec4eb` preserves first-frame progress within the
+cooperative submission budget; native fingerprint is `8a3c5036...`. The existing
+two-job Windows Debug ASan incremental build passes, DLL SHA-256
+`96daa40e9dd7bb9cafcfba8428353603ced1297b89bf47fd87847139cc435dd5`.
+The first operator wrapper incorrectly called an unsupported `communicate`
+method and closed its owned Job; the corrected bounded wrapper and its captured
+logs remain alongside that preparation failure.
+
+Pinned coordinator window `6a71ee3f-9ef0-4a2c-a37a-6a699cc778fb` passes both
+profiles: seven relevance actors, twenty Character actors, eight legacy actors
+and six Function actors. No unexpected ASan report occurs. The stronger fixture
+retains all 32 signals from sixteen same-turn barriers in exact order. Captured
+diagnostics include invalid-target messages during relevance peer retirement
+and existing Character teardown/intentional access-rejection diagnostics; this
+is not a claim of empty stderr. Both outer Jobs and the build Job are checked
+reaped, without timeouts or output-reader errors.
+
+The chat interruption delayed collection/release notification. Following the
+coordinator's expiry notice, only bounded collection and retirement checks run.
+The 23:16:32 UTC task-root census finds zero live owned processes; no owned PID
+remains to retain a listener. All SSH/SCP commands finish before checked release
+is sent. Raw archive `gl039-local-checkpoint1.zip` contains 933 members and
+2,746,941 bytes; ZIP integrity passes and SHA-256 is
+`ca676b4cb1fa45933c2c5ea2c6b0efb9991fa0701a3363efe8720280e84e9b88`.
+It preserves actual logs, identities, executed helpers and coordinator journals.
+
+GL-039 stays open: these focused correctness passes do not establish the
+32-peer latency improvement. Fresh hosted qualification and repeated matched
+Release latency/frame/fairness measurements remain required. No worker workload
+is active or queued; a later run requires a separate checked handoff. The branch
+remains unmerged, with release publication and updater admission disabled.
+
 ## GL-039 minimal burst candidate — qualification pending
 
 Resume from clean local/remote `b4b6ea3`; main remains `9f52b27`. Retained
