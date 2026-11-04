@@ -195,7 +195,10 @@ bool NetworkService::RefreshReplicationRecord(uint64_t Id, const std::array<uint
     auto Previous = Replication.Catalog.find(Id);
     auto Dirty = Replication.Dirty.find(Id);
     uint64_t Revision = Dirty == Replication.Dirty.end() ? 0 : Dirty->second;
+    auto Control = Replication.Controls.find(Id);
+    Record.ControlRevision = Control == Replication.Controls.end() ? 0 : Control->second;
     bool Semantic = Previous == Replication.Catalog.end() || Previous->second.Object != Record.Object || Previous->second.Revision != Revision ||
+        Previous->second.ControlRevision != Record.ControlRevision ||
         Previous->second.ReferenceObject != Record.ReferenceObject || Previous->second.ReferenceId != Record.ReferenceId ||
         Previous->second.Global != Record.Global || Previous->second.Data->Parent != Parent || Previous->second.Data->Name != String(NodeValue->get_name());
     bool Rebuild = Semantic;
@@ -522,7 +525,7 @@ bool NetworkService::QueueReplication(int PeerValue, const std::vector<std::pair
             Next.Object = Record.Object; Next.Generation = Generation; Next.Revision = Record.Revision;
             Next.Parent = Record.Data->Parent; Next.References = Record.Data->References;
             Next.Global = Record.Global; Next.LastSequence = Sequence;
-            Next.ControlRevision = Replication.Controls.count(Id) ? Replication.Controls.at(Id) : 0;
+            Next.ControlRevision = Record.ControlRevision;
             Next.GlobalSequence = Record.Global ? (Old != Planned.end() && Old->second.Global ? Old->second.GlobalSequence : Sequence) : 0;
             Next.EnteredSequence = Kind == 4 ? Old->second.EnteredSequence : Sequence;
             if (Old != Planned.end()) { Next.Materialized = Old->second.Materialized; Edges(Old->second, false); }

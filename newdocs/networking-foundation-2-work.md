@@ -2,6 +2,45 @@
 
 ## Bounded catalog first execution — GL-038
 
+At `712ea47`, Linux ordinary native qualification passes the expired-value and
+new service-replacement assertions, but fails the authorized client-physics
+positive case. Its complete Linux full-native sanitizer job subsequently reports
+success; independent artifact verification is pending. Preserve both results:
+the ordinary failure is not erased by the sanitizer pass.
+
+Source review identifies an ordering/acknowledgment discrepancy: runtime
+`net_set_owner` sends an immediate legacy RPC while cached structural snapshots
+also carry ownership, and queue admission labels a snapshot using the live
+control map. A snapshot captured before a later control write can therefore be
+tagged with the newer revision. Capture the control version with the source
+record and route opted-in runtime ownership through the ordered snapshot.
+Keep native immediate revocation and the existing ACK/readiness check. The
+fixture now waits for the exact requested owner, rather than any nonzero owner,
+and uses the established functional ENet unthrottled profile, retaining all
+wrong-generation/owner assertions. Production transport defaults stay unchanged.
+The precise cause of the observed ordinary physics failure is not independently
+attributed yet; the source discrepancy and stricter precondition are verified.
+
+The [failure receipt](evidence/networking2-6b6ee8b-objectvalue-failure.json)
+retains source/product/fixture identities, the actual report hash and checked
+coordinator disposition. The focused getter correction is published as
+`712ea478a6d503f85655cc20219de21c84a7e4c2`; its
+[core](https://github.com/gmoddev/GodotLuau/actions/runs/41802226872) passes and
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41802226887),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41802340597)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41802343918)
+workflows are running. The concurrency queue supersedes the unstarted `6b6ee8b`
+candidate with this corrected source; the failed source's ordinary/sanitizer
+runs and local failure remain retained.
+
+The earlier `bd18580` candidate now completes and independently verifies all
+four 85-core/131-actor profiles, both 133-member extracted packages and startup
+actors, with acceptance hash
+`a271d89c8f99dc1f503dc3033d4c24e38538097fa61cf4762e1b55526a8000cf`
+([receipt](evidence/networking2-bd18580-candidate-verification.json)). All four
+workflows are qualified at that exact earlier source. This does not qualify the
+new catalog/getter changes or close GL-034/038.
+
 Candidate `6b6ee8b93caa88898b80875fc5929c5e6899eb2c` compiles on the existing
 worker MSVC Debug ASan toolchain in 35.656 seconds with two jobs; DLL SHA-256 is
 `8b9373158642305af2457296f69556adc4a550e13a51bacb23bff95e2c474751`.

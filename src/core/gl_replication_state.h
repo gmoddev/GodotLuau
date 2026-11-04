@@ -37,6 +37,7 @@ struct CatalogRecord {
     Identity ReferenceObject = 0, ReferenceId = 0;
     uint64_t Revision = 0;
     uint64_t Scan = 0;
+    uint64_t ControlRevision = 0;
     bool Static = false, Global = true;
     godot::Transform3D Pose;
     std::shared_ptr<const Snapshot> Data;

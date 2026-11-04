@@ -102,6 +102,15 @@ binding after extracting the raw object pointer. Preserve the target-destruction
 case and verify both native and Luau getter paths under fresh sanitizers before
 closing this issue or GL-034.
 
+At `712ea47`, Linux's complete full-native sanitizer workflow reports success;
+the ordinary Linux native job passes expired-value and replacement assertions
+but fails its client-physics positive case. Artifact verification and a complete
+fresh matrix remain required. Source review separately corrects captured control
+revision labeling and orders runtime ownership through structural snapshots.
+That discrepancy is source-verified; it is not yet an independently attributed
+explanation of the intermittent physics failure. The fixture now requires the
+exact requested owner and retains wrong-owner/generation rejection assertions.
+
 ## GL-036: Release benchmark omits setup and checks
 
 **Status: corrected and checked on Windows Debug ASan and Release hosts.** The

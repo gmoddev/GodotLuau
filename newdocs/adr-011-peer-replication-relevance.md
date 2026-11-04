@@ -165,6 +165,15 @@ group, and retains every ordered accepted transition. There is no older staged
 record to roll a newer barrier backward. This candidate needs fresh qualification;
 the prior `bd18580` receipt does not qualify these changed scheduling semantics.
 
+Control revision belongs to the captured source snapshot, not to mutable live
+state at queue time. An older cached frame cannot acknowledge a newer Size,
+collision, pose or ownership control. Opted-in runtime ownership therefore
+travels in the ordered structural snapshot; its immediate legacy ownership RPC
+is retained only for legacy/static paths. Native server ownership changes still
+revoke a former sender immediately, and physics readiness requires the matching
+captured control revision to be acknowledged. This correction preserves the
+existing wire carriers and fields.
+
 Planned state advances at application queue acceptance; Known advances only at
 successful native handoff. Materialized records mean the exact peer/session
 reported cumulative application of an accepted sequence. An ACK is not evidence

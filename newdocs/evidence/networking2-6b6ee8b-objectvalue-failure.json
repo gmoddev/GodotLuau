@@ -1,0 +1,36 @@
+{
+  "Revision": "6b6ee8b93caa88898b80875fc5929c5e6899eb2c",
+  "NativeSourceSHA256": "34e4ff3d1e4d6bfe97ed01bdc16f1e1da47c12030591c67a25fa40f472f15d97",
+  "ExtensionSHA256": "8b9373158642305af2457296f69556adc4a550e13a51bacb23bff95e2c474751",
+  "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+  "FixtureSHA256": "c78993cf132999cdde42fee0a752596d44f864d54199a0d5d111a601ce460be7",
+  "BuildSeconds": 35.656,
+  "BuildJobs": 2,
+  "Result": "FAIL",
+  "Finding": "heap-use-after-free",
+  "ReadBytes": 4,
+  "Thread": "T0, Godot main thread",
+  "Trigger": "Retain an ObjectValue while its target is destroyed after an unfinished sweep has captured the reference.",
+  "Stack": [
+    "Object::get_instance_binding",
+    "gdextension_object_get_instance_binding",
+    "godot::internal::get_object_instance_binding",
+    "godot::Variant::operator Object*",
+    "NetworkService::RefreshReplicationRecord, src/core/gl_replication_relevance.cpp:143",
+    "NetworkService::RefreshReplication",
+    "NetworkService::TickReplication"
+  ],
+  "TargetFreedBy": "SceneTree::_flush_delete_queue on T0",
+  "ReportSHA256": "8e56bc427561db8776b75cbfb319858b869cf6d7244168ec290e449b299024e5",
+  "WorkerOutput": "focused-v29-3b402046-984c-4282-8edb-6b9c1717a11b/relevance/asan-report.1512",
+  "Coordinator": {
+    "Revision": "cf1628de587ee0ccfbd74742d62946dac1adf522",
+    "Profile": 1,
+    "Exit": 1,
+    "TimedOut": false,
+    "OutputErrors": [],
+    "OuterOwnedJobReaped": true,
+    "BenchmarkStarted": false
+  },
+  "Scope": "Actual sanitizer failure at the unmerged catalog candidate. Earlier unsafe conversion is source-verified but an older-build crash is not reproduced here. The focused fix and later qualification are separate."
+}

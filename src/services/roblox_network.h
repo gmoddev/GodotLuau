@@ -3075,7 +3075,14 @@ public:
         }
         Replication.Owners.erase(uint64_t(netId));
         _apply_owner((uint64_t)netId, owner_peer, is_auto);
-        if (Replication.Enabled) TouchReplication(uint64_t(netId));
+        if (Replication.Enabled) {
+            TouchReplication(uint64_t(netId));
+            Replication.Controls[uint64_t(netId)] = Replication.Dirty[uint64_t(netId)];
+            // Runtime ownership belongs to the ordered structural snapshot.
+            // An immediate legacy RPC could be overwritten by an older cached
+            // frame accepted afterward; its ACK must not grant newer controls.
+            if (!gl_is_static_netid(uint64_t(netId))) return;
+        }
         rpc("_phys_owner", netId, owner_peer, is_auto);
     }
     void _apply_owner(uint64_t netId, int owner_peer, bool is_auto) {

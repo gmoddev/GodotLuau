@@ -86,6 +86,9 @@ the inherited runtime already satisfies them. Baseline gaps link to
   ObjectValue targets are weak Node references: validate the engine Variant
   before asking godot-cpp to convert its pointer or obtain an instance binding.
   Expired targets read as nil through both native and Luau getters (GL-038).
+  Control ACKs describe the snapshot's captured revision. Do not label older
+  cached data with a newer live control version or let an immediate runtime
+  ownership RPC race the ordered structural ownership state.
 
 - Application RemoteEvent delivery configuration is native Server authority.
   Publication/readiness binds the current native transport session, endpoint

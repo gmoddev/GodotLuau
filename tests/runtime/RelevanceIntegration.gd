@@ -8,6 +8,14 @@ var Address := ""
 var Mode := "Listen"
 var Port := 0
 
+func ConfigurePeer(Peer: int) -> void:
+    var Transport = Network.get_multiplayer().get_multiplayer_peer()
+    if Transport is ENetMultiplayerPeer and (Transport.get_unique_id() == 1 or Peer == 1):
+        var Link = Transport.get_peer(Peer)
+        if Link:
+            Link.throttle_configure(5000, 32, 0)
+            Check(int(Link.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE_DECELERATION)) == 0, "functional physics carrier throttle profile configured")
+
 func _initialize() -> void:
     var Arguments := OS.get_cmdline_user_args()
     for Index in range(Arguments.size() - 1):
@@ -44,6 +52,7 @@ func Run() -> void:
     World = Create("RobloxWorkspace", "Workspace", Game); World.set_process(false)
     ClientScript("Prewarm", "game:SetAttribute('ClientWarmed',true)")
     Network = Create("NetworkService", "NetworkService", Game)
+    Network.get_multiplayer().peer_connected.connect(ConfigurePeer)
     await process_frame
     if Role == "server" and Mode == "Listen":
         Game.set_meta("Port", Port)
@@ -263,7 +272,8 @@ func Client() -> void:
     await Until(func(): return World.has_node("Body") and World.get_node("Body").global_position.x > 50.25, "generation-tagged server physics advances a materialized body")
     Mark("client" + str(ClientIndex) + ".physics")
     await Wait("owner.go")
-    await Until(func(): return int(World.get_node("Body").get_meta("_gl_owner",0)) != 0, "owner grant follows materialization")
+    var ExpectedOwner := int(FileAccess.get_file_as_string("res://replication-client1.ready"))
+    await Until(func(): return int(World.get_node("Body").get_meta("_gl_owner",0)) == ExpectedOwner, "exact owner grant follows materialization")
     if ClientIndex == 1:
         World.get_node("Body").gravity_scale = 0
         World.get_node("Body").linear_velocity = Vector3(1,0,0)
