@@ -1,5 +1,20 @@
 # Networking Foundation 2 campaign journal
 
+## GL-039 minimal burst candidate — qualification pending
+
+Resume from clean local/remote `b4b6ea3`; main remains `9f52b27`. Retained
+Release evidence reproduces 6.58–6.96-second 32-peer convergence. Source inspection
+finds one queued frame submitted per peer visit and one received frame applied
+per client tick. The candidate changes only those loops to bounded FIFO bursts
+of eight, preserving the existing server eight-peer/four-ms budget, native
+preflight for every send, 64-frame ACK window, queue caps and ten-second failures.
+The client burst has its own cooperative four-ms quantum and revalidates native
+lifetime after each application. No wire format, scheduler or ownership refactor
+is introduced. The actual native fixture now requires all 32 transition signals
+from sixteen same-turn reparent barriers in exact order. Nothing is qualified
+by this source trace; fresh native/sanitizer/platform and paired latency evidence
+must establish the result before GL-039 closes.
+
 ## GL-034/037 qualification complete within recorded profiles — 436850a
 
 GL-037 remains closed by its corrected fixture/actual native matrix. GL-034 now
