@@ -817,7 +817,7 @@ void NetworkService::TickReplication() {
             // existing global submission budget and 64-frame ACK window.
             for (size_t Batch = 0; Batch < 8 && View.Sent - View.Acked < 64; ++Batch) {
                 const auto* Pending = Replication.Outgoing.Front(PeerValue);
-                if (!Pending || Time::get_singleton()->get_ticks_usec() - Started >= 4000) break;
+                if (!Pending || (Batch && Time::get_singleton()->get_ticks_usec() - Started >= 4000)) break;
                 if (Now >= Pending->EnqueuedUsec && Now - Pending->EnqueuedUsec > 10000000) { Failures.push_back(PeerValue); break; }
                 Dictionary Capacity = NativeRemoteAdmission(PeerValue);
                 bool WouldBlock = !NativeCapacity(Capacity, Pending->Bytes);
