@@ -239,6 +239,13 @@ game:SetAttribute('BasicDone', true)
 """)
         await Until(func(): return Game.has_meta("BasicDone"), "success nil slots nested payload error timeout manual-resume and bounds")
         await Until(func(): return int(State().Pending) == 0 and int(State().Responses) == 0, "client terminal outcomes release exact correlation records")
+        Engine.time_scale = 20.0
+        var DeadlineStarted := Time.get_ticks_msec()
+        ScriptNode("LocalScript", "MonotonicDeadline", "local Ok, Message=pcall(function() game.ReplicatedStorage.Function:InvokeServer('Block') end); assert(not Ok and string.find(tostring(Message),'timed out',1,true)); game:SetAttribute('MonotonicDeadlineDone',true)")
+        await Until(func(): return Game.has_meta("MonotonicDeadlineDone"), "deadline completes under accelerated simulation time")
+        var DeadlineElapsed := Time.get_ticks_msec() - DeadlineStarted
+        Engine.time_scale = 1.0
+        Check(DeadlineElapsed >= 390 and DeadlineElapsed < 3000, "native deadline uses wall time instead of scaled frame delta")
         ScriptNode("LocalScript", "Bounds", """
 local Pending = {}
 for Index=1,64 do

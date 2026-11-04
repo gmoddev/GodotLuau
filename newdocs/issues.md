@@ -131,7 +131,11 @@ disabled.
 
 ## GL-030: Default RemoteFunction waits have no finite terminal deadline
 
-**Status: OPEN; source-verified, runtime nonresponse/exhaustion unexercised.**
+**Status: OPEN pending campaign qualification; baseline nonresponse reproduced.**
+Exact main's valid ENet handler leaves its caller uncompleted after 70,006 ms in
+the controlled [campaign baseline](networking-foundation-2-work.md). Candidate
+full-width/exhaustion and terminal-outcome fixtures pass in development; complete
+latest-revision platform/native/sanitizer qualification remains pending.
 Networking Foundation 2 is implementing the separately authorized
 [ADR-010 terminal contract](adr-010-remotefunction-terminal-outcomes.md) on
 `foundation/networking-2`. See the [running journal](networking-foundation-2-work.md).

@@ -153,3 +153,23 @@ The exact-main nonresponse observation reaches 69,994 ms with `Completed=false`;
 the fixture's 70,000 ms threshold correctly remains a failed run. Godot timer time
 is not the monotonic wall barrier needed here. Replace the timer with a checked
 monotonic frame barrier and repeat, retaining the original observation.
+
+The corrected exact-main baseline reproduces nonresponse at **70,006 ms** after
+the validated remote handler entered: caller `Completed=false`, both actors
+exit zero with the REPRODUCED marker. Baseline extension SHA-256
+`5f3799751dbd8e1fcf1ecd4238f2d240c284ba160c9cbe2b5514b06f24160a56`;
+native fingerprint remains exact main's `27822f8...`. This is actual nonresponse
+evidence beyond the old GC interval, not direct introspection of an erased map.
+Receipt/logs: DockerPC `Networking2/baseline-main-trial2`.
+
+At `11e0036`, hosted Windows/Linux core jobs pass, and the candidate workflow's
+Linux core ASan/LSan job passes. Native/full-native/profile jobs are still
+building at this checkpoint; they cannot qualify later runtime corrections.
+The initial `a7339e0` core run passes; its superseded ordinary-native run was
+explicitly cancelled to avoid duplicate heavy work, not reported as passing.
+
+Review found the domain-host timeout still accumulated scaled Godot frame delta,
+whereas NetworkService used native monotonic time. Use an absolute monotonic
+deadline in both owners and add a 20x simulation-time regression; this preserves
+the finite wall-time contract during time scaling and reentrant wait creation.
+No general scheduler or unrelated WaitForChild timer behavior changes.

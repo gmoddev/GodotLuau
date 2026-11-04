@@ -237,7 +237,9 @@ void GLDomainHost::WaitForChild(lua_State* Thread, uint64_t Parent, const String
         String::utf8(lua_debugtrace(Thread))});
 }
 void GLDomainHost::WaitForInvoke(lua_State* Thread, int64_t CallId, double Timeout, int Reference) {
-    InvokeWaits.push_back({Thread, GLGetOwnerState(Thread), CallId, gl_net_service_id(), Timeout, 0, Reference});
+    if (!std::isfinite(Timeout) || Timeout < 0.05 || Timeout > 300) Timeout = 30;
+    uint64_t Deadline = Time::get_singleton()->get_ticks_usec() + uint64_t(Timeout * 1000000);
+    InvokeWaits.push_back({Thread, GLGetOwnerState(Thread), CallId, gl_net_service_id(), Deadline, Reference});
 }
 bool GLDomainHost::InterruptInvoke(lua_State* Thread) {
     auto Found = std::find_if(InvokeWaits.begin(), InvokeWaits.end(), [Thread](const GLInvokeWait& Wait) { return Wait.Thread == Thread; });
@@ -424,16 +426,11 @@ void GLDomainHost::_process(double Delta) {
         });
     }
     for (size_t Index = 0; Index < InvokeWaits.size();) {
-        InvokeWaits[Index].Elapsed += Delta;
         GLInvokeWait Wait = InvokeWaits[Index];
         GLExecutionDomain* Domain = GLReferenceAlive(Wait.Anchor, Wait.Reference) ? WaitingDomain(Wait.Thread) : nullptr;
         auto Found = gl_net_responses().find(Wait.CallId);
         bool Ready = Found != gl_net_responses().end() && Found->second.ready;
-        bool TimedOut = Wait.Timeout > 0 && Wait.Elapsed >= Wait.Timeout;
-        if (Domain && !Ready && !TimedOut && !Wait.Warned && Wait.Elapsed >= 10.0) {
-            InvokeWaits[Index].Warned = true;
-            UtilityFunctions::print("[Runtime:Wait] Infinite yield possible on RemoteFunction invoke");
-        }
+        bool TimedOut = Time::get_singleton()->get_ticks_usec() >= Wait.Deadline;
         if (Domain && !Ready && !TimedOut) { ++Index; continue; }
         InvokeWaits.erase(InvokeWaits.begin() + Index);
         GLNetResponse Response;

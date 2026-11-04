@@ -29,10 +29,8 @@ class GLDomainHost : public godot::Node {
         lua_State* Anchor;
         int64_t CallId;
         uint64_t Service;
-        double Timeout;
-        double Elapsed;
+        uint64_t Deadline;
         int Reference;
-        bool Warned = false;
     };
     std::array<std::unique_ptr<GLExecutionDomain>, 2> Domains;
     std::array<bool, 2> Initialized = {false, false};
