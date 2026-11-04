@@ -1,5 +1,35 @@
 # Networking Foundation 2 campaign journal
 
+## Empty-catalog authority follow-up — GL-035
+
+A separate actual listen-host LocalScript probe reproduces removal of the shared
+scene through `game:Destroy()` before any source records or Character authority
+exist. Snapshot `v22` exits with the two required preservation/completion checks
+failed and no ASan report. Original fixture hash is `34fb0067...`; baseline
+stdout hash is `5f298184...`. Source trace shows registered-object ancestors are
+protected, while scope roots themselves were checked only by exact identity.
+Extend that same native boundary to their live ancestors for structural writes.
+Promote the reproduction to the required native suite, retaining the empty
+precondition and positive callback-completion assertion; the matrix now requires
+131 actors. Snapshot `v23`, fingerprint
+`c702c86c162bc4c9f655052fbcefb4f99a5460c1a7ea22d87724022bbe065c85`,
+is under qualification. Sixteen candidate-policy tests pass with the stricter
+131-actor requirement. No main or distribution activation is performed.
+
+The corrected `v23` passes all seven relevance actors, including the promoted
+empty-root test, in 28.97 s, and six Function actors in 18.69 s, without an
+unexpected ASan report. DLL SHA-256 is
+`f9f171dbc3805c28fb1ae9b07c2d1eac5108089aca50a1ba5af07159f31e3008`.
+Twelve retention-policy tests also pass. Character/animation and fresh complete
+platform gates remain required; GL-035 is not closed from these selected checks.
+
+The [refresh checkpoint](evidence/networking2-refresh-checkpoint.json) preserves
+44 selected final-refresh actors and four supplemental incompatible-mode actors,
+all passing. Both mismatch directions terminate without materializing a replica.
+They do not replace complete cross-platform qualification. Raw archive 7 has
+10,066 members / 31,288,516 bytes, SHA-256
+`4ddd0da2763babde443b09786b21cca814370658506cb47ea8acd4b81dc2a7b6`.
+
 ## Targeted refresh correction
 
 Stage probe `v20` records 81.21 s total refresh time, with 0.79 s encoding,

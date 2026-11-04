@@ -313,7 +313,17 @@ def RelevanceFixtures(Args, Output, Environment):
                 Evidence.append(Record)
         finally:
             for Process, _, _, _ in Entries: StopProcess(Process)
-    (Output / 'relevance-evidence.json').write_text(json.dumps({'Actors': 6, 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
+    Project = Output / 'Relevance-RootGuard'
+    Prepare(Project, Args.extension)
+    Process = Start(Args.godot, Project, 'RelevanceRootGuard.gd', 'relevance-rootguard', ['--fixture-port', str(Port())], Environment)
+    try:
+        Results.append(Check(Process, time.monotonic() + Args.timeout, Project, 'relevance-rootguard', '[Network:RootGuardTest] PASS'))
+        RootGuard = json.loads((Project / 'replication-evidence-root.json').read_text())
+        if RootGuard['Result'] != 'PASS' or not RootGuard['Complete'] or not RootGuard['Cases'] or not all(Item['Passed'] for Item in RootGuard['Cases']):
+            raise RuntimeError('Relevance empty-root authority fixture incomplete')
+    finally:
+        StopProcess(Process)
+    (Output / 'relevance-evidence.json').write_text(json.dumps({'Actors': 7, 'Transport': 'ENet', 'Evidence': Evidence, 'RootGuard': RootGuard}, indent=2))
     return Results
 
 

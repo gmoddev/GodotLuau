@@ -128,6 +128,9 @@ attributes, impulses, destruction and ownership assignment. Ordinary attributes
 on Game are not structural subtree mutations. Client-local additions cannot
 promote an object into the source global set. Focus uses existing validated
 Character authority, with a fixed 250-unit selection radius.
+Captured scope roots and their structural ancestors remain protected even before
+the first registered object or Character exists (GL-035). Native scope identity,
+not Client-editable metadata or catalog population, establishes this boundary.
 
 The source uses bounded immutable property snapshots: 8 KiB/512 codec nodes/128
 properties per record and 8 MiB encoded catalog data. The existing bounded queue

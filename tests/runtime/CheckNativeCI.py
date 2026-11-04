@@ -24,7 +24,7 @@ def Main():
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
-        'remote': [*[f'{Kind}-{Mode}-{Role}' for Kind in ['remote', 'function'] for Mode in ['Listen', 'Dedicated'] for Role in ['server', 'client1', 'client2']], 'replication-server', 'replication-client', *[f'relevance-{Mode}-{Role}' for Mode in ['Listen', 'Dedicated'] for Role in ['server0', 'client1', 'client2']]],
+        'remote': [*[f'{Kind}-{Mode}-{Role}' for Kind in ['remote', 'function'] for Mode in ['Listen', 'Dedicated'] for Role in ['server', 'client1', 'client2']], 'replication-server', 'replication-client', *[f'relevance-{Mode}-{Role}' for Mode in ['Listen', 'Dedicated'] for Role in ['server0', 'client1', 'client2']], 'relevance-rootguard'],
         'characters': [*[f'character-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])], 'character-model', 'character-manual-server', 'character-manual-client1', 'character-manual-client2'],
         'resources': ['resource-' + Case for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']],
         'filesystem': ['filesystem-capabilities','filesystem-writer','filesystem-reader'],
@@ -47,8 +47,12 @@ def Main():
     Functions = json.loads((Args.output / 'remote/function-evidence.json').read_text())
     Replication = json.loads((Args.output / 'remote/replication-evidence.json').read_text())
     Relevance = json.loads((Args.output / 'remote/relevance-evidence.json').read_text())
-    if Relevance.get('Actors') != 6 or Relevance.get('Transport') != 'ENet' or {(Actor.get('Mode'), Actor.get('Role')) for Actor in Relevance.get('Evidence', [])} != {(Mode, Role) for Mode in ['Listen', 'Dedicated'] for Role in ['server0', 'client1', 'client2']} or any(not Actor.get('Complete') or Actor.get('Result') != 'PASS' or not Actor.get('Cases') or any(not Case.get('Passed') for Case in Actor['Cases']) for Actor in Relevance['Evidence']):
+    if Relevance.get('Actors') != 7 or Relevance.get('Transport') != 'ENet' or {(Actor.get('Mode'), Actor.get('Role')) for Actor in Relevance.get('Evidence', [])} != {(Mode, Role) for Mode in ['Listen', 'Dedicated'] for Role in ['server0', 'client1', 'client2']} or any(not Actor.get('Complete') or Actor.get('Result') != 'PASS' or not Actor.get('Cases') or any(not Case.get('Passed') for Case in Actor['Cases']) for Actor in Relevance['Evidence']):
         raise ValueError('Relevance lifecycle/authority qualification incomplete')
+    RootGuard = Relevance.get('RootGuard', {})
+    RootLabels = {Case['Label'] for Case in RootGuard.get('Cases', []) if Case.get('Passed')}
+    if not RootGuard.get('Complete') or RootGuard.get('Result') != 'PASS' or not {'opted-in empty catalog has no Character authority fallback', 'Client cannot destroy structural ancestor of captured scope roots before first publication', 'rejected mutation permits ordinary Client callback completion'} <= RootLabels or any(not Case.get('Passed') for Case in RootGuard['Cases']):
+        raise ValueError('Empty-catalog scope-root authority qualification missing or failed')
     if Replication.get('Actors') != 2 or Replication.get('Transport') != 'ENet' or {Item['Role'] for Item in Replication.get('Evidence', [])} != {'server', 'client'}:
         raise ValueError('GL-031 actual ENet replication actors missing')
     for Record in Replication['Evidence']:

@@ -3824,7 +3824,10 @@ public:
                 if (!Registered) continue;
                 if (Registered == Target || Registered->is_ancestor_of(Target) || (Subtree && Target->is_ancestor_of(Registered))) return false;
             }
-            for (uint64_t Scope : RemoteScopeRoots) if (Scope == uint64_t(Target->get_instance_id())) return false;
+            for (uint64_t Scope : RemoteScopeRoots) {
+                auto Root = Object::cast_to<Node>(ObjectDB::get_instance(Scope));
+                if (Root && (Root == Target || (Subtree && Target->is_ancestor_of(Root)))) return false;
+            }
         }
         if (Subtree) for (const auto& Entry : CharacterAuthorities) {
             Node* Character = LiveCharacter(Entry.second.Identity);

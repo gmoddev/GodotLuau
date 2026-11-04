@@ -70,6 +70,28 @@ four successful workflows and independently checked artifacts.
 | GL-032 | P2 | Closed on campaign branch; qualified at 532650f | ObjectValue Instance/nil bridge and native reference projection |
 | GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
 | GL-034 | P2 | Open; reproduced mixed-workload regression | Opt-in relevance has excessive frame/CPU cost in paired 64/512-object ASan trials |
+| GL-035 | P1 | Fixed in campaign; qualification pending | Empty-catalog listen Client can remove structural scope-root ancestor |
+
+## GL-035: Empty-catalog listen Client can remove scope-root ancestor
+
+**Status: confirmed runtime authority defect; focused correction being qualified.**
+On native fingerprint `738a60cf...` / DLL `53a1f38f...`, an actual LocalScript in
+an opted-in listen host with no registered instances or Character authority can
+execute `game:Destroy()` and remove the server's shared scene. The headless
+Windows Debug ASan process exits cleanly without an unexpected sanitizer report;
+this is authority failure, not a reproduced memory defect. Fixture SHA-256 is
+`34fb006757c72edd87761abbc0a6e3c62a893cf96d43c4d60597199062e3b5bf`;
+captured baseline stdout is `5f2981842e97902433b51fc1e8d3b0b43d28e885741017b8e94679249489b9b8`.
+
+The existing Client boundary protects registered objects and their ancestors,
+but checks captured scope roots only for exact identity. The focused fix also
+rejects structural mutation of their live native ancestors, independently of
+catalog population. Ordinary Client attribute writes retain their existing path.
+The [required native regression](../tests/runtime/RelevanceRootGuard.gd) checks
+the empty precondition, actual Client mutation, preserved scene identity and
+ordinary callback completion after rejection. The required native matrix grows
+from 130 to 131 actors; no existing actor/assertion is removed. Full qualification
+is required before closure. This experimental protocol remains unmerged.
 
 ## GL-034: Opt-in relevance mixed-world performance regression
 
