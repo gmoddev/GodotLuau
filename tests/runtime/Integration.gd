@@ -586,6 +586,7 @@ for Index = 1, 20000 do
     local Memory = gcinfo()
     if Memory < PreviousMemory then ObservedCollection = true end
     PreviousMemory = Memory
+    if Index % 1000 == 0 then task.wait() end
 end
 assert(ObservedCollection)
 for Index, Name in ipairs(Names) do assert(Name == Expected[Index]) end

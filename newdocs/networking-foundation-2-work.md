@@ -120,3 +120,16 @@ plus six function actors); all sixteen existing candidate-policy/rejection tests
 pass locally. Native evidence upload includes the new function report. Further
 handler-side authority and pre-completion liveness checks are in the v5 candidate
 and need their own execution; v4 evidence is not relabeled as v5 qualification.
+
+Published the initial GL-030 development checkpoint as `a7339e0`; remote main
+remains `9f52b27`. DockerPC subsequently closes SSH before key exchange on repeated
+bounded attempts, preventing log collection/new local runs at that moment.
+Hosted qualification is authorized and independent of this worker outage.
+
+Correct the baseline identity/GC fixture by yielding every 1,000 iterations of
+its existing 20,000-iteration collection workload. Preserve every iteration,
+all retained-name/native-identity assertions and the required observed GC.
+This test is about identity surviving collection and deletion, not non-yielding
+throughput. The production 25 ms limits and dedicated execution/sanitizer controls
+stay unchanged. Retain the original candidate and exact-main failures above;
+this fixture change does not claim a runtime speed improvement.
