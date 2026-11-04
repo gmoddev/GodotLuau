@@ -2685,11 +2685,15 @@ public:
 #endif
         return Result;
     }
-    bool LiveFunctionRequest(const RFPending& Request) {
+    bool LiveFunctionSession(const RFPending& Request) {
         if (!RemoteServiceActive() || Request.Epoch != RemoteEpoch || !_mp()->get_peers().has(Request.peer)) return false;
         int64_t User = mode == 2 ? gl_local_user_id() : (peer_seq_uid.count(Request.peer) ? peer_seq_uid.at(Request.peer) : 0);
+        return User > 0 && User == Request.User;
+    }
+    bool LiveFunctionRequest(const RFPending& Request) {
+        if (!LiveFunctionSession(Request)) return false;
         auto Found = RemotePublications.find(Request.Endpoint);
-        return User == Request.User && Found != RemotePublications.end() && Found->second.Function &&
+        return Found != RemotePublications.end() && Found->second.Function &&
             Found->second.Generation == Request.Generation && Found->second.Object == Request.Object &&
             Found->second.LocalGeneration == Request.LocalGeneration && LiveEndpoint(Found->second);
     }
@@ -2871,13 +2875,14 @@ public:
             _rf_fail_local(CallId, Timeout ? "RemoteFunction invoke timed out" : "[Network:Function] Endpoint or session retired");
             if (Timeout) { ++FunctionExpired; if (LiveFunctionRequest(Request)) rpc_id(Request.peer, "_rf_cancel", Request.Header); }
         }
-        std::vector<int64_t> Retired;
+        std::vector<std::pair<int64_t, bool>> Retired;
         for (const auto& Entry : FunctionServing) {
             const auto& Serving = Entry.second;
             if (!LiveFunctionRequest(Serving.Request) || RemoteNow() >= Serving.Request.Deadline ||
-                !GLReferenceAlive(Serving.Anchor, Serving.Guard) || !GLGetOwner(Serving.Thread)->Domain->CanResume(Serving.Thread)) Retired.push_back(Entry.first);
+                !GLReferenceAlive(Serving.Anchor, Serving.Guard) || !GLGetOwner(Serving.Thread)->Domain->CanResume(Serving.Thread))
+                Retired.emplace_back(Entry.first, LiveFunctionSession(Serving.Request));
         }
-        for (int64_t Token : Retired) FinishFunction(Token, false, Array::make("[Network:Function] Handler cancelled or timed out"), true);
+        for (const auto& Entry : Retired) FinishFunction(Entry.first, false, Array::make("[Network:Function] Handler cancelled or timed out"), Entry.second);
     }
     // Falla las llamadas en vuelo hacia un peer que ya no está (o hacia todos).
     void _rf_fail_pending(int peer, const String& msg) {
