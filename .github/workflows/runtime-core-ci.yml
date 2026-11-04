@@ -18,11 +18,62 @@ on:
       - ".gitmodules"
       - ".github/workflows/runtime-core-ci.yml"
   workflow_dispatch:
+    inputs:
+      ExportBenchmarkHost:
+        description: "Qualify and retain a Windows Release host for bounded worker benchmarks (no publication)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
+  BenchmarkHost:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.ExportBenchmarkHost }}
+    name: Qualification-only Windows Release benchmark host
+    runs-on: windows-2022
+    timeout-minutes: 65
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select existing admitted-profile compiler
+        run: ./tools/InitializeReleaseToolchain.ps1
+      - name: Provision hash-pinned build frontend
+        run: python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r tools/ReleaseBuildRequirements.txt
+      - name: Build existing admitted Release host with bounded parallelism
+        run: python tests/runtime/BuildSanitizedGodot.py --output "$env:RUNNER_TEMP/remote-host" --remote-admission --configuration Release --jobs 2 --timeout 3300
+      - name: Require actual ENet ownership and RPC checks before export
+        run: |
+          $HostRecord = Get-Content -LiteralPath "$env:RUNNER_TEMP/remote-host/remote-host.json" -Raw | ConvertFrom-Json
+          python tests/runtime/RunRemoteHostQualification.py --godot "$($HostRecord.Executable)" --host-manifest "$env:RUNNER_TEMP/remote-host/remote-host.json" --output "$env:RUNNER_TEMP/benchmark-host-qualification"
+      - name: Export qualification-only host
+        run: python tests/runtime/ExportRemoteHost.py --manifest "$env:RUNNER_TEMP/remote-host/remote-host.json" --output "$env:RUNNER_TEMP/benchmark-host"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-host-Windows-Release
+          retention-days: 7
+          if-no-files-found: error
+          path: ${{ runner.temp }}/benchmark-host/*
+      - name: Preserve host-only qualification evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-host-qualification-Windows-Release
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/benchmark-host-qualification/**
+            ${{ runner.temp }}/remote-host/remote-host.json
+            ${{ runner.temp }}/remote-host-attempts/**
+
   Core:
     name: Core (${{ matrix.Platform }}, Debug)
     runs-on: ${{ matrix.Runner }}

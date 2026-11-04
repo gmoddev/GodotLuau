@@ -59,6 +59,14 @@ manifest/runtime hashes and Godot license notices, for a separate bounded
 Release comparison. Export is a qualification artifact, not a release channel
 or updater admission. Dependency/host-patch pins remain unchanged.
 
+The core workflow also has an explicit `ExportBenchmarkHost` manual option.
+It retains the ordinary core jobs and adds an independent two-job-limit host
+build with actual ENet native ownership/RPC checks before exporting the same
+admitted Release profile. This host-only evidence does not accept source
+candidates, skip their gates or grant publication. It avoids waiting for a
+complete candidate build merely to obtain the executable needed for a bounded
+Release memory profile.
+
 Remaining performance coverage includes Release 16/32 peers, an impaired-link
 profile, mixed traffic fairness/starvation, more sustained churn and repeated
 disconnect/reconnect storms. Phase 2/3 correctness fixtures cover deterministic
