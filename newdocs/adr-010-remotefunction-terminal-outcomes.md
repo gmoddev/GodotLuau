@@ -38,8 +38,10 @@ fallback retains its existing non-yielding contract and return shapes.
 
 ## Identity and publication
 
-Use checked positive signed-64-bit request IDs, never recycled in the process,
-including after service replacement. Exhaustion fails before wrap. IDs remain
+Use checked positive signed-64-bit request IDs, never recycled during an extension
+load, including after service replacement. An extension unload retires all old
+domains/transports; a new load establishes a new service/transport scope.
+Exhaustion fails before wrap. IDs remain
 native integer Variants on the wire; private serving tokens cross Lua as decimal
 strings, never doubles. Tokens belong to one exact serving coroutine and live
 owner; knowing a token is insufficient to respond from another thread.

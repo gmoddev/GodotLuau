@@ -246,6 +246,7 @@ game:SetAttribute('BasicDone', true)
         var DeadlineElapsed := Time.get_ticks_msec() - DeadlineStarted
         Engine.time_scale = 1.0
         Check(DeadlineElapsed >= 390 and DeadlineElapsed < 3000, "native deadline uses wall time instead of scaled frame delta")
+        multiplayer_poll = false
         ScriptNode("LocalScript", "Bounds", """
 local Pending = {}
 for Index=1,64 do
@@ -254,26 +255,36 @@ end
 local Ok, Message = pcall(function() game.ReplicatedStorage.Function:InvokeServer('Block') end)
 assert(not Ok and string.find(tostring(Message),'pending limit',1,true))
 game:SetAttribute('BoundFull',true)
-task.wait(0.05)
+while not game:GetAttribute('ReleaseBounds') do task.wait() end
 for _, Thread in Pending do task.cancel(Thread) end
 game:SetAttribute('BoundDone',true)
 """)
         await Until(func(): return Game.has_meta("BoundFull"), "exact pending ceiling admits and one-over rejects")
         Check(int(State().Pending) == 64, "per-peer pending accounting retains exactly sixty-four requests")
+        Game.set_meta("ReleaseBounds", true)
         await Until(func(): return Game.has_meta("BoundDone") and int(State().Pending) == 0 and int(State().Responses) == 0, "task cancellation detaches all pending records")
+        multiplayer_poll = true
         var Before := int(State().Rejected)
         Network.call("_rf_return", [1,1,1,1,1,1,true,[666]])
         Check(int(State().Rejected) == Before + 1, "reflected response cannot establish transport provenance")
         Mark("basic-" + str(ClientIndex))
         await Until(func(): return Marked("client-call-done"), "server completed reverse invoke")
         ScriptNode("LocalScript", "Retiring", """
-local Retained = game.ReplicatedStorage.Function.InvokeServer
+_G.RetainedFunctionInvoke = game.ReplicatedStorage.Function.InvokeServer
+_G.RetainedFunctionObject = game.ReplicatedStorage.Function
 local Ok, Message = pcall(function() game.ReplicatedStorage.Function:InvokeServer('Retire') end)
 assert(not Ok)
-task.wait(0.05)
-assert(not pcall(function() Retained(game.ReplicatedStorage.Function, 'replacement') end))
+game:SetAttribute('PendingRetired',true)
+while not game:GetAttribute('LocalDestroyed') do task.wait() end
+assert(not pcall(function() _G.RetainedFunctionInvoke(_G.RetainedFunctionObject, 'replacement') end))
 game:SetAttribute('RetiredDone',true)
 """)
+        await Until(func(): return Game.has_meta("PendingRetired"), "server retirement settles the in-flight call")
+        var OldId := Function.get_instance_id()
+        Function.free()
+        Function = Create("RemoteFunctionNode", "Function", Storage)
+        Check(Function.get_instance_id() != OldId and not bool(Network.call("GetRemoteState", Function).get("Ready", false)), "Client replacement has fresh ObjectID and cannot inherit function readiness")
+        Game.set_meta("LocalDestroyed", true)
         await Until(func(): return Game.has_meta("RetiredDone"), "endpoint retirement and retained closure reject replacement")
         Check(bool(Network.call("QualificationFunctionCounter", 9223372036854775806)), "checked identity reaches final positive boundary")
         ScriptNode("LocalScript", "Exhaustion", """

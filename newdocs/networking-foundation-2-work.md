@@ -173,3 +173,41 @@ whereas NetworkService used native monotonic time. Use an absolute monotonic
 deadline in both owners and add a 20x simulation-time regression; this preserves
 the finite wall-time contract during time scaling and reentrant wait creation.
 No general scheduler or unrelated WaitForChild timer behavior changes.
+
+## Latest local checkpoint and hosted fixture correction
+
+Runtime `2f08e44` has native fingerprint
+`7a4af3b79e002ac005fcc86a1d7de5bc6ff65291b45b280bbe3a521bde02ba9b`.
+The [versioned local receipt](evidence/gl030-local-checkpoint-2026-11-03.json)
+records the independently checked 590-member raw-log/report archive, exact
+baseline and selected Windows MSVC 18 Debug ASan products. The final local replay
+passes six Function actors (109 assertions), eight general integration actors,
+and the twelve-actor combined Remote group, including all six existing GL-029
+actors (461 assertions) and the six Function actors again. No unexpected ASan
+report is present. This is 26 selected actor process runs, not the full 122-actor
+matrix or complete platform qualification.
+
+The scaled-time test exposed a fixture race: a 0.05-second cancellation timer
+could run before GDScript sampled the admitted 64-request count. The ordinary
+hosted Linux job reproduces that same failure after all six GL-029 actors pass.
+Use an explicit release barrier and pause inbound polling while observing the
+exact pending ceiling. Keep the 64-count/one-over and cleanup assertions intact.
+Strengthen endpoint lifetime coverage by actually destroying the Client Function,
+creating a same-name replacement, verifying fresh ObjectID/no readiness, and
+calling the retained old closure. All six actors pass that stronger fixture.
+
+The first cooperative GC fixture edit also needed `%%` inside its formatted
+GDScript string; the corrected form is in `2f08e44` and the complete eight-actor
+local regression now passes. Earlier formatting/timeout failures remain retained.
+One unchanged v7 Remote replay misses the final unreliable sequence barrier;
+an unchanged-runtime replay passes all six GL-029 actors. No source cause or
+guaranteed unreliable delivery is claimed from that replay.
+
+Hosted core Windows/Linux at `2f08e44` is downloaded and independently verified:
+81 distinct cases each. Original core report hashes are
+`0bfe6bf4dae3a8b81e55a9df59ed28fb6a787530f544890cebff581c20161c7c`
+(Linux) and `ac24b86b279a15d8126f7b860f0bf1144aef9b6f5b4e97c34efbbba989d065dd`
+(Windows). Hosted native `41745944549` fails the old count-observation fixture;
+its failed artifacts are preserved. Full-native `41746182521` and candidate
+`41746187100` are separate pending runs at that revision, not passing evidence
+for the corrected fixture. Final hosted qualification must use the new checkpoint.
