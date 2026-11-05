@@ -86,7 +86,7 @@ local Far = Instance.new('Part'); Far.Name = 'Far'; Far.Anchored = true; Far.Pos
 local Counter = Instance.new('IntValue'); Counter.Name = 'Counter'; Counter.Value = 1; Counter.Parent = game.ReplicatedStorage
 local A = Instance.new('Folder'); A.Name = 'ParentA'; A.Parent = game.ReplicatedStorage
 local B = Instance.new('Folder'); B.Name = 'ParentB'; B.Parent = game.ReplicatedStorage
-local Child = Instance.new('Folder'); Child.Name = 'Child'; Child.Parent = A
+local Child = Instance.new('StringValue'); Child.Name = 'Child'; Child.Value = string.rep('p',7500); Child.Parent = A
 local Hidden = Instance.new('Folder'); Hidden.Name = 'HiddenDirect'; Hidden.Parent = World
 local Inner = Instance.new('Folder'); Inner.Name = 'HiddenChild'; Inner.Parent = Hidden
 Hidden.Name = 'ServerStorage'
@@ -251,6 +251,7 @@ func Client() -> void:
     for Round in range(8): ExpectedStructural.append_array(["A-","B+","B-","A+"])
     await Until(func(): return Structural == ExpectedStructural, "burst preserves every ordered structural transition")
     Check(Storage.get_node("ParentA/Child").get_instance_id() == ChildIdentity, "reparent preserves child native identity")
+    Check(str(Storage.get_node("ParentA/Child").get("Value")) == "p".repeat(7500), "large FIFO barrier payload survives burst splitting intact")
     await Until(func(): return Storage.has_node("SweepReference") and Storage.get_node("SweepReference").get("Value") == null and not Storage.has_node("SweepTarget"), "destruction during an unfinished sweep clears references and retires the exact target")
     Mark("client" + str(ClientIndex) + ".reparent")
     await Wait("reference.go")

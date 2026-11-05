@@ -9,6 +9,9 @@ the existing cooperative time/in-flight checks. This is a source-verified bound
 correction, not a reproduced receiver failure. No queue/native/timeout limit or
 wire format changes. Earlier `01ec4eb` qualification remains attributed to that
 source; fresh proof is required for this additional minimal guard.
+The actual native fixture now reparents a 7,500-byte StringValue sixteen times
+and verifies its exact final payload and every ordered transition. This exercises
+large-frame burst splitting without adding an implementation-mirroring unit test.
 
 ## GL-039 resumed CI review — 01ec4eb
 
