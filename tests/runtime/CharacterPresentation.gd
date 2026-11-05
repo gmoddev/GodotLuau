@@ -468,18 +468,19 @@ game:SetAttribute('PresentationSpawnLanes',true)
     else:
         Check(Character != null, "participant owns a local Character")
         if Character == null: return
-    # A walking-cycle observation requires an actually grounded owner. Startup
-    # spawn/contact motion can legitimately hold a static airborne leg pose.
+    # A client can ground at its default spawn before the trusted server's lane
+    # teleport arrives. Observe that placement and its landing before walking.
     if not (Case.begins_with("dedicated") and Role == "server"):
         var GroundDeadline := Time.get_ticks_msec() + 15000
         var GroundTrace := []
-        while not Character.call("IsGrounded") and Time.get_ticks_msec() < GroundDeadline:
+        while (Character.global_position.z < 12.0 or not Character.call("IsGrounded")) and Time.get_ticks_msec() < GroundDeadline:
             var GroundBody: CharacterBody3D = Character.call("GetPhysicsBody")
             GroundTrace.append({"Time": Time.get_ticks_msec(), "Position": str(Character.global_position), "Velocity": str(GroundBody.velocity), "PlatformVelocity": str(GroundBody.get_platform_velocity())})
             await process_frame
         States["Grounding"] = GroundTrace
         if not Character.call("IsGrounded") and not GroundTrace.is_empty():
             printerr("[Character:Presentation] Grounding final sample ", GroundTrace.back())
+        Check(Character.global_position.z >= 12.0, "trusted server walking lane reaches owner")
         Check(Character.call("IsGrounded"), "walking observation starts from grounded owner")
         Character.call("set_npc_move_dir", Vector3.RIGHT)
     await Ticks(90)

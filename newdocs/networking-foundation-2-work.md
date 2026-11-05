@@ -1,5 +1,27 @@
 # Networking Foundation 2 campaign journal
 
+## Captured late lane placement explains the remaining presentation race
+
+At `20a1592`, sanitizer run `42036812889` passes Linux. Both platforms' DataStore
+groups pass with the original contention status, timing and frame-progress
+checks. Windows presentation still fails the post-warmup ground assertion.
+The added local samples show the exact condition: before/after physics the
+client is at `(3.6875,1.25,48)` / `(3.954167,0.9375,48)` with vertical velocity
+`-18` / `-18.75`. Initial grounding trace is empty. It had already grounded at
+the default spawn before receiving its trusted server lane teleport, then was
+still falling when the 90-tick walking sample ran. Other participants are near
+the floor and their walking cycles progress. Retain the failed artifacts under
+`ci-gl039-warm`; post-physics sampling alone was insufficient.
+
+The smallest correction waits for the nonzero server-assigned lane as well as
+real floor contact before movement. Add a lane-arrival assertion; retain both
+ground checks, the existing 15-second deadline, 90-tick warmup and every motion,
+identity and animation assertion. No physics, network authority, tolerance or
+production source changes. This handles a fixture setup race rather than hiding
+the separately observed GL-040 coincident-body behavior. Fresh full sanitizer
+CI is required for this changed fixture; reuse the unchanged implementation's
+existing ordinary/profile/package and 32-peer evidence.
+
 ## Presentation passes; Windows contention fixture follow-up
 
 At `37a5e4e`, core `42031393024` and ordinary native `42031392980` pass on both
