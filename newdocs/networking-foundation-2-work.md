@@ -1,5 +1,34 @@
 # Networking Foundation 2 campaign journal
 
+## Presentation passes; Windows contention fixture follow-up
+
+At `37a5e4e`, core `42031393024` and ordinary native `42031392980` pass on both
+platforms. Full-native sanitizer `42031394386` passes Linux. Both platforms'
+presentation groups pass, preserving every grounding/movement/animation check.
+Windows fails a different existing DataStore contention assertion, followed by
+the strict check's missing incomplete DataStore result. Controls pass and there
+are no unexpected sanitizer reports. The failed artifacts remain retained under
+`ci-gl039-phase`; this is not a passing full Windows sanitizer run.
+
+The old single-line assertion does not identify whether the returned status or
+elapsed time failed. Source shows each operation starts a new helper, so the
+0.8–3-second test includes loading the freshly copied ASan executable as well as
+the backend's one-second lock wait and helper retirement. The focused fixture
+change reads the missing key before publishing the root barrier, warming that
+disposable executable image; it does not introduce a persistent worker. The
+timed request still creates a new companion and retains the exact error,
+0.8–3-second and frame-progress assertions. Failure messages now retain status
+and elapsed seconds. Cold helper behavior remains covered by the other cases.
+Cold-image attribution remains a hypothesis, not a reproduced native defect.
+
+The worker lease is busy with another campaign, so no additional worker test is
+started or lease bypassed. Run fresh full-native sanitizer CI for this fixture
+change. Reuse `37a5e4e` ordinary native and `fa0d431` four-profile/package evidence
+within their unchanged-production scope instead of rebuilding those matrices
+again. The fixture-only commit skips automatic duplicate push jobs; the manual
+full sanitizer workflow still requires both complete platform suites and all
+existing core/native checks. GL-039 remains open until that result verifies.
+
 ## Capacity recovered and 32-peer latency measured — 2026-11-05
 
 The owner authorizes bounded pagefile recovery and MainPC fallback. DockerPC has
