@@ -1,5 +1,57 @@
 # Networking Foundation 2 campaign journal
 
+## Capacity recovered and 32-peer latency measured — 2026-11-05
+
+The owner authorizes bounded pagefile recovery and MainPC fallback. DockerPC has
+no remaining GL-039 process to retire; large allocations belong to unrelated
+workloads and remain untouched. Its free commit is 7,291,944,960 bytes despite
+17,363,705,856 bytes of free physical RAM. MainPC lacks the existing physical-RAM
+headroom. A temporary, non-boot-registered auxiliary pagefile adds 2 GiB through
+the existing privileged SSH/Python installation. Free commit becomes
+8,492,187,648 bytes; the 7,717,519,360-byte guard remains unchanged. Windows' own
+system-managed file changes size too; the receipt reports actual commit rather
+than equating allocated disk bytes with recovered commit. No restart, process
+termination, shared-cache cleanup or persistent setting change occurs. The
+[capacity receipt](evidence/gl039-capacity-recovery.json) records the failed
+initial helper call, correction, observed counters and safe rollback after a
+normally planned restart. Never delete or shrink an active pagefile.
+
+Core `41964866152`, native `41964866191` and all four candidate profiles/package
+gates `41964867366` pass at `fa0d431`; downloaded candidate artifacts verify with
+the existing verifier in the
+[receipt](evidence/gl039-fa0d431-candidate-verification.json). Production inputs
+remain native fingerprint `6698ad26...`. Both full-native sanitizer jobs fail
+only the new walking-ground sample in listen presentation; no unexpected
+sanitizer report is present. Remote poses remain near the floor and remote walk
+cycles pass, unlike the prior GL-040 airborne-host failure.
+
+Lease generation 5 covers the existing sealed Release recipe and subsequent
+independent candidate-only large-world run. All four candidate 32-peer trials
+pass with zero replication failures. Worst-client final convergence is
+299/226 us at 64 objects and 75,159/699,938 us at 512 objects, versus the retained
+6.58–6.96-second old opt-in measurements. Small-world server frame p95 is
+14.813/15.802 ms versus paired legacy 17.954/20.464 ms. Large-world frame p95 is
+15.557/16.050 ms; its legacy baseline fails warmup before candidate launch, so
+the unchanged harness runs the candidate independently. That failed comparison
+is retained, not relabeled passing or retried without attribution. No fresh
+large-world paired frame-speedup claim follows. Ordinary and impaired 16-peer
+pairs pass, including healthy-peer progress. See the
+[Release receipt](evidence/gl039-release41-qualification.json): 14 passes and one
+retained legacy failure, no candidate failure. Raw archive has 1,899 members,
+8,395,841 bytes and SHA-256 `246cfd59e0f80cb3f5d4355b3746f3c5a52f35ba947bf90cb909dc14ca207c4e`.
+Owned process census is zero; all coordinator Jobs retire and lease 5 releases.
+
+The focused fixture correction observes the completed physics step before the
+ground check, retaining its assertion and before/after pose/velocity evidence.
+Godot documents `physics_frame` before node physics callbacks; the prior
+`Ticks(90)` returns at that boundary. Three focused Windows ASan listen actors
+pass using the existing matching host/products; this reuses unchanged Character
+physics and does not qualify a new production binary. Fresh hosted sanitizer
+verification remains required. The phase attribution is source-supported, not
+an independently reproduced before-false/after-true transition in this local
+run. No production physics, assertion, resource bound or native source changes.
+GL-039 remains open pending the final sanitizer result; GL-040 stays separate.
+
 ## Current GL-039 checkpoint — fa0d431
 
 The separate-lane presentation fixture is committed and pushed as `fa0d431`.

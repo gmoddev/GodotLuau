@@ -1,0 +1,81 @@
+{
+  "Revision": "fa0d431d459fa10659adf5369199e553d4d46c53",
+  "NativeSource": {
+    "SHA256": "6698ad267f15b43fa3cacccd8d9d61ff625c2a4c492d304db71607cce25352ad",
+    "Files": 94,
+    "Newlines": "LF normalized"
+  },
+  "Profiles": [
+    {
+      "Profile": "Windows-Debug",
+      "CoreCases": 85,
+      "Actors": 131,
+      "LogHashes": 388,
+      "FilesVerified": 6,
+      "ProfileSHA256": "654f0a61c4acfefd8380345371e65dbf3a51aa417d22621997e210de80628af9",
+      "HostSHA256": "7d6fb3a2685c9637f4c98e840bd9146241e6e5cf08b1adabff482e0c64a9ebee",
+      "ExtensionSHA256": "cc4bbbac437e54b4c402f38c126ac87a74f19ccd63aefd3c32be70af29226ab0",
+      "CompanionSHA256": "cf6de4053dca2c0d14bbe80739c82031701dd0c3a6f1d4d2e5fc26f530dc759d"
+    },
+    {
+      "Profile": "Windows-Release",
+      "CoreCases": 85,
+      "Actors": 131,
+      "LogHashes": 384,
+      "FilesVerified": 6,
+      "ProfileSHA256": "602ff2ae3a29f77790cffe5f6464cb5d35cc4106a9d310eee4fbd27cbb84955d",
+      "HostSHA256": "2941d26bf7d21b2bcbae6446c8ab6a635b88749aed34d4d8b7649216176d1530",
+      "ExtensionSHA256": "bfc372c4e5a7472b41554bab63f6fcfa8ff9c52a574664f1bd4ae93b95e800ab",
+      "CompanionSHA256": "cf686dae11ed567dec6404eeba57db77ca6814036bd0034d606590cb1b75b22e"
+    },
+    {
+      "Profile": "Linux-Debug",
+      "CoreCases": 85,
+      "Actors": 131,
+      "LogHashes": 388,
+      "FilesVerified": 6,
+      "ProfileSHA256": "d51e01f577c7439d5b5c0b6dafc93e14498449572c83738ac776ea050e2fe41e",
+      "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99",
+      "ExtensionSHA256": "c5354b2e293089aa0f8dcf4848e9eb358d2ef8bfcf4dd3bc058ad33353abb5a2",
+      "CompanionSHA256": "f495e3f37dc32616a6df6951d9f9d7515213a4c00decbe1e8a7246bb8e5d83fc"
+    },
+    {
+      "Profile": "Linux-Release",
+      "CoreCases": 85,
+      "Actors": 131,
+      "LogHashes": 384,
+      "FilesVerified": 6,
+      "ProfileSHA256": "49e38d2c9b7034b6c01fab17cd87e29a4765ced20c4082d179c7feef7b4c0ae8",
+      "HostSHA256": "5ceeff3881483604aa60e194fc5be46f9e1009241632b82203ea1867ef17ea6e",
+      "ExtensionSHA256": "bc940198919009c46c684d4172d62c9cf10586a103f02e50925e7e223d6678e2",
+      "CompanionSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0"
+    }
+  ],
+  "Scope": "Downloaded exact-revision profiles, strict native rechecks, extracted packages and nonpublishing acceptance.",
+  "CoreSanitizer": {
+    "Result": "PASS",
+    "Cases": 85
+  },
+  "Packages": [
+    {
+      "Platform": "Linux",
+      "Result": "PASS",
+      "StartupActors": 2,
+      "Members": 133,
+      "PackageSHA256": "0af2f73983db620bbb13e7a259dabe3cabb837213adfd91454891bf5a9d5c5ef",
+      "RecordSHA256": "ec92984ae5a7bd84b8cec355f65df062ea553fcf6b41478cd490f44c38d37f94"
+    },
+    {
+      "Platform": "Windows",
+      "Result": "PASS",
+      "StartupActors": 2,
+      "Members": 133,
+      "PackageSHA256": "d98c66c358056af5fa55ca26ebe44ec2bd0b18d713b2c17b77c9d3da26fe7265",
+      "RecordSHA256": "eddbcf2f304a3fc5a3b6a0a23862d986922590792aa12bc16bb457459e53d944"
+    }
+  ],
+  "Acceptance": {
+    "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+    "SHA256": "21aa5bf553687d52b2f70f3d91da7877892c13a6c56225557a100ca667884f8f"
+  }
+}

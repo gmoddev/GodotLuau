@@ -104,9 +104,14 @@ admission failure.** The minimal bounded FIFO-drain candidate now includes the
 sanitizer matrices independently verify in the
 [runtime receipt](evidence/gl039-cb4c967-runtime-verification.json). Candidate
 qualification fails a presentation case, retained separately as GL-040.
-The corrected fixture is pushed at `fa0d431`; fresh CI is pending. All eight
-32-peer diagnostic configurations are blocked before launch by the unchanged
-worker memory preflight; 16-peer passes do not establish 32-peer latency.
+All four candidate 32-peer Release trials now pass after authorized temporary
+pagefile capacity recovery: worst-client convergence is 0.299/0.226 ms for 64
+objects and 75.159/699.938 ms for 512 objects. The
+[receipt](evidence/gl039-release41-qualification.json) retains the legacy large
+world's warmup failure and independent candidate runs. All four source profiles
+and both packages verify at `fa0d431`. Closure still awaits the sanitizer
+presentation-grounding follow-up; the completed-physics observation retains
+every existing assertion. The earlier memory-blocked attempts remain evidence.
 See the [journal](networking-foundation-2-work.md). No refactor,
 wire change, queue/native-cap increase or timeout increase is included.
 

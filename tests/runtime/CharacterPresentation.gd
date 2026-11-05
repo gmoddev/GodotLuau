@@ -484,6 +484,12 @@ game:SetAttribute('PresentationSpawnLanes',true)
         Character.call("set_npc_move_dir", Vector3.RIGHT)
     await Ticks(90)
     if not (Case.begins_with("dedicated") and Role == "server"):
+        var WalkingBody: CharacterBody3D = Character.call("GetPhysicsBody")
+        States["WalkingBeforeProcess"] = {"Grounded": Character.call("IsGrounded"), "Position": str(Character.global_position), "Velocity": str(WalkingBody.velocity)}
+        # physics_frame precedes the nodes' physics callbacks. Observe the
+        # completed step before process callbacks can apply another network pose.
+        await process_frame
+        States["WalkingAfterPhysics"] = {"Grounded": Character.call("IsGrounded"), "Position": str(Character.global_position), "Velocity": str(WalkingBody.velocity)}
         Check(Character.call("IsGrounded"), "walking owner remains physically grounded")
     Mark(Role + Index + ".moving")
     for Participant in ["server0", "client1", "client2"]: await Wait(Participant + ".moving")
