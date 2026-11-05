@@ -426,7 +426,7 @@ local NextLane = 0
 local function Place(Player)
     NextLane += 1
     local Lane = NextLane
-    local function Position(Character) Character.Position = Vector3.new(0,5,Lane*12) end
+    local function Position(Character) Character.Position = Vector3.new(0,0,Lane*12) end
     Player.CharacterAdded:Connect(Position)
     if Player.Character then Position(Player.Character) end
 end

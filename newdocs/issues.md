@@ -76,6 +76,24 @@ four successful workflows and independently checked artifacts.
 | GL-038 | P1 | Closed on unmerged campaign; verified at 436850a | Live ObjectValue can convert a destroyed target through a stale instance binding |
 | GL-039 | P3 | Open; measured performance limitation | 32-peer structural burst takes about seven seconds to converge |
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
+| GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
+
+## GL-041: Raised authoritative startup remains airborne during walking
+
+Windows full-native ASan at `20a1592` and `436af11` captures a local client at
+height 1.25/0.9375 with vertical velocity -18/-18.75 after the walking warmup.
+The trusted fixture's lane placement starts at height 5. Waiting for a nonzero
+lane alone does not resolve the behavior. The
+[evidence](evidence/gl041-raised-spawn-evidence.json) retains actual failed
+assertions, local samples and original JSON hashes. No sanitizer report, memory
+defect, precise grant/reconciliation cause or GL-039 regression is established.
+
+Use the known floor-level lane origin for walking presentation, retaining real
+physics, both ground checks and all animation/movement assertions. This isolates
+that fixture; it does not fix or close the raised-startup finding. Investigate
+initial grants, later reconciliation and simulation/frame timing separately,
+preserving GL-007 authority and production physics. Existing single-character
+jumping/falling coverage remains required. No production change is made here.
 
 ## GL-040: Coincident presentation spawns produce airborne host motion
 

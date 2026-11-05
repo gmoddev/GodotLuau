@@ -1,5 +1,34 @@
 # Networking Foundation 2 campaign journal
 
+## Ground-level walking setup; raised startup retained as GL-041
+
+At `436af11`, full sanitizer run `42041791695` passes Linux; Windows DataStore
+passes but listen presentation again catches the same falling local client.
+The lane barrier observes a default-ground sample at `(0,-0.00026,0)` before the
+lane arrives. After the walking warmup, position/velocity are again
+`(3.6875,1.25,48)` / `(16,-18,0)`, then `(3.954167,0.9375,48)` /
+`(16,-18.75,0)`. Lane arrival alone was insufficient. GL-041 retains this
+separated, raised-startup behavior and its unproven grant/reconciliation/physics
+cause. It is distinct from GL-040's high coincident-spawn ascent.
+
+The walking fixture's floor top is -1 and its native capsule half-height is 1.
+Place its trusted lane origin at y=0 instead of y=5. This removes an unnecessary
+startup fall from the walking observation without changing production physics,
+authority, tolerances, deadlines, the warmup or any ground/animation assertion.
+Single-character jumping/falling tests remain unchanged and mandatory. Neither
+GL-040 nor GL-041 closes through this fixture isolation.
+
+Worker lease generation 7 covers a focused existing Windows ASan presentation
+run: all 12 listen/dedicated/default/custom multiplayer actors pass. Reuse cached
+matching host/products with unchanged Character/network paths; no compilation
+or extra test framework is introduced. This is fixture evidence, not a new
+qualification of the older cached runtime. Native fingerprint `6698ad26...`
+still requires the final hosted check. Archive `presentation-ground44-checkpoint.zip`
+has 228 members, 636,348 bytes, SHA-256
+`c6f09b701101842f678f4abbe59446fe295543c6f149764ea88a7a845c41bdf4`.
+All assertions and archive integrity verify; owned process census is zero and
+lease 7 releases at 14:51:45 UTC. No worker workload remains active.
+
 ## Captured late lane placement explains the remaining presentation race
 
 At `20a1592`, sanitizer run `42036812889` passes Linux. Both platforms' DataStore
