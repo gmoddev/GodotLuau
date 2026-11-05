@@ -52,7 +52,15 @@ GL-034's [bounded maintenance correction](gl-034-catalog-proposal.md) is qualifi
 at `436850a`: repeated current 1/16/32-peer Release worlds and separate impaired
 profiles pass. The [receipt](evidence/networking2-436850a-release-qualification.json)
 retains baseline failures and limits. GL-034 closes within those profiles;
-GL-039 records approximately seven-second structural convergence at 32 peers.
+GL-039's bounded FIFO drain now passes two 32-peer Release trials per world size:
+maximum final-counter convergence is 0.299/0.226 ms at 64 objects and
+75.159/699.938 ms at 512 objects, versus the prior roughly seven seconds. Its
+[receipt](evidence/gl039-release41-qualification.json) preserves the failed legacy
+large-world baseline. GL-039 closes within that headless scope after final
+Windows/Linux sanitizer verification at `903b10c`; the
+[final receipt](evidence/gl039-final-verification.json) records reused ordinary
+and profile/package evidence for identical production inputs. GL-040/041 remain
+open Character findings.
 This branch is not ready for automatic integration or distribution.
 
 GL-018 / GL-029 are integrated through normal merge

@@ -1,5 +1,46 @@
 # Networking Foundation 2 campaign journal
 
+## GL-039 qualified and closed on the unmerged campaign
+
+Final fixture revision `903b10c4d19db3b9a739e94765746bf7366ad77f` passes hosted
+full-native sanitizer workflow
+[42049370120](https://github.com/gmoddev/GodotLuau/actions/runs/42049370120) on
+Windows and Linux. Downloaded summaries establish 23 Windows/24 Linux checks,
+85 core cases and 131 native actors per platform, with controls passed, complete
+qualification and no unexpected reports. Both builds report 1,161 instrumented
+native files. The existing core artifact parser passes; changed fixture hashes
+match the exact Git source and extension identities agree across manifests.
+Existing strict CI/instrumentation gates are trusted rather than reimplemented.
+See the [final receipt](evidence/gl039-final-verification.json).
+
+Ordinary core `42031393024` and native `42031392980` pass at `37a5e4e`; their
+downloaded reports and summary identities/counts are reviewed. Four source
+profiles and both extracted packages at `fa0d431` already verify with the
+established candidate verifier. All use production fingerprint `6698ad26...`.
+Only two fixtures and documentation change after that qualified implementation;
+the Git diff establishes unchanged production/build inputs. Reuse these results
+within their exact scope. No repeat profile/package build, performance run or
+new qualifier test suite is required.
+
+The existing Release workload passes all four candidate 32-peer trials, with
+worst-client final-counter convergence 0.299/0.226 ms at 64 objects and
+75.159/699.938 ms at 512 objects, down from the retained 6.58–6.96 seconds. The
+14 passing configurations include ordinary/impaired 16-peer pairs. One legacy
+512-object warmup failure remains failed; its candidate measurements run
+independently, with no fresh paired large-world frame-speedup claim. The
+7,717,519,360-byte preflight guard, queue/native limits, timeouts and all existing
+assertions remain intact. Required transition/payload regressions pass.
+
+GL-039 closes within this headless admitted-host scope. The failed sanitizer
+attempts remain failed and documented below. Fixture isolation does not close
+GL-040's coincident-body or GL-041's raised-startup findings. General latency,
+64-peer, full graphical and broader campaign guarantees are not established.
+Worker leases 5 and 7 release after checked retirement; no task workload remains
+active. The temporary pagefile has no boot registration; its safe post-restart
+cleanup is in the [capacity receipt](evidence/gl039-capacity-recovery.json).
+All commits are preserved. Main, disabled releases and fail-closed updater stay
+unchanged; this qualification is not merge or distribution authorization.
+
 ## Ground-level walking setup; raised startup retained as GL-041
 
 At `436af11`, full sanitizer run `42041791695` passes Linux; Windows DataStore
