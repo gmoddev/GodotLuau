@@ -1,5 +1,36 @@
 # Networking Foundation 2 campaign journal
 
+## Retained Windows Release presentation precondition failure
+
+Candidate workflow `41953316449` passes three source profiles but Windows Release
+fails `listen-custom` at `walking observation starts from grounded owner`, with
+a remote animation comparison also failing. Keep its captured `presentation.log`
+and actor logs. This does not establish a GL-039 source cause: the fixture begins
+scripted walking before establishing startup ground contact. The focused fixture
+correction establishes real grounding first, starts walking, and retains the
+movement/animation checks plus a grounding assertion after the walking warmup.
+No artificial pose reset, physics disable, tolerance increase or timeout increase
+is used. Retain final failed ground samples and presentation evidence JSON in
+future failed artifacts. Fresh qualification is required; no failed profile is
+relabeled passing.
+
+## GL-039 final runtime matrix verified — cb4c967
+
+Core `41953311858`, ordinary native `41953311887` and full-native sanitizer
+`41953312982` pass on Windows/Linux. Frozen-source independent verification
+establishes 85 core cases, 131 native actors per profile, 23 Windows/24 Linux
+sanitizer checks and 1,161 native plus three core instrumented units. Required
+logs/harnesses/products/host identities verify; two ephemeral GL-003 mailbox
+hashes are explicitly retained as such in the
+[receipt](evidence/gl039-cb4c967-runtime-verification.json). The 7,500-byte
+sixteen-barrier fixture passes with exact ordering and payload integrity.
+
+The four-profile/package workflow remains running. Its qualified Release
+products will supply the matched old/new 32-peer test. No older runtime receipt
+or prepared-but-unexecuted recipe is substituted for final latency evidence.
+GL-039 remains open. The worker lease was busy during local preparation;
+historical availability and a fresh Free status do not confer admission.
+
 ## GL-039 burst byte-bound review
 
 Before the latency run, source review identifies a byte-quantum edge: eight

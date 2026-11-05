@@ -451,8 +451,6 @@ func Multiplayer() -> void:
     else:
         Check(Character != null, "participant owns a local Character")
         if Character == null: return
-        Character.call("set_npc_move_dir", Vector3.RIGHT)
-    await Ticks(90)
     # A walking-cycle observation requires an actually grounded owner. Startup
     # spawn/contact motion can legitimately hold a static airborne leg pose.
     if not (Case.begins_with("dedicated") and Role == "server"):
@@ -463,7 +461,13 @@ func Multiplayer() -> void:
             GroundTrace.append({"Time": Time.get_ticks_msec(), "Position": str(Character.global_position), "Velocity": str(GroundBody.velocity), "PlatformVelocity": str(GroundBody.get_platform_velocity())})
             await process_frame
         States["Grounding"] = GroundTrace
+        if not Character.call("IsGrounded") and not GroundTrace.is_empty():
+            printerr("[Character:Presentation] Grounding final sample ", GroundTrace.back())
         Check(Character.call("IsGrounded"), "walking observation starts from grounded owner")
+        Character.call("set_npc_move_dir", Vector3.RIGHT)
+    await Ticks(90)
+    if not (Case.begins_with("dedicated") and Role == "server"):
+        Check(Character.call("IsGrounded"), "walking owner remains physically grounded")
     Mark(Role + Index + ".moving")
     for Participant in ["server0", "client1", "client2"]: await Wait(Participant + ".moving")
     var RemoteLimbs := {}
