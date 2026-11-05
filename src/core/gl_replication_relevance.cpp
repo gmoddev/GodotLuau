@@ -815,9 +815,12 @@ void NetworkService::TickReplication() {
             if (View.Sent > View.Acked && View.WaitingSince && Now - View.WaitingSince > 10000000) { Failures.push_back(PeerValue); continue; }
             // Amortize a peer visit across a small FIFO burst, within the
             // existing global submission budget and 64-frame ACK window.
+            size_t BurstBytes = 0;
             for (size_t Batch = 0; Batch < 8 && View.Sent - View.Acked < 64; ++Batch) {
                 const auto* Pending = Replication.Outgoing.Front(PeerValue);
                 if (!Pending || (Batch && Time::get_singleton()->get_ticks_usec() - Started >= 4000)) break;
+                // Keep the old maximum single-frame byte quantum per visit.
+                if (Pending->Bytes > 60 * 1024 - BurstBytes) break;
                 if (Now >= Pending->EnqueuedUsec && Now - Pending->EnqueuedUsec > 10000000) { Failures.push_back(PeerValue); break; }
                 Dictionary Capacity = NativeRemoteAdmission(PeerValue);
                 bool WouldBlock = !NativeCapacity(Capacity, Pending->Bytes);
@@ -843,6 +846,7 @@ void NetworkService::TickReplication() {
                     View.Sent = CommitValue->Sequence;
                     if (!View.WaitingSince) View.WaitingSince = Now;
                     Replication.Outgoing.Take(PeerValue);
+                    BurstBytes += Message.Bytes;
                     CountRemote(Replication.Submitted); CountRemote(Replication.Bytes, Message.Bytes);
                     CountRemote(Replication.Enters, CommitValue->Enters); CountRemote(Replication.Leaves, CommitValue->Leaves);
                     CountRemote(Replication.Retired, CommitValue->Retired); CountRemote(Replication.Updates, CommitValue->Updates);

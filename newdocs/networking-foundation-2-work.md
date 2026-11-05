@@ -1,5 +1,35 @@
 # Networking Foundation 2 campaign journal
 
+## GL-039 burst byte-bound review
+
+Before the latency run, source review identifies a byte-quantum edge: eight
+near-maximum frames could exceed the former one-frame per-visit traffic quantum.
+Cap the burst at the existing 60-KiB frame maximum as well as eight frames and
+the existing cooperative time/in-flight checks. This is a source-verified bound
+correction, not a reproduced receiver failure. No queue/native/timeout limit or
+wire format changes. Earlier `01ec4eb` qualification remains attributed to that
+source; fresh proof is required for this additional minimal guard.
+
+## GL-039 resumed CI review — 01ec4eb
+
+Core `41930591599`, ordinary native `41930591984` and candidate `41930600188`
+pass. Independent frozen-source candidate verification checks all four
+85-core/131-actor profiles, logs/products/harnesses, admitted host proof and both
+133-member extracted packages with two startup actors each. The
+[receipt](evidence/gl039-01ec4eb-candidate-verification.json) retains acceptance
+hash `db2e49362134a58235300cec49b298442fb93f55e3095cf09bb6b01db8dccb77`.
+Full-native sanitizer `41930595264` passes Windows but Linux times out after
+five minutes installing compiler prerequisites, before any source build/test.
+Retain that infrastructure failure; rerun only its failed job without runtime,
+assertion or workflow changes. Its result is pending.
+
+The exact qualified Release adapter is staged locally for a matched comparison
+of old `436850a` and new `01ec4eb`, with the same admitted compiler/host. Fixed
+profiles cover repeated 32-peer 64/512-object worlds and 16-peer ordinary and
+impaired fairness checks. GL-039 stays open until actual latency evidence and
+the remaining sanitizer proof establish acceptance. Worker admission now uses
+the shared host-local lease mechanism; no historical release grants a new lease.
+
 ## GL-039 interrupted-turn collection — 01ec4eb
 
 Minimal runtime source `01ec4eb` preserves first-frame progress within the
