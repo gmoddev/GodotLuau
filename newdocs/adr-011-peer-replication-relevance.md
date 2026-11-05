@@ -197,8 +197,9 @@ Property writes coalesce before admission. Already accepted reparent barriers
 remain immutable FIFO work, including two changes in one Luau turn. Cached
 property bytes are reused with per-peer headers. NetworkService's existing tick
 does at most eight peer turns or four milliseconds of submission work, round
-robin. GL-039 candidate `01ec4eb` drains up to eight queued FIFO frames per peer
-visit within that existing cooperative budget, rechecking native capacity and
+robin. GL-039 candidate native fingerprint `6698ad26...` drains up to eight queued
+FIFO frames and at most 60 KiB per peer visit within that existing cooperative
+budget, rechecking native capacity and
 the unchanged 64-frame application-ACK window before each send. The first frame
 retains progress if earlier peer planning consumed the budget. Clients apply
 up to eight FIFO frames per tick with a cooperative four-ms quantum, revalidating

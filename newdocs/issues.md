@@ -84,6 +84,8 @@ host at approximately `(72.7,161.9,-8.1)` while the other characters remain near
 the floor. Its local grounding/remote walking-cycle comparisons fail. Grounding
 before movement does not resolve the interaction. These are actual captured
 transforms, not proof of the precise physics cause or a GL-039 regression.
+The [retained failure receipt](evidence/gl040-presentation-failure.json) includes
+all three actors' failed assertions, captured transforms and original JSON hashes.
 
 The presentation fixture uses coincident spawns. Assign distinct parallel walking
 lanes through the existing trusted-server CharacterAdded/Position API, retaining
@@ -96,10 +98,16 @@ authority, CharacterBody3D behavior and qualified collision semantics intact.
 ## GL-039: Structural convergence under a 32-peer burst
 
 **Status: OPEN; measured performance limitation, not a reproduced ordering or
-admission failure.** A minimal bounded FIFO-drain candidate is pushed as
-`01ec4eb`; 41 focused Windows Debug ASan actors pass, including exact ordering
-of sixteen same-turn barriers. Full hosted and repeated 32-peer latency evidence
-remain pending; see the [journal](networking-foundation-2-work.md). No refactor,
+admission failure.** The minimal bounded FIFO-drain candidate now includes the
+60-KiB per-peer visit byte bound and sixteen same-turn barriers carrying a
+7,500-byte value. At `cb4c967`, Windows/Linux core, 131-actor native and full-native
+sanitizer matrices independently verify in the
+[runtime receipt](evidence/gl039-cb4c967-runtime-verification.json). Candidate
+qualification fails a presentation case, retained separately as GL-040.
+The corrected fixture is pushed at `fa0d431`; fresh CI is pending. All eight
+32-peer diagnostic configurations are blocked before launch by the unchanged
+worker memory preflight; 16-peer passes do not establish 32-peer latency.
+See the [journal](networking-foundation-2-work.md). No refactor,
 wire change, queue/native-cap increase or timeout increase is included.
 
 At `436850a`, both 32-peer Release trials pass the mixed

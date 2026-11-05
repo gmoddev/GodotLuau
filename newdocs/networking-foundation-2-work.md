@@ -1,5 +1,25 @@
 # Networking Foundation 2 campaign journal
 
+## Current GL-039 checkpoint — fa0d431
+
+The separate-lane presentation fixture is committed and pushed as `fa0d431`.
+Core workflow `41964866152` passes; ordinary native `41964866191` and full-native
+sanitizer `41964870001` are running. Nonpublishing candidate `41964867366` is
+running after cancellation of the superseded `5ea6345` run. Its failed Windows
+Release evidence is retained in the
+[GL-040 receipt](evidence/gl040-presentation-failure.json). Initial policy and
+Linux core sanitizer gates pass; four source profiles remain in progress, not
+accepted. A frozen `fa0d431` verification worktree and
+downloaded core artifacts preserve the source boundary for independent review.
+
+A read-only worker resource probe at 04:02 UTC on 2026-11-05 reports
+7,336,517,632 bytes of free commit, still below 7,717,519,360 bytes. No 32-peer
+actor launches, guard changes, unrelated workload stops or machine-setting
+changes occur. The previously released worker lease remains released.
+The 16 release-candidate admission tests and `git diff --check` pass locally.
+Main remains `9f52b27`; dependency pins, disabled publication and fail-closed
+updater remain unchanged. GL-039 cannot close without actual 32-peer results.
+
 ## Presentation evidence revises the initial fixture hypothesis
 
 At `5ea6345`, all core/native/full-native sanitizer workflows pass but Windows

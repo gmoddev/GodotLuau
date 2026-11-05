@@ -1,0 +1,161 @@
+{
+  "Scope": "Retained Windows Release headless presentation failure. Coincident-spawn interaction observed; precise physics cause and GL-039 causality are unproven. Separate lanes isolate walking qualification without closing GL-040.",
+  "Revision": "5ea6345fa3c57a4c9274bcda7d0d57fd662ebfd3",
+  "Workflow": "https://github.com/gmoddev/GodotLuau/actions/runs/41960533637",
+  "Profile": "Windows-Release",
+  "Evidence": [
+    {
+      "Result": "FAIL",
+      "Graphical": false,
+      "FailedAssertions": [
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": false
+        }
+      ],
+      "Name": "evidence-client1.json",
+      "Role": "client1",
+      "Transforms": {
+        "Grounding": [
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(0.0, 5.0, 0.0)",
+            "Time": 199,
+            "Velocity": "(0.0, 0.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(0.0, 5.0, 0.0)",
+            "Time": 206,
+            "Velocity": "(0.0, 0.0, 0.0)"
+          }
+        ],
+        "RemotePlayer_1 animation": {
+          "FinalPosition": "(72.71416, 161.8671, -8.05691)",
+          "InitialPose": "(0.350007, 0.0, 0.0)",
+          "MaximumPoseDelta": 0.00000676512718200684
+        },
+        "RemotePlayer_1510414376 animation": {
+          "FinalPosition": "(55.23919, 0.000943, 0.0)",
+          "InitialPose": "(0.300599, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.2001895904541
+        },
+        "replicated puppet RemotePlayer_1": {
+          "Body": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (57.24739, 129.8215, -8.05691)]",
+          "Character": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (57.24739, 129.8215, -8.05691)]",
+          "RootPart": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (57.24739, 129.8215, -8.05691)]"
+        },
+        "replicated puppet RemotePlayer_1510414376": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.69911, 0.000943, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.69911, 0.000943, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.69911, 0.000943, 0.0)]"
+        }
+      },
+      "SHA256": "52c998c1680052b1be60d47afbde778feba6e1d20dbc85432c1f3f1a1d73ef65"
+    },
+    {
+      "Result": "FAIL",
+      "Graphical": false,
+      "FailedAssertions": [
+        {
+          "Label": "remote procedural animation progresses",
+          "Passed": false
+        }
+      ],
+      "Name": "evidence-client2.json",
+      "Role": "client2",
+      "Transforms": {
+        "Grounding": [
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(0.0, 5.0, 0.0)",
+            "Time": 195,
+            "Velocity": "(0.0, 0.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(0.0, 4.9875, 0.0)",
+            "Time": 204,
+            "Velocity": "(0.0, -0.75, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(0.0, 4.9875, 0.0)",
+            "Time": 211,
+            "Velocity": "(0.0, -0.75, 0.0)"
+          }
+        ],
+        "RemotePlayer_1 animation": {
+          "FinalPosition": "(72.71416, 161.8671, -8.05691)",
+          "InitialPose": "(0.350007, 0.0, 0.0)",
+          "MaximumPoseDelta": 0.00000712275505065918
+        },
+        "RemotePlayer_1953322849 animation": {
+          "FinalPosition": "(54.83929, 0.000944, 0.0)",
+          "InitialPose": "(0.66801, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.56760013103485
+        },
+        "replicated puppet RemotePlayer_1": {
+          "Body": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (56.71406, 127.9664, -8.05691)]",
+          "Character": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (56.71406, 127.9664, -8.05691)]",
+          "RootPart": "[X: (0.0, 0.0, 0.999999), Y: (0.0, 1.0, 0.0), Z: (-0.999999, 0.0, 0.0), O: (56.71406, 127.9664, -8.05691)]"
+        },
+        "replicated puppet RemotePlayer_1953322849": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.35285, 0.000944, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.35285, 0.000944, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.35285, 0.000944, 0.0)]"
+        }
+      },
+      "SHA256": "48bbe157df0d2a733e0ebedf1186080dc57fd21c6270bbc55d72e309712a069e"
+    },
+    {
+      "Result": "FAIL",
+      "Graphical": false,
+      "FailedAssertions": [
+        {
+          "Label": "walking owner remains physically grounded",
+          "Passed": false
+        }
+      ],
+      "Name": "evidence-server0.json",
+      "Role": "server0",
+      "Transforms": {
+        "Grounding": [
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(0.0, 4.55, 0.0)",
+            "Time": 206,
+            "Velocity": "(0.0, -6.0, 0.0)"
+          },
+          {
+            "PlatformVelocity": "(0.0, 0.0, 0.0)",
+            "Position": "(0.0, 4.55, 0.0)",
+            "Time": 213,
+            "Velocity": "(0.0, -6.0, 0.0)"
+          }
+        ],
+        "RemotePlayer_1510414376 animation": {
+          "FinalPosition": "(54.53878, 0.000943, 0.0)",
+          "InitialPose": "(0.300599, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.19962477684021
+        },
+        "RemotePlayer_1953322849 animation": {
+          "FinalPosition": "(54.83929, 0.000944, 0.0)",
+          "InitialPose": "(0.616183, 0.0, 0.0)",
+          "MaximumPoseDelta": 1.51577317714691
+        },
+        "replicated puppet RemotePlayer_1510414376": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.69911, 0.000943, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.69911, 0.000943, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.69911, 0.000943, 0.0)]"
+        },
+        "replicated puppet RemotePlayer_1953322849": {
+          "Body": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.97834, 0.000944, 0.0)]",
+          "Character": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.97834, 0.000944, 0.0)]",
+          "RootPart": "[X: (0.0, 0.0, 1.0), Y: (0.0, 1.0, 0.0), Z: (-1.0, 0.0, 0.0), O: (32.97834, 0.000944, 0.0)]"
+        }
+      },
+      "SHA256": "d2f3bd46e51a8f96f550ac4ba31159bc9120919dc839b295d5a04d575dd18dbd"
+    }
+  ]
+}
