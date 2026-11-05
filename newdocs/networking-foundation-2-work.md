@@ -1,5 +1,45 @@
 # Networking Foundation 2 campaign journal
 
+## Presentation evidence revises the initial fixture hypothesis
+
+At `5ea6345`, all core/native/full-native sanitizer workflows pass but Windows
+Release presentation fails again. Saved JSON now shows the host rising to about
+161.9 units while other participants remain near the floor; the initial
+ground-before-walking change was insufficient. GL-040 retains this observed
+coincident-spawn interaction without asserting an unproven physics cause.
+The next small fixture change assigns parallel lanes through the already
+qualified trusted-server CharacterAdded/Position API before peers join, rather
+than changing production collision/platform behavior. Every existing ground,
+movement, identity and animation assertion remains required. GL-039 and GL-040
+remain open until their respective acceptance facts are established.
+
+## GL-039 diagnostic run — 32-peer memory preflight blocks launch
+
+Atomic worker-heavy lease generation 4 is acquired at 03:18:52 UTC, renewed,
+then released at 03:23:13 after checked retirement. The first unsealed recipe
+references a missing preinstalled helper; no benchmark starts in that root.
+Fresh sealed installation `release40` uses the same diagnostic Release adapter
+from the failed `cb4c967` profile, explicitly not accepted candidate proof. The
+runtime fingerprint remains `6698ad26...`; the earlier full runtime matrix
+verifies that source independently. Neither a failed candidate nor this
+diagnostic result is relabeled full qualification.
+
+Both 32-peer world sizes are blocked before launch: free commit is about
+7.21–7.22 GB decimal, below the unchanged 7,717,519,360-byte requirement. No
+resource guard is weakened. The separate 16-peer ordinary and impaired-peer
+pairs pass all eight configurations, with zero replication failures and retained
+frame/RTT/convergence metrics. These do not qualify 32 peers. See the
+[diagnostic receipt](evidence/gl039-diagnostic-release40.json).
+
+All executed outer/nested Jobs are checked reaped, with no timeout/output errors.
+The final census finds zero owned processes/listeners. Raw archive integrity
+passes: 869 members, 3,162,648 bytes, SHA-256
+`b85ec41022ad672a52d3226965a77072668169327f49c9761733c538aaf3dea1`.
+No worker workload remains active. A text clarification asks the user to free
+about 1 GiB of committed worker memory; unrelated workloads and machine settings
+are preserved. Fresh presentation-corrected CI continues independently. GL-039
+remains open pending actual 32-peer execution and full current acceptance.
+
 ## Retained Windows Release presentation precondition failure
 
 Candidate workflow `41953316449` passes three source profiles but Windows Release

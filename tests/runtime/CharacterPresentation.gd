@@ -420,6 +420,23 @@ func Wait(Name: String) -> void:
 func Multiplayer() -> void:
     Game.set_meta("Port", Port)
     if Role == "server":
+        Script("PresentationSpawnLanes", """
+local Players = game:GetService('Players')
+local NextLane = 0
+local function Place(Player)
+    NextLane += 1
+    local Lane = NextLane
+    local function Position(Character) Character.Position = Vector3.new(0,5,Lane*12) end
+    Player.CharacterAdded:Connect(Position)
+    if Player.Character then Position(Player.Character) end
+end
+Players.PlayerAdded:Connect(Place)
+for _, Player in Players:GetPlayers() do Place(Player) end
+game:SetAttribute('PresentationSpawnLanes',true)
+""")
+        var LaneDeadline := Time.get_ticks_msec() + 15000
+        while not Game.has_meta("PresentationSpawnLanes") and Time.get_ticks_msec() < LaneDeadline: await process_frame
+        Check(Game.has_meta("PresentationSpawnLanes"), "trusted server installs distinct walking lanes")
         var StartupDeadline := Time.get_ticks_msec() + 15000
         if Case.begins_with("dedicated"):
             # --glserver owns startup and removes the observer's local Character.

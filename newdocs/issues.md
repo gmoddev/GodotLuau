@@ -75,6 +75,23 @@ four successful workflows and independently checked artifacts.
 | GL-037 | P2 | Closed on unmerged campaign; native/sanitizer matrix verified | Follow-up full-native runs fail Character/legacy barriers; fixture races corrected |
 | GL-038 | P1 | Closed on unmerged campaign; verified at 436850a | Live ObjectValue can convert a destroyed target through a stale instance binding |
 | GL-039 | P3 | Open; measured performance limitation | 32-peer structural burst takes about seven seconds to converge |
+| GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
+
+## GL-040: Coincident presentation spawns produce airborne host motion
+
+At `5ea6345`, failed Windows Release presentation evidence shows the listen
+host at approximately `(72.7,161.9,-8.1)` while the other characters remain near
+the floor. Its local grounding/remote walking-cycle comparisons fail. Grounding
+before movement does not resolve the interaction. These are actual captured
+transforms, not proof of the precise physics cause or a GL-039 regression.
+
+The presentation fixture uses coincident spawns. Assign distinct parallel walking
+lanes through the existing trusted-server CharacterAdded/Position API, retaining
+real physics, ground checks and every motion/animation assertion. This isolates
+the intended walking observation; it does not fix or close the overlapping-body
+finding. A separate reproduction should distinguish collision recovery and
+moving-platform velocity before changing production physics. Keep native
+authority, CharacterBody3D behavior and qualified collision semantics intact.
 
 ## GL-039: Structural convergence under a 32-peer burst
 
