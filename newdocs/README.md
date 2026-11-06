@@ -33,10 +33,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-The input campaign is under development on `feature/input-action-api-foundation`.
+The qualified input foundation is integrated by normal merge `f3c5757`.
+See the [integration and package verification](input-main-integration.md).
 See [ADR-012](adr-012-input-actions.md), the [API](input-actions-api.md) and
 [running qualification journal](input-action-development.md). Its branch evidence
-does not establish main integration or untested controller/device coverage.
+does not establish untested controller/device coverage.
 
 Networking Foundation 2 is integrated by the user-authorized normal merge of
 `foundation/networking-2` at `cb2014f` into compacted main `41acd27`, preserving

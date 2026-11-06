@@ -83,9 +83,14 @@ four successful workflows and independently checked artifacts.
 | GL-039 | P3 | Integrated; closed within bounded 32-peer scope | Structural burst convergence corrected by bounded FIFO draining |
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
-| GL-042 | P2 | Fixed and qualified on feature branch; main unchanged | Raw input reports GUI consumption only after native GUI routing |
+| GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
 
 ## GL-042: UserInputService GUI routing flag
+
+Integrated by normal merge `f3c5757`, preserving the qualified source and all
+four commits. The [integration record](input-main-integration.md) verifies the
+previously outstanding four-profile and extracted-package gates. Device and
+graphical limits below remain; the source-branch evidence is retained.
 
 The input campaign confirms that actual raw event paths called `_fire` without
 its game-processed argument, always defaulting false. DockerPC's native focused

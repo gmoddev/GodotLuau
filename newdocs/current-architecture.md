@@ -1,14 +1,14 @@
 # Current architecture
 
-On `feature/input-action-api-foundation`, native `InputService`, `InputContext`,
+Integrated on main by [normal merge](input-main-integration.md), native `InputService`, `InputContext`,
 `InputAction` and `InputBinding` Nodes author one disposable `GLInputGraph`.
 `src/core/gl_input_actions.cpp` supplies the typed Luau surface and owner-aware
 dispatch; `src/gameplay/roblox_input.h` remains the physical Godot adapter, with
-a bounded post-GUI commit barrier shared by raw and semantic events. This branch
+a bounded post-GUI commit barrier shared by raw and semantic events. This foundation
 does not replace Character V2 polling or network authority. See the
 [API/migration contract](input-actions-api.md), [ADR-012](adr-012-input-actions.md)
 and [journal](input-action-development.md) for implemented scope and test limits.
-The branch also supplies `src/core/gl_local_motor.cpp`: an independent local
+The foundation also supplies `src/core/gl_local_motor.cpp`: an independent local
 CharacterBody3D motor with bounded commands consumed after existing Stepped
 callbacks, and owner-scoped camera/capture leases. Frame/physics input samples
 have separate accumulators. Scene-authored motors are inert until Client

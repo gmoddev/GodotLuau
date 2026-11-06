@@ -1,0 +1,395 @@
+{
+  "Schema": 1,
+  "StartingMain": "091c13da85b1d082249b525123f5cae4d3c17dd1",
+  "SourceBranch": "feature/input-action-api-foundation",
+  "BranchTip": "435bb6917b847c0405a9574cfe5fccfcdb1b9340",
+  "QualifiedImplementation": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+  "NormalMerge": "f3c575728a7d40b291a3e8f55015f24b5c542396",
+  "MergeTree": "dea70a7c9297b12eff866f5d8a3047a2b51cdbe9",
+  "Source": {
+    "Revision": "435bb6917b847c0405a9574cfe5fccfcdb1b9340",
+    "Tree": "dea70a7c9297b12eff866f5d8a3047a2b51cdbe9",
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    },
+    "NativeSource": {
+      "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+      "Files": 99,
+      "Newlines": "LF normalized"
+    },
+    "HarnessHashes": {
+      "AnimationAdversarial.gd": "05e0a4f64a4f2cd18cd2416606b180f74d8b321604658758220a454aab182db8",
+      "AnimationIntegration.gd": "0420f0ace4ae74d4981135424e7b85623f10278561d5cfdf214c1b1aab7759c6",
+      "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+      "BuildNativeSanitizers.py": "5b861d5c859d5f4a27f8656a5f0609a2aba0e32b351c2b499112f7e92f10487b",
+      "BuildSanitizedGodot.py": "d0b46dd645b867be4d9e8c7d1b35dd4e4b35dc5d1b17ed0966c9ac49f511fbff",
+      "BundleCharacterAssets.gd": "77834d4630760fcdf0ccf2fd5860bbc74c51e25a03dad415e7faab2446b1a57a",
+      "CMakeLists.txt": "891f215981287e1d8752eb41b85a91e538a64dc4b124af15b6bd36161587656e",
+      "CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+      "CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+      "CharacterDispatchProbe.gd": "2e58edaa60b956daff1181a36cdbf7107f0ff68024187f3324c525378dcd9ae5",
+      "CharacterIntegration.gd": "e061d1ea944eb026ec25b8fc2229718c0dabd87de90c73e56060124ed93a56a2",
+      "CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+      "CharacterNetworkBenchmarks.gd": "663513466c665205c1b105b7a2688a6d11c71d66c0dc0cc083ab51301b176c5e",
+      "CharacterPerformance.gd": "76b6431487b0691de069f517b0bb09b6716f691841214660c7ab0f54df74fd67",
+      "CharacterPresentation.gd": "8f2076432ae2a66468cc2016b90b65990b1843b69fea75efa70a0d1b89f8ed75",
+      "CharacterV2.gd": "08000a8307702721d6e951ad3ac2944709517f1c7d0c4db07639c7cccdb96859",
+      "CheckCoreCI.py": "20136181f352d65b95f71584beccf19d789c54b9988eeb781a27bb6112d127ab",
+      "CheckNativeCI.py": "3f35c02a2ba12b9151cbb5fff2b3e5d20be377e35cfd504c41e2e2b523a91996",
+      "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+      "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+      "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+      "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+      "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+      "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+      "DatastoreTransactions.gd": "86e02ae4b440f6c6b3b2f43f8461dd1acfc4d06c0aec92423cdafdb8d09e5d07",
+      "DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+      "DiagnoseSanitizerUnload.py": "b12586e76aea174353f8dc580aa06c55416371829e7196e127a793cff2c8ac5b",
+      "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+      "ExecutionDomainTests.cpp": "525b25161b86ee2ad3fe2d8fe000b4edea98fc5fd9dc467016583988bb56d2ee",
+      "ExportRemoteHost.py": "9b5022119f47d4fe205f66c598492b98c1209b8a9d926a97750b80434717313b",
+      "FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+      "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+      "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+      "FixtureProcesses.py": "5755cfe133f6fb4b9aae7695de8fd55e90dad42fe640dfcf44c230f8a75168a1",
+      "FoundationBenchmark.gd": "ce96d01bef0ce408753f18433a3c27ee136136ff9839050d6240beb25f32381f",
+      "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+      "HotPathBenchmarks.cpp": "f80e5b2bf1da2ce9440cce643ab2733215cd8b99e00fddcb851c26b0fee60bab",
+      "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+      "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+      "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+      "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+      "HttpFixtureServer.py": "5c2559ebe6a41e4532fc9244c259ec3acbd5ef48be0b636f9f1c5c5b56749663",
+      "HttpIntegration.gd": "bd1ec37260d7e1e17809930ea3bc133ba23b2c7dccdf4748cb8a80681c76a345",
+      "HttpServiceBaseline.gd": "d001b05eac5f8c3e1042cc51f97ce10a8a50beaf00383d32533313137739f429",
+      "HttpServiceCallers.gd": "231b96bbd3e40f9469686cbce72a11b2da1c0b942385af05c14a143d454bc4d6",
+      "HttpServiceIntegration.gd": "2ac75cbecacb50e0ab45595b7d7ba9c04d928f01f878834ac7174f865830aa1b",
+      "InputActionTests.cpp": "7a2ad92b901e57564d7a22c8629fb3f8fc7e1baaf6f180758036867d665a7456",
+      "InputActions.gd": "b5146be7a3523a380cf5740f192734658378449ad43fc169b633ddc88c49c6a9",
+      "InputBenchmarks.gd": "95bcbc54c77a02a4dfa6d43ad7d0582c61acbf82371cbe9cbd544564778f097d",
+      "InputController.gd": "605a5ebff05dc50051e81e2fbecf741b1f0e1aff33ad34cdcfbb223dee494fe1",
+      "InputControllerDemo.gd": "e7c5ee23acfb4434594959d0e618055d3e44a24c1936aecc66ea3e721144ec78",
+      "InputRoutingBaseline.gd": "66dcb8e4360edad73d4845861a27276648ca6bd53332e84ba35314a67915fd74",
+      "InspectHttpUtilities.gd": "2566bcb220076a9802a4e282d08cc51059a64f2cd18b05fae2afd9454ee77954",
+      "Integration.gd": "2743801bf0aba90274a639e3d3d5e73a8f94c623f507a7fa77e147f8566fb16a",
+      "InvestigateProductionBindings.py": "6afaf5579062cb8f3be1890df44932532ef3aced1a87ab7e01793f83f92189f1",
+      "InvestigateSanitizerBindings.py": "819e77d957ae84dfbe3459a683bcc4152061f6c1b3f3046beaa911bcad70d1bb",
+      "NativeAdmission.gd": "45bd0f5f59a44266220995175f78c2aab4730ad1d5f159444c0ea22a26828cc5",
+      "NativeRpcAdmission.gd": "83aa8686c6feebd043980b94c7af046905b1c7755cb218a763c020e087dad4cf",
+      "NetworkIntegration.gd": "d0ea61e35e7f15f2a324e5830042944a9c446609945b311212cdf63222bbded5",
+      "NetworkSecurity.gd": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+      "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+      "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+      "RelevanceIntegration.gd": "dfcc59850b9c705b893390c9864de982112c8685d59ee6456132536453f88bcf",
+      "RelevanceRootGuard.gd": "34fb006757c72edd87761abbc0a6e3c62a893cf96d43c4d60597199062e3b5bf",
+      "RemoteDeliveryBenchmark.gd": "3da04d72df4df71aabbe855304afadff36e9fba871bb3060f2d357d3caadffd1",
+      "RemoteEvents.gd": "9edd8471d46158fdc052758549654ad43039282ce4b39bd56508f03db4bc9349",
+      "RemoteFunctionBaseline.gd": "fe81409a57c9d2d345137ae3af1f906e080884a6bd2b8301ab639378fb3c360b",
+      "RemoteFunctions.gd": "4ba5d63bda449770b3e4ef0868f6d6a9600e2ac760a44982dab2dce302542c1b",
+      "RemoteHostIdentity.py": "7c601fad6c297c39171c909784e432bc8736cb708061d8ebbd776a06072a1586",
+      "ReplicationIntegration.gd": "2ac995c614e6514c1095a40105eef2446eb616af694cc3974ea3884cad233767",
+      "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+      "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+      "RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+      "RunCharacterNetworkBenchmarks.py": "0727ab7c1c180d37ec0250cb4aa0d8af0deac0d3a82fdc06fc2e8a39ad029e0b",
+      "RunCharacterPerformance.py": "eb045d9ec5e66024d72cdebb17daaacbb748232aa7ad08127a5bb238602cd128",
+      "RunCharacterPresentation.py": "b99193a3377da56b79a52543fb94998fc588ceafa68a1c689c42f3e7f110026e",
+      "RunCoreQualification.py": "0649f1b82f7b17cd58e78c91d8477b236c1577a1476bfccbfbd4bbdc9b46ed7c",
+      "RunCoreTests.py": "fdd97eb57c2e5b26e523e5053094eae676c7e3a421b27fdad0757bed72961522",
+      "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+      "RunDatastoreQualification.py": "1b66520fb5ec260d2da26f3370a0e8c74ce6003669432e5865df197a30e1e394",
+      "RunFoundationBenchmarks.py": "b168ca402e7b8497ea63f950e0c50ac6236e7ba244c54ac4f03111e873a51320",
+      "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+      "RunHttpServiceBaseline.py": "1128b038d7069434df6afd47f502fe0f797d0f05db9eddca04963564ecf7e980",
+      "RunHttpServiceCallers.py": "a999d6eaa0fd6bfdf1ed3cc9242a3a57983fce07ced8bad28ebf2d5200714462",
+      "RunInputBenchmarks.py": "af14a5588338a3cda59f3c17b044ba2f683cf30252d49b16cfd1372586bebaab",
+      "RunInputController.py": "959019f56531ccba220c7bf50848034082a53419d1d3d4d45fd89b47944b0914",
+      "RunNativeSanitizers.py": "ea5fa5dc02b79ae46912269d4a5b4b63490c3f1d9aaca2cd1ec06f9181be196b",
+      "RunQualification.py": "bcac14c720cb94976d5a983cf2492b3a96956c397b9ae04c4469e3acf2370ae3",
+      "RunRemoteDeliveryBenchmarks.py": "91c2d2a2bcd3a30b944f583d4073e31f9cb6f498ddcddcf3468df655a8a82128",
+      "RunRemoteHostQualification.py": "45ea4e2ff75ed6168f904ff883271dd6eb103e8abc0604f12b7cbfc05cfbed6d",
+      "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+      "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+      "SanitizerLifecycle.gd": "9b5f0f892df88015a98e15b449f198f3c682cfd3538fb3314d17597fe58a9252",
+      "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+      "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+      "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f",
+      "Controller.luau": "20695393adbc496c4fa165146bb66386f026b18cf3086122dc7970eab175b0f6"
+    },
+    "PolicySHA256": "934fe9e055690ced8a4cdeef31d6b3a4468c3805d8ff81c0e222f930fa35e04e"
+  },
+  "CommitsPreserved": [
+    "6b799b24557ed8e18dbf047c2b8a0389d0ac854d",
+    "9ce9382bd6afc0f946f425c7a480e2f1f9d8e20b",
+    "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+    "435bb6917b847c0405a9574cfe5fccfcdb1b9340"
+  ],
+  "Candidate": {
+    "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161",
+    "Result": "success",
+    "Head": "435bb6917b847c0405a9574cfe5fccfcdb1b9340",
+    "Jobs": [
+      {
+        "Name": "Linux production core ASan and LSan",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127785968661",
+        "Result": "success"
+      },
+      {
+        "Name": "Candidate rejection and retention checks (windows-2022)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127785968808",
+        "Result": "success"
+      },
+      {
+        "Name": "Candidate rejection and retention checks (ubuntu-24.04)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127785968985",
+        "Result": "success"
+      },
+      {
+        "Name": "Source build and qualify (Windows, Release)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127786099490",
+        "Result": "success"
+      },
+      {
+        "Name": "Source build and qualify (Windows, Debug)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127786099531",
+        "Result": "success"
+      },
+      {
+        "Name": "Source build and qualify (Linux, Release)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127786099572",
+        "Result": "success"
+      },
+      {
+        "Name": "Source build and qualify (Linux, Debug)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127786099579",
+        "Result": "success"
+      },
+      {
+        "Name": "Extract and start candidate (Windows)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127808720227",
+        "Result": "success"
+      },
+      {
+        "Name": "Extract and start candidate (Linux)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127808720345",
+        "Result": "success"
+      },
+      {
+        "Name": "Require every candidate gate (no publication)",
+        "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/42185879161/job/127809086001",
+        "Result": "success"
+      }
+    ],
+    "Artifacts": [
+      {
+        "digest": "sha256:c8c663af885a76f0ed7068f23b77cdf1f818565658f8058a1ca5b40e25659374",
+        "id": 13491141520,
+        "name": "accepted-candidate",
+        "size_in_bytes": 25668
+      },
+      {
+        "digest": "sha256:159e6db0cd99b12740fd460633f209ac316fef06fec4158956d3f306e2c2c540",
+        "id": 13490408322,
+        "name": "candidate-Windows",
+        "size_in_bytes": 8435953
+      },
+      {
+        "digest": "sha256:6adf8cfaaab823a6ff28751e22e2c2afcb39c854fc55cec627da772588990d11",
+        "id": 13490393367,
+        "name": "candidate-Linux",
+        "size_in_bytes": 11341998
+      },
+      {
+        "digest": "sha256:31cc7e75a568f70dd3647f535ad0959eff00ad4ad28fe7a07a80352757d98f2d",
+        "id": 13490303444,
+        "name": "host-Windows-Release",
+        "size_in_bytes": 18219
+      },
+      {
+        "digest": "sha256:d0c5a0e9c605960336dda3e1a7f0bf7b4a819a919de4c5f0b8b519c30f0d4ef9",
+        "id": 13490173780,
+        "name": "benchmark-host-Windows-Release",
+        "size_in_bytes": 16576687
+      },
+      {
+        "digest": "sha256:a5f7e6f8533bdfc473a390fbe644161d8b5c838a23d512c8aa537e7698cfefc7",
+        "id": 13490133959,
+        "name": "profile-Windows-Release",
+        "size_in_bytes": 4724246
+      },
+      {
+        "digest": "sha256:3da3e3f652d25a8629e2e101fa75f2b2fce580734324cdc391fad9255705c487",
+        "id": 13489350978,
+        "name": "host-Windows-Debug",
+        "size_in_bytes": 18201
+      },
+      {
+        "digest": "sha256:d587cad1e41316345246b830645d4f1e2815dd64849f4320a5e8f41101656c88",
+        "id": 13489216435,
+        "name": "profile-Windows-Debug",
+        "size_in_bytes": 9133085
+      },
+      {
+        "digest": "sha256:85321d46acec50b7da83d384689dce22f70914ed8f608fa7fa70b32d68c9b449",
+        "id": 13488808985,
+        "name": "profile-Linux-Release",
+        "size_in_bytes": 8630449
+      },
+      {
+        "digest": "sha256:2fbc31e18d589acd00953c9bbae483d0be181c2d6a3ab7adcede1d14c4fc3eb4",
+        "id": 13488704353,
+        "name": "host-Linux-Release",
+        "size_in_bytes": 17361
+      },
+      {
+        "digest": "sha256:a6a082472bd5ff75bfbe98a84240d0ee4e70aae6aa8754a4d4c5c8fb02ebddea",
+        "id": 13488487924,
+        "name": "host-Linux-Debug",
+        "size_in_bytes": 17387
+      },
+      {
+        "digest": "sha256:214ca02de6c1a6252b406d985d641274bf96e7604c798172f3e48654e1a01095",
+        "id": 13488477945,
+        "name": "profile-Linux-Debug",
+        "size_in_bytes": 36950749
+      },
+      {
+        "digest": "sha256:d6a29e43e98c8e9795974f266fb8b63ab43ed31fdca762aebd74c1ed86ceef7d",
+        "id": 13487532355,
+        "name": "sanitizer",
+        "size_in_bytes": 13685
+      }
+    ],
+    "Packages": [
+      {
+        "Platform": "Windows",
+        "Package": {
+          "File": "GodotLuau-Windows.zip",
+          "SHA256": "cf9f698577dceea4d6d03f26c582b9ed252b6dcb802e8545bf663c50e482585f",
+          "Bytes": 8478244,
+          "NativeMembers": {
+            "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": {
+              "SHA256": "7961ea92dfc09b19d9f5beda5a84cca051d07284a0bdc81804388ad049c4e979",
+              "Bytes": 7215104,
+              "Mode": 438
+            },
+            "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": {
+              "SHA256": "1046e60a6d8209f43483686e0b3051eb1c6ac285ef914ae388da45d9e5182819",
+              "Bytes": 5158400,
+              "Mode": 438
+            },
+            "GodotLuau/bin/godot_luau_store_worker.exe": {
+              "SHA256": "08e168d66966118a02726842dadec721661cbfa9a3866d9c68c48a231f1b6763",
+              "Bytes": 171008,
+              "Mode": 511
+            }
+          }
+        },
+        "ProvenanceSHA256": "fcd7fee7e2e2366d84a8e5c56449475ea4c907bcc3a0106e1de298b2f432a0c7",
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Label": "package-Debug",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "7961ea92dfc09b19d9f5beda5a84cca051d07284a0bdc81804388ad049c4e979",
+            "CompanionSHA256": "08e168d66966118a02726842dadec721661cbfa9a3866d9c68c48a231f1b6763",
+            "Logs": {
+              "stdout": "5ba3797a5effb099b1d977fc72bec98cf5efcdb7241cf1363d9a556ad7944335",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          {
+            "Configuration": "Release",
+            "Label": "package-Release",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "1046e60a6d8209f43483686e0b3051eb1c6ac285ef914ae388da45d9e5182819",
+            "CompanionSHA256": "08e168d66966118a02726842dadec721661cbfa9a3866d9c68c48a231f1b6763",
+            "Logs": {
+              "stdout": "38f5e67f7e14e1e1427125641c4a57cc2dc7cd756fd84f1655b21ceb75ec3ad1",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ]
+      },
+      {
+        "Platform": "Linux",
+        "Package": {
+          "File": "GodotLuau-Linux.zip",
+          "SHA256": "175804ab3e20a17eac5db4415915433e8e49fa1314ef5d8ec12665d1d4153074",
+          "Bytes": 11406603,
+          "NativeMembers": {
+            "GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so": {
+              "SHA256": "a79bb558b785e65501462ae4a05c284c803ff59fee47b5e996188ac978f8f596",
+              "Bytes": 11157632,
+              "Mode": 420
+            },
+            "GodotLuau/bin/godot_luau_store_worker": {
+              "SHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+              "Bytes": 26856,
+              "Mode": 493
+            },
+            "GodotLuau/bin/godot_luau.linux.template_release.x86_64.so": {
+              "SHA256": "f73c32971533a19f600a9aad15ade2e45a9a408ef903ae827418dc2f0142d87d",
+              "Bytes": 10620120,
+              "Mode": 420
+            }
+          }
+        },
+        "ProvenanceSHA256": "3bc3bc39b118842d7920163972c689f53f0b20fb20dab8c2547192269fb47778",
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Label": "package-Debug",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "a79bb558b785e65501462ae4a05c284c803ff59fee47b5e996188ac978f8f596",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "Logs": {
+              "stdout": "3e55deb9b979616b90ad6c979e6f70ebcfb961f4125ca6aa49766510da51939f",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          {
+            "Configuration": "Release",
+            "Label": "package-Release",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "f73c32971533a19f600a9aad15ade2e45a9a408ef903ae827418dc2f0142d87d",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "Logs": {
+              "stdout": "41fa0c9f785671cf4ec61887046ec5868254c6c5f4bb532b5f3b7aedb79bec67",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "Verification": {
+    "MergeTreeMatchesSource": true,
+    "FinalEvidenceCommitChangesOnlyDocs": true,
+    "Profiles": 4,
+    "CoreCasesPerProfile": 85,
+    "NativeActorsPerProfile": 134,
+    "NewFixtureChecks": {
+      "Input": 51,
+      "IndependentMotor": 20,
+      "HeadlessExample": 20
+    },
+    "DownloadedPackageAndNativeMemberHashes": true,
+    "ExtractedCompanionStartupBothConfigurations": true,
+    "LinuxCompanionExecutableMode": "0755"
+  },
+  "RetainedQualificationReceipt": "input-final-qualification-2026-11-06.json",
+  "Limitations": [
+    "Candidate artifacts only; publication and runtime updater admission remain disabled",
+    "Recorded build inputs and hashes do not establish byte-for-byte reproducibility",
+    "Hosted presentation assertions are headless; no hosted GPU or physical-input qualification",
+    "Linux production-core ASan/LSan is required; Windows core and full-native sanitizer qualification are not automated by this candidate profile",
+    "GL-017 external engine defect, GL-018 native sanitizer host and broader GL-020 adversarial animation qualification remain open",
+    "GL-027 template authoring, arbitrary assets, production scale and asset redistribution rights remain separate limits"
+  ]
+}
