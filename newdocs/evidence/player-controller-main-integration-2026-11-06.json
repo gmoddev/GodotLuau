@@ -1,0 +1,272 @@
+{
+  "Schema": 1,
+  "StartingMain": "9ef59d12dbfbd8b1a695e09c993760b5b458a375",
+  "SourceBranch": "codex/scripted-character-control",
+  "SourceTip": "d76d6896db5790bc0b99f1b40de12a2663a2c9db",
+  "PreservedCommits": [
+    "9b1d67e6dc9ba5c77c5d5408115177200c96aa8c",
+    "0325c3c6d6ce18972313f35906a769ffa86ffd17",
+    "d76d6896db5790bc0b99f1b40de12a2663a2c9db"
+  ],
+  "NormalMerge": "2b0f846864b6eef3273421dd32f1a723fba42461",
+  "MergeTree": "93ab58b36cf01eeaf58b983778e53cec51e8061f",
+  "Source": {
+    "Revision": "d76d6896db5790bc0b99f1b40de12a2663a2c9db",
+    "Tree": "93ab58b36cf01eeaf58b983778e53cec51e8061f",
+    "NativeSource": {
+      "SHA256": "2278df21b72670c189c6206a5a49582a50d4cd835448f3f0708629ae0fd7d52e",
+      "Files": 101,
+      "Newlines": "LF normalized"
+    },
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    }
+  },
+  "HarnessFiles": 100,
+  "ReusedQualification": {
+    "Receipt": "player-controller-qualification-2026-11-06.json",
+    "Revision": "0325c3c6d6ce18972313f35906a769ffa86ffd17",
+    "Core": 42200598352,
+    "Native": 42200598344,
+    "FullNativeSanitizers": 42200618819,
+    "WindowsRenderedChecks": 43,
+    "Reason": "Only documentation changed between qualified revision and source tip; merge tree exactly equals source tip"
+  },
+  "Candidate": {
+    "Run": 42216970390,
+    "Attempt": 2,
+    "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+    "AcceptedManifestSHA256": "5e50cf468df055ee636ed2c2127afb811802884374f499cfb373b291141a08b9",
+    "Verification": "Existing ReleaseCandidate.CheckJobs and CheckPackage passed for downloaded accepted manifest and both packages",
+    "Artifacts": [
+      {
+        "Name": "accepted-candidate",
+        "ID": 13509448123,
+        "Digest": "sha256:54be24abb0fc7646c3f5c23539f6ee5e5f5cbf4181f0c83390f7cb6c423c5f9e"
+      },
+      {
+        "Name": "candidate-Windows",
+        "ID": 13511181612,
+        "Digest": "sha256:e20772477ee9260ea30e6dbd3a4cd65a65ac1baa881f7de0ffeda2a3995de4bf"
+      },
+      {
+        "Name": "candidate-Linux",
+        "ID": 13508873417,
+        "Digest": "sha256:227b00812c82557913feb72bd154b9e6cca01a04734a39cb66be027464611a73"
+      }
+    ],
+    "Profiles": {
+      "Windows-Debug": {
+        "Core": {
+          "Result": "PASS",
+          "Cases": 85
+        },
+        "Native": {
+          "Result": "PASS",
+          "Actors": 141
+        }
+      },
+      "Windows-Release": {
+        "Core": {
+          "Result": "PASS",
+          "Cases": 85
+        },
+        "Native": {
+          "Result": "PASS",
+          "Actors": 141
+        }
+      },
+      "Linux-Debug": {
+        "Core": {
+          "Result": "PASS",
+          "Cases": 85
+        },
+        "Native": {
+          "Result": "PASS",
+          "Actors": 141
+        }
+      },
+      "Linux-Release": {
+        "Core": {
+          "Result": "PASS",
+          "Cases": 85
+        },
+        "Native": {
+          "Result": "PASS",
+          "Actors": 141
+        }
+      }
+    },
+    "Packages": [
+      {
+        "Platform": "Windows",
+        "Package": {
+          "File": "GodotLuau-Windows.zip",
+          "SHA256": "1883a6be5361a111004d78dd5c225bbac2f76012aa2b86a29ea94c3034634229",
+          "Bytes": 8487364
+        },
+        "NativeMembers": {
+          "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": {
+            "SHA256": "4b8ab37a593d6447f85b37e9c63b93893c2eac6e54572242faa35fa0374bcf99",
+            "Bytes": 7226368,
+            "Mode": 438
+          },
+          "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": {
+            "SHA256": "8e0d268eeefd94d56238bbd139e95cc0849c9ad9f570d9fbb62605a691c0bc9f",
+            "Bytes": 5168640,
+            "Mode": 438
+          },
+          "GodotLuau/bin/godot_luau_store_worker.exe": {
+            "SHA256": "4fbf3c3d86a3df0387362cd3da21398fc2d0176f3b6389add8e24201250488ba",
+            "Bytes": 171008,
+            "Mode": 511
+          }
+        },
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Exit": 0,
+            "ExtensionSHA256": "4b8ab37a593d6447f85b37e9c63b93893c2eac6e54572242faa35fa0374bcf99",
+            "CompanionSHA256": "4fbf3c3d86a3df0387362cd3da21398fc2d0176f3b6389add8e24201250488ba"
+          },
+          {
+            "Configuration": "Release",
+            "Exit": 0,
+            "ExtensionSHA256": "8e0d268eeefd94d56238bbd139e95cc0849c9ad9f570d9fbb62605a691c0bc9f",
+            "CompanionSHA256": "4fbf3c3d86a3df0387362cd3da21398fc2d0176f3b6389add8e24201250488ba"
+          }
+        ]
+      },
+      {
+        "Platform": "Linux",
+        "Package": {
+          "File": "GodotLuau-Linux.zip",
+          "SHA256": "6dafd54a28308cf5b475f5d7eed58fa16b889eb420c052a0706f47d235629bf1",
+          "Bytes": 11422951
+        },
+        "NativeMembers": {
+          "GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so": {
+            "SHA256": "91ef61b096ad090d45ffcc85e628e44f87c860a41ae8b9157978619e8ceba263",
+            "Bytes": 11182368,
+            "Mode": 420
+          },
+          "GodotLuau/bin/godot_luau_store_worker": {
+            "SHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "Bytes": 26856,
+            "Mode": 493
+          },
+          "GodotLuau/bin/godot_luau.linux.template_release.x86_64.so": {
+            "SHA256": "c597bb7b50f02b9fd98b222e26f854dc19fbe8b3f3a3e20cd4bfd6882c0ed1e1",
+            "Bytes": 10636664,
+            "Mode": 420
+          }
+        },
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Exit": 0,
+            "ExtensionSHA256": "91ef61b096ad090d45ffcc85e628e44f87c860a41ae8b9157978619e8ceba263",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0"
+          },
+          {
+            "Configuration": "Release",
+            "Exit": 0,
+            "ExtensionSHA256": "c597bb7b50f02b9fd98b222e26f854dc19fbe8b3f3a3e20cd4bfd6882c0ed1e1",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0"
+          }
+        ]
+      }
+    ]
+  },
+  "FailedAttempts": [
+    {
+      "Attempt": 1,
+      "Job": 127889463272,
+      "Platform": "Linux Release",
+      "Failure": "Five-minute compiler provisioning timeout before build/tests; missing products follow early failure",
+      "JobLogSHA256": "6b671f163ff9cb90a94f313471f6b9d983fac0fc8df79a1658195a64aced1b66"
+    },
+    {
+      "Attempt": 1,
+      "Job": 127889463160,
+      "Platform": "Windows Release",
+      "Artifact": 13504713242,
+      "Failure": "animation-Dedicated-client2 did not observe replacement life within five seconds; server and client1 passed. Unchanged retry passed the full suite; exact timing cause not established",
+      "JobLogSHA256": "324dc977b14a3421125bc9a85345ea3bf7565a2ca14a6f51aaddabe91d477eb9"
+    }
+  ],
+  "Retry": "gh run rerun 42216970390 --failed; successful profiles/gates retained, no check or source changes",
+  "PostMergeCI": {
+    "Revision": "2b0f846864b6eef3273421dd32f1a723fba42461",
+    "Core": {
+      "Run": 42233498213,
+      "Result": "PASS",
+      "CasesPerPlatform": 85,
+      "GraphAssertionsPerPlatform": 29,
+      "Artifacts": [13511092298, 13508873899]
+    },
+    "Native": {
+      "Run": 42233498273,
+      "Result": "PASS",
+      "ActorsPerPlatform": 141,
+      "Artifacts": [13513056810, 13511388255],
+      "Summaries": [
+        {
+          "Platform": "runtime-native-Linux-Debug",
+          "Actors": 141,
+          "ControllerActors": 7,
+          "ControllerCases": [
+            40,
+            16,
+            10,
+            10,
+            15,
+            10,
+            10
+          ],
+          "ControllerFailed": 0,
+          "SummarySHA256": "4df98c7fe89f68f8d8cde9e292d25fa12df45721d376ee3accc6700efb3f60f1",
+          "ExtensionSHA256": "1b932e2298f4615d836a50310ac0e4e7e1c523ef93e37c50fadb433e1216b110",
+          "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+          "HarnessFiles": 100
+        },
+        {
+          "Platform": "runtime-native-Windows-Debug",
+          "Actors": 141,
+          "ControllerActors": 7,
+          "ControllerCases": [
+            40,
+            16,
+            10,
+            10,
+            15,
+            10,
+            10
+          ],
+          "ControllerFailed": 0,
+          "SummarySHA256": "5f9852eb67855ebfe5539b3fb65099283b507048472e053c543b560acc236d6f",
+          "ExtensionSHA256": "c60a6c4fba229b2e7ffe0e86a66a23a5375bd6874a8150760d09808bda5fbb81",
+          "CompanionSHA256": "9b000a1ac72c1344c6d5f43be59f32cf26e76f55ef02f595bf20ad921f79390b",
+          "HarnessFiles": 100
+        }
+      ]
+    }
+  },
+  "ActualCorrections": [],
+  "ControllerSupport": {
+    "Native": "Default; existing path preserved",
+    "Scripted": "Explicit local Client opt-in on actual Player.Character"
+  },
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false,
+  "Limitations": [
+    "Physical input devices and OS mouse capture unqualified",
+    "Linux graphical qualification absent",
+    "Windows LSan unsupported",
+    "Mixed local Debug extension and older Release host shutdown remains unsupported/unresolved",
+    "GL-040/041 remain separate Character findings",
+    "Existing admitted-host, GL-017/018, older-glibc/pristine-consumer and allocation-profiling limits retained",
+    "Candidate acceptance does not authorize distribution"
+  ]
+}

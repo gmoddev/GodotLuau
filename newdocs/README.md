@@ -39,8 +39,10 @@ See [ADR-012](adr-012-input-actions.md), the [API](input-actions-api.md) and
 [running qualification journal](input-action-development.md). Its branch evidence
 does not establish untested controller/device coverage.
 
-Optional Luau control of the existing Player.Character is separate development
-on `codex/scripted-character-control`. See [ADR-013](adr-013-scripted-character-control.md),
+Optional Luau control of the existing Player.Character is integrated by normal
+merge `2b0f846`, preserving `codex/scripted-character-control` at `d76d689`.
+See the [integration and package verification](player-controller-main-integration.md),
+[ADR-013](adr-013-scripted-character-control.md),
 the [API/example](player-character-control.md) and
 [qualification journal](player-controller-development.md).
 

@@ -217,3 +217,15 @@ preserved. No further local processes need to run. The next action is review of
 the published controller branch before any separately authorized integration.
 `main` remains at the Input integration revision. Releases, updater distribution,
 upstream, admitted hosts and dependency pins remain unchanged.
+
+## Main integration — 2026-11-06
+
+The separately authorized integration now preserves all three source commits by
+normal merge `2b0f846864b6eef3273421dd32f1a723fba42461`. Its tree exactly equals
+source tip `d76d689`; qualified runtime and fixture inputs are unchanged.
+The previous shutdown paragraph is the historical branch handoff, not current
+main status. The [integration record](player-controller-main-integration.md)
+tracks accepted Windows/Linux Debug/Release candidate packages, retained failed
+attempts and ordinary post-merge CI. Native remains the default; Scripted is an
+explicit local Client opt-in. No runtime correction or distribution admission
+is introduced by integration.

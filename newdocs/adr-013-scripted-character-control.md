@@ -73,5 +73,7 @@ The supplied example owns its contexts and disconnects them when superseded.
 It supports keyboard/gamepad actions, mouse/gamepad look, jumping/sprinting,
 remapping, menu consumption and explicit Native switching. Synthetic replay does
 not establish physical-device or OS mouse-capture qualification. Real ENet and
-matching sanitizer evidence will be recorded in the
-[development journal](player-controller-development.md).
+matching sanitizer evidence are retained in the
+[development journal](player-controller-development.md). The
+[main integration](player-controller-main-integration.md) preserves that evidence
+and records the additional non-publishing package gates.

@@ -17,7 +17,7 @@ replication and reference admission; no protocol or Character controller is
 replaced. [Performance evidence](input-action-performance.md) separates the
 evaluator, real event routing and callback publication costs.
 
-On `codex/scripted-character-control`, the optional
+Integrated on main by [normal merge](player-controller-main-integration.md), the optional
 [Character controller](player-character-control.md) supplies bounded local intent
 to the existing Character V2 body. `src/core/gl_character_controller.cpp` owns a
 script/generation lease checked against the exact native Player.Character and
