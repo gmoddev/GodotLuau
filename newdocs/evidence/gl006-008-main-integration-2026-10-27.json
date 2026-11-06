@@ -1,0 +1,273 @@
+{
+  "Date": "2026-10-27",
+  "Classification": "INTEGRATED WITH QUALIFICATION LIMITATIONS",
+  "StartingMain": "78d9664d10cede4f4dc7e7d4a93ddf1785c97ea0",
+  "QualifiedSource": "462969bd967bd26fcbeccdca1bd6ae60335347f4",
+  "IntegratedRuntimeMain": "2e69d8ac703d3f968e42054871511111ab8471be",
+  "MergeStrategy": "Normal --no-ff using ort; no conflicts; no squash, rebase, rewrite or force push",
+  "MergeTree": "3ddb481b04cd36a28f006b03736a43ae2d9cc83d",
+  "PreservedCommits": [
+    "2f563e079ac289d6bba54af0232ee100c71cb37d",
+    "b839ea4a6d1ce46cceef9eb4eb58a7b210ea56c6",
+    "462969bd967bd26fcbeccdca1bd6ae60335347f4"
+  ],
+  "SourceIdentity": {
+    "MergeTreeEqualsQualifiedTree": true,
+    "RuntimeBuildAndTestCodeEqualsQualifiedSource": true,
+    "WorkerRuntimeBuildAndTestFilesCompared": 86,
+    "WorkerMissingFiles": [],
+    "WorkerDifferentFiles": [],
+    "NativeInputs": {
+      "SHA256": "3f4e64b4477d228e9ed3580d5c054a4cc1f3d6d32abf53de842cf25daf78fd37",
+      "Files": 65,
+      "Newlines": "LF normalized"
+    },
+    "AfterMergeChanges": "Only integration documentation and this compact evidence record",
+    "UnchangedSinceStartingMain": [
+      "src/core",
+      "SConstruct",
+      ".gitmodules",
+      ".github",
+      "addons",
+      "godot-cpp pin",
+      "luau pin"
+    ],
+    "ValidatedBoundaries": [
+      "Connected Client-role and actual sender 1 for state/removal/chat receive",
+      "Server-role and current assigned transport sender for client relays",
+      "Live server PlayerObject and matching session UserId for remote chat",
+      "Original string Variant validation, 256 Unicode scalars, five-token burst and one-token-per-second refill",
+      "Accepted server echo; ObjectID revalidation and RemoteFunction ownership retained"
+    ]
+  },
+  "FreshCore": {
+    "Cases": 39,
+    "Configurations": [
+      "WindowsDebug",
+      "WindowsRelease",
+      "WindowsCoreAsan",
+      "LinuxDebug",
+      "LinuxRelease",
+      "LinuxAsan"
+    ],
+    "RepetitionsPerConfiguration": 1,
+    "AllPassed": true,
+    "BuildChecks": "All six incremental CMake core/adapter checks pass with no work; exact compatible artifacts reused"
+  },
+  "FreshNative": {
+    "SecurityProcesses": 50,
+    "ExistingRegressionProcesses": 40,
+    "TotalProcesses": 90,
+    "AllExitedZeroAndPassed": true,
+    "RepetitionsPerConfiguration": 1,
+    "NoHistoricalStressMatrixRepeated": true,
+    "Windows": {
+      "Platform": "Windows",
+      "NativeSource": {
+        "SHA256": "3f4e64b4477d228e9ed3580d5c054a4cc1f3d6d32abf53de842cf25daf78fd37",
+        "Files": 65,
+        "Newlines": "LF normalized"
+      },
+      "Root": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl006-008-integration-2e69d8a",
+      "Groups": {
+        "debug-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "debug-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "fafb041952d55def94d551c2181c565b9e93fa55c5bec25f780ad954f12fee9d",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "release-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "release-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "e80187d3daa20b99c1e2e14074e72483c4d30f4c0ee2a77f2191d13bfa8c5316",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        }
+      },
+      "Libraries": {
+        "debug": "18beeabdf072e5143625e95187164be21bb36cd8bfc9b0aeb65c3172c99b49f8",
+        "release": "51e223ad8a30acc27040c58e7f475619af7a02fe3e8ad5177fbc2878f8c48432"
+      },
+      "CoreLogs": {
+        "debug": {
+          "SHA256": "bfdfeac8a6a51b4e99443940d86d97f459bbbe3d722bff2a2b4d27115b7e2120",
+          "AllPassed": true,
+          "CachedBuildNoWork": true,
+          "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl006-008-integration-debug.log"
+        },
+        "release": {
+          "SHA256": "3dde6539fdd1dc9939187b584e07e850bde89ca55bfaa4e708160b0da0c13c61",
+          "AllPassed": true,
+          "CachedBuildNoWork": true,
+          "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl006-008-integration-release.log"
+        },
+        "asan": {
+          "SHA256": "d30922decdf21266fa4060ee8bdfad5bc44c7cca1c34317e71b7268984352bac",
+          "AllPassed": true,
+          "CachedBuildNoWork": true,
+          "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl006-008-integration-asan.log"
+        }
+      },
+      "SourceTestHashes": {
+        "tests/runtime/NetworkSecurity.gd": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+        "tests/runtime/RunQualification.py": "4aee64bf10177fe8cce637d6b6905fbe93ffed87834fa4399b4fd5d30f1e6fee",
+        "src/ui/roblox_chat.h": "83953b20cd67bcf0c398ab6b8d0425d858e2055afc4ac2e3889118f75cb74a66",
+        "src/services/roblox_network.h": "2a3ff580a48c755f8089d0291f840bde7e0d699cfe88fdcaa6d06216ce23ec97"
+      }
+    },
+    "Linux": {
+      "Platform": "Linux",
+      "NativeSource": {
+        "SHA256": "3f4e64b4477d228e9ed3580d5c054a4cc1f3d6d32abf53de842cf25daf78fd37",
+        "Files": 65,
+        "Newlines": "LF normalized"
+      },
+      "Root": "/opt/codex/godotluau/artifacts/gl006-008-integration-2e69d8a",
+      "Groups": {
+        "debug-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "debug-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "b3118151a8a273b9b7ce39f9673e7737cf9a96f7ebfc971df217130776295275",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "release-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "release-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "111744ed686cf2796fb571e4ac8c2917b1b26783e2ca5e46400069fdfc1e75bc",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "asan-regression": {
+          "Processes": 8,
+          "AllExitsZero": true,
+          "ResultsSHA256": "dfaabcdd0f54f89450cd2615dc6ea7c35df624de2017f0af082a45c0d3a712ff",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        },
+        "asan-security": {
+          "Processes": 10,
+          "AllExitsZero": true,
+          "ResultsSHA256": "35f8ad1b7ccc74d756b99ae705f8c09a86ada4dfa91ba38772a64a66462e9930",
+          "GL017Labels": [],
+          "CopiedLibrariesMatch": true,
+          "NoSecurityAssertionFailures": true,
+          "SanitizerReportFiles": []
+        }
+      },
+      "Libraries": {
+        "debug": "e21c10a7f99a6bb80f24ea0e61db41bb650a0082150185813d5062e21e0a428f",
+        "release": "e3aaf11993aaa2545d1752920dba49061632ca4649fd9c2faa7732feb595f4bc",
+        "asan": "b6bdd18df87f590dc72dd1c6251715f05764474e5eac46bd919b7963fd0d054e"
+      },
+      "CoreLogs": {
+        "debug": {
+          "SHA256": "6a97b20b25cb9576f25dafe1dc868e0afc93c6a41540f1f1e486927d05f2d314",
+          "AllPassed": true,
+          "CachedBuildNoWork": true,
+          "Path": "/opt/codex/godotluau/artifacts/gl006-008-integration-2e69d8a/debug.log"
+        },
+        "release": {
+          "SHA256": "09aabb0b943c9d956f0760c4e7f80e6e811120427c316431d59e47aaee5f20f8",
+          "AllPassed": true,
+          "CachedBuildNoWork": true,
+          "Path": "/opt/codex/godotluau/artifacts/gl006-008-integration-2e69d8a/release.log"
+        },
+        "asan": {
+          "SHA256": "fba4a3f46a7486c8d274f14451eca72a40eec7d019bbc8c0a2b481f787588d94",
+          "AllPassed": true,
+          "CachedBuildNoWork": true,
+          "Path": "/opt/codex/godotluau/artifacts/gl006-008-integration-2e69d8a/asan.log"
+        }
+      },
+      "SourceTestHashes": {
+        "tests/runtime/NetworkSecurity.gd": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+        "tests/runtime/RunQualification.py": "4aee64bf10177fe8cce637d6b6905fbe93ffed87834fa4399b4fd5d30f1e6fee",
+        "src/ui/roblox_chat.h": "83953b20cd67bcf0c398ab6b8d0425d858e2055afc4ac2e3889118f75cb74a66",
+        "src/services/roblox_network.h": "2a3ff580a48c755f8089d0291f840bde7e0d699cfe88fdcaa6d06216ce23ec97"
+      }
+    }
+  },
+  "ReusedQualification": {
+    "Manifest": "gl006-008-qualification-2026-10-27.json",
+    "ManifestLFNormalizedSHA256": "37f9012991dbe0cadb3f841e6f37d05e15e9d68bdbc559687469dfcf162a7b26",
+    "Scope": "Original baseline reproduction, source qualification, wire compatibility and documented limits retained; fresh integration results are separate",
+    "AllNativeLibraryHashesMatchQualifiedArtifacts": true,
+    "NoNewFullProductionQualification": true,
+    "NoNewPerformanceBenchmark": "GL-019 source unchanged; prior evidence retained in original scope"
+  },
+  "Commands": {
+    "Build": "cmake --build <existing-config> --target ExecutionDomainTests GodotLuauAdapter --parallel 4",
+    "Core": "ctest --test-dir <existing-config> --output-on-failure --timeout 30",
+    "NativeRegression": "python tests/runtime/RunQualification.py --godot <existing-host> --extension <library> --output <distinct-integration-directory> --teardown --coordinated-close --timeout 60",
+    "NativeSecurity": "python tests/runtime/RunQualification.py --godot <existing-host> --extension <library> --output <distinct-integration-directory> --security --timeout 60",
+    "LinuxSanitizer": "Matching minimal instrumented Godot; detect_leaks=1:halt_on_error=1 with distinct log_path and --timeout 90; ordered final close",
+    "WindowsCoreSanitizer": "Existing compiler runtime DLL directory on PATH in vcvars64 environment"
+  },
+  "Publication": {
+    "Remote": "https://github.com/gmoddev/GodotLuau.git",
+    "Ref": "main",
+    "Tip": "Integration documentation commit directly following IntegratedRuntimeMain; exact remote tip verified in final handoff",
+    "HistoricalSourceBranchRetained": "security/gl-006-008-rpc-authority",
+    "MainProtectionAtPreflight": false,
+    "RepositoryRulesetsAtPreflight": [],
+    "NewCommitMessages": "Both merge and integration documentation use [skip ci] to prevent inherited release workflow; workflow/updater unchanged"
+  },
+  "Limits": [
+    "GL-007 movement/health semantic authority remains open",
+    "GL-020 animation RPC authority remains open; not all presentation RPCs are secure",
+    "GL-017 independent engine diagnostic/leak remains open; final groups emitted no zero-channel diagnostics; ordered close does not qualify simultaneous close",
+    "GL-018 Windows full-native sanitizer host unqualified; only Windows core ASan is claimed",
+    "GL-003/004/005 capabilities/sandbox/quotas/HTTP, GL-009 persistence, GL-010/011/012/016 release/provenance/updater, and GL-015 assets remain open",
+    "Original qualification did not force numeric peer-ID collision, mixed historical-client versions or malformed UDP framing; integration does not expand those claims",
+    "No new graphical/coordinator/production-content or SCons packaging qualification; no binary/Release publication"
+  ],
+  "NextTask": "GL-020 animation sender/receiver authority with actual two-client rejection and valid play/stop/late-join coverage; GL-007 is a separate gameplay-authority design effort"
+}

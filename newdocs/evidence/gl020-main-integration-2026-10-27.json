@@ -1,0 +1,419 @@
+{
+  "Date": "2026-10-27",
+  "StartingMain": "132970c6f7270062952ef872d609844b762058f8",
+  "SourceBranch": "8e21d18a5504e0d703efbcf2a71a53d56314058e",
+  "Merge": "6b140427e8ab39d97e12ee693f7cbda72abc7bba",
+  "TreeIdentity": "Merge tree equals qualified branch; no conflicts or runtime edits",
+  "Status": "INTEGRATED FUNCTIONAL IMPLEMENTATION - SECURITY QUALIFICATION PENDING",
+  "Fresh": {
+    "CoreConfigurations": 2,
+    "CoreCases": 39,
+    "NativeProcesses": 36,
+    "Windows": {
+      "Platform": "WindowsDebug",
+      "Source": {
+        "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+        "Files": 65,
+        "Newlines": "LF normalized"
+      },
+      "LibrarySHA256": "8db6631beb43e71993a61fc48d5d9a34f86674259d63152fce816e093ac8f0e2",
+      "LibraryPath": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-debug\\godot_luau.dll",
+      "Commands": [
+        "call \"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Auxiliary\\Build\\vcvars64.bat\" >nul && set \"PATH=C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64;C:\\Sandbox\\Codex\\Tools\\cmake-3.31.10\\cmake-3.31.10-windows-x86_64\\bin;C:\\Strawberry\\c\\bin;%PATH%\" && cmake --build \"C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-debug\" --target ExecutionDomainTests GodotLuauAdapter --parallel 4 && ctest --test-dir \"C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-debug\" --output-on-failure --timeout 30",
+        [
+          "C:/Sandbox/Codex/Tools/python-3.12.6-controlled-v1/python.exe",
+          "C:\\Sandbox\\Codex\\Workspaces\\GodotLuau\\tests\\runtime\\RunQualification.py",
+          "--godot",
+          "C:/Sandbox/Codex/Tools/Godot_v4.7.1-stable_win64.exe",
+          "--extension",
+          "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-debug\\godot_luau.dll",
+          "--output",
+          "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl020-integration-6b14042-win2\\animation",
+          "--timeout",
+          "60",
+          "--animation"
+        ],
+        [
+          "C:/Sandbox/Codex/Tools/python-3.12.6-controlled-v1/python.exe",
+          "C:\\Sandbox\\Codex\\Workspaces\\GodotLuau\\tests\\runtime\\RunQualification.py",
+          "--godot",
+          "C:/Sandbox/Codex/Tools/Godot_v4.7.1-stable_win64.exe",
+          "--extension",
+          "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-debug\\godot_luau.dll",
+          "--output",
+          "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl020-integration-6b14042-win2\\regression",
+          "--timeout",
+          "60",
+          "--teardown",
+          "--coordinated-close"
+        ]
+      ],
+      "Core39Passed": true,
+      "Groups": {
+        "animation": [
+          {
+            "Label": "animation-Local-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Listen-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Listen-client1",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Listen-client2",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Dedicated-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Dedicated-client1",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Dedicated-client2",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Editor-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Editor-client1",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Editor-client2",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "regression": [
+          {
+            "Label": "integration-0",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Listen-0-listen",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Dedicated-0-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Dedicated-0-client1",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          },
+          {
+            "Label": "Dedicated-0-client2",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          },
+          {
+            "Label": "Editor-0-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Editor-0-client1",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          },
+          {
+            "Label": "Editor-0-client2",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' Ã¢Â€Â” este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          }
+        ]
+      },
+      "Logs": {
+        "commands.log": "11f54dc5b819da4855ab5dacc97778fcbff87f0ea9f00d8d9681caced742e027",
+        "regression\\Dedicated-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+        "regression\\Dedicated-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+        "regression\\Dedicated-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+        "regression\\Dedicated-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+        "regression\\Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression\\Dedicated-0-server.stdout.log": "ba29b2e0bec5fea05053d6f8ae7093ce1c9d61cbf811aa94b8113172c5b1824c",
+        "regression\\Editor-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+        "regression\\Editor-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+        "regression\\Editor-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+        "regression\\Editor-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+        "regression\\Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression\\Editor-0-server.stdout.log": "030d97b2f54ee00a593a46c98512183ced3960343ded44b408abdda0451a4097",
+        "regression\\integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression\\integration-0.stdout.log": "d41b9f5212182fcd7d6c4d3ece066413f553134fc986aec72a808675d6890fb1",
+        "regression\\Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression\\Listen-0-listen.stdout.log": "051ac184d863813f5710a0df6e87a8f4ea2544c191601d6815e1ddc57f09959b",
+        "animation\\Dedicated\\animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Dedicated\\animation-Dedicated-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+        "animation\\Dedicated\\animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Dedicated\\animation-Dedicated-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+        "animation\\Dedicated\\animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Dedicated\\animation-Dedicated-server.stdout.log": "6ff6773f3edbe9f3714cb4ab1dd6120ff6043b4ff1e1eedc60bc8d72d3082307",
+        "animation\\Editor\\animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Editor\\animation-Editor-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+        "animation\\Editor\\animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Editor\\animation-Editor-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+        "animation\\Editor\\animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Editor\\animation-Editor-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+        "animation\\Listen\\animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Listen\\animation-Listen-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+        "animation\\Listen\\animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Listen\\animation-Listen-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+        "animation\\Listen\\animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Listen\\animation-Listen-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+        "animation\\Local\\animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation\\Local\\animation-Local-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21"
+      },
+      "SourceTestHashes": {
+        "tests/runtime/RunQualification.py": "c38353323e83cd9d073cc1c2dd8d6cf4c06768617bd3b8c33e1d05c217c8cf36",
+        "tests/runtime/AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "tests/runtime/NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae"
+      }
+    },
+    "Linux": {
+      "Platform": "LinuxRelease",
+      "Source": {
+        "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+        "Files": 65,
+        "Newlines": "LF normalized"
+      },
+      "LibrarySHA256": "217aaaa623bce7d43f40fe759ed8c5fd125b1939d6148a6a2a4745a0c945a675",
+      "LibraryPath": "/opt/codex/godotluau/builds/linux-release/godot_luau.so",
+      "Commands": [
+        [
+          "docker",
+          "exec",
+          "codex-godotluau-qualification",
+          "cmake",
+          "--build",
+          "/work/builds/linux-release",
+          "--target",
+          "ExecutionDomainTests",
+          "GodotLuauAdapter",
+          "--parallel",
+          "4"
+        ],
+        [
+          "docker",
+          "exec",
+          "codex-godotluau-qualification",
+          "ctest",
+          "--test-dir",
+          "/work/builds/linux-release",
+          "--output-on-failure",
+          "--timeout",
+          "30"
+        ],
+        [
+          "docker",
+          "exec",
+          "codex-godotluau-qualification",
+          "python3",
+          "/work/source/tests/runtime/RunQualification.py",
+          "--godot",
+          "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "--extension",
+          "/work/builds/linux-release/godot_luau.so",
+          "--output",
+          "/work/artifacts/gl020-integration-6b14042/animation",
+          "--timeout",
+          "60",
+          "--animation"
+        ],
+        [
+          "docker",
+          "exec",
+          "codex-godotluau-qualification",
+          "python3",
+          "/work/source/tests/runtime/RunQualification.py",
+          "--godot",
+          "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "--extension",
+          "/work/builds/linux-release/godot_luau.so",
+          "--output",
+          "/work/artifacts/gl020-integration-6b14042/regression",
+          "--timeout",
+          "60",
+          "--teardown",
+          "--coordinated-close"
+        ]
+      ],
+      "Core39Passed": true,
+      "Groups": {
+        "animation": [
+          {
+            "Label": "animation-Local-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Listen-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Listen-client1",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Listen-client2",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Dedicated-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Dedicated-client1",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Dedicated-client2",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Editor-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Editor-client1",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "animation-Editor-client2",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "regression": [
+          {
+            "Label": "integration-0",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Listen-0-listen",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Dedicated-0-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Dedicated-0-client1",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          },
+          {
+            "Label": "Dedicated-0-client2",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          },
+          {
+            "Label": "Editor-0-server",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "Editor-0-client1",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          },
+          {
+            "Label": "Editor-0-client2",
+            "Exit": 0,
+            "Diagnostics": "ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.\n   at: push_error (core/variant/variant_utility.cpp:1023)"
+          }
+        ]
+      },
+      "Logs": {
+        "commands.log": "4ffd94417b8df547826f6ae61517dbd1bf3ff78e3455e3d3d29981126511b67b",
+        "regression/Editor-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+        "regression/Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression/integration-0.stdout.log": "2c2bf54374e4ed353a388fd7a796ba4d272b6d78553c6b45227f7f59a321d33b",
+        "regression/Dedicated-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+        "regression/Dedicated-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+        "regression/Dedicated-0-server.stdout.log": "e4509cd94eac3a1f6ead049ed099e0b65c11870be158de1faa9eccc0284de61d",
+        "regression/Editor-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+        "regression/Editor-0-server.stdout.log": "0bd8e15a5232401211a42d3d3c4cd9fbce00c08121a254ecd56f417b2f54613a",
+        "regression/Dedicated-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+        "regression/Listen-0-listen.stdout.log": "822a96e607e14626dee5da07d01a9becaf3e474987bb1e9086f7eda971cbb3b9",
+        "regression/Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression/Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression/Dedicated-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+        "regression/integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "regression/Editor-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+        "regression/Editor-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+        "animation/Dedicated/animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Dedicated/animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Dedicated/animation-Dedicated-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+        "animation/Dedicated/animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Dedicated/animation-Dedicated-server.stdout.log": "f0bd3af3a19e881144a1d5de9f74d5f82974d5f97394e7cffd03cddf7e9daea8",
+        "animation/Dedicated/animation-Dedicated-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+        "animation/Editor/animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Editor/animation-Editor-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+        "animation/Editor/animation-Editor-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+        "animation/Editor/animation-Editor-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+        "animation/Editor/animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Editor/animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Local/animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Local/animation-Local-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+        "animation/Listen/animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Listen/animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Listen/animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "animation/Listen/animation-Listen-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+        "animation/Listen/animation-Listen-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+        "animation/Listen/animation-Listen-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1"
+      },
+      "SourceTestHashes": {
+        "tests/runtime/RunQualification.py": "c38353323e83cd9d073cc1c2dd8d6cf4c06768617bd3b8c33e1d05c217c8cf36",
+        "tests/runtime/AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "tests/runtime/NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae"
+      }
+    }
+  },
+  "Reused": {
+    "Manifest": "gl020-animation-qualification-2026-10-27.json",
+    "CoreConfigurations": 6,
+    "NativeProcesses": 180,
+    "SConsConfigurations": 4,
+    "Scope": "Immutable identical source and artifact hashes; not fresh executions"
+  },
+  "Deferred": "Animation-specific adversarial transport/handler qualification; not run",
+  "Limitations": [
+    "GL-007",
+    "GL-017",
+    "GL-018",
+    "production content and graphical rendering"
+  ],
+  "WrapperFailure": "Initial Windows command quoting failed before build/tests; log retained in gl020-integration-6b14042. Corrected hidden shell invocation passed in win2."
+}

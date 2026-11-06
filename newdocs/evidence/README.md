@@ -1,5 +1,36 @@
 # Shared-domain qualification evidence
 
+[`gl020-main-integration-2026-10-27.json`](gl020-main-integration-2026-10-27.json)
+records the normal GL-020 merge, complete qualified-tree identity, two fresh
+39-case core executions and 36 fresh native functional process results. Matching
+library hashes support scoped reuse of the original broader qualification.
+Animation-specific adversarial security qualification remains pending.
+
+[`gl020-animation-qualification-2026-10-27.json`](gl020-animation-qualification-2026-10-27.json)
+records the GL-020 dedicated branch's functional implementation: matching native/
+fixture source hashes, six 39-case core configurations, four SCons builds and
+180 final native process results. Runtime/source identity, binary/result/log
+hashes, retained fixture failures and remaining security/platform limitations
+are explicit. The [animation report](../animation-lifecycle-validation.md)
+documents execution/session/cache contracts and reproduction. GL-020 remains
+open for full animation transport security qualification; main is not merged.
+
+[`gl006-008-main-integration-2026-10-27.json`](gl006-008-main-integration-2026-10-27.json)
+records the normal main merge, qualified-tree identity, 86 matching worker source/
+build/test files, six fresh core executions and 90 fresh native process results.
+Exact cached library hashes match the qualified artifacts. The
+[integration record](../network-authority-validation.md#main-integration-2026-10-27)
+keeps fresh checks distinct from the preserved source qualification below.
+
+[`gl006-008-qualification-2026-10-27.json`](gl006-008-qualification-2026-10-27.json)
+records the dedicated security branch's source identity, six passing 39-case
+core configurations, 90 passing native process results, binary/result/log hashes,
+per-session chat policy and remaining scope limits. Source and test hashes match
+the Windows/Linux workers. Raw logs remain on those task workers; the
+[authority report](../network-authority-validation.md) documents trust rules,
+actual adversarial transport assertions, commands and compatibility. Historical
+shared-domain and GL-019 reports below retain their original source scope.
+
 [`shared-domains-benchmark-2026-10-26.json`](shared-domains-benchmark-2026-10-26.json)
 contains all 90 final benchmark phase records: three counts, three trials, two
 architectures and five phases. See the [validation report](../shared-domains-validation.md)

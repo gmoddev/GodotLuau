@@ -1,5 +1,61 @@
 # Shared-domain regression fixtures
 
+## Animation lifecycle
+
+GL-020 extends this runner with `AnimationIntegration.gd`:
+
+```text
+python tests/runtime/RunQualification.py --godot <existing-Godot-4.7.1> --extension <candidate-library> --output <new-isolated-directory> --animation --timeout 60
+```
+
+It runs ten actual Godot processes: single-player, listen-host with two clients,
+dedicated server with two clients, and editor-style launch flags with two clients.
+Use `--animation-modes Local Listen Dedicated Editor` to select groups. The second
+client starts only after the first animation is cached, making it a real late join.
+Native network processing is paused after startup so explicit ENet state sends
+establish animation-before-puppet ordering. RPC polling continues through Godot.
+Observer acknowledgements prevent the next phase overtaking a previous assertion;
+file barriers coordinate actors and never deliver tested animation messages.
+
+Assertions read `NetworkService.GetAnimationStates()` and actual AnimationPlayers,
+covering preconnection playback, play/stop/completion, speed/loop bounds and changes,
+independent players, clip replacement, preserved playback position, deferred spawn,
+late join, respawn, removal, reconnect with fresh UserId, destroyed AnimationPlayer,
+callback-triggered queued deletion, service replacement and scene teardown. Native
+handler calls with sender zero, wrong roles and server-sent unknown target mappings
+must leave state unchanged. Ordered final closes preserve GL-017 separately.
+These are functional lifecycle checks; they do not qualify forged animation receive
+traffic from another client or handler guards with transport authority relaxed.
+See the [animation report](../../newdocs/animation-lifecycle-validation.md).
+
+## Network authority and chat security
+
+Main includes the qualified GL-006/008 `NetworkSecurity.gd` fixtures through the
+existing runner. The [integration record](../../newdocs/network-authority-validation.md#main-integration-2026-10-27)
+distinguishes fresh integration checks from the retained source-branch evidence:
+
+```text
+python tests/runtime/RunQualification.py --godot <existing-Godot-4.7.1> --extension <candidate-library> --output <new-isolated-directory> --security --timeout 60
+```
+
+This executes ten processes across Local, Listen, Dedicated and Handler modes.
+Handler deliberately changes the four receive RPCs to ANY_PEER in the fixture,
+testing native guards independently of transport authority filtering. Attacks
+still traverse real ENet; file barriers coordinate actors only. Use a new output
+directory per run, since markers and logs are retained there. For a focused
+reproduction, `--security-modes Dedicated` selects one server/two-client group.
+
+The same message signatures and existing runner prepare/start/check/deadline/
+cleanup paths apply. Windows uses hidden processes and crash-UI suppression;
+Linux full-native sanitizer runs use the established matching instrumented host,
+`detect_leaks=1`, and a 90-second timeout. Final closes are ordered after the
+transport poll, preserving GL-017 separately. Existing `--teardown
+--coordinated-close` regression runs remain a separate gate. See the
+[authority report](../../newdocs/network-authority-validation.md) for assertions,
+source identity, executed platforms and limitations.
+
+## Shared-domain coverage
+
 These tests exercise the production `GLExecutionDomain` implementation and the
 actual Godot adapters. They do not use a second scheduler/cache implementation.
 `main` is the optimized shared-domain development baseline, including GL-019;

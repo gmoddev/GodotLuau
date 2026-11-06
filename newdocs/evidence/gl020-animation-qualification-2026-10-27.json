@@ -1,0 +1,916 @@
+{
+  "Date": "2026-10-27",
+  "Classification": "FUNCTIONAL IMPLEMENTATION QUALIFIED � SECURITY QUALIFICATION PENDING",
+  "StartingMain": "132970c6f7270062952ef872d609844b762058f8",
+  "Branch": "fix/gl-020-animation-lifecycle",
+  "InvestigationAndRegressionCommit": "fb36282974fd0d007489ba88de48d4d116f45db5",
+  "InitialRuntimeCommit": "f9b27c6b6bb3caa3b8b617e029d45c858a546f9a",
+  "RuntimeCommit": "7212b87e71f539a80d8e6b6977510fa075c0a2ba",
+  "FinalFixture": "7212b87e71f539a80d8e6b6977510fa075c0a2ba includes observer acknowledgements; exact normalized file hash below.",
+  "Publication": "Dedicated branch only. Commit/remote SHA verified in final handoff; main unchanged, no binaries or upstream writes.",
+  "NativeSource": {
+    "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+    "Files": 65,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "DependencyReuse": "Existing qualified worker caches. Windows submodule HEAD pins rechecked; Linux reuses extracted archives from prior qualification without upgrades.",
+  "LinuxDependencyArchives": {
+    "luau.tar": "31164c634c9885131c203b893e3f58e2d1841fc34049969782eb095798ae1e74",
+    "godot-cpp.tar": "29af1538a795102259fdb5ac08ec8da6b7c0477198567181eee934eb720f02e0"
+  },
+  "Core": {
+    "Cases": 39,
+    "Configurations": [
+      "WindowsDebug",
+      "WindowsRelease",
+      "WindowsCoreAsan",
+      "LinuxDebug",
+      "LinuxRelease",
+      "LinuxAsan"
+    ],
+    "AllPassed": true
+  },
+  "Native": {
+    "AnimationProcesses": 90,
+    "ExistingRegressionProcesses": 40,
+    "ExistingGL006008Processes": 50,
+    "TotalProcesses": 180,
+    "AllExitedZeroAndPassed": true,
+    "AnimationModes": [
+      "SinglePlayer",
+      "ListenHostWithTwoClients",
+      "DedicatedWithTwoClients",
+      "EditorFlagsWithTwoClients"
+    ],
+    "SConsBuildsAndAnimationGroups": [
+      "WindowsDebug",
+      "WindowsRelease",
+      "LinuxDebug",
+      "LinuxRelease"
+    ],
+    "FinalCloses": "Ordered after transport poll; real disconnect/reconnect phases retained"
+  },
+  "Commands": {
+    "Build": "cmake --build <existing-config> --target ExecutionDomainTests GodotLuauAdapter --parallel 4",
+    "Core": "ctest --test-dir <existing-config> --output-on-failure --timeout 30",
+    "Animation": "python tests/runtime/RunQualification.py --godot <pinned-host> --extension <library> --output <new-directory> --animation --timeout 60",
+    "Regression": "python tests/runtime/RunQualification.py --godot <pinned-host> --extension <library> --output <new-directory> --teardown --coordinated-close --timeout 60",
+    "ExistingSecurity": "python tests/runtime/RunQualification.py --godot <pinned-host> --extension <library> --output <new-directory> --security --timeout 60",
+    "SCons": "scons platform=<windows-or-linux> target=<template_debug-or-template_release> -j4; each output runs --animation",
+    "WindowsSCons": "python tests/runtime/RunSConsPortable.py C:/Sandbox/Codex/Tools/GodotLuauSCons platform=windows target=<target> -j4",
+    "LinuxNativeSanitizer": "ASAN_OPTIONS=detect_leaks=1:halt_on_error=1:log_path=<output>/asan-report; matching existing instrumented minimal Godot; --timeout 90",
+    "WindowsCoreAsan": "Existing vcvars64/MSVC ASan runtime PATH; build target ExecutionDomainTests only",
+    "Timeouts": "Fixture children 60s/90s; controlling build commands 1200s; existing four-job worker limits"
+  },
+  "WireCompatibility": {
+    "NamesArgumentsOrderRepresentations": "Unchanged",
+    "ReceiveMode": "Reliable AUTHORITY plus native checks",
+    "RelayMode": "Reliable ANY_PEER plus native Server/sender/session checks",
+    "NewWireMessages": false,
+    "MixedHistoricalVersionsQualified": false
+  },
+  "FunctionalBounds": {
+    "Speed": [
+      0,
+      20
+    ],
+    "FiniteSpeedRequired": true,
+    "IdCharacters": 1024,
+    "NameCharacters": 128,
+    "EmptyPlayName": "Rejected"
+  },
+  "Diagnostics": {
+    "GL017FinalLabels": [],
+    "MinimalLinuxHost": "Dummy physics and missing FreeType diagnostics retained; no physics/rendering qualification",
+    "ExistingRegression": "Expected ServerStorage denial diagnostics retained",
+    "ExistingSecurity": "Expected authority/type/invalid-input diagnostics retained",
+    "SanitizerFindings": []
+  },
+  "RetainedFailedFixtureAttempts": [
+    {
+      "Roots": "Both workers gl020-final",
+      "Cause": "Fixture attempted free() on emitting/locked track; Godot rejects it. Corrected to queue_free() and next-frame observation; not a reproduced crash."
+    },
+    {
+      "Root": "Windows gl020-qualified-final/release-animation/Dedicated",
+      "Cause": "Next clip could overtake previous observer assertion. Added observer acknowledgements; final animation outputs use fresh gl020-animation-final2 directories with unchanged runtime binaries."
+    }
+  ],
+  "FinalReviewCorrection": "7212b87 restores pruning retired stored callbacks before taking reentrant dispatch snapshots. All six core and 180 native process results below are fresh final3 runs of that corrected runtime.",
+  "Limitations": [
+    "GL-020 full adversarial animation transport/handler qualification remains open; existing GL-006/008 results do not close it",
+    "GL-017 simultaneous-close engine send/leak remains open",
+    "GL-018 Windows full-native sanitizer host remains unqualified; core ASan only",
+    "No forced numeric peer-ID collision",
+    "Controlled native playback/cache fixtures do not qualify skeletal rendering, production content, graphical editor or coordinator deployment",
+    "Initial animation findings are source traces; no pre-fix adversarial animation reproduction is claimed",
+    "No release packaging/distribution or binary publication"
+  ],
+  "Windows": {
+    "Platform": "Windows",
+    "NativeSource": {
+      "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+      "Files": 65,
+      "Newlines": "LF normalized"
+    },
+    "Root": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl020-final3",
+    "Groups": {
+      "debug-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [],
+        "Logs": {
+          "Dedicated\\animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-server.stdout.log": "4af8d50972316aa1dbecae770def636a62b9535963c70697f7e67ce53b652c63",
+          "Editor\\animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Listen\\animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Local\\animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local\\animation-Local-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21"
+        }
+      },
+      "debug-regression": {
+        "Processes": 8,
+        "AllExitsZero": true,
+        "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "Dedicated-0-client1",
+          "Dedicated-0-client2",
+          "Editor-0-client1",
+          "Editor-0-client2"
+        ],
+        "Logs": {
+          "Dedicated-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Dedicated-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Dedicated-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Dedicated-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated-0-server.stdout.log": "d873d4281d8fa1f7085cf7c105bdb1796b361755c4dbfd3f10827bfdf0b500bc",
+          "Editor-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Editor-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Editor-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Editor-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor-0-server.stdout.log": "030d97b2f54ee00a593a46c98512183ced3960343ded44b408abdda0451a4097",
+          "integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "integration-0.stdout.log": "d41b9f5212182fcd7d6c4d3ece066413f553134fc986aec72a808675d6890fb1",
+          "Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen-0-listen.stdout.log": "051ac184d863813f5710a0df6e87a8f4ea2544c191601d6815e1ddc57f09959b"
+        }
+      },
+      "debug-security": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "1120b948b57cacc35f137f5e6ea99f80ba9ecae58794ab955f0d200ce6ce5861",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "security-Listen-server",
+          "security-Listen-client2",
+          "security-Dedicated-server",
+          "security-Dedicated-client2",
+          "security-Handler-server",
+          "security-Handler-client2"
+        ],
+        "Logs": {
+          "Dedicated\\security-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\security-Dedicated-client1.stdout.log": "c60e1720cc420c6413c91502053f33f4965f7e9b58fc2dc2a8792dcfc46b2e36",
+          "Dedicated\\security-Dedicated-client2.stderr.log": "8efc368a173eb02caf9d4b166b8bf7fd17687f3b78d37222c3e48a2f2fb3b3f8",
+          "Dedicated\\security-Dedicated-client2.stdout.log": "c60e1720cc420c6413c91502053f33f4965f7e9b58fc2dc2a8792dcfc46b2e36",
+          "Dedicated\\security-Dedicated-server.stderr.log": "8efc368a173eb02caf9d4b166b8bf7fd17687f3b78d37222c3e48a2f2fb3b3f8",
+          "Dedicated\\security-Dedicated-server.stdout.log": "d98b33c67aa6bfe23456c37dc9137ec007281267187a0fb026e62debb365936d",
+          "Handler\\security-Handler-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler\\security-Handler-client1.stdout.log": "c60e1720cc420c6413c91502053f33f4965f7e9b58fc2dc2a8792dcfc46b2e36",
+          "Handler\\security-Handler-client2.stderr.log": "c8443587e982a711ae10c320476136a5f368414335e33b733cb1624790021802",
+          "Handler\\security-Handler-client2.stdout.log": "c60e1720cc420c6413c91502053f33f4965f7e9b58fc2dc2a8792dcfc46b2e36",
+          "Handler\\security-Handler-server.stderr.log": "c8443587e982a711ae10c320476136a5f368414335e33b733cb1624790021802",
+          "Handler\\security-Handler-server.stdout.log": "aa64556cd4a8b6ef3f9d6e54c965da8094a98f083bd4afa0c46446afdd843f07",
+          "Listen\\security-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\security-Listen-client1.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Listen\\security-Listen-client2.stderr.log": "b3b48764346294585572d0525f27c40d0711d01f69e9b18d0e5134b02b5eda1f",
+          "Listen\\security-Listen-client2.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Listen\\security-Listen-server.stderr.log": "d510b84d22044cdf58b1484bb4bfd22789e2de5e988beb6848d2382d73e5b04e",
+          "Listen\\security-Listen-server.stdout.log": "7872c9d55a87896bf445d89033ef567c3bb12a9c6c89e3ae9f07379da8184a36",
+          "Local\\security-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local\\security-Local-server.stdout.log": "bda060f33bc87f9b70d39f28fa18a6d057868e2cf8a8480fdf30edb002413069"
+        }
+      },
+      "release-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [],
+        "Logs": {
+          "Dedicated\\animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-server.stdout.log": "07acd41682b4d100d862eaea5a26009ca401b9bf10d8834aec804231ebc505ed",
+          "Editor\\animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Listen\\animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Local\\animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local\\animation-Local-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21"
+        }
+      },
+      "release-regression": {
+        "Processes": 8,
+        "AllExitsZero": true,
+        "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "Dedicated-0-client1",
+          "Dedicated-0-client2",
+          "Editor-0-client1",
+          "Editor-0-client2"
+        ],
+        "Logs": {
+          "Dedicated-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Dedicated-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Dedicated-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Dedicated-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated-0-server.stdout.log": "9db3e3dc02c92f16d6f4c329d463638ef58fad9c481f257b056a0b59d26645b7",
+          "Editor-0-client1.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Editor-0-client1.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Editor-0-client2.stderr.log": "49b5a439f0c21fb038393451b872b04f1f9c1267e4a4e30f8a545d916733100a",
+          "Editor-0-client2.stdout.log": "0904eea4b349ff5c163724002a138e6280113bd0907eb3f85175b54a1d18322e",
+          "Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor-0-server.stdout.log": "030d97b2f54ee00a593a46c98512183ced3960343ded44b408abdda0451a4097",
+          "integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "integration-0.stdout.log": "d41b9f5212182fcd7d6c4d3ece066413f553134fc986aec72a808675d6890fb1",
+          "Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen-0-listen.stdout.log": "051ac184d863813f5710a0df6e87a8f4ea2544c191601d6815e1ddc57f09959b"
+        }
+      },
+      "release-security": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "ec1dd4567a9d762d2705c974c437e9f8c683fb9bf4ddfc739fe0c7956ffbce68",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "security-Listen-server",
+          "security-Listen-client2",
+          "security-Dedicated-server",
+          "security-Dedicated-client2",
+          "security-Handler-server"
+        ],
+        "Logs": {
+          "Dedicated\\security-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\security-Dedicated-client1.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Dedicated\\security-Dedicated-client2.stderr.log": "c03bf44685756b7f6a45497cbfd7c4f800fc8bf81bd2c3a4a2f488508bc966f0",
+          "Dedicated\\security-Dedicated-client2.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Dedicated\\security-Dedicated-server.stderr.log": "c03bf44685756b7f6a45497cbfd7c4f800fc8bf81bd2c3a4a2f488508bc966f0",
+          "Dedicated\\security-Dedicated-server.stdout.log": "07ebd62083f7c5ad3c333bfeefa965ce9970bc2b352a5af1661b1ac6e24858ae",
+          "Handler\\security-Handler-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler\\security-Handler-client1.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Handler\\security-Handler-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler\\security-Handler-client2.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Handler\\security-Handler-server.stderr.log": "11e8f18bbfb411c7c860e8c45e6ef33fb2c415b3531443a3fe20e8e1c001d97b",
+          "Handler\\security-Handler-server.stdout.log": "502c1e6d7eb24aa5f7eeb7543ba5b123b9a0ed9c43ae361a6cdca65516088a94",
+          "Listen\\security-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\security-Listen-client1.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Listen\\security-Listen-client2.stderr.log": "b8e0403ed1613e0ac1cc7ee6fd0fcdef737503da7d9af126ebec9e311d8912a3",
+          "Listen\\security-Listen-client2.stdout.log": "8baff785d7e442ec994c3b07ad776ba504008d60ff7d0283639edfb6c30d33b5",
+          "Listen\\security-Listen-server.stderr.log": "5cda8fb39e09403180e48b958198f69551fa677a7b7a2c569901390eab5f5249",
+          "Listen\\security-Listen-server.stdout.log": "7872c9d55a87896bf445d89033ef567c3bb12a9c6c89e3ae9f07379da8184a36",
+          "Local\\security-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local\\security-Local-server.stdout.log": "bda060f33bc87f9b70d39f28fa18a6d057868e2cf8a8480fdf30edb002413069"
+        }
+      },
+      "scons-template_debug-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+        "CopiedLibrariesMatch": true,
+        "GL017Labels": [],
+        "DiagnosticLabels": [],
+        "NoAssertionFailures": true,
+        "Logs": {
+          "Dedicated\\animation-Dedicated-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-server.stdout.log": "10e65a8f5bd2bb7da7bfe019fc25476e9cd16ccf060e8ad2928b2094674e90bb",
+          "Editor\\animation-Editor-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Listen\\animation-Listen-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Local\\animation-Local-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Dedicated\\animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local\\animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "scons-template_release-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+        "CopiedLibrariesMatch": true,
+        "GL017Labels": [],
+        "DiagnosticLabels": [],
+        "NoAssertionFailures": true,
+        "Logs": {
+          "Dedicated\\animation-Dedicated-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Dedicated\\animation-Dedicated-server.stdout.log": "31557990d82008c6d6fff0500e6cacfd6f7076d6f136712280fc572ed260772f",
+          "Editor\\animation-Editor-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Editor\\animation-Editor-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Listen\\animation-Listen-client1.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-client2.stdout.log": "0148ada4ff8f5bd950e16dfce1103ccb27db75662bf001ea28d54a4969a0dd4c",
+          "Listen\\animation-Listen-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Local\\animation-Local-server.stdout.log": "6de62194ac35205e4ce9b873f7aafc1868cebd42f706e7ccb53dd6a3c72a4b21",
+          "Dedicated\\animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated\\animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor\\animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen\\animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local\\animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "Libraries": {
+      "debug": {
+        "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-debug\\godot_luau.dll",
+        "SHA256": "8db6631beb43e71993a61fc48d5d9a34f86674259d63152fce816e093ac8f0e2"
+      },
+      "release": {
+        "Path": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-release\\godot_luau.dll",
+        "SHA256": "928511cc9e0b00ad4ea51661caa296344be855827d960e4ad1c23e1fe6ea4a07"
+      },
+      "scons-template_debug": {
+        "Path": "C:\\Sandbox\\Codex\\Workspaces\\GodotLuau\\GodotLuau\\bin\\godot_luau.windows.template_debug.x86_64.dll",
+        "SHA256": "f0faf836891e662becb2fa18bf92e5ac031a22f38835525c80e5f4a286a54421"
+      },
+      "scons-template_release": {
+        "Path": "C:\\Sandbox\\Codex\\Workspaces\\GodotLuau\\GodotLuau\\bin\\godot_luau.windows.template_release.x86_64.dll",
+        "SHA256": "dde9817a287f14e6f25709f27124778001f66e5c0977e843e408878d1fa759d7"
+      }
+    },
+    "CoreLogs": {
+      "debug": {
+        "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl020-final3-debug.log",
+        "SHA256": "d699ec2c9c92d3a197b19ccb80a7b2a20d59003293f639c9844d165c0ae89b77",
+        "CorePassed": true,
+        "SConsPassed": false
+      },
+      "release": {
+        "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl020-final3-release.log",
+        "SHA256": "cee2291be7658221b4df454f72b86ccd26a4d011822b22e764cc5b30aac365f7",
+        "CorePassed": true,
+        "SConsPassed": false
+      },
+      "asan": {
+        "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl020-final3-asan.log",
+        "SHA256": "f9fc632749c674a60226b4d33d2d15836101848a4caf4e8bbcbd90831c2b9d5c",
+        "CorePassed": true,
+        "SConsPassed": false
+      }
+    },
+    "SConsLogs": {
+      "template_debug": {
+        "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl020-final3-scons-template_debug.log",
+        "SHA256": "e7b08197adfd9540a7df08851506ffe2637e8abbc7252a7258f3d83c5280fe6d",
+        "CorePassed": false,
+        "SConsPassed": true
+      },
+      "template_release": {
+        "Path": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl020-final3-scons-template_release.log",
+        "SHA256": "3c4ad419ec85032fe9d0844c752dcfebde7aeeb37fd21aadcce53e421bd299f0",
+        "CorePassed": false,
+        "SConsPassed": true
+      }
+    },
+    "SourceTestHashes": {
+      "tests/runtime/AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+      "tests/runtime/RunQualification.py": "c38353323e83cd9d073cc1c2dd8d6cf4c06768617bd3b8c33e1d05c217c8cf36",
+      "src/core/luau_api.h": "801bb6106ddac76a8d6ee5744bfa4e7f5d1c0dc62dc9606b4a93bc6603fd3abf",
+      "src/gameplay/roblox_animation.h": "af5d745315f17b0248309500140a5aef57bff7bbd9122280f514a77d8112f1cd",
+      "src/services/roblox_network.h": "bb4226cc0093bb3668556995e9043cce95daf7e844b71072872cacf9ddc5581b"
+    }
+  },
+  "Linux": {
+    "Platform": "Linux",
+    "NativeSource": {
+      "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+      "Files": 65,
+      "Newlines": "LF normalized"
+    },
+    "Root": "/opt/codex/godotluau/artifacts/gl020-final3",
+    "Groups": {
+      "debug-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [],
+        "Logs": {
+          "Dedicated/animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-server.stdout.log": "71da7e069e4303198f060e22876f5de763659e20de396a5b7c73379ddcd6a907",
+          "Editor/animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Listen/animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Local/animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local/animation-Local-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876"
+        }
+      },
+      "debug-regression": {
+        "Processes": 8,
+        "AllExitsZero": true,
+        "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "Dedicated-0-client1",
+          "Dedicated-0-client2",
+          "Editor-0-client1",
+          "Editor-0-client2"
+        ],
+        "Logs": {
+          "Dedicated-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Dedicated-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Dedicated-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Dedicated-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated-0-server.stdout.log": "4407b99a3d900c9cf562b2ea833451a087c586c18e79f6a3280417cd56a7d524",
+          "Editor-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Editor-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Editor-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Editor-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor-0-server.stdout.log": "0bd8e15a5232401211a42d3d3c4cd9fbce00c08121a254ecd56f417b2f54613a",
+          "Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen-0-listen.stdout.log": "822a96e607e14626dee5da07d01a9becaf3e474987bb1e9086f7eda971cbb3b9",
+          "integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "integration-0.stdout.log": "2c2bf54374e4ed353a388fd7a796ba4d272b6d78553c6b45227f7f59a321d33b"
+        }
+      },
+      "debug-security": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "20044e0feb89c1b3e1a5df2ab29c6e1a30408edd34439f5f62a1d8ac8ef42c70",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "security-Listen-server",
+          "security-Listen-client2",
+          "security-Dedicated-server",
+          "security-Dedicated-client2",
+          "security-Handler-server"
+        ],
+        "Logs": {
+          "Dedicated/security-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/security-Dedicated-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Dedicated/security-Dedicated-client2.stderr.log": "5816bc6acce368f78e76b2e2c45f316314c98c2105da8a4d548bd12c6598422a",
+          "Dedicated/security-Dedicated-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Dedicated/security-Dedicated-server.stderr.log": "5816bc6acce368f78e76b2e2c45f316314c98c2105da8a4d548bd12c6598422a",
+          "Dedicated/security-Dedicated-server.stdout.log": "a23baae0413aefc0bc375ce6a38dd038ce877222e3558b6277b847dfddbcf624",
+          "Handler/security-Handler-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler/security-Handler-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Handler/security-Handler-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler/security-Handler-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Handler/security-Handler-server.stderr.log": "bbb7afe3f43f125ddb25019828401c7d7c737a657be7e761ee62e0fde4f43600",
+          "Handler/security-Handler-server.stdout.log": "de09e552aeca8436b0d25d0b318cd7775f3d2484acaa6719f4f2e4d67c4d278f",
+          "Listen/security-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/security-Listen-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Listen/security-Listen-client2.stderr.log": "77e6345209e04b5d93f43cdc2f7e07e86fd343a4949c8ec9c1ef3f8608045513",
+          "Listen/security-Listen-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Listen/security-Listen-server.stderr.log": "77e6345209e04b5d93f43cdc2f7e07e86fd343a4949c8ec9c1ef3f8608045513",
+          "Listen/security-Listen-server.stdout.log": "c40c6e43137ebe6b98d4508c31bb135f47020d4e2ab4dff245b5cf37e2f0589c",
+          "Local/security-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local/security-Local-server.stdout.log": "7b875a95513e299f05aeac4707bd3f586f9273db910d242fe1841144ece823cf"
+        }
+      },
+      "release-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [],
+        "Logs": {
+          "Dedicated/animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-server.stdout.log": "db29a43ebad241e554cbe609c0b7d618591a2c76d75d4d5d23b6c8a7780c7b64",
+          "Editor/animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Listen/animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Local/animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local/animation-Local-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876"
+        }
+      },
+      "release-regression": {
+        "Processes": 8,
+        "AllExitsZero": true,
+        "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "Dedicated-0-client1",
+          "Dedicated-0-client2",
+          "Editor-0-client1",
+          "Editor-0-client2"
+        ],
+        "Logs": {
+          "Dedicated-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Dedicated-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Dedicated-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Dedicated-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated-0-server.stdout.log": "0766b660a0085246c405537eb38d8a58cf746eecfb34c3787ebafc912ef4a854",
+          "Editor-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Editor-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Editor-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+          "Editor-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+          "Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor-0-server.stdout.log": "0bd8e15a5232401211a42d3d3c4cd9fbce00c08121a254ecd56f417b2f54613a",
+          "Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen-0-listen.stdout.log": "822a96e607e14626dee5da07d01a9becaf3e474987bb1e9086f7eda971cbb3b9",
+          "integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "integration-0.stdout.log": "2c2bf54374e4ed353a388fd7a796ba4d272b6d78553c6b45227f7f59a321d33b"
+        }
+      },
+      "release-security": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "350cd2c2cdfb011a9049b8bb6a4d5804bb0dfc7b50041033545c7ea94a8acf90",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "security-Listen-server",
+          "security-Listen-client2",
+          "security-Dedicated-server",
+          "security-Dedicated-client2"
+        ],
+        "Logs": {
+          "Dedicated/security-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/security-Dedicated-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Dedicated/security-Dedicated-client2.stderr.log": "1e76c8455613478e359090f540ea6c74b77bd988e7bf0494880aa4b99c63ba6e",
+          "Dedicated/security-Dedicated-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Dedicated/security-Dedicated-server.stderr.log": "dfab4ae210592d86dd5d367c4e6da4cf8f8a1d384b797c850ed5767cca259a79",
+          "Dedicated/security-Dedicated-server.stdout.log": "60ce88869705f6b4ea8c01e53ad1f1d765bff8faa6047cdd96026d0a9ed86a9e",
+          "Handler/security-Handler-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler/security-Handler-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Handler/security-Handler-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler/security-Handler-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Handler/security-Handler-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Handler/security-Handler-server.stdout.log": "afa68adcc9a0102638e67cb45dd496f56a72f218fe9e2bafc00ce11e10d44d96",
+          "Listen/security-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/security-Listen-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Listen/security-Listen-client2.stderr.log": "e3776ab09b46504236b5f25167754d49a673ee374799fd32a8eca8791ebd9f44",
+          "Listen/security-Listen-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+          "Listen/security-Listen-server.stderr.log": "e3776ab09b46504236b5f25167754d49a673ee374799fd32a8eca8791ebd9f44",
+          "Listen/security-Listen-server.stdout.log": "c40c6e43137ebe6b98d4508c31bb135f47020d4e2ab4dff245b5cf37e2f0589c",
+          "Local/security-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local/security-Local-server.stdout.log": "7b875a95513e299f05aeac4707bd3f586f9273db910d242fe1841144ece823cf"
+        }
+      },
+      "asan-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "b9c8d23acd31e8993a8f8e498c1aa9f1b44c4b820fe6c876cc89352b577f106b",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "animation-Local-server",
+          "animation-Listen-server",
+          "animation-Listen-client1",
+          "animation-Listen-client2",
+          "animation-Dedicated-server",
+          "animation-Dedicated-client1",
+          "animation-Dedicated-client2",
+          "animation-Editor-server",
+          "animation-Editor-client1",
+          "animation-Editor-client2"
+        ],
+        "Logs": {
+          "Dedicated/animation-Dedicated-client1.stderr.log": "0fc6bf2ace3ece4df03955f6eba340079326aca6b0eea4052f3895741f11cad7",
+          "Dedicated/animation-Dedicated-client1.stdout.log": "c3cca6d2a4beb205912b2259af5ae9ff0b191e916b1ffea3239616171a038931",
+          "Dedicated/animation-Dedicated-client2.stderr.log": "04d61a157dd958748dce4312b0d5bdb2ae60b80017bc73f6d33fceecfe81dc0f",
+          "Dedicated/animation-Dedicated-client2.stdout.log": "c3cca6d2a4beb205912b2259af5ae9ff0b191e916b1ffea3239616171a038931",
+          "Dedicated/animation-Dedicated-server.stderr.log": "4e364e8c9d09946c8a7a205259f3a9c4127b5c28c78b3cdab6d42b3a7f6d9c01",
+          "Dedicated/animation-Dedicated-server.stdout.log": "c341eb23e7fd717cd40aaa74739dd5afd968d7c928d595ab3cbc6a9d1af08b58",
+          "Editor/animation-Editor-client1.stderr.log": "0fc6bf2ace3ece4df03955f6eba340079326aca6b0eea4052f3895741f11cad7",
+          "Editor/animation-Editor-client1.stdout.log": "c3cca6d2a4beb205912b2259af5ae9ff0b191e916b1ffea3239616171a038931",
+          "Editor/animation-Editor-client2.stderr.log": "df1edb5b0d524e34a640c7ea61a2299b0b877c98ffa0f5c0e9dfb671b3ed76dd",
+          "Editor/animation-Editor-client2.stdout.log": "c3cca6d2a4beb205912b2259af5ae9ff0b191e916b1ffea3239616171a038931",
+          "Editor/animation-Editor-server.stderr.log": "8d7c36cbad5bc2261352c1035f4dc20046e10fa992f93fe2a2ddad7bf39f7a2d",
+          "Editor/animation-Editor-server.stdout.log": "2f916a3496fc4c0afd21fdd0458e99afd6ceefd98d5fe1c0a209549656ccabd6",
+          "Listen/animation-Listen-client1.stderr.log": "35bc82b23ab78570e5967c2f2507d55b7181e8afffb8e27695d88c1b08f3621a",
+          "Listen/animation-Listen-client1.stdout.log": "c3cca6d2a4beb205912b2259af5ae9ff0b191e916b1ffea3239616171a038931",
+          "Listen/animation-Listen-client2.stderr.log": "fe385a3b7fc8a6d7ad631f479505f3d749ecf8d9946b90967a84eea10687478f",
+          "Listen/animation-Listen-client2.stdout.log": "c3cca6d2a4beb205912b2259af5ae9ff0b191e916b1ffea3239616171a038931",
+          "Listen/animation-Listen-server.stderr.log": "140bd50be05d68ddceed6bbbbb8f6361843dfb2dc430eb69a656ca6728ce22ed",
+          "Listen/animation-Listen-server.stdout.log": "2f916a3496fc4c0afd21fdd0458e99afd6ceefd98d5fe1c0a209549656ccabd6",
+          "Local/animation-Local-server.stderr.log": "50cd918f72c5b91ed0c9de9669b98459faec722a0eb1dbade99576bd238acffa",
+          "Local/animation-Local-server.stdout.log": "2f916a3496fc4c0afd21fdd0458e99afd6ceefd98d5fe1c0a209549656ccabd6"
+        }
+      },
+      "asan-regression": {
+        "Processes": 8,
+        "AllExitsZero": true,
+        "ResultsSHA256": "dfaabcdd0f54f89450cd2615dc6ea7c35df624de2017f0af082a45c0d3a712ff",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "integration-0",
+          "Listen-0-listen",
+          "Dedicated-0-server",
+          "Dedicated-0-client1",
+          "Dedicated-0-client2",
+          "Editor-0-server",
+          "Editor-0-client1",
+          "Editor-0-client2"
+        ],
+        "Logs": {
+          "Dedicated-0-client1.stderr.log": "5e9865f364ac3b8ce6bf1b9b7cf74ac8066f0057d747cbd816875cc514a10465",
+          "Dedicated-0-client1.stdout.log": "e0aa054a29da2b519b3464e5bf63edca8e998a42a1ad453a7a01ed9d8be01f5d",
+          "Dedicated-0-client2.stderr.log": "5e9865f364ac3b8ce6bf1b9b7cf74ac8066f0057d747cbd816875cc514a10465",
+          "Dedicated-0-client2.stdout.log": "e0aa054a29da2b519b3464e5bf63edca8e998a42a1ad453a7a01ed9d8be01f5d",
+          "Dedicated-0-server.stderr.log": "ffb008802886b2caaa8fa284738a3d8548f798ac38ac64462cf9c9dee7caabd9",
+          "Dedicated-0-server.stdout.log": "6b75bc0ce7b89b3cb5c7f1e526d6cb2ad6cb4eb1ae19daf14c451f7bb5166bb9",
+          "Editor-0-client1.stderr.log": "5e9865f364ac3b8ce6bf1b9b7cf74ac8066f0057d747cbd816875cc514a10465",
+          "Editor-0-client1.stdout.log": "e0aa054a29da2b519b3464e5bf63edca8e998a42a1ad453a7a01ed9d8be01f5d",
+          "Editor-0-client2.stderr.log": "5e9865f364ac3b8ce6bf1b9b7cf74ac8066f0057d747cbd816875cc514a10465",
+          "Editor-0-client2.stdout.log": "e0aa054a29da2b519b3464e5bf63edca8e998a42a1ad453a7a01ed9d8be01f5d",
+          "Editor-0-server.stderr.log": "ffb008802886b2caaa8fa284738a3d8548f798ac38ac64462cf9c9dee7caabd9",
+          "Editor-0-server.stdout.log": "96d3ba1512b267ea5fe266b7355c45f919170ebc926c5c6171251550da7c8a40",
+          "Listen-0-listen.stderr.log": "ffb008802886b2caaa8fa284738a3d8548f798ac38ac64462cf9c9dee7caabd9",
+          "Listen-0-listen.stdout.log": "e2527f007917069edf4b49fb593ef6a74fccaa02d6c657f8fdd8a8248a5a45a8",
+          "integration-0.stderr.log": "ffb008802886b2caaa8fa284738a3d8548f798ac38ac64462cf9c9dee7caabd9",
+          "integration-0.stdout.log": "fe8786a6d5be6473322c3a91a85371a7efff43a1fc0594f4195d65a8601294a8"
+        }
+      },
+      "asan-security": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "f9186536caffb38ed1ad5e48e6f65ba4981ccb936b714bf7c28e82c6e53a42ce",
+        "GL017Labels": [],
+        "CopiedLibrariesMatch": true,
+        "NoAssertionFailures": true,
+        "SanitizerReportFiles": [],
+        "DiagnosticLabels": [
+          "security-Local-server",
+          "security-Listen-server",
+          "security-Listen-client1",
+          "security-Listen-client2",
+          "security-Dedicated-server",
+          "security-Dedicated-client1",
+          "security-Dedicated-client2",
+          "security-Handler-server",
+          "security-Handler-client1",
+          "security-Handler-client2"
+        ],
+        "Logs": {
+          "Dedicated/security-Dedicated-client1.stderr.log": "078ce68da19ddea0cac983489aed2b6190a1716121a57df938b46468c7fbd881",
+          "Dedicated/security-Dedicated-client1.stdout.log": "8a9f0aa0ed3839df60e6fc15af83fa70a7c9496d3453f37653a49697f17715bc",
+          "Dedicated/security-Dedicated-client2.stderr.log": "a7ba54d907cc07ba65c804050172fe0882084d04273e5dd57bb59156529ff33d",
+          "Dedicated/security-Dedicated-client2.stdout.log": "8a9f0aa0ed3839df60e6fc15af83fa70a7c9496d3453f37653a49697f17715bc",
+          "Dedicated/security-Dedicated-server.stderr.log": "f0587ac3561974115bc07bcc2172a02a7ec9f797fb0dc119a5b0522f1cf4f029",
+          "Dedicated/security-Dedicated-server.stdout.log": "687eae203954658f5fa4a09d3112c96f2aa40a09aa7d1d74dc33729d51274709",
+          "Handler/security-Handler-client1.stderr.log": "078ce68da19ddea0cac983489aed2b6190a1716121a57df938b46468c7fbd881",
+          "Handler/security-Handler-client1.stdout.log": "8a9f0aa0ed3839df60e6fc15af83fa70a7c9496d3453f37653a49697f17715bc",
+          "Handler/security-Handler-client2.stderr.log": "bc41990c1c49516d96b81e667c5ea5d5c0fd176d82afd3f41d5de919d81d6db6",
+          "Handler/security-Handler-client2.stdout.log": "8a9f0aa0ed3839df60e6fc15af83fa70a7c9496d3453f37653a49697f17715bc",
+          "Handler/security-Handler-server.stderr.log": "27a3d956a7de5859b1c4d812a9b34b0e44c1b684405aa11d5ccc8cefe868d953",
+          "Handler/security-Handler-server.stdout.log": "e591e965905f7041587d17845958e91dcd0b09d5bbfae805eefd3a1532141f03",
+          "Listen/security-Listen-client1.stderr.log": "078ce68da19ddea0cac983489aed2b6190a1716121a57df938b46468c7fbd881",
+          "Listen/security-Listen-client1.stdout.log": "750414033f8099b6b858aafbf5beca51a0130eed1365c4b7e9954aa9b571fcbe",
+          "Listen/security-Listen-client2.stderr.log": "8f3f3eebb650de5b9e3e5dc554023d51700e1bacce2aedcf261ece302ee91ad5",
+          "Listen/security-Listen-client2.stdout.log": "750414033f8099b6b858aafbf5beca51a0130eed1365c4b7e9954aa9b571fcbe",
+          "Listen/security-Listen-server.stderr.log": "11826feaa34bacd4304a51af6c2eb08bbb0440089fddd7e9207e32037475794d",
+          "Listen/security-Listen-server.stdout.log": "80e3df64ae1909bf8442af84298cc2c3b70e958474d7b929c905168d4b240cd1",
+          "Local/security-Local-server.stderr.log": "6fc1d777e9cb03b74403d28eba91156f027af8cd62705a751d3a12386e63b6a3",
+          "Local/security-Local-server.stdout.log": "41341526f92fa942dda29b5d93a23b1bd625bb409f31a2d7ec7fb03de57f00cc"
+        }
+      },
+      "scons-template_debug-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+        "CopiedLibrariesMatch": true,
+        "GL017Labels": [],
+        "DiagnosticLabels": [],
+        "NoAssertionFailures": true,
+        "Logs": {
+          "Dedicated/animation-Dedicated-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-server.stdout.log": "bb7d7ee6509dc3d622e72422c489134d1f18613f20d116569a4d864eca7753e9",
+          "Editor/animation-Editor-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Listen/animation-Listen-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Local/animation-Local-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Dedicated/animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local/animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "scons-template_release-animation": {
+        "Processes": 10,
+        "AllExitsZero": true,
+        "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+        "CopiedLibrariesMatch": true,
+        "GL017Labels": [],
+        "DiagnosticLabels": [],
+        "NoAssertionFailures": true,
+        "Logs": {
+          "Dedicated/animation-Dedicated-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Dedicated/animation-Dedicated-server.stdout.log": "6f5564cce58b6adb1ed01762c4fed0656c7bfab66e6fe4a9309a36b5ad02f1ba",
+          "Editor/animation-Editor-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Editor/animation-Editor-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Listen/animation-Listen-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+          "Listen/animation-Listen-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Local/animation-Local-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+          "Dedicated/animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Dedicated/animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Editor/animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Listen/animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Local/animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "Libraries": {
+      "debug": {
+        "Path": "/opt/codex/godotluau/builds/linux-debug/godot_luau.so",
+        "SHA256": "7b8a28cc674b89b9b9cce8dfe04c308bc60111c49c1776b47d2d99593dfe1d35"
+      },
+      "release": {
+        "Path": "/opt/codex/godotluau/builds/linux-release/godot_luau.so",
+        "SHA256": "217aaaa623bce7d43f40fe759ed8c5fd125b1939d6148a6a2a4745a0c945a675"
+      },
+      "asan": {
+        "Path": "/opt/codex/godotluau/builds/linux-asan/godot_luau.so",
+        "SHA256": "f00621e9afee0a63069e4d1db1ed98ab45920cde60fee177bdb46d5abbf6cc05"
+      },
+      "scons-template_debug": {
+        "Path": "/opt/codex/godotluau/source/GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so",
+        "SHA256": "12ef27dc26034883a8e200891e3cf084eefe9381f9769b064e100a724ac2acd8"
+      },
+      "scons-template_release": {
+        "Path": "/opt/codex/godotluau/source/GodotLuau/bin/godot_luau.linux.template_release.x86_64.so",
+        "SHA256": "8bb02c94e2c9b23eb729161a33634a8ef6fbe5bd430adea1bb78a4e52154c2d3"
+      }
+    },
+    "CoreLogs": {
+      "debug": {
+        "Path": "/opt/codex/godotluau/artifacts/gl020-final3/debug.log",
+        "SHA256": "4ba9f338ab7c942559d0a8a5ac3a733477bbc353a4d3044fa81123491cc3dce7",
+        "CorePassed": true,
+        "SConsPassed": false
+      },
+      "release": {
+        "Path": "/opt/codex/godotluau/artifacts/gl020-final3/release.log",
+        "SHA256": "6b11882f701fa0c5e3aceae2a400e053f2cd7b133f99565355829d4b53e6f52f",
+        "CorePassed": true,
+        "SConsPassed": false
+      },
+      "asan": {
+        "Path": "/opt/codex/godotluau/artifacts/gl020-final3/asan.log",
+        "SHA256": "cefc956c48a5b86b49884e05c0b65961004de0b0e209e4f623ee6b4d38c1fc5c",
+        "CorePassed": true,
+        "SConsPassed": false
+      }
+    },
+    "SConsLogs": {
+      "template_debug": {
+        "Path": "/opt/codex/godotluau/artifacts/gl020-final3/scons-template_debug.log",
+        "SHA256": "463a9239cc6a02fb3ec10a8be6ee3c1df7abe0b90f740fb6a12d13c740a8fb78",
+        "CorePassed": false,
+        "SConsPassed": true
+      },
+      "template_release": {
+        "Path": "/opt/codex/godotluau/artifacts/gl020-final3/scons-template_release.log",
+        "SHA256": "602535c6ae0c8681feb5655e2a340b189eb8eadc8e8056613f05b4234ae6c798",
+        "CorePassed": false,
+        "SConsPassed": true
+      }
+    },
+    "SourceTestHashes": {
+      "tests/runtime/AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+      "tests/runtime/RunQualification.py": "c38353323e83cd9d073cc1c2dd8d6cf4c06768617bd3b8c33e1d05c217c8cf36",
+      "src/core/luau_api.h": "801bb6106ddac76a8d6ee5744bfa4e7f5d1c0dc62dc9606b4a93bc6603fd3abf",
+      "src/gameplay/roblox_animation.h": "af5d745315f17b0248309500140a5aef57bff7bbd9122280f514a77d8112f1cd",
+      "src/services/roblox_network.h": "bb4226cc0093bb3668556995e9043cce95daf7e844b71072872cacf9ddc5581b"
+    }
+  }
+}

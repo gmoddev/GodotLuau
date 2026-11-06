@@ -4,8 +4,10 @@ Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
 Historical evidence is preserved below. GL-001/GL-002 are resolved for their
 specific captures, GL-014 is integrated into main and source-qualified, and GL-019
-is optimized, qualified and integrated into main. Other entries
-remain open. This file does not create upstream or GitHub issues.
+is optimized, qualified and integrated into main. GL-006/GL-008 are also integrated
+into main and resolved for their qualified endpoints; GL-020 records a
+separate animation authority gap. Other entries remain open. This file does not
+create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
 described implementation fact, not a reproduced crash/exploit. `Needs review`
@@ -26,9 +28,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
 | GL-004 | P1 | Verified control gap; impact needs review | No explicit VM sandbox or execution/memory quotas found |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
-| GL-006 | P1 | Verified authority defect | State/removal receivers accept any-peer RPCs without sender guards |
+| GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
-| GL-008 | P2 | Verified identity defect | Chat display name comes from the sender's payload |
+| GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
@@ -40,6 +42,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
+| GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -159,6 +162,11 @@ requests, and continued frame/scheduler progress against explicit budgets.
 
 ## GL-006: Server-origin RPC receivers omit authority checks
 
+**Status (2026-10-27): INTEGRATED AND RESOLVED for state/2D-state/removal endpoints
+in main through `2e69d8ac703d3f968e42054871511111ab8471be`.** Original static
+evidence and counterevidence are preserved below. The unchanged main runtime's
+state/removal effects were subsequently reproduced over actual ENet.
+
 **Evidence:** `src/services/roblox_network.h:616-630` configures state and removal
 RPCs as ANY_PEER. `_recv_state`, `_recv_state2d`, and `_recv_remove` at `1825-1836`
 do not validate the actual sender or receiver role. Removal reaches
@@ -180,6 +188,27 @@ connected-client calls against server and another client, with no mutation,
 callbacks, removal, or relay on rejection; preserve legitimate server updates
 and disconnect cleanup. Pin the peer/topology configuration in evidence.
 
+**Correction and executed closure:** Implementation
+`b839ea4a6d1ce46cceef9eb4eb58a7b210ea56c6` adds authority RPC configuration and
+native Client-role/actual-server-sender checks before mutation. Client-origin
+state relays also require a Server role and active assigned transport sender,
+closing the direct-relay-to-client path. Positive mapped target identities are
+required for state; legitimate removal can follow transport departure. Server
+session indices replace client-chosen name indices. Callback reentrancy is
+followed by ObjectID/sender revalidation before forwarding.
+
+Actual two-client transport attacks against server and victim cover forged/self/
+invalid targets, both dimensions, removal and teardown timing. Player/character
+state and removal callbacks remain unchanged; legitimate state and real disconnect
+cleanup pass. Tests also relax RPC filtering to ANY_PEER and establish native
+handler rejection separately. Windows/Linux Debug/Release and matching Linux
+full-native ASan/LSan pass. See the [authority report](network-authority-validation.md)
+and [immutable qualification manifest](evidence/gl006-008-qualification-2026-10-27.json).
+GL-007 and GL-020 remain independent; this closes the named position/health/
+removal entry points, not all player presentation or networking authority.
+The [main integration record](network-authority-validation.md#main-integration-2026-10-27)
+distinguishes fresh integrated-revision checks from retained branch qualification.
+
 ## GL-007: Character relay trusts supplied movement and health
 
 **Evidence:** `src/services/roblox_network.h:1813-1822` derives sender identity,
@@ -200,6 +229,10 @@ movement. Trace authoritative consumers before claiming a gameplay exploit.
 
 ## GL-008: Chat display identity is client supplied
 
+**Status (2026-10-27): INTEGRATED AND RESOLVED within the qualified chat/session
+scope in main through `2e69d8ac703d3f968e42054871511111ab8471be`.** The original finding
+is preserved below; baseline ENet tests subsequently reproduced name spoofing.
+
 **Evidence:** `src/services/roblox_network.h:1854-1862` reads the transport peer
 ID but displays/relays the caller's `name`; `_show_chat:1841-1845` forwards it to
 TextChatService. `_recv_chat` also lacks a server-sender guard.
@@ -212,6 +245,33 @@ The peer ID itself is not forged; this does not establish account takeover.
 player/session data, bound text and rate, and gate server-origin reception before
 display. Test a connected client supplying another name or raw receive RPC,
 unknown/disconnected senders, valid chat, and rejection without display or relay.
+
+**Correction and executed closure:** Implementation
+`b839ea4a6d1ce46cceef9eb4eb58a7b210ea56c6` resolves the active transport sender to
+its live server-owned PlayerObject and matching assigned session UserId. Submitted
+names are ignored, and first-state display indices can no longer poison that
+record. Receive and relay handlers validate receiver role and transport sender.
+Original Variant types are checked before conversion: a real Array attack showed
+that Godot's binder could stringify invalid text despite reporting an error.
+
+The shared acceptance path rejects missing/stale records, invalid/oversized text,
+and excessive rate before display/relay. The policy is 256 Unicode scalars,
+five burst tokens and one token/second. Sender UI waits for accepted server echo;
+single-player/system chat, including no Players service, remains supported.
+RPC argument counts/order and valid string wire payloads remain unchanged.
+
+Transport tests demonstrate replacement of other-player/system names, rejection
+of raw receive/relay spoofing, pre-initialization/disconnected/invalidated records,
+malformed/oversized/control text, Unicode bounds and bursts. They also establish
+normal multi-client/server/local UI chat, refill/independent allowance and real
+reconnect/record replacement. Platform and sanitizer coverage is the same as
+GL-006; see the [report](network-authority-validation.md) and
+[manifest](evidence/gl006-008-qualification-2026-10-27.json).
+Session identities are not authenticated accounts. Deterministic numeric peer-ID
+collision, mixed historical-client versions and malformed UDP framing were not
+forced. GL-017/018 and unrelated capability/security findings remain open.
+The [main integration record](network-authority-validation.md#main-integration-2026-10-27)
+retains these limits and records fresh focused checks without a new security phase.
 
 ## GL-009: DataStore loses updates and has no crash-atomic write protocol
 
@@ -480,3 +540,69 @@ Its complete source tree equals qualified branch revision
 distinguishes fresh checks from reused historical measurements. GL-019 stays
 resolved for its measured scope. GL-017/GL-018 and the independent capability,
 networking, persistence, asset and distribution issues remain open.
+
+## GL-020: Animation RPCs omit sender and receiver-role authority
+
+**Status (2026-10-27): OPEN; source-verified independent presentation authority
+defect, P1. No adversarial animation runtime reproduction is claimed.**
+
+**Evidence:** At security implementation
+`b839ea4a6d1ce46cceef9eb4eb58a7b210ea56c6`, `_setup_rpcs` still configures
+`_relay_anim` and `_recv_anim` as ANY_PEER (roblox_network.h:703-704).
+`_recv_anim:2027-2031` checks only whether payload `who` is the local peer, then
+`_apply_anim_puppet:2032-2040` writes `peer_anim[who]` and invokes `gl_anim_apply`
+on an existing puppet. `_relay_anim:2022-2026` likewise lacks receiver-role/
+current-sender membership enforcement before applying and relaying.
+
+**Boundary and scope:** A connected peer can choose a different remote puppet's
+animation state via these entry points. This is a static presentation-authority
+defect; no position/health mutation, player removal or chat sink is reached by
+these animation methods. It therefore does not bypass the qualified GL-006/008
+endpoint corrections, but prevents a general claim that every presentation RPC
+is protected. GL-007's movement semantics are separate too.
+
+**Closure:** Apply server-origin/client-origin role and transport-sender checks,
+preserve valid ownership/late-join animation behavior, and demonstrate actual
+two-client rejection without animation/cache/relay effects plus valid play/stop.
+Do not close based only on a helper test or compilation. No animation fix is
+included in the GL-006/008 branch.
+
+**Functional implementation (2026-10-27): delivered on
+`fix/gl-020-animation-lifecycle`; security qualification remains OPEN.** Runtime
+commits `f9b27c6b6bb3caa3b8b617e029d45c858a546f9a` and
+`7212b87e71f539a80d8e6b6977510fa075c0a2ba` add existing execution-role/
+transport-sender guards, current service/session validation and AUTHORITY receive
+configuration. Cached animation records bind the server-assigned UserId, preserve
+pre-puppet/late-join updates and clear at character/session/service boundaries.
+Tracks resolve AnimationPlayers by ObjectID; settings/completion replicate and
+loaded clips are independent per character. No wire signature or shared-domain/
+GL-019 ownership/hot-path change is introduced.
+
+The [functional record](animation-lifecycle-validation.md) and its evidence
+manifest distinguish exercised playback/lifecycle checks from closure acceptance.
+GL-020 is **partially qualified**, not closed: actual two-client forged animation
+receive/relay traffic, native handler guards with RPC authority relaxed, and
+proof of rejection without cache/animation/relay effects remain for the security
+follow-up. Existing GL-006/008 adversarial regressions are retained and passing;
+they are not animation security qualification. GL-017/GL-018 remain independently
+open. This branch is not merged into main and publishes no binaries.
+
+**Executed functional qualification:** Windows/Linux Debug/Release core and
+native groups, Windows core ASan and Linux full-native ASan/LSan pass. The 39-case
+core runs in six configurations; four SCons builds pass and run their animation
+fixtures. All 180 final native process results pass (90 animation, 40 existing
+multiplayer/lifetime, 50 GL-006/008). Source/fixture and binary hashes match across
+the checkout/workers; the [manifest](evidence/gl020-animation-qualification-2026-10-27.json)
+retains exact evidence and failed fixture-attempt dispositions. No full animation
+security closure is inferred from these results.
+
+**Integration (2026-10-27): INTEGRATED FUNCTIONAL IMPLEMENTATION — SECURITY
+QUALIFICATION PENDING.** Normal merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`
+preserves all four GL-020 commits with a tree identical to qualified branch
+`8e21d18a5504e0d703efbcf2a71a53d56314058e`. The
+[integration record](animation-lifecycle-validation.md#main-integration-2026-10-27)
+distinguishes fresh functional checks from reused immutable qualification.
+GL-020 remains OPEN for animation-specific adversarial transport/handler evidence;
+the historical finding and closure requirements above remain applicable. No
+deferred adversarial qualification, binary release or general security certification
+is performed by this integration. GL-007/GL-017/GL-018 remain independent.

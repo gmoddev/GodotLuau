@@ -2087,19 +2087,7 @@ static int godot_object_index(lua_State* L) {
                         // busca la copia LOCAL del usuario y si no hay, no se
                         // toca ResourceLoader (si no suelta dos ERROR rojos por
                         // animacion; un place trae decenas).
-                        String apath = aid;
-                        if (gl_is_roblox_asset(aid)) apath = gl_local_asset_path(aid);
-                        ResourceLoader* arl = ResourceLoader::get_singleton();
-                        if (!apath.is_empty() && arl && arl->exists(apath, "Animation") &&
-                            !ap->has_animation(StringName(anim_name_s))) {
-                            Ref<Animation> loaded_anim = arl->load(apath, "Animation");
-                            if (loaded_anim.is_valid()) {
-                                Ref<AnimationLibrary> lib;
-                                lib.instantiate();
-                                lib->add_animation(StringName(anim_name_s), loaded_anim);
-                                ap->add_animation_library(StringName(""), lib);
-                            }
-                        }
+                        GLLoadAnimation(ap, aid, anim_name_s);
                     }
                 } else if (lua_isstring(pL, 2)) {
                     anim_name_s = String(lua_tostring(pL, 2));

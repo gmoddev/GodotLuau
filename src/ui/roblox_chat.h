@@ -365,13 +365,15 @@ public:
         if (!input_field) return;
         String text = input_field->get_text().strip_edges();
         if (!text.is_empty()) {
-            send_message(player_name, text);
-            // Multijugador: mandar el mensaje a las demas ventanas (como Roblox)
+            // NetworkService displays only accepted chat (including the sender's
+            // server echo). Keep the standalone UI fallback when no service exists.
+            Node* ns = nullptr;
             if (is_inside_tree()) {
-                Node* ns = _find_netservice((Node*)get_tree()->get_root());
-                if (ns) ns->call("gl_send_chat", player_name, text);
+                ns = _find_netservice((Node*)get_tree()->get_root());
             }
             input_field->clear();
+            if (ns) ns->call("gl_send_chat", player_name, text);
+            else send_message(player_name, text);
         }
     }
 

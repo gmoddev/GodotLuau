@@ -339,6 +339,14 @@ class NetworkService : public Node {
     std::map<int, int64_t> peer_seq_uid;   // peerId -> UserId asignado
     int64_t next_seq_uid = 2;              // servidor: siguiente UserId (host toma el 1)
 
+    struct ChatBudget {
+        uint64_t PlayerIdentity = 0;
+        int64_t UserIdentity = 0;
+        uint64_t Updated = 0;
+        double Tokens = 5.0;
+    };
+    std::map<int, ChatBudget> ChatBudgets;
+
     // ── RemoteFunction en vuelo (1.14.9.1) ──────────────────────────────
     // call_id -> a quién le pedimos la respuesta. Sirve para tres cosas: validar
     // que la respuesta viene del peer al que invocamos (si no, cualquier cliente
@@ -357,8 +365,59 @@ class NetworkService : public Node {
     // cuanto aparece su muñeco (la animación puede llegar ANTES que el primer
     // estado de posición) y para que el servidor se la cuente a quien entra tarde
     // —si no, una animación en bucle sería invisible para el recién llegado—.
-    struct AnimState { String id; String name; float speed = 1.0f; bool looped = false; bool play = false; };
+    struct AnimState { String id; String name; float speed = 1.0f; bool looped = false; bool play = false; int64_t UserIdentity = 0; };
     std::map<int, AnimState> peer_anim;
+    uint64_t LocalAnimationCharacter = 0;
+    AnimState LocalAnimation;
+    bool AnimationShutdown = false;
+
+    bool AnimationServiceLive() {
+        if (AnimationShutdown || !is_inside_tree() || is_queued_for_deletion() ||
+            gl_net_service_id() != static_cast<uint64_t>(get_instance_id())) return false;
+        Ref<MultiplayerAPI> Multiplayer = _mp();
+        return peer.is_valid() && Multiplayer.is_valid() && Multiplayer->get_multiplayer_peer() == peer &&
+            peer->get_connection_status() == MultiplayerPeer::CONNECTION_CONNECTED &&
+            ((mode == 1 && Multiplayer->is_server()) || (mode == 2 && net_connected && !Multiplayer->is_server()));
+    }
+    bool HasAnimationSession(int Peer) {
+        auto Session = peer_seq_uid.find(Peer);
+        if (!AnimationServiceLive() || Peer <= 0 || Session == peer_seq_uid.end() || Session->second <= 0) return false;
+        // Clients trust the server's ordered UID assignments even before a
+        // puppet/PlayerObject exists. Servers also require current transport membership.
+        return mode == 2 || (mode == 1 && (Peer == 1 || _mp()->get_peers().has(Peer)));
+    }
+    static bool ValidAnimation(const String& Identity, const String& Name, float Speed, bool Play) {
+        return Identity.length() <= 1024 && Name.length() <= 128 && (!Play || !Name.is_empty()) &&
+            Math::is_finite(Speed) && Speed >= 0.0f && Speed <= 20.0f;
+    }
+    void SyncLocalAnimation() {
+        Node* Character = _local_player();
+        Node* HumanoidNode = Character ? Character->get_node_or_null("Humanoid") : nullptr;
+        if (!HumanoidNode) return;
+        for (int Index = 0; Index < HumanoidNode->get_child_count(); ++Index)
+            if (AnimationTrack* Track = Object::cast_to<AnimationTrack>(HumanoidNode->get_child(Index))) Track->ReplicateState();
+    }
+    void SendLocalAnimation(const AnimState& State) {
+        int Identity = _my_peer_id();
+        if (!HasAnimationSession(Identity) || is_coordinator) return;
+        LocalAnimation = State;
+        if (mode == 1) {
+            peer_anim[Identity] = State;
+            peer_anim[Identity].UserIdentity = peer_seq_uid.at(Identity);
+            rpc("_recv_anim", Identity, State.id, State.name, State.speed, State.looped, State.play);
+        } else if (mode == 2 && net_connected) {
+            rpc_id(1, "_relay_anim", State.id, State.name, State.speed, State.looped, State.play);
+        }
+    }
+    void OnAnimationCharacterGone(uint64_t CharacterIdentity) {
+        if (LocalAnimationCharacter != CharacterIdentity) return;
+        LocalAnimationCharacter = 0;
+        Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+        if (!LocalAnimation.play || !Scene || !Scene->is_inside_tree() || Scene->is_queued_for_deletion()) return;
+        AnimState Stopped = LocalAnimation;
+        Stopped.play = false;
+        SendLocalAnimation(Stopped);
+    }
 
     // ── Replicación automática (1.14.5) ─────────────────────────────────
     // netId (asignado por el servidor) -> ObjectID del nodo replicado. En el
@@ -429,6 +488,56 @@ class NetworkService : public Node {
         if (p.is_null() || p->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED) return 0;
         return m->get_unique_id();
     }
+    // Inbound dispatch never treats sender zero as trusted local execution.
+    bool AcceptServerRpc() {
+        Ref<MultiplayerAPI> Multiplayer = _mp();
+        return mode == 2 && net_connected && !is_coordinator && _my_peer_id() > 1 &&
+            Multiplayer.is_valid() && !Multiplayer->is_server() &&
+            Multiplayer->get_remote_sender_id() == 1 && Multiplayer->get_peers().has(1);
+    }
+    int GetClientRpcSender() {
+        Ref<MultiplayerAPI> Multiplayer = _mp();
+        if (mode != 1 || is_coordinator || _my_peer_id() != 1 ||
+            Multiplayer.is_null() || !Multiplayer->is_server()) return 0;
+        int Sender = Multiplayer->get_remote_sender_id();
+        return Sender > 1 && Multiplayer->get_peers().has(Sender) && peer_seq_uid.count(Sender) ? Sender : 0;
+    }
+    static bool ValidChatText(const String& Text) {
+        // Limit Unicode scalars, not UTF-8 bytes. Reject controls, invalid scalar
+        // values and whitespace-only messages without truncation or reinterpretation.
+        if (Text.is_empty() || Text.length() > 256 || Text.strip_edges().is_empty()) return false;
+        for (int64_t Index = 0; Index < Text.length(); ++Index) {
+            char32_t Character = Text[Index];
+            if (Character < 32 || (Character >= 127 && Character <= 159) ||
+                (Character >= 0xd800 && Character <= 0xdfff) || Character > 0x10ffff) return false;
+        }
+        return true;
+    }
+    bool AcceptChat(int Sender, PlayerObject* Player, const String& Text) {
+        if (!ValidChatText(Text)) return false;
+        if (Player && (!Player->is_inside_tree() || Player->is_queued_for_deletion())) return false;
+        // Local single-player/system dispatch does not require a Players service.
+        // Remote clients always require a live authoritative PlayerObject.
+        bool Local = (mode == 0 && Sender == 0) || (mode == 1 && Sender == 1 && is_server());
+        if (!Player && !Local) return false;
+        int64_t UserIdentity = Player ? Player->user_id : (mode == 1 ? 1 : 0);
+        auto Session = peer_seq_uid.find(Sender);
+        if (mode != 0 && (Session == peer_seq_uid.end() || Session->second != UserIdentity)) return false;
+        uint64_t Now = Time::get_singleton()->get_ticks_msec();
+        ChatBudget& Budget = ChatBudgets[Sender];
+        uint64_t Identity = static_cast<uint64_t>(Player ? Player->get_instance_id() : get_instance_id());
+        if (Budget.PlayerIdentity != Identity || Budget.UserIdentity != UserIdentity) {
+            Budget = ChatBudget{};
+            Budget.PlayerIdentity = Identity;
+            Budget.UserIdentity = UserIdentity;
+            Budget.Updated = Now;
+        }
+        Budget.Tokens = Math::min(5.0, Budget.Tokens + static_cast<double>(Now - Budget.Updated) / 1000.0);
+        Budget.Updated = Now;
+        if (Budget.Tokens < 1.0) return false;
+        Budget.Tokens -= 1.0;
+        return true;
+    }
     bool _valid(Node* n) const { return n && UtilityFunctions::is_instance_valid(n); }
 
     // El personaje local. También fija is_2d según lo que exista en el mundo.
@@ -488,6 +597,13 @@ class NetworkService : public Node {
     // jugador LOCAL cuando el peer soy yo.
     void _gl_peer_uid(int peer, int uid) {
         if (get_multiplayer()->get_remote_sender_id() != 1) return;   // solo el servidor asigna
+        auto Animation = peer_anim.find(peer);
+        if (Animation != peer_anim.end() && Animation->second.UserIdentity != uid) {
+            auto Puppet = puppets.find(peer);
+            if (Puppet != puppets.end() && _valid(Puppet->second.node))
+                gl_anim_apply(Puppet->second.node, "", "", 1.0f, false, false);
+            peer_anim.erase(peer);
+        }
         peer_seq_uid[peer] = (int64_t)uid;
         int myid = _my_peer_id();
         if (peer == myid) {
@@ -495,6 +611,7 @@ class NetworkService : public Node {
             if (PlayerObject* lp = _local_player_obj()) lp->user_id = (int64_t)uid;
         }
         if (PlayerObject* po = _peer_player(peer)) po->user_id = (int64_t)uid;   // corregir si ya existía
+        if (peer == myid) SyncLocalAnimation();
     }
 
     void _name_local_player(int display_num) {
@@ -623,13 +740,17 @@ class NetworkService : public Node {
         u["channel"]       = 0;
         Dictionary r = u.duplicate();
         r["transfer_mode"] = MultiplayerPeer::TRANSFER_MODE_RELIABLE;
-        rpc_config("_recv_state",    u);
+        Dictionary ServerUnreliable = u.duplicate();
+        ServerUnreliable["rpc_mode"] = MultiplayerAPI::RPC_MODE_AUTHORITY;
+        Dictionary ServerReliable = r.duplicate();
+        ServerReliable["rpc_mode"] = MultiplayerAPI::RPC_MODE_AUTHORITY;
+        rpc_config("_recv_state",    ServerUnreliable);
         rpc_config("_relay_state",   u);
-        rpc_config("_recv_state2d",  u);
+        rpc_config("_recv_state2d",  ServerUnreliable);
         rpc_config("_relay_state2d", u);
-        rpc_config("_recv_remove",   r);
+        rpc_config("_recv_remove",   ServerReliable);
         rpc_config("_relay_chat",    r);   // chat: confiable (no se pierde ningun mensaje)
-        rpc_config("_recv_chat",     r);
+        rpc_config("_recv_chat",     ServerReliable);
         rpc_config("_ping_req",      u);   // medicion de ping (para el menu de ajustes)
         rpc_config("_ping_res",      u);
         rpc_config("_ping_report",   u);   // el cliente reporta su ping al servidor (GetNetworkPing 1.14.10)
@@ -639,7 +760,7 @@ class NetworkService : public Node {
         rpc_config("_set_char_health", r); // salud autoritativa del servidor (1.14.11)
         rpc_config("_gl_teleport",   r);   // TeleportService: cambiar de mundo (1.14.17)
         rpc_config("_relay_anim",    r);   // animaciones: NO se pueden perder (1.14.12)
-        rpc_config("_recv_anim",     r);
+        rpc_config("_recv_anim",     ServerReliable);
         // RemoteEvent por red (Fase 2): confiables y no-confiables, ambos sentidos
         rpc_config("_re_deliver_server",  r);
         rpc_config("_re_deliver_client",  r);
@@ -775,7 +896,7 @@ class NetworkService : public Node {
             _ensure_puppet_humanoid(pup);
             // Si el muñeco sale del árbol por fuera (Luau Destroy/ClearAllChildren),
             // quitar la entrada ANTES de que el puntero quede colgando.
-            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key));
+            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key, static_cast<uint64_t>(pup->get_instance_id())));
             Puppet P; P.node = pup; P.tpos = pos; P.tyaw = yaw; P.has_target = true;
             P.anim_sp = sp; P.anim_air = air;
             if (Node3D* v = Object::cast_to<Node3D>(pup->get_node_or_null("Visual")))
@@ -797,7 +918,8 @@ class NetworkService : public Node {
             _apply_puppet_health(pup, key, hp);
             // Animación que ya estaba sonando antes de que naciera su muñeco (1.14.12).
             auto ait = peer_anim.find(key);
-            if (ait != peer_anim.end() && ait->second.play)
+            if (ait != peer_anim.end() && ait->second.play && HasAnimationSession(key) &&
+                ait->second.UserIdentity == peer_seq_uid.at(key))
                 gl_anim_apply(pup, ait->second.id, ait->second.name, ait->second.speed, ait->second.looped, true);
         } else {
             it->second.tpos = pos; it->second.tyaw = yaw; it->second.has_target = true;
@@ -852,7 +974,7 @@ class NetworkService : public Node {
             pup->set_name(String("RemotePlayer_") + String::num_int64(key));
             wsp->add_child(pup);
             pup->set_global_position(pos);
-            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key));
+            pup->connect("tree_exiting", Callable(this, "_on_puppet_gone").bind(key, static_cast<uint64_t>(pup->get_instance_id())));
             Puppet P; P.node = pup; P.tpos2d = pos; P.tyaw = rot; P.has_target = true;
             puppets[key] = P;
             if (PlayerObject* po = _ensure_peer_player(key)) {
@@ -871,11 +993,15 @@ class NetworkService : public Node {
     }
     // El muñeco salió del árbol: quitar su entrada del mapa mientras el puntero
     // todavía es válido (evita is_instance_valid sobre un Node* colgante -> UAF).
-    void _on_puppet_gone(int key) {
+    void _on_puppet_gone(int key, uint64_t Identity) {
         auto it = puppets.find(key);
-        if (it != puppets.end()) puppets.erase(it);
+        if (it != puppets.end() && static_cast<uint64_t>(it->second.node->get_instance_id()) == Identity) {
+            peer_anim.erase(key);
+            puppets.erase(it);
+        }
     }
     void _remove_puppet(int key) {
+        peer_anim.erase(key);
         auto it = puppets.find(key);
         if (it != puppets.end()) {
             if (_valid(it->second.node)) it->second.node->queue_free();
@@ -883,6 +1009,7 @@ class NetworkService : public Node {
         }
     }
     void _clear_puppets() {
+        peer_anim.clear();
         for (auto& kv : puppets) if (_valid(kv.second.node)) kv.second.node->queue_free();
         puppets.clear();
     }
@@ -993,10 +1120,12 @@ protected:
         ClassDB::bind_method(D_METHOD("net_anim_state", "character", "anim_id", "anim_name", "speed", "looped", "play"), &NetworkService::net_anim_state);
         ClassDB::bind_method(D_METHOD("_relay_anim", "anim_id", "anim_name", "speed", "looped", "play"),                 &NetworkService::_relay_anim);
         ClassDB::bind_method(D_METHOD("_recv_anim", "who", "anim_id", "anim_name", "speed", "looped", "play"),           &NetworkService::_recv_anim);
+        ClassDB::bind_method(D_METHOD("GetAnimationStates"), &NetworkService::GetAnimationStates);
+        ClassDB::bind_method(D_METHOD("OnAnimationCharacterGone", "identity"), &NetworkService::OnAnimationCharacterGone);
         ClassDB::bind_method(D_METHOD("_recv_state2d", "who", "pos", "rot", "idx"), &NetworkService::_recv_state2d);
         ClassDB::bind_method(D_METHOD("_relay_state2d", "pos", "rot", "idx"),       &NetworkService::_relay_state2d);
         ClassDB::bind_method(D_METHOD("_recv_remove", "who"),                       &NetworkService::_recv_remove);
-        ClassDB::bind_method(D_METHOD("_on_puppet_gone", "key"),                    &NetworkService::_on_puppet_gone);
+        ClassDB::bind_method(D_METHOD("_on_puppet_gone", "key", "identity"),        &NetworkService::_on_puppet_gone);
         ClassDB::bind_method(D_METHOD("gl_send_chat", "name", "text"),              &NetworkService::gl_send_chat);
         ClassDB::bind_method(D_METHOD("_relay_chat", "name", "text"),               &NetworkService::_relay_chat);
         ClassDB::bind_method(D_METHOD("_recv_chat", "from", "name", "text"),        &NetworkService::_recv_chat);
@@ -1072,6 +1201,7 @@ protected:
 
     void _notification(int p_what) {
         if (p_what == NOTIFICATION_EXIT_TREE) {
+            AnimationShutdown = true;
             if (gl_net_service_id() == static_cast<uint64_t>(get_instance_id())) {
                 // The SceneTree can outlive this service. Resolve pending
                 // callers before its response map and transport owner disappear.
@@ -1094,6 +1224,7 @@ public:
         }
         gl_mp_log(String("otro jugador entro (peer ") + String::num_int64(id) + ")");
         if (mode == 1) {
+            peer_anim.erase(id);
             // UserId secuencial: primero poner al día al peer nuevo con las
             // asignaciones YA hechas (host + otros peers), luego asignarle el suyo
             // y avisar a TODOS para que todas las ventanas coincidan.
@@ -1126,6 +1257,8 @@ public:
         peer_player_ids.erase(id);
     }
     void _on_peer_disconnected(int id) {
+        ChatBudgets.erase(id);
+        peer_seq_uid.erase(id);
         _remove_puppet(id);
         if (is_server()) rpc("_recv_remove", id);   // que los clientes también lo quiten
         // Física (1.14.7): partes que poseía ese peer vuelven al servidor.
@@ -1150,6 +1283,7 @@ public:
     void _on_connect_failed()          { mode = 0; if (retry_left > 0) return; _fire(fail_cbs, false, 0); }
     void _on_server_disconnected() {
         net_connected = false;
+        LocalAnimationCharacter = 0; LocalAnimation = AnimState();
         _rf_fail_pending(0, "InvokeServer: lost connection to the server");
         _clear_puppets();
         // Cliente local: si el host (editor) se detiene, cerrar esta ventana para
@@ -1740,7 +1874,8 @@ public:
         // Animaciones en curso (1.14.12): sin esto, una animación en bucle que ya
         // estaba sonando sería invisible para el que acaba de entrar.
         for (auto& kv : peer_anim) {
-            if (!kv.second.play || kv.first == id) continue;
+            if (!kv.second.play || kv.first == id || !HasAnimationSession(kv.first) ||
+                kv.second.UserIdentity != peer_seq_uid.at(kv.first)) continue;
             rpc_id(id, "_recv_anim", kv.first, kv.second.id, kv.second.name,
                    kv.second.speed, kv.second.looped, true);
         }
@@ -1824,29 +1959,47 @@ public:
     // ── RPCs de réplica ──────────────────────────────────────────────────
     // Cliente -> servidor: "aquí estoy". El servidor lo muestra y lo reenvía.
     void _relay_state(Vector3 pos, float yaw, int idx, float hp, float sp, bool air) {
-        int sid = get_multiplayer()->get_remote_sender_id();
+        int sid = GetClientRpcSender();
+        if (!sid) return;
+        idx = static_cast<int>(peer_seq_uid.at(sid)); // identity cannot come from the client's display index
         if (_diag_tick()) { gl_mp_log(String("RX relay de peer ") + String::num_int64(sid) + " pos=" + String(pos)); diag_timer = 1.0; }
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         _update_puppet3d(sid, idx, pos, yaw, hp, sp, air);
-        rpc("_recv_state", sid, pos, yaw, idx, hp, sp, air);
+        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == sid)
+            Service->rpc("_recv_state", sid, pos, yaw, idx, hp, sp, air);
     }
     void _relay_state2d(Vector2 pos, float rot, int idx) {
-        int sid = get_multiplayer()->get_remote_sender_id();
+        int sid = GetClientRpcSender();
+        if (!sid) return;
+        idx = static_cast<int>(peer_seq_uid.at(sid));
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         _update_puppet2d(sid, idx, pos, rot);
-        rpc("_recv_state2d", sid, pos, rot, idx);
+        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && !Service->is_queued_for_deletion() && Service->GetClientRpcSender() == sid)
+            Service->rpc("_recv_state2d", sid, pos, rot, idx);
     }
     // Servidor -> clientes: estado autoritativo de "who".
     void _recv_state(int who, Vector3 pos, float yaw, int idx, float hp, float sp, bool air) {
+        if (!AcceptServerRpc() || who <= 0 || !peer_seq_uid.count(who)) return;
         int myid = _my_peer_id();
         if (who == myid) return;              // ese soy yo
         if (_diag_tick()) { gl_mp_log(String("RX estado de ") + String::num_int64(who) + " pos=" + String(pos)); diag_timer = 1.0; }
         _update_puppet3d(who, idx, pos, yaw, hp, sp, air);
     }
     void _recv_state2d(int who, Vector2 pos, float rot, int idx) {
+        if (!AcceptServerRpc() || who <= 0 || !peer_seq_uid.count(who)) return;
         int myid = _my_peer_id();
         if (who == myid) return;
         _update_puppet2d(who, idx, pos, rot);
     }
-    void _recv_remove(int who) { _remove_puppet(who); _remove_peer_player(who); }
+    void _recv_remove(int who) {
+        // A legitimate removal arrives after transport membership has ended.
+        if (!AcceptServerRpc() || who <= 0 || who == _my_peer_id()) return;
+        _remove_puppet(who);
+        _remove_peer_player(who);
+        peer_seq_uid.erase(who);
+    }
 
     // ── CHAT EN RED (como Roblox: todos ven los mensajes de todos) ────────
     // El RobloxChat local llama gl_send_chat al enviar; el servidor lo muestra
@@ -1854,25 +2007,44 @@ public:
     void _show_chat(const String& name, const String& text) {
         if (!is_inside_tree()) return;
         Node* tcs = _find_by_class((Node*)get_tree()->get_root(), "TextChatService");
-        if (tcs) tcs->call("send_message", name, text);
         gl_mp_log(String("chat << ") + name + ": " + text);
+        // Display can invoke user callbacks, including service teardown. No
+        // service/session pointer is accessed after dispatch.
+        if (tcs) tcs->call("send_message", name, text);
     }
     void gl_send_chat(const String& name, const String& text) {
-        Ref<MultiplayerAPI> m = _mp();
-        if (m.is_null() || !m->has_multiplayer_peer()) return;   // sin sesion: solo local
-        if (is_server()) rpc("_recv_chat", 1, name, text);
-        else             rpc_id(1, "_relay_chat", name, text);
-        gl_mp_log(String("chat >> ") + name + ": " + text);
-    }
-    void _relay_chat(String name, String text) {
-        int sid = get_multiplayer()->get_remote_sender_id();
-        _show_chat(name, text);                    // el servidor tambien lo ve
-        rpc("_recv_chat", sid, name, text);        // reenviar a todos los clientes
-    }
-    void _recv_chat(int from, String name, String text) {
-        int myid = _my_peer_id();
-        if (from == myid) return;                  // yo ya lo mostre al enviarlo
+        if (!ValidChatText(text) || !is_inside_tree() || is_coordinator) return;
+        if (mode == 2) {
+            if (net_connected && _my_peer_id() > 1) rpc_id(1, "_relay_chat", name, text);
+            return; // wait for server acceptance; never show optimistic network echo
+        }
+        // Explicit trusted local API, separate from inbound RPC handlers. Server
+        // scripts may supply a system label; clients cannot reach this via RPC.
+        if (mode != 0 && (mode != 1 || !is_server() || _my_peer_id() != 1)) return;
+        PlayerObject* Player = _local_player_obj();
+        if (!AcceptChat(mode == 1 ? 1 : 0, Player, text)) return;
+        if (mode == 1) rpc("_recv_chat", 1, name, text);
         _show_chat(name, text);
+    }
+    void _relay_chat(Variant name, Variant text) {
+        int Sender = GetClientRpcSender();
+        // Godot's native binder may stringify a non-string argument even while
+        // reporting a conversion error. Validate the original wire Variants.
+        if (!Sender || name.get_type() != Variant::STRING || text.get_type() != Variant::STRING) return;
+        String Message = text;
+        PlayerObject* Player = _peer_player(Sender);
+        // No implicit creation or fallback identity for pre-initialization chat.
+        if (!AcceptChat(Sender, Player, Message)) return;
+        String Identity = Player->display_name;
+        rpc("_recv_chat", Sender, Identity, Message);
+        _show_chat(Identity, Message);
+    }
+    void _recv_chat(int from, Variant name, Variant text) {
+        if (!AcceptServerRpc() || from <= 0 || !peer_seq_uid.count(from) ||
+            name.get_type() != Variant::STRING || text.get_type() != Variant::STRING) return;
+        String Message = text;
+        if (!ValidChatText(Message)) return;
+        _show_chat(name, Message);
     }
 
     // ── PING (para el menu de ajustes, como el de Roblox) ─────────────────
@@ -1908,22 +2080,29 @@ public:
     // animación de cada jugador la decide su dueño (como Roblox).
     void net_anim_state(Object* character, String anim_id, String anim_name, float speed, bool looped, bool play) {
         Node* ch = Object::cast_to<Node>(character);
-        if (!ch || mode == 0) return;
+        if (!ch || !ch->is_inside_tree() || ch->is_queued_for_deletion() || !AnimationServiceLive() ||
+            !ValidAnimation(anim_id, anim_name, speed, play)) return;
         if (ch != _local_player()) return;   // no re-emitir la animación de un muñeco
-        if (mode == 2 && !net_connected) return;
-        if (is_server()) {
-            peer_anim[1] = { anim_id, anim_name, speed, looped, play };   // la mía, para el late-join
-            rpc("_recv_anim", 1, anim_id, anim_name, speed, looped, play);
-        } else {
-            rpc_id(1, "_relay_anim", anim_id, anim_name, speed, looped, play);
+        if (!HasAnimationSession(_my_peer_id())) return;
+        uint64_t CharacterIdentity = static_cast<uint64_t>(ch->get_instance_id());
+        if (LocalAnimationCharacter != CharacterIdentity) {
+            LocalAnimationCharacter = CharacterIdentity;
+            Callable Callback = Callable(this, "OnAnimationCharacterGone").bind(CharacterIdentity);
+            if (!ch->is_connected("tree_exiting", Callback)) ch->connect("tree_exiting", Callback);
         }
+        SendLocalAnimation({ anim_id, anim_name, speed, looped, play });
     }
     void _relay_anim(String anim_id, String anim_name, float speed, bool looped, bool play) {
-        int sid = get_multiplayer()->get_remote_sender_id();
+        int sid = GetClientRpcSender();
+        if (!sid || !HasAnimationSession(sid) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
+        uint64_t ServiceIdentity = static_cast<uint64_t>(get_instance_id());
         _apply_anim_puppet(sid, anim_id, anim_name, speed, looped, play);
-        rpc("_recv_anim", sid, anim_id, anim_name, speed, looped, play);
+        NetworkService* Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(ServiceIdentity));
+        if (Service && Service->HasAnimationSession(sid) && Service->GetClientRpcSender() == sid)
+            Service->rpc("_recv_anim", sid, anim_id, anim_name, speed, looped, play);
     }
     void _recv_anim(int who, String anim_id, String anim_name, float speed, bool looped, bool play) {
+        if (!AcceptServerRpc() || !HasAnimationSession(who) || !ValidAnimation(anim_id, anim_name, speed, play)) return;
         int myid = _my_peer_id();
         if (who == myid) return;   // ese soy yo
         _apply_anim_puppet(who, anim_id, anim_name, speed, looped, play);
@@ -1932,10 +2111,27 @@ public:
         // Se recuerda SIEMPRE, aunque el muñeco no exista todavía: se aplicará en
         // cuanto aparezca (_update_puppet3d) y sirve para contárselo a los que
         // entren después.
-        peer_anim[who] = { anim_id, anim_name, speed, looped, play };
+        if (!HasAnimationSession(who)) return;
+        peer_anim[who] = { anim_id, anim_name, speed, looped, play, peer_seq_uid.at(who) };
         auto it = puppets.find(who);
-        if (it == puppets.end() || !_valid(it->second.node)) return;
+        if (it == puppets.end() || !_valid(it->second.node) || it->second.node->is_queued_for_deletion()) return;
         gl_anim_apply(it->second.node, anim_id, anim_name, speed, looped, play);
+    }
+
+    // Read-only diagnostic snapshot; not an RPC or an alternate session registry.
+    Dictionary GetAnimationStates() const {
+        Dictionary States;
+        for (const auto& Entry : peer_anim) {
+            Dictionary State;
+            State["Id"] = Entry.second.id;
+            State["Name"] = Entry.second.name;
+            State["Speed"] = Entry.second.speed;
+            State["Looped"] = Entry.second.looped;
+            State["Play"] = Entry.second.play;
+            State["UserId"] = Entry.second.UserIdentity;
+            States[Entry.first] = State;
+        }
+        return States;
     }
 
     // ── TeleportService (1.14.17) ────────────────────────────────────────
@@ -2504,6 +2700,9 @@ public:
         peer.instantiate();
         Error e = peer->create_server(port, max_players > 0 ? max_players : 32);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo abrir el servidor en el puerto ") + String::num_int64(port)); return false; }
+        ChatBudgets.clear();
+        _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
+        peer_seq_uid.clear();
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 1;
@@ -2513,6 +2712,7 @@ public:
         if (PlayerObject* lp = _local_player_obj()) lp->user_id = 1;
         _stamp_static_ids();   // antes de correr scripts: que ya vean el place con netId (1.14.10)
         gl_run_deferred_server_scripts();   // si esta ventana era cliente y se promovió a host, corre ahora sus ServerScripts
+        SyncLocalAnimation();
         set_process(true);
         return true;
     }
@@ -2529,6 +2729,9 @@ public:
         target_address = ip + String(":") + String::num_int64(port);
         Error e = peer->create_client(addr, port);
         if (e != OK) { UtilityFunctions::push_warning(String("[NetworkService] No se pudo conectar a ") + ip); target_address = ""; return false; }
+        ChatBudgets.clear();
+        _clear_puppets(); LocalAnimationCharacter = 0; LocalAnimation = AnimState(); AnimationShutdown = false;
+        peer_seq_uid.clear(); gl_local_user_id() = 0;
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(peer);
         mode = 2;
@@ -2539,6 +2742,8 @@ public:
         return true;
     }
     void disconnect_net() {
+        LocalAnimationCharacter = 0; LocalAnimation = AnimState();
+        ChatBudgets.clear();
         _clear_puppets();
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_valid()) m->set_multiplayer_peer(Ref<MultiplayerPeer>());

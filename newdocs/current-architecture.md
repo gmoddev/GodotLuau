@@ -1,10 +1,19 @@
 # Current architecture
 
-Current development baseline: optimized shared-domain `main`, following GL-019
-integration on 2026-10-26. Runtime merge:
-`6badbae4b467a5544ffd027a1c7d7bd505cd0d46`, identical to qualified source
-`perf/gl-019-hot-paths` at `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`.
-See the [GL-019 integration record](shared-domains-validation.md#gl-019-main-integration-2026-10-26).
+Current development baseline: optimized shared-domain `main` with GL-006/008's
+qualified state/removal/chat authority corrections, integrated on 2026-10-27.
+GL-020's functional animation/session implementation is integrated through normal
+merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`, with the same tree as qualified
+branch `8e21d18a5504e0d703efbcf2a71a53d56314058e`. Full animation-specific
+adversarial transport/handler qualification remains pending. See the
+[animation integration record](animation-lifecycle-validation.md#main-integration-2026-10-27).
+Security runtime merge `2e69d8ac703d3f968e42054871511111ab8471be` equals qualified
+source `462969bd967bd26fcbeccdca1bd6ae60335347f4`. See the
+[security integration record](network-authority-validation.md#main-integration-2026-10-27).
+The preceding GL-019 merge `6badbae4b467a5544ffd027a1c7d7bd505cd0d46` matched
+`perf/gl-019-hot-paths` at `ad200aa468be56edf4812bb3a03daeb31d5bbdd8`;
+its execution-domain and module-cache implementation remains unchanged. See the
+[GL-019 integration record](shared-domains-validation.md#gl-019-main-integration-2026-10-26).
 The earlier migration merge `dd68cda850fb548aa7713242275ff73c183e813c`
 and historical branch `runtime/shared-domains` at
 `9423fed4051bec2fba798d9a49eaec7dea6cca3b` retain their
@@ -142,12 +151,51 @@ before destruction. Retained ObjectID method closures cannot act on replacement
 services. Godot 4.7.1's independent simultaneous-disconnect relay send/leak remains
 reproducible without the extension (GL-017); production relay is still enabled.
 
-RPC dictionaries use `RPC_MODE_ANY_PEER` in `_bind_methods`, relying on individual
-handlers to enforce authority. Some do: structural replication checks sender 1,
-RemoteFunction returns match the expected peer, and owned physics updates check
-the owner. Character-state/removal receivers lack the same sender guard; state
-relays trust supplied values and chat relays trust supplied display names.
-See GL-006 through GL-008 for scope and missing runtime evidence.
+On main, state/removal/chat receive RPCs use RPC_MODE_AUTHORITY
+plus connected Client-role/transport-sender-1 checks. Their client-origin state
+and chat relays require a connected Server role and active assigned remote peer.
+State relays derive the presentation index from the server's session UserId;
+chat derives its name from the matching live server PlayerObject and validates
+original string Variants, message bounds and a per-session token bucket.
+The sender waits for accepted server echo. Explicit local/system chat remains
+available, including scenes without a Players service. See the
+[authority qualification record](network-authority-validation.md) for exact
+rules, compatibility, source identity and fresh integration transport evidence.
+Structural replication, RemoteFunction reply and owned-physics checks are
+preserved. Client-supplied movement values remain GL-007; independent animation
+RPC authority is addressed by the integrated GL-020 implementation below; its full
+security transport qualification remains independent. No general networking
+security claim is made.
+
+On main, `_relay_anim` keeps its reliable ANY_PEER
+client-to-server configuration and requires the existing Server-role/sender
+guard, current service/transport and assigned session. `_recv_anim` uses reliable
+AUTHORITY plus the Client-role/server-origin guard and a positive mapped target;
+the local target is ignored. Both reject nonfinite/out-of-range speed (0–20),
+IDs over 1,024 characters, names over 128 characters and empty play names before
+mutation. RPC names, arguments and wire shapes remain unchanged.
+
+`peer_anim` stores the assigned UserId with each transport peer's latest state,
+including stops. It admits mapped sessions before PlayerObject/puppet creation;
+3D puppet initialization and late-join replay validate that same session binding.
+Puppet exit/removal, peer departure, server loss, disconnect, transport replacement
+and service exit clear obsolete cache entries. Puppet exit callbacks include the
+character ObjectID so an old queued character cannot erase a replacement's state.
+Local character exit sends a stop through the existing animation wire path while
+the service/session is live; scene/service shutdown admits no animation work.
+UID assignment/server startup replays already-playing local tracks, recovering
+preconnection playback. No separate session authority is introduced.
+
+AnimationTrack resolves its AnimationPlayer ObjectID on use. Active speed/loop
+changes and natural completion notify the network; stop/completion notifications
+precede user callbacks, whose lists are copied for reentrant dispatch. Per-player
+Animation resources duplicate loaded clips so loop configuration is independent.
+The loader reuses the default library for clip replacement. Applying the current
+clip's settings preserves playback position. `GetAnimationStates()` is a native
+read-only diagnostic snapshot of the actual cache (including UserId), not an RPC.
+The [animation record](animation-lifecycle-validation.md) separates functional
+qualification from outstanding adversarial transport acceptance. Shared domains,
+GL-019 paths and owner-based coroutine cancellation are unchanged.
 
 The coordinator uses local process discovery/heartbeat files. Upstream documents
 no account authentication and no incoming connection validation against
