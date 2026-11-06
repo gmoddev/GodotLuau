@@ -6,7 +6,8 @@ Historical evidence is preserved below. GL-001/GL-002 are resolved for their
 specific captures, GL-014 is integrated into main and source-qualified, and GL-019
 is optimized, qualified and integrated into main. GL-006/GL-008 are also integrated
 into main and resolved for their qualified endpoints; GL-020 records a
-separate animation authority gap. Other entries remain open. This file does not
+separate animation authority gap. GL-022 is fixed and qualified on its dedicated
+branch and now integrated into main. Other entries remain open. This file does not
 create upstream or GitHub issues.
 
 Evidence is static unless explicitly stated otherwise. `Verified` establishes the
@@ -35,7 +36,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
-| GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
+| GL-013 | P2 | Open; five extractions integrated | API/stdlib fan-out three to one; bootstrap owned by script CPP |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
@@ -43,6 +44,8 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
+| GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
+| GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
 
 ## GL-001: Retained WaitForChild closure can outlive its Node
 
@@ -426,6 +429,149 @@ bug and does not justify a sweeping rewrite.
 ownership/interfaces, preserve behavior, and measure build impact when claimed.
 Avoid mixing mechanical movement with unrelated runtime changes.
 
+**First extraction (qualified 2026-10-27; integrated 2026-10-28):** Starting main
+`eb638bfa6ff16abc91d11742625b3cc034f53178`; branch
+`refactor/gl-013-luau-api-extraction` moves native Vector3/Color3 userdata bindings
+to a separately compiled unit with no Godot/domain dependency. The original
+header is 290,353 LF bytes at this main baseline, reduced to 281,472; the historical
+294,380-byte finding above remains tied to its original revision. The narrow
+header exposes layouts/helpers and two initialization calls; math callbacks stay
+private. CMake compiles the new unit; SCons dry-run discovery includes it.
+See the [extraction record](shared-domains-validation.md#gl-013-first-value-binding-extraction)
+and [measurements](evidence/gl013-value-extraction-2026-10-27.json).
+
+Local Windows/Linux Debug/Release each pass 39 core cases and 28 native actors.
+Implementation `83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c` also passes fresh hosted
+core run `40626224165` (39 per platform) and native run `40626224232` (actual Debug
+builds, 28 actors per platform and verified diagnostic summaries). Disposition:
+**GL-013 — Incremental modularization underway; four extractions qualified.**
+Normal merge `bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7` integrates both commits
+through source `1c9f4c6296bc955a6a5969a6da0668d137e46ed1`; the merge tree exactly
+matches qualified source. The [integration record](shared-domains-validation.md#first-extraction-main-integration-2026-10-28)
+distinguishes reused qualification from fresh main CI observation. Existing shared-domain ownership, userdata layout,
+registration order, reflection and networking remain unchanged. The original
+header still couples Instance dispatch, services and Godot properties; this first
+boundary does not close GL-013. An exploratory physics-backed baseline fixture
+also exposed a Linux shutdown failure after PASS; its diagnostic evidence is
+retained as an independent qualification limitation, not fixed by extraction.
+
+**Second extraction (2026-10-28, integrated):**
+`refactor/gl-013-variant-bindings` starts from integrated main `174efcc2bdb59c5072ba21d27645c5380c61e8e9`.
+Only the two generic Luau/Variant conversion bodies move to an owned `.cpp` and
+two-declaration forward-only header; Instance reflection, ObjectID validation and
+property/Offset/error dispatch stay with their existing owners. No type support,
+ownership, registration or conversion logic is added. `luau_api.h` decreases from
+281,472 bytes/4,946 lines to 280,183 bytes/4,923 lines. See the
+[second extraction record](shared-domains-validation.md#gl-013-second-generic-variant-extraction)
+and [separate measurements](evidence/gl013-variant-extraction-2026-10-28.json).
+All Windows/Linux Debug/Release worker builds/core39/native28 pass. Implementation
+`5f72f4cda1c5e3bb76edd33bb11e276cff07ac10` also passes hosted core run `40631078253`
+(39 per platform) and native run `40631078251` (fresh actual Debug builds and28
+actors per platform). Diagnostic summaries verify exact source/fixture identity.
+Normal merge `21d10d91769ee81c85ae2e1d2029e683feeb51ba` preserves both commits
+with an identical tree. Fresh main core/native observation is recorded below.
+Disposition: **SECOND EXTRACTION QUALIFIED AND INTEGRATED**. Baseline tests establish that unsupported reads retain invalid-member
+errors and Lua non-ASCII strings retain the existing Latin-1 constructor behavior;
+these are preserved, not silently fixed. The first extraction's historical
+measurements/limitations remain. GL-013 stays open.
+
+**Third extraction (2026-10-28, integrated):**
+`refactor/gl-013-instance-reflection` starts from verified integrated main
+`752bb2063f61a533c3e59b481196a0d8aa88f1ba`. Exact property-list membership and
+the two generic `_gl_bridge` read/write blocks move to an owned Object adapter,
+with a three-declaration forward-only interface. Dependencies now point from
+Instance dispatch through reflection to Variant conversion and native values;
+no Node/service/domain header, retained object, registry or registration is added.
+Class identity, method/signal/callback bindings, ObjectID validation, class-specific
+properties, child/error fallbacks and replication remain in their existing owners.
+The API header decreases from 280,183 bytes/4,923 lines to 278,169 bytes/4,885 lines.
+The new interface is 1,007 bytes/18 lines; implementation is 1,878 bytes/53 lines.
+See [third extraction analysis and qualification](shared-domains-validation.md#gl-013-third-instance-property-extraction)
+and its [separate manifest](evidence/gl013-instance-reflection-2026-10-28.json).
+Baseline production fixtures establish read-only/property/metadata/Offset/error
+and Changed behavior before code moves; those semantics are preserved. GL-013
+remains OPEN for broader Instance/service/editor header coupling. Normal merge
+`b7ec9fd614bd0e92ce418859de68b835180a7d7c` preserves both commits with a tree
+identical to qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058`.
+**THIRD EXTRACTION QUALIFIED AND INTEGRATED**: Windows/Linux
+Debug/Release core39/native28 pass (112 local actor results); hosted core
+`40643325332` passes39 per platform and native `40643325389` passes fresh Debug
+builds/process checks/all28 actors per platform. Exact revision/source/fixture
+identities are verified in digest-checked diagnostic archives. A one-unit
+implementation edit boundary is measured; no general build-speed or native
+lifetime/sanitizer guarantee is inferred.
+
+**Fourth extraction (2026-10-28, integrated):**
+`refactor/gl-013-class-identity` starts from integrated main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6`. The generic native/Roblox class map
+and exact/custom-parent/Godot IsA predicate move to an Object/String-only unit with
+an owned String result and two forward declarations. The old fallback used a
+TU-local mutable CharString, but current callers immediately copied/compared it;
+no supported-call lifetime defect is confirmed. Returning an owned value avoids
+introducing shared mutable fallback storage at the new compilation boundary.
+Player/Value overrides, Mouse branch ordering, ObjectID resolution and error/
+hierarchy dispatch remain unchanged. No separate lifetime fix or ownership model
+is introduced. The [audit and qualification](shared-domains-validation.md#gl-013-fourth-class-identity-extraction)
+and [new manifest](evidence/gl013-class-identity-2026-10-28.json) retain exact
+analysis, baseline fixture failure and measurements. The API header decreases
+278,169 bytes/4,885 lines -> 274,780 bytes/4,838 lines; the interface is 748 bytes/15
+lines. Local Windows/Linux Debug/Release core39/native28 pass (112 actors total).
+**FOURTH EXTRACTION QUALIFIED**: hosted core `40646744969` passes 39 per platform
+and native `40646744985` passes fresh Debug builds/process checks/all 28 actors per
+platform. Digest-checked summaries verify exact revision/source/fixture identity.
+No supported-call lifetime defect is confirmed; no new sanitizer matrix is run
+because native object ownership is unchanged. Normal merge
+`35c993ce3711076a61dace5324f74691f4fb77ef` preserves all four commits and equals
+qualified tip `eb53661072999887d2a124e5d4ece2f458c7bb30`. GL-013 remains OPEN. No general speed/lifetime/sanitizer guarantee is inferred.
+EOF-only follow-up `688fd5b` removes one trailing blank line; implementation code
+is unchanged. Fresh follow-up core39 passed while native run `40648770257` was still
+building at that earlier bounded observation. Both cleanup workflows subsequently
+passed; fresh merge core `40651973151` and native `40651973098` also pass Windows/Linux
+39 core cases / 28 native processes each. Final main is
+`08b2bb83b7093a361c80b147b4827eb22715ad32`, with identical tested inputs.
+
+**Remaining-boundary assessment (2026-10-28): complete, GL-013 still OPEN.**
+The [assessment](gl013-boundary-assessment.md) and
+[inventory/compiler evidence](evidence/gl013-boundary-assessment-2026-10-28.json)
+record 64 headers/eight implementation units, no project include cycles and exact
+matches of eight qualified compiler include closures. Four isolated owners are a
+maintainability improvement; API-header edits still affect three TUs and no general
+build-speed improvement is established. Prefer script bootstrap/Instance access in
+existing `luau_script.cpp`, followed by completion ownership and GUI metadata/style
+adaptation. Inert helpers rank below these; earlier next-helper suggestions are
+historical. State/dispatch/network boundaries need their stated proof before a
+future extraction. GL-021 records a separate static compatibility discrepancy.
+No fifth extraction, production/test/build/workflow change or unrelated closure.
+
+**Fifth extraction (development branch, 2026-10-28): FIFTH EXTRACTION QUALIFIED.**
+`refactor/gl-013-script-bootstrap` begins at main
+`ce5e19fa8aea1cf65da875d07cda13c1696fc08c` after assessment integration. Bootstrap,
+RemoteFunction setup and child relay move to existing script CPP, with one narrow
+wrapper-push declaration and explicit host/registration include prerequisites.
+VM, scheduler, module cache and network/dispatch implementations remain unchanged.
+Compiler dependency closures match the graph in all eight before/after/platform/
+configuration sets (64 objects): API and stdlib fan-out three → one; script-header
+touch still rebuilds three. All four candidate configurations pass 39 core cases
+and 28 native actors (112 candidate actors); unchanged baseline passes the final
+expanded eight-actor regression group in all four configurations.
+The [fifth qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary)
+and [manifest](evidence/gl013-script-bootstrap-2026-10-28.json) retain timing/size
+increases, include failures, baseline callback finding GL-022 and qualification
+limits. Implementation `50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4` is pushed and
+remote identity read back. Fresh hosted core `40661531131` passes 39 distinct cases
+per platform and native `40661531193` passes fresh Debug builds, process-runner
+self-checks and all 28 actors per platform. Digest-checked summaries match exact
+source/pins/all 22 harness hashes. Both complete within the 25-minute bound.
+The evidence follow-up changes no tested input; this is not merged to main.
+GL-013 remains OPEN; no sixth extraction or unrelated issue closure is implied.
+
+**Fifth extraction integration (2026-10-29):** Normal merge
+`109bd6d838410509da9831b1502dfffb023ad823` preserves both source commits and
+exact qualified tree `9171199fc6b3b43a2aa07a98f3f20977abc43533`. Fresh checks
+and hosted outcomes are recorded in the [integration record](gl022-child-relay-validation.md).
+GL-013 stays open. GL-022's shared-target reproduction predates this extraction
+and is not treated as an introduced refactor regression.
+
 ## GL-014: Shared execution domains — integrated and source-qualified
 
 **Evidence:** Per-executable-script `L_main` at `luau_script.h:960`; require's
@@ -688,3 +834,83 @@ GL-020 remains OPEN for animation-specific adversarial transport/handler evidenc
 the historical finding and closure requirements above remain applicable. No
 deferred adversarial qualification, binary release or general security certification
 is performed by this integration. GL-007/GL-017/GL-018 remain independent.
+
+## GL-021: Inert signals omit lowercase once/wait aliases
+
+**Classification: Verified construction-order discrepancy; runtime unexercised.**
+Source revision `08b2bb83b7093a361c80b147b4827eb22715ad32`:
+`src/core/luau_api.h:63-71` copies Connect/Wait/Once to connect/wait/once only when
+each uppercase field already exists. `_gl_push_inert_signal` at `172-190` creates
+a new table, installs Connect, calls that copier at `185`, then installs Once and
+Wait at `186-189`. Thus the constructed table has connect but no once/wait fields.
+The source's stated legacy signal contract includes all three lowercase names.
+`GetPropertyChangedSignal` at `1290-1295` returns this inert table.
+
+**Impact and limits:** scripts expecting the documented lowercase inert methods
+would find nil. This is a source trace, not an executed failure, native lifetime
+defect or security finding. Uppercase behavior and connection reference handling
+are not reclassified. No focused assertion for these lowercase inert fields was
+found in the current native fixtures. No code or tests changed during assessment.
+
+**Separate follow-up:** reproduce with actual production GetPropertyChangedSignal;
+decide and document the intended alias contract; correct construction order in a
+focused compatibility fix. Require Connect/connect, Once/once, Wait/wait,
+Disconnect/disconnect, Connected=false, nil Wait result, repeated calls with no
+references or callbacks, GC and fresh-domain teardown. Preserve the inert nature.
+Close only with linked implementation and executed regression evidence. Do not
+silently combine this behavior change with the next GL-013 extraction.
+
+## GL-022: Shared ModuleScript loses the second domain's child relay
+
+**Original classification: Reproduced baseline callback compatibility gap; cause needs review.**
+The first fifth-extraction fixture runs the same native ModuleScript in Server
+and Client domains, with each module connecting game.ChildAdded. Both requiring
+callers retire; a later child reaches the Server callback but the Client marker
+never appears. This fails on unchanged production main `ce5e19f` / native fingerprint
+`653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3`, Windows and
+Linux Debug, before the refactor. Windows diagnostic replay shows only one native
+child_entered_tree connection, targeting the shared ModuleScript with one bound ref.
+
+`luau_api.h:1239-1286` selects the owner's native script node and uses
+`Callable(sn, "_gl_child_event").bind(ref)` with an is_connected guard. Domains
+share the same native ModuleScript receiver even though references/VMs differ.
+The trace identifies the missing connection; exact callable equality/registration
+cause and any broader signal impact remain unproven. No UAF, authority defect or
+cache-isolation failure is established. Source, failed logs and diagnostic replay
+are retained under worker `gl013-bootstrap/baseline-qualification1-debug` and
+`baseline-diagnostic2-debug`; see the fifth manifest for hashes and scope.
+
+Distinct native relay ModuleScripts pass the same both-domain/caller-retirement
+assertions in baseline Windows/Linux Debug/Release. The final extraction fixture
+uses those targets, retains shared-module cache/metatable checks and adds
+cross-domain attribute watchers. The failed shared-target expectation is preserved,
+not reported as passing or fixed. No production callback/ModuleScript logic is
+changed to address this finding. The refactor's qualification does not close it.
+
+**Separate follow-up:** reproduce the shared-native-target case, trace connection
+identity and owner/reference cleanup, and implement a focused fix with two-domain,
+same-domain multiple connection, disconnect, caller/module destruction and fresh
+domain tests. Close only with linked fix and executed evidence.
+
+**Resolution (2026-10-29): FIXED AND QUALIFIED on the development branch.**
+The [record](gl022-child-relay-validation.md#stage-2-baseline-and-mechanism-2026-10-29)
+reproduces the shared-target failure on both unchanged Debug platforms. Godot
+source and native is_connected diagnostics confirm bound arguments are excluded
+from signal identity; public references are process-wide/non-recycled. The
+development branch uses distinct base Callables and host-owned cleanup, preserving
+module-owned callbacks after caller retirement. Windows/Linux Debug/Release
+core39 and 112 native actors pass; Windows core ASan and Linux core/full-native
+ASan/LSan pass (28 native actors). Final hosted core39/native28 pass per platform
+on `0cdaed65f0a9592c7a19302d837e5a0e68db5c58`; verified artifacts exercise all
+four required GL-022 markers. The record preserves baseline failures, the child
+signals' Connect-only protocol, test-adapter teardown access and limits.
+This resolves the exercised scope on `fix/gl-022-cross-domain-child-relay`,
+not main or unrelated findings. GL-017/018 and deferred GL-020 adversarial
+qualification remain open.
+
+**Main integration:** Normal merge `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`
+preserves all three qualified GL-022 commits without conflicts. Runtime/build/
+fixture inputs are unchanged from qualified revision `0cdaed6`; see the
+[integration record](gl022-child-relay-validation.md#main-integration) for fresh
+main CI results and retained limitations. Historical branch evidence above is
+preserved; no broader issue closure or distribution readiness is inferred.

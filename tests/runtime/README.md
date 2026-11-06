@@ -165,6 +165,46 @@ source identity, executed platforms and limitations.
 
 ## Shared-domain coverage
 
+The fifth GL-013 bootstrap fixture runs first in both Server and Client domains.
+It captures the actual production global tables/functions and wrapper metatables
+in a shared ModuleScript, verifies per-domain caches and independent `_G`/`shared`,
+JSON round trips, game/workspace/native globals, removed temporary bootstrap
+spawner and repeated startup without duplicate execution. It checks module-owned
+attribute callbacks across domains and child callbacks after caller retirement.
+Child relays use distinct native ModuleScript targets: the original shared-target
+attempt reproduced GL-022 before any production change and remains separately
+recorded. Existing destruction/reload/cancellation, value/reflection/identity,
+network, RemoteFunction and functional animation assertions remain unchanged.
+No additional process group or parallel bootstrap implementation is introduced.
+
+GL-022 extends this same Integration process with one shared native ModuleScript,
+independent module tables, multiple subscriptions, retired callers, exact-once/
+reentrant/yielded delivery and independent/self/peer disconnect. It covers module/
+script invalidation and destruction, dead targets, ChildRemoved and repeated
+scene replacement with a surviving emitter. The CMake adapter's GL_RUNTIME_TESTS
+reset method permits destroying/recreating Server while Client remains live;
+callers retire before this test-only destruction. Shipping SCons builds do not
+expose it. Child signals retain their Connect-only protocol; service Once/Wait
+assertions remain below. CheckNativeCI requires the new PASS markers. See the
+[record](../../newdocs/gl022-child-relay-validation.md).
+
+The integrated first GL-013 extraction extends `Integration.gd` through actual native Vector3/Color3
+constructors, arithmetic, constants, exact type rejection, native Variant bridge
+round trips, wrapper identity/destruction and fresh-domain reinitialization.
+Both Server and Client domains execute the value checks. Deferred destruction is
+observed over at most ten scheduler yields; the existing runner bounds the process.
+The lightweight Beam metadata bridge avoids introducing physics resources into
+this value-binding fixture. Existing lifecycle and network fixtures remain gates.
+
+The second GL-013 branch also exercises the generic Variant bridge in both
+directions: native INT/BOOL/FLOAT/STRING/VECTOR3/COLOR reads; scalar/value writes;
+nil, collections, callbacks and live/destroyed Instance rejection without replacing
+the previous value; unchanged table-Offset fallback; reflected integer properties
+and subsequent error propagation. Native arrays/dictionaries/object references
+remain unsupported by this bridge and retain the caller's invalid-member error.
+These cases run through
+the production Instance/property paths, not a second conversion implementation.
+
 These tests exercise the production `GLExecutionDomain` implementation and the
 actual Godot adapters. They do not use a second scheduler/cache implementation.
 `main` is the optimized shared-domain development baseline, including GL-019;
@@ -441,3 +481,34 @@ binary is stripped; inclusive caller costs overlap. Profiled runs are separate
 from the unprofiled latency trials. Raw data, commands, identities, accepted/
 rejected candidates and qualification are in the
 [GL-019 report](../../newdocs/shared-domains-validation.md#gl-019-optimization-2026-10-26).
+
+
+### GL-013 Instance reflection extraction
+
+`Integration.gd` exercises the production generic property bridge in both Server
+and Client domains. Additional baseline-established cases cover native properties
+before conflicting metadata, unsupported native-property metadata fallback,
+Vector3/bool/native integer writes, read-only `multiplayer` rejection without
+metadata creation, nil/Offset writes, repeated access, missing-member and Offset
+metamethod errors, unchanged Changed/SetAttribute notification behavior and a
+non-bridge object's ignored write. Existing value/conversion, destroyed ObjectID,
+callback-destruction, reload and fresh-domain cases remain. No mock reflection
+implementation is used. Run the existing core and three native groups above;
+no separate configuration or workflow is required. See the
+[qualification record](../../newdocs/shared-domains-validation.md#gl-013-third-instance-property-extraction).
+
+
+### GL-013 class identity extraction
+
+`Integration.gd` exercises ClassName/IsA through production bindings in both domains:
+Folder, unmapped Beam/Trail/Node3D, native PointLight/OmniLight3D and Frame aliases,
+IntValue/script special cases, native and compatibility parents, unrelated/empty/
+invalid/case-sensitive names, hierarchy search consumers, repeated and sequential
+lookups, retained Lua strings, lookup inside native attribute callbacks, missing-
+member error formatting, destruction/replacement and fresh-domain initialization.
+Bounded allocation pressure requires an observed `gcinfo()` decrease before
+rechecking retained strings. Production Luau exposes gcinfo, not collectgarbage;
+the initial baseline fixture error is retained in the qualification record.
+Use the existing core and three native groups, without a new configuration or
+mock identity implementation. See the
+[audit and evidence](../../newdocs/shared-domains-validation.md#gl-013-fourth-class-identity-extraction).

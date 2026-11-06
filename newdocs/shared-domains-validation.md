@@ -1,5 +1,322 @@
 # Shared-domain implementation and qualification
 
+## GL-013 first value-binding extraction
+
+Branch `refactor/gl-013-luau-api-extraction` starts at verified local/remote main
+`eb638bfa6ff16abc91d11742625b3cc034f53178`. This is one implementation extraction,
+not a new runtime architecture; it is not merged into main.
+
+### Source analysis and selected boundary
+
+At this baseline `luau_api.h` contains 5,168 lines/290,353 LF bytes. Its free
+functions have internal linkage (`static`, some also `inline`); LuauVector3's
+class-body math methods are implicitly inline. `luau_script.h` includes it and
+contains inline class implementation/registration. `luau_script.cpp` contributes
+only the ordinary out-of-line `_get_language` definition. `luau_stdlib.h` owns a
+TU-local embedded Lua program. `gl_runtime.h` supplies ObjectID wrappers, inline
+compatibility bridges and existing state/hooks; VM ownership remains in
+`GLExecutionDomain`/`GLDomainHost`, not in these value bindings.
+
+The only direct `luau_api.h` include is `luau_script.h`. Its transitive consumers
+include `luau_language.h`, `roblox_datamodel.h`, `rbx_importer.h` and three adapter
+translation units: `luau_script.cpp`, `gl_domain_host.cpp`, `register_types.cpp`.
+The last also performs Godot class registration. Broad includes bring gameplay,
+services, networking and editor/importer dependencies into these units. Instance
+index/newindex/methods depend directly on Godot types and domain-owned callbacks;
+attribute watchers, classname buffers, virtual-container tables and replication
+hooks retain their original TU/static ownership. No Luau private VM headers or
+direct VM-structure access are used by the selected value functions: they call
+the public Lua C API. Generic property conversion and Instance reflection stay
+Godot-dependent in `luau_api.h`.
+
+Native Vector3/Color3 is the first boundary because its allocation, type checking,
+arithmetic and registration form a small cohesive subsystem with no Godot or
+domain requirement. Instance dispatch would require a much wider cross-subsystem
+interface; selecting it by line count would expand scope. Lua-backed CFrame,
+Vector2, BrickColor and existing input-service value packing remain untouched.
+
+`src/core/luau_value_bindings.h` is 31 lines/1,185 LF bytes: two existing layouts,
+five existing native bridge declarations and two registration calls. It only
+forward-declares `lua_State`. The 260-line/10,405-byte implementation includes its
+own header first, public Luau headers and standard headers. It includes no large
+implementation header, Godot type or domain host. Twelve callback functions stay
+`static`; five bridge functions and the two new initialization functions have one
+ordinary C++ definition. Five existing math member bodies move out of line.
+All 17 moved free-function bodies compare exactly to baseline. No duplicate copy,
+registry, abstract interface, shim, static initialization or new state is added.
+
+`luau_api.h` now includes that declaration interface and is 4,946 lines/281,472
+LF bytes, down 222 lines/8,881 bytes. Only its value implementation is removed.
+`luau_script.h` replaces the two original registration blocks with calls at their
+original positions. Metatable names, callback debug names, layouts, numeric
+operations, stack effects and Lua-facing signatures are preserved; private bridge
+linkage becomes shared within the extension. Godot class registration is unchanged.
+The new include edge terminates at a forward declaration, adding no include cycle.
+`roblox_input.h`'s pre-existing independent three-float packing remains a coupling
+to the layout; this extraction does not change that service.
+
+### Build and runtime qualification
+
+Both existing build paths discover `src/core/*.cpp`: CMake's `CONFIGURE_DEPENDS`
+glob and SCons' `Glob`. No build-file change is necessary. CMake actually compiles
+and links the new unit on Windows/Linux Debug/Release. A Linux SCons `-n`
+`platform=linux target=template_debug -j2` dry run explicitly lists the new unit;
+this is source-discovery evidence, not a new SCons package qualification. Linux
+`nm -C` confirms single registration/helper definitions and local math callbacks.
+
+Measurements use the same task snapshot path, existing pinned-vendor build
+objects, CMake/Ninja, two compiler jobs, MSVC 19.51.36260.0 on DockerPC and
+GCC 13.3.0 in the task-owned Ubuntu container. A baseline archive of the starting
+revision precedes edits. Candidate measurement deletes only snapshot/core-test
+objects, retaining vendor objects. Cold figures include adapter and core-test
+compilation/linking: six C++ units before, seven after. Header-touch figures
+rebuild three adapter units in both versions. Touching the new implementation
+rebuilds only that one unit. These are one trial per configuration, not statistical
+performance claims; full dependency-clean rebuilds and peak compiler RSS are not
+measured. Pinned dependency objects are deliberately warm in both comparisons.
+Windows Debug is slower in this trial; no overall compile-speed improvement is
+claimed. Exact seconds, object sizes, library sizes and warnings are in the
+[evidence manifest](evidence/gl013-value-extraction-2026-10-27.json).
+
+Reproduce with a baseline/candidate source snapshot under the same `<Source>`
+and matching existing dependency build tree:
+
+```text
+cmake -S <PinnedWorkerSource>/tests/runtime -B <Build> -DGL_SOURCE_ROOT=<Source> -DGL_BUILD_CORE_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=ON -DGL_BASELINE_SOURCE_ROOT=
+cmake --build <Build> --target GodotLuauAdapter ExecutionDomainTests --parallel 2
+ctest --test-dir <Build> --output-on-failure --verbose --timeout 30
+```
+
+Remove only the selected source/core-test objects for the extension-cold run;
+retain dependency objects. Time each build using a monotonic wall clock; count
+`Building CXX object` records. Touch only `luau_api.h`, rebuild/time, then in the
+candidate touch only `luau_value_bindings.cpp` and rebuild/time. Record the active
+adapter objects and extension byte sizes. Native runs use the existing
+`RunQualification.py` commands above/below with `--teardown --coordinated-close`,
+`--security` and `--animation` in separate fresh directories, timeout 60.
+
+`Integration.gd` adds actual native constructor/constants/arithmetic/type-error,
+Variant bridge round-trip, wrapper identity/destruction and fresh-domain checks;
+both Server and Client run the value cases. Existing 39-case core, native loading,
+owner teardown, reload, network and functional-animation gates remain intact.
+An initial exploratory Part-backed fixture assumed one yield guaranteed deletion;
+the baseline disproved that assumption. After bounded deletion observation it
+passed assertions but Linux still exited -11 at shutdown with four ObjectDB
+instances reported. Those baseline artifacts are retained at `gl013/baseline-values`
+and `baseline-values-2`; no cause or fix is claimed. The final lightweight Beam
+metadata bridge passes eight baseline Linux actors and exercises the selected
+conversions without introducing physics resources. Baseline Windows also passes
+eight actors with the earlier Part fixture after corrected deletion observation.
+The final candidate fixture must pass on both platforms; a PASS marker alone
+never overrides a nonzero exit.
+
+Local qualification passes Windows/Linux Debug and Release: 39 production-core
+cases in each configuration, actual GDExtension loading and all 28 required native
+actors each (112 total). The final Beam/value fixture passes both platforms and
+configurations, including fresh-domain initialization. Recorded native source
+fingerprint is `ec0db95eb65d488a9b6a2037cffee8cc0d1b1cd83b2b12b7e5eabbc60af5ae41`
+for 67 inputs; normalized changed-source/fixture hashes agree across workers and
+the controlling checkout. Both workers retain the exact result/log/library hashes
+in the manifest.
+
+Implementation `83bc42d2bcea9d66d21cfd4d2df2650b6c87a06c` is pushed to the dedicated
+branch. Fresh [core run 40626224165](https://github.com/gmoddev/GodotLuau/actions/runs/40626224165)
+passes 39 cases on each hosted platform. Fresh
+[native run 40626224232](https://github.com/gmoddev/GodotLuau/actions/runs/40626224232)
+passes both actual Debug adapter builds, process checks, pinned Godot provisioning,
+all 28 actors per platform and final summary/upload steps. Native completion takes
+19m11s within the 25-minute observation bound. Hosted Windows uses MSVC
+19.44.35229.0; Linux uses GCC 13.3.0. Both checkout logs confirm the unchanged pins.
+Downloaded ZIP digests match hosted metadata; summaries match the exact commit,
+67-input native fingerprint and extended fixture hash, with 8/10/10 zero-exit
+actors and no production binary payload. These hosted elapsed times are not a
+controlled baseline/candidate build-speed comparison.
+
+Disposition: **FIRST EXTRACTION QUALIFIED** on the dedicated branch; main stays
+at `eb638bfa6ff16abc91d11742625b3cc034f53178`. The final documentation/evidence-only
+follow-up changes no tested input and claims no separate run. Worker source-root
+configurations are restored; no test/Godot process remains, and the Linux task
+container is stopped. The extraction is ready for review and a separately
+authorized merge within this bounded scope. No merge is performed here.
+
+| Configuration | Cold before/after seconds | API-header touch before/after seconds | New implementation touch seconds | Extension bytes before/after |
+| --- | --- | --- | --- | --- |
+| Windows Debug | 21.448 / 32.785 | 19.822 / 30.840 | 1.133 | 24,191,488 / 24,191,488 |
+| Windows Release | 43.185 / 42.719 | 42.673 / 35.424 | 1.333 | 4,075,008 / 4,073,984 |
+| Linux Debug | 22.692 / 22.649 | 21.841 / 21.749 | 1.116 | 78,957,184 / 78,938,272 |
+| Linux Release | 41.574 / 41.824 | 40.321 / 40.471 | 0.565 | 12,519,496 / 12,515,920 |
+
+No userdata/native
+ownership rule changes, so no new sanitizer configuration is introduced. Existing
+retained math closures still capture native value addresses under the inherited
+semantics; safety across value collection is not established by this movement.
+GL-003/004/005/007/009/010/011/017/018/020 limitations remain independent; no
+dependency, updater, release or production publication behavior changes.
+
+GL-013 stays open. Recommended next extraction for a separately authorized task:
+the Godot Variant/property-conversion helpers, after defining their interface to
+these values and the Instance bridge. The large Instance index/newindex dispatch
+and header-heavy service/editor dependencies remain; no second extraction starts.
+
+### First extraction main integration (2026-10-28)
+
+Starting main `eb638bfa6ff16abc91d11742625b3cc034f53178`; qualified source
+`1c9f4c6296bc955a6a5969a6da0668d137e46ed1`. Normal merge
+`bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7` preserves implementation `83bc42d`
+and its evidence-only follow-up `1c9f4c6`, without conflicts. Its tree exactly
+equals qualified source. The branch remains a historical reference.
+
+Fresh checks inspect the actual diff, two-commit ancestry, unchanged normalized
+source/fixture hashes and registration calls, declaration-only value interface,
+single implementation and CMake/SCons source globs. Publication remains
+dispatch-only/read-only with both release jobs false; updater admission remains
+literal false. JSON/diff/source identity checks pass. No local native matrix is
+repeated: the exact tested inputs retain the Windows/Linux Debug/Release and
+hosted qualification recorded above. Historical limitations remain unchanged.
+
+The merge is pushed and remote main read back. Fresh automatic
+[core run 40629813359](https://github.com/gmoddev/GodotLuau/actions/runs/40629813359)
+and [native run 40629813337](https://github.com/gmoddev/GodotLuau/actions/runs/40629813337)
+target that merge. Initial observation is bounded at 90 seconds; pending jobs
+are not assumed successful. Their later results may be recorded alongside the
+authorized second extraction. Integration documentation changes no tested input.
+GL-013 remains open; one further extraction is separately authorized on a new
+branch from verified integrated main, without permission to merge that work.
+
+Fresh main observation subsequently completes during Stage 2: both core jobs pass
+39 cases per platform; both native jobs pass actual Debug adapter builds, process
+checks and all 28 actors each, including final completeness checks. Native job logs
+`122623327125` (Windows) and `122623327392` (Linux) confirm the 28-result PASS.
+Both workflows target merge `bdd57fd`; canonical main `174efcc` changes documentation
+only. Disposition: **INTEGRATED AND VERIFIED**. These are fresh main results,
+distinct from reused source qualification. Existing limitations remain unchanged.
+
+## GL-013 second generic Variant extraction
+
+Stage 2 starts from verified integrated main
+`174efcc2bdb59c5072ba21d27645c5380c61e8e9` on
+`refactor/gl-013-variant-bindings`, not the historical first-extraction branch.
+Its scope is only generic Luau/Godot value conversion; the branch is not merged.
+
+### Selection, dependencies and preserved contracts
+
+`gl_luau_to_variant` and `gl_variant_to_luau` were static free-function definitions
+in `luau_api.h`, duplicated per including translation unit. Their only direct
+consumers are the generic property read/write paths in that header: two reverse
+conversion sites and one forward conversion site. They use public Luau calls,
+Godot value types and the first extraction's exact-metatable checks/allocation.
+They neither resolve native objects nor access VM internals, domain ownership,
+callbacks or mutable static state. Registration remains entirely with existing
+domain/value initialization; conversion needs the same already-created metatables.
+
+`gl_has_property` inspects Godot Object property lists and remains TU-local with
+Instance dispatch. Read/write dispatch also owns native liveness checks via
+`gow_node`, property lookup/set/get, metadata fallbacks, table-Offset handling and
+invalid-member errors. Those functions are not generic conversion and are not
+moved together just because they shared a header. A larger Instance/property
+adapter would require broader lifetime/dispatch contracts; it is rejected for
+this extraction. A new collection/object conversion framework is also rejected:
+the existing generic helper intentionally does not support those types.
+
+The new `luau_variant_bindings.h` has only forward declarations for `lua_State`
+and `godot::Variant`, and the two existing boolean function signatures. Its
+implementation includes that header first, `luau_value_bindings.h`, public Lua,
+Godot Variant/String/Vector3/Color and cstdint headers. It includes no Node, ObjectID
+wrapper, service, domain, `luau_script.h` or `luau_api.h`. Dependencies point from
+Instance dispatch to conversion to value helpers, with no reverse include cycle.
+The value module remains Godot-free. The two bodies are byte-for-byte unchanged;
+only their internal-to-TU linkage becomes one ordinary definition each. No new
+registration, static initialization, state, public Lua API or ownership rule exists.
+
+Forward conversion accepts numbers as Godot double, bool, strings and exact
+Vector3/Color3 userdata. Reverse conversion accepts BOOL/INT/FLOAT/STRING/VECTOR3/
+COLOR and retains double numeric semantics. Unsupported conversion returns false:
+forward leaves the output and stack unchanged, reverse pushes nothing. The
+Instance caller preserves existing ignored writes, table-Offset fallback and
+invalid-member errors. Arrays/dictionaries/Instances are not newly supported.
+
+The baseline fixture initially expected unsupported reads to return nil; both
+workers showed the existing invalid-member error instead. A second initial
+expectation of non-ASCII string round-trip equality also failed: pinned
+godot-cpp `src/variant/char_string.cpp:159-160` implements `String(const char*)`
+with `string_new_with_latin1_chars`. Thus Lua UTF-8 bytes for `héλ` return as
+`hÃ©Î»`; native Godot strings still return UTF-8 correctly. Both behaviors are
+preserved explicitly by golden assertions, without an encoding fix. Initial
+failure artifacts remain in `gl013-variant/baseline-conversions` and
+`baseline-conversions-2`; the corrected fixture passes all eight baseline actors
+on both platforms at `baseline-conversions-3`. No runtime logic changed to obtain
+those passes. Existing first-extraction math/physics limitations remain separate.
+
+`Integration.gd` extends the existing Server/Client cases with native INT/BOOL/
+FLOAT/STRING/VECTOR3/COLOR reads; numeric, boolean and string writes; retained
+vector/color round trips; nil/unsupported table, array, function, userdata and
+live/destroyed Instance rejection preserving the prior value; table-Offset
+fallback; reflected integer property access; and caught error propagation.
+Existing wrapper destruction and fresh-domain checks remain. These are real
+production property/converter calls, not a mock or duplicate implementation.
+
+### Measurements and qualification
+
+Baseline source is archived before implementation to an isolated task snapshot;
+the same snapshot path, worker hardware, pinned dependencies, compiler/configuration
+and two build jobs are used before/after. Pinned vendor objects stay warm; task
+adapter/core objects are cold for each cold measurement. Baseline compiles five
+adapter plus two core-test units; candidate adds one converter unit. API-header
+touch still rebuilds three adapter units; converter-implementation touch is measured
+separately. Object and extension sizes, warnings, exact results/log hashes and
+limitations are recorded in the
+[second extraction manifest](evidence/gl013-variant-extraction-2026-10-28.json).
+Previous measurements remain historical and are not overwritten. Full dependency-
+clean time and peak compiler RSS are not measured; a single trial establishes no
+general speed claim.
+
+Local Windows/Linux Debug and Release builds pass, each with 39 core cases and
+all 28 required native actors (112 total); both final baseline conversion runs
+also pass eight actors. Native source fingerprint is
+`24dd210d77dade0a6ae5279402f4c31c61d57049636f6a505b1a4e3934b08f17` for 69 inputs.
+Changed source/fixture hashes match both workers and this checkout. CMake compiles
+and links the new unit in all four configurations; Linux SCons dry-run discovery
+lists it, and `nm -C` shows exactly one definition of each converter. Both build
+systems retain their existing `src/core/*.cpp` discovery; no new build configuration
+or workflow is needed. The API header decreases from 281,472 bytes/4,946 lines to
+280,183 bytes/4,923 lines; the interface is 688 bytes/15 lines and implementation
+1,601 bytes/36 lines, using normalized LF bytes.
+
+| Configuration | Dependency-warm cold before/after seconds | API-header touch before/after seconds | Converter touch seconds | Extension bytes before/after |
+| --- | --- | --- | --- | --- |
+| Windows Debug | 21.118 / 25.409 | 19.307 / 23.181 | 1.023 | 24,192,000 / 24,192,000 |
+| Windows Release | 31.639 / 34.776 | 30.746 / 32.462 | 1.361 | 4,073,984 / 4,073,984 |
+| Linux Debug | 22.692 / 22.792 | 21.691 / 21.742 | 1.165 | 78,938,368 / 79,034,768 |
+| Linux Release | 41.722 / 41.924 | 40.270 / 40.421 | 0.564 | 12,515,920 / 12,516,144 |
+
+These single samples demonstrate a one-unit implementation edit boundary, not
+overall faster compilation or smaller binaries. Exact object sizes are retained
+in the manifest. Reproduction uses the first extraction's commands with the new snapshot
+and `luau_variant_bindings.cpp` as the implementation-touch input. Both Windows/
+Linux Debug and Release core/native gates pass; existing hosted core/native Debug
+qualification completes on implementation `5f72f4cda1c5e3bb76edd33bb11e276cff07ac10`:
+[core run 40631078253](https://github.com/gmoddev/GodotLuau/actions/runs/40631078253)
+passes 39 cases per platform; [native run 40631078251](https://github.com/gmoddev/GodotLuau/actions/runs/40631078251)
+passes both fresh actual Debug builds, process checks, verified Godot provisioning,
+all 28 actors per platform and final completeness/uploads. Native run time is
+19m13s, within the 25-minute observation bound. Both checkout logs confirm exact
+dependency pins. Downloaded diagnostic ZIP digests match metadata; summaries
+verify the tested commit,69-input fingerprint and extended fixture hash, with
+exact8/10/10 groups and zero actor exits. No binaries are published or uploaded.
+
+Disposition: **SECOND EXTRACTION QUALIFIED**. The branch is ready for review within
+its bounded scope and remains unmerged; remote main stays `174efcc2bdb59c5072ba21d27645c5380c61e8e9`.
+The final evidence-only follow-up changes no tested input and claims no additional
+run. Worker Debug/Release source-root settings are restored; no task-owned test/
+Godot process remains, and the Linux task container is stopped. No new sanitizer configuration is justified
+by this ownership-preserving movement.
+
+GL-013 remains open. The next separately authorized candidate is a bounded Instance
+reflection adapter around `gl_has_property`, after mapping property/fallback and
+lifetime contracts. Broad Instance dispatch and service/editor header dependencies
+remain. No third extraction or unrelated runtime/dependency/publication change is
+part of this task.
+
 ## GL-011 independent core CI (2026-10-27)
 
 Branch `ci/gl-011-core-qualification` starts at canonical main
@@ -1313,3 +1630,812 @@ Main subsequently integrated that exact qualified source through normal merge
 and [separate integration manifest](evidence/gl006-008-main-integration-2026-10-27.json)
 for the six fresh core checks and 90 fresh native process results. The corrected
 networking endpoints are the current main baseline; GL-007 and GL-020 remain open.
+
+
+## Second extraction main integration (2026-10-28)
+
+Starting local/remote main `174efcc2bdb59c5072ba21d27645c5380c61e8e9`
+merges qualified branch tip `d97fa5da9c5fb587061db9e35be00e764a47e3de`
+normally as `21d10d91769ee81c85ae2e1d2029e683feeb51ba`. Both source commits
+(`5f72f4c` and `d97fa5d`) remain ancestors; the entire merge tree equals that tip.
+The final branch commit changes four evidence/documentation files only. Source,
+fixtures, dependencies, build configuration and workflows equal qualified
+implementation `5f72f4cda1c5e3bb76edd33bb11e276cff07ac10`.
+
+Fresh integration checks compare both converter bodies exactly to pre-extraction
+source, confirm one definition each, inspect unchanged reflection/registration,
+forward-only headers and both source-discovery globs, parse evidence and check the
+diff. Prior Windows/Linux Debug/Release core39/native28 qualification is reused
+within its recorded scope; no expensive local matrix is repeated. Release jobs
+remain false with read-only permissions and updater admission remains false.
+The normal push is read back at the exact merge SHA.
+
+Fresh [core run 40642408324](https://github.com/gmoddev/GodotLuau/actions/runs/40642408324)
+and [native run 40642408346](https://github.com/gmoddev/GodotLuau/actions/runs/40642408346)
+target this merge. Observation is bounded at 25 minutes, with results recorded
+during the authorized third extraction. Initial status is pending; pending work
+is not a pass. The next documentation commit changes no tested input. GL-013
+remains open, and the third extraction is authorized for branch publication only.
+
+
+Fresh main observation subsequently completes within the bound (15m45s native run).
+Both Windows/Linux core jobs pass 39 cases; both native jobs pass fresh actual
+Debug adapter builds, process checks, 8/10/10 actors and final completeness checks.
+Logs confirm unchanged pins; digest-checked diagnostic ZIPs verify merge revision,
+69-input native fingerprint and original extended fixture hash, with no production
+binary payload. Final main `752bb2063f61a533c3e59b481196a0d8aa88f1ba` changes only
+integration documentation relative to the tested merge. The separate manifest's
+`VariantMainIntegration` follow-up records jobs, digests and timings without
+changing historical measurements. Disposition: **INTEGRATED AND VERIFIED**.
+No Stage 2 source is included in main.
+
+## GL-013 third Instance property extraction
+
+The branch `refactor/gl-013-instance-reflection` starts from verified local/remote
+main `752bb2063f61a533c3e59b481196a0d8aa88f1ba`, following the second extraction's
+normal integration. Stage 2 is authorized for branch publication only. Main does
+not contain this extraction. No fourth extraction is included.
+
+### Source map and selected interface
+
+| Responsibility | Existing owner and dependency |
+| --- | --- |
+| Native userdata/identity | `GodotObjectWrapper` stores ObjectID; `gow_node` in `gl_runtime.h` resolves ObjectDB and checks Node type/liveness on access. `wrap_node` retains the existing layout/metatable and identity behavior. |
+| Class identity | `gl_roblox_classname`, IsA checks and class-specific tests remain in `luau_api.h`; classname buffers remain TU-local. |
+| Read dispatch | `godot_object_index` applies stack guard, key/wrapper checks, special-case properties/methods, Anchored compatibility, generic bridge, child lookup, lowercase alias, then the existing invalid-member error. |
+| Write dispatch | `godot_object_newindex_impl` validates/resolves the wrapper and handles class-specific setters before the generic bridge. The outer `godot_object_newindex` still performs replication afterward. |
+| Method lookup/binding | Explicit key branches and existing Lua functions/closures; native callback captures, owner/reference guards and service dependencies stay in their current implementation. No generic callable registry exists in the selected subset. |
+| Variant/value conversion | The preceding two independently owned modules; their bodies, layouts, metatable names and two initialization positions remain unchanged. |
+| Generic reflection | Exact property-list enumeration, Object get/set and `_glp_` metadata fallback. No cached schema, permission/usage filtering or automatic notification is added. |
+| Signals/reentrancy | Attribute watchers use a TU-local vector of node IDs, Lua references and owner checks; Changed/ValueBase/property-specific signal paths remain outside the adapter. Generic GetPropertyChangedSignal remains inert where already unsupported. |
+| Registration/includes | `luau_script.h` owns existing domain setup and includes `luau_api.h`; transitive API consumers remain gl_domain_host/luau_script/register_types. Static watcher/container/replication state and class registration stay in place. |
+
+A whole Instance adapter would bring class-specific services/gameplay, callbacks,
+replication and initialization dependencies across the boundary. It is rejected
+for this bounded task. Extracting only the membership loop would leave its generic
+read/write policy duplicated among API consumers. The selected subsystem instead
+owns membership plus both generic adaptation blocks, while leaving all Roblox
+compatibility and caller fallback policy with their existing owners. No reflection
+framework, hierarchy, registry or injection layer is introduced.
+
+The interface is established before moving the blocks: three functions in a
+forward-declaration-only header. `HasLuauInstanceProperty(Object*, const String&)`
+accepts null just as the old helper did. `PushLuauInstanceProperty(L,Object*,Key)`
+requires the caller's live borrowed object/checked key and existing metatables,
+pushes one value on true and none on false. `WriteLuauInstanceProperty` uses the
+existing value at Lua stack index 3. Both preserve `_gl_bridge` admission. No
+parameter is retained and no static state or registration is added. The C++
+implementation includes its header first, public Luau, Godot Object/value headers
+and only the narrow Variant conversion interface. No Node, domain, service,
+networking or large implementation header is needed. The dependency direction is
+Instance dispatch -> property adapter -> Variant conversion -> native values.
+The native-value module remains Godot-free, with no reverse include cycle.
+
+The membership function body and both bridge blocks compare exactly to baseline,
+apart from the helper's PascalCase name and read-success `return true` instead of
+returning the enclosing Lua result count 1. The caller returns 1 at the same
+position. Both Anchored compatibility sites call the same membership function.
+The old definitions/blocks are removed rather than retained as parallel paths.
+Three ordinary C++ definitions own this implementation; no callback or ABI/public
+Lua registration changes. Narrow forward declarations reduce implementation edit
+coupling; touching the original API header still affects its three consumers.
+
+### Behavior and baseline evidence
+
+An immutable baseline archive precedes any C++ edit. Windows/Linux Debug and
+Release baseline builds and all 39 core cases pass. Before moving implementation,
+the extended `Integration.gd` fixture passes eight production native actors on each
+platform using the unchanged Debug extension (`baseline-reflection-debug`). It
+establishes exact native-property precedence over metadata, metadata fallback for
+unsupported native Transform3D, Vector3/bool/int writes, read-only `multiplayer`
+write rejection with no `_glp_multiplayer` entry/native mutation, ignored nil,
+numeric table Offset, repeated access and existing missing-member/Offset-metamethod
+errors. GDScript also reads back the native value, so tests cannot pass through
+metadata alone. Changed remains silent for generic writes and fires on the
+existing SetAttribute path. Non-bridge objects retain ignored writes. Prior
+scalar/Unicode/unsupported Variant, wrapper identity/destruction and fresh-domain
+cases remain; the existing fixture also destroys owners inside callbacks.
+
+The extraction preserves Godot `set` failure handling (return ignored), property
+usage/read-only policy, class-specific dispatch and diagnostics. Unsupported reads
+still reach the existing invalid-member error unless a supported metadata/child
+fallback succeeds. Lua UTF-8 byte reinterpretation, unsupported writes and numeric
+Offset truncation stay unchanged. The borrowed call introduces no retained raw
+pointer or ownership change; Offset metamethod execution can reenter/raise exactly
+as before. No new sanitizer matrix is justified by this stateless physical split;
+existing GL-017/018 and historical Part/shutdown/math-closure qualification limits
+remain visible, without claiming general native-lifetime safety.
+
+### Measurements and qualification
+
+All four candidate builds pass 39 production-core cases and all 28 native actors
+per configuration (112 total), including the extended reflection fixture, existing
+lifecycle/reload/owner-callback teardown, network and functional animation groups.
+The separate [manifest](evidence/gl013-instance-reflection-2026-10-28.json) retains
+exact measurements, object sizes, source/fixture/library and result/log hashes.
+Both workers match this checkout's 71-input native fingerprint
+`671227453cc8b67fbf763be7968faae1ea295d1e2e916aabc7501b709b8abbed`.
+
+The same immutable-baseline/candidate snapshot path, pinned dependencies, hardware,
+CMake/Ninja configuration and two jobs are used for comparison. Baseline cold means
+six adapter plus two core-test units; candidate adds one adapter unit. Pinned vendor
+objects stay warm. API touches rebuild three units in both; reflection implementation
+touches rebuild exactly one. Two existing MSVC Luau Ast.h C4100 warnings remain in
+cold core builds; no new native warning appears, and Linux reports zero warnings.
+CMake actually compiles/links the discovered source in all four configurations.
+SCons' unchanged `Glob("src/core/*.cpp")` includes it by source inspection only;
+no new SCons/package qualification is claimed. Linux `nm -C` confirms a single
+ordinary global definition of each adapter function.
+
+| Configuration | Cold seconds before/after | API touch seconds before/after | Reflection touch seconds | Adapter object bytes before/after | Extension bytes before/after |
+| --- | --- | --- | --- | --- | --- |
+| Windows Debug | 21.469 / 21.182 | 19.391 / 19.038 | 0.923 | 91,084,363 / 91,179,002 | 24,192,000 / 24,194,048 |
+| Windows Release | 30.421 / 29.697 | 27.988 / 27.553 | 1.306 | 49,113,557 / 49,149,845 | 4,074,496 / 4,073,984 |
+| Linux Debug | 22.950 / 22.892 | 21.747 / 21.841 | 1.266 | 67,641,664 / 68,053,648 | 79,034,808 / 79,138,320 |
+| Linux Release | 42.116 / 42.066 | 40.314 / 40.414 | 0.665 | 15,705,912 / 15,724,776 | 12,516,144 / 12,516,600 |
+
+These are single trials, with no full dependency-clean or peak compiler RSS
+measurement. The small timing differences do not establish an overall speedup.
+The useful measured boundary is a one-unit implementation edit. `luau_api.h`
+decreases 2,014 LF bytes/38 lines (280,183/4,923 -> 278,169/4,885); the interface
+is 1,007 bytes/18 lines and implementation 1,878 bytes/53 lines. Binary/object
+sizes are not uniformly reduced. Broader includes remain in the three API consumers.
+
+Reproduction uses the existing CMake/core/native commands above with source roots
+`C:/Sandbox/Codex/Builds/GodotLuau/gl013-reflection/source` or
+`/work/gl013-reflection/source`, existing Debug/Release build caches and two jobs.
+Private worker drivers run baseline then candidate in both configurations, recording
+`cold-extension.log`, `touch-api.log`, `touch-reflection.log`, `core.log`, three
+native logs/result sets and `measurements.json`; the manifest retains their hashes.
+Baseline extended-fixture artifacts are kept at `baseline-reflection-debug` on each
+worker. Header/implementation touch changes timestamps only; candidate cold removes
+only validated task-source/core-test objects, never dependency objects.
+
+Local disposition: qualified in Windows/Linux Debug and Release. Hosted core/native
+observation follows branch push and is bounded at 25 minutes; pending jobs are not
+passes. The final documentation follow-up changes no tested input. GL-013 remains
+open. Recommended next investigation is `gl_roblox_classname`/`gl_isa`: their
+string-based mapping and Godot class checks use Node/value APIs, but the fallback
+returns a pointer into a TU-local static CharString. Its storage/lifetime contract
+must be decided explicitly before moving those helpers across a compilation boundary.
+No fourth extraction, publication, workflow or dependency change is included.
+
+Implementation `00097117a56c37abaf5e060033e15e2d82614581` is pushed and remote
+branch identity read back; remote main remains `752bb2063f61a533c3e59b481196a0d8aa88f1ba`.
+Fresh [core run 40643325332](https://github.com/gmoddev/GodotLuau/actions/runs/40643325332)
+passes 39 cases per platform, with exact pinned checkouts confirmed in both logs.
+Fresh [native run 40643325389](https://github.com/gmoddev/GodotLuau/actions/runs/40643325389)
+is under bounded observation; its two fresh Debug builds are initially pending.
+Both worker source-root configurations are restored without rebuilding; the
+Linux container is verified idle then stopped, and the Windows task-process scan
+is empty. Task snapshots, logs and all previous extraction evidence are retained.
+
+
+Final hosted observation completes in 14m08s, within the 25-minute bound. Both
+[core jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40643325332) pass39;
+both [native jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40643325389)
+pass actual fresh Debug builds, process checks (Linux14; Windows8 plus6 Linux-only
+skips), verified Godot provisioning, all28 actors and final completeness checks.
+Hosted Windows uses MSVC19.44.35229.0; Linux uses GCC13.3.0. Both native checkout
+logs confirm the unchanged pins. Digest-checked diagnostic ZIPs match implementation
+`00097117a56c37abaf5e060033e15e2d82614581`, the 71-input native fingerprint,
+extended fixture hash and 8/10/10 zero-exit actors. No binary payload is present.
+The manifest records exact job IDs, digests, sizes, timestamps and local evidence.
+
+Disposition: **THIRD EXTRACTION QUALIFIED**, on the unmerged development branch.
+The final evidence commit changes no source, fixture, build or workflow input;
+main remains `752bb2063f61a533c3e59b481196a0d8aa88f1ba`. This is compilation
+isolation and preserved exercised behavior, not a production distribution,
+full-lifetime/sanitizer or general build-speed guarantee. GL-013 and the independent
+qualification limitations remain open. Stop after this third extraction.
+
+
+## Third extraction main integration (2026-10-28)
+
+Starting local/remote main `752bb2063f61a533c3e59b481196a0d8aa88f1ba` normally
+merges qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058` as
+`b7ec9fd614bd0e92ce418859de68b835180a7d7c`. Both implementation `0009711` and
+final evidence `90776e7` remain ancestors; the entire merge tree equals that tip.
+The final source-branch commit changes four qualification/evidence files only.
+Source, fixtures, build/workflow configuration and pins equal tested implementation
+`00097117a56c37abaf5e060033e15e2d82614581`.
+
+Focused checks verify the qualified native fingerprint, exact unchanged inputs,
+three single reflection definitions and no old duplicate membership implementation,
+source discovery and declaration-only interface. Generic property, metadata/Offset,
+ObjectID and callback/registration contracts are unchanged. Existing Windows/Linux
+Debug/Release core39/native28 and hosted core/native qualification is reused within
+its documented scope; no Stage1 local matrix is repeated. Release jobs remain false
+with read-only permissions and updater admission false. Push/readback confirms the
+exact merge on origin main. GL-013 remains open.
+
+Fresh [core run 40645510990](https://github.com/gmoddev/GodotLuau/actions/runs/40645510990)
+and [native run 40645511072](https://github.com/gmoddev/GodotLuau/actions/runs/40645511072)
+target the merge. Initial status is in progress, with a 25-minute observation bound;
+results are recorded during the separately authorized fourth extraction. Pending
+jobs are not passes. The following integration documentation changes no tested input.
+
+
+Fresh main observation completes in 19m19s, within the bound. Both core jobs pass 39;
+both native jobs pass actual Debug builds, process checks,8/10/10 actors and final
+completeness checks. Checkout logs confirm exact pins; both diagnostic ZIP digests
+match metadata, with merge revision,71-input native fingerprint and original
+reflection fixture hash verified and no binary payload. Final main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6` differs from the tested merge only in
+integration documentation. The manifest's ReflectionMainIntegration follow-up
+preserves all prior measurements. Disposition: **INTEGRATED AND VERIFIED**.
+No fourth-extraction source is on main.
+
+## GL-013 fourth Class identity extraction
+
+Branch `refactor/gl-013-class-identity` starts from verified local/remote main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6`, following normal reflection integration.
+Only this fourth extraction is authorized for branch publication; it remains
+unmerged. No fifth extraction or unrelated runtime work is included.
+
+### Actual behavior, consumers and boundary
+
+The old `gl_roblox_classname(Node*)` first obtains a Godot String from get_class,
+then checks a fixed table of native/Roblox names. Null yields Instance. Examples
+include OmniLight3D -> PointLight, RobloxFrame -> Frame, ServerScript -> Script,
+Humanoid2D -> Humanoid and RobloxChat -> TextChatService; unmapped native names
+remain exact. The table is not a dynamic registry or object/name cache.
+`gl_isa` rejects null object/query, accepts Instance and exact mapped names,
+adds Part's BasePart/PVInstance, selected GUI GuiObject/GuiBase2d and script
+LuaSourceContainer compatibility, then falls back to Godot is_class. Empty,
+unknown and wrong-case names retain the baseline result.
+
+All consumers are in `luau_api.h`: generic ClassName, invalid-member error
+formatting, generic IsA and child/ancestor class searches. They do not retain a
+name pointer beyond the immediate operation. Class-specific PlayerObject and
+RobloxValue ClassName/IsA branches and Mouse ClassName remain in dispatch; notably
+IntValue's concrete identity differs from generic RobloxValue -> NumberValue.
+Moving these branches would add concrete-type/header/callback dependencies and
+risk changing compatibility; it is rejected. Moving only the table would leave
+its name/parent policy split across duplicate header implementations. The selected
+boundary owns the complete generic name mapping plus predicate, not wrapper
+resolution, class-specific overrides, traversal, errors or Lua registration.
+
+Source-order counterevidence matters: the Mouse-specific ClassName branch occurs
+after the unconditional generic ClassName return, so it is not an effective name
+override in this path. That baseline ordering is preserved; merely finding a
+branch labeled Mouse would not establish a public Mouse alias. No separate Mouse
+compatibility correction is bundled with this extraction.
+
+The new forward-only header has two declarations. `GetLuauClassName(Object*)`
+returns an owned Godot String; `IsLuauClass(Object*, const char*)` borrows the live
+object/query for the current call only. Object get_class/is_class are the only
+native operations, so a Node dependency is unnecessary. Callers still resolve
+ObjectIDs through gow_node at their existing points. The implementation includes
+its own header first, Godot Object/String and cstring only, with no Luau, domain,
+service, gameplay, property/conversion or implementation header. Dependencies
+point from Instance dispatch to this independent Godot adapter; there is no
+reverse include or registration/static initialization dependency.
+
+The entire table and predicate compare to baseline after the explicit function
+signature/name/storage adaptations. Names become PascalCase; the former Node
+parameter becomes its Object base. Unmapped return changes from a borrowed static
+buffer to the existing owned Godot String. IsA owns a local CharString before
+using the same strcmp/Godot rules; ClassName/error callers use `.utf8().get_data()`
+within the same full expression. The old implementations are removed, with two
+ordinary C++ definitions and no duplicate dispatch path. This internal value
+boundary can add String/UTF-8 conversion work for mapped names; runtime throughput
+is not benchmarked and no runtime speed claim is made. GL-019 code is unchanged.
+
+### Explicit string-storage lifetime audit
+
+| Storage/use | Baseline finding and new contract |
+| --- | --- |
+| Static name literals | Fixed table entries have static lifetime; no issue established. The immutable table remains, returning the same textual identity. |
+| Fallback storage | The actual type is a mutable TU-local static Godot CharString, not std::string or thread_local. Assignment from `c.utf8()` retains the COW buffer through CharString copy assignment; the temporary's destruction does not invalidate that retained storage. A later fallback lookup may overwrite it. |
+| Existing borrowers | IsA compares before another class lookup; ClassName immediately calls lua_pushstring; error formatting calls luaL_error. No class-name pointer is stored in a closure, cache, userdata or pending task. `gl_instance_fullname` uses parent/name traversal and does not call the identity helper. |
+| Luau copying | Pinned lapi.cpp lua_pushstring calls lua_pushlstring/strlen; luaS_newlstr interns or copies bytes into a TString. laux.cpp luaL_errorL formats into Lua strings before raising. Returned Lua strings do not borrow native name storage. |
+| Temporary conversions | Existing class-specific Value and fullname/tostring conversions use a temporary CharString alive through the full expression. New generic ClassName/error conversions use the same lifetime rule with an owned String result. IsA's named CharString remains alive through all comparisons/native inheritance checks. No pointer into a destroyed conversion temporary is returned. |
+| Sequential/reentrant use | Sequential lookups overwrite the old fallback buffer only after the current consumer has copied/compared it. Selected helpers make no Lua call/yield. Production code registers no Lua userdata destructor that performs a class lookup during string-push GC; the domain userthread hook owns thread bookkeeping. Supported native attribute callbacks can call class lookups, but no earlier native name borrow crosses their dispatch. Fixtures retain Lua strings across those calls. |
+| Concurrency | Domain Tick/managed callbacks run through the existing SceneTree host; no parallel native-binding dispatch is established here. Shared Server/Client domains are not OS threads. Unsupported cross-thread Godot/Luau use is neither required nor qualified. No claim of general concurrency safety is made from static storage appearance. |
+| New boundary | Returning an owned Godot String avoids changing three TU-local mutable buffers into one shared mutable global buffer and avoids exposing an overwrite-sensitive borrowed-pointer contract. There is no mutable identity buffer/cache in the new unit. Object ownership remains unchanged. |
+
+Disposition: **no confirmed lifetime defect in the examined supported call graph**.
+A stale-pointer test that intentionally retained the old private borrowed pointer
+past another lookup would exceed every existing caller's contract; it is not a
+reproduced production UAF. No separate defect/fix commit or new issue is invented.
+The owned result is an explicit compilation-interface decision, not a behavioral
+correction disguised as a mechanical move. No native object ownership or confirmed
+lifetime defect changes, so no new sanitizer matrix is run; existing GL-017/018,
+prior Part-shutdown evidence and retained math-closure limitations stay independent.
+
+### Baseline and focused qualification
+
+An immutable source archive and all Windows/Linux Debug/Release cold/header/core
+baseline measurements precede C++ edits. Extended production fixtures run on the
+unchanged Debug adapters on both workers. The first attempt fails at the fixture's
+unsupported `collectgarbage` call, after preceding identity assertions; logs are
+retained at `gl013-class/baseline-identity-debug`. Production Luau's lbaselib exposes
+gcinfo, not that entry point. The corrected fixture uses 20,000 bounded ephemeral
+allocations and requires an observed gcinfo decrease before asserting retained
+names again. No runtime capability is added to force collection. Both corrected
+baseline runs pass all eight actors at `baseline-identity-2-debug`.
+
+The fixture covers exact aliases, custom and Godot parents, unrelated/empty/
+unknown/wrong-case queries, repeated/sequential names from different classes,
+Lua-owned names retained after later lookups, attribute-callback lookups, existing
+error formatting, retained generic IsA on a destroyed wrapper, native replacement,
+GC pressure and fresh-domain ClassName/IsA. Existing owner callback destruction,
+script reload/shutdown, multiplayer and functional-animation groups remain. No
+mock or duplicate identity implementation substitutes for production bindings.
+
+### Measurements and qualification results
+
+All Windows/Linux Debug and Release candidate builds pass 39 core cases and 28 native
+actors per configuration (112 total). Extended production identity fixtures and all
+existing lifecycle/network/functional-animation groups pass. The corrected baseline
+passes 8 actors per platform. Exact source,fixture,library,result and log hashes plus
+object sizes are retained in the [separate manifest](evidence/gl013-class-identity-2026-10-28.json).
+Both workers match this checkout's 73-input native fingerprint
+`26680e318ee208040329105b03ae430cc530544d2418a26f8e4ba9e32192421d`.
+
+Same task snapshot path, workers, pinned dependencies, CMake/Ninja configurations
+and two jobs are used. Cold extension means 7 adapter+2 core units before and 8+2
+after, with pinned dependency objects warm. API-header touch rebuilds 3 units in
+both; identity-implementation touch rebuilds 1. Two existing MSVC Ast.h C4100 warnings
+remain in cold core builds; no new native warnings and Linux zero. CMake actually
+compiles/links the unit in all four configurations; SCons' unchanged core glob
+includes it by source inspection only. Linux nm -C confirms two single ordinary
+identity definitions. No SCons package build is newly claimed.
+
+| Configuration | Cold seconds before/after | API touch seconds before/after | Identity touch seconds | Adapter object bytes before/after | Extension bytes before/after |
+| --- | --- | --- | --- | --- | --- |
+| Windows Debug | 21.708 / 28.911 | 19.843 / 23.189 | 0.926 | 91,177,976 / 91,257,778 | 24,193,536 / 24,192,000 |
+| Windows Release | 30.483 / 30.441 | 27.929 / 28.067 | 1.301 | 49,149,615 / 49,190,958 | 4,073,472 / 4,073,984 |
+| Linux Debug | 22.899 / 22.951 | 21.948 / 21.797 | 1.266 | 68,053,336 / 68,447,240 | 79,138,248 / 79,240,992 |
+| Linux Release | 42.123 / 42.025 | 40.720 / 40.421 | 0.615 | 15,724,648 / 15,742,904 | 12,516,600 / 12,516,600 |
+
+These are single trials with warm dependency objects, uncontrolled ambient worker
+load, no full dependency-clean timing and no compiler peak RSS. The Windows Debug
+sample varies substantially; no overall speedup or smaller-binary claim is made.
+The demonstrated boundary is one-unit implementation editing. Header LF size falls
+3,389 bytes/47 lines: 278,169/4,885 -> 274,780/4,838. The interface is 748 bytes/15 lines;
+implementation 3,624 bytes/57 lines. Remaining broad API includes still reach three
+consuming units. Owned-string runtime costs are not benchmarked.
+
+Reproduction follows the preceding CMake/core/native commands using source roots
+`C:/Sandbox/Codex/Builds/GodotLuau/gl013-class/source` and `/work/gl013-class/source`,
+existing Debug/Release build caches and two jobs. Private worker drivers run
+baseline/candidate in each configuration, record cold-extension/touch-api/touch-class/
+core/native logs and measurements.json, and preserve baseline fixture failures.
+Only validated task-source/core-test objects are removed for cold candidate runs;
+dependency objects remain. Touch operations change timestamps only.
+
+Local disposition: qualified across all four configurations. Hosted core/native
+observation follows publication with a 25-minute bound; pending jobs are not passes.
+GL-013 remains open. Recommended next investigation is stateless inert-signal
+construction and lowercase signal aliases, separately from stateful connection/
+owner handling. No fifth extraction, ownership/configuration change, new capability,
+workflow, updater distribution or release publication is included.
+That recommendation is historical; the subsequent
+[remaining-boundary assessment](gl013-boundary-assessment.md#ranked-future-work--proposals-not-authorization)
+ranks the script bootstrap/Instance-access boundary ahead of another tiny helper.
+
+Implementation `9320b3e4c69b6c883fa37c6fed6769b0acbe5f40` is pushed and remote
+branch identity read back; main remains `4e3db8496e189b6e09148b015eff28b1c8ae29b6`.
+Fresh [core run 40646744969](https://github.com/gmoddev/GodotLuau/actions/runs/40646744969)
+passes 39 on both platforms; logs confirm the unchanged pins. Fresh
+[native run 40646744985](https://github.com/gmoddev/GodotLuau/actions/runs/40646744985)
+is initially building under the 25-minute observation bound. Both worker caches are
+restored to their original source roots without rebuilding; Linux is verified idle
+then stopped, and the Windows task-process scan is empty. Prior artifacts remain.
+
+
+Final hosted observation completes in 16m06s, within the 25-minute bound. Both
+[core jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40646744969) pass 39;
+both [native jobs](https://github.com/gmoddev/GodotLuau/actions/runs/40646744985)
+pass fresh actual Debug builds, process checks (Linux 14; Windows 8 plus 6 Linux-only
+skips), verified Godot provisioning, all 28 actors and final completeness gates.
+Hosted MSVC19.44.35229.0/GCC13.3.0 and exact dependency pins are confirmed in logs.
+Both diagnostic ZIP digests match metadata; their summaries verify implementation
+`9320b3e4c69b6c883fa37c6fed6769b0acbe5f40`, the 73-input native fingerprint,
+extended fixture hash and 8/10/10 zero-exit actors. Only diagnostics are retained,
+without binary payload. Exact jobs, hashes and timings are in the manifest.
+
+Disposition: **FOURTH EXTRACTION QUALIFIED**, on its unmerged development branch.
+No separate supported-call lifetime defect was confirmed. The explicit owned-value
+interface avoids shared mutable name-buffer coupling while preserving exercised
+Lua behavior. Final evidence changes no source/fixture/build/workflow input; main
+remains `4e3db8496e189b6e09148b015eff28b1c8ae29b6`. This qualifies compilation
+isolation and the exercised compatibility cases, not general runtime throughput,
+threaded native access, sanitizer/production distribution or complete GL-013 closure.
+The initial fixture failure and all prior extraction evidence remain. Stop after
+this fourth extraction.
+
+
+A final full-range `git diff --check` caught a trailing blank line in the newly
+added implementation (the earlier working-tree check did not inspect untracked
+files). Published history is preserved: whitespace-only commit
+`688fd5bc77893f7f5728d6e7ad44f2fcf4b200ba` removes exactly one EOF newline. Every
+preceding byte equals qualified implementation `9320b3e`; all other native,fixture,
+build/workflow and dependency inputs remain identical. The final implementation
+is 3,623 LF bytes/56 lines; original measured 3,624/57 and source hashes remain as
+historical evidence. The final 73-input fingerprint is
+`653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3`.
+
+Completed local and hosted implementation qualification is reused for identical
+C++ code; no expensive local matrix is repeated for trailing EOF whitespace.
+Fresh [core run 40648770262](https://github.com/gmoddev/GodotLuau/actions/runs/40648770262)
+passes 39 per platform. Fresh [native run 40648770257](https://github.com/gmoddev/GodotLuau/actions/runs/40648770257)
+is still building on both platforms after the bounded initial observation (about 90s,
+final snapshot 98s from 07:14:16Z). Those pending jobs are not claimed passed; the
+completed source-qualification runs above target 9320b3e. The manifest records this
+follow-up separately rather than silently replacing tested fingerprints.
+**FOURTH EXTRACTION QUALIFIED** applies to the unchanged implementation; latest
+whitespace-follow-up native CI remains pending at this snapshot. Final evidence
+changes no source/input relative to 688fd5b, and remote main remains 4e3db84.
+
+
+## Fourth extraction main integration (2026-10-28)
+
+Starting local/remote main `4e3db8496e189b6e09148b015eff28b1c8ae29b6` normally
+merges qualified tip `eb53661072999887d2a124e5d4ece2f458c7bb30` as
+`35c993ce3711076a61dace5324f74691f4fb77ef`. All four commits (`9320b3e`,
+`8d26994`, `688fd5b`, `eb53661`) remain ancestors; the entire merge tree equals
+the qualified tip. Final source/build/workflow/fixture inputs exactly equal
+cleanup revision `688fd5bc77893f7f5728d6e7ad44f2fcf4b200ba`; only one EOF newline
+separates that source from original tested implementation `9320b3e`.
+
+Focused checks verify ancestry, exact source/native fingerprint and final tree,
+owned String interface, single identity definitions, unchanged aliases/predicate,
+both core-source discovery globs and unchanged registration/ObjectID/domain/API
+contracts. No supported-call UAF is newly claimed. Full-range whitespace checking
+passes; release jobs remain false/read-only and updater admission remains false.
+The merge is pushed and remote SHA read back. Existing local Windows/Linux
+Debug/Release core39/native28 evidence is reused, with no new local matrix.
+Cleanup [core40648770262](https://github.com/gmoddev/GodotLuau/actions/runs/40648770262)
+and [native40648770257](https://github.com/gmoddev/GodotLuau/actions/runs/40648770257)
+are now both completed successfully on Windows/Linux; their earlier pending
+snapshot remains historical evidence rather than being silently overwritten.
+
+Fresh integrated [core40651973151](https://github.com/gmoddev/GodotLuau/actions/runs/40651973151)
+and [native40651973098](https://github.com/gmoddev/GodotLuau/actions/runs/40651973098)
+target merge `35c993ce3711076a61dace5324f74691f4fb77ef`. The initial in-progress
+snapshot remains in the manifest. **INTEGRATED AND VERIFIED:** both workflows
+completed successfully within the 25-minute bound, by 08:00:15 UTC. Core jobs
+`122693937967` (Windows) and `122693938282` (Linux) each log 39 passed, 0 failed;
+native jobs `122693937576` and `122693937878` each log 8 lifecycle, 10 network and
+10 functional animation process results, with the 28-result admission check passing.
+
+Both native diagnostic archives were SHA256 checked against GitHub artifact digests:
+Windows `5b3deff0f73700dbeff90592f1c2b7fb281bbaf2f80abdf9a42fccb94c2bd1b7`,
+Linux `0ebeb988093ea6e88d33881dbd787c269f613e5e6e5e40ba27532ae4572f0b17`.
+Their summaries target the merge and native fingerprint
+`653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3` (73 inputs),
+all 28 exits are zero, and all 22 harness hashes match final main. Godot is verified
+official 4.7.1; diagnostic archives contain no production binaries. Binary/source
+identities and precise scope are appended under `ClassMainIntegration` in the
+[manifest](evidence/gl013-class-identity-2026-10-28.json), preserving earlier records.
+
+Final pushed/read-back main is `08b2bb83b7093a361c80b147b4827eb22715ad32`.
+Its follow-up changes integration documentation only; tested inputs are identical
+to the CI merge. Hosted Debug results do not add Release/sanitizer/complete lifetime
+qualification or GL-020 adversarial coverage. Existing local four-configuration
+evidence remains bounded as recorded above. Publication and updater stay disabled.
+GL-013 remains open.
+
+## GL-013 remaining-boundary assessment (2026-10-28)
+
+**ARCHITECTURAL ASSESSMENT COMPLETE.** The unmerged documentation branch
+`research/gl-013-remaining-boundaries` starts at verified main `08b2bb8`.
+The [focused assessment](gl013-boundary-assessment.md) supplies the current inventory,
+responsibility/lifetime/dependency map, cumulative four-extraction evaluation,
+ranked four-candidate plan and qualification gates. A focused document keeps the
+existing long qualification log readable; current architecture and issue ledger
+link it rather than creating another source of ownership requirements.
+
+Executed commands and evidence:
+
+- `rg --files src` and temporary ignored `python -X utf8 .runtime-tests/GL013Assessment.py`:
+  64 headers / eight implementation units, LF sizes/lines, unpreprocessed
+  tree-sitter syntax counts, raw-string sizes, include edges and reverse consumers.
+  Parser/macro limitations remain explicit in the
+  [inventory](evidence/gl013-boundary-assessment-2026-10-28.json).
+- Existing worker `ninja -C /work/builds/linux-debug -t deps` with the eight explicit
+  `/work/gl013-class/source` object targets: all eight project include closures
+  exactly match the graph, including 42/45/63 project headers for host/script/
+  registration. Default restored source targets were first found to describe an
+  older baseline, so only explicit qualified snapshot records support this result.
+  No configure/compile/test was run. The container is stopped again.
+- `git show eb638bfa6ff16abc91d11742625b3cc034f53178:src/core/luau_api.h` and
+  `git ls-tree -r --name-only ... src/core`: reliable first-extraction baseline
+  290,353 bytes / 5,168 lines and four TUs versus current 274,780 / 4,838 and eight.
+  Header reduction is 5.36% bytes / 6.39% lines; it is not a measured speedup.
+- Review of all four existing GL-013 manifests: own-unit touch compiles one TU,
+  API-header touch three; dependency-warm single trials do not establish full-clean,
+  parsing-only, linking-only, memory or runtime performance improvements.
+- Source/caller/state audit, linked-document and source-reference checks, JSON
+  validation, `git diff --check`, and exact source/test/build/workflow/submodule
+  identity against final main. Only assessment/evidence documentation is committed.
+
+Preferred next work is script bootstrap and narrow Instance access using existing
+`luau_script.cpp`, with explicit host service/codec dependencies and unchanged
+registration/lifetime ordering. Completion ownership and GUI metadata/style follow;
+inert helpers have smaller benefit and a separate GL-021 alias discrepancy to
+resolve first. Full dispatch/network/callback ownership and embedded-data movement
+are deferred with specific proof requirements. No fifth extraction, production
+change, new local/native matrix, editor/game launch, dependency upgrade or binary
+publication was performed. That assessment stage stopped after documentation.
+
+## Assessment main integration (2026-10-28)
+
+**INTEGRATED AND VERIFIED.** Starting local/remote main
+`08b2bb83b7093a361c80b147b4827eb22715ad32` normally merges assessment source
+`bbb21752b2f241d718c936b667bf7076f1d2927e` as
+`d99adcfb2b915b3209fef7f849865cf4acc964f9`. The merge tree exactly equals the
+assessment source and preserves its commit. All seven changed paths are
+documentation/evidence under newdocs; no source, fixture, build, workflow, pin,
+binary or behavioral contract changes. Local/remote main match after push.
+
+Static checks verify all 72 inventory source hashes, header/TU counts, recorded
+include edges/closures, historical evidence preservation, local Markdown links
+and anchors, relevant source references and full-range whitespace. The native
+fingerprint remains `653e3ce3b6c3e4555365f53bea7490b1cd09664921deb9d6000ee8e7bd70f6c3`.
+Release jobs remain false/read-only; updater admission remains false. No builds,
+editor/game execution or CI dispatch were needed for this documentation merge.
+The following documentation follow-up updates historical branch status only.
+GL-013 remains open; recommendations are not runtime invariants. The separately
+authorized bootstrap implementation starts from verified main on its own branch.
+
+## GL-013 fifth script bootstrap boundary
+
+Branch `refactor/gl-013-script-bootstrap` starts at final assessment-integration
+main `ce5e19fa8aea1cf65da875d07cda13c1696fc08c`. Assessment source `bbb2175` is
+preserved by normal merge `d99adcf`; the documentation-only follow-up is `ce5e19f`.
+Stage 1 is **INTEGRATED AND VERIFIED**: remote main was read back at that SHA,
+with unchanged runtime/test/build/workflow/pin inputs and no CI dispatch.
+Stage 2 is **FIFTH EXTRACTION QUALIFIED** at implementation
+`50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4`, with hosted results below. It remains
+unmerged. The [manifest](evidence/gl013-script-bootstrap-2026-10-28.json) records
+source identity, all four configurations, compiler closures and failed attempts.
+
+### Selected implementation and source equivalence
+
+Move InitializeDomain, setup_remotefunction_system and `_gl_child_event` from
+script header to its existing CPP, together with the private JSON/HTTP helpers
+used only by bootstrap. Three method bodies compare exactly after removing class
+indentation; the private helper block is byte-identical after LF normalization.
+Retained script lifecycle/template methods are unchanged. Host method bodies differ
+only by wrapper call name. Registration bodies and order are unchanged; Humanoid's
+existing include moves before workspace/network to make an implicit prerequisite
+explicit. No new CPP, VM owner, service locator or registration path is introduced.
+
+The forward-only `luau_instance_access.h` declares `PushLuauInstance(lua_State*,
+godot::Node*)`. The script CPP implementation delegates once to existing wrap_node:
+one nil or ObjectID userdata plus the same GodotObject metatable, no retained native
+object, wrapper cache or parallel userdata implementation. Host environment setup,
+WaitForChild and pending native-argument resumes use this facade after resolving
+ObjectID. A non-null push requires the existing per-domain metatable. Raw
+GLPushNodeHandle lacks that metatable and was deliberately not substituted.
+Linux Debug object symbols contain one strong definition of each moved method
+and the facade; successful Windows/Linux links and source checks exclude duplicate
+bootstrap/wrapper ownership. The external GDExtension entry contract is unchanged.
+
+Rejected alternatives: moving only InitializeDomain leaves relay/codec dependencies
+in the header and direct host wrap_node calls; exposing the entire wrapper or
+dispatch API widens the interface unnecessarily; a new CPP adds no useful owner
+over the existing script implementation. Template caching, attribute watcher
+redesign, network codec extraction, editor completion and GL-021 changes are not
+bundled into this move. HTTP/JSON behavior is moved verbatim, not redesigned.
+
+### Initialization, cancellation and teardown ordering
+
+| Order and scope | Existing operation retained |
+| --- | --- |
+| Per-process extension levels | Register language/resources/classes/editor plugin at the existing levels; retain singleton/reference index identities. |
+| Per-domain creation | Host lazily constructs Server/Client GLExecutionDomain; core allocates VM, opens Luau libraries, creates bootstrap owner, flags, `_G`/shared and builtins/task/require machinery. Host installs environment/module/time/error/invalidation hooks. |
+| Per-execution attempt | iniciar_corrutina checks editor/module/role/template/enabled/already-started/source conditions. It obtains the host/domain and claims initialization using the existing per-domain bit. |
+| Per-domain native setup | Register live state; install GodotObject index/newindex/equality/string metatable; set replication/invoke hooks; register value metatables. |
+| Per-domain scene/globals | Discover game and Workspace with the existing root/viewport fallbacks; push wrappers and nil script; install Instance and value globals. |
+| Per-domain bridge order | Install print/warn/error/introspection/time/input bindings, RemoteFunction machinery, file bridge, network role/VM ID and network table, JSON/HTTP and raw Instance constructor in the original order. |
+| Per-domain stdlib | Expose temporary `_GLDomainSpawn`, compile/load/call the exact embedded stdlib, retain existing error logging/pops, then remove that temporary global. |
+| Per-script run | Create/reuse execution owner rules and independent environment/coroutines, initialize script wrapper via host facade, retain RunGuard and execute source. Module cache and sticky errors remain core/domain owned. |
+| Per-script disable/reload | StopRun cancels owner and releases guard; source revision invalidates module identity; enabled eligible scripts restart through existing deferred path. Domain and unrelated module caches survive. |
+| Per-service/session | Native service IDs, role, response maps, network disconnect/replacement and pending invokes retain current owners and cancellation. No per-domain/session registry is added. |
+| Owner/thread cancellation | Host removes child/invoke/pending resume and service wait records with existing guards; core invalidates callback references before VM release. Child relay resolves reference state at dispatch. |
+| Scene/domain shutdown | Stop admission for both domains; dispatch finite close-hook snapshot and cancel owners. Shutdown is idempotent. VM close stays in destruction after active resumes, not inside a callback. |
+| Extension teardown | Scene shutdown precedes material-cache and loader/saver cleanup; server level unregisters language. No native registration or static destruction order is changed. |
+
+The original initialization claim precedes the body and is not transactional.
+The rootless early return and stdlib failure paths are preserved, not corrected.
+Normal production startup/repeat/reload/shutdown paths run in native fixtures;
+an artificially interrupted/rootless bootstrap is covered by source equivalence,
+not a new fault-injection runtime test or added public test hook. This distinction
+does not establish recovery from arbitrary allocation/initialization failures.
+
+### State and dependency ownership
+
+External-inline runtime role/service identity, live-state/reference, pending-resume
+and response accessors keep their shared identity. Template string cache remains
+TU-local in the script header; script counter cache remains in its existing inline
+method. Codec error and pcall trace slots keep their TU-local linkage. Attribute
+watchers stay static inside API implementation; all watch/fire entry points remain
+together, now instantiated only in script CPP. Removing unused host/registration
+API copies does not introduce a process singleton or change reference ownership.
+The baseline and candidate cross-domain attribute fixture both pass. The VM-ID
+counter and RF source literal remain function-local statics in the same logical
+method/lambda scopes. No registration flag or other mutable static is added.
+
+Before: host/script/registration → script header → API/native implementations and
+embedded stdlib. After: those consumers → script class/lifecycle header; only script
+CPP → API/stdlib/private bootstrap helpers; host → narrow wrapper declaration plus
+its real runtime/error/service/network/codec dependencies. Registration still needs
+concrete native class headers. Completion still reaches two TUs. Network/service
+headers still reach three; this change does not pretend to isolate them.
+
+| Project dependency metric | Baseline → candidate |
+| --- | ---: |
+| Native headers / CPPs | 64 / 8 → 65 / 8 |
+| Script header LF bytes / lines | 86,306 / 1,593 → 35,726 / 657 |
+| Script CPP LF bytes / lines | 172 / 8 → 48,651 / 961 |
+| New wrapper declaration | 453 bytes / 12 lines; zero includes |
+| Script header direct include directives / project closure | 31 / 41 → 25 / 7 |
+| Host project-header closure | 42 → 21 |
+| Script CPP project-header closure | 45 → 46 |
+| Registration project-header closure | 63 → 57 |
+| API / stdlib consuming TUs | 3 / 3 → 1 / 1 |
+| Script header / script CPP touch builds | 3 / 1 → 3 / 1 TUs |
+| API header touch builds | 3 → 1 TU |
+
+Static graph has no project include cycle. All 64 before/after Windows/Linux
+Debug/Release object dependency closures match it exactly. Ninja/MSVC emits
+relative header paths and omits the compiling CPP; GCC includes the source. The
+analysis resolves paths against each build directory and compares headers with
+the appropriate source-listing convention. Records are retained, not inferred
+from filenames or header sizes. CMake and SCons still discover eight core CPPs.
+
+### Comparable build measurements
+
+Actual private worker drivers are retained at each task root. They prepare the
+archived baseline or candidate source at the same source path, then execute the
+following commands for Debug/Release (replace Config with the selected cache):
+
+```text
+cmake -S <Original>/tests/runtime -B <BuildRoot>/Config -DGL_SOURCE_ROOT=<Task>/source -DGL_BUILD_CORE_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=ON -DGL_BASELINE_SOURCE_ROOT=
+cmake --build <BuildRoot>/Config --target GodotLuauAdapter ExecutionDomainTests --parallel 2
+ctest --test-dir <BuildRoot>/Config --output-on-failure --verbose --timeout 30
+ninja -C <BuildRoot>/Config -t deps <eight explicit snapshot object targets>
+python <Task>/source/tests/runtime/RunQualification.py --godot <qualified-Godot-4.7.1> --extension <saved-library> --output <new-output>/regression --teardown --coordinated-close --timeout 60
+python <Task>/source/tests/runtime/RunQualification.py --godot <qualified-Godot-4.7.1> --extension <saved-library> --output <new-output>/security --security --timeout 60
+python <Task>/source/tests/runtime/RunQualification.py --godot <qualified-Godot-4.7.1> --extension <saved-library> --output <new-output>/animation --animation --timeout 60
+```
+
+Linux Original is `/work/source`, Task `/work/gl013-bootstrap` and caches
+`/work/builds/linux-debug` / `linux-release` in the existing qualification container.
+Windows Original is `C:/Sandbox/Codex/Workspaces/GodotLuau`, Task
+`C:/Sandbox/Codex/Builds/GodotLuau/gl013-bootstrap`, caches `runtime-msvc-debug` /
+`runtime-msvc-release` under the same Build parent, using the existing VS18 vcvars64
+environment and CMake 3.31.10. Drivers are `GL013BootstrapWorker.py baseline build`,
+`baseline qualification3`, `candidate3 build` and `candidate3 qualification1`;
+failed attempts use separate directories. Existing output directories are never
+accepted as a fresh run. Source/CMake/core-test hashes match the checkout on both
+workers. Private analysis/driver code stays ignored, not permanent repository tooling.
+
+Same task source path and build caches, pinned vendor objects warm, two jobs,
+each configuration/platform sequential. Project adapter/core-test objects only
+are removed for each cold project build. Cold compilation is eight adapter plus
+two core-test inputs, not a dependency-clean build. CMake/compiler identity is
+unchanged within each pair: Windows MSVC toolset 14.51.36231 and Linux GCC 13.3.0.
+Windows pinned Git revisions were read; Linux's historical pinned archives match
+their recorded SHA256 and every archived file matches the live vendor tree
+(godot-cpp 165 files, Luau 852). Pins are unchanged. No vendored source is edited.
+
+Seconds include linking, single trials with uncontrolled ambient load:
+
+| Configuration | Cold project | Script header touch | API header touch | Script CPP touch |
+| --- | ---: | ---: | ---: | ---: |
+| Windows Debug | 21.652 → 19.049 | 19.754 → 17.076 | 19.722 → 7.367 | 6.925 → 7.398 |
+| Windows Release | 30.727 → 27.587 | 27.945 → 28.144 | 27.702 → 10.754 | 7.033 → 10.460 |
+| Linux Debug | 23.000 → 19.144 | 21.897 → 18.142 | 21.797 → 6.323 | 6.273 → 6.274 |
+| Linux Release | 42.026 → 38.120 | 40.520 → 36.717 | 40.418 → 9.777 | 4.520 → 9.727 |
+
+| Configuration | Adapter object bytes | Extension bytes |
+| --- | ---: | ---: |
+| Windows Debug | 91,258,628 → 96,673,552 | 24,192,000 → 23,896,576 |
+| Windows Release | 49,191,148 → 51,500,262 | 4,073,984 → 4,080,640 |
+| Linux Debug | 68,447,528 → 59,362,024 | 79,241,056 → 76,732,152 |
+| Linux Release | 15,742,968 → 16,122,896 | 12,516,600 → 12,557,408 |
+
+Windows cold builds retain two existing pinned Luau Ast.h C4100 warnings; touched
+native builds add none. Linux records zero warnings. Script CPP edit times increase,
+especially Release, and Windows Release script-header time slightly increases.
+The evidence establishes API fan-out reduction and independent bootstrap ownership,
+not universal speed or binary-size improvement. Full-clean vendor cost, isolated
+header parsing/link CPU, peak memory and runtime performance are not measured.
+The additional synchronous wrapper call is not separately benchmarked.
+
+### Production qualification, failed attempts and limits
+
+All four baseline builds/core39 runs pass. The final expanded regression fixture
+also passes baseline Debug/Release on both platforms (8 actors each, 32 baseline
+actors), establishing new assertions on unchanged production before candidate
+qualification. Candidate Debug/Release on both platforms pass core39 plus 8 existing
+lifecycle/startup actors, 10 GL-006/008 actors and 10 functional animation actors:
+112 final candidate actors, all zero exits, with source/fixture/library hashes.
+These include actual GDExtension loading, single-player, listen, dedicated/two-client
+and editor-style startup, value/Variant/reflection/identity, invalid/destroyed native
+references, module sharing/invalidation/errors, disable/reload/cancellation, waits,
+pending RemoteFunctions, service replacement, scene teardown and repeated shutdown.
+The Editor label simulates startup flags; it does not run actual editor UI tests.
+
+Added assertions exercise the real bootstrap's native global/function tables,
+JSON round trip, game/workspace wrappers, per-domain module state, same metatable
+for module/script/scene wrappers, repeated start guards, removed bootstrap global,
+cross-domain attribute watchers and child relays after requiring callers retire.
+No second bootstrap, additional process group or weakened existing assertion.
+Fresh-domain and destruction cases remain in the existing fixture.
+
+Preserved failures: initial shared-native-ModuleScript child relay attempt fails
+before code changes on Windows/Linux Debug. Windows diagnostic replay observes
+one native connection; GL-022 records the compatibility gap and unresolved exact
+cause. Distinct relay targets retain both-domain lifetime assertions while shared
+module/cache assertions remain. This does not close or qualify the shared-target
+case. Failed logs and original fixture archive remain under gl013-bootstrap.
+First candidate Windows compile lacks Humanoid in host; second candidate compile
+exposes registration's workspace/network include order on both platforms. Explicit
+consumer prerequisites fix these compile failures; no native type/authority method
+changes. A transient Linux SSH upload reset is retried before compilation and is
+an infrastructure event. None of these failed attempts is reported as a pass.
+
+No new native lifetime/ownership algorithm changes, so no additional sanitizer
+matrix was run; earlier sanitizer evidence retains its original source/scope.
+GL-017/018 limitations, deferred GL-020 adversarial qualification, GL-021 alias gap
+and new GL-022 remain independent. No new SCons/release packaging qualification,
+CI workflow, distribution channel or production binary publication is added.
+GL-013 stays open. The next independent boundary is completion ownership after
+its editor-specific fixture gap is addressed; do not begin it automatically.
+
+Worker source-root configurations are restored for both Debug/Release on both
+platforms; the Linux qualification container is stopped. The first cleanup guard
+compared a literal path containing `..` to CMake's canonical path and failed after
+configuration; it was corrected to compare resolved paths, then both configurations
+were restored and verified. This private guard failure changes no qualification
+input or runtime outcome. Evidence and source/library snapshots remain isolated
+under each worker's gl013-bootstrap task directory.
+
+### Fifth extraction hosted qualification
+
+Implementation `50f1c0e4b7f569bbacf3163651dcf16fa0e9a8f4` is pushed and remote
+source branch SHA read back. Existing [core40661531131](https://github.com/gmoddev/GodotLuau/actions/runs/40661531131)
+and [native40661531193](https://github.com/gmoddev/GodotLuau/actions/runs/40661531193)
+both complete successfully on that exact source. The early queued/in-progress
+snapshots remain in the manifest. Both workflows complete within the 25-minute
+observation bound, native by 09:17:23 UTC (created 09:05:22 UTC).
+
+Core jobs `122725470749` (Windows) and `122725470976` (Linux) each log 39 distinct
+PASS cases and 39 passed / zero failed. Native jobs `122725470508` and
+`122725470398` each build the actual Debug adapter and pass 8 lifecycle/startup,
+10 network and 10 functional animation actors; the 28-process admission check
+passes. Runner self-tests execute 14 on Linux; Windows executes eight with six
+platform-specific skips. No test-count or native admission assertion is weakened.
+
+Diagnostic ZIPs match GitHub artifact digests: Windows
+`1593942f814d9f4d9b0c7cdd5a64871b4625100952feb280b536818640c8cdbf`, Linux
+`9d41c59bb7289d6e351c2b0e89e9ff8911c2b8cd2e1ce8a5014dd73259e8ee4a`.
+Both summaries verify exact revision, native fingerprint
+`31175d5b7c336134577b5ba78b8b6e8475d9bfdd55cd1f7e8545e40680ef335e` (74 inputs),
+the pinned submodule logs, all 22 harness hashes and all 28 zero exits. The extended
+Integration fixture is `387b71e4cff783785b7447889268e62c4197eb0d43bffec3de9cf7abd538c9a8`
+after LF normalization. Godot is verified official 4.7.1. These ZIPs contain no
+production binaries; summary binary hashes are retained as identity evidence.
+
+Disposition: **FIFTH EXTRACTION QUALIFIED**, bounded to the unchanged initialization/
+wrapper behavior and exercised paths. Hosted Debug does not add Release sanitizer,
+rootless fault recovery, GL-020 adversarial or GL-022 shared-target qualification.
+The final documentation/evidence follow-up changes no source, fixture, build,
+workflow or dependency input. Main remains `ce5e19f`; the development branch stays
+unmerged. GL-013 remains OPEN, with no sixth extraction or publication channel work.
+
+### Fifth extraction main integration (2026-10-29)
+
+Normal merge `109bd6d838410509da9831b1502dfffb023ad823` integrates qualified
+tip `9171199fc6b3b43a2aa07a98f3f20977abc43533` from starting main
+`ce5e19fa8aea1cf65da875d07cda13c1696fc08c`, without conflicts or source changes.
+The above qualification remains historical evidence within its original scope.
+The [integration and GL-022 work record](gl022-child-relay-validation.md)
+records fresh checks, hosted outcomes and the separately authorized callback fix.

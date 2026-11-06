@@ -1,8 +1,64 @@
 #include "gl_domain_host.h"
 #include "luau_script.h"
+#include "luau_instance_access.h"
+#include "gl_runtime.h"
+#include "gl_errors.h"
+#include "gl_net_bridge.h"
+#include "humanoid.h"
+#include "roblox_network.h"
+#include "roblox_services.h"
+#include "roblox_player.h"
+#include "roblox_remote.h"
+
+#include <godot_cpp/classes/time.hpp>
+#include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/variant/callable_custom.hpp>
+#include <algorithm>
+#include <functional>
 
 namespace {
 uint64_t GLHostIdentity = 0;
+// Godot strips bind() arguments when comparing signal slots. The immutable
+// callback reference must be part of the base Callable's identity instead.
+class GLChildCallable : public CallableCustom {
+    uint64_t Receiver;
+    int Reference;
+    static bool Equal(const CallableCustom* Left, const CallableCustom* Right) {
+        auto A = static_cast<const GLChildCallable*>(Left);
+        auto B = static_cast<const GLChildCallable*>(Right);
+        return A->Reference == B->Reference && A->Receiver == B->Receiver;
+    }
+    static bool Less(const CallableCustom* Left, const CallableCustom* Right) {
+        auto A = static_cast<const GLChildCallable*>(Left);
+        auto B = static_cast<const GLChildCallable*>(Right);
+        return A->Reference != B->Reference ? A->Reference < B->Reference : A->Receiver < B->Receiver;
+    }
+public:
+    GLChildCallable(uint64_t SelectedReceiver, int SelectedReference) : Receiver(SelectedReceiver), Reference(SelectedReference) {}
+    uint32_t hash() const override { return static_cast<uint32_t>(Reference); }
+    String get_as_text() const override { return String("[Runtime:ChildRelay] ") + String::num_int64(Reference); }
+    CompareEqualFunc get_compare_equal_func() const override { return Equal; }
+    CompareLessFunc get_compare_less_func() const override { return Less; }
+    ObjectID get_object() const override { return ObjectID(Receiver); }
+    bool is_valid() const override { return GLReferenceState(Reference) && ObjectDB::get_instance(Receiver); }
+    int get_argument_count(bool& Valid) const override { Valid = true; return 1; }
+    void call(const Variant** Arguments, int Count, Variant& Result, GDExtensionCallError& Error) const override {
+        Error.error = GDEXTENSION_CALL_OK;
+        Result = Variant();
+        if (Count != 1 || Arguments[0]->get_type() != Variant::OBJECT) {
+            Error.error = GDEXTENSION_CALL_ERROR_INVALID_ARGUMENT;
+            Error.argument = 0;
+            Error.expected = Variant::OBJECT;
+            return;
+        }
+        auto Script = Object::cast_to<ScriptNodeBase>(ObjectDB::get_instance(Receiver));
+        Object* ChildObject = *Arguments[0];
+        auto Child = Object::cast_to<Node>(ChildObject);
+        // Resolve both weak native identity and the live owner at delivery.
+        // Do not touch the receiver after user code may destroy it.
+        if (Script && Child && GLReferenceState(Reference)) Script->_gl_child_event(Child, Reference);
+    }
+};
 template<class T> void GLEraseWaits(std::vector<T>& Waits, lua_State* Anchor) {
     Waits.erase(std::remove_if(Waits.begin(), Waits.end(), [Anchor](const T& Wait) {
         return Wait.main_L == Anchor;
@@ -51,7 +107,7 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
         Domains[Index]->SetTimeProvider([]() { return static_cast<double>(Time::get_singleton()->get_ticks_msec()) / 1000.0; });
         Domains[Index]->SetEnvironmentHook([](lua_State* Thread, uint64_t Identity) {
             Node* Script = Object::cast_to<Node>(ObjectDB::get_instance(Identity));
-            wrap_node(Thread, Script); lua_setglobal(Thread, "script");
+            PushLuauInstance(Thread, Script); lua_setglobal(Thread, "script");
         });
         Domains[Index]->SetModuleResolver([](lua_State* Thread, int Argument, GLModuleSource& Module) {
             auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(Thread, Argument));
@@ -101,6 +157,8 @@ GLExecutionDomain* GLDomainHost::WaitingDomain(lua_State* Thread) const {
     return nullptr;
 }
 void GLDomainHost::InvalidateOwner(lua_State* Anchor) {
+    for (size_t Index = ChildConnections.size(); Index > 0; --Index)
+        if (ChildConnections[Index - 1].Anchor == Anchor) DisconnectChild(ChildConnections[Index - 1].Reference);
     ChildWaits.erase(std::remove_if(ChildWaits.begin(), ChildWaits.end(), [Anchor](const GLChildWait& Wait) {
         return Wait.Anchor == Anchor;
     }), ChildWaits.end());
@@ -136,6 +194,37 @@ void GLDomainHost::InvalidateOwner(lua_State* Anchor) {
 }
 void GLDomainHost::InvalidateModule(uint64_t NativeId) {
     for (const auto& Domain : Domains) if (Domain) Domain->InvalidateModule(NativeId);
+}
+bool GLDomainHost::ConnectChild(lua_State* Thread, Node* Target, Node* Receiver, bool Added, int Reference) {
+    lua_State* Anchor = GLReferenceState(Reference);
+    if (!Anchor || Anchor != GLGetOwnerState(Thread) || !Target || !Receiver) return false;
+    StringName Signal = Added ? "child_entered_tree" : "child_exiting_tree";
+    Callable Handler(memnew(GLChildCallable(static_cast<uint64_t>(Receiver->get_instance_id()), Reference)));
+    if (Target->connect(Signal, Handler) != OK) return false;
+    ChildConnections.push_back({Anchor, static_cast<uint64_t>(Target->get_instance_id()), Signal, Handler, Reference});
+    return true;
+}
+#ifdef GL_RUNTIME_TESTS
+void GLDomainHost::ResetDomainForTests(bool Client) {
+    size_t Index = Client ? 1 : 0;
+    if (Domains[Index]) {
+        Domains[Index]->Shutdown();
+        gl_unregister_state(Domains[Index]->GetState());
+        Domains[Index].reset();
+    }
+    Initialized[Index] = false;
+}
+#endif
+void GLDomainHost::DisconnectChild(int Reference) {
+    auto Found = std::find_if(ChildConnections.begin(), ChildConnections.end(), [Reference](const GLChildConnection& Connection) {
+        return Connection.Reference == Reference;
+    });
+    if (Found == ChildConnections.end()) return;
+    GLChildConnection Connection = *Found;
+    ChildConnections.erase(Found); // keep a local Callable root across disconnection
+    if (auto Target = Object::cast_to<Node>(ObjectDB::get_instance(Connection.Target)))
+        if (Target->is_connected(Connection.Signal, Connection.Handler)) Target->disconnect(Connection.Signal, Connection.Handler);
+    GLUnreference(nullptr, Reference);
 }
 void GLDomainHost::InvalidateThread(lua_State* Thread) {
     ChildWaits.erase(std::remove_if(ChildWaits.begin(), ChildWaits.end(), [Thread](const GLChildWait& Wait) {
@@ -174,6 +263,14 @@ void GLDomainHost::InvalidateThread(lua_State* Thread) {
     Visit(Tree->get_root());
 }
 void GLDomainHost::_process(double Delta) {
+    // Weak native targets may be destroyed while their script/module survives.
+    // Reap those registrations before entering Lua, including detached targets.
+    for (size_t Index = ChildConnections.size(); Index > 0; --Index) {
+        const auto& Connection = ChildConnections[Index - 1];
+        if (!GLReferenceAlive(Connection.Anchor, Connection.Reference) ||
+            !ObjectDB::get_instance(Connection.Target) || !Connection.Handler.is_valid())
+            DisconnectChild(Connection.Reference);
+    }
     // Drain condition queues before timed work. Remove entries before resuming:
     // resumed code may destroy an owner or append to the same collections.
     for (size_t Index = 0; Index < ChildWaits.size();) {
@@ -193,7 +290,7 @@ void GLDomainHost::_process(double Delta) {
         }
         if (!Domain || Ready) {
             ChildWaits.erase(ChildWaits.begin() + Index);
-            if (Domain) { wrap_node(Wait.Thread, Found); GLResume(Wait.Thread, nullptr, 1); }
+            if (Domain) { PushLuauInstance(Wait.Thread, Found); GLResume(Wait.Thread, nullptr, 1); }
             GLUnreference(nullptr, Wait.Reference);
         } else ++Index;
     }
@@ -210,7 +307,7 @@ void GLDomainHost::_process(double Delta) {
         if (Resume.use_args) {
             Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(Resume.ctx_id));
             Arguments = gl_net_decode_args(Resume.thread, Resume.args, Context);
-        } else if (Resume.NodeId) wrap_node(Resume.thread, Object::cast_to<Node>(ObjectDB::get_instance(Resume.NodeId)));
+        } else if (Resume.NodeId) PushLuauInstance(Resume.thread, Object::cast_to<Node>(ObjectDB::get_instance(Resume.NodeId)));
         else lua_pushnumber(Resume.thread, Resume.delta);
         GLResume(Resume.thread, nullptr, Arguments);
     }

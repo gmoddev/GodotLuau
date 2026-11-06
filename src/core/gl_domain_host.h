@@ -5,6 +5,7 @@
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/callable.hpp>
 #include <array>
 
 class GLDomainHost : public godot::Node {
@@ -33,18 +34,36 @@ class GLDomainHost : public godot::Node {
     std::array<bool, 2> Initialized = {false, false};
     std::vector<GLChildWait> ChildWaits;
     std::vector<GLInvokeWait> InvokeWaits;
+    struct GLChildConnection {
+        lua_State* Anchor;
+        uint64_t Target;
+        godot::StringName Signal;
+        godot::Callable Handler;
+        int Reference;
+    };
+    std::vector<GLChildConnection> ChildConnections;
     void InvalidateOwner(lua_State* Anchor);
     void InvalidateThread(lua_State* Thread);
     GLExecutionDomain* WaitingDomain(lua_State* Thread) const;
 
 protected:
-    static void _bind_methods() {}
+    static void _bind_methods() {
+#ifdef GL_RUNTIME_TESTS
+        godot::ClassDB::bind_method(godot::D_METHOD("_gl_test_reset_domain", "client"), &GLDomainHost::ResetDomainForTests);
+#endif
+    }
     void _notification(int What);
 
 public:
     ~GLDomainHost();
     GLExecutionDomain& GetDomain(GLDomainKind Kind);
     bool ClaimInitialization(GLDomainKind Kind);
+    bool ConnectChild(lua_State* Thread, godot::Node* Target, godot::Node* Receiver, bool Added, int Reference);
+    void DisconnectChild(int Reference);
+#ifdef GL_RUNTIME_TESTS
+    // Fixture calls only outside Lua after retiring all executable callers.
+    void ResetDomainForTests(bool Client);
+#endif
     void WaitForChild(lua_State* Thread, uint64_t Parent, const godot::String& Name, double Timeout, int Reference);
     void WaitForInvoke(lua_State* Thread, int64_t CallId, double Timeout, int Reference);
     void InvalidateModule(uint64_t NativeId);

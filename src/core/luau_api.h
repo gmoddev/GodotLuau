@@ -1,6 +1,9 @@
 #ifndef LUAU_API_H
 #define LUAU_API_H
 
+#include "luau_value_bindings.h"
+#include "luau_instance_reflection.h"
+#include "luau_class_identity.h"
 #include "gl_errors.h"
 #include "gl_stackguard.h"
 #include "folder.h"
@@ -44,6 +47,7 @@
 #include "Luau/Compiler.h"
 
 #include "gl_runtime.h"   // GodotObjectWrapper (ObjectID), gow_node/gow_set, registro de estados vivos
+#include "gl_domain_host.h"
 
 #include <cmath>
 #include <cstring>
@@ -69,30 +73,12 @@ static void gl_signal_lowercase_aliases(lua_State* L) {
 
 
 // ════════════════════════════════════════════════════════════════════
-//  Data structures for Luau types
+//  Remaining Godot-backed Luau types
 ////
 //  Estructuras de datos para los tipos Luau
 //  (GodotObjectWrapper vive en gl_runtime.h: guarda ObjectID, no Node* crudo)
 // ════════════════════════════════════════════════════════════════════
 
-struct LuauVector3 {
-    float x, y, z;
-    float magnitude() const { return std::sqrt(x*x + y*y + z*z); }
-    LuauVector3 unit() const {
-        float m = magnitude();
-        if (m < 0.0001f) return {0.0f, 0.0f, 0.0f};
-        return {x/m, y/m, z/m};
-    }
-    LuauVector3 lerp(const LuauVector3& to, float alpha) const {
-        return {x + (to.x - x)*alpha, y + (to.y - y)*alpha, z + (to.z - z)*alpha};
-    }
-    float dot(const LuauVector3& b) const { return x*b.x + y*b.y + z*b.z; }
-    LuauVector3 cross(const LuauVector3& b) const {
-        return {y*b.z - z*b.y, z*b.x - x*b.z, x*b.y - y*b.x};
-    }
-};
-
-struct LuauColor3 { float r, g, b; };
 struct LuauCFrame { Transform3D transform; };
 
 // ════════════════════════════════════════════════════════════════════
@@ -119,22 +105,6 @@ static void _gl_push_cframe_pos(lua_State* L, const Vector3& p) {
     lua_pushnumber(L, p.x); lua_pushnumber(L, p.y); lua_pushnumber(L, p.z);
     if (lua_pcall(L, 3, 1, 0) != LUA_OK) { lua_pop(L, 2); lua_pushnil(L); return; }
     lua_remove(L, -2);   // quitar la tabla CFrame, dejar solo el resultado
-}
-
-static LuauVector3* push_vector3(lua_State* L, float x, float y, float z) {
-    LuauVector3* v = (LuauVector3*)lua_newuserdata(L, sizeof(LuauVector3));
-    v->x = x; v->y = y; v->z = z;
-    luaL_getmetatable(L, "Vector3");
-    lua_setmetatable(L, -2);
-    return v;
-}
-
-static LuauColor3* push_color3(lua_State* L, float r, float g, float b) {
-    LuauColor3* c = (LuauColor3*)lua_newuserdata(L, sizeof(LuauColor3));
-    c->r = r; c->g = g; c->b = b;
-    luaL_getmetatable(L, "Color3");
-    lua_setmetatable(L, -2);
-    return c;
 }
 
 // ── BrickColor (1.15) ────────────────────────────────────────────────────────
@@ -195,65 +165,6 @@ static String read_brickcolor_name(lua_State* L, int idx) {
         lua_pop(L, 1);
     }
     return String();
-}
-
-// ── Comprobación de tipo segura: solo devuelve el puntero si el userdata
-//    tiene EXACTAMENTE la metatable esperada. Evita reinterpretar un tipo
-//    por otro (p.ej. pasar un Color3 donde se espera un Vector3, o un nodo
-//    donde se espera un Vector3 → lectura fuera de límites). ────────────────
-static inline bool _gl_has_metatable(lua_State* L, int idx, const char* mt) {
-    if (lua_type(L, idx) != LUA_TUSERDATA) return false;
-    if (!lua_getmetatable(L, idx)) return false;
-    luaL_getmetatable(L, mt);
-    bool ok = lua_rawequal(L, -1, -2);
-    lua_pop(L, 2);
-    return ok;
-}
-static inline LuauVector3* check_vector3(lua_State* L, int idx) {
-    return _gl_has_metatable(L, idx, "Vector3") ? (LuauVector3*)lua_touserdata(L, idx) : nullptr;
-}
-static inline LuauColor3* check_color3(lua_State* L, int idx) {
-    return _gl_has_metatable(L, idx, "Color3") ? (LuauColor3*)lua_touserdata(L, idx) : nullptr;
-}
-
-// ════════════════════════════════════════════════════════════════════
-//  Puente genérico de propiedades (clases nuevas con meta "_gl_bridge")
-//  Permite leer/escribir cualquier propiedad registrada en el ClassDB con
-//  nombre estilo Roblox (ADD_PROPERTY) sin cablearla a mano en el index/
-//  newindex. Solo se activa en nodos que ponen set_meta("_gl_bridge", true)
-//  en su constructor, así que NO afecta a las clases existentes.
-// ════════════════════════════════════════════════════════════════════
-static bool gl_has_property(Object* o, const String& pname) {
-    if (!o) return false;
-    TypedArray<Dictionary> pl = o->get_property_list();
-    for (int i = 0; i < pl.size(); i++) {
-        Dictionary d = pl[i];
-        if (String(d.get("name", String())) == pname) return true;
-    }
-    return false;
-}
-static bool gl_luau_to_variant(lua_State* L, int idx, Variant& out) {
-    switch (lua_type(L, idx)) {
-        case LUA_TNUMBER:  out = (double)lua_tonumber(L, idx); return true;
-        case LUA_TBOOLEAN: out = (bool)(lua_toboolean(L, idx) != 0); return true;
-        case LUA_TSTRING:  out = String(lua_tostring(L, idx)); return true;
-        case LUA_TUSERDATA:
-            if (LuauVector3* v = check_vector3(L, idx)) { out = Vector3(v->x, v->y, v->z); return true; }
-            if (LuauColor3*  c = check_color3(L, idx))  { out = Color(c->r, c->g, c->b);   return true; }
-            return false;
-        default: return false;
-    }
-}
-static bool gl_variant_to_luau(lua_State* L, const Variant& v) {
-    switch (v.get_type()) {
-        case Variant::BOOL:    lua_pushboolean(L, (bool)v);              return true;
-        case Variant::INT:     lua_pushnumber(L, (double)(int64_t)v);    return true;
-        case Variant::FLOAT:   lua_pushnumber(L, (double)v);             return true;
-        case Variant::STRING:  { String s = v; lua_pushstring(L, s.utf8().get_data()); return true; }
-        case Variant::VECTOR3: { Vector3 q = v; push_vector3(L, q.x, q.y, q.z); return true; }
-        case Variant::COLOR:   { Color q = v; push_color3(L, q.r, q.g, q.b);    return true; }
-        default: return false;
-    }
 }
 
 // Señal "inerte": objeto con Connect/Once/Wait que NO hace nada y NO filtra
@@ -323,54 +234,6 @@ static void _gl_push_connection(lua_State* L, Node* node, int ref) {
     }, "__index", 1);
     lua_setfield(L, -2, "__index");
     lua_setmetatable(L, -2);
-}
-
-// ── ClassName / IsA estilo Roblox ────────────────────────────────────────────
-// Devuelve el nombre de clase Roblox a partir de la clase Godot interna.
-static const char* gl_roblox_classname(Node* n) {
-    if (!n) return "Instance";
-    String c = n->get_class();
-    struct M { const char* g; const char* r; };
-    static const M map[] = {
-        {"RobloxPart","Part"},{"Folder","Folder"},{"Humanoid","Humanoid"},{"Humanoid2D","Humanoid"},
-        {"RobloxPlayer","Player"},{"RobloxPlayer2D","Player"},
-        {"OmniLight3D","PointLight"},{"SpotLight3D","SpotLight"},{"DirectionalLight3D","DirectionalLight"},
-        {"RemoteEventNode","RemoteEvent"},{"RemoteFunctionNode","RemoteFunction"},{"BindableEventNode","BindableEvent"},
-        {"RobloxSound","Sound"},{"RobloxSoundGroup","SoundGroup"},{"RobloxTween","Tween"},{"TweenService","TweenService"},
-        {"ScreenGui","ScreenGui"},{"RobloxFrame","Frame"},{"RobloxTextLabel","TextLabel"},
-        {"RobloxTextButton","TextButton"},{"RobloxTextBox","TextBox"},{"RobloxImageLabel","ImageLabel"},
-        {"RobloxScrollingFrame","ScrollingFrame"},{"ServerScript","Script"},{"LocalScript","LocalScript"},
-        {"ModuleScript","ModuleScript"},{"RobloxTool","Tool"},{"ClickDetector","ClickDetector"},
-        {"ProximityPrompt","ProximityPrompt"},{"SpawnLocation","SpawnLocation"},{"BillboardGui","BillboardGui"},
-        {"SurfaceGui","SurfaceGui"},{"Motor6D","Motor6D"},{"AnimationObject","Animation"},{"AnimationTrack","AnimationTrack"},
-        {"RobloxWorkspace","Workspace"},{"RobloxWorkspace2D","Workspace"},{"RobloxChat","TextChatService"},
-        {"RobloxTerrain","Terrain"},{"RobloxValue","NumberValue"},{"PlayerObject","Player"},
-        {"BodyVelocity","BodyVelocity"},{"BodyPosition","BodyPosition"},{"BodyForce","BodyForce"},
-        {"BodyAngularVelocity","BodyAngularVelocity"},{"BodyGyro","BodyGyro"},
-        {"WeldConstraint","WeldConstraint"},{"HingeConstraint","HingeConstraint"},
-        {"BallSocketConstraint","BallSocketConstraint"},{"RodConstraint","RodConstraint"},{"SpringConstraint","SpringConstraint"},
-        {nullptr,nullptr}
-    };
-    for (int i = 0; map[i].g; i++) if (c == map[i].g) return map[i].r;
-    // Servicios / nodos no mapeados conservan su nombre (Players, Lighting, ReplicatedStorage...)
-    static CharString buf; buf = c.utf8(); return buf.get_data();
-}
-
-// IsA estilo Roblox: nombre exacto + jerarquía pragmática + compat con clase Godot.
-static bool gl_isa(Node* n, const char* q) {
-    if (!n || !q) return false;
-    if (strcmp(q, "Instance") == 0) return true;          // todo es Instance
-    const char* rc = gl_roblox_classname(n);
-    if (strcmp(rc, q) == 0) return true;
-    if (strcmp(rc, "Part") == 0 && (strcmp(q,"BasePart")==0 || strcmp(q,"PVInstance")==0)) return true;
-    bool gui = (strcmp(rc,"Frame")==0||strcmp(rc,"TextLabel")==0||strcmp(rc,"TextButton")==0||
-                strcmp(rc,"TextBox")==0||strcmp(rc,"ImageLabel")==0||strcmp(rc,"ScrollingFrame")==0);
-    if (gui && (strcmp(q,"GuiObject")==0 || strcmp(q,"GuiBase2d")==0)) return true;
-    if ((strcmp(rc,"Script")==0||strcmp(rc,"LocalScript")==0||strcmp(rc,"ModuleScript")==0)
-        && strcmp(q,"LuaSourceContainer")==0) return true;
-    // Compat: aceptar también el nombre de clase Godot (IsA("RobloxPart"), IsA("Node")...)
-    if (n->is_class(q)) return true;
-    return false;
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -488,7 +351,7 @@ static int method_findfirstancestorofclass(lua_State* L) {
     if (!w || !gow_node(w)) { lua_pushnil(L); return 1; }
     Node* cur = gow_node(w)->get_parent();
     while (cur) {
-        if (gl_isa(cur, cls)) { wrap_node(L, cur); return 1; }
+        if (IsLuauClass(cur, cls)) { wrap_node(L, cur); return 1; }
         cur = cur->get_parent();
     }
     lua_pushnil(L); return 1;
@@ -531,7 +394,7 @@ static int method_findfirstchild_whichisa(lua_State* L) {
     if (!w || !gow_node(w)) { lua_pushnil(L); return 1; }
     for (int i = 0; i < gow_node(w)->get_child_count(); i++) {
         Node* ch = gow_node(w)->get_child(i);
-        if (ch && gl_isa(ch, cls)) { wrap_node(L, ch); return 1; }
+        if (ch && IsLuauClass(ch, cls)) { wrap_node(L, ch); return 1; }
     }
     lua_pushnil(L); return 1;
 }
@@ -543,7 +406,7 @@ static int method_findfirstchildofclass(lua_State* L) {
         TypedArray<Node> ch = gow_node(w)->get_children();
         for (int i = 0; i < ch.size(); i++) {
             Node* n = Object::cast_to<Node>(ch[i]);
-            if (n && gl_isa(n, cls)) { wrap_node(L, n); return 1; }
+            if (n && IsLuauClass(n, cls)) { wrap_node(L, n); return 1; }
         }
     }
     lua_pushnil(L); return 1;
@@ -586,7 +449,7 @@ static int method_getdescendants(lua_State* L) {
 static int method_isa(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     const char* cls = luaL_checkstring(L, 2);
-    lua_pushboolean(L, w && gl_isa(gow_node(w), cls));
+    lua_pushboolean(L, w && IsLuauClass(gow_node(w), cls));
     return 1;
 }
 
@@ -1377,47 +1240,47 @@ static int godot_object_index(lua_State* L) {
     if (strcmp(key, "ChildAdded") == 0 || strcmp(key, "ChildRemoved") == 0) {
         bool is_added = (strcmp(key, "ChildAdded") == 0);
         lua_newtable(L);
-        lua_pushlightuserdata(L, (void*)n);
+        GLPushNodeHandle(L, n);
         lua_pushboolean(L, is_added ? 1 : 0);
         lua_pushcclosure(L, [](lua_State* pL) -> int {
-            Node* nd = (Node*)lua_touserdata(pL, lua_upvalueindex(1));
+            Node* nd = GLNodeUpvalue(pL, 1);
             bool adding = lua_toboolean(pL, lua_upvalueindex(2)) != 0;
             if (!nd || !lua_isfunction(pL, 2)) { lua_pushnil(pL); return 1; }
-            // Dueño del callback = el ScriptNodeBase. Godot desconecta solo al
-            // liberar cualquiera de los dos extremos → sin fugas ni use-after-free.
+            // The executing script/module owns the callback, independently of
+            // the original requiring caller and of other domain subscriptions.
             GLPushScriptNode(pL);
             Node* sn = (Node*)lua_touserdata(pL, -1); lua_pop(pL, 1);
             if (!sn) { lua_pushnil(pL); return 1; }
             lua_pushvalue(pL, 2); int ref = GLReference(pL, -1); lua_pop(pL, 1);
-            const char* gsig = adding ? "child_entered_tree" : "child_exiting_tree";
-            // .bind(ref) crea un Callable distinto por conexion, pero Godot
-            // compara solo el metodo base: sin este guardia salta un warning
-            // "Signal already connected" por cada script que escucha ChildAdded.
-            if (nd->has_signal(gsig) && !nd->is_connected(gsig, Callable(sn, "_gl_child_event").bind(ref)))
-                nd->connect(gsig, Callable(sn, "_gl_child_event").bind(ref));
-            // Objeto conexión con Disconnect() (resuelve por ObjectID: seguro
-            // aunque los nodos se hayan destruido cuando se llame).
+            auto Host = GLGetDomainHost();
+            if (!Host || !Host->ConnectChild(pL, nd, sn, adding, ref)) {
+                GLUnreference(nullptr, ref);
+                lua_pushnil(pL);
+                return 1;
+            }
             lua_newtable(pL);
-            lua_pushlightuserdata(pL, (void*)(uintptr_t)nd->get_instance_id());
-            lua_pushlightuserdata(pL, (void*)(uintptr_t)sn->get_instance_id());
-            lua_pushstring(pL, gsig);
+            lua_pushlightuserdata(pL, (void*)(uintptr_t)Host->get_instance_id());
             lua_pushinteger(pL, ref);
             lua_pushcclosure(pL, [](lua_State* dL) -> int {
-                uint64_t tid = (uint64_t)(uintptr_t)lua_touserdata(dL, lua_upvalueindex(1));
-                uint64_t sid = (uint64_t)(uintptr_t)lua_touserdata(dL, lua_upvalueindex(2));
-                const char* sig = lua_tostring(dL, lua_upvalueindex(3));
-                int r = (int)lua_tointeger(dL, lua_upvalueindex(4));
-                Node* tnd = Object::cast_to<Node>(ObjectDB::get_instance(tid));
-                Node* snn = Object::cast_to<Node>(ObjectDB::get_instance(sid));
-                if (tnd && snn) {
-                    Callable c = Callable(snn, "_gl_child_event").bind(r);
-                    if (tnd->is_connected(sig, c)) tnd->disconnect(sig, c);
-                }
+                uint64_t Identity = (uint64_t)(uintptr_t)lua_touserdata(dL, lua_upvalueindex(1));
+                int Reference = (int)lua_tointeger(dL, lua_upvalueindex(2));
+                if (auto Host = Object::cast_to<GLDomainHost>(ObjectDB::get_instance(Identity))) Host->DisconnectChild(Reference);
                 return 0;
-            }, "Disconnect", 4);
+            }, "Disconnect", 2);
             lua_setfield(pL, -2, "Disconnect");
             lua_getfield(pL, -1, "Disconnect");   // alias legacy :disconnect()
             lua_setfield(pL, -2, "disconnect");
+            lua_newtable(pL);
+            lua_pushinteger(pL, ref);
+            lua_pushcclosure(pL, [](lua_State* State) -> int {
+                const char* Key = lua_tostring(State, 2);
+                if (Key && strcmp(Key, "Connected") == 0)
+                    lua_pushboolean(State, GLReferenceState(static_cast<int>(lua_tointeger(State, lua_upvalueindex(1)))) != nullptr);
+                else lua_pushnil(State);
+                return 1;
+            }, "__index", 1);
+            lua_setfield(pL, -2, "__index");
+            lua_setmetatable(pL, -2);
             return 1;
         }, "Connect", 2);
         lua_setfield(L, -2, "Connect");
@@ -1446,7 +1309,7 @@ static int godot_object_index(lua_State* L) {
 
     // ── Propiedades de Instance ───────────────────────────────────
     if (strcmp(key, "Name")      == 0) { lua_pushstring(L, String(n->get_name()).utf8().get_data()); return 1; }
-    if (strcmp(key, "ClassName") == 0) { lua_pushstring(L, gl_roblox_classname(n)); return 1; }
+    if (strcmp(key, "ClassName") == 0) { lua_pushstring(L, GetLuauClassName(n).utf8().get_data()); return 1; }
     if (strcmp(key, "Parent")    == 0) { wrap_node(L, n->get_parent()); return 1; }
 
     // ── Players ───────────────────────────────────────────────────
@@ -4026,20 +3889,13 @@ static int godot_object_index(lua_State* L) {
 
     // Anchored en un Node3D que no es Part (el HumanoidRootPart del rig del
     // personaje lo es): se guarda como estado propio en vez de reventar.
-    if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(n) && !gl_has_property(n, "Anchored")) {
+    if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(n) && !HasLuauInstanceProperty(n, "Anchored")) {
         lua_pushboolean(L, n->has_meta("_gl_anchored") ? (bool)n->get_meta("_gl_anchored") : 0);
         return 1;
     }
 
     // ── Puente genérico de lectura (solo clases nuevas con meta _gl_bridge) ──
-    if (n->has_meta("_gl_bridge")) {
-        if (gl_has_property(n, String(key))) {
-            Variant gv = n->get(String(key));
-            if (gl_variant_to_luau(L, gv)) return 1;
-        }
-        String _mk = String("_glp_") + String(key);
-        if (n->has_meta(_mk) && gl_variant_to_luau(L, n->get_meta(_mk))) return 1;
-    }
+    if (PushLuauInstanceProperty(L, n, key)) return 1;
 
     Node* child = n->get_node_or_null(NodePath(key));
     if (child) { wrap_node(L, child); return 1; }
@@ -4059,7 +3915,7 @@ static int godot_object_index(lua_State* L) {
     // COMO ROBLOX: indexar un miembro que no existe es un ERROR, no nil.
     // (Para sondear sin error existen FindFirstChild / pcall, igual que alla.)
     luaL_error(L, "%s is not a valid member of %s \"%s\"",
-               key, gl_roblox_classname(n), gl_instance_fullname(n).utf8().get_data());
+               key, GetLuauClassName(n).utf8().get_data(), gl_instance_fullname(n).utf8().get_data());
     return 0;
 }
 
@@ -4094,7 +3950,7 @@ static int godot_object_newindex_impl(lua_State* L) {
     // Anchored sobre un Node3D que no es Part (ver la lectura mas arriba).
     {
         Node* _n = gow_node(wrapper);
-        if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(_n) && !gl_has_property(_n, "Anchored")) {
+        if (strcmp(key, "Anchored") == 0 && Object::cast_to<Node3D>(_n) && !HasLuauInstanceProperty(_n, "Anchored")) {
             const bool on = lua_toboolean(L, 3) != 0;
             _n->set_meta("_gl_anchored", on);
             if (PhysicsBody3D* pb = Object::cast_to<PhysicsBody3D>(_n))
@@ -4796,22 +4652,7 @@ static int godot_object_newindex_impl(lua_State* L) {
     }
 
     // ── Puente genérico de escritura (solo clases nuevas con meta _gl_bridge) ──
-    if (n->has_meta("_gl_bridge")) {
-        Variant gv;
-        if (gl_luau_to_variant(L, 3, gv)) {
-            if (gl_has_property(n, String(key))) n->set(String(key), gv);
-            else n->set_meta(String("_glp_") + String(key), gv);
-        } else if (lua_istable(L, 3)) {
-            // UDim / UDim2 → usar Offset (p.ej. CornerRadius, Padding numéricos)
-            lua_getfield(L, 3, "Offset");
-            if (lua_isnumber(L, -1)) {
-                int off = (int)lua_tonumber(L, -1);
-                if (gl_has_property(n, String(key))) n->set(String(key), off);
-                else n->set_meta(String("_glp_") + String(key), off);
-            }
-            lua_pop(L, 1);
-        }
-    }
+    WriteLuauInstanceProperty(L, n, key);
     return 0;
 }
 
@@ -4993,176 +4834,6 @@ static int godot_instance_new(lua_State* L) {
     // emite un único warning. (Antes esto ensuciaba la consola con clases válidas.)
     lua_pushnil(L);
     return 1;
-}
-
-// ════════════════════════════════════════════════════════════════════
-//  Vector3
-// ════════════════════════════════════════════════════════════════════
-
-static int godot_vector3_new(lua_State* L) {
-    float x = (float)luaL_optnumber(L, 1, 0.0);
-    float y = (float)luaL_optnumber(L, 2, 0.0);
-    float z = (float)luaL_optnumber(L, 3, 0.0);
-    push_vector3(L, x, y, z);
-    return 1;
-}
-
-static int godot_vector3_index(lua_State* L) {
-    LuauVector3* vec = check_vector3(L, 1);
-    const char* key  = luaL_checkstring(L, 2);
-    if (!vec) { lua_pushnil(L); return 1; }
-
-    if (strcmp(key, "X") == 0 || strcmp(key, "x") == 0) { lua_pushnumber(L, vec->x); return 1; }
-    if (strcmp(key, "Y") == 0 || strcmp(key, "y") == 0) { lua_pushnumber(L, vec->y); return 1; }
-    if (strcmp(key, "Z") == 0 || strcmp(key, "z") == 0) { lua_pushnumber(L, vec->z); return 1; }
-
-    if (strcmp(key, "Magnitude") == 0) { lua_pushnumber(L, vec->magnitude()); return 1; }
-
-    if (strcmp(key, "Unit") == 0) {
-        LuauVector3 u = vec->unit();
-        push_vector3(L, u.x, u.y, u.z);
-        return 1;
-    }
-
-    if (strcmp(key, "Lerp") == 0) {
-        lua_pushlightuserdata(L, vec);
-        lua_pushcclosure(L, [](lua_State* pL) -> int {
-            LuauVector3* self = (LuauVector3*)lua_touserdata(pL, lua_upvalueindex(1));
-            LuauVector3* goal = check_vector3(pL, 1);
-            float alpha = (float)luaL_checknumber(pL, 2);
-            if (!self || !goal) { lua_pushnil(pL); return 1; }
-            LuauVector3 r = self->lerp(*goal, alpha);
-            push_vector3(pL, r.x, r.y, r.z);
-            return 1;
-        }, "Lerp", 1);
-        return 1;
-    }
-
-    if (strcmp(key, "Dot") == 0) {
-        lua_pushlightuserdata(L, vec);
-        lua_pushcclosure(L, [](lua_State* pL) -> int {
-            LuauVector3* self = (LuauVector3*)lua_touserdata(pL, lua_upvalueindex(1));
-            LuauVector3* other = check_vector3(pL, 1);
-            if (!self || !other) { lua_pushnumber(pL, 0); return 1; }
-            lua_pushnumber(pL, self->dot(*other));
-            return 1;
-        }, "Dot", 1);
-        return 1;
-    }
-
-    if (strcmp(key, "Cross") == 0) {
-        lua_pushlightuserdata(L, vec);
-        lua_pushcclosure(L, [](lua_State* pL) -> int {
-            LuauVector3* self = (LuauVector3*)lua_touserdata(pL, lua_upvalueindex(1));
-            LuauVector3* other = check_vector3(pL, 1);
-            if (!self || !other) { lua_pushnil(pL); return 1; }
-            LuauVector3 c = self->cross(*other);
-            push_vector3(pL, c.x, c.y, c.z);
-            return 1;
-        }, "Cross", 1);
-        return 1;
-    }
-
-    lua_pushnil(L); return 1;
-}
-
-static int godot_vector3_add(lua_State* L) {
-    LuauVector3* a = check_vector3(L, 1);
-    LuauVector3* b = check_vector3(L, 2);
-    if (a && b) { push_vector3(L, a->x+b->x, a->y+b->y, a->z+b->z); return 1; }
-    lua_pushnil(L); return 1;
-}
-
-static int godot_vector3_sub(lua_State* L) {
-    LuauVector3* a = check_vector3(L, 1);
-    LuauVector3* b = check_vector3(L, 2);
-    if (a && b) { push_vector3(L, a->x-b->x, a->y-b->y, a->z-b->z); return 1; }
-    lua_pushnil(L); return 1;
-}
-
-static int godot_vector3_mul(lua_State* L) {
-    if (lua_isnumber(L, 1)) {
-        float s = (float)lua_tonumber(L, 1);
-        LuauVector3* v = check_vector3(L, 2);
-        if (v) { push_vector3(L, v->x*s, v->y*s, v->z*s); return 1; }
-    } else {
-        LuauVector3* v = check_vector3(L, 1);
-        if (lua_isnumber(L, 2)) {
-            float s = (float)lua_tonumber(L, 2);
-            if (v) { push_vector3(L, v->x*s, v->y*s, v->z*s); return 1; }
-        } else {
-            LuauVector3* b = check_vector3(L, 2);
-            if (v && b) { push_vector3(L, v->x*b->x, v->y*b->y, v->z*b->z); return 1; }
-        }
-    }
-    lua_pushnil(L); return 1;
-}
-
-static int godot_vector3_unm(lua_State* L) {
-    LuauVector3* v = check_vector3(L, 1);
-    if (v) { push_vector3(L, -v->x, -v->y, -v->z); return 1; }
-    lua_pushnil(L); return 1;
-}
-
-// Vector3 / number  ó  Vector3 / Vector3 (componente a componente), como Roblox
-static int godot_vector3_div(lua_State* L) {
-    LuauVector3* a = check_vector3(L, 1);
-    if (a && lua_isnumber(L, 2)) {
-        float s = (float)lua_tonumber(L, 2);
-        push_vector3(L, a->x/s, a->y/s, a->z/s); return 1;
-    }
-    LuauVector3* b = check_vector3(L, 2);
-    if (a && b) { push_vector3(L, a->x/b->x, a->y/b->y, a->z/b->z); return 1; }
-    lua_pushnil(L); return 1;
-}
-
-// Vector3 == Vector3 por valor (sin esto, == comparaba identidad de userdata)
-static int godot_vector3_eq(lua_State* L) {
-    LuauVector3* a = check_vector3(L, 1);
-    LuauVector3* b = check_vector3(L, 2);
-    lua_pushboolean(L, (a && b && a->x == b->x && a->y == b->y && a->z == b->z) ? 1 : 0);
-    return 1;
-}
-
-static int godot_vector3_tostring(lua_State* L) {
-    LuauVector3* v = check_vector3(L, 1);
-    if (v) {
-        char buf[64];
-        snprintf(buf, sizeof(buf), "%.3f, %.3f, %.3f", v->x, v->y, v->z);
-        lua_pushstring(L, buf);
-        return 1;
-    }
-    lua_pushstring(L, "Vector3(nil)"); return 1;
-}
-
-// ════════════════════════════════════════════════════════════════════
-//  Color3
-// ════════════════════════════════════════════════════════════════════
-
-static int godot_color3_new(lua_State* L) {
-    float r = (float)luaL_optnumber(L, 1, 0.0);
-    float g = (float)luaL_optnumber(L, 2, 0.0);
-    float b = (float)luaL_optnumber(L, 3, 0.0);
-    push_color3(L, r, g, b);
-    return 1;
-}
-
-static int godot_color3_from_rgb(lua_State* L) {
-    float r = (float)luaL_optnumber(L, 1, 0.0) / 255.0f;
-    float g = (float)luaL_optnumber(L, 2, 0.0) / 255.0f;
-    float b = (float)luaL_optnumber(L, 3, 0.0) / 255.0f;
-    push_color3(L, r, g, b);
-    return 1;
-}
-
-static int godot_color3_index(lua_State* L) {
-    LuauColor3* col = check_color3(L, 1);
-    const char* key = luaL_checkstring(L, 2);
-    if (!col) { lua_pushnil(L); return 1; }
-    if (strcmp(key, "R") == 0 || strcmp(key, "r") == 0) { lua_pushnumber(L, col->r); return 1; }
-    if (strcmp(key, "G") == 0 || strcmp(key, "g") == 0) { lua_pushnumber(L, col->g); return 1; }
-    if (strcmp(key, "B") == 0 || strcmp(key, "b") == 0) { lua_pushnumber(L, col->b); return 1; }
-    lua_pushnil(L); return 1;
 }
 
 #endif // LUAU_API_H

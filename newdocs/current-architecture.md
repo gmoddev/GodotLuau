@@ -98,6 +98,215 @@ from `RigidBody3D`. There are also Luau table-backed services and value datatype
 Do not describe every exposed value or service as a Godot Node, or describe an
 engine-neutral Instance ownership layer as already implemented.
 
+## Native value binding boundary (GL-013)
+
+Main integrates `refactor/gl-013-luau-api-extraction` at
+`1c9f4c6296bc955a6a5969a6da0668d137e46ed1` through normal merge
+`bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7`. `luau_value_bindings.cpp` owns the
+native Vector3/Color3 userdata allocation, exact-metatable checks, math callbacks
+and registration. Its declaration header exposes the existing two layouts and
+five bridge helpers plus two registration calls. It forward-declares `lua_State`;
+the implementation includes only public Luau headers and standard math/string
+headers, with no Godot, execution-domain or large implementation-header dependency.
+Callback functions retain internal linkage; shared bridge helpers and registration
+have one ordinary C++ definition. No new static state or registration singleton
+is introduced. Both qualified source commits and the historical branch remain.
+
+Domain bootstrap in `luau_script.cpp` calls registration at the same two per-domain initialization
+points: metatables before globals, preserving the intervening Instance setup.
+`luau_api.h` consumes the narrow declaration header for its existing conversions
+and Instance operations. Godot Variant/property reflection, CFrame/Vector2 Lua
+bridges, Instance dispatch, script scheduling and native ObjectID resolution stay
+with their existing owners. The value module neither allocates nor retains VMs.
+The VM still owns userdata allocation/collection; existing math-method native
+captures are preserved, not newly qualified for retained use across collection.
+
+The [extraction record](shared-domains-validation.md#gl-013-first-value-binding-extraction)
+records dependency analysis, build measurements, compatibility and qualification.
+Both CMake and SCons discover core `.cpp` sources; the new implementation must
+remain in that discovered set. Other large headers and their remaining coupling
+remain GL-013 work, not additional extractions in this change.
+
+## Generic Variant conversion (second GL-013 extraction)
+
+Normal merge `21d10d91769ee81c85ae2e1d2029e683feeb51ba` integrates
+`refactor/gl-013-variant-bindings`, based on prior main
+`174efcc2bdb59c5072ba21d27645c5380c61e8e9`, separates the two generic conversion
+functions into `luau_variant_bindings.cpp`. Its header forward-declares only
+`lua_State` and Godot `Variant`, exposing the existing two boolean conversion
+functions. The implementation depends on public Luau, Godot value types and the
+native value-binding interface; it includes no Node, Instance dispatch, ObjectID
+wrapper, service, execution-domain or large implementation header. There is no
+registration, retained state or new initialization order.
+
+Luau numbers/booleans/strings and exact Vector3/Color3 userdata convert to Variants.
+Godot BOOL/INT/FLOAT/STRING/VECTOR3/COLOR convert back, with the inherited double
+numeric and C-string conventions. Nil, collections, functions and Instance
+references are unsupported by these helpers; false preserves the output/stack
+contract. The existing caller still decides whether to ignore, raise its existing
+invalid-member error, or use
+the table-Offset fallback. At integration, `gl_has_property`, reflection and
+metadata fallback remain in `luau_api.h`; the third extraction below moves that
+stateless subset. ObjectID resolution remains in `gl_runtime.h`. Both qualified
+source commits are preserved. See the
+[second extraction record](shared-domains-validation.md#gl-013-second-generic-variant-extraction).
+
+## Instance property adapter (third GL-013 extraction, integrated)
+
+Normal merge `b7ec9fd614bd0e92ce418859de68b835180a7d7c` integrates both commits
+from `refactor/gl-013-instance-reflection`, based on prior main
+`752bb2063f61a533c3e59b481196a0d8aa88f1ba`. The generic `_gl_bridge` read/write
+blocks and Godot property-list membership helper now belong to
+`luau_instance_reflection.cpp`. Its forward-only header exposes three internal
+functions: `HasLuauInstanceProperty`, `PushLuauInstanceProperty` and
+`WriteLuauInstanceProperty`. It retains no object, state, callback or registration.
+The caller still resolves ObjectID immediately before dispatch. Synchronous raw
+Object parameters are borrowed for the existing call only; this is no new
+ownership model or general reentrant native-lifetime guarantee.
+
+Dependencies now point from Instance dispatch to reflection to the separate
+Variant conversion and native value bindings. Reflection includes public Luau and
+Godot Object/value headers; it does not include Node, services, networking,
+execution domains, `gl_runtime.h`, `luau_script.h` or `luau_api.h`. Conversion and
+native value implementations are unchanged. There is no reverse dependency or
+include cycle. Both existing build globs discover the owned implementation.
+
+Membership still enumerates `get_property_list` by exact name without filtering
+usage/read-only flags. Reads try native properties, then `_glp_` metadata using the
+existing converters; false leaves child, lowercase alias and invalid-member error
+fallback with Instance dispatch. Writes try conversion and native `set` or metadata,
+then the existing numeric table-Offset fallback; nil/unsupported values remain
+ignored. The adapter does not check Godot `set` success or synthesize notifications.
+Lua Offset metamethod execution/errors remain part of the existing operation.
+
+Class-specific identity overrides, wrappers, hierarchy, all special-case Roblox properties/methods,
+callback bindings, Changed/attribute watchers, property-specific signals and
+replication hooks remain in their original owners. `Anchored` fallback uses the
+same extracted membership helper without moving its class-specific policy.
+No public Lua API, capability, pin, wire format or VM/cache lifetime changes.
+See the [analysis and qualification](shared-domains-validation.md#gl-013-third-instance-property-extraction).
+The merge tree equals qualified tip `90776e7c1c5ba2b087d4efc4b9ecc2e50a223058`.
+GL-013 remains open for remaining header coupling.
+
+## Class identity adapter (fourth GL-013 extraction, integrated)
+
+Normal merge `35c993ce3711076a61dace5324f74691f4fb77ef` integrates all four
+commits of `refactor/gl-013-class-identity`, based on prior main
+`4e3db8496e189b6e09148b015eff28b1c8ae29b6`. `luau_class_identity.cpp` owns the
+existing native-to-Roblox name mapping and generic IsA predicate. Its forward-only
+header declares `GetLuauClassName(Object*) -> String` and
+`IsLuauClass(Object*, const char*) -> bool`. It depends only on public Godot
+Object/String and cstring, with no Luau, Node, domain, service, reflection, value
+binding or large implementation header. Instance dispatch resolves ObjectID and
+keeps its class-specific identity dispatch and error/hierarchy policy. Player/Value
+overrides precede generic ClassName; the existing Mouse ClassName branch follows
+that unconditional generic return, and its ordering is preserved.
+All alias entries and exact/custom-parent/Godot is_class rules are preserved.
+
+The old unmapped-name result borrowed a TU-local static CharString; mapped names
+borrowed static literals. Current callers compare or copy immediately, with no
+retained pointer or lookup/yield in between. No supported-call lifetime defect is
+established. The new compilation boundary returns an owned Godot String instead
+of introducing a shared mutable process-wide UTF-8 buffer. IsA owns its UTF-8
+conversion locally; Lua push/error call conversions remain alive for their full
+expression and are copied by Luau. Neither native objects nor query pointers are
+retained. This is an explicit internal storage/interface change with preserved
+public behavior, not a concealed fix for a confirmed defect. The mapping table is
+immutable and no registration or mutable cache is added. No concurrent
+Godot/Luau binding execution guarantee is introduced.
+
+Both core-source build globs discover the owned implementation. The merge tree equals qualified tip `eb53661072999887d2a124e5d4ece2f458c7bb30`;
+qualification and the [string lifetime audit](shared-domains-validation.md#gl-013-fourth-class-identity-extraction)
+distinguish tested serialized callbacks/GC/shutdown from unsupported concurrency
+and existing broader lifetime/sanitizer limitations. GL-013 remains open.
+
+## Remaining implementation coupling (GL-013 assessment)
+
+At integrated main `08b2bb83b7093a361c80b147b4827eb22715ad32`, the source contains
+64 native project headers and eight core implementation units. Static includes
+and retained qualified Linux Debug compiler dependencies agree: API/script/network
+and GUI implementation still reach host, script and registration TUs; completion
+reaches script and registration. No project include cycle is found. The four
+extracted implementation units each have only one or two project-header dependencies.
+
+The [focused assessment](gl013-boundary-assessment.md) records the full inventory,
+responsibility/lifetime map, compiler evidence, historical comparison and ranked
+proposals. The preferred future change is script bootstrap plus narrow Instance
+access in existing `luau_script.cpp`; host wrapper/service/codec calls must first
+be made explicit. Moving only InitializeDomain cannot remove all API dependencies.
+Completion ownership, GUI metadata/style adaptation and inert-signal helpers rank
+after it. These are proposals, not delivered boundaries. GL-021 separately records
+the source-observed inert lowercase-alias gap. No production implementation or
+ownership contract changes in this assessment; GL-013 remains open.
+
+## Script bootstrap boundary (fifth GL-013 extraction, integrated)
+
+`refactor/gl-013-script-bootstrap` starts at integrated main
+`ce5e19fa8aea1cf65da875d07cda13c1696fc08c`. Normal merge
+`109bd6d838410509da9831b1502dfffb023ad823` integrates qualified branch tip
+`9171199fc6b3b43a2aa07a98f3f20977abc43533` with an identical tree. See the
+[integration record](gl022-child-relay-validation.md#stage-1-gl-013-script-bootstrap-integration-2026-10-29).
+`luau_script.cpp` owns the existing InitializeDomain, RemoteFunction setup and
+child-event relay bodies plus their private JSON/HTTP helpers. `luau_script.h`
+retains script/resource declarations, editor/template handling and execution
+startup/cancellation. The three moved bodies are exact after class indentation;
+JSON/HTTP helper text is unchanged. This changes compilation ownership, not VM,
+module, callback, service or persistence authority.
+
+`luau_instance_access.h` forward-declares lua_State and Godot Node and exposes
+only `PushLuauInstance`. Its implementation delegates to the existing `wrap_node`
+in the same CPP, preserving nil, ObjectID userdata and GodotObject metatable.
+It owns no object, cache, VM or registry. `GLPushNodeHandle` is not substituted:
+that function does not install the metatable. Host environment and resume paths
+resolve ObjectIDs and call the facade synchronously. The metatable must already
+be installed for non-null wrappers.
+
+Host service/codec/error/runtime includes are now explicit. Humanoid must precede
+network implementation in host and workspace/network in registration; the latter
+include moves upward without changing any registration body or order. Native
+service, network, core VM/scheduler, compatibility runtime, dispatch, stdlib and
+the previous four adapters otherwise remain unchanged. No TU is added.
+
+Compiler records on both platforms/configurations match the source graph: API
+and stdlib now reach only script CPP (three TUs before); host project-header
+closure falls 42 → 21, registration 63 → 57, script CPP grows 45 → 46.
+Script header still reaches three TUs; its own closure falls 41 → 7. A new wrapper
+declaration affects host and script only. The graph has no project include cycle.
+
+External-inline shared state remains shared. Template cache and script counter
+storage remain where they were; codec error/trace slots retain TU-local linkage.
+Dispatch attribute watchers remain private to API implementation, now compiled
+only in script CPP, rather than being moved to a singleton. All live watcher
+entry points and registration stay together. The old unused API copies are no
+longer instantiated in host/registration. `_GL_VM_ID`'s function-local counter
+and RemoteFunction source literal retain their function storage duration; no
+initialization flag or global registry is introduced. This is serialized native
+execution, not a new thread-safety guarantee.
+
+Local Windows/Linux Debug/Release core39/native28 and fresh hosted Debug core39/
+native28 on both platforms pass at implementation `50f1c0e`. See the
+[fifth qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary).
+GL-013 stays open. GL-022 separately records the reproduced baseline shared-module
+child-relay connection conflict; distinct relay targets pass both-domain coverage.
+The next ranked independent candidate remains editor completion ownership, with
+its missing editor-specific fixture requirements. It is not implemented here.
+
+## Child signal subscriptions (GL-022 integrated)
+
+Main integrates `fix/gl-022-cross-domain-child-relay` at qualified tip
+`ef8a6b47e918cc72d26e572f3e4a539a5db66161` through normal merge
+`f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`. Child subscriptions use a custom native
+Callable keyed by immutable callback reference and receiver ObjectID. Godot's
+signal map ignores bind arguments, merging the previous bound-method identity
+on a shared native ModuleScript. The existing scene domain host tracks native
+connections and disconnects by owner/reference, preserving the other VM's work.
+Dispatch resolves ObjectIDs and the existing reference mapping; no VM pointer
+is captured by the Callable. Dead targets are reaped before the next host tick.
+The [GL-022 record](gl022-child-relay-validation.md) preserves the failing baseline,
+mechanism, lifecycle contract and passing Windows/Linux/ASan/hosted qualification.
+The integrated implementation is identical to the qualified source. Fresh main
+CI status is recorded in the integration section of that record.
+
 ## Script capabilities and scheduling
 
 Domain setup publishes `_FileAccess` and `_HTTP` into gameplay VMs.
@@ -107,7 +316,7 @@ level DataStore wrapper rejects network clients, but this does not remove the
 native global. OS permissions and platform restrictions still apply.
 
 HTTP uses synchronous `HTTPClient` polling and delays on the calling thread
-in `luau_script.h`. It has a nominal ten-second timeout; this is not a
+in `luau_script.cpp`. It has a nominal ten-second timeout; this is not a
 nonblocking scheduler or a demonstrated bound on every network/body path.
 No explicit sandbox setup, instruction-interrupt budget, or custom memory quota
 was found in extension VM initialization or the searched extension source.
@@ -266,9 +475,9 @@ provenance and runtime-gate gaps remain GL-010/011. See
 
 | Area | Read implementation first | Related issues |
 | --- | --- | --- |
-| VM, require, tasks, shutdown | `src/core/gl_execution_domain.h/.cpp`, `gl_domain_host.h/.cpp`, `luau_script.h` | GL-001, GL-004, GL-014 |
+| VM, require, tasks, shutdown | `src/core/gl_execution_domain.h/.cpp`, `gl_domain_host.h/.cpp`, `luau_script.h/.cpp` | GL-001, GL-004, GL-014 |
 | Native object methods | `src/core/luau_api.h`, `gl_runtime.h` | GL-001, GL-002, GL-013 |
-| File/HTTP permissions | `src/core/luau_script.h`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
+| File/HTTP permissions | `src/core/luau_script.cpp`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
 | RPCs, players, replication | `src/services/roblox_network.h`, `src/core/gl_net_bridge.h`, `src/gameplay/roblox_remote.h` | GL-006, GL-007, GL-008 |
 | Persistence | DataStore section of `luau_stdlib.h`, native file bridge, `backend/README.md` | GL-009 |
 | Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `.github/workflows/runtime-native-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |

@@ -28,6 +28,36 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-022's qualified shared-ModuleScript child relay correction is integrated into
+main through `f1e1b9c492e56549a72739ad3086ad3ec9c32ee9`, preserving all three
+source commits. See the [integration record](gl022-child-relay-validation.md#main-integration).
+Release publication and the runtime updater remain disabled.
+
+GL-013's first native Vector3/Color3 implementation extraction is integrated by
+normal merge `bdd57fd3097537bb1cf0f8a0b7c08ae7e312d0d7`, preserving both qualified
+source commits. See the [integration record](shared-domains-validation.md#first-extraction-main-integration-2026-10-28).
+The second generic Variant extraction is integrated by normal merge
+`21d10d91769ee81c85ae2e1d2029e683feeb51ba`; see its
+[integration record](shared-domains-validation.md#second-extraction-main-integration-2026-10-28).
+The third Instance property adapter is integrated by normal merge
+`b7ec9fd614bd0e92ce418859de68b835180a7d7c`; see its
+[integration record](shared-domains-validation.md#third-extraction-main-integration-2026-10-28).
+The fourth ClassName/IsA adapter is integrated by normal merge
+`35c993ce3711076a61dace5324f74691f4fb77ef`; see its
+[integration record](shared-domains-validation.md#fourth-extraction-main-integration-2026-10-28).
+GL-013 stays open for incremental modularization; no broader lifetime or build-speed
+guarantee is inferred.
+The [remaining-boundary assessment](gl013-boundary-assessment.md) inventories the
+integrated source and ranks script bootstrap/Instance access as the preferred next
+boundary. Normal merge `d99adcfb2b915b3209fef7f849865cf4acc964f9` integrates the
+assessment; its recommendations remain proposals, not implemented boundaries.
+The fifth bootstrap/Instance-access boundary is integrated from
+`refactor/gl-013-script-bootstrap`; see its
+[qualification record](shared-domains-validation.md#gl-013-fifth-script-bootstrap-boundary).
+Fresh hosted core39/native28 pass on Windows/Linux at implementation `50f1c0e`;
+the [integration record](gl022-child-relay-validation.md) tracks fresh main
+checks and hosted results. GL-013 remains open; no further extraction is included.
+
 GL-012 release retention is integrated with publication disabled by explicit
 workflow admission and read-only permissions. See the
 [integration record](release-retention.md#main-integration-2026-10-27).
@@ -49,6 +79,7 @@ Source-identical hosted qualification is reused; see the bounded
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
 | [Current architecture](current-architecture.md) | Implemented ownership and subsystem entry points |
+| [GL-013 boundary assessment](gl013-boundary-assessment.md) | Measured source/dependency inventory and ranked future boundaries; assessment only |
 | [Invariants](invariants.md) | Required properties for new/touched behavior, with known baseline gaps |
 | [Issue ledger](issues.md) | Stable IDs, evidence, priorities, proof gaps, and closure criteria |
 | [Review validation](review-validation.md) | Claim-by-claim assessment of the supplied architecture review |
