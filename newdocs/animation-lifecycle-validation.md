@@ -1,5 +1,10 @@
 # GL-020 animation lifecycle qualification
 
+Subsequent [authority qualification](animation-authority-qualification.md) records
+the 2026-11-01 dedicated-branch ENet follow-up, original-wire coercion correction
+and remaining sanitizer gaps. The functional runs and pending-security statements
+below retain their historical scope; they are not rewritten as adversarial proof.
+
 Investigation baseline: `132970c6f7270062952ef872d609844b762058f8`,
 2026-10-27. Working branch: `fix/gl-020-animation-lifecycle`.
 

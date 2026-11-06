@@ -139,6 +139,15 @@ session cache; it cannot be used after a life has been granted. Animation rates
 are separately bounded. A reliable animation for a new life may wait for its
 unreliable birth snapshot, without applying to the old character.
 
+The GL-020 authority follow-up validates original animation wire Variants before
+Godot's native binder can coerce them. Epoch, life and target peer are integers
+(target peer is positive signed 32-bit); asset/name are Strings; speed is an
+integer or float finite in `[0,20]`; loop/play are booleans. Bounds and existing
+session/life/catalog checks remain. The same six/seven argument RPCs, reliable
+channel and protocol-3 policy are retained. Normal AnimationTrack callers already
+send these types. Raw RPC callers relying on numeric/string/boolean coercion must
+send canonical fields; a conversion diagnostic is not rejection evidence.
+
 ## Lifetime and compatibility
 
 The service uses native ObjectIDs and revalidates after gameplay callbacks.

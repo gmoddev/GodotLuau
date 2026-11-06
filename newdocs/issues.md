@@ -5,9 +5,10 @@ Initial triage: 2026-10-26. Source baseline:
 Historical evidence is preserved below. GL-001/GL-002 are resolved for their
 specific captures, GL-014 is integrated into main and source-qualified, and GL-019
 is optimized, qualified and integrated into main. GL-006/GL-008 are also integrated
-into main and resolved for their qualified endpoints; GL-020 records a
-separate animation authority gap. GL-022 is fixed and qualified on its dedicated
-branch and now integrated into main. GL-007 and the scoped GL-024/025 fixes are
+into main and resolved for their qualified endpoints; GL-020's dedicated
+adversarial follow-up corrects a reproduced malformed-animation gap and is now
+integrated, with native sanitizer limitations retained. GL-022 is fixed and
+qualified on its dedicated branch and now integrated into main. GL-007 and the scoped GL-024/025 fixes are
 also integrated; GL-026's bounded workaround is integrated while its dependency
 follow-up remains open. Other entries retain their stated scope. This file does not
 create upstream or GitHub issues.
@@ -45,7 +46,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
-| GL-020 | P1 | Verified static animation authority defect | Animation receive/relay RPCs still accept unauthorized presentation changes |
+| GL-020 | P1 | Integrated scoped authority correction; sanitizer qualification partial | Canonical wire validation and ENet adversarial coverage; GL-017/018 remain separate |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
 | GL-022 | P2 | Integrated; fixed and qualified | Distinct native subscription identities and owner cleanup on main |
 | GL-023 | P2 | Integrated and resolved within the documented API contract | HttpService errors, headers, optional arguments and JSON/GUID semantics |
@@ -990,8 +991,17 @@ networking, persistence, asset and distribution issues remain open.
 
 ## GL-020: Animation RPCs omit sender and receiver-role authority
 
-**Status (2026-10-27): OPEN; source-verified independent presentation authority
-defect, P1. No adversarial animation runtime reproduction is claimed.**
+**Current status (2026-11-01): scoped authority correction integrated and freshly
+verified on main. Native sanitizer qualification remains partial.**
+The [adversarial record](animation-authority-qualification.md) and
+[manifest](evidence/gl020-animation-authority-2026-11-01.json) distinguish current
+runtime reproduction, correction, executed transport coverage and sanitizer gaps.
+The [main integration record](animation-authority-main-integration.md) separates
+the controlled merge and fresh main verification from branch qualification.
+Historical findings and partial evidence follow.
+
+**Historical status (2026-10-27): OPEN; source-verified independent presentation
+authority defect, P1. No adversarial runtime reproduction was then claimed.**
 
 **Evidence:** At security implementation
 `b839ea4a6d1ce46cceef9eb4eb58a7b210ea56c6`, `_setup_rpcs` still configures
@@ -1053,6 +1063,41 @@ GL-020 remains OPEN for animation-specific adversarial transport/handler evidenc
 the historical finding and closure requirements above remain applicable. No
 deferred adversarial qualification, binary release or general security certification
 is performed by this integration. GL-007/GL-017/GL-018 remain independent.
+
+**Adversarial follow-up (2026-11-01): corrected and qualified within the exercised
+authority scope on the dedicated branch; full native sanitizer qualification
+remains incomplete.** Actual ENet traffic confirms existing role/sender/session
+guards reject wrong peers even with receive filtering relaxed. A distinct native
+binder defect is reproduced: typed argument conversion diagnostics still permit
+six malformed client-relay states and eight malformed server-receive states to
+mutate real animation/cache state. Commit `358d6ffc491303e498d512792d09bdb62332bb25`
+validates original Variants before conversion, preserving normal wire shapes,
+catalog/life/admission semantics and the existing ownership/lifetime implementation.
+Separate test commits and every failed attempt remain retained.
+
+Windows Debug/Release and Linux Release each pass 80 core cases and 110 native
+actors locally on DockerPC, including ten animation actors, 510 authority checks
+and 1,003 total animation assertions. Linux Debug core and Windows/Linux core
+sanitizer checks pass. Actual Character replacement, disconnect/reconnect,
+late-join, callback cancellation and 23/20 per-packet no-mutation matrices execute.
+Hosted core/native Windows/Linux artifacts have been independently
+verified, including actual execution of all new cases. Linux stock-host native
+ASan fails before assertions on RTLD_DEEPBIND; its diagnostic is preserved, and Windows native
+ASan remains GL-018's gap. No sanitizer pass is substituted. Original GL-020
+two-client authority closure criteria are satisfied on the branch; this does not
+close GL-017/018, certify engine security, or integrate/publish the correction.
+
+**Controlled integration (2026-11-01):** normal merge
+`9f4a4d165abcc5e8b97af65fe7fda1eb191eba8f` preserves all four source commits and
+exactly equals retained source tip `83e498b7c7ffd203857806488c8c3790439e9560`.
+Qualified runtime/fixture identity `358d6ffc491303e498d512792d09bdb62332bb25`
+is unchanged. Fresh hosted Windows/Linux core reports each pass all 80 cases;
+native profiles each pass all 110 actors. Independent downloaded-artifact checks
+verify every animation phase, all 510 authority checks and 1,003 assertions per
+platform, including all 23/20 no-mutation matrices and actual actor stdout. See the
+[integration manifest](evidence/gl020-main-integration-2026-11-01.json). No GL-017/018
+fix, sanitizer suppression, release/updater enablement or dependency change is
+included. Earlier failures, sanitizer gaps and branch evidence remain retained.
 
 ## GL-021: Inert signals omit lowercase once/wait aliases
 

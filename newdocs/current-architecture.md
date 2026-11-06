@@ -17,8 +17,13 @@ Current development baseline: optimized shared-domain `main` with GL-006/008's
 qualified state/removal/chat authority corrections, integrated on 2026-10-27.
 GL-020's functional animation/session implementation is integrated through normal
 merge `6b140427e8ab39d97e12ee693f7cbda72abc7bba`, with the same tree as qualified
-branch `8e21d18a5504e0d703efbcf2a71a53d56314058e`. Full animation-specific
-adversarial transport/handler qualification remains pending. See the
+branch `8e21d18a5504e0d703efbcf2a71a53d56314058e`. The dedicated
+[adversarial follow-up](animation-authority-qualification.md) records current
+transport/handler evidence and remaining sanitizer boundaries. Its four commits
+are integrated by normal merge `9f4a4d165abcc5e8b97af65fe7fda1eb191eba8f`, with
+a tree identical to retained source tip `83e498b7c7ffd203857806488c8c3790439e9560`.
+The [authority integration record](animation-authority-main-integration.md) records
+fresh main checks separately from retained branch qualification. See the
 [animation integration record](animation-lifecycle-validation.md#main-integration-2026-10-27).
 Security runtime merge `2e69d8ac703d3f968e42054871511111ab8471be` equals qualified
 source `462969bd967bd26fcbeccdca1bd6ae60335347f4`. See the
@@ -491,6 +496,11 @@ GL-007 makes legacy `_relay_anim`/`_recv_anim` handlers inert and uses
 client input also binds the correction epoch and server playback binds the life.
 Finite speed (0–20), identity/name bounds, per-peer rate limits, checked assets
 and active gameplay-timeline protection apply before cache mutation/relay.
+The GL-020 follow-up receives raw Variants and validates canonical field types
+before conversion, including integer epoch/life and positive 32-bit target peers.
+Normal AnimationTrack packet shapes remain unchanged; implicit malformed-field
+coercion is rejected. Qualification is recorded in the
+[authority follow-up](animation-authority-qualification.md).
 ADR-006 documents the epoch-zero pre-puppet case. Protocol-3 removal tombstones
 also reject stale animation for a removed life. This preserves GL-020's existing
 replication mechanism while explicitly versioning the character wire contract.
@@ -518,8 +528,9 @@ retirement releases callbacks and cannot stop a newer gameplay timeline.
 Applying the current clip's settings preserves playback position.
 `GetAnimationStates()` is a native
 read-only diagnostic snapshot of the actual cache (including UserId), not an RPC.
-The [animation record](animation-lifecycle-validation.md) separates functional
-qualification from outstanding adversarial transport acceptance. Shared domains,
+The [animation record](animation-lifecycle-validation.md) preserves historical
+functional qualification; the [authority follow-up](animation-authority-qualification.md)
+records the subsequent adversarial scope. Shared domains,
 GL-019 paths and owner-based coroutine cancellation are unchanged.
 
 The coordinator uses local process discovery/heartbeat files. Upstream documents

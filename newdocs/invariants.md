@@ -75,8 +75,11 @@ the inherited runtime already satisfies them. Baseline gaps link to
   `who`, name, role, or owner claim. GL-006/008's endpoint-specific corrections
   are integrated into main and documented in the [authority record](network-authority-validation.md);
   GL-020's integrated implementation applies the same execution/session rules to animation;
-  full animation security qualification remains pending.
+  the [dedicated authority follow-up](animation-authority-qualification.md) records
+  adversarial transport scope and remaining sanitizer qualification limits.
 - Animation state binds the current assigned session before puppet creation.
+  Original wire types are checked before coercion; conversion diagnostics must
+  not permit malformed animation state to reach cache, playback or relay.
   Stops replace active state; character/session/service departure invalidates old
   state. Legitimate server state can wait for a puppet, but stale state must not
   cross into a replacement session. Animation settings must not restart the same
