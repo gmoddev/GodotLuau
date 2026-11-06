@@ -1,0 +1,74 @@
+# ADR-012: Local semantic input and independent native controller primitives
+
+Status: implementation in progress on `feature/input-action-api-foundation`.
+This records the authorized campaign contract, not passing qualification.
+
+## Ownership and API
+
+InputService, InputContext, InputAction and InputBinding are ordinary native
+Nodes, exposed as Instances with the existing ObjectID wrapper, ClassDB
+properties, parenting and construction. Direct service/context/action/binding
+chains are the authoring source. A disposable native GLInputGraph evaluates
+them; no second action map, global InputMap edits or network input stream exists.
+
+Client Luau obtains `game:GetService("InputService")`; Server execution cannot
+read hardware or invoke its semantic API. Convenience `AddContext(Name, Options)`,
+`AddAction(Name, Options)` and `AddBinding(KeyCode, Options)` construct those same
+Instances with closed, validated options. Bool, Scalar and Vector2 action types
+have neutral false/zero values. Bool sources OR, Scalar sources sum/clamp, and
+Vector2 contributions sum with unit-length clamping. Keyboard/mouse/gamepad
+buttons are the first slice; composites, analog sticks and relative pointer
+sources follow as actual implementations, not usable placeholder enum entries.
+
+Context priority descends, with ObjectID ties; within a context binding priority
+descends, with ObjectID ties. Matching actions in one context may cofire. A
+consuming higher context suppresses lower contexts for the physical source.
+Enabling a context, rebinding or losing a modifier never synthesizes a press.
+Digital admission requires a fresh nonrepeat primary press; consumed releases
+still retire active state. Definition changes invalidate affected admissions;
+unmodified definitions retain theirs. Stable identity does not depend on names.
+
+All changed action values commit before callbacks. Signals are `Pressed()`,
+`Changed(Value)`, `Canceled(Reason)` and `Released()`; nonphysical termination
+adds Canceled before Released. Signal closures resolve ObjectIDs and callbacks
+reuse existing GLReference/GLDispatch owner accounting. Lua-created contexts
+retire with their creator; project-authored definitions remain scene-owned.
+Loaded/cloned authoring configuration never copies device/transient state.
+
+Initial evaluation bounds are 32 contexts, 256 actions, 1,024 bindings, four
+modifier keys and 16 gamepad device indices. These are explicit local limits,
+not network authority or total-process memory claims. Diagnostics copy bounded
+configuration/state without exposing mutable evaluator objects or native handles.
+
+## Godot routing and compatibility
+
+DockerPC's real Godot 4.7.1 headless viewport probe passed: consumed keyboard
+press and release both visit `_input` then focused LineEdit `gui_input`, skipping
+`_unhandled_input`. An unconsumed key visits `_input` then `_unhandled_input`.
+Handled state inside `_input` is false before the Control accepts the event.
+This is synthetic-event/native-Control evidence, not physical-device or GPU proof.
+
+The input adapter observes events in UserInputService `_input`, retains bounded
+event identity/order, and marks those reaching `_unhandled_input` as unconsumed.
+A post-routing deferred commit handles both consumed and unconsumed events in
+arrival order. Raw UserInputService events keep their existing argument shapes
+and polling APIs, but their callback timing deliberately moves to this same-frame
+post-GUI barrier and gameProcessed becomes meaningful. Document this migration;
+do not silently promise the inherited pre-GUI timing. Existing native Character
+hardware polling and camera behavior are not replaced by semantic contexts.
+
+Focus loss, definition/owner retirement, queue overflow and device removal must
+produce neutral state without resurrecting held input. Callback edits affect the
+next safe evaluation boundary. Unsupported multi-viewport routing must be
+explicit rather than mixing device admission from unrelated viewports.
+
+## Controller boundary
+
+Phase 2 adds simple vector composites, deadzoned sticks and relative pointer
+input, with distinct documented frame/physics samples. Phase 3 uses Godot's
+CharacterBody3D for a separately instantiated, locally owned motor with bounded
+commands consumed once per native physics tick. It does not expose arbitrary
+move_and_slide, raw RIDs or authority over Player.Character/server objects.
+A local owner-scoped camera/capture surface must arbitrate native ownership.
+The runnable Luau sample computes intent through actions and uses these narrow
+primitives. Character V2 and networking/authority remain unchanged.
