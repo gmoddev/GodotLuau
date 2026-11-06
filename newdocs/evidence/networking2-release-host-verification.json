@@ -1,0 +1,900 @@
+{
+  "Origin": {
+    "Workflow": 41779583648,
+    "Revision": "c14342c25eb8943dab828d58d1c50cffcc216fde",
+    "ArchiveSHA256": "d9f380f1eacaa3a83587b6577b1b2361f8a747ca248a024d6360c3cb494a7cf6",
+    "ExportSHA256": "cdcc4bd674872a1bc176902cbbb2d3d9c1fd2fa519bea01e3d8e0004278da520",
+    "ManifestSHA256": "bebc17b14005b5f3205c4df7d6747f22fb732149d5876eb68a93bbe13ac6d828",
+    "QualificationSummarySHA256": "c0b78b550d68d183dd3be0214bcbd5a4438e0231d8b574aec89792d902176ab7",
+    "ExecutableSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+    "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+    "Scope": "Admitted uninstrumented Release host only, not source-candidate acceptance or distribution"
+  },
+  "Members": {
+    "godot.windows.template_release.x86_64.exe": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+    "remote-host.json": "bebc17b14005b5f3205c4df7d6747f22fb732149d5876eb68a93bbe13ac6d828",
+    "LICENSE.txt": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80",
+    "COPYRIGHT.txt": "cb1980c88089573bcacd7221d777c689bb8bbd778799f24c27fca0fe5f774d6d"
+  },
+  "Qualification": {
+    "Result": "PASS",
+    "Host": {
+      "Platform": "Windows",
+      "EngineRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+      "ArchiveSHA256": "98c5c1c101d15d43de5e3dca81cfb57ef3698495d67eeaf5e34db739b751bbb9",
+      "PolicySHA256": "29388336c2d63c03485f1cb5a82f5c82606d5f65e6487ebecaa7672aaecae390",
+      "OriginalSourceFiles": 13985,
+      "OriginalSourceIndexSHA256": "6a77825d2462e8ba87ac1cd9a6d69f0f4c06981e6abf2d452212df15499150b9",
+      "QualificationPatch": {
+        "File": "sanitizers/GodotBindingRetirement.patch",
+        "SHA256LF": "adfde942eb64b8f99e5a4dab4075678e201693cf3069a01675697c64b49b3fa1",
+        "Path": "core/extension/gdextension.cpp",
+        "OriginalSHA256": "a7f2f64bd1b05461f430ab499a5d2e4d87913179b2cbca223b9aa90a9c7a1d8b",
+        "PatchedSHA256": "1160e48c8bbf5dc9c22c3d70062dbe3ebd18fc6bd67886f1363d4ff115b51aa8"
+      },
+      "QualificationPatchSourceSHA256": "1160e48c8bbf5dc9c22c3d70062dbe3ebd18fc6bd67886f1363d4ff115b51aa8",
+      "QualificationPatchSourceSHA256LF": "1160e48c8bbf5dc9c22c3d70062dbe3ebd18fc6bd67886f1363d4ff115b51aa8",
+      "Compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.EXE",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "SCons": "4.10.0",
+      "Command": [
+        "C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe",
+        "-m",
+        "SCons",
+        "arch=x86_64",
+        "use_static_cpp=no",
+        "lto=none",
+        "disable_path_overrides=no",
+        "vulkan=no",
+        "opengl3=no",
+        "modules_enabled_by_default=no",
+        "module_gdscript_enabled=yes",
+        "module_multiplayer_enabled=yes",
+        "module_enet_enabled=yes",
+        "module_mbedtls_enabled=yes",
+        "module_godot_physics_2d_enabled=yes",
+        "module_godot_physics_3d_enabled=yes",
+        "module_freetype_enabled=yes",
+        "module_text_server_fb_enabled=yes",
+        "platform=windows",
+        "debug_symbols=yes",
+        "d3d12=no",
+        "angle=no",
+        "target=template_release",
+        "dev_build=no",
+        "use_asan=no",
+        "optimize=speed",
+        "-j2"
+      ],
+      "Timeout": 3300,
+      "Scope": "Headless GL-029 network host with admitted native data ownership bounds; no sanitizer, editor, rendering or device qualification",
+      "RemoteAdmission": {
+        "Version": 1,
+        "EngineRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+        "File": "native/GodotRemoteAdmission.patch",
+        "SHA256LF": "df10215b62e125d3595972e5f16e0c7b45a9b0b9141564a91f1741b413f7568b",
+        "Files": {
+          "modules/enet/enet_connection.cpp": {
+            "OriginalSHA256": "91c46ac50b489e9f55b30fce12412ce552f43275a1a82c8ea45263945f5e18c8",
+            "PatchedSHA256": "8de44e933c302fe0860e92e5ac852bd96ad104285fb4bee238f45f6303df0c2c"
+          },
+          "modules/enet/enet_connection.h": {
+            "OriginalSHA256": "f724e8858bda8577203fe03739b724beb506e1879244f8cc370d4c557377eb3f",
+            "PatchedSHA256": "8b6b962792c2d8b1d1975e7247b628ec991531c3d9eeb758215b9d7f9017e5fc"
+          },
+          "modules/enet/enet_multiplayer_peer.cpp": {
+            "OriginalSHA256": "972c0f8aaeffc200683a16c8d2ca1364588b77c897eb30aa6f76e715c7ed97f1",
+            "PatchedSHA256": "e891170e04d70bfbeaf5199be76946b72fdf99a6cbc8cf2c5e5bdf6da9fae89c"
+          },
+          "modules/enet/enet_packet_peer.cpp": {
+            "OriginalSHA256": "15d77c8fec6da4877674c5db322a27a664ad96392790c2aa1f55d5da6185cde0",
+            "PatchedSHA256": "febf78ebba0bcd271e7a62edc9d7ca66ecc5f3887d3351322a02d57fc997f332"
+          },
+          "modules/enet/enet_packet_peer.h": {
+            "OriginalSHA256": "c6c2d48d7220c33899cab4dc8cbdee52a8afe98c134fc1a3355b3955b32d4567",
+            "PatchedSHA256": "92f93aa66ea947226c0fd9638b648d108cfe8de4582ff2b39626cfb1d414e813"
+          },
+          "modules/enet/godot_luau_admission.h": {
+            "OriginalSHA256": null,
+            "PatchedSHA256": "c9c068c0971ca4902cea3621475c46eab88f982d2a3a2a83328149c7449bb49e"
+          },
+          "modules/multiplayer/scene_multiplayer.cpp": {
+            "OriginalSHA256": "71d62fede101f834482346f1066023dbc126596012fcf7d2cb7689480b254494",
+            "PatchedSHA256": "7905b65b0163912bfbc61954b169de55b54dd79fce5dad235085aa4258e60cfd"
+          },
+          "modules/multiplayer/scene_multiplayer.h": {
+            "OriginalSHA256": "4b8c589bf37ae9679e8f124c811b65890e5cde7d8fc779d8faba899cb4c90247",
+            "PatchedSHA256": "32cfdae070864b4ecb83d35594d7621f95659fcd129e1094b5afafdffcd4b36d"
+          },
+          "modules/multiplayer/scene_rpc_interface.cpp": {
+            "OriginalSHA256": "cca1423803e1f1cc58570ba9d0c6bd39be22ebaa39a283551aa984889659c6c7",
+            "PatchedSHA256": "2411a9a0aa7ce47dc28f269f404bbe1670725df45a8bfa2bed568e6ee044a8db"
+          },
+          "modules/multiplayer/scene_rpc_interface.h": {
+            "OriginalSHA256": "1b305eacae476013d8ff928ea1d3687820bbc5f02855ce4f4ed8a95b3bcfa132",
+            "PatchedSHA256": "108af44d0aa9f9b6389b976bc53c984300de5704cab248103ad5538b08a6ca67"
+          }
+        },
+        "PeerBytes": 4194304,
+        "PeerCommands": 4096,
+        "HostBytes": 16777216,
+        "HostCommands": 16384,
+        "Scope": "Native retained data packets and their data-command counts; not total engine memory or protocol-control storage"
+      },
+      "Configuration": "Release",
+      "Exit": 0,
+      "BuildLogSHA256": "f895fd22b80fb7942026237471bd4f926d50451fd01eb23ebd47a943cc018871",
+      "Executable": "D:\\a\\_temp\\remote-host\\bin\\godot.windows.template_release.x86_64.exe",
+      "ExecutableSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "RuntimeDLLs": {}
+    },
+    "Records": [
+      {
+        "Name": "ownership",
+        "Command": [
+          "D:\\a\\_temp\\remote-host\\bin\\godot.windows.template_release.x86_64.exe",
+          "--headless",
+          "--disable-crash-handler",
+          "--single-threaded-scene",
+          "--path",
+          "D:\\a\\_temp\\benchmark-host-qualification\\ownership",
+          "--script",
+          "res://NativeAdmission.gd"
+        ],
+        "FixtureSHA256": "8516eae917e40d84843a1856c8e833a52293dbb755286ec1f2e5f5747e9d1377",
+        "Exit": 0,
+        "Evidence": {
+          "Cases": [
+            {
+              "Label": "raw native server created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "native admission capability exists",
+              "Passed": true
+            },
+            {
+              "Label": "fresh native data ownership is empty",
+              "Passed": true
+            },
+            {
+              "Label": "native negotiated unfragmented budget reserves protocol overhead",
+              "Passed": true
+            },
+            {
+              "Label": "exact peer byte limit is admitted",
+              "Passed": true
+            },
+            {
+              "Label": "whole fragmented packet has one exact data charge",
+              "Passed": true
+            },
+            {
+              "Label": "native fragment commands are charged",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one-over peer admission rejects without ownership",
+              "Passed": true
+            },
+            {
+              "Label": "repeated rejected packets leave prior native ownership unchanged",
+              "Passed": true
+            },
+            {
+              "Label": "actual partial native ACK retires only some commands",
+              "Passed": true
+            },
+            {
+              "Label": "partial ACK retains the entire packet buffer charge",
+              "Passed": true
+            },
+            {
+              "Label": "complete native ACK retires exact retained ownership",
+              "Passed": true
+            },
+            {
+              "Label": "unordered native packet is admitted",
+              "Passed": true
+            },
+            {
+              "Label": "unordered work is charged before native handoff",
+              "Passed": true
+            },
+            {
+              "Label": "unordered native handoff releases its packet charge",
+              "Passed": true
+            },
+            {
+              "Label": "reliable ownership can be admitted again after retirement",
+              "Passed": true
+            },
+            {
+              "Label": "native reset retires the exact peer ownership",
+              "Passed": true
+            },
+            {
+              "Label": "raw native server created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "native host accepts bounded per-peer fanout",
+              "Passed": true
+            },
+            {
+              "Label": "native host accepts bounded per-peer fanout",
+              "Passed": true
+            },
+            {
+              "Label": "native host accepts bounded per-peer fanout",
+              "Passed": true
+            },
+            {
+              "Label": "native host accepts bounded per-peer fanout",
+              "Passed": true
+            },
+            {
+              "Label": "native host byte limit is exactly full",
+              "Passed": true
+            },
+            {
+              "Label": "one-over host admission rejects without charging a new peer",
+              "Passed": true
+            },
+            {
+              "Label": "aggregate rejection preserves all previous native ownership",
+              "Passed": true
+            },
+            {
+              "Label": "one peer reset releases host capacity for another peer",
+              "Passed": true
+            },
+            {
+              "Label": "native partial fanout reports blocked destinations",
+              "Passed": true
+            },
+            {
+              "Label": "healthy fanout recipient proceeds while full peers reject",
+              "Passed": true
+            },
+            {
+              "Label": "blocked broadcast keeps old slow-peer packet ownership",
+              "Passed": true
+            },
+            {
+              "Label": "host destruction invalidates retained peer observations safely",
+              "Passed": true
+            },
+            {
+              "Label": "raw native server created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "raw native client created",
+              "Passed": true
+            },
+            {
+              "Label": "fragment commands seed the command-boundary fixture",
+              "Passed": true
+            },
+            {
+              "Label": "small packets reach command ceiling below byte ceiling",
+              "Passed": true
+            },
+            {
+              "Label": "one-over native command-count rejection preserves ownership",
+              "Passed": true
+            },
+            {
+              "Label": "fragment commands seed the command-boundary fixture",
+              "Passed": true
+            },
+            {
+              "Label": "small packets reach command ceiling below byte ceiling",
+              "Passed": true
+            },
+            {
+              "Label": "one-over native command-count rejection preserves ownership",
+              "Passed": true
+            },
+            {
+              "Label": "fragment commands seed the command-boundary fixture",
+              "Passed": true
+            },
+            {
+              "Label": "small packets reach command ceiling below byte ceiling",
+              "Passed": true
+            },
+            {
+              "Label": "one-over native command-count rejection preserves ownership",
+              "Passed": true
+            },
+            {
+              "Label": "fragment commands seed the command-boundary fixture",
+              "Passed": true
+            },
+            {
+              "Label": "small packets reach command ceiling below byte ceiling",
+              "Passed": true
+            },
+            {
+              "Label": "one-over native command-count rejection preserves ownership",
+              "Passed": true
+            },
+            {
+              "Label": "aggregate command ceiling is independent of payload byte ceiling",
+              "Passed": true
+            },
+            {
+              "Label": "one-over host command-count rejection does not charge another peer",
+              "Passed": true
+            },
+            {
+              "Label": "native command capacity recovers after peer retirement",
+              "Passed": true
+            }
+          ],
+          "Complete": true,
+          "Measurements": {
+            "FragmentCommandsAfterPartialAck": 3028,
+            "FragmentCommandsBefore": 3076
+          },
+          "Result": "PASS"
+        },
+        "Passed": true,
+        "Seconds": 1.5779999999999745,
+        "Logs": {
+          "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout.log": "3384bb12a0c758d33f06e908f8f768eab3a9b297282657308787ab28d10366de"
+        }
+      },
+      {
+        "Name": "rpc",
+        "Command": [
+          "D:\\a\\_temp\\remote-host\\bin\\godot.windows.template_release.x86_64.exe",
+          "--headless",
+          "--disable-crash-handler",
+          "--single-threaded-scene",
+          "--path",
+          "D:\\a\\_temp\\benchmark-host-qualification\\rpc",
+          "--script",
+          "res://NativeRpcAdmission.gd"
+        ],
+        "FixtureSHA256": "9faadd69d30eba24f2bcff4194ef5e439e1429d15c0a49b712429b8e4d7d72b2",
+        "Exit": 0,
+        "Evidence": {
+          "Cases": [
+            {
+              "Label": "native RPC server created",
+              "Passed": true
+            },
+            {
+              "Label": "native RPC client created",
+              "Passed": true
+            },
+            {
+              "Label": "production SceneRPC peers connect",
+              "Passed": true
+            },
+            {
+              "Label": "normal RPC handoff succeeds",
+              "Passed": true
+            },
+            {
+              "Label": "normal RPC executes on the actual receiver",
+              "Passed": true
+            },
+            {
+              "Label": "uncached native RPC uses maximum admitted UTF-8 node path",
+              "Passed": true
+            },
+            {
+              "Label": "maximum unreliable Remote frame submits through uncached RPC path",
+              "Passed": true
+            },
+            {
+              "Label": "complete uncached UTF-8-path RPC packet fits negotiated MTU without native fragmentation",
+              "Passed": true
+            },
+            {
+              "Label": "maximum UTF-8-path unreliable RPC reaches actual receiver and retires",
+              "Passed": true
+            },
+            {
+              "Label": "maximum unreliable Remote frame submits through cached RPC path",
+              "Passed": true
+            },
+            {
+              "Label": "complete cached RPC packet fits negotiated MTU without native fragmentation",
+              "Passed": true
+            },
+            {
+              "Label": "native ownership fills while receiver is paused",
+              "Passed": true
+            },
+            {
+              "Label": "confirmed-path RPC propagates native WouldBlock",
+              "Passed": true
+            },
+            {
+              "Label": "queued Remote RPC rejection retains old ownership and live retry session",
+              "Passed": true
+            },
+            {
+              "Label": "unconfirmed full-path RPC propagates native WouldBlock",
+              "Passed": true
+            },
+            {
+              "Label": "unconfirmed rejected RPC does not retain candidate ownership",
+              "Passed": true
+            },
+            {
+              "Label": "unbuffered reliable control RPC reports native exhaustion",
+              "Passed": true
+            },
+            {
+              "Label": "unbuffered reliable control failure terminates affected session explicitly",
+              "Passed": true
+            }
+          ],
+          "Complete": true,
+          "Measurements": {
+            "CachedSubmittedCommands": 1,
+            "CachedSubmittedPacketBytes": 819,
+            "MTU": 1392,
+            "NodePathUTF8Bytes": 256,
+            "RemoteFrameBytes": 816,
+            "RetainedNativePacketBytes": 282,
+            "UncachedSubmittedCommands": 1,
+            "UncachedSubmittedPacketBytes": 1066,
+            "UnfragmentedPacketBytes": 1364
+          },
+          "Result": "PASS"
+        },
+        "Passed": true,
+        "Seconds": 0.25,
+        "Logs": {
+          "stderr.log": "c050f61ae0e0788e260fb38f8e397f040fa38487db3cc6f1fc3c6e8e34f22f98",
+          "stdout.log": "14e6510b4664b7615068a46784b3099617caa8ec534618033676af426d8100cc"
+        }
+      }
+    ],
+    "UnexpectedReports": []
+  }
+}

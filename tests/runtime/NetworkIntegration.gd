@@ -72,9 +72,17 @@ func Run() -> void:
     await process_frame
     if Role == "client":
         CreateScript("ServerScript", "ForbiddenServer", "game:SetAttribute('WrongRole', true)", Game)
-        for Index in range(600):
-            if Network.call("is_connected_net") and bool(Network.call("GetRemoteState", Storage.get_node("Event")).get("Ready", false)): break
+        var Ready := false
+        var ReadyDeadline := Time.get_ticks_msec() + 12000
+        while Time.get_ticks_msec() < ReadyDeadline:
+            if Network.call("is_connected_net") and bool(Network.call("GetRemoteState", Storage.get_node("Event")).get("Ready", false)) and bool(Network.call("GetRemoteState", Storage.get_node("Function")).get("Ready", false)):
+                Ready = true
+                break
             await process_frame
+        if not Ready:
+            print("[Runtime:NetworkTest] FAIL client waiting for Event and Function publication")
+            quit(1)
+            return
         var Victim := CreateScript("LocalScript", "PendingInvokeVictim", "game:SetAttribute('VictimWaiting', true); game.ReplicatedStorage.Function:InvokeServer(-1); game:SetAttribute('CancelledInvokeRan', true)", Game)
         await Until("VictimWaiting")
         await process_frame

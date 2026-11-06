@@ -44,7 +44,7 @@ func ConfigurePeer(Peer: int) -> void:
         var Link = Transport.get_peer(Peer)
         if Link:
             Link.throttle_configure(5000, 32, 0)
-            Check(int(Link.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE_DECELERATION)) == 0, "functional 2D carrier throttle profile configured")
+            Check(int(Link.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE_DECELERATION)) == 0, "functional carrier throttle profile configured")
 
 func Create(Type: String, Name: String, Parent: Node = null) -> Node:
     var Result: Node = ClassDB.instantiate(Type)
@@ -103,7 +103,7 @@ func Run() -> void:
     Create("Players", "Players")
     Create("RunService", "RunService")
     Network = Create("NetworkService", "NetworkService")
-    if Mode == "TwoD": Network.get_multiplayer().peer_connected.connect(ConfigurePeer)
+    Network.get_multiplayer().peer_connected.connect(ConfigurePeer)
     # Suppress unrelated menu construction without replacing native characters.
     var Settings := Node.new()
     Settings.name = "SettingsMenu"
@@ -291,10 +291,16 @@ func Server() -> void:
     Mark("valid")
     await Wait("valid.sent")
     await Drain()
+    var MovementDeadline := Time.get_ticks_msec() + 5000
+    while States()[First].Position.x <= Original.x and Time.get_ticks_msec() < MovementDeadline:
+        await process_frame
     Check(States()[First].Position.x > Original.x and States()[First].Position.x < Original.x + (40 if Mode in ["Movement", "Latency"] else 2), "bounded movement admitted")
     if Mode in ["Movement", "Latency"]:
         var Measured: Dictionary = JSON.parse_string(Read("valid.sent"))
+        while absf(States()[First].Position.x - float(Measured.LastX)) >= 1 and Time.get_ticks_msec() < MovementDeadline:
+            await process_frame
         Check(absf(States()[First].Position.x - float(Measured.LastX)) < 1, "native controller samples reach observer baseline")
+    Mark("valid.received")
     var RateBefore: int = States()[First].RateRejectedInputs
     Mark("rate")
     await Wait("rate.sent")
@@ -348,7 +354,8 @@ func Server() -> void:
         await Wait("ascent.sent")
         await Drain()
         var Rise: float = States()[First].Position.y - AscentStart.y
-        Check(Rise > 0.1 and Rise < 5.2, "repeated airborne packets cannot accumulate unbounded ascent")
+        print("[Network:CharacterTest] admitted ascent ", Rise)
+        Check(Rise > 4.2 and Rise < 5.2, "repeated airborne packets approach but cannot exceed the ascent budget")
         var LimitedPosition: Vector3 = States()[First].Position
         Mark("ascent.sync")
         await Wait("ascent.sync.sent")
@@ -533,6 +540,10 @@ func Client() -> void:
                 Send(Original + Vector3(0.5, 0, 0))
                 await create_timer(0.05).timeout
             Mark("valid.sent")
+            var DeliveryDeadline := Time.get_ticks_msec() + 5000
+            while not FileAccess.file_exists("res://character-valid.received") and Time.get_ticks_msec() < DeliveryDeadline:
+                Send(Original + Vector3(0.5, 0, 0))
+                await create_timer(0.05).timeout
     await Wait("rate")
     if Index == 1:
         for Count in range(500): Send(LastSent)
@@ -606,8 +617,11 @@ func Client() -> void:
                     return
                 await process_frame
             var LimitedPosition: Vector3 = States()[Peer].Position
+            # Exceed the remaining (< 1 unit) ascent budget, while allowing
+            # enough elapsed packet credit that a reset would admit the input.
+            await create_timer(0.1).timeout
             for Count in range(5):
-                Send(LimitedPosition + Vector3(0, 0.2, 0), 0.0, true)
+                Send(LimitedPosition + Vector3(0, 1.0, 0), 0.0, true)
                 await create_timer(0.035).timeout
             Mark("ascent.sync.sent")
     await Wait("corrected")
@@ -669,9 +683,17 @@ func Client() -> void:
     await Drain()
     Check(World.get_node_or_null("LocalPlayer") == null if Index == 1 else Puppet(int(Read("client1.ready"))) == null, "late pose cannot recreate a removed life")
     Check(not Network.call("GetAnimationStates").has(int(Read("client1.ready"))), "late animation cannot recreate removed cache")
+    # A file barrier does not establish receipt of an unreliable snapshot.
+    # Exercise delayed receipt before requiring bounded positive convergence.
+    if Mode == "Listen" and Index == 2: multiplayer_poll = false
     Mark("client" + str(Index) + ".tombstone")
     await Wait("restored")
-    await Drain()
+    if Mode == "Listen" and Index == 2:
+        await create_timer(0.35).timeout
+        multiplayer_poll = true
+    var ReplacementDeadline := Time.get_ticks_msec() + 5000
+    while (World.get_node_or_null("LocalPlayer") == null if Index == 1 else Puppet(int(Read("client1.ready"))) == null) and Time.get_ticks_msec() < ReplacementDeadline:
+        await process_frame
     Check(World.get_node_or_null("LocalPlayer") != null if Index == 1 else Puppet(int(Read("client1.ready"))) != null, "trusted replacement reaches owner and observer")
     Freeze()
     Mark("client" + str(Index) + ".restored")
@@ -740,6 +762,10 @@ func MoveNative() -> void:
     print("[Network:CharacterTest] native movement ", JSON.stringify(Measured))
     Check(is_equal_approx(Walk, 16.0) and Up > 19 and Down < -15, "actual native walk/jump/fall")
     Mark("valid.sent", JSON.stringify(Measured))
+    var DeliveryDeadline := Time.get_ticks_msec() + 5000
+    while not FileAccess.file_exists("res://character-valid.received") and Time.get_ticks_msec() < DeliveryDeadline:
+        Send(Body.global_position, 0.0, not Body.is_on_floor())
+        await create_timer(0.05).timeout
 
 func MoveNative2D() -> void:
     var Body: CharacterBody2D = World.get_node("LocalPlayer")

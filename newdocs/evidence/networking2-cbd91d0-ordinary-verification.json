@@ -1,0 +1,54 @@
+{
+  "Revision": "cbd91d08c4384348b4b29cf91dc461fff109e120",
+  "NativeSource": {
+    "SHA256": "c702c86c162bc4c9f655052fbcefb4f99a5460c1a7ea22d87724022bbe065c85",
+    "Files": 94,
+    "Newlines": "LF normalized"
+  },
+  "Core": [
+    {
+      "Path": "core\\runtime-core-Linux-Debug\\core-results.xml",
+      "Cases": 85,
+      "SHA256": "63ca82bd3555fb2ef49b37aa8312b0acc7acfe9fb59b9ef2fc88e1c866c44192"
+    },
+    {
+      "Path": "core\\runtime-core-Windows-Debug\\core-results.xml",
+      "Cases": 85,
+      "SHA256": "b9ff0afe65ac6f02d5584931dfda988f10fe743a8f7ebe02cad436637770d889"
+    }
+  ],
+  "Native": [
+    {
+      "Path": "native\\runtime-native-Linux-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 131,
+      "RemoteActors": 6,
+      "RemoteCases": 458,
+      "HostFixtures": 2,
+      "LogHashes": 391,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 88,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "9897e6dbee1f860dbe8e0b208f7d5ac2b81d747fe910e1f066c89927f5078998",
+      "ExtensionSHA256": "c98295be252d20f3839c4712341d7f2489e8bf7ce23a44413520f3797fd2fcd6",
+      "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+      "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99"
+    },
+    {
+      "Path": "native\\runtime-native-Windows-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 131,
+      "RemoteActors": 6,
+      "RemoteCases": 458,
+      "HostFixtures": 2,
+      "LogHashes": 394,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 88,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "04efe8d94de914ac7f7635cbe4335f42c9b795dc0706b3a44806f206e1f7b19d",
+      "ExtensionSHA256": "f87ead5913e83c6167f91ccf40a89e6c4c946281096184bae07e2d5c44e60be9",
+      "CompanionSHA256": "f47cb97e0edbcfac23fbfee70946044738bf140d4c1f68654d363d95a617eb0b",
+      "HostSHA256": "78c044fc685b09ae38e46ead3e163a6ce9309e2c6a87352bea2989838ca0ceca"
+    }
+  ],
+  "Sanitizers": [],
+  "Scope": "Only completed core and ordinary Windows/Linux Debug native artifacts. Full-native sanitizer failures and pending candidate profiles are separate and are not passing."
+}

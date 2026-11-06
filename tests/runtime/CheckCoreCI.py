@@ -21,8 +21,8 @@ def CheckReport(Report):
         raise ValueError('Production-core execution did not pass.')
     Output = Test.findtext('system-out', '')
     Cases = re.findall(r'^\[Runtime:Test\] PASS (.+)$', Output, re.MULTILINE)
-    if len(Cases) != 81 or len(set(Cases)) != 81 or '[Runtime:Test] 81 passed, 0 failed' not in Output or '[Runtime:Test] FAIL ' in Output:
-        raise ValueError('Expected completion of all 81 distinct production-core cases.')
+    if len(Cases) != 85 or len(set(Cases)) != 85 or '[Runtime:Test] 85 passed, 0 failed' not in Output or '[Runtime:Test] FAIL ' in Output:
+        raise ValueError('Expected completion of all 85 distinct production-core cases.')
 
 
 def Main():

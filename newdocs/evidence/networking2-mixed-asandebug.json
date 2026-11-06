@@ -1,0 +1,580 @@
+{
+  "Result": "PARTIAL; functional one-peer measurements pass but reproduce GL-034; larger configurations resource-blocked",
+  "Archive": {
+    "File": "local-evidence-checkpoint6.zip",
+    "SHA256": "f183c5a502d82e6dea71ea4bff4c8ecd9ab5000f2785b9d8c62de2aa32ca00e3",
+    "Members": 8368
+  },
+  "InputsSHA256": "a9ac8581ed22e2105733513260c4498d49898935c4539b9ad75e7ac6d1b9d1cc",
+  "SummarySHA256": "3e025b4fb250a3ef66c6c0613b3eef2127f173018688b796d4e829e48cfc0430",
+  "Host": {
+    "ExecutableSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+    "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+    "EngineRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+    "QualificationPatch": {
+      "File": "sanitizers/GodotBindingRetirement.patch",
+      "SHA256LF": "adfde942eb64b8f99e5a4dab4075678e201693cf3069a01675697c64b49b3fa1",
+      "Path": "core/extension/gdextension.cpp",
+      "OriginalSHA256": "a7f2f64bd1b05461f430ab499a5d2e4d87913179b2cbca223b9aa90a9c7a1d8b",
+      "PatchedSHA256": "1160e48c8bbf5dc9c22c3d70062dbe3ebd18fc6bd67886f1363d4ff115b51aa8"
+    }
+  },
+  "Products": {
+    "Baseline": {
+      "Source": {
+        "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "Products": {
+        "godot_luau.dll": "5f3799751dbd8e1fcf1ecd4238f2d240c284ba160c9cbe2b5514b06f24160a56",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57"
+    },
+    "Candidate": {
+      "Source": {
+        "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "Products": {
+        "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57"
+    }
+  },
+  "Trials": 2,
+  "Samples": 64,
+  "HarnessHashes": {
+    "FoundationBenchmark.gd": "f4977aa587886db133779a778c1018d19a4e834ed91644041a458d910adf864e",
+    "RemoteDeliveryBenchmark.gd": "ffcf10d36df8fc1802635d7b5c390afa26c82b734e33dd87f763849c08066d41",
+    "CharacterDispatchProbe.gd": "643c5a87dfb37db3a544c730405ac30685f6c258187040e2249b55f0673fd479",
+    "RunFoundationBenchmarks.py": "0b18961135d161350718638b551f3c511d86e0202211f600e6d1c0dc9c0ed85d"
+  },
+  "Measurements": [
+    {
+      "Configuration": "Baseline",
+      "Peers": 1,
+      "World": 64,
+      "Trial": 0,
+      "Result": "PASS",
+      "Seconds": 13.203000000212342,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19877314560,
+        "CommitFree": 9523343360
+      },
+      "Server": {
+        "FrameP95Seconds": 0.011216,
+        "UserCPUSeconds": 8.546875,
+        "StartupUsec": 6805959.0,
+        "Wire": {
+          "ReceivedBytes": 77787.0,
+          "ReceivedPackets": 278.0,
+          "SentBytes": 62966.0,
+          "SentPackets": 423.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 0.034398399759084,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 64,
+        "PartsMaximum": 64,
+        "ConvergenceUsec": 1043
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 1,
+      "World": 64,
+      "Trial": 0,
+      "Result": "PASS",
+      "Seconds": 18.125,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19836104704,
+        "CommitFree": 9465765888
+      },
+      "Server": {
+        "FrameP95Seconds": 0.056762,
+        "UserCPUSeconds": 15.1875,
+        "StartupUsec": 7578300.0,
+        "Wire": {
+          "ReceivedBytes": 82040.0,
+          "ReceivedPackets": 361.0,
+          "SentBytes": 120715.0,
+          "SentPackets": 443.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 0.173812000080943,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 0,
+        "PartsMaximum": 64,
+        "ConvergenceUsec": 727
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 1,
+      "World": 64,
+      "Trial": 1,
+      "Result": "PASS",
+      "Seconds": 18.265999999828637,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19837120512,
+        "CommitFree": 9488658432
+      },
+      "Server": {
+        "FrameP95Seconds": 0.057139,
+        "UserCPUSeconds": 15.078125,
+        "StartupUsec": 7699157.0,
+        "Wire": {
+          "ReceivedBytes": 83610.0,
+          "ReceivedPackets": 371.0,
+          "SentBytes": 123653.0,
+          "SentPackets": 454.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 0.181710900273174,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 0,
+        "PartsMaximum": 64,
+        "ConvergenceUsec": 666
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 1,
+      "World": 64,
+      "Trial": 1,
+      "Result": "PASS",
+      "Seconds": 13.155999999959022,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19868770304,
+        "CommitFree": 9516142592
+      },
+      "Server": {
+        "FrameP95Seconds": 0.010664,
+        "UserCPUSeconds": 8.25,
+        "StartupUsec": 6904221.0,
+        "Wire": {
+          "ReceivedBytes": 77849.0,
+          "ReceivedPackets": 280.0,
+          "SentBytes": 68154.0,
+          "SentPackets": 439.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 0.037952299695462,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 64,
+        "PartsMaximum": 64,
+        "ConvergenceUsec": 660
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 1,
+      "World": 512,
+      "Trial": 0,
+      "Result": "PASS",
+      "Seconds": 32.35900000017136,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19883454464,
+        "CommitFree": 9518526464
+      },
+      "Server": {
+        "FrameP95Seconds": 0.012232,
+        "UserCPUSeconds": 23.578125,
+        "StartupUsec": 25548554.0,
+        "Wire": {
+          "ReceivedBytes": 77841.0,
+          "ReceivedPackets": 280.0,
+          "SentBytes": 63405.0,
+          "SentPackets": 425.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 0.0373556003905833,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 512,
+        "PartsMaximum": 512,
+        "ConvergenceUsec": 713
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 1,
+      "World": 512,
+      "Trial": 0,
+      "Result": "PASS",
+      "Seconds": 111.0789999999106,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19896086528,
+        "CommitFree": 9544531968
+      },
+      "Server": {
+        "FrameP95Seconds": 0.426239,
+        "UserCPUSeconds": 108.046875,
+        "StartupUsec": 50963322.0,
+        "Wire": {
+          "ReceivedBytes": 162185.0,
+          "ReceivedPackets": 1959.0,
+          "SentBytes": 213029.0,
+          "SentPackets": 671.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 1.44060839992017,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 64,
+        "PartsMaximum": 128,
+        "ConvergenceUsec": 732
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 1,
+      "World": 512,
+      "Trial": 1,
+      "Result": "PASS",
+      "Seconds": 110.73400000017136,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19860635648,
+        "CommitFree": 9450192896
+      },
+      "Server": {
+        "FrameP95Seconds": 0.414545,
+        "UserCPUSeconds": 108.25,
+        "StartupUsec": 50822849.0,
+        "Wire": {
+          "ReceivedBytes": 160493.0,
+          "ReceivedPackets": 1946.0,
+          "SentBytes": 213007.0,
+          "SentPackets": 668.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 1.44008570024744,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 64,
+        "PartsMaximum": 128,
+        "ConvergenceUsec": 725
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 1,
+      "World": 512,
+      "Trial": 1,
+      "Result": "PASS",
+      "Seconds": 34.25,
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19778310144,
+        "CommitFree": 9381683200
+      },
+      "Server": {
+        "FrameP95Seconds": 0.012891,
+        "UserCPUSeconds": 24.375,
+        "StartupUsec": 27256986.0,
+        "Wire": {
+          "ReceivedBytes": 78003.0,
+          "ReceivedPackets": 286.0,
+          "SentBytes": 65611.0,
+          "SentPackets": 432.0
+        },
+        "AnimationStarts": 4,
+        "Reparents": 8,
+        "FinalCounter": 80
+      },
+      "Client": {
+        "RTTP95Seconds": 0.0411438001319766,
+        "FunctionCalls": 8,
+        "CharacterCensus": 2,
+        "PartsMinimum": 512,
+        "PartsMaximum": 512,
+        "ConvergenceUsec": 686
+      },
+      "NonemptyStderr": [],
+      "Reports": []
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19781496832,
+        "CommitFree": 9407221760
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19783061504,
+        "CommitFree": 9408430080
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19782680576,
+        "CommitFree": 9408339968
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784814592,
+        "CommitFree": 9409806336
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 512,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19783692288,
+        "CommitFree": 9405739008
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 512,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19783864320,
+        "CommitFree": 9405095936
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 512,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784175616,
+        "CommitFree": 9405288448
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 512,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784593408,
+        "CommitFree": 9406001152
+      },
+      "RequiredCommit": 19327352832,
+      "RequiredPhysical": 8589934592
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784105984,
+        "CommitFree": 9405321216
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784208384,
+        "CommitFree": 9405280256
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784728576,
+        "CommitFree": 9405382656
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19785543680,
+        "CommitFree": 9407086592
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784392704,
+        "CommitFree": 9407086592
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19785936896,
+        "CommitFree": 9407082496
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784675328,
+        "CommitFree": 9406976000
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 19784601600,
+        "CommitFree": 9406857216
+      },
+      "RequiredCommit": 36507222016,
+      "RequiredPhysical": 17179869184
+    }
+  ]
+}

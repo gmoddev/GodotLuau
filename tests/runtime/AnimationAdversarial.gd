@@ -294,11 +294,16 @@ func Reconnected(Replacement: int) -> void:
         await R.Drain()
         var Current: Dictionary = R.Network.call("GetCharacterStates")[Replacement]
         Check(Current.Life > Old.Life and R.Puppet(Replacement).get_instance_id() != OldIdentity, "life", "trusted replacement changes actual Character and life")
+        # This fixture normally freezes service dispatch. Allow the existing
+        # periodic unreliable birth snapshot to converge before testing stale
+        # traffic; a file marker cannot establish the receiver's native life.
+        R.Network.set_process(true)
         R.Mark("security-life.old", str(Old.Epoch))
         R.Mark("security-life.life", str(Old.Life))
         R.Mark("security-life.prepare")
         await R.Wait("security-life.ready1")
         await R.Wait("security-life.ready2")
+        R.Network.set_process(false)
         Before = Snapshot()
         for Target in [Replacement, int(R.Read("client2.peer"))]:
             Send(Target, "_recv_anim_v2", [Replacement, Old.Life, "res://Dance.tres", "OldLife", 1.0, true, true], "old-life-play")
@@ -321,6 +326,13 @@ func Reconnected(Replacement: int) -> void:
         Check(Snapshot() == Before, "reconnect", "disconnected transport identity cannot restore animation")
         R.Mark("security-reconnect.checked" + str(R.Index))
         await R.Wait("security-life.prepare")
+        var LifeDeadline := Time.get_ticks_msec() + 5000
+        var Observed := false
+        while not Observed and Time.get_ticks_msec() < LifeDeadline:
+            var Replica: Dictionary = R.Network.call("GetCharacterReplicaState", Replacement)
+            Observed = int(Replica.get("Life", 0)) > int(R.Read("security-life.life")) and not bool(Replica.get("Removed", true))
+            if not Observed: await R.process_frame
+        Check(Observed, "life", "replacement life is received before stale-life attack")
         await R.Drain()
         Before = Snapshot()
         R.Mark("security-life.ready" + str(R.Index))
@@ -330,7 +342,9 @@ func Reconnected(Replacement: int) -> void:
             R.Mark("security-life.sent")
         await R.Wait("security-life.observed")
         await R.Drain()
-        Check(Snapshot() == Before, "life", "out-of-order old-life play and stop have no effects")
+        var After := Snapshot()
+        Observations["OldLife"] = {"Before": Before, "After": After, "ObservedReplacement": Observed, "NativeReplica": R.Network.call("GetCharacterReplicaState", Replacement), "RetiredLife": int(R.Read("security-life.life"))}
+        Check(After == Before, "life", "out-of-order old-life play and stop have no effects")
         R.Mark("security-life.checked" + str(R.Index))
         await R.Wait("security-life.done")
 

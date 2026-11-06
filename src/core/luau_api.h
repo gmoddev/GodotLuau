@@ -6,6 +6,7 @@
 #include "luau_class_identity.h"
 #include "gl_errors.h"
 #include "gl_stackguard.h"
+#include "gl_domain_host.h"
 #include "folder.h"
 #include "rbx_character.h"
 #include "humanoid2d.h"
@@ -498,6 +499,10 @@ static void gl_fire_attribute_changed(Node* n, const String& attr) {
 static int method_setattribute(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
+        if (GLExecutionDomain::IsClientExecution() && gl_net_role() == 1) {
+            auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+            if (Service && !Service->CanWriteCharacter(gow_node(w))) return 0;
+        }
         if (gow_node(w)->is_class("RBXCharacter") && GLExecutionDomain::IsClientExecution()) return 0;
         const char* key = luaL_checkstring(L, 2);
         if (strcmp(key,"_gl_bridge")==0)
@@ -1078,6 +1083,9 @@ static int godot_object_index(lua_State* L) {
     }
 
     // ── RobloxValue (NumberValue/IntValue/StringValue/…): .Changed, ClassName, IsA ─
+    if (auto Value = Object::cast_to<RobloxValue>(n)) if (Value->roblox_class == "ObjectValue" && strcmp(key, "Value") == 0) {
+        Value->_push_value(L); return 1;
+    }
     // .Value se resuelve por el puente _gl_bridge más abajo; aquí solo lo específico.
     {
         RobloxValue* rval = Object::cast_to<RobloxValue>(n);
@@ -2618,6 +2626,8 @@ static int godot_object_index(lua_State* L) {
             lua_pushcclosure(L, [](lua_State* pL) -> int {
                 RobloxPart* p = (RobloxPart*)lua_touserdata(pL, lua_upvalueindex(1));
                 if (!p) return 0;
+                if (auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
+                    if (!Service->CanWriteCharacter(p)) return 0;
                 float ix = 0; float iy = 0; float iz = 0;
                 if (lua_istable(pL,2)) {
                     lua_getfield(pL,2,"X"); ix=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
@@ -2634,6 +2644,8 @@ static int godot_object_index(lua_State* L) {
             lua_pushcclosure(L, [](lua_State* pL) -> int {
                 RobloxPart* p = (RobloxPart*)lua_touserdata(pL, lua_upvalueindex(1));
                 if (!p) return 0;
+                if (auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
+                    if (!Service->CanWriteCharacter(p)) return 0;
                 float ix = 0; float iy = 0; float iz = 0;
                 if (lua_istable(pL,2)) {
                     lua_getfield(pL,2,"X"); ix=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
@@ -2896,15 +2908,16 @@ static int godot_object_index(lua_State* L) {
     RemoteFunctionNode* rf = Object::cast_to<RemoteFunctionNode>(n);
     if (rf) {
         if (strcmp(key, "InvokeServer") == 0) {
-            lua_pushlightuserdata(L, (void*)rf);
-            lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RemoteFunctionNode* rfn = (RemoteFunctionNode*)lua_touserdata(pL, lua_upvalueindex(1));
-                if (!rfn) { lua_pushnil(pL); return 1; }
+            _gl_push_node(L, rf);
+            lua_pushcclosurek(L, [](lua_State* pL) -> int {
+                auto rfn = Object::cast_to<RemoteFunctionNode>(_gl_node_from_lua(pL, lua_upvalueindex(1)));
+                if (!rfn || rfn->is_queued_for_deletion()) luaL_error(pL, "[Network:Function] RemoteFunction retired");
                 int nargs = lua_gettop(pL) - 1; if (nargs < 0) nargs = 0;
                 Node* ns = _gl_find_network_service(rfn);
                 // Cliente en sesión de red: mandar al servidor, ceder el hilo y
                 // reanudar con la respuesta (1.14.6). Host/single: correr local.
                 if (_gl_net_mode(ns) == 2 && rfn->is_inside_tree() && gl_add_invoke_wait_hook()) {
+                    if (!GLIsClient(pL)) luaL_error(pL, "[Network:Function] InvokeServer requires Client execution");
                     GLPushScriptNode(pL);
                     Node* sn = (Node*)lua_touserdata(pL, -1); lua_pop(pL, 1);
                     GLPushOwnerState(pL);
@@ -2912,22 +2925,35 @@ static int godot_object_index(lua_State* L) {
                     if (!sn) { lua_pushnil(pL); return 1; }
                     if (!main_L) main_L = pL;
                     int64_t call_id = gl_net_new_call_id();
-                    Array args = gl_net_encode_args(pL, 2, nargs);
-                    ns->call("net_invoke_server", String(rfn->get_path()), (int)call_id, args);
+                    if (!call_id) luaL_error(pL, "[Network:Function] Request identity exhausted");
+                    if (nargs > GLRemotePayload::MaxArguments) luaL_error(pL, "[Network:Function] Too many arguments");
+                    int Nodes = 0; size_t Bytes = 0;
+                    for (int Index = 2; Index < 2 + nargs; ++Index)
+                        if (!GLRemotePayload::CheckLua(pL, Index, Nodes, Bytes)) luaL_error(pL, "[Network:Function] Invalid or oversized payload");
+                    Array args = gl_net_encode_args(pL, 2, nargs, true);
                     int ref = GLCaptureWait(pL);
-                    gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, 0.0);   // 0 = esperar como Roblox (el fallo llega si el receptor se cae)
+                    String Error = Object::cast_to<NetworkService>(ns)->net_invoke_server(rfn, call_id, args);
+                    if (!Error.is_empty()) { GLUnreference(nullptr, ref); luaL_error(pL, "%s", Error.utf8().get_data()); }
+                    gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, double(ns->call("GetInvokeTimeout")));
+                    lua_settop(pL, 0); // Continuation returns only received values, never the original self/arguments.
                     lua_pushstring(pL, "__WAIT_INVOKE__");
                     return lua_yield(pL, 1);
                 }
                 return rfn->invoke_server(pL, 2, nargs);
-            }, "InvokeServer", 1);
+            }, "InvokeServer", 1, [](lua_State* Thread, int Status) -> int {
+                auto Host = GLGetDomainHost();
+                if (!Host || Host->InterruptInvoke(Thread)) luaL_error(Thread, "[Network:Function] Invoke resumed outside completion");
+                if (Status != LUA_OK) lua_error(Thread);
+                return lua_gettop(Thread);
+            });
             return 1;
         }
         if (strcmp(key, "InvokeClient") == 0) {
-            lua_pushlightuserdata(L, (void*)rf);
-            lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RemoteFunctionNode* rfn = (RemoteFunctionNode*)lua_touserdata(pL, lua_upvalueindex(1));
-                if (!rfn) { lua_pushnil(pL); return 1; }
+            _gl_push_node(L, rf);
+            lua_pushcclosurek(L, [](lua_State* pL) -> int {
+                auto rfn = Object::cast_to<RemoteFunctionNode>(_gl_node_from_lua(pL, lua_upvalueindex(1)));
+                if (!rfn || rfn->is_queued_for_deletion()) luaL_error(pL, "[Network:Function] RemoteFunction retired");
+                if (GLIsClient(pL)) luaL_error(pL, "[Network:Function] InvokeClient requires Server execution");
                 int nargs = lua_gettop(pL) - 2; if (nargs < 0) nargs = 0;
                 Node* ns = _gl_find_network_service(rfn);
                 // Servidor invocando a un cliente concreto por red (1.14.6). Si el
@@ -2946,15 +2972,27 @@ static int godot_object_index(lua_State* L) {
                     if (!sn) { lua_pushnil(pL); return 1; }
                     if (!main_L) main_L = pL;
                     int64_t call_id = gl_net_new_call_id();
-                    Array args = gl_net_encode_args(pL, 3, nargs);
-                    ns->call("net_invoke_client", peer, String(rfn->get_path()), (int)call_id, args);
+                    if (!call_id) luaL_error(pL, "[Network:Function] Request identity exhausted");
+                    if (nargs > GLRemotePayload::MaxArguments) luaL_error(pL, "[Network:Function] Too many arguments");
+                    int Nodes = 0; size_t Bytes = 0;
+                    for (int Index = 3; Index < 3 + nargs; ++Index)
+                        if (!GLRemotePayload::CheckLua(pL, Index, Nodes, Bytes)) luaL_error(pL, "[Network:Function] Invalid or oversized payload");
+                    Array args = gl_net_encode_args(pL, 3, nargs, true);
                     int ref = GLCaptureWait(pL);
-                    gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, 0.0);   // 0 = esperar como Roblox (el fallo llega si el receptor se cae)
+                    String Error = Object::cast_to<NetworkService>(ns)->net_invoke_client(peer, rfn, call_id, args);
+                    if (!Error.is_empty()) { GLUnreference(nullptr, ref); luaL_error(pL, "%s", Error.utf8().get_data()); }
+                    gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, double(ns->call("GetInvokeTimeout")));
+                    lua_settop(pL, 0);
                     lua_pushstring(pL, "__WAIT_INVOKE__");
                     return lua_yield(pL, 1);
                 }
                 return rfn->invoke_client(pL, 3, nargs);
-            }, "InvokeClient", 1);
+            }, "InvokeClient", 1, [](lua_State* Thread, int Status) -> int {
+                auto Host = GLGetDomainHost();
+                if (!Host || Host->InterruptInvoke(Thread)) luaL_error(Thread, "[Network:Function] Invoke resumed outside completion");
+                if (Status != LUA_OK) lua_error(Thread);
+                return lua_gettop(Thread);
+            });
             return 1;
         }
     }
@@ -4485,16 +4523,18 @@ static int godot_object_newindex_impl(lua_State* L) {
     RemoteFunctionNode* rfall = Object::cast_to<RemoteFunctionNode>(n);
     if (rfall && lua_isfunction(L, 3)) {
         if (strcmp(key, "OnServerInvoke") == 0) {
-            lua_pushvalue(L, 3);
-            int ref = GLReference(L, -1);
-            lua_pop(L, 1);
+            if (GLIsClient(L)) luaL_error(L, "[Network:Function] OnServerInvoke requires Server authority");
+            if (!lua_isnil(L, 3) && !lua_isfunction(L, 3)) luaL_error(L, "[Network:Function] Handler must be a function or nil");
+            int ref = LUA_NOREF;
+            if (!lua_isnil(L, 3)) ref = GLReference(L, 3);
             rfall->set_server_invoke(L, ref);
             return 0;
         }
         if (strcmp(key, "OnClientInvoke") == 0) {
-            lua_pushvalue(L, 3);
-            int ref = GLReference(L, -1);
-            lua_pop(L, 1);
+            if (!GLIsClient(L)) luaL_error(L, "[Network:Function] OnClientInvoke requires Client execution");
+            if (!lua_isnil(L, 3) && !lua_isfunction(L, 3)) luaL_error(L, "[Network:Function] Handler must be a function or nil");
+            int ref = LUA_NOREF;
+            if (!lua_isnil(L, 3)) ref = GLReference(L, 3);
             rfall->set_client_invoke(L, ref);
             return 0;
         }
@@ -4652,6 +4692,16 @@ static int godot_object_newindex_impl(lua_State* L) {
         return 0;
     }
 
+    if (auto Value = Object::cast_to<RobloxValue>(n)) if (Value->roblox_class == "ObjectValue" && strcmp(key, "Value") == 0) {
+        if (lua_isnil(L, 3)) Value->set_value(Variant());
+        else {
+            auto Wrapped = static_cast<GodotObjectWrapper*>(luaL_checkudata(L, 3, "GodotObject"));
+            Node* Target = Wrapped ? gow_node(Wrapped) : nullptr;
+            if (!Target || Target->is_queued_for_deletion()) luaL_error(L, "[Runtime:Instance] ObjectValue requires a live Instance or nil");
+            Value->set_value(Target);
+        }
+        return 0;
+    }
     // ── Puente genérico de escritura (solo clases nuevas con meta _gl_bridge) ──
     WriteLuauInstanceProperty(L, n, key);
     return 0;
@@ -4668,7 +4718,9 @@ static int godot_object_newindex_impl(lua_State* L) {
 
 static NetworkService* gl_rep_service() {
     if (gl_net_role() != 1) return nullptr;
-    return Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+    auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
+    if (Service && Service->IsReplicationEnabled() && GLExecutionDomain::IsClientExecution()) return nullptr;
+    return Service;
 }
 
 // ¿el nodo cuelga de un contenedor replicable (Workspace / ReplicatedStorage)?
@@ -4711,6 +4763,7 @@ static void gl_rep_replicate_subtree(NetworkService* ns, Node* n) {
     if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n)) return;
     if (auto Remote = Object::cast_to<RemoteEventNode>(n)) if (!Remote->IsServerAdmitted()) return;
     int64_t id = ns->rep_next_id();
+    if (id <= 0) return; // Checked exhaustion never enters the static ID namespace.
     n->set_meta("_gl_netid", id);
     ns->rep_map(id, n);
     ns->rep_send_new(id, n->get_class(), String(n->get_name()), gl_rep_parent_ref(n->get_parent()), ns->rep_build_props(n));

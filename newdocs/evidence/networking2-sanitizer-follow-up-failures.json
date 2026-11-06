@@ -1,0 +1,120 @@
+{
+  "Scope": "Retained failed full-native sanitizer gates; no passing full qualification is claimed",
+  "Profiles": [
+    {
+      "Workflow": 41779147030,
+      "Path": "ci-refresh\\sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "FAIL",
+      "Revision": "0428413462fd2c1aa154467a8e825d0a3f6fa97c",
+      "NativeSource": {
+        "SHA256": "738a60cf761be0b691f67d689cb2016cf9260af5f68282f66a3e192f206eccbc",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "ControlsPassed": true,
+      "UnexpectedReports": [],
+      "FailedChecks": [
+        {
+          "Label": "suite-characters",
+          "Exit": 1,
+          "TimedOut": false,
+          "SanitizerFinding": false
+        },
+        {
+          "Label": "strict-native-check",
+          "Exit": 1,
+          "TimedOut": false,
+          "SanitizerFinding": false
+        }
+      ],
+      "SummarySHA256": "acf8bbec8dedac9c5e9bd6ded67d3e04c2a621edd806bb1632342e026072deb4",
+      "InputsSHA256": "90dc477a3a77363ff2d60618b3acb7d05b137b3fbe213e69b13d175395efcdf5",
+      "FailedLogs": [
+        {
+          "Path": "suite-characters\\stderr.log",
+          "SHA256": "f70b9d38f06665d391a605ab925be68cdc7111d531c2b95563b25074aa522019"
+        }
+      ]
+    },
+    {
+      "Workflow": 41779147030,
+      "Path": "ci-refresh\\sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "FAIL",
+      "Revision": "0428413462fd2c1aa154467a8e825d0a3f6fa97c",
+      "NativeSource": {
+        "SHA256": "738a60cf761be0b691f67d689cb2016cf9260af5f68282f66a3e192f206eccbc",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "ControlsPassed": true,
+      "UnexpectedReports": [],
+      "FailedChecks": [
+        {
+          "Label": "suite-remote",
+          "Exit": 1,
+          "TimedOut": false,
+          "SanitizerFinding": false
+        },
+        {
+          "Label": "suite-characters",
+          "Exit": 1,
+          "TimedOut": false,
+          "SanitizerFinding": false
+        },
+        {
+          "Label": "strict-native-check",
+          "Exit": 1,
+          "TimedOut": false,
+          "SanitizerFinding": false
+        }
+      ],
+      "SummarySHA256": "008dd87eb266d9f9b56c10667e8c76f10024124b9479b9b9b24737de0c94674d",
+      "InputsSHA256": "f57b0cef35c585f8573ed8cde3fdbce6a44bfebdceacd8e08a1c54f26d2f5c99",
+      "FailedLogs": [
+        {
+          "Path": "suite-characters\\stderr.log",
+          "SHA256": "fd02911d334ae32212a00c1941c9c02742e99473e7998b002cc661d7292d5ffa"
+        },
+        {
+          "Path": "suite-remote\\stderr.log",
+          "SHA256": "ef0d66eb447806136720bc25f6b550834bb83b6c6f8de2c5e07dedc7b93a1a98"
+        }
+      ]
+    },
+    {
+      "Workflow": 41781831880,
+      "Path": "ci-scopeguard-early-linux\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "FAIL",
+      "Revision": "cbd91d08c4384348b4b29cf91dc461fff109e120",
+      "NativeSource": {
+        "SHA256": "c702c86c162bc4c9f655052fbcefb4f99a5460c1a7ea22d87724022bbe065c85",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "ControlsPassed": true,
+      "UnexpectedReports": [],
+      "FailedChecks": [
+        {
+          "Label": "suite-regression",
+          "Exit": 1,
+          "TimedOut": false,
+          "SanitizerFinding": false
+        },
+        {
+          "Label": "strict-native-check",
+          "Exit": 1,
+          "TimedOut": false,
+          "SanitizerFinding": false
+        }
+      ],
+      "SummarySHA256": "c3c1f110182180b5c9fcc6ede7bd9bfb6aaad68755b715a7286aa23ce88445de",
+      "InputsSHA256": "0d340d684af20ca595009e9b8578b17c43545a323acaa975fe1125c0e4872ad8",
+      "FailedLogs": [
+        {
+          "Path": "suite-regression\\stderr.log",
+          "SHA256": "3d1b791f78a26cf96a0d224cc08cd81c3c280e3544c04278c160c0cd183237a8"
+        }
+      ]
+    }
+  ]
+}

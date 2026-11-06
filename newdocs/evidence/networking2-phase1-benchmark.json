@@ -1,0 +1,531 @@
+{
+  "Scope": "GL-030 network-only Fire/echo overhead against exact main; not relevance/batching qualification",
+  "RepairNote": "Regenerated from original raw JSON; replaces a receipt accidentally containing a truncated tool rendering. Raw measurements are unchanged.",
+  "Archive": {
+    "File": "local-evidence-checkpoint8.zip",
+    "SHA256": "f30e914a718451c4202563d62478724817562eff8c5533dee935dd4c61db1d3f",
+    "Members": 13508,
+    "Bytes": 46843412
+  },
+  "InputsSHA256": "7f4b95dd2bb6b0a43e04e56e3fe6e531b2826fe105a39ff0aebe6b69fb2c5c49",
+  "MeasurementsSHA256": "618f75df57cc18cbd23e216909f9601b81e9fa6dce2fbeef66364d4e9e795d4e",
+  "Counts": [
+    1,
+    16,
+    32
+  ],
+  "Trials": 2,
+  "Samples": 64,
+  "FixtureHashes": {
+    "RemoteDeliveryBenchmark.gd": "ffcf10d36df8fc1802635d7b5c390afa26c82b734e33dd87f763849c08066d41",
+    "CharacterDispatchProbe.gd": "643c5a87dfb37db3a544c730405ac30685f6c258187040e2249b55f0673fd479"
+  },
+  "Configurations": {
+    "Baseline": {
+      "Source": {
+        "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "Products": {
+        "godot_luau.dll": "5f3799751dbd8e1fcf1ecd4238f2d240c284ba160c9cbe2b5514b06f24160a56",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7"
+    },
+    "Candidate": {
+      "Source": {
+        "SHA256": "7a4af3b79e002ac005fcc86a1d7de5bc6ff65291b45b280bbe3a521bde02ba9b",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "Products": {
+        "godot_luau.dll": "c17b3689af87a0598a4b42e3d7251e62981613051e61b695a7d1e86e73eec782",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7"
+    }
+  },
+  "Completed": [
+    {
+      "Configuration": "Baseline",
+      "Peers": 1,
+      "Trial": 0,
+      "Seconds": 10.140999999828637,
+      "Server": {
+        "CallbackStarts": 80,
+        "FrameSeconds": {
+          "Mean": 0.00845763967611336,
+          "Median": 0.008314,
+          "P95": 0.012701,
+          "P99": 0.019771,
+          "Samples": 247
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.00200575303643725,
+          "Median": 0.001541,
+          "P95": 0.004622,
+          "P99": 0.005615,
+          "Samples": 247
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00249696094397222,
+          "Median": 0.00241080019623041,
+          "P95": 0.0029887999407947,
+          "P99": 0.00767960026860237,
+          "Samples": 64
+        },
+        "StartupUsec": 4159742,
+        "MemoryBefore": {
+          "Nodes": 19.0,
+          "Objects": 1147.0,
+          "StaticBytes": 23395366.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 21.0,
+          "Objects": 1151.0,
+          "StaticBytes": 23438082.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23388982.0
+        },
+        "ObservedNativeHighBytes": 84,
+        "ObservedNativeHighCommands": 1
+      },
+      "Clients": {
+        "Actors": 1,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.0369887999258935
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 1,
+      "Trial": 0,
+      "Seconds": 9.67200000025332,
+      "Server": {
+        "CallbackStarts": 80,
+        "FrameSeconds": {
+          "Mean": 0.00835762944162436,
+          "Median": 0.008307,
+          "P95": 0.009652,
+          "P99": 0.016324,
+          "Samples": 197
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.00207129441624365,
+          "Median": 0.001595,
+          "P95": 0.004569,
+          "P99": 0.005084,
+          "Samples": 197
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00234161249682074,
+          "Median": 0.00234770029783248,
+          "P95": 0.00274789985269308,
+          "P99": 0.00464829988777637,
+          "Samples": 64
+        },
+        "StartupUsec": 4151929,
+        "MemoryBefore": {
+          "Nodes": 19.0,
+          "Objects": 1147.0,
+          "StaticBytes": 23394162.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 21.0,
+          "Objects": 1151.0,
+          "StaticBytes": 23431826.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23382598.0
+        },
+        "ObservedNativeHighBytes": 84,
+        "ObservedNativeHighCommands": 1
+      },
+      "Clients": {
+        "Actors": 1,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.0260450001806021
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 1,
+      "Trial": 1,
+      "Seconds": 9.453000000212342,
+      "Server": {
+        "CallbackStarts": 80,
+        "FrameSeconds": {
+          "Mean": 0.00836375510204081,
+          "Median": 0.008383,
+          "P95": 0.009703,
+          "P99": 0.014539,
+          "Samples": 196
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.00212945408163265,
+          "Median": 0.001622,
+          "P95": 0.004522,
+          "P99": 0.00507,
+          "Samples": 196
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00234366247605066,
+          "Median": 0.00233649974688887,
+          "P95": 0.00273859966546297,
+          "P99": 0.00336150033399462,
+          "Samples": 64
+        },
+        "StartupUsec": 4065099,
+        "MemoryBefore": {
+          "Nodes": 19.0,
+          "Objects": 1147.0,
+          "StaticBytes": 23394162.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 21.0,
+          "Objects": 1151.0,
+          "StaticBytes": 23431826.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23382598.0
+        },
+        "ObservedNativeHighBytes": 84,
+        "ObservedNativeHighCommands": 1
+      },
+      "Clients": {
+        "Actors": 1,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.0255322000011802
+      }
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 1,
+      "Trial": 1,
+      "Seconds": 9.5,
+      "Server": {
+        "CallbackStarts": 80,
+        "FrameSeconds": {
+          "Mean": 0.008361465,
+          "Median": 0.008393,
+          "P95": 0.009775,
+          "P99": 0.014626,
+          "Samples": 200
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.00212069,
+          "Median": 0.001687,
+          "P95": 0.004437,
+          "P99": 0.005615,
+          "Samples": 200
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00227830468065803,
+          "Median": 0.00233060028403997,
+          "P95": 0.00261470023542642,
+          "P99": 0.00369499996304512,
+          "Samples": 64
+        },
+        "StartupUsec": 4048618,
+        "MemoryBefore": {
+          "Nodes": 19.0,
+          "Objects": 1147.0,
+          "StaticBytes": 23395366.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 21.0,
+          "Objects": 1151.0,
+          "StaticBytes": 23433054.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23383954.0
+        },
+        "ObservedNativeHighBytes": 84,
+        "ObservedNativeHighCommands": 1
+      },
+      "Clients": {
+        "Actors": 1,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.0327953998930752
+      }
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "Trial": 0,
+      "Seconds": 26.780999999959022,
+      "Server": {
+        "CallbackStarts": 1280,
+        "FrameSeconds": {
+          "Mean": 0.0127651994047619,
+          "Median": 0.01272,
+          "P95": 0.018289,
+          "P99": 0.026306,
+          "Samples": 672
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.0103601369047619,
+          "Median": 0.010832,
+          "P95": 0.014249,
+          "P99": 0.021461,
+          "Samples": 672
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00329914931853636,
+          "Median": 0.00297020003199577,
+          "P95": 0.00474260002374649,
+          "P99": 0.0105202002450824,
+          "Samples": 1024
+        },
+        "StartupUsec": 12067354,
+        "MemoryBefore": {
+          "Nodes": 79.0,
+          "Objects": 1222.0,
+          "StaticBytes": 23495110.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 81.0,
+          "Objects": 1226.0,
+          "StaticBytes": 23679310.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23530482.0
+        },
+        "ObservedNativeHighBytes": 420,
+        "ObservedNativeHighCommands": 5
+      },
+      "Clients": {
+        "Actors": 16,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.178662900347263
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "Trial": 0,
+      "Seconds": 25.092999999877065,
+      "Server": {
+        "CallbackStarts": 1280,
+        "FrameSeconds": {
+          "Mean": 0.0120787967115097,
+          "Median": 0.012394,
+          "P95": 0.01622,
+          "P99": 0.024241,
+          "Samples": 669
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.00980951420029895,
+          "Median": 0.010296,
+          "P95": 0.01255,
+          "P99": 0.016979,
+          "Samples": 669
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00314513408648054,
+          "Median": 0.00295750005170702,
+          "P95": 0.00358660006895661,
+          "P99": 0.00698659988120198,
+          "Samples": 1024
+        },
+        "StartupUsec": 11060157,
+        "MemoryBefore": {
+          "Nodes": 79.0,
+          "Objects": 1222.0,
+          "StaticBytes": 23493906.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 81.0,
+          "Objects": 1226.0,
+          "StaticBytes": 23678218.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23529262.0
+        },
+        "ObservedNativeHighBytes": 336,
+        "ObservedNativeHighCommands": 4
+      },
+      "Clients": {
+        "Actors": 16,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.157673600129783
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "Trial": 1,
+      "Seconds": 25.280999999959022,
+      "Server": {
+        "CallbackStarts": 1280,
+        "FrameSeconds": {
+          "Mean": 0.0124052028753994,
+          "Median": 0.01296,
+          "P95": 0.015334,
+          "P99": 0.019517,
+          "Samples": 626
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.0101066741214057,
+          "Median": 0.010962,
+          "P95": 0.012493,
+          "P99": 0.013932,
+          "Samples": 626
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00305024522003805,
+          "Median": 0.00294100027531385,
+          "P95": 0.00334689998999238,
+          "P99": 0.00558939995244145,
+          "Samples": 1024
+        },
+        "StartupUsec": 11756398,
+        "MemoryBefore": {
+          "Nodes": 79.0,
+          "Objects": 1222.0,
+          "StaticBytes": 23493906.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 81.0,
+          "Objects": 1226.0,
+          "StaticBytes": 23671810.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23522854.0
+        },
+        "ObservedNativeHighBytes": 336,
+        "ObservedNativeHighCommands": 4
+      },
+      "Clients": {
+        "Actors": 16,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.14860780024901
+      }
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "Trial": 1,
+      "Seconds": 25.061999999918044,
+      "Server": {
+        "CallbackStarts": 1280,
+        "FrameSeconds": {
+          "Mean": 0.0125438596774194,
+          "Median": 0.012906,
+          "P95": 0.015527,
+          "P99": 0.019803,
+          "Samples": 620
+        },
+        "NodeDispatchSeconds": {
+          "Mean": 0.0102134790322581,
+          "Median": 0.010866,
+          "P95": 0.012683,
+          "P99": 0.016439,
+          "Samples": 620
+        },
+        "FireCallSeconds": {
+          "Mean": 0.00307492343881677,
+          "Median": 0.00291999988257884,
+          "P95": 0.0035035996697843,
+          "P99": 0.00615440029650926,
+          "Samples": 1024
+        },
+        "StartupUsec": 11703604,
+        "MemoryBefore": {
+          "Nodes": 79.0,
+          "Objects": 1222.0,
+          "StaticBytes": 23495110.0
+        },
+        "MemoryAfterWork": {
+          "Nodes": 81.0,
+          "Objects": 1226.0,
+          "StaticBytes": 23673038.0
+        },
+        "MemoryAfterTeardown": {
+          "Nodes": 1.0,
+          "Objects": 1123.0,
+          "StaticBytes": 23524210.0
+        },
+        "ObservedNativeHighBytes": 252,
+        "ObservedNativeHighCommands": 3
+      },
+      "Clients": {
+        "Actors": 16,
+        "MinimumCallbackStarts": 80,
+        "MaximumCallbackStarts": 80,
+        "WorstClientRTTP95": 0.148219000082463
+      }
+    }
+  ],
+  "NegativeReports": [
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/32-0-Baseline/asan-report.10896",
+      "SHA256": "5980fc3eb873119884b27d90c5ae9c2707736a669237b0d3152480091a51d5d8",
+      "Text": "=================================================================\n==10896==ERROR: AddressSanitizer: out of memory: allocator is trying to allocate 0xc8 bytes\n==10896==FATAL: AddressSanitizer: internal allocator is out of memory trying to allocate 0x70 bytes\n"
+    },
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/32-0-Baseline/asan-report.34504",
+      "SHA256": "2afbb36718952ee14fa14ff751e997c778694dc535e1e37a222200b96e6c9bc5",
+      "Text": "=================================================================\nERROR: Failed to mmap\n"
+    },
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/32-0-Baseline/asan-report.3808",
+      "SHA256": "02e1294444778bd1187a1a8a5100c4cc6f5aca6fe5126fa6e1780170e6e71b8e",
+      "Text": "=================================================================\n==3808==ERROR: AddressSanitizer: out of memory: allocator is trying to allocate 0xcc bytes\n==3808==FATAL: AddressSanitizer: internal allocator is out of memory trying to allocate 0x70 bytes\n"
+    },
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/32-0-Baseline/asan-report.38572",
+      "SHA256": "4640c184311ee5e5500bedf3fec1511f7a2e8d0a74e2c5e1666bc15e425eafcd",
+      "Text": "=================================================================\n==38572==ERROR: AddressSanitizer: out of memory: allocator is trying to allocate 0x64 bytes\n==38572==FATAL: AddressSanitizer: internal allocator is out of memory trying to allocate 0x70 bytes\n"
+    },
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/32-0-Baseline/asan-report.43060",
+      "SHA256": "9e25a3e58449cf1b305cf1df9fe451661a38390d9eddcbe6816443b931b7b10d",
+      "Text": "=================================================================\n==43060==ERROR: AddressSanitizer: out of memory: allocator is trying to allocate 0x64 bytes\n"
+    },
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/32-0-Baseline/asan-report.51424",
+      "SHA256": "0db30eef2a7efabc3dca65d46154ccfc1fb5aa20035d7c9796351e837f85e089",
+      "Text": "=================================================================\n==51424==ERROR: AddressSanitizer: out of memory: allocator is trying to allocate 0x60 bytes\n==51424==FATAL: AddressSanitizer: internal allocator is out of memory trying to allocate 0x70 bytes\n"
+    }
+  ],
+  "NonemptyStderr": [
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/16-0-Candidate/server0.stderr.log",
+      "SHA256": "e72489b59c93ade365cc17f9218810cdfc5409e10eafa77f45014cd784eb6cdc",
+      "Tail": "ERROR: Unable to send packet on channel 0, max channels: 0\r\n   at: ENetPacketPeer::send (modules\\enet\\enet_packet_peer.cpp:65)\r\n"
+    },
+    {
+      "Path": "gl030-event-overhead-comparison-replay1/16-1-Candidate/server0.stderr.log",
+      "SHA256": "e72489b59c93ade365cc17f9218810cdfc5409e10eafa77f45014cd784eb6cdc",
+      "Tail": "ERROR: Unable to send packet on channel 0, max channels: 0\r\n   at: ENetPacketPeer::send (modules\\enet\\enet_packet_peer.cpp:65)\r\n"
+    }
+  ]
+}

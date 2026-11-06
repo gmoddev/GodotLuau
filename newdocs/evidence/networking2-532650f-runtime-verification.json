@@ -1,0 +1,123 @@
+{
+  "Revision": "532650f926723b588b04559ec242d8fa20e07239",
+  "NativeSource": {
+    "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+    "Files": 94,
+    "Newlines": "LF normalized"
+  },
+  "Core": [
+    {
+      "Path": "core\\runtime-core-Linux-Debug\\core-results.xml",
+      "Cases": 85,
+      "SHA256": "0b0a77c2e609351fac2a08720f0de6c181511dd410a3bb23324b210ebd20afd0"
+    },
+    {
+      "Path": "core\\runtime-core-Windows-Debug\\core-results.xml",
+      "Cases": 85,
+      "SHA256": "c10ba1521a5d3e11a7c7427c866cfcb0863327fb190a82dba6cc512a48e71bbd"
+    }
+  ],
+  "Native": [
+    {
+      "Path": "native\\runtime-native-Linux-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 130,
+      "RemoteActors": 6,
+      "RemoteCases": 458,
+      "HostFixtures": 2,
+      "LogHashes": 389,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 84,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "2a103b9a67c53c45124cf870ba7adffa903077e6a6e3c0b0fcbad1c88edf8639",
+      "ExtensionSHA256": "6be4e4322dc95d417f41d918ab533bd5d03c5b2a79f239037ea6f91627fc7275",
+      "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+      "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99"
+    },
+    {
+      "Path": "native\\runtime-native-Windows-Debug\\_temp\\native-ci\\summary.json",
+      "Actors": 130,
+      "RemoteActors": 6,
+      "RemoteCases": 460,
+      "HostFixtures": 2,
+      "LogHashes": 392,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 84,
+      "UUIDSamplesRehashed": 4000,
+      "SummarySHA256": "97462c1c88d3e6ff84facebe575ee2194c742daf4b0f1b6d990dd4d3c9d64147",
+      "ExtensionSHA256": "d512aee621e0cf587de0106b1d4a730927ae17553a140c987b565c9c3d1c61cb",
+      "CompanionSHA256": "ef4390bd541aed2de35799fff79f5011c76a92f74b5beefb6a1481d674e28074",
+      "HostSHA256": "88b447420cdc3cde25352660bd68e4cf08546f48b962302ffb5eb103ce3c9691"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+      "Actors": 130,
+      "RemoteActors": 6,
+      "RemoteCases": 459,
+      "HostFixtures": 2,
+      "LogHashes": 381,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 84,
+      "UUIDSamplesRehashed": 0,
+      "SummarySHA256": "b9bb36711b019e655af535c14ef4b5379d2f3b3b7aeb0e5d41045575af7c7a2a",
+      "ExtensionSHA256": "7312f7a7d1af84a09ef67e443dae96765baec62cda8022608e235f2385c7f1ed",
+      "CompanionSHA256": "1bc0970cfd2d847a6fa0d116e15892de880b8183eb8d24df0f10b2989f98402a",
+      "HostSHA256": "72645b0eb1d30afde108c1604cb5377d662770b2f922d7def37f92f58602d711"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+      "Actors": 130,
+      "RemoteActors": 6,
+      "RemoteCases": 459,
+      "HostFixtures": 2,
+      "LogHashes": 381,
+      "MissingGeneratedLogs": [],
+      "HarnessHashes": 84,
+      "UUIDSamplesRehashed": 0,
+      "SummarySHA256": "e7de7de49c66e080c0a27c935612a173920d743729bcaacb0f0ae1580d4f788e",
+      "ExtensionSHA256": "0dfa5b3b8ce2548dafdf3fb2fd11423bcaa37e8db1149a1f953d7b635bce473f",
+      "CompanionSHA256": "4c60caceb3ffec418e9c9c7c71bbc2fa59242839e5b5e04dd3a8e369a86d57f9",
+      "HostSHA256": "8de1b1ce5d21c222c40392c1f6eb637a1eddc395e7cdd03c78d1a5740f291deb"
+    }
+  ],
+  "Sanitizers": [
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "PASS",
+      "Checks": 24,
+      "FilesVerified": 638,
+      "MissingEphemeralData": [
+        {
+          "Path": "native/filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/msg_GL003-shared__6aeab4f1-65c4-4059-8f10-000b577bcf10_1.json",
+          "ExpectedSHA256": "11d10191072b7b3ec70584d53f1809927f7e6e519ebeacf3e9ec582ce7f2cbbc",
+          "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+        }
+      ],
+      "CoreCases": 85,
+      "InstrumentedTranslationUnits": [
+        1161,
+        3
+      ],
+      "SummarySHA256": "5c0321e3dd4d0d95785838f6ac7a82646602c4aa8befeb2fdac1f4417b5c5983"
+    },
+    {
+      "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+      "Result": "PASS",
+      "Checks": 23,
+      "FilesVerified": 633,
+      "MissingEphemeralData": [
+        {
+          "Path": "native\\filesystem\\profile\\APPDATA\\GodotLuauRuntimeQualification\\msg_GL003-shared__6aeab7af-a7a4-4f8a-80b2-0029ec8500b2_1.json",
+          "ExpectedSHA256": "2685732afcd66c126b9b09408bd7864c4a54d80c436d181939db9007e966004b",
+          "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+        }
+      ],
+      "CoreCases": 85,
+      "InstrumentedTranslationUnits": [
+        1161,
+        3
+      ],
+      "SummarySHA256": "6b0a44bc4505e3e8a6ef2ae1ad9f8e96992d306d2724a333c45de53d045b0add"
+    }
+  ],
+  "Scope": "Downloaded completed artifacts only; absent profiles are not passing."
+}

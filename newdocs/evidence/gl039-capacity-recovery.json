@@ -1,0 +1,37 @@
+{
+  "Host": "DockerPC (SSH alias dockerbox, Windows hostname HOSTPC)",
+  "BeforeUTC": "2026-11-05T12:43:16.9444967Z",
+  "Before": {
+    "CommittedBytes": 32460697600,
+    "CommitLimit": 39752642560,
+    "FreeCommit": 7291944960,
+    "PhysicalFree": 17363705856,
+    "SystemPagefileAllocatedMiB": 5216,
+    "TaskOwnedProcessesRemaining": 0
+  },
+  "RecoveryUTC": "2026-11-05T12:45:53.805175+00:00",
+  "Action": "Create a nonpersistent auxiliary pagefile with NtCreatePagingFile through existing privileged SSH/Python infrastructure. No unrelated process was stopped, cache deleted or boot setting changed.",
+  "Path": "C:/Sandbox/Codex/Networking2/gl039-capacity41-pagefile.sys",
+  "MinimumBytes": 2147483648,
+  "MaximumBytes": 2147483648,
+  "NTSTATUS": "0x0",
+  "AfterUTC": "2026-11-05T12:45:54.4121834Z",
+  "After": {
+    "CommittedBytes": 32451317760,
+    "CommitLimit": 40943505408,
+    "FreeCommit": 8492187648,
+    "SystemPagefileAllocatedMiB": 4304,
+    "AuxiliaryPagefileAllocatedMiB": 2048,
+    "AuxiliaryPagefileUsedMiB": 0
+  },
+  "AutomaticManagedPagefile": true,
+  "ExplicitBootPagefileSettings": [],
+  "RequiredFreeCommitUnchanged": 7717519360,
+  "MainPCFallback": "Not used: only 1533403136 bytes free physical memory at inspection, below the existing 16-GiB preflight requirement.",
+  "FailedAttempt": "First ctypes helper returned STATUS_OBJECT_PATH_SYNTAX_BAD without creating a pagefile. Retaining the Unicode buffer across the native call corrected its lifetime; both attempt records are archived.",
+  "Rollback": "No boot registration was added. After the next normally planned restart, verify this exact path is absent from Win32_PageFileUsage, then remove only this task-owned file. Never remove an active pagefile. No restart or unsafe live shrink is performed.",
+  "Source": "https://github.com/winsiderss/phnt/blob/master/ntmmapi.h",
+  "ArchiveSHA256": "246cfd59e0f80cb3f5d4355b3746f3c5a52f35ba947bf90cb909dc14ca207c4e",
+  "RetirementUTC": "2026-11-05T12:54:37.4343146Z",
+  "Retirement": {"OwnedProcesses": 0, "WorkerLeaseGeneration": 5, "WorkerLeaseReleased": true}
+}

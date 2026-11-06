@@ -1,0 +1,126 @@
+{
+  "Revision": "903b10c4d19db3b9a739e94765746bf7366ad77f",
+  "Run": 42049370120,
+  "NativeSource": {
+    "SHA256": "6698ad267f15b43fa3cacccd8d9d61ff625c2a4c492d304db71607cce25352ad",
+    "Files": 94,
+    "Newlines": "LF normalized"
+  },
+  "ProductionChangedSinceQualifiedProfiles": false,
+  "ChangesSinceQualifiedProfiles": [
+    "newdocs/adr-011-peer-replication-relevance.md",
+    "newdocs/evidence/gl039-capacity-recovery.json",
+    "newdocs/evidence/gl039-fa0d431-candidate-verification.json",
+    "newdocs/evidence/gl039-release41-qualification.json",
+    "newdocs/evidence/gl040-presentation-failure.json",
+    "newdocs/evidence/gl041-raised-spawn-evidence.json",
+    "newdocs/issues.md",
+    "newdocs/networking-foundation-2-work.md",
+    "tests/runtime/CharacterPresentation.gd",
+    "tests/runtime/DatastoreTransactions.gd"
+  ],
+  "Scope": "Downloaded final sanitizer summaries, native identities, existing core report checks and changed fixture hashes reviewed. Existing strict CI and instrumentation gates are trusted; no new verifier test suite or repeated profile/package build.",
+  "Sanitizers": [
+    {
+      "Platform": "Linux",
+      "Checks": 24,
+      "CoreCases": 85,
+      "NativeActors": 131,
+      "RelevanceActors": 7,
+      "InstrumentedNativeFiles": 1161,
+      "HostSHA256": "72645b0eb1d30afde108c1604cb5377d662770b2f922d7def37f92f58602d711",
+      "ExtensionSHA256": "a1fc5f5b0f54815b4e6140d63df5aa75b1a8e0e1ae6f63f277ecc3d47b2932c5",
+      "CompanionSHA256": "1bc0970cfd2d847a6fa0d116e15892de880b8183eb8d24df0f10b2989f98402a",
+      "ChangedFixtureHashes": {
+        "CharacterPresentation.gd": "8f2076432ae2a66468cc2016b90b65990b1843b69fea75efa70a0d1b89f8ed75",
+        "DatastoreTransactions.gd": "86e02ae4b440f6c6b3b2f43f8461dd1acfc4d06c0aec92423cdafdb8d09e5d07"
+      },
+      "SummarySHA256": "f938502b4ff52d76b91594c91f12f5c6ca644ff16706c9d484d6c2b94145b0f3",
+      "NativeSummarySHA256": "974ef221b97b11dc0ebf1e9dcf1ad984d5cec482b0aa1fd82bb9030d3142f373",
+      "UnexpectedReports": []
+    },
+    {
+      "Platform": "Windows",
+      "Checks": 23,
+      "CoreCases": 85,
+      "NativeActors": 131,
+      "RelevanceActors": 7,
+      "InstrumentedNativeFiles": 1161,
+      "HostSHA256": "3aa481efd45d0fd8c6372d73303286220be68cd5cf15376e7ecc519963862901",
+      "ExtensionSHA256": "0e0b1c187ec58e4740acc54a6be6b34601dd952df8194550115ae3826ab2b98c",
+      "CompanionSHA256": "c06260709fc5c6fb9f9cf12f60dceb6fd56d66d56730f4250598bde864e6414d",
+      "ChangedFixtureHashes": {
+        "CharacterPresentation.gd": "fb13e8679bdd4c342d88a356f762750078ff905b4adaee7bb2b55013279c7f50",
+        "DatastoreTransactions.gd": "e8fb74820d2805a404501f970579356deb5327e256e651b9ab8c46d6b2db18b8"
+      },
+      "SummarySHA256": "ac7a42f2ae2c597b1aeb66a8f7ee0048c44ea6dac4c155685745ece159bbab85",
+      "NativeSummarySHA256": "2bbe2ea244e1a9b3617f4360dcd4ff5be6495a8d028d6c5850fc1139a1fad7c9",
+      "UnexpectedReports": []
+    }
+  ],
+  "OrdinaryCI": {
+    "Revision": "37a5e4e68cd9cb7df91cbe9a96afcb149fd559d3",
+    "CoreRun": 42031393024,
+    "NativeRun": 42031392980,
+    "NativeSource": {
+      "SHA256": "6698ad267f15b43fa3cacccd8d9d61ff625c2a4c492d304db71607cce25352ad",
+      "Files": 94,
+      "Newlines": "LF normalized"
+    },
+    "Core": [
+      {
+        "Path": "core\\runtime-core-Linux-Debug\\core-results.xml",
+        "Cases": 85,
+        "SHA256": "fdbb3b41ae019aa05340bf11654a5eb3dace7ea851f0c53f9b922e681f4ac23e"
+      },
+      {
+        "Path": "core\\runtime-core-Windows-Debug\\core-results.xml",
+        "Cases": 85,
+        "SHA256": "15b0e4b9c6b255cf17b8244abd1a186fa820de0e3bd253015f991413fd19a1d9"
+      }
+    ],
+    "Native": [
+      {
+        "Path": "native\\runtime-native-Linux-Debug\\_temp\\native-ci\\summary.json",
+        "Actors": 131,
+        "ExtensionSHA256": "717e939560061e92c560dbb66894336bc4abb184e8b5fae34bb71db800b31fec",
+        "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+        "SHA256": "941fff0a5b9e40c920e3a83239960e9dbf598d76daa093c276f18673b384e2cf"
+      },
+      {
+        "Path": "native\\runtime-native-Windows-Debug\\_temp\\native-ci\\summary.json",
+        "Actors": 131,
+        "ExtensionSHA256": "71a47762bae781021e4e1e8ca19629a04c811b16244a8f31af17f220abe3a3df",
+        "CompanionSHA256": "367336ca99bb0d483ee39aa7907c1fa77f773a4ef3fffddabdf5c0a5c8d07df4",
+        "SHA256": "914b4dd068ce91f22821a6dcb7452a432d923b94c38bca622b4b09a5e8cd17a2"
+      }
+    ]
+  },
+  "Candidate": {
+    "Revision": "fa0d431d459fa10659adf5369199e553d4d46c53",
+    "Run": 41964867366,
+    "Profiles": 4,
+    "Packages": 2,
+    "Receipt": "gl039-fa0d431-candidate-verification.json"
+  },
+  "Performance": {
+    "Receipt": "gl039-release41-qualification.json",
+    "PassingConfigurations": 14,
+    "Candidate32PeerTrials": 4,
+    "RetainedLegacyWarmupFailures": 1,
+    "CandidateFailures": 0
+  },
+  "Capacity": {
+    "Receipt": "gl039-capacity-recovery.json",
+    "QualificationGuardUnchanged": true,
+    "AuxiliaryPagefileBytes": 2147483648
+  },
+  "Limitations": [
+    "Headless admitted-host scope; no general latency or 64-peer guarantee.",
+    "Legacy512-object warmup failure prevents a fresh paired large-world frame-speedup claim.",
+    "GL-040 coincident-body and GL-041 raised-startup findings remain open.",
+    "Auxiliary pagefile is active until normal restart; only remove it after verifying it is no longer an active pagefile.",
+    "Windows LSan remains unsupported within the established GL-018 scope.",
+    "Releases and updater disabled; no main merge authorized."
+  ]
+}

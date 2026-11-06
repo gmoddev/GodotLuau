@@ -4,7 +4,8 @@ GL-018's development branch qualifies the admitted matching headless sanitizer
 hosts and production extension at `46427d0`: Windows ASan and Linux ASan/LSan each
 pass 80 core cases and 110 native actors. See [closure and retained limits](gl018-closure.md).
 The derived engine binding-retirement correction does not establish stock-host
-unload safety, and the branch remains unmerged.
+unload safety. Main now preserves this historical branch through the combined
+[GL-018/GL-029 integration](gl018-gl029-main-integration.md).
 
 Main integrates GL-007 through normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`
 and Model-based Character V2 through `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`.
@@ -435,6 +436,52 @@ Native stack guards use per-thread OS bounds on Windows/Linux and real frame/
 return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
 
 ## Networking and persistence
+
+Main integrates `foundation/networking-2` at compacted source `cb2014f`, preserving
+its three foundation commits and the qualified runtime/test inputs. See the
+[controlled integration record](networking-foundation-2-work.md#main-integration-2026-11-05).
+This adds the
+[ADR-010 RemoteFunction lifecycle](adr-010-remotefunction-terminal-outcomes.md):
+finite request/handler deadlines, full-width correlation, existing native
+publication/session admission, exact serving-task cancellation and protected
+terminal completion. The [campaign journal](networking-foundation-2-work.md)
+separates exact-revision qualification, retained failures and broader coverage
+limits. Historical source/merge SHAs below remain evidence for their original
+revisions in the retained archive, rather than fresh integrated-main qualification.
+
+The same branch implements the opt-in [ADR-011 projection and batching
+contract](adr-011-peer-replication-relevance.md). The native catalog and spatial
+index feed bounded desired/planned/known/materialized peer views through the
+existing NetworkService tick and GL-029 queue/admission capability. Immutable
+reliable structural groups, cached property snapshots and explicit application
+ACKs are distinct from native transport ACKs. Runtime physics carries view
+generation/session identity; unanchored bodies remain global. This is a narrow
+runtime anchored-leaf-Part slice, disabled by default, with matching-build/setting
+requirements and explicit Remote-reference restrictions. At `436850a`, all four
+hosted workflows and targeted repeated 1/16/32-peer Release workloads verify;
+broader campaign coverage remains distinct. The journal records actual limits.
+GL-031 fixes static-parent late join; GL-032 adds the missing ObjectValue Instance
+getter/setter without broadening scalar conversion or reflection authority.
+The GL-034 implementation extracts the existing record validator into bounded private
+cache/index sweep turns and refreshes only affected published reparent closures.
+New peer selection waits for sweep completion while accepted immutable frames
+drain; native identity/visibility is revalidated before new admission. Sweep state
+retires with NetworkService reset. GL-034 closes with exact current
+[runtime](evidence/networking2-436850a-runtime-verification.json),
+[candidate](evidence/networking2-436850a-candidate-verification.json) and
+[Release](evidence/networking2-436850a-release-qualification.json) receipts.
+GL-039's bounded FIFO drain submits up to eight frames and 60 KiB per peer visit
+within the existing cooperative submission budget and 64-frame application-ACK
+window. Clients apply up to eight FIFO frames within a cooperative four-ms turn,
+revalidating native lifetime after each application. Queue/native ownership and
+timeout limits are unchanged. Its repeated 32-peer Release measurements improve
+the prior roughly seven-second final-counter convergence to 0.299/0.226 ms in
+64-object worlds and 75.159/699.938 ms in 512-object worlds. The
+[receipt](evidence/gl039-release41-qualification.json) retains a failed legacy
+large-world warmup and the independent candidate runs. Final Windows/Linux
+sanitizer verification at `903b10c` closes GL-039 within the
+[recorded scope](evidence/gl039-final-verification.json); GL-040/041 remain open.
+No general latency, graphical or 64-player guarantee follows from these profiles.
 
 Main includes the qualified Phase 1 native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen

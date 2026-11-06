@@ -1,0 +1,2717 @@
+{
+  "ArchiveSHA256": "886d2c136c1d2998a7a4adc8684c80879a99a75bfba8854b26e860bc2018dec3",
+  "BaselineRevision": "9f52b273cf977dce9c0541ff718cfb44dfb54c31",
+  "Revision": "436850aca89e87e6ee8bc2e520740318ba0be27c",
+  "Windows": [
+    {
+      "Path": "coordinator-cf1628-release32/window-2b6ef821-205c-4989-9f68-f154b82cb1de/results.json",
+      "Results": [
+        {
+          "Profile": 1,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 2,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 3,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 4,
+          "Exit": 1,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 5,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 6,
+          "Exit": 1,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 7,
+          "Result": "NOT_NEEDED_PAIRED_PASS",
+          "PairedProfile": 2
+        },
+        {
+          "Profile": 8,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 9,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 10,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 11,
+          "Exit": 1,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        }
+      ]
+    },
+    {
+      "Path": "coordinator-cf1628-release33/window-b7cdd6fc-5325-4bec-9de0-c0525c98a591/results.json",
+      "Results": [
+        {
+          "Profile": 2,
+          "Exit": 0,
+          "TimedOut": false,
+          "OwnedJobReaped": true,
+          "Errors": []
+        },
+        {
+          "Profile": 3,
+          "Result": "NOT_NEEDED_PAIRED_PASS",
+          "PairedProfile": 2
+        }
+      ]
+    }
+  ],
+  "Runs": [
+    {
+      "Path": "foundation-benchmark-release32-0f7f5cb4-bf0d-4b91-9c2d-93e2d95f51e0",
+      "Profile": 4,
+      "Result": "PARTIAL",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "6361bebef8facfe7902ad399bb4c6451641e47b700d50f467dc82eacd6fb56a3",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 16,
+          "World": 512,
+          "Trial": 0,
+          "Resources": {
+            "Available": true,
+            "PhysicalFree": 18460684288,
+            "CommitFree": 8349138944
+          },
+          "Result": "FAIL",
+          "Seconds": 121.42199999978766,
+          "MinimumObservedCommitFree": 7407202304,
+          "ResourceGuardAborted": false,
+          "Reports": [],
+          "NonemptyStderr": [
+            {
+              "Path": "client1.stderr.log",
+              "SHA256": "7f8d60205ff36bdf72c1bdadb577fc79abcb5e8b244df3497111f80cca5b48cc"
+            },
+            {
+              "Path": "client10.stderr.log",
+              "SHA256": "f098d7fcca74f8986b7a7d071df45f62fcd36a166d78ddb0937b7b46a812fc92"
+            },
+            {
+              "Path": "client11.stderr.log",
+              "SHA256": "3c7509ae6c2c23f906c2e385553ee7ebb534cd9ccbd09edff1086d5739e01b04"
+            },
+            {
+              "Path": "client12.stderr.log",
+              "SHA256": "87b3b1c3c8e87a9440ad52fcb80e13d30d35a124efb7935a67611f07b5a21fe0"
+            },
+            {
+              "Path": "client13.stderr.log",
+              "SHA256": "8385071eea9266d62e749c80b9e03cfe25313159a52463d70707d63ec5229ea5"
+            },
+            {
+              "Path": "client14.stderr.log",
+              "SHA256": "8385071eea9266d62e749c80b9e03cfe25313159a52463d70707d63ec5229ea5"
+            },
+            {
+              "Path": "client15.stderr.log",
+              "SHA256": "e155936f1f75cb0c6579072acb5a6ef715539db2e20c26f21115a349de6c514e"
+            },
+            {
+              "Path": "client16.stderr.log",
+              "SHA256": "86f87c476028b04c3e7f55fb32e3966b3a47b285debc3539a41273c740a957f9"
+            },
+            {
+              "Path": "client2.stderr.log",
+              "SHA256": "1ffe71b1a640a90c5609bc9a0bb2945bf16f2cea92ef5e4f8425938071f1bd60"
+            },
+            {
+              "Path": "client3.stderr.log",
+              "SHA256": "f5a62abc0396129e11dabd6fbfcbcc42b7251c8e2f887e001c5cc94d298ce519"
+            },
+            {
+              "Path": "client4.stderr.log",
+              "SHA256": "53f302cc1f0bd1f52c9792e59d284a4eda4d9777bff1d9cacbd488866ce84f82"
+            },
+            {
+              "Path": "client5.stderr.log",
+              "SHA256": "0fccd4701dc20449215e89b8ed16e2149c23bdc0b8d061f31630d7ba1c6e0056"
+            },
+            {
+              "Path": "client6.stderr.log",
+              "SHA256": "0fccd4701dc20449215e89b8ed16e2149c23bdc0b8d061f31630d7ba1c6e0056"
+            },
+            {
+              "Path": "client7.stderr.log",
+              "SHA256": "d8c4a06f762c882b17e15d692a775e44c1a77e0d289785fef158cb3deb6a396f"
+            },
+            {
+              "Path": "client8.stderr.log",
+              "SHA256": "227c1373a88a952b9fe402484a864ba139300eb53dccf7fcd0e856a52c16ffe5"
+            },
+            {
+              "Path": "client9.stderr.log",
+              "SHA256": "45d91caea1c67b62c0b7e69ab83bb9b4eb6d2704dba4baac425b1ec5b5d4f924"
+            },
+            {
+              "Path": "server0.stderr.log",
+              "SHA256": "922e1eb2170fab6e6ec3168a0a46fba85bfa6a508b34d97977b2865bae6b834e"
+            }
+          ],
+          "ErrorSHA256": "8657d1405b6f00f588b122f14f3f544937afb2b50cd443adf794040bcce3fa68",
+          "Failure": "Unchanged baseline fails all-peer warmup with invalid-target errors; full stderr retained in raw archive"
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-1518f1da-e8fd-4612-9844-8b6e06402e66",
+      "Profile": 1,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "058870aa5735727d489fbf0ab45ac5bc210a59a210160218688ee1ed517f5b9d",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 1,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 3.125,
+          "MinimumObservedCommitFree": 8225505280,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.487,
+          "ServerDispatchP95MS": 0.40099999999999997,
+          "ClientFrameP95RangeMS": [
+            8.491,
+            8.491
+          ],
+          "ClientConvergenceUsecRange": [
+            105,
+            105
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 76994,
+            "ReceivedPackets": 264,
+            "SentBytes": 55988,
+            "SentPackets": 408
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.125,
+            "WholeLifecycleUserSeconds": 0.421875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 237,
+            "Objects": 1452,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 244,
+            "Objects": 1470,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            152,
+            1104
+          ],
+          "ClientRTTP95RangeMS": [
+            25.063700042665,
+            25.063700042665
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 1,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 3.0470000002533197,
+          "MinimumObservedCommitFree": 8228569088,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.471,
+          "ServerDispatchP95MS": 0.435,
+          "ClientFrameP95RangeMS": [
+            8.408000000000001,
+            8.408000000000001
+          ],
+          "ClientConvergenceUsecRange": [
+            233,
+            233
+          ],
+          "ObservedClientPartsRange": [
+            0,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 155,
+            "RefreshUsec": 9364,
+            "RefreshMaximumUsec": 483,
+            "RefreshStage": 0,
+            "Coalesced": 108,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 24,
+            "Updates": 20,
+            "Enters": 197,
+            "Leaves": 128,
+            "Materialized": 69
+          },
+          "ServerWire": {
+            "ReceivedBytes": 77054,
+            "ReceivedPackets": 242,
+            "SentBytes": 85773,
+            "SentPackets": 319
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.1875,
+            "WholeLifecycleUserSeconds": 0.421875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 237,
+            "Objects": 1452,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 244,
+            "Objects": 1470,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            241,
+            1136
+          ],
+          "ClientRTTP95RangeMS": [
+            25.0500002875924,
+            25.0500002875924
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 1,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 3.0159999998286366,
+          "MinimumObservedCommitFree": 8222494720,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.455,
+          "ServerDispatchP95MS": 0.442,
+          "ClientFrameP95RangeMS": [
+            8.442,
+            8.442
+          ],
+          "ClientConvergenceUsecRange": [
+            101,
+            101
+          ],
+          "ObservedClientPartsRange": [
+            0,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 155,
+            "RefreshUsec": 9598,
+            "RefreshMaximumUsec": 492,
+            "RefreshStage": 0,
+            "Coalesced": 108,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 24,
+            "Updates": 20,
+            "Enters": 197,
+            "Leaves": 128,
+            "Materialized": 69
+          },
+          "ServerWire": {
+            "ReceivedBytes": 77056,
+            "ReceivedPackets": 243,
+            "SentBytes": 85777,
+            "SentPackets": 321
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.09375,
+            "WholeLifecycleUserSeconds": 0.59375
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 237,
+            "Objects": 1452,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 244,
+            "Objects": 1470,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            241,
+            1136
+          ],
+          "ClientRTTP95RangeMS": [
+            25.0467001460493,
+            25.0467001460493
+          ]
+        },
+        {
+          "Configuration": "Baseline",
+          "Peers": 1,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 3.016000000294298,
+          "MinimumObservedCommitFree": 8202670080,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.444,
+          "ServerDispatchP95MS": 0.40499999999999997,
+          "ClientFrameP95RangeMS": [
+            8.496,
+            8.496
+          ],
+          "ClientConvergenceUsecRange": [
+            125,
+            125
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 77052,
+            "ReceivedPackets": 268,
+            "SentBytes": 57828,
+            "SentPackets": 413
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.109375,
+            "WholeLifecycleUserSeconds": 0.40625
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 240,
+            "Objects": 1463,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 247,
+            "Objects": 1481,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            84,
+            1104
+          ],
+          "ClientRTTP95RangeMS": [
+            25.1151002012193,
+            25.1151002012193
+          ]
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-162242e0-4137-40e3-994e-5ee4c6ebbb03",
+      "Profile": 10,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "b99d732e0d642c48415cd829433d4c6d56cf245d77c664a432841a4760f3ae1d",
+      "ImpairedLink": {
+        "ClientIndex": 1,
+        "IntentionalDropEvery": 17,
+        "DelaySeconds": 0.04,
+        "JitterSeconds": [
+          0,
+          0.035,
+          0.07
+        ],
+        "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a"
+      },
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 31.453999999910593,
+          "MinimumObservedCommitFree": 8107225088,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.447,
+          "ServerDispatchP95MS": 0.78,
+          "ClientFrameP95RangeMS": [
+            8.44,
+            8.44
+          ],
+          "ClientConvergenceUsecRange": [
+            101,
+            101
+          ],
+          "ObservedClientPartsRange": [
+            512,
+            512
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 112740,
+            "ReceivedPackets": 960,
+            "SentBytes": 413230,
+            "SentPackets": 1435
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.25,
+            "WholeLifecycleUserSeconds": 3.59375
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1584,
+            "Objects": 3255,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1591,
+            "Objects": 3273,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            767,
+            2208
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 3738,
+              "Forwarded": 3519,
+              "Dropped": 219,
+              "PeakPending": 444,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 219,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 1790,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 1,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            591.431200038642,
+            591.431200038642
+          ],
+          "ImpairedPeerRTTP95MS": 591.431200038642,
+          "HealthyPeerRTTP95MaximumMS": null
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 24.032000000122935,
+          "MinimumObservedCommitFree": 8267317248,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.458,
+          "ServerDispatchP95MS": 0.828,
+          "ClientFrameP95RangeMS": [
+            8.451,
+            8.451
+          ],
+          "ClientConvergenceUsecRange": [
+            470331,
+            470331
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            128
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 2368,
+            "RefreshUsec": 137392,
+            "RefreshMaximumUsec": 596,
+            "RefreshStage": 3,
+            "Coalesced": 82,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 38,
+            "Updates": 37,
+            "Enters": 261,
+            "Leaves": 192,
+            "Materialized": 69
+          },
+          "ServerWire": {
+            "ReceivedBytes": 103419,
+            "ReceivedPackets": 703,
+            "SentBytes": 354621,
+            "SentPackets": 1067
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.34375,
+            "WholeLifecycleUserSeconds": 3.09375
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1584,
+            "Objects": 3255,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1591,
+            "Objects": 3273,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            2240,
+            16113
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 2533,
+              "Forwarded": 2383,
+              "Dropped": 149,
+              "PeakPending": 23,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 149,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 1131,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 1,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            499.987400136888,
+            499.987400136888
+          ],
+          "ImpairedPeerRTTP95MS": 499.987400136888,
+          "HealthyPeerRTTP95MaximumMS": null
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 20.609000000171363,
+          "MinimumObservedCommitFree": 8269209600,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.468,
+          "ServerDispatchP95MS": 0.8400000000000001,
+          "ClientFrameP95RangeMS": [
+            8.435,
+            8.435
+          ],
+          "ClientConvergenceUsecRange": [
+            516573,
+            516573
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            128
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 2008,
+            "RefreshUsec": 117775,
+            "RefreshMaximumUsec": 530,
+            "RefreshStage": 1,
+            "Coalesced": 82,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 40,
+            "Updates": 39,
+            "Enters": 325,
+            "Leaves": 256,
+            "Materialized": 5
+          },
+          "ServerWire": {
+            "ReceivedBytes": 101778,
+            "ReceivedPackets": 674,
+            "SentBytes": 347724,
+            "SentPackets": 1006
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.21875,
+            "WholeLifecycleUserSeconds": 2.546875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1581,
+            "Objects": 3244,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1588,
+            "Objects": 3262,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            2285,
+            16220
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 2206,
+              "Forwarded": 2074,
+              "Dropped": 129,
+              "PeakPending": 25,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 129,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 1033,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 1,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            474.989099893719,
+            474.989099893719
+          ],
+          "ImpairedPeerRTTP95MS": 474.989099893719,
+          "HealthyPeerRTTP95MaximumMS": null
+        },
+        {
+          "Configuration": "Baseline",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 25.061999999918044,
+          "MinimumObservedCommitFree": 8248242176,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.449,
+          "ServerDispatchP95MS": 0.7879999999999999,
+          "ClientFrameP95RangeMS": [
+            8.463,
+            8.463
+          ],
+          "ClientConvergenceUsecRange": [
+            122,
+            122
+          ],
+          "ObservedClientPartsRange": [
+            512,
+            512
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 106354,
+            "ReceivedPackets": 799,
+            "SentBytes": 347950,
+            "SentPackets": 1249
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.46875,
+            "WholeLifecycleUserSeconds": 2.71875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1584,
+            "Objects": 3255,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1591,
+            "Objects": 3273,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            767,
+            3312
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 3405,
+              "Forwarded": 3205,
+              "Dropped": 200,
+              "PeakPending": 444,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 200,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 1672,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 1,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            533.259999938309,
+            533.259999938309
+          ],
+          "ImpairedPeerRTTP95MS": 533.259999938309,
+          "HealthyPeerRTTP95MaximumMS": null
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-2ce8aa5d-1025-4f41-819e-306c2a405cf1",
+      "Profile": 5,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "7c55936863ad43278e177b3020ebffc594dc05c64d0f93b98a7f7ee9e62bb6b3",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 32,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 13.030999999959022,
+          "MinimumObservedCommitFree": 6825598976,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 17.27,
+          "ServerDispatchP95MS": 9.763000000000002,
+          "ClientFrameP95RangeMS": [
+            8.575,
+            8.694
+          ],
+          "ClientConvergenceUsecRange": [
+            99,
+            374
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 3954467,
+            "ReceivedPackets": 37475,
+            "SentBytes": 96108310,
+            "SentPackets": 395042
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 3.546875,
+            "WholeLifecycleUserSeconds": 7.890625
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 674,
+            "Objects": 2083,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 836,
+            "Objects": 2256,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            22693
+          ],
+          "ClientRTTP95RangeMS": [
+            116.75309995189299,
+            266.680400352925
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 32,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 11.655999999959022,
+          "MinimumObservedCommitFree": 6828171264,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 11.443999999999999,
+          "ServerDispatchP95MS": 6.758,
+          "ClientFrameP95RangeMS": [
+            8.583,
+            8.758000000000001
+          ],
+          "ClientConvergenceUsecRange": [
+            6624678,
+            6657999
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 263,
+            "RefreshUsec": 17058,
+            "RefreshMaximumUsec": 371,
+            "RefreshStage": 0,
+            "Coalesced": 4060,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 633600,
+            "PendingMessages": 6336,
+            "Submitted": 1952,
+            "Updates": 1920,
+            "Enters": 2208,
+            "Leaves": 0,
+            "Materialized": 2208
+          },
+          "ServerWire": {
+            "ReceivedBytes": 2547112,
+            "ReceivedPackets": 10370,
+            "SentBytes": 28955436,
+            "SentPackets": 85392
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 3.1875,
+            "WholeLifecycleUserSeconds": 3.84375
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 638,
+            "Objects": 2023,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 800,
+            "Objects": 2196,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            8271
+          ],
+          "ClientRTTP95RangeMS": [
+            33.3331003785133,
+            41.883500292897196
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 32,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 11.640000000130385,
+          "MinimumObservedCommitFree": 6817239040,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 10.865,
+          "ServerDispatchP95MS": 6.572,
+          "ClientFrameP95RangeMS": [
+            8.559000000000001,
+            8.722000000000001
+          ],
+          "ClientConvergenceUsecRange": [
+            6582890,
+            6608137
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 282,
+            "RefreshUsec": 18312,
+            "RefreshMaximumUsec": 448,
+            "RefreshStage": 1,
+            "Coalesced": 4056,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 625600,
+            "PendingMessages": 6256,
+            "Submitted": 2032,
+            "Updates": 2000,
+            "Enters": 2208,
+            "Leaves": 0,
+            "Materialized": 2208
+          },
+          "ServerWire": {
+            "ReceivedBytes": 2556024,
+            "ReceivedPackets": 10626,
+            "SentBytes": 30005117,
+            "SentPackets": 88210
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 3.390625,
+            "WholeLifecycleUserSeconds": 3.546875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 629,
+            "Objects": 2008,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 791,
+            "Objects": 2181,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1136,
+            5476
+          ],
+          "ClientRTTP95RangeMS": [
+            33.339399844408,
+            41.963000316172796
+          ]
+        },
+        {
+          "Configuration": "Baseline",
+          "Peers": 32,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 16.063000000081956,
+          "MinimumObservedCommitFree": 6810103808,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 17.279,
+          "ServerDispatchP95MS": 9.797,
+          "ClientFrameP95RangeMS": [
+            8.59,
+            8.725
+          ],
+          "ClientConvergenceUsecRange": [
+            96,
+            399
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 3952066,
+            "ReceivedPackets": 37211,
+            "SentBytes": 94615812,
+            "SentPackets": 390887
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 4.09375,
+            "WholeLifecycleUserSeconds": 9.421875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 674,
+            "Objects": 2083,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 836,
+            "Objects": 2256,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            18840
+          ],
+          "ClientRTTP95RangeMS": [
+            116.68650014326,
+            275.151799898595
+          ]
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-35612ce3-4dc7-4474-baf7-b7cfcfdc372c",
+      "Profile": 9,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "6d2b702eeadd93e34a667d21a696305ad339bf1af8ed97d51eabe0838f5a6c5b",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Candidate",
+          "Peers": 32,
+          "World": 512,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 13.125,
+          "MinimumObservedCommitFree": 6807977984,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 12.133,
+          "ServerDispatchP95MS": 7.016,
+          "ClientFrameP95RangeMS": [
+            8.59,
+            8.792
+          ],
+          "ClientConvergenceUsecRange": [
+            6924656,
+            6958075
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 500,
+            "RefreshUsec": 39245,
+            "RefreshMaximumUsec": 751,
+            "RefreshStage": 0,
+            "Coalesced": 4088,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 633600,
+            "PendingMessages": 6336,
+            "Submitted": 1920,
+            "Updates": 1856,
+            "Enters": 2208,
+            "Leaves": 0,
+            "Materialized": 2208
+          },
+          "ServerWire": {
+            "ReceivedBytes": 2547582,
+            "ReceivedPackets": 10345,
+            "SentBytes": 29460118,
+            "SentPackets": 86658
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 3.1875,
+            "WholeLifecycleUserSeconds": 4.3125
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 2000,
+            "Objects": 3845,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 2162,
+            "Objects": 4018,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            4045
+          ],
+          "ClientRTTP95RangeMS": [
+            41.1731000058353,
+            50.1395999453962
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 32,
+          "World": 512,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 13.030999999959022,
+          "MinimumObservedCommitFree": 6846255104,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 11.122,
+          "ServerDispatchP95MS": 7.056,
+          "ClientFrameP95RangeMS": [
+            8.588999999999999,
+            8.708
+          ],
+          "ClientConvergenceUsecRange": [
+            6799668,
+            6833060
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 514,
+            "RefreshUsec": 40734,
+            "RefreshMaximumUsec": 762,
+            "RefreshStage": 1,
+            "Coalesced": 4088,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 632000,
+            "PendingMessages": 6320,
+            "Submitted": 1936,
+            "Updates": 1872,
+            "Enters": 2208,
+            "Leaves": 0,
+            "Materialized": 2208
+          },
+          "ServerWire": {
+            "ReceivedBytes": 2546029,
+            "ReceivedPackets": 10258,
+            "SentBytes": 29096962,
+            "SentPackets": 85716
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 3.390625,
+            "WholeLifecycleUserSeconds": 4.3125
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1982,
+            "Objects": 3815,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 2144,
+            "Objects": 3988,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            32,
+            4532
+          ],
+          "ClientRTTP95RangeMS": [
+            33.3434999920428,
+            58.271199930459304
+          ]
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-410c1c69-a35a-4c9f-8da9-f5dd5952c6d9",
+      "Profile": 8,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "81cf7c3134fecda678549d95054dbf779e14002010fa22d989bc4a04278d5867",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Candidate",
+          "Peers": 16,
+          "World": 512,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 6.17200000025332,
+          "MinimumObservedCommitFree": 7601528832,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 9.436,
+          "ServerDispatchP95MS": 2.775,
+          "ClientFrameP95RangeMS": [
+            8.474,
+            8.656
+          ],
+          "ClientConvergenceUsecRange": [
+            574837,
+            591485
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 499,
+            "RefreshUsec": 34965,
+            "RefreshMaximumUsec": 664,
+            "RefreshStage": 0,
+            "Coalesced": 2040,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 12800,
+            "PendingMessages": 128,
+            "Submitted": 1952,
+            "Updates": 1920,
+            "Enters": 1104,
+            "Leaves": 0,
+            "Materialized": 1104
+          },
+          "ServerWire": {
+            "ReceivedBytes": 1324724,
+            "ReceivedPackets": 6916,
+            "SentBytes": 7891512,
+            "SentPackets": 26220
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.609375,
+            "WholeLifecycleUserSeconds": 1.390625
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1794,
+            "Objects": 3555,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1876,
+            "Objects": 3648,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            2185
+          ],
+          "ClientRTTP95RangeMS": [
+            25.073199998587402,
+            33.3770997822285
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 16,
+          "World": 512,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 5.70299999974668,
+          "MinimumObservedCommitFree": 7584829440,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 9.169,
+          "ServerDispatchP95MS": 2.832,
+          "ClientFrameP95RangeMS": [
+            8.478,
+            8.588000000000001
+          ],
+          "ClientConvergenceUsecRange": [
+            449831,
+            466716
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 446,
+            "RefreshUsec": 32558,
+            "RefreshMaximumUsec": 533,
+            "RefreshStage": 1,
+            "Coalesced": 2040,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 43200,
+            "PendingMessages": 432,
+            "Submitted": 1648,
+            "Updates": 1616,
+            "Enters": 1104,
+            "Leaves": 0,
+            "Materialized": 1104
+          },
+          "ServerWire": {
+            "ReceivedBytes": 1301052,
+            "ReceivedPackets": 6126,
+            "SentBytes": 6906364,
+            "SentPackets": 23078
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.53125,
+            "WholeLifecycleUserSeconds": 1.46875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1767,
+            "Objects": 3510,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1849,
+            "Objects": 3603,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            4204
+          ],
+          "ClientRTTP95RangeMS": [
+            25.031799916178,
+            33.264399971813
+          ]
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-78123ef4-94ee-425b-8af5-b13c81d5bd4a",
+      "Profile": 6,
+      "Result": "PARTIAL",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "4f4ff9787ea687d475c70dae2d2fd0b009a7db822b865dc66292968dbdf79839",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 32,
+          "World": 512,
+          "Trial": 0,
+          "Resources": {
+            "Available": true,
+            "PhysicalFree": 18602946560,
+            "CommitFree": 8318431232
+          },
+          "Result": "FAIL",
+          "Seconds": 121.6710000000894,
+          "MinimumObservedCommitFree": 6612365312,
+          "ResourceGuardAborted": false,
+          "Reports": [],
+          "NonemptyStderr": [
+            {
+              "Path": "client1.stderr.log",
+              "SHA256": "4391bc181221129d8627dbcd670460bf688d80ef54e83c63b1e693421cecf452"
+            },
+            {
+              "Path": "client10.stderr.log",
+              "SHA256": "5b289bd9a13e9ce47bb1ffa7250b7acf600acc4c15b6102e08df0a33541b9f5c"
+            },
+            {
+              "Path": "client11.stderr.log",
+              "SHA256": "f3a211f1bb3027215fddefe3eb879dcc32ca90c560bf968b50e50cdb153d32cb"
+            },
+            {
+              "Path": "client12.stderr.log",
+              "SHA256": "41511038e3356347c16d6d6310d31d76c7978fb0ae33a42532178565550d2fcd"
+            },
+            {
+              "Path": "client13.stderr.log",
+              "SHA256": "e89d13ef5ebe8388e06e93659f8c91b3c7b60045b04af448d5aa7b46312dbe71"
+            },
+            {
+              "Path": "client14.stderr.log",
+              "SHA256": "afbc98770c38402867986cd84833bfe74a116fa13dfcffefa202501055b512fc"
+            },
+            {
+              "Path": "client15.stderr.log",
+              "SHA256": "b303232aece62c062a99a9e3351a8b8c6065a4dca5f45adb3829125c4ec3f070"
+            },
+            {
+              "Path": "client16.stderr.log",
+              "SHA256": "31f5a681f0152e7655fe0312ba570f9cbe470e828eb59e98421abf6c90df3e29"
+            },
+            {
+              "Path": "client17.stderr.log",
+              "SHA256": "58353d9601c0ee949bebfd89dfa435959c03c923baab352700f7983b77b3531f"
+            },
+            {
+              "Path": "client18.stderr.log",
+              "SHA256": "45b74fdbf14c187a60cfc46801f8fb86c0a47c90001dff52e8afc736b9494f1e"
+            },
+            {
+              "Path": "client19.stderr.log",
+              "SHA256": "3976e34067928005d37543116897e62861b1b2c3aa1a681bd1c32c053be6c6c2"
+            },
+            {
+              "Path": "client2.stderr.log",
+              "SHA256": "4391bc181221129d8627dbcd670460bf688d80ef54e83c63b1e693421cecf452"
+            },
+            {
+              "Path": "client20.stderr.log",
+              "SHA256": "3e6f5655b69de21e543a8568b47bd94b91a91908da739c0c640f2c9de98f3926"
+            },
+            {
+              "Path": "client21.stderr.log",
+              "SHA256": "3976e34067928005d37543116897e62861b1b2c3aa1a681bd1c32c053be6c6c2"
+            },
+            {
+              "Path": "client22.stderr.log",
+              "SHA256": "4692143c9895b49dcbb181fa0a253990efc9021b7b3086de66a40181197750ce"
+            },
+            {
+              "Path": "client23.stderr.log",
+              "SHA256": "d8c4a06f762c882b17e15d692a775e44c1a77e0d289785fef158cb3deb6a396f"
+            },
+            {
+              "Path": "client24.stderr.log",
+              "SHA256": "2dca222b6293d210f68a8be6c518ef94fa5daaadd77a73747f58d65fcad24f50"
+            },
+            {
+              "Path": "client25.stderr.log",
+              "SHA256": "225eee66de1b201b4af5e79f00ec9bde924a451b658329775b08c9ce8c5f2912"
+            },
+            {
+              "Path": "client26.stderr.log",
+              "SHA256": "f5561d017bc57ea6444d8782d0fb9ce645abca5808ed0a02742947fce88e6440"
+            },
+            {
+              "Path": "client27.stderr.log",
+              "SHA256": "dcd487304c80835b641d00c423c2801387b1605eb4a86da275c8405cc7651645"
+            },
+            {
+              "Path": "client28.stderr.log",
+              "SHA256": "71a620399d7498ec287d8a7f41e6c5f27f4ce8f47970f3272ed5f3ff9000cec7"
+            },
+            {
+              "Path": "client29.stderr.log",
+              "SHA256": "fc58df877edf10995c443c2845ee70220101200e6105f500df56b97338693dbe"
+            },
+            {
+              "Path": "client3.stderr.log",
+              "SHA256": "3c3fa064b9a632055af87f85631b692ef545687f723174bfc14821842af2e49c"
+            },
+            {
+              "Path": "client30.stderr.log",
+              "SHA256": "c8b181ff42d3a422855002e4ad0b14c176d479e165d51c44826bffa2da725cdb"
+            },
+            {
+              "Path": "client31.stderr.log",
+              "SHA256": "05e2e273f7bb5918662f42a7714373373acd59e5f0e24b9569e2ccea8f5d8400"
+            },
+            {
+              "Path": "client32.stderr.log",
+              "SHA256": "62f9d4aaed7ed5c9508e4171cb374b28d4855c92d03793d2a5c743d796527f11"
+            },
+            {
+              "Path": "client4.stderr.log",
+              "SHA256": "34013eacb27b9223adca801b5cf7c6defddf2f694571e81ef157ae6b3cdc496b"
+            },
+            {
+              "Path": "client5.stderr.log",
+              "SHA256": "34013eacb27b9223adca801b5cf7c6defddf2f694571e81ef157ae6b3cdc496b"
+            },
+            {
+              "Path": "client6.stderr.log",
+              "SHA256": "5294e86b870064b9b78a8b8a6e30dfcf1e791c8930f8e8ba8143e645431a44cd"
+            },
+            {
+              "Path": "client7.stderr.log",
+              "SHA256": "69ea2b70acb10b690841ef4d583353f72797e7e440f1c7554e7b646afdc0b937"
+            },
+            {
+              "Path": "client8.stderr.log",
+              "SHA256": "0bce97e2f511ba08ad728d1f6b6b50952a928de3b3e7e9bc59ac82050699353a"
+            },
+            {
+              "Path": "client9.stderr.log",
+              "SHA256": "9353e291275e227606d2b802fe999d5cd520994db141586bcb4c8e66977bade0"
+            },
+            {
+              "Path": "server0.stderr.log",
+              "SHA256": "3234bc54b920d53fe85ad9264b93bcaf58f0b520feef1f1954f223c837e9d5a4"
+            }
+          ],
+          "ErrorSHA256": "acc8f6367078bb259788fd6d6d4d42112ffe2cb5fdc6c7d1dcda4d471aacf52b",
+          "Failure": "Unchanged baseline fails all-peer warmup with invalid-target errors; full stderr retained in raw archive"
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-7be79655-344f-401f-b082-322b9b20f92f",
+      "Profile": 2,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "256588e0c5ff219b67ca226da63b63cb69ad30622365b9b998752e37dc4e7055",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 4.141000000294298,
+          "MinimumObservedCommitFree": 8197197824,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.444,
+          "ServerDispatchP95MS": 0.902,
+          "ClientFrameP95RangeMS": [
+            8.588999999999999,
+            8.588999999999999
+          ],
+          "ClientConvergenceUsecRange": [
+            117,
+            117
+          ],
+          "ObservedClientPartsRange": [
+            512,
+            512
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 76996,
+            "ReceivedPackets": 269,
+            "SentBytes": 57444,
+            "SentPackets": 411
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.109375,
+            "WholeLifecycleUserSeconds": 0.6875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1584,
+            "Objects": 3255,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1591,
+            "Objects": 3273,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            84,
+            1104
+          ],
+          "ClientRTTP95RangeMS": [
+            25.1960000023246,
+            25.1960000023246
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 4.70299999974668,
+          "MinimumObservedCommitFree": 8206729216,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.501999999999999,
+          "ServerDispatchP95MS": 0.954,
+          "ClientFrameP95RangeMS": [
+            8.411,
+            8.411
+          ],
+          "ClientConvergenceUsecRange": [
+            683273,
+            683273
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            128
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 365,
+            "RefreshUsec": 27429,
+            "RefreshMaximumUsec": 501,
+            "RefreshStage": 4,
+            "Coalesced": 120,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 14,
+            "Updates": 10,
+            "Enters": 133,
+            "Leaves": 64,
+            "Materialized": 69
+          },
+          "ServerWire": {
+            "ReceivedBytes": 76516,
+            "ReceivedPackets": 224,
+            "SentBytes": 68819,
+            "SentPackets": 300
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.03125,
+            "WholeLifecycleUserSeconds": 0.78125
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1581,
+            "Objects": 3244,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1588,
+            "Objects": 3262,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            240,
+            1200
+          ],
+          "ClientRTTP95RangeMS": [
+            25.0402996316552,
+            25.0402996316552
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 4.813000000081956,
+          "MinimumObservedCommitFree": 8206336000,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.441,
+          "ServerDispatchP95MS": 0.9740000000000001,
+          "ClientFrameP95RangeMS": [
+            8.411999999999999,
+            8.411999999999999
+          ],
+          "ClientConvergenceUsecRange": [
+            691569,
+            691569
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            128
+          ],
+          "ServerReplication": {
+            "Catalog": 517,
+            "CatalogBytes": 72819,
+            "RefreshCalls": 364,
+            "RefreshUsec": 27324,
+            "RefreshMaximumUsec": 504,
+            "RefreshStage": 4,
+            "Coalesced": 120,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 14,
+            "Updates": 10,
+            "Enters": 133,
+            "Leaves": 64,
+            "Materialized": 69
+          },
+          "ServerWire": {
+            "ReceivedBytes": 76516,
+            "ReceivedPackets": 224,
+            "SentBytes": 68819,
+            "SentPackets": 300
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.0625,
+            "WholeLifecycleUserSeconds": 0.84375
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1584,
+            "Objects": 3255,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1591,
+            "Objects": 3273,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            240,
+            1200
+          ],
+          "ClientRTTP95RangeMS": [
+            25.0486000441015,
+            25.0486000441015
+          ]
+        },
+        {
+          "Configuration": "Baseline",
+          "Peers": 1,
+          "World": 512,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 4.125,
+          "MinimumObservedCommitFree": 8211251200,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.45,
+          "ServerDispatchP95MS": 0.8009999999999999,
+          "ClientFrameP95RangeMS": [
+            8.512,
+            8.512
+          ],
+          "ClientConvergenceUsecRange": [
+            117,
+            117
+          ],
+          "ObservedClientPartsRange": [
+            512,
+            512
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 76996,
+            "ReceivedPackets": 269,
+            "SentBytes": 57079,
+            "SentPackets": 410
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.109375,
+            "WholeLifecycleUserSeconds": 0.96875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 1584,
+            "Objects": 3255,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 1591,
+            "Objects": 3273,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            84,
+            1104
+          ],
+          "ClientRTTP95RangeMS": [
+            25.0627999193966,
+            25.0627999193966
+          ]
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-ad185759-6f3c-4559-bf3f-325cc64bae80",
+      "Profile": 3,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "10f92eff427c4a468c8d7273a710cd75165885cc64d8112876f49a16f5888e7d",
+      "ImpairedLink": null,
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 4.3280000002123415,
+          "MinimumObservedCommitFree": 7613743104,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 9.116000000000001,
+          "ServerDispatchP95MS": 5.575,
+          "ClientFrameP95RangeMS": [
+            8.603,
+            8.758000000000001
+          ],
+          "ClientConvergenceUsecRange": [
+            86,
+            252
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 1529304,
+            "ReceivedPackets": 6602,
+            "SentBytes": 9521164,
+            "SentPackets": 60362
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.9375,
+            "WholeLifecycleUserSeconds": 1.09375
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 444,
+            "Objects": 1753,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 526,
+            "Objects": 1846,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            18547
+          ],
+          "ClientRTTP95RangeMS": [
+            25.4446999169886,
+            41.4472999982536
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 4.405999999959022,
+          "MinimumObservedCommitFree": 7608680448,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.757,
+          "ServerDispatchP95MS": 2.5829999999999997,
+          "ClientFrameP95RangeMS": [
+            8.44,
+            8.597000000000001
+          ],
+          "ClientConvergenceUsecRange": [
+            108220,
+            125170
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 218,
+            "RefreshUsec": 12832,
+            "RefreshMaximumUsec": 441,
+            "RefreshStage": 0,
+            "Coalesced": 2016,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 10400,
+            "PendingMessages": 104,
+            "Submitted": 1992,
+            "Updates": 1976,
+            "Enters": 1104,
+            "Leaves": 0,
+            "Materialized": 1104
+          },
+          "ServerWire": {
+            "ReceivedBytes": 1328280,
+            "ReceivedPackets": 7078,
+            "SentBytes": 8025312,
+            "SentPackets": 26656
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.5,
+            "WholeLifecycleUserSeconds": 1.078125
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 432,
+            "Objects": 1733,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 514,
+            "Objects": 1826,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            3501
+          ],
+          "ClientRTTP95RangeMS": [
+            25.0258999876678,
+            33.44970010221
+          ]
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 4.42200000025332,
+          "MinimumObservedCommitFree": 7608057856,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 9.336,
+          "ServerDispatchP95MS": 2.484,
+          "ClientFrameP95RangeMS": [
+            8.467,
+            8.55
+          ],
+          "ClientConvergenceUsecRange": [
+            124802,
+            133302
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 209,
+            "RefreshUsec": 12190,
+            "RefreshMaximumUsec": 427,
+            "RefreshStage": 0,
+            "Coalesced": 2016,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 10400,
+            "PendingMessages": 104,
+            "Submitted": 2008,
+            "Updates": 2008,
+            "Enters": 1104,
+            "Leaves": 0,
+            "Materialized": 1104
+          },
+          "ServerWire": {
+            "ReceivedBytes": 1328850,
+            "ReceivedPackets": 7092,
+            "SentBytes": 7908490,
+            "SentPackets": 26333
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.5625,
+            "WholeLifecycleUserSeconds": 0.875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 423,
+            "Objects": 1718,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 505,
+            "Objects": 1811,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            3400
+          ],
+          "ClientRTTP95RangeMS": [
+            25.038999971002298,
+            33.3946999162436
+          ]
+        },
+        {
+          "Configuration": "Baseline",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 4.32799999974668,
+          "MinimumObservedCommitFree": 7436185600,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.834,
+          "ServerDispatchP95MS": 5.728,
+          "ClientFrameP95RangeMS": [
+            8.557,
+            8.741999999999999
+          ],
+          "ClientConvergenceUsecRange": [
+            97,
+            178
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 1529730,
+            "ReceivedPackets": 6743,
+            "SentBytes": 9603512,
+            "SentPackets": 60572
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 0.75,
+            "WholeLifecycleUserSeconds": 1.484375
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 444,
+            "Objects": 1753,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 526,
+            "Objects": 1846,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            18615
+          ],
+          "ClientRTTP95RangeMS": [
+            25.1784999854863,
+            41.8257997371256
+          ]
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release32-f5bd371e-9dc8-400d-825f-2f04c6826bbf",
+      "Profile": 11,
+      "Result": "PARTIAL",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "1de1c6b99ec1915afb57eacc69430d5a810b79a7fa49285c70510a53de3bea97",
+      "ImpairedLink": {
+        "ClientIndex": 16,
+        "IntentionalDropEvery": 17,
+        "DelaySeconds": 0.04,
+        "JitterSeconds": [
+          0,
+          0.035,
+          0.07
+        ],
+        "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a"
+      },
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 16,
+          "World": 512,
+          "Trial": 0,
+          "Resources": {
+            "Available": true,
+            "PhysicalFree": 18628829184,
+            "CommitFree": 8345587712
+          },
+          "Result": "FAIL",
+          "Seconds": 121.46799999987707,
+          "MinimumObservedCommitFree": 7412224000,
+          "ResourceGuardAborted": false,
+          "Reports": [],
+          "NonemptyStderr": [
+            {
+              "Path": "client1.stderr.log",
+              "SHA256": "8a9378a8339afba813b25dfc9ccc42a028c6f2bb7d50491547e8833d227724d2"
+            },
+            {
+              "Path": "client10.stderr.log",
+              "SHA256": "e575b6dff7ea178316c852f4620d7165dfe3e065258823b29c862088c78fe0e7"
+            },
+            {
+              "Path": "client11.stderr.log",
+              "SHA256": "0f3b7f6fda6a971da7377d018f57f5503313c488614de65be9824ada4919b24f"
+            },
+            {
+              "Path": "client12.stderr.log",
+              "SHA256": "a63337ea8be2debeae6a44a800e6c96956f1f6e135c9eb6cc1c5a3d5856ef64d"
+            },
+            {
+              "Path": "client13.stderr.log",
+              "SHA256": "97a100dc0587ac9379b0787ec361799ed614033410627cffb37c90af382eebc9"
+            },
+            {
+              "Path": "client14.stderr.log",
+              "SHA256": "13cf28f7ecffd9f4b49256169d17119fb510dd8738682a74db982f346cae779e"
+            },
+            {
+              "Path": "client15.stderr.log",
+              "SHA256": "d915a5c5e55e2bad5eb8384976faa1549eb8ed16529659b8c63c92110867ba5f"
+            },
+            {
+              "Path": "client16.stderr.log",
+              "SHA256": "3464f581928889b65baf23d4f48bca931f19fd1554082f0dd25a4ce86e8ef9f3"
+            },
+            {
+              "Path": "client2.stderr.log",
+              "SHA256": "1ffe71b1a640a90c5609bc9a0bb2945bf16f2cea92ef5e4f8425938071f1bd60"
+            },
+            {
+              "Path": "client3.stderr.log",
+              "SHA256": "1ffe71b1a640a90c5609bc9a0bb2945bf16f2cea92ef5e4f8425938071f1bd60"
+            },
+            {
+              "Path": "client4.stderr.log",
+              "SHA256": "53f302cc1f0bd1f52c9792e59d284a4eda4d9777bff1d9cacbd488866ce84f82"
+            },
+            {
+              "Path": "client5.stderr.log",
+              "SHA256": "53f302cc1f0bd1f52c9792e59d284a4eda4d9777bff1d9cacbd488866ce84f82"
+            },
+            {
+              "Path": "client6.stderr.log",
+              "SHA256": "25a0b4ce00137de84a835d6e3e80a6b7d0fc51e308634d82652cbdbf9c37e42f"
+            },
+            {
+              "Path": "client7.stderr.log",
+              "SHA256": "c14e34c83e7fb1887c93bec9254ac7b12584c5cd496a7f4c8f8e99327ac1ae3f"
+            },
+            {
+              "Path": "client8.stderr.log",
+              "SHA256": "aa302f0456d3b012f5c2f922796c6f81e662f078d06e952f79d8d32c217e0b25"
+            },
+            {
+              "Path": "client9.stderr.log",
+              "SHA256": "227c1373a88a952b9fe402484a864ba139300eb53dccf7fcd0e856a52c16ffe5"
+            },
+            {
+              "Path": "server0.stderr.log",
+              "SHA256": "27115901bd8341c266fe00ac70c83e61a2bf4ec37e994d2b278bbfaabf839662"
+            }
+          ],
+          "ErrorSHA256": "82d1e5b0b52e98837b7fa38675233304f1922857de9c3cea962b77bd58e21206",
+          "Failure": "Unchanged baseline fails all-peer warmup with invalid-target errors; full stderr retained in raw archive"
+        }
+      ],
+      "Family": "release32"
+    },
+    {
+      "Path": "foundation-benchmark-release33-a01760a2-eb42-4b91-97ff-a359bb0ab154",
+      "Profile": 2,
+      "Result": "PASS",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+      "InputsSHA256": "ce96024967351a5af25efb049827d68628c2439f207958fe5b6ab66d6a057df6",
+      "ImpairedLink": {
+        "ClientIndex": 16,
+        "IntentionalDropEvery": 17,
+        "DelaySeconds": 0.04,
+        "JitterSeconds": [
+          0,
+          0.035,
+          0.07
+        ],
+        "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a"
+      },
+      "Measurements": [
+        {
+          "Configuration": "Baseline",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 29.390999999828637,
+          "MinimumObservedCommitFree": 7598923776,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.678,
+          "ServerDispatchP95MS": 3.947,
+          "ClientFrameP95RangeMS": [
+            8.555,
+            8.734
+          ],
+          "ClientConvergenceUsecRange": [
+            93,
+            152
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 2072616,
+            "ReceivedPackets": 18907,
+            "SentBytes": 68793505,
+            "SentPackets": 222380
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 4.484375,
+            "WholeLifecycleUserSeconds": 4.78125
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 435,
+            "Objects": 1738,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 517,
+            "Objects": 1831,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            21534
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 18361,
+              "Forwarded": 17281,
+              "Dropped": 1080,
+              "PeakPending": 239,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 1080,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 11202,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 16,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            33.2650002092123,
+            1032.5305997394
+          ],
+          "ImpairedPeerRTTP95MS": 1032.5305997394,
+          "HealthyPeerRTTP95MaximumMS": 41.656999848783
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 0,
+          "Result": "PASS",
+          "Seconds": 23.280999999959022,
+          "MinimumObservedCommitFree": 7495819264,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 8.767999999999999,
+          "ServerDispatchP95MS": 1.371,
+          "ClientFrameP95RangeMS": [
+            8.458,
+            8.562999999999999
+          ],
+          "ClientConvergenceUsecRange": [
+            172,
+            926
+          ],
+          "ObservedClientPartsRange": [
+            0,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 1226,
+            "RefreshUsec": 67770,
+            "RefreshMaximumUsec": 412,
+            "RefreshStage": 0,
+            "Coalesced": 1898,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 3068,
+            "Updates": 3983,
+            "Enters": 1232,
+            "Leaves": 128,
+            "Materialized": 1104
+          },
+          "ServerWire": {
+            "ReceivedBytes": 1774707,
+            "ReceivedPackets": 16818,
+            "SentBytes": 51340589,
+            "SentPackets": 145547
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 3.71875,
+            "WholeLifecycleUserSeconds": 4.0625
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 417,
+            "Objects": 1708,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 499,
+            "Objects": 1801,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            109,
+            17550
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 13156,
+              "Forwarded": 12383,
+              "Dropped": 773,
+              "PeakPending": 76,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 773,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 7978,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 16,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            25.050500407815,
+            516.711000353098
+          ],
+          "ImpairedPeerRTTP95MS": 516.711000353098,
+          "HealthyPeerRTTP95MaximumMS": 33.4262000396848
+        },
+        {
+          "Configuration": "Candidate",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 24.594000000040978,
+          "MinimumObservedCommitFree": 7608213504,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 9.424999999999999,
+          "ServerDispatchP95MS": 1.408,
+          "ClientFrameP95RangeMS": [
+            8.481,
+            8.594
+          ],
+          "ClientConvergenceUsecRange": [
+            96,
+            121453
+          ],
+          "ObservedClientPartsRange": [
+            0,
+            64
+          ],
+          "ServerReplication": {
+            "Catalog": 69,
+            "CatalogBytes": 9203,
+            "RefreshCalls": 1296,
+            "RefreshUsec": 70375,
+            "RefreshMaximumUsec": 383,
+            "RefreshStage": 3,
+            "Coalesced": 1908,
+            "Deferred": 0,
+            "Failures": 0,
+            "Rejected": 0,
+            "PendingBytes": 0,
+            "PendingMessages": 0,
+            "Submitted": 2980,
+            "Updates": 3809,
+            "Enters": 1232,
+            "Leaves": 128,
+            "Materialized": 1040
+          },
+          "ServerWire": {
+            "ReceivedBytes": 1800012,
+            "ReceivedPackets": 17383,
+            "SentBytes": 54271191,
+            "SentPackets": 153399
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 3.5625,
+            "WholeLifecycleUserSeconds": 3.921875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 426,
+            "Objects": 1723,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 508,
+            "Objects": 1816,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            77,
+            14295
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 13796,
+              "Forwarded": 12985,
+              "Dropped": 811,
+              "PeakPending": 78,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 811,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 8401,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 16,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            25.0779003836215,
+            516.563499812037
+          ],
+          "ImpairedPeerRTTP95MS": 516.563499812037,
+          "HealthyPeerRTTP95MaximumMS": 33.4315001964569
+        },
+        {
+          "Configuration": "Baseline",
+          "Peers": 16,
+          "World": 64,
+          "Trial": 1,
+          "Result": "PASS",
+          "Seconds": 30.234999999869615,
+          "MinimumObservedCommitFree": 7601221632,
+          "ResourceGuardAborted": false,
+          "ServerFrameP95MS": 9.121,
+          "ServerDispatchP95MS": 3.654,
+          "ClientFrameP95RangeMS": [
+            8.581,
+            8.7
+          ],
+          "ClientConvergenceUsecRange": [
+            94,
+            187
+          ],
+          "ObservedClientPartsRange": [
+            64,
+            64
+          ],
+          "ServerReplication": null,
+          "ServerWire": {
+            "ReceivedBytes": 2125041,
+            "ReceivedPackets": 20103,
+            "SentBytes": 74801995,
+            "SentPackets": 238797
+          },
+          "ServerCPU": {
+            "WholeLifecycleKernelSeconds": 4.890625,
+            "WholeLifecycleUserSeconds": 4.71875
+          },
+          "ServerMemoryBefore": {
+            "Nodes": 435,
+            "Objects": 1738,
+            "StaticBytes": 0
+          },
+          "ServerMemoryAfterWork": {
+            "Nodes": 517,
+            "Objects": 1831,
+            "StaticBytes": 0
+          },
+          "NativeObservedHighBytesRange": [
+            1104,
+            19907
+          ],
+          "ImpairedLink": {
+            "Stats": {
+              "Received": 19017,
+              "Forwarded": 17899,
+              "Dropped": 1118,
+              "PeakPending": 236,
+              "ConfiguredDelaySeconds": 0.04,
+              "JitterSeconds": [
+                0,
+                0.035,
+                0.07
+              ],
+              "MinimumObservedSeconds": 0.04600000008940697,
+              "IntentionalDrops": 1118,
+              "OverflowDrops": 0,
+              "ReorderedForwards": 11617,
+              "IntentionalDropEvery": 17
+            },
+            "Error": null,
+            "ClientIndex": 16,
+            "HelperSHA256": "5fe9180d27a23a1e911379ccda9deca7cb9e0fa3fd05b040c51e552a454d4b3a",
+            "Scope": "One task-owned loopback UDP proxy; fixed packet loss and jitter affect real ENet; other peers use direct loopback"
+          },
+          "ClientRTTP95RangeMS": [
+            33.2806999795139,
+            991.664400324225
+          ],
+          "ImpairedPeerRTTP95MS": 991.664400324225,
+          "HealthyPeerRTTP95MaximumMS": 41.9674003496766
+        }
+      ],
+      "Family": "release33"
+    }
+  ],
+  "Result": "TARGETED_CORRECTION_QUALIFIED_WITH_RETAINED_BASELINE_FAILURES",
+  "NativeSource": "770c9ff58ef2d684d62f355eed686f2e296c935b91f0cab51ae162b09962b668",
+  "Summary": {
+    "PassedCandidateConfigurations": 16,
+    "PassedBaselineConfigurations": 12,
+    "RetainedBaselineFailures": 3,
+    "SuccessfulActorProcesses": 392,
+    "MeasuredSamplesPerPeer": 64,
+    "WarmupPerPeer": 16,
+    "Trials": 2,
+    "CandidateReplicationFailures": 0,
+    "SuccessfulConfigurationStderrFiles": 0,
+    "UnexpectedReportFiles": 0,
+    "ResourceGuardAborts": 0
+  },
+  "Coordinator": {
+    "Repository": "https://github.com/GantriaEngine/agent-coordinator",
+    "Revision": "cf1628de587ee0ccfbd74742d62946dac1adf522",
+    "Wire": "Fixed numeric profiles only; no command/path/argv launch authority",
+    "Release32Window": "2b6ef821-205c-4989-9f68-f154b82cb1de",
+    "Release33Window": "b7cdd6fc-5325-4bec-9de0-c0525c98a591"
+  },
+  "RawArchive": {
+    "File": "C:/Sandbox/Codex/Networking2/local-evidence-checkpoint10.zip",
+    "Members": 19469,
+    "Bytes": 67818845,
+    "Integrity": "PASS",
+    "SHA256": "886d2c136c1d2998a7a4adc8684c80879a99a75bfba8854b26e860bc2018dec3",
+    "Scope": "Actual benchmark reports/logs, prepared fixtures, immutable identities, executed helpers, coordinator journals and ownership cleanup; also retains earlier failed source/ASan evidence"
+  },
+  "Retirement": {
+    "Windows": [
+      {
+        "Path": "C:\\Sandbox\\Codex\\Networking2\\coordinator-cf1628-release32\\window-2b6ef821-205c-4989-9f68-f154b82cb1de",
+        "Results": {
+          "value": [
+            {
+              "Profile": 1,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 2,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 3,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 4,
+              "Exit": 1,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 5,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 6,
+              "Exit": 1,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 7,
+              "Result": "NOT_NEEDED_PAIRED_PASS",
+              "PairedProfile": 2
+            },
+            {
+              "Profile": 8,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 9,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 10,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 11,
+              "Exit": 1,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            }
+          ],
+          "Count": 11
+        }
+      },
+      {
+        "Path": "C:\\Sandbox\\Codex\\Networking2\\coordinator-cf1628-release33\\window-b7cdd6fc-5325-4bec-9de0-c0525c98a591",
+        "Results": {
+          "value": [
+            {
+              "Profile": 2,
+              "Exit": 0,
+              "TimedOut": false,
+              "OwnedJobReaped": true,
+              "Errors": []
+            },
+            {
+              "Profile": 3,
+              "Result": "NOT_NEEDED_PAIRED_PASS",
+              "PairedProfile": 2
+            }
+          ],
+          "Count": 2
+        }
+      }
+    ],
+    "UTC": "2026-11-04T11:24:10.7245851Z",
+    "Scope": "Every executed outer and nested Job checked reaped; process census found no task-root command line; no owned PID remains to retain a listener",
+    "LiveOwnedProcesses": 0,
+    "OwnedListeners": 0
+  },
+  "Limitations": [
+    "Headless synthetic mixed workloads; no graphical, physical input, or general 64-player qualification.",
+    "At 16/32 peers with 512 objects, baseline warmups fail; candidate-only large-world results are not paired speedups.",
+    "32-peer final structural convergence takes 6.58–6.96 seconds after the coordinated close, inside the existing 10-second failure policy; tracked separately as GL-039.",
+    "Release static-memory byte monitor returns zero and is unavailable, not evidence of zero memory growth. Object/node counts and machine commit headroom are observed; no allocation-rate or total-process-RSS claim.",
+    "Whole-process CPU includes startup/warmup/teardown; native occupancy is sampled, not an exact high-water guarantee.",
+    "Large ASan peer matrices remain resource-preflight limited. Long-duration reconnect storms and broader impaired-link profiles remain separate campaign coverage."
+  ]
+}

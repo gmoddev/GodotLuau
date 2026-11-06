@@ -1,0 +1,39 @@
+{
+  "NativeSource": {
+    "SHA256": "7a4af3b79e002ac005fcc86a1d7de5bc6ff65291b45b280bbe3a521bde02ba9b",
+    "Files": 91,
+    "Newlines": "LF normalized"
+  },
+  "Products": {
+    "godot_luau.dll": "c17b3689af87a0598a4b42e3d7251e62981613051e61b695a7d1e86e73eec782",
+    "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+    "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+  },
+  "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+  "FixtureSHA256": "8692b3d3503b407929bb66708bc3f10896e293fe6cbaa05620541516ebc4587b",
+  "Observation": {
+    "ChildUnderStaticParentArrived": false,
+    "Result": "REPRODUCED",
+    "RootControlArrived": true,
+    "SameStaticParentIdentity": true,
+    "StaticParentId": "8669193947511794297"
+  },
+  "Actors": [
+    {
+      "Label": "replication-baseline-server",
+      "Exit": 0,
+      "Diagnostics": ""
+    },
+    {
+      "Label": "replication-baseline-client",
+      "Exit": 0,
+      "Diagnostics": ""
+    }
+  ],
+  "Logs": {
+    "replication-baseline-client.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "replication-baseline-client.stdout.log": "806611352630a35f2c8c2026f5cf71113e9c7eca7611a8713273130bdd5d6521",
+    "replication-baseline-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "replication-baseline-server.stdout.log": "1af6ed209a146cddc1255dc6b177ed3518591738405b08007c0faac9934c1cee"
+  }
+}

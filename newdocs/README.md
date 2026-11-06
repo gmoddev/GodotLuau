@@ -33,6 +33,39 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+Networking Foundation 2 is integrated by the user-authorized normal merge of
+`foundation/networking-2` at `cb2014f` into compacted main `41acd27`, preserving
+all three foundation commits. The [integration record](networking-foundation-2-work.md#main-integration-2026-11-05)
+separates fresh branch CI, historical qualification and integrated-main checks.
+The original campaign started at archived main `9f52b27`; historical SHA receipts
+remain unchanged after compaction. [ADR-010](adr-010-remotefunction-terminal-outcomes.md)
+defines the integrated GL-030 implementation contract.
+GL-030 is qualified at `2296c96` with exact-revision receipts in the journal.
+[ADR-011](adr-011-peer-replication-relevance.md) defines the experimental,
+default-disabled runtime relevance/batching slice and its compatibility limits.
+The journal's campaign checkpoint classifies relevance, structural admission and
+scalability as partially qualified. At `bd18580`, Windows/Linux core, 131-actor
+native and full-native sanitizer gates pass and independently verify; GL-035/037
+closed on the campaign branch. At `436850a`, the new catalog/getter/control
+corrections pass both platforms' core/native/full-native sanitizer matrices;
+GL-038 closes with linked evidence. All four current source profiles and both
+extracted packages independently verify at `436850a`.
+GL-034's [bounded maintenance correction](gl-034-catalog-proposal.md) is qualified
+at `436850a`: repeated current 1/16/32-peer Release worlds and separate impaired
+profiles pass. The [receipt](evidence/networking2-436850a-release-qualification.json)
+retains baseline failures and limits. GL-034 closes within those profiles;
+GL-039's bounded FIFO drain now passes two 32-peer Release trials per world size:
+maximum final-counter convergence is 0.299/0.226 ms at 64 objects and
+75.159/699.938 ms at 512 objects, versus the prior roughly seven seconds. Its
+[receipt](evidence/gl039-release41-qualification.json) preserves the failed legacy
+large-world baseline. GL-039 closes within that headless scope after final
+Windows/Linux sanitizer verification at `903b10c`; the
+[final receipt](evidence/gl039-final-verification.json) records reused ordinary
+and profile/package evidence for identical production inputs. GL-040/041 remain
+open Character findings.
+Integration preserves those scoped closures and open findings. Relevance stays
+disabled by default; integration does not authorize release or updater distribution.
+
 GL-018 / GL-029 are integrated through normal merge
 `6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851`, preserving all 39 integration-branch
 commits and the exact qualified tree. The

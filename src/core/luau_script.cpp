@@ -789,16 +789,26 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
 
 void ScriptNodeBase::setup_remotefunction_system(lua_State* L) {
     // C: tras correr el handler, empaqueta sus retornos y pide al
-    // NetworkService que los mande al invocador. (callId, replyPeer, ok, ...rets)
+    // NetworkService que los mande al invocador. (native serving token, ok, ...rets)
     lua_pushcfunction(L, [](lua_State* L) -> int {
-        int64_t call_id = (int64_t)luaL_checknumber(L, 1);
-        int     reply_peer = (int)luaL_checknumber(L, 2);
-        bool    ok = lua_toboolean(L, 3) != 0;
+        String Token = String::utf8(luaL_checkstring(L, 1));
+        int64_t Identity = Token.to_int();
+        if (Identity <= 0 || String::num_int64(Identity) != Token) return 0;
+        bool ok = lua_toboolean(L, 2) != 0;
         Array rets;
         int top = lua_gettop(L);
-        for (int i = 4; i <= top; i++) {
+        int Nodes = 0; size_t Bytes = 0;
+        if (top - 2 > GLRemotePayload::MaxArguments) {
+            if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
+                Network->RespondFunction(L, Identity, false, Array::make("[Network:Function] Too many handler results"));
+            return 0;
+        }
+        for (int i = 3; i <= top; i++) {
+            if (!GLRemotePayload::CheckLua(L, i, Nodes, Bytes)) {
+                ok = false; rets = Array::make("[Network:Function] Invalid or oversized handler result"); break;
+            }
             gl_net_encode_err() = String();
-            Variant rv = gl_net_encode(L, i);
+            Variant rv = gl_net_encode(L, i, 0, true);
             if (!gl_net_encode_err().is_empty()) {
                 // El handler devolvió algo no serializable: en vez de mandar nil
                 // en silencio, el invocador recibe el error.
@@ -811,25 +821,24 @@ void ScriptNodeBase::setup_remotefunction_system(lua_State* L) {
             }
             rets.push_back(rv);
         }
-        if (Node* ns = Object::cast_to<Node>(ObjectDB::get_instance(gl_net_service_id())))
-            ns->call("net_rf_respond", reply_peer, (int)call_id, ok, rets);
+        if (auto Network = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
+            Network->RespondFunction(L, Identity, ok, rets);
         return 0;
     }, "__gl_rf_respond");
     lua_setglobal(L, "__gl_rf_respond");
 
-    // Lua: corre el handler en un task.spawn (así puede ceder: WaitForChild,
-    // task.wait, DataStore...) y al terminar responde. isServer decide si el
+    // Lua: the native domain-dispatched serving task can yield for WaitForChild,
+    // task.wait or DataStore. Its exact native token owns completion. isServer decides whether
     // handler recibe el Player (OnServerInvoke(player,...) vs OnClientInvoke(...)).
     static const char* GL_RF_LUA =
-        "function __gl_rf_serve(handler, player, callId, replyPeer, isServer, ...)\n"
+        "local Respond = __gl_rf_respond\n"
+        "function __gl_rf_serve(handler, player, token, isServer, ...)\n"
         "  local args = table.pack(...)\n"
-        "  task.spawn(function()\n"
         "    local packed\n"
         "    if isServer then packed = table.pack(pcall(handler, player, table.unpack(args, 1, args.n)))\n"
         "    else packed = table.pack(pcall(handler, table.unpack(args, 1, args.n))) end\n"
-        "    if not packed[1] then warn('RemoteFunction handler error: ' .. tostring(packed[2])) end\n"
-        "    __gl_rf_respond(callId, replyPeer, table.unpack(packed, 1, packed.n))\n"
-        "  end)\n"
+        "    if not packed[1] then packed = table.pack(false, tostring(packed[2])) end\n"
+        "    Respond(token, table.unpack(packed, 1, packed.n))\n"
         "end\n";
     std::string bc = Luau::compile(GL_RF_LUA);
     if (luau_load(L, "=__gl_rf", bc.data(), bc.size(), 0) == 0) {
