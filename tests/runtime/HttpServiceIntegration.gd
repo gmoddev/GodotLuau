@@ -129,11 +129,18 @@ for _,V in {Cycle,{[2]=1},{[1]=1,x=1},function() end,math.huge,0/0,string.char(2
 assert(H:JSONDecode(H:JSONEncode({OK=true})).OK)
 assert(H:UrlEncode(utf8.char(0x96ea)..string.char(0)..' /%?#&=+~._-')=='%E9%9B%AA%00%20%2F%25%3F%23%26%3D%2B~._-')
 assert(H:UrlEncode(string.char(255))=='%FF' and not pcall(H.UrlEncode,H,123))
+for Byte=0,255 do
+    local Unreserved=(Byte>=65 and Byte<=90) or (Byte>=97 and Byte<=122) or (Byte>=48 and Byte<=57) or Byte==45 or Byte==46 or Byte==95 or Byte==126
+    assert(H:UrlEncode(string.char(Byte))==(Unreserved and string.char(Byte) or string.format('%%%02X',Byte)))
+end
 local GUIDs,Seen={},{}
 for I=1,2000 do
     local G=H:GenerateGUID(false)
     assert(#G==36 and G:match('^%x%x%x%x%x%x%x%x%-%x%x%x%x%-4%x%x%x%-[89ab]%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$') and not Seen[G])
     GUIDs[I]=G; Seen[G]=true
+    -- This is a sample-size stress loop, not one indivisible API operation.
+    -- Keep measuring real frames without monopolizing one with 2,000 calls.
+    if I%32==0 then task.wait() end
 end
 assert(#H:GenerateGUID()==38 and H:GenerateGUID(true):sub(1,1)=='{' and not pcall(H.GenerateGUID,H,1))
 game:SetAttribute('GUIDs',table.concat(GUIDs,'\n'))
@@ -218,7 +225,11 @@ func Run() -> void:
         # Create this owner before its host, so it remains live during host exit.
         Prefix = "local H=game:GetService('HttpService'); local Store=game:GetService('DataStoreService'):GetDataStore('GL023'); game:BindToClose(function() assert(not H.HttpEnabled); assert(not pcall(H.GetAsync,H,game:GetAttribute('Origin')..'/forbidden/close')); Store:SetAsync('Close',23) end); "
     Script("Counter", Prefix + "while true do game:SetAttribute('Counter',(game:GetAttribute('Counter') or 0)+1); task.wait() end")
+    if Case == "denied":
+        Script("ClientWarmup", "game:SetAttribute('ClientWarm',true)", true)
     for Index in range(3): await process_frame
+    print("[Runtime:HttpServiceTest] Startup peak frame gap seconds=", PeakGap)
+    PeakGap = 0.0
     LastFrame = Time.get_ticks_usec()
     if Case == "api": await Api()
     elif Case == "denied": await Denied()

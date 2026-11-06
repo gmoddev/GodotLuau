@@ -5,13 +5,14 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import time
 from FixtureProcesses import StartProcess, StopAll
 from RunQualification import Prepare, Check, Port
 
 
-def Assets(Godot, Source, Output, Environment):
+def Assets(Godot, Source, Output, Environment, RuntimeRemaps=False):
     Import = Output / 'asset-import'
     Import.mkdir(parents=True)
     (Import / 'project.godot').write_text('config_version=5\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n')
@@ -21,9 +22,33 @@ def Assets(Godot, Source, Output, Environment):
     (Import / Shader.parent).mkdir(parents=True)
     shutil.copyfile(Source / Shader, Import / Shader)
     (Import / 'asset-inputs.json').write_text(json.dumps({File.relative_to(Source).as_posix(): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted((Source / Relative).rglob('*')) if File.is_file()} | {Shader.as_posix(): hashlib.sha256((Source / Shader).read_bytes()).hexdigest()}, indent=2))
+    (Import / 'asset-tool.json').write_text(json.dumps({'Executable': str(Godot), 'SHA256': hashlib.sha256(Path(Godot).read_bytes()).hexdigest(), 'Scope': 'Editor asset preprocessing only; no GDExtension is loaded here'}, indent=2))
     with (Import / 'stdout.log').open('w') as Out, (Import / 'stderr.log').open('w') as Err:
         Actor = StartProcess([str(Godot), '--headless', '--disable-crash-handler', '--editor', '--path', str(Import), '--import'], Out, Err, Environment)
         if Actor.wait(timeout=120) != 0: raise RuntimeError('Character fixture asset import failed')
+    if RuntimeRemaps:
+        shutil.copy2(Source/'tests/runtime/BundleCharacterAssets.gd', Import/'BundleCharacterAssets.gd')
+        with (Import/'bundle.stdout.log').open('w') as Out, (Import/'bundle.stderr.log').open('w') as Err:
+            Actor = StartProcess([str(Godot), '--headless', '--disable-crash-handler', '--path', str(Import), '--script', 'res://BundleCharacterAssets.gd'], Out, Err, Environment)
+            if Actor.wait(timeout=120) != 0: raise RuntimeError('Character fixture asset bundling failed')
+        Bundled = json.loads((Import/'bundled-assets.json').read_text())
+        # Template hosts resolve exported .remap files, not editor .import files.
+        # Retain the imported products and derive each mapping from the actual
+        # verified editor output; never replace the rig with a synthetic asset.
+        Remaps = {}
+        for File in sorted((Import / Relative).rglob('*.import')):
+            Match = re.search(r'^path=("[^\n]+")$', File.read_text(), re.MULTILINE)
+            if not Match: raise ValueError('Imported Character asset has no runtime path: ' + str(File))
+            Target = json.loads(Match[1])
+            Asset = 'res://' + File.relative_to(Import).as_posix().removesuffix('.import')
+            if Asset in Bundled: Target = Bundled[Asset]['Path']
+            if not Target.startswith('res://.godot/imported/') or not (Import / Target[6:]).is_file():
+                raise ValueError('Missing or invalid imported Character product: ' + Target)
+            Mapping = File.with_suffix('.remap')
+            Mapping.write_text('[remap]\npath=' + json.dumps(Target) + '\n')
+            Remaps[str(Mapping.relative_to(Import))] = {'Path': Target, 'SHA256': hashlib.sha256((Import / Target[6:]).read_bytes()).hexdigest()}
+        if not Remaps: raise ValueError('No actual Character import mappings generated')
+        (Import / 'runtime-remaps.json').write_text(json.dumps(Remaps, indent=2))
     return Import
 
 
@@ -48,6 +73,7 @@ def Launch(Args, Directory, Label, Extra, Environment):
 def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     for Name in ['godot', 'extension', 'output']: Parser.add_argument('--'+Name, type=Path, required=True)
+    Parser.add_argument('--asset-godot', type=Path, help='Separate verified editor for asset import when the runtime host is a sanitizer template')
     Parser.add_argument('--graphical', action='store_true')
     Parser.add_argument('--cases', nargs='+', choices=['r6', 'custom', 'listen', 'dedicated', 'listen-custom', 'dedicated-custom'], default=['r6', 'custom', 'listen', 'dedicated', 'listen-custom', 'dedicated-custom'])
     Args = Parser.parse_args()
@@ -60,7 +86,7 @@ def Main():
     Source = Path(__file__).resolve().parents[2]
     Results, Evidence = [], []
     try:
-        Import = Assets(Args.godot, Source, Args.output, Environment)
+        Import = Assets(Args.asset_godot.resolve() if Args.asset_godot else Args.godot, Source, Args.output, Environment, RuntimeRemaps=bool(Args.asset_godot))
         for Case in Args.cases:
             Directory = Args.output / Case
             Project(Directory, Args.extension, Import)

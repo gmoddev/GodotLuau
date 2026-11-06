@@ -72,7 +72,7 @@ jobs:
     name: Source build and qualify (${{ matrix.Platform }}, ${{ matrix.Configuration }})
     needs: Policy
     runs-on: ${{ matrix.Runner }}
-    timeout-minutes: 120
+    timeout-minutes: 240
     strategy:
       fail-fast: false
       matrix:
@@ -105,8 +105,17 @@ jobs:
       - name: Verify official Godot archive and executable
         timeout-minutes: 5
         run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
+      - name: Prepare Linux network-host compiler
+        if: runner.os == 'Linux'
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y clang-19 lld-19 pkg-config ninja-build
+      - name: Build admitted GL-029 network host for this profile
+        timeout-minutes: 120
+        run: python tests/runtime/BuildSanitizedGodot.py --output "$RUNNER_TEMP/remote-host" --remote-admission --configuration "${{ matrix.Configuration }}" --jobs 2 --timeout 7000
       - name: Source-built production products and existing complete qualification
-        run: python tools/ReleaseCandidate.py build --revision "$GITHUB_SHA" --configuration "${{ matrix.Configuration }}" --godot "$RUNNER_TEMP/godot" --output "$RUNNER_TEMP/profile"
+        run: python tools/ReleaseCandidate.py build --revision "$GITHUB_SHA" --configuration "${{ matrix.Configuration }}" --godot "$RUNNER_TEMP/godot" --remote-host "$RUNNER_TEMP/remote-host/remote-host.json" --output "$RUNNER_TEMP/profile"
       - name: Retain profile products and complete diagnostics
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -123,6 +132,16 @@ jobs:
             ${{ runner.temp }}/profile/core/**
             ${{ runner.temp }}/profile/native/**/*.log
             ${{ runner.temp }}/profile/native/**/results.json
+      - name: Retain admitted host build diagnostics separately
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-${{ matrix.Platform }}-${{ matrix.Configuration }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/remote-host/remote-host.json
+            ${{ runner.temp }}/remote-host-attempts/**
 
   Packages:
     name: Extract and start candidate (${{ matrix.Platform }})

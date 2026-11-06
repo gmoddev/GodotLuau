@@ -1,0 +1,123 @@
+Internal ctest changing into directory: /work/fresh-asan
+UpdateCTestConfiguration  from :/work/fresh-asan/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/work/fresh-asan/DartConfiguration.tcl
+Test project /work/fresh-asan
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: ExecutionDomains
+
+1: Test command: /usr/bin/python3.12 "/cache/source/tests/runtime/RunCoreTests.py" "--binary" "/work/fresh-asan/ExecutionDomainTests" "--output" "/work/fresh-asan/resource-tests"
+1: Working Directory: /work/fresh-asan
+1: Test timeout computed to be: 30
+1: [Runtime:Test] PASS VM allocator accounts growth shrink rejection and frees
+1: [Runtime:Test] PASS VM allocator rejects invalid sizes and arithmetic overflow
+1: [Runtime:Test] PASS Actual VM allocation failure is protected and close releases accounting
+1: [Runtime:Test] PASS Sandbox preserves custom typeof shared facades and function environments
+1: [Runtime:Test] PASS Task quota rejects admission before creating extra coroutine and recovers after tick
+1: [Runtime:Test] PASS Reference quota and owner quota reject without replacing valid work
+1: [Runtime:Test] PASS Live coroutine quota includes untracked manual coroutines and frees on collection
+1: [Runtime:Test] PASS Memory quota retirement covers caught Lua failure and fresh domain recovery
+1: [Runtime:Test] PASS Memory failure during callback marshalling retires without unprotected unwind
+1: [Runtime:Test] PASS Insufficient VM bootstrap quota produces a controlled unavailable domain
+1: [Runtime:Test] PASS Shared module allocations use the domain quota and retire all owners on exhaustion
+1: [Runtime:Test] PASS Server module sharing and ordering
+1: [Runtime:Test] PASS Client module sharing and ordering
+1: [Runtime:Test] PASS Server and Client VMs and caches are distinct
+1: [Runtime:Test] PASS Concurrent yielding module initializes exactly once
+1: [Runtime:Test] PASS Scalar false, number, string and function results preserve identity
+1: [Runtime:Test] PASS Recursive and indirect cyclic requires fail predictably
+1: [Runtime:Test] PASS Concurrent initializer dependency cycle does not deadlock
+1: [Runtime:Test] PASS Module failure is sticky and unrelated execution survives
+1: [Runtime:Test] PASS Missing and multiple module results fail
+1: [Runtime:Test] PASS Source revision and explicit destruction invalidate only that module
+1: [Runtime:Test] PASS Invalidated pending module wakes callers with an error
+1: [Runtime:Test] PASS Revision cache loads only on misses and distinguishes replacement resources
+1: [Runtime:Test] PASS Revision change cancels pending initialization and wakes all old waiters
+1: [Runtime:Test] PASS Revision loader preserves dependency cycles and sticky failures
+1: [Runtime:Test] PASS Destroying first caller does not cancel shared initialization
+1: [Runtime:Test] PASS Script environments and identities survive interleaved yields
+1: [Runtime:Test] PASS Module global assignments do not leak to caller or another module
+1: [Runtime:Test] PASS _G and shared are domain-shared but ordinary globals are local
+1: [Runtime:Test] PASS Script errors leave unrelated scripts and domain alive
+1: [Runtime:Test] PASS spawn, defer, delay, wait arguments and reentrant scheduling
+1: [Runtime:Test] PASS Cancel owner suppresses all pending task kinds
+1: [Runtime:Test] PASS Cancellation during callback and child task spawn is reentrant-safe
+1: [Runtime:Test] PASS External callbacks that yield remain scheduler-owned
+1: [Runtime:Test] PASS Cancelled callback references cannot alias new owners
+1: [Runtime:Test] PASS Repeated creation cancellation GC and restart
+1: [Runtime:Test] PASS Repeated domain shutdown and no work after shutdown
+1: [Runtime:Test] PASS Context authority is independent of mutable compatibility globals
+1: [Runtime:Test] PASS Task cancellation detaches native condition wait ownership
+1: [Runtime:Test] PASS Close callbacks run once with admission closed and cached require available
+1: [Runtime:Test] PASS Completed coroutines cannot be resumed a second time
+1: [Runtime:Test] PASS A module child task is not a blocking initializer dependency
+1: [Runtime:Test] PASS Deep requires and spawn dispatch yield at a bounded native depth
+1: [Runtime:Test] PASS Service callbacks keep their registering owner across dispatch and yields
+1: [Runtime:Test] PASS Trusted service polling survives its first subscriber and hides its bootstrap hook
+1: [Runtime:Test] PASS Wait guards invalidate independently of an orphaned native source
+1: [Runtime:Test] PASS A manually resumed coroutine joins scheduler ownership when it waits externally
+1: [Runtime:Test] PASS Manual coroutines adopt timed and module waits and cannot revive dead owners
+1: [Runtime:Test] PASS Explicit getfenv and setfenv retain Luau function environment behavior
+1: [Runtime:Test] PASS Native stack guard uses real thread bounds under sanitizer instrumentation
+1: [Runtime:Test] PASS Filesystem native operation grants and bounded storage
+1: [Runtime:Test] PASS Filesystem hostile names and final links reject without mutation
+1: [Runtime:Test] PASS Filesystem intermediate links and replacement races stay confined
+1: [Runtime:Test] PASS HTTP production origin parsing separates authority and target
+1: [Runtime:Test] PASS HTTP production request headers reject injection and framing control
+1: [Runtime:Test] PASS HTTP production wire budgets bound cumulative and per tick work
+1: [Runtime:Test] PASS Native character authority observes synchronous domain and restores nesting
+1: [Runtime:Test] PASS HttpService strict JSON preserves scalars containers null and UTF8 bytes
+1: [Runtime:Test] PASS HttpService strict JSON rejects malformed and ambiguous syntax
+1: [Runtime:Test] PASS HttpService JSON rejects cycles sparse mixed and unsupported values
+1: [Runtime:Test] PASS HttpService JSON enforces byte node and depth bounds without stale state
+1: [Runtime:Test] PASS HttpService public facade propagates errors and validates options before transport
+1: [Runtime:Test] PASS HTTP response capture preserves duplicates and rejects bounds without mutation
+1: [Runtime:Test] PASS UUID v4 formatting fixes version variant braces and byte order
+1: [Runtime:Test] 64 passed, 0 failed
+1: [Runtime:LimitTest] PASS infinite
+1: [Runtime:Test] PASS Isolated execution resource case infinite
+1: [Runtime:LimitTest] PASS nested
+1: [Runtime:Test] PASS Isolated execution resource case nested
+1: [Runtime:LimitTest] PASS pcall
+1: [Runtime:Test] PASS Isolated execution resource case pcall
+1: [Runtime:LimitTest] PASS finite-exceeded
+1: [Runtime:Test] PASS Isolated execution resource case finite-exceeded
+1: [Runtime:LimitTest] PASS finite-within
+1: [Runtime:Test] PASS Isolated execution resource case finite-within
+1: [Runtime:LimitTest] PASS module
+1: [Runtime:Test] PASS Isolated execution resource case module
+1: [Runtime:LimitTest] PASS callback
+1: [Runtime:Test] PASS Isolated execution resource case callback
+1: [Runtime:LimitTest] PASS marshal
+1: [Runtime:Test] PASS Isolated execution resource case marshal
+1: [Runtime:LimitTest] PASS invoke
+1: [Runtime:Test] PASS Isolated execution resource case invoke
+1: [Runtime:LimitTest] PASS native
+1: [Runtime:Test] PASS Isolated execution resource case native
+1: [Runtime:LimitTest] PASS cross-time
+1: [Runtime:Test] PASS Isolated execution resource case cross-time
+1: [Runtime:LimitTest] PASS cross-count
+1: [Runtime:Test] PASS Isolated execution resource case cross-count
+1: [Runtime:LimitTest] PASS cross-reentry
+1: [Runtime:Test] PASS Isolated execution resource case cross-reentry
+1: [Runtime:LimitTest] PASS cross-memory
+1: [Runtime:Test] PASS Isolated execution resource case cross-memory
+1: [Runtime:LimitTest] PASS memory-catch
+1: [Runtime:Test] PASS Isolated execution resource case memory-catch
+1: [Runtime:LimitTest] PASS shutdown
+1: [Runtime:Test] PASS Isolated execution resource case shutdown
+1: [Runtime:Test] 80 passed, 0 failed
+1/1 Test #1: ExecutionDomains .................   Passed    2.65 sec
+
+The following tests passed:
+	ExecutionDomains
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   2.66 sec
+

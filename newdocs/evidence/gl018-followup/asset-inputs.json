@@ -1,0 +1,18 @@
+{
+  "GodotLuau/assets/avatars/r6/R6.mtl": "d1bc49ba06f03ce419633c57b2d1e52e33869b401aa1795c942b15a329d15824",
+  "GodotLuau/assets/avatars/r6/R6_Head.obj": "d71c5736ba8e38a9223dd346df16eadaa1ab1abcd1b7237764b647c9d3e8c72a",
+  "GodotLuau/assets/avatars/r6/R6_Head.obj.import": "eefb5e4e943ad59b4db6f7c43934c3cb878ad47fc4ab70409ae02b35b648801d",
+  "GodotLuau/assets/avatars/r6/R6_LeftArm.obj": "f80e9a50998b27f263fd438d7408ab88ee8fa272760dd63593d49a3756e5df49",
+  "GodotLuau/assets/avatars/r6/R6_LeftArm.obj.import": "b8f44522609cccb25b613a70d05d69860fd0b6e9217d56db97730f1bbffca394",
+  "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj": "ff4dd3712a02b2bf9340bd2ee6cf26874d2e6eb0fa9650586fddf420eb9265c4",
+  "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj.import": "49c9a264a5a6c8f71c1d9e7f8174e74f0818381126e76c1d6a6285ea22c796e4",
+  "GodotLuau/assets/avatars/r6/R6_RightArm.obj": "1aab9a15ed4002d94bc19f7af0fc82f91f0c8e2456b25b344d2319f366d9c67a",
+  "GodotLuau/assets/avatars/r6/R6_RightArm.obj.import": "0cf92f5052ee8c96d3dd513891720e0b3775db6860353948653f0b03db9d30b6",
+  "GodotLuau/assets/avatars/r6/R6_RightLeg.obj": "603241299830fddc8a796154c3850ee354f75bbf5866c6366ed36e0e55ac0549",
+  "GodotLuau/assets/avatars/r6/R6_RightLeg.obj.import": "e810bacc9cec35a94fc3138d6042a4165bb8085dd166a75d345994214ce311f0",
+  "GodotLuau/assets/avatars/r6/R6_Torso.obj": "3b74c114a547ed53abf3e110e6679af44bbc1a912a2569ea002e5da62c2bdeb7",
+  "GodotLuau/assets/avatars/r6/R6_Torso.obj.import": "689a7efcd3c985a8451fbdbd58927e922ba4a98c4b7b537ad1d0359a1d958b0d",
+  "GodotLuau/assets/avatars/r6/Rig1_diff.png": "f6ad52139deaef50f673cbb639f4bda531edb93c8babe42ec5b9cbfb065c3e02",
+  "GodotLuau/assets/avatars/r6/Rig1_diff.png.import": "3e191d5d8de8cc19a7abb7d0e937ba83db32711d4877048027c5b262b5d7fd38",
+  "GodotLuau/shaders/character_fade.gdshader": "87ca8506406339c274f1d75ec76e7b34f83e3c3c77c1e93e231ab3342bd17353"
+}

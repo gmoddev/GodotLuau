@@ -210,6 +210,9 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
         if (ptr && gow_node(ptr)) {
             Node* node = gow_node(ptr);
 
+            // This canonical configuration must win over same-named children.
+            if (key == "DeliveryType" && Object::cast_to<RemoteEventNode>(node)) return godot_object_index(L);
+
             if (key == "FindFirstChild") {
                 lua_pushcfunction(L, [](lua_State* pL) -> int {
                     GodotObjectWrapper* pptr = (GodotObjectWrapper*)lua_touserdata(pL, 1);

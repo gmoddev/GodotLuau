@@ -1,5 +1,11 @@
 # Current architecture
 
+GL-018's development branch qualifies the admitted matching headless sanitizer
+hosts and production extension at `46427d0`: Windows ASan and Linux ASan/LSan each
+pass 80 core cases and 110 native actors. See [closure and retained limits](gl018-closure.md).
+The derived engine binding-retirement correction does not establish stock-host
+unload safety, and the branch remains unmerged.
+
 Main integrates GL-007 through normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`
 and Model-based Character V2 through `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`.
 The latter tree equals retained `46f65e0`, with runtime/test inputs identical to
@@ -430,6 +436,35 @@ return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
 
 ## Networking and persistence
 
+Main includes the qualified Phase 1 native RemoteEvent
+DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen
+configuration, per-session descriptors/readiness and ObjectID-bound publication.
+Event bodies use a bounded event-only byte codec; RemoteFunction and generic
+replication keep their existing wire behavior. No sequenced mode, general
+scheduler or new execution domain is added by Phase 1; see
+[ADR-008](adr-008-remoteevent-publication.md) and the
+[qualification record](remoteevent-phase1-qualification.md) for status and exact
+compatibility changes, including preserved native legacy class identity and
+strict UTF-8 event dictionary keys. Functional loopback qualification uses the
+explicit carrier profile in ADR-008; production ENet defaults remain unchanged.
+
+The integrated later phase adds [ADR-009](adr-009-bounded-remote-delivery.md)
+bounded Remote-owned send/dispatch queues, fair peer service, GER2 sequencing and
+unsent supersession. A hash-pinned Godot/ENet host adapter bounds native retained
+data packets/commands and propagates RPC admission failures. It also provides
+read-only actual RPC call context; NetworkService checks target/method/carrier/
+channel before accepting event traffic. Stock hosts fail closed at network
+startup. It preserves the native storage, HTTP, character/animation, replication
+and RemoteFunction authorities. Normal merge `6a7fedf` preserves the qualified
+tree; [fresh main verification](gl018-gl029-main-integration.md) passes at
+`ac119bc`, including downloaded evidence and both extracted packages. The
+[qualification record](remoteevent-completion-qualification.md) verifies the
+Windows/Linux profiles and extracted packages, and records latency costs and
+the bounded 32-peer comparative performance scope. The
+[work record](remoteevent-completion-work.md) preserves earlier failed attempts.
+Native data ceilings do not bound total RAM, receive predecode or native
+control/ACK storage.
+
 Integrated `security/gl-007-character-authority` source `3bb641a` introduced
 protocol 2 character grants/snapshots, native server health, bounded pose admission,
 and a startup presentation-animation catalog. Its bounded contract and executed
@@ -629,6 +664,33 @@ See the [correction record](shared-domains-validation.md#linux-process-liveness-
 for fresh results. The source branch is retained.
 Sanitizers and release enforcement
 remain separate. See the [native CI record](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
+The original [GL-018 follow-up](native-sanitizer-qualification.md#follow-up-from-66362c7)
+adds host/build/test controls and a bounded public URL-encoding correction: ASCII
+unreserved bytes no longer depend on the process C locale. Matching instrumented
+hosts resolve the minimal loader/exit controls. C ABI controls reproduce surviving
+instance-binding callbacks after explicit library unload without GodotLuau;
+production unload and complete profile gates remained unqualified at that checkpoint.
+It introduces no runtime ownership, capability, networking or distribution change.
+
+The subsequent [binding-retirement investigation](native-sanitizer-qualification.md#binding-retirement-follow-up-from-dfa700a)
+keeps the GodotLuau production tree unchanged and admits one hash-pinned patch
+to the instrumented qualification host. It retires surviving library-token
+bindings before unmapping the DLL/SO. These derived hosts are distinct from
+unmodified Godot and from any distributed engine; production distribution stays
+disabled. Direct production unload controls pass on both derived hosts. The
+corrected Linux profile passes 80 core cases and 110 native actors locally and
+in hosted CI. Windows remained incomplete at that checkpoint because competing increments exhausted
+GL-009's existing eight-attempt conflict budget; no persistence semantics or
+qualification assertions were changed to obtain acceptance. Other retained
+sanitizer and graphical limitations remain separate.
+
+The subsequent [GL-018 closure](gl018-closure.md) resolves the admitted-host
+headless scope, with successful detection/reload controls on both platforms.
+The combined qualified branch additionally passes 81 core cases, 116 native
+actors and ADR-009's host fixtures. Main now preserves that source through
+`6a7fedf`; fresh main results are recorded separately in the
+[integration record](gl018-gl029-main-integration.md). Stock-host unload, Windows
+LSan and graphical/editor/device limits remain separate.
 
 GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at
 `169fd98be216c4322f4c820c7d77f3081761982b`. A bounded read-only release/tag-absence

@@ -1,0 +1,42 @@
+[
+  {
+    "ArtifactID": 13117000424,
+    "Name": "runtime-native-Windows-Debug",
+    "SHA256": "627f071cc95a314453b35c8fc28903bf7dab61fe681c91e2464b9864b6e80b2a",
+    "Revision": "241396b46f193ea48e63294594bce2d7104f6966",
+    "Scope": "Intermediate source; not a substitute for current-source failed/pending gates",
+    "Actors": 110,
+    "AnimationActors": 10,
+    "AuthorityCases": 510,
+    "AnimationAssertions": 1003,
+    "VerifiedLogHashes": 335,
+    "VerifiedHarnessInputs": 71,
+    "NativeSource": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "ReportedExtensionSHA256": "43899a974c6bb79ae899404eab18558e52d8a2933901bdf051f9ccad25c1cc67",
+    "ReportedCompanionSHA256": "c6ebbbe2cc671706a482451095bdf860d4f09ddec12d27113b76ebd8e14c844d"
+  },
+  {
+    "ArtifactID": 13115718971,
+    "Name": "runtime-native-Linux-Debug",
+    "SHA256": "d97e087bde6f2136f7a3b67f871ca8dcbbd7369589e7e54263f3e8fdfff8ea9f",
+    "Revision": "241396b46f193ea48e63294594bce2d7104f6966",
+    "Scope": "Intermediate source; not a substitute for current-source failed/pending gates",
+    "Actors": 110,
+    "AnimationActors": 10,
+    "AuthorityCases": 510,
+    "AnimationAssertions": 1003,
+    "VerifiedLogHashes": 335,
+    "VerifiedHarnessInputs": 71,
+    "NativeSource": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "ReportedExtensionSHA256": "4cb7ebd1857880906bea32e917416f9c5dc1e389816bf1a4dca41efb5da2b42f",
+    "ReportedCompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980"
+  }
+]

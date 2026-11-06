@@ -1,0 +1,543 @@
+Breakpoint 1 at 0x8839b24
+warning: Error disabling address space randomization: Operation not permitted
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[Detaching after vfork from child process 1308]
+[New Thread 0x7c96ef3ff6c0 (LWP 1309)]
+[New Thread 0x7c96ee0f56c0 (LWP 1310)]
+[New Thread 0x7c96ecdeb6c0 (LWP 1311)]
+Godot Engine v4.7.1.stable.custom_build - https://godotengine.org
+[New Thread 0x7c96eb1ff6c0 (LWP 1312)]
+
+[GodotLuau] ////////////////////////////////////////////////////
+[GodotLuau]   GodotLuau ? - by PimpoliDev
+[GodotLuau]   Luau System for Godot [Active]
+[GodotLuau] ////////////////////////////////////////////////////
+
+Thread 1 "godot-symbols" hit Breakpoint 1, 0x000059ed8cfb4b24 in GDExtension::close_library() ()
+Last stopped for thread 1 (Thread 0x7c96f24e0500 (LWP 1305)).
+	Using the running image of child process 1305.
+Program stopped at 0x59ed8cfb4b24.
+It stopped at breakpoint 1.
+  Id   Target Id                                         Frame 
+* 1    Thread 0x7c96f24e0500 (LWP 1305) "godot-symbols"  0x000059ed8cfb4b24 in GDExtension::close_library() ()
+  2    Thread 0x7c96ef3ff6c0 (LWP 1309) "godot-symbols"  0x00007c96f2579e51 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+  3    Thread 0x7c96ee0f56c0 (LWP 1310) "WorkerThread 0" 0x00007c96f2579e51 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+  4    Thread 0x7c96ecdeb6c0 (LWP 1311) "WorkerThread 1" 0x00007c96f2579e51 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+  5    Thread 0x7c96eb1ff6c0 (LWP 1312) "godot-symbols"  0x00007c96f25cdbdf in clock_nanosleep () from /lib/x86_64-linux-gnu/libc.so.6
+
+Thread 5 (Thread 0x7c96eb1ff6c0 (LWP 1312) "godot-symbols"):
+#0  0x00007c96f25cdbdf in clock_nanosleep () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#1  0x00007c96f25dab27 in nanosleep () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#2  0x000059ed878423c1 in OS_Unix::delay_usec(unsigned int) const ()
+No symbol table info available.
+#3  0x000059ed8a4c5382 in AudioDriverDummy::thread_func(void*) ()
+No symbol table info available.
+#4  0x000059ed8bf02a7c in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+No symbol table info available.
+#5  0x000059ed8bf04226 in void std::__invoke_impl<void, void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(std::__invoke_other, void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#6  0x000059ed8bf040a5 in std::__invoke_result<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>::type std::__invoke<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#7  0x000059ed8bf04065 in void std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::_M_invoke<0ul, 1ul, 2ul, 3ul, 4ul>(std::_Index_tuple<0ul, 1ul, 2ul, 3ul, 4ul>) ()
+No symbol table info available.
+#8  0x000059ed8bf03ff5 in std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::operator()() ()
+No symbol table info available.
+#9  0x000059ed8bf03c29 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> > >::_M_run() ()
+No symbol table info available.
+#10 0x00007c96f290adb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#11 0x000059ed86bf522b in asan_thread_start(void*) ()
+No symbol table info available.
+#12 0x00007c96f257db84 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#13 0x00007c96f260ab64 in clone () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+
+Thread 4 (Thread 0x7c96ecdeb6c0 (LWP 1311) "WorkerThread 1"):
+#0  0x00007c96f2579e51 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#1  0x00007c96f257c8cd in pthread_cond_wait () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#2  0x000059ed8d0fdc73 in WorkerThreadPool::_thread_function(void*) ()
+No symbol table info available.
+#3  0x000059ed8bf02a7c in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+No symbol table info available.
+#4  0x000059ed8bf04226 in void std::__invoke_impl<void, void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(std::__invoke_other, void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#5  0x000059ed8bf040a5 in std::__invoke_result<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>::type std::__invoke<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#6  0x000059ed8bf04065 in void std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::_M_invoke<0ul, 1ul, 2ul, 3ul, 4ul>(std::_Index_tuple<0ul, 1ul, 2ul, 3ul, 4ul>) ()
+No symbol table info available.
+#7  0x000059ed8bf03ff5 in std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::operator()() ()
+No symbol table info available.
+#8  0x000059ed8bf03c29 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> > >::_M_run() ()
+No symbol table info available.
+#9  0x00007c96f290adb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#10 0x000059ed86bf522b in asan_thread_start(void*) ()
+No symbol table info available.
+#11 0x00007c96f257db84 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#12 0x00007c96f260ab64 in clone () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+
+Thread 3 (Thread 0x7c96ee0f56c0 (LWP 1310) "WorkerThread 0"):
+#0  0x00007c96f2579e51 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#1  0x00007c96f257c8cd in pthread_cond_wait () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#2  0x000059ed8d0fdc73 in WorkerThreadPool::_thread_function(void*) ()
+No symbol table info available.
+#3  0x000059ed8bf02a7c in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+No symbol table info available.
+#4  0x000059ed8bf04226 in void std::__invoke_impl<void, void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(std::__invoke_other, void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#5  0x000059ed8bf040a5 in std::__invoke_result<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>::type std::__invoke<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#6  0x000059ed8bf04065 in void std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::_M_invoke<0ul, 1ul, 2ul, 3ul, 4ul>(std::_Index_tuple<0ul, 1ul, 2ul, 3ul, 4ul>) ()
+No symbol table info available.
+#7  0x000059ed8bf03ff5 in std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::operator()() ()
+No symbol table info available.
+#8  0x000059ed8bf03c29 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> > >::_M_run() ()
+No symbol table info available.
+#9  0x00007c96f290adb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#10 0x000059ed86bf522b in asan_thread_start(void*) ()
+No symbol table info available.
+#11 0x00007c96f257db84 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#12 0x00007c96f260ab64 in clone () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+
+Thread 2 (Thread 0x7c96ef3ff6c0 (LWP 1309) "godot-symbols"):
+#0  0x00007c96f2579e51 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#1  0x00007c96f257c8cd in pthread_cond_wait () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#2  0x000059ed8c60fb49 in _IP_ResolverPrivate::_thread_function(void*) ()
+No symbol table info available.
+#3  0x000059ed8bf02a7c in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+No symbol table info available.
+#4  0x000059ed8bf04226 in void std::__invoke_impl<void, void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(std::__invoke_other, void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#5  0x000059ed8bf040a5 in std::__invoke_result<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>::type std::__invoke<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*>(void (*&&)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long&&, Thread::Settings&&, void (*&&)(void*), void*&&) ()
+No symbol table info available.
+#6  0x000059ed8bf04065 in void std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::_M_invoke<0ul, 1ul, 2ul, 3ul, 4ul>(std::_Index_tuple<0ul, 1ul, 2ul, 3ul, 4ul>) ()
+No symbol table info available.
+#7  0x000059ed8bf03ff5 in std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> >::operator()() ()
+No symbol table info available.
+#8  0x000059ed8bf03c29 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(unsigned long, Thread::Settings const&, void (*)(void*), void*), unsigned long, Thread::Settings, void (*)(void*), void*> > >::_M_run() ()
+No symbol table info available.
+#9  0x00007c96f290adb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+No symbol table info available.
+#10 0x000059ed86bf522b in asan_thread_start(void*) ()
+No symbol table info available.
+#11 0x00007c96f257db84 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+#12 0x00007c96f260ab64 in clone () from /lib/x86_64-linux-gnu/libc.so.6
+No symbol table info available.
+
+Thread 1 (Thread 0x7c96f24e0500 (LWP 1305) "godot-symbols"):
+#0  0x000059ed8cfb4b24 in GDExtension::close_library() ()
+No symbol table info available.
+#1  0x000059ed8cfb5830 in GDExtension::~GDExtension() ()
+No symbol table info available.
+#2  0x000059ed86c454fa in void memdelete<RefCounted>(RefCounted*) ()
+No symbol table info available.
+#3  0x000059ed8cfc5006 in Ref<GDExtension>::unref() ()
+No symbol table info available.
+#4  0x000059ed8cfb8ee5 in Ref<GDExtension>::~Ref() ()
+No symbol table info available.
+#5  0x000059ed8cfdf189 in GDExtensionManager::unload_extension(String const&) ()
+No symbol table info available.
+#6  0x000059ed8cfeb231 in void call_with_validated_variant_args_ret_helper<__UnexistingClass, GDExtensionManager::LoadStatus, String const&, 0ul>(__UnexistingClass*, GDExtensionManager::LoadStatus (__UnexistingClass::*)(String const&), Variant const**, Variant*, IndexSequence<0ul>) ()
+No symbol table info available.
+#7  0x000059ed8cfeb0f5 in void call_with_validated_object_instance_args_ret<__UnexistingClass, GDExtensionManager::LoadStatus, String const&>(__UnexistingClass*, GDExtensionManager::LoadStatus (__UnexistingClass::*)(String const&), Variant const**, Variant*) ()
+No symbol table info available.
+#8  0x000059ed8cfea3ef in MethodBindTR<GDExtensionManager::LoadStatus, String const&>::validated_call(Object*, Variant const**, Variant*) const ()
+No symbol table info available.
+#9  0x000059ed86eb7458 in GDScriptFunction::call(GDScriptInstance*, Variant const**, int, Callable::CallError&, GDScriptFunction::CallState*) ()
+No symbol table info available.
+#10 0x000059ed871c3588 in GDScriptFunctionState::resume(Variant const&) ()
+No symbol table info available.
+#11 0x000059ed871c2c30 in GDScriptFunctionState::_signal_callback(Variant const**, int, Callable::CallError&) ()
+No symbol table info available.
+#12 0x000059ed871d312e in MethodBindVarArgTR<GDScriptFunctionState, Variant>::call(Object*, Variant const**, int, Callable::CallError&) const ()
+No symbol table info available.
+#13 0x000059ed8d075f25 in Object::callp(StringName const&, Variant const**, int, Callable::CallError&) ()
+No symbol table info available.
+#14 0x000059ed8c8f2a35 in Callable::callp(Variant const**, int, Variant&, Callable::CallError&) const ()
+No symbol table info available.
+#15 0x000059ed8c8fdf89 in CallableCustomBind::call(Variant const**, int, Variant&, Callable::CallError&) const ()
+No symbol table info available.
+#16 0x000059ed8c8f24d4 in Callable::callp(Variant const**, int, Variant&, Callable::CallError&) const ()
+No symbol table info available.
+#17 0x000059ed8d07bec7 in Object::emit_signalp(StringName const&, Variant const**, int) ()
+No symbol table info available.
+#18 0x000059ed8c8fca2a in Signal::emit(Variant const**, int) const ()
+No symbol table info available.
+#19 0x000059ed86ef087e in GDScriptFunction::call(GDScriptInstance*, Variant const**, int, Callable::CallError&, GDScriptFunction::CallState*) ()
+No symbol table info available.
+#20 0x000059ed871c3588 in GDScriptFunctionState::resume(Variant const&) ()
+No symbol table info available.
+#21 0x000059ed871c2c30 in GDScriptFunctionState::_signal_callback(Variant const**, int, Callable::CallError&) ()
+No symbol table info available.
+#22 0x000059ed871d312e in MethodBindVarArgTR<GDScriptFunctionState, Variant>::call(Object*, Variant const**, int, Callable::CallError&) const ()
+No symbol table info available.
+#23 0x000059ed8d075f25 in Object::callp(StringName const&, Variant const**, int, Callable::CallError&) ()
+No symbol table info available.
+#24 0x000059ed8c8f2a35 in Callable::callp(Variant const**, int, Variant&, Callable::CallError&) const ()
+No symbol table info available.
+#25 0x000059ed8c8fdf89 in CallableCustomBind::call(Variant const**, int, Variant&, Callable::CallError&) const ()
+No symbol table info available.
+#26 0x000059ed8c8f24d4 in Callable::callp(Variant const**, int, Variant&, Callable::CallError&) const ()
+No symbol table info available.
+#27 0x000059ed8d07bec7 in Object::emit_signalp(StringName const&, Variant const**, int) ()
+No symbol table info available.
+#28 0x000059ed8779a47e in Error Object::emit_signal<>(StringName const&) ()
+No symbol table info available.
+#29 0x000059ed87c4ae9a in SceneTree::process(double) ()
+No symbol table info available.
+#30 0x000059ed86c8d73f in Main::iteration() ()
+No symbol table info available.
+#31 0x000059ed86c4ea8e in OS_LinuxBSD::run() ()
+No symbol table info available.
+#32 0x000059ed86c57d00 in main ()
+No symbol table info available.
+From                To                  Syms Read   Shared Object Library
+0x00007c96f2ab6000  0x00007c96f2ae0195  Yes (*)     /lib64/ld-linux-x86-64.so.2
+0x00007c96f2a9e180  0x00007c96f2aa131c  Yes (*)     /lib/x86_64-linux-gnu/libatomic.so.1
+0x00007c96f28c35c0  0x00007c96f2a02ce2  Yes (*)     /lib/x86_64-linux-gnu/libstdc++.so.6
+0x00007c96f2745420  0x00007c96f27c33a6  Yes (*)     /lib/x86_64-linux-gnu/libm.so.6
+0x00007c96f27266e0  0x00007c96f272ef19  Yes (*)     /lib/x86_64-linux-gnu/libresolv.so.2
+0x00007c96f26f9780  0x00007c96f271c745  Yes (*)     /lib/x86_64-linux-gnu/libgcc_s.so.1
+0x00007c96f2509800  0x00007c96f2690eb9  Yes (*)     /lib/x86_64-linux-gnu/libc.so.6
+0x00007c96e6f22b00  0x00007c96e830e756  Yes         /evidence/linux-2/production/production/godot_luau.so
+(*): Shared library is missing debugging information.
+process 1305
+Mapped address spaces:
+
+          Start Addr           End Addr       Size     Offset  Perms  objfile
+          0x7fff7000         0x8fff7000 0x10000000        0x0  rw-p   
+          0x8fff7000      0x2008fff7000 0x20000000000        0x0  ---p   
+       0x2008fff7000     0x10007fff8000 0xdfff0001000        0x0  rw-p   
+      0x500000000000     0x502000000000 0x2000000000        0x0  ---p   
+      0x502000000000     0x502000040000    0x40000        0x0  rw-p   
+      0x502000040000     0x502e00000000 0xdfffc0000        0x0  ---p   
+      0x502e00000000     0x502e00040000    0x40000        0x0  rw-p   
+      0x502e00040000     0x503000000000 0x1fffc0000        0x0  ---p   
+      0x503000000000     0x503000100000   0x100000        0x0  rw-p   
+      0x503000100000     0x503e00000000 0xdfff00000        0x0  ---p   
+      0x503e00000000     0x503e00040000    0x40000        0x0  rw-p   
+      0x503e00040000     0x504000000000 0x1fffc0000        0x0  ---p   
+      0x504000000000     0x504000340000   0x340000        0x0  rw-p   
+      0x504000340000     0x504e00000000 0xdffcc0000        0x0  ---p   
+      0x504e00000000     0x504e00040000    0x40000        0x0  rw-p   
+      0x504e00040000     0x506000000000 0x11fffc0000        0x0  ---p   
+      0x506000000000     0x506000600000   0x600000        0x0  rw-p   
+      0x506000600000     0x506e00000000 0xdffa00000        0x0  ---p   
+      0x506e00000000     0x506e00040000    0x40000        0x0  rw-p   
+      0x506e00040000     0x507000000000 0x1fffc0000        0x0  ---p   
+      0x507000000000     0x507000380000   0x380000        0x0  rw-p   
+      0x507000380000     0x507e00000000 0xdffc80000        0x0  ---p   
+      0x507e00000000     0x507e00040000    0x40000        0x0  rw-p   
+      0x507e00040000     0x508000000000 0x1fffc0000        0x0  ---p   
+      0x508000000000     0x508000500000   0x500000        0x0  rw-p   
+      0x508000500000     0x508e00000000 0xdffb00000        0x0  ---p   
+      0x508e00000000     0x508e00040000    0x40000        0x0  rw-p   
+      0x508e00040000     0x50b000000000 0x21fffc0000        0x0  ---p   
+      0x50b000000000     0x50b000500000   0x500000        0x0  rw-p   
+      0x50b000500000     0x50be00000000 0xdffb00000        0x0  ---p   
+      0x50be00000000     0x50be00040000    0x40000        0x0  rw-p   
+      0x50be00040000     0x50c000000000 0x1fffc0000        0x0  ---p   
+      0x50c000000000     0x50c000500000   0x500000        0x0  rw-p   
+      0x50c000500000     0x50ce00000000 0xdffb00000        0x0  ---p   
+      0x50ce00000000     0x50ce00040000    0x40000        0x0  rw-p   
+      0x50ce00040000     0x50d000000000 0x1fffc0000        0x0  ---p   
+      0x50d000000000     0x50d000300000   0x300000        0x0  rw-p   
+      0x50d000300000     0x50de00000000 0xdffd00000        0x0  ---p   
+      0x50de00000000     0x50de00040000    0x40000        0x0  rw-p   
+      0x50de00040000     0x50e000000000 0x1fffc0000        0x0  ---p   
+      0x50e000000000     0x50e000240000   0x240000        0x0  rw-p   
+      0x50e000240000     0x50ee00000000 0xdffdc0000        0x0  ---p   
+      0x50ee00000000     0x50ee00040000    0x40000        0x0  rw-p   
+      0x50ee00040000     0x50f000000000 0x1fffc0000        0x0  ---p   
+      0x50f000000000     0x50f000100000   0x100000        0x0  rw-p   
+      0x50f000100000     0x50fe00000000 0xdfff00000        0x0  ---p   
+      0x50fe00000000     0x50fe00040000    0x40000        0x0  rw-p   
+      0x50fe00040000     0x510000000000 0x1fffc0000        0x0  ---p   
+      0x510000000000     0x510000180000   0x180000        0x0  rw-p   
+      0x510000180000     0x510e00000000 0xdffe80000        0x0  ---p   
+      0x510e00000000     0x510e00040000    0x40000        0x0  rw-p   
+      0x510e00040000     0x511000000000 0x1fffc0000        0x0  ---p   
+      0x511000000000     0x511000480000   0x480000        0x0  rw-p   
+      0x511000480000     0x511e00000000 0xdffb80000        0x0  ---p   
+      0x511e00000000     0x511e00040000    0x40000        0x0  rw-p   
+      0x511e00040000     0x512000000000 0x1fffc0000        0x0  ---p   
+      0x512000000000     0x5120001c0000   0x1c0000        0x0  rw-p   
+      0x5120001c0000     0x512e00000000 0xdffe40000        0x0  ---p   
+      0x512e00000000     0x512e00040000    0x40000        0x0  rw-p   
+      0x512e00040000     0x513000000000 0x1fffc0000        0x0  ---p   
+      0x513000000000     0x5130000c0000    0xc0000        0x0  rw-p   
+      0x5130000c0000     0x513e00000000 0xdfff40000        0x0  ---p   
+      0x513e00000000     0x513e00040000    0x40000        0x0  rw-p   
+      0x513e00040000     0x514000000000 0x1fffc0000        0x0  ---p   
+      0x514000000000     0x514000140000   0x140000        0x0  rw-p   
+      0x514000140000     0x514e00000000 0xdffec0000        0x0  ---p   
+      0x514e00000000     0x514e00040000    0x40000        0x0  rw-p   
+      0x514e00040000     0x515000000000 0x1fffc0000        0x0  ---p   
+      0x515000000000     0x5150000c0000    0xc0000        0x0  rw-p   
+      0x5150000c0000     0x515e00000000 0xdfff40000        0x0  ---p   
+      0x515e00000000     0x515e00040000    0x40000        0x0  rw-p   
+      0x515e00040000     0x516000000000 0x1fffc0000        0x0  ---p   
+      0x516000000000     0x516000100000   0x100000        0x0  rw-p   
+      0x516000100000     0x516e00000000 0xdfff00000        0x0  ---p   
+      0x516e00000000     0x516e00040000    0x40000        0x0  rw-p   
+      0x516e00040000     0x517000000000 0x1fffc0000        0x0  ---p   
+      0x517000000000     0x5170000c0000    0xc0000        0x0  rw-p   
+      0x5170000c0000     0x517e00000000 0xdfff40000        0x0  ---p   
+      0x517e00000000     0x517e00040000    0x40000        0x0  rw-p   
+      0x517e00040000     0x518000000000 0x1fffc0000        0x0  ---p   
+      0x518000000000     0x518000140000   0x140000        0x0  rw-p   
+      0x518000140000     0x518e00000000 0xdffec0000        0x0  ---p   
+      0x518e00000000     0x518e00040000    0x40000        0x0  rw-p   
+      0x518e00040000     0x519000000000 0x1fffc0000        0x0  ---p   
+      0x519000000000     0x519000100000   0x100000        0x0  rw-p   
+      0x519000100000     0x519e00000000 0xdfff00000        0x0  ---p   
+      0x519e00000000     0x519e00040000    0x40000        0x0  rw-p   
+      0x519e00040000     0x51a000000000 0x1fffc0000        0x0  ---p   
+      0x51a000000000     0x51a000140000   0x140000        0x0  rw-p   
+      0x51a000140000     0x51ae00000000 0xdffec0000        0x0  ---p   
+      0x51ae00000000     0x51ae00040000    0x40000        0x0  rw-p   
+      0x51ae00040000     0x51b000000000 0x1fffc0000        0x0  ---p   
+      0x51b000000000     0x51b000100000   0x100000        0x0  rw-p   
+      0x51b000100000     0x51be00000000 0xdfff00000        0x0  ---p   
+      0x51be00000000     0x51be00040000    0x40000        0x0  rw-p   
+      0x51be00040000     0x51c000000000 0x1fffc0000        0x0  ---p   
+      0x51c000000000     0x51c000040000    0x40000        0x0  rw-p   
+      0x51c000040000     0x51ce00000000 0xdfffc0000        0x0  ---p   
+      0x51ce00000000     0x51ce00040000    0x40000        0x0  rw-p   
+      0x51ce00040000     0x51d000000000 0x1fffc0000        0x0  ---p   
+      0x51d000000000     0x51d000100000   0x100000        0x0  rw-p   
+      0x51d000100000     0x51de00000000 0xdfff00000        0x0  ---p   
+      0x51de00000000     0x51de00040000    0x40000        0x0  rw-p   
+      0x51de00040000     0x51e000000000 0x1fffc0000        0x0  ---p   
+      0x51e000000000     0x51e000040000    0x40000        0x0  rw-p   
+      0x51e000040000     0x51ee00000000 0xdfffc0000        0x0  ---p   
+      0x51ee00000000     0x51ee00040000    0x40000        0x0  rw-p   
+      0x51ee00040000     0x51f000000000 0x1fffc0000        0x0  ---p   
+      0x51f000000000     0x51f0000c0000    0xc0000        0x0  rw-p   
+      0x51f0000c0000     0x51fe00000000 0xdfff40000        0x0  ---p   
+      0x51fe00000000     0x51fe00040000    0x40000        0x0  rw-p   
+      0x51fe00040000     0x520000000000 0x1fffc0000        0x0  ---p   
+      0x520000000000     0x520000040000    0x40000        0x0  rw-p   
+      0x520000040000     0x520e00000000 0xdfffc0000        0x0  ---p   
+      0x520e00000000     0x520e00040000    0x40000        0x0  rw-p   
+      0x520e00040000     0x521000000000 0x1fffc0000        0x0  ---p   
+      0x521000000000     0x521000100000   0x100000        0x0  rw-p   
+      0x521000100000     0x521e00000000 0xdfff00000        0x0  ---p   
+      0x521e00000000     0x521e00040000    0x40000        0x0  rw-p   
+      0x521e00040000     0x522000000000 0x1fffc0000        0x0  ---p   
+      0x522000000000     0x522000040000    0x40000        0x0  rw-p   
+      0x522000040000     0x522e00000000 0xdfffc0000        0x0  ---p   
+      0x522e00000000     0x522e00040000    0x40000        0x0  rw-p   
+      0x522e00040000     0x523000000000 0x1fffc0000        0x0  ---p   
+      0x523000000000     0x523000100000   0x100000        0x0  rw-p   
+      0x523000100000     0x523e00000000 0xdfff00000        0x0  ---p   
+      0x523e00000000     0x523e00040000    0x40000        0x0  rw-p   
+      0x523e00040000     0x524000000000 0x1fffc0000        0x0  ---p   
+      0x524000000000     0x524000200000   0x200000        0x0  rw-p   
+      0x524000200000     0x524e00000000 0xdffe00000        0x0  ---p   
+      0x524e00000000     0x524e00040000    0x40000        0x0  rw-p   
+      0x524e00040000     0x525000000000 0x1fffc0000        0x0  ---p   
+      0x525000000000     0x525000340000   0x340000        0x0  rw-p   
+      0x525000340000     0x525e00000000 0xdffcc0000        0x0  ---p   
+      0x525e00000000     0x525e00040000    0x40000        0x0  rw-p   
+      0x525e00040000     0x526000000000 0x1fffc0000        0x0  ---p   
+      0x526000000000     0x526000040000    0x40000        0x0  rw-p   
+      0x526000040000     0x526e00000000 0xdfffc0000        0x0  ---p   
+      0x526e00000000     0x526e00040000    0x40000        0x0  rw-p   
+      0x526e00040000     0x527000000000 0x1fffc0000        0x0  ---p   
+      0x527000000000     0x527000080000    0x80000        0x0  rw-p   
+      0x527000080000     0x527e00000000 0xdfff80000        0x0  ---p   
+      0x527e00000000     0x527e00040000    0x40000        0x0  rw-p   
+      0x527e00040000     0x528000000000 0x1fffc0000        0x0  ---p   
+      0x528000000000     0x528000040000    0x40000        0x0  rw-p   
+      0x528000040000     0x528e00000000 0xdfffc0000        0x0  ---p   
+      0x528e00000000     0x528e00040000    0x40000        0x0  rw-p   
+      0x528e00040000     0x529000000000 0x1fffc0000        0x0  ---p   
+      0x529000000000     0x529000300000   0x300000        0x0  rw-p   
+      0x529000300000     0x529e00000000 0xdffd00000        0x0  ---p   
+      0x529e00000000     0x529e00040000    0x40000        0x0  rw-p   
+      0x529e00040000     0x52a000000000 0x1fffc0000        0x0  ---p   
+      0x52a000000000     0x52a000080000    0x80000        0x0  rw-p   
+      0x52a000080000     0x52ae00000000 0xdfff80000        0x0  ---p   
+      0x52ae00000000     0x52ae00040000    0x40000        0x0  rw-p   
+      0x52ae00040000     0x52b000000000 0x1fffc0000        0x0  ---p   
+      0x52b000000000     0x52b000080000    0x80000        0x0  rw-p   
+      0x52b000080000     0x52be00000000 0xdfff80000        0x0  ---p   
+      0x52be00000000     0x52be00040000    0x40000        0x0  rw-p   
+      0x52be00040000     0x52c000000000 0x1fffc0000        0x0  ---p   
+      0x52c000000000     0x52c000040000    0x40000        0x0  rw-p   
+      0x52c000040000     0x52ce00000000 0xdfffc0000        0x0  ---p   
+      0x52ce00000000     0x52ce00040000    0x40000        0x0  rw-p   
+      0x52ce00040000     0x52d000000000 0x1fffc0000        0x0  ---p   
+      0x52d000000000     0x52d000200000   0x200000        0x0  rw-p   
+      0x52d000200000     0x52de00000000 0xdffe00000        0x0  ---p   
+      0x52de00000000     0x52de00040000    0x40000        0x0  rw-p   
+      0x52de00040000     0x52e000000000 0x1fffc0000        0x0  ---p   
+      0x52e000000000     0x52e000040000    0x40000        0x0  rw-p   
+      0x52e000040000     0x52ee00000000 0xdfffc0000        0x0  ---p   
+      0x52ee00000000     0x52ee00040000    0x40000        0x0  rw-p   
+      0x52ee00040000     0x52f000000000 0x1fffc0000        0x0  ---p   
+      0x52f000000000     0x52f000100000   0x100000        0x0  rw-p   
+      0x52f000100000     0x52fe00000000 0xdfff00000        0x0  ---p   
+      0x52fe00000000     0x52fe00040000    0x40000        0x0  rw-p   
+      0x52fe00040000     0x530000000000 0x1fffc0000        0x0  ---p   
+      0x530000000000     0x530000080000    0x80000        0x0  rw-p   
+      0x530000080000     0x530e00000000 0xdfff80000        0x0  ---p   
+      0x530e00000000     0x530e00040000    0x40000        0x0  rw-p   
+      0x530e00040000     0x531000000000 0x1fffc0000        0x0  ---p   
+      0x531000000000     0x5310001c0000   0x1c0000        0x0  rw-p   
+      0x5310001c0000     0x531e00000000 0xdffe40000        0x0  ---p   
+      0x531e00000000     0x531e00040000    0x40000        0x0  rw-p   
+      0x531e00040000     0x532000000000 0x1fffc0000        0x0  ---p   
+      0x532000000000     0x532000040000    0x40000        0x0  rw-p   
+      0x532000040000     0x532e00000000 0xdfffc0000        0x0  ---p   
+      0x532e00000000     0x532e00040000    0x40000        0x0  rw-p   
+      0x532e00040000     0x533000000000 0x1fffc0000        0x0  ---p   
+      0x533000000000     0x533000100000   0x100000        0x0  rw-p   
+      0x533000100000     0x533e00000000 0xdfff00000        0x0  ---p   
+      0x533e00000000     0x533e00040000    0x40000        0x0  rw-p   
+      0x533e00040000     0x534000000000 0x1fffc0000        0x0  ---p   
+      0x534000000000     0x534000040000    0x40000        0x0  rw-p   
+      0x534000040000     0x534e00000000 0xdfffc0000        0x0  ---p   
+      0x534e00000000     0x534e00040000    0x40000        0x0  rw-p   
+      0x534e00040000     0x540000000000 0xb1fffc0000        0x0  ---p   
+      0x540000000000     0x540000002000     0x2000        0x0  rw-p   
+      0x59ed8477b000     0x59ed86b57000  0x23dc000        0x0  r--p   /evidence/symbols-3/godot-symbols
+      0x59ed86b57000     0x59ed8d49f000  0x6948000  0x23db000  r-xp   /evidence/symbols-3/godot-symbols
+      0x59ed8d49f000     0x59ed8d5ee000   0x14f000  0x8d22000  r--p   /evidence/symbols-3/godot-symbols
+      0x59ed8d5ee000     0x59ed8dcb8000   0x6ca000  0x8e70000  rw-p   /evidence/symbols-3/godot-symbols
+      0x59ed8dcb8000     0x59ed8e898000   0xbe0000        0x0  rw-p   
+      0x7c96e5600000     0x7c96e5e00000   0x800000        0x0  rw-p   
+      0x7c96e5f2f000     0x7c96e6000000    0xd1000        0x0  rw-p   
+      0x7c96e6000000     0x7c96e6800000   0x800000        0x0  rw-p   
+      0x7c96e6806000     0x7c96e6838000    0x32000        0x0  rw-p   
+      0x7c96e6838000     0x7c96e6ed7000   0x69f000        0x0  r--p   /evidence/linux-2/production/production/godot_luau.so
+      0x7c96e6ed7000     0x7c96e830f000  0x1438000   0x69f000  r-xp   /evidence/linux-2/production/production/godot_luau.so
+      0x7c96e830f000     0x7c96e8835000   0x526000  0x1ad7000  r--p   /evidence/linux-2/production/production/godot_luau.so
+      0x7c96e8835000     0x7c96e8873000    0x3e000  0x1ffc000  r--p   /evidence/linux-2/production/production/godot_luau.so
+      0x7c96e8873000     0x7c96e8af0000   0x27d000  0x203a000  rw-p   /evidence/linux-2/production/production/godot_luau.so
+      0x7c96e8af0000     0x7c96e8c00000   0x110000        0x0  rw-p   
+      0x7c96e8c00000     0x7c96e9c00000  0x1000000        0x0  rw-p   
+      0x7c96e9c0f000     0x7c96ea9ff000   0xdf0000        0x0  rw-p   
+      0x7c96ea9ff000     0x7c96eaa00000     0x1000        0x0  ---p   
+      0x7c96eaa00000     0x7c96eb200000   0x800000        0x0  rw-p   
+      0x7c96eb200000     0x7c96eba00000   0x800000        0x0  rw-p   
+      0x7c96eba09000     0x7c96ec5eb000   0xbe2000        0x0  rw-p   
+      0x7c96ec5eb000     0x7c96ec5ec000     0x1000        0x0  ---p   
+      0x7c96ec5ec000     0x7c96ecdec000   0x800000        0x0  rw-p   
+      0x7c96ecdec000     0x7c96ed8f5000   0xb09000        0x0  rw-p   
+      0x7c96ed8f5000     0x7c96ed8f6000     0x1000        0x0  ---p   
+      0x7c96ed8f6000     0x7c96ee0f6000   0x800000        0x0  rw-p   
+      0x7c96ee0f6000     0x7c96eebff000   0xb09000        0x0  rw-p   
+      0x7c96eebff000     0x7c96eec00000     0x1000        0x0  ---p   
+      0x7c96eec00000     0x7c96ef400000   0x800000        0x0  rw-p   
+      0x7c96ef400000     0x7c96efc00000   0x800000        0x0  rw-p   
+      0x7c96efc00000     0x7c96eff00000   0x300000        0x0  rw-p   
+      0x7c96eff06000     0x7c96f0100000   0x1fa000        0x0  rw-p   
+      0x7c96f0106000     0x7c96f0e20000   0xd1a000        0x0  rw-p   
+      0x7c96f0e20000     0x7c96f1600000   0x7e0000        0x0  ---p   
+      0x7c96f1600000     0x7c96f1900000   0x300000        0x0  rw-p   
+      0x7c96f1906000     0x7c96f1947000    0x41000        0x0  rw-p   
+      0x7c96f1947000     0x7c96f194e000     0x7000        0x0  r--s   /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+      0x7c96f194e000     0x7c96f19a7000    0x59000        0x0  r--p   /usr/lib/locale/C.utf8/LC_CTYPE
+      0x7c96f19a7000     0x7c96f1e00000   0x459000        0x0  rw-p   
+      0x7c96f1e00000     0x7c96f1f00000   0x100000        0x0  rw-p   
+      0x7c96f1f01000     0x7c96f24e1000   0x5e0000        0x0  rw-p   
+      0x7c96f24e1000     0x7c96f2509000    0x28000        0x0  r--p   /usr/lib/x86_64-linux-gnu/libc.so.6
+      0x7c96f2509000     0x7c96f2691000   0x188000    0x28000  r-xp   /usr/lib/x86_64-linux-gnu/libc.so.6
+      0x7c96f2691000     0x7c96f26e0000    0x4f000   0x1b0000  r--p   /usr/lib/x86_64-linux-gnu/libc.so.6
+      0x7c96f26e0000     0x7c96f26e4000     0x4000   0x1fe000  r--p   /usr/lib/x86_64-linux-gnu/libc.so.6
+      0x7c96f26e4000     0x7c96f26e6000     0x2000   0x202000  rw-p   /usr/lib/x86_64-linux-gnu/libc.so.6
+      0x7c96f26e6000     0x7c96f26f5000     0xf000        0x0  rw-p   
+      0x7c96f26f5000     0x7c96f26f9000     0x4000        0x0  r--p   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+      0x7c96f26f9000     0x7c96f271d000    0x24000     0x4000  r-xp   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+      0x7c96f271d000     0x7c96f2721000     0x4000    0x28000  r--p   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+      0x7c96f2721000     0x7c96f2722000     0x1000    0x2b000  r--p   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+      0x7c96f2722000     0x7c96f2723000     0x1000    0x2c000  rw-p   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+      0x7c96f2723000     0x7c96f2726000     0x3000        0x0  r--p   /usr/lib/x86_64-linux-gnu/libresolv.so.2
+      0x7c96f2726000     0x7c96f272f000     0x9000     0x3000  r-xp   /usr/lib/x86_64-linux-gnu/libresolv.so.2
+      0x7c96f272f000     0x7c96f2731000     0x2000     0xc000  r--p   /usr/lib/x86_64-linux-gnu/libresolv.so.2
+      0x7c96f2731000     0x7c96f2732000     0x1000     0xe000  r--p   /usr/lib/x86_64-linux-gnu/libresolv.so.2
+      0x7c96f2732000     0x7c96f2733000     0x1000     0xf000  rw-p   /usr/lib/x86_64-linux-gnu/libresolv.so.2
+      0x7c96f2733000     0x7c96f2735000     0x2000        0x0  rw-p   
+      0x7c96f2735000     0x7c96f2745000    0x10000        0x0  r--p   /usr/lib/x86_64-linux-gnu/libm.so.6
+      0x7c96f2745000     0x7c96f27c4000    0x7f000    0x10000  r-xp   /usr/lib/x86_64-linux-gnu/libm.so.6
+      0x7c96f27c4000     0x7c96f281c000    0x58000    0x8f000  r--p   /usr/lib/x86_64-linux-gnu/libm.so.6
+      0x7c96f281c000     0x7c96f281d000     0x1000    0xe7000  r--p   /usr/lib/x86_64-linux-gnu/libm.so.6
+      0x7c96f281d000     0x7c96f281e000     0x1000    0xe8000  rw-p   /usr/lib/x86_64-linux-gnu/libm.so.6
+      0x7c96f281e000     0x7c96f28bb000    0x9d000        0x0  r--p   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+      0x7c96f28bb000     0x7c96f2a03000   0x148000    0x9d000  r-xp   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+      0x7c96f2a03000     0x7c96f2a8a000    0x87000   0x1e5000  r--p   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+      0x7c96f2a8a000     0x7c96f2a95000     0xb000   0x26b000  r--p   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+      0x7c96f2a95000     0x7c96f2a98000     0x3000   0x276000  rw-p   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+      0x7c96f2a98000     0x7c96f2a9c000     0x4000        0x0  rw-p   
+      0x7c96f2a9c000     0x7c96f2a9e000     0x2000        0x0  r--p   /usr/lib/x86_64-linux-gnu/libatomic.so.1.2.0
+      0x7c96f2a9e000     0x7c96f2aa2000     0x4000     0x2000  r-xp   /usr/lib/x86_64-linux-gnu/libatomic.so.1.2.0
+      0x7c96f2aa2000     0x7c96f2aa4000     0x2000     0x6000  r--p   /usr/lib/x86_64-linux-gnu/libatomic.so.1.2.0
+      0x7c96f2aa4000     0x7c96f2aa5000     0x1000     0x7000  r--p   /usr/lib/x86_64-linux-gnu/libatomic.so.1.2.0
+      0x7c96f2aa5000     0x7c96f2aa6000     0x1000     0x8000  rw-p   /usr/lib/x86_64-linux-gnu/libatomic.so.1.2.0
+      0x7c96f2aa6000     0x7c96f2aad000     0x7000        0x0  rw-p   
+      0x7c96f2aad000     0x7c96f2ab1000     0x4000        0x0  r--p   [vvar]
+      0x7c96f2ab1000     0x7c96f2ab3000     0x2000        0x0  r--p   [vvar_vclock]
+      0x7c96f2ab3000     0x7c96f2ab5000     0x2000        0x0  r-xp   [vdso]
+      0x7c96f2ab5000     0x7c96f2ab6000     0x1000        0x0  r--p   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7c96f2ab6000     0x7c96f2ae1000    0x2b000     0x1000  r-xp   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7c96f2ae1000     0x7c96f2aeb000     0xa000    0x2c000  r--p   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7c96f2aeb000     0x7c96f2aed000     0x2000    0x36000  r--p   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7c96f2aed000     0x7c96f2aef000     0x2000    0x38000  rw-p   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7ffd46d65000     0x7ffd46d94000    0x2f000        0x0  rw-p   [stack]
+rax            0x5130000aa201      89266600976897
+rbx            0x7ffd46d75a00      140725791971840
+rcx            0x5160000f4501      89472759710977
+rdx            0x0                 0
+rsi            0x3                 3
+rdi            0x5160000f4590      89472759711120
+rbp            0x7ffd46d75960      0x7ffd46d75960
+rsp            0x7ffd46d75960      0x7ffd46d75960
+r8             0x0                 0
+r9             0x7fffffffff01      140737488355073
+r10            0x7fffffffff01      140737488355073
+r11            0xeadde6bc8c21c801  -1522807401502095359
+r12            0xd                 13
+r13            0x0                 0
+r14            0x59ed8d49ff78      98876812558200
+r15            0x7c96f2aed000      136987758481408
+rip            0x59ed8cfb4b24      0x59ed8cfb4b24 <GDExtension::close_library()+4>
+eflags         0x202               [ IF ]
+cs             0x33                51
+ss             0x2b                43
+ds             0x0                 0
+es             0x0                 0
+fs             0x0                 0
+gs             0x0                 0
+fs_base        0x7c96f24e0500      136987752137984
+gs_base        0x0                 0
+#1  0x000059ed8cfb5830 in GDExtension::~GDExtension() ()
+   0x59ed8cfb5818 <_ZN11GDExtensionD2Ev+56>:	adc    %cl,-0x77(%rax)
+   0x59ed8cfb581b <_ZN11GDExtensionD2Ev+59>:	(bad)
+   0x59ed8cfb581c <_ZN11GDExtensionD2Ev+60>:	call   0x59ed8cfb4be0 <_ZNK11GDExtension15is_library_openEv>
+   0x59ed8cfb5821 <_ZN11GDExtensionD2Ev+65>:	test   $0x1,%al
+   0x59ed8cfb5823 <_ZN11GDExtensionD2Ev+67>:	jne    0x59ed8cfb5827 <_ZN11GDExtensionD2Ev+71>
+   0x59ed8cfb5825 <_ZN11GDExtensionD2Ev+69>:	jmp    0x59ed8cfb5830 <_ZN11GDExtensionD2Ev+80>
+   0x59ed8cfb5827 <_ZN11GDExtensionD2Ev+71>:	mov    -0x10(%rbp),%rdi
+   0x59ed8cfb582b <_ZN11GDExtensionD2Ev+75>:	call   0x59ed8cfb4b20 <_ZN11GDExtension13close_libraryEv>
+=> 0x59ed8cfb5830 <_ZN11GDExtensionD2Ev+80>:	mov    -0x10(%rbp),%rdi
+   0x59ed8cfb5834 <_ZN11GDExtensionD2Ev+84>:	add    $0x1f8,%rdi
+   0x59ed8cfb583b <_ZN11GDExtensionD2Ev+91>:	call   0x59ed86c901b0 <_ZN7HashMapI6StringS0_20HashMapHasherDefault24HashMapComparatorDefaultIS0_vE21DefaultTypedAllocatorI14HashMapElementIS0_S0_EEED2Ev>
+   0x59ed8cfb5840 <_ZN11GDExtensionD2Ev+96>:	mov    -0x10(%rbp),%rdi

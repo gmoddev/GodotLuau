@@ -66,6 +66,7 @@ public:
     // Synchronous native entry points use the executing VM, including callbacks
     // and generic Godot call/set aliases. No authority is inferred from a node.
     static bool IsClientExecution();
+    static bool IsExecuting();
     bool IsClosing() const { return Closing || AdmissionClosed; }
     bool IsShutdownCallback(lua_State* Thread) const { return Closing && Thread && Thread==ClosingThread; }
     void StopAdmission() { AdmissionClosed = true; }

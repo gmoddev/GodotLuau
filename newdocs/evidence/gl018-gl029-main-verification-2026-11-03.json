@@ -1,0 +1,436 @@
+{
+  "Status": "Integrated and verified on main within admitted-host scope; publication/updater disabled",
+  "DateUTC": "2026-11-03",
+  "PreviousMain": "83cd0887968d73d61d050650718d8ada6e124579",
+  "QualifiedBranch": "d6afbe683479505e447436365cb45a712400a023",
+  "MergeCommit": "6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851",
+  "MergeParents": [
+    "83cd0887968d73d61d050650718d8ada6e124579",
+    "d6afbe683479505e447436365cb45a712400a023"
+  ],
+  "MergeTree": "2b5260cde48a53e4d7ac05a1b0fa49432e9e34da",
+  "QualifiedBranchTreeIdentical": true,
+  "PreservedBranchCommits": 39,
+  "PreservedSourceCommits": [
+    "0e61db4a418c606deff50fad27f9831dc6204981",
+    "69bcc659aebe9ceb41eb5cd66466bd8b095c6f97",
+    "1e5e2f62b6b85f97e29bd03bacf469182fa4467d",
+    "9ea782bb739cc35deba06474a82582a12529df6d",
+    "eec239779e873c54982c81ec9984c7ff98b8f6b8",
+    "d6afbe683479505e447436365cb45a712400a023"
+  ],
+  "VerificationRevision": "ac119bc72e609577b6024ceae19765f7cd21ba75",
+  "VerificationTree": "e58bb9c3ea933a2b6cd3a029cefeccfdf44019d8",
+  "DocumentationOnlyChangesAfterMerge": [
+    "newdocs/README.md",
+    "newdocs/adr-008-remoteevent-publication.md",
+    "newdocs/adr-009-bounded-remote-delivery.md",
+    "newdocs/current-architecture.md",
+    "newdocs/gl018-closure.md",
+    "newdocs/gl018-gl029-integration.md",
+    "newdocs/gl018-gl029-main-integration.md",
+    "newdocs/invariants.md",
+    "newdocs/issues.md",
+    "newdocs/remoteevent-api.md",
+    "newdocs/remoteevent-completion-qualification.md"
+  ],
+  "NativeSource": {
+    "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+    "Files": 91,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "Workflows": [
+    {
+      "Run": 41641774898,
+      "Attempt": 1,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774898",
+      "Revision": "ac119bc72e609577b6024ceae19765f7cd21ba75",
+      "Result": "success",
+      "Jobs": [
+        {
+          "Name": "Core (Windows, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774898/job/125936816183"
+        },
+        {
+          "Name": "Core (Linux, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774898/job/125936816320"
+        }
+      ]
+    },
+    {
+      "Run": 41641774764,
+      "Attempt": 1,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774764",
+      "Revision": "ac119bc72e609577b6024ceae19765f7cd21ba75",
+      "Result": "success",
+      "Jobs": [
+        {
+          "Name": "Native (Windows, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774764/job/125936814628"
+        },
+        {
+          "Name": "Native (Linux, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774764/job/125936814987"
+        }
+      ]
+    },
+    {
+      "Run": 41641774730,
+      "Attempt": 1,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774730",
+      "Revision": "ac119bc72e609577b6024ceae19765f7cd21ba75",
+      "Result": "success",
+      "Jobs": [
+        {
+          "Name": "Full-native ASan (Linux)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774730/job/125936821517"
+        },
+        {
+          "Name": "Full-native ASan (Windows)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641774730/job/125936821947"
+        }
+      ]
+    },
+    {
+      "Run": 41641778925,
+      "Attempt": 1,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925",
+      "Revision": "ac119bc72e609577b6024ceae19765f7cd21ba75",
+      "Result": "success",
+      "Jobs": [
+        {
+          "Name": "Linux production core ASan and LSan",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125936838997"
+        },
+        {
+          "Name": "Candidate rejection and retention checks (windows-2022)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125936839408"
+        },
+        {
+          "Name": "Candidate rejection and retention checks (ubuntu-24.04)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125936839498"
+        },
+        {
+          "Name": "Source build and qualify (Linux, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125937014503"
+        },
+        {
+          "Name": "Source build and qualify (Windows, Release)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125937014506"
+        },
+        {
+          "Name": "Source build and qualify (Windows, Debug)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125937014587"
+        },
+        {
+          "Name": "Source build and qualify (Linux, Release)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125937014635"
+        },
+        {
+          "Name": "Extract and start candidate (Windows)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125961589940"
+        },
+        {
+          "Name": "Extract and start candidate (Linux)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125961590011"
+        },
+        {
+          "Name": "Require every candidate gate (no publication)",
+          "Result": "success",
+          "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41641778925/job/125962118389"
+        }
+      ]
+    }
+  ],
+  "DownloadedRuntimeVerification": {
+    "Revision": "ac119bc72e609577b6024ceae19765f7cd21ba75",
+    "NativeSource": {
+      "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+      "Files": 91,
+      "Newlines": "LF normalized"
+    },
+    "Core": [
+      {
+        "Path": "core\\runtime-core-Linux-Debug\\core-results.xml",
+        "Cases": 81,
+        "SHA256": "696d634c2a1d63eab595d1003c99531fdbbba1fa906f740d0ae7106dbdab3cc7"
+      },
+      {
+        "Path": "core\\runtime-core-Windows-Debug\\core-results.xml",
+        "Cases": 81,
+        "SHA256": "e14311b1261f11284da4faeb722d4739977353d982c6bf9db6fdc2c4104581a7"
+      }
+    ],
+    "Native": [
+      {
+        "Path": "native\\runtime-native-Linux-Debug\\_temp\\native-ci\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 459,
+        "HostFixtures": 2,
+        "LogHashes": 359,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 4000,
+        "SummarySHA256": "297bfe754292a3ff9fca4d75b2c1e00639c88614a293e7f058f2aaa365211d82",
+        "ExtensionSHA256": "5f421923d690fd60a8e27b2c9a444a322a825fe08b22e0fbd561b2ab3bc45d6e",
+        "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+        "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99"
+      },
+      {
+        "Path": "native\\runtime-native-Windows-Debug\\_temp\\native-ci\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 461,
+        "HostFixtures": 2,
+        "LogHashes": 365,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 4000,
+        "SummarySHA256": "1b1b3630489a446c6cdad12b3165fc95393b3af5b2cd07ebb48110f70848786c",
+        "ExtensionSHA256": "0ff3b71646e948df6c76f8746163d87f3e1fdaa20ebd4e35ff851e85c9f41543",
+        "CompanionSHA256": "cf37e2296b3ea2c17209dc7a0dd54dc9e4c8461db0455009ab9bca18a798ad54",
+        "HostSHA256": "c5d39258f59b5c3859a2c3a8d0b4fcc2acb63db493f9cebd0cd18b5067ef136e"
+      },
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 459,
+        "HostFixtures": 2,
+        "LogHashes": 353,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 0,
+        "SummarySHA256": "8999677930e71b3475c46e807cc4bed6b0d0ab0a224c3841b90048c29467312e",
+        "ExtensionSHA256": "9a2e3463ec1f633b5f8e7439253e339ae17acdbbc6fc81c723d0e7b0de34f39b",
+        "CompanionSHA256": "1bc0970cfd2d847a6fa0d116e15892de880b8183eb8d24df0f10b2989f98402a",
+        "HostSHA256": "72645b0eb1d30afde108c1604cb5377d662770b2f922d7def37f92f58602d711"
+      },
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\native\\summary.json",
+        "Actors": 116,
+        "RemoteActors": 6,
+        "RemoteCases": 461,
+        "HostFixtures": 2,
+        "LogHashes": 353,
+        "HarnessHashes": 80,
+        "UUIDSamplesRehashed": 0,
+        "SummarySHA256": "8549cafd24d50d956dce74442cbe887b8a3e23d5f4f1263eff741d4c6e45f185",
+        "ExtensionSHA256": "e822a9d676a6e5892f1e32dbd09c7ccbf107a3cefba10fa66fa5462c86f8d952",
+        "CompanionSHA256": "e990222f49075cab5cac22fdb45f1b314641b8a40c905c9bb0961bbeda50a4f8",
+        "HostSHA256": "1d67cdfad7fc87a6c4bd4fefd9ef95f4171c1f96059fb7a4526d13307e570ae4"
+      }
+    ],
+    "Sanitizers": [
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Linux\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+        "Result": "PASS",
+        "Checks": 24,
+        "FilesVerified": 562,
+        "MissingEphemeralData": [
+          {
+            "Path": "native/filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/msg_GL003-shared__6ae9e372-239a-4a4d-a709-0010dff4e709_1.json",
+            "ExpectedSHA256": "f80b70bdb104b0175552d487a19a653efab2d2e341485c8b64ee198f47c9cdd0",
+            "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+          }
+        ],
+        "CoreCases": 81,
+        "InstrumentedTranslationUnits": [
+          1160,
+          3
+        ],
+        "SummarySHA256": "3253a59cef8f0ccc6248b9e132dfe74def7bb3da14f2e7db7c820755ee2f670f"
+      },
+      {
+        "Path": "sanitizers\\runtime-native-sanitizers-Windows\\_temp\\native-sanitizer-evidence\\sanitizer-summary.json",
+        "Result": "PASS",
+        "Checks": 23,
+        "FilesVerified": 557,
+        "MissingEphemeralData": [
+          {
+            "Path": "native\\filesystem\\profile\\APPDATA\\GodotLuauRuntimeQualification\\msg_GL003-shared__6ae9e458-06a4-4c5f-9aea-002a55c61aea_1.json",
+            "ExpectedSHA256": "bd399311491be5dbc30dfa2ab87d9bd3d3d6c1f4ac54ef2be79f71e8f562dc71",
+            "Scope": "Transient GL-003 mailbox, not a required input, result or log."
+          }
+        ],
+        "CoreCases": 81,
+        "InstrumentedTranslationUnits": [
+          1160,
+          3
+        ],
+        "SummarySHA256": "59fc857e60f194f7fde3a545c9bf0163cb5098026d1651d14241077aa1de6e17"
+      }
+    ],
+    "Scope": "Downloaded completed artifacts only; absent profiles are not passing."
+  },
+  "DownloadedCandidateVerification": {
+    "Revision": "ac119bc72e609577b6024ceae19765f7cd21ba75",
+    "Profiles": [
+      {
+        "Profile": "Windows-Debug",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 461,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 357,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "0d82a8b61202b00ca8121f98e34a534814e488d5ae9f4d998175528b71ef21ee",
+        "HostSHA256": "8c5816561ea894d0c34c29b74dcac34a9f74c5e40350c75b5851c63acd1a0527",
+        "ExtensionSHA256": "befa0978b694b1dfeab987a3a298c5b6e100f2a5e266307027d737c354f9d7f3",
+        "CompanionSHA256": "abda0e676334c2d400299511bc6b296f8604efd91d3d6a5f72b276817492e00a"
+      },
+      {
+        "Profile": "Windows-Release",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 461,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 353,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "da5d28b921234d17a88fe57630e9ab226a8783442505f6e84127fc4073787bc5",
+        "HostSHA256": "d4273a567d9cb5bdfebcabd596793985c28ebf00a4802959b2b9caa986757095",
+        "ExtensionSHA256": "b202701cedf777d740961821599a9ebe24443a77b6b25f68ba94af3ee7b6ef41",
+        "CompanionSHA256": "060809ce2a4bf2452883726a2d51fa7ab5550b3171213d9e86f0a3fa492f96ca"
+      },
+      {
+        "Profile": "Linux-Debug",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 457,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 356,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "fe6f421cec0f4742e74093af7be74d5e03aad87f50ca012d8b3ba542537e89fb",
+        "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99",
+        "ExtensionSHA256": "00b013936d4ed942ee1636aadccf5ec983126243879b53b27440d3e650833da7",
+        "CompanionSHA256": "f495e3f37dc32616a6df6951d9f9d7515213a4c00decbe1e8a7246bb8e5d83fc"
+      },
+      {
+        "Profile": "Linux-Release",
+        "CoreCases": 81,
+        "Actors": 116,
+        "RemoteCases": 459,
+        "HostPacketMeasurements": {
+          "CachedSubmittedCommands": 1,
+          "CachedSubmittedPacketBytes": 819,
+          "MTU": 1392,
+          "NodePathUTF8Bytes": 256,
+          "RemoteFrameBytes": 816,
+          "RetainedNativePacketBytes": 282,
+          "UncachedSubmittedCommands": 1,
+          "UncachedSubmittedPacketBytes": 1066,
+          "UnfragmentedPacketBytes": 1364
+        },
+        "LogHashes": 349,
+        "UUIDSamplesRehashed": 4000,
+        "FilesVerified": 6,
+        "ProfileSHA256": "6b6b45416ef9d9c159f5ed06b5a377614b6e6f35c8e768cd904de3fd81d9977d",
+        "HostSHA256": "5ceeff3881483604aa60e194fc5be46f9e1009241632b82203ea1867ef17ea6e",
+        "ExtensionSHA256": "8ce6ca67bb351a0fd142e40eb3b9bb1b6621e42062e8b0c072aa60f21135b1fc",
+        "CompanionSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0"
+      }
+    ],
+    "Scope": "Downloaded profile products, strict native rechecks, exact packages and acceptance.",
+    "CoreSanitizer": {
+      "Result": "PASS",
+      "Cases": 81
+    },
+    "Packages": [
+      {
+        "Platform": "Linux",
+        "Result": "PASS",
+        "StartupActors": 2,
+        "Members": 133,
+        "PackageSHA256": "7e29272d82270ad840988888ce24e4379ab780d7a21750a7082f0e74299108a8",
+        "RecordSHA256": "2225bc7485c283dcc5c4c07d2056c3ae4c7be984331bab79ef088df753b167fc"
+      },
+      {
+        "Platform": "Windows",
+        "Result": "PASS",
+        "StartupActors": 2,
+        "Members": 133,
+        "PackageSHA256": "a6e6e91579cadd773e576041ada1516e53f138e3e9b75a5aee17aad045ee2110",
+        "RecordSHA256": "34c62e8e511e41411723a2e975853e5e6c764bac166d58a170662019f6d4f28d"
+      }
+    ],
+    "Acceptance": {
+      "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+      "SHA256": "3eb55832e63c91dc9e880650a5d0bab6ce43a8b50b97df1d5cce14f4ac794af9"
+    }
+  },
+  "PublicationGuards": {
+    ".github/workflows/build-release.yml": {
+      "GitBlob": "8c958e1206588f70d5477fd733dcebc060d49092",
+      "UnchangedFromPreviousMain": true
+    },
+    "addons/GodotLuauUpdater/plugin.gd": {
+      "GitBlob": "b9b4b8027c42b230a806b0ee2deda3e69d2a32c8",
+      "UnchangedFromPreviousMain": true
+    }
+  },
+  "ReusedBranchEvidence": {
+    "File": "newdocs/evidence/gl029-completion-verification-2026-11-03.json",
+    "SHA256LF": "3d8779597d2de4406e78b9b3275e48472ef5e47ff2d0aa7299a4ea2cd59c144c",
+    "Scope": "Branch UDP-fault and paired 1/16/32-peer Debug ASan measurements; not freshly repeated integration benchmarks"
+  },
+  "Limitations": [
+    "Requires the hash-pinned admitted host and matching GER2 peers; stock-host network startup fails closed. No patched engine is distributed.",
+    "GL-018 matching-host headless scope retained; stock-host/custom unload, Windows LSan and graphics/editor/device qualification are not inferred.",
+    "Native data caps exclude total RAM, receive predecode and control/ACK queues.",
+    "Earlier branch Character observation failures passed unchanged replays without an asserted root-cause correction.",
+    "Branch comparative performance is bounded to 32 actual peers and Debug ASan; higher response latency, incomplete 64-peer attempts and no Release speed claim remain explicit.",
+    "Sanitizer upload transient-mailbox/raw-GUID retention limits are recorded in downloaded verification. Ordinary/sanitizer product identities are reported; candidate profiles/packages include binaries for independent product rehashing.",
+    "Full-native and non-publishing candidate workflows were explicitly dispatched on main; their future push-trigger admission is unchanged.",
+    "GL-017 and GL-030 remain separate. Release publication and updater distribution remain disabled."
+  ]
+}

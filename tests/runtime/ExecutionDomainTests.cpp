@@ -2,6 +2,7 @@
 #include "gl_storage.h"
 #include "gl_http_policy.h"
 #include "gl_uuid.h"
+#include "gl_remote_delivery.h"
 #include "luau_stdlib.h"
 #include "gl_stackguard.h"
 #include <cstdio>
@@ -21,6 +22,16 @@
 #endif
 
 namespace {
+struct DeliveryAllocation { static inline bool Fail = false; };
+template<class T> struct DeliveryAllocator : std::allocator<T> {
+    template<class U> struct rebind { using other = DeliveryAllocator<U>; };
+    DeliveryAllocator() = default;
+    template<class U> DeliveryAllocator(const DeliveryAllocator<U>&) {}
+    T* allocate(size_t Count) {
+        if (DeliveryAllocation::Fail) throw std::bad_alloc();
+        return std::allocator<T>::allocate(Count);
+    }
+};
 void Check(bool Condition, const char* Message) {
     if (!Condition) throw std::runtime_error(Message);
 }
@@ -1002,6 +1013,10 @@ assert(not pcall(H.GetAsync,H,'ok','true') and not pcall(H.GetAsync,H,'ok',true,
 assert(shared.HttpCalls==Before)
 assert(H:GenerateGUID()=='{wrapped}' and H:GenerateGUID(false)=='bare' and not pcall(H.GenerateGUID,H,1))
 assert(H:UrlEncode(utf8.char(0x96ea)..string.char(0)..' /%')=='%E9%9B%AA%00%20%2F%25')
+for Byte=0,255 do
+    local Unreserved=(Byte>=65 and Byte<=90) or (Byte>=97 and Byte<=122) or (Byte>=48 and Byte<=57) or Byte==45 or Byte==46 or Byte==95 or Byte==126
+    assert(H:UrlEncode(string.char(Byte))==(Unreserved and string.char(Byte) or string.format('%%%02X',Byte)))
+end
 assert(not pcall(H.UrlEncode,H,123) and not pcall(H.UrlEncode,H,nil))
 )"); F.NoErrors();
     });
@@ -1024,6 +1039,123 @@ assert(not pcall(H.UrlEncode,H,123) and not pcall(H.UrlEncode,H,nil))
         Check(FormatGLUuid(Bytes,true)=="{ffffffff-ffff-4fff-bfff-ffffffffffff}","UUID version/variant or braces incorrect");
         for (size_t Index=0;Index<Bytes.size();++Index) Bytes[Index]=uint8_t(Index);
         Check(FormatGLUuid(Bytes,false)=="00010203-0405-4607-8809-0a0b0c0d0e0f","UUID octet order incorrect");
+    });
+    Test("Remote delivery queues conserve bounded ownership and supersession", [] {
+        using Body = std::vector<uint8_t>;
+        using Entry = GLRemoteDelivery::Message<Body>;
+        using Queue = GLRemoteDelivery::Queue<Body>;
+        using Result = GLRemoteDelivery::Result;
+        GLRemoteDelivery::Limits Limits;
+        Limits.PeerBytes = 100; Limits.TotalBytes = 150; Limits.FrameBytes = 200;
+        Limits.PeerMessages = 4; Limits.TotalMessages = 8; Limits.Peers = 3;
+        auto Message = [](int Peer, size_t Bytes, int Delivery = 0, uint64_t Sequence = 0) {
+            Entry Value; Value.Key = {Peer, 1, 10, 20, 30, 0}; Value.Bytes = Bytes;
+            Value.Object = 100; Value.LocalGeneration = 1; Value.Delivery = Delivery; Value.Sequence = Sequence;
+            Value.Body = std::make_shared<const Body>(Body{uint8_t(Bytes)}); return Value;
+        };
+        Queue Q(Limits);
+        Entry Invalid = Message(2, 10); Invalid.Key.Epoch = 0;
+        Check(Q.Push(Invalid) == Result::Invalid && Q.GetTotals().Messages == 0, "Invalid work allocated queue state");
+        Check(Q.Push(Message(2, 60)) == Result::Accepted && Q.Push(Message(2, 40)) == Result::Accepted, "Exact peer byte limit rejected");
+        Check(Q.Push(Message(2, 1)) == Result::PeerFull && Q.GetTotals().Bytes == 100 && Q.GetTotals().Messages == 2, "One-over peer mutated ownership");
+        Check(Q.Push(Message(3, 50)) == Result::Accepted && Q.Push(Message(4, 1)) == Result::GlobalFull, "Aggregate bound not independent");
+        Check(Q.Take(2)->Bytes == 60 && Q.Take(2)->Bytes == 40 && Q.GetTotals().Bytes == 50, "Reliable FIFO/charge release lost");
+        Q.Clear(); Q.Clear();
+        Check(Q.GetTotals().Peers == 0 && Q.GetTotals().Bytes == 0 && Q.GetTotals().Messages == 0, "Queue clear retained charges");
+
+        Entry Old = Message(2, 40, 2, 1);
+        Check(Q.Push(Old) == Result::Accepted && Q.Push(Message(2, 60)) == Result::Accepted, "Replacement fixture admission failed");
+        Check(Q.Push(Message(2, 60, 2, 2)) == Result::PeerFull && Q.Front(2)->Body == Old.Body && Q.Front(2)->Sequence == 1, "Rejected larger replacement evicted old sample");
+        Check(Q.Push(Message(2, 20, 2, 2)) == Result::Replaced && Q.GetTotals().Bytes == 80 && Q.GetTotals().Messages == 2, "Smaller replacement mischarged work");
+        Check(Q.Push(Message(2, 20, 2, 2)) == Result::Stale && Q.Push(Message(2, 20, 2, 1)) == Result::Stale, "Older/duplicate unsent sample replaced newer state");
+        Entry WrongObject = Message(2, 20, 2, 3); WrongObject.Object = 101;
+        Check(Q.Push(WrongObject) == Result::Invalid && Q.Front(2)->Sequence == 2, "Different object inherited stream ownership");
+        Q.Clear();
+        Entry OtherRemote = Message(2, 20, 2, 1); OtherRemote.Key.Endpoint++;
+        Entry OtherDirection = Message(2, 20, 2, 1); OtherDirection.Key.Direction = 1;
+        Check(Q.Push(Message(2, 20, 2, 1)) == Result::Accepted && Q.Push(OtherRemote) == Result::Accepted &&
+            Q.Push(OtherDirection) == Result::Accepted && Q.Push(Message(3, 20, 2, 1)) == Result::Accepted && Q.GetTotals().Messages == 4,
+            "Peers, Remotes or directions shared supersession state");
+        Check(Q.Retire([](const Entry& Value) { return Value.Key.Peer == 2 && Value.Key.Endpoint == 20 && Value.Key.Direction == 0; }) == 1 && Q.GetTotals().Messages == 3,
+            "Generation retirement removed unrelated work");
+        Check(Q.NextPeer(0) == 2 && Q.NextPeer(2) == 3 && Q.NextPeer(3) == 2, "Peer rotation lost bounded fairness");
+        Q.Clear();
+        Entry NewSession = Message(2, 20, 2, 1); NewSession.Key.Session++;
+        Entry NewPublication = Message(2, 20, 2, 1); NewPublication.Key.Publication++;
+        Check(Q.Push(Message(2, 20, 2, 1)) == Result::Accepted && Q.Push(NewSession) == Result::Accepted && Q.Push(NewPublication) == Result::Accepted,
+            "New session/publication reused old pending sample");
+        Q.Clear();
+        Check(Q.Push(Message(2, 20, 2, 3), false) == Result::Accepted && Q.Push(Message(2, 20, 2, 4), false) == Result::Accepted &&
+            Q.Take(2)->Sequence == 3 && Q.Take(2)->Sequence == 4, "Admitted receive samples were superseded instead of dispatching in order");
+
+        uint64_t Next = 99;
+        Check(GLRemoteDelivery::NextSequence(0, Next) && Next == 1, "Sequence did not begin at one");
+        Check(GLRemoteDelivery::NextSequence(uint64_t(INT64_MAX) - 1, Next) && Next == uint64_t(INT64_MAX), "Final positive sequence rejected");
+        Check(!GLRemoteDelivery::NextSequence(uint64_t(INT64_MAX), Next) && Next == uint64_t(INT64_MAX), "Exhausted sequence wrapped or mutated candidate");
+
+        GLRemoteDelivery::Queue<Body, DeliveryAllocator<Entry>> Faults(Limits);
+        Entry Pending = Message(2, 40);
+        DeliveryAllocation::Fail = true;
+        Result Fault = Faults.Push(Pending);
+        DeliveryAllocation::Fail = false;
+        Check(Fault == Result::Allocation && Faults.GetTotals().Peers == 0 && Faults.GetTotals().Messages == 0 && Faults.GetTotals().Bytes == 0, "Allocation rejection retained partial state");
+        Check(Faults.Push(Pending) == Result::Accepted, "Admission did not recover after allocation failure");
+        DeliveryAllocation::Fail = true;
+        Fault = Faults.Push(Message(2, 20));
+        DeliveryAllocation::Fail = false;
+        Check(Fault == Result::Allocation && Faults.GetTotals().Bytes == 40 && Faults.GetTotals().Messages == 1, "Allocation failure lost previous work");
+
+        DeliveryAllocation::Fail = true;
+        Fault = Faults.PushBatch({Message(2, 20), Message(3, 20)});
+        DeliveryAllocation::Fail = false;
+        Check(Fault == Result::Allocation && Faults.GetTotals().Bytes == 40 && Faults.GetTotals().Peers == 1,
+            "Fanout allocation failure partially committed destinations");
+        Q.Clear();
+        Check(Q.Push(Message(2, 70, 2, 1)) == Result::Accepted && Q.Push(Message(3, 70, 2, 1)) == Result::Accepted,
+            "Fanout replacement setup failed");
+        Check(Q.PushBatch({Message(2, 80, 2, 2), Message(3, 80, 2, 2)}) == Result::GlobalFull &&
+            Q.Front(2)->Sequence == 1 && Q.Front(3)->Sequence == 1 && Q.GetTotals().Bytes == 140,
+            "Fanout global rejection mutated earlier destinations");
+        Check(Q.PushBatch({Message(2, 80, 2, 2), Message(3, 20, 2, 2), Message(4, 50)}) == Result::Accepted &&
+            Q.GetTotals().Bytes == 150 && Q.GetTotals().Messages == 3 && Q.GetTotals().Peers == 3,
+            "Fanout replacement/new-peer charge did not commit atomically");
+        Check(Q.PushBatch({Message(3, 1), Message(2, 1)}) == Result::Invalid && Q.GetTotals().Bytes == 150,
+            "Unsorted/duplicate fanout bypassed preflight");
+        Q.Clear();
+        for (int Index = 0; Index < 4; ++Index) Check(Q.Push(Message(2, 1)) == Result::Accepted, "Exact record count rejected");
+        Check(Q.Push(Message(2, 1)) == Result::PeerFull && Q.GetTotals().Messages == 4, "Peer record bound mutated queue");
+        for (int Index = 0; Index < 4; ++Index) Check(Q.Push(Message(3, 1)) == Result::Accepted, "Exact aggregate record count rejected");
+        Check(Q.Push(Message(4, 1)) == Result::GlobalFull && Q.GetTotals().Messages == 8, "Aggregate record bound mutated queue");
+        Q.Clear();
+        Check(Q.PushBatch({Message(2, 1), Message(3, 1), Message(4, 1)}) == Result::Accepted &&
+            Q.Push(Message(5, 1)) == Result::PeerFull && Q.GetTotals().Peers == 3, "Peer identity bound bypassed");
+
+        Queue ProductionBytes;
+        for (int Peer = 2; Peer < 18; ++Peer)
+            for (int Index = 0; Index < 16; ++Index)
+                Check(ProductionBytes.Push(Message(Peer, 65536)) == Result::Accepted, "Production aggregate byte boundary rejected accepted work");
+        Check(ProductionBytes.GetTotals().Bytes == 16 * 1024 * 1024 && ProductionBytes.Push(Message(18, 1)) == Result::GlobalFull,
+            "Production aggregate bytes exceed the admitted sixteen MiB ceiling");
+        Queue ProductionMessages;
+        for (int Peer = 2; Peer < 18; ++Peer)
+            for (int Index = 0; Index < 1024; ++Index)
+                Check(ProductionMessages.Push(Message(Peer, 1)) == Result::Accepted, "Production aggregate record boundary rejected accepted work");
+        Check(ProductionMessages.GetTotals().Messages == 16384 && ProductionMessages.Push(Message(18, 1)) == Result::GlobalFull,
+            "Production aggregate records exceed the admitted sixteen-thousand ceiling");
+
+        Q.Clear();
+        std::weak_ptr<const Body> Weak;
+        { Entry Owned = Message(2, 20); Weak = Owned.Body; Check(Q.Push(Owned) == Result::Accepted, "Ownership admission failed"); }
+        Check(!Weak.expired(), "Accepted payload followed submitting-stack lifetime");
+        auto Taken = Q.Take(2);
+        Check(Q.GetTotals().Bytes == 0 && !Weak.expired(), "Handoff confused queue charge with external payload ownership");
+        Taken.reset(); Check(Weak.expired(), "Finished handoff retained payload");
+
+        Limits.FrameBytes = std::numeric_limits<size_t>::max();
+        Limits.PeerBytes = Limits.TotalBytes = std::numeric_limits<size_t>::max() - 1;
+        Queue Overflow(Limits);
+        Check(Overflow.Push(Message(2, Limits.PeerBytes)) == Result::Accepted && Overflow.Push(Message(2, 2)) == Result::PeerFull &&
+            Overflow.GetTotals().Bytes == Limits.PeerBytes, "Byte arithmetic overflow bypassed admission");
     });
     std::printf("[Runtime:Test] %d passed, %d failed\n", Passed, Failed);
     return Failed == 0 ? 0 : 1;

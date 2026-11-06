@@ -1,0 +1,17 @@
+{
+  "Schema": 1,
+  "EngineRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+  "ArchiveSHA256": "98c5c1c101d15d43de5e3dca81cfb57ef3698495d67eeaf5e34db739b751bbb9",
+  "SCons": "4.10.0",
+  "QualificationPatch": {
+    "File": "sanitizers/GodotBindingRetirement.patch",
+    "SHA256LF": "adfde942eb64b8f99e5a4dab4075678e201693cf3069a01675697c64b49b3fa1",
+    "Path": "core/extension/gdextension.cpp",
+    "OriginalSHA256": "a7f2f64bd1b05461f430ab499a5d2e4d87913179b2cbca223b9aa90a9c7a1d8b",
+    "PatchedSHA256": "1160e48c8bbf5dc9c22c3d70062dbe3ebd18fc6bd67886f1363d4ff115b51aa8"
+  },
+  "Common": ["target=template_debug", "arch=x86_64", "use_asan=yes", "use_static_cpp=no", "dev_build=yes", "optimize=none", "lto=none", "disable_path_overrides=no", "vulkan=no", "opengl3=no", "modules_enabled_by_default=no", "module_gdscript_enabled=yes", "module_multiplayer_enabled=yes", "module_enet_enabled=yes", "module_mbedtls_enabled=yes", "module_godot_physics_2d_enabled=yes", "module_godot_physics_3d_enabled=yes", "module_freetype_enabled=yes", "module_text_server_fb_enabled=yes"],
+  "Windows": ["platform=windows", "debug_crt=yes", "debug_symbols=yes", "d3d12=no", "angle=no"],
+  "Linux": ["platform=linuxbsd", "use_lsan=yes", "use_llvm=yes", "CC=clang-19", "CXX=clang++-19", "LINK=clang++-19", "linker=lld", "debug_symbols=no", "ccflags=-fno-omit-frame-pointer", "x11=no", "wayland=no", "accesskit=no", "alsa=no", "pulseaudio=no", "dbus=no", "speechd=no", "fontconfig=no", "udev=no", "sdl=no"],
+  "Scope": "Headless instrumented runtime with real 2D/3D physics, ENet and TLS. Asset import uses a separately verified official editor at the same engine revision. No editor/rendered/full-device sanitizer qualification."
+}

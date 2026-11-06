@@ -1,0 +1,98 @@
+___interceptor_malloc
+??:?
+void* Memory::alloc_static<false>(unsigned long, bool)
+??:?
+operator new(unsigned long, DefaultAllocator)
+??:?
+Object* ClassDB::creator<Node3D>(bool)
+??:?
+ClassDB::_instantiate_internal(StringName const&, bool, bool, bool, bool)
+??:?
+ClassDB::instantiate_no_placeholders(StringName const&)
+??:?
+gdextension_classdb_construct_object(void const*)
+gdextension_interface.cpp:?
+Node::_gdvirtual__ready_call()
+??:?
+Node::_notification(int)
+??:?
+Node::_notification_forwardv(int)
+??:?
+Node3D::_notification_forwardv(int)
+??:?
+Object::_notification_forward(int)
+??:?
+Object::notification(int, bool)
+??:?
+Node::_propagate_ready()
+??:?
+Node::_set_tree(SceneTree*)
+??:?
+Node::_add_child_nocheck(Node*, StringName const&, Node::InternalMode)
+??:?
+Node::add_child(RequiredParam<Node>, bool, Node::InternalMode)
+??:?
+void call_with_variant_args_helper<__UnexistingClass, RequiredParam<Node>, bool, Node::InternalMode, 0ul, 1ul, 2ul>(__UnexistingClass*, void (__UnexistingClass::*)(RequiredParam<Node>, bool, Node::InternalMode), Variant const**, Callable::CallError&, IndexSequence<0ul, 1ul, 2ul>)
+??:?
+void call_with_variant_args_dv<__UnexistingClass, RequiredParam<Node>, bool, Node::InternalMode>(__UnexistingClass*, void (__UnexistingClass::*)(RequiredParam<Node>, bool, Node::InternalMode), Variant const**, int, Callable::CallError&, Vector<Variant> const&)
+??:?
+HashMap<StringName, Variant*, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant*> > >::_insert(StringName const&, Variant* const&, unsigned int, bool)
+??:?
+HashMap<StringName, Variant*, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant*> > >::operator[](StringName const&)
+??:?
+Object::set_meta(StringName const&, Variant const&)
+??:?
+Node::set_meta(StringName const&, Variant const&)
+??:?
+void call_with_ptr_args_helper<__UnexistingClass, StringName const&, Variant const&, 0ul, 1ul>(__UnexistingClass*, void (__UnexistingClass::*)(StringName const&, Variant const&), void const**, IndexSequence<0ul, 1ul>)
+??:?
+void call_with_ptr_args<__UnexistingClass, StringName const&, Variant const&>(__UnexistingClass*, void (__UnexistingClass::*)(StringName const&, Variant const&), void const**)
+??:?
+MethodBindT<StringName const&, Variant const&>::ptrcall(Object*, void const**, void*) const
+??:?
+gdextension_object_method_bind_ptrcall(void const*, void*, void const* const*, void*)
+gdextension_interface.cpp:?
+HashMap<StringName, Variant, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant> > >::_insert(StringName const&, Variant const&, unsigned int, bool)
+??:?
+HashMap<StringName, Variant, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant> > >::insert(StringName const&, Variant const&, bool)
+??:?
+Object::set_meta(StringName const&, Variant const&)
+??:?
+__interceptor_calloc
+??:?
+void* Memory::alloc_static<true>(unsigned long, bool)
+??:?
+Memory::alloc_static_zeroed(unsigned long, bool)
+gdscript.cpp:?
+HashMap<StringName, Variant, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant> > >::_insert(StringName const&, Variant const&, unsigned int, bool)
+??:?
+Memory::alloc_static_zeroed(unsigned long, bool)
+object.cpp:?
+HashMap<StringName, Variant*, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant*> > >::_insert(StringName const&, Variant* const&, unsigned int, bool)
+??:?
+gdextension_mem_alloc(unsigned long)
+gdextension_interface.cpp:?
+MethodBindT<RequiredParam<Node>, bool, Node::InternalMode>::call(Object*, Variant const**, int, Callable::CallError&) const
+??:?
+GDScriptFunction::call(GDScriptInstance*, Variant const**, int, Callable::CallError&, GDScriptFunction::CallState*)
+??:?
+GDScriptInstance::callp(StringName const&, Variant const**, int, Callable::CallError&)
+??:?
+Object::callp(StringName const&, Variant const**, int, Callable::CallError&)
+??:?
+Variant::callp(StringName const&, Variant const**, int, Variant&, Callable::CallError&)
+??:?
+GDScriptFunction::call(GDScriptInstance*, Variant const**, int, Callable::CallError&, GDScriptFunction::CallState*)
+??:?
+HashMapElement<StringName, Variant>* DefaultTypedAllocator<HashMapElement<StringName, Variant> >::new_allocation<HashMapElement<StringName, Variant> >(HashMapElement<StringName, Variant> const&&)
+??:?
+HashMap<StringName, Variant, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant> > >::_insert(StringName const&, Variant const&, unsigned int, bool)
+??:?
+Object::set_instance_binding(void*, void*, GDExtensionInstanceBindingCallbacks const*)
+??:?
+gdextension_object_set_instance_binding(void*, void*, void*, GDExtensionInstanceBindingCallbacks const*)
+gdextension_interface.cpp:?
+HashMapElement<StringName, Variant*>* DefaultTypedAllocator<HashMapElement<StringName, Variant*> >::new_allocation<HashMapElement<StringName, Variant*> >(HashMapElement<StringName, Variant*> const&&)
+??:?
+HashMap<StringName, Variant*, HashMapHasherDefault, HashMapComparatorDefault<StringName, void>, DefaultTypedAllocator<HashMapElement<StringName, Variant*> > >::_insert(StringName const&, Variant* const&, unsigned int, bool)
+??:?

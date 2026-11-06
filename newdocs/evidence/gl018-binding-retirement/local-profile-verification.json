@@ -1,0 +1,286 @@
+[
+  {
+    "Profile": "full-windows",
+    "Result": "FAIL",
+    "FullQualification": false,
+    "ControlsPassed": true,
+    "UnexpectedReports": [],
+    "VerifiedFileHashes": 385,
+    "NativeSource": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "GodotSHA256": "96a64e425ae1aac600014e6fbe8489b3178c8d09b210c47fd4a03f18edcafdb0",
+    "ExtensionSHA256": "82aded0415266a64dc93918e0a586e7edef8619c7c36742d6b47110ee1116f34",
+    "Revision": "0119017696b60901a7f0af981387446d82833230",
+    "PassedGates": [
+      "standalone-clean",
+      "standalone-uaf",
+      "engine-only",
+      "minimal-reload",
+      "host-uaf",
+      "production-registration",
+      "production-vm-reload",
+      "suite-regression",
+      "suite-security",
+      "suite-animation",
+      "suite-characters",
+      "suite-resources",
+      "suite-filesystem",
+      "suite-callers",
+      "suite-core"
+    ],
+    "FailedGates": [
+      "suite-http",
+      "suite-httpservice",
+      "suite-datastore",
+      "suite-presentation",
+      "suite-performance",
+      "strict-native-check"
+    ],
+    "AnimationRecords": [
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 70
+      },
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 97
+      },
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 155
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 70
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 98
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 155
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 69
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 107
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 157
+      },
+      {
+        "File": "native\\animation\\Local\\animation-authority-server0.json",
+        "Cases": 6,
+        "Assertions": 29
+      }
+    ]
+  },
+  {
+    "Profile": "full-linux",
+    "Result": "FAIL",
+    "FullQualification": false,
+    "ControlsPassed": true,
+    "UnexpectedReports": [],
+    "VerifiedFileHashes": 296,
+    "NativeSource": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "GodotSHA256": "4e2a235ab539a164fac338f1e236dec52e4d2b26540bd5f7af6b2a7b2d6b7bd8",
+    "ExtensionSHA256": "3886aca57e1314168651f0ac126fda5f556a92d75dc7d808b2135f620e6c87ce",
+    "Revision": "0119017696b60901a7f0af981387446d82833230",
+    "PassedGates": [
+      "standalone-clean",
+      "standalone-uaf",
+      "engine-only",
+      "minimal-reload",
+      "host-uaf",
+      "host-leak",
+      "production-registration",
+      "production-vm-reload",
+      "suite-regression",
+      "suite-security",
+      "suite-animation",
+      "suite-characters",
+      "suite-resources",
+      "suite-filesystem",
+      "suite-http",
+      "suite-httpservice",
+      "suite-callers",
+      "suite-core"
+    ],
+    "FailedGates": [
+      "suite-datastore",
+      "suite-presentation",
+      "suite-performance",
+      "strict-native-check"
+    ],
+    "AnimationRecords": [
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 69
+      },
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 97
+      },
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 155
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 70
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 98
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 155
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 70
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 106
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 157
+      },
+      {
+        "File": "native\\animation\\Local\\animation-authority-server0.json",
+        "Cases": 6,
+        "Assertions": 29
+      }
+    ]
+  },
+  {
+    "Profile": "full-linux-binary",
+    "Result": "PASS",
+    "FullQualification": true,
+    "ControlsPassed": true,
+    "UnexpectedReports": [],
+    "VerifiedFileHashes": 406,
+    "NativeSource": {
+      "SHA256": "2706e1685bdf0207e55eacc2f877e4578a3164603ea5861c183009348c7d1bc8",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "GodotSHA256": "4e2a235ab539a164fac338f1e236dec52e4d2b26540bd5f7af6b2a7b2d6b7bd8",
+    "ExtensionSHA256": "3886aca57e1314168651f0ac126fda5f556a92d75dc7d808b2135f620e6c87ce",
+    "Revision": "92659bae6cc5d7b321b075848b905e9d660b47df",
+    "PassedGates": [
+      "standalone-clean",
+      "standalone-uaf",
+      "engine-only",
+      "minimal-reload",
+      "host-uaf",
+      "host-leak",
+      "production-registration",
+      "production-vm-reload",
+      "suite-regression",
+      "suite-security",
+      "suite-animation",
+      "suite-characters",
+      "suite-resources",
+      "suite-filesystem",
+      "suite-http",
+      "suite-httpservice",
+      "suite-callers",
+      "suite-datastore",
+      "suite-presentation",
+      "suite-performance",
+      "suite-core",
+      "strict-native-check"
+    ],
+    "FailedGates": [],
+    "NativeActors": 110,
+    "AnimationActors": 10,
+    "AnimationCases": 510,
+    "AnimationAssertions": 1006,
+    "AnimationRecords": [
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 69
+      },
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 97
+      },
+      {
+        "File": "native\\animation\\Dedicated\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 155
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 69
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 98
+      },
+      {
+        "File": "native\\animation\\Editor\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 155
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-client1.json",
+        "Cases": 53,
+        "Assertions": 71
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-client2.json",
+        "Cases": 57,
+        "Assertions": 106
+      },
+      {
+        "File": "native\\animation\\Listen\\animation-authority-server0.json",
+        "Cases": 58,
+        "Assertions": 157
+      },
+      {
+        "File": "native\\animation\\Local\\animation-authority-server0.json",
+        "Cases": 6,
+        "Assertions": 29
+      }
+    ]
+  }
+]

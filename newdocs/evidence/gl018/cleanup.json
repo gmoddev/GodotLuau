@@ -1,0 +1,20 @@
+{
+  "UTC": "2026-11-01T10:16:56Z",
+  "TaskContainers": [
+    {
+      "Container": "codex-gl018-ram",
+      "ID": "5d901e0edb4f0c96a79984081075ae0c901160caa6af51d3c2335f62651d7e66",
+      "StoppedAndRemoved": true,
+      "SharedCacheReadOnly": true
+    },
+    {
+      "Container": "codex-gl018-linux",
+      "ID": "0a00fc2292e340a96189e53e8f65ef0a9d85aac5c32a29eb61666590651eb21c",
+      "StoppedAndRemoved": true,
+      "SharedCacheReadOnly": true
+    }
+  ],
+  "PreexistingCharacterContainerRestoredStopped": true,
+  "SharedVolumeRetained": true,
+  "E_TaskCachesAndEvidenceRetained": true
+}

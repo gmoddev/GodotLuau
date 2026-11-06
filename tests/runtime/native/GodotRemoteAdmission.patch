@@ -1,0 +1,575 @@
+diff --git a/modules/enet/enet_connection.cpp b/modules/enet/enet_connection.cpp
+--- a/modules/enet/enet_connection.cpp
++++ b/modules/enet/enet_connection.cpp
+@@ -37,10 +37,26 @@
+ #include "core/object/class_db.h"
+ #include "core/variant/typed_array.h"
+ 
+-void ENetConnection::broadcast(enet_uint8 p_channel, ENetPacket *p_packet) {
+-	ERR_FAIL_NULL_MSG(host, "The ENetConnection instance isn't currently active.");
+-	ERR_FAIL_COND_MSG(p_channel >= host->channelLimit, vformat("Unable to send packet on channel %d, max channels: %d", p_channel, (int)host->channelLimit));
+-	enet_host_broadcast(host, p_channel, p_packet);
++Error ENetConnection::broadcast(enet_uint8 p_channel, ENetPacket *p_packet) {
++	ERR_FAIL_NULL_V_MSG(host, ERR_UNCONFIGURED, "The ENetConnection instance isn't currently active.");
++	ERR_FAIL_COND_V_MSG(p_channel >= host->channelLimit, ERR_INVALID_PARAMETER, vformat("Unable to send packet on channel %d, max channels: %d", p_channel, (int)host->channelLimit));
++	Error Result = OK;
++	// Retain one temporary reference while each peer performs native admission.
++	// Match enet_host_broadcast's ownership, including an empty/fully rejected fanout.
++	++p_packet->referenceCount;
++	for (const Ref<ENetPacketPeer> &Peer : peers) {
++		if (Peer->get_state() != ENetPacketPeer::STATE_CONNECTED) {
++			continue;
++		}
++		const int Sent = Peer->send(p_channel, p_packet);
++		if (Sent < 0) {
++			Result = Sent == -2 ? ERR_BUSY : FAILED;
++		}
++	}
++	if (--p_packet->referenceCount == 0) {
++		enet_packet_destroy(p_packet);
++	}
++	return Result;
+ }
+ 
+ Error ENetConnection::create_host_bound(const IPAddress &p_bind_address, int p_port, int p_max_peers, int p_max_channels, int p_in_bandwidth, int p_out_bandwidth) {
+@@ -331,12 +347,12 @@
+ 	return out;
+ }
+ 
+-void ENetConnection::_broadcast(int p_channel, PackedByteArray p_packet, int p_flags) {
+-	ERR_FAIL_NULL_MSG(host, "The ENetConnection instance isn't currently active.");
+-	ERR_FAIL_COND_MSG(p_channel < 0 || p_channel > (int)host->channelLimit, "Invalid channel");
+-	ERR_FAIL_COND_MSG(p_flags & ~ENetPacketPeer::FLAG_ALLOWED, "Invalid flags");
++Error ENetConnection::_broadcast(int p_channel, PackedByteArray p_packet, int p_flags) {
++	ERR_FAIL_NULL_V_MSG(host, ERR_UNCONFIGURED, "The ENetConnection instance isn't currently active.");
++	ERR_FAIL_COND_V_MSG(p_channel < 0 || p_channel >= (int)host->channelLimit, ERR_INVALID_PARAMETER, "Invalid channel");
++	ERR_FAIL_COND_V_MSG(p_flags & ~ENetPacketPeer::FLAG_ALLOWED, ERR_INVALID_PARAMETER, "Invalid flags");
+ 	ENetPacket *pkt = enet_packet_create(p_packet.ptr(), p_packet.size(), p_flags);
+-	broadcast(p_channel, pkt);
++	return broadcast(p_channel, pkt);
+ }
+ 
+ void ENetConnection::socket_send(const String &p_address, int p_port, const PackedByteArray &p_packet) {
+diff --git a/modules/enet/enet_connection.h b/modules/enet/enet_connection.h
+--- a/modules/enet/enet_connection.h
++++ b/modules/enet/enet_connection.h
+@@ -84,7 +84,7 @@
+ 	EventType _parse_event(const ENetEvent &p_event, Event &r_event);
+ 	Error _create(ENetAddress *p_address, int p_max_peers, int p_max_channels, int p_in_bandwidth, int p_out_bandwidth);
+ 	Array _service(int p_timeout = 0);
+-	void _broadcast(int p_channel, PackedByteArray p_packet, int p_flags);
++	Error _broadcast(int p_channel, PackedByteArray p_packet, int p_flags);
+ 	TypedArray<ENetPacketPeer> _get_peers();
+ 
+ 	class Compressor {
+@@ -107,7 +107,7 @@
+ 	};
+ 
+ public:
+-	void broadcast(enet_uint8 p_channel, ENetPacket *p_packet);
++	Error broadcast(enet_uint8 p_channel, ENetPacket *p_packet);
+ 	void socket_send(const String &p_address, int p_port, const PackedByteArray &p_packet);
+ 	Error create_host_bound(const IPAddress &p_bind_address = IPAddress("*"), int p_port = 0, int p_max_peers = 32, int p_max_channels = 0, int p_in_bandwidth = 0, int p_out_bandwidth = 0);
+ 	Error create_host(int p_max_peers = 32, int p_max_channels = 0, int p_in_bandwidth = 0, int p_out_bandwidth = 0);
+diff --git a/modules/enet/enet_multiplayer_peer.cpp b/modules/enet/enet_multiplayer_peer.cpp
+--- a/modules/enet/enet_multiplayer_peer.cpp
++++ b/modules/enet/enet_multiplayer_peer.cpp
+@@ -367,11 +367,16 @@
+ #endif
+ 
+ 	ENetPacket *packet = enet_packet_create(nullptr, p_buffer_size, packet_flags);
++	if (!packet) {
++		return ERR_OUT_OF_MEMORY;
++	}
+ 	memcpy(&packet->data[0], p_buffer, p_buffer_size);
++	++packet->referenceCount; // Protect shared fanout until every admission attempt ends.
++	Error AdmissionResult = OK;
+ 
+ 	if (is_server()) {
+ 		if (target_peer == 0) {
+-			hosts[0]->broadcast(channel, packet);
++			AdmissionResult = hosts[0]->broadcast(channel, packet);
+ 
+ 		} else if (target_peer < 0) {
+ 			// Send to all but one and make copies for sending.
+@@ -380,17 +385,20 @@
+ 				if (E.key == exclude) {
+ 					continue;
+ 				}
+-				E.value->send(channel, packet);
++				const int Sent = E.value->send(channel, packet);
++				if (Sent < 0) AdmissionResult = Sent == -2 ? ERR_BUSY : FAILED;
+ 			}
+ 			_destroy_unused(packet);
+ 		} else {
+-			peers[target_peer]->send(channel, packet);
++			const int Sent = peers[target_peer]->send(channel, packet);
++			if (Sent < 0) AdmissionResult = Sent == -2 ? ERR_BUSY : FAILED;
+ 		}
+ 		ERR_FAIL_COND_V(!hosts.has(0), ERR_BUG);
+ 		hosts[0]->flush();
+ 
+ 	} else if (active_mode == MODE_CLIENT) {
+-		peers[1]->send(channel, packet); // Send to server for broadcast.
++		const int Sent = peers[1]->send(channel, packet); // Send to server for broadcast.
++		if (Sent < 0) AdmissionResult = Sent == -2 ? ERR_BUSY : FAILED;
+ 		ERR_FAIL_COND_V(!hosts.has(0), ERR_BUG);
+ 		hosts[0]->flush();
+ 
+@@ -401,19 +409,23 @@
+ 				if (E.key == exclude) {
+ 					continue;
+ 				}
+-				E.value->send(channel, packet);
++				const int Sent = E.value->send(channel, packet);
++				if (Sent < 0) AdmissionResult = Sent == -2 ? ERR_BUSY : FAILED;
+ 				ERR_CONTINUE(!hosts.has(E.key));
+ 				hosts[E.key]->flush();
+ 			}
+ 			_destroy_unused(packet);
+ 		} else {
+-			peers[target_peer]->send(channel, packet);
++			const int Sent = peers[target_peer]->send(channel, packet);
++			if (Sent < 0) AdmissionResult = Sent == -2 ? ERR_BUSY : FAILED;
+ 			ERR_FAIL_COND_V(!hosts.has(target_peer), ERR_BUG);
+ 			hosts[target_peer]->flush();
+ 		}
+ 	}
+ 
+-	return OK;
++	--packet->referenceCount;
++	_destroy_unused(packet);
++	return AdmissionResult;
+ }
+ 
+ int ENetMultiplayerPeer::get_max_packet_size() const {
+diff --git a/modules/enet/enet_packet_peer.cpp b/modules/enet/enet_packet_peer.cpp
+--- a/modules/enet/enet_packet_peer.cpp
++++ b/modules/enet/enet_packet_peer.cpp
+@@ -29,6 +29,7 @@
+ /**************************************************************************/
+ 
+ #include "enet_packet_peer.h"
++#include "godot_luau_admission.h"
+ 
+ #include "core/object/class_db.h"
+ 
+@@ -62,7 +63,46 @@
+ 	ERR_FAIL_NULL_V(peer, -1);
+ 	ERR_FAIL_NULL_V(p_packet, -1);
+ 	ERR_FAIL_COND_V_MSG(p_channel >= peer->channelCount, -1, vformat("Unable to send packet on channel %d, max channels: %d", p_channel, (int)peer->channelCount));
+-	return enet_peer_send(peer, p_channel, p_packet);
++	if (peer->state == ENET_PEER_STATE_CONNECTED && !GodotLuauAdmission::Allows(peer, p_packet)) {
++		return -2; // WouldBlock: no ownership transfer or previous-work mutation.
++	}
++	const size_t PreviousReferences = p_packet->referenceCount;
++	const int Result = enet_peer_send(peer, p_channel, p_packet);
++	if (Result == 0) {
++		LastSubmittedBytes = p_packet->dataLength;
++		LastSubmittedCommands = p_packet->referenceCount - PreviousReferences;
++		if (SubmittedPackets < uint64_t(INT64_MAX)) ++SubmittedPackets;
++	}
++	return Result;
++}
++
++Dictionary ENetPacketPeer::GetGodotLuauAdmission() const {
++	using namespace GodotLuauAdmission;
++	Snapshot Local, Host;
++	if (peer) {
++		Local = ReadPeer(peer);
++		Host = ReadHost(peer->host);
++	}
++	Dictionary Result;
++	Result["Version"] = 1;
++	Result["Active"] = peer != nullptr;
++	Result["PeerBytes"] = int64_t(Local.Bytes);
++	Result["PeerCommands"] = int64_t(Local.Commands);
++	Result["PeerPackets"] = int64_t(Local.Packets);
++	// Submission observations are separate from current retention/ACK evidence.
++	Result["LastSubmittedBytes"] = peer ? int64_t(LastSubmittedBytes) : 0;
++	Result["LastSubmittedCommands"] = peer ? int64_t(LastSubmittedCommands) : 0;
++	Result["SubmittedPackets"] = peer ? int64_t(SubmittedPackets) : 0;
++	Result["HostBytes"] = int64_t(Host.Bytes);
++	Result["HostCommands"] = int64_t(Host.Commands);
++	Result["PeerByteLimit"] = int64_t(PeerBytes);
++	Result["PeerCommandLimit"] = int64_t(PeerCommands);
++	Result["HostByteLimit"] = int64_t(HostBytes);
++	Result["HostCommandLimit"] = int64_t(HostCommands);
++	Result["MTU"] = peer ? int64_t(peer->mtu) : 0;
++	const size_t Header = sizeof(ENetProtocolHeader) + sizeof(ENetProtocolSendFragment) + (peer && peer->host->checksum ? sizeof(enet_uint32) : 0);
++	Result["UnfragmentedPacketBytes"] = peer && peer->mtu > Header ? int64_t(peer->mtu - Header) : 0;
++	return Result;
+ }
+ 
+ void ENetPacketPeer::reset() {
+@@ -107,7 +147,11 @@
+ Error ENetPacketPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
+ 	ERR_FAIL_NULL_V(peer, ERR_UNCONFIGURED);
+ 	ENetPacket *packet = enet_packet_create(p_buffer, p_buffer_size, ENET_PACKET_FLAG_RELIABLE);
+-	return send(0, packet) < 0 ? FAILED : OK;
++	const int Result = send(0, packet);
++	if (Result < 0) {
++		enet_packet_destroy(packet);
++	}
++	return Result == -2 ? ERR_BUSY : (Result < 0 ? FAILED : OK);
+ }
+ 
+ IPAddress ENetPacketPeer::get_remote_address() const {
+@@ -202,10 +246,15 @@
+ 	ERR_FAIL_COND_V_MSG(p_channel < 0 || p_channel > (int)peer->channelCount, ERR_INVALID_PARAMETER, "Invalid channel");
+ 	ERR_FAIL_COND_V_MSG(p_flags & ~FLAG_ALLOWED, ERR_INVALID_PARAMETER, "Invalid flags");
+ 	ENetPacket *packet = enet_packet_create(p_packet.ptr(), p_packet.size(), p_flags);
+-	return send(p_channel, packet) == 0 ? OK : FAILED;
++	const int Result = send(p_channel, packet);
++	if (Result < 0) {
++		enet_packet_destroy(packet);
++	}
++	return Result == -2 ? ERR_BUSY : (Result < 0 ? FAILED : OK);
+ }
+ 
+ void ENetPacketPeer::_bind_methods() {
++	ClassDB::bind_method(D_METHOD("GetGodotLuauAdmission"), &ENetPacketPeer::GetGodotLuauAdmission);
+ 	ClassDB::bind_method(D_METHOD("peer_disconnect", "data"), &ENetPacketPeer::peer_disconnect, DEFVAL(0));
+ 	ClassDB::bind_method(D_METHOD("peer_disconnect_later", "data"), &ENetPacketPeer::peer_disconnect_later, DEFVAL(0));
+ 	ClassDB::bind_method(D_METHOD("peer_disconnect_now", "data"), &ENetPacketPeer::peer_disconnect_now, DEFVAL(0));
+diff --git a/modules/enet/enet_packet_peer.h b/modules/enet/enet_packet_peer.h
+--- a/modules/enet/enet_packet_peer.h
++++ b/modules/enet/enet_packet_peer.h
+@@ -39,6 +39,8 @@
+ 
+ private:
+ 	ENetPeer *peer = nullptr;
++	size_t LastSubmittedBytes = 0, LastSubmittedCommands = 0;
++	uint64_t SubmittedPackets = 0;
+ 	List<ENetPacket *> packet_queue;
+ 	ENetPacket *last_packet = nullptr;
+ 
+@@ -107,6 +109,7 @@
+ 	void ping_interval(int p_interval);
+ 	void reset();
+ 	int send(uint8_t p_channel, ENetPacket *p_packet);
++	Dictionary GetGodotLuauAdmission() const;
+ 	void throttle_configure(int interval, int acceleration, int deceleration);
+ 	void set_timeout(int p_timeout, int p_timeout_min, int p_timeout_max);
+ 	double get_statistic(PeerStatistic p_stat);
+diff --git a/modules/enet/godot_luau_admission.h b/modules/enet/godot_luau_admission.h
+new file mode 100644
+--- /dev/null
++++ b/modules/enet/godot_luau_admission.h
+@@ -0,0 +1,78 @@
++/**************************************************************************/
++/* GodotLuau native data-packet admission adapter. MIT, like the host.       */
++/**************************************************************************/
++#pragma once
++
++#include "core/templates/hash_set.h"
++#include <enet/enet.h>
++
++namespace GodotLuauAdmission {
++constexpr size_t PeerBytes = 4 * 1024 * 1024;
++constexpr size_t PeerCommands = 4096;
++constexpr size_t HostBytes = 16 * 1024 * 1024;
++constexpr size_t HostCommands = 16384;
++
++struct Snapshot {
++	size_t Bytes = 0;
++	size_t Commands = 0;
++	size_t Packets = 0;
++	bool ContainsCandidate = false;
++};
++
++// Same owner thread as ENet service/send. Count full packet ownership, not just
++// remaining fragment lengths: a partly acknowledged packet retains its buffer.
++inline Snapshot ReadPeer(ENetPeer *Peer, const ENetPacket *Candidate = nullptr) {
++	Snapshot Result;
++	HashSet<ENetPacket *> Packets;
++	ENetList *Lists[] = { &Peer->outgoingCommands, &Peer->outgoingSendReliableCommands, &Peer->sentReliableCommands };
++	for (ENetList *List : Lists) {
++		for (ENetListIterator Entry = enet_list_begin(List); Entry != enet_list_end(List); Entry = enet_list_next(Entry)) {
++			const ENetOutgoingCommand *Command = reinterpret_cast<const ENetOutgoingCommand *>(Entry);
++			if (!Command->packet) {
++				continue; // Native control/ACK storage is outside this data-packet cap.
++			}
++			++Result.Commands;
++			Result.ContainsCandidate |= Command->packet == Candidate;
++			if (!Packets.has(Command->packet)) {
++				Packets.insert(Command->packet);
++				Result.Bytes += Command->packet->dataLength;
++				++Result.Packets;
++			}
++		}
++	}
++	return Result;
++}
++
++inline Snapshot ReadHost(ENetHost *Host) {
++	Snapshot Result;
++	for (size_t Index = 0; Index < Host->peerCount; ++Index) {
++		Snapshot Peer = ReadPeer(&Host->peers[Index]);
++		Result.Bytes += Peer.Bytes;
++		Result.Commands += Peer.Commands;
++		Result.Packets += Peer.Packets;
++	}
++	return Result;
++}
++
++inline bool Exceeds(size_t Current, size_t Added, size_t Limit) {
++	return Current > Limit || Added > Limit - Current;
++}
++
++inline bool Allows(ENetPeer *Peer, const ENetPacket *Packet) {
++	size_t Header = sizeof(ENetProtocolHeader) + sizeof(ENetProtocolSendFragment);
++	if (Peer->host->checksum) {
++		Header += sizeof(enet_uint32);
++	}
++	if (Peer->mtu <= Header) {
++		return false;
++	}
++	const size_t FragmentBytes = Peer->mtu - Header;
++	const size_t Commands = Packet->dataLength > FragmentBytes ?
++			1 + (Packet->dataLength - 1) / FragmentBytes : 1;
++	Snapshot Local = ReadPeer(Peer, Packet);
++	Snapshot Host = ReadHost(Peer->host);
++	const size_t Bytes = Local.ContainsCandidate ? 0 : Packet->dataLength;
++	return !Exceeds(Local.Bytes, Bytes, PeerBytes) && !Exceeds(Local.Commands, Commands, PeerCommands) &&
++			!Exceeds(Host.Bytes, Bytes, HostBytes) && !Exceeds(Host.Commands, Commands, HostCommands);
++}
++} // namespace GodotLuauAdmission
+diff --git a/modules/multiplayer/scene_multiplayer.cpp b/modules/multiplayer/scene_multiplayer.cpp
+--- a/modules/multiplayer/scene_multiplayer.cpp
++++ b/modules/multiplayer/scene_multiplayer.cpp
+@@ -131,9 +131,16 @@
+ 
+ 			_process_sys(sender, packet, len, mode, channel);
+ 		} else {
++			const int PreviousSender = remote_sender_id;
++			const auto PreviousMode = GodotLuauRemoteMode;
++			const int PreviousChannel = GodotLuauRemoteChannel;
+ 			remote_sender_id = sender;
++			GodotLuauRemoteMode = mode;
++			GodotLuauRemoteChannel = channel;
+ 			_process_packet(sender, packet, len);
+-			remote_sender_id = 0;
++			remote_sender_id = PreviousSender;
++			GodotLuauRemoteMode = PreviousMode;
++			GodotLuauRemoteChannel = PreviousChannel;
+ 		}
+ 
+ 		_update_status();
+@@ -343,9 +350,16 @@
+ 				should_process = true;
+ 			}
+ 			if (should_process) {
++				const int PreviousSender = remote_sender_id;
++				const auto PreviousMode = GodotLuauRemoteMode;
++				const int PreviousChannel = GodotLuauRemoteChannel;
+ 				remote_sender_id = peer;
++				GodotLuauRemoteMode = p_mode;
++				GodotLuauRemoteChannel = p_channel;
+ 				_process_packet(peer, packet, len);
+-				remote_sender_id = 0;
++				remote_sender_id = PreviousSender;
++				GodotLuauRemoteMode = PreviousMode;
++				GodotLuauRemoteChannel = PreviousChannel;
+ 			}
+ 		} break;
+ 		default: {
+@@ -635,7 +649,14 @@
+ 	return replicator->get_max_delta_packet_size();
+ }
+ 
++bool SceneMultiplayer::IsGodotLuauRemoteCall(Object *Target, const StringName &Method, int Mode, int Channel) const {
++	return Target && remote_sender_id > 0 && !remote_sender_override &&
++			GodotLuauRemoteTarget == Target->get_instance_id() && GodotLuauRemoteMethod == Method &&
++			GodotLuauRemoteMode == Mode && GodotLuauRemoteChannel == Channel;
++}
++
+ void SceneMultiplayer::_bind_methods() {
++	ClassDB::bind_method(D_METHOD("IsGodotLuauRemoteCall", "Target", "Method", "Mode", "Channel"), &SceneMultiplayer::IsGodotLuauRemoteCall);
+ 	ClassDB::bind_method(D_METHOD("set_root_path", "path"), &SceneMultiplayer::set_root_path);
+ 	ClassDB::bind_method(D_METHOD("get_root_path"), &SceneMultiplayer::get_root_path);
+ 	ClassDB::bind_method(D_METHOD("clear"), &SceneMultiplayer::clear);
+diff --git a/modules/multiplayer/scene_multiplayer.h b/modules/multiplayer/scene_multiplayer.h
+--- a/modules/multiplayer/scene_multiplayer.h
++++ b/modules/multiplayer/scene_multiplayer.h
+@@ -115,6 +115,11 @@
+ 	HashSet<int> connected_peers;
+ 	int remote_sender_id = 0;
+ 	int remote_sender_override = 0;
++	friend class SceneRPCInterface;
++	ObjectID GodotLuauRemoteTarget;
++	StringName GodotLuauRemoteMethod;
++	MultiplayerPeer::TransferMode GodotLuauRemoteMode = MultiplayerPeer::TRANSFER_MODE_RELIABLE;
++	int GodotLuauRemoteChannel = -1;
+ 
+ 	Vector<uint8_t> packet_cache;
+ 
+@@ -157,6 +162,8 @@
+ 	virtual Vector<int> get_peer_ids() override;
+ 	virtual int get_remote_sender_id() override { return remote_sender_override ? remote_sender_override : remote_sender_id; }
+ 
++	bool IsGodotLuauRemoteCall(Object *Target, const StringName &Method, int Mode, int Channel) const;
++
+ 	virtual Error rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) override;
+ 
+ 	virtual Error object_configuration_add(Object *p_obj, Variant p_config) override;
+diff --git a/modules/multiplayer/scene_rpc_interface.cpp b/modules/multiplayer/scene_rpc_interface.cpp
+--- a/modules/multiplayer/scene_rpc_interface.cpp
++++ b/modules/multiplayer/scene_rpc_interface.cpp
+@@ -294,7 +294,13 @@
+ 
+ 	Callable::CallError ce;
+ 
++	const ObjectID PreviousTarget = multiplayer->GodotLuauRemoteTarget;
++	const StringName PreviousMethod = multiplayer->GodotLuauRemoteMethod;
++	multiplayer->GodotLuauRemoteTarget = p_node->get_instance_id();
++	multiplayer->GodotLuauRemoteMethod = config.name;
+ 	p_node->callp(config.name, (const Variant **)argp.ptr(), argc, ce);
++	multiplayer->GodotLuauRemoteTarget = PreviousTarget;
++	multiplayer->GodotLuauRemoteMethod = PreviousMethod;
+ 	if (ce.error != Callable::CallError::CALL_OK) {
+ 		String error = Variant::get_call_error_text(p_node, config.name, (const Variant **)argp.ptr(), argc, ce);
+ 		error = "RPC - " + error;
+@@ -302,20 +308,20 @@
+ 	}
+ }
+ 
+-void SceneRPCInterface::_send_rpc(Node *p_node, int p_to, uint16_t p_rpc_id, const RPCConfig &p_config, const StringName &p_name, const Variant **p_arg, int p_argcount) {
++Error SceneRPCInterface::_send_rpc(Node *p_node, int p_to, uint16_t p_rpc_id, const RPCConfig &p_config, const StringName &p_name, const Variant **p_arg, int p_argcount) {
+ 	Ref<MultiplayerPeer> peer = multiplayer->get_multiplayer_peer();
+-	ERR_FAIL_COND_MSG(peer.is_null(), "Attempt to call RPC without active multiplayer peer.");
+-
+-	ERR_FAIL_COND_MSG(peer->get_connection_status() == MultiplayerPeer::CONNECTION_CONNECTING, "Attempt to call RPC while multiplayer peer is not connected yet.");
+-
+-	ERR_FAIL_COND_MSG(peer->get_connection_status() == MultiplayerPeer::CONNECTION_DISCONNECTED, "Attempt to call RPC while multiplayer peer is disconnected.");
+-
+-	ERR_FAIL_COND_MSG(p_argcount > 255, "Too many arguments (>255).");
++	ERR_FAIL_COND_V_MSG(peer.is_null(), ERR_UNCONFIGURED, "Attempt to call RPC without active multiplayer peer.");
++
++	ERR_FAIL_COND_V_MSG(peer->get_connection_status() == MultiplayerPeer::CONNECTION_CONNECTING, ERR_CONNECTION_ERROR, "Attempt to call RPC while multiplayer peer is not connected yet.");
++
++	ERR_FAIL_COND_V_MSG(peer->get_connection_status() == MultiplayerPeer::CONNECTION_DISCONNECTED, ERR_CONNECTION_ERROR, "Attempt to call RPC while multiplayer peer is disconnected.");
++
++	ERR_FAIL_COND_V_MSG(p_argcount > 255, ERR_INVALID_PARAMETER, "Too many arguments (>255).");
+ 
+ 	if (p_to != 0 && !multiplayer->get_connected_peers().has(Math::abs(p_to))) {
+-		ERR_FAIL_COND_MSG(p_to == multiplayer->get_unique_id(), "Attempt to call RPC on yourself! Peer unique ID: " + itos(multiplayer->get_unique_id()) + ".");
+-
+-		ERR_FAIL_MSG("Attempt to call RPC with unknown peer ID: " + itos(p_to) + ".");
++		ERR_FAIL_COND_V_MSG(p_to == multiplayer->get_unique_id(), ERR_INVALID_PARAMETER, "Attempt to call RPC on yourself! Peer unique ID: " + itos(multiplayer->get_unique_id()) + ".");
++
++		ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Attempt to call RPC with unknown peer ID: " + itos(p_to) + ".");
+ 	}
+ 
+ 	// See if all peers have cached path (if so, call can be fast) while building the RPC target list.
+@@ -324,7 +330,7 @@
+ 	bool has_all_peers = true;
+ 	const ObjectID oid = p_node->get_instance_id();
+ 	if (p_to > 0) {
+-		ERR_FAIL_COND_MSG(!multiplayer_replicator->is_rpc_visible(oid, p_to), "Attempt to call an RPC to a peer that cannot see this node. Peer ID: " + itos(p_to));
++		ERR_FAIL_COND_V_MSG(!multiplayer_replicator->is_rpc_visible(oid, p_to), ERR_UNAUTHORIZED, "Attempt to call an RPC to a peer that cannot see this node. Peer ID: " + itos(p_to));
+ 		targets.insert(p_to);
+ 		has_all_peers = multiplayer_cache->send_object_cache(p_node, p_to, psc_id);
+ 	} else {
+@@ -342,7 +348,7 @@
+ 		}
+ 	}
+ 	if (targets.is_empty()) {
+-		return; // No one in sight.
++		return OK; // No one in sight.
+ 	}
+ 
+ 	// Create base packet, lots of hardcode because it must be tight.
+@@ -410,7 +416,7 @@
+ 
+ 	int len;
+ 	Error err = MultiplayerAPI::encode_and_compress_variants(p_arg, p_argcount, nullptr, len, &byte_only_or_no_args, multiplayer->is_object_decoding_allowed());
+-	ERR_FAIL_COND_MSG(err != OK, "Unable to encode RPC arguments. THIS IS LIKELY A BUG IN THE ENGINE!");
++	ERR_FAIL_COND_V_MSG(err != OK, err, "Unable to encode RPC arguments. THIS IS LIKELY A BUG IN THE ENGINE!");
+ 	if (byte_only_or_no_args) {
+ 		MAKE_ROOM(ofs + len);
+ 	} else {
+@@ -423,9 +429,9 @@
+ 		ofs += len;
+ 	}
+ 
+-	ERR_FAIL_COND(command_type > 7);
+-	ERR_FAIL_COND(node_id_compression > 3);
+-	ERR_FAIL_COND(name_id_compression > 1);
++	ERR_FAIL_COND_V(command_type > 7, ERR_BUG);
++	ERR_FAIL_COND_V(node_id_compression > 3, ERR_BUG);
++	ERR_FAIL_COND_V(name_id_compression > 1, ERR_BUG);
+ 
+ #ifdef DEBUG_ENABLED
+ 	_profile_node_data("rpc_out", p_node->get_instance_id(), ofs);
+@@ -438,9 +444,20 @@
+ 	peer->set_transfer_channel(p_config.channel);
+ 	peer->set_transfer_mode(p_config.transfer_mode);
+ 
++	Error SendResult = OK;
++	auto RecordSend = [&](int Target, int Size) {
++		Error Result = multiplayer->send_command(Target, packet_cache.ptr(), Size);
++		if (Result != OK && SendResult == OK) SendResult = Result;
++		// RemoteEvent data owns bounded retry queues. Other reliable RPC callers
++		// have no such queue: terminate the affected session instead of silent loss.
++		if (Result == ERR_BUSY && p_config.transfer_mode == MultiplayerPeer::TRANSFER_MODE_RELIABLE &&
++				p_name != SNAME("_re_deliver_server") && p_name != SNAME("_re_deliver_client")) {
++			peer->disconnect_peer(Target, true);
++		}
++	};
+ 	if (has_all_peers) {
+ 		for (const int P : targets) {
+-			multiplayer->send_command(P, packet_cache.ptr(), ofs);
++			RecordSend(P, ofs);
+ 		}
+ 	} else {
+ 		// Unreachable because the node ID is never compressed if the peers doesn't know it.
+@@ -460,14 +477,15 @@
+ 			if (confirmed) {
+ 				// This one confirmed path, so use id.
+ 				encode_uint32(psc_id, &(packet_cache.write[1]));
+-				multiplayer->send_command(P, packet_cache.ptr(), ofs);
++				RecordSend(P, ofs);
+ 			} else {
+ 				// This one did not confirm path yet, so use entire path (sorry!).
+ 				encode_uint32(0x80000000 | ofs, &(packet_cache.write[1])); // Offset to path and flag.
+-				multiplayer->send_command(P, packet_cache.ptr(), ofs + path_len);
++				RecordSend(P, ofs + path_len);
+ 			}
+ 		}
+ 	}
++	return SendResult;
+ }
+ 
+ Error SceneRPCInterface::rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) {
+@@ -496,8 +514,9 @@
+ 		}
+ 	}
+ 
++	Error SendResult = OK;
+ 	if (p_peer_id != caller_id) {
+-		_send_rpc(node, p_peer_id, rpc_id, config, p_method, p_arg, p_argcount);
++		SendResult = _send_rpc(node, p_peer_id, rpc_id, config, p_method, p_arg, p_argcount);
+ 	}
+ 
+ 	if (call_local_native) {
+@@ -530,5 +549,5 @@
+ 			return FAILED;
+ 		}
+ 	}
+-	return OK;
+-}
++	return SendResult;
++}
+diff --git a/modules/multiplayer/scene_rpc_interface.h b/modules/multiplayer/scene_rpc_interface.h
+--- a/modules/multiplayer/scene_rpc_interface.h
++++ b/modules/multiplayer/scene_rpc_interface.h
+@@ -92,7 +92,7 @@
+ protected:
+ 	void _process_rpc(Node *p_node, const uint16_t p_rpc_method_id, int p_from, const uint8_t *p_packet, int p_packet_len, int p_offset);
+ 
+-	void _send_rpc(Node *p_from, int p_to, uint16_t p_rpc_id, const RPCConfig &p_config, const StringName &p_name, const Variant **p_arg, int p_argcount);
++	Error _send_rpc(Node *p_from, int p_to, uint16_t p_rpc_id, const RPCConfig &p_config, const StringName &p_name, const Variant **p_arg, int p_argcount);
+ 	Node *_process_get_node(int p_from, const uint8_t *p_packet, uint32_t p_node_target, int p_packet_len);
+ 
+ 	void _parse_rpc_config(const Variant &p_config, bool p_for_node, RPCConfigCache &r_cache);

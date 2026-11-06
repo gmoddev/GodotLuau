@@ -47,6 +47,7 @@ end
 --  Enum — constantes de enumeración exactas de Roblox
 -- ══════════════════════════════════════════════════════════════════════
 Enum = {
+    EventDeliveryType = { ReliableOrdered = 0, UnreliableUnordered = 1, UnreliableSequenced = 2 },
     EasingStyle = {
         Linear = 0, Sine = 1, Quad = 2, Cubic = 3,
         Quart = 4, Quint = 5, Bounce = 6, Elastic = 7,
@@ -1074,7 +1075,8 @@ end
 function HttpService:UrlEncode(input)
     RequireString(input, "URL input")
     if #input > MaxJsonBytes then ApiError("URL encoding input limit exceeded") end
-    return (input:gsub("[^%w%-_%.~]", function(Character)
+    -- URI unreserved bytes are ASCII, independent of the host C locale.
+    return (input:gsub("[^A-Za-z0-9%-_%.~]", function(Character)
         return string.format("%%%02X", string.byte(Character))
     end))
 end

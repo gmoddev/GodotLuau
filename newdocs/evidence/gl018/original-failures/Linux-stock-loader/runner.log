@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/work/source/tests/runtime/RunQualification.py", line 568, in <module>
+    Main()
+  File "/work/source/tests/runtime/RunQualification.py", line 526, in Main
+    Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "load", "[Runtime:LoadProbe] PASS")]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/source/tests/runtime/RunQualification.py", line 74, in Check
+    raise RuntimeError(f"{Label} exit={Result}\n{Text[-4000:]}\n{Errors[-6000:]}")
+RuntimeError: load exit=1
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+
+libfontconfig.so.1: cannot open shared object file: No such file or directory
+
+

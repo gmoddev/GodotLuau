@@ -25,6 +25,15 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 ## Index
 
+The [combined GL-018/GL-029 development review](gl018-gl029-integration.md)
+preserves both histories and lists the remaining acceptance gates. GL-018 now has
+its separate scoped [closure](gl018-closure.md); GL-029 has a separate
+[admitted-host closure](remoteevent-completion-qualification.md). Normal merge
+`6a7fedf` integrates both; [fresh main verification](gl018-gl029-main-integration.md)
+passes at `ac119bc`, separately from retained branch qualification. The
+[main receipt](evidence/gl018-gl029-main-verification-2026-11-03.json) records all
+four successful workflows and independently checked artifacts.
+
 | ID | Priority | Classification | Summary |
 | --- | --- | --- | --- |
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
@@ -44,7 +53,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
 | GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
-| GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
+| GL-018 | P2 | Integrated; resolved within admitted matching-host profile | Headless Windows ASan/Linux ASan-LSan qualification; retained host/platform limits |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
 | GL-020 | P1 | Integrated scoped authority correction; sanitizer qualification partial | Canonical wire validation and ENet adversarial coverage; GL-017/018 remain separate |
 | GL-021 | P2 | Verified construction-order discrepancy; runtime unexercised | Inert signals omit lowercase once/wait aliases |
@@ -55,6 +64,92 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-026 | P2 | Bounded workaround integrated; dependency follow-up open | Pinned Dictionary move assignment leaks replaced importer storage |
 | GL-027 | P2 | Rendered authoring limitation | StarterCharacter prototype geometry can remain visible in the live scene |
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
+| GL-029 | P2 | Integrated; resolved within ADR-008/009 admitted-host scope | Three-mode RemoteEvent publication and bounded application/native admission |
+| GL-030 | P2 | Open; source-verified terminal-outcome gap | Default RemoteFunction waits are infinite while aged correlation records are erased |
+
+## GL-029: Application Remote delivery has no unified bounded publication contract
+
+**Phase 1 qualified:** [qualification](remoteevent-phase1-qualification.md) and
+the [versioned receipt](evidence/gl029-phase1-ci-verification.json) verify source
+`eec2397`: Windows/Linux Debug/Release (80 core/116 native each), hosted ordinary
+native and full-native sanitizer profiles, plus exact SCons products and both
+extracted companion packages with non-publishing acceptance. Controlled ENet
+throttle/readiness fixtures address transport loss/startup assumptions without
+changing production carrier defaults. A reproduced Unicode dictionary-key defect
+is fixed by one StrictRemote-only UTF-8 conversion line; actual ENet Server/echo/
+Wait assertions pass. Other carriers and persistence encoding remain unchanged.
+No refactor or main merge is included. Earlier failures remain in the record.
+
+**Status: INTEGRATED AND RESOLVED within ADR-008/009's admitted-host qualification scope.**
+Normal main merge `6a7fedf` preserves retained
+`integration/gl-018-gl-029-remoteevents` at `d6afbe6`; see
+[fresh main verification](gl018-gl029-main-integration.md). The original checkpoint remains
+preserved; see the [handoff](remoteevent-phase1-handoff.md).
+The [completion investigation](remoteevent-completion-work.md) and
+[native admission decision](remoteevent-native-admission-decision.md) reproduce
+finite native retention on the stock host. Stronger native-backpressure closure
+uses the narrow patched-host contract approved on 2026-11-03, recorded in
+[ADR-009](adr-009-bounded-remote-delivery.md). Bounded queues, native call-context
+validation and sequencing are implemented and qualified at runtime `6e29c86`,
+with the packaging correction at `3c552e6`. The
+[completion record](remoteevent-completion-qualification.md) and
+[receipt](evidence/gl029-completion-verification-2026-11-03.json) verify all four
+Windows/Linux Debug/Release source profiles (81 core / 116 native actors each),
+ordinary native, matching-host full-native sanitizer, exact packet/ownership
+boundaries and both extracted packages. Actual UDP loss/reorder and two paired
+1/16/32-peer performance trials are retained. Response latency increases; 64-peer
+performance is unqualified. Earlier Character observation failures pass unchanged
+replays without an asserted root-cause fix. Main integration preserves this
+qualified tree; fresh CI is tracked separately. Baseline assessment
+source is `83cd0887968d73d61d050650718d8ada6e124579`; research is retained at
+`9ea782bb739cc35deba06474a82582a12529df6d`.
+
+The baseline boolean/path RPC converged reliable/unreliable event handlers without
+target-mode, publication-generation or receive-size/aggregate admission checks.
+FireAllClients ran local callbacks before encoding/size validation; retained event
+closures captured raw native pointers. Existing role checks, GL-004 budgets and
+qualified GL-006/007/020 paths remain counterevidence to a blanket networking
+failure claim. The original findings were source verified, not new exploit proofs.
+
+Phase 1 replaces those event boundaries with the narrower
+[ADR-008 contract](adr-008-remoteevent-publication.md). The
+[qualification record](remoteevent-phase1-qualification.md) preserves failed
+attempts, an actual same-named-child precedence failure and the correction to
+the research's assumed legacy identity. ClassName/IsA keep their actual native
+legacy behavior. Native constructor/domain provenance prevents Client-created
+listen-host endpoints from acquiring publication authority. No general mutation
+gateway or unrelated replication redesign is implied.
+
+**Closure:** bounded queues, sequenced stale rejection/unsent supersession,
+native retained-data admission, complete-RPC MTU and lifecycle/failure outcomes
+pass the linked qualification. Application queue and native ownership evidence
+remain distinct. Deployment requires the admitted patched host and GER2 peers;
+native caps exclude total RAM, receive predecode and control/ACK storage. GL-018's
+sanitizer limits remain intact. No unreliable RemoteFunction modes or GL-030
+timeout changes belong to this work. Releases and updater distribution remain
+disabled.
+
+## GL-030: Default RemoteFunction waits have no finite terminal deadline
+
+**Status: OPEN; source-verified, runtime nonresponse/exhaustion unexercised.**
+Baseline source `83cd0887968d73d61d050650718d8ada6e124579` is unchanged by the
+event-only Phase 1 behavior.
+
+Public invokes pass timeout 0.0. GLDomainHost warns after ten seconds but expires
+only positive deadlines. NetworkService separately erases expectation/response
+records older than sixty seconds without completing that waiting coroutine.
+The global int64 request counter is narrowed to int for RPC transmission and has
+no checked exhaustion rule. Expected-peer response validation, guarded owner
+cancellation, disconnect/service failure completion and legitimate yielding
+handlers already exist and must be preserved.
+
+**Closure:** separately approve finite-deadline compatibility, preserve reliable
+request/response and current Player/handler APIs, use checked session-scoped
+full-width correlation and detach/settle each request once before callbacks.
+Qualify missing replies past GC, timeout/response/cancel races, manual resume,
+disconnect/reconnect and owner/Remote/service retirement. See the
+[research design](remoteevent-delivery-proposal.md#remotefunction-stays-separate).
+Phase 1 does not claim this target is already implemented.
 
 ## GL-028: Fade update tolerance can retain visible first-person dither
 
@@ -920,6 +1015,44 @@ engine/source reproduction in [validation](shared-domains-validation.md).
 
 ## GL-018: Windows full-native sanitizer host remains unqualified
 
+**Current disposition: INTEGRATED AND RESOLVED within the admitted matching-host profile.**
+Normal merge `6a7fedf` preserves the combined qualified source;
+[fresh main verification](gl018-gl029-main-integration.md) passes at `ac119bc`,
+including Windows/Linux ordinary native, matching-host full-native sanitizer,
+all four source-product profiles and both extracted packages. The original qualification
+limits remain unchanged.
+The retained branch qualification at `46427d0` passes all six hosted
+core/native/sanitizer jobs, with exact
+source/harness, actual cases, instrumented builds and retained logs independently
+checked. See [closure and proof limits](gl018-closure.md). Stock-host unload safety,
+Windows LSan and arbitrary custom/device profiles remain outside this closure.
+The historical OPEN dispositions and failed attempts below are superseded by
+this scoped closure and preserved as evidence.
+
+**Frame-progress follow-up:** the
+[HTTP timing investigation](gl018-http-frame-investigation.md) attributes the
+original failures to measured domain startup and an uninterrupted 2,000-UUID
+stress loop. A small fixture correction preserves 250 ms assertions, warms the
+measured domains and batches the sample workload. The corrected utility passes;
+an injected 350 ms stall is rejected at 441.823 ms. Local full groups still fail
+unchanged close-time storage assertions, so complete hosted qualification remains
+required. No production change or refactor is included; GL-018 remains OPEN.
+
+**2026-11-02 bounded-conflict correction:** the
+[focused work record](gl018-increment-qualification.md) identifies the increment
+fixture's unsupported fair-completion assumption. A small fixture-only change
+checks exact acknowledgment accounting while permitting only ADR-005's definite
+conflict exhaustion. Windows ASan DataStore passes 23 actors and unchanged native
+controls; GL-018 stays OPEN pending complete profile verification. No runtime or
+retry-policy change and no refactor is included.
+
+**Completed hosted follow-up:** exact-fix core/ordinary native CI and Linux
+full-native sanitizers pass. Windows DataStore also passes all 23 actors, but
+HTTP and HttpService frame-progress assertions fail at 0.332602/0.334151 seconds.
+All 520 Linux and 495 Windows summary-indexed artifact files rehash correctly;
+no unexpected sanitizer report is recorded. GL-018 remains OPEN for those Windows
+timing failures; see the [completed observation](gl018-increment-qualification.md#completed-hosted-observation).
+
 **Status: OPEN; bounded qualification gap.** MSVC-instrumented adapter/bindings/
 Luau reaches functional PASS under stock Godot, then times out at exit. A
 registration-only inherited baseline and candidate both reproduce the timeout
@@ -930,6 +1063,63 @@ native fixtures pass; full native Linux ASan/LSan passes ordered lifecycle stres
 and rerun registration plus native lifecycle fixtures with bounded clean exit.
 Do not label the current timeout as successful native coverage, infer all Windows
 bindings safe from Linux evidence, or suppress the failure.
+
+**2026-11-01 follow-up:** The dedicated
+[GL-018 qualification record](native-sanitizer-qualification.md) preserves fresh
+stock-host reproductions, matching instrumented host builds and actual UAF/LSan
+detection controls. Minimal C ABI and production registration reloads now exit
+cleanly on the matching Windows host; Linux uses Godot's existing ASAN_ENABLED
+loader path without DEEPBIND overrides. Full production VM reload nevertheless
+fails after its functional marker, with an unloaded instance-binding callback
+in the Windows root Window destructor. Additional HTTP progress, utilities,
+contention and template-asset profile failures remain unqualified. GL-018 stays
+open; no runtime fix, GL-017 remediation or complete full-native pass is claimed.
+
+**2026-11-02 follow-up:** [Binding-only controls and qualification records](native-sanitizer-qualification.md#follow-up-from-66362c7)
+reproduce the unload failure on both matching hosts without godot-cpp, Luau or
+GodotLuau. Explicit binding retirement exits cleanly; leaving callbacks attached
+fails after PASS. The branch corrects a demonstrated locale-dependent UrlEncode
+defect and prepares original Character assets for template hosts. It does not
+patch the engine or change authority, persistence or execution bounds. Supported
+Linux ext-family storage exercises the earlier denied groups, but backing-disk
+exhaustion interrupts the full local attempt; its evidence and authorized worker
+recovery are retained. Fresh source profiles and required hosted states remain
+separate from old passes. Closure still requires clean production unload, all
+80 core cases and 110 native actors on both supported sanitizer platforms with
+actual detection controls and no unexpected reports, crashes or timeouts.
+The final source-`2466015` hosted core/native jobs pass 80/110 on each platform
+(one ordinary Linux retry; its original failure is retained). Both fresh full
+sanitizer jobs fail: core ASan passes 80 each, but only 52 Windows/95 Linux native
+actors complete in whole passing groups, with production unload still failing,
+dedicated presentation incomplete and performance actors timing out. Linux's
+hosted 23-actor DataStore group closes that supported-filesystem proof gap;
+the local disk failure, GDB record loss, Windows timing/contention limits and
+historical Linux leak remain explicit limitations. No full GL-018 closure is claimed.
+
+**Binding-retirement follow-up:** diagnostics `44fe8c2` and qualification-host
+correction `0119017` preserve the production tree and reproduce seven surviving
+engine-owned bindings on both platforms. A durable symbol-retaining Linux trace
+resolves the root Window teardown into an unmapped binding callback. The narrowly
+admitted host patch retires library-token bindings before unmapping; direct
+production registration/VM reload now exits cleanly on both corrected hosts,
+with intentional sanitizer detection retained. This is a derived qualification
+host correction, not an upstream/production engine change or a GL-017 fix.
+See the [mechanism and scope](native-sanitizer-qualification.md#binding-retirement-follow-up-from-dfa700a).
+Fixture correction `92659b` preserves all original rig identities in binary
+bundles and routes Linux storage through the admitted ext-family profile root.
+The corrected Linux full-native ASan/LSan profile passes all 80 core cases and
+110 native actors locally and in hosted CI. Windows hosted ASan passes 80 core
+and 87 actors in complete passing groups, including actual GL-020 transport
+fixtures; its 23-actor DataStore group fails at competing increments. A diagnostic
+trace captures eight consecutive conflicts while the other writer commits,
+matching ADR-005's bounded-retry failure rather than a sanitizer memory finding.
+The assertion still fails; no fairness guarantee or larger retry budget is added.
+Windows HTTP timing failures persist in separate local attempts even though the
+fresh hosted HTTP groups pass. Historical failures, including the 29,400-byte
+missing-rig leak report and an earlier hosted animation assertion, remain retained.
+GL-018 is **PARTIALLY QUALIFIED, OPEN**. Closure requires a separately reviewed
+resolution of the increment acceptance/fairness conflict and a complete clean
+Windows profile; see the [final outcomes and next step](native-sanitizer-qualification.md#qualification-outcome-and-remaining-blocker).
 
 ## GL-019: Shared-domain cached require and task overhead regresses
 
@@ -1202,6 +1392,14 @@ and zero forbidden requests. See the [API and migration contract](httpservice-ap
 [qualification record](httpservice-validation.md) and [evidence manifest](evidence/gl023-httpservice-2026-10-31.json).
 This resolves the scoped API findings, not GL-017/018, broader
 GL-020, graphical correctness or release/updater qualification.
+
+The GL-018 follow-up reproduces a narrower host-locale counterexample to URL
+encoding: `%w` leaves non-ASCII bytes unescaped on its Windows host. Branch
+correction `241396b` replaces that class with explicit ASCII ranges and extends
+existing core/native assertions to all 256 byte values. See the
+[follow-up record](native-sanitizer-qualification.md#follow-up-from-66362c7) for
+fresh verification and remaining sanitizer failures. This correction is not yet
+integrated into main; GL-005's transport and authorization are unchanged.
 
 At the audited revision,
 `src/core/luau_stdlib.h:782–847` hardcodes HttpEnabled, catches public HTTP errors,

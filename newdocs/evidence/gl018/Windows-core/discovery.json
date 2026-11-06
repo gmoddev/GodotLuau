@@ -1,0 +1,58 @@
+{
+  "backtraceGraph" : 
+  {
+    "commands" : 
+    [
+      "add_test"
+    ],
+    "files" : 
+    [
+      "C:/Sandbox/Codex/Workspaces/GodotLuau/tests/runtime/CMakeLists.txt"
+    ],
+    "nodes" : 
+    [
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 39,
+        "parent" : 0
+      }
+    ]
+  },
+  "kind" : "ctestInfo",
+  "tests" : 
+  [
+    {
+      "backtrace" : 1,
+      "command" : 
+      [
+        "C:/Sandbox/Codex/Tools/python-3.12.6-controlled-v1/python.exe",
+        "C:/Sandbox/Codex/Workspaces/GodotLuau/tests/runtime/RunCoreTests.py",
+        "--binary",
+        "C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-asan/ExecutionDomainTests.exe",
+        "--output",
+        "C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-asan/resource-tests"
+      ],
+      "name" : "ExecutionDomains",
+      "properties" : 
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-asan"
+        }
+      ]
+    }
+  ],
+  "version" : 
+  {
+    "major" : 1,
+    "minor" : 0
+  }
+}

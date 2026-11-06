@@ -1,0 +1,24 @@
+{
+  "Exit": 1,
+  "RTLD_DEEPBIND_Reproduced": true,
+  "EngineSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+  "ExtensionSHA256": "ae55d4f83cb75709c94137fd3a60772f932247c3e2aaa3481fdf64f3e9e9bee9",
+  "Runtime": "/usr/lib/llvm-19/lib/clang/19/lib/linux/libclang_rt.asan-x86_64.so",
+  "RuntimeSHA256": "cc47f0a9141b3917e76d243b8b9bd9db668753c815c3470438a685766bf687e7",
+  "Command": [
+    "/usr/bin/python3",
+    "/work/source/tests/runtime/RunQualification.py",
+    "--godot",
+    "/cache/godot/Godot_v4.7.1-stable_linux.x86_64",
+    "--extension",
+    "/work/products/linux-asan/godot_luau.so",
+    "--output",
+    "/evidence/linux-stock-loader-first/load",
+    "--load-only",
+    "--asan-runtime",
+    "/usr/lib/llvm-19/lib/clang/19/lib/linux/libclang_rt.asan-x86_64.so",
+    "--timeout",
+    "30"
+  ],
+  "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1:log_path=/evidence/linux-stock-loader-first/asan-report"
+}

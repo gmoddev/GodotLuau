@@ -65,7 +65,7 @@ static inline void gl_net_push_node(lua_State* L, Node* node) {
 }
 
 // ── Codificar un valor Luau (en idx) a Variant ────────────────────────────
-static Variant gl_net_encode(lua_State* L, int idx, int depth = 0) {
+static Variant gl_net_encode(lua_State* L, int idx, int depth = 0, bool StrictRemote = false) {
     if (idx < 0) idx = lua_gettop(L) + idx + 1;
     if (!lua_checkstack(L, 6)) { gl_net_enc_fail("value is too complex"); return Variant(); }   // reserva pila para metatables/claves de este nivel
     int t = lua_type(L, idx);
@@ -74,7 +74,8 @@ static Variant gl_net_encode(lua_State* L, int idx, int depth = 0) {
         case LUA_TBOOLEAN: return Variant((bool)lua_toboolean(L, idx));
         case LUA_TNUMBER: {
             double n = lua_tonumber(L, idx);
-            return (n == (double)(int64_t)n) ? Variant((int64_t)n) : Variant(n);
+            bool FitsInteger = !StrictRemote || (n >= -9223372036854775808.0 && n < 9223372036854775808.0);
+            return (FitsInteger && n == (double)(int64_t)n) ? Variant((int64_t)n) : Variant(n);
         }
         case LUA_TSTRING:  return Variant(String::utf8(lua_tostring(L, idx)));
         case LUA_TUSERDATA: {
@@ -125,7 +126,8 @@ static Variant gl_net_encode(lua_State* L, int idx, int depth = 0) {
             // ¿tabla tipada (CFrame/UDim2/…) con metatable.__type?
             String type_name;
             if (lua_getmetatable(L, idx)) {
-                lua_getfield(L, -1, "__type");
+                if (StrictRemote) { lua_pushstring(L, "__type"); lua_rawget(L, -2); }
+                else lua_getfield(L, -1, "__type");
                 if (lua_isstring(L, -1)) type_name = String(lua_tostring(L, -1));
                 lua_pop(L, 2);  // __type + metatable
             }
@@ -142,7 +144,7 @@ static Variant gl_net_encode(lua_State* L, int idx, int depth = 0) {
                     Array arr;
                     for (int i = 1; i <= seq; i++) {
                         lua_rawgeti(L, idx, i);
-                        arr.push_back(gl_net_encode(L, -1, depth + 1));
+                        arr.push_back(gl_net_encode(L, -1, depth + 1, StrictRemote));
                         lua_pop(L, 1);
                     }
                     return arr;
@@ -154,13 +156,14 @@ static Variant gl_net_encode(lua_State* L, int idx, int depth = 0) {
             while (lua_next(L, idx) != 0) {
                 Variant key;
                 int kt = lua_type(L, -2);
-                if (kt == LUA_TSTRING)      key = String(lua_tostring(L, -2));
+                if (kt == LUA_TSTRING)      key = StrictRemote ? String::utf8(lua_tostring(L, -2)) : String(lua_tostring(L, -2));
                 else if (kt == LUA_TNUMBER) {
                     double kn = lua_tonumber(L, -2);   // preservar claves no enteras como FLOAT (no truncar)
-                    key = (kn == (double)(int64_t)kn) ? Variant((int64_t)kn) : Variant(kn);
+                    bool FitsInteger = !StrictRemote || (kn >= -9223372036854775808.0 && kn < 9223372036854775808.0);
+                    key = (FitsInteger && kn == (double)(int64_t)kn) ? Variant((int64_t)kn) : Variant(kn);
                 }
                 else { gl_net_enc_fail("table key of type " + String(lua_typename(L, kt))); lua_pop(L, 1); continue; }
-                d[key] = gl_net_encode(L, -1, depth + 1);
+                d[key] = gl_net_encode(L, -1, depth + 1, StrictRemote);
                 lua_pop(L, 1);
             }
             if (!type_name.is_empty()) {
@@ -193,7 +196,7 @@ static inline void gl_net_push_key(lua_State* L, const Variant& k) {
 
 // ── Decodificar un Variant y empujarlo en L ───────────────────────────────
 // ctx: nodo desde el que resolver las rutas de Instances (get_node_or_null).
-static void gl_net_decode(lua_State* L, const Variant& v, Node* ctx, int depth = 0) {
+static void gl_net_decode(lua_State* L, const Variant& v, Node* ctx, int depth = 0, bool Remote = false) {
     if (depth >= 16) { lua_pushnil(L); return; }               // tope de anidamiento (payload no confiable)
     if (!lua_checkstack(L, 6)) { lua_pushnil(L); return; }     // reserva pila para tabla+clave+valor de este nivel
     switch (v.get_type()) {
@@ -222,7 +225,7 @@ static void gl_net_decode(lua_State* L, const Variant& v, Node* ctx, int depth =
             Array a = v;
             lua_newtable(L);
             for (int i = 0; i < a.size(); i++) {
-                gl_net_decode(L, a[i], ctx, depth + 1);
+                gl_net_decode(L, a[i], ctx, depth + 1, Remote);
                 lua_rawseti(L, -2, i + 1);
             }
             return;
@@ -231,6 +234,13 @@ static void gl_net_decode(lua_State* L, const Variant& v, Node* ctx, int depth =
             Dictionary d = v;
             if (d.has("__glnet")) {
                 String tag = d["__glnet"];
+                // Event-only decoder output: exact local identity captured at
+                // admission, never a path/net-ID lookup after a callback runs.
+                if (Remote && tag == String("remoteinst")) {
+                    auto NodeValue = Object::cast_to<Node>(ObjectDB::get_instance(uint64_t(int64_t(d.get("oid", int64_t(0))))));
+                    gl_net_push_node(L, NodeValue && NodeValue->is_inside_tree() && !NodeValue->is_queued_for_deletion() ? NodeValue : nullptr);
+                    return;
+                }
                 if (tag == String("inst")) {
                     Node* nd = nullptr;
                     // 1) por netId estable (1.14.9): resolver vía el NetworkService.
@@ -256,7 +266,7 @@ static void gl_net_decode(lua_State* L, const Variant& v, Node* ctx, int depth =
                     for (int i = 0; i < keys.size(); i++) {
                         Variant k = keys[i];
                         gl_net_push_key(L, k);
-                        gl_net_decode(L, f[k], ctx, depth + 1);
+                        gl_net_decode(L, f[k], ctx, depth + 1, Remote);
                         lua_settable(L, -3);
                     }
                     if (!tn.is_empty()) {
@@ -273,7 +283,7 @@ static void gl_net_decode(lua_State* L, const Variant& v, Node* ctx, int depth =
             for (int i = 0; i < keys.size(); i++) {
                 Variant k = keys[i];
                 gl_net_push_key(L, k);
-                gl_net_decode(L, d[k], ctx, depth + 1);
+                gl_net_decode(L, d[k], ctx, depth + 1, Remote);
                 lua_settable(L, -3);
             }
             return;
@@ -285,11 +295,11 @@ static void gl_net_decode(lua_State* L, const Variant& v, Node* ctx, int depth =
 // Codifica un rango de argumentos [base, base+n) de la pila a un Array.
 // Si algo no es serializable, LANZA error de Lua con el nº de argumento (como
 // Roblox) en vez de mandar nil en silencio.
-static inline Array gl_net_encode_args(lua_State* L, int base, int n) {
+static inline Array gl_net_encode_args(lua_State* L, int base, int n, bool StrictRemote = false) {
     Array a;
     for (int i = base; i < base + n; i++) {
         gl_net_encode_err() = String();
-        Variant v = gl_net_encode(L, i);
+        Variant v = gl_net_encode(L, i, 0, StrictRemote);
         if (!gl_net_encode_err().is_empty()) {
             String msg = "argument " + String::num_int64(i - base + 1) + ": " + gl_net_encode_err()
                        + " cannot be sent over the network";
@@ -302,8 +312,8 @@ static inline Array gl_net_encode_args(lua_State* L, int base, int n) {
 }
 
 // Empuja todos los elementos de un Array como argumentos en L; devuelve cuántos.
-static inline int gl_net_decode_args(lua_State* L, const Array& a, Node* ctx) {
-    for (int i = 0; i < a.size(); i++) gl_net_decode(L, a[i], ctx);
+static inline int gl_net_decode_args(lua_State* L, const Array& a, Node* ctx, bool Remote = false) {
+    for (int i = 0; i < a.size(); i++) gl_net_decode(L, a[i], ctx, 0, Remote);
     return (int)a.size();
 }
 

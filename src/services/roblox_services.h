@@ -40,6 +40,7 @@ struct LuauPendingResume {
     Array      args;
     uint64_t   ctx_id = 0;
     bool       use_args = false;
+    uint64_t   RemoteGeneration = 0; // Event waits revalidate their exact endpoint life.
     int        Guard = LUA_NOREF;
 };
 inline std::vector<LuauPendingResume>& get_pending_resumes() {
