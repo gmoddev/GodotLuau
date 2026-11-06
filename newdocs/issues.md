@@ -83,7 +83,7 @@ four successful workflows and independently checked artifacts.
 | GL-039 | P3 | Integrated; closed within bounded 32-peer scope | Structural burst convergence corrected by bounded FIFO draining |
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
-| GL-042 | P2 | Candidate correction; qualification in progress | Raw input reports GUI consumption only after native GUI routing |
+| GL-042 | P2 | Fixed and qualified on feature branch; main unchanged | Raw input reports GUI consumption only after native GUI routing |
 
 ## GL-042: UserInputService GUI routing flag
 
@@ -94,9 +94,14 @@ LineEdit probe establishes that GUI consumption occurs after `_input`, before
 commit barrier for raw and semantic input, preserving arrival order and consumed
 releases. This deliberately changes raw callback timing; see the
 [migration contract](input-actions-api.md#userinputservice-migration) and
-[development evidence](input-action-development.md). Native synthetic-event
-coverage is not physical-device or graphical qualification. Main is unchanged;
-broader campaign qualification remains in progress.
+[development evidence](input-action-development.md#final-qualification-of-the-controller-implementation).
+Native Control replay verifies consumed/unconsumed press/release ordering, owner
+retirement and the new post-GUI barrier. The separate Windows rendered controller
+also verifies that typing into a focused LineEdit does not move the body. This is
+synthetic-event coverage, with physical devices and OS capture still unqualified.
+Windows Release and full-native ASan, plus hosted Linux native/ASan-LSan, pass at
+`c037472`; the journal records final hosted results and remaining limitations.
+Main is unchanged.
 
 ## GL-041: Raised authoritative startup remains airborne during walking
 

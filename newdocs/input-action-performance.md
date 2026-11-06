@@ -17,6 +17,16 @@ Raw1/16/64 preserve legacy raw signal workloads. Dense semantic cases bind every
 action to W; sparse cases bind only one action to W and the rest to Q. Both
 exercise actual production handlers and owner-aware Lua callbacks.
 
+The initial main/candidate raw comparison retains the cost of fixing GUI routing:
+median microseconds per 32 events are 30 → 40 with no subscribers, 73.5 → 82
+with one subscriber, 448 → 454.5 with 16, and 1,585.5 → 1,620 with 64. The
+corresponding p99 values are 63 → 69, 130 → 153, 814 → 742 and 2,364 → 2,249.
+The post-GUI queue adds a small absolute routing cost; the subscription workloads
+show mixed tails. These values compare main with the first complete controller
+candidate, before the semantic publication optimization below. Raw routing code
+is unchanged by that optimization. Do not describe this campaign as a universal
+legacy-input performance improvement.
+
 The existing [hot-path benchmark](../tests/runtime/HotPathBenchmarks.cpp) gains
 `--input` to isolate the production evaluator. Its [40 profiles](evidence/input-projection-profiles-2026-11-06.jsonl)
 cover five repeats at 1/16/64/256 actions, dense and sparse, with 1,000 warm events

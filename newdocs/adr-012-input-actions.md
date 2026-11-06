@@ -1,7 +1,7 @@
 # ADR-012: Local semantic input and independent native controller primitives
 
-Status: implementation in progress on `feature/input-action-api-foundation`.
-This records the authorized campaign contract, not passing qualification.
+Status: implemented on `feature/input-action-api-foundation`; qualification is
+recorded in the [campaign journal](input-action-development.md). Main is unchanged.
 
 ## Ownership and API
 
@@ -17,8 +17,8 @@ read hardware or invoke its semantic API. Convenience `AddContext(Name, Options)
 Instances with closed, validated options. Bool, Scalar and Vector2 action types
 have neutral false/zero values. Bool sources OR, Scalar sources sum/clamp, and
 Vector2 contributions sum with unit-length clamping. Keyboard/mouse/gamepad
-buttons are the first slice; composites, analog sticks and relative pointer
-sources follow as actual implementations, not usable placeholder enum entries.
+buttons, vector composites, analog sticks and relative pointer sources use this
+same implemented evaluator.
 
 Context priority descends, with ObjectID ties; within a context binding priority
 descends, with ObjectID ties. Matching actions in one context may cofire. A
@@ -64,8 +64,8 @@ explicit rather than mixing device admission from unrelated viewports.
 
 ## Controller boundary
 
-Phase 2 adds simple vector composites, deadzoned sticks and relative pointer
-input, with distinct documented frame/physics samples. Phase 3 uses Godot's
+Vector composites, deadzoned sticks and relative pointer input have distinct
+documented frame/physics samples. The independent motor uses Godot's
 CharacterBody3D for a separately instantiated, locally owned motor with bounded
 commands consumed once per native physics tick. It does not expose arbitrary
 move_and_slide, raw RIDs or authority over Player.Character/server objects.

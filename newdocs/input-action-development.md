@@ -166,3 +166,60 @@ hot C++ allocations within its stated scope. All 16 existing candidate rejection
 tests pass with the 134-actor gate and example source identity. Expanded hosted
 134-actor CI, final core profiles and full-native sanitizer results are pending;
 this milestone does not claim their completion.
+
+## Final qualification of the controller implementation
+
+Implementation revision: `c03747277dfd1ccdfcfed2d2bf453659da553af5`.
+Native production identity: 99 files, LF-normalized SHA256
+`0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf`.
+The later documentation receipt does not change runtime, fixture or dependency
+inputs. Earlier pending statements describe their historical milestones.
+
+DockerPC's final current-source Windows Release run passes 85 core cases with
+complete CTest output and the existing strict checker, plus 29 graph assertions.
+The optimized Release DLL is
+`37bcb8dc08168120d87cb9cfa0aa0b47991f39e7fc71ee2c82f4810e297b8822`.
+Input/motor checks are 51/20; the real rendered example passes 23 checks and 20
+restart cycles with no node-count growth. The screenshot and raw performance
+observations remain those linked above.
+
+The existing full-native sanitizer builder/runner also passes on DockerPC with
+the matching existing MSVC 14.51 host: detection controls, registration/reload,
+85 core cases, all 134 native actors and strict native completeness verification.
+No unexpected sanitizer report is present. Windows LSan remains unsupported.
+No dependency or host correction is changed. Task-owned native processes are
+gone; the durable evidence and build caches remain, with 16.5 GiB free on C: at
+the final local check.
+
+Fresh hosted [core CI](https://github.com/gmoddev/GodotLuau/actions/runs/42180439541)
+passes on Windows/Linux: 85 cases and 29 graph assertions per platform. Downloaded
+Linux [native](https://github.com/gmoddev/GodotLuau/actions/runs/42180439542) and
+[full-native ASan/LSan](https://github.com/gmoddev/GodotLuau/actions/runs/42180461051)
+artifacts pass all 134 actors at the same native source identity. Actual logs
+contain 51 input checks, 20 motor checks and 20 headless example checks, including
+20 restart cycles. Both ENet replication actors pass local input/motor exclusion
+and inert scene-authored motor assertions. Linux sanitizer coverage includes
+intentional UAF/leak controls, all 85 core cases and zero unexpected reports.
+Hosted Windows native and full-native ASan subsequently pass as well. Their
+downloaded artifacts contain the same 134 actors, 51/20/20 input/motor/example
+checks and controller fixture identity. Both hosted sanitizer builds instrument
+1,164 compilation units; all detection controls and production reload gates pass,
+with 85 core cases and no unexpected reports. The ordinary Windows/Linux native
+jobs and both core jobs are complete and successful; no pending gate is counted
+as passing. Windows LSan is unsupported, rather than silently disabled coverage.
+
+The [final receipt](evidence/input-final-qualification-2026-11-06.json) retains
+workflow/job links, all six downloaded artifact IDs/digests, source/binary and
+companion identities, fixture hashes, actual input-check inventories, core report
+hashes, local Release/rendered results and sanitizer scopes. **QUALIFIED within
+these recorded profiles.** No runtime or fixture correction was needed after
+`c037472`; this final follow-up contains documentation/evidence only.
+
+Remaining scope limits are physical keyboard/gamepad/touch and actual OS mouse
+capture, Linux graphical/Release coverage, and complete native allocation
+profiling. The existing admitted-host, GL-017/018 and other issue-ledger limits
+remain independent; this work does not close them. The next useful qualification
+is a bounded physical-device/capture play session on the permitted workers.
+Character V2, GL-029/030/031–039 authority and transport contracts remain intact.
+No main merge, release, updater distribution, dependency change or upstream change
+is performed by this campaign.
