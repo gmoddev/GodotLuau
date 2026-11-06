@@ -1,0 +1,118 @@
+{
+  "Date": "2026-10-26",
+  "Branch": "perf/gl-019-hot-paths",
+  "StartingMain": "aa5400321b8f838a75de8d2b4005b0c5165dab34",
+  "MeasurementHarnessCommit": "0427a3560ac01b191aa7dcc8b2c144f8eccda2dd",
+  "RuntimeCommit": "1756cc2600e5a59ea948e69a684f5abd93e32229",
+  "NativeSourceFingerprint": {
+    "Files": 65,
+    "Newlines": "LF normalized",
+    "SHA256": "40e2cbadfae3cef7fdc39e17d6b9feec94f635aa5e8926614bdcdb27c324045d"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "ReleaseLibrariesSHA256": {
+    "OriginalPerScript": "46df80185bbbf5cc98294429989e4cc210c29b8d4f7f3a37b88e80009bab03c6",
+    "Before": "8ea4e9c2faeb4218157059415e93aab6700eebce41283a1ab0b20106aff66ee9",
+    "After": "d9398aed311dab4e4493b022fc0df8e4ed81e569e778d562aeb3695248544883"
+  },
+  "CoreBenchmarkSHA256": {
+    "Before": "730eac3188435d43538e12fa2f92a4eb6500a3132ebe4c11162bfd0e1424a815",
+    "After": "d925f9c33b95be289eb78f60012b918588ddc4c722ac7234f47ff565c2e96cc4"
+  },
+  "OriginalPerScriptRevision": "8b163269cbe44cf7fcf7a9a0285620878a2345fd",
+  "WindowsNativeLibrarySHA256": {
+    "Debug": "f0a9bc80beeb14f92424a599488c7fd01c3cc810ad93e46a8da80ca9e70de795",
+    "Release": "876b90ea79025475901ad1adf0e15ad3853b86aeabe4ba849b90c1fc6a7dbbbd"
+  },
+  "Profile": {
+    "Scope": "Only task container cgroup; 15 million cached calls in five processes per variant",
+    "CyclesSamplingFrequency": 997,
+    "UserCycleSamples": {
+      "Before": 16463,
+      "After": 3094
+    },
+    "LostSamples": 0,
+    "InclusivePercentBefore": {
+      "BeginRequire": 67.63,
+      "NativeResolver": 66.04,
+      "StringUtf8": 30.98,
+      "InstanceFullName": 26.62,
+      "ModuleTypeCast": 3.17,
+      "RegistryResultLookup": 0.63
+    },
+    "TaskClockMs": {
+      "Before": 16570.54,
+      "After": 3150.85
+    },
+    "Cycles": {
+      "Before": 92553006857,
+      "After": 16905222890
+    },
+    "Instructions": {
+      "Before": 325971371660,
+      "After": 56991030396
+    },
+    "CounterScope": "Includes runner/startup/shutdown and profiling overhead; not isolated function CPU"
+  },
+  "CoreQualification": {
+    "Cases": 39,
+    "RepetitionsPerConfiguration": 5,
+    "Configurations": [
+      "WindowsDebug",
+      "WindowsRelease",
+      "WindowsAsan",
+      "LinuxDebug",
+      "LinuxRelease",
+      "LinuxAsan"
+    ]
+  },
+  "NativeQualification": {
+    "WindowsDebug": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "1cab3964ad4423d22449c8c5585d28091e66ed63347eef927ead31ebc1bb3388",
+      "KnownZeroChannelLabels": [
+        "Dedicated-0-server",
+        "Editor-0-server"
+      ]
+    },
+    "WindowsRelease": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "24df63dde85241b9d456beb2797e0c3dd8c96d04bcad7b074c00e81f4db3c1b5",
+      "KnownZeroChannelLabels": [
+        "Editor-0-server"
+      ]
+    },
+    "LinuxDebug": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+      "KnownZeroChannelLabels": []
+    },
+    "LinuxRelease": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+      "KnownZeroChannelLabels": []
+    },
+    "LinuxFullNativeAsan": {
+      "Results": 24,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "769209430f0323c063631a75137dc8309e38622ea773cfe302ae046aa2a68272",
+      "KnownZeroChannelLabels": []
+    }
+  },
+  "Limits": [
+    "Windows full-native ASan remains GL-018",
+    "Independent Godot simultaneous-disconnect leak/diagnostic remains GL-017",
+    "Task creation retains stronger ownership and two C++ allocations",
+    "C++ new counters exclude Luau/Godot malloc and peak live bytes",
+    "Core CPU timings differ from native scheduler CPU",
+    "No production distribution or main merge"
+  ],
+  "Classification": "OPTIMIZED AND QUALIFIED"
+}

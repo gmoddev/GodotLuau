@@ -1,0 +1,131 @@
+{
+  "Date": "2026-10-26",
+  "StartingRevision": "0498efca0c3da15b16fff6fb30aac9658975c50a",
+  "RuntimeRevision": "5f61bea0e273e7473260f351fa4fb321116090ee",
+  "NativeSourceFingerprint": {
+    "SHA256": "6b9b752044b36b161a34868ad7d5b94258fdf831d0effb0d489403ce9735103c",
+    "Files": 65,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "CoreSuite": {
+    "Cases": 36,
+    "RepetitionsPerConfiguration": 20,
+    "Configurations": [
+      "WindowsDebug",
+      "WindowsRelease",
+      "WindowsAsan",
+      "LinuxDebug",
+      "LinuxRelease",
+      "LinuxAsan"
+    ]
+  },
+  "NativeGates": {
+    "WindowsCMakeDebug": {
+      "Results": 24,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "9fd0bf83d2a65e500d1d606f544bab397a162f58035dc3e3bc746d0c5aa0edef"
+    },
+    "WindowsCMakeRelease": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9"
+    },
+    "WindowsSConsDebug": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "92e3003925d590f08de6284b67f831049e44403693747cbdeb6ea513fab19046"
+    },
+    "WindowsSConsRelease": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "92e3003925d590f08de6284b67f831049e44403693747cbdeb6ea513fab19046"
+    },
+    "LinuxCMakeDebug": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "3516c69f943c6ea0af099de7097af5af5aff326050a2e9adcf68561d24af70e8"
+    },
+    "LinuxCMakeRelease": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "db2d1e86418286ee28a8be5e91512f3c12224f426fa4ac455a603c2451e8afcc"
+    },
+    "LinuxSConsDebug": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "db2d1e86418286ee28a8be5e91512f3c12224f426fa4ac455a603c2451e8afcc"
+    },
+    "LinuxSConsRelease": {
+      "Results": 8,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "9611327d27905debf22c113f7414b90e619afb3e5421051b7e4069cfd53b18b8"
+    },
+    "LinuxFullNativeAsanOrdered": {
+      "Results": 80,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "0a89fb5052f5d51473be124435ab5ab443e3f9f9473046374b6b65a3fa320a99"
+    },
+    "WindowsEngineProbeMatrix": {
+      "Results": 25,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "a6a7cad55d494df255da8a8b58cdd3896a479c219696ce2a1b1194adba2e1230"
+    },
+    "LinuxEngineProbeMatrix": {
+      "Results": 25,
+      "AllExitsZero": true,
+      "RawResultsSHA256": "faae0f9fa0a914d025d570eb76e4b11440f09930d0402c51e340248e616316cc"
+    }
+  },
+  "Benchmark": {
+    "RawRecords": 90,
+    "File": "shared-domains-benchmark-2026-10-26.json",
+    "Baseline": "8b163269cbe44cf7fcf7a9a0285620878a2345fd",
+    "BaselineLibrarySHA256": "46df80185bbbf5cc98294429989e4cc210c29b8d4f7f3a37b88e80009bab03c6",
+    "CandidateLibrarySHA256": "8ea4e9c2faeb4218157059415e93aab6700eebce41283a1ab0b20106aff66ee9",
+    "OfficialLinuxGodotSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+    "ExcludedMetrics": [
+      "ProcessMedianMs",
+      "ProcessP95Ms"
+    ]
+  },
+  "Package": {
+    "Name": "GodotLuau-shared-domains-5f61bea-test.zip",
+    "Bytes": 13992761,
+    "SHA256": "31dc9ef586ad78bc03b12a8cf4f191f9afcc7790dad8876729fa8fa52089401e",
+    "Files": 129,
+    "UpdaterIncluded": false,
+    "CRCAndHashesVerified": true,
+    "DescriptorLoadSmoke": [
+      "WindowsExit0",
+      "LinuxExit0"
+    ],
+    "Binaries": {
+      "GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so": {
+        "SHA256": "f37691ba0a67061db62b44a658dcf8362ac5e77ba600c5531af0c38a1e08ed6b",
+        "Bytes": 10029616
+      },
+      "GodotLuau/bin/godot_luau.linux.template_release.x86_64.so": {
+        "SHA256": "343d27b1f6ac47e4fa4426a19af046af9e5e51e7397a2e19b014ced4a142bf84",
+        "Bytes": 9442936
+      },
+      "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": {
+        "SHA256": "ef1a9755fcdc2ecc215c827396942c834d6186979f55b802aeb7ad29201aa893",
+        "Bytes": 6218752
+      },
+      "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": {
+        "SHA256": "b3ad0edd11d34799158d90265ad4cd6b1a0528a861b0798781202ec6dbd358e9",
+        "Bytes": 4377088
+      }
+    }
+  },
+  "UnqualifiedGates": {
+    "SimultaneousDisconnectFullAsan": "54-byte engine-only leak, nonzero exit",
+    "WindowsFullNativeAsan": "Baseline and candidate registration-only shutdown timeout",
+    "SchedulerCpu": "TIME_PROCESS samples stale/zero; frame pacing masks isolated cost"
+  },
+  "Readiness": "CONDITIONALLY READY for source integration; production publication unqualified"
+}

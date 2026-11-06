@@ -11,7 +11,8 @@ def _enable_exceptions(e):
         if key in e:
             e[key] = [f for f in e[key] if str(f) != "-fno-exceptions"]
     if e.get("is_msvc", False):
-        e.Append(CXXFLAGS=["/EHsc"])
+        # The native binding translation units exceed COFF's default section limit.
+        e.Append(CXXFLAGS=["/EHsc", "/bigobj"])
     else:
         e.Append(CXXFLAGS=["-fexceptions"])
 _enable_exceptions(env)

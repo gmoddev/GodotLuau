@@ -1,0 +1,100 @@
+[
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0130399130284786,
+    "HotMs": 1050.8067891933,
+    "Mode": "Before",
+    "Trial": 0
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0125803053379059,
+    "HotMs": 160.087259951979,
+    "Mode": "Candidate",
+    "Trial": 0
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0133998692035675,
+    "HotMs": 163.363283034414,
+    "Mode": "Candidate",
+    "Trial": 1
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0130101107060909,
+    "HotMs": 1040.44454498217,
+    "Mode": "Before",
+    "Trial": 1
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.013359822332859,
+    "HotMs": 1054.32960577309,
+    "Mode": "Before",
+    "Trial": 2
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0130799598991871,
+    "HotMs": 163.507503923029,
+    "Mode": "Candidate",
+    "Trial": 2
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0140499323606491,
+    "HotMs": 169.722060207278,
+    "Mode": "Candidate",
+    "Trial": 3
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0117998570203781,
+    "HotMs": 1064.40687691793,
+    "Mode": "Before",
+    "Trial": 3
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0141402706503868,
+    "HotMs": 1018.8218196854,
+    "Mode": "Before",
+    "Trial": 4
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.012190081179142,
+    "HotMs": 159.992242231965,
+    "Mode": "Candidate",
+    "Trial": 4
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0129998661577702,
+    "HotMs": 173.673721961677,
+    "Mode": "Candidate",
+    "Trial": 5
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0149100087583065,
+    "HotMs": 1058.07791510597,
+    "Mode": "Before",
+    "Trial": 5
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.011879950761795,
+    "HotMs": 1065.14800107107,
+    "Mode": "Before",
+    "Trial": 6
+  },
+  {
+    "Calls": 1000000,
+    "ColdMs": 0.0138701871037483,
+    "HotMs": 166.063860058784,
+    "Mode": "Candidate",
+    "Trial": 6
+  }
+]

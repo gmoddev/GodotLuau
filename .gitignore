@@ -30,3 +30,6 @@ GodotLuau/bin/*.old
 # Cache de Python (scripts de tools/)
 __pycache__/
 *.pyc
+
+# Isolated runtime qualification output (fixtures, binaries, captured logs).
+.runtime-tests/

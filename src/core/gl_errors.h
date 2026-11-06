@@ -113,7 +113,10 @@ static int gl_trace_handler(lua_State* L) {
 
 // Chequeo estandar tras lua_resume de un callback de usuario.
 static void gl_check_resume(lua_State* th, int status) {
-    if (status != LUA_OK && status != LUA_YIELD) gl_report_script_error(th);
+    // GLExecutionDomain reports errors once and retains the thread until the
+    // scheduler boundary. Native dispatch sites keep this compatibility helper.
+    (void)th;
+    (void)status;
 }
 
 #endif // GL_ERRORS_H

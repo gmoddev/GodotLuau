@@ -193,7 +193,7 @@ static void _lua_cross_push(lua_State* src, int idx, lua_State* dst, int depth =
 
 struct LuaCB { lua_State* L; int ref; bool active = true; bool once = false; };
 // Corrutina suspendida en OnServerEvent:Wait()/OnClientEvent:Wait().
-struct LuaWait { lua_State* th; lua_State* main_L; };
+struct LuaWait { lua_State* th; lua_State* main_L; int Guard = GLCaptureWait(th); };
 
 // Empaqueta un nodo como referencia de red (para pasar el Player en :Wait server).
 static inline Dictionary _gl_inst_dict(Node* nd) {
@@ -233,9 +233,9 @@ public:
     void _queue_waits(std::vector<LuaWait>& waits, const Array& args_arr, Node* ctx) {
         uint64_t ctx_id = ctx ? (uint64_t)ctx->get_instance_id() : 0;
         for (auto& w : waits) {
-            if (!gl_state_alive(w.main_L)) continue;
+            if (!GLReferenceAlive(w.main_L, w.Guard)) continue;
             LuauPendingResume pr;
-            pr.thread = w.th; pr.main_L = w.main_L; pr.delta = 0; pr.node_arg = nullptr;
+            pr.thread = w.th; pr.main_L = w.main_L; pr.delta = 0; pr.Guard = w.Guard;
             pr.args = args_arr; pr.ctx_id = ctx_id; pr.use_args = true;
             get_pending_resumes().push_back(pr);
         }
@@ -247,7 +247,7 @@ public:
     static void _compact_cbs(std::vector<LuaCB>& v) {
         for (int i = (int)v.size() - 1; i >= 0; --i) {
             if (!v[i].active) {
-                if (gl_state_alive(v[i].L)) lua_unref(v[i].L, v[i].ref);
+                if (gl_state_alive(v[i].L)) GLUnreference(v[i].L, v[i].ref);
                 v.erase(v.begin() + i);
             }
         }
@@ -259,7 +259,7 @@ public:
     void _run_server_cbs(lua_State* L, int stack_base, int nargs, Node* player) {
         std::vector<LuaCB> snapshot = server_cbs;  // copia defensiva: un :Connect dentro del handler no invalida el bucle
         for (auto& cb : snapshot) {
-            if (!cb.active || !gl_state_alive(cb.L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.L);
             lua_rawgeti(cb.L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.L, -1)) {
@@ -268,7 +268,7 @@ public:
                 for (int i = stack_base; i < stack_base + nargs; i++)
                     _lua_cross_push(L, i, th);
                 if (cb.once) _gl_disconnect(cb.ref);    // :Once → desconectar ANTES de invocar (como Roblox)
-                gl_check_resume(th, lua_resume(th, nullptr, 1 + nargs));
+                gl_check_resume(th, GLResume(th, nullptr, 1 + nargs));
             } else lua_pop(cb.L, 1);
             lua_pop(cb.L, 1);
         }
@@ -283,7 +283,7 @@ public:
     void _run_client_cbs(lua_State* L, int stack_base, int nargs) {
         std::vector<LuaCB> snapshot = client_cbs;  // copia defensiva (ver _run_server_cbs)
         for (auto& cb : snapshot) {
-            if (!cb.active || !gl_state_alive(cb.L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.L);
             lua_rawgeti(cb.L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.L, -1)) {
@@ -291,7 +291,7 @@ public:
                 for (int i = stack_base; i < stack_base + nargs; i++)
                     _lua_cross_push(L, i, th);
                 if (cb.once) _gl_disconnect(cb.ref);    // :Once → desconectar ANTES de invocar (como Roblox)
-                gl_check_resume(th, lua_resume(th, nullptr, nargs));
+                gl_check_resume(th, GLResume(th, nullptr, nargs));
             } else lua_pop(cb.L, 1);
             lua_pop(cb.L, 1);
         }
@@ -307,7 +307,7 @@ public:
     void deliver_to_server_cbs(const Array& args, Node* player, Node* ctx) {
         std::vector<LuaCB> snapshot = server_cbs;  // copia defensiva (ver _run_server_cbs)
         for (auto& cb : snapshot) {
-            if (!cb.active || !gl_state_alive(cb.L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.L);
             lua_rawgeti(cb.L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.L, -1)) {
@@ -315,7 +315,7 @@ public:
                 _gl_push_node(th, player);
                 int n = gl_net_decode_args(th, args, ctx);
                 if (cb.once) _gl_disconnect(cb.ref);
-                gl_check_resume(th, lua_resume(th, nullptr, 1 + n));
+                gl_check_resume(th, GLResume(th, nullptr, 1 + n));
             } else lua_pop(cb.L, 1);
             lua_pop(cb.L, 1);
         }
@@ -329,14 +329,14 @@ public:
     void deliver_to_client_cbs(const Array& args, Node* ctx) {
         std::vector<LuaCB> snapshot = client_cbs;  // copia defensiva (ver _run_server_cbs)
         for (auto& cb : snapshot) {
-            if (!cb.active || !gl_state_alive(cb.L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.L);
             lua_rawgeti(cb.L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.L, -1)) {
                 lua_xmove(cb.L, th, 1);
                 int n = gl_net_decode_args(th, args, ctx);
                 if (cb.once) _gl_disconnect(cb.ref);
-                gl_check_resume(th, lua_resume(th, nullptr, n));
+                gl_check_resume(th, GLResume(th, nullptr, n));
             } else lua_pop(cb.L, 1);
             lua_pop(cb.L, 1);
         }
@@ -432,19 +432,19 @@ public:
 
     void set_server_invoke(lua_State* L, int ref) {
         if (server_invoke_L && server_invoke_ref != LUA_NOREF)
-            lua_unref(server_invoke_L, server_invoke_ref);
-        server_invoke_L = L; server_invoke_ref = ref;
+            GLUnreference(server_invoke_L, server_invoke_ref);
+        server_invoke_L = GLGetOwnerState(L); server_invoke_ref = ref;
     }
 
     void set_client_invoke(lua_State* L, int ref) {
         if (client_invoke_L && client_invoke_ref != LUA_NOREF)
-            lua_unref(client_invoke_L, client_invoke_ref);
-        client_invoke_L = L; client_invoke_ref = ref;
+            GLUnreference(client_invoke_L, client_invoke_ref);
+        client_invoke_L = GLGetOwnerState(L); client_invoke_ref = ref;
     }
 
     // InvokeServer: call server handler synchronously, return values to caller
     int invoke_server(lua_State* caller, int stack_base, int nargs) {
-        if (!gl_state_alive(server_invoke_L) || server_invoke_ref == LUA_NOREF) {
+        if (!GLReferenceAlive(server_invoke_L, server_invoke_ref)) {
             lua_pushnil(caller); return 1;
         }
         int pre_top = lua_gettop(server_invoke_L);
@@ -470,7 +470,7 @@ public:
 
     // InvokeClient: call client handler synchronously, return values to caller
     int invoke_client(lua_State* caller, int stack_base, int nargs) {
-        if (!gl_state_alive(client_invoke_L) || client_invoke_ref == LUA_NOREF) {
+        if (!GLReferenceAlive(client_invoke_L, client_invoke_ref)) {
             lua_pushnil(caller); return 1;
         }
         int pre_top = lua_gettop(client_invoke_L);
@@ -517,14 +517,14 @@ public:
     void fire(lua_State* L, int stack_base, int nargs) {
         std::vector<LuaCB> snapshot = cbs;  // copia defensiva: un :Connect dentro del handler no invalida el bucle
         for (auto& cb : snapshot) {
-            if (!cb.active || !gl_state_alive(cb.L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.L);
             lua_rawgeti(cb.L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.L, -1)) {
                 lua_xmove(cb.L, th, 1);
                 for (int i = stack_base; i < stack_base + nargs; i++)
                     _lua_cross_push(L, i, th);
-                gl_check_resume(th, lua_resume(th, nullptr, nargs));
+                gl_check_resume(th, GLResume(th, nullptr, nargs));
             } else lua_pop(cb.L, 1);
             lua_pop(cb.L, 1);
         }

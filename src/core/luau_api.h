@@ -56,7 +56,6 @@ using namespace godot;
 // muere con "attempt to call missing method 'connect'". Esto copia el metodo ya
 // puesto en la tabla de señal a su alias en minuscula.
 // Callbacks registrados con game:BindToClose (se ejecutan al cerrar el juego).
-static std::vector<int>& gl_bind_to_close_refs() { static std::vector<int> v; return v; }
 
 static void gl_signal_lowercase_aliases(lua_State* L) {
     // La tabla de la señal esta en el tope de la pila.
@@ -294,6 +293,7 @@ static void _gl_push_connection(lua_State* L, Node* node, int ref) {
         int r = (int)lua_tointeger(dL, lua_upvalueindex(2));
         Node* n = Object::cast_to<Node>(ObjectDB::get_instance(id));
         if (n && n->has_method("_gl_disconnect")) n->call("_gl_disconnect", r);
+        GLUnreference(nullptr, r);
         if (lua_istable(dL, 1)) { lua_pushboolean(dL, 0); lua_setfield(dL, 1, "_gl_conn"); }
         return 0;
     }, "Disconnect", 2);
@@ -308,12 +308,19 @@ static void _gl_push_connection(lua_State* L, Node* node, int ref) {
     // seguía diciendo true después de Disconnect(). Va por __index para que se
     // lea del estado real; solo salta si la clave no está en la tabla.
     lua_newtable(L);
-    lua_pushcfunction(L, [](lua_State* mL) -> int {
+    lua_pushinteger(L, ref);
+    lua_pushcclosure(L, [](lua_State* mL) -> int {
         const char* k = lua_tostring(mL, 2);
-        if (k && strcmp(k, "Connected") == 0) { lua_getfield(mL, 1, "_gl_conn"); return 1; }
+        if (k && strcmp(k, "Connected") == 0) {
+            lua_getfield(mL, 1, "_gl_conn");
+            bool Connected = lua_toboolean(mL, -1) != 0;
+            lua_pop(mL, 1);
+            lua_pushboolean(mL, Connected && GLReferenceState(static_cast<int>(lua_tointeger(mL, lua_upvalueindex(1)))) != nullptr);
+            return 1;
+        }
         lua_pushnil(mL);
         return 1;
-    }, "__index");
+    }, "__index", 1);
     lua_setfield(L, -2, "__index");
     lua_setmetatable(L, -2);
 }
@@ -594,11 +601,11 @@ static std::vector<GLAttrWatch>& gl_attr_watchers() {
 }
 static void gl_watch_attribute(Node* n, const String& attr, lua_State* L, int fn_idx) {
     if (!n) return;
-    lua_getfield(L, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+    GLPushOwnerState(L);
     lua_State* mL = (lua_State*)lua_touserdata(L, -1); lua_pop(L, 1);
     if (!mL) mL = L;
     lua_pushvalue(L, fn_idx);
-    const int ref = lua_ref(L, -1);
+    const int ref = GLReference(L, -1);
     lua_pop(L, 1);
     gl_attr_watchers().push_back({ (uint64_t)n->get_instance_id(), attr, mL, ref, true });
 }
@@ -607,14 +614,14 @@ static void gl_fire_attribute_changed(Node* n, const String& attr) {
     const uint64_t id = (uint64_t)n->get_instance_id();
     std::vector<GLAttrWatch>& v = gl_attr_watchers();
     for (int i = (int)v.size() - 1; i >= 0; i--) {
-        GLAttrWatch& w = v[i];
-        if (!w.active || !gl_state_alive(w.main_L)) { v.erase(v.begin() + i); continue; }
+        GLAttrWatch w = v[i];
+        if (!w.active || !GLReferenceAlive(w.main_L, w.ref)) { v.erase(v.begin() + i); continue; }
         if (w.node_id != id || w.attr != attr) continue;
         lua_State* th = lua_newthread(w.main_L);
         lua_rawgeti(w.main_L, LUA_REGISTRYINDEX, w.ref);
         if (lua_isfunction(w.main_L, -1)) {
             lua_xmove(w.main_L, th, 1);
-            gl_check_resume(th, lua_resume(th, nullptr, 0));
+            gl_check_resume(th, GLResume(th, nullptr, 0));
         } else lua_pop(w.main_L, 1);
         lua_pop(w.main_L, 1);
     }
@@ -701,12 +708,8 @@ static int method_getservice(lua_State* L) {
     // just like in Roblox: the client can never access the server's storage.
     //// ServerStorage y ServerScriptService son invisibles para LocalScript,
     //// igual que en Roblox: el cliente nunca puede acceder al almacén del servidor.
-    lua_getglobal(L, "__IS_CLIENT");
-    const bool is_client = lua_isboolean(L, -1) && (lua_toboolean(L, -1) != 0);
-    lua_pop(L, 1);
-    lua_getglobal(L, "__IS_SERVER");
-    const bool is_server = lua_isboolean(L, -1) && (lua_toboolean(L, -1) != 0);
-    lua_pop(L, 1);
+    const bool is_client = GLIsClient(L);
+    const bool is_server = !is_client;
     if (is_client && (strcmp(svc_name, "ServerStorage") == 0 ||
                       strcmp(svc_name, "ServerScriptService") == 0)) {
         UtilityFunctions::push_error("[GodotLuau] LocalScript no puede acceder a '",
@@ -726,7 +729,10 @@ static int method_getservice(lua_State* L) {
 
     // 1. Lua pure services stored as _G["__SVC_ServiceName"]
     std::string global_key = std::string("__SVC_") + svc_name;
-    lua_getglobal(L, global_key.c_str());
+    lua_getglobal(L, "_G");
+    if (lua_istable(L, -1)) lua_getfield(L, -1, global_key.c_str());
+    else lua_pushnil(L);
+    lua_remove(L, -2);
     if (!lua_isnil(L, -1)) return 1;
     lua_pop(L, 1);
 
@@ -903,11 +909,11 @@ static int godot_object_index(lua_State* L) {
                     // Acepta game:BindToClose(fn) (self+fn) o game.BindToClose(fn)
                     int fnidx = lua_isfunction(pL, 2) ? 2 : (lua_isfunction(pL, 1) ? 1 : 0);
                     if (!fnidx) return 0;
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                     lua_pop(pL, 1);
                     if (!mL) mL = pL;
-                    int ref = lua_ref(pL, fnidx);   // ref en el registro compartido
+                    int ref = GLReference(pL, fnidx);   // ref en el registro compartido
                     gl_add_close_cb(mL, ref);
                     return 0;
                 }, "BindToClose"); return 1;
@@ -1057,9 +1063,9 @@ static int godot_object_index(lua_State* L) {
                 lua_pushcclosure(L, [](lua_State* pL) -> int {
                     PlayerObject* p = (PlayerObject*)lua_touserdata(pL, lua_upvalueindex(1));
                     if (!p || !lua_isfunction(pL, 2)) { lua_pushnil(pL); return 1; }
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL, 1); if (!mL) mL = pL;
-                    int ref = lua_ref(pL, 2); p->add_char_added_cb(mL, ref); _gl_push_connection(pL, p, ref); return 1;
+                    int ref = GLReference(pL, 2); p->add_char_added_cb(mL, ref); _gl_push_connection(pL, p, ref); return 1;
                 }, "Connect", 1);
                 lua_setfield(L, -2, "Connect");
                 gl_signal_lowercase_aliases(L);
@@ -1067,7 +1073,7 @@ static int godot_object_index(lua_State* L) {
                 lua_pushcclosure(L, [](lua_State* pL) -> int {
                     PlayerObject* p = (PlayerObject*)lua_touserdata(pL, lua_upvalueindex(1));
                     if (!p) { lua_pushnil(pL); return 1; }
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL, 1); if (!mL) mL = pL;
                     p->add_char_added_wait(pL, mL);
                     lua_pushstring(pL, "__WAIT_SIGNAL__"); return lua_yield(pL, 1);
@@ -1084,9 +1090,9 @@ static int godot_object_index(lua_State* L) {
                     PlayerObject* p = (PlayerObject*)lua_touserdata(pL, lua_upvalueindex(1));
                     bool rem = lua_toboolean(pL, lua_upvalueindex(2));
                     if (!p || !lua_isfunction(pL, 2)) { lua_pushnil(pL); return 1; }
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL, 1); if (!mL) mL = pL;
-                    int ref = lua_ref(pL, 2);
+                    int ref = GLReference(pL, 2);
                     if (rem) p->add_char_removing_cb(mL, ref); else p->add_char_appearance_cb(mL, ref);
                     _gl_push_connection(pL, p, ref); return 1;
                 }, "Connect", 2);
@@ -1180,7 +1186,7 @@ static int godot_object_index(lua_State* L) {
                 lua_pushcclosure(L, [](lua_State* LL) -> int {
                     RobloxValue* d = (RobloxValue*)lua_touserdata(LL, lua_upvalueindex(1));
                     if (!d || !lua_isfunction(LL, 2)) { lua_pushnil(LL); return 1; }
-                    int ref = lua_ref(LL, 2);
+                    int ref = GLReference(LL, 2);
                     d->add_changed_cb(gl_main_of(LL), ref); _gl_push_connection(LL, d, ref); return 1;
                 }, "Connect", 1);
                 lua_setfield(L, -2, "Connect");
@@ -1195,7 +1201,7 @@ static int godot_object_index(lua_State* L) {
                     lua_pushcclosure(LL, [](lua_State* L2) -> int {
                         RobloxValue* d2 = (RobloxValue*)lua_touserdata(L2, lua_upvalueindex(1));
                         if (!d2 || !lua_isfunction(L2, 2)) { lua_pushnil(L2); return 1; }
-                        int ref = lua_ref(L2, 2);
+                        int ref = GLReference(L2, 2);
                         d2->add_changed_cb(gl_main_of(L2), ref); _gl_push_connection(L2, d2, ref); return 1;
                     }, "Connect", 1);
                     lua_setfield(LL, -2, "Connect");
@@ -1264,7 +1270,7 @@ static int godot_object_index(lua_State* L) {
                 for (int i = 1; i <= lua_gettop(pL); i++) {
                     if (!lua_isfunction(pL, i)) continue;
                     lua_pushvalue(pL, i);
-                    gl_bind_to_close_refs().push_back(lua_ref(pL, -1));
+                    gl_add_close_cb(GLGetOwnerState(pL), GLReference(pL, -1));
                     lua_pop(pL, 1);
                     break;
                 }
@@ -1379,10 +1385,10 @@ static int godot_object_index(lua_State* L) {
             if (!nd || !lua_isfunction(pL, 2)) { lua_pushnil(pL); return 1; }
             // Dueño del callback = el ScriptNodeBase. Godot desconecta solo al
             // liberar cualquiera de los dos extremos → sin fugas ni use-after-free.
-            lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_SCRIPT_NODE");
+            GLPushScriptNode(pL);
             Node* sn = (Node*)lua_touserdata(pL, -1); lua_pop(pL, 1);
             if (!sn) { lua_pushnil(pL); return 1; }
-            lua_pushvalue(pL, 2); int ref = lua_ref(pL, -1); lua_pop(pL, 1);
+            lua_pushvalue(pL, 2); int ref = GLReference(pL, -1); lua_pop(pL, 1);
             const char* gsig = adding ? "child_entered_tree" : "child_exiting_tree";
             // .bind(ref) crea un Callable distinto por conexion, pero Godot
             // compara solo el metodo base: sin este guardia salta un warning
@@ -1448,7 +1454,7 @@ static int godot_object_index(lua_State* L) {
     if (players_svc) {
         if (strcmp(key, "LocalPlayer") == 0) {
             // El servidor no tiene "jugador local": LocalPlayer = nil en un ServerScript.
-            lua_getglobal(L, "__IS_SERVER");
+            lua_pushboolean(L, !GLIsClient(L));
             bool srv = lua_isboolean(L, -1) && (lua_toboolean(L, -1) != 0);
             lua_pop(L, 1);
             if (srv) { lua_pushnil(L); return 1; }
@@ -1520,8 +1526,8 @@ static int godot_object_index(lua_State* L) {
                 Players* ps = (Players*)lua_touserdata(pL, lua_upvalueindex(1));
                 const char* ev = lua_tostring(pL, lua_upvalueindex(2));
                 if (!lua_isfunction(pL, 2) || !ps) return 0;
-                lua_pushvalue(pL, 2); int ref = lua_ref(pL, -1); lua_pop(pL, 1);
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                lua_pushvalue(pL, 2); int ref = GLReference(pL, -1); lua_pop(pL, 1);
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                 lua_pop(pL, 1);
                 if (!mL) mL = pL;
@@ -1538,8 +1544,8 @@ static int godot_object_index(lua_State* L) {
                 Players* ps = (Players*)lua_touserdata(pL, lua_upvalueindex(1));
                 const char* ev = lua_tostring(pL, lua_upvalueindex(2));
                 if (!lua_isfunction(pL, 2) || !ps) return 0;
-                lua_pushvalue(pL, 2); int ref = lua_ref(pL, -1); lua_pop(pL, 1);
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                lua_pushvalue(pL, 2); int ref = GLReference(pL, -1); lua_pop(pL, 1);
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                 lua_pop(pL, 1);
                 if (!mL) mL = pL;
@@ -1555,7 +1561,7 @@ static int godot_object_index(lua_State* L) {
                 Players* ps = (Players*)lua_touserdata(pL, lua_upvalueindex(1));
                 const char* ev = lua_tostring(pL, lua_upvalueindex(2));
                 if (!ps) { lua_pushnil(pL); return 1; }
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                 lua_pop(pL, 1);
                 if (!mL) mL = pL;
@@ -1631,10 +1637,10 @@ static int godot_object_index(lua_State* L) {
                     int idx = (int)lua_tointeger(pL, lua_upvalueindex(2));
                     bool once_f = lua_toboolean(pL, lua_upvalueindex(3)) != 0;
                     if (!m || !lua_isfunction(pL, 2)) { lua_pushnil(pL); return 1; }
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL, 1);
                     if (!mL) mL = pL;
-                    int ref = lua_ref(pL, 2);
+                    int ref = GLReference(pL, 2);
                     if (auto* lst = m->cb_list(idx)) m->add_cb(*lst, mL, ref, once_f);
                     _gl_push_connection(pL, m, ref);
                     return 1;
@@ -1721,7 +1727,7 @@ static int godot_object_index(lua_State* L) {
                 TextChatService* t = (TextChatService*)lua_touserdata(pL, lua_upvalueindex(1));
                 if (t && lua_isfunction(pL, 2)) {
                     lua_pushvalue(pL, 2);
-                    int ref = lua_ref(pL, -1);
+                    int ref = GLReference(pL, -1);
                     lua_pop(pL, 1);
                     t->gl_connect_message_received(gl_main_of(pL), ref);
                 }
@@ -2183,12 +2189,12 @@ static int godot_object_index(lua_State* L) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
                 if (fn_pos == -1 || !h) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
                 if (!main_L) main_L = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1);
+                int ref = GLReference(pL, -1);
                 lua_pop(pL, 1);
                 h->add_died_callback(main_L, ref);
                 _gl_push_connection(pL, h, ref); return 1;
@@ -2224,12 +2230,12 @@ static int godot_object_index(lua_State* L) {
                     for (int ai = 1; ai <= lua_gettop(pL); ai++)
                         if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                     if (fn_pos == -1 || !h) return 0;
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                     lua_pop(pL, 1);
                     if (!main_L) main_L = pL;
                     lua_pushvalue(pL, fn_pos);
-                    int ref = lua_ref(pL, -1);
+                    int ref = GLReference(pL, -1);
                     lua_pop(pL, 1);
                     h->add_move_signal_callback(which, main_L, ref);
                     _gl_push_connection(pL, h, ref); return 1;
@@ -2249,12 +2255,12 @@ static int godot_object_index(lua_State* L) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
                 if (fn_pos == -1 || !h) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
                 if (!main_L) main_L = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1);
+                int ref = GLReference(pL, -1);
                 lua_pop(pL, 1);
                 h->add_health_changed_callback(main_L, ref);
                 _gl_push_connection(pL, h, ref); return 1;
@@ -2273,12 +2279,12 @@ static int godot_object_index(lua_State* L) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
                 if (fn_pos == -1 || !h) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
                 if (!main_L) main_L = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1);
+                int ref = GLReference(pL, -1);
                 lua_pop(pL, 1);
                 h->add_state_changed_callback(main_L, ref);
                 _gl_push_connection(pL, h, ref); return 1;
@@ -2334,112 +2340,112 @@ static int godot_object_index(lua_State* L) {
     NetworkService* nsvc = Object::cast_to<NetworkService>(n);
     if (nsvc) {
         if (strcmp(key, "StartServer") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 int port = (int)luaL_optnumber(pL, 2, 25565);
                 int maxp = (int)luaL_optnumber(pL, 3, 32);
                 lua_pushboolean(pL, s && s->start_server(port, maxp)); return 1;
             }, "StartServer", 1); return 1;
         }
         if (strcmp(key, "Connect") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 const char* ip = luaL_checkstring(pL, 2);
                 int port = (int)luaL_optnumber(pL, 3, 25565);
                 lua_pushboolean(pL, s && s->connect_server(String(ip), port)); return 1;
             }, "Connect", 1); return 1;
         }
         if (strcmp(key, "Disconnect") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 if (s) s->disconnect_net(); return 0;
             }, "Disconnect", 1); return 1;
         }
         if (strcmp(key, "IsServer") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushboolean(pL, s && s->is_server()); return 1;
             }, "IsServer", 1); return 1;
         }
         if (strcmp(key, "IsClient") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushboolean(pL, s && s->is_client()); return 1;
             }, "IsClient", 1); return 1;
         }
         if (strcmp(key, "GetPeerId") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushnumber(pL, s ? s->get_peer_id() : 0); return 1;
             }, "GetPeerId", 1); return 1;
         }
         if (strcmp(key, "GetPlayerCount") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushnumber(pL, s ? s->get_player_count() : 1); return 1;
             }, "GetPlayerCount", 1); return 1;
         }
         if (strcmp(key, "GetDevice") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushstring(pL, s ? s->get_device().utf8().get_data() : "PC"); return 1;
             }, "GetDevice", 1); return 1;
         }
         if (strcmp(key, "GetPlayerIndex") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushnumber(pL, s ? s->get_player_index() : 0); return 1;
             }, "GetPlayerIndex", 1); return 1;
         }
         if (strcmp(key, "IsConnected") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushboolean(pL, s && s->is_connected_net()); return 1;
             }, "IsConnected", 1); return 1;
         }
         if (strcmp(key, "GetServerAddress") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushstring(pL, s ? s->get_server_address().utf8().get_data() : ""); return 1;
             }, "GetServerAddress", 1); return 1;
         }
         if (strcmp(key, "GetConnectionState") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushstring(pL, s ? s->get_connection_state().utf8().get_data() : "Disconnected"); return 1;
             }, "GetConnectionState", 1); return 1;
         }
         if (strcmp(key, "IsDedicatedServer") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushboolean(pL, s && s->is_dedicated_server()); return 1;
             }, "IsDedicatedServer", 1); return 1;
         }
         if (strcmp(key, "GetLocalIP") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushstring(pL, s ? s->get_local_ip().utf8().get_data() : "127.0.0.1"); return 1;
             }, "GetLocalIP", 1); return 1;
         }
         // ── Lista de servidores guardados (estilo lista de Minecraft) ──
         if (strcmp(key, "GetServers") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_newtable(pL);
                 if (s) {
                     Array list = s->get_server_list();
@@ -2456,9 +2462,9 @@ static int godot_object_index(lua_State* L) {
             }, "GetServers", 1); return 1;
         }
         if (strcmp(key, "AddServer") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 const char* name = luaL_checkstring(pL, 2);
                 const char* ip   = luaL_checkstring(pL, 3);
                 int port = (int)luaL_optnumber(pL, 4, 25565);
@@ -2467,50 +2473,50 @@ static int godot_object_index(lua_State* L) {
             }, "AddServer", 1); return 1;
         }
         if (strcmp(key, "RemoveServer") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 if (s) s->remove_server(String(luaL_checkstring(pL, 2)));
                 return 0;
             }, "RemoveServer", 1); return 1;
         }
         if (strcmp(key, "JoinServer") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushboolean(pL, s && s->join_server(String(luaL_checkstring(pL, 2)))); return 1;
             }, "JoinServer", 1); return 1;
         }
         // ── Coordinador de mundos (matchmaking estilo Roblox) ──
         if (strcmp(key, "StartHost") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 int port = (int)luaL_optnumber(pL, 2, 25565);
                 int maxp = (int)luaL_optnumber(pL, 3, 8);
                 lua_pushboolean(pL, s && s->start_coordinator(port, maxp)); return 1;
             }, "StartHost", 1); return 1;
         }
         if (strcmp(key, "JoinMatchmaking") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 const char* ip = luaL_checkstring(pL, 2);
                 int port = (int)luaL_optnumber(pL, 3, 25565);
                 lua_pushboolean(pL, s && s->join_matchmaking(String(ip), port)); return 1;
             }, "JoinMatchmaking", 1); return 1;
         }
         if (strcmp(key, "GenerateHostKey") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushstring(pL, s ? s->read_or_make_host_key().utf8().get_data() : ""); return 1;
             }, "GenerateHostKey", 1); return 1;
         }
         if (strcmp(key, "GetHostKey") == 0) {
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 lua_pushstring(pL, s ? s->get_host_key().utf8().get_data() : ""); return 1;
             }, "GetHostKey", 1); return 1;
         }
@@ -2520,13 +2526,13 @@ static int godot_object_index(lua_State* L) {
                         (strcmp(key,"PlayerDisconnected")==0) ? 1 :
                         (strcmp(key,"Connected")==0) ? 2 : 3;
             lua_newtable(L);
-            lua_pushlightuserdata(L, (void*)nsvc);
+            GLPushNodeHandle(L, nsvc);
             lua_pushinteger(L, which);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                NetworkService* s = (NetworkService*)lua_touserdata(pL, lua_upvalueindex(1));
+                NetworkService* s = Object::cast_to<NetworkService>(GLNodeUpvalue(pL, 1));
                 int w = (int)lua_tointeger(pL, lua_upvalueindex(2));
                 if (!s || !lua_isfunction(pL, 2)) { lua_pushnil(pL); return 1; }
-                lua_pushvalue(pL, 2); int ref = lua_ref(pL, -1); lua_pop(pL, 1);
+                lua_pushvalue(pL, 2); int ref = GLReference(pL, -1); lua_pop(pL, 1);
                 if      (w == 0) s->add_pc_cb(pL, ref);
                 else if (w == 1) s->add_pd_cb(pL, ref);
                 else if (w == 2) s->add_conn_cb(pL, ref);
@@ -2555,14 +2561,14 @@ static int godot_object_index(lua_State* L) {
         }
         if (strcmp(key, "IsClient") == 0) {
             lua_pushcfunction(L, [](lua_State* pL) -> int {
-                lua_getglobal(pL, "__IS_CLIENT"); bool v = lua_toboolean(pL, -1) != 0; lua_pop(pL, 1);
+                bool v = GLIsClient(pL);
                 lua_pushboolean(pL, v); return 1;
             }, "IsClient");
             return 1;
         }
         if (strcmp(key, "IsServer") == 0) {
             lua_pushcfunction(L, [](lua_State* pL) -> int {
-                lua_getglobal(pL, "__IS_SERVER"); bool v = lua_toboolean(pL, -1) != 0; lua_pop(pL, 1);
+                bool v = !GLIsClient(pL);
                 lua_pushboolean(pL, v); return 1;
             }, "IsServer");
             return 1;
@@ -2586,33 +2592,17 @@ static int godot_object_index(lua_State* L) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
                 if (fn_pos == -1 || !rs_ptr) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
                 if (!main_L) main_L = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1);
+                int ref = GLReference(pL, -1);
                 lua_pop(pL, 1);
                 if      (strcmp(ev, "Heartbeat")     == 0) rs_ptr->add_heartbeat(main_L, ref);
                 else if (strcmp(ev, "RenderStepped") == 0) rs_ptr->add_render_stepped(main_L, ref);
                 else if (strcmp(ev, "Stepped")       == 0) rs_ptr->add_stepped(main_L, ref);
-                // Return connection object: { Disconnect(), Connected }
-                lua_newtable(pL);
-                lua_pushlightuserdata(pL, (void*)rs_ptr);
-                lua_pushstring(pL, ev);
-                lua_pushinteger(pL, ref);
-                lua_pushcclosure(pL, [](lua_State* dL) -> int {
-                    RunService* rs = static_cast<RunService*>(lua_touserdata(dL, lua_upvalueindex(1)));
-                    const char* signal = lua_tostring(dL, lua_upvalueindex(2));
-                    int r = (int)lua_tointeger(dL, lua_upvalueindex(3));
-                    if (rs) rs->disconnect_by_ref(signal, r);
-                    return 0;
-                }, "Disconnect", 3);
-                lua_setfield(pL, -2, "Disconnect");
-                lua_getfield(pL, -1, "Disconnect");   // alias legacy :disconnect()
-                lua_setfield(pL, -2, "disconnect");
-                lua_pushboolean(pL, true);
-                lua_setfield(pL, -2, "Connected");
+                _gl_push_connection(pL, rs_ptr, ref);
                 return 1;
             }, "Connect", 2);
             lua_setfield(L, -2, "Connect");
@@ -2628,33 +2618,17 @@ static int godot_object_index(lua_State* L) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
                 if (fn_pos == -1 || !rs_ptr) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* main_L = static_cast<lua_State*>(lua_touserdata(pL, -1));
                 lua_pop(pL, 1);
                 if (!main_L) main_L = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1);
+                int ref = GLReference(pL, -1);
                 lua_pop(pL, 1);
                 if      (strcmp(ev, "Heartbeat")     == 0) rs_ptr->add_heartbeat(main_L, ref, true);
                 else if (strcmp(ev, "RenderStepped") == 0) rs_ptr->add_render_stepped(main_L, ref, true);
                 else if (strcmp(ev, "Stepped")       == 0) rs_ptr->add_stepped(main_L, ref, true);
-                // Return connection object (same shape as Connect for consistency)
-                lua_newtable(pL);
-                lua_pushlightuserdata(pL, (void*)rs_ptr);
-                lua_pushstring(pL, ev);
-                lua_pushinteger(pL, ref);
-                lua_pushcclosure(pL, [](lua_State* dL) -> int {
-                    RunService* rs = static_cast<RunService*>(lua_touserdata(dL, lua_upvalueindex(1)));
-                    const char* signal = lua_tostring(dL, lua_upvalueindex(2));
-                    int r = (int)lua_tointeger(dL, lua_upvalueindex(3));
-                    if (rs) rs->disconnect_by_ref(signal, r);
-                    return 0;
-                }, "Disconnect", 3);
-                lua_setfield(pL, -2, "Disconnect");
-                lua_getfield(pL, -1, "Disconnect");   // alias legacy :disconnect()
-                lua_setfield(pL, -2, "disconnect");
-                lua_pushboolean(pL, true);
-                lua_setfield(pL, -2, "Connected");
+                _gl_push_connection(pL, rs_ptr, ref);
                 return 1;
             }, "Once", 2);
             lua_setfield(L, -2, "Once");
@@ -2665,7 +2639,7 @@ static int godot_object_index(lua_State* L) {
                 RunService* rs_ptr = static_cast<RunService*>(lua_touserdata(pL, lua_upvalueindex(1)));
                 const char* ev = lua_tostring(pL, lua_upvalueindex(2));
                 if (!rs_ptr) { lua_pushnumber(pL, 0); return 1; }
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* main_L = (lua_State*)lua_touserdata(pL, -1);
                 lua_pop(pL, 1);
                 if (!main_L) main_L = pL;
@@ -2744,7 +2718,7 @@ static int godot_object_index(lua_State* L) {
                 const char* sig  = lua_tostring(L, lua_upvalueindex(2));
                 if (lua_isfunction(L, 2)) {
                     lua_pushvalue(L, 2);
-                    int ref = lua_ref(L, -1);
+                    int ref = GLReference(L, -1);
                     int64_t ptr_L = (int64_t)gl_main_of(L);
                     if (target && target->has_signal(StringName(sig))) {
                         // El contact monitor es caro con miles de parts: se
@@ -3015,11 +2989,11 @@ static int godot_object_index(lua_State* L) {
                     for (int ai = 1; ai <= lua_gettop(pL); ai++)
                         if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                     if (fn_pos == -1 || !rev) return 0;
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                     lua_pop(pL, 1);
                     if (!mL) mL = pL;
-                    int ref = lua_ref(pL, fn_pos);
+                    int ref = GLReference(pL, fn_pos);
                     if (srv) rev->add_server_cb(mL, ref, once);
                     else     rev->add_client_cb(mL, ref, once);
                     _gl_push_connection(pL, rev, ref); return 1;
@@ -3033,7 +3007,7 @@ static int godot_object_index(lua_State* L) {
                 RemoteEventNode* rev = (RemoteEventNode*)lua_touserdata(pL, lua_upvalueindex(1));
                 bool srv = lua_toboolean(pL, lua_upvalueindex(2));
                 if (!rev) { lua_pushnil(pL); return 1; }
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                 lua_pop(pL, 1);
                 if (!mL) mL = pL;
@@ -3060,16 +3034,16 @@ static int godot_object_index(lua_State* L) {
                 // Cliente en sesión de red: mandar al servidor, ceder el hilo y
                 // reanudar con la respuesta (1.14.6). Host/single: correr local.
                 if (_gl_net_mode(ns) == 2 && rfn->is_inside_tree() && gl_add_invoke_wait_hook()) {
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_SCRIPT_NODE");
+                    GLPushScriptNode(pL);
                     Node* sn = (Node*)lua_touserdata(pL, -1); lua_pop(pL, 1);
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* main_L = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL, 1);
                     if (!sn) { lua_pushnil(pL); return 1; }
                     if (!main_L) main_L = pL;
                     int64_t call_id = gl_net_new_call_id();
                     Array args = gl_net_encode_args(pL, 2, nargs);
                     ns->call("net_invoke_server", String(rfn->get_path()), (int)call_id, args);
-                    lua_pushthread(pL); int ref = lua_ref(pL, -1); lua_pop(pL, 1);
+                    int ref = GLCaptureWait(pL);
                     gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, 0.0);   // 0 = esperar como Roblox (el fallo llega si el receptor se cae)
                     lua_pushstring(pL, "__WAIT_INVOKE__");
                     return lua_yield(pL, 1);
@@ -3094,16 +3068,16 @@ static int godot_object_index(lua_State* L) {
                     int myid = (int)(ns->call("get_peer_id"));
                     if (peer == myid && myid != 0) return rfn->invoke_client(pL, 3, nargs);
                     if (peer <= 0) { lua_pushnil(pL); return 1; }
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_SCRIPT_NODE");
+                    GLPushScriptNode(pL);
                     Node* sn = (Node*)lua_touserdata(pL, -1); lua_pop(pL, 1);
-                    lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                    GLPushOwnerState(pL);
                     lua_State* main_L = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL, 1);
                     if (!sn) { lua_pushnil(pL); return 1; }
                     if (!main_L) main_L = pL;
                     int64_t call_id = gl_net_new_call_id();
                     Array args = gl_net_encode_args(pL, 3, nargs);
                     ns->call("net_invoke_client", peer, String(rfn->get_path()), (int)call_id, args);
-                    lua_pushthread(pL); int ref = lua_ref(pL, -1); lua_pop(pL, 1);
+                    int ref = GLCaptureWait(pL);
                     gl_add_invoke_wait_hook()(sn, pL, main_L, ref, call_id, 0.0);   // 0 = esperar como Roblox (el fallo llega si el receptor se cae)
                     lua_pushstring(pL, "__WAIT_INVOKE__");
                     return lua_yield(pL, 1);
@@ -3138,12 +3112,12 @@ static int godot_object_index(lua_State* L) {
                     if (lua_isfunction(pL, ai)) { fn_pos = ai; break; }
                 }
                 if (fn_pos == -1 || !bev) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1);
                 lua_pop(pL, 1);
                 if (!mL) mL = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1);
+                int ref = GLReference(pL, -1);
                 lua_pop(pL, 1);
                 bev->add_cb(mL, ref);
                 _gl_push_connection(pL, bev, ref); return 1;
@@ -3272,7 +3246,7 @@ static int godot_object_index(lua_State* L) {
                 RobloxFrame* f  = (RobloxFrame*)lua_touserdata(pL, lua_upvalueindex(2));
                 if (f && lua_isfunction(pL, 2)) {
                     lua_pushvalue(pL, 2);
-                    int ref = lua_ref(pL, -1); lua_pop(pL, 1);
+                    int ref = GLReference(pL, -1); lua_pop(pL, 1);
                     // connect Godot signal / conectar señal de Godot
                     f->connect(StringName(sig), Callable(f, sig == String("MouseEnter") ? "_emit_mouse_enter" : "_emit_mouse_leave"));
                 }
@@ -3311,11 +3285,11 @@ static int godot_object_index(lua_State* L) {
                 int fn_pos = -1;
                 for (int ai=1; ai<=lua_gettop(pL); ai++) if (lua_isfunction(pL,ai)) { fn_pos=ai; break; }
                 if (fn_pos==-1 || !btn) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL,1);
                 if (!mL) mL = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1); lua_pop(pL,1);
+                int ref = GLReference(pL, -1); lua_pop(pL,1);
                 btn->add_click_cb(mL, ref);
                 _gl_push_connection(pL, btn, ref); return 1;
             }, "Connect", 1);
@@ -3331,11 +3305,11 @@ static int godot_object_index(lua_State* L) {
                 int fn_pos = -1;
                 for (int ai=1; ai<=lua_gettop(pL); ai++) if (lua_isfunction(pL,ai)) { fn_pos=ai; break; }
                 if (fn_pos==-1 || !btn) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL,1);
                 if (!mL) mL = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1); lua_pop(pL,1);
+                int ref = GLReference(pL, -1); lua_pop(pL,1);
                 btn->add_enter_cb(mL, ref);
                 _gl_push_connection(pL, btn, ref); return 1;
             }, "Connect", 1);
@@ -3361,11 +3335,11 @@ static int godot_object_index(lua_State* L) {
                 int fn_pos = -1;
                 for (int ai=1; ai<=lua_gettop(pL); ai++) if (lua_isfunction(pL,ai)) { fn_pos=ai; break; }
                 if (fn_pos==-1 || !btn) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL,1);
                 if (!mL) mL = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1); lua_pop(pL,1);
+                int ref = GLReference(pL, -1); lua_pop(pL,1);
                 btn->add_click_cb(mL, ref);
                 _gl_push_connection(pL, btn, ref); return 1;
             }, "Connect", 1);
@@ -3381,11 +3355,11 @@ static int godot_object_index(lua_State* L) {
                 int fn_pos = -1;
                 for (int ai=1; ai<=lua_gettop(pL); ai++) if (lua_isfunction(pL,ai)) { fn_pos=ai; break; }
                 if (fn_pos==-1 || !btn) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL,1);
                 if (!mL) mL = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1); lua_pop(pL,1);
+                int ref = GLReference(pL, -1); lua_pop(pL,1);
                 btn->add_enter_cb(mL, ref);
                 _gl_push_connection(pL, btn, ref); return 1;
             }, "Connect", 1);
@@ -3409,11 +3383,11 @@ static int godot_object_index(lua_State* L) {
                 int fn_pos = -1;
                 for (int ai=1; ai<=lua_gettop(pL); ai++) if (lua_isfunction(pL,ai)) { fn_pos=ai; break; }
                 if (fn_pos==-1 || !tb) return 0;
-                lua_getfield(pL, LUA_REGISTRYINDEX, "GODOTLUAU_MAIN_STATE");
+                GLPushOwnerState(pL);
                 lua_State* mL = (lua_State*)lua_touserdata(pL, -1); lua_pop(pL,1);
                 if (!mL) mL = pL;
                 lua_pushvalue(pL, fn_pos);
-                int ref = lua_ref(pL, -1); lua_pop(pL,1);
+                int ref = GLReference(pL, -1); lua_pop(pL,1);
                 tb->add_focus_lost_cb(mL, ref);
                 _gl_push_connection(pL, tb, ref); return 1;
             }, "Connect", 1);
@@ -3526,7 +3500,7 @@ static int godot_object_index(lua_State* L) {
                 AnimationTrack* d=(AnimationTrack*)lua_touserdata(LL,lua_upvalueindex(1));
                 auto* c=(std::vector<AnimationTrack::LuaCallback>*)lua_touserdata(LL,lua_upvalueindex(2));
                 if(!c||!lua_isfunction(LL,2)){lua_pushnil(LL);return 1;}
-                lua_pushvalue(LL,2); int ref=lua_ref(LL,-1); lua_pop(LL,1);
+                lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
                 c->push_back({gl_main_of(LL),ref,true}); _gl_push_connection(LL, d, ref); return 1;
             },"Connect",2);
             lua_setfield(L, -2, "Connect");
@@ -3595,7 +3569,7 @@ static int godot_object_index(lua_State* L) {
                 RobloxSound* s = (RobloxSound*)lua_touserdata(LL, lua_upvalueindex(1));
                 if (!s || !lua_isfunction(LL, 2)) { lua_pushnil(LL); return 1; }
                 lua_pushvalue(LL, 2);
-                int ref = lua_ref(LL, -1); lua_pop(LL, 1);
+                int ref = GLReference(LL, -1); lua_pop(LL, 1);
                 // Ended fires when IsPlaying goes false; handled via polling in Luau or signal
                 lua_pushnil(LL); return 1;
             }, "Connect", 1);
@@ -3702,7 +3676,7 @@ static int godot_object_index(lua_State* L) {
             lua_pushcclosure(L, [](lua_State* LL)->int{
                 RobloxTween* t=(RobloxTween*)lua_touserdata(LL,lua_upvalueindex(1));
                 if (!t || !lua_isfunction(LL,2)) { lua_pushnil(LL); return 1; }
-                lua_pushvalue(LL,2); int ref=lua_ref(LL,-1); lua_pop(LL,1);
+                lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
                 t->add_completed_cb(gl_main_of(LL), ref);
                 _gl_push_connection(LL, t, ref); return 1;
             }, "Connect", 1);
@@ -3729,7 +3703,7 @@ static int godot_object_index(lua_State* L) {
                 ClickDetector* d=(ClickDetector*)lua_touserdata(LL,lua_upvalueindex(1));
                 auto* c=(std::vector<ClickDetector::LuaCallback>*)lua_touserdata(LL,lua_upvalueindex(2));
                 if (!d || !c || !lua_isfunction(LL,2)) { lua_pushnil(LL); return 1; }
-                lua_pushvalue(LL,2); int ref=lua_ref(LL,-1); lua_pop(LL,1);
+                lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
                 c->push_back({gl_main_of(LL), ref, true});
                 _gl_push_connection(LL, d, ref); return 1;
             }, "Connect", 2);
@@ -3757,7 +3731,7 @@ static int godot_object_index(lua_State* L) {
                 ProximityPrompt* d=(ProximityPrompt*)lua_touserdata(LL,lua_upvalueindex(1));
                 auto* c=(std::vector<ProximityPrompt::LuaCallback>*)lua_touserdata(LL,lua_upvalueindex(2));
                 if (!c || !lua_isfunction(LL,2)) { lua_pushnil(LL); return 1; }
-                lua_pushvalue(LL,2); int ref=lua_ref(LL,-1); lua_pop(LL,1);
+                lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
                 c->push_back({gl_main_of(LL), ref, true});
                 _gl_push_connection(LL, d, ref); return 1;
             }, "Connect", 2);
@@ -3836,7 +3810,7 @@ static int godot_object_index(lua_State* L) {
                 RobloxTool* d=(RobloxTool*)lua_touserdata(LL,lua_upvalueindex(1));
                 auto* c=(std::vector<RobloxTool::LuaCallback>*)lua_touserdata(LL,lua_upvalueindex(2));
                 if (!c || !lua_isfunction(LL,2)){lua_pushnil(LL);return 1;}
-                lua_pushvalue(LL,2); int ref=lua_ref(LL,-1); lua_pop(LL,1);
+                lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
                 c->push_back({gl_main_of(LL),ref,true});
                 _gl_push_connection(LL, d, ref); return 1;
             },"Connect",2);
@@ -3947,7 +3921,7 @@ static int godot_object_index(lua_State* L) {
                 UserInputService* d=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
                 auto* c=(std::vector<UserInputService::LuaCallback>*)lua_touserdata(LL,lua_upvalueindex(2));
                 if(!c||!lua_isfunction(LL,2)){lua_pushnil(LL);return 1;}
-                lua_pushvalue(LL,2); int ref=lua_ref(LL,-1); lua_pop(LL,1);
+                lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
                 c->push_back({gl_main_of(LL),ref,true}); _gl_push_connection(LL, d, ref); return 1;
             },"Connect",2);
             lua_setfield(L, -2, "Connect");
@@ -4667,14 +4641,14 @@ static int godot_object_newindex_impl(lua_State* L) {
     if (rfall && lua_isfunction(L, 3)) {
         if (strcmp(key, "OnServerInvoke") == 0) {
             lua_pushvalue(L, 3);
-            int ref = lua_ref(L, -1);
+            int ref = GLReference(L, -1);
             lua_pop(L, 1);
             rfall->set_server_invoke(L, ref);
             return 0;
         }
         if (strcmp(key, "OnClientInvoke") == 0) {
             lua_pushvalue(L, 3);
-            int ref = lua_ref(L, -1);
+            int ref = GLReference(L, -1);
             lua_pop(L, 1);
             rfall->set_client_invoke(L, ref);
             return 0;

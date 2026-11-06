@@ -607,7 +607,9 @@ class NetworkService : public Node {
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_null()) return;
         m->connect("peer_connected",      Callable(this, "_on_peer_connected"));
-        m->connect("peer_disconnected",   Callable(this, "_on_peer_disconnected"));
+        // ENet resets peers before completing the current poll. Application
+        // removal RPCs/callbacks must run after all queued disconnects are drained.
+        m->connect("peer_disconnected",   Callable(this, "_on_peer_disconnected"), Object::CONNECT_DEFERRED);
         m->connect("connected_to_server", Callable(this, "_on_connected_ok"));
         m->connect("connection_failed",   Callable(this, "_on_connect_failed"));
         m->connect("server_disconnected", Callable(this, "_on_server_disconnected"));
@@ -667,14 +669,14 @@ class NetworkService : public Node {
         // (las conexiones nuevas disparan en el SIGUIENTE evento, como en Roblox).
         std::vector<NCB> snapshot = cbs;
         for (auto& cb : snapshot) {
-            if (!cb.active || !gl_state_alive(cb.L)) continue;
+            if (!cb.active || !GLReferenceAlive(cb.L, cb.ref)) continue;
             lua_State* th = lua_newthread(cb.L);
             lua_rawgeti(cb.L, LUA_REGISTRYINDEX, cb.ref);
             if (lua_isfunction(cb.L, -1)) {
                 lua_xmove(cb.L, th, 1);
                 int nargs = 0;
                 if (has_id) { lua_pushinteger(th, id); nargs = 1; }
-                gl_check_resume(th, lua_resume(th, nullptr, nargs));
+                gl_check_resume(th, GLResume(th, nullptr, nargs));
             } else lua_pop(cb.L, 1);
             lua_pop(cb.L, 1);
         }
@@ -1069,7 +1071,14 @@ protected:
     }
 
     void _notification(int p_what) {
-        if (p_what == NOTIFICATION_EXIT_TREE) _clear_puppets();
+        if (p_what == NOTIFICATION_EXIT_TREE) {
+            if (gl_net_service_id() == static_cast<uint64_t>(get_instance_id())) {
+                // The SceneTree can outlive this service. Resolve pending
+                // callers before its response map and transport owner disappear.
+                disconnect_net();
+                gl_net_service_id() = 0;
+            } else _clear_puppets();
+        }
     }
 
 public:
@@ -1210,6 +1219,10 @@ public:
         r.ready = true;
         r.age = 0.0;
     }
+    void CancelInvoke(int64_t CallId) {
+        rf_expect.erase(CallId);
+        gl_net_responses().erase(CallId);
+    }
     void net_invoke_server(String path, int call_id, Array args) {
         Ref<MultiplayerAPI> m = _mp();
         if (m.is_null() || !m->has_multiplayer_peer() || (mode == 2 && !net_connected)) {
@@ -1248,7 +1261,7 @@ public:
     // Corre el handler (OnServerInvoke/OnClientInvoke) vía __gl_rf_serve, que lo
     // envuelve en task.spawn (soporta yield) y responde al terminar.
     void _rf_run_handler(lua_State* L, int handler_ref, Node* player, int call_id, int reply_peer, const Array& args, bool is_server) {
-        if (!gl_state_alive(L) || handler_ref == LUA_NOREF) {
+        if (!GLReferenceAlive(L, handler_ref)) {
             _rf_send_error(reply_peer, call_id, is_server
                 ? "InvokeServer: OnServerInvoke is not set for this RemoteFunction"
                 : "InvokeClient: OnClientInvoke is not set for this RemoteFunction");
@@ -1263,7 +1276,7 @@ public:
         lua_pushnumber(th, (double)reply_peer);            // replyPeer
         lua_pushboolean(th, is_server ? 1 : 0);            // isServer
         int n = gl_net_decode_args(th, args, this);        // ...args
-        gl_check_resume(th, lua_resume(th, nullptr, 5 + n));
+        gl_check_resume(th, GLResume(th, nullptr, 5 + n));
         lua_pop(L, 1);   // quitar el hilo wrapper (el handler corre en su propio hilo de task.spawn)
     }
     void _rf_invoke_server(String path, int call_id, Array args) {
