@@ -311,6 +311,12 @@ private:
     }
 
     bool _do_instances() {
+        if (cursor == 0) {
+            for (const auto& Entry : class_names) if (Entry.value == "Humanoid") {
+                _fail("[Importer:Character] Legacy Humanoid requires explicit Character V2 scene/script migration. Source file was not changed.");
+                return false;
+            }
+        }
         const int total = flat_ref.size();
         int end = MIN(cursor + BATCH_INSTANCES, total);
         for (; cursor < end; cursor++) {
@@ -950,8 +956,12 @@ public:
     bool begin_import(const String &p_path) {
         path = p_path;
         last_error = String();
-        report = Dictionary(); class_counts = Dictionary(); missing_classes = Dictionary();
-        ignored_props = Dictionary(); missing_assets = Array(); verify_errors = Array();
+        // The pinned Dictionary rvalue assignment does not destroy its prior
+        // storage. Const lvalues select the releasing copy assignment and keep
+        // each returned report independent of subsequent imports.
+        const Dictionary FreshReport, FreshCounts, FreshMissing, FreshIgnored;
+        report = FreshReport; class_counts = FreshCounts; missing_classes = FreshMissing;
+        ignored_props = FreshIgnored; missing_assets.clear(); verify_errors.clear();
         by_ref.clear(); prop_cache.clear(); pending_refs.clear();
         inst_chunks.clear(); prop_chunks.clear(); prnt_chunks.clear();
         flat_class.clear(); flat_ref.clear();

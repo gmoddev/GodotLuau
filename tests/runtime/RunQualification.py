@@ -68,7 +68,7 @@ def Check(Process, Deadline, Output, Label, Marker):
     Text = (Output / (Label + ".stdout.log")).read_text(errors="replace")
     Errors = (Output / (Label + ".stderr.log")).read_text(errors="replace")
     Combined = Text + '\n' + Errors
-    Failure = re.search(r'\[(?:Runtime|Network):[^\]]+\][^\n]*\bFAIL\b', Combined)
+    Failure = re.search(r'\[(?:Runtime|Network|Character):[^\]]+\][^\n]*\bFAIL\b', Combined)
     Sanitizer = re.search(r'(?:ERROR|SUMMARY): [^\n]*Sanitizer|LeakSanitizer|AddressSanitizer:DEADLYSIGNAL', Combined)
     if Result != 0 or Marker not in Text or Failure or Sanitizer or 'SCRIPT ERROR:' in Errors:
         raise RuntimeError(f"{Label} exit={Result}\n{Text[-4000:]}\n{Errors[-6000:]}")
@@ -261,6 +261,92 @@ def Probes(Args, Output, Environment):
     return Results
 
 
+def CharacterFixtures(Args, Output, Environment):
+    Results = []
+    for Mode in Args.character_modes:
+        Project = Output / Mode
+        Prepare(Project, Args.extension)
+        Entries = []
+        Forwarders = []
+        try:
+            Selected = Port()
+            Roles = ['server'] if Mode == 'Local' else ['server', 'client1', 'client2']
+            for Role in Roles:
+                FixtureRole = 'client' if Role.startswith('client') else 'server'
+                Label = 'character-' + Mode + '-' + Role
+                ActorPort = Selected
+                if Mode == 'Latency' and FixtureRole == 'client':
+                    from DelayedDatagrams import DelayedDatagrams
+                    Forwarder = DelayedDatagrams(Selected)
+                    Forwarders.append(Forwarder)
+                    ActorPort = Forwarder.Port
+                Extra = ['--fixture-role', FixtureRole, '--fixture-port', str(ActorPort), '--character-mode', Mode]
+                if FixtureRole == 'client': Extra += ['--fixture-client-index', Role[-1]]
+                Process = Start(Args.godot, Project, 'CharacterIntegration.gd', Label, Extra, Environment)
+                Entries.append((Process, Label, FixtureRole))
+                if Role == 'server' and Mode != 'Local':
+                    Deadline = time.monotonic() + Args.timeout
+                    while not (Project / 'character-ready').exists():
+                        if Process.poll() is not None or time.monotonic() >= Deadline:
+                            raise RuntimeError('Character readiness failed: ' + Label)
+                        time.sleep(.02)
+            Deadline = time.monotonic() + Args.timeout
+            for Process, Label, Role in Entries:
+                Results.append(Check(Process, Deadline, Project, Label, '[Network:CharacterTest] ' + Role + ' PASS'))
+        finally:
+            for Process, _, _ in Entries: StopProcess(Process)
+            for Forwarder in Forwarders: Forwarder.Close()
+            if Forwarders:
+                Evidence = [Forwarder.Stats for Forwarder in Forwarders]
+                (Project / 'latency-proxy.json').write_text(json.dumps(Evidence, indent=2))
+                if any(Item['Dropped'] or Item['Forwarded'] == 0 or Item['MinimumObservedSeconds'] < .19 for Item in Evidence):
+                    raise RuntimeError('Latency forwarding evidence incomplete')
+    if Args.character_modes == ['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency']:
+        Project = Output / 'Model'
+        Prepare(Project, Args.extension)
+        Label = 'character-model'
+        Process = Start(Args.godot, Project, 'CharacterV2.gd', Label, [], Environment)
+        Results.append(Check(Process, time.monotonic() + Args.timeout, Project, Label, '[Character:V2] PASS'))
+        Errors = (Project / (Label + '.stderr.log')).read_text(errors='replace')
+        if 'ERROR:' in Errors:
+            raise RuntimeError('Character Model fixture emitted engine errors: ' + Errors[-4000:])
+        Results += ManualCharacterFixtures(Args, Output / 'Manual', Environment)
+    return Results
+
+
+def ManualCharacterFixtures(Args, Project, Environment):
+    Prepare(Project, Args.extension)
+    Selected = Port()
+    Entries = []
+    Results = []
+    try:
+        for Role in ['server', 'client1', 'client2']:
+            FixtureRole = 'server' if Role == 'server' else 'client'
+            Extra = ['--fixture-role', FixtureRole, '--fixture-port', str(Selected)]
+            if Role == 'server': Extra += ['--glserver', str(Selected)]
+            else: Extra += ['--fixture-client-index', Role[-1]]
+            if Role == 'client2':
+                Deadline = time.monotonic() + Args.timeout
+                while not (Project / 'manual-client1.ready').exists():
+                    if time.monotonic() > Deadline:
+                        raise RuntimeError('Manual Character first-player admission failed')
+                    time.sleep(.02)
+            Label = 'character-manual-' + Role
+            Process = Start(Args.godot, Project, 'CharacterManual.gd', Label, Extra, Environment)
+            Entries.append((Process, Label))
+            if Role == 'server':
+                Deadline = time.monotonic() + Args.timeout
+                while not (Project / 'manual-ready').exists():
+                    if Process.poll() is not None or time.monotonic() > Deadline:
+                        raise RuntimeError('Manual Character server readiness failed')
+                    time.sleep(.02)
+        for Process, Label in Entries:
+            Results.append(Check(Process, time.monotonic() + Args.timeout, Project, Label, '[Character:Manual] PASS'))
+    finally:
+        for Process, _ in Entries: StopProcess(Process)
+    return Results
+
+
 def Resources(Args, Output, Environment):
     Results = []
     for Case in ['execution', 'module', 'callback', 'invoke', 'memory', 'tasks', 'shutdown', 'configuration']:
@@ -347,6 +433,9 @@ def Main():
     Parser.add_argument("--teardown", action="store_true")
     Parser.add_argument("--security", action="store_true")
     Parser.add_argument("--animation", action="store_true")
+    Parser.add_argument("--characters", action="store_true")
+    Parser.add_argument("--manual-characters", action="store_true")
+    Parser.add_argument("--character-modes", nargs="+", choices=('Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'), default=['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'])
     Parser.add_argument("--resources", action="store_true")
     Parser.add_argument("--filesystem", action="store_true")
     Parser.add_argument("--http", action="store_true")
@@ -387,6 +476,10 @@ def Main():
         Results = SecurityFixtures(Args, Args.output, Environment)
     elif Args.animation:
         Results = AnimationFixtures(Args, Args.output, Environment)
+    elif Args.manual_characters:
+        Results = ManualCharacterFixtures(Args, Args.output, Environment)
+    elif Args.characters:
+        Results = CharacterFixtures(Args, Args.output, Environment)
     elif Args.resources:
         Results = Resources(Args, Args.output, Environment)
     elif Args.filesystem:

@@ -894,6 +894,18 @@ shared.Waited = true
         for (size_t Index=0;Index<GLHttpPolicy::MaxHeaderBytes/2048;++Index) { Check(Headers.ConsumeHeader(2048),"Valid header allowance rejected"); Headers.Tick(); }
         Check(!Headers.ConsumeHeader(1) && Headers.Headers==GLHttpPolicy::MaxHeaderBytes,"Header bound or no-side-effect rejection failed");
     });
+    Test("Native character authority observes synchronous domain and restores nesting", [] {
+        Check(!GLExecutionDomain::IsClientExecution(), "Native engine execution misclassified");
+        GLExecutionDomain Server(GLDomainKind::Server), Client(GLDomainKind::Client);
+        Check(Client.RunNative([&](lua_State*) {
+            Check(GLExecutionDomain::IsClientExecution(), "Client native call lost domain");
+            Check(Server.RunNative([&](lua_State*) {
+                Check(!GLExecutionDomain::IsClientExecution(), "Server callback inherited client authority");
+            }), "Nested server callback failed");
+            Check(GLExecutionDomain::IsClientExecution(), "Nested callback failed to restore client");
+        }), "Client native call failed");
+        Check(!GLExecutionDomain::IsClientExecution(), "Domain leaked beyond native return");
+    });
     std::printf("[Runtime:Test] %d passed, %d failed\n", Passed, Failed);
     return Failed == 0 ? 0 : 1;
 }

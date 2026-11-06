@@ -1,0 +1,174 @@
+{
+  "Schema": 1,
+  "Stage": "Character V2 preparation; qualified GL-007 production parent",
+  "SourceCommit": "3bb641a822df288bf48fc6358baec389994b77f0",
+  "StackedParent": "514d12f1bf1add924214492248a459e0763d4ca0",
+  "NativeSourceSHA256": "20ecbfcbb11cbdbef85480c41ec3cd4e1705bba210cb3ab290c84eab518b329a",
+  "Configuration": "CMake Release adapter; official Godot 4.7.1; actual R6 imported in isolated asset-only fixture",
+  "Windows": {
+    "Worker": "dockerbox",
+    "Output": "C:/Sandbox/Codex/Artifacts/GodotLuau/character-v2-baseline-r6-v3",
+    "Measurements": {
+      "After100Respawns": {
+        "ObjectDelta": 0,
+        "StaticMemoryDeltaBytes": 4
+      },
+      "Architecture": "GL007",
+      "CharacterNativeNodes": 21,
+      "CreationMicroseconds": {
+        "Median": 6986,
+        "P95": 9011,
+        "Samples": 30
+      },
+      "OneCharacter": {
+        "Characters": 1,
+        "Objects": 1566,
+        "PhysicsSeconds": {
+          "Median": 0.000249,
+          "P95": 0.009195,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000272,
+          "P95": 0.000686,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 33228031
+      },
+      "RespawnMicroseconds": {
+        "Median": 389,
+        "P95": 488,
+        "Samples": 30
+      },
+      "Rig": "R6",
+      "SixteenCharacters": {
+        "Characters": 16,
+        "Objects": 2079,
+        "PhysicsSeconds": {
+          "Median": 0.000665,
+          "P95": 0.000712,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.0003,
+          "P95": 0.000309,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 34838095
+      },
+      "StaticMemoryBytes": 31032831
+    },
+    "Files": [
+      {
+        "Name": "benchmark.stderr.log",
+        "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "Name": "benchmark.stdout.log",
+        "SHA256": "ffa9555f114913a8231a670ed25fe62ea9bd00c4043d0e42d14791e48fe52322"
+      },
+      {
+        "Name": "godot_luau.dll",
+        "SHA256": "5c61681bfbfb59948cc74bb5f633705b8abdf80b47c8cbc40700da926fbb8a54"
+      },
+      {
+        "Name": "import.stderr.log",
+        "SHA256": "180a913bca7f245f9240aec1a1a51e66a07dcf86c8c8c7a8dc30c1ccfc03f899"
+      },
+      {
+        "Name": "import.stdout.log",
+        "SHA256": "4a2edead023b38034a57fdc64bf1963d46b5ee1007e56caee26e140372b500f4"
+      },
+      {
+        "Name": "measurements.json",
+        "SHA256": "ec125fa58aaa8fc4dc628c74130a41b00f9ef1144b20dff7db2869efe4f8e26a"
+      }
+    ]
+  },
+  "Linux": {
+    "Worker": "linuxbox",
+    "Output": "/opt/codex/godotluau/results/character-v2-baseline-r6-v3",
+    "Measurements": {
+      "After100Respawns": {
+        "ObjectDelta": 0,
+        "StaticMemoryDeltaBytes": 4
+      },
+      "Architecture": "GL007",
+      "CharacterNativeNodes": 21,
+      "CreationMicroseconds": {
+        "Median": 2380,
+        "P95": 2739,
+        "Samples": 30
+      },
+      "OneCharacter": {
+        "Characters": 1,
+        "Objects": 1566,
+        "PhysicsSeconds": {
+          "Median": 0.000246,
+          "P95": 0.000448,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000142,
+          "P95": 0.000471,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 33209119
+      },
+      "RespawnMicroseconds": {
+        "Median": 330,
+        "P95": 349,
+        "Samples": 30
+      },
+      "Rig": "R6",
+      "SixteenCharacters": {
+        "Characters": 16,
+        "Objects": 2079,
+        "PhysicsSeconds": {
+          "Median": 0.0005,
+          "P95": 0.000547,
+          "Samples": 120
+        },
+        "ProcessSeconds": {
+          "Median": 0.000187,
+          "P95": 0.000187,
+          "Samples": 120
+        },
+        "StaticMemoryBytes": 34828255
+      },
+      "StaticMemoryBytes": 32888599
+    },
+    "Files": [
+      {
+        "Name": "godot_luau.so",
+        "SHA256": "62fef8b7423aaaf9b9bcbdf8b9eca7aace076a38e46be27b366f47d672bf090f"
+      },
+      {
+        "Name": "measurements.json",
+        "SHA256": "94cd41d670fbc10a034ffee6afd7233be4454b1abed60fb9cb9abed65b5f693f"
+      },
+      {
+        "Name": "benchmark.stdout.log",
+        "SHA256": "926049f20d53821d14cebc2b15933eb37291cecee8802ff54dc357decf093243"
+      },
+      {
+        "Name": "benchmark.stderr.log",
+        "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "Name": "import.stdout.log",
+        "SHA256": "f44603c6ce3c8aad43fd4b669f0cd8ec3333a6e79d7835fdec9d6ffaae380313"
+      },
+      {
+        "Name": "import.stderr.log",
+        "SHA256": "e4433468292947194a6adb9913b69ac72cb79b95a68e1f4f8db2706ab4ad27e9"
+      }
+    ]
+  },
+  "Limits": [
+    "Headless only; no graphical correctness claim",
+    "One trial per platform; no cross-platform speed or improvement claim",
+    "Global frame monitors include engine work and scheduler variation",
+    "No network/puppet or candidate measurements yet"
+  ]
+}

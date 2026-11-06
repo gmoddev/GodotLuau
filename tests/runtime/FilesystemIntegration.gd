@@ -45,10 +45,11 @@ func Assets() -> void:
     Game.set_meta("AbsoluteTexture",ProjectSettings.globalize_path("res://protected/texture.tres"))
     Game.set_meta("AbsoluteSound",ProjectSettings.globalize_path("res://protected/sound.tres"))
     Create("Players","Players",Game)
-    var Character := Create("RobloxPlayer","LocalPlayer",Game)
+    var Character := Create("RBXCharacter","LocalPlayer",Game)
     Character.set_process(false)
     Character.set_physics_process(false)
-    if not Character.has_node("Humanoid"): Create("Humanoid","Humanoid",Character)
+    Character.call("SetLocalControl", true)
+    Character.call("EnsureRootPart")
     for Name in ["Allowed","Absolute","Traversal"]:
         var Object := Create("AnimationObject","Clip"+Name,Game)
         Object.call("set_anim_name",Name)
@@ -59,7 +60,7 @@ local U=Instance.new('ImageLabel'); U.Name='UidImage'; U.Parent=game; U.Image=ga
 local D=Instance.new('ImageLabel'); D.Name='DeniedImage'; D.Parent=game; D.Image=game:GetAttribute('AbsoluteTexture')
 local S=Instance.new('Sound'); S.Name='AllowedSound'; S.Parent=game; S.SoundId='res://protected/sound.tres'
 local X=Instance.new('Sound'); X.Name='DeniedSound'; X.Parent=game; X.SoundId=game:GetAttribute('AbsoluteSound')
-for _,Name in {'Allowed','Absolute','Traversal'} do game.LocalPlayer.Humanoid:LoadAnimation(game['Clip'..Name]) end
+for _,Name in {'Allowed','Absolute','Traversal'} do game.LocalPlayer:LoadAnimation(game['Clip'..Name]) end
 game:SetAttribute('AssetsRan',true)
 """,Game)
     for Index in range(5): await process_frame

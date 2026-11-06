@@ -35,7 +35,7 @@
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
 #include "roblox_player.h"
-#include "humanoid.h"
+#include "rbx_character.h"
 #include "gl_avatar.h"
 #include "roblox_part.h"
 #include "roblox_services.h"
@@ -224,6 +224,7 @@ private:
 protected:
     static void _bind_methods() {
         ClassDB::bind_method(D_METHOD("build_local_character"),                &RobloxWorkspace::build_local_character);   // LoadCharacter (1.14.10)
+        ClassDB::bind_method(D_METHOD("GetCharacterSpawn", "player"), &RobloxWorkspace::GetCharacterSpawn);
         ClassDB::bind_method(D_METHOD("_gl_apply_quality_deferred"),           &RobloxWorkspace::_gl_apply_quality_deferred);
         ClassDB::bind_method(D_METHOD("_gl_tune_for_map_size"),                &RobloxWorkspace::_gl_tune_for_map_size);
         ClassDB::bind_method(D_METHOD("_gl_rebuild_chunks"),                   &RobloxWorkspace::_gl_rebuild_chunks);
@@ -469,23 +470,16 @@ public:
     // aparecían en el mismo sitio y había que recolocarlos a mano. Regla de
     // Roblox: un spawn con Neutral=true acepta a cualquiera; con Neutral=false
     // solo a quien tenga su TeamColor. Entre los válidos se elige al azar.
-    SpawnLocation* _pick_spawn_for_local_player() {
+    Vector3 GetCharacterSpawn(Object* Player) {
+        String TeamColor;
+        if (Player && Player->has_method("_gl_team_color_name")) TeamColor = String(Player->call("_gl_team_color_name"));
+        SpawnLocation* Spawn = PickCharacterSpawn(TeamColor);
+        return Spawn ? Spawn->get_spawn_position() : Vector3(0, 5, 0);
+    }
+    SpawnLocation* PickCharacterSpawn(const String& team_color) {
         std::vector<SpawnLocation*> all;
         _collect_spawns_r(this, all);
         if (all.empty()) return nullptr;
-
-        String team_color;
-        if (Node* dm = get_parent()) {
-            if (Node* players = dm->get_node_or_null("Players")) {
-                for (int i = 0; i < players->get_child_count(); i++) {
-                    Node* po = players->get_child(i);
-                    if (!po || !po->is_class("PlayerObject")) continue;
-                    if (!po->has_method("_gl_is_local") || !(bool)po->call("_gl_is_local")) continue;
-                    team_color = String(po->call("_gl_team_color_name"));
-                    break;
-                }
-            }
-        }
 
         std::vector<SpawnLocation*> ok;
         for (SpawnLocation* s : all) {
@@ -497,6 +491,12 @@ public:
         // al vacío en (0,5,0) sin explicación.
         std::vector<SpawnLocation*>& pool = ok.empty() ? all : ok;
         return pool[(int)(UtilityFunctions::randi() % pool.size())];
+    }
+    SpawnLocation* _pick_spawn_for_local_player() {
+        String TeamColor;
+        if (Node* Parent = get_parent()) if (auto Service = Object::cast_to<Players>(Parent->get_node_or_null("Players")))
+            if (auto Player = Service->ensure_local_player_obj()) TeamColor = Player->_gl_team_color_name();
+        return PickCharacterSpawn(TeamColor);
     }
 
     void _ready() override {
@@ -558,7 +558,8 @@ public:
             if (sm) { sm->set_name("SettingsMenu"); get_parent()->call_deferred("add_child", sm); }
         }
 
-        build_local_character();
+        Players* PlayerService = get_parent() ? Object::cast_to<Players>(get_parent()->get_node_or_null("Players")) : nullptr;
+        if (!PlayerService || PlayerService->get_character_auto_loads()) build_local_character();
         set_process(true);   // muerte por vacío (1.15)
 
         // ── Ritmo de física adaptativo (rendimiento) ─────────────────────
@@ -749,12 +750,12 @@ public:
         // lo revive tras RespawnTime.
         for (int i = 0; i < get_child_count(); i++) {
             Node* ch = get_child(i);
-            if (!ch || !(ch->is_class("RobloxPlayer") || ch->is_class("RobloxPlayer2D"))) continue;
+            if (!ch || !(ch->is_class("RBXCharacter") || ch->is_class("RobloxPlayer2D"))) continue;
             Node3D* ref = Object::cast_to<Node3D>(ch->get_node_or_null(NodePath("HumanoidRootPart")));
             Node3D* body = ref ? ref : Object::cast_to<Node3D>(ch);
             if (!body) continue;
             if (body->get_global_position().y >= _fall_effective) continue;
-            Node* hum = ch->get_node_or_null(NodePath("Humanoid"));
+            Node* hum = ch->is_class("RBXCharacter") ? ch : ch->get_node_or_null(NodePath("Humanoid"));
             if (hum && hum->has_method("get_health") && (double)hum->call("get_health") > 0.0)
                 hum->call("set_health", 0.0);
         }
@@ -786,10 +787,10 @@ private:
         for (int i = 0; i < n->get_child_count(); i++) _scan_lowest_anchored(n->get_child(i), lowest, found);
     }
 
-    // ¿este nodo está dentro de un personaje? (tiene un Humanoid por ancestro)
+    // Explicit Character ancestry; 2D keeps its separate native controller.
     static bool _under_character(Node* n) {
         for (Node* a = n ? n->get_parent() : nullptr; a; a = a->get_parent())
-            if (a->get_node_or_null(NodePath("Humanoid"))) return true;
+            if (a->is_class("RBXCharacter") || a->is_class("RobloxPlayer2D")) return true;
         return false;
     }
     void _destroy_fallen_parts(Node* n) {
@@ -814,7 +815,7 @@ private:
     }
 
 public:
-    // Construye el personaje local (spawn + rig + Humanoid + scripts). Extraído
+    // Builds the native Character root, rig, Animator and character scripts.
     // de _ready para que Player:LoadCharacter() pueda rehacerlo (1.14.10).
     void build_local_character() {
         // ── 1. Find StarterPlayer (sibling of Workspace in the scene) ──────────
@@ -826,7 +827,11 @@ public:
 
         // ── 2. Create the player character ──────────────────────────────────────
         //// ── 2. Crear el personaje del jugador ────────────────────────────────────
-        RobloxPlayer* p = memnew(RobloxPlayer);
+        Node3D* Visual = gl_build_character(this);
+        RBXCharacter* p = Object::cast_to<RBXCharacter>(Visual);
+        const bool ClonedCharacter = p != nullptr;
+        if (!p) p = memnew(RBXCharacter);
+        p->SetLocalControl(true);
         p->set_name("LocalPlayer");
         // Spawnear en un SpawnLocation acorde a su equipo (como Roblox)
         Vector3 spawn_pos(0, 5, 0);
@@ -838,14 +843,15 @@ public:
         // Prioridad: StarterPlayer/StarterCharacter (clonado, como Roblox) →
         // avatar R6 por partes con animaciones clasicas → capsula gris.
         // La FISICA siempre es la capsula.
-        {
-            Node3D* character = gl_build_character(this);
+        if (!ClonedCharacter) {
+            Node3D* character = Visual;
             if (character) {
                 p->add_child(character);
                 // Aplanar el rig R6 propio: partes + HumanoidRootPart pasan a ser
                 // hijos DIRECTOS del personaje (como el Model plano de Roblox), así
                 // Character:FindFirstChild("HumanoidRootPart") resuelve.
                 gl_flatten_r6_character(p, character);
+                gl_lift_hrp(p, p->get_node_or_null("Visual"));
             } else {
                 MeshInstance3D* m = memnew(MeshInstance3D);
                 m->set_name("Mesh");
@@ -858,19 +864,8 @@ public:
                 p->add_child(m);
             }
 
-            CollisionShape3D* c = memnew(CollisionShape3D);
-            Ref<CapsuleShape3D> cs; cs.instantiate();
-            c->set_shape(cs);
-            p->add_child(c);
         }
-
-        // ── 4. Always ensure a Humanoid exists (movement) ───────────────────────
-        //// ── 4. Siempre garantizar Humanoid (movimiento) ──────────────────────────
-        if (!p->get_node_or_null("Humanoid")) {
-            Humanoid* hum = memnew(Humanoid);
-            hum->set_name("Humanoid");
-            p->add_child(hum);
-        }
+        p->EnsureRootPart();
 
         // ── 5. Clone StarterCharacterScripts onto the character ─────────────────
         //// ── 5. Clonar StarterCharacterScripts al personaje ───────────────────────

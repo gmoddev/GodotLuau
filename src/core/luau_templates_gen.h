@@ -27,31 +27,32 @@ static const char* LUAU_TEMPLATE_HEALTH = R"LUAU(
 
 local RunService = game:GetService("RunService")
 
-local humanoid = script.Parent:FindFirstChild("Humanoid")
-if not humanoid then
-    dwarn("[Health] Humanoid no encontrado en el personaje")
+local Character = script.Parent
+local State = Character:IsA("Character") and Character or (Character:IsA("RobloxPlayer2D") and Character:FindFirstChild("Humanoid"))
+if not State then
+    dwarn("[Character:Health] Character state unavailable")
     return
 end
 
-dprint("[Health] Regeneracion activa: " .. script.Parent.Name)
+dprint("[Character:Health] Regeneracion activa: " .. script.Parent.Name)
 
 -- La regeneración empieza REGEN_DELAY s tras el ÚLTIMO daño (recibir daño reinicia el contador).
 -- /// Regen starts REGEN_DELAY s after the LAST hit (taking damage resets the timer).
 local REGEN_DELAY = 3.0    -- s sin daño para regenerar /// seconds without damage before regen
 local REGEN_RATE  = 0.01   -- fracción de MaxHealth por segundo (1%) /// fraction of MaxHealth per second (1%)
 
-local last_health = humanoid.Health
+local last_health = State.Health
 local since_damage = REGEN_DELAY  -- permite regenerar desde el inicio /// allow regen from the start
 
-humanoid.HealthChanged:Connect(function(newHP)
+State.HealthChanged:Connect(function(newHP)
     if newHP < last_health then
         since_damage = 0.0  -- recibió daño → reinicia el contador /// took damage → reset the timer
     end
     last_health = newHP
 end)
 
-humanoid.Died:Connect(function()
-    dprint("[Health] " .. script.Parent.Name .. " ha muerto.")
+State.Died:Connect(function()
+    dprint("[Character:Health] " .. script.Parent.Name .. " ha muerto.")
 end)
 
 -- Cada frame: si pasó el retardo y falta vida, sube un poco hacia MaxHealth.
@@ -59,10 +60,10 @@ end)
 RunService.Heartbeat:Connect(function(dt)
     since_damage = since_damage + dt
     if since_damage < REGEN_DELAY then return end
-    if humanoid.Health > 0 and humanoid.Health < humanoid.MaxHealth then
-        local nuevo = humanoid.Health + humanoid.MaxHealth * REGEN_RATE * dt
-        humanoid.Health = math.min(humanoid.MaxHealth, nuevo)
-        last_health = humanoid.Health
+    if State.Health > 0 and State.Health < State.MaxHealth then
+        local nuevo = State.Health + State.MaxHealth * REGEN_RATE * dt
+        State.Health = math.min(State.MaxHealth, nuevo)
+        last_health = State.Health
     end
 end)
 )LUAU";
@@ -76,24 +77,25 @@ static const char* LUAU_TEMPLATE_ANIMATE = R"LUAU(
 
 local RunService = game:GetService("RunService")
 
-local humanoid = script.Parent:FindFirstChild("Humanoid")
-if not humanoid then
-    dwarn("[Animate] Humanoid no encontrado")
+local Character = script.Parent
+local State = Character:IsA("Character") and Character or (Character:IsA("RobloxPlayer2D") and Character:FindFirstChild("Humanoid"))
+if not State then
+    dwarn("[Character:Animation] Character state unavailable")
     return
 end
 
-dprint("[Animate] Sistema de animacion listo")
+dprint("[Character:Animation] Sistema de animacion listo")
 
 -- ══ TU CÓDIGO DE ANIMACIÓN AQUÍ /// YOUR ANIMATION CODE HERE ══
--- Descomenta para reaccionar a eventos del Humanoid: /// Uncomment to react to Humanoid events:
+-- Descomenta para reaccionar a eventos del Character: /// Uncomment to react to Character events:
 
--- humanoid.Died:Connect(function()
---     print("[Animate] El personaje murio!")
+-- State.Died:Connect(function()
+--     print("[Character:Animation] El personaje murio!")
 -- end)
 
--- humanoid.HealthChanged:Connect(function(newHP)
---     if newHP < humanoid.MaxHealth * 0.3 then
---         print("[Animate] Salud baja!")
+-- State.HealthChanged:Connect(function(newHP)
+--     if newHP < State.MaxHealth * 0.3 then
+--         print("[Character:Animation] Salud baja!")
 --     end
 -- end)
 
@@ -115,12 +117,12 @@ static const char* LUAU_TEMPLATE_PLAYER_MODULE = R"LUAU(
 
 local RunService = game:GetService("RunService")
 
--- El jugador tiene el Humanoid y la carpeta Modules/. /// The player holds the Humanoid and the Modules/ folder.
-local character = script.Parent
-local humanoid  = character:FindFirstChild("Humanoid")
+-- This engine template is cloned under the Character with its Modules folder.
+local Character = script.Parent
+local State = Character:IsA("Character") and Character or (Character:IsA("RobloxPlayer2D") and Character:FindFirstChild("Humanoid"))
 
-if not humanoid then
-    dwarn("[PlayerModule] Humanoid no encontrado en el jugador")
+if not State then
+    dwarn("[Character:PlayerModule] Character state unavailable")
     return
 end
 
@@ -144,26 +146,30 @@ pcall(function()
     Menu.Init(game:GetService("Players").LocalPlayer)
 end)
 
--- Pasar la velocidad y el salto del ControlModule al Humanoid.
--- /// Copy the ControlModule's walk speed and jump power to the Humanoid.
-humanoid.WalkSpeed = ControlModule.WalkSpeed
-humanoid.JumpPower = ControlModule.JumpPower
+-- Pasar la velocidad y el salto del ControlModule al Character.
+-- /// Copy the ControlModule's walk speed and jump power to the Character.
+-- 3D movement configuration is granted by the native Server authority.
+-- Existing 2D controller bindings keep their separate contract.
+if not Character:IsA("Character") then
+    State.WalkSpeed = ControlModule.WalkSpeed
+    State.JumpPower = ControlModule.JumpPower
+end
 
-dprint("[PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
+dprint("[Character:PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
 
-humanoid.Died:Connect(function()
-    dprint("[PlayerModule] El personaje ha muerto.")
+State.Died:Connect(function()
+    dprint("[Character:PlayerModule] El personaje ha muerto.")
 end)
 
 -- Cada frame: el ControlModule calcula la velocidad (sprint suave) y la aplica.
 -- /// Each frame: ControlModule computes the speed (smooth sprint) and applies it.
 RunService.Heartbeat:Connect(function(dt)
-    if humanoid.Health <= 0 then return end
+    if State.Health <= 0 then return end
 
     ControlModule:Update(dt)
     local speed = ControlModule:GetCurrentSpeed()
-    if math.abs(humanoid.WalkSpeed - speed) > 0.01 then
-        humanoid.WalkSpeed = speed
+    if not Character:IsA("Character") and math.abs(State.WalkSpeed - speed) > 0.01 then
+        State.WalkSpeed = speed
     end
 
     -- ══ TU CÓDIGO POR FRAME AQUÍ /// YOUR PER-FRAME CODE HERE ══
@@ -1176,8 +1182,8 @@ DamageEvent.OnServerEvent:Connect(function(player, targetName, amount)
     dprint("[Server]", player.Name, "-> daño a", targetName, "(" .. amount .. ")")
     -- Aqui aplicarias el daño al objetivo, por ejemplo:
     -- local target = workspace:FindFirstChild(targetName)
-    -- local hum = target and target:FindFirstChild("Humanoid")
-    -- if hum then hum:TakeDamage(amount) end
+    -- local Character = target and target:IsA("Character") and target
+    -- if Character then Character:TakeDamage(amount) end
 end)
 
 -- ── Sistema de rondas (esqueleto) ─────────────────────────────────

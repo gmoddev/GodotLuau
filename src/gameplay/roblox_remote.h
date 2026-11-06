@@ -38,7 +38,7 @@ static inline Node* _gl_find_local_player(Node* from) {
     // Fallback: el personaje (compat si aún no hay servicio Players)
     std::function<Node*(Node*)> rec_char = [&](Node* n) -> Node* {
         if (!n) return nullptr;
-        if (n->is_class("RobloxPlayer") || n->is_class("RobloxPlayer2D")) return n;
+        if ((n->is_class("RBXCharacter") && static_cast<bool>(n->call("IsLocalControl"))) || n->is_class("RobloxPlayer2D")) return n;
         for (int i = 0; i < n->get_child_count(); i++) { Node* r = rec_char(n->get_child(i)); if (r) return r; }
         return nullptr;
     };

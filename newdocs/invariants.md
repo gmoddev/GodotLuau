@@ -83,7 +83,23 @@ the inherited runtime already satisfies them. Baseline gaps link to
   playing clip or alter another character's loop configuration.
 - Validate finite values, legal ranges/transitions, size, and rate before
   accepting gameplay input. Define which state is authoritative versus visual.
-  Rejection has no partial mutation or broadcast. Gap: GL-007.
+  Rejection has no partial gameplay mutation or broadcast. Integrated GL-007
+  supplies native health, bounded prediction and checked presentation; integrated
+  Character V2 carries those requirements into ADR-007's protocol 3 and Model root.
+  See [ADR-006](adr-006-character-authority.md) and
+  [main integration evidence](character-main-integration.md).
+- Character V2 has one real Model-derived Character identity and one authoritative
+  world pose. Its internal top-level physics body, direct root proxy, visual rig,
+  camera and replicated world pose must stay synchronized. No Humanoid wrapper,
+  second active rig collider or independent visual-authority transform is allowed.
+  2D's separate native contract is preserved.
+- Character health/configuration are Server-owned. Movement requests cannot claim
+  arbitrary observed states. Native death latches once; respawn creates fresh
+  ObjectIDs and playback ownership. Reentrant LoadCharacter cannot duplicate a life.
+- Protocol-3 removal tombstones reject same/older-life pose and animation before
+  cache/presentation mutation. Connected Player identity survives Character absence.
+  Same-scene reparenting preserves identity; stale deferred removal cannot erase a
+  replacement. Animator/track cleanup acts only on its exact owned playback clip.
 - Match asynchronous replies to the expected request and peer; keep disconnect,
   timeout, and cancellation semantics explicit. Preserve existing checks when
   refactoring. A coordinator file/key is not connection/account authentication.

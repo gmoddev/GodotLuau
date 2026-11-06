@@ -29,6 +29,7 @@
 #include <godot_cpp/core/math.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include "gl_runtime.h"
+#include <cmath>
 
 using namespace godot;
 
@@ -47,14 +48,27 @@ using namespace godot;
 //    2 = Suave      — La cámara sigue con un pequeño retraso elegante
 //    3 = Combinada  — Retraso fuerte al moverse, se centra sola al detenerse
 // ════════════════════════════════════════════════════════════════════
+
+template<class T> class GLCharacterNodeRef {
+    uint64_t Identity = 0;
+public:
+    GLCharacterNodeRef() = default;
+    GLCharacterNodeRef& operator=(T* Value) { Identity = Value ? static_cast<uint64_t>(Value->get_instance_id()) : 0; return *this; }
+    uint64_t GetIdentity() const { return Identity; }
+    T* Get() const { auto Value = Object::cast_to<T>(ObjectDB::get_instance(Identity)); return Value && !Value->is_queued_for_deletion() ? Value : nullptr; }
+    operator T*() const { return Get(); }
+    T* operator->() const { return Get(); }
+};
+
 class RobloxPlayer : public CharacterBody3D {
     GDCLASS(RobloxPlayer, CharacterBody3D);
 
 private:
-    Node3D* pivot_h    = nullptr;  // Horizontal pivot (mouse X) / Pivote horizontal (mouse X)
-    Node3D* pivot_v    = nullptr;  // Vertical pivot (mouse Y) / Pivote vertical (mouse Y)
-    SpringArm3D* spring_arm = nullptr; // Prevents camera clipping through walls / Evita que la cámara atraviese paredes
-    Camera3D* camera     = nullptr;
+    bool LocalControl = true;
+    GLCharacterNodeRef<Node3D> pivot_h;  // Horizontal pivot (mouse X) / Pivote horizontal (mouse X)
+    GLCharacterNodeRef<Node3D> pivot_v;  // Vertical pivot (mouse Y) / Pivote vertical (mouse Y)
+    GLCharacterNodeRef<SpringArm3D> spring_arm; // Prevents camera clipping through walls / Evita que la cámara atraviese paredes
+    GLCharacterNodeRef<Camera3D> camera;
 
     float mouse_sensitivity = 0.0022f;   // v1.8.3: bajado de 0.003 (camara mas calmada)
     float target_zoom       = 10.0f;
@@ -70,7 +84,7 @@ private:
 
     void _setup_fade() {
         if (fade_setup_done) return;
-        Node* character = get_node_or_null("Character");
+        Node* character = get_parent() && get_parent()->is_class("RBXCharacter") ? get_parent() : get_node_or_null("Character");
         if (!character) { fade_setup_done = true; return; }   // capsula: usa visibilidad
         ResourceLoader* rl = ResourceLoader::get_singleton();
         const String sh_path = "res://GodotLuau/shaders/character_fade.gdshader";
@@ -134,8 +148,8 @@ private:
     float   idle_time = 0.0f;
 
     // ── Controles tactiles (movil) ──────────────────────────────────
-    CanvasLayer* touch_ui    = nullptr;
-    Button*      jump_btn    = nullptr;
+    GLCharacterNodeRef<CanvasLayer> touch_ui;
+    GLCharacterNodeRef<Button> jump_btn;
     int          move_touch  = -1;     // indice del dedo del joystick de movimiento
     Vector2      move_origin;          // punto donde se apoyo el dedo del joystick
     int          look_touch  = -1;     // indice del dedo que rota la camara
@@ -146,8 +160,8 @@ private:
     bool         mobile_emu  = false;
     bool         mouse_move_drag = false;   // mouse "tocando" el joystick
     bool         mouse_look_drag = false;   // mouse "tocando" la zona de mirar
-    Panel*       joy_base    = nullptr;     // joystick visual (base)
-    Panel*       joy_knob    = nullptr;     // joystick visual (perilla)
+    GLCharacterNodeRef<Panel> joy_base;     // joystick visual (base)
+    GLCharacterNodeRef<Panel> joy_knob;     // joystick visual (perilla)
     // Móvil (1.15): joystick DINÁMICO tipo Roblox — aparece donde tocas en la
     // mitad izquierda, en vez de estar fijo abajo. Configurable por el jugador.
     bool         dynamic_joystick = true;
@@ -222,10 +236,12 @@ protected:
     }
 
 public:
+    void SetLocalControl(bool Enabled) { LocalControl = Enabled; }
+    bool IsLocalControl() const { return LocalControl; }
     // ── Camera / Mouse ─────────────────────────────────────────────
     void  set_camera_mode(int m)       { camera_mode = Math::clamp(m, 1, 3); }
     int   get_camera_mode() const      { return camera_mode; }
-    void  set_mouse_sensitivity(float s){ mouse_sensitivity = s; }
+    void  set_mouse_sensitivity(float s){ if (std::isfinite(s) && s >= 0) mouse_sensitivity = s; }
     float get_mouse_sensitivity() const{ return mouse_sensitivity; }
     // Para el Humanoid (1.15): en primera persona el cuerpo se pega al yaw de la
     // camara en vez de girar hacia el movimiento. OJO: camera_mode de esta clase
@@ -261,6 +277,7 @@ public:
 
     // ── _ready ─────────────────────────────────────────────────────
     void _ready() override {
+        if (!LocalControl) return;
         if (Engine::get_singleton()->is_editor_hint()) return;
 
         last_position = get_global_position();
@@ -373,9 +390,9 @@ public:
         if (joy_base) { if (v) joy_base->set_visible(false); else { joy_base->set_visible(true); _center_knob(); } }
     }
     bool get_joystick_dynamic() const { return dynamic_joystick; }
-    void set_joystick_radius(float r) { joystick_radius = Math::clamp(r, 40.0f, 200.0f); }
+    void set_joystick_radius(float r) { if (std::isfinite(r)) joystick_radius = Math::clamp(r, 40.0f, 200.0f); }
     float get_joystick_radius() const { return joystick_radius; }
-    void set_joystick_opacity(float o) { joystick_opacity = Math::clamp(o, 0.0f, 1.0f); if (joy_base) joy_base->set_modulate(Color(1,1,1,joystick_opacity)); }
+    void set_joystick_opacity(float o) { if (std::isfinite(o)) joystick_opacity = Math::clamp(o, 0.0f, 1.0f); if (joy_base) joy_base->set_modulate(Color(1,1,1,joystick_opacity)); }
     float get_joystick_opacity() const { return joystick_opacity; }
 
     // Circulo de UI (StyleBoxFlat con esquinas al maximo)
@@ -400,6 +417,7 @@ public:
 
     // ── Input: Mouse ───────────────────────────────────────────────
     void _input(const Ref<InputEvent>& p_event) override {
+        if (!LocalControl) return;
         if (Engine::get_singleton()->is_editor_hint()) return;
         if (gl_freecam().active) return;   // Vista de Servidor: la cámara libre maneja el input
         if (gl_menu_open()) return;        // Menú abierto: la rueda desplaza el menú, no la cámara
@@ -540,9 +558,10 @@ public:
     // ── _process: camera and zoom ─────────────────────────────────
     //// ── _process: cámara y zoom ────────────────────────────────────
     void _process(double delta) override {
+        if (!LocalControl) return;
         if (Engine::get_singleton()->is_editor_hint()) return;
         if (gl_freecam().active) return;   // Vista de Servidor: no seguir/rotar la cámara del jugador
-        if (!pivot_h || !spring_arm) return;
+        if (!pivot_h || !pivot_v || !spring_arm || !camera) return;
 
         // ── Gamepad: stick derecho rota la camara ──────────────────
         Input* gp_input = Input::get_singleton();
@@ -627,7 +646,7 @@ public:
             _update_fade(d);
         }
         // Fallback capsula: ocultar el mesh en primera persona
-        MeshInstance3D* mesh = Object::cast_to<MeshInstance3D>(get_node_or_null("Mesh"));
+        MeshInstance3D* mesh = Object::cast_to<MeshInstance3D>((get_parent() && get_parent()->is_class("RBXCharacter") ? get_parent()->get_node_or_null("Mesh") : get_node_or_null("Mesh")));
         if (mesh) {
             mesh->set_visible(target_zoom >= 0.6f);
         }

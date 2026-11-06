@@ -53,6 +53,7 @@ Enum = {
         Back = 8, Exponential = 9,
     },
     EasingDirection = { In = 0, Out = 1, InOut = 2 },
+    CharacterStateType = { Idle = 0, Running = 1, Jumping = 2, Landed = 3, Dead = 7, Freefall = 8 },
     HumanoidStateType = {
         None = 0, Running = 1, Jumping = 2, Landed = 3,
         Swimming = 4, Climbing = 5, Seated = 6, Dead = 7,
@@ -1597,8 +1598,8 @@ local _cls_map = {
     Part="RobloxPart", BasePart="RobloxPart", MeshPart="RobloxPart",
     WedgePart="RobloxPart", CornerWedgePart="RobloxPart", TrussPart="RobloxPart",
     UnionOperation="RobloxPart", SpecialMesh="RobloxPart",
-    Folder="Folder", Model="Node3D", Configuration="Folder",
-    Humanoid="Humanoid", Humanoid2D="Humanoid2D",
+    Folder="Folder", Model="RBXModel", Character="RBXCharacter", Animator="RBXAnimator", Configuration="Folder",
+    Humanoid2D="Humanoid2D",
     PointLight="OmniLight3D", SpotLight="SpotLight3D",
     DirectionalLight="DirectionalLight3D", SurfaceLight="OmniLight3D",
     RemoteEvent="RemoteEventNode", UnreliableRemoteEvent="UnreliableRemoteEventNode",
@@ -1646,6 +1647,7 @@ local _cls_map = {
 
 Instance = Instance or {}
 Instance.new = function(className, parent)
+    if className == "Humanoid" then error("Humanoid was removed; use Character properties and Animator", 2) end
     local inst
     -- 1. Intentar con la función C++ original (mapeos hardcodeados)
     if _cpp_new then

@@ -17,6 +17,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include "roblox_part.h"   // RobloxPart, base de RBXMeshPart
+#include "rbx_model.h"
 
 using namespace godot;
 
@@ -39,88 +40,6 @@ public:
     String get_rbx_class_name() const { return rbx_class_name; }
 };
 
-// ── Model ───────────────────────────────────────────────────────────
-class RBXModel : public Node3D {
-    GDCLASS(RBXModel, Node3D);
-
-    NodePath primary_part;
-    Transform3D world_pivot;
-    float scale_factor = 1.0f;
-
-    void _collect_aabb(Node *n, AABB &box, bool &first) const {
-        RobloxPart *p = Object::cast_to<RobloxPart>(n);
-        if (p) {
-            AABB b(p->get_global_position() - p->get_size() * 0.5f, p->get_size());
-            if (first) { box = b; first = false; }
-            else box = box.merge(b);
-        }
-        for (int k = 0; k < n->get_child_count(); k++)
-            _collect_aabb(n->get_child(k), box, first);
-    }
-
-protected:
-    static void _bind_methods() {
-        ClassDB::bind_method(D_METHOD("set_primary_part", "p"), &RBXModel::set_primary_part);
-        ClassDB::bind_method(D_METHOD("get_primary_part"),      &RBXModel::get_primary_part);
-        ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "PrimaryPart"),
-                     "set_primary_part", "get_primary_part");
-
-        ClassDB::bind_method(D_METHOD("set_world_pivot", "t"), &RBXModel::set_world_pivot);
-        ClassDB::bind_method(D_METHOD("get_world_pivot"),      &RBXModel::get_world_pivot);
-        ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM3D, "WorldPivot"),
-                     "set_world_pivot", "get_world_pivot");
-
-        ClassDB::bind_method(D_METHOD("set_scale_factor", "f"), &RBXModel::set_scale_factor);
-        ClassDB::bind_method(D_METHOD("get_scale_factor"),      &RBXModel::get_scale_factor);
-        ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ScaleFactor"),
-                     "set_scale_factor", "get_scale_factor");
-
-        ClassDB::bind_method(D_METHOD("GetPivot"),           &RBXModel::get_pivot);
-        ClassDB::bind_method(D_METHOD("PivotTo", "t"),       &RBXModel::pivot_to);
-        ClassDB::bind_method(D_METHOD("MoveTo", "pos"),      &RBXModel::move_to);
-        ClassDB::bind_method(D_METHOD("GetBoundingBox"),     &RBXModel::get_bounding_box);
-        ClassDB::bind_method(D_METHOD("GetExtentsSize"),     &RBXModel::get_extents_size);
-    }
-
-public:
-    void set_primary_part(const NodePath &p) { primary_part = p; }
-    NodePath get_primary_part() const { return primary_part; }
-    void set_world_pivot(const Transform3D &t) { world_pivot = t; }
-    Transform3D get_world_pivot() const { return world_pivot; }
-    void set_scale_factor(float f) { scale_factor = f; }
-    float get_scale_factor() const { return scale_factor; }
-
-    // Si hay PrimaryPart el pivote es el suyo, como en Roblox.
-    Transform3D get_pivot() const {
-        if (!primary_part.is_empty()) {
-            Node3D *pp = Object::cast_to<Node3D>(get_node_or_null(primary_part));
-            if (pp) return pp->get_global_transform();
-        }
-        return world_pivot;
-    }
-
-    void pivot_to(const Transform3D &t) {
-        Transform3D cur = get_pivot();
-        Transform3D delta = t * cur.affine_inverse();
-        set_global_transform(delta * get_global_transform());
-        world_pivot = t;
-    }
-
-    void move_to(const Vector3 &pos) {
-        Transform3D t = get_pivot();
-        t.origin = pos;
-        pivot_to(t);
-    }
-
-    AABB get_bounding_box() const {
-        AABB box; bool first = true;
-        for (int k = 0; k < get_child_count(); k++)
-            _collect_aabb(get_child(k), box, first);
-        return box;
-    }
-
-    Vector3 get_extents_size() const { return get_bounding_box().size; }
-};
 
 // ── MeshPart ────────────────────────────────────────────────────────
 // Hereda toda la fisica y el material de RobloxPart. El mesh real vive en la

@@ -1,5 +1,11 @@
 # Shared-domain qualification evidence
 
+[GL-007 and Character V2 main integration](character-main-integration-2026-10-31.json)
+records both sequential normal merges, qualified source/tree identity, retained
+branch refs, fresh Linux focused integration and Windows/Linux main core/native
+CI. The [integration record](../character-main-integration.md) distinguishes
+those fresh gates from retained Debug/Release, sanitizer and product qualification.
+
 [GL-004 main integration](gl004-main-integration-2026-10-29.json) records the
 normal merge and exact source/configuration identity, fresh worker Debug/Release
 core and Debug lifecycle/resource checks. Fresh main Windows/Linux core/native

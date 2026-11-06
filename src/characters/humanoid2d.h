@@ -5,6 +5,8 @@
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
+#include "gl_execution_domain.h"
+#include <cmath>
 
 using namespace godot;
 
@@ -51,33 +53,38 @@ protected:
 
 public:
     void set_health(float h) {
+        if (is_dead || !std::isfinite(h) || GLExecutionDomain::IsClientExecution()) return;
+        uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         float old = health;
         health = Math::clamp(h, 0.0f, max_health);
+        bool Died = health <= 0.0f;
+        if (Died) is_dead = true;
 
         if (old != health) {
             emit_signal("HealthChanged", health, old);
+            if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
         }
 
-        if (health <= 0.0f && !is_dead) {
-            is_dead = true;
+        if (Died) {
             emit_signal("Died");
         }
     }
     float get_health() const { return health; }
 
     void set_max_health(float h) {
+        if (!std::isfinite(h) || GLExecutionDomain::IsClientExecution()) return;
         max_health = Math::max(h, 1.0f);
         health = Math::min(health, max_health);
     }
     float get_max_health() const { return max_health; }
 
     void take_damage(float amount) {
-        if (is_dead) return;
+        if (is_dead || !std::isfinite(amount) || amount < 0) return;
         set_health(health - amount);
     }
 
     void heal(float amount) {
-        if (is_dead) return;
+        if (is_dead || !std::isfinite(amount) || amount < 0) return;
         set_health(health + amount);
     }
 };

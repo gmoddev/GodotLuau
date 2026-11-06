@@ -33,8 +33,8 @@ DamageEvent.OnServerEvent:Connect(function(player, targetName, amount)
     dprint("[Server]", player.Name, "-> daño a", targetName, "(" .. amount .. ")")
     -- Aqui aplicarias el daño al objetivo, por ejemplo:
     -- local target = workspace:FindFirstChild(targetName)
-    -- local hum = target and target:FindFirstChild("Humanoid")
-    -- if hum then hum:TakeDamage(amount) end
+    -- local Character = target and target:IsA("Character") and target
+    -- if Character then Character:TakeDamage(amount) end
 end)
 
 -- ── Sistema de rondas (esqueleto) ─────────────────────────────────

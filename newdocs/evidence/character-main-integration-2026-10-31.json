@@ -1,0 +1,4840 @@
+{
+  "DateUTC": "2026-10-31",
+  "Repository": "https://github.com/gmoddev/GodotLuau",
+  "StartingMain": "4ea53113a98961a64347c672890f65bf9b5c8a54",
+  "Method": "Two sequential normal no-ff merges, preserving both source histories; Stage 2 started only after all four Stage 1 jobs and artifacts verified.",
+  "RetainedBranches": {
+    "security/gl-007-character-authority": "514d12f1bf1add924214492248a459e0763d4ca0",
+    "runtime/character-v2-model": "46f65e0414bbfeecbe535e47236e1a2ccd4c7b75"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "Stage1": {
+    "Merge": "4d4694e8ea5f05120ded9b116bcd06a2c95e4ead",
+    "Parents": [
+      "4ea53113a98961a64347c672890f65bf9b5c8a54",
+      "514d12f1bf1add924214492248a459e0763d4ca0"
+    ],
+    "Tree": "14eceb71800790ca82c39997059b69bf03c74626",
+    "QualifiedSource": "3bb641a822df288bf48fc6358baec389994b77f0",
+    "NativeFingerprint": "20ecbfcbb11cbdbef85480c41ec3cd4e1705bba210cb3ab290c84eab518b329a",
+    "FreshCore": {
+      "Run": 41171080423,
+      "Revision": "4d4694e8ea5f05120ded9b116bcd06a2c95e4ead",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41171080423",
+      "Jobs": [
+        {
+          "ID": 124448976411,
+          "Name": "Core (Linux, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 124448976571,
+          "Name": "Core (Windows, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13031247039,
+          "Name": "runtime-core-Linux-Debug",
+          "SHA256": "35934b692fbbc2f0d078787bb80ad2e6b93403a37c0133d68420c91ae821d4be",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        },
+        {
+          "ID": 13031187371,
+          "Name": "runtime-core-Windows-Debug",
+          "SHA256": "a7ca60150603dd34dea01cdd8babe1079251431de92d6959aad35d1a56763d07",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        }
+      ]
+    },
+    "FreshNative": {
+      "Run": 41171080300,
+      "Revision": "4d4694e8ea5f05120ded9b116bcd06a2c95e4ead",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41171080300",
+      "CreatedAt": "2026-10-31T05:04:08Z",
+      "UpdatedAt": "2026-10-31T05:22:01Z",
+      "VerifiedAt": "2026-10-31T05:22:13.151560+00:00",
+      "Jobs": [
+        {
+          "ID": 124448975966,
+          "Name": "Native (Windows, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T05:04:11Z",
+          "CompletedAt": "2026-10-31T05:22:01Z",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Expose installed MSVC Debug runtime",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "GL-007 character authority and animation-health rejection",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 124448976150,
+          "Name": "Native (Linux, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T05:04:12Z",
+          "CompletedAt": "2026-10-31T05:17:09Z",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "GL-007 character authority and animation-health rejection",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13031228703,
+          "Name": "runtime-native-Linux-Debug",
+          "SHA256": "c43d77c524561c3edd0bd8ec28dff10f4f8ecf845aee86855eb8a70bed3afafe",
+          "Native": {
+            "Revision": "4d4694e8ea5f05120ded9b116bcd06a2c95e4ead",
+            "NativeSource": {
+              "SHA256": "20ecbfcbb11cbdbef85480c41ec3cd4e1705bba210cb3ab290c84eab518b329a",
+              "Files": 87,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "4629a097a17ed8d09476cdb713afb24cac4bcad114b1730e6ac9570fceff3805",
+            "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992009,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+                "Bytes": 76056717,
+                "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+                "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+              },
+              "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+              "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "VersionStderr": ""
+            },
+            "Processes": 82,
+            "CharacterLatency": [
+              {
+                "Received": 1058,
+                "Forwarded": 1058,
+                "Dropped": 0,
+                "PeakPending": 502,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20002128999999513
+              },
+              {
+                "Received": 361,
+                "Forwarded": 360,
+                "Dropped": 0,
+                "PeakPending": 20,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20002015800002937
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "22e6d36e58ef81daa725e7bbd82327a8db9eb318e70d17438d19a8462dbf5af5",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "22e6d36e58ef81daa725e7bbd82327a8db9eb318e70d17438d19a8462dbf5af5",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "eee73edc295c8eca24a58d3d125e98380f8a9296b4fc647ce4b11dcbf644dab2",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "eee73edc295c8eca24a58d3d125e98380f8a9296b4fc647ce4b11dcbf644dab2",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "89471eeb265bb2470ce9b0b39c32d0d6cebaf4847d06c57c24cb1873928e5b87",
+                  "DiagnosticsBytes": 4217
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2ebd244fc0ddce8afdbab01e04509ab44d1a3171d076ed2b32dfa64ea9ff1225",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "deedd6906bbc6a9df6a3bea5899f1fb4ed966446422c7f52ec437e265747c3c5",
+                  "DiagnosticsBytes": 621
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 46,
+          "VerifiedLogFiles": 250
+        },
+        {
+          "ID": 13031174370,
+          "Name": "runtime-native-Windows-Debug",
+          "SHA256": "d522ed0b029590509143bdddaa5f2817872dbcbe3bfa077be997c265ceb7e75a",
+          "Native": {
+            "Revision": "4d4694e8ea5f05120ded9b116bcd06a2c95e4ead",
+            "NativeSource": {
+              "SHA256": "20ecbfcbb11cbdbef85480c41ec3cd4e1705bba210cb3ab290c84eab518b329a",
+              "Files": 87,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "9725b85c86bf97bda885c0423190954f39d79f38eeeb984f8fe1041e3319b34a",
+            "DataStoreWorkerSHA256": "21d1002a88042043c03c55055c13d5b7d4a3d4a7dafad277c76186ec75e863d7",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992673,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+                "Bytes": 84198557,
+                "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+                "Executable": "Godot_v4.7.1-stable_win64.exe"
+              },
+              "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+              "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "VersionStderr": ""
+            },
+            "Processes": 82,
+            "CharacterLatency": [
+              {
+                "Received": 1068,
+                "Forwarded": 1068,
+                "Dropped": 0,
+                "PeakPending": 503,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.2029999999995198
+              },
+              {
+                "Received": 375,
+                "Forwarded": 375,
+                "Dropped": 0,
+                "PeakPending": 20,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.2029999999995198
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "30481f95458c7840a2b6b7fb7c32da4550eba7700df63579991492a879fda155",
+                  "DiagnosticsBytes": 8701
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "b4400794eaaf66ee90c9d874e684c0d571b107f5341ac2d57676eca25e005f06",
+                  "DiagnosticsBytes": 4350
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "203267e6b3dc1744810ad5bb62a7dafdb8b263d65a68cbb95644822e12e3c2bb",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "203267e6b3dc1744810ad5bb62a7dafdb8b263d65a68cbb95644822e12e3c2bb",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "46fbc7732f72dc772409b249789bfdfd3e58acd53b0947e072753f098f36fe35",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "46fbc7732f72dc772409b249789bfdfd3e58acd53b0947e072753f098f36fe35",
+                  "DiagnosticsBytes": 4416
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2ebd244fc0ddce8afdbab01e04509ab44d1a3171d076ed2b32dfa64ea9ff1225",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "3706cc5d653ca1347b3b950e913cb3c86d88ef57f885e726b7ad99b605deaeb6",
+                  "DiagnosticsBytes": 609
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 46,
+          "VerifiedLogFiles": 251
+        }
+      ]
+    }
+  },
+  "Stage2": {
+    "Merge": "1c3176c0d9331dc1fa6849b98f8ed8e90e59c110",
+    "Parents": [
+      "4d4694e8ea5f05120ded9b116bcd06a2c95e4ead",
+      "46f65e0414bbfeecbe535e47236e1a2ccd4c7b75"
+    ],
+    "Tree": "b4fe3ba718aadbae28374c38ef31d1413bfa759e",
+    "QualifiedSource": "d7905dd4af5c7a89c9b0f0a005861e9043379be1",
+    "NativeFingerprint": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+    "FreshCore": {
+      "Run": 41172545145,
+      "Revision": "1c3176c0d9331dc1fa6849b98f8ed8e90e59c110",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41172545145",
+      "CreatedAt": "2026-10-31T05:25:34Z",
+      "UpdatedAt": "2026-10-31T05:26:33Z",
+      "VerifiedAt": "2026-10-31T05:27:15.070746+00:00",
+      "Jobs": [
+        {
+          "ID": 124453376127,
+          "Name": "Core (Windows, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T05:25:47Z",
+          "CompletedAt": "2026-10-31T05:26:32Z",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 124453376269,
+          "Name": "Core (Linux, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T05:25:37Z",
+          "CompletedAt": "2026-10-31T05:26:03Z",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13031666176,
+          "Name": "runtime-core-Windows-Debug",
+          "SHA256": "129ab1611439e83b355e0070c482f8896c9514905dbfeebb2f52f261336ed831",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        },
+        {
+          "ID": 13031304280,
+          "Name": "runtime-core-Linux-Debug",
+          "SHA256": "b989ee9b6a1ddcbd1d31ede006feb69d4a63f642da76bc45e75b2c25fddb3b14",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        }
+      ]
+    },
+    "FreshNative": {
+      "Run": 41172545109,
+      "Revision": "1c3176c0d9331dc1fa6849b98f8ed8e90e59c110",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41172545109",
+      "CreatedAt": "2026-10-31T05:25:34Z",
+      "UpdatedAt": "2026-10-31T05:47:25Z",
+      "VerifiedAt": "2026-10-31T05:47:37.205835+00:00",
+      "Jobs": [
+        {
+          "ID": 124453376085,
+          "Name": "Native (Windows, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T05:25:46Z",
+          "CompletedAt": "2026-10-31T05:47:24Z",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Expose installed MSVC Debug runtime",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "Character V2 Model lifecycle and GL-007 authority regressions",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 124453376222,
+          "Name": "Native (Linux, Debug)",
+          "Conclusion": "success",
+          "StartedAt": "2026-10-31T05:25:37Z",
+          "CompletedAt": "2026-10-31T05:38:14Z",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "Character V2 Model lifecycle and GL-007 authority regressions",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13032641255,
+          "Name": "runtime-native-Windows-Debug",
+          "SHA256": "0482d490431288a5b2602afd5291b3dcba13f4eddb10dd448b813d0bfc4329fc",
+          "CharacterModelChecks": 76,
+          "ManualCharacterActors": 3,
+          "VerifiedCharacterActorMarkers": [
+            "character-Local-server",
+            "character-Listen-server",
+            "character-Listen-client1",
+            "character-Listen-client2",
+            "character-Dedicated-server",
+            "character-Dedicated-client1",
+            "character-Dedicated-client2",
+            "character-TwoD-server",
+            "character-TwoD-client1",
+            "character-TwoD-client2",
+            "character-Movement-server",
+            "character-Movement-client1",
+            "character-Movement-client2",
+            "character-Latency-server",
+            "character-Latency-client1",
+            "character-Latency-client2",
+            "character-model",
+            "character-manual-server",
+            "character-manual-client1",
+            "character-manual-client2"
+          ],
+          "Native": {
+            "Revision": "1c3176c0d9331dc1fa6849b98f8ed8e90e59c110",
+            "NativeSource": {
+              "SHA256": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+              "Files": 88,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "cbdae7efe2e98fb919e64414b72d89c92ff2e69cda0defb6f0a686368ee85e1f",
+            "DataStoreWorkerSHA256": "e7b1e7aa4a1ea143fb1996380d113d65efa3097374e26fed80fbed4855043c98",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992673,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+                "Bytes": 84198557,
+                "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+                "Executable": "Godot_v4.7.1-stable_win64.exe"
+              },
+              "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+              "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "VersionStderr": ""
+            },
+            "Processes": 86,
+            "CharacterLatency": [
+              {
+                "Received": 1127,
+                "Forwarded": 1127,
+                "Dropped": 0,
+                "PeakPending": 502,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20299999999997453
+              },
+              {
+                "Received": 430,
+                "Forwarded": 430,
+                "Dropped": 0,
+                "PeakPending": 19,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20299999999997453
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "29032741d12ba5095b0e56340dbcbc810bb300f9fa5bbc9386ef4617f136c681",
+                  "DiagnosticsBytes": 4194
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "bba4fcc79e22630bf7176390c8f99a6b102bb9a0d2af5af566c037fb6e794eb6",
+                  "DiagnosticsBytes": 3994
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0bd2059f48aff8a8801b0af1e4e2106ca49e2bc2319d0fc609b13a7f530a2292",
+                  "DiagnosticsBytes": 4194
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "96d1dd71b65c64871072e622b581cd99e4fb1132347af0f5a76686ad7e4a439f",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "faa1fbb18deaa52b287f017ddafaf77d19cd4ec162a764343370f4456c3e12bf",
+                  "DiagnosticsBytes": 4215
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "4d1230ce4be3a69fa2665ce78cb4a0657f07895712985abf0f58b441e8bd0fe8",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-model",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "577fa335ed0b44e3e4d253b21823b954c5fa5e9412f4e50277d2699d46cd7b57",
+                  "DiagnosticsBytes": 253
+                },
+                {
+                  "Label": "character-manual-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "3706cc5d653ca1347b3b950e913cb3c86d88ef57f885e726b7ad99b605deaeb6",
+                  "DiagnosticsBytes": 609
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 52,
+          "VerifiedLogFiles": 260
+        },
+        {
+          "ID": 13031667162,
+          "Name": "runtime-native-Linux-Debug",
+          "SHA256": "3e8b43ade8e75cfcd65571b843bf8d2188ed88528d523ff1d29e97fb46e74634",
+          "CharacterModelChecks": 76,
+          "ManualCharacterActors": 3,
+          "VerifiedCharacterActorMarkers": [
+            "character-Local-server",
+            "character-Listen-server",
+            "character-Listen-client1",
+            "character-Listen-client2",
+            "character-Dedicated-server",
+            "character-Dedicated-client1",
+            "character-Dedicated-client2",
+            "character-TwoD-server",
+            "character-TwoD-client1",
+            "character-TwoD-client2",
+            "character-Movement-server",
+            "character-Movement-client1",
+            "character-Movement-client2",
+            "character-Latency-server",
+            "character-Latency-client1",
+            "character-Latency-client2",
+            "character-model",
+            "character-manual-server",
+            "character-manual-client1",
+            "character-manual-client2"
+          ],
+          "Native": {
+            "Revision": "1c3176c0d9331dc1fa6849b98f8ed8e90e59c110",
+            "NativeSource": {
+              "SHA256": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+              "Files": 88,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "1fd2e6730410639e80e13ff78721da42c8db2f5859a96d16b64fc16905711af9",
+            "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992009,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+                "Bytes": 76056717,
+                "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+                "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+              },
+              "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+              "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "VersionStderr": ""
+            },
+            "Processes": 86,
+            "CharacterLatency": [
+              {
+                "Received": 1117,
+                "Forwarded": 1117,
+                "Dropped": 0,
+                "PeakPending": 503,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.2000329630000124
+              },
+              {
+                "Received": 420,
+                "Forwarded": 420,
+                "Dropped": 0,
+                "PeakPending": 19,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20002206399999523
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "55ba69fbc8679a8616ab60fc3cd5cc28ba304539a66061a119fae2505ececfe4",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "55ba69fbc8679a8616ab60fc3cd5cc28ba304539a66061a119fae2505ececfe4",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "624145843278a5e9da54fba589571ae21494757f784cea8b642631fef035ea79",
+                  "DiagnosticsBytes": 4372
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "624145843278a5e9da54fba589571ae21494757f784cea8b642631fef035ea79",
+                  "DiagnosticsBytes": 4372
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "bc4edf5eb7e1b6b26500aaac1742c5102556a6ccbedf3b9dd5b0b9b27d689e29",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "4d1230ce4be3a69fa2665ce78cb4a0657f07895712985abf0f58b441e8bd0fe8",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-model",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "7c1f1b04218af6f98d47c9ce893bb3ffb92fbf65985dfc3f2b09f08990f84934",
+                  "DiagnosticsBytes": 259
+                },
+                {
+                  "Label": "character-manual-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "deedd6906bbc6a9df6a3bea5899f1fb4ed966446422c7f52ec437e265747c3c5",
+                  "DiagnosticsBytes": 621
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 52,
+          "VerifiedLogFiles": 260
+        }
+      ]
+    }
+  },
+  "HistoricalQualificationReverified": [
+    {
+      "Run": 41032181619,
+      "Revision": "3bb641a822df288bf48fc6358baec389994b77f0",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41032181619",
+      "Jobs": [
+        {
+          "ID": 123984279244,
+          "Name": "Core (Linux, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 123984279760,
+          "Name": "Core (Windows, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 12965438843,
+          "Name": "runtime-core-Linux-Debug",
+          "SHA256": "1b92794508f93464c8990cfbd3c5f4d7c743c8ee7903e84263faed1d4a2afda7",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        },
+        {
+          "ID": 12965299465,
+          "Name": "runtime-core-Windows-Debug",
+          "SHA256": "ae0773a06cc124e0ea08228f5d340369791add0890f1a55d89be6d0ce0ccb3fa",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        }
+      ]
+    },
+    {
+      "Run": 41032181621,
+      "Revision": "3bb641a822df288bf48fc6358baec389994b77f0",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41032181621",
+      "Jobs": [
+        {
+          "ID": 123984279470,
+          "Name": "Native (Windows, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Expose installed MSVC Debug runtime",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "GL-007 character authority and animation-health rejection",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 123984279810,
+          "Name": "Native (Linux, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "GL-007 character authority and animation-health rejection",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 12966998061,
+          "Name": "runtime-native-Windows-Debug",
+          "SHA256": "d19e1142134b672b2aedb280e57bfb328eb884a4fd88f4b361339796ecbacb89",
+          "Native": {
+            "Revision": "3bb641a822df288bf48fc6358baec389994b77f0",
+            "NativeSource": {
+              "SHA256": "20ecbfcbb11cbdbef85480c41ec3cd4e1705bba210cb3ab290c84eab518b329a",
+              "Files": 87,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "95b0ee9c70d20dbe45a7ea8fee2a53235d2946edb08f41d70ef0211d6ce73045",
+            "DataStoreWorkerSHA256": "cd35f7ff7dde1f4ff6c50b06e3bc598df1d511f79c4f543d0ce1bf0178dd8de3",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992673,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+                "Bytes": 84198557,
+                "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+                "Executable": "Godot_v4.7.1-stable_win64.exe"
+              },
+              "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+              "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "VersionStderr": ""
+            },
+            "Processes": 82,
+            "CharacterLatency": [
+              {
+                "Received": 1040,
+                "Forwarded": 1040,
+                "Dropped": 0,
+                "PeakPending": 503,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20299999999997453
+              },
+              {
+                "Received": 357,
+                "Forwarded": 357,
+                "Dropped": 0,
+                "PeakPending": 19,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20299999999997453
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "cd4731f0235575377c79f7b873abacc11c4f22219f6770abb24614d3a504d999",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "cd4731f0235575377c79f7b873abacc11c4f22219f6770abb24614d3a504d999",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c1187e17b3722fbf08ec4eea5a1a4ee69c3e4fb5fb2c51b321136b63b81f7637",
+                  "DiagnosticsBytes": 4196
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2ff9285a0d68f09de11811e32f76e2fce785ca06969ae3bc46bee246d137a3a0",
+                  "DiagnosticsBytes": 3998
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2d0e191f0188ee2f4a7125c60bd3e35e44266410274f44d17690339d71fd686d",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2d0e191f0188ee2f4a7125c60bd3e35e44266410274f44d17690339d71fd686d",
+                  "DiagnosticsBytes": 4394
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2ebd244fc0ddce8afdbab01e04509ab44d1a3171d076ed2b32dfa64ea9ff1225",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "3706cc5d653ca1347b3b950e913cb3c86d88ef57f885e726b7ad99b605deaeb6",
+                  "DiagnosticsBytes": 609
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 46,
+          "VerifiedLogFiles": 251
+        },
+        {
+          "ID": 12965804676,
+          "Name": "runtime-native-Linux-Debug",
+          "SHA256": "1991249b3102939b919c4035ce95122c03ac6d648bb593f201f3f6dda00df92c",
+          "Native": {
+            "Revision": "3bb641a822df288bf48fc6358baec389994b77f0",
+            "NativeSource": {
+              "SHA256": "20ecbfcbb11cbdbef85480c41ec3cd4e1705bba210cb3ab290c84eab518b329a",
+              "Files": 87,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "4629a097a17ed8d09476cdb713afb24cac4bcad114b1730e6ac9570fceff3805",
+            "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992009,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+                "Bytes": 76056717,
+                "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+                "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+              },
+              "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+              "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "VersionStderr": ""
+            },
+            "Processes": 82,
+            "CharacterLatency": [
+              {
+                "Received": 1078,
+                "Forwarded": 1078,
+                "Dropped": 0,
+                "PeakPending": 503,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.2000304780000306
+              },
+              {
+                "Received": 370,
+                "Forwarded": 370,
+                "Dropped": 0,
+                "PeakPending": 21,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20006488699999636
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2b0133b4e4ee139651b0ad14b3e9210b11e8739c07c331ba0226d267fd486ca8",
+                  "DiagnosticsBytes": 4196
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "1b9ff25d39708ac261e4f798d744860743e62e35c17b1733d5c3b4b635d2994b",
+                  "DiagnosticsBytes": 3998
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "18f85467e471121e1ca6459f92fe2d472f7ceeb6c56441e8c6e6c703fa84dd6f",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "18f85467e471121e1ca6459f92fe2d472f7ceeb6c56441e8c6e6c703fa84dd6f",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2ebd244fc0ddce8afdbab01e04509ab44d1a3171d076ed2b32dfa64ea9ff1225",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "deedd6906bbc6a9df6a3bea5899f1fb4ed966446422c7f52ec437e265747c3c5",
+                  "DiagnosticsBytes": 621
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 46,
+          "VerifiedLogFiles": 249
+        }
+      ]
+    },
+    {
+      "Run": 41139334359,
+      "Revision": "d7905dd4af5c7a89c9b0f0a005861e9043379be1",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41139334359",
+      "Jobs": [
+        {
+          "ID": 124349484180,
+          "Name": "Core (Windows, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 124349484583,
+          "Name": "Core (Linux, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Configure production core",
+            "Build ExecutionDomainTests",
+            "Require production regression discovery",
+            "Run production core through CTest",
+            "Retain qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13018061310,
+          "Name": "runtime-core-Linux-Debug",
+          "SHA256": "f84a59b6122c0cbe952052b62dd8446b50e88c926b640356bb1a16ccf8099d01",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        },
+        {
+          "ID": 13018056608,
+          "Name": "runtime-core-Windows-Debug",
+          "SHA256": "47afb49354c4998ad3626b3ef5a037591f3b9a1064a9fcf5f7d3439772429934",
+          "CoreCases": 73,
+          "DistinctCoreCases": 73
+        }
+      ]
+    },
+    {
+      "Run": 41139334272,
+      "Revision": "d7905dd4af5c7a89c9b0f0a005861e9043379be1",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41139334272",
+      "Jobs": [
+        {
+          "ID": 124349483392,
+          "Name": "Native (Windows, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Expose installed MSVC Debug runtime",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "Character V2 Model lifecycle and GL-007 authority regressions",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        },
+        {
+          "ID": 124349483506,
+          "Name": "Native (Linux, Debug)",
+          "Conclusion": "success",
+          "Steps": [
+            "Set up job",
+            "Run actions/checkout@v4",
+            "Record source and dependency identity",
+            "Verify fixture process ownership and failure handling",
+            "Provision verified official Godot 4.7.1",
+            "Verify DataStore companion archive packaging",
+            "Configure production native adapter",
+            "Build GodotLuauAdapter",
+            "Single-player listen dedicated and editor lifecycle",
+            "GL-006 and GL-008 existing network regressions",
+            "GL-020 existing functional animation lifecycle",
+            "Character V2 Model lifecycle and GL-007 authority regressions",
+            "GL-004 isolated resource and recovery cases",
+            "GL-003 confined filesystem and cross-process services",
+            "GL-005 asynchronous HTTP authority bounds and lifecycle",
+            "GL-009 transactional persistence and interrupted commit recovery",
+            "Require all native actors and retain identity",
+            "Retain native qualification diagnostics",
+            "Post Run actions/checkout@v4",
+            "Complete job"
+          ]
+        }
+      ],
+      "Artifacts": [
+        {
+          "ID": 13017934957,
+          "Name": "runtime-native-Windows-Debug",
+          "SHA256": "f11421a892c33453e0add6e24edefdbfd087f2a281c01af7b37cae75924fc4c7",
+          "CharacterModelChecks": 76,
+          "ManualCharacterActors": 3,
+          "Native": {
+            "Revision": "d7905dd4af5c7a89c9b0f0a005861e9043379be1",
+            "NativeSource": {
+              "SHA256": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+              "Files": 88,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "161fda982d4885a6db8577e648cd733868bcb3526b7814f6686ce5bb311edf4c",
+            "DataStoreWorkerSHA256": "caed7ff5af50c7b23c4c1563a4ae45914072f92bbcbf06c1e1c547e90fbfd60b",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992673,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+                "Bytes": 84198557,
+                "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+                "Executable": "Godot_v4.7.1-stable_win64.exe"
+              },
+              "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+              "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "VersionStderr": ""
+            },
+            "Processes": 86,
+            "CharacterLatency": [
+              {
+                "Received": 1108,
+                "Forwarded": 1108,
+                "Dropped": 0,
+                "PeakPending": 503,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.2029999999995198
+              },
+              {
+                "Received": 418,
+                "Forwarded": 417,
+                "Dropped": 0,
+                "PeakPending": 18,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.2029999999995198
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "0a051103feb288589e67eead4032cde209eea1e690a1c7bb6f39c20b80c0d3be",
+                  "DiagnosticsBytes": 179
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "51c512dd6cf229cf77adac151afc7f882614091179f7dc95759d94513b1db2ff",
+                  "DiagnosticsBytes": 4194
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "73f659ece543790c909ef99d663db3c6398301a34a3bfbc64f22a0d9e5e92a12",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "084b04e7c2aa497ac9bd2a8fa10fca9d9a3ea269d97a0a780221c67065b8bd7f",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "084b04e7c2aa497ac9bd2a8fa10fca9d9a3ea269d97a0a780221c67065b8bd7f",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2fd894158387138e81be5f037cd95ed16b2b8288dc5b799df5e1f881678c4f1d",
+                  "DiagnosticsBytes": 4394
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "2fd894158387138e81be5f037cd95ed16b2b8288dc5b799df5e1f881678c4f1d",
+                  "DiagnosticsBytes": 4394
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "4d1230ce4be3a69fa2665ce78cb4a0657f07895712985abf0f58b441e8bd0fe8",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-model",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "577fa335ed0b44e3e4d253b21823b954c5fa5e9412f4e50277d2699d46cd7b57",
+                  "DiagnosticsBytes": 253
+                },
+                {
+                  "Label": "character-manual-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "3706cc5d653ca1347b3b950e913cb3c86d88ef57f885e726b7ad99b605deaeb6",
+                  "DiagnosticsBytes": 609
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 52,
+          "VerifiedLogFiles": 259
+        },
+        {
+          "ID": 13017898459,
+          "Name": "runtime-native-Linux-Debug",
+          "SHA256": "fe4216db806e90845260857b19d69746348f536eac1e447315e4aa3f11772679",
+          "CharacterModelChecks": 76,
+          "ManualCharacterActors": 3,
+          "Native": {
+            "Revision": "d7905dd4af5c7a89c9b0f0a005861e9043379be1",
+            "NativeSource": {
+              "SHA256": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+              "Files": 88,
+              "Newlines": "LF normalized"
+            },
+            "ExtensionSHA256": "1fd2e6730410639e80e13ff78721da42c8db2f5859a96d16b64fc16905711af9",
+            "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+            "DataStoreNative": {
+              "FaultStages": 4,
+              "KillStages": 4,
+              "IndependentIncrements": 40,
+              "PowerLossTest": false
+            },
+            "Godot": {
+              "Version": "4.7.1.stable.official.a13da4feb",
+              "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+              "ReleaseID": 353974774,
+              "Asset": {
+                "AssetID": 476992009,
+                "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+                "Bytes": 76056717,
+                "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+                "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+              },
+              "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+              "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "VersionStderr": ""
+            },
+            "Processes": 86,
+            "CharacterLatency": [
+              {
+                "Received": 1100,
+                "Forwarded": 1100,
+                "Dropped": 0,
+                "PeakPending": 503,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20002862700005153
+              },
+              {
+                "Received": 415,
+                "Forwarded": 415,
+                "Dropped": 0,
+                "PeakPending": 20,
+                "ConfiguredDelaySeconds": 0.2,
+                "JitterSeconds": [
+                  0,
+                  0.035,
+                  0.07
+                ],
+                "MinimumObservedSeconds": 0.20003791099998125
+              }
+            ],
+            "Groups": {
+              "regression": [
+                {
+                  "Label": "integration-0",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Listen-0-listen",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Dedicated-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Dedicated-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "Editor-0-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                },
+                {
+                  "Label": "Editor-0-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+                  "DiagnosticsBytes": 171
+                }
+              ],
+              "security": [
+                {
+                  "Label": "security-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "679b98e52906366c2fa7253c3f41bfd113cecf40f5fabb15f40f0e57eba1d9bc",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "679b98e52906366c2fa7253c3f41bfd113cecf40f5fabb15f40f0e57eba1d9bc",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Dedicated-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "49dd706117ff04e1ac735f4ccaf1eb0461c9cba524f3ac13f9cc53780a24fb9a",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Dedicated-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "49dd706117ff04e1ac735f4ccaf1eb0461c9cba524f3ac13f9cc53780a24fb9a",
+                  "DiagnosticsBytes": 4416
+                },
+                {
+                  "Label": "security-Handler-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "4a7db19c67577d989de6aef0d78b99bcd0f489951878525280c3037bd8e97349",
+                  "DiagnosticsBytes": 4194
+                },
+                {
+                  "Label": "security-Handler-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "security-Handler-client2",
+                  "Exit": 0
+                }
+              ],
+              "animation": [
+                {
+                  "Label": "animation-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Listen-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "animation-Editor-client2",
+                  "Exit": 0
+                }
+              ],
+              "characters": [
+                {
+                  "Label": "character-Local-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Listen-server",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "4d1230ce4be3a69fa2665ce78cb4a0657f07895712985abf0f58b441e8bd0fe8",
+                  "DiagnosticsBytes": 583
+                },
+                {
+                  "Label": "character-Listen-client1",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Listen-client2",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+                  "DiagnosticsBytes": 243
+                },
+                {
+                  "Label": "character-Dedicated-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Dedicated-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-TwoD-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Movement-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-Latency-client2",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-model",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "7c1f1b04218af6f98d47c9ce893bb3ffb92fbf65985dfc3f2b09f08990f84934",
+                  "DiagnosticsBytes": 259
+                },
+                {
+                  "Label": "character-manual-server",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client1",
+                  "Exit": 0
+                },
+                {
+                  "Label": "character-manual-client2",
+                  "Exit": 0
+                }
+              ],
+              "resources": [
+                {
+                  "Label": "resource-execution",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-module",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-callback",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-invoke",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-memory",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-tasks",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-shutdown",
+                  "Exit": 0
+                },
+                {
+                  "Label": "resource-configuration",
+                  "Exit": 0
+                }
+              ],
+              "filesystem": [
+                {
+                  "Label": "filesystem-capabilities",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-writer",
+                  "Exit": 0
+                },
+                {
+                  "Label": "filesystem-reader",
+                  "Exit": 0
+                }
+              ],
+              "http": [
+                {
+                  "Label": "http-enabled",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-denied",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "deedd6906bbc6a9df6a3bea5899f1fb4ed966446422c7f52ec437e265747c3c5",
+                  "DiagnosticsBytes": 621
+                },
+                {
+                  "Label": "http-lifecycle",
+                  "Exit": 0
+                },
+                {
+                  "Label": "http-tls",
+                  "Exit": 0,
+                  "DiagnosticsSHA256": "c26a3061156284a7296e58feb2ec1bb02f941c8955023f0d966b0e2f58322e0e",
+                  "DiagnosticsBytes": 199
+                }
+              ],
+              "datastore": [
+                {
+                  "Label": "datastore-basic-basic-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-update-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-update-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-set-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-set-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-remove-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-remove-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-seed-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-A",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-increment-B",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-increment-verify-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-failures-failures-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-lifecycle-lifecycle-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-memory-memory-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-contention-contention-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-unavailable-unavailable-single",
+                  "Exit": 0
+                },
+                {
+                  "Label": "datastore-incompatible-incompatible-single",
+                  "Exit": 0
+                }
+              ]
+            }
+          },
+          "VerifiedHarnessFiles": 52,
+          "VerifiedLogFiles": 259
+        }
+      ]
+    }
+  ],
+  "FreshLinuxDebugIntegration": {
+    "MergeRevision": "1c3176c0d9331dc1fa6849b98f8ed8e90e59c110",
+    "InputManifest": {
+      "SourceBranchTip": "46f65e0414bbfeecbe535e47236e1a2ccd4c7b75",
+      "QualifiedRevision": "d7905dd4af5c7a89c9b0f0a005861e9043379be1",
+      "NativeSource": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+      "Files": {
+        "SConstruct": "2701ee420956fbfabb51ac029f694626f7a141b0d9534fdc465a3f0998e6eab2",
+        "src/.gdignore": "4d410fe86c92e3a191c0259d510fc358507441685489dc9720fa1a464a8b8290",
+        "src/characters/gl_avatar.h": "4876ac669a827db1c161c11491ccd6c054768c1e5ecadb6a776b55e6629f558c",
+        "src/characters/humanoid2d.h": "2a0541cad1ebe45fa12e6ee8da80760e88d56dcb48dd9ea51b1005c14636c38b",
+        "src/characters/rbx_character.h": "2e8319a2792bc37ebb2f070d1ad99e1645db7dcc419d14ee0d465a099b187b36",
+        "src/characters/roblox_attachment.h": "53bc0ec63aac46d53f7cf5aee5d11734ddaba6af2be82e6bb51b390a8efb6cb2",
+        "src/characters/roblox_bodymovers.h": "eed2ce6b37d0f64990c782708f5f6e07ffd63b9084ddce49ef5e491962f0f7f0",
+        "src/characters/roblox_constraints.h": "1ba191fb601a0e5a7e2f8e37357804a4be5402d5f46e987699a48936d963ec29",
+        "src/characters/roblox_part.h": "a24219f877f9363b238a0420f2e2f556639d58be45f5967cff2a2f6cf274f113",
+        "src/characters/roblox_player.h": "40d9e2f7bba3b1b419eb471b25e4cc0fbcb8661882d04035f95ea7610768e26f",
+        "src/characters/roblox_player2d.h": "87c530ea4c0185313c03170b9829139bfbba855701b8fdf7f40d2abb5c5710d8",
+        "src/characters/roblox_terrain.h": "1ba7de814f71272882915dbeae1bc546f436c9002a6c041d3038e4d8c5618564",
+        "src/core/gl_asset.cpp": "688c6f5dc532518877a8c37cf620b38915d53ae5b3a3c644b5a3a95e0b8d8c6e",
+        "src/core/gl_asset.h": "f4a67256b3be488133b4034d35948647053c8717de94945c23d7c6b2febd2c7c",
+        "src/core/gl_datastore.cpp": "7780f9be245043971b1486fb296281fe4bc13c4d42185a5cdbf714238a853d22",
+        "src/core/gl_datastore.h": "76acd420f5e4e0856415a9e56433ccbc8275a2d9d0a9ecb988aced16a943bd7e",
+        "src/core/gl_datastore_backend.h": "d53b79c878b69e73b08d20cebd0c4f790491e82e739ab64d7ba1d0730e08a9a5",
+        "src/core/gl_datastore_process.h": "ef8a46331ec6c7a8fc2b60b3262707142eaff5a0edc8c190903ce57b75db80ee",
+        "src/core/gl_datastore_protocol.h": "7a7c21c371c62c880430b2935786a886e85a2210ca6acd505ad6cab51e3ca9dc",
+        "src/core/gl_debug.h": "d53997cccd029fe114f553a524cf18391f5ad0f338f85620617fc31ef6ac0dfd",
+        "src/core/gl_domain_host.cpp": "7d325bfaf5079efba6c68a21286326d235586d0173d2e16efe11d2dabc90153b",
+        "src/core/gl_domain_host.h": "fcf97f54be89cbd124e5a954b12419135fa1c51a8a37a74b3c525e0e6605250b",
+        "src/core/gl_errors.h": "d4b719a9a9bd07e228e774e7adb208ca7f6cac0afef3fb4856ebb386b122c117",
+        "src/core/gl_execution_domain.cpp": "ace9a8c80c5869542b8038d30cca6293576a27c79aedd7be8c5c8f520e004e08",
+        "src/core/gl_execution_domain.h": "b7bb25145d8e488b6e7f313d1522a4c8a0a56da4b42bc03deb847e2a44bd83a1",
+        "src/core/gl_graphics.h": "12419be5f7c6b409b8fa90423e057aa2b0a6f1b1c581b8a918943f27d6fe5975",
+        "src/core/gl_http.cpp": "f2db21aa09319807bfe4f8f8071608d31fa074d9abb45b82e6f788052dcc77c8",
+        "src/core/gl_http.h": "2cd3194bb3f6fbe979c43303208404e00739129ef61d403b96cd5c640809120a",
+        "src/core/gl_http_policy.h": "fcdc4317fde8cdd6158c1a5e210e54cf4e6e1c18c62679d9298159e2eec933d5",
+        "src/core/gl_memory_account.h": "a4084a8b9735d9bf4560f64c588930effdb159bdee6a922e9d975594c7f093ef",
+        "src/core/gl_net_bridge.h": "3d825c403a60e09ee2a280c7d229878c684b43977d6685b9a41e54d6db7f8119",
+        "src/core/gl_runtime.h": "ac8420da578f4a63c006e006731be4434aa8ae68f20c6df5338491812d6590d9",
+        "src/core/gl_service_storage.h": "6b75a6c75012cc75256610b5fd185fe38da7dc2b31d47dad6f853fda33139bfe",
+        "src/core/gl_stackguard.h": "b4f1270b764d7dd5963f5e6088e6450baec098599e4a8a7c6407e79f60da5b49",
+        "src/core/gl_storage.h": "db8766ae41bdf3c69f876565a7b69e492dec47d8186d613c0bbf2bd9d79d69cb",
+        "src/core/luau_api.h": "369f8ab0abb3329424415ab1dc10dfa3bdf5512ffceba48cf752cd4ad64a706f",
+        "src/core/luau_class_identity.cpp": "5833d48bba089d2d1e3a2aabcf2d11b954cec5d63dcd1d4d5b7cbf4a414ed1af",
+        "src/core/luau_class_identity.h": "f34312cd85de561b096a9fc12a17573d50acb9d55e508902c49d40bac8527391",
+        "src/core/luau_instance_access.h": "814d81bcdd4576b58660fe9b52ed15cefb3461939d7b6ba152b40304b2f5c14a",
+        "src/core/luau_instance_reflection.cpp": "21044d8109b16331bd3bf74db1d0aea166ca8b74bac9a45108b6a5b1eea7743a",
+        "src/core/luau_instance_reflection.h": "7500d99d8843051cd2701a0bce3bbf3ebbc9729ac5cd29b4ee3b73c759ac84bf",
+        "src/core/luau_language.h": "55a1391489d2aa39ab2f9aba10b3872875af28aad7823f65419057e7d25f4ec7",
+        "src/core/luau_script.cpp": "b5142ded1fe4fc8bf0c4171be6a96c14f43173ff95f426bf02067f671d91ef90",
+        "src/core/luau_script.h": "ac973800f7bbb483d3be4d4127e60e742df26456fd0573934390f341aea2633c",
+        "src/core/luau_stdlib.h": "170ed1ff979d054ee00d880db5f563006caddbcb7b0a6c8ad58cc57e95a421fc",
+        "src/core/luau_templates_gen.h": "8b05068b9e8bb4e938527ca9a047904c0db24fd482323c542c94c1b715d318bf",
+        "src/core/luau_value_bindings.cpp": "b71ba38d41251e4a0b12a079de03e1a4ce1d2a212b5bc7e61f63ae455a28defc",
+        "src/core/luau_value_bindings.h": "ffcc71b3d07452ca0305cb7d34dc1f1692fe14d73580ce8173546d037b4d0fed",
+        "src/core/luau_variant_bindings.cpp": "b316536110a6bb97e8c1b0510bb7998fc250f8299d30b2dcec2e880a45ad493a",
+        "src/core/luau_variant_bindings.h": "aa63d5356b04e6a67a2494131cdd87827209eaa959e0ed34f81e965c131c1ac4",
+        "src/core/menu_templates.h": "418e0a70c58bcd8504a2c0d7e71ef43843ce84178078cb6d44522f5b6b0c1073",
+        "src/core/register_types.cpp": "544b6459d919a0868109c7c6ed830305e219e13d79ce8f4e220f410958de2c2c",
+        "src/core/register_types.h": "e56515c6940103fc2c3995be4b702f6e8211d1dd9e19f82def9aa6592b107e74",
+        "src/core/roblox_behavior.h": "dc597686dbc7a28a40993df1654efd6ac231515570bf59af8864f0aacca937a8",
+        "src/core/roblox_effects.h": "4dede9fafdf0b18f81f89d299ef32bf7133f120bb77c0c335e80f3f899464ae1",
+        "src/core/roblox_extra.h": "b8bd2bb9a72a53d468f9c46da4e9afec4d2bb76afe6a2a610a41324f9617685d",
+        "src/editor/luau_autocomplete.h": "29a284435e0020e44490fe4bf514dc7175f1f444e58c6dee43d175fb2cc6e401",
+        "src/editor/luau_type_database.h": "a0fc141024e61e4d973040968bdf28dd5b40783cbc9b3707cd64408901808fd5",
+        "src/gameplay/rbx_model.h": "f831abcf00028ccb14f783e9e029eadaf43321a16a3c04edae2361cae9278d97",
+        "src/gameplay/roblox_animation.h": "1b1efeb21382946ac940fe17d6967ff9e718d660a8d1a6ea1720ed6045d73f3b",
+        "src/gameplay/roblox_input.h": "9077add9865e02dfd4e70a4cacb51b8d0d2764daaaa4025ae81ad9ba3a83a37d",
+        "src/gameplay/roblox_interactive.h": "453fa23f0092e56c335a0f55c0d02a99b422d4c12db2ca2862e972d0b0865d67",
+        "src/gameplay/roblox_remote.h": "848b48e86e41ac340e6023df25f92d00c0b8a7264c0dd8797a9da3ebb22929c8",
+        "src/gameplay/roblox_sound.h": "e41f9858897446d6e51a3de3bffd0e766fd129b12c15eae1070a33927df1ab7e",
+        "src/gameplay/roblox_tween.h": "f50c1ca4be6c65b02247b99b0413fbe6298d17ac6e3b0559f3580e902250053b",
+        "src/importer/rbx_classmap.h": "e511ff2f56c570326123fd168df1c1e8a7e58db7536300f2c3bb8eb0345d3664",
+        "src/importer/rbx_import_plugin.h": "277fd321fbd2d3b70aa76dabd4e4d261eef91c5bfedca08e8746344ccf34a492",
+        "src/importer/rbx_importer.h": "b6ddb8c023f0515064c96412671f486c6a46506b5bccb8712a3394a88f66b839",
+        "src/importer/rbx_instances.h": "37ea87b1b22f9c180c94c7b121ccce109743ad83662318e9b606458161059fef",
+        "src/importer/rbx_prop.h": "e7e7eca63b8da5186b81cc6b6faefc8e54ad8119a4675df56e4761aab5a9226e",
+        "src/importer/rbx_reader.h": "10ee1a414bf2d31b25505c2715ee884ff1200993fba51c937015399a6386ae1c",
+        "src/persistence/worker_main.cpp": "3059bd5ae8433f20c553ebbd983a0d259cf800eb230f012dd029142d77b4659c",
+        "src/services/folder.h": "7a2076ef0395288813af25e54c4542dede2751f5d3d2d28db62ddb7ff610394c",
+        "src/services/gl_chunks.h": "bd0a54e0a61fad9dd66ba1ac3a03f8e97054df13b948c4380924f59b1b9a8f3d",
+        "src/services/roblox_datamodel.h": "feb803ac6424acb419e6fb364ede440e8b9dc998ec26a9c62b95a8ecf643ef1b",
+        "src/services/roblox_game2d.h": "9d1a29c5f0a4d032a434dfbf504646a86d04f1659329fb2067d88b3457ef178c",
+        "src/services/roblox_game3d.h": "f42c922f610a8f9485e77d3e9c4bb1840e21840ecfce3bb20229e61a9f839089",
+        "src/services/roblox_network.h": "9c9399c32bcf6ccb5e563d18ac1f546cbd0fb3728f8d91162a43e9bb5bf1e5a6",
+        "src/services/roblox_services.h": "363a2dd8c2a474b6d32953959f3bfc943048fe22c7f5d5c47f1224f052ea5eb9",
+        "src/services/roblox_workspace.h": "6a1bfc9c2b446e6db14b3211fac68bc434c92eddb101455447b650c3ab4ea447",
+        "src/services/roblox_workspace2d.h": "adeebd9636481a64303be71a7a2d9d19ba7ff28e758ed7e10b52df12ecb98f7c",
+        "src/ui/gl_gui_core.h": "c64368c82838273404b6d3005dda260cf8901d13131d24706a154aaa42431874",
+        "src/ui/gl_settings_menu.h": "2eb7e3b3d78c041e9048b6bab25b467ea097cdd550b44ae18b2fcb9de364a1b9",
+        "src/ui/gl_ui_modifiers.h": "ce9852ddeb9621f1395efb38b2606f1d270e709491e3e2a454f217126c1df0dc",
+        "src/ui/gl_world_gui.h": "66d3367595d5cbefaf35252f9a1f76d19642a72744addad97fb219f7e0bf3bf7",
+        "src/ui/roblox_billboard.h": "d2da88ee7e8b26d0f99517dfb9314918581e73a870bcd214a6c019bc95bce723",
+        "src/ui/roblox_chat.h": "83953b20cd67bcf0c398ab6b8d0425d858e2055afc4ac2e3889118f75cb74a66",
+        "src/ui/roblox_gui.h": "a8169c1f31c77a980fd165b53aedbb2564bd4ca7aae0ec2d39eb58878ad1c851",
+        "src/ui/roblox_lighting_fx.h": "302e1085cca452b5c3411aff88de7ff5a2ad586aa47c33f9f40fe9e3afc54430",
+        "tests/packaging/PackagingTests.py": "b8e065d1732090665b12a7e3e06b7506fe2483a5263f847bf82c2559f1ae1566",
+        "tests/runtime/AnimationIntegration.gd": "212970c1ee016c7b644233fcb1600a5bb15cf0afddf257a14dbdf440280ba177",
+        "tests/runtime/Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "tests/runtime/BuildLinux.sh": "2efe15099d91418ab5dd13808fab3e5b9ba6dd757512e1e1d730f0c738924c22",
+        "tests/runtime/BuildSanitizedGodot.sh": "2449c90fa79e8ad596d77fccb67b4fe71f2bf371decb7a247de76716c090675e",
+        "tests/runtime/CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+        "tests/runtime/CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+        "tests/runtime/CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+        "tests/runtime/CharacterIntegration.gd": "d55240cd898aa2a6889753aa95e1ecee883cf080f7220bde9663d43fce8876ef",
+        "tests/runtime/CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+        "tests/runtime/CharacterNetworkBenchmarks.gd": "b47b6cda51ef9b7606ffb25b467e2660076740f34a3882020cc4dbb10562b0fc",
+        "tests/runtime/CharacterV2.gd": "08000a8307702721d6e951ad3ac2944709517f1c7d0c4db07639c7cccdb96859",
+        "tests/runtime/CheckCoreCI.py": "ef786304942c9565974ee5598b5137aa0c9add67f3aae19681aed42430381e73",
+        "tests/runtime/CheckNativeCI.py": "b5ed77ba3543b9ec7ed24c669160381d7cb24513f5fbaedec81b3629dd6e059d",
+        "tests/runtime/DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+        "tests/runtime/DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+        "tests/runtime/DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+        "tests/runtime/DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+        "tests/runtime/DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+        "tests/runtime/DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+        "tests/runtime/DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+        "tests/runtime/DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+        "tests/runtime/ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "tests/runtime/ExecutionDomainTests.cpp": "e61ab199685b8918c74b2892a174ba62a502dbef6e279c7b078fd241b1b027cf",
+        "tests/runtime/FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+        "tests/runtime/FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+        "tests/runtime/FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "tests/runtime/FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "tests/runtime/GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "tests/runtime/HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+        "tests/runtime/HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+        "tests/runtime/HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+        "tests/runtime/HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+        "tests/runtime/HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+        "tests/runtime/HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+        "tests/runtime/HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+        "tests/runtime/Integration.gd": "44426f90ae9e2fcbc71854cee70d5efbeaa008abfc93ca9c19fbc86054014a4a",
+        "tests/runtime/NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "tests/runtime/NetworkSecurity.gd": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+        "tests/runtime/PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "tests/runtime/ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "tests/runtime/Qualification.Dockerfile": "152029a74c864de770bdcfb62d97ecf7d97cbcdec0f9c7cb171853c891041380",
+        "tests/runtime/README.md": "fd924345fb387eb245125d4dd829392779c3a99bd02cb91a36308d3d20051e55",
+        "tests/runtime/RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "tests/runtime/ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "tests/runtime/RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+        "tests/runtime/RunCharacterNetworkBenchmarks.py": "e73f969d4923f0ccb93dc92bfdd62f67bceb1ec23f1b1363d27bb1562a05a53c",
+        "tests/runtime/RunCoreTests.py": "52cc8c652861fcd3f0a3d5c3012710d080021f1d5950703f042a994252db36c8",
+        "tests/runtime/RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+        "tests/runtime/RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+        "tests/runtime/RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "tests/runtime/RunIntegration.ps1": "ff05e1306f317cecbf9ec9ec1a8de39519f0850845265d0ffe69e20db79fc109",
+        "tests/runtime/RunNetworkIntegration.ps1": "142aca117c489c9693fcc5b82e208ad8cd864815047737caec20b6c400580cfd",
+        "tests/runtime/RunQualification.py": "725996109b58472fd3f84c6280554e1b6bd2551c23c3660c59ddea6a37509c06",
+        "tests/runtime/RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "tests/runtime/RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "tests/runtime/SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "tests/runtime/SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "tests/runtime/SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f",
+        "tools/generar_release.py": "35852bdab7b5885685bb525328f1557dcab6cd33f663d0820795495e82019f48"
+      },
+      "HostedWorkflows": {
+        ".github/workflows/build-release.yml": "4a4759e2e4d2b580d96c0d02e8b680fd5400e9f4d85c3b6450a27a36f97b060e",
+        ".github/workflows/runtime-core-ci.yml": "5e52f917bb7ef565100546ef46afc6d78b3260d190561ef8d4495fe7eaef60e6",
+        ".github/workflows/runtime-native-ci.yml": "de06ea3a710a51db173a6bc2c7c62016a121cf67cc42cf3f95624fbe3837d955"
+      },
+      "Scope": "149 native, build, packaging and runtime harness inputs compared on worker; three hosted workflow inputs verified separately in Git and CI because local worker commands do not consume workflow YAML."
+    },
+    "NativeSource": {
+      "SHA256": "e64dffcbd69a806aedadcf98dc97507a3a17eaff88ced4a38d9fbd7d4ac427db",
+      "Files": 88,
+      "Newlines": "LF normalized"
+    },
+    "CoreCases": 73,
+    "Groups": {
+      "regression": [
+        {
+          "Label": "integration-0",
+          "Exit": 0
+        },
+        {
+          "Label": "Listen-0-listen",
+          "Exit": 0
+        },
+        {
+          "Label": "Dedicated-0-server",
+          "Exit": 0
+        },
+        {
+          "Label": "Dedicated-0-client1",
+          "Exit": 0,
+          "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+          "DiagnosticsBytes": 171
+        },
+        {
+          "Label": "Dedicated-0-client2",
+          "Exit": 0,
+          "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+          "DiagnosticsBytes": 171
+        },
+        {
+          "Label": "Editor-0-server",
+          "Exit": 0
+        },
+        {
+          "Label": "Editor-0-client1",
+          "Exit": 0,
+          "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+          "DiagnosticsBytes": 171
+        },
+        {
+          "Label": "Editor-0-client2",
+          "Exit": 0,
+          "DiagnosticsSHA256": "e6dbf9c90860124bd19a04f8728ade0817fc142d43dccd6f20d5eb748e8b80c2",
+          "DiagnosticsBytes": 171
+        }
+      ],
+      "security": [
+        {
+          "Label": "security-Local-server",
+          "Exit": 0
+        },
+        {
+          "Label": "security-Listen-server",
+          "Exit": 0,
+          "DiagnosticsSHA256": "4a0eb05b7fe1ab9deafcb52fca9ab01eee044f1c6bc99dec7680f188b3f42215",
+          "DiagnosticsBytes": 4416
+        },
+        {
+          "Label": "security-Listen-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "security-Listen-client2",
+          "Exit": 0,
+          "DiagnosticsSHA256": "4a0eb05b7fe1ab9deafcb52fca9ab01eee044f1c6bc99dec7680f188b3f42215",
+          "DiagnosticsBytes": 4416
+        },
+        {
+          "Label": "security-Dedicated-server",
+          "Exit": 0,
+          "DiagnosticsSHA256": "4e999d3782707b508e9a03e2e15bf9a9493973253df25d8c5ed09ffc81cb2566",
+          "DiagnosticsBytes": 4394
+        },
+        {
+          "Label": "security-Dedicated-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "security-Dedicated-client2",
+          "Exit": 0,
+          "DiagnosticsSHA256": "4e999d3782707b508e9a03e2e15bf9a9493973253df25d8c5ed09ffc81cb2566",
+          "DiagnosticsBytes": 4394
+        },
+        {
+          "Label": "security-Handler-server",
+          "Exit": 0,
+          "DiagnosticsSHA256": "e29064e77b8c4dc48d4842eb3a998ebd2ddb942fa7436f95b21ff8059aead077",
+          "DiagnosticsBytes": 4416
+        },
+        {
+          "Label": "security-Handler-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "security-Handler-client2",
+          "Exit": 0
+        }
+      ],
+      "animation": [
+        {
+          "Label": "animation-Local-server",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Listen-server",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Listen-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Listen-client2",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Dedicated-server",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Dedicated-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Dedicated-client2",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Editor-server",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Editor-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "animation-Editor-client2",
+          "Exit": 0
+        }
+      ],
+      "characters": [
+        {
+          "Label": "character-Local-server",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Listen-server",
+          "Exit": 0,
+          "DiagnosticsSHA256": "4d1230ce4be3a69fa2665ce78cb4a0657f07895712985abf0f58b441e8bd0fe8",
+          "DiagnosticsBytes": 583
+        },
+        {
+          "Label": "character-Listen-client1",
+          "Exit": 0,
+          "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+          "DiagnosticsBytes": 243
+        },
+        {
+          "Label": "character-Listen-client2",
+          "Exit": 0,
+          "DiagnosticsSHA256": "d505419ae1a8fd487ec2a148c1651c531857f1c56b19f79ce4cf92ed67d5d5f6",
+          "DiagnosticsBytes": 243
+        },
+        {
+          "Label": "character-Dedicated-server",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Dedicated-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Dedicated-client2",
+          "Exit": 0
+        },
+        {
+          "Label": "character-TwoD-server",
+          "Exit": 0
+        },
+        {
+          "Label": "character-TwoD-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "character-TwoD-client2",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Movement-server",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Movement-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Movement-client2",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Latency-server",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Latency-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "character-Latency-client2",
+          "Exit": 0
+        },
+        {
+          "Label": "character-model",
+          "Exit": 0,
+          "DiagnosticsSHA256": "7c1f1b04218af6f98d47c9ce893bb3ffb92fbf65985dfc3f2b09f08990f84934",
+          "DiagnosticsBytes": 259
+        },
+        {
+          "Label": "character-manual-server",
+          "Exit": 0
+        },
+        {
+          "Label": "character-manual-client1",
+          "Exit": 0
+        },
+        {
+          "Label": "character-manual-client2",
+          "Exit": 0
+        }
+      ]
+    },
+    "NativeActors": 48,
+    "ModelChecks": 76,
+    "Commands": [
+      {
+        "Command": [
+          "cmake",
+          "--build",
+          "/work/builds/linux-debug",
+          "--target",
+          "ExecutionDomainTests",
+          "GodotLuauAdapter",
+          "DatastoreBackendProbe",
+          "--parallel",
+          "2"
+        ],
+        "TimeoutSeconds": 600
+      },
+      {
+        "Command": [
+          "ctest",
+          "--test-dir",
+          "/work/builds/linux-debug",
+          "-R",
+          "^ExecutionDomains$",
+          "--output-junit",
+          "/work/results/character-main-integration-20261031/core.xml",
+          "--test-output-size-passed",
+          "65536",
+          "--test-output-size-failed",
+          "65536",
+          "--output-on-failure"
+        ],
+        "TimeoutSeconds": 60
+      },
+      {
+        "Command": [
+          "/usr/bin/python3",
+          "/work/source/tests/runtime/CheckCoreCI.py",
+          "report",
+          "/work/results/character-main-integration-20261031/core.xml"
+        ],
+        "TimeoutSeconds": 30
+      },
+      {
+        "Command": [
+          "/usr/bin/python3",
+          "/work/source/tests/runtime/RunQualification.py",
+          "--godot",
+          "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "--extension",
+          "/work/builds/linux-debug/godot_luau.so",
+          "--output",
+          "/work/results/character-main-integration-20261031/regression",
+          "--teardown",
+          "--coordinated-close",
+          "--timeout",
+          "60"
+        ],
+        "TimeoutSeconds": 360
+      },
+      {
+        "Command": [
+          "/usr/bin/python3",
+          "/work/source/tests/runtime/RunQualification.py",
+          "--godot",
+          "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "--extension",
+          "/work/builds/linux-debug/godot_luau.so",
+          "--output",
+          "/work/results/character-main-integration-20261031/security",
+          "--security",
+          "--timeout",
+          "60"
+        ],
+        "TimeoutSeconds": 360
+      },
+      {
+        "Command": [
+          "/usr/bin/python3",
+          "/work/source/tests/runtime/RunQualification.py",
+          "--godot",
+          "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "--extension",
+          "/work/builds/linux-debug/godot_luau.so",
+          "--output",
+          "/work/results/character-main-integration-20261031/animation",
+          "--animation",
+          "--timeout",
+          "60"
+        ],
+        "TimeoutSeconds": 360
+      },
+      {
+        "Command": [
+          "/usr/bin/python3",
+          "/work/source/tests/runtime/RunQualification.py",
+          "--godot",
+          "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "--extension",
+          "/work/builds/linux-debug/godot_luau.so",
+          "--output",
+          "/work/results/character-main-integration-20261031/characters",
+          "--characters",
+          "--timeout",
+          "60"
+        ],
+        "TimeoutSeconds": 360
+      }
+    ],
+    "ExtensionSHA256": "2a9934686dd1a1b4b7f00831f0376518cae4014fbf3bce041369c4aacc4a3b8c",
+    "EngineSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+    "LogHashes": {
+      "Core.log": "fe5a42f3f25111177b6ab32aceee69860059bd77a600acc094817278606d2102",
+      "Build.log": "c2ed93ffd93c840755c0e91392ae593b1b52de9b7aaf6c208123feaceb1dde2e",
+      "regression.log": "ef7e009b71da5b24907826d6679939e5a0073ad41183dad9049992e3320eac0b",
+      "animation.log": "a226932415b787daf491a34b712ef39aadfae52da65a6c297be8d227d1393a6d",
+      "CoreCheck.log": "9c535c31ea8ed05313793cb7623d0ab9d97902c1548980c8f352da16f5a49de1",
+      "security.log": "3ce88acfae0bf7cb34c94f2cfc73e800cdc817beefd29ec9510e6393d443ef62",
+      "characters.log": "843c39714eb0582313d55e3c9aaf591ccae9b9b4aa7d963e1644ec5ba0a2e937",
+      "regression/Editor-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+      "regression/Listen-0-listen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "regression/integration-0.stdout.log": "42191b7facb5ab3a54b75314c895a504d05b8e702e10ac6049daafa33a575b79",
+      "regression/Dedicated-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+      "regression/Dedicated-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+      "regression/Dedicated-0-server.stdout.log": "f1d7683b018758d18b53ffe44b58e9f946ac8b06dc0ad299b917b56d269afaa1",
+      "regression/Editor-0-client1.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+      "regression/Editor-0-server.stdout.log": "0bd8e15a5232401211a42d3d3c4cd9fbce00c08121a254ecd56f417b2f54613a",
+      "regression/Dedicated-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+      "regression/Listen-0-listen.stdout.log": "822a96e607e14626dee5da07d01a9becaf3e474987bb1e9086f7eda971cbb3b9",
+      "regression/Dedicated-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "regression/Editor-0-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "regression/Dedicated-0-client1.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+      "regression/integration-0.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "regression/Editor-0-client2.stdout.log": "c579b9b52f3a67c93f6c5cb0017cb78263a0c808cd932d682798c2f26f790384",
+      "regression/Editor-0-client2.stderr.log": "a9745039b7a0d6ea647e0a353fc63d86c80b4c28c7efb91a1b784119cee366a4",
+      "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.22.40.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+      "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.22.38.log": "83520f5b6aa06900f55a0c3b072e9dd13aec36e5c852a1d50ac342b4f3e744a6",
+      "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "728393834523a741d01f0e70e0efa9921b9d354e46b8bc44b1840b5d351abbb5",
+      "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.22.39.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+      "characters/Manual/character-manual-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Manual/character-manual-client1.stdout.log": "e6bd4fbc2c81639c895a8a56dbb666be25c25252e40886c7b422bcbfd1a58f7d",
+      "characters/Manual/character-manual-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Manual/character-manual-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Manual/character-manual-client2.stdout.log": "e6bd4fbc2c81639c895a8a56dbb666be25c25252e40886c7b422bcbfd1a58f7d",
+      "characters/Manual/character-manual-server.stdout.log": "44e344b61ff4ec86d5d611ec2d08b2f89f12992a97eadde6506b156cdc57ff51",
+      "characters/Dedicated/character-Dedicated-server.stdout.log": "2b3b308dcb402688a7cff04da0656f3a388c457251a285412daa60e787f0c8e7",
+      "characters/Dedicated/character-Dedicated-client2.stdout.log": "c531317c6a5e0431528a551eb86e14e57a376830f6350445ab161b14eca582b8",
+      "characters/Dedicated/character-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Dedicated/character-Dedicated-client1.stdout.log": "c531317c6a5e0431528a551eb86e14e57a376830f6350445ab161b14eca582b8",
+      "characters/Dedicated/character-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Dedicated/character-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Model/character-model.stdout.log": "1cb8ffe577cfb054c62456a0bd70589d0f6717a48d7752bb8363f88f6e1100ae",
+      "characters/Model/character-model.stderr.log": "9969f48a6a2ded25c876b7f753f8d895e0204956958b887aabd4b27a1e0c32f2",
+      "characters/Local/character-Local-server.stdout.log": "108e97fbebece09570bf24768b43ba50d7cc8c1a1c02b0ee9e4163e329f55da2",
+      "characters/Local/character-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Movement/character-Movement-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Movement/character-Movement-client2.stdout.log": "c531317c6a5e0431528a551eb86e14e57a376830f6350445ab161b14eca582b8",
+      "characters/Movement/character-Movement-client1.stdout.log": "ea96b5de99ea54391d5e9e7496a93e48d089b85b71e1680cb257a4111be9d8af",
+      "characters/Movement/character-Movement-server.stdout.log": "fee0df8b714f97432cd1803dbad564911fdd044cb87ff80ebce8dfe7585083ff",
+      "characters/Movement/character-Movement-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Movement/character-Movement-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Listen/character-Listen-server.stderr.log": "b8c06e3afa266f6205c327c3d34edf8256c1afa45e6f85f7b522d117218cc29b",
+      "characters/Listen/character-Listen-client2.stdout.log": "c531317c6a5e0431528a551eb86e14e57a376830f6350445ab161b14eca582b8",
+      "characters/Listen/character-Listen-client1.stderr.log": "fe308ebe429919539df9451b7aa5221b3f29313c85ebedeb2f55cf36dc049081",
+      "characters/Listen/character-Listen-client1.stdout.log": "c531317c6a5e0431528a551eb86e14e57a376830f6350445ab161b14eca582b8",
+      "characters/Listen/character-Listen-server.stdout.log": "09745f37a151e8a891478d275423314f5168a2eb1179972207ca68499329246d",
+      "characters/Listen/character-Listen-client2.stderr.log": "fe308ebe429919539df9451b7aa5221b3f29313c85ebedeb2f55cf36dc049081",
+      "characters/Latency/character-Latency-client1.stdout.log": "ea96b5de99ea54391d5e9e7496a93e48d089b85b71e1680cb257a4111be9d8af",
+      "characters/Latency/character-Latency-server.stdout.log": "60b832d18927543d9d1376b28acf7524a52d036977885c03ad1a16a7f602dfb0",
+      "characters/Latency/character-Latency-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Latency/character-Latency-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/Latency/character-Latency-client2.stdout.log": "c531317c6a5e0431528a551eb86e14e57a376830f6350445ab161b14eca582b8",
+      "characters/Latency/character-Latency-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/TwoD/character-TwoD-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/TwoD/character-TwoD-server.stdout.log": "013e7cb7e1e8d2fd1b24c483c7a9790959efe870ff2151bcb516d8f465aa1684",
+      "characters/TwoD/character-TwoD-client2.stdout.log": "c531317c6a5e0431528a551eb86e14e57a376830f6350445ab161b14eca582b8",
+      "characters/TwoD/character-TwoD-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/TwoD/character-TwoD-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/TwoD/character-TwoD-client1.stdout.log": "5e18b59ec46e0ad6956da42aee5ff9818c591be915e951d1bb5d20aecde8bde6",
+      "characters/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.23.50.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.24.31.log": "d18b0cc7f2cdd6fe1ac8942841969cba9777d981e648953e68855a36a91f0fdc",
+      "characters/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "af5f353019aef3ae3f0ecbceb3fff82d17f74a27d22cd57e20737691144eff8b",
+      "characters/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.24.32.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+      "characters/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.24.18.log": "34d7903afd98539697864d282ce72452d1036202d5987f814a3c794333248338",
+      "security/Dedicated/security-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "security/Dedicated/security-Dedicated-client2.stderr.log": "f0d211b1b50e303bfb7699668c3fd121d924e2f7716aed1764a1a4bedddb1ce4",
+      "security/Dedicated/security-Dedicated-server.stderr.log": "f0d211b1b50e303bfb7699668c3fd121d924e2f7716aed1764a1a4bedddb1ce4",
+      "security/Dedicated/security-Dedicated-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+      "security/Dedicated/security-Dedicated-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+      "security/Dedicated/security-Dedicated-server.stdout.log": "33cdb67aabcc675a19591d480528fcf92d3fa336fa64d8e57879c3eb10eb970e",
+      "security/Local/security-Local-server.stdout.log": "7b875a95513e299f05aeac4707bd3f586f9273db910d242fe1841144ece823cf",
+      "security/Local/security-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "security/Listen/security-Listen-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+      "security/Listen/security-Listen-server.stderr.log": "f7e9606517e85d9eb6fde09fdbc7777451b26272b3ad83fc3be51bf24e1cf4ec",
+      "security/Listen/security-Listen-client2.stderr.log": "f7e9606517e85d9eb6fde09fdbc7777451b26272b3ad83fc3be51bf24e1cf4ec",
+      "security/Listen/security-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "security/Listen/security-Listen-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+      "security/Listen/security-Listen-server.stdout.log": "c40c6e43137ebe6b98d4508c31bb135f47020d4e2ab4dff245b5cf37e2f0589c",
+      "security/Handler/security-Handler-server.stdout.log": "00533864fc818ca5e76e33d786286bd96e72baaac8b3ce3b557202a1d4669062",
+      "security/Handler/security-Handler-client2.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+      "security/Handler/security-Handler-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "security/Handler/security-Handler-client1.stdout.log": "49ff9780c64f0c602f54bbaf92167e590d89fc18a20ab65f70c275449e8763ff",
+      "security/Handler/security-Handler-server.stderr.log": "633e72dcd6649d52066546670e65fa79b7ab5e89874f2482aaca9d2f7323413e",
+      "security/Handler/security-Handler-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.22.41.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.22.52.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "8c81ff571c97aba82f8e1b0f5a0af87ffd37d383cb3986ef66cbcd628695a483",
+      "security/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.22.46.log": "5ce019ab88b065661f8b5bbc38c25e4f3c409075b8bfd21c9efd3ccec45eda4d",
+      "animation/Dedicated/animation-Dedicated-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Dedicated/animation-Dedicated-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Dedicated/animation-Dedicated-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+      "animation/Dedicated/animation-Dedicated-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Dedicated/animation-Dedicated-server.stdout.log": "7b4eb48cd8cbf1dee6c2961ca8fd2efd025245f77b43701b2446bb7d5e1bb97f",
+      "animation/Dedicated/animation-Dedicated-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+      "animation/Editor/animation-Editor-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Editor/animation-Editor-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+      "animation/Editor/animation-Editor-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+      "animation/Editor/animation-Editor-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+      "animation/Editor/animation-Editor-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Editor/animation-Editor-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Local/animation-Local-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Local/animation-Local-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+      "animation/Listen/animation-Listen-client2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Listen/animation-Listen-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Listen/animation-Listen-client1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "animation/Listen/animation-Listen-server.stdout.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+      "animation/Listen/animation-Listen-client2.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+      "animation/Listen/animation-Listen-client1.stdout.log": "6dff9f9a3c11e12756a89734158b98b0de833a979224986dd7e7f92fb22f75b1",
+      "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.22.59.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+      "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.23.08.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+      "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.23.07.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6",
+      "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot.log": "1c14c397677400b7f313441b8bb62357b6fb4567c37bed533272d9b2486f6876",
+      "animation/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-10-31T05.23.03.log": "207b9f8084902ed18a396b815dabf5f3c11925d8af1dfc7bea123ec25c07b1d6"
+    }
+  },
+  "Limits": [
+    "Fresh hosted gates are Debug, not a repeated full product/sanitizer matrix.",
+    "The unchanged source qualification retains Debug/Release, core ASan, Linux matching full-native ASan/LSan and four SCons products.",
+    "GL-017 independent engine relay edge remains.",
+    "GL-018 Windows full-native sanitizer-host gap remains.",
+    "GL-020 full animation-security qualification remains open.",
+    "Graphical appearance, physical device ergonomics, arbitrary custom content, collision truth and mixed builds remain unqualified.",
+    "GL-026 dependency-wide assignment follow-up remains open.",
+    "Release workflow remains disabled/read-only; runtime updater admission remains false."
+  ],
+  "ObservationBudgetMinutesPerStage": 25,
+  "Preservation": "No production source, tests, workflows, dependency pins, original qualification result data or source branch refs changed by integration follow-up. Documentation statuses and new integration evidence are the only follow-up changes.",
+  "WorkerArchive": {
+    "File": "character-main-integration-20261031.zip",
+    "SHA256": "fff3c5a19b7a4d2034c3889d7daf97e2167e8abf9d9c4940e8d4d038ce0f241e",
+    "Entries": 614,
+    "VerifiedLogs": 121
+  }
+}

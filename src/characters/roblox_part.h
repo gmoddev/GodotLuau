@@ -35,7 +35,7 @@ using namespace godot;
 // el heap de descriptores de D3D12 se desborda ("Cannot create uniform set")
 // y cada draw arrastra un estado distinto (lag). Asi lo agrupa Roblox.
 // (static local en funcion, NO global: ver gotcha del error 1114 en gl_errors.h)
-static HashMap<String, Ref<StandardMaterial3D>>& gl_shared_materials() {
+inline HashMap<String, Ref<StandardMaterial3D>>& gl_shared_materials() {
     static HashMap<String, Ref<StandardMaterial3D>> cache;
     return cache;
 }
@@ -47,11 +47,11 @@ static HashMap<String, Ref<StandardMaterial3D>>& gl_shared_materials() {
 // reutilizar el recurso (y agrupar draws), y la fisica reutiliza la forma.
 // IMPORTANTE: una malla del cache NO se puede mutar (la usan muchas piezas);
 // al cambiar de tamaño se pide OTRA al cache (ver _refresh_shape).
-static HashMap<String, Ref<Mesh>>& gl_shared_meshes() {
+inline HashMap<String, Ref<Mesh>>& gl_shared_meshes() {
     static HashMap<String, Ref<Mesh>> cache;
     return cache;
 }
-static HashMap<String, Ref<Shape3D>>& gl_shared_shapes() {
+inline HashMap<String, Ref<Shape3D>>& gl_shared_shapes() {
     static HashMap<String, Ref<Shape3D>> cache;
     return cache;
 }
@@ -764,7 +764,15 @@ public:
     // parts ancladas y en kinematico el simulador las sigue procesando (6000
     // parts ~ 10 FPS). En estatico salen del calculo y se pueden seguir moviendo
     // por codigo cambiando su transform.
+    bool IsCharacterVisual() const {
+        for (Node* Parent = get_parent(); Parent; Parent = Parent->get_parent()) {
+            if (Parent->is_class("RobloxTool")) return false;
+            if (Parent->is_class("RBXCharacter")) return true;
+        }
+        return false;
+    }
     void set_anchored(bool a) {
+        if (IsCharacterVisual()) a = true;
         anchored = a;
         set_freeze_mode(RigidBody3D::FREEZE_MODE_STATIC);
         set_freeze_enabled(a);
@@ -822,6 +830,7 @@ public:
     bool get_dither_transparency() const { return dither_transparency; }
 
     void set_can_collide(bool c) {
+        if (IsCharacterVisual()) { can_collide = false; set_collision_layer(0); set_collision_mask(0); return; }
         can_collide = c;
         if (c) _ensure_collider();   // se crea bajo demanda (no existe si nacio sin colision)
         if (collision_shape) collision_shape->set_disabled(!c);
