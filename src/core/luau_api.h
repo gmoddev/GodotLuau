@@ -3,6 +3,7 @@
 
 #include "luau_value_bindings.h"
 #include "local_motor.h"
+#include "character_controller.h"
 #include "luau_instance_reflection.h"
 #include "luau_class_identity.h"
 #include "gl_errors.h"
@@ -3984,6 +3985,7 @@ static int godot_object_newindex_impl(lua_State* L) {
 
     if (GLInputWrite(L,gow_node(wrapper),key)) return 0;
     if (GLMotorWrite(L,gow_node(wrapper),key)) return 0;
+    if (GLCharacterControllerWrite(L,gow_node(wrapper),key)) return 0;
 
     if (strcmp(key, "DeliveryType") == 0) {
         if (auto Remote = Object::cast_to<RemoteEventNode>(gow_node(wrapper))) {

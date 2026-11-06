@@ -1,0 +1,146 @@
+=================================================================
+==49348==ERROR: AddressSanitizer: heap-use-after-free on address 0x1205ece60570 at pc 0x7ffe0c9de94e bp 0x0016601ebe00 sp 0x0016601eb598
+READ of size 1 at 0x1205ece60570 thread T0
+    #0 0x7ffe0c9de94d  (C:\Sandbox\Codex\GL029Completion\host-asan\bin\clang_rt.asan_dynamic-x86_64.dll+0x18007e94d)
+    #1 0x7ffdc24e8d10 in currfuncname C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\laux.cpp:30
+    #2 0x7ffdc24e4a2b in luaL_typeerrorL(struct lua_State *, int, char const *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\laux.cpp:48
+    #3 0x7ffdc24e8e70 in tag_error C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\laux.cpp:69
+    #4 0x7ffdc24e5428 in luaL_checktype(struct lua_State *, int, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\laux.cpp:158
+    #5 0x7ffdc0c3f266 in `anonymous namespace'::OptionalBoolean C:\Sandbox\Codex\InputAction20261106\source-final\src\core\gl_character_controller.cpp:17
+    #6 0x7ffdc0c3f732 in <lambda_fea990ecb2218c34891b819ffe47cf24>::operator() C:\Sandbox\Codex\InputAction20261106\source-final\src\core\gl_character_controller.cpp:142
+    #7 0x7ffdc0c3fc64 in <lambda_fea990ecb2218c34891b819ffe47cf24>::<lambda_invoker_cdecl> (C:\Sandbox\Codex\ScriptedCharacter20261106\asan-local-v1\project\godot_luau.dll+0x18003fc64)
+    #8 0x7ffdc2590d15 in luau_execute<0> C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:967
+    #9 0x7ffdc254bd14 in luau_execute(struct lua_State *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3051
+    #10 0x7ffdc24ed29c in performcall C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:273
+    #11 0x7ffdc24ea242 in luaD_callint(struct lua_State *, struct lua_TValue *, int, bool) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:309
+    #12 0x7ffdc24ea699 in luaD_call(struct lua_State *, struct lua_TValue *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:336
+    #13 0x7ffdc25b6247 in luaB_pcallrun C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lbaselib.cpp:294
+    #14 0x7ffdc24ec971 in luaD_rawrunprotected(struct lua_State *, void (__cdecl *)(struct lua_State *, void *), void *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:128
+    #15 0x7ffdc24eb08f in luaD_pcall(struct lua_State *, void (__cdecl *)(struct lua_State *, void *), void *, __int64, __int64) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:741
+    #16 0x7ffdc25b6375 in luaB_pcally C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lbaselib.cpp:307
+    #17 0x7ffdc2590d15 in luau_execute<0> C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:967
+    #18 0x7ffdc254bd14 in luau_execute(struct lua_State *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3051
+    #19 0x7ffdc24ed792 in resume_continue C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:415
+    #20 0x7ffdc24ee38e in resume C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:528
+    #21 0x7ffdc24ec971 in luaD_rawrunprotected(struct lua_State *, void (__cdecl *)(struct lua_State *, void *), void *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:128
+    #22 0x7ffdc24e99e0 in lua_resume(struct lua_State *, struct lua_State *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:681
+    #23 0x7ffdc0d043a6 in GLExecutionDomain::Resume(struct lua_State *, struct lua_State *, int, bool) C:\Sandbox\Codex\InputAction20261106\source-final\src\core\gl_execution_domain.cpp:565
+    #24 0x7ffdc0d03012 in GLExecutionDomain::Execute(struct GLExecutionOwner *, class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>> const &, class std::basic_string<char, struct std::char_traits<char>, class std::allocator<char>> const &) C:\Sandbox\Codex\InputAction20261106\source-final\src\core\gl_execution_domain.cpp:487
+    #25 0x7ffdc1b24b2e in ScriptNodeBase::iniciar_corrutina(void) C:\Sandbox\Codex\InputAction20261106\source-final\src\core\luau_script.h:607
+    #26 0x7ffdc1567c32 in godot::call_with_variant_args_helper<class ScriptNodeBase>(class ScriptNodeBase *, void (__cdecl ScriptNodeBase::*)(void), class godot::Variant const **, struct GDExtensionCallError &, struct godot::IndexSequence<>) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\include\godot_cpp\core\binder_common.hpp:237
+    #27 0x7ffdc1530934 in godot::call_with_variant_args_dv<class ScriptNodeBase>(class ScriptNodeBase *, void (__cdecl ScriptNodeBase::*)(void), void const *const *, int, struct GDExtensionCallError &, class std::vector<class godot::Variant, class std::allocator<class godot::Variant>> const &) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\include\godot_cpp\core\binder_common.hpp:365
+    #28 0x7ffdc19d6e1f in godot::MethodBindT<class ScriptNodeBase>::call(void *, void const *const *, __int64, struct GDExtensionCallError &) const C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\include\godot_cpp\core\method_bind.hpp:329
+    #29 0x7ffdc2054667 in godot::MethodBind::bind_call(void *, void *, void const *const *, __int64, void *, struct GDExtensionCallError *) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\src\core\method_bind.cpp:92
+    #30 0x7ff663483339 in GDExtensionMethodBind::call(class Object *, class Variant const **, int, struct Callable::CallError &) const E:\Sandbox\Codex\NativeSanitizers\godot-host\core\extension\gdextension.cpp:108
+    #31 0x7ff661ebcb71 in Object::callp(class StringName const &, class Variant const **, int, struct Callable::CallError &) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\object\object.cpp:823
+    #32 0x7ff6620829db in Callable::callp(class Variant const **, int, class Variant &, struct Callable::CallError &) const E:\Sandbox\Codex\NativeSanitizers\godot-host\core\variant\callable.cpp:70
+    #33 0x7ff6627346d1 in CallQueue::_call_function(class Callable const &, class Variant const *, int, bool) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\object\message_queue.cpp:218
+    #34 0x7ff662737b9d in CallQueue::flush(void) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\object\message_queue.cpp:266
+    #35 0x7ff65a9d5e32 in Main::iteration(void) E:\Sandbox\Codex\NativeSanitizers\godot-host\main\main.cpp:5061
+    #36 0x7ff65a7cb041 in OS_Windows::run(void) E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\os_windows.cpp:2353
+    #37 0x7ff65a9216a6 in widechar_main(int, wchar_t **) E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:98
+    #38 0x7ff65a921987 in _main(void) E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:125
+    #39 0x7ff65a921a01 in main E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:139
+    #40 0x7ff65a920eac in WinMain E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\godot_windows.cpp:152
+    #41 0x7ff663a62f81 in invoke_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:102
+    #42 0x7ff663a62ea1 in __scrt_common_main_seh D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+    #43 0x7ff663a62d5d in __scrt_common_main D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:330
+    #44 0x7ff663a62ffd in WinMainCRTStartup D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_winmain.cpp:16
+    #45 0x7ff65a7a849f in ShimMainCRTStartup E:\Sandbox\Codex\NativeSanitizers\godot-host\platform\windows\cpu_feature_validation.c:74
+    #46 0x7ffe7e23cd86  (C:\WINDOWS\System32\KERNEL32.DLL+0x18002cd86)
+    #47 0x7ffe8020caeb  (C:\WINDOWS\SYSTEM32\ntdll.dll+0x1800acaeb)
+
+0x1205ece60570 is located 32 bytes inside of 40-byte region [0x1205ece60550,0x1205ece60578)
+freed by thread T0 here:
+    #0 0x7ffe0c9f42c1  (C:\Sandbox\Codex\GL029Completion\host-asan\bin\clang_rt.asan_dynamic-x86_64.dll+0x1800942c1)
+    #1 0x7ff661dddcc1 in Memory::free_static(void *, bool) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\os\memory.cpp:201
+    #2 0x7ff663755b24 in gdextension_mem_free E:\Sandbox\Codex\NativeSanitizers\godot-host\core\extension\gdextension_interface.cpp:274
+    #3 0x7ffdc1be97a7 in godot::Memory::free_static(void *, bool) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\src\core\memory.cpp:93
+    #4 0x7ffdc0c36afa in godot::CowData<char>::_unref(void *) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\include\godot_cpp\templates\cowdata.hpp:275
+    #5 0x7ffdc0c2aae1 in godot::CowData<char>::~CowData<char>(void) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\include\godot_cpp\templates\cowdata.hpp:483
+    #6 0x7ffdc0c2aa65 in godot::CharStringT<char>::~CharStringT<char>(void) (C:\Sandbox\Codex\ScriptedCharacter20261106\asan-local-v1\project\godot_luau.dll+0x18002aa65)
+    #7 0x7ffdc1065c2a in <lambda_c63ef7efe5a5455795c3ed0bb8132ba3>::operator() C:\Sandbox\Codex\InputAction20261106\source-final\src\core\luau_script.cpp:206
+    #8 0x7ffdc10661d4 in <lambda_c63ef7efe5a5455795c3ed0bb8132ba3>::<lambda_invoker_cdecl> (C:\Sandbox\Codex\ScriptedCharacter20261106\asan-local-v1\project\godot_luau.dll+0x1804661d4)
+    #9 0x7ffdc254c5ca in luau_precall(struct lua_State *, struct lua_TValue *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3101
+    #10 0x7ffdc24ecdf3 in performcall C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:256
+    #11 0x7ffdc24ea242 in luaD_callint(struct lua_State *, struct lua_TValue *, int, bool) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:309
+    #12 0x7ffdc24ea699 in luaD_call(struct lua_State *, struct lua_TValue *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:336
+    #13 0x7ffdc252dfaa in callTMres C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmutils.cpp:70
+    #14 0x7ffdc252aca4 in luaV_gettable(struct lua_State *, struct lua_TValue const *, struct lua_TValue *, struct lua_TValue *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmutils.cpp:123
+    #15 0x7ffdc258fce6 in luau_execute<0> C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:889
+    #16 0x7ffdc254bd14 in luau_execute(struct lua_State *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3051
+    #17 0x7ffdc24ed29c in performcall C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:273
+    #18 0x7ffdc24ea242 in luaD_callint(struct lua_State *, struct lua_TValue *, int, bool) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:309
+    #19 0x7ffdc24ea699 in luaD_call(struct lua_State *, struct lua_TValue *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:336
+    #20 0x7ffdc25b6247 in luaB_pcallrun C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lbaselib.cpp:294
+    #21 0x7ffdc24ec971 in luaD_rawrunprotected(struct lua_State *, void (__cdecl *)(struct lua_State *, void *), void *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:128
+    #22 0x7ffdc24eb08f in luaD_pcall(struct lua_State *, void (__cdecl *)(struct lua_State *, void *), void *, __int64, __int64) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:741
+    #23 0x7ffdc25b6375 in luaB_pcally C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lbaselib.cpp:307
+    #24 0x7ffdc2590d15 in luau_execute<0> C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:967
+    #25 0x7ffdc254bd14 in luau_execute(struct lua_State *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3051
+    #26 0x7ffdc24ed792 in resume_continue C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:415
+    #27 0x7ffdc24ee38e in resume C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:528
+
+previously allocated by thread T0 here:
+    #0 0x7ffe0c9f28e2  (C:\Sandbox\Codex\GL029Completion\host-asan\bin\clang_rt.asan_dynamic-x86_64.dll+0x1800928e2)
+    #1 0x7ff661dde489 in Memory::alloc_static<0>(unsigned __int64, bool) E:\Sandbox\Codex\NativeSanitizers\godot-host\core\os\memory.cpp:101
+    #2 0x7ff663755ad4 in gdextension_mem_alloc E:\Sandbox\Codex\NativeSanitizers\godot-host\core\extension\gdextension_interface.cpp:266
+    #3 0x7ffdc1be95e1 in godot::Memory::alloc_static(unsigned __int64, bool) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\src\core\memory.cpp:44
+    #4 0x7ffdc1bee9ac in godot::CowData<char>::resize<0>(__int64) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\include\godot_cpp\templates\cowdata.hpp:347
+    #5 0x7ffdc1bf6fc6 in godot::CharStringT<char>::resize(__int64) C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\include\godot_cpp\variant\char_string.hpp:94
+    #6 0x7ffdc1bea5a7 in godot::String::utf8(void) const C:\Sandbox\Codex\InputAction20261106\source-final\godot-cpp\src\variant\char_string.cpp:236
+    #7 0x7ffdc1065bd9 in <lambda_c63ef7efe5a5455795c3ed0bb8132ba3>::operator() C:\Sandbox\Codex\InputAction20261106\source-final\src\core\luau_script.cpp:206
+    #8 0x7ffdc10661d4 in <lambda_c63ef7efe5a5455795c3ed0bb8132ba3>::<lambda_invoker_cdecl> (C:\Sandbox\Codex\ScriptedCharacter20261106\asan-local-v1\project\godot_luau.dll+0x1804661d4)
+    #9 0x7ffdc254c5ca in luau_precall(struct lua_State *, struct lua_TValue *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3101
+    #10 0x7ffdc24ecdf3 in performcall C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:256
+    #11 0x7ffdc24ea242 in luaD_callint(struct lua_State *, struct lua_TValue *, int, bool) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:309
+    #12 0x7ffdc24ea699 in luaD_call(struct lua_State *, struct lua_TValue *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:336
+    #13 0x7ffdc252dfaa in callTMres C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmutils.cpp:70
+    #14 0x7ffdc252aca4 in luaV_gettable(struct lua_State *, struct lua_TValue const *, struct lua_TValue *, struct lua_TValue *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmutils.cpp:123
+    #15 0x7ffdc258fce6 in luau_execute<0> C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:889
+    #16 0x7ffdc254bd14 in luau_execute(struct lua_State *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3051
+    #17 0x7ffdc24ed29c in performcall C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:273
+    #18 0x7ffdc24ea242 in luaD_callint(struct lua_State *, struct lua_TValue *, int, bool) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:309
+    #19 0x7ffdc24ea699 in luaD_call(struct lua_State *, struct lua_TValue *, int) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:336
+    #20 0x7ffdc25b6247 in luaB_pcallrun C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lbaselib.cpp:294
+    #21 0x7ffdc24ec971 in luaD_rawrunprotected(struct lua_State *, void (__cdecl *)(struct lua_State *, void *), void *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:128
+    #22 0x7ffdc24eb08f in luaD_pcall(struct lua_State *, void (__cdecl *)(struct lua_State *, void *), void *, __int64, __int64) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:741
+    #23 0x7ffdc25b6375 in luaB_pcally C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lbaselib.cpp:307
+    #24 0x7ffdc2590d15 in luau_execute<0> C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:967
+    #25 0x7ffdc254bd14 in luau_execute(struct lua_State *) C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\lvmexecute.cpp:3051
+    #26 0x7ffdc24ed792 in resume_continue C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:415
+    #27 0x7ffdc24ee38e in resume C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\ldo.cpp:528
+
+SUMMARY: AddressSanitizer: heap-use-after-free C:\Sandbox\Codex\InputAction20261106\source-final\luau\VM\src\laux.cpp:30 in currfuncname
+Shadow bytes around the buggy address:
+  0x1205ece60280: fa fa fd fd fd fd fd fd fa fa fd fd fd fd fd fd
+  0x1205ece60300: fa fa fd fd fd fd fd fa fa fa fd fd fd fd fd fd
+  0x1205ece60380: fa fa fd fd fd fd fd fd fa fa fd fd fd fd fd fa
+  0x1205ece60400: fa fa fd fd fd fd fd fd fa fa fd fd fd fd fd fd
+  0x1205ece60480: fa fa fd fd fd fd fd fa fa fa fd fd fd fd fd fd
+=>0x1205ece60500: fa fa fd fd fd fd fd fd fa fa fd fd fd fd[fd]fa
+  0x1205ece60580: fa fa fd fd fd fd fd fd fa fa fa fa fa fa fa fa
+  0x1205ece60600: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1205ece60680: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1205ece60700: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1205ece60780: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==49348==ABORTING

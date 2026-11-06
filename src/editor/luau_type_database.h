@@ -116,6 +116,11 @@ static const std::vector<RobloxMember>& roblox_get_members(const std::string& p_
     }},
 
     {"Character", {
+        {"ControllerMode", "Enum.CharacterControllerMode", "Native default; local Client may claim Scripted control", 4},
+        {"ControllerActive", "boolean", "Read-only: this script owns the current controller", 4},
+        {"ControllerInputEnabled", "boolean", "Read-only: owned controller currently admits input", 4},
+        {"RotateCamera", "(deltaRadians: Vector2) -> boolean", "Bounded existing-camera rotation in Scripted mode", 1},
+        {"CaptureMouse", "(capture: boolean) -> boolean", "Owner-scoped capture in Scripted mode", 1},
         {"Health", "number", "Server-owned health; default 100", 4},
         {"MaxHealth", "number", "Server-owned maximum health; default 100", 4},
         {"WalkSpeed", "number", "Server movement grant; default 16", 4},
@@ -137,7 +142,7 @@ static const std::vector<RobloxMember>& roblox_get_members(const std::string& p_
         {"Heal", "(amount: number) -> ()", "Server healing; cannot revive a dead life", 1},
         {"GetState", "() -> Enum.CharacterStateType", "Observed movement state", 1},
         {"ChangeState", "(state: Enum.CharacterStateType) -> boolean", "Request jump, stop movement or Server death", 1},
-        {"Move", "(direction: Vector3, relativeToCamera: boolean?) -> ()", "Continuous local/NPC movement request", 1},
+        {"Move", "(direction: Vector3, relativeToCamera: boolean?, sprint: boolean?) -> boolean?", "Native continuous request; Scripted bounded one-tick intent", 1},
         {"Jump", "() -> boolean", "Request a grounded jump", 1},
         {"WalkToPoint", "(position: Vector3) -> boolean", "Horizontal target; bounded eight-second attempt", 1},
         {"WalkToPart", "(target: Instance) -> boolean", "ObjectID-backed target; cancels on departure", 1},

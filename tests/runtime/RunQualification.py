@@ -48,6 +48,8 @@ def Prepare(Output, Extension):
         shutil.copyfile(Script, Output / Script.name)
     Controller = Path(__file__).resolve().parents[2] / 'examples/input-controller/Controller.luau'
     if Controller.is_file(): shutil.copyfile(Controller, Output / Controller.name)
+    PlayerController = Path(__file__).resolve().parents[2] / "examples/player-controller/PlayerController.luau"
+    if PlayerController.is_file(): shutil.copyfile(PlayerController, Output / PlayerController.name)
 
 
 def Start(Godot, Output, Script, Label, Extra, Environment):
@@ -623,6 +625,40 @@ def HttpService(Args, Output, Environment):
     return Results
 
 
+def PlayerControllerFixtures(Args, Output, Environment):
+    Results, Evidence = [], []
+    for Mode in Args.controller_modes:
+        Project = Output / Mode
+        Prepare(Project, Args.extension)
+        Entries = []
+        try:
+            Selected = Port()
+            for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2']):
+                FixtureRole = 'client' if Role.startswith('client') else 'server'
+                Index = int(Role[-1]) if FixtureRole == 'client' else 0
+                Label = 'controller-' + Mode + '-' + Role
+                Extra = ['--fixture', '--fixture-role', FixtureRole, '--fixture-port', str(Selected), '--character-mode', Mode, '--fixture-client-index', str(Index)]
+                Child = Start(Args.godot, Project, 'PlayerController.gd', Label, Extra, Environment)
+                Entries.append((Child, Label, FixtureRole, Index))
+                if Role == 'server' and Mode != 'Local':
+                    Deadline = time.monotonic() + Args.timeout
+                    while not (Project / 'character-ready').exists():
+                        if Child.poll() is not None or time.monotonic() >= Deadline:
+                            raise RuntimeError('PlayerController readiness failed: ' + Label)
+                        time.sleep(.02)
+            Deadline = time.monotonic() + Args.timeout
+            for Child, Label, Role, Index in Entries:
+                Results.append(Check(Child, Deadline, Project, Label, '[Character:Controller] ' + Role + ' PASS'))
+                Record = json.loads((Project / ('player-controller-' + Role + str(Index) + '.json')).read_text())
+                if Record.get('Result') != 'PASS' or not Record.get('Complete') or not Record.get('Cases') or any(not Case['Passed'] for Case in Record['Cases']):
+                    raise RuntimeError('PlayerController fixture incomplete: ' + Label)
+                Evidence.append(Record)
+        finally:
+            for Child, _, _, _ in Entries: StopProcess(Child)
+    (Output / 'controller-evidence.json').write_text(json.dumps({'Actors': len(Evidence), 'Transport': 'ENet', 'Evidence': Evidence}, indent=2))
+    return Results
+
+
 def Main():
     Parser = argparse.ArgumentParser()
     Parser.add_argument("--godot", type=Path, required=True)
@@ -637,6 +673,8 @@ def Main():
     Parser.add_argument("--remote", action="store_true")
     Parser.add_argument("--characters", action="store_true")
     Parser.add_argument("--input", action="store_true")
+    Parser.add_argument("--player-controller", action="store_true")
+    Parser.add_argument("--controller-modes", nargs="+", choices=('Local','Listen','Dedicated'), default=['Local','Listen','Dedicated'])
     Parser.add_argument("--manual-characters", action="store_true")
     Parser.add_argument("--character-modes", nargs="+", choices=('Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'), default=['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'])
     Parser.add_argument("--resources", action="store_true")
@@ -686,6 +724,8 @@ def Main():
         Results = ManualCharacterFixtures(Args, Args.output, Environment)
     elif Args.characters:
         Results = CharacterFixtures(Args, Args.output, Environment)
+    elif Args.player_controller:
+        Results = PlayerControllerFixtures(Args, Args.output, Environment)
     elif Args.input:
         Results = []
         for Script, Label, Marker, Extra in [

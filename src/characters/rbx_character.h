@@ -212,6 +212,13 @@ private:
     bool RigRefreshQueued = false;
     bool InsidePhysics = false;
     bool JumpRequested = false;
+    // Local intent lease; never serialized or replicated as gameplay authority.
+    int ControllerModeValue = 0, ControllerGuard = 0, ControllerNativePriority = 0;
+    uint64_t ControllerGeneration = 0, ControllerPlayer = 0, ControllerService = 0, ControllerTransport = 0;
+    int ControllerNetMode = 0;
+    bool ControllerFocused = true, ControllerHasMove = false, ControllerRelative = false;
+    bool ControllerSprint = false, ControllerJump = false;
+    Vector3 ControllerDirection;
     Vector3 ObservedVelocity;
     double ObservedAt = 0;
     bool WalkingToPoint = false;
@@ -274,6 +281,8 @@ protected:
         ClassDB::bind_method(D_METHOD("RefreshRig"), &RBXCharacter::RefreshRig);
         ClassDB::bind_method(D_METHOD("EnsureRootPart"), &RBXCharacter::EnsureRootPart);
         ClassDB::bind_method(D_METHOD("GetPhysicsBody"), &RBXCharacter::GetPhysicsBody);
+        ClassDB::bind_method(D_METHOD("GetControllerMode"), &RBXCharacter::GetControllerMode);
+        ClassDB::bind_method(D_METHOD("IsControllerActive"), &RBXCharacter::IsControllerActive);
         ClassDB::bind_method(D_METHOD("IsLocalControl"), &RBXCharacter::IsLocalControl);
         ClassDB::bind_method(D_METHOD("SetLocalControl", "enabled"), &RBXCharacter::SetLocalControl);
         ClassDB::bind_method(D_METHOD("SetPresentationOnly", "enabled"), &RBXCharacter::SetPresentationOnly);
@@ -434,6 +443,22 @@ public:
     bool IsLocalControl() const { return LocalControl; }
     void SetPresentationOnly(bool Enabled) { PresentationOnly = Enabled; }
     bool IsPresentationOnly() const { return PresentationOnly; }
+    int GetControllerMode() const { return ControllerModeValue; }
+    uint64_t GetControllerGeneration() const { return ControllerGeneration; }
+    bool ControllerLocalCharacter() const;
+    bool ControllerContextValid() const;
+    bool IsControllerActive() const;
+    bool ControllerOwnedBy(lua_State* Thread) const;
+    bool ControllerInputAllowed() const;
+    bool ControllerCanCommand(lua_State* Thread, uint64_t Lease) const;
+    void ClearControllerInput();
+    void RetireController();
+    void PollController();
+    bool SelectController(lua_State* Thread, int Mode);
+    bool SetControllerMove(lua_State* Thread, uint64_t Lease, Vector3 Direction, bool Relative, bool Sprint);
+    bool ControllerRequestJump(lua_State* Thread, uint64_t Lease);
+    bool RotateControllerCamera(lua_State* Thread, uint64_t Lease, Vector2 Delta);
+    bool CaptureControllerMouse(lua_State* Thread, uint64_t Lease, bool Capture);
 
     void ConfigureVisual(Node* Item) {
         if (!Item || Item == GetPhysicsBody() || Item->is_class("RobloxTool") || Item->is_class("RBXCharacter")) return;
@@ -499,6 +524,10 @@ public:
 public:
     void SetDepartureObserver(uint64_t Identity) { DepartureObserver = Identity; }
     void _notification(int What) {
+        if (What == NOTIFICATION_WM_WINDOW_FOCUS_OUT || What == NOTIFICATION_APPLICATION_FOCUS_OUT) { ControllerFocused = false; if (ControllerModeValue == 1) ClearControllerInput(); }
+        if (What == NOTIFICATION_WM_WINDOW_FOCUS_IN || What == NOTIFICATION_APPLICATION_FOCUS_IN) ControllerFocused = true;
+        if (What == NOTIFICATION_PAUSED && ControllerModeValue == 1) ClearControllerInput();
+        if (What == NOTIFICATION_EXIT_TREE && ControllerModeValue == 1) RetireController();
         if (What == NOTIFICATION_PREDELETE && DepartureObserver) {
             const uint64_t ObserverIdentity = DepartureObserver;
             DepartureObserver = 0;
@@ -535,7 +564,7 @@ public:
     int get_dev_computer_movement_mode() const { auto Body = GetPhysicsBody(); return Body ? Body->get_dev_computer_movement_mode() : 0; }
     void set_dev_touch_movement_mode(int Value) { if (auto Body = GetPhysicsBody()) Body->set_dev_touch_movement_mode(Value); }
     int get_dev_touch_movement_mode() const { auto Body = GetPhysicsBody(); return Body ? Body->get_dev_touch_movement_mode() : 0; }
-    bool CanControlMovement() const { return !PresentationOnly && (!GLExecutionDomain::IsClientExecution() || LocalControl); }
+    bool CanControlMovement() const { return ControllerModeValue == 0 && !PresentationOnly && (!GLExecutionDomain::IsClientExecution() || LocalControl); }
     bool RequestJump() { auto Body = GetPhysicsBody(); if (!CanControlMovement() || is_dead || !Body || !Body->is_on_floor()) return false; JumpRequested = true; return true; }
     bool WalkToPoint(const Vector3& Position) {
         if (!CanControlMovement() || is_dead || !Position.is_finite()) return false;
@@ -582,6 +611,7 @@ public:
     // ── Health ─────────────────────────────────────────────────────
     //// ── Salud ──────────────────────────────────────────────────────
     ~RBXCharacter() {
+        if (ControllerModeValue == 1) RetireController();
         for (const auto& Callback : died_cbs) GLUnreference(nullptr, Callback.ref);
         for (const auto& Callback : health_changed_cbs) GLUnreference(nullptr, Callback.ref);
         for (const auto& Callback : state_changed_cbs) GLUnreference(nullptr, Callback.ref);
@@ -594,7 +624,7 @@ public:
         float old = health;
         health = Math::clamp(h, 0.0f, max_health);
         bool Died = health <= 0.0f;
-        if (Died) { is_dead = true; PendingTouchCount = 0; if (auto Body = GetPhysicsBody()) Body->set_velocity(Vector3()); PendingStateCount = 0; _has_pending_running = _has_pending_air = false; if (WalkingToPoint) FinishMovement(false); } // latch before reentrant HealthChanged callbacks
+        if (Died) { is_dead = true; if (ControllerModeValue == 1) RetireController(); PendingTouchCount = 0; if (auto Body = GetPhysicsBody()) Body->set_velocity(Vector3()); PendingStateCount = 0; _has_pending_running = _has_pending_air = false; if (WalkingToPoint) FinishMovement(false); } // latch before reentrant HealthChanged callbacks
 
         if (old != health) {
             auto Callbacks = health_changed_cbs;
@@ -802,6 +832,7 @@ public:
 
     void _physics_process(double delta) override {
         if (Engine::get_singleton()->is_editor_hint() || gl_in_template_container(this)) return;
+        if (ControllerModeValue == 1) PollController();
         if (PresentationOnly) { _ensure_overhead(); _update_overhead_distance(); return; }
         const uint64_t Identity = static_cast<uint64_t>(get_instance_id());
         _ensure_overhead();
@@ -823,7 +854,12 @@ public:
             body_configured = true;
         }
 
-        UpdateMoveTarget(delta);
+        const bool Scripted = ControllerModeValue == 1;
+        const Vector3 Intent = ControllerHasMove ? ControllerDirection : Vector3();
+        const bool Relative = ControllerRelative, Sprint = ControllerHasMove && ControllerSprint;
+        const bool ScriptedJump = ControllerJump;
+        ControllerHasMove = ControllerJump = false;
+        if (!Scripted) UpdateMoveTarget(delta);
         Input* input = Input::get_singleton();
         Vector3 velocity = body->get_velocity();
 
@@ -838,10 +874,10 @@ public:
         // Vista de Servidor activa (o menú abierto): el input no mueve al
         // personaje (WASD/salto congelados, como en Roblox Studio / menú Esc).
         bool freecam = !LocalControl || gl_freecam().active || gl_menu_open();
-        bool jump_pressed = !freecam && (input->is_key_pressed(KEY_SPACE)
+        bool jump_pressed = !Scripted && !freecam && (input->is_key_pressed(KEY_SPACE)
             || input->is_joy_button_pressed(0, JOY_BUTTON_A)
             || (gl_mobile().active && gl_mobile().jump));
-        bool Requested = JumpRequested; JumpRequested = false;
+        bool Requested = Scripted ? ScriptedJump : JumpRequested; JumpRequested = false;
         if ((jump_pressed || Requested) && body->is_on_floor()) {
             velocity.y = jump_power;
         }
@@ -866,7 +902,7 @@ public:
             // y consola sin cambiar nada.
             float input_forward = 0.0f;
             float input_right   = 0.0f;
-            if (!freecam) {
+            if (!Scripted && !freecam) {
                 // Teclado (WASD + flechas)
                 if (input->is_key_pressed(KEY_W) || input->is_key_pressed(KEY_UP))    input_forward += 1.0f;
                 if (input->is_key_pressed(KEY_S) || input->is_key_pressed(KEY_DOWN))  input_forward -= 1.0f;
@@ -890,9 +926,15 @@ public:
             Vector3 move_dir = forward * input_forward + right * input_right;
 
             // NPC/scripted movement overrides player input when set
-            if (npc_move_dir.length_squared() > 0.01f) {
+            if (!Scripted && npc_move_dir.length_squared() > 0.01f) {
                 move_dir = npc_move_dir.normalized();
                 move_dir.y = 0;
+            }
+
+            if (Scripted) {
+                move_dir = Relative ? right * Intent.x + forward * -Intent.z : Intent;
+                move_dir.y = 0;
+                move_dir = move_dir.is_finite() ? move_dir.limit_length(1) : Vector3();
             }
 
             // Primera persona (1.15): el cuerpo mira SIEMPRE hacia donde apunta
@@ -903,10 +945,10 @@ public:
 
             // Velocidad horizontal OBJETIVO (0 si no hay input).
             Vector3 target_h(0.0f, 0.0f, 0.0f);
-            if (move_dir.length_squared() > 0.01f) {
-                move_dir = move_dir.normalized();
+            if (move_dir.length_squared() > (Scripted ? 0.000001f : 0.01f)) {
+                if (!Scripted) move_dir = move_dir.normalized();
                 // Sprint: Shift (teclado) o click del stick izquierdo (gamepad)
-                bool sprint = LocalControl && !freecam && (input->is_key_pressed(KEY_SHIFT)
+                bool sprint = Scripted ? Sprint : LocalControl && !freecam && (input->is_key_pressed(KEY_SHIFT)
                     || input->is_joy_button_pressed(0, JOY_BUTTON_LEFT_STICK));
                 float speed_mult = sprint ? 1.5f : 1.0f;
                 target_h = move_dir * (walk_speed * speed_mult);
@@ -1129,6 +1171,8 @@ public:
     // de Animate.lua crean y destruyen nodos).
     void _process(double) override {
         uint64_t Identity = static_cast<uint64_t>(get_instance_id());
+        if (ControllerModeValue == 1) PollController();
+        if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
         const auto Touches = PendingTouches;
         const size_t TouchCount = PendingTouchCount; PendingTouchCount = 0;
         for (size_t Index = 0; Index < TouchCount; ++Index) {

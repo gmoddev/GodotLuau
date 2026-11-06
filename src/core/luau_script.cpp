@@ -212,6 +212,7 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
 
             if (GLInputIndex(L,node,key.utf8().get_data())) return 1;
             if (GLMotorIndex(L,node,key.utf8().get_data())) return 1;
+            if (GLCharacterControllerIndex(L,node,key.utf8().get_data())) return 1;
 
             // This canonical configuration must win over same-named children.
             if (key == "DeliveryType" && Object::cast_to<RemoteEventNode>(node)) return godot_object_index(L);

@@ -1,0 +1,23 @@
+=== controller-Dedicated-server.stdout.log ===
+Godot Engine v4.7.1.stable.custom_build - https://godotengine.org
+
+[GodotLuau] ////////////////////////////////////////////////////
+[GodotLuau]   GodotLuau ? - by PimpoliDev
+[GodotLuau]   Luau System for Godot [Active]
+[GodotLuau] ////////////////////////////////////////////////////
+[Character:Controller] movement {"Authoritative":"(60.0, 0.0, 0.0)","Authority":{"AcceptedInputs":26,"CharacterId":27632075954,"Contract":{"Acceleration":110.0,"AirAcceleration":45.0,"AutoRotate":true,"Gravity":45.0,"JumpPower":20.0,"Pose":"[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (60.0, 0.0, 0.0)]","TurnSpeed":11.0,"Version":3,"WalkSpeed":16.0},"Epoch":3,"Health":100.0,"Life":2,"Position":"(60.0, 0.0, 0.0)","RateRejectedInputs":0,"Sequence":26},"Client":{"X":60.0,"Y":0.0,"Z":0.0},"Original":"(60.0, 0.0, 0.0)"}
+[Network:CharacterTest] FAIL server scripted movement reaches authoritative ENet observer
+[Character:Controller] server FAIL
+[Runtime:BindingRetirement] Retired 0 bindings before library close
+
+
+=== controller-Dedicated-client1.stdout.log ===
+Godot Engine v4.7.1.stable.custom_build - https://godotengine.org
+
+[GodotLuau] ////////////////////////////////////////////////////
+[GodotLuau]   GodotLuau ? - by PimpoliDev
+[GodotLuau]   Luau System for Godot [Active]
+[GodotLuau] ////////////////////////////////////////////////////
+[Character:Controller] samples [{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, 0.0)","Running":true,"Tick":0,"Velocity":"(0.0, 0.0, 0.0)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -0.030556)","Running":true,"Tick":1,"Velocity":"(0.0, 0.0, -1.833333)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -0.091667)","Running":true,"Tick":2,"Velocity":"(0.0, 0.0, -3.666667)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -0.183333)","Running":true,"Tick":3,"Velocity":"(0.0, 0.0, -5.5)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -0.305556)","Running":true,"Tick":4,"Velocity":"(0.0, 0.0, -7.333333)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -0.458333)","Running":true,"Tick":5,"Velocity":"(0.0, 0.0, -9.166667)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -0.641667)","Running":true,"Tick":6,"Velocity":"(0.0, 0.0, -11.0)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -0.855556)","Running":true,"Tick":7,"Velocity":"(0.0, 0.0, -12.83333)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -1.1)","Running":true,"Tick":8,"Velocity":"(0.0, 0.0, -14.66667)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -1.375)","Running":true,"Tick":9,"Velocity":"(0.0, 0.0, -16.5)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -1.680556)","Running":true,"Tick":10,"Velocity":"(0.0, 0.0, -18.33333)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -2.016667)","Running":true,"Tick":11,"Velocity":"(0.0, 0.0, -20.16667)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -2.383333)","Running":true,"Tick":12,"Velocity":"(0.0, 0.0, -22.0)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -2.780556)","Running":true,"Tick":13,"Velocity":"(0.0, 0.0, -23.83334)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -3.180556)","Running":true,"Tick":14,"Velocity":"(0.0, 0.0, -24.0)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -3.580556)","Running":true,"Tick":15,"Velocity":"(0.0, 0.0, -24.0)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -3.980556)","Running":true,"Tick":16,"Velocity":"(0.0, 0.0, -24.0)"},{"Active":true,"Epoch":2,"Player":20937966709,"Position":"(100.0, 0.000827, -4.380556)","Running":true,"Tick":17,"Velocity":"(0.0, 0.0, -24.0)"}]
+[Character:Controller] client PASS
+[Runtime:BindingRetirement] Retired 0 bindings before library close

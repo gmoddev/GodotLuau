@@ -39,6 +39,11 @@ See [ADR-012](adr-012-input-actions.md), the [API](input-actions-api.md) and
 [running qualification journal](input-action-development.md). Its branch evidence
 does not establish untested controller/device coverage.
 
+Optional Luau control of the existing Player.Character is separate development
+on `codex/scripted-character-control`. See [ADR-013](adr-013-scripted-character-control.md),
+the [API/example](player-character-control.md) and
+[qualification journal](player-controller-development.md).
+
 Networking Foundation 2 is integrated by the user-authorized normal merge of
 `foundation/networking-2` at `cb2014f` into compacted main `41acd27`, preserving
 all three foundation commits. The [integration record](networking-foundation-2-work.md#main-integration-2026-11-05)
