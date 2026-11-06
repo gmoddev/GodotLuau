@@ -1,6 +1,7 @@
 # ADR-013: Optional script-owned Character movement intent
 
-- Status: Accepted implementation decision; qualification in progress
+- Status: Accepted; qualified within the profiles and limitations in the
+  [qualification receipt](evidence/player-controller-qualification-2026-11-06.json)
 - Date: 2026-11-06
 - Depends on: [ADR-006](adr-006-character-authority.md),
   [ADR-007](adr-007-model-character.md), [ADR-012](adr-012-input-actions.md)
@@ -74,4 +75,3 @@ remapping, menu consumption and explicit Native switching. Synthetic replay does
 not establish physical-device or OS mouse-capture qualification. Real ENet and
 matching sanitizer evidence will be recorded in the
 [development journal](player-controller-development.md).
-

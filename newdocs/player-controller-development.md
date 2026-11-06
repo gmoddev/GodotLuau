@@ -164,3 +164,56 @@ Neither incomplete/failed job is accepted as passing.
 Release publication, updater distribution, dependency pins and the admitted Godot
 host remain unchanged. GL-040/041 and documented device, allocation and sanitizer
 scope limitations remain independent.
+
+### Published qualification and shutdown handoff
+
+The Input foundation is integrated on `main` at
+`9ef59d12dbfbd8b1a695e09c993760b5b458a375`, including normal merge
+`f3c575728a7d40b291a3e8f55015f24b5c542396`. Its source branch and four commits
+remain retained. All ten [candidate/package gates](https://github.com/gmoddev/GodotLuau/actions/runs/42185879161)
+passed at `435bb6917b847c0405a9574cfe5fccfcdb1b9340`; extracted Windows/Linux
+Debug/Release packages, binary identities and persistence companion startup
+were verified. These package results apply to the Input foundation source.
+
+The controller remains on `codex/scripted-character-control`, unmerged.
+Runtime implementation is `9b1d67e6dc9ba5c77c5d5408115177200c96aa8c`;
+`0325c3c6d6ce18972313f35906a769ffa86ffd17` changes the movement-baseline
+fixture and documentation only. The final documentation commit changes no
+qualified runtime, test, dependency or workflow inputs.
+
+Fresh hosted qualification at `0325c3c` is complete:
+
+- [Core CI](https://github.com/gmoddev/GodotLuau/actions/runs/42200598352):
+  Windows and Linux each pass 85 core cases and 29 graph assertions.
+- [Native CI](https://github.com/gmoddev/GodotLuau/actions/runs/42200598344):
+  Windows and Linux each pass all 141 actors, including all seven actual ENet
+  controller actors and ten adversarial/legitimate animation actors.
+- [Full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/42200618819):
+  Windows ASan and Linux ASan/LSan pass controls, registration/reload, 85 core
+  cases and 141 native actors each, with 1,165 instrumented compilation units
+  and no unexpected sanitizer reports. Linux leak detection remains enabled.
+
+Downloaded artifacts confirm the source fingerprint above, actual controller
+case counts `40 / 16 / 10 / 10 / 15 / 10 / 10`, zero failed controller assertions,
+and the same 100 harness/example hashes across current Windows native,
+Windows sanitizer and Linux native evidence. The
+[final receipt](evidence/player-controller-qualification-2026-11-06.json)
+records artifact IDs/digests, binary hashes, local results and retained failures.
+Earlier failed attempts remain failed; fresh results do not erase them.
+
+DockerPC additionally passed Windows Release affected regressions, the revised
+focused ASan controller group, full matching Windows ASan, and 43 actual
+rendered checks with the retained walking screenshot. Classification:
+**QUALIFIED within the documented supported profiles**. Physical-device and
+OS-capture testing, Linux graphical validation, Windows leak detection,
+older-glibc/pristine-consumer portability, broader allocation profiling, and
+new controller candidate packages remain outside this claim. The mixed local
+Debug extension/older Release host shutdown failure remains unqualified and
+unresolved; matching profiles pass.
+
+At shutdown handoff, DockerPC has no task-owned build/test processes remaining;
+13,657,382,912 bytes are free on C:. Caches and durable historical evidence are
+preserved. No further local processes need to run. The next action is review of
+the published controller branch before any separately authorized integration.
+`main` remains at the Input integration revision. Releases, updater distribution,
+upstream, admitted hosts and dependency pins remain unchanged.
