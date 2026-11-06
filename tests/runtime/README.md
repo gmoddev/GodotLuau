@@ -617,3 +617,14 @@ the initial baseline fixture error is retained in the qualification record.
 Use the existing core and three native groups, without a new configuration or
 mock identity implementation. See the
 [audit and evidence](../../newdocs/shared-domains-validation.md#gl-013-fourth-class-identity-extraction).
+
+## Published HttpService caller migration
+
+`RunQualification.py --callers` executes the exact Lua examples extracted from
+`backend/README.md` and `newdocs/httpservice-api.md` against the real native API.
+Only endpoint literals are replaced with owned loopback fixtures. Three actors
+cover non-2xx, empty success and zero-I/O denied-origin recovery, with JSON
+parse/schema/null/false/encoding failures in each actor. `CheckNativeCI.py`
+requires their markers, exact requests and snippet hashes in addition to the
+original 92 actors (95 total). Core remains 80. See the
+[integration record](../../newdocs/httpservice-main-integration.md).

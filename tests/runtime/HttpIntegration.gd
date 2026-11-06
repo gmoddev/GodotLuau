@@ -97,7 +97,7 @@ func Denied() -> void:
     var Source := """
 local Origin=game:GetAttribute('HttpOrigin')
 local Service=game:GetService('HttpService')
-Service.HttpEnabled=true
+assert(not pcall(function() Service.HttpEnabled=true end) and not Service.HttpEnabled)
 _GL_NET_ROLE=0
 local Native=_HTTP.get
 local Raw=function(...) return Native(...) end
@@ -105,10 +105,9 @@ setfenv(Raw,setmetatable({_GL_NET_ROLE=0},{__index=getfenv(Raw)}))
 assert(not pcall(Raw,Origin..'/forbidden/default?token=PrivateSentinel'))
 assert(not pcall(_HTTP.post,Origin..'/forbidden/default','value'))
 assert(not pcall(_HTTP.request,'GET',Origin..'/forbidden/default'))
-assert(Service:GetAsync(Origin..'/forbidden/default?token=PrivateSentinel')=='')
-assert(Service:PostAsync(Origin..'/forbidden/default','value')=='')
-local Result=Service:RequestAsync({Url=Origin..'/forbidden/default'})
-assert(not Result.Success and Result.StatusCode==0 and Result.Body=='')
+assert(not pcall(Service.GetAsync,Service,Origin..'/forbidden/default?token=PrivateSentinel'))
+assert(not pcall(Service.PostAsync,Service,Origin..'/forbidden/default','value'))
+assert(not pcall(Service.RequestAsync,Service,{Url=Origin..'/forbidden/default'}))
 local Request=Instance.new('HTTPRequest')
 assert(not pcall(function() Request:request(Origin..'/forbidden/node') end))
 Request:Destroy()
@@ -125,7 +124,8 @@ func Enabled() -> void:
     Counter()
     Script("LocalScript", "Client", """
 _GL_NET_ROLE=0
-game:GetService('HttpService').HttpEnabled=true
+local Service=game:GetService('HttpService')
+assert(not pcall(function() Service.HttpEnabled=true end) and not Service.HttpEnabled)
 local Native=_HTTP.get
 local Raw=function(...) return Native(...) end
 setfenv(Raw,setmetatable({_GL_NET_ROLE=0},{__index=getfenv(Raw)}))
@@ -152,7 +152,7 @@ for _,Method in {'GET','POST','PUT','PATCH','DELETE','HEAD','OPTIONS'} do
     assert(Result.Body==(Method=='HEAD' and '' or Method))
 end
 local Status=_HTTP.request('GET',Origin..'/status')
-assert(not Status.Success and Status.StatusCode==418 and Status.StatusMessage=='HTTP 418' and Status.Body=='teapot')
+assert(not Status.Success and Status.StatusCode==418 and Status.StatusMessage=="I'm a Teapot" and Status.Body=='teapot')
 assert(_HTTP.get(Origin..'/status')=='teapot')
 local Redirect=_HTTP.request('GET',Origin..'/redirect')
 assert(not Redirect.Success and Redirect.StatusCode==302 and Redirect.Body=='redirect')

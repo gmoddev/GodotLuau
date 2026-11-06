@@ -226,6 +226,7 @@ int GLDomainHost::BeginHttp(lua_State* Thread,GLExecutionDomain* Domain,int Oper
     return Http->Begin(Thread,Domain,Operation);
 }
 bool GLDomainHost::InterruptHttp(lua_State* Thread) { return Http && Http->Interrupt(Thread); }
+bool GLDomainHost::IsHttpAvailable(lua_State* Thread,GLExecutionDomain* Domain) const { return Http && Http->Available(Thread,Domain); }
 int GLDomainHost::BeginDataStore(lua_State* Thread,GLExecutionDomain* Domain,const std::string& Root,const std::string& Leaf,int Operation,bool Exists,const std::string& Expected,const std::string& Value) {
     if (!DataStore) DataStore=std::make_unique<GLDataStoreManager>();
     return DataStore->Begin(Thread,Domain,Root,Leaf,Operation,Exists,Expected,Value);

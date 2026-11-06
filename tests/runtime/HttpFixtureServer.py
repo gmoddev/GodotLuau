@@ -1,6 +1,7 @@
 """Owned loopback-only HTTP/TLS endpoints; public fixture keys are never production credentials."""
 import hashlib
 import http.server
+import json
 from pathlib import Path
 import socketserver
 import socket
@@ -135,6 +136,30 @@ def Serve(Tls=False):
                     Status, Body = 302, b'redirect'
                 elif Self.path == '/no-content':
                     Status, Body = 204, b''
+                elif Self.path == '/inspect':
+                    Body = json.dumps({'Method': Self.command, 'ContentType': Self.headers.get('Content-Type', ''),
+                        'CacheControl': Self.headers.get('Cache-Control', ''), 'Pragma': Self.headers.get('Pragma', ''),
+                        'Body': Body.decode('utf-8')}).encode()
+                elif Self.path in ['/response-headers', '/response-header-count', '/response-header-name', '/response-folded']:
+                    if Self.path == '/response-headers':
+                        Self.send_response(200, 'Fixture Success')
+                        Self.send_header('X-Mixed-Case', 'first')
+                        Self.send_header('x-mixed-case', 'second')
+                        Self.send_header('Set-Cookie', 'a=1; Expires=Wed, 21 Oct 2030 07:28:00 GMT')
+                        Self.send_header('Set-Cookie', 'b=2')
+                        Self.send_header('X-Empty', '')
+                        Self.send_header('Content-Length', '0')
+                        Self.send_header('Connection', 'close')
+                        Self.end_headers()
+                    elif Self.path == '/response-header-count':
+                        Self.wfile.write(b'HTTP/1.1 200 OK\r\n' + b'X: value\r\n' * 129 + b'Content-Length: 0\r\n\r\n')
+                    elif Self.path == '/response-header-name':
+                        Self.wfile.write(b'HTTP/1.1 200 OK\r\n' + b'X' * 129 + b': value\r\nContent-Length: 0\r\n\r\n')
+                    else:
+                        Self.wfile.write(b'HTTP/1.1 200 OK\r\nX: value\r\n folded\r\nContent-Length: 0\r\n\r\n')
+                    Self.wfile.flush()
+                    Self.close_connection = True
+                    return
                 elif Self.path == '/method':
                     Body = Self.command.encode()
                 elif Self.path == '/headers':

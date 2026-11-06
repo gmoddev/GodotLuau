@@ -15,6 +15,7 @@ public:
     ~GLHttpManager();
     static void Install(lua_State* Thread,GLExecutionDomain& Domain,uint64_t Host);
     int Begin(lua_State* Thread,GLExecutionDomain* Domain,int Operation);
+    bool Available(lua_State* Thread,GLExecutionDomain* Domain) const;
     void Tick();
     void CancelOwner(lua_State* Anchor);
     void CancelThread(lua_State* Thread);

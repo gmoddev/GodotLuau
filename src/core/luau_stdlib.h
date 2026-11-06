@@ -54,6 +54,8 @@ Enum = {
     },
     EasingDirection = { In = 0, Out = 1, InOut = 2 },
     CharacterStateType = { Idle = 0, Running = 1, Jumping = 2, Landed = 3, Dead = 7, Freefall = 8 },
+    HttpContentType = { ApplicationJson = 0, ApplicationXml = 1, ApplicationUrlEncoded = 2, TextPlain = 3, TextXml = 4 },
+    HttpCompression = { None = 0, Gzip = 1 },
     HumanoidStateType = {
         None = 0, Running = 1, Jumping = 2, Landed = 3,
         Swimming = 4, Climbing = 5, Seated = 6, Dead = 7,
@@ -780,74 +782,312 @@ R"LUAU(
 -- ////
 --  HttpService — peticiones HTTP y serialización JSON
 -- ══════════════════════════════════════════════════════════════════════
+-- GL023_HTTP_SERVICE_BEGIN
+-- This fragment is also executed by the production-core compatibility tests.
+do
 local HttpService = {}
-HttpService.__index = HttpService
-HttpService.HttpEnabled = true
+local NativeRequest, NativeEnabled, NativeGuid = _HTTP.request, _HTTP.enabled, _HTTP.guid
+local JsonNull = table.freeze({})
+local JsonKinds = setmetatable({}, {__mode = "k"})
+local MaxJsonBytes, MaxJsonNodes, MaxJsonDepth = 1024 * 1024, 16384, 32
+HttpService.JSONNull = JsonNull
+
+local function ApiError(Message)
+    error("[Runtime:HttpService] " .. Message, 3)
+end
+local function RequireString(Value, Label)
+    if type(Value) ~= "string" then ApiError(Label .. " must be a string") end
+end
+local function RequireBoolean(Value, Label)
+    if Value ~= nil and type(Value) ~= "boolean" then ApiError(Label .. " must be boolean") end
+end
+local function ValidUtf8(Value)
+    if not utf8.len(Value) then ApiError("JSON string is not valid UTF-8") end
+end
+local Escapes = {["\""] = "\\\"", ["\\"] = "\\\\", ["\b"] = "\\b", ["\f"] = "\\f", ["\n"] = "\\n", ["\r"] = "\\r", ["\t"] = "\\t"}
 
 function HttpService:JSONEncode(value)
-    local ok, r = pcall(_JSON and _JSON.encode or function() return "{}" end, value)
-    return ok and r or "{}"
+    local Parts, Active, Nodes, Bytes = {}, {}, 0, 0
+    local function Put(Text)
+        if #Text > MaxJsonBytes - Bytes then ApiError("JSON byte limit exceeded") end
+        Bytes += #Text
+        Parts[#Parts + 1] = Text
+    end
+    local function Quote(Text)
+        if #Text + 2 > MaxJsonBytes - Bytes then ApiError("JSON byte limit exceeded") end
+        ValidUtf8(Text)
+        local Size = #Text + 2
+        local Encoded = Text:gsub('[%z\1-\31\\"]', function(Character)
+            local Escape = Escapes[Character] or string.format("\\u%04x", string.byte(Character))
+            Size += #Escape - 1
+            if Size > MaxJsonBytes - Bytes then ApiError("JSON byte limit exceeded") end
+            return Escape
+        end)
+        Put('"' .. Encoded .. '"')
+    end
+    local Encode
+    Encode = function(Value, Depth)
+        Nodes += 1
+        if Nodes > MaxJsonNodes or Depth > MaxJsonDepth then ApiError("JSON traversal limit exceeded") end
+        local Kind = type(Value)
+        if Value == JsonNull or Kind == "nil" then Put("null")
+        elseif Kind == "boolean" then Put(Value and "true" or "false")
+        elseif Kind == "number" then
+            if Value ~= Value or math.abs(Value) == math.huge then ApiError("JSON number must be finite") end
+            Put(string.format("%.17g", Value))
+        elseif Kind == "string" then Quote(Value)
+        elseif Kind == "table" then
+            if Active[Value] then ApiError("Cyclic JSON table") end
+            Active[Value] = true
+            local Count, Maximum, Numbers, Strings = 0, 0, false, false
+            for Key in next, Value do
+                Count += 1
+                if Count > MaxJsonNodes then ApiError("JSON table limit exceeded") end
+                if type(Key) == "number" and Key >= 1 and Key == math.floor(Key) and Key <= MaxJsonNodes then
+                    Numbers = true
+                    Maximum = math.max(Maximum, Key)
+                elseif type(Key) == "string" then Strings = true
+                else ApiError("JSON keys must be strings or consecutive positive integers") end
+            end
+            if Numbers and Strings or Numbers and Maximum ~= Count then ApiError("Mixed or sparse JSON table") end
+            local Array = Numbers or not Strings and JsonKinds[Value] ~= "object"
+            if Count > 0 and JsonKinds[Value] == "object" and Numbers or Count > 0 and JsonKinds[Value] == "array" and Strings then
+                ApiError("JSON container kind changed")
+            end
+            Put(Array and "[" or "{")
+            if Array then
+                for Index = 1, Count do
+                    if Index > 1 then Put(",") end
+                    Encode(rawget(Value, Index), Depth + 1)
+                end
+            else
+                local Index = 0
+                for Key, Item in next, Value do
+                    Nodes += 1
+                    if Nodes > MaxJsonNodes then ApiError("JSON traversal limit exceeded") end
+                    if Index > 0 then Put(",") end
+                    Quote(Key)
+                    Put(":")
+                    Encode(Item, Depth + 1)
+                    Index += 1
+                end
+            end
+            Put(Array and "]" or "}")
+            Active[Value] = nil
+        else ApiError("Unsupported JSON value type " .. Kind) end
+    end
+    Encode(value, 0)
+    return table.concat(Parts)
 end
 
 function HttpService:JSONDecode(json)
-    if not json or json == "" then return {} end
-    local ok, r = pcall(_JSON and _JSON.decode or function() return {} end, json)
-    return ok and r or {}
+    RequireString(json, "JSON input")
+    if #json == 0 or #json > MaxJsonBytes then ApiError("Invalid JSON input size") end
+    ValidUtf8(json)
+    local Position, Nodes = 1, 0
+    local function Step()
+        Nodes += 1
+        if Nodes > MaxJsonNodes then ApiError("JSON traversal limit exceeded") end
+    end
+    local function Skip()
+        local _, Finish = json:find("^[ \t\r\n]*", Position)
+        Position = (Finish or Position - 1) + 1
+    end
+    local function ParseString()
+        Position += 1
+        local Parts = {}
+        while Position <= #json do
+            local Start, Finish = json:find('["\\%z\1-\31]', Position)
+            if not Start then ApiError("Unterminated JSON string") end
+            Parts[#Parts + 1] = json:sub(Position, Start - 1)
+            local Character = json:sub(Start, Finish)
+            Position = Finish + 1
+            if Character == '"' then return table.concat(Parts) end
+            if Character ~= "\\" then ApiError("Unescaped JSON control character") end
+            Step()
+            Character = json:sub(Position, Position)
+            Position += 1
+            local Simple = {['"'] = '"', ["\\"] = "\\", ["/"] = "/", b = "\b", f = "\f", n = "\n", r = "\r", t = "\t"}
+            local Text = Simple[Character]
+            if Character == "u" then
+                local Hex = json:sub(Position, Position + 3)
+                if #Hex ~= 4 or not Hex:match("^%x%x%x%x$") then ApiError("Invalid JSON Unicode escape") end
+                local Code = tonumber(Hex, 16)
+                Position += 4
+                if Code >= 0xd800 and Code <= 0xdbff then
+                    if json:sub(Position, Position + 1) ~= "\\u" then ApiError("Unpaired JSON surrogate") end
+                    Hex = json:sub(Position + 2, Position + 5)
+                    if #Hex ~= 4 or not Hex:match("^%x%x%x%x$") then ApiError("Invalid JSON Unicode escape") end
+                    local Low = tonumber(Hex, 16)
+                    if Low < 0xdc00 or Low > 0xdfff then ApiError("Unpaired JSON surrogate") end
+                    Code = 0x10000 + (Code - 0xd800) * 1024 + Low - 0xdc00
+                    Position += 6
+                elseif Code >= 0xdc00 and Code <= 0xdfff then ApiError("Unpaired JSON surrogate") end
+                Text = utf8.char(Code)
+            end
+            if Text == nil then ApiError("Invalid JSON escape") end
+            Parts[#Parts + 1] = Text
+        end
+        ApiError("Unterminated JSON string")
+    end
+    local Parse
+    Parse = function(Depth)
+        Step()
+        if Depth > MaxJsonDepth then ApiError("JSON depth limit exceeded") end
+        Skip()
+        local Character = json:sub(Position, Position)
+        if Character == '"' then return ParseString() end
+        if Character == "[" or Character == "{" then
+            local Array = Character == "["
+            local Closing = Array and "]" or "}"
+            local Result, Count = {}, 0
+            JsonKinds[Result] = Array and "array" or "object"
+            Position += 1
+            Skip()
+            if json:sub(Position, Position) == Closing then Position += 1; return Result end
+            while true do
+                local Key
+                if not Array then
+                    if json:sub(Position, Position) ~= '"' then ApiError("JSON object key must be a string") end
+                    Step()
+                    Key = ParseString()
+                    if rawget(Result, Key) ~= nil then ApiError("Duplicate JSON object key") end
+                    Skip()
+                    if json:sub(Position, Position) ~= ":" then ApiError("Missing JSON colon") end
+                    Position += 1
+                end
+                Count += 1
+                Result[Array and Count or Key] = Parse(Depth + 1)
+                Skip()
+                Character = json:sub(Position, Position)
+                Position += 1
+                if Character == Closing then return Result end
+                if Character ~= "," then ApiError("Missing JSON separator") end
+                Skip()
+            end
+        end
+        for _, Literal in {"true", "false", "null"} do
+            if json:sub(Position, Position + #Literal - 1) == Literal then
+                Position += #Literal
+                if Literal == "null" then return JsonNull end
+                return Literal == "true"
+            end
+        end
+        local Start = Position
+        if Character == "-" then Position += 1 end
+        Character = json:sub(Position, Position)
+        if Character == "0" then Position += 1
+        elseif Character:match("^[1-9]$") then
+            repeat Position += 1; Character = json:sub(Position, Position) until not Character:match("^%d$")
+        else ApiError("Invalid JSON value") end
+        if json:sub(Position, Position) == "." then
+            Position += 1
+            if not json:sub(Position, Position):match("^%d$") then ApiError("Invalid JSON fraction") end
+            repeat Position += 1 until not json:sub(Position, Position):match("^%d$")
+        end
+        Character = json:sub(Position, Position)
+        if Character == "e" or Character == "E" then
+            Position += 1
+            Character = json:sub(Position, Position)
+            if Character == "+" or Character == "-" then Position += 1 end
+            if not json:sub(Position, Position):match("^%d$") then ApiError("Invalid JSON exponent") end
+            repeat Position += 1 until not json:sub(Position, Position):match("^%d$")
+        end
+        local Number = tonumber(json:sub(Start, Position - 1))
+        if not Number or Number ~= Number or math.abs(Number) == math.huge then ApiError("JSON number must be finite") end
+        return Number
+    end
+    local Result = Parse(0)
+    Skip()
+    if Position <= #json then ApiError("Trailing JSON input") end
+    return Result
+end
+
+)LUAU"
+R"LUAU(local function CopyHeaders(Headers)
+    if Headers ~= nil and type(Headers) ~= "table" then ApiError("Headers must be a table") end
+    local Result, Count = {}, 0
+    for Key, Value in next, Headers or {} do
+        Count += 1
+        if Count > 32 or type(Key) ~= "string" or #Key > 128 or type(Value) ~= "string" and type(Value) ~= "number" then ApiError("Invalid request headers") end
+        if type(Value) == "string" and #Value > 4096 then ApiError("Invalid request headers") end
+        Result[Key] = Value
+    end
+    return Result
+end
+local function HasHeader(Headers, Name)
+    for Key in next, Headers do if Key:lower() == Name then return true end end
+    return false
+end
+local function Send(Method, Url, Body, Headers)
+    RequireString(Url, "URL")
+    if Body ~= nil then RequireString(Body, "Body") end
+    local Result = NativeRequest(Method, Url, Body, Headers)
+    if Result.StatusCode == 0 then ApiError(Result.StatusMessage) end
+    return Result
+end
+local function Successful(Result)
+    if not Result.Success then ApiError("HTTP " .. Result.StatusCode .. " " .. Result.StatusMessage:sub(1, 128)) end
+    return Result.Body
 end
 
 function HttpService:GetAsync(url, noCache, headers)
-    if _HTTP then
-        local ok, r = pcall(_HTTP.get, url, headers)
-        if ok then return r end
+    RequireBoolean(noCache, "noCache")
+    local Headers = CopyHeaders(headers)
+    if noCache then
+        if HasHeader(Headers, "cache-control") or HasHeader(Headers, "pragma") then ApiError("noCache conflicts with cache headers") end
+        Headers["Cache-Control"], Headers.Pragma = "no-cache", "no-cache"
     end
-    warn("[Runtime:HTTP] GetAsync failed")
-    return ""
+    return Successful(Send("GET", url, nil, Headers))
 end
-
+local ContentTypes = {[0] = "application/json", "application/xml", "application/x-www-form-urlencoded", "text/plain", "text/xml"}
 function HttpService:PostAsync(url, data, contentType, compress, headers)
-    if _HTTP then
-        local ok, r = pcall(_HTTP.post, url, data or "", contentType or "application/json", headers)
-        if ok then return r end
-    end
-    warn("[Runtime:HTTP] PostAsync failed")
-    return ""
+    RequireString(data, "POST data")
+    RequireBoolean(compress, "compress")
+    if compress then ApiError("gzip compression is unsupported") end
+    local ContentType = contentType == nil and "application/json" or ContentTypes[contentType] or contentType
+    if type(ContentType) ~= "string" or #ContentType == 0 or #ContentType > 256 then ApiError("Unsupported content type") end
+    local Headers = CopyHeaders(headers)
+    if HasHeader(Headers, "content-type") then ApiError("Duplicate content type") end
+    Headers["Content-Type"] = ContentType
+    return Successful(Send("POST", url, data, Headers))
 end
-
 function HttpService:RequestAsync(options)
-    local method  = (options.Method or "GET"):upper()
-    local url     = options.Url or ""
-    local body    = options.Body
-    local headers = options.Headers
-    if _HTTP and _HTTP.request then
-        local ok, r = pcall(_HTTP.request, method, url, body, headers)
-        if ok and type(r) == "table" then
-            return {
-                Success       = r.Success,
-                StatusCode    = r.StatusCode,
-                StatusMessage = r.StatusMessage,
-                Body          = r.Body,
-                Headers       = {},
-            }
-        end
+    if type(options) ~= "table" then ApiError("RequestAsync options must be a table") end
+    for Key in next, options do
+        if Key ~= "Url" and Key ~= "Method" and Key ~= "Body" and Key ~= "Headers" and Key ~= "Compress" then ApiError("Unsupported RequestAsync option") end
     end
-    warn("[Runtime:HTTP] RequestAsync failed")
-    return { Success = false, StatusCode = 0, StatusMessage = "No HTTP", Body = "" }
+    local Method = rawget(options, "Method")
+    if Method == nil then Method = "GET" end
+    RequireString(Method, "Method")
+    Method = Method:upper()
+    local Body = rawget(options, "Body")
+    if (Method == "GET" or Method == "HEAD") and Body ~= nil then ApiError("Body must be excluded for GET/HEAD") end
+    local Compress = rawget(options, "Compress")
+    if Compress ~= nil and Compress ~= 0 then ApiError("RequestAsync compression is unsupported") end
+    return Send(Method, rawget(options, "Url"), Body, CopyHeaders(rawget(options, "Headers")))
 end
-
 function HttpService:GenerateGUID(wrapInCurlyBraces)
-    local t = math.floor(tick() * 1000)
-    local r1, r2, r3, r4 = math.random(0, 0xFFFF), math.random(0x4000, 0x4FFF), math.random(0x8000, 0xBFFF), math.random(0, 0xFFFF)
-    local guid = string.format("%08x-%04x-%04x-%04x-%04x%08x", t % 0xFFFFFFFF, r1, r2, r3, r4, t % 0xFFFFFFFF)
-    return wrapInCurlyBraces and "{" .. guid .. "}" or guid
+    RequireBoolean(wrapInCurlyBraces, "GUID braces")
+    return NativeGuid(wrapInCurlyBraces)
 end
-
 function HttpService:UrlEncode(input)
-    return (tostring(input):gsub("[^%w%-_%.~]", function(c)
-        return string.format("%%%02X", string.byte(c))
+    RequireString(input, "URL input")
+    if #input > MaxJsonBytes then ApiError("URL encoding input limit exceeded") end
+    return (input:gsub("[^%w%-_%.~]", function(Character)
+        return string.format("%%%02X", string.byte(Character))
     end))
 end
-
-_G["__SVC_HttpService"] = HttpService
+local HttpMetatable = {__index = function(_, Key)
+    if Key == "HttpEnabled" then return NativeEnabled() end
+    return nil
+end}
+setmetatable(HttpService, HttpMetatable)
+_G["__SVC_HttpService"] = table.freeze(HttpService)
+HttpMetatable.__metatable = "HttpService"
+table.freeze(HttpMetatable)
+end
+-- GL023_HTTP_SERVICE_END
 
 -- ══════════════════════════════════════════════════════════════════════
 --  ContextActionService — binding de acciones a teclas

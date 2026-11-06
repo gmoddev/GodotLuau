@@ -74,7 +74,7 @@ GodotLuau is a C++ GDExtension that embeds the [Luau](https://luau.org/) interpr
 | Local multiplayer test (N windows + Server View) | ✅ working |
 | Real networking: dedicated server, Direct Connect, networked `RemoteEvent`s, replication | ✅ working |
 | Coordinator with automatic worlds (Roblox-style matchmaking) | ⚠️ working, single machine only — see [limits](#3-coordinator--worlds-roblox-style-matchmaking) |
-| `HttpService` (real HTTP/HTTPS, blocking) | ✅ working |
+| `HttpService` (asynchronous HTTP/HTTPS, native origin grants) | ✅ working; [API/migration](newdocs/httpservice-api.md) |
 | `DataStoreService` | ⚠️ local JSON files only, no cloud backend yet |
 | Server authentication / anti-cheat / accounts | ❌ does not exist — see [Security](#security-read-this-before-you-publish) |
 | macOS binaries | ❌ build from source |

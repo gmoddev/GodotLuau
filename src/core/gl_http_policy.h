@@ -11,6 +11,8 @@ namespace GLHttpPolicy {
 constexpr size_t MaxUrl = 4096, MaxRequest = 1024*1024, MaxResponse = 4*1024*1024;
 constexpr size_t MaxHeaders = 32, MaxHeaderBytes = 16384, MaxWire = 8*1024*1024;
 constexpr size_t MaxActive = 4, MaxOwner = 2;
+constexpr size_t MaxResponseHeaders = 128;
+struct ResponseHeader { std::string Name,Value; };
 struct Url {
     std::string Host, Target, Origin;
     int Port = 0;
@@ -64,6 +66,37 @@ inline bool Parse(const std::string& Value, Url& Result) {
 }
 inline bool Method(const std::string& Value) {
     return Value=="GET" || Value=="POST" || Value=="PUT" || Value=="PATCH" || Value=="DELETE" || Value=="HEAD" || Value=="OPTIONS";
+}
+// Capture original checked wire values (before parser transfer-token folding).
+// Preserve order/duplicates; reject obsolete folding and malformed field lines.
+// Failure leaves the caller's prior collection untouched.
+inline bool CaptureHeaders(const std::string& Wire,std::vector<ResponseHeader>& Result) {
+    if (Wire.size()>MaxHeaderBytes) return false;
+    auto End=Wire.find("\r\n");
+    if (End==std::string::npos) return false;
+    size_t Position=End+2;
+    std::vector<ResponseHeader> Parsed;
+    while (Position<Wire.size()) {
+        End=Wire.find("\r\n",Position);
+        if (End==std::string::npos) return false;
+        if (End==Position) {
+            if (End+2!=Wire.size()) return false;
+            Result=std::move(Parsed); return true;
+        }
+        auto Colon=Wire.find(':',Position);
+        if (Colon==std::string::npos || Colon>=End || Colon==Position || Colon-Position>128 || Parsed.size()>=MaxResponseHeaders) return false;
+        std::string Name=Wire.substr(Position,Colon-Position);
+        for (unsigned char C:Name)
+            if (!((C>='A' && C<='Z') || (C>='a' && C<='z') || (C>='0' && C<='9') || std::string("!#$%&'*+-.^_`|~").find(char(C))!=std::string::npos)) return false;
+        size_t Begin=Colon+1, Finish=End;
+        while (Begin<Finish && (Wire[Begin]==' ' || Wire[Begin]=='\t')) ++Begin;
+        while (Finish>Begin && (Wire[Finish-1]==' ' || Wire[Finish-1]=='\t')) --Finish;
+        std::string Value=Wire.substr(Begin,Finish-Begin);
+        for (unsigned char C:Value) if ((C<32 && C!='\t') || C>=127) return false;
+        Parsed.push_back({Lower(std::move(Name)),std::move(Value)});
+        Position=End+2;
+    }
+    return false;
 }
 inline bool Header(const std::string& Name,const std::string& Value) {
     if (Name.empty() || Name.size()>128 || Value.size()>4096) return false;
