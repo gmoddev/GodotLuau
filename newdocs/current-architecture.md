@@ -467,8 +467,18 @@ retires with NetworkService reset. GL-034 closes with exact current
 [runtime](evidence/networking2-436850a-runtime-verification.json),
 [candidate](evidence/networking2-436850a-candidate-verification.json) and
 [Release](evidence/networking2-436850a-release-qualification.json) receipts.
-GL-039 records approximately seven-second structural convergence in the 32-peer
-burst workload; no general latency or 64-player guarantee is established.
+GL-039's bounded FIFO drain submits up to eight frames and 60 KiB per peer visit
+within the existing cooperative submission budget and 64-frame application-ACK
+window. Clients apply up to eight FIFO frames within a cooperative four-ms turn,
+revalidating native lifetime after each application. Queue/native ownership and
+timeout limits are unchanged. Its repeated 32-peer Release measurements improve
+the prior roughly seven-second final-counter convergence to 0.299/0.226 ms in
+64-object worlds and 75.159/699.938 ms in 512-object worlds. The
+[receipt](evidence/gl039-release41-qualification.json) retains a failed legacy
+large-world warmup and the independent candidate runs. Final Windows/Linux
+sanitizer verification at `903b10c` closes GL-039 within the
+[recorded scope](evidence/gl039-final-verification.json); GL-040/041 remain open.
+No general latency, graphical or 64-player guarantee follows from these profiles.
 
 Main includes the qualified Phase 1 native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen

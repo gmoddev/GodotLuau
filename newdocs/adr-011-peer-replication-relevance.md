@@ -197,7 +197,18 @@ Property writes coalesce before admission. Already accepted reparent barriers
 remain immutable FIFO work, including two changes in one Luau turn. Cached
 property bytes are reused with per-peer headers. NetworkService's existing tick
 does at most eight peer turns or four milliseconds of submission work, round
-robin. Catalog refresh/query and native property application have their own
+robin. GL-039 qualified native fingerprint `6698ad26...` drains up to eight queued
+FIFO frames and at most 60 KiB per peer visit within that existing cooperative
+budget, rechecking native capacity and
+the unchanged 64-frame application-ACK window before each send. The first frame
+retains progress if earlier peer planning consumed the budget. Clients apply
+up to eight FIFO frames per tick with a cooperative four-ms quantum, revalidating
+native lifetime after each application. This does not coalesce accepted barriers
+or increase queue, native ownership, in-flight or timeout limits. Its repeated
+32-peer latency and final sanitizer evidence is in the
+[qualification receipt](evidence/gl039-final-verification.json), separate from
+the focused ordering/payload fixtures and broader unsupported workloads.
+Catalog refresh/query and native property application have their own
 finite object/byte bounds; the four milliseconds is not a whole-frame time bound
 or a proof of fairness under every mixed traffic workload.
 
@@ -230,8 +241,10 @@ Exact `436850a` qualification includes the four hosted workflows, actual server
 service replacement during an unfinished sweep, repeated 1/16/32-peer Release
 small/large worlds, and separate bounded loss/reordering/fairness workloads.
 See the [measurement record](networking2-benchmarks.md) and linked receipts.
-GL-034's frame-cost correction is qualified within those profiles; GL-039 retains
-approximately seven-second 32-peer structural convergence. Remaining coverage
+GL-034's frame-cost correction is qualified within those profiles. GL-039's
+bounded FIFO drain corrects the prior roughly seven-second 32-peer convergence
+within its repeated headless Release profiles; retained baseline failures and
+limits remain explicit. Remaining coverage
 includes broader impairment/churn, mixed-mode rejection and full graphical
 behavior. Static-place removal history before a peer joins
 is not introduced by this runtime-only slice. Unsupported arbitrary attached

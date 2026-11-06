@@ -86,7 +86,7 @@ local Far = Instance.new('Part'); Far.Name = 'Far'; Far.Anchored = true; Far.Pos
 local Counter = Instance.new('IntValue'); Counter.Name = 'Counter'; Counter.Value = 1; Counter.Parent = game.ReplicatedStorage
 local A = Instance.new('Folder'); A.Name = 'ParentA'; A.Parent = game.ReplicatedStorage
 local B = Instance.new('Folder'); B.Name = 'ParentB'; B.Parent = game.ReplicatedStorage
-local Child = Instance.new('Folder'); Child.Name = 'Child'; Child.Parent = A
+local Child = Instance.new('StringValue'); Child.Name = 'Child'; Child.Value = string.rep('p',7500); Child.Parent = A
 local Hidden = Instance.new('Folder'); Hidden.Name = 'HiddenDirect'; Hidden.Parent = World
 local Inner = Instance.new('Folder'); Inner.Name = 'HiddenChild'; Inner.Parent = Hidden
 Hidden.Name = 'ServerStorage'
@@ -138,8 +138,8 @@ game:SetAttribute('Created',true)
     await Until(func(): return int(Entry(FirstPeer, NearId).get("Generation", 0)) > Generation, "reentry has a fresh materialization generation")
     var SweepReferenceId: int = Storage.get_node("SweepReference").get_meta("_gl_netid")
     await Until(func(): return int(View(0).RefreshStage) == 1 and int(View(0).RefreshCursor) > SweepReferenceId, "unfinished source sweep has captured the reference before mutation")
-    ScriptNode("MoveTwice", "local C=game.ReplicatedStorage.ParentA.Child; C.Parent=game.ReplicatedStorage.ParentB; C.Parent=game.ReplicatedStorage.ParentA; game.ReplicatedStorage.SweepTarget:Destroy(); game:SetAttribute('Reparented',true)")
-    await Until(func(): return Game.has_meta("Reparented"), "two structural barriers submitted")
+    ScriptNode("MoveTwice", "local C=game.ReplicatedStorage.ParentA.Child; for N=1,8 do C.Parent=game.ReplicatedStorage.ParentB; C.Parent=game.ReplicatedStorage.ParentA end; game.ReplicatedStorage.SweepTarget:Destroy(); game:SetAttribute('Reparented',true)")
+    await Until(func(): return Game.has_meta("Reparented"), "sixteen structural barriers submitted")
     Mark("reparent.go"); await Wait("client1.reparent"); await Wait("client2.reparent")
     Check(Storage.get_node("SweepReference").get("Value") == null, "native ObjectValue getter returns nil after target destruction")
     ScriptNode("ReadDestroyedReference", "assert(game.ReplicatedStorage.SweepReference.Value == nil); game:SetAttribute('DestroyedReferenceRead',true)")
@@ -247,8 +247,11 @@ func Client() -> void:
         Check(World.get_node("Near").get_instance_id() != Identity, "reentry uses a fresh native identity")
         Identity = World.get_node("Near").get_instance_id(); Mark("client1.back")
     await Wait("reparent.go")
-    await Until(func(): return Structural == ["A-","B+","B-","A+"], "reparent barriers preserve every structural transition")
+    var ExpectedStructural := []
+    for Round in range(8): ExpectedStructural.append_array(["A-","B+","B-","A+"])
+    await Until(func(): return Structural == ExpectedStructural, "burst preserves every ordered structural transition")
     Check(Storage.get_node("ParentA/Child").get_instance_id() == ChildIdentity, "reparent preserves child native identity")
+    Check(str(Storage.get_node("ParentA/Child").get("Value")) == "p".repeat(7500), "large FIFO barrier payload survives burst splitting intact")
     await Until(func(): return Storage.has_node("SweepReference") and Storage.get_node("SweepReference").get("Value") == null and not Storage.has_node("SweepTarget"), "destruction during an unfinished sweep clears references and retires the exact target")
     Mark("client" + str(ClientIndex) + ".reparent")
     await Wait("reference.go")

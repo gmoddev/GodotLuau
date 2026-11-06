@@ -734,14 +734,18 @@ void NetworkService::TickReplication() {
         FailReplicationPeer(1, "matching structural protocol did not begin within ten seconds"); return;
     }
     if (Replication.Receiving && mode == 2 && RemoteServiceActive()) {
-        const uint64_t Identity = uint64_t(get_instance_id());
-        auto Pending = Replication.Incoming.Take(1);
-        if (Pending) {
+        const uint64_t Identity = uint64_t(get_instance_id()), Started = Time::get_singleton()->get_ticks_usec();
+        // Drain a bounded FIFO burst rather than adding one scene tick per
+        // accepted barrier. Revalidate lifetime after every application.
+        for (size_t Batch = 0; Batch < 8 && Replication.Receiving && mode == 2 && RemoteServiceActive(); ++Batch) {
+            auto Pending = Replication.Incoming.Take(1);
+            if (!Pending) break;
             const bool Live = Pending->Object == Identity && Pending->Key.Epoch == uint64_t(Replication.ReceivedEpoch) &&
                 Pending->Key.Session == uint64_t(gl_local_user_id()) && _mp()->get_peers().has(1);
             bool Applied = Live && RemoteNow() - Pending->EnqueuedUsec <= 10000000 && ApplyReplicationFrame(*Pending->Body);
             if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
-            if (!Applied && mode == 2 && RemoteServiceActive()) FailReplicationPeer(1, "received structural frame could not be materialized");
+            if (!Applied && mode == 2 && RemoteServiceActive()) { FailReplicationPeer(1, "received structural frame could not be materialized"); return; }
+            if (Time::get_singleton()->get_ticks_usec() - Started >= 4000) break;
         }
         return;
     }
@@ -809,21 +813,27 @@ void NetworkService::TickReplication() {
                 }
             }
             if (View.Sent > View.Acked && View.WaitingSince && Now - View.WaitingSince > 10000000) { Failures.push_back(PeerValue); continue; }
-            const auto* Pending = Replication.Outgoing.Front(PeerValue);
-            if (Pending && View.Sent - View.Acked < 64) {
-                if (Now >= Pending->EnqueuedUsec && Now - Pending->EnqueuedUsec > 10000000) { Failures.push_back(PeerValue); continue; }
+            // Amortize a peer visit across a small FIFO burst, within the
+            // existing global submission budget and 64-frame ACK window.
+            size_t BurstBytes = 0;
+            for (size_t Batch = 0; Batch < 8 && View.Sent - View.Acked < 64; ++Batch) {
+                const auto* Pending = Replication.Outgoing.Front(PeerValue);
+                if (!Pending || (Batch && Time::get_singleton()->get_ticks_usec() - Started >= 4000)) break;
+                // Keep the old maximum single-frame byte quantum per visit.
+                if (Pending->Bytes > 60 * 1024 - BurstBytes) break;
+                if (Now >= Pending->EnqueuedUsec && Now - Pending->EnqueuedUsec > 10000000) { Failures.push_back(PeerValue); break; }
                 Dictionary Capacity = NativeRemoteAdmission(PeerValue);
                 bool WouldBlock = !NativeCapacity(Capacity, Pending->Bytes);
 #ifdef GL_RUNTIME_TESTS
                 WouldBlock = WouldBlock || RemoteBusyPeer == PeerValue;
 #endif
-                if (WouldBlock) CountRemote(Replication.Deferred);
+                if (WouldBlock) { CountRemote(Replication.Deferred); break; }
                 else {
                     auto Message = *Pending;
                     auto CommitValue = Message.Body->Prepared;
                     Error Sent = rpc_id(PeerValue, "_replication_frame", Message.Body->Bytes);
                     if (ObjectDB::get_instance(Identity) != this || is_queued_for_deletion()) return;
-                    if (Sent != OK) { Failures.push_back(PeerValue); continue; }
+                    if (Sent != OK) { Failures.push_back(PeerValue); break; }
                     for (auto Change = CommitValue->Changes.begin(); Change != CommitValue->Changes.end();) {
                         auto Node = CommitValue->Changes.extract(Change++);
                         auto Previous = View.Known.find(Node.key());
@@ -836,6 +846,7 @@ void NetworkService::TickReplication() {
                     View.Sent = CommitValue->Sequence;
                     if (!View.WaitingSince) View.WaitingSince = Now;
                     Replication.Outgoing.Take(PeerValue);
+                    BurstBytes += Message.Bytes;
                     CountRemote(Replication.Submitted); CountRemote(Replication.Bytes, Message.Bytes);
                     CountRemote(Replication.Enters, CommitValue->Enters); CountRemote(Replication.Leaves, CommitValue->Leaves);
                     CountRemote(Replication.Retired, CommitValue->Retired); CountRemote(Replication.Updates, CommitValue->Updates);

@@ -46,12 +46,16 @@ func Run() -> void:
         await Until("Done")
         Check(FileAccess.get_file_as_string("user://ds_GL009_Sentinel.json")=="123","helper failure retains committed sentinel")
     elif Mode=="contention":
+        # Warm this disposable helper image before the timed contention case.
+        # Each operation still starts its own companion; keep the same bound.
+        Script(Prefix+"assert(Store:GetAsync('Missing')==nil); game:SetAttribute('ContentionReady',true)")
+        await Until("ContentionReady")
         var Location := FileAccess.open("res://root.txt",FileAccess.WRITE)
         Location.store_string(OS.get_user_data_dir()); Location.close()
         var Deadline := Time.get_ticks_msec()+10000
         while not FileAccess.file_exists("res://locked.marker") and Time.get_ticks_msec()<Deadline: await process_frame
         Check(FileAccess.file_exists("res://locked.marker"),"native lock held")
-        Script(Prefix+"local Start=os.clock(); local Ok,Error=pcall(Store.GetAsync,Store,'Missing'); assert(not Ok and Error:find('Lock contention',1,true)); assert(os.clock()-Start>=.8 and os.clock()-Start<3); game:SetAttribute('Done',true)")
+        Script(Prefix+"local Start=os.clock(); local Ok,Error=pcall(Store.GetAsync,Store,'Missing'); local Elapsed=os.clock()-Start; assert(not Ok and Error:find('Lock contention',1,true),'[Persistence:Transactions] contention result '..tostring(Ok)..' '..tostring(Error)); assert(Elapsed>=.8 and Elapsed<3,'[Persistence:Transactions] contention seconds '..tostring(Elapsed)); game:SetAttribute('Done',true)")
         var Frames := 0
         while not Game.has_meta("Done") and Frames<3000: Frames+=1; await process_frame
         Check(Frames>10,"frames progress during lock contention")

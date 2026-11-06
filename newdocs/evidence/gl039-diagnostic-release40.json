@@ -1,0 +1,409 @@
+{
+  "Scope": "Diagnostic Release comparison; cb4c967 candidate profile failed presentation and is not accepted. No32-peer measurement was launched.",
+  "NativeSource": "6698ad267f15b43fa3cacccd8d9d61ff625c2a4c492d304db71607cce25352ad",
+  "BaselineRevision": "436850aca89e87e6ee8bc2e520740318ba0be27c",
+  "CandidateRevision": "cb4c9674d8f82cbcd42b9bd76f9e8d781dedd05e",
+  "ArchiveSHA256": "b85ec41022ad672a52d3226965a77072668169327f49c9761733c538aaf3dea1",
+  "Records": [
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 0,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-2a931dc8-5b5f-4e3f-9399-6452eaf7e946/summary.json",
+      "ServerFrameP95MS": 9.299,
+      "ConvergenceUsecRange": [
+        94,
+        154
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 33.3238001912832,
+        "2.0": 33.3910002373159,
+        "3.0": 33.4108998067677,
+        "4.0": 41.7300998233259,
+        "5.0": 41.5860000066459,
+        "6.0": 41.6136002168059,
+        "7.0": 41.7514001019299,
+        "8.0": 33.1488000229001,
+        "9.0": 33.484000246971796,
+        "10.0": 41.6919998824596,
+        "11.0": 33.4542002528906,
+        "12.0": 33.3121996372938,
+        "13.0": 33.3537999540567,
+        "14.0": 33.5194002836943,
+        "15.0": 33.5634001530707,
+        "16.0": 558.119600173086
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 0,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-2a931dc8-5b5f-4e3f-9399-6452eaf7e946/summary.json",
+      "ServerFrameP95MS": 8.803,
+      "ConvergenceUsecRange": [
+        88,
+        165
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 25.1478003337979,
+        "2.0": 33.4339002147317,
+        "3.0": 25.1221996732056,
+        "4.0": 25.0773001462221,
+        "5.0": 33.4016000851989,
+        "6.0": 25.4163001663983,
+        "7.0": 25.1892996020615,
+        "8.0": 33.2281999289989,
+        "9.0": 25.1927999779582,
+        "10.0": 25.0900997780263,
+        "11.0": 33.3607997745275,
+        "12.0": 25.219100061804,
+        "13.0": 25.3254999406636,
+        "14.0": 25.108099915087198,
+        "15.0": 25.1855999231339,
+        "16.0": 591.21340001002
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 1,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-2a931dc8-5b5f-4e3f-9399-6452eaf7e946/summary.json",
+      "ServerFrameP95MS": 8.913,
+      "ConvergenceUsecRange": [
+        96,
+        175
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 25.1660998910666,
+        "2.0": 25.1593999564648,
+        "3.0": 25.1085995696485,
+        "4.0": 25.2900999039412,
+        "5.0": 25.0502000562847,
+        "6.0": 25.0984998419881,
+        "7.0": 25.1517998985946,
+        "8.0": 25.1331999897957,
+        "9.0": 25.2275001257658,
+        "10.0": 25.0626998022199,
+        "11.0": 25.1758000813424,
+        "12.0": 25.0898003578186,
+        "13.0": 25.1460000872612,
+        "14.0": 33.3364000543952,
+        "15.0": 33.3803002722561,
+        "16.0": 599.71860004589
+      }
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 1,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-2a931dc8-5b5f-4e3f-9399-6452eaf7e946/summary.json",
+      "ServerFrameP95MS": 8.796999999999999,
+      "ConvergenceUsecRange": [
+        95,
+        171
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 33.472899813205,
+        "2.0": 41.6704998351633,
+        "3.0": 33.347699791193,
+        "4.0": 33.6102996952832,
+        "5.0": 41.5698001161218,
+        "6.0": 33.680099993944204,
+        "7.0": 33.3650000393391,
+        "8.0": 50.0841001048684,
+        "9.0": 41.559400036931,
+        "10.0": 41.3846997544169,
+        "11.0": 41.514600161463,
+        "12.0": 33.5148996673524,
+        "13.0": 33.4040997549891,
+        "14.0": 33.8407000526786,
+        "15.0": 33.3539000712335,
+        "16.0": 966.520799789578
+      }
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-a61fe48f-e29e-4df5-b091-3b6ff2ee5988/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17181995008,
+        "CommitFree": 7218548736
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-a61fe48f-e29e-4df5-b091-3b6ff2ee5988/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17181995008,
+        "CommitFree": 7218548736
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-a61fe48f-e29e-4df5-b091-3b6ff2ee5988/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17181995008,
+        "CommitFree": 7218548736
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 512,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-a61fe48f-e29e-4df5-b091-3b6ff2ee5988/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17181995008,
+        "CommitFree": 7218548736
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-bc884e81-12b0-4c7a-89fa-9dfcd0c8098a/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17183211520,
+        "CommitFree": 7212740608
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 0,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-bc884e81-12b0-4c7a-89fa-9dfcd0c8098a/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17183211520,
+        "CommitFree": 7212740608
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-bc884e81-12b0-4c7a-89fa-9dfcd0c8098a/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17183145984,
+        "CommitFree": 7212740608
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 32,
+      "World": 64,
+      "Trial": 1,
+      "Result": "BLOCKED_RESOURCE_PREFLIGHT",
+      "Path": "foundation-benchmark-release40-bc884e81-12b0-4c7a-89fa-9dfcd0c8098a/summary.json",
+      "Resources": {
+        "Available": true,
+        "PhysicalFree": 17183145984,
+        "CommitFree": 7212740608
+      },
+      "RequiredCommit": 7717519360,
+      "RequiredPhysical": 17179869184
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 0,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-e071f2b8-b8fa-4cbd-a723-e567486bd88a/summary.json",
+      "ServerFrameP95MS": 9.286000000000001,
+      "ConvergenceUsecRange": [
+        94,
+        231
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 33.5610001347959,
+        "2.0": 25.269399862736503,
+        "3.0": 33.6429001763463,
+        "4.0": 33.463700208813,
+        "5.0": 25.3464002162218,
+        "6.0": 33.2879996858537,
+        "7.0": 33.2567002624273,
+        "8.0": 33.5149001330137,
+        "9.0": 33.3758997730911,
+        "10.0": 41.8493002653122,
+        "11.0": 33.2702999003232,
+        "12.0": 33.3190001547337,
+        "13.0": 33.3422003313899,
+        "14.0": 33.3885997533798,
+        "15.0": 41.402299888432,
+        "16.0": 33.1695997156203
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 0,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-e071f2b8-b8fa-4cbd-a723-e567486bd88a/summary.json",
+      "ServerFrameP95MS": 8.99,
+      "ConvergenceUsecRange": [
+        90,
+        141
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 25.0821001827717,
+        "2.0": 25.1154000870883,
+        "3.0": 25.0943996943533,
+        "4.0": 31.2466998584569,
+        "5.0": 25.200899690389598,
+        "6.0": 25.1585999503732,
+        "7.0": 25.0848000869155,
+        "8.0": 31.445799861103303,
+        "9.0": 25.0921002589166,
+        "10.0": 33.3742001093924,
+        "11.0": 25.1031001098454,
+        "12.0": 33.4061998873949,
+        "13.0": 33.4028997458517,
+        "14.0": 25.1166000962257,
+        "15.0": 25.0758002512157,
+        "16.0": 25.1195998862386
+      }
+    },
+    {
+      "Configuration": "Candidate",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 1,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-e071f2b8-b8fa-4cbd-a723-e567486bd88a/summary.json",
+      "ServerFrameP95MS": 9.055,
+      "ConvergenceUsecRange": [
+        88,
+        144
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 25.2038999460638,
+        "2.0": 33.4089999087155,
+        "3.0": 25.2350000664592,
+        "4.0": 25.1281000673771,
+        "5.0": 25.2423002384603,
+        "6.0": 25.1962998881936,
+        "7.0": 25.061999913304998,
+        "8.0": 25.0727999955416,
+        "9.0": 25.1337001100182,
+        "10.0": 25.0814002938568,
+        "11.0": 33.3541999571025,
+        "12.0": 25.1082996837795,
+        "13.0": 25.146699976176,
+        "14.0": 33.2049997523427,
+        "15.0": 25.1429998315871,
+        "16.0": 25.1365001313388
+      }
+    },
+    {
+      "Configuration": "Baseline",
+      "Peers": 16,
+      "World": 64,
+      "Trial": 1,
+      "Result": "PASS",
+      "Path": "foundation-benchmark-release40-e071f2b8-b8fa-4cbd-a723-e567486bd88a/summary.json",
+      "ServerFrameP95MS": 8.806,
+      "ConvergenceUsecRange": [
+        95,
+        232
+      ],
+      "ClientRTTP95MS": {
+        "1.0": 33.5821001790464,
+        "2.0": 33.348600380122704,
+        "3.0": 41.752199642360196,
+        "4.0": 33.4951998665929,
+        "5.0": 33.296899870038,
+        "6.0": 33.3733004517853,
+        "7.0": 41.3184999488294,
+        "8.0": 41.3374998606741,
+        "9.0": 33.1473997794092,
+        "10.0": 33.6692002601921,
+        "11.0": 33.0270999111235,
+        "12.0": 25.320400018245,
+        "13.0": 33.408800140023196,
+        "14.0": 25.220800191164,
+        "15.0": 33.0942999571562,
+        "16.0": 33.1496996805072
+      }
+    }
+  ],
+  "Windows": [
+    [
+      {
+        "Profile": 1,
+        "Exit": 1,
+        "TimedOut": false,
+        "OwnedJobReaped": true,
+        "Errors": []
+      },
+      {
+        "Profile": 2,
+        "Exit": 1,
+        "TimedOut": false,
+        "OwnedJobReaped": true,
+        "Errors": []
+      },
+      {
+        "Profile": 3,
+        "Exit": 0,
+        "TimedOut": false,
+        "OwnedJobReaped": true,
+        "Errors": []
+      },
+      {
+        "Profile": 4,
+        "Exit": 0,
+        "TimedOut": false,
+        "OwnedJobReaped": true,
+        "Errors": []
+      }
+    ]
+  ]
+}

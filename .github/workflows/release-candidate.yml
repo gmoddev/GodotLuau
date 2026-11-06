@@ -143,6 +143,7 @@ jobs:
             ${{ runner.temp }}/profile/core/**
             ${{ runner.temp }}/profile/native/**/*.log
             ${{ runner.temp }}/profile/native/**/results.json
+            ${{ runner.temp }}/profile/native/**/evidence-*.json
       - name: Retain admitted host build diagnostics separately
         if: ${{ always() }}
         uses: actions/upload-artifact@v4

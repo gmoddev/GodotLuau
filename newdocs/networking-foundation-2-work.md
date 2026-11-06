@@ -1,5 +1,351 @@
 # Networking Foundation 2 campaign journal
 
+## GL-039 qualified and closed on the unmerged campaign
+
+Final fixture revision `903b10c4d19db3b9a739e94765746bf7366ad77f` passes hosted
+full-native sanitizer workflow
+[42049370120](https://github.com/gmoddev/GodotLuau/actions/runs/42049370120) on
+Windows and Linux. Downloaded summaries establish 23 Windows/24 Linux checks,
+85 core cases and 131 native actors per platform, with controls passed, complete
+qualification and no unexpected reports. Both builds report 1,161 instrumented
+native files. The existing core artifact parser passes; changed fixture hashes
+match the exact Git source and extension identities agree across manifests.
+Existing strict CI/instrumentation gates are trusted rather than reimplemented.
+See the [final receipt](evidence/gl039-final-verification.json).
+
+Ordinary core `42031393024` and native `42031392980` pass at `37a5e4e`; their
+downloaded reports and summary identities/counts are reviewed. Four source
+profiles and both extracted packages at `fa0d431` already verify with the
+established candidate verifier. All use production fingerprint `6698ad26...`.
+Only two fixtures and documentation change after that qualified implementation;
+the Git diff establishes unchanged production/build inputs. Reuse these results
+within their exact scope. No repeat profile/package build, performance run or
+new qualifier test suite is required.
+
+The existing Release workload passes all four candidate 32-peer trials, with
+worst-client final-counter convergence 0.299/0.226 ms at 64 objects and
+75.159/699.938 ms at 512 objects, down from the retained 6.58–6.96 seconds. The
+14 passing configurations include ordinary/impaired 16-peer pairs. One legacy
+512-object warmup failure remains failed; its candidate measurements run
+independently, with no fresh paired large-world frame-speedup claim. The
+7,717,519,360-byte preflight guard, queue/native limits, timeouts and all existing
+assertions remain intact. Required transition/payload regressions pass.
+
+GL-039 closes within this headless admitted-host scope. The failed sanitizer
+attempts remain failed and documented below. Fixture isolation does not close
+GL-040's coincident-body or GL-041's raised-startup findings. General latency,
+64-peer, full graphical and broader campaign guarantees are not established.
+Worker leases 5 and 7 release after checked retirement; no task workload remains
+active. The temporary pagefile has no boot registration; its safe post-restart
+cleanup is in the [capacity receipt](evidence/gl039-capacity-recovery.json).
+All commits are preserved. Main, disabled releases and fail-closed updater stay
+unchanged; this qualification is not merge or distribution authorization.
+
+## Ground-level walking setup; raised startup retained as GL-041
+
+At `436af11`, full sanitizer run `42041791695` passes Linux; Windows DataStore
+passes but listen presentation again catches the same falling local client.
+The lane barrier observes a default-ground sample at `(0,-0.00026,0)` before the
+lane arrives. After the walking warmup, position/velocity are again
+`(3.6875,1.25,48)` / `(16,-18,0)`, then `(3.954167,0.9375,48)` /
+`(16,-18.75,0)`. Lane arrival alone was insufficient. GL-041 retains this
+separated, raised-startup behavior and its unproven grant/reconciliation/physics
+cause. It is distinct from GL-040's high coincident-spawn ascent.
+
+The walking fixture's floor top is -1 and its native capsule half-height is 1.
+Place its trusted lane origin at y=0 instead of y=5. This removes an unnecessary
+startup fall from the walking observation without changing production physics,
+authority, tolerances, deadlines, the warmup or any ground/animation assertion.
+Single-character jumping/falling tests remain unchanged and mandatory. Neither
+GL-040 nor GL-041 closes through this fixture isolation.
+
+Worker lease generation 7 covers a focused existing Windows ASan presentation
+run: all 12 listen/dedicated/default/custom multiplayer actors pass. Reuse cached
+matching host/products with unchanged Character/network paths; no compilation
+or extra test framework is introduced. This is fixture evidence, not a new
+qualification of the older cached runtime. Native fingerprint `6698ad26...`
+still requires the final hosted check. Archive `presentation-ground44-checkpoint.zip`
+has 228 members, 636,348 bytes, SHA-256
+`c6f09b701101842f678f4abbe59446fe295543c6f149764ea88a7a845c41bdf4`.
+All assertions and archive integrity verify; owned process census is zero and
+lease 7 releases at 14:51:45 UTC. No worker workload remains active.
+
+## Captured late lane placement explains the remaining presentation race
+
+At `20a1592`, sanitizer run `42036812889` passes Linux. Both platforms' DataStore
+groups pass with the original contention status, timing and frame-progress
+checks. Windows presentation still fails the post-warmup ground assertion.
+The added local samples show the exact condition: before/after physics the
+client is at `(3.6875,1.25,48)` / `(3.954167,0.9375,48)` with vertical velocity
+`-18` / `-18.75`. Initial grounding trace is empty. It had already grounded at
+the default spawn before receiving its trusted server lane teleport, then was
+still falling when the 90-tick walking sample ran. Other participants are near
+the floor and their walking cycles progress. Retain the failed artifacts under
+`ci-gl039-warm`; post-physics sampling alone was insufficient.
+
+The smallest correction waits for the nonzero server-assigned lane as well as
+real floor contact before movement. Add a lane-arrival assertion; retain both
+ground checks, the existing 15-second deadline, 90-tick warmup and every motion,
+identity and animation assertion. No physics, network authority, tolerance or
+production source changes. This handles a fixture setup race rather than hiding
+the separately observed GL-040 coincident-body behavior. Fresh full sanitizer
+CI is required for this changed fixture; reuse the unchanged implementation's
+existing ordinary/profile/package and 32-peer evidence.
+
+## Presentation passes; Windows contention fixture follow-up
+
+At `37a5e4e`, core `42031393024` and ordinary native `42031392980` pass on both
+platforms. Full-native sanitizer `42031394386` passes Linux. Both platforms'
+presentation groups pass, preserving every grounding/movement/animation check.
+Windows fails a different existing DataStore contention assertion, followed by
+the strict check's missing incomplete DataStore result. Controls pass and there
+are no unexpected sanitizer reports. The failed artifacts remain retained under
+`ci-gl039-phase`; this is not a passing full Windows sanitizer run.
+
+The old single-line assertion does not identify whether the returned status or
+elapsed time failed. Source shows each operation starts a new helper, so the
+0.8–3-second test includes loading the freshly copied ASan executable as well as
+the backend's one-second lock wait and helper retirement. The focused fixture
+change reads the missing key before publishing the root barrier, warming that
+disposable executable image; it does not introduce a persistent worker. The
+timed request still creates a new companion and retains the exact error,
+0.8–3-second and frame-progress assertions. Failure messages now retain status
+and elapsed seconds. Cold helper behavior remains covered by the other cases.
+Cold-image attribution remains a hypothesis, not a reproduced native defect.
+
+The worker lease is busy with another campaign, so no additional worker test is
+started or lease bypassed. Run fresh full-native sanitizer CI for this fixture
+change. Reuse `37a5e4e` ordinary native and `fa0d431` four-profile/package evidence
+within their unchanged-production scope instead of rebuilding those matrices
+again. The fixture-only commit skips automatic duplicate push jobs; the manual
+full sanitizer workflow still requires both complete platform suites and all
+existing core/native checks. GL-039 remains open until that result verifies.
+
+## Capacity recovered and 32-peer latency measured — 2026-11-05
+
+The owner authorizes bounded pagefile recovery and MainPC fallback. DockerPC has
+no remaining GL-039 process to retire; large allocations belong to unrelated
+workloads and remain untouched. Its free commit is 7,291,944,960 bytes despite
+17,363,705,856 bytes of free physical RAM. MainPC lacks the existing physical-RAM
+headroom. A temporary, non-boot-registered auxiliary pagefile adds 2 GiB through
+the existing privileged SSH/Python installation. Free commit becomes
+8,492,187,648 bytes; the 7,717,519,360-byte guard remains unchanged. Windows' own
+system-managed file changes size too; the receipt reports actual commit rather
+than equating allocated disk bytes with recovered commit. No restart, process
+termination, shared-cache cleanup or persistent setting change occurs. The
+[capacity receipt](evidence/gl039-capacity-recovery.json) records the failed
+initial helper call, correction, observed counters and safe rollback after a
+normally planned restart. Never delete or shrink an active pagefile.
+
+Core `41964866152`, native `41964866191` and all four candidate profiles/package
+gates `41964867366` pass at `fa0d431`; downloaded candidate artifacts verify with
+the existing verifier in the
+[receipt](evidence/gl039-fa0d431-candidate-verification.json). Production inputs
+remain native fingerprint `6698ad26...`. Both full-native sanitizer jobs fail
+only the new walking-ground sample in listen presentation; no unexpected
+sanitizer report is present. Remote poses remain near the floor and remote walk
+cycles pass, unlike the prior GL-040 airborne-host failure.
+
+Lease generation 5 covers the existing sealed Release recipe and subsequent
+independent candidate-only large-world run. All four candidate 32-peer trials
+pass with zero replication failures. Worst-client final convergence is
+299/226 us at 64 objects and 75,159/699,938 us at 512 objects, versus the retained
+6.58–6.96-second old opt-in measurements. Small-world server frame p95 is
+14.813/15.802 ms versus paired legacy 17.954/20.464 ms. Large-world frame p95 is
+15.557/16.050 ms; its legacy baseline fails warmup before candidate launch, so
+the unchanged harness runs the candidate independently. That failed comparison
+is retained, not relabeled passing or retried without attribution. No fresh
+large-world paired frame-speedup claim follows. Ordinary and impaired 16-peer
+pairs pass, including healthy-peer progress. See the
+[Release receipt](evidence/gl039-release41-qualification.json): 14 passes and one
+retained legacy failure, no candidate failure. Raw archive has 1,899 members,
+8,395,841 bytes and SHA-256 `246cfd59e0f80cb3f5d4355b3746f3c5a52f35ba947bf90cb909dc14ca207c4e`.
+Owned process census is zero; all coordinator Jobs retire and lease 5 releases.
+
+The focused fixture correction observes the completed physics step before the
+ground check, retaining its assertion and before/after pose/velocity evidence.
+Godot documents `physics_frame` before node physics callbacks; the prior
+`Ticks(90)` returns at that boundary. Three focused Windows ASan listen actors
+pass using the existing matching host/products; this reuses unchanged Character
+physics and does not qualify a new production binary. Fresh hosted sanitizer
+verification remains required. The phase attribution is source-supported, not
+an independently reproduced before-false/after-true transition in this local
+run. No production physics, assertion, resource bound or native source changes.
+GL-039 remains open pending the final sanitizer result; GL-040 stays separate.
+
+## Current GL-039 checkpoint — fa0d431
+
+The separate-lane presentation fixture is committed and pushed as `fa0d431`.
+Core workflow `41964866152` passes; ordinary native `41964866191` and full-native
+sanitizer `41964870001` are running. Nonpublishing candidate `41964867366` is
+running after cancellation of the superseded `5ea6345` run. Its failed Windows
+Release evidence is retained in the
+[GL-040 receipt](evidence/gl040-presentation-failure.json). Initial policy and
+Linux core sanitizer gates pass; four source profiles remain in progress, not
+accepted. A frozen `fa0d431` verification worktree and
+downloaded core artifacts preserve the source boundary for independent review.
+
+A read-only worker resource probe at 04:02 UTC on 2026-11-05 reports
+7,336,517,632 bytes of free commit, still below 7,717,519,360 bytes. No 32-peer
+actor launches, guard changes, unrelated workload stops or machine-setting
+changes occur. The previously released worker lease remains released.
+The 16 release-candidate admission tests and `git diff --check` pass locally.
+Main remains `9f52b27`; dependency pins, disabled publication and fail-closed
+updater remain unchanged. GL-039 cannot close without actual 32-peer results.
+
+## Presentation evidence revises the initial fixture hypothesis
+
+At `5ea6345`, all core/native/full-native sanitizer workflows pass but Windows
+Release presentation fails again. Saved JSON now shows the host rising to about
+161.9 units while other participants remain near the floor; the initial
+ground-before-walking change was insufficient. GL-040 retains this observed
+coincident-spawn interaction without asserting an unproven physics cause.
+The next small fixture change assigns parallel lanes through the already
+qualified trusted-server CharacterAdded/Position API before peers join, rather
+than changing production collision/platform behavior. Every existing ground,
+movement, identity and animation assertion remains required. GL-039 and GL-040
+remain open until their respective acceptance facts are established.
+
+## GL-039 diagnostic run — 32-peer memory preflight blocks launch
+
+Atomic worker-heavy lease generation 4 is acquired at 03:18:52 UTC, renewed,
+then released at 03:23:13 after checked retirement. The first unsealed recipe
+references a missing preinstalled helper; no benchmark starts in that root.
+Fresh sealed installation `release40` uses the same diagnostic Release adapter
+from the failed `cb4c967` profile, explicitly not accepted candidate proof. The
+runtime fingerprint remains `6698ad26...`; the earlier full runtime matrix
+verifies that source independently. Neither a failed candidate nor this
+diagnostic result is relabeled full qualification.
+
+Both 32-peer world sizes are blocked before launch: free commit is about
+7.21–7.22 GB decimal, below the unchanged 7,717,519,360-byte requirement. No
+resource guard is weakened. The separate 16-peer ordinary and impaired-peer
+pairs pass all eight configurations, with zero replication failures and retained
+frame/RTT/convergence metrics. These do not qualify 32 peers. See the
+[diagnostic receipt](evidence/gl039-diagnostic-release40.json).
+
+All executed outer/nested Jobs are checked reaped, with no timeout/output errors.
+The final census finds zero owned processes/listeners. Raw archive integrity
+passes: 869 members, 3,162,648 bytes, SHA-256
+`b85ec41022ad672a52d3226965a77072668169327f49c9761733c538aaf3dea1`.
+No worker workload remains active. A text clarification asks the user to free
+about 1 GiB of committed worker memory; unrelated workloads and machine settings
+are preserved. Fresh presentation-corrected CI continues independently. GL-039
+remains open pending actual 32-peer execution and full current acceptance.
+
+## Retained Windows Release presentation precondition failure
+
+Candidate workflow `41953316449` passes three source profiles but Windows Release
+fails `listen-custom` at `walking observation starts from grounded owner`, with
+a remote animation comparison also failing. Keep its captured `presentation.log`
+and actor logs. This does not establish a GL-039 source cause: the fixture begins
+scripted walking before establishing startup ground contact. The focused fixture
+correction establishes real grounding first, starts walking, and retains the
+movement/animation checks plus a grounding assertion after the walking warmup.
+No artificial pose reset, physics disable, tolerance increase or timeout increase
+is used. Retain final failed ground samples and presentation evidence JSON in
+future failed artifacts. Fresh qualification is required; no failed profile is
+relabeled passing.
+
+## GL-039 final runtime matrix verified — cb4c967
+
+Core `41953311858`, ordinary native `41953311887` and full-native sanitizer
+`41953312982` pass on Windows/Linux. Frozen-source independent verification
+establishes 85 core cases, 131 native actors per profile, 23 Windows/24 Linux
+sanitizer checks and 1,161 native plus three core instrumented units. Required
+logs/harnesses/products/host identities verify; two ephemeral GL-003 mailbox
+hashes are explicitly retained as such in the
+[receipt](evidence/gl039-cb4c967-runtime-verification.json). The 7,500-byte
+sixteen-barrier fixture passes with exact ordering and payload integrity.
+
+The four-profile/package workflow remains running. Its qualified Release
+products will supply the matched old/new 32-peer test. No older runtime receipt
+or prepared-but-unexecuted recipe is substituted for final latency evidence.
+GL-039 remains open. The worker lease was busy during local preparation;
+historical availability and a fresh Free status do not confer admission.
+
+## GL-039 burst byte-bound review
+
+Before the latency run, source review identifies a byte-quantum edge: eight
+near-maximum frames could exceed the former one-frame per-visit traffic quantum.
+Cap the burst at the existing 60-KiB frame maximum as well as eight frames and
+the existing cooperative time/in-flight checks. This is a source-verified bound
+correction, not a reproduced receiver failure. No queue/native/timeout limit or
+wire format changes. Earlier `01ec4eb` qualification remains attributed to that
+source; fresh proof is required for this additional minimal guard.
+The actual native fixture now reparents a 7,500-byte StringValue sixteen times
+and verifies its exact final payload and every ordered transition. This exercises
+large-frame burst splitting without adding an implementation-mirroring unit test.
+
+## GL-039 resumed CI review — 01ec4eb
+
+Core `41930591599`, ordinary native `41930591984` and candidate `41930600188`
+pass. Independent frozen-source candidate verification checks all four
+85-core/131-actor profiles, logs/products/harnesses, admitted host proof and both
+133-member extracted packages with two startup actors each. The
+[receipt](evidence/gl039-01ec4eb-candidate-verification.json) retains acceptance
+hash `db2e49362134a58235300cec49b298442fb93f55e3095cf09bb6b01db8dccb77`.
+Full-native sanitizer `41930595264` passes Windows but Linux times out after
+five minutes installing compiler prerequisites, before any source build/test.
+Retain that infrastructure failure; rerun only its failed job without runtime,
+assertion or workflow changes. Its result is pending.
+
+The exact qualified Release adapter is staged locally for a matched comparison
+of old `436850a` and new `01ec4eb`, with the same admitted compiler/host. Fixed
+profiles cover repeated 32-peer 64/512-object worlds and 16-peer ordinary and
+impaired fairness checks. GL-039 stays open until actual latency evidence and
+the remaining sanitizer proof establish acceptance. Worker admission now uses
+the shared host-local lease mechanism; no historical release grants a new lease.
+
+## GL-039 interrupted-turn collection — 01ec4eb
+
+Minimal runtime source `01ec4eb` preserves first-frame progress within the
+cooperative submission budget; native fingerprint is `8a3c5036...`. The existing
+two-job Windows Debug ASan incremental build passes, DLL SHA-256
+`96daa40e9dd7bb9cafcfba8428353603ced1297b89bf47fd87847139cc435dd5`.
+The first operator wrapper incorrectly called an unsupported `communicate`
+method and closed its owned Job; the corrected bounded wrapper and its captured
+logs remain alongside that preparation failure.
+
+Pinned coordinator window `6a71ee3f-9ef0-4a2c-a37a-6a699cc778fb` passes both
+profiles: seven relevance actors, twenty Character actors, eight legacy actors
+and six Function actors. No unexpected ASan report occurs. The stronger fixture
+retains all 32 signals from sixteen same-turn barriers in exact order. Captured
+diagnostics include invalid-target messages during relevance peer retirement
+and existing Character teardown/intentional access-rejection diagnostics; this
+is not a claim of empty stderr. Both outer Jobs and the build Job are checked
+reaped, without timeouts or output-reader errors.
+
+The chat interruption delayed collection/release notification. Following the
+coordinator's expiry notice, only bounded collection and retirement checks run.
+The 23:16:32 UTC task-root census finds zero live owned processes; no owned PID
+remains to retain a listener. All SSH/SCP commands finish before checked release
+is sent. Raw archive `gl039-local-checkpoint1.zip` contains 933 members and
+2,746,941 bytes; ZIP integrity passes and SHA-256 is
+`ca676b4cb1fa45933c2c5ea2c6b0efb9991fa0701a3363efe8720280e84e9b88`.
+It preserves actual logs, identities, executed helpers and coordinator journals.
+
+GL-039 stays open: these focused correctness passes do not establish the
+32-peer latency improvement. Fresh hosted qualification and repeated matched
+Release latency/frame/fairness measurements remain required. No worker workload
+is active or queued; a later run requires a separate checked handoff. The branch
+remains unmerged, with release publication and updater admission disabled.
+
+## GL-039 minimal burst candidate — qualification pending
+
+Resume from clean local/remote `b4b6ea3`; main remains `9f52b27`. Retained
+Release evidence reproduces 6.58–6.96-second 32-peer convergence. Source inspection
+finds one queued frame submitted per peer visit and one received frame applied
+per client tick. The candidate changes only those loops to bounded FIFO bursts
+of eight, preserving the existing server eight-peer/four-ms budget, native
+preflight for every send, 64-frame ACK window, queue caps and ten-second failures.
+The client burst has its own cooperative four-ms quantum and revalidates native
+lifetime after each application. No wire format, scheduler or ownership refactor
+is introduced. The actual native fixture now requires all 32 transition signals
+from sixteen same-turn reparent barriers in exact order. Nothing is qualified
+by this source trace; fresh native/sanitizer/platform and paired latency evidence
+must establish the result before GL-039 closes.
+
 ## GL-034/037 qualification complete within recorded profiles — 436850a
 
 GL-037 remains closed by its corrected fixture/actual native matrix. GL-034 now

@@ -1,0 +1,64 @@
+{
+  "Scope": "Observed Windows full-native ASan raised-lane startup behavior, separate from GL-039 latency and GL-040 coincident-body ascent. No precise grant/reconciliation/physics cause is claimed.",
+  "Setting": "Trusted server places each Character at (0,5,Lane*12). Walking warmup is90physics ticks after an initial ground check; lane arrival is additionally required at436af11.",
+  "Records": [
+    {
+      "After": {
+        "Grounded": false,
+        "Position": "(3.954167, 0.9375, 48.0)",
+        "Velocity": "(16.0, -18.75, 0.0)"
+      },
+      "Role": "client1",
+      "FailedAssertions": [
+        {
+          "Label": "walking owner remains physically grounded",
+          "Passed": false
+        }
+      ],
+      "Revision": "20a15921e010a3acf442bf9253a86476cba3113c",
+      "OriginalJSONSHA256": "4cdfe28ed30853efdfa53670e695af7a6117c8f33cd40d8a80a6756647157a37",
+      "Before": {
+        "Grounded": false,
+        "Position": "(3.6875, 1.25, 48.0)",
+        "Velocity": "(16.0, -18.0, 0.0)"
+      },
+      "Grounding": [],
+      "Graphical": false,
+      "Workflow": "https://github.com/gmoddev/GodotLuau/actions/runs/42036812889",
+      "Result": "FAIL"
+    },
+    {
+      "After": {
+        "Grounded": false,
+        "Position": "(3.954167, 0.9375, 48.0)",
+        "Velocity": "(16.0, -18.75, 0.0)"
+      },
+      "Role": "client2",
+      "FailedAssertions": [
+        {
+          "Label": "walking owner remains physically grounded",
+          "Passed": false
+        }
+      ],
+      "Revision": "436af11c2e36aa5a15e70025437cfeaaf2bcbcfe",
+      "OriginalJSONSHA256": "cd79141121d8624df0400c8aee01977c127219e628cb905de0fa958f8a35e10a",
+      "Before": {
+        "Grounded": false,
+        "Position": "(3.6875, 1.25, 48.0)",
+        "Velocity": "(16.0, -18.0, 0.0)"
+      },
+      "Grounding": [
+        {
+          "PlatformVelocity": "(0.0, 0.0, 0.0)",
+          "Position": "(0.0, -0.00026, 0.0)",
+          "Time": 4428,
+          "Velocity": "(0.0, 0.0, 0.0)"
+        }
+      ],
+      "Graphical": false,
+      "Workflow": "https://github.com/gmoddev/GodotLuau/actions/runs/42041791695",
+      "Result": "FAIL"
+    }
+  ],
+  "Disposition": "Keep GL-041 open. Use known ground-level lanes for the walking-only fixture; preserve the original ground and animation assertions. Do not weaken GL-007 authority or change production physics here."
+}

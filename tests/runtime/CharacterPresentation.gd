@@ -420,6 +420,23 @@ func Wait(Name: String) -> void:
 func Multiplayer() -> void:
     Game.set_meta("Port", Port)
     if Role == "server":
+        Script("PresentationSpawnLanes", """
+local Players = game:GetService('Players')
+local NextLane = 0
+local function Place(Player)
+    NextLane += 1
+    local Lane = NextLane
+    local function Position(Character) Character.Position = Vector3.new(0,0,Lane*12) end
+    Player.CharacterAdded:Connect(Position)
+    if Player.Character then Position(Player.Character) end
+end
+Players.PlayerAdded:Connect(Place)
+for _, Player in Players:GetPlayers() do Place(Player) end
+game:SetAttribute('PresentationSpawnLanes',true)
+""")
+        var LaneDeadline := Time.get_ticks_msec() + 15000
+        while not Game.has_meta("PresentationSpawnLanes") and Time.get_ticks_msec() < LaneDeadline: await process_frame
+        Check(Game.has_meta("PresentationSpawnLanes"), "trusted server installs distinct walking lanes")
         var StartupDeadline := Time.get_ticks_msec() + 15000
         if Case.begins_with("dedicated"):
             # --glserver owns startup and removes the observer's local Character.
@@ -451,19 +468,30 @@ func Multiplayer() -> void:
     else:
         Check(Character != null, "participant owns a local Character")
         if Character == null: return
-        Character.call("set_npc_move_dir", Vector3.RIGHT)
-    await Ticks(90)
-    # A walking-cycle observation requires an actually grounded owner. Startup
-    # spawn/contact motion can legitimately hold a static airborne leg pose.
+    # A client can ground at its default spawn before the trusted server's lane
+    # teleport arrives. Observe that placement and its landing before walking.
     if not (Case.begins_with("dedicated") and Role == "server"):
         var GroundDeadline := Time.get_ticks_msec() + 15000
         var GroundTrace := []
-        while not Character.call("IsGrounded") and Time.get_ticks_msec() < GroundDeadline:
+        while (Character.global_position.z < 12.0 or not Character.call("IsGrounded")) and Time.get_ticks_msec() < GroundDeadline:
             var GroundBody: CharacterBody3D = Character.call("GetPhysicsBody")
             GroundTrace.append({"Time": Time.get_ticks_msec(), "Position": str(Character.global_position), "Velocity": str(GroundBody.velocity), "PlatformVelocity": str(GroundBody.get_platform_velocity())})
             await process_frame
         States["Grounding"] = GroundTrace
+        if not Character.call("IsGrounded") and not GroundTrace.is_empty():
+            printerr("[Character:Presentation] Grounding final sample ", GroundTrace.back())
+        Check(Character.global_position.z >= 12.0, "trusted server walking lane reaches owner")
         Check(Character.call("IsGrounded"), "walking observation starts from grounded owner")
+        Character.call("set_npc_move_dir", Vector3.RIGHT)
+    await Ticks(90)
+    if not (Case.begins_with("dedicated") and Role == "server"):
+        var WalkingBody: CharacterBody3D = Character.call("GetPhysicsBody")
+        States["WalkingBeforeProcess"] = {"Grounded": Character.call("IsGrounded"), "Position": str(Character.global_position), "Velocity": str(WalkingBody.velocity)}
+        # physics_frame precedes the nodes' physics callbacks. Observe the
+        # completed step before process callbacks can apply another network pose.
+        await process_frame
+        States["WalkingAfterPhysics"] = {"Grounded": Character.call("IsGrounded"), "Position": str(Character.global_position), "Velocity": str(WalkingBody.velocity)}
+        Check(Character.call("IsGrounded"), "walking owner remains physically grounded")
     Mark(Role + Index + ".moving")
     for Participant in ["server0", "client1", "client2"]: await Wait(Participant + ".moving")
     var RemoteLimbs := {}

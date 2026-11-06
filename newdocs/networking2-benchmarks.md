@@ -3,6 +3,37 @@
 These experiments do not establish 64-player support or a general speedup.
 Runtime/source qualification and performance evidence are separate gates.
 
+## GL-039 bounded FIFO drain — native fingerprint 6698ad26
+
+The [measurement receipt](evidence/gl039-release41-qualification.json) uses
+qualified `fa0d431` Windows Release products and the established matching admitted
+host/compiler. Counts, worlds, warmups, samples, two-trial ordering, production
+assertions and resource guards are unchanged. The temporary
+[capacity recovery](evidence/gl039-capacity-recovery.json) enables 32 peers;
+no queue, native ownership or timeout limit increases.
+
+| Peers / objects | Candidate server frame p95, trials 0/1 | Maximum final-counter convergence, trials 0/1 |
+| --- | --- | --- |
+| 32 / 64 | 14.813 / 15.802 ms | 0.299 / 0.226 ms |
+| 32 / 512 | 15.557 / 16.050 ms | 75.159 / 699.938 ms |
+
+All four candidate 32-peer trials pass with zero replication failures. The
+paired small-world legacy frame p95 is 17.954/20.464 ms. The large-world legacy
+warmup fails before measurement, so its failure is retained and the candidate
+runs independently with the unchanged harness. This does not establish a fresh
+paired large-world frame speedup. Ordinary and impaired 16-peer pairs also pass;
+the record contains 14 passes and one legacy failure, with no candidate failure.
+
+Convergence measures the final replicated counter after the coordinated-close
+barrier, not end-to-end Fire/echo RTT or an arbitrary world transaction. Ordered
+barriers and payload integrity have separate native regression coverage. These
+headless results do not establish graphical correctness, 64-peer support or a
+general latency guarantee. The historical 6.58–6.96-second 32-peer results below
+remain counterevidence. Final Windows/Linux sanitizer verification at `903b10c`
+closes GL-039 within this scope; the
+[final receipt](evidence/gl039-final-verification.json) records exact CI revisions
+and the journal preserves all fixture follow-ups and failed attempts.
+
 ## Release qualification — 436850a
 
 The [current receipt](evidence/networking2-436850a-release-qualification.json)

@@ -74,12 +74,75 @@ four successful workflows and independently checked artifacts.
 | GL-036 | P2 | Closed on campaign within exercised profiles | Benchmark setup and assertions were omitted by Release GDScript |
 | GL-037 | P2 | Closed on unmerged campaign; native/sanitizer matrix verified | Follow-up full-native runs fail Character/legacy barriers; fixture races corrected |
 | GL-038 | P1 | Closed on unmerged campaign; verified at 436850a | Live ObjectValue can convert a destroyed target through a stale instance binding |
-| GL-039 | P3 | Open; measured performance limitation | 32-peer structural burst takes about seven seconds to converge |
+| GL-039 | P3 | Closed on unmerged campaign; bounded 32-peer scope | Structural burst convergence corrected by bounded FIFO draining |
+| GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
+| GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
+
+## GL-041: Raised authoritative startup remains airborne during walking
+
+Windows full-native ASan at `20a1592` and `436af11` captures a local client at
+height 1.25/0.9375 with vertical velocity -18/-18.75 after the walking warmup.
+The trusted fixture's lane placement starts at height 5. Waiting for a nonzero
+lane alone does not resolve the behavior. The
+[evidence](evidence/gl041-raised-spawn-evidence.json) retains actual failed
+assertions, local samples and original JSON hashes. No sanitizer report, memory
+defect, precise grant/reconciliation cause or GL-039 regression is established.
+
+Use the known floor-level lane origin for walking presentation, retaining real
+physics, both ground checks and all animation/movement assertions. This isolates
+that fixture; it does not fix or close the raised-startup finding. Investigate
+initial grants, later reconciliation and simulation/frame timing separately,
+preserving GL-007 authority and production physics. Existing single-character
+jumping/falling coverage remains required. No production change is made here.
+
+## GL-040: Coincident presentation spawns produce airborne host motion
+
+At `5ea6345`, failed Windows Release presentation evidence shows the listen
+host at approximately `(72.7,161.9,-8.1)` while the other characters remain near
+the floor. Its local grounding/remote walking-cycle comparisons fail. Grounding
+before movement does not resolve the interaction. These are actual captured
+transforms, not proof of the precise physics cause or a GL-039 regression.
+The [retained failure receipt](evidence/gl040-presentation-failure.json) includes
+all three actors' failed assertions, captured transforms and original JSON hashes.
+
+The presentation fixture uses coincident spawns. Assign distinct parallel walking
+lanes through the existing trusted-server CharacterAdded/Position API, retaining
+real physics, ground checks and every motion/animation assertion. This isolates
+the intended walking observation; it does not fix or close the overlapping-body
+finding. A separate reproduction should distinguish collision recovery and
+moving-platform velocity before changing production physics. Keep native
+authority, CharacterBody3D behavior and qualified collision semantics intact.
 
 ## GL-039: Structural convergence under a 32-peer burst
 
-**Status: OPEN; measured performance limitation, not a reproduced ordering or
-admission failure.** At `436850a`, both 32-peer Release trials pass the mixed
+**Status: CLOSED on the unmerged campaign within the repeated headless 32-peer
+Release scope.** The [bounded FIFO fix](https://github.com/gmoddev/GodotLuau/commit/7c06e08e4a1f99ecb3e7c1efc6e6ad7ef2ca91cf),
+[first-frame progress correction](https://github.com/gmoddev/GodotLuau/commit/01ec4eb521576b8d0c477c8f78ade8d9f99afc47)
+and [60-KiB byte bound](https://github.com/gmoddev/GodotLuau/commit/8ea2470b0ca2e358f39bf47f082c12e669d029f2)
+preserve accepted barriers, native admission, the 64-frame application-ACK window
+and existing time/resource limits. The strengthened native fixture retains all
+sixteen same-turn transitions and the 7,500-byte payload.
+
+All four candidate 32-peer trials pass after authorized temporary capacity
+recovery, with zero replication failures. Worst-client final-counter convergence
+is 0.299/0.226 ms at 64 objects and 75.159/699.938 ms at 512 objects. The
+[Release receipt](evidence/gl039-release41-qualification.json) retains the failed
+legacy large-world warmup and independent candidate runs; it does not establish
+a fresh paired large-world frame speedup.
+
+Native fingerprint `6698ad26...` is unchanged through final fixture revision
+`903b10c`. Full Windows/Linux sanitizer workflow `42049370120` passes with 23/24
+checks, 85 core cases, 131 native actors and no unexpected reports per platform.
+Ordinary core/native at `37a5e4e` and four source profiles/two packages at
+`fa0d431` remain valid within their identical-production scope. The
+[final verification](evidence/gl039-final-verification.json) records exact
+revisions, reviewed artifacts and changed-fixture hashes. The
+[journal](networking-foundation-2-work.md) preserves blocked and failed attempts.
+GL-040/041 remain separate open Character findings. No refactor, wire change,
+main merge, release publication or updater distribution is included. No general
+latency, graphical or 64-peer qualification is claimed.
+
+At `436850a`, both 32-peer Release trials pass the mixed
 workload in 64- and 512-object worlds with zero replication failures. Final
 structural convergence nevertheless takes 6.58–6.96 seconds after coordinated
 close; the 64-object baseline takes 0.096–0.399 ms. Required reparent barriers
