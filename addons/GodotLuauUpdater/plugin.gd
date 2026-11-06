@@ -125,6 +125,7 @@ const TR := {
 		"bar_script_err":        "❌ Could not write update script.",
 		"bar_verifying":         "🔒 Verifying download...",
 		"bar_hash_err":          "❌ Integrity check failed — update aborted.",
+		"bar_fork_disabled":     "%s — Runtime updates disabled: no verified fork release channel. Install a verified fork build manually.",
 		"ver_unknown":           "unknown",
 		"btn_check_ver":         "🔍",
 		"btn_reinstall":         "↺ Reinstall",
@@ -202,6 +203,7 @@ const TR := {
 		"bar_apply_close":       "✅ Listo. Godot se cerrará y aplicará la DLL.",
 		"btn_rollback":          "↺ Volver a %s",
 		"bar_rollback_done":     "✅ Restaurado %s. Reinicia para aplicar.",
+		"bar_fork_disabled":     "%s — Actualizaciones desactivadas: no hay un canal verificado del fork. Instala manualmente una compilación verificada del fork.",
 		"btn_versions":          "🗂 Versiones",
 		"bar_versions_loading":  "🕐 Cargando lista de versiones...",
 		"bar_versions_err":      "❌ No se pudo obtener la lista de versiones",
@@ -290,6 +292,7 @@ const TR := {
 		"bar_ok_no_restart":     "✅ %s instalado.",
 		"bar_ok_restart":        "✅ Atualizado — clique para reiniciar.",
 		"bar_restart_in":        "✅ Atualizado — reiniciando em %d s (o Godot reabrirá sozinho)",
+		"bar_fork_disabled":     "%s — Atualizações desativadas: não há canal verificado do fork. Instale manualmente uma compilação verificada do fork.",
 		"bar_apply_close":       "✅ Pronto. O Godot fechará e aplicará a DLL.",
 		"btn_rollback":          "↺ Voltar para %s",
 		"bar_rollback_done":     "✅ Restaurado %s. Reinicie para aplicar.",
@@ -366,6 +369,7 @@ var _is_dark_theme := true
 # ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 func _enter_tree() -> void:
+	print("[Editor:Updater] Runtime updates disabled: no verified fork release channel; editor tools remain available.")
 	_detect_editor_lang()
 	_compute_theme_colors()
 	_load_font_pref()
@@ -985,6 +989,7 @@ func _fs(base: int) -> int:
 # ── Plugin.cfg auto-sync from res://Version ───────────────────────────────────
 
 func _sync_plugin_cfg() -> void:
+	if RejectRuntimeUpdate(): return
 	for old in ["user://godotluau_version.txt",
 				"res://addons/GodotLuauUpdater/installed_version.txt"]:
 		if FileAccess.file_exists(old):
@@ -1020,11 +1025,15 @@ func _sync_plugin_cfg() -> void:
 func _check_watermark() -> void:
 	# Aviso único — sin timer repetitivo (quien compila su propia DLL puede ignorarlo)
 	if Engine.has_meta(WM_META_KEY): return
+	if not RuntimeUpdatesAllowed():
+		push_warning("[Editor:Updater] Native runtime not detected. Install a verified fork build manually; automatic updates are disabled.")
+		return
 	push_warning("[GodotLuau] " + _t("warn_watermark"))
 
 # ── Outdated version console warning ─────────────────────────────────────────
 
 func _setup_outdated_warning(local: String, remote: String) -> void:
+	if RejectRuntimeUpdate(): return
 	if not ProjectSettings.get_setting("godot_luau/notify_outdated_version", true): return
 	push_warning("[GodotLuau] ⚠ Outdated version: %s — latest: %s | %s" % [local, remote, GITHUB_URL])
 	if _outdated_timer and is_instance_valid(_outdated_timer): return
@@ -1054,6 +1063,7 @@ func _apply_autocomplete_speed() -> void:
 # ── Cleanup old DLL backups ───────────────────────────────────────────────────
 
 func _cleanup_old_dlls() -> void:
+	if RejectRuntimeUpdate(): return
 	# v1.11.2: la migracion se DIFIERE. Borrar carpetas y forzar scan() durante
 	# el PRIMER escaneo del editor crasheaba el editor entero (signal 11 en el
 	# hilo del escaner). Ahora espera a que el editor este tranquilo.
@@ -1080,6 +1090,7 @@ func _cleanup_old_dlls() -> void:
 # raiz. El zip nuevo ya extrae en GodotLuau/; aqui se limpian los restos viejos
 # (solo carpetas DE LA EXTENSION, nunca contenido del usuario).
 func _migrate_old_layout() -> void:
+	if RejectRuntimeUpdate(): return
 	if not is_inside_tree():
 		return
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path("res://GodotLuau/bin")):
@@ -1126,6 +1137,7 @@ func _migrate_old_layout() -> void:
 			fs.scan()
 
 func _remove_dir_recursive(g_path: String) -> void:
+	if RejectRuntimeUpdate(): return
 	var d := DirAccess.open(g_path)
 	if d == null: return
 	d.list_dir_begin()
@@ -1985,6 +1997,23 @@ func _set_ver_status(msg: String, btn_text: String, color: Color, action: String
 		_ver_btn.text    = btn_text
 		_ver_btn.visible = true
 
+# Fork policy: there is no qualified runtime release channel. This is deliberately
+# not a project setting or URL override. Enabling updates requires a reviewed
+# provenance/compatibility design, not a checksum or an upstream version number.
+func RuntimeUpdatesAllowed() -> bool:
+	return false
+
+func RejectRuntimeUpdate() -> bool:
+	if RuntimeUpdatesAllowed(): return false
+	_stop_outdated_warning()
+	_downloading = false
+	_bar_action = ""
+	_set_ver_status(_t("bar_fork_disabled") % _get_local_version(), "", Color(1.0, 0.8, 0.4))
+	for ControlNode in [_ver_btn, _reinstall_btn, _versions_btn, _rollback_btn]:
+		if ControlNode and is_instance_valid(ControlNode): ControlNode.disabled = true
+	if _rollback_btn and is_instance_valid(_rollback_btn): _rollback_btn.visible = false
+	return true
+
 func _set_notif(msg: String, color: Color) -> void:
 	if not (_notif_bar and is_instance_valid(_notif_bar)): return
 	_notif_label.text = msg
@@ -2003,11 +2032,13 @@ func _set_notif(msg: String, color: Color) -> void:
 	)
 
 func _reset_ver_idle() -> void:
+	if RejectRuntimeUpdate(): return
 	_set_ver_status(_get_local_version(), _t("btn_check_ver"), _col_dim)
 	if _reinstall_btn and is_instance_valid(_reinstall_btn):
 		_reinstall_btn.disabled = false
 
 func _on_action_pressed() -> void:
+	if RejectRuntimeUpdate(): return
 	match _bar_action:
 		"restart":  _do_editor_restart()
 		"apply":    _apply_windows_update_legacy()
@@ -2017,6 +2048,7 @@ func _on_action_pressed() -> void:
 # ── Version check ─────────────────────────────────────────────────────────────
 
 func _check_for_update() -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_version and is_instance_valid(_http_version): return
 	# Buscar actualizacion mira SIEMPRE la ultima publicada, aunque antes se
 	# hubiera instalado una version concreta del historial.
@@ -2032,6 +2064,7 @@ func _check_for_update() -> void:
 		_reset_ver_idle()
 
 func _on_version_received(result: int, code: int, _hdrs: PackedStringArray, body: PackedByteArray) -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_version and is_instance_valid(_http_version):
 		_http_version.queue_free(); _http_version = null
 	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
@@ -2092,6 +2125,7 @@ func _version_to_num(v: String) -> int:
 # ── Download & reinstall ──────────────────────────────────────────────────────
 
 func _start_reinstall() -> void:
+	if RejectRuntimeUpdate(): return
 	if _downloading: return
 	if _remote_version.is_empty(): _remote_version = _get_local_version()
 	_set_ver_status(_t("bar_reinstalling") % _get_local_version(), "", Color(0.4, 0.8, 1.0))
@@ -2099,6 +2133,7 @@ func _start_reinstall() -> void:
 	_start_download()
 
 func _start_download() -> void:
+	if RejectRuntimeUpdate(): return
 	_downloading = true
 	if not (_ver_label and is_instance_valid(_ver_label) and _ver_label.text.begins_with("↺")):
 		_set_ver_status(_t("bar_downloading") % _remote_version, "", Color(0.4, 0.8, 1.0))
@@ -2120,6 +2155,7 @@ func _start_download() -> void:
 		_http_download.queue_free(); _http_download = null
 
 func _on_download_completed(result: int, code: int, _hdrs: PackedStringArray, _body: PackedByteArray) -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_download and is_instance_valid(_http_download):
 		_http_download.queue_free(); _http_download = null
 	_downloading = false
@@ -2136,6 +2172,7 @@ func _on_download_completed(result: int, code: int, _hdrs: PackedStringArray, _b
 # ── Verificación de integridad (SHA-256) ─────────────────────────────────────
 
 func _start_hash_verify() -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_hash and is_instance_valid(_http_hash): return
 	_set_ver_status(_t("bar_verifying"), "", Color(0.4, 0.8, 1.0))
 	_http_hash = HTTPRequest.new()
@@ -2154,6 +2191,7 @@ func _start_hash_verify() -> void:
 		if _reinstall_btn and is_instance_valid(_reinstall_btn): _reinstall_btn.disabled = false
 
 func _on_hash_received(result: int, code: int, _hdrs: PackedStringArray, body: PackedByteArray) -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_hash and is_instance_valid(_http_hash):
 		_http_hash.queue_free(); _http_hash = null
 	var zip_path := OS.get_user_data_dir() + "/godotluau_update.zip"
@@ -2179,6 +2217,7 @@ func _on_hash_received(result: int, code: int, _hdrs: PackedStringArray, body: P
 var _windows_staged_dlls : Array[Dictionary] = []
 
 func _apply_update() -> void:
+	if RejectRuntimeUpdate(): return
 	var zip_path  := OS.get_user_data_dir() + "/godotluau_update.zip"
 	var proj_path := ProjectSettings.globalize_path("res://")
 
@@ -2268,6 +2307,7 @@ func _apply_update() -> void:
 		_set_ver_status(_t("bar_ok_restart"), _t("bar_restart"), Color(0.4, 0.9, 1.0), "restart")
 
 func _fail_apply() -> void:
+	if RejectRuntimeUpdate(): return
 	DirAccess.remove_absolute(OS.get_user_data_dir() + "/godotluau_update.zip")
 	_set_ver_status(_t("bar_dl_failed") % 0, _t("bar_retry"), Color(1.0, 0.4, 0.4), "download")
 	if _reinstall_btn and is_instance_valid(_reinstall_btn): _reinstall_btn.disabled = false
@@ -2277,6 +2317,7 @@ func _fail_apply() -> void:
 # Guarda en res://.luau_backup/files/ una copia de cada archivo del proyecto que
 # la actualizacion va a sobrescribir, mas la version anterior. Permite deshacer.
 func _backup_current(zfiles: PackedStringArray, old_ver: String) -> void:
+	if RejectRuntimeUpdate(): return
 	var proj := ProjectSettings.globalize_path("res://")
 	var bdir := ProjectSettings.globalize_path(BACKUP_DIR) + "/"
 	_rmdir_recursive(bdir)
@@ -2297,6 +2338,7 @@ func _backup_current(zfiles: PackedStringArray, old_ver: String) -> void:
 	if inf: inf.store_string(old_ver + "\n")
 
 func _can_rollback() -> bool:
+	if RejectRuntimeUpdate(): return false
 	return FileAccess.file_exists(ProjectSettings.globalize_path(BACKUP_DIR) + "/version.txt")
 
 func _backup_version() -> String:
@@ -2308,6 +2350,7 @@ func _backup_version() -> String:
 # Restaura los archivos respaldados a su sitio (lo usa tanto el rollback manual
 # como el aborto de una extraccion fallida). Las DLL van por staging+rename.
 func _restore_from_backup() -> bool:
+	if RejectRuntimeUpdate(): return false
 	var proj := ProjectSettings.globalize_path("res://")
 	var base := ProjectSettings.globalize_path(BACKUP_DIR) + "/files"
 	if not DirAccess.dir_exists_absolute(base): return false
@@ -2321,6 +2364,7 @@ func _restore_from_backup() -> bool:
 	return true
 
 func _collect_backup(base: String, rel: String, proj: String, staging: String, staged: Array) -> void:
+	if RejectRuntimeUpdate(): return
 	var dir_path := base + ("/" + rel if rel != "" else "")
 	var d := DirAccess.open(dir_path)
 	if not d: return
@@ -2345,6 +2389,7 @@ func _collect_backup(base: String, rel: String, proj: String, staging: String, s
 	d.list_dir_end()
 
 func _rmdir_recursive(path: String) -> void:
+	if RejectRuntimeUpdate(): return
 	var clean := path.rstrip("/")
 	if not DirAccess.dir_exists_absolute(clean): return
 	var d := DirAccess.open(clean)
@@ -2364,6 +2409,7 @@ func _rmdir_recursive(path: String) -> void:
 # exista un Release ni tener un respaldo local: se puede saltar a cualquiera.
 
 func _on_versions_pressed() -> void:
+	if RejectRuntimeUpdate(): return
 	if _downloading: return
 	if not _tag_list.is_empty():
 		_show_versions_menu()
@@ -2374,6 +2420,7 @@ func _on_versions_pressed() -> void:
 	_fetch_version_page()
 
 func _fetch_version_page() -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_tags and is_instance_valid(_http_tags): _http_tags.queue_free()
 	_http_tags = HTTPRequest.new()
 	add_child(_http_tags)
@@ -2385,6 +2432,7 @@ func _fetch_version_page() -> void:
 		_http_tags.queue_free(); _http_tags = null
 
 func _on_commits_received(result: int, code: int, _hdrs: PackedStringArray, body: PackedByteArray) -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_tags and is_instance_valid(_http_tags):
 		_http_tags.queue_free(); _http_tags = null
 	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
@@ -2494,6 +2542,7 @@ func _show_versions_menu() -> void:
 	_versions_menu.popup(Rect2i(Vector2i(pos), Vector2i(240, 0)))
 
 func _on_version_chosen(id: int) -> void:
+	if RejectRuntimeUpdate(): return
 	if _downloading: return
 	if id < 0 or id >= _tag_list.size(): return
 	_pending_tag = _tag_list[id]["tag"]
@@ -2507,6 +2556,7 @@ func _on_version_chosen(id: int) -> void:
 		_install_pending_tag(_pretty_tag(_pending_tag))
 
 func _on_tag_version_received(result: int, code: int, _hdrs: PackedStringArray, body: PackedByteArray) -> void:
+	if RejectRuntimeUpdate(): return
 	if _http_tagver and is_instance_valid(_http_tagver):
 		_http_tagver.queue_free(); _http_tagver = null
 	var ver := _pretty_tag(_pending_tag)
@@ -2516,6 +2566,7 @@ func _on_tag_version_received(result: int, code: int, _hdrs: PackedStringArray, 
 	_install_pending_tag(ver)
 
 func _install_pending_tag(ver: String) -> void:
+	if RejectRuntimeUpdate(): return
 	if _pending_tag.is_empty(): return
 	_remote_version   = ver
 	_zip_url_override = "%s/%s/GodotLuau.zip" % [RAW_BASE, _pending_tag]
@@ -2524,6 +2575,7 @@ func _install_pending_tag(ver: String) -> void:
 	_start_download()
 
 func _on_rollback_pressed() -> void:
+	if RejectRuntimeUpdate(): return
 	if not _can_rollback(): return
 	var ver := _backup_version()
 	_restore_from_backup()
@@ -2533,6 +2585,7 @@ func _on_rollback_pressed() -> void:
 	_auto_restart_countdown()
 
 func _refresh_rollback_btn() -> void:
+	if RejectRuntimeUpdate(): return
 	if not (_rollback_btn and is_instance_valid(_rollback_btn)): return
 	if _can_rollback():
 		_rollback_btn.visible = true
@@ -2541,6 +2594,7 @@ func _refresh_rollback_btn() -> void:
 		_rollback_btn.visible = false
 
 func _auto_restart_countdown() -> void:
+	if RejectRuntimeUpdate(): return
 	for i in range(5, 0, -1):
 		if _bar_action != "restart": return  # el usuario hizo otra cosa
 		_set_ver_status(_t("bar_restart_in") % i, _t("bar_restart"), Color(0.4, 0.9, 1.0), "restart")
@@ -2549,6 +2603,7 @@ func _auto_restart_countdown() -> void:
 		_do_editor_restart()
 
 func _try_rename_and_replace() -> bool:
+	if RejectRuntimeUpdate(): return false
 	for item in _windows_staged_dlls:
 		var dst : String = item["dst"]
 		var src : String = item["src"]
@@ -2568,11 +2623,13 @@ func _try_rename_and_replace() -> bool:
 	return true
 
 func _do_editor_restart() -> void:
+	if RejectRuntimeUpdate(): return
 	_set_ver_status(_t("bar_restarting"), "", Color(0.4, 0.8, 1.0))
 	await get_tree().create_timer(0.5).timeout
 	get_editor_interface().restart_editor()
 
 func _apply_windows_update_legacy() -> void:
+	if RejectRuntimeUpdate(): return
 	var ps_path  := OS.get_user_data_dir() + "/_godotluau_apply.ps1"
 	var godot    := OS.get_executable_path().replace("/", "\\")
 	var proj_dir := ProjectSettings.globalize_path("res://").rstrip("/\\").replace("/", "\\")

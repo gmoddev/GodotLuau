@@ -211,15 +211,56 @@ stack and future integration plans; it is not the active persistence authority.
 ## Editor and release path
 
 The updater plugin includes configuration, autocomplete/model management, import
-tools, and update/restart behavior. Its URLs still target `Pimpoli/GodotLuau`
-(`addons/GodotLuauUpdater/plugin.gd:4-39`), and `project.godot` enables the plugin.
-Fork source changes do not automatically change its distribution source.
+tools, and guarded update/restart code. Inherited URLs still name
+`Pimpoli/GodotLuau`, but `RuntimeUpdatesAllowed()` is literal false and every
+runtime replacement entry/completion and cleanup/rollback/restart path rejects
+before side effects. The enabled plugin retains editor tools and explicit
+optional JSON data downloads, with visible disabled-runtime controls. There is
+no qualified production channel or user-setting override. See the
+[fork updater policy](fork-updater-isolation.md).
 
-The single tracked Actions workflow, `.github/workflows/build-release.yml`,
-builds Linux debug/release binaries, extracts Windows binaries from a committed
-ZIP, packages releases, writes the archive back, and deletes older releases and
-tags. It has no runtime-test or sanitizer step. The `test_chat/` fixture is not
-an automated qualification gate.
+The inherited `.github/workflows/build-release.yml` is disabled during fork
+integration: only manual dispatch remains, both jobs have literal false admission
+conditions, repository permissions are read-only, and checkout credentials are
+not persisted. Ordinary pushes cannot start its builds, archive commits or release
+publication. Its dormant implementation still extracts Windows binaries from a
+committed ZIP. Historical release/tag deletion has been removed by GL-012. No
+sanitizer workflow exists yet. Main integrates the qualified core CI branch via
+`f0199004d56485ec7a9de14d5454d1907822ba11`. The separate
+`runtime-core-ci.yml` builds the production `ExecutionDomainTests` target and
+runs its 39 cases through CTest on hosted Windows/Linux Debug. Read-only access,
+recursive pinned checkout, two build jobs, explicit deadlines and checked
+discovery/completion are independent of publication. Only diagnostic reports/logs
+are uploaded. Fresh hosted integration succeeds on Windows/Linux; outcomes and the continuing
+GL-011 gaps are in the [CI record](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
+The `test_chat/` fixture is not an
+automated qualification gate. Re-enabling distribution requires a reviewed change;
+manual dispatch does not bypass this interim policy.
+
+Main integrates `ci/gl-011-native-integration` at `cebc64919e4fbf67624b19e075f31ef25941d136`
+through normal merge `9029d01a24d904deaa1ecd7a9c30fc483e13757f`.
+`runtime-native-ci.yml` additionally
+builds the actual Debug CMake adapter on Windows/Linux and runs the unchanged
+single-player/listen/dedicated/editor fixtures plus GL-006/008 and functional
+animation groups (28 processes per platform). The runner owns child process
+trees, isolates profiles, and requires complete actors and PASS outcomes. Official
+Godot 4.7.1 archive bytes/version are verified against pinned provenance before
+execution. Both fresh hosted Debug builds and all 28 actors per platform pass at
+`216066131b64bdd81efdd48cedc04277e5a74919`; integrated runtime/build/test inputs
+were identical at integration. The subsequent Linux proc-stat liveness-test
+correction changes only process inspection in the launcher tests and adds
+deterministic coverage; native/build/workflow inputs and pins remain unchanged.
+See the [correction record](shared-domains-validation.md#linux-process-liveness-correction-2026-10-27)
+for fresh results. The source branch is retained.
+Sanitizers and release enforcement
+remain separate. See the [native CI record](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
+
+GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at
+`169fd98be216c4322f4c820c7d77f3081761982b`. A bounded read-only release/tag-absence
+preflight rejects reused identities before package/commit/publish; workflow
+publishing runs are serialized and asset overwrite is disabled. Existing build
+provenance and runtime-gate gaps remain GL-010/011. See
+[retention policy](release-retention.md).
 
 ## Task routing
 
@@ -230,7 +271,7 @@ an automated qualification gate.
 | File/HTTP permissions | `src/core/luau_script.h`, `luau_stdlib.h` | GL-003, GL-004, GL-005 |
 | RPCs, players, replication | `src/services/roblox_network.h`, `src/core/gl_net_bridge.h`, `src/gameplay/roblox_remote.h` | GL-006, GL-007, GL-008 |
 | Persistence | DataStore section of `luau_stdlib.h`, native file bridge, `backend/README.md` | GL-009 |
-| Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |
+| Build and release | `SConstruct`, `.gitmodules`, `.github/workflows/build-release.yml`, `.github/workflows/runtime-core-ci.yml`, `.github/workflows/runtime-native-ci.yml`, `tests/runtime/CMakeLists.txt`, `tools/generar_release.py` | GL-010, GL-011, GL-012 |
 | Editor updates and autocomplete | `addons/GodotLuauUpdater/plugin.gd`, `src/editor/luau_autocomplete.h` | GL-016 |
 | Imported/bundled assets | `src/importer/`, `GodotLuau/assets/`, `GodotLuau/licenses/` | GL-015 |
 

@@ -33,12 +33,12 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
 | GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
-| GL-011 | P1 | Verified qualification gap | Release workflow has no automated runtime or sanitizer gates |
-| GL-012 | P2 | Verified history-loss behavior | Workflow attempts to delete older releases and tags |
+| GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
+| GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
 | GL-013 | P2 | Verified maintainability concern | Large implementation headers concentrate subsystems |
 | GL-014 | P2 | Integrated; source-qualified | Main contains shared domains; remaining limitations stay independently tracked |
 | GL-015 | P2 | Needs review | Asset provenance is not established by root MIT license |
-| GL-016 | P1 | Verified fork distribution gap | Enabled updater still downloads upstream packages |
+| GL-016 | P1 | Integrated; resolved within isolation scope | Runtime updates fail closed; editor tools remain available |
 | GL-017 | P2 | Reproduced external engine defect | Godot simultaneous-disconnect relay sends to reset peer and leaks packet |
 | GL-018 | P2 | Native sanitizer qualification gap | Windows stock host plus ASan DLL hangs on exit, also with baseline |
 | GL-019 | P2 | Integrated; optimized and source-qualified | Main retains revision-aware cache, smaller snapshots and measured tradeoffs |
@@ -313,7 +313,7 @@ published release provenance and workflow correction.
 
 ## GL-011: Automated runtime qualification is missing from release gates
 
-**Evidence:** One tracked Actions workflow performs build/package/release steps
+**Original evidence:** One tracked Actions workflow performs build/package/release steps
 without runtime tests, multiplayer integration, or sanitizers. `test_chat/` has a
 small scene/script fixture; it is not executed by the workflow.
 
@@ -331,9 +331,61 @@ native Linux ASan/LSan evidence now exist under `tests/runtime`. They are manual
 qualification gates; the inherited release workflow still does not enforce them,
 so GL-011 remains open.
 
+**First CI milestone (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
+`f0199004d56485ec7a9de14d5454d1907822ba11` preserves source branch
+`ci/gl-011-core-qualification` at `95167299ad8a102b23fb3b25284a751483815779`.
+Adds a separate read-only, non-publishing
+Windows/Linux Debug workflow for the existing 39-case production-core suite.
+Recursive pinned checkout, bounded compilation and deadlines, explicit discovery
+and full completion checks reject missing/partial evidence. No new runtime or
+duplicate scheduler is introduced. Diagnostic artifacts exclude production
+binaries. See [commands, actual outcomes and limitations](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
+Hosted [run 40475254435](https://github.com/gmoddev/GodotLuau/actions/runs/40475254435)
+passes both Windows MSVC and Linux GCC Debug jobs, 39 cases each, including
+discovery/report checks and diagnostic uploads. Fresh main integration
+[run 40476321167](https://github.com/gmoddev/GodotLuau/actions/runs/40476321167)
+also passes both jobs, all 39 cases each, with reports and diagnostics retained.
+The release workflow stays disabled. Native Godot, multiplayer/lifecycle/security
+fixtures, sanitizers, persistence failures and release enforcement remain manual
+or independently incomplete. This milestone does not close GL-011 or qualify
+GL-020's deferred adversarial cases.
+
+**GL-011B native milestone (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
+`9029d01a24d904deaa1ecd7a9c30fc483e13757f` preserves both commits of qualified
+source `ci/gl-011-native-integration` at `cebc64919e4fbf67624b19e075f31ef25941d136`.
+The separate read-only
+Debug workflow builds `GodotLuauAdapter` on Windows/Linux, verifies pinned official
+Godot 4.7.1 assets and reuses 8 lifecycle/network, 10 GL-006/008 and 10 functional
+animation process fixtures per platform. New launcher ownership/cleanup and eight
+bounded failure tests address process trees and partial startup. Equivalent worker
+runs pass all 28 actors on each platform. Actual hosted
+[run 40478173463](https://github.com/gmoddev/GodotLuau/actions/runs/40478173463)
+also passes fresh Windows/Linux adapter builds, eight launcher checks and all
+28 native actors each (56 process results), with diagnostic-only uploads verified.
+This is Debug/x86_64 coverage, distinct from manual sanitizer evidence. See
+[native CI evidence and sanitizer assessment](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
+No sanitizer job or release enforcement is introduced; no GL-020 adversarial
+animation test is added or executed. GL-011 remains open.
+The merge tree exactly matches qualified source; following integration notes
+change documentation only. Existing hosted qualification is reused within its
+Debug/x86_64 scope. No expensive local matrix is repeated; automatically triggered
+integration runs are observed for a bounded period and are not assumed to pass.
+
+The integrated Linux run `40483447902` subsequently exposed a launcher-test
+proc-stat check/read race before provisioning or compilation; Windows passed.
+The [focused correction](shared-domains-validation.md#linux-process-liveness-correction-2026-10-27)
+uses one guarded read with narrow disappearance handling. Complete worker tests
+pass (Linux 14; Windows eight plus six Linux-only skips); deterministic baseline
+reproduction fails as expected. Fresh corrected-main core run `40618765032` passes
+39 cases per platform; native run `40618765012` passes both actual adapter builds,
+process suites and all 28 actors per platform. Both diagnostic summaries verify
+the correction and unchanged native fingerprint. The race is fixed and
+hosted-verified; historical evidence remains separate.
+This CI reliability correction does not close GL-011 or expand runtime scope.
+
 ## GL-012: Release workflow deletes prior provenance references
 
-**Evidence:** The final release step lists up to 100 releases and attempts
+**Original evidence:** The final release step lists up to 100 releases and attempts
 `gh release delete --yes --cleanup-tag` on every tag except the current release.
 
 **Consequence/limits:** This can remove useful published assets and source tags,
@@ -344,6 +396,20 @@ prove that all earlier releases were deleted.
 tags, artifacts and provenance. Validate the changed workflow without performing
 destructive deletion of real published history. Do not dispatch the inherited
 workflow as a documentation check.
+
+**Integration (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
+`3551bcce8f5f68ed2ee47c2ac41e2e85f74a4feb` preserves qualified branch
+`maintenance/gl-012-release-retention` at `169fd98be216c4322f4c820c7d77f3081761982b`.
+Removes historical release/
+tag deletion, rejects reuse of a published release or Git tag before package/
+commit/publish, serializes this workflow's publication and disables asset
+overwrite. Twelve mocked/read-only tests and parsed YAML structural checks pass;
+no live publishing/deletion or remote tag change is performed. See
+[retention policy and continuation assessment](release-retention.md) and
+[evidence](evidence/gl012-release-retention-2026-10-27.json). The interim policy
+also removes automatic triggers and disables both publishing-workflow jobs with
+read-only permissions. GL-010/011 and repository-wide immutability/external
+publisher coordination remain independent gaps.
 
 ## GL-013: Implementation headers concentrate unrelated responsibilities
 
@@ -438,7 +504,7 @@ asset whose redistribution rights cannot be established.
 
 ## GL-016: Fork updater still installs from upstream
 
-**Evidence:** `addons/GodotLuauUpdater/plugin.gd:4-39` hardcodes Pimpoli's
+**Original evidence:** `addons/GodotLuauUpdater/plugin.gd:4-39` hardcodes Pimpoli's
 version, ZIP, hash, tag/history and model URLs. `project.godot:18` enables the
 plugin. Creating the GitHub fork does not change those endpoints.
 
@@ -451,6 +517,22 @@ include disabling automatic updates or selecting verified, pinned fork releases.
 Cover all version/archive/hash/history/model endpoints as appropriate, preserve
 upstream attribution, verify failure paths, and distinguish inherited ZIPs from
 fork-built artifacts. A URL replacement alone does not establish provenance.
+
+**Integration (2026-10-27): INTEGRATED AND VERIFIED.** Normal merge
+`abf7776dfb1d7dfde1abfc7b7cb468047575f738` preserves qualified source
+`maintenance/gl-016-fork-updater` at `ed7211a2e354aa29516c646a3ee40f2459f87106`.
+Runtime checks/download/apply,
+callbacks, history, unverified backup restore, staging/swap/restart and destructive
+startup cleanup fail closed before side effects. Enabled editor tools and explicit
+model/custom-autocomplete downloads remain available. Both Windows/Linux actual
+headless editor fixtures pass 596 assertions across 42 blocked operations and two
+localhost optional-data downloads, preserving installed files/backups/metadata.
+See [policy/recovery/limits](fork-updater-isolation.md) and
+[evidence](evidence/gl016-updater-isolation-2026-10-27.json). Fresh Windows/Linux
+integration fixtures each repeat 596 assertions and 42 rejected operations; the
+historical branch results remain separate. Release publication stays disabled.
+No fork production update channel or distribution provenance is established.
+Original evidence and GL-010/011 remain independent.
 
 ## GL-017: Godot simultaneous-disconnect relay targets reset peers
 

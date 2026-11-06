@@ -1,0 +1,23 @@
+{
+  "Version": "4.7.1-stable",
+  "ExpectedVersionOutput": "4.7.1.stable.official.a13da4feb",
+  "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+  "SourceTagAPI": "https://api.github.com/repos/godotengine/godot/git/ref/tags/4.7.1-stable",
+  "ReleaseAPI": "https://api.github.com/repos/godotengine/godot-builds/releases/tags/4.7.1-stable",
+  "ReleaseID": 353974774,
+  "DigestSource": "Official GitHub release asset SHA-256 digests observed 2026-10-27; pinned locally, never accepted dynamically",
+  "Windows": {
+    "AssetID": 476992673,
+    "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+    "Bytes": 84198557,
+    "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+    "Executable": "Godot_v4.7.1-stable_win64.exe"
+  },
+  "Linux": {
+    "AssetID": 476992009,
+    "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+    "Bytes": 76056717,
+    "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+    "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+  }
+}

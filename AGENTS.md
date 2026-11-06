@@ -96,10 +96,12 @@ and the controlling PC responsive. Capture logs without opening visible windows.
 - Stage explicit paths. Never stage, discard, reset, or commit unrelated work.
 - A request to create a fork and its documentation permits publishing that work
   to the fork. It does not request upstream issues, comments, PRs, or messages.
-- Review workflow effects before pushing. The inherited release workflow writes
-  archives and deletes old releases/tags; do not dispatch it as a generic check.
-- The inherited updater still targets upstream. Read GL-016 before installing or
-  distributing fork builds. Merely changing download URLs is not provenance.
+- Review workflow effects before pushing. The inherited release workflow is
+  disabled with read-only permissions; keep publication disabled until separately
+  authorized and qualified. Do not dispatch it as a generic check.
+- Runtime updater admission fails closed (GL-016); no production fork channel is
+  qualified. Read GL-016 before installing or distributing fork builds. Merely
+  changing download URLs is not provenance.
 
 ## Definition of done
 

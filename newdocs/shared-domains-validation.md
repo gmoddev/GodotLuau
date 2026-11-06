@@ -1,5 +1,298 @@
 # Shared-domain implementation and qualification
 
+## GL-011 independent core CI (2026-10-27)
+
+Branch `ci/gl-011-core-qualification` starts at canonical main
+`f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`, after GL-012 and GL-016 integration.
+The original branch qualification below precedes the main integration recorded
+at the end of this milestone. The independent workflow runs only the existing production
+`ExecutionDomainTests` target (one CTest entry, 39 internal regression cases).
+There is no runtime/native source, ownership, pin or wire-format change.
+The [test instructions](../tests/runtime/README.md#independent-core-ci-gl-011)
+give portable commands and all timeouts. The matrix selects hosted Windows 2022
+with Visual Studio 17 2022/MSVC and Ubuntu 24.04 with Ninja/GCC, using existing
+runner tools. No package installation or toolchain upgrade step is added.
+
+The workflow explicitly grants `contents: read`, checks out pinned submodules
+recursively without persisted credentials, and has no secrets, repository writes,
+release/deploy/updater operation or dependency on the disabled publisher. Relevant
+pushes/PRs and manual dispatch are declared. Bash error/pipefail handling preserves
+configuration, build and CTest failures while capturing logs. Missing/mismatched
+dependencies, zero/wrong CTest discovery, execution errors/timeouts and missing,
+partial, failed or skipped 39-case results fail qualification. JUnit, discovery,
+logs and CMake diagnostics are retained seven days, excluding binaries. No test
+retry is configured. This is an independent development signal; branch protection
+and release enforcement are not changed.
+
+Fresh equivalent worker checks pass on Linux GCC 13.3/Ninja and Windows MSVC
+19.51/Ninja, Debug, with two build jobs: configure, build, CTest discovery and all
+39 cases, followed by the same evidence checker. Windows uses its existing worker
+developer environment; these paths/generator are not copied into hosted CI.
+Outputs are `/opt/codex/godotluau/builds/gl011-core-ci-2` and
+`C:\Sandbox\Codex\Builds\GodotLuau\gl011-core-ci-msvc3`. Real Linux discovery/JUnit
+also drive 16 local negative evidence checks (zero/wrong/extra discovery, malformed
+JSON/XML, missing file/test, errors/failures/skips, wrong status/name and incomplete
+completion). Parsed YAML checks confirm matrix, triggers, read-only permissions,
+step/job deadlines and diagnostic-only upload. The inherited publisher remains
+dispatch-only with both jobs disabled and no persisted credentials.
+
+The first Linux run passed all cases but CTest truncated the JUnit passed output
+at 1024 bytes, which the checker correctly rejected. Both success/failure retained
+output limits are now 65536 bytes. Windows worker wrappers initially failed on
+shell quoting and lost compiler/SDK PATH state before configuration; the corrected
+wrapper preserves the existing developer environment. An intermediate GNU/Windows
+build also passed 39 cases but is not substituted for MSVC evidence. Original
+attempt directories/logs are preserved; no failing production test was retried
+without a concrete harness correction.
+
+The first hosted push at implementation `2f1c8199e5b47c9cfad4304f21b785317796ed4d`
+completes successfully in [Actions run 40475254435](https://github.com/gmoddev/GodotLuau/actions/runs/40475254435),
+2026-10-27 08:41:22–08:42:31 UTC. Both jobs pass recursive pinned checkout,
+configuration, compilation, exact CTest discovery, all 39 cases and report
+validation. `Core (Windows, Debug)` uses MSVC 19.44.35229.0/Visual Studio 17 2022;
+`Core (Linux, Debug)` uses GCC 13.3.0/Ninja. This is actual hosted execution,
+separate from the equivalent worker runs. No hosted retry or workflow defect
+correction is needed. Diagnostic uploads succeed: Windows artifact 12721115200
+(9776 bytes), Linux artifact 12719944156 (11214 bytes); both expire after seven
+days. The [manifest](evidence/gl011-core-ci-2026-10-27.json) retains run/job IDs,
+artifact digests, source/report hashes and limits beyond that retention period.
+The subsequent evidence-only commit changes no workflow, checker, test, core
+source or dependency input; it does not claim another hosted run.
+
+Configuration semantics follow [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
+and [CTest's documented discovery, no-tests and JUnit options](https://cmake.org/cmake/help/latest/manual/ctest.1.html).
+All 65 normalized native inputs remain at fingerprint
+`a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd`, matching main
+and both workers. Read-only Actions queries observe zero push runs at both
+post-integration main checkpoints (`73634b7e41081d5f149012b0df055949c6180bbe` and
+`f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`); the publisher was never dispatched.
+
+The original branch disposition was **OPEN; IMPLEMENTED — REVIEW PENDING**.
+Native Godot integration, multiplayer/lifecycle fixtures, security rejection,
+sanitizers, persistence failure coverage and enforced release gates remain manual
+or independently incomplete. GL-010 provenance and GL-020 adversarial animation
+qualification are not resolved or executed by this workflow.
+
+### GL-011A main integration
+
+Starting main `f8681c32fc45c9a9f543fb09495768bf3ebfe8e6`; normal merge
+`f0199004d56485ec7a9de14d5454d1907822ba11` preserves both source commits,
+ending at `95167299ad8a102b23fb3b25284a751483815779`. The merge has the exact
+qualified branch tree. The evidence-only source commit changes no CI/runtime/test
+or pinned dependency input. Parsed workflow/permission/trigger/deadline checks
+pass, and the updater remains fail-closed while both publishing jobs remain
+disabled. No release workflow is dispatched or repository protection changed.
+
+The main push triggers [run 40476321167](https://github.com/gmoddev/GodotLuau/actions/runs/40476321167)
+at the merge revision, completed **successfully** from 08:50:22 to 08:51:24 UTC
+(62 seconds). Windows job 122095323119 and Linux job 122095323702 each pass
+configuration, production-core compilation, exact discovery, **39 passed / 0
+failed**, and report validation. Diagnostic upload succeeds for both jobs.
+The existing [manifest](evidence/gl011-core-ci-2026-10-27.json) adds separate
+integration run/job/artifact identities and digests, retaining the original
+branch evidence. A following documentation-only commit changes none of these
+tested inputs. Disposition: **INTEGRATED AND VERIFIED** for GL-011A; GL-011 stays
+open for native integration, sanitizers and enforced release gates.
+
+## GL-011B native CI (2026-10-27)
+
+Branch `ci/gl-011-native-integration` starts at verified canonical main
+`db132e45607056cf23c024599f95ed37deac09bd`, after GL-011A integration. It is
+originally **NATIVE CI IMPLEMENTED AND HOSTED-QUALIFIED** on that branch. Main
+integration is recorded below; the original qualification is preserved. The separate native
+workflow builds the production adapter in Debug on hosted Windows 2022/MSVC and
+Ubuntu 24.04/GCC using the existing CMake target, unchanged Luau/godot-cpp pins
+and two build jobs. No native implementation or existing GDScript fixture changes.
+The [test instructions](../tests/runtime/README.md#native-ci-gl-011b) record exact
+portable commands, actor groups, deadlines and diagnostic retention.
+
+Godot provisioning is pinned to the [official 4.7.1 release](https://github.com/godotengine/godot-builds/releases/tag/4.7.1-stable).
+The official release API supplies asset IDs, byte sizes and SHA-256 digests,
+recorded in `GodotDistribution.json`; it does not grant permission to dynamically
+trust replacement bytes at a mutable tag. Before executing anything the helper
+requires the recorded archive size/digest, extracts only the named executable,
+checks `4.7.1.stable.official.a13da4feb` and records executable SHA-256. The
+[official source tag](https://github.com/godotengine/godot/tree/4.7.1-stable)
+resolves to `a13da4feb8d8aefc283c3763d33a2f170a18d541`, matching the manual
+qualification baseline. No fallback to another engine version or unverified
+worker binary is allowed. Downloads have bounded reads and a total deadline.
+
+Existing `RunQualification.py` is reused for 28 processes per platform: eight
+registration/script/module/native/lifecycle/network processes across single-player,
+listen, dedicated and editor; ten existing GL-006/008 security/regression actors;
+ten existing functional animation actors. The fixture assertions, transport and
+coordinated-close logic are unchanged. Full GL-020 adversarial animation
+qualification remains deferred. Exact actor labels/counts and successful exits
+are required by the summary checker; required PASS markers and failure/sanitizer
+diagnostics are enforced by the runner itself.
+
+The directly required launcher correction gives each fixture a POSIX session or
+Windows kill-on-close job, closes output handles on partial startup, and retires
+owned descendants even when their parent exits normally. Group cleanup runs on
+normal/failure/timeout/partial-startup paths and process exit/interruption.
+SIGTERM unwinds the runner; Windows job handles also close when its process dies.
+Child profiles/output trees are isolated, fresh output is required, and Windows
+crash/error dialogs remain suppressed. Existing ephemeral ports and 25575
+preflight remain intact. Raw stderr and ENet diagnostics are retained; no broad
+error suppression or ignored failure is added. Eight actual launcher regressions
+cover tree termination and missing PASS/failure/nonzero/sanitizer rejection.
+
+Fresh equivalent worker checks pass on both platforms, including official
+download verification, all eight launcher checks and all 28 native actors. Cached
+Debug adapter builds report no work after CMake reconfiguration: native inputs
+are unchanged at fingerprint `a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd`.
+This reuses existing compiled native code with verified source identity; it is not
+presented as a fresh full compilation. Logs/results remain at Windows
+`C:\Sandbox\Codex\Builds\GodotLuau\gl011-native-ci-1` and Linux
+`/opt/codex/godotluau/artifacts/gl011-native-ci-1`. Expected ServerStorage denials
+and RPC authority rejection diagnostics remain visible. No zero-channel ENet
+diagnostic appears in these ordered-close runs; GL-017 remains independently open.
+
+### Hosted native results
+
+Implementation `216066131b64bdd81efdd48cedc04277e5a74919` passes on the first
+hosted attempt in [run 40478173463](https://github.com/gmoddev/GodotLuau/actions/runs/40478173463),
+09:05:36–09:21:08 UTC (15m32s workflow wall time). Both platforms compile the
+actual Debug GDExtension from a fresh checkout/build tree, verify the official
+engine archive/version, pass all eight launcher regressions, and complete **28
+native process results each** (8 lifecycle/network + 10 GL-006/008 + 10 functional
+animation). Incomplete groups cannot pass. No hosted retry or code correction is
+needed. The separate [core run 40478173545](https://github.com/gmoddev/GodotLuau/actions/runs/40478173545)
+also succeeds on that implementation push; core CI itself remains unchanged.
+
+| Hosted job | Compiler / generator | Total | Native build | Fixture groups |
+| --- | --- | --- | --- | --- |
+| Windows 2022 Debug | MSVC 19.44.35229.0 / Visual Studio 17 2022 | 15m28s | 13m53s | 10s + 18s + 16s |
+| Ubuntu 24.04 Debug | GCC 13.3.0 / Ninja | 9m52s | 8m53s | 9s + 17s + 14s |
+
+Cold compilation dominates: the Linux log records 970 godot-cpp binding units,
+53 Luau units and four production core units. Official engine provisioning takes
+three seconds on Windows and one on Linux. The Windows job explicitly discovers
+the existing VS Debug CRT with `vswhere` and exposes its directory to fixture
+children; it installs no runtime package or toolchain. No build cache is introduced
+for this first independently verified milestone. A later cache should target the
+costly binding build and bind OS/image, compiler, pins, configuration and source
+identity; it must not silently substitute stale output.
+
+Diagnostic artifact 12722526926 (Windows, 45665 bytes) and 12722041865 (Linux,
+50512 bytes) upload successfully with seven-day retention. Both ZIP downloads are
+verified against GitHub's artifact SHA-256 digests and inspected: 84/82 files,
+respectively, with no DLL, SO, executable or package ZIP payload. Their summaries
+record all 28 actors, exact implementation revision, engine/library hashes and
+matching harness hashes. Both retain fingerprint
+`a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd` for all 65 native
+inputs. No zero-channel ENet diagnostic appears; expected ServerStorage and RPC
+authority rejection errors remain in raw stderr and structured results. GL-017
+is not closed by the ordered-close matrix.
+
+The [native manifest](evidence/gl011-native-ci-2026-10-27.json) preserves source,
+pin, official engine, job/step timing, artifact/summary digest and worker identities.
+The final evidence-only follow-up changes no hosted-tested workflow, helper,
+fixture, native source or pin and claims no additional hosted run. That branch
+checkpoint was left unmerged until the authorized integration below.
+
+### GL-011B main integration
+
+Starting main `db132e45607056cf23c024599f95ed37deac09bd`; qualified source
+`cebc64919e4fbf67624b19e075f31ef25941d136`. Conflict-free normal merge
+`9029d01a24d904deaa1ecd7a9c30fc483e13757f` preserves both source commits
+(`216066131b64bdd81efdd48cedc04277e5a74919`, then its evidence-only follow-up).
+The merge tree exactly equals qualified source. Integration notes change only
+existing documentation/evidence; all runtime/build/test/workflow inputs and pins
+retain their qualified identity. The source branch is retained.
+
+Fresh lightweight checks validate both workflow YAML structures, Windows/Linux
+matrices, recursive checkout/no persisted credentials, read-only permissions,
+existing core/native targets, exact recorded harness hashes, Python syntax and
+all 65 native input fingerprints. Publication remains dispatch-only with both
+jobs disabled, and runtime updater admission remains literal false. Diff/graph
+review contains no unrelated files or generated production artifacts.
+
+Hosted [run 40478173463](https://github.com/gmoddev/GodotLuau/actions/runs/40478173463)
+is rechecked as successful at the unchanged implementation: two fresh Debug
+adapter builds, 28 native actors and eight launcher checks per platform. It is
+reused within that documented scope, not presented as a fresh integration run.
+No expensive local matrix, engine download, worker job, new configuration or
+manual workflow dispatch is started. Automatically triggered integration CI is
+observed for at most 90 seconds; its completion/pending state is reported at task
+completion, without inferring success. Disposition: **INTEGRATED AND VERIFIED**
+for the source-identical integration. GL-011 and GL-007/010/017/018/020 remain
+open within their existing scopes. Publication and updater distribution stay
+disabled. This completes the authorized session; no further development begins.
+
+### Linux process-liveness correction (2026-10-27)
+
+Starting main `dcc4b4c2bbe948d2d9a792991c02331b32bc5033` failed Linux
+[native run 40483447902](https://github.com/gmoddev/GodotLuau/actions/runs/40483447902),
+job `122119224290`, in `test_partial_startup_failure_cleans_prior_actor`:
+`/proc/2658/stat` disappeared between `exists()` and `read_text()`.
+The Windows job passed; Linux provisioning, compilation and native fixtures were
+skipped. Prior successful source qualification remains historical evidence.
+
+`fix/ci-proc-liveness-race` replaces that precheck with one Linux proc-stat read.
+Only `FileNotFoundError`/`ProcessLookupError` indicate disappearance; zombie
+detection and the subsequent zero-signal probe remain, including termination
+between read and probe. Permission and unrelated I/O errors propagate. Windows
+liveness, tree ownership, deadlines and all existing assertions are unchanged.
+
+Six deterministic Linux tests cover the original race, ESRCH during read, zombie,
+running process, disappearance during the subsequent probe and unexpected errors
+at both operations. Running the new race test against the starting helper
+reproduces `FileNotFoundError`; the corrected complete suite passes all 14 Linux
+tests (0.257s). Windows passes the original eight with six Linux-only skips
+(0.603s). Commands: Python 3.12 `tests/runtime/FixtureProcessTests.py` on DockerPC
+and the task-owned Linux qualification container; baseline reproduction uses an
+ignored harness substituting the original helper. Controller `python -m
+py_compile tests/runtime/FixtureProcessTests.py` and `git diff --check` pass.
+No local native rebuild is needed or performed.
+
+Correction `a6411da5b1ac4f79e9f0b6163fb78827157863a1` is preserved by normal
+merge `995401b03335bca26eb8e1b62d52848f89a69e1e`, pushed to fork main. The branch
+is retained. Fresh [core run 40618765032](https://github.com/gmoddev/GodotLuau/actions/runs/40618765032)
+passes 39 cases on each platform. Fresh [native run 40618765012](https://github.com/gmoddev/GodotLuau/actions/runs/40618765012)
+passes both Debug jobs: complete process suites (Linux 14; Windows eight plus six
+Linux-only skips), verified Godot provisioning, actual adapter builds, all three
+fixture groups, final 28-actor checks and diagnostic uploads. Native elapsed run
+time is 18m38s, completing within the 20-minute observation bound; no retry or
+manual dispatch occurs. These runs target the corrected merge, not the old SHA.
+
+Both downloaded diagnostic ZIP digests match hosted metadata; their summaries
+identify the corrected helper hash and unchanged 65-input native fingerprint,
+exactly 8/10/10 actors with zero exit codes, and no production binary payload.
+Worker inspection finds no surviving test Python children; the Linux task
+container is restored to stopped. AST comparison confirms every original test
+method and Windows liveness branch unchanged. Disposition:
+**FIXED AND HOSTED-VERIFIED**. The final evidence-only commit changes no tested
+input and does not claim a separate run. The
+[existing manifest](evidence/gl011-native-ci-2026-10-27.json) records correction
+identity and results separately from historical qualification. GL-011 remains
+open for sanitizer/release enforcement; all other recorded limitations and
+disabled publication/updater policy remain unchanged.
+
+### Sanitizer expansion assessment
+
+No sanitizer job is added to routine CI. The existing full-native Linux ASan/LSan
+qualification uses a matching instrumented Godot host built from the pinned
+source, minimal headless modules and compiler/runtime settings; stock Godot's
+RTLD_DEEPBIND loader is incompatible with simply preloading ASan. Its earlier
+task container has a 10 GiB memory bound. The inspected official release lists
+34 assets and no instrumented host. There is no separately qualified immutable
+host artifact available to these hosted jobs. Rebuilding the instrumented engine
+on every ordinary push would add a separate engine compilation and provenance
+pipeline; no hosted sanitizer build time or resource claim is fabricated here.
+
+The recommended later milestone is a separately triggered Linux instrumented-host
+build with recorded source/compiler/configuration and verified reusable artifact
+identity, followed by a bounded native ASan/LSan lifecycle job. Cache/admission
+keys must bind engine revision, compiler/runtime, image, build options and native
+inputs as appropriate; an ordinary stock executable is not equivalent. GL-018's
+Windows sanitizer-host gap and the minimal host's graphics/physics limitations
+remain unchanged. Current CI is Debug/native functional coverage, manual Linux
+full-native sanitizer evidence remains manual, release-gate enforcement is absent,
+and GL-010 provenance and GL-011's broader closure requirements stay open.
+
+## Original shared-domain qualification
+
 Date: 2026-10-26. Starting revision:
 `8b163269cbe44cf7fcf7a9a0285620878a2345fd`.
 Branch: `runtime/shared-domains` in the public `gmoddev/GodotLuau` fork.

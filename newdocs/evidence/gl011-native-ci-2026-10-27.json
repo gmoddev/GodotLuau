@@ -1,0 +1,431 @@
+{
+  "ProcessLivenessCorrection": {
+    "StartingMain": "dcc4b4c2bbe948d2d9a792991c02331b32bc5033",
+    "Branch": "fix/ci-proc-liveness-race",
+    "Correction": "a6411da5b1ac4f79e9f0b6163fb78827157863a1",
+    "Merge": "995401b03335bca26eb8e1b62d52848f89a69e1e",
+    "MergeMethod": "Normal no-ff merge; exact correction branch tree; correction commit and branch retained",
+    "FixtureProcessTestsSHA256LF": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+    "FailedRun": 40483447902,
+    "FailedLinuxJob": 122119224290,
+    "Failure": "FileNotFoundError /proc/2658/stat in partial-startup cleanup before provisioning/build/native fixtures; Windows passed",
+    "Fix": "Single Linux proc-stat read; narrowly handle ENOENT/ESRCH; retain zombie detection and kill-zero probe; other errors propagate; Windows unchanged",
+    "Regression": "Six Linux-only deterministic checks, including original exists/read disappearance, read ESRCH, zombie, live process, post-read disappearance and unexpected read/probe errors",
+    "BaselineProof": "New disappearance test against original helper reproduces FileNotFoundError on Linux",
+    "WorkerCommand": "python tests/runtime/FixtureProcessTests.py",
+    "Windows": { "Tests": 14, "Passed": 8, "SkippedLinuxOnly": 6, "Seconds": 0.603 },
+    "Linux": { "Tests": 14, "Passed": 14, "Skipped": 0, "Seconds": 0.257 },
+    "Static": ["python -m py_compile tests/runtime/FixtureProcessTests.py", "git diff --check"],
+    "Scope": "Only launcher liveness test helper and regressions; no native source, ownership helper, qualification runner, fixtures, workflows or pin changes; no local native build",
+    "Cleanup": "Windows CIM finds no matching test/child Python process; Linux docker top shows only sleep infinity; task container restored to stopped state",
+    "PreservationProof": "AST comparison confirms every original test method and Windows Alive branch unchanged",
+    "HostedCore": { "Run": 40618765032, "WindowsJob": 122587388492, "LinuxJob": 122587388681, "Conclusion": "success", "CasesPerPlatform": 39 },
+    "HostedNative": {
+      "Run": 40618765012,
+      "WindowsJob": 122587388823,
+      "LinuxJob": 122587388614,
+      "Conclusion": "success",
+      "ProcessTests": "Linux 14 pass in 0.430s; Windows eight pass plus six Linux-only skips in 0.594s",
+      "BuildAndFixtures": "Both actual adapter builds and all lifecycle/network/functional-animation groups pass; final checks require 28 actors each, 8/10/10 with Exit 0",
+      "StartedUTC": "2026-10-28T02:04:27Z",
+      "CompletedUTC": "2026-10-28T02:23:05Z",
+      "ElapsedSeconds": 1118,
+      "NativeSourceSHA256LF": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+      "WindowsArtifact": { "ID": 12787007629, "Bytes": 46318, "SHA256": "303b5b9f3d3a3a965bfb66e658768519ae8c1628eb66b3cdfd592a42dba7ddb0", "Files": 84 },
+      "LinuxArtifact": { "ID": 12786547155, "Bytes": 49468, "SHA256": "fd0d6e87eab36812cfb070f05ebe0719c315d9042ea529324d9975e502d076e8", "Files": 81 },
+      "ArtifactVerification": "Downloaded ZIP hashes match metadata; summaries verify merge revision, corrected helper hash, unchanged 65-input native fingerprint, exact 8/10/10 actors with Exit 0; no .dll/.so/.exe/.zip payload"
+    },
+    "Observation": "Bounded to 20 minutes after push; no old-revision rerun or manual dispatch",
+    "Disposition": "FIXED AND HOSTED-VERIFIED",
+    "EvidenceFollowup": "Documentation-only final commit changes no CI-tested input; no separate hosted run claimed; GL-011 and existing independent limitations remain open; publication/updater disabled"
+  },
+  "MainIntegration": {
+    "StartingMain": "db132e45607056cf23c024599f95ed37deac09bd",
+    "Source": "cebc64919e4fbf67624b19e075f31ef25941d136",
+    "Merge": "9029d01a24d904deaa1ecd7a9c30fc483e13757f",
+    "Method": "Normal no-ff merge; no conflicts; both source commits retained; source branch retained",
+    "Identity": "Merge tree exactly equals qualified source; integration notes change no runtime/build/test/workflow/pin input",
+    "Disposition": "INTEGRATED AND VERIFIED",
+    "FreshChecks": [
+      "git diff --exit-code cebc649 HEAD at merge: exact tree identity",
+      "Recorded LF-normalized harness/workflow hashes match; native fingerprint remains a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd for 65 inputs",
+      "Parsed YAML: both Windows/Linux matrices, read-only permissions, recursive checkout, no persisted credentials, existing native/core targets",
+      "Python py_compile for core/native checkers, process launcher/tests and Godot provisioner",
+      "Publication workflow dispatch-only with both jobs false; updater admission literal false; diff/graph checks"
+    ],
+    "ReusedHostedRun": 40478173463,
+    "ReusedScope": "Successful fresh source-branch Windows/Linux Debug adapter builds, 28 native actors and eight launcher checks each; not a new integration run",
+    "NewHostedObservation": "Automatic runs observed for at most 90 seconds after push; exact live status reported at task completion; no manual dispatch or assumed pass",
+    "Shutdown": "No local or remote-worker builds/tests, containers or background polling loops started; no PC/service shutdown or restart",
+    "HistoricalFields": "Original unmerged-branch qualification fields below are retained as historical evidence"
+  },
+  "Date": "2026-10-27",
+  "Branch": "ci/gl-011-native-integration",
+  "BaseMain": "db132e45607056cf23c024599f95ed37deac09bd",
+  "Implementation": "216066131b64bdd81efdd48cedc04277e5a74919",
+  "Disposition": "NATIVE CI IMPLEMENTED AND HOSTED-QUALIFIED; NOT MERGED",
+  "CoreIntegration": {
+    "StartingMain": "f8681c32fc45c9a9f543fb09495768bf3ebfe8e6",
+    "Source": "95167299ad8a102b23fb3b25284a751483815779",
+    "Merge": "f0199004d56485ec7a9de14d5454d1907822ba11",
+    "CanonicalMain": "db132e45607056cf23c024599f95ed37deac09bd",
+    "Run": 40476321167,
+    "Conclusion": "success",
+    "ElapsedSeconds": 62,
+    "WindowsCases": 39,
+    "LinuxCases": 39
+  },
+  "SourceHashesLFNormalized": {
+    ".github/workflows/runtime-native-ci.yml": "7b8c8561fa862963a9f1c89ab9c20097939bfd22d9c748ac07e80b001e8e2d40",
+    "tests/runtime/RunQualification.py": "96fce1b3b671fda8db95e27ef0ffdf04defeac31f0e6fb0f47580e4ccd3a5cbc",
+    "tests/runtime/FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+    "tests/runtime/FixtureProcessTests.py": "2302abfb4483042cfe75c889982d382fc08ac132c92cff7409ad0be77b634074",
+    "tests/runtime/GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+    "tests/runtime/ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+    "tests/runtime/CheckNativeCI.py": "bc86d7ea15564c78bafe91a5ef4dc1468dea03fb1c952ee9aa1d8b985265b343"
+  },
+  "GodotDistribution": {
+    "Version": "4.7.1-stable",
+    "ExpectedVersionOutput": "4.7.1.stable.official.a13da4feb",
+    "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+    "SourceTagAPI": "https://api.github.com/repos/godotengine/godot/git/ref/tags/4.7.1-stable",
+    "ReleaseAPI": "https://api.github.com/repos/godotengine/godot-builds/releases/tags/4.7.1-stable",
+    "ReleaseID": 353974774,
+    "DigestSource": "Official GitHub release asset SHA-256 digests observed 2026-10-27; pinned locally, never accepted dynamically",
+    "Windows": {
+      "AssetID": 476992673,
+      "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+      "Bytes": 84198557,
+      "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+      "Executable": "Godot_v4.7.1-stable_win64.exe"
+    },
+    "Linux": {
+      "AssetID": 476992009,
+      "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+      "Bytes": 76056717,
+      "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+      "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+    }
+  },
+  "Workers": {
+    "windows": {
+      "Processes": 28,
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10
+      },
+      "ExtensionSHA256": "8db6631beb43e71993a61fc48d5d9a34f86674259d63152fce816e093ac8f0e2",
+      "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+      "SummaryFileSHA256": "4bd67959ce8552da295b3f9d56457169e2a9f4836aad74fb91c5295f1640862e",
+      "ZeroChannelDiagnostics": 0
+    },
+    "linux": {
+      "Processes": 28,
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10
+      },
+      "ExtensionSHA256": "7b8a28cc674b89b9b9cce8dfe04c308bc60111c49c1776b47d2d99593dfe1d35",
+      "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+      "SummaryFileSHA256": "d48a80afeb53d375545d3a489ddaa7434714664fb246dba470fa05d99dce7637",
+      "ZeroChannelDiagnostics": 0
+    }
+  },
+  "NativeSource": {
+    "Files": 65,
+    "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+    "Scope": "Unchanged native/SConstruct inputs, pins and existing GDScript fixtures"
+  },
+  "Hosted": {
+    "Run": 40478173463,
+    "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/40478173463",
+    "Event": "push",
+    "Head": "216066131b64bdd81efdd48cedc04277e5a74919",
+    "Conclusion": "success",
+    "Linux": {
+      "Job": 122101480010,
+      "Conclusion": "success",
+      "Cases": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10
+      },
+      "Processes": 28,
+      "ExtensionSHA256": "f5e01b9b0bf3780635e66e405289bfde4e0e4c1389e0c5ada5f8c09bc19f6d95",
+      "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+      "SummarySHA256": "810653c5b17e24500488c9cb1bde68cac0a3bc247c396b02180b396740380ccc",
+      "ZeroChannelDiagnostics": 0,
+      "Runner": "ubuntu-24.04",
+      "Compiler": "GNU 13.3.0",
+      "Generator": "Ninja",
+      "LauncherTests": 8,
+      "ElapsedSeconds": 592,
+      "Steps": [
+        {
+          "Name": "Set up job",
+          "Conclusion": "success",
+          "Seconds": 1
+        },
+        {
+          "Name": "Run actions/checkout@v4",
+          "Conclusion": "success",
+          "Seconds": 9
+        },
+        {
+          "Name": "Record source and dependency identity",
+          "Conclusion": "success",
+          "Seconds": 0
+        },
+        {
+          "Name": "Verify fixture process ownership and failure handling",
+          "Conclusion": "success",
+          "Seconds": 1
+        },
+        {
+          "Name": "Provision verified official Godot 4.7.1",
+          "Conclusion": "success",
+          "Seconds": 1
+        },
+        {
+          "Name": "Configure production native adapter",
+          "Conclusion": "success",
+          "Seconds": 3
+        },
+        {
+          "Name": "Build GodotLuauAdapter",
+          "Conclusion": "success",
+          "Seconds": 533
+        },
+        {
+          "Name": "Expose installed MSVC Debug runtime",
+          "Conclusion": "skipped",
+          "Seconds": 0
+        },
+        {
+          "Name": "Single-player listen dedicated and editor lifecycle",
+          "Conclusion": "success",
+          "Seconds": 9
+        },
+        {
+          "Name": "GL-006 and GL-008 existing network regressions",
+          "Conclusion": "success",
+          "Seconds": 17
+        },
+        {
+          "Name": "GL-020 existing functional animation lifecycle",
+          "Conclusion": "success",
+          "Seconds": 14
+        },
+        {
+          "Name": "Require all native actors and retain identity",
+          "Conclusion": "success",
+          "Seconds": 0
+        },
+        {
+          "Name": "Retain native qualification diagnostics",
+          "Conclusion": "success",
+          "Seconds": 2
+        },
+        {
+          "Name": "Post Run actions/checkout@v4",
+          "Conclusion": "success",
+          "Seconds": 0
+        },
+        {
+          "Name": "Complete job",
+          "Conclusion": "success",
+          "Seconds": 0
+        }
+      ]
+    },
+    "LinuxArtifact": {
+      "ID": 12722041865,
+      "Bytes": 50512,
+      "SHA256": "e2365e4a8574da33e020531119cdfb1e1c3f8a7d7f576462edc4063e7e4f7c79",
+      "VerifiedZipContents": "82 diagnostic files; no .dll/.so/.exe/.zip payload"
+    },
+    "Windows": {
+      "Files": 84,
+      "Processes": 28,
+      "Revision": "216066131b64bdd81efdd48cedc04277e5a74919",
+      "Fingerprint": {
+        "SHA256": "a954a5541435b37246d6010e8384b21a579a420b950b25a64d6db944daad76dd",
+        "Files": 65,
+        "Newlines": "LF normalized"
+      },
+      "ExtensionSHA256": "dea1bb30601e4eff44f714dcfd74ef84119ead779959e49b9d75af1bf2806ee0",
+      "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+      "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+      "Groups": {
+        "regression": 8,
+        "security": 10,
+        "animation": 10
+      },
+      "ZeroChannelDiagnostics": 0,
+      "SummarySHA256": "8ad261390c50b9c6139e5e2dd333bb09f108e702f6b4e858e2ecfcbbc023fbe6",
+      "Job": 122101479725,
+      "Runner": "windows-2022",
+      "Compiler": "MSVC 19.44.35229.0",
+      "Generator": "Visual Studio 17 2022",
+      "Conclusion": "success",
+      "LauncherTests": 8,
+      "ElapsedSeconds": 928,
+      "Steps": [
+        {
+          "Name": "Set up job",
+          "Conclusion": "success",
+          "Seconds": 1
+        },
+        {
+          "Name": "Run actions/checkout@v4",
+          "Conclusion": "success",
+          "Seconds": 17
+        },
+        {
+          "Name": "Record source and dependency identity",
+          "Conclusion": "success",
+          "Seconds": 3
+        },
+        {
+          "Name": "Verify fixture process ownership and failure handling",
+          "Conclusion": "success",
+          "Seconds": 1
+        },
+        {
+          "Name": "Provision verified official Godot 4.7.1",
+          "Conclusion": "success",
+          "Seconds": 3
+        },
+        {
+          "Name": "Configure production native adapter",
+          "Conclusion": "success",
+          "Seconds": 18
+        },
+        {
+          "Name": "Build GodotLuauAdapter",
+          "Conclusion": "success",
+          "Seconds": 833
+        },
+        {
+          "Name": "Expose installed MSVC Debug runtime",
+          "Conclusion": "success",
+          "Seconds": 1
+        },
+        {
+          "Name": "Single-player listen dedicated and editor lifecycle",
+          "Conclusion": "success",
+          "Seconds": 10
+        },
+        {
+          "Name": "GL-006 and GL-008 existing network regressions",
+          "Conclusion": "success",
+          "Seconds": 18
+        },
+        {
+          "Name": "GL-020 existing functional animation lifecycle",
+          "Conclusion": "success",
+          "Seconds": 16
+        },
+        {
+          "Name": "Require all native actors and retain identity",
+          "Conclusion": "success",
+          "Seconds": 0
+        },
+        {
+          "Name": "Retain native qualification diagnostics",
+          "Conclusion": "success",
+          "Seconds": 1
+        },
+        {
+          "Name": "Post Run actions/checkout@v4",
+          "Conclusion": "success",
+          "Seconds": 2
+        },
+        {
+          "Name": "Complete job",
+          "Conclusion": "success",
+          "Seconds": 0
+        }
+      ]
+    },
+    "StartedUTC": "2026-10-27T09:05:36Z",
+    "CompletedUTC": "2026-10-27T09:21:08Z",
+    "ElapsedSeconds": 932,
+    "WindowsArtifact": {
+      "ID": 12722526926,
+      "Bytes": 45665,
+      "SHA256": "28fd116d53aea86768b38e8a9ca6115344c6af9bf9738d3a8a8b5b110ff4933e",
+      "VerifiedZipContents": "84 diagnostic files; no .dll/.so/.exe/.zip payload"
+    }
+  },
+  "WorkerScope": {
+    "Windows": "C:/Sandbox/Codex/Builds/GodotLuau/gl011-native-ci-1",
+    "Linux": "/opt/codex/godotluau/artifacts/gl011-native-ci-1",
+    "Builds": "Existing Debug adapters; CMake reconfigure/build returns no work. Reused native inputs verified by normalized fingerprint; not a fresh full compilation.",
+    "LauncherTestsPerPlatform": 8,
+    "Godot": "Fresh official archive downloads verified before all worker native actors",
+    "HarnessIdentity": "All five new/changed runner/provision/checker module hashes match committed inputs; existing GDScript fixtures unchanged",
+    "Cleanup": "Task-owned Linux container restored to its original exited state"
+  },
+  "Workflow": {
+    "Permissions": {
+      "contents": "read"
+    },
+    "Checkout": "recursive pinned dependencies, no persisted credentials",
+    "Configurations": [
+      "Windows 2022/MSVC Debug",
+      "Ubuntu 24.04/GCC Debug"
+    ],
+    "BuildParallelism": 2,
+    "JobTimeoutMinutes": 80,
+    "BuildTimeoutMinutes": 50,
+    "FixtureTimeoutSeconds": 60,
+    "FixtureGroupStepTimeoutMinutes": [
+      4,
+      4,
+      5
+    ],
+    "Retries": "none",
+    "Caching": "none in first milestone; fresh hosted compilation; no stale-cache substitution",
+    "Artifacts": "seven-day logs, results, provenance and source hashes only; no production binaries/packages",
+    "Distribution": "No release/deployment/updater operation or repository writing credential"
+  },
+  "Sanitizers": {
+    "Automated": "none",
+    "Manual": "Existing matching minimal Linux instrumented Godot/adapter ASan/LSan qualification retained separately",
+    "OfficialInstrumentedAssets": 0,
+    "OfficialReleaseAssetCount": 34,
+    "Assessment": "Stock host is not equivalent; no qualified immutable instrumented host available to hosted CI. Avoid rebuilding the entire instrumented engine on routine pushes. A separately triggered, provenance-bound host build/reuse pipeline is a later milestone.",
+    "Windows": "GL-018 remains open",
+    "HostedInstrumentedBuildTiming": "not measured or claimed"
+  },
+  "Limits": [
+    "GL-011 remains open; native branch unmerged",
+    "Debug/x86_64 Windows and Linux only; no Release/macOS/other architecture coverage",
+    "No automated sanitizer or release enforcement; GL-010 remains independent",
+    "Functional animation is not GL-020 adversarial qualification; those deferred cases were not executed",
+    "GL-017 transport defect remains independently open; diagnostics retained without filtering",
+    "Expected ServerStorage and RPC authority-rejection diagnostics retained in raw logs/results",
+    "No account-level settings, repository protection or upstream changes"
+  ],
+  "NextMilestone": "Review and integrate the qualified native CI branch without enabling publication; immutable instrumented-host reuse is a separate later scope",
+  "Pins": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "HostedLinuxCompileUnits": {
+    "GodotBindings": 970,
+    "Luau": 53,
+    "ProductionCore": 4,
+    "Other": 0
+  },
+  "IndependentCoreRun": {
+    "Run": 40478173545,
+    "Conclusion": "success",
+    "Scope": "Both existing Windows/Linux core jobs also pass on native implementation push; source core workflow unchanged"
+  },
+  "Attempts": "First native worker and hosted attempts pass; no hosted retry or correction required",
+  "EvidenceOnlyFollowup": "Final documentation/evidence commit changes no hosted-tested workflow, helper, fixture, native or pin input; claims no additional run"
+}

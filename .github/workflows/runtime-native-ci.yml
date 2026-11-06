@@ -1,0 +1,146 @@
+name: Runtime native qualification
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "tests/runtime/**"
+      - "luau"
+      - "godot-cpp"
+      - ".gitmodules"
+      - ".github/workflows/runtime-native-ci.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/runtime/**"
+      - "luau"
+      - "godot-cpp"
+      - ".gitmodules"
+      - ".github/workflows/runtime-native-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  Native:
+    name: Native (${{ matrix.Platform }}, Debug)
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 80
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+            Generator: Visual Studio 17 2022
+            Executable: Godot_v4.7.1-stable_win64.exe
+            Library: Debug/godot_luau.dll
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Generator: Ninja
+            Executable: Godot_v4.7.1-stable_linux.x86_64
+            Library: godot_luau.so
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Record source and dependency identity
+        timeout-minutes: 1
+        run: |
+          mkdir -p "$RUNNER_TEMP/native-ci" build/native
+          git rev-parse HEAD | tee "$RUNNER_TEMP/native-ci/revision.log"
+          git submodule status --recursive | tee "$RUNNER_TEMP/native-ci/dependencies.log"
+          if git submodule status --recursive | grep -E '^[-+U]'; then
+            echo '[Runtime:NativeCI] Missing or mismatched pinned submodule.'
+            exit 1
+          fi
+          python tests/runtime/SourceFingerprint.py . > "$RUNNER_TEMP/native-ci/source.json"
+
+      - name: Verify fixture process ownership and failure handling
+        timeout-minutes: 2
+        run: python tests/runtime/FixtureProcessTests.py 2>&1 | tee "$RUNNER_TEMP/native-ci/process-tests.log"
+
+      - name: Provision verified official Godot 4.7.1
+        timeout-minutes: 5
+        run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot-4.7.1" 2>&1 | tee "$RUNNER_TEMP/native-ci/provision.log"
+
+      - name: Configure production native adapter
+        timeout-minutes: 5
+        run: |
+          cmake -S tests/runtime -B build/native -G "${{ matrix.Generator }}" \
+            -DCMAKE_BUILD_TYPE=Debug -DGL_BUILD_CORE_TESTS=OFF \
+            -DGL_BUILD_GODOT_ADAPTER=ON \
+            2>&1 | tee build/native/configure.log
+
+      - name: Build GodotLuauAdapter
+        timeout-minutes: 50
+        run: |
+          cmake --build build/native --config Debug --target GodotLuauAdapter --parallel 2 \
+            2>&1 | tee build/native/build.log
+
+      - name: Expose installed MSVC Debug runtime
+        if: ${{ runner.os == 'Windows' }}
+        timeout-minutes: 1
+        shell: pwsh
+        run: |
+          $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $Installation = & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if ($LASTEXITCODE -ne 0 -or -not $Installation) { throw '[Runtime:NativeCI] MSVC installation unavailable.' }
+          $Runtime = Get-ChildItem -Path "$Installation\VC\Redist\MSVC\*\debug_nonredist\x64\Microsoft.VC*.DebugCRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $Runtime -or -not (Test-Path -LiteralPath (Join-Path $Runtime.FullName 'vcruntime140d.dll'))) { throw '[Runtime:NativeCI] Installed MSVC Debug CRT unavailable.' }
+          $Runtime.FullName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "[Runtime:NativeCI] Debug CRT: $($Runtime.FullName)" | Tee-Object -FilePath "$env:RUNNER_TEMP/native-ci/msvc-runtime.log"
+
+      - name: Single-player listen dedicated and editor lifecycle
+        timeout-minutes: 4
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/regression" --teardown --coordinated-close --timeout 60
+
+      - name: GL-006 and GL-008 existing network regressions
+        timeout-minutes: 4
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/security" --security --timeout 60
+
+      - name: GL-020 existing functional animation lifecycle
+        timeout-minutes: 5
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/animation" --animation --timeout 60
+
+      - name: Require all native actors and retain identity
+        timeout-minutes: 1
+        run: |
+          python tests/runtime/CheckNativeCI.py --output "$RUNNER_TEMP/native-ci" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --godot-evidence "$RUNNER_TEMP/godot-4.7.1/provenance.json" --revision "$GITHUB_SHA"
+
+      - name: Retain native qualification diagnostics
+        if: ${{ always() }}
+        timeout-minutes: 2
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-native-${{ matrix.Platform }}-Debug
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/native-ci/**/*.log
+            ${{ runner.temp }}/native-ci/**/results.json
+            ${{ runner.temp }}/native-ci/source.json
+            ${{ runner.temp }}/native-ci/summary.json
+            ${{ runner.temp }}/godot-4.7.1/provenance.json
+            build/native/*.log
+            build/native/CMakeFiles/CMakeConfigureLog.yaml

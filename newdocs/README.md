@@ -28,6 +28,23 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+GL-012 release retention is integrated with publication disabled by explicit
+workflow admission and read-only permissions. See the
+[integration record](release-retention.md#main-integration-2026-10-27).
+GL-016 updater isolation is also integrated; fresh Windows/Linux headless editor
+checks are recorded in its [integration record](fork-updater-isolation.md#main-integration-2026-10-27).
+GL-011A core CI is integrated by normal merge `f0199004d56485ec7a9de14d5454d1907822ba11`.
+Both fresh hosted Debug jobs pass 39 cases; see the
+[CI milestone](shared-domains-validation.md#gl-011-independent-core-ci-2026-10-27).
+GL-011 remains open for sanitizer/release-enforcement and broader coverage gaps.
+GL-011B native CI is integrated by normal merge `9029d01a24d904deaa1ecd7a9c30fc483e13757f`.
+Its qualified source passes actual hosted Debug
+adapter builds and 28 native actors on each platform, including existing network
+and functional animation regressions. See the
+[native CI milestone](shared-domains-validation.md#gl-011b-native-ci-2026-10-27).
+Source-identical hosted qualification is reused; see the bounded
+[main integration record](shared-domains-validation.md#gl-011b-main-integration).
+
 | Document | Purpose |
 | --- | --- |
 | [AI policy](../AGENTS.md) | Contribution workflow, naming, evidence, and non-disruptive tooling |
@@ -40,6 +57,8 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 | [Shared-domain validation](shared-domains-validation.md) | Reproduction commands, acceptance coverage and remaining gaps |
 | [Network authority validation](network-authority-validation.md) | Integrated GL-006/008 trust boundaries, transport regressions, compatibility and remaining gaps |
 | [Animation lifecycle validation](animation-lifecycle-validation.md) | GL-020 development-branch execution/session rules, functional regressions and outstanding security qualification |
+| [Release retention](release-retention.md) | Integrated GL-012 retention, disabled publication and integration checks |
+| [Fork updater isolation](fork-updater-isolation.md) | GL-016 fail-closed policy, manual recovery and headless editor verification |
 
 ## Documentation authority
 

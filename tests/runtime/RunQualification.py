@@ -4,10 +4,13 @@ import ctypes
 import json
 import os
 from pathlib import Path
+import re
 import shutil
+import signal
 import socket
 import subprocess
 import time
+from FixtureProcesses import StartProcess, StopProcess, StopAll
 
 
 def Rss(Process):
@@ -42,25 +45,24 @@ def Prepare(Output, Extension):
 
 
 def Start(Godot, Output, Script, Label, Extra, Environment):
-    Stdout = open(Output / (Label + ".stdout.log"), "w")
-    Stderr = open(Output / (Label + ".stderr.log"), "w")
-    Flags = {"creationflags": subprocess.CREATE_NO_WINDOW} if os.name == "nt" else {}
-    Process = subprocess.Popen([str(Godot), "--headless", "--disable-crash-handler", "--single-threaded-scene", "--path", str(Output), "--script", "res://" + Script, "--", *Extra], stdout=Stdout, stderr=Stderr, env=Environment, **Flags)
-    Stdout.close()
-    Stderr.close()
-    return Process
+    with open(Output / (Label + ".stdout.log"), "w") as Stdout, open(Output / (Label + ".stderr.log"), "w") as Stderr:
+        return StartProcess([str(Godot), "--headless", "--disable-crash-handler", "--single-threaded-scene", "--path", str(Output), "--script", "res://" + Script, "--", *Extra], Stdout, Stderr, Environment)
 
 
 def Check(Process, Deadline, Output, Label, Marker):
     try:
         Result = Process.wait(timeout=max(0.1, Deadline - time.monotonic()))
     except subprocess.TimeoutExpired:
-        Process.kill()
-        Process.wait()
+        StopProcess(Process)
         raise RuntimeError(f"Timeout: {Label}")
+    finally:
+        StopProcess(Process)
     Text = (Output / (Label + ".stdout.log")).read_text(errors="replace")
     Errors = (Output / (Label + ".stderr.log")).read_text(errors="replace")
-    if Result != 0 or Marker not in Text or "ERROR: AddressSanitizer" in Errors or "LeakSanitizer" in Errors:
+    Combined = Text + '\n' + Errors
+    Failure = re.search(r'\[(?:Runtime|Network):[^\]]+\][^\n]*\bFAIL\b', Combined)
+    Sanitizer = re.search(r'(?:ERROR|SUMMARY): [^\n]*Sanitizer|LeakSanitizer|AddressSanitizer:DEADLYSIGNAL', Combined)
+    if Result != 0 or Marker not in Text or Failure or Sanitizer or 'SCRIPT ERROR:' in Errors:
         raise RuntimeError(f"{Label} exit={Result}\n{Text[-4000:]}\n{Errors[-6000:]}")
     return {"Label": Label, "Exit": Result, "Diagnostics": Errors.strip()}
 
@@ -111,9 +113,7 @@ def Fixtures(Args, Output, Environment):
                     Results.append(Check(Process, Deadline, Output, Label, f"[Runtime:NetworkTest] {Role} PASS"))
             finally:
                 for Process, _, _ in Entries:
-                    if Process.poll() is None:
-                        Process.kill()
-                        Process.wait()
+                    StopProcess(Process)
     return Results
 
 
@@ -152,9 +152,7 @@ def Benchmark(Args, Output, Environment):
                         raise RuntimeError(f"Incomplete benchmark: {Label} {Seen}")
                     (Output / "benchmark-results.json").write_text(json.dumps(Results, indent=2))
                 finally:
-                    if Process.poll() is None:
-                        Process.kill()
-                        Process.wait()
+                    StopProcess(Process)
     return Results
 
 
@@ -191,9 +189,7 @@ def SecurityFixtures(Args, Output, Environment):
                 Results.append(Result)
         finally:
             for Process, _, _ in Entries:
-                if Process.poll() is None:
-                    Process.kill()
-                    Process.wait()
+                StopProcess(Process)
     return Results
 
 
@@ -233,9 +229,7 @@ def AnimationFixtures(Args, Output, Environment):
                 Results.append(Check(Process, Deadline, Project, Label, f"[Network:AnimationTest] {Role} PASS"))
         finally:
             for Process, _, _ in Entries:
-                if Process.poll() is None:
-                    Process.kill()
-                    Process.wait()
+                StopProcess(Process)
     return Results
 
 
@@ -277,14 +271,22 @@ def Main():
     Parser.add_argument("--repeat", type=int, default=1)
     Parser.add_argument("--timeout", type=float, default=45)
     Args = Parser.parse_args()
+    if Args.repeat < 1 or Args.timeout <= 0:
+        Parser.error('repeat and timeout must be positive')
     Args.godot, Args.extension, Args.output = Args.godot.resolve(), Args.extension.resolve(), Args.output.resolve()
     if os.name == "nt":
         ctypes.windll.kernel32.SetErrorMode(0x8003)
+    Args.output.mkdir(parents=True, exist_ok=False)
     Prepare(Args.output, Args.extension)
     if Args.runtime_directory:
         for Library in Args.runtime_directory.glob("*.dll"):
             shutil.copyfile(Library, Args.output / Library.name)
     Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING="1")
+    for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
+        Directory = Args.output / 'profile' / Name
+        Directory.mkdir(parents=True)
+        Environment[Name] = str(Directory)
+    (Args.output / 'profile/.gdignore').write_text('')
     if Args.asan_runtime:
         Environment["LD_PRELOAD"] = str(Args.asan_runtime.resolve())
     if Args.load_only:
@@ -305,4 +307,10 @@ def Main():
 
 
 if __name__ == "__main__":
-    Main()
+    def Interrupt(Signum, Frame):
+        raise SystemExit(128 + Signum)
+    signal.signal(signal.SIGTERM, Interrupt)
+    try:
+        Main()
+    finally:
+        StopAll()

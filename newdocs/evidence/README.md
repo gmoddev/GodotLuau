@@ -1,5 +1,30 @@
 # Shared-domain qualification evidence
 
+[`gl011-native-ci-2026-10-27.json`](gl011-native-ci-2026-10-27.json) records the
+native CI milestone and subsequent source-identical main integration: fresh
+source-branch hosted Windows/Linux Debug adapter builds,
+28 native actors and eight launcher regressions per platform, pinned official
+Godot archive/executable identity, source/harness/pin hashes, measured job/step
+durations and verified diagnostic-only artifacts. It distinguishes cached worker
+build reuse from fresh hosted compilation and keeps sanitizer/release gaps open.
+
+[`gl011-core-ci-2026-10-27.json`](gl011-core-ci-2026-10-27.json) records the
+unmerged independent core workflow: actual successful Windows/Linux hosted jobs
+(39 cases each), equivalent worker configurations, discovery/report rejection
+checks, source/run/job/artifact identities and remaining GL-011 scope.
+
+[`gl012-release-retention-2026-10-27.json`](gl012-release-retention-2026-10-27.json)
+records the retention branch's 12 mocked/read-only tests, parsed workflow
+settings, missing-token CLI rejection, source hashes and explicit publishing/
+provenance limitations, plus separate fresh main integration checks. No real
+release/tag operation or workflow dispatch occurs.
+
+[`gl016-updater-isolation-2026-10-27.json`](gl016-updater-isolation-2026-10-27.json)
+records the updater-isolation branch: Windows/Linux actual headless
+editor initialization, 596 checks and 42 rejected operations per platform, sentinel
+file preservation, two localhost optional-data downloads and source/log hashes.
+It establishes a closed runtime channel, not a qualified enabled release channel.
+
 [`gl020-main-integration-2026-10-27.json`](gl020-main-integration-2026-10-27.json)
 records the normal GL-020 merge, complete qualified-tree identity, two fresh
 39-case core executions and 36 fresh native functional process results. Matching
