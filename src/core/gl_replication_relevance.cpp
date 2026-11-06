@@ -119,6 +119,7 @@ bool NetworkService::RefreshReplicationRecord(uint64_t Id, const std::array<uint
     Node* NodeValue = Object::cast_to<Node>(Native);
     if (!Native) { net_instances.erase(Id); Registry().Objects.erase(Id); Registry().Globals.erase(Id); }
     if (!NodeValue) return Exclude();
+    if (GLInputLocal(NodeValue)) return Exclude();
     Node* NativeParent = NodeValue->get_parent();
     // Native components remain constructed and owned by RobloxPart.
     // Exclusion grants nothing, so avoid traversing their visibility path.

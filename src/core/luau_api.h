@@ -2,6 +2,7 @@
 #define LUAU_API_H
 
 #include "luau_value_bindings.h"
+#include "local_motor.h"
 #include "luau_instance_reflection.h"
 #include "luau_class_identity.h"
 #include "gl_errors.h"
@@ -242,6 +243,10 @@ static void _gl_push_connection(lua_State* L, Node* node, int ref) {
 ////
 //  Métodos de Instance (accesibles desde Lua)
 // ════════════════════════════════════════════════════════════════════
+
+void GLInputPushConnection(lua_State* Thread, Node* Target, int Reference) {
+    _gl_push_connection(Thread,Target,Reference);
+}
 
 static int method_destroy(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
@@ -595,7 +600,7 @@ static int method_getservice(lua_State* L) {
     }
     // Los servicios de ENTRADA son exclusivos del cliente: un ServerScript no
     // puede leer teclado/ratón/pantalla (igual que en Roblox).
-    if (is_server && (strcmp(svc_name, "UserInputService")   == 0 ||
+    if (is_server && (strcmp(svc_name, "InputService") == 0 || strcmp(svc_name, "UserInputService")   == 0 ||
                       strcmp(svc_name, "ContextActionService") == 0)) {
         UtilityFunctions::push_error("[GodotLuau] ServerScript no puede acceder a '",
             svc_name, "' — la entrada de hardware solo existe en el cliente (LocalScript).");
@@ -649,7 +654,7 @@ static int method_getservice(lua_State* L) {
     // todos los scripts de interfaz: UserInputService.InputBegan, RunService,
     // ContextActionService... eran la mitad de los errores del place de prueba.
     static const char* kAutoServices[] = {
-        "Players", "UserInputService", "ContextActionService", "RunService",
+        "Players", "InputService", "UserInputService", "ContextActionService", "RunService",
         "TweenService", "CollectionService", "SoundService", "TextChatService",
         "Lighting", "MaterialService", "PlayerScripts", NULL
     };
@@ -3732,14 +3737,15 @@ static int godot_object_index(lua_State* L) {
     // ── UserInputService ──────────────────────────────────────────────
     UserInputService* uis = Object::cast_to<UserInputService>(n);
     if (uis) {
+        if (!GLIsClient(L)) luaL_error(L,"[Input:Authority] UserInputService requires Client execution");
         if (strcmp(key,"MouseEnabled")    == 0) { lua_pushboolean(L, true); return 1; }
         if (strcmp(key,"KeyboardEnabled") == 0) { lua_pushboolean(L, true); return 1; }
         if (strcmp(key,"TouchEnabled")    == 0) { lua_pushboolean(L, uis->get_touch_enabled()?1:0); return 1; }
         if (strcmp(key,"GamepadEnabled")  == 0) { lua_pushboolean(L, uis->get_gamepad_connected()?1:0); return 1; }
         if (strcmp(key,"IsKeyDown") == 0 || strcmp(key,"IsKeyboardKeyDown") == 0) {
-            lua_pushlightuserdata(L,(void*)uis);
+            GLPushNodeHandle(L,uis);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                UserInputService* u=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
+                UserInputService* u=Object::cast_to<UserInputService>(GLNodeUpvalue(LL,1));
                 if (!u){ lua_pushboolean(LL,0); return 1; }
                 int kc = 0;
                 if (lua_isnumber(LL,2)) {
@@ -3764,41 +3770,41 @@ static int godot_object_index(lua_State* L) {
             },"IsKeyDown",1); return 1;
         }
         if (strcmp(key,"GetMouseDelta") == 0) {
-            lua_pushlightuserdata(L,(void*)uis);
+            GLPushNodeHandle(L,uis);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                UserInputService* u=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
+                UserInputService* u=Object::cast_to<UserInputService>(GLNodeUpvalue(LL,1));
                 Vector2 d = u ? u->get_mouse_delta_v() : Vector2();
                 push_vector3(LL, d.x, d.y, 0.0f); return 1;
             },"GetMouseDelta",1); return 1;
         }
         if (strcmp(key,"IsGamepadButtonDown") == 0) {
-            lua_pushlightuserdata(L,(void*)uis);
+            GLPushNodeHandle(L,uis);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                UserInputService* u=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
+                UserInputService* u=Object::cast_to<UserInputService>(GLNodeUpvalue(LL,1));
                 int btn = lua_isnumber(LL,3) ? (int)lua_tonumber(LL,3) : 0;
                 lua_pushboolean(LL, (u && u->is_gamepad_button_down(0, btn))?1:0); return 1;
             },"IsGamepadButtonDown",1); return 1;
         }
         if (strcmp(key,"GetLastInputType") == 0) {
-            lua_pushlightuserdata(L,(void*)uis);
+            GLPushNodeHandle(L,uis);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                UserInputService* u=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
+                UserInputService* u=Object::cast_to<UserInputService>(GLNodeUpvalue(LL,1));
                 lua_pushinteger(LL, u ? u->get_last_input_type() : 0); return 1;
             },"GetLastInputType",1); return 1;
         }
         if (strcmp(key,"IsMouseButtonDown") == 0) {
-            lua_pushlightuserdata(L,(void*)uis);
+            GLPushNodeHandle(L,uis);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                UserInputService* u=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
+                UserInputService* u=Object::cast_to<UserInputService>(GLNodeUpvalue(LL,1));
                 if (!u || !lua_isnumber(LL,2)){ lua_pushboolean(LL,0); return 1; }
                 int btn=(int)lua_tonumber(LL,2);
                 lua_pushboolean(LL, u->is_mouse_button_down(btn)?1:0); return 1;
             },"IsMouseButtonDown",1); return 1;
         }
         if (strcmp(key,"GetMouseLocation") == 0) {
-            lua_pushlightuserdata(L,(void*)uis);
+            GLPushNodeHandle(L,uis);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                UserInputService* u=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
+                UserInputService* u=Object::cast_to<UserInputService>(GLNodeUpvalue(LL,1));
                 if (!u){ lua_pushnil(LL); return 1; }
                 Vector2 pos = u->get_mouse_location_v();
                 // Return as Vector2 table
@@ -3813,14 +3819,13 @@ static int godot_object_index(lua_State* L) {
         // Signals
         auto make_uis_sig = [&](std::vector<UserInputService::LuaCallback>& cbs) -> int {
             lua_newtable(L);
-            lua_pushlightuserdata(L,(void*)uis);
-            lua_pushlightuserdata(L,(void*)&cbs);
+            GLPushNodeHandle(L,uis);
+            lua_pushinteger(L,&cbs==&uis->input_began_cbs?0:&cbs==&uis->input_ended_cbs?1:2);
             lua_pushcclosure(L,[](lua_State* LL)->int{
-                UserInputService* d=(UserInputService*)lua_touserdata(LL,lua_upvalueindex(1));
-                auto* c=(std::vector<UserInputService::LuaCallback>*)lua_touserdata(LL,lua_upvalueindex(2));
-                if(!c||!lua_isfunction(LL,2)){lua_pushnil(LL);return 1;}
+                auto d=Object::cast_to<UserInputService>(GLNodeUpvalue(LL,1));
+                if(!d||d->is_queued_for_deletion()||!lua_isfunction(LL,2)){lua_pushnil(LL);return 1;}
                 lua_pushvalue(LL,2); int ref=GLReference(LL,-1); lua_pop(LL,1);
-                c->push_back({gl_main_of(LL),ref,true}); _gl_push_connection(LL, d, ref); return 1;
+                d->GetCallbacks(int(lua_tointeger(LL,lua_upvalueindex(2)))).push_back({gl_main_of(LL),ref,true}); _gl_push_connection(LL, d, ref); return 1;
             },"Connect",2);
             lua_setfield(L, -2, "Connect");
             gl_signal_lowercase_aliases(L);
@@ -3976,6 +3981,9 @@ static int godot_object_newindex_impl(lua_State* L) {
     GodotObjectWrapper* wrapper = (GodotObjectWrapper*)lua_touserdata(L, 1);
     const char* key = luaL_checkstring(L, 2);
     if (!wrapper || !gow_node(wrapper)) return 0;
+
+    if (GLInputWrite(L,gow_node(wrapper),key)) return 0;
+    if (GLMotorWrite(L,gow_node(wrapper),key)) return 0;
 
     if (strcmp(key, "DeliveryType") == 0) {
         if (auto Remote = Object::cast_to<RemoteEventNode>(gow_node(wrapper))) {
@@ -4735,6 +4743,7 @@ static bool IsPlayerCharacterNode(Node* Item) {
 }
 
 static bool gl_rep_is_replicable(Node* n) {
+    if (GLInputLocal(n)) return false;
     if (IsPlayerCharacterNode(n)) return false;
     for (Node* p = n ? n->get_parent() : nullptr; p; p = p->get_parent()) {
         StringName nm = p->get_name();
@@ -4760,7 +4769,7 @@ static String gl_rep_parent_ref(Node* parent) {
 // Replica el nodo y su subárbol como creaciones nuevas (asigna netId + snapshot
 // vía NetworkService::rep_build_props, que resuelve el transform global).
 static void gl_rep_replicate_subtree(NetworkService* ns, Node* n) {
-    if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n)) return;
+    if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n) || GLInputLocal(n)) return;
     if (auto Remote = Object::cast_to<RemoteEventNode>(n)) if (!Remote->IsServerAdmitted()) return;
     int64_t id = ns->rep_next_id();
     if (id <= 0) return; // Checked exhaustion never enters the static ID namespace.
@@ -4778,6 +4787,7 @@ static void gl_rep_on_newindex(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     Node* n = w ? gow_node(w) : nullptr;
     if (!n || !lua_isstring(L, 2)) return;
+    if (GLInputLocal(n)) return;
     String key = String(lua_tostring(L, 2));
     if (key == "DeliveryType" && Object::cast_to<RemoteEventNode>(n)) return; // Frozen descriptor owns this property, not generic deltas.
     if (key == "Parent") {

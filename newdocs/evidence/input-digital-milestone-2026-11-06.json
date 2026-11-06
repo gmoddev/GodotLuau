@@ -1,0 +1,55 @@
+{
+  "Scope": "Digital input milestone; campaign incomplete",
+  "Worker": "HostPC",
+  "Platform": "Windows-11-10.0.26200-SP0",
+  "BaseMain": "091c13da85b1d082249b525123f5cae4d3c17dd1",
+  "Production": {
+    "SHA256": "a37b92d484d4964e1f46ef2080d00a64d5f6bc1e04e061709784729656593d74",
+    "Files": 97,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "NativeBinarySHA256": "d84c65cbfa00880882a8a46a1656c4ab3f32a114ab33f51f5b3eb9a6c03b3b88",
+  "FixtureSHA256": {
+    "InputActions.gd": "83c90f4107d227f997babbc2c9cecda98d3efc1ba66fa3d1b762d478b2b2d0d4",
+    "InputActionTests.cpp": "725eeb9908cb4cbb95e03d2b21821294254759aee8d0242ea0552c770e215433"
+  },
+  "Results": {
+    "WindowsDebugCore": 85,
+    "GraphAssertions": 17,
+    "NativeInputAssertions": 30,
+    "NativeInputFinal": "input-v4",
+    "CandidateRejectionTestsExit": 0
+  },
+  "FailedAttempts": {
+    "nativebuild-v1": "VS environment PATH too long; corrected bounded build environment",
+    "input-v1": "Callback fixture assertion after remap; printed PASS is rejected",
+    "input-v2": "Fixture expected three instead of four legitimate presses"
+  },
+  "Logs": {
+    "nativebuild-v1/stderr.log": "6ca493bad8e8daa617e36dd4447a93b4b1e81f1ab1e60d5477e802f1d07d7936",
+    "nativebuild-v2/stdout.log": "0547e795e1e5ac1a8f7999f9b68704b9c2915e727dd10df86bcb3cd42fe2119a",
+    "nativebuild-v3/stdout.log": "d1faaabe14f38408a3a39de3f9ef7d187f46213f480742270724137be7552164",
+    "nativebuild-v4/stdout.log": "d1faaabe14f38408a3a39de3f9ef7d187f46213f480742270724137be7552164",
+    "graph-v2/stdout.log": "16f6cc4a1a6c09aa11cf464c99ba52255d5cafa4c36028756f0522728efb6844",
+    "corecheck-v1/stdout.log": "3cb510ed9b29769f206987f60e0e09be7edd92d87a0948579c8985b82c9cffb7",
+    "core-report-v1/stdout.log": "0dbd659a00591cd623657946825756c419bfa80a54cf44445a6866a59a726b3e",
+    "input-v1/input.stdout.log": "ac8d5938d6b686a8de9f9f4280d531f9d8b487e9105b1b483718cc741e9738d3",
+    "input-v1/input.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "input-v2/input.stdout.log": "bebc66c8f24bbb4b433047a5e64711f501f01c02294b165ad6638d0ca436433a",
+    "input-v2/input.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "input-v3/input.stdout.log": "d09da7e9b307e1074f90bccba43ecb5d94ebe5b6dda05cf53cb756656a62ebd7",
+    "input-v3/input.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "input-v4/input.stdout.log": "bffdb996837c9dec409b4a06eee9ef6427ce9b76e6b3af3032f56427fec30003",
+    "input-v4/input.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "Limitations": [
+    "Synthetic headless input/real Control only; no physical-device or GPU qualification",
+    "Linux, Release and sanitizer configurations pending",
+    "Analog, pointer sampling, native motor/camera and playable example pending",
+    "No broader native regression claim yet"
+  ]
+}

@@ -53,6 +53,10 @@ func Run() -> void:
     Storage = Create("ReplicatedStorage", "ReplicatedStorage", Game)
     StaticParent = Create("Folder", "StaticParent", Storage)
     StaticParent.owner = Game
+    var LocalInput := Create("InputContext","LocalInput",Storage)
+    var LocalMotor := Create("KinematicMotor3D","LocalMotor",Storage)
+    LocalInput.owner = Game
+    LocalMotor.owner = Game
     var StaticIdentity := StaticParent.get_instance_id()
     var Players := Create("Players", "Players", Game)
     Players.call("set_character_auto_loads", false)
@@ -60,6 +64,8 @@ func Run() -> void:
     if Role == "client": ScriptNode("Prewarm", "game:SetAttribute('ClientWarmed',true)")
     Network = Create("NetworkService", "NetworkService", Game)
     await process_frame
+    Check(not LocalInput.has_meta("_gl_netid") and not LocalMotor.has_meta("_gl_netid"), "local input and motor are excluded from static network identities")
+    Check(int(LocalMotor.call("GetTicks"))==0, "scene-authored motor is inert until Client adoption")
     if Role == "server": await Server()
     else: await Client()
     Check(is_instance_valid(StaticParent) and StaticParent.get_instance_id() == StaticIdentity, "static parent native identity preserved")

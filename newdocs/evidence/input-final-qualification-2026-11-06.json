@@ -1,0 +1,1127 @@
+{
+  "Scope": "All four input/controller slices; qualified profiles only; no main integration",
+  "StartingMain": "091c13da85b1d082249b525123f5cae4d3c17dd1",
+  "ImplementationRevision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+  "LocalWindows": {
+    "Worker": "HostPC",
+    "Root": "C:\\Sandbox\\Codex\\InputAction20261106",
+    "ImplementationRevision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+    "Release": {
+      "Build": {
+        "Configuration": "Release",
+        "Source": {
+          "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+          "Files": 99,
+          "Newlines": "LF normalized"
+        },
+        "Library": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-release\\godot_luau.dll",
+        "SHA256": "37bcb8dc08168120d87cb9cfa0aa0b47991f39e7fc71ee2c82f4810e297b8822",
+        "Driver": "C:/Sandbox/Codex/Workspaces/GodotLuau/tests/runtime",
+        "ProductionSource": "C:\\Sandbox\\Codex\\InputAction20261106\\source",
+        "CoreTests": "Separate current-source task build; old driver core target not used"
+      },
+      "CoreCases": 85,
+      "CoreCommand": {
+        "Command": [
+          "C:/Sandbox/Codex/Tools/cmake-3.31.10/cmake-3.31.10-windows-x86_64/bin/ctest.exe",
+          "--test-dir",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\core-release",
+          "-C",
+          "Release",
+          "-R",
+          "^ExecutionDomains$",
+          "--no-tests=error",
+          "--timeout",
+          "30",
+          "--output-on-failure",
+          "--verbose",
+          "--test-output-size-passed",
+          "65536",
+          "--test-output-size-failed",
+          "65536",
+          "--output-junit",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\core-release-final.xml"
+        ],
+        "Exit": 0,
+        "Timeout": 60
+      },
+      "CoreReportSHA256": "716e8e70392d2e1dd994a57f4060fb034c1c11be858463f1688d4bb601a245ca",
+      "StrictCoreChecker": {
+        "Command": [
+          "C:\\Sandbox\\Codex\\Tools\\python-3.12.6-controlled-v1\\python.exe",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\source\\tests\\runtime\\CheckCoreCI.py",
+          "report",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\core-release-final.xml"
+        ],
+        "Exit": 0,
+        "Timeout": 15
+      },
+      "GraphAssertions": 29,
+      "GraphCommand": {
+        "Command": [
+          "C:\\Sandbox\\Codex\\InputAction20261106\\core-release\\InputActionTests.exe"
+        ],
+        "Exit": 0,
+        "Timeout": 30
+      },
+      "GraphLogSHA256": "21305e8e2c261fb3f49a39384a118e7f80fbf8060fdd625275c308bf276a13b1",
+      "InputAssertions": 51,
+      "MotorAssertions": 20,
+      "Graphical": {
+        "Checks": 23,
+        "Graphical": true,
+        "NodeDelta": 0,
+        "RestartCycles": 20,
+        "Result": "PASS",
+        "StaticMemoryDeltaBytes": -5160.0,
+        "WalkingDistance": 0.91666841506958
+      },
+      "Renderer": "NVIDIA GeForce GTX 1650 SUPER / OpenGL 3.3 / NVIDIA 591.86",
+      "ScreenshotSHA256": "f03535ba7c9f26d17ab2b53c9c48da3fd37bc1f1340f4ca091eda8bf30cb50e3"
+    },
+    "FullNativeASAN": {
+      "Result": "PASS",
+      "FullQualification": true,
+      "ControlsPassed": true,
+      "UnexpectedReports": [],
+      "Core": {
+        "Command": [
+          "ctest",
+          "--test-dir",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-final\\native",
+          "-R",
+          "^ExecutionDomains$",
+          "--no-tests=error",
+          "--timeout",
+          "30",
+          "--output-on-failure",
+          "--verbose",
+          "--test-output-size-passed",
+          "65536",
+          "--test-output-size-failed",
+          "65536",
+          "--output-junit",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-qualification-final\\core\\core-results.xml"
+        ],
+        "NativeSource": {
+          "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+          "Files": 99,
+          "Newlines": "LF normalized"
+        },
+        "Cases": 85,
+        "Result": "PASS",
+        "ASAN_OPTIONS": "halt_on_error=1:log_path=\"C:/Sandbox/Codex/InputAction20261106/asan-qualification-final/suite-core/asan-report\"",
+        "Files": {
+          "discovery.json": "4cec9a1872b3cd780ce3b879356128f1f65088d7540dee69b3d832c61d32dd27",
+          "core-results.xml": "577bf9838cea6254e2d8a8ea21c3f4694c256de413a2d844ca5138fbd8d7ca99",
+          "ctest.log": "b683dd2247ffdb58e4a45ede85466fd7f946069a593a265c810efd288b342ac5"
+        }
+      },
+      "Source": {
+        "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+        "Files": 99,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 134,
+      "InputActors": [
+        {
+          "Label": "input-actions",
+          "Exit": 0,
+          "Diagnostics": ""
+        },
+        {
+          "Label": "input-controller",
+          "Exit": 0,
+          "Diagnostics": ""
+        },
+        {
+          "Label": "input-demo",
+          "Exit": 0,
+          "Diagnostics": ""
+        }
+      ],
+      "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "InstrumentedFiles": 1164,
+      "Products": {
+        "godot_luau.dll": "60171e690eee85e3c87c5592b78fd7ebf3e7330bcd6a8dd62bab557277483c24",
+        "godot_luau_store_worker.exe": "b9a9d7b68dce290a59730cd92e73ea20bd4cba47af21c0b8a993d3fd23f05549",
+        "ExecutionDomainTests.exe": "6716f31c74d59947c46f5e19c45c9cf3e3242f4797adaa074998a50e19181423",
+        "DatastoreBackendProbe.exe": "e81d699f4dbecbfdb07589c0b0a7229a13579e94f37dce4a021c93adc6558228"
+      },
+      "Scope": "headless full-native ASan; Linux LSan enabled; Windows LSan unsupported",
+      "Command": {
+        "Command": [
+          "C:\\Sandbox\\Codex\\Tools\\python-3.12.6-controlled-v1\\python.exe",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\source-final\\tests\\runtime\\RunNativeSanitizers.py",
+          "--godot",
+          "C:\\Sandbox\\Codex\\GL029Completion\\host-asan\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+          "--host-manifest",
+          "C:\\Sandbox\\Codex\\GL029Completion\\host-asan\\sanitizer-host.json",
+          "--extension",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-final\\native\\godot_luau.dll",
+          "--build",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-final\\native",
+          "--build-identity",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-final\\build-identity.json",
+          "--probe",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-final\\probes\\NativeSanitizerProbe.dll",
+          "--loader",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-final\\probes\\NativeSanitizerLoader.exe",
+          "--asset-godot",
+          "C:/Sandbox/Codex/Tools/Godot_v4.7.1-stable_win64.exe",
+          "--asset-provenance",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asset-editor-provenance.json",
+          "--revision",
+          "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+          "--output",
+          "C:\\Sandbox\\Codex\\InputAction20261106\\asan-qualification-final"
+        ],
+        "Exit": 0,
+        "Timeout": 2100
+      },
+      "SummarySHA256": "91e731df3c64b9991c6ed86c62e42c2b466bae6dbfbe77f14dfd8e7c42c385a6",
+      "NativeSummarySHA256": "624a5eb3bfd9dc005c431f72397f2bbb97af54c3c1323fcc2fd8f403ca8ba17a",
+      "BuildIdentitySHA256": "7b2444fc533d98ceca95f7f3f39f3982d9372839767c2954d8342231be951006"
+    },
+    "LinuxReadiness": {
+      "Primary": {
+        "Command": [
+          "docker",
+          "info",
+          "--format",
+          "{{.OSType}}"
+        ],
+        "Exit": "TIMEOUT",
+        "Timeout": 10
+      },
+      "PrimaryLogSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "Fallback": {
+        "Command": [
+          "ssh",
+          "-o",
+          "BatchMode=yes",
+          "-o",
+          "ConnectTimeout=8",
+          "mainpc",
+          "powershell.exe",
+          "-NoProfile",
+          "-EncodedCommand",
+          "aABvAHMAdABuAGEAbQBlAAoAJABUAGEAcwBrAEQAbwBjAGsAZQByAD0AWwBEAGkAYQBnAG4AbwBzAHQAaQBjAHMALgBQAHIAbwBjAGUAcwBzAF0AOgA6AG4AZQB3ACgAKQAKACQAVABhAHMAawBEAG8AYwBrAGUAcgAuAFMAdABhAHIAdABJAG4AZgBvAC4ARgBpAGwAZQBOAGEAbQBlAD0AJwBkAG8AYwBrAGUAcgAuAGUAeABlACcACgAkAFQAYQBzAGsARABvAGMAawBlAHIALgBTAHQAYQByAHQASQBuAGYAbwAuAEEAcgBnAHUAbQBlAG4AdABzAD0AJwBpAG4AZgBvACAALQAtAGYAbwByAG0AYQB0ACAAewB7AC4ATwBTAFQAeQBwAGUAfQB9ACcACgAkAFQAYQBzAGsARABvAGMAawBlAHIALgBTAHQAYQByAHQASQBuAGYAbwAuAFUAcwBlAFMAaABlAGwAbABFAHgAZQBjAHUAdABlAD0AJABmAGEAbABzAGUACgAkAFQAYQBzAGsARABvAGMAawBlAHIALgBTAHQAYQByAHQASQBuAGYAbwAuAEMAcgBlAGEAdABlAE4AbwBXAGkAbgBkAG8AdwA9ACQAdAByAHUAZQAKACQAVABhAHMAawBEAG8AYwBrAGUAcgAuAFMAdABhAHIAdABJAG4AZgBvAC4AUgBlAGQAaQByAGUAYwB0AFMAdABhAG4AZABhAHIAZABPAHUAdABwAHUAdAA9ACQAdAByAHUAZQAKACQAVABhAHMAawBEAG8AYwBrAGUAcgAuAFMAdABhAHIAdABJAG4AZgBvAC4AUgBlAGQAaQByAGUAYwB0AFMAdABhAG4AZABhAHIAZABFAHIAcgBvAHIAPQAkAHQAcgB1AGUACgB0AHIAeQAgAHsACgAgACAAWwB2AG8AaQBkAF0AJABUAGEAcwBrAEQAbwBjAGsAZQByAC4AUwB0AGEAcgB0ACgAKQAKACAAIABpAGYAIAAoAC0AbgBvAHQAIAAkAFQAYQBzAGsARABvAGMAawBlAHIALgBXAGEAaQB0AEYAbwByAEUAeABpAHQAKAAxADAAMAAwADAAKQApACAAewAgAHQAYQBzAGsAawBpAGwAbAAuAGUAeABlACAALwBQAEkARAAgACQAVABhAHMAawBEAG8AYwBrAGUAcgAuAEkAZAAgAC8AVAAgAC8ARgA7ACAAVwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAnAEQAbwBjAGsAZQByACAAcgBlAGEAZABpAG4AZQBzAHMAIABUAEkATQBFAE8AVQBUACcAOwAgAGUAeABpAHQAIAAyACAAfQAKACAAIABXAHIAaQB0AGUALQBPAHUAdABwAHUAdAAgACQAVABhAHMAawBEAG8AYwBrAGUAcgAuAFMAdABhAG4AZABhAHIAZABPAHUAdABwAHUAdAAuAFIAZQBhAGQAVABvAEUAbgBkACgAKQAKACAAIABXAHIAaQB0AGUALQBPAHUAdABwAHUAdAAgACQAVABhAHMAawBEAG8AYwBrAGUAcgAuAFMAdABhAG4AZABhAHIAZABFAHIAcgBvAHIALgBSAGUAYQBkAFQAbwBFAG4AZAAoACkACgAgACAAZQB4AGkAdAAgACQAVABhAHMAawBEAG8AYwBrAGUAcgAuAEUAeABpAHQAQwBvAGQAZQAKAH0AIABjAGEAdABjAGgAIAB7ACAAVwByAGkAdABlAC0ATwB1AHQAcAB1AHQAIAAkAF8ALgBFAHgAYwBlAHAAdABpAG8AbgAuAE0AZQBzAHMAYQBnAGUAOwAgAGUAeABpAHQAIAAzACAAfQAKAA=="
+        ],
+        "Exit": 0,
+        "Timeout": 25
+      },
+      "FallbackLogSHA256": "660e9ec75ae0165f88f1908d3a114fe4f3c4e3d7acd7e1e7bf5e0642c8820f5f",
+      "Availability": "Unavailable; primary info timeout, fallback missing Linux engine pipe; fallback SSH exit zero is not availability"
+    },
+    "Cleanup": "Existing FixtureProcesses StopAll executed; owned native process inventory checked separately; caches and historical evidence retained"
+  },
+  "Workflows": [
+    {
+      "Name": "core",
+      "Run": {
+        "conclusion": "success",
+        "id": 42180439541,
+        "jobs": [
+          {
+            "conclusion": "success",
+            "name": "Core (Linux, Debug)",
+            "status": "completed",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180439541/job/127768543609"
+          },
+          {
+            "conclusion": "success",
+            "name": "Core (Windows, Debug)",
+            "status": "completed",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180439541/job/127768543751"
+          },
+          {
+            "conclusion": "skipped",
+            "name": "Qualification-only Windows Release benchmark host",
+            "status": "completed",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180439541/job/127768545315"
+          }
+        ],
+        "revision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180439541"
+      },
+      "Artifacts": [
+        {
+          "id": 13484568708,
+          "name": "runtime-core-Windows-Debug",
+          "size_in_bytes": 14090,
+          "digest": "sha256:25431e8458f0d8cdcadd440ebd3ee4c320c4d404cd8b59d5ef8f9f35db8761b7"
+        },
+        {
+          "id": 13484558665,
+          "name": "runtime-core-Linux-Debug",
+          "size_in_bytes": 15451,
+          "digest": "sha256:10a340708ce2ab6160a5f72d83a68ddb5227ab277acaf525a4a2f36f90637624"
+        }
+      ]
+    },
+    {
+      "Name": "native",
+      "Run": {
+        "conclusion": "success",
+        "id": 42180439542,
+        "jobs": [
+          {
+            "conclusion": "success",
+            "name": "Native (Linux, Debug)",
+            "status": "completed",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180439542/job/127768543172"
+          },
+          {
+            "conclusion": "success",
+            "name": "Native (Windows, Debug)",
+            "status": "completed",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180439542/job/127768543453"
+          }
+        ],
+        "revision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180439542"
+      },
+      "Artifacts": [
+        {
+          "id": 13486178724,
+          "name": "runtime-native-Windows-Debug",
+          "size_in_bytes": 418877,
+          "digest": "sha256:c1c5af4b32cf69043ac844842bf3517ce330d9d641a9b3c2b6b18fe97ea25987"
+        },
+        {
+          "id": 13485623611,
+          "name": "runtime-native-Linux-Debug",
+          "size_in_bytes": 416569,
+          "digest": "sha256:d9436c5a50005d8499a544d591e6061635274df419842d4907aec35cb21aa98f"
+        }
+      ]
+    },
+    {
+      "Name": "sanitizers",
+      "Run": {
+        "conclusion": "success",
+        "id": 42180461051,
+        "jobs": [
+          {
+            "conclusion": "success",
+            "name": "Full-native ASan (Windows)",
+            "status": "completed",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180461051/job/127768616126"
+          },
+          {
+            "conclusion": "success",
+            "name": "Full-native ASan (Linux)",
+            "status": "completed",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180461051/job/127768616347"
+          }
+        ],
+        "revision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/42180461051"
+      },
+      "Artifacts": [
+        {
+          "id": 13487340030,
+          "name": "runtime-native-sanitizers-Windows",
+          "size_in_bytes": 570782,
+          "digest": "sha256:fea895d625d1b65ec1d40bb80f4fb4dc2fb27b4a9ddba3ac3dda172134abad09"
+        },
+        {
+          "id": 13486370919,
+          "name": "runtime-native-sanitizers-Linux",
+          "size_in_bytes": 560120,
+          "digest": "sha256:5f2b0390c4098dd71370a1dd364f3000238c807f98f73a4abb03b1d167ea316d"
+        }
+      ]
+    }
+  ],
+  "HostedCore": [
+    {
+      "Platform": "Windows",
+      "Configuration": "Debug",
+      "CoreCases": 85,
+      "GraphAssertions": 29,
+      "ReportSHA256": "51d9dfdb7ea1f86aa8863194af3a53c51b10e1b0a6845f6594b1fd194f5b75cd",
+      "GraphLogSHA256": "21305e8e2c261fb3f49a39384a118e7f80fbf8060fdd625275c308bf276a13b1",
+      "Dependencies": [
+        " d5cc777a89d899665fb61f1650ef0dc0cf6488c4 godot-cpp (d5cc777)",
+        " 9e2984fd0334414a2ef62ceede0c06dab7574d55 luau (9e2984f)"
+      ]
+    },
+    {
+      "Platform": "Linux",
+      "Configuration": "Debug",
+      "CoreCases": 85,
+      "GraphAssertions": 29,
+      "ReportSHA256": "96fe9f3113f26f2087c60cb82d9275bfbcc7a4980c5a106945eb6e893f25a0ea",
+      "GraphLogSHA256": "7bc2077ccc8cecd3153ad74a95e3eb1260355c56a902eaa5be6cb7be0b92e813",
+      "Dependencies": [
+        " d5cc777a89d899665fb61f1650ef0dc0cf6488c4 godot-cpp (d5cc777)",
+        " 9e2984fd0334414a2ef62ceede0c06dab7574d55 luau (9e2984f)"
+      ]
+    }
+  ],
+  "HostedNative": {
+    "Windows": {
+      "Revision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+      "NativeSource": {
+        "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+        "Files": 99,
+        "Newlines": "LF normalized"
+      },
+      "ExtensionSHA256": "9415d4acc9c733906b1985b7898abad7b73a9431f9f563856fd6adbcf585fbe7",
+      "CompanionSHA256": "bf205bc0c6f546145d59108849fb6090c6ece241e0acfafeaa2caa607b98be9f",
+      "Processes": 134,
+      "InputActors": [
+        {
+          "Label": "input-actions",
+          "Exit": 0,
+          "Diagnostics": ""
+        },
+        {
+          "Label": "input-controller",
+          "Exit": 0,
+          "Diagnostics": ""
+        },
+        {
+          "Label": "input-demo",
+          "Exit": 0,
+          "Diagnostics": ""
+        }
+      ],
+      "InputAssertions": 51,
+      "MotorAssertions": 20,
+      "Demo": {
+        "Checks": 20,
+        "Graphical": false,
+        "NodeDelta": 0,
+        "RestartCycles": 20,
+        "Result": "PASS",
+        "StaticMemoryDeltaBytes": -4092.0,
+        "WalkingDistance": 0.91666841506958
+      },
+      "FixtureSHA256LF": {
+        "InputActions.gd": "b5146be7a3523a380cf5740f192734658378449ad43fc169b633ddc88c49c6a9",
+        "InputController.gd": "605a5ebff05dc50051e81e2fbecf741b1f0e1aff33ad34cdcfbb223dee494fe1",
+        "InputControllerDemo.gd": "e7c5ee23acfb4434594959d0e618055d3e44a24c1936aecc66ea3e721144ec78",
+        "Controller.luau": "20695393adbc496c4fa165146bb66386f026b18cf3086122dc7970eab175b0f6",
+        "ReplicationIntegration.gd": "2ac995c614e6514c1095a40105eef2446eb616af694cc3974ea3884cad233767",
+        "InputActionTests.cpp": "7a2ad92b901e57564d7a22c8629fb3f8fc7e1baaf6f180758036867d665a7456"
+      },
+      "LocalReplicationCases": [
+        {
+          "Role": "server",
+          "Label": "local input and motor are excluded from static network identities",
+          "Passed": true
+        },
+        {
+          "Role": "server",
+          "Label": "scene-authored motor is inert until Client adoption",
+          "Passed": true
+        },
+        {
+          "Role": "client",
+          "Label": "local input and motor are excluded from static network identities",
+          "Passed": true
+        },
+        {
+          "Role": "client",
+          "Label": "scene-authored motor is inert until Client adoption",
+          "Passed": true
+        }
+      ],
+      "SummarySHA256": "d89927b9d10c72540ad26dd9d68efa66c5deffd3ed4271706243fb0ce29ef2d0"
+    },
+    "Linux": {
+      "Revision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+      "NativeSource": {
+        "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+        "Files": 99,
+        "Newlines": "LF normalized"
+      },
+      "ExtensionSHA256": "e4db6ab73378b51d5b4cd9ebe1d21d65d4825c72a2e8136edb429085a08f71e3",
+      "CompanionSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+      "Processes": 134,
+      "InputActors": [
+        {
+          "Label": "input-actions",
+          "Exit": 0,
+          "Diagnostics": ""
+        },
+        {
+          "Label": "input-controller",
+          "Exit": 0,
+          "Diagnostics": ""
+        },
+        {
+          "Label": "input-demo",
+          "Exit": 0,
+          "Diagnostics": ""
+        }
+      ],
+      "InputAssertions": 51,
+      "MotorAssertions": 20,
+      "Demo": {
+        "Checks": 20,
+        "Graphical": false,
+        "NodeDelta": 0,
+        "RestartCycles": 20,
+        "Result": "PASS",
+        "StaticMemoryDeltaBytes": -4092.0,
+        "WalkingDistance": 0.91666841506958
+      },
+      "FixtureSHA256LF": {
+        "InputActions.gd": "b5146be7a3523a380cf5740f192734658378449ad43fc169b633ddc88c49c6a9",
+        "InputController.gd": "605a5ebff05dc50051e81e2fbecf741b1f0e1aff33ad34cdcfbb223dee494fe1",
+        "InputControllerDemo.gd": "e7c5ee23acfb4434594959d0e618055d3e44a24c1936aecc66ea3e721144ec78",
+        "Controller.luau": "20695393adbc496c4fa165146bb66386f026b18cf3086122dc7970eab175b0f6",
+        "ReplicationIntegration.gd": "2ac995c614e6514c1095a40105eef2446eb616af694cc3974ea3884cad233767",
+        "InputActionTests.cpp": "7a2ad92b901e57564d7a22c8629fb3f8fc7e1baaf6f180758036867d665a7456"
+      },
+      "LocalReplicationCases": [
+        {
+          "Role": "server",
+          "Label": "local input and motor are excluded from static network identities",
+          "Passed": true
+        },
+        {
+          "Role": "server",
+          "Label": "scene-authored motor is inert until Client adoption",
+          "Passed": true
+        },
+        {
+          "Role": "client",
+          "Label": "local input and motor are excluded from static network identities",
+          "Passed": true
+        },
+        {
+          "Role": "client",
+          "Label": "scene-authored motor is inert until Client adoption",
+          "Passed": true
+        }
+      ],
+      "SummarySHA256": "749f610434487a0f93921df0f5af52450e984eb436093c3e811dbeabe57730e5"
+    }
+  },
+  "HostedSanitizers": {
+    "Windows": {
+      "Result": "PASS",
+      "FullQualification": true,
+      "ControlsPassed": true,
+      "UnexpectedReports": [],
+      "Scope": "headless full-native ASan; Linux LSan enabled; Windows LSan unsupported",
+      "InstrumentedFiles": 1164,
+      "HostSHA256": "2549180152a18e0b1148d8cecfe54129df0b97d7986718db42109211af8c6f7e",
+      "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "Core": {
+        "Command": [
+          "ctest",
+          "--test-dir",
+          "D:\\a\\GodotLuau\\GodotLuau\\build\\sanitizers\\native",
+          "-R",
+          "^ExecutionDomains$",
+          "--no-tests=error",
+          "--timeout",
+          "30",
+          "--output-on-failure",
+          "--verbose",
+          "--test-output-size-passed",
+          "65536",
+          "--test-output-size-failed",
+          "65536",
+          "--output-junit",
+          "D:\\a\\_temp\\native-sanitizer-evidence\\core\\core-results.xml"
+        ],
+        "NativeSource": {
+          "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+          "Files": 99,
+          "Newlines": "LF normalized"
+        },
+        "Cases": 85,
+        "Result": "PASS",
+        "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/suite-core/asan-report\"",
+        "Files": {
+          "discovery.json": "c582da31d68bf73241ec276c7377646c77afc2dc46ebaa82a126b165f58ffffa",
+          "core-results.xml": "0969fdd02fbdddb3a2e3279f824f76e73a14ad024469f4d1c07f2fa7d0c434bb",
+          "ctest.log": "43d3a63a03fcc650f71db7c208670f206c9edb360226e487785df1460f8ffa01"
+        }
+      },
+      "Native": {
+        "Revision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+        "NativeSource": {
+          "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+          "Files": 99,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "b565a76fbc2fd0bd75622b992ce9882c130831f2bec80bf47bbec3315deac775",
+        "CompanionSHA256": "cb2cf1ca3ddc5fa2002660e54567e55e23e2c23d9c7b6f84579d0e25f3f4a630",
+        "Processes": 134,
+        "InputActors": [
+          {
+            "Label": "input-actions",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "input-controller",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "input-demo",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "InputAssertions": 51,
+        "MotorAssertions": 20,
+        "Demo": {
+          "Checks": 20,
+          "Graphical": false,
+          "NodeDelta": 0,
+          "RestartCycles": 20,
+          "Result": "PASS",
+          "StaticMemoryDeltaBytes": -4092.0,
+          "WalkingDistance": 0.91666841506958
+        },
+        "FixtureSHA256LF": {
+          "InputActions.gd": "b5146be7a3523a380cf5740f192734658378449ad43fc169b633ddc88c49c6a9",
+          "InputController.gd": "605a5ebff05dc50051e81e2fbecf741b1f0e1aff33ad34cdcfbb223dee494fe1",
+          "InputControllerDemo.gd": "e7c5ee23acfb4434594959d0e618055d3e44a24c1936aecc66ea3e721144ec78",
+          "Controller.luau": "20695393adbc496c4fa165146bb66386f026b18cf3086122dc7970eab175b0f6",
+          "ReplicationIntegration.gd": "2ac995c614e6514c1095a40105eef2446eb616af694cc3974ea3884cad233767",
+          "InputActionTests.cpp": "7a2ad92b901e57564d7a22c8629fb3f8fc7e1baaf6f180758036867d665a7456"
+        },
+        "LocalReplicationCases": [
+          {
+            "Role": "server",
+            "Label": "local input and motor are excluded from static network identities",
+            "Passed": true
+          },
+          {
+            "Role": "server",
+            "Label": "scene-authored motor is inert until Client adoption",
+            "Passed": true
+          },
+          {
+            "Role": "client",
+            "Label": "local input and motor are excluded from static network identities",
+            "Passed": true
+          },
+          {
+            "Role": "client",
+            "Label": "scene-authored motor is inert until Client adoption",
+            "Passed": true
+          }
+        ],
+        "SummarySHA256": "cd5947c308a9cfc36c4dc9402d36d6c29d17f3974dcf4da939c27922caba4e5f"
+      },
+      "Controls": [
+        {
+          "Label": "standalone-clean",
+          "Command": [
+            "D:\\a\\GodotLuau\\GodotLuau\\build\\sanitizers\\probes\\NativeSanitizerLoader.exe",
+            "D:\\a\\GodotLuau\\GodotLuau\\build\\sanitizers\\probes\\NativeSanitizerProbe.dll"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.34400000000005093,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/standalone-clean/asan-report\""
+        },
+        {
+          "Label": "standalone-uaf",
+          "Command": [
+            "D:\\a\\GodotLuau\\GodotLuau\\build\\sanitizers\\probes\\NativeSanitizerLoader.exe",
+            "D:\\a\\GodotLuau\\GodotLuau\\build\\sanitizers\\probes\\NativeSanitizerProbe.dll"
+          ],
+          "Exit": 1,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.6099999999999,
+          "ExpectedFinding": "heap-use-after-free",
+          "SanitizerFinding": true,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/standalone-uaf/asan-report\""
+        },
+        {
+          "Label": "engine-only",
+          "Command": [
+            "D:\\a\\_temp\\sanitizer-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "D:\\a\\_temp\\native-sanitizer-evidence\\engine-only\\project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "engine",
+            "--cycles",
+            "1"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 2.530999999999949,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/engine-only/asan-report\""
+        },
+        {
+          "Label": "minimal-reload",
+          "Command": [
+            "D:\\a\\_temp\\sanitizer-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "D:\\a\\_temp\\native-sanitizer-evidence\\minimal-reload\\project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "minimal",
+            "--cycles",
+            "5"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 2.3900000000001,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/minimal-reload/asan-report\""
+        },
+        {
+          "Label": "host-uaf",
+          "Command": [
+            "D:\\a\\_temp\\sanitizer-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "D:\\a\\_temp\\native-sanitizer-evidence\\host-uaf\\project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "minimal",
+            "--cycles",
+            "1"
+          ],
+          "Exit": 1,
+          "TimedOut": false,
+          "ElapsedSeconds": 2.1870000000001255,
+          "ExpectedFinding": "heap-use-after-free",
+          "SanitizerFinding": true,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/host-uaf/asan-report\""
+        },
+        {
+          "Label": "production-registration",
+          "Command": [
+            "D:\\a\\_temp\\sanitizer-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "D:\\a\\_temp\\native-sanitizer-evidence\\production-registration\\project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "registration",
+            "--cycles",
+            "5"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 4.593000000000075,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/production-registration/asan-report\""
+        },
+        {
+          "Label": "production-vm-reload",
+          "Command": [
+            "D:\\a\\_temp\\sanitizer-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "D:\\a\\_temp\\native-sanitizer-evidence\\production-vm-reload\\project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "vm-cycles",
+            "--cycles",
+            "5"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 6.1720000000000255,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/production-vm-reload/asan-report\""
+        },
+        {
+          "Label": "remote-host-qualification",
+          "Command": [
+            "C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe",
+            "D:\\a\\GodotLuau\\GodotLuau\\tests\\runtime\\RunRemoteHostQualification.py",
+            "--godot",
+            "D:\\a\\_temp\\sanitizer-host\\bin\\godot.windows.template_debug.dev.x86_64.san.exe",
+            "--host-manifest",
+            "D:\\a\\_temp\\sanitizer-host\\sanitizer-host.json",
+            "--output",
+            "D:\\a\\_temp\\native-sanitizer-evidence\\remote-host"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 17.3900000000001,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/remote-host-qualification/asan-report\""
+        }
+      ],
+      "SummarySHA256": "c77a2a83958f06dd0d5b0eab526acbba7445c3eaef420653309ea076a7da123c"
+    },
+    "Linux": {
+      "Result": "PASS",
+      "FullQualification": true,
+      "ControlsPassed": true,
+      "UnexpectedReports": [],
+      "Scope": "headless full-native ASan; Linux LSan enabled; Windows LSan unsupported",
+      "InstrumentedFiles": 1164,
+      "HostSHA256": "72645b0eb1d30afde108c1604cb5377d662770b2f922d7def37f92f58602d711",
+      "CompilerSHA256": "f6d5286a52de10b1e3e8841457c9903a1ea28f222ac0f58cd616697d0dcd9db3",
+      "Core": {
+        "Command": [
+          "ctest",
+          "--test-dir",
+          "/home/runner/work/GodotLuau/GodotLuau/build/sanitizers/native",
+          "-R",
+          "^ExecutionDomains$",
+          "--no-tests=error",
+          "--timeout",
+          "30",
+          "--output-on-failure",
+          "--verbose",
+          "--test-output-size-passed",
+          "65536",
+          "--test-output-size-failed",
+          "65536",
+          "--output-junit",
+          "/home/runner/work/_temp/native-sanitizer-evidence/core/core-results.xml"
+        ],
+        "NativeSource": {
+          "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+          "Files": 99,
+          "Newlines": "LF normalized"
+        },
+        "Cases": 85,
+        "Result": "PASS",
+        "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/suite-core/asan-report\"",
+        "Files": {
+          "discovery.json": "9f3765c5ae78e49f8cc806efb6969ec27ec3426aa54c9c5771d4cbbbda456c0e",
+          "core-results.xml": "040558ad1f1214905a645f6914a6568d6ae61dd515beae5a359c77229ed2b616",
+          "ctest.log": "45dd896894957a50a91a0156c0e1f4fa07e5ea4a78c283235805ad515cc6e476"
+        }
+      },
+      "Native": {
+        "Revision": "c03747277dfd1ccdfcfed2d2bf453659da553af5",
+        "NativeSource": {
+          "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+          "Files": 99,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "9c5f79079e44f89c2bb1d89a843cf5100911e1154e3127a7b1dddeed90d6b24d",
+        "CompanionSHA256": "1bc0970cfd2d847a6fa0d116e15892de880b8183eb8d24df0f10b2989f98402a",
+        "Processes": 134,
+        "InputActors": [
+          {
+            "Label": "input-actions",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "input-controller",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "input-demo",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "InputAssertions": 51,
+        "MotorAssertions": 20,
+        "Demo": {
+          "Checks": 20,
+          "Graphical": false,
+          "NodeDelta": 0,
+          "RestartCycles": 20,
+          "Result": "PASS",
+          "StaticMemoryDeltaBytes": -4092.0,
+          "WalkingDistance": 0.91666841506958
+        },
+        "FixtureSHA256LF": {
+          "InputActions.gd": "b5146be7a3523a380cf5740f192734658378449ad43fc169b633ddc88c49c6a9",
+          "InputController.gd": "605a5ebff05dc50051e81e2fbecf741b1f0e1aff33ad34cdcfbb223dee494fe1",
+          "InputControllerDemo.gd": "e7c5ee23acfb4434594959d0e618055d3e44a24c1936aecc66ea3e721144ec78",
+          "Controller.luau": "20695393adbc496c4fa165146bb66386f026b18cf3086122dc7970eab175b0f6",
+          "ReplicationIntegration.gd": "2ac995c614e6514c1095a40105eef2446eb616af694cc3974ea3884cad233767",
+          "InputActionTests.cpp": "7a2ad92b901e57564d7a22c8629fb3f8fc7e1baaf6f180758036867d665a7456"
+        },
+        "LocalReplicationCases": [
+          {
+            "Role": "server",
+            "Label": "local input and motor are excluded from static network identities",
+            "Passed": true
+          },
+          {
+            "Role": "server",
+            "Label": "scene-authored motor is inert until Client adoption",
+            "Passed": true
+          },
+          {
+            "Role": "client",
+            "Label": "local input and motor are excluded from static network identities",
+            "Passed": true
+          },
+          {
+            "Role": "client",
+            "Label": "scene-authored motor is inert until Client adoption",
+            "Passed": true
+          }
+        ],
+        "SummarySHA256": "25bdd645354006bcae50dd5ab22d98669db03df935beca0f727b43daafcc09bd"
+      },
+      "Controls": [
+        {
+          "Label": "standalone-clean",
+          "Command": [
+            "/home/runner/work/GodotLuau/GodotLuau/build/sanitizers/probes/NativeSanitizerLoader",
+            "/home/runner/work/GodotLuau/GodotLuau/build/sanitizers/probes/NativeSanitizerProbe.so"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.008210024000049998,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/standalone-clean/asan-report\""
+        },
+        {
+          "Label": "standalone-uaf",
+          "Command": [
+            "/home/runner/work/GodotLuau/GodotLuau/build/sanitizers/probes/NativeSanitizerLoader",
+            "/home/runner/work/GodotLuau/GodotLuau/build/sanitizers/probes/NativeSanitizerProbe.so"
+          ],
+          "Exit": 1,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.00838930400004756,
+          "ExpectedFinding": "heap-use-after-free",
+          "SanitizerFinding": true,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/standalone-uaf/asan-report\""
+        },
+        {
+          "Label": "engine-only",
+          "Command": [
+            "/home/runner/work/_temp/sanitizer-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "/home/runner/work/_temp/native-sanitizer-evidence/engine-only/project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "engine",
+            "--cycles",
+            "1"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.46517010600007325,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/engine-only/asan-report\""
+        },
+        {
+          "Label": "minimal-reload",
+          "Command": [
+            "/home/runner/work/_temp/sanitizer-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "/home/runner/work/_temp/native-sanitizer-evidence/minimal-reload/project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "minimal",
+            "--cycles",
+            "5"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.5150582139999642,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/minimal-reload/asan-report\""
+        },
+        {
+          "Label": "host-uaf",
+          "Command": [
+            "/home/runner/work/_temp/sanitizer-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "/home/runner/work/_temp/native-sanitizer-evidence/host-uaf/project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "minimal",
+            "--cycles",
+            "1"
+          ],
+          "Exit": 1,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.36467107800001486,
+          "ExpectedFinding": "heap-use-after-free",
+          "SanitizerFinding": true,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/host-uaf/asan-report\""
+        },
+        {
+          "Label": "host-leak",
+          "Command": [
+            "/home/runner/work/_temp/sanitizer-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "/home/runner/work/_temp/native-sanitizer-evidence/host-leak/project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "minimal-hold",
+            "--cycles",
+            "1"
+          ],
+          "Exit": 1,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.46532089200002247,
+          "ExpectedFinding": "detected memory leaks",
+          "SanitizerFinding": true,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/host-leak/asan-report\""
+        },
+        {
+          "Label": "production-registration",
+          "Command": [
+            "/home/runner/work/_temp/sanitizer-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "/home/runner/work/_temp/native-sanitizer-evidence/production-registration/project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "registration",
+            "--cycles",
+            "5"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 0.7156920910000508,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/production-registration/asan-report\""
+        },
+        {
+          "Label": "production-vm-reload",
+          "Command": [
+            "/home/runner/work/_temp/sanitizer-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+            "--headless",
+            "--disable-crash-handler",
+            "--single-threaded-scene",
+            "--path",
+            "/home/runner/work/_temp/native-sanitizer-evidence/production-vm-reload/project",
+            "--script",
+            "res://SanitizerLifecycle.gd",
+            "--",
+            "--mode",
+            "vm-cycles",
+            "--cycles",
+            "5"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 1.115782572999933,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/production-vm-reload/asan-report\""
+        },
+        {
+          "Label": "remote-host-qualification",
+          "Command": [
+            "/opt/hostedtoolcache/Python/3.12.16/x64/bin/python",
+            "/home/runner/work/GodotLuau/GodotLuau/tests/runtime/RunRemoteHostQualification.py",
+            "--godot",
+            "/home/runner/work/_temp/sanitizer-host/bin/godot.linuxbsd.template_debug.dev.x86_64.llvm.san",
+            "--host-manifest",
+            "/home/runner/work/_temp/sanitizer-host/sanitizer-host.json",
+            "--output",
+            "/home/runner/work/_temp/native-sanitizer-evidence/remote-host"
+          ],
+          "Exit": 0,
+          "TimedOut": false,
+          "ElapsedSeconds": 5.522384646000091,
+          "ExpectedFinding": null,
+          "SanitizerFinding": false,
+          "Passed": true,
+          "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/remote-host-qualification/asan-report\""
+        }
+      ],
+      "SummarySHA256": "b632f6bc37d198777f22e0cc8f6dfaee920666576e64ad3fb9537e74447cd67b"
+    }
+  },
+  "Limitations": [
+    "Synthetic viewport input and native Control routing; no physical keyboard/gamepad/touch or OS mouse-capture qualification",
+    "One-worker real Windows rendering; no comparative GPU frame-time or Linux graphical claim",
+    "No local Linux engine on permitted workers; Linux results use hosted CI",
+    "Windows LSan unsupported; matching admitted hosts and existing GL-017/018 scope retained",
+    "No complete Godot/Luau/native allocation profile; limited C++ evaluator allocation counter and restart observations",
+    "No Linux Release claim; supported local Windows Release, hosted Debug and full-native sanitizer configurations are explicit",
+    "Post-GUI raw callback timing and Client-only hardware access require documented caller migration",
+    "Independent local controller; shared Client domain remains the boundary; Character V2/network authority unchanged",
+    "Existing GL-026/027/033/040/041 and other documented qualification limits remain independently tracked",
+    "Releases/updater distribution disabled; main unchanged"
+  ]
+}

@@ -57,6 +57,9 @@ Enum = {
     CharacterStateType = { Idle = 0, Running = 1, Jumping = 2, Landed = 3, Dead = 7, Freefall = 8 },
     HttpContentType = { ApplicationJson = 0, ApplicationXml = 1, ApplicationUrlEncoded = 2, TextPlain = 3, TextXml = 4 },
     HttpCompression = { None = 0, Gzip = 1 },
+    InputActionValueType = { Bool = 0, Scalar = 1, Vector2 = 2 },
+    InputBindingSource = { Key = 0, MouseButton = 1, GamepadButton = 2, GamepadStick = 3, MouseMotion = 4 },
+    InputStick = { Left = 0, Right = 1 },
     HumanoidStateType = {
         None = 0, Running = 1, Jumping = 2, Landed = 3,
         Swimming = 4, Climbing = 5, Seated = 6, Dead = 7,
@@ -71,6 +74,10 @@ Enum = {
     },
     UserInputState = { Begin = 0, Change = 1, End = 2, Cancel = 3, None = 4 },
     KeyCode = {
+        ButtonA = 1000, ButtonB = 1001, ButtonX = 1002, ButtonY = 1003,
+        ButtonL1 = 1004, ButtonR1 = 1005, ButtonL3 = 1008, ButtonR3 = 1009,
+        ButtonStart = 1010, ButtonSelect = 1011,
+        DPadUp = 1012, DPadDown = 1013, DPadLeft = 1014, DPadRight = 1015,
         Unknown = 0, Backspace = 8, Tab = 9, Return = 13, Escape = 27,
         Space = 32, Quote = 39, Comma = 44, Minus = 45, Period = 46,
         Slash = 47, Zero = 48, One = 49, Two = 50, Three = 51, Four = 52,
