@@ -1,0 +1,33 @@
+[
+  {
+    "Command": [
+      "nvidia-smi",
+      "--query-gpu=name,driver_version,temperature.gpu,clocks.sm,clocks.mem,pstate,power.draw",
+      "--format=csv,noheader"
+    ],
+    "Exit": 0,
+    "Output": "NVIDIA GeForce GTX 1650 SUPER, 591.86, 38, 660 MHz, 5000 MHz, P3, 16.55 W"
+  },
+  {
+    "Command": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-CimInstance Win32_Processor | Select-Object Name,LoadPercentage | ConvertTo-Json -Compress"
+    ],
+    "Exit": 0,
+    "Output": "{\"Name\":\"AMD Ryzen 9 5900X 12-Core Processor            \",\"LoadPercentage\":80}"
+  },
+  {
+    "Command": [
+      "docker",
+      "exec",
+      "codex-character-linux",
+      "sh",
+      "-c",
+      "command -v perf; command -v valgrind; command -v heaptrack; true"
+    ],
+    "Exit": 0,
+    "Output": ""
+  }
+]

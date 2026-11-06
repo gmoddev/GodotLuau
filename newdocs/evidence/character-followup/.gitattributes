@@ -1,0 +1,6 @@
+# Captured evidence is hashed: retain its original bytes and generated whitespace.
+*.json -text whitespace=cr-at-eol
+*.xml -text whitespace=cr-at-eol
+*.log -text whitespace=cr-at-eol
+core-*/discovery.json whitespace=cr-at-eol,-blank-at-eol
+failed-network-runner.log whitespace=cr-at-eol,-blank-at-eof

@@ -1,0 +1,11 @@
+[Character:Worker] candidate-core
+[Character:Worker] candidate-core-check
+Traceback (most recent call last):
+  File "/transfer/LinuxWorker.py", line 71, in <module>
+[Runtime:CI] Expected completion of all 80 distinct production-core cases.
+
+    Run([sys.executable,Source/'tests/runtime/CheckCoreCI.py','report',Logs/'candidate-core.xml'],'candidate-core-check',30)
+  File "/transfer/LinuxWorker.py", line 23, in Run
+    assert Result.returncode == 0,Name
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: candidate-core-check

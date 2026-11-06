@@ -6,6 +6,13 @@ The latter tree equals retained `46f65e0`, with runtime/test inputs identical to
 qualified `d7905dd`. See the [integration record](character-main-integration.md)
 for fresh verification and the retained platform/graphical limitations.
 
+Character presentation/performance is integrated by normal merge
+`bee07b7d4fc948556e69aa2ae0306b0ad1a52fb4`, identical to retained source tip
+`57d0083e66ea50893fb28f57f0d29ef2e71b8ce3`. Qualified runtime `2bd4374` and
+fixture inputs `432b06a` are preserved. The
+[presentation integration record](character-presentation-main-integration.md)
+distinguishes fresh main verification from retained performance/sanitizer evidence.
+
 Current development baseline: optimized shared-domain `main` with GL-006/008's
 qualified state/removal/chat authority corrections, integrated on 2026-10-27.
 GL-020's functional animation/session implementation is integrated through normal
@@ -582,6 +589,15 @@ and retained UUID samples; its [qualification record](httpservice-validation.md)
 verifies both platforms' hosted artifacts. The
 [HttpService integration](httpservice-main-integration.md) adds three published
 caller migration actors (95 native total) and records fresh main verification.
+The integrated graphical/performance work initially adds eight headless presentation
+actors and one performance-fixture actor (104 native total); additional custom
+listen/dedicated coverage raises presentation to fourteen and native to 110.
+Core remains 80 cases. Its exact first-person endpoint check strengthens the
+earlier substantial-fade check (GL-028).
+Hosted fixture execution is distinct from the actual DockerPC NVIDIA captures
+and repeated comparable benchmarks in the
+[work record](character-presentation-performance.md); headless CI cannot qualify
+graphical appearance and its single performance actor is not a speed gate.
 The runner owns
 child process
 trees, isolates profiles, and requires complete actors and PASS outcomes. Official

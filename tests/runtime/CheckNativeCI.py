@@ -23,6 +23,8 @@ def Main():
         'http': ['http-enabled','http-denied','http-lifecycle','http-tls'],
         'httpservice': ['httpservice-' + Case for Case in ['api', 'denied', 'lifecycle', 'tls', 'utilities-A', 'utilities-B']],
         'callers': ['callers-' + Case for Case in ['status', 'empty', 'denied']],
+        'presentation': ['presentation-r6-single0', 'presentation-custom-single0', *['presentation-' + Case + '-' + Role for Case in ['listen', 'dedicated', 'listen-custom', 'dedicated-custom'] for Role in ['server0', 'client1', 'client2']]],
+        'performance': ['Candidate-0'],
         'datastore': ['datastore-basic-basic-single',
             *[Label for Case in ['update','set','remove','increment'] for Label in ['datastore-'+Case+'-seed-single','datastore-'+Case+'-'+Case+'-A','datastore-'+Case+'-'+Case+'-B','datastore-'+Case+'-verify-single']],
             *['datastore-'+Case+'-'+Case+'-single' for Case in ['failures','lifecycle','memory','contention','unavailable','incompatible']]]
@@ -77,6 +79,28 @@ def Main():
         Hits = json.loads((Project / 'server-results.json').read_text())['Hits']
         if '[Runtime:HttpCallers] PASS ' + Case not in Text or Hits != [{'Method': 'GET', 'Path': Path} for Path in Paths]:
             raise ValueError('Published caller migration fixture missing/failed: ' + Case)
+    Presentation = json.loads((Args.output / 'presentation/native-evidence.json').read_text())
+    if Presentation['Graphical'] or Presentation['Actors'] != 14 or len(Presentation['Evidence']) != 14:
+        raise ValueError('Missing headless presentation assertions or false graphical claim')
+    for Item in Presentation['Evidence']:
+        if Item['Graphical'] or Item['Result'] != 'PASS' or not Item['Assertions'] or not all(Assertion['Passed'] for Assertion in Item['Assertions']):
+            raise ValueError('Presentation assertions did not execute/pass')
+        Labels = {Assertion['Label'] for Assertion in Item['Assertions']}
+        Required = {'first-person rig transparency and zoom', 'AnimationPlayer advances visual track', 'automatic respawn replaces rendered life', 'touch simulation moves Character', 'Character rotates toward actual movement', 'controller jump reaches real physics', 'mobile simulation GUI jump reaches real physics', 'unchanged root repairs independently changed live body'} if Item['Case'] in ['r6', 'custom'] else {'real ENet remote Characters created', 'remote has real Model identity', 'puppet has no local camera/input', 'owner or replicated Character moves during real transport'}
+        if not Required <= Labels: raise ValueError('Presentation case skipped required behavior')
+        Additional = {'first-person fade reaches fully invisible endpoint', 'procedural animation enters airborne pose', 'procedural animation returns to grounded pose', 'processed respawns leave no live object growth'} if Item['Case'] in ['r6', 'custom'] else {'remote uses actual custom rig' if Item['Case'].endswith('-custom') else 'remote uses actual R6 rig', 'remote rig animation limbs are present', 'remote procedural animation progresses'}
+        if not Additional <= Labels: raise ValueError('Presentation case skipped animation/lifetime assertions')
+        if Item['Case'].endswith('-custom') and 'remote custom geometry is not R6 fallback' not in Labels: raise ValueError('Custom multiplayer fixture fell back to the default rig')
+        if Item['Case'] not in ['r6','custom'] and not (Item['Case'].startswith('dedicated') and Item['Role']=='server0') and 'walking observation starts from grounded owner' not in Labels: raise ValueError('Walking observation skipped physical grounding')
+    Performance = json.loads((Args.output/'performance/measurements.json').read_text())
+    PerformanceInputs = json.loads((Args.output/'performance/inputs.json').read_text())
+    if len(Performance) != 1 or Performance[0]['Graphical'] or PerformanceInputs['Trials'] != 1 or PerformanceInputs['SamplesPerPhysicsWindow'] != 120 or PerformanceInputs['Counts'] != '1,16':
+        raise ValueError('Performance fixture execution missing or wrong workload')
+    Profiles = Performance[0]['Profiles']
+    if {(Item['Characters'],Item['Mode']) for Item in Profiles} != {(1,'all'),(16,'all'),(16,'physics-only'),(16,'animation-only'),(16,'inactive')} or any(Item['PhysicsSeconds']['Samples'] < 118 or Item['ProcessSeconds']['Samples'] < 118 for Item in Profiles):
+        raise ValueError('Performance fixture skipped independent dispatch windows')
+    if Performance[0]['ExtensionSHA256'] != hashlib.sha256(Args.extension.read_bytes()).hexdigest() or PerformanceInputs['SourceAtInvocation'] != GetFingerprint(Path(__file__).resolve().parents[2]):
+        raise ValueError('Performance fixture product/source identity mismatch')
     Evidence = {
         'Revision': Args.revision, 'NativeSource': GetFingerprint(Path(__file__).resolve().parents[2]),
         'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
@@ -84,6 +108,8 @@ def Main():
         'DataStoreNative': json.loads((Args.output/'datastore/native-evidence.json').read_text()),
         'HttpServiceNative': HttpServiceNative,
         'CallerNative': CallerEvidence,
+        'PresentationNative': Presentation,
+        'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
         'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']},
         'Processes': sum(len(Results) for Results in Groups.values()),

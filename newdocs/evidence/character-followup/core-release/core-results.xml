@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="0"
+	timestamp="2026-11-01T01:30:20"
+	>
+	<testcase name="ExecutionDomains" classname="ExecutionDomains" time="0.920825" status="run">
+		<properties/>
+		<system-out>[Runtime:Test] PASS VM allocator accounts growth shrink rejection and frees
+[Runtime:Test] PASS VM allocator rejects invalid sizes and arithmetic overflow
+[Runtime:Test] PASS Actual VM allocation failure is protected and close releases accounting
+[Runtime:Test] PASS Sandbox preserves custom typeof shared facades and function environments
+[Runtime:Test] PASS Task quota rejects admission before creating extra coroutine and recovers after tick
+[Runtime:Test] PASS Reference quota and owner quota reject without replacing valid work
+[Runtime:Test] PASS Live coroutine quota includes untracked manual coroutines and frees on collection
+[Runtime:Test] PASS Memory quota retirement covers caught Lua failure and fresh domain recovery
+[Runtime:Test] PASS Memory failure during callback marshalling retires without unprotected unwind
+[Runtime:Test] PASS Insufficient VM bootstrap quota produces a controlled unavailable domain
+[Runtime:Test] PASS Shared module allocations use the domain quota and retire all owners on exhaustion
+[Runtime:Test] PASS Server module sharing and ordering
+[Runtime:Test] PASS Client module sharing and ordering
+[Runtime:Test] PASS Server and Client VMs and caches are distinct
+[Runtime:Test] PASS Concurrent yielding module initializes exactly once
+[Runtime:Test] PASS Scalar false, number, string and function results preserve identity
+[Runtime:Test] PASS Recursive and indirect cyclic requires fail predictably
+[Runtime:Test] PASS Concurrent initializer dependency cycle does not deadlock
+[Runtime:Test] PASS Module failure is sticky and unrelated execution survives
+[Runtime:Test] PASS Missing and multiple module results fail
+[Runtime:Test] PASS Source revision and explicit destruction invalidate only that module
+[Runtime:Test] PASS Invalidated pending module wakes callers with an error
+[Runtime:Test] PASS Revision cache loads only on misses and distinguishes replacement resources
+[Runtime:Test] PASS Revision change cancels pending initialization and wakes all old waiters
+[Runtime:Test] PASS Revision loader preserves dependency cycles and sticky failures
+[Runtime:Test] PASS Destroying first caller does not cancel shared initialization
+[Runtime:Test] PASS Script environments and identities survive interleaved yields
+[Runtime:Test] PASS Module global assignments do not leak to caller or another module
+[Runtime:Test] PASS _G and shared are domain-shared but ordinary globals are local
+[Runtime:Test] PASS Script errors leave unrelated scripts and domain alive
+[Runtime:Test] PASS spawn, defer, delay, wait arguments and reentrant scheduling
+[Runtime:Test] PASS Cancel owner suppresses all pending task kinds
+[Runtime:Test] PASS Cancellation during callback and child task spawn is reentrant-safe
+[Runtime:Test] PASS External callbacks that yield remain scheduler-owned
+[Runtime:Test] PASS Cancelled callback references cannot alias new owners
+[Runtime:Test] PASS Repeated creation cancellation GC and restart
+[Runtime:Test] PASS Repeated domain shutdown and no work after shutdown
+[Runtime:Test] PASS Context authority is independent of mutable compatibility globals
+[Runtime:Test] PASS Task cancellation detaches native condition wait ownership
+[Runtime:Test] PASS Close callbacks run once with admission closed and cached require available
+[Runtime:Test] PASS Completed coroutines cannot be resumed a second time
+[Runtime:Test] PASS A module child task is not a blocking initializer dependency
+[Runtime:Test] PASS Deep requires and spawn dispatch yield at a bounded native depth
+[Runtime:Test] PASS Service callbacks keep their registering owner across dispatch and yields
+[Runtime:Test] PASS Trusted service polling survives its first subscriber and hides its bootstrap hook
+[Runtime:Test] PASS Wait guards invalidate independently of an orphaned native source
+[Runtime:Test] PASS A manually resumed coroutine joins scheduler ownership when it waits externally
+[Runtime:Test] PASS Manual coroutines adopt timed and module waits and cannot revive dead owners
+[Runtime:Test] PASS Explicit getfenv and setfenv retain Luau function environment behavior
+[Runtime:Test] PASS Native stack guard uses real thread bounds under sanitizer instrumentation
+[Runtime:Test] PASS Filesystem native operation grants and bounded storage
+[Runtime:Test] PASS Filesystem hostile names and final links reject without mutation
+[Runtime:Test] PASS Filesystem intermediate links and replacement races stay confined
+[Runtime:Test] PASS HTTP production origin parsing separates authority and target
+[Runtime:Test] PASS HTTP production request headers reject injection and framing control
+[Runtime:Test] PASS HTTP production wire budgets bound cumulative and per tick work
+[Runtime:Test] PASS Native character authority observes synchronous domain and restores nesting
+[Runtime:Test] PASS HttpService strict JSON preserves scalars containers null and UTF8 bytes
+[Runtime:Test] PASS HttpService strict JSON rejects malformed and ambiguous syntax
+[Runtime:Test] PASS HttpService JSON rejects cycles sparse mixed and unsupported values
+[Runtime:Test] PASS HttpService JSON enforces byte node and depth bounds without stale state
+[Runtime:Test] PASS HttpService public facade propagates errors and validates options before transport
+[Runtime:Test] PASS HTTP response capture preserves duplicates and rejects bounds without mutation
+[Runtime:Test] PASS UUID v4 formatting fixes version variant braces and byte order
+[Runtime:Test] 64 passed, 0 failed
+[Runtime:LimitTest] PASS infinite
+[Runtime:Test] PASS Isolated execution resource case infinite
+[Runtime:LimitTest] PASS nested
+[Runtime:Test] PASS Isolated execution resource case nested
+[Runtime:LimitTest] PASS pcall
+[Runtime:Test] PASS Isolated execution resource case pcall
+[Runtime:LimitTest] PASS finite-exceeded
+[Runtime:Test] PASS Isolated execution resource case finite-exceeded
+[Runtime:LimitTest] PASS finite-within
+[Runtime:Test] PASS Isolated execution resource case finite-within
+[Runtime:LimitTest] PASS module
+[Runtime:Test] PASS Isolated execution resource case module
+[Runtime:LimitTest] PASS callback
+[Runtime:Test] PASS Isolated execution resource case callback
+[Runtime:LimitTest] PASS marshal
+[Runtime:Test] PASS Isolated execution resource case marshal
+[Runtime:LimitTest] PASS invoke
+[Runtime:Test] PASS Isolated execution resource case invoke
+[Runtime:LimitTest] PASS native
+[Runtime:Test] PASS Isolated execution resource case native
+[Runtime:LimitTest] PASS cross-time
+[Runtime:Test] PASS Isolated execution resource case cross-time
+[Runtime:LimitTest] PASS cross-count
+[Runtime:Test] PASS Isolated execution resource case cross-count
+[Runtime:LimitTest] PASS cross-reentry
+[Runtime:Test] PASS Isolated execution resource case cross-reentry
+[Runtime:LimitTest] PASS cross-memory
+[Runtime:Test] PASS Isolated execution resource case cross-memory
+[Runtime:LimitTest] PASS memory-catch
+[Runtime:Test] PASS Isolated execution resource case memory-catch
+[Runtime:LimitTest] PASS shutdown
+[Runtime:Test] PASS Isolated execution resource case shutdown
+[Runtime:Test] 80 passed, 0 failed
+</system-out>
+	</testcase>
+</testsuite>

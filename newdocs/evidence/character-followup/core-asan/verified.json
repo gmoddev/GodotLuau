@@ -1,0 +1,33 @@
+{
+  "Command": [
+    "ctest",
+    "--test-dir",
+    "/work/build-asan",
+    "-R",
+    "^ExecutionDomains$",
+    "--no-tests=error",
+    "--timeout",
+    "30",
+    "--output-on-failure",
+    "--verbose",
+    "--test-output-size-passed",
+    "65536",
+    "--test-output-size-failed",
+    "65536",
+    "--output-junit",
+    "/work/followup/core-asan/core-results.xml"
+  ],
+  "NativeSource": {
+    "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+    "Files": 89,
+    "Newlines": "LF normalized"
+  },
+  "Cases": 80,
+  "Result": "PASS",
+  "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+  "Files": {
+    "discovery.json": "a331229a9cb27e281f98c441e01d388c5cdaca9cbc890168e82508f1490085e6",
+    "core-results.xml": "7a393cf33e683e10588d17679b99381f8f952dfed0a39980f183200d34008acf",
+    "ctest.log": "b2f5362759a5bf31c961dc418a4646b41a21c6ef38988ba18cd8117340a26a4c"
+  }
+}
