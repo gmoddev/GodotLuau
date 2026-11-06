@@ -245,6 +245,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/datastore" --datastore --timeout 60
 
+      - name: Input actions and real GUI routing
+        timeout-minutes: 2
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$GODOT_RUNTIME" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/input" --input --timeout 45
+
       - name: Require all native actors and retain identity
         timeout-minutes: 1
         run: |

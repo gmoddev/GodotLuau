@@ -243,6 +243,10 @@ static void _gl_push_connection(lua_State* L, Node* node, int ref) {
 //  Métodos de Instance (accesibles desde Lua)
 // ════════════════════════════════════════════════════════════════════
 
+void GLInputPushConnection(lua_State* Thread, Node* Target, int Reference) {
+    _gl_push_connection(Thread,Target,Reference);
+}
+
 static int method_destroy(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     Node* n = w ? gow_node(w) : nullptr;
@@ -595,7 +599,7 @@ static int method_getservice(lua_State* L) {
     }
     // Los servicios de ENTRADA son exclusivos del cliente: un ServerScript no
     // puede leer teclado/ratón/pantalla (igual que en Roblox).
-    if (is_server && (strcmp(svc_name, "UserInputService")   == 0 ||
+    if (is_server && (strcmp(svc_name, "InputService") == 0 || strcmp(svc_name, "UserInputService")   == 0 ||
                       strcmp(svc_name, "ContextActionService") == 0)) {
         UtilityFunctions::push_error("[GodotLuau] ServerScript no puede acceder a '",
             svc_name, "' — la entrada de hardware solo existe en el cliente (LocalScript).");
@@ -649,7 +653,7 @@ static int method_getservice(lua_State* L) {
     // todos los scripts de interfaz: UserInputService.InputBegan, RunService,
     // ContextActionService... eran la mitad de los errores del place de prueba.
     static const char* kAutoServices[] = {
-        "Players", "UserInputService", "ContextActionService", "RunService",
+        "Players", "InputService", "UserInputService", "ContextActionService", "RunService",
         "TweenService", "CollectionService", "SoundService", "TextChatService",
         "Lighting", "MaterialService", "PlayerScripts", NULL
     };
@@ -3976,6 +3980,8 @@ static int godot_object_newindex_impl(lua_State* L) {
     GodotObjectWrapper* wrapper = (GodotObjectWrapper*)lua_touserdata(L, 1);
     const char* key = luaL_checkstring(L, 2);
     if (!wrapper || !gow_node(wrapper)) return 0;
+
+    if (GLInputWrite(L,gow_node(wrapper),key)) return 0;
 
     if (strcmp(key, "DeliveryType") == 0) {
         if (auto Remote = Object::cast_to<RemoteEventNode>(gow_node(wrapper))) {

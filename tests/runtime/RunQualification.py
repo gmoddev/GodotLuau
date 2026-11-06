@@ -634,6 +634,7 @@ def Main():
     Parser.add_argument("--animation", action="store_true")
     Parser.add_argument("--remote", action="store_true")
     Parser.add_argument("--characters", action="store_true")
+    Parser.add_argument("--input", action="store_true")
     Parser.add_argument("--manual-characters", action="store_true")
     Parser.add_argument("--character-modes", nargs="+", choices=('Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'), default=['Local', 'Listen', 'Dedicated', 'TwoD', 'Movement', 'Latency'])
     Parser.add_argument("--resources", action="store_true")
@@ -683,6 +684,9 @@ def Main():
         Results = ManualCharacterFixtures(Args, Args.output, Environment)
     elif Args.characters:
         Results = CharacterFixtures(Args, Args.output, Environment)
+    elif Args.input:
+        Process = Start(Args.godot, Args.output, "InputActions.gd", "input-actions", [], Environment)
+        Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "input-actions", "[Input:Actions] PASS")]
     elif Args.resources:
         Results = Resources(Args, Args.output, Environment)
     elif Args.filesystem:

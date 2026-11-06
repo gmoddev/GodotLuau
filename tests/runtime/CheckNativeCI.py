@@ -21,6 +21,7 @@ def Main():
     if HostQualification.get('Result') != 'PASS' or HostQualification.get('Host') != Host or HostQualification.get('UnexpectedReports') or [Record.get('Name') for Record in HostQualification.get('Records', [])] != ['ownership','rpc'] or any(not Record.get('Passed') for Record in HostQualification['Records']):
         raise ValueError('GL-029 admitted host runtime qualification missing or failed')
     Expected = {
+        'input': ['input-actions'],
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],

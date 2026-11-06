@@ -116,8 +116,15 @@ jobs:
         timeout-minutes: 15
         run: |
           cmake --build build/runtime-core --config Debug \
-            --target ExecutionDomainTests --parallel 2 \
+            --target ExecutionDomainTests InputActionTests --parallel 2 \
             2>&1 | tee build/runtime-core/build.log
+
+      - name: Native input evaluator regressions
+        timeout-minutes: 1
+        run: |
+          GRAPH="build/runtime-core/InputActionTests"
+          if [ "${{ matrix.Platform }}" = "Windows" ]; then GRAPH="build/runtime-core/Debug/InputActionTests.exe"; fi
+          "$GRAPH" 2>&1 | tee build/runtime-core/input-graph.log
 
       - name: Require production regression discovery
         timeout-minutes: 1

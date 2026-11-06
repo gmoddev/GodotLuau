@@ -25,6 +25,7 @@
 #include <cstring>
 #include <algorithm>
 #include <map>
+#include "input_actions.h"
 
 #include "lua.h"
 #include "lualib.h"
@@ -281,9 +282,18 @@ private:
     Vector2 mouse_delta_accum;   // acumulado durante el frame en curso
     Vector2 mouse_delta_frame;   // doble-buffer: delta del frame anterior (lo que devuelve GetMouseDelta)
     int     last_input_type = 10; // Enum.UserInputType del ultimo input (Keyboard por defecto)
+    struct PendingInput { Ref<InputEvent> Event; bool Processed=true; };
+    std::vector<PendingInput> Pending;
+    bool CommitScheduled=false;
 
 protected:
+    void _notification(int What) {
+        if (What==NOTIFICATION_APPLICATION_FOCUS_OUT || What==NOTIFICATION_EXIT_TREE) {
+            Pending.clear(); mouse_delta_accum=Vector2(); mouse_delta_frame=Vector2();
+        }
+    }
     static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("_CommitInput"), &UserInputService::_CommitInput);
         ClassDB::bind_method(D_METHOD("_gl_disconnect", "ref"),    &UserInputService::_gl_disconnect);
         ClassDB::bind_method(D_METHOD("is_key_down", "keycode"),   &UserInputService::is_key_down);
         ClassDB::bind_method(D_METHOD("get_mouse_location"),       &UserInputService::get_mouse_location_v);
@@ -355,6 +365,7 @@ public:
     void _ready() override {
         if (!Engine::get_singleton()->is_editor_hint()) {
             set_process_input(true);
+            set_process_unhandled_input(true);
             set_process(true);   // para el doble-buffer del delta de mouse
         }
     }
@@ -367,11 +378,30 @@ public:
         mouse_delta_accum = Vector2();
     }
 
-    // Recibe TODOS los eventos (teclado, mouse, rueda, tactil, gamepad) y dispara
-    // InputBegan / InputChanged / InputEnded a Luau en tiempo real, con un
-    // InputObject que trae UserInputType, KeyCode, UserInputState, Position y Delta.
     void _input(const Ref<InputEvent>& event) override {
         if (Engine::get_singleton()->is_editor_hint()) return;
+        if (Pending.size()>=1024) {
+            Pending.clear(); GLInputCancel(get_viewport(),"InputQueueOverflow");
+            return;
+        }
+        Pending.push_back({event,true});
+        if (!CommitScheduled) { CommitScheduled=true; call_deferred("_CommitInput"); }
+    }
+    void _unhandled_input(const Ref<InputEvent>& Event) override {
+        for (auto Item=Pending.rbegin();Item!=Pending.rend();++Item) if (Item->Event==Event) { Item->Processed=false; break; }
+    }
+    void _CommitInput() {
+        CommitScheduled=false;
+        std::vector<PendingInput> Batch; Batch.swap(Pending);
+        const uint64_t Identity=get_instance_id();
+        for (const auto& Item:Batch) {
+            GLInputDeliver(get_viewport(),Identity,Item.Event,Item.Processed);
+            if (ObjectDB::get_instance(Identity)!=this) return;
+            DispatchInput(Item.Event,Item.Processed);
+            if (ObjectDB::get_instance(Identity)!=this) return;
+        }
+    }
+    void DispatchInput(const Ref<InputEvent>& event, bool Processed) {
         Vector2 mloc = get_mouse_location_v();
 
         // ── Teclado ────────────────────────────────────────────────
@@ -381,8 +411,8 @@ public:
             int rc = godot_key_to_roblox(key_ev->get_keycode());
             if (rc == 0) return;
             last_input_type = 10;
-            if (key_ev->is_pressed()) _fire(input_began_cbs, 10, rc, 0, Vector3(), Vector3());
-            else                      _fire(input_ended_cbs, 10, rc, 2, Vector3(), Vector3());
+            if (key_ev->is_pressed()) _fire(input_began_cbs, 10, rc, 0, Vector3(), Vector3(), Processed);
+            else                      _fire(input_ended_cbs, 10, rc, 2, Vector3(), Vector3(), Processed);
             return;
         }
 
@@ -394,13 +424,13 @@ public:
                 if (mb->is_pressed()) {
                     float dir = (btn == MOUSE_BUTTON_WHEEL_UP) ? 1.0f : -1.0f;
                     last_input_type = 4;  // MouseWheel
-                    _fire(input_changed_cbs, 4, 0, 1, Vector3(mloc.x, mloc.y, dir), Vector3(0, 0, dir));
+                    _fire(input_changed_cbs, 4, 0, 1, Vector3(mloc.x, mloc.y, dir), Vector3(0, 0, dir), Processed);
                 }
                 return;
             }
             last_input_type = btn;  // MouseButton1..3
-            if (mb->is_pressed()) _fire(input_began_cbs, btn, 0, 0, Vector3(mloc.x, mloc.y, 0), Vector3());
-            else                  _fire(input_ended_cbs, btn, 0, 2, Vector3(mloc.x, mloc.y, 0), Vector3());
+            if (mb->is_pressed()) _fire(input_began_cbs, btn, 0, 0, Vector3(mloc.x, mloc.y, 0), Vector3(), Processed);
+            else                  _fire(input_ended_cbs, btn, 0, 2, Vector3(mloc.x, mloc.y, 0), Vector3(), Processed);
             return;
         }
 
@@ -410,7 +440,7 @@ public:
             Vector2 rel = mm->get_relative();
             mouse_delta_accum += rel;
             last_input_type = 5;
-            _fire(input_changed_cbs, 5, 0, 1, Vector3(mloc.x, mloc.y, 0), Vector3(rel.x, rel.y, 0));
+            _fire(input_changed_cbs, 5, 0, 1, Vector3(mloc.x, mloc.y, 0), Vector3(rel.x, rel.y, 0), Processed);
             return;
         }
 
@@ -419,15 +449,15 @@ public:
         if (st) {
             Vector2 p = st->get_position();
             last_input_type = 7;  // Touch
-            if (st->is_pressed()) _fire(input_began_cbs, 7, st->get_index(), 0, Vector3(p.x, p.y, 0), Vector3());
-            else                  _fire(input_ended_cbs, 7, st->get_index(), 2, Vector3(p.x, p.y, 0), Vector3());
+            if (st->is_pressed()) _fire(input_began_cbs, 7, st->get_index(), 0, Vector3(p.x, p.y, 0), Vector3(), Processed);
+            else                  _fire(input_ended_cbs, 7, st->get_index(), 2, Vector3(p.x, p.y, 0), Vector3(), Processed);
             return;
         }
         const InputEventScreenDrag* sd = Object::cast_to<const InputEventScreenDrag>(*event);
         if (sd) {
             Vector2 p = sd->get_position(), rel = sd->get_relative();
             last_input_type = 7;
-            _fire(input_changed_cbs, 7, sd->get_index(), 1, Vector3(p.x, p.y, 0), Vector3(rel.x, rel.y, 0));
+            _fire(input_changed_cbs, 7, sd->get_index(), 1, Vector3(p.x, p.y, 0), Vector3(rel.x, rel.y, 0), Processed);
             return;
         }
 
@@ -435,15 +465,15 @@ public:
         const InputEventJoypadButton* jb = Object::cast_to<const InputEventJoypadButton>(*event);
         if (jb) {
             last_input_type = 8;  // Gamepad1
-            if (jb->is_pressed()) _fire(input_began_cbs, 8, (int)jb->get_button_index(), 0, Vector3(), Vector3());
-            else                  _fire(input_ended_cbs, 8, (int)jb->get_button_index(), 2, Vector3(), Vector3());
+            if (jb->is_pressed()) _fire(input_began_cbs, 8, (int)jb->get_button_index(), 0, Vector3(), Vector3(), Processed);
+            else                  _fire(input_ended_cbs, 8, (int)jb->get_button_index(), 2, Vector3(), Vector3(), Processed);
             return;
         }
         const InputEventJoypadMotion* jm = Object::cast_to<const InputEventJoypadMotion>(*event);
         if (jm) {
             float v = jm->get_axis_value();
             last_input_type = 8;
-            _fire(input_changed_cbs, 8, (int)jm->get_axis(), 1, Vector3(v, 0, 0), Vector3(v, 0, 0));
+            _fire(input_changed_cbs, 8, (int)jm->get_axis(), 1, Vector3(v, 0, 0), Vector3(v, 0, 0), Processed);
             return;
         }
     }
@@ -456,9 +486,14 @@ private:
     // state: 0=Begin 1=Change 2=End (Enum.UserInputState)
     void _fire(std::vector<LuaCallback>& list, int type, int kc, int state,
                Vector3 pos, Vector3 delta, bool game_proc = false) {
-        for (int i=(int)list.size()-1; i>=0; --i) {
-            auto cb = list[i];
-            if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) { list.erase(list.begin()+i); continue; }
+        list.erase(std::remove_if(list.begin(),list.end(),[](const LuaCallback& Item) {
+            return !Item.active || !GLReferenceAlive(Item.main_L,Item.ref);
+        }),list.end());
+        const auto Snapshot=list;
+        const uint64_t Identity=get_instance_id();
+        for (auto Item=Snapshot.rbegin();Item!=Snapshot.rend();++Item) {
+            const auto cb=*Item;
+            if (!GLReferenceAlive(cb.main_L,cb.ref)) continue;
             GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 // InputObject (tabla con campos estilo Roblox)
                 lua_newtable(Thread);
@@ -470,6 +505,7 @@ private:
                 lua_pushboolean(Thread, game_proc);  // 2do argumento: gameProcessed
                 return 2;
             });
+            if (ObjectDB::get_instance(Identity)!=this) return;
         }
     }
 };

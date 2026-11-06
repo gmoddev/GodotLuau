@@ -83,6 +83,20 @@ four successful workflows and independently checked artifacts.
 | GL-039 | P3 | Integrated; closed within bounded 32-peer scope | Structural burst convergence corrected by bounded FIFO draining |
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
+| GL-042 | P2 | Candidate correction; qualification in progress | Raw input reports GUI consumption only after native GUI routing |
+
+## GL-042: UserInputService GUI routing flag
+
+The input campaign confirms that actual raw event paths called `_fire` without
+its game-processed argument, always defaulting false. DockerPC's native focused
+LineEdit probe establishes that GUI consumption occurs after `_input`, before
+`_unhandled_input`. The feature branch introduces a shared bounded post-GUI
+commit barrier for raw and semantic input, preserving arrival order and consumed
+releases. This deliberately changes raw callback timing; see the
+[migration contract](input-actions-api.md#userinputservice-migration) and
+[development evidence](input-action-development.md). Native synthetic-event
+coverage is not physical-device or graphical qualification. Main is unchanged;
+broader campaign qualification remains in progress.
 
 ## GL-041: Raised authoritative startup remains airborne during walking
 

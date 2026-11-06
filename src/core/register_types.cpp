@@ -252,6 +252,11 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
         // Input / Collection
         //// Entrada / Colección
         ClassDB::register_class<UserInputService>();
+        ClassDB::register_abstract_class<InputDefinition>();
+        ClassDB::register_class<InputContext>();
+        ClassDB::register_class<InputAction>();
+        ClassDB::register_class<InputBinding>();
+        ClassDB::register_class<InputService>();
         ClassDB::register_class<CollectionService>();
 
         // Animation

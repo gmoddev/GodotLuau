@@ -210,6 +210,8 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
         if (ptr && gow_node(ptr)) {
             Node* node = gow_node(ptr);
 
+            if (GLInputIndex(L,node,key.utf8().get_data())) return 1;
+
             // This canonical configuration must win over same-named children.
             if (key == "DeliveryType" && Object::cast_to<RemoteEventNode>(node)) return godot_object_index(L);
 
@@ -763,6 +765,10 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
         Object* obj = ClassDB::instantiate(StringName(class_name));
         Node* node  = Object::cast_to<Node>(obj);
         if (!node) { if (obj) memdelete(obj); lua_pushnil(L); return 1; }
+        if ((Object::cast_to<InputDefinition>(node) || Object::cast_to<InputService>(node)) && !GLInputAllowed()) {
+            memdelete(node); luaL_error(L,"[Input:Authority] Input Instances require Client execution");
+        }
+        GLInputAdoptOwner(L,node);
         wrap_node(L, node);
         gl_track_orphan(node);   // sin padre = lo libera el cierre (1.15)
         return 1;
