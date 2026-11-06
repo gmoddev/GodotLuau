@@ -3,6 +3,7 @@
 #include "gl_http_policy.h"
 #include "gl_uuid.h"
 #include "gl_remote_delivery.h"
+#include "gl_replication_index.h"
 #include "luau_stdlib.h"
 #include "gl_stackguard.h"
 #include <cstdio>
@@ -1156,6 +1157,46 @@ assert(not pcall(H.UrlEncode,H,123) and not pcall(H.UrlEncode,H,nil))
         Queue Overflow(Limits);
         Check(Overflow.Push(Message(2, Limits.PeerBytes)) == Result::Accepted && Overflow.Push(Message(2, 2)) == Result::PeerFull &&
             Overflow.GetTotals().Bytes == Limits.PeerBytes, "Byte arithmetic overflow bypassed admission");
+    });
+    Test("Replication spatial selection retains globals and enforces radius and cell bounds", [] {
+        GLReplication::Index Index;
+        Check(Index.Set({1, 101, 0, {0, 0, 0}, false, {}}) && Index.Set({2, 102, 0, {1000, 0, 0}, false, {}}) &&
+            Index.Set({3, 103, 0, {10000, 0, 0}, true, {}}), "Index setup rejected valid native identities");
+        auto Near = Index.Query({0, 0, 0}, 250);
+        Check(Near.Result == GLReplication::QueryResult::Status::Ready && Near.Desired == std::set<uint64_t>({1, 3}), "Spatial selection leaked distant objects or lost globals");
+        auto Far = Index.Query({1000, 0, 0}, 250);
+        Check(Far.Desired == std::set<uint64_t>({2, 3}), "Focus movement did not change the selected view");
+        Check(Index.Query({0, 0, 0}, 250, false).Desired == std::set<uint64_t>({3}), "Missing trusted focus selected spatial objects");
+        Check(Index.Query({0, 0, 0}, 512).Cells <= 125 && Index.Query({0, 0, 0}, 513).Result == GLReplication::QueryResult::Status::Invalid, "Query cell/radius bound bypassed");
+    });
+    Test("Replication dependency closure handles cycles and rejects incomplete visibility", [] {
+        GLReplication::Index Index;
+        Check(Index.Set({1, 101, 0, {}, true, {2}}) && Index.Set({2, 102, 0, {1000, 0, 0}, false, {1, 3}}), "Dependency setup failed");
+        auto Missing = Index.Query({}, 250);
+        Check(Missing.Result == GLReplication::QueryResult::Status::MissingDependency && Missing.Desired.empty(), "Missing dependency exposed a partial view");
+        Check(Index.Set({3, 103, 0, {5000, 0, 0}, false, {}}), "Dependency insertion failed");
+        auto Closed = Index.Query({}, 250);
+        Check(Closed.Result == GLReplication::QueryResult::Status::Ready && Closed.Desired == std::set<uint64_t>({1, 2, 3}), "Reference closure lost cyclic/distant dependencies");
+        Index.Remove(2);
+        Check(Index.Query({}, 250).Result == GLReplication::QueryResult::Status::MissingDependency, "Retired dependency remained selectable");
+    });
+    Test("Replication index invalid input preserves the previous committed projection", [] {
+        GLReplication::Index Index;
+        Check(Index.Set({1, 101, 0, {}, false, {}}), "Initial projection failed");
+        Check(!Index.Set({1, 999, 0, {NAN, 0, 0}, false, {}}) && Index.Get(1)->Object == 101, "Non-finite update changed native identity");
+        Check(!Index.Set({2, 102, 0, {1e13, 0, 0}, false, {}}) && !Index.Get(2), "Out-of-range coordinates entered the index");
+        std::vector<uint64_t> References(65, 1);
+        Check(!Index.Set({2, 102, 0, {}, true, References}) && Index.Size() == 1, "Reference fanout limit mutated the projection");
+    });
+    Test("Replication source and peer view ceilings reject overflow without partial results", [] {
+        GLReplication::Index Index;
+        for (uint64_t Id = 1; Id <= GLReplication::Index::MaximumObjects; ++Id)
+            Check(Index.Set({Id, Id + 100, 0, {}, Id <= GLReplication::Index::MaximumView, {}}), "Exact source bound rejected valid input");
+        Check(!Index.Set({GLReplication::Index::MaximumObjects + 1, 99999, 0, {}, false, {}}) && Index.Size() == GLReplication::Index::MaximumObjects, "Source bound mutated stored identities");
+        auto Exact = Index.Query({}, 250, false);
+        Check(Exact.Result == GLReplication::QueryResult::Status::Ready && Exact.Desired.size() == GLReplication::Index::MaximumView, "Exact global view bound failed");
+        auto Overflow = Index.Query({}, 250);
+        Check(Overflow.Result == GLReplication::QueryResult::Status::Limit && Overflow.Desired.empty(), "Oversized spatial view returned partial visibility");
     });
     std::printf("[Runtime:Test] %d passed, %d failed\n", Passed, Failed);
     return Failed == 0 ? 0 : 1;

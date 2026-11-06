@@ -1,0 +1,210 @@
+{
+  "Scope": "Selected DockerPC Windows Debug full-native ASan; not complete platform/native qualification",
+  "Archive": {
+    "File": "local-evidence-checkpoint5.zip",
+    "SHA256": "887ab8a28504d8c7e570f71ed8b19f9bbac97d87e957b50443eaeb60c9a10f78",
+    "Members": 1877,
+    "Bytes": 3077527
+  },
+  "SelectedGroups": [
+    {
+      "Record": "focused-v18-trial2/results.json",
+      "Group": "relevance",
+      "Source": {
+        "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "RelevanceFixtureSHA256": "c80be53a8acd4dc468784ab7148dc64343e9df324e222a7d3088ddf0a6eac2f8",
+      "ReplicationFixtureSHA256": "421487aacd1420cda2b2daed3775b9b3f6fae7608fbcdcab9fe0dc281cf2a74a",
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 6,
+      "UnexpectedReports": [],
+      "Seconds": 25.188000000081956
+    },
+    {
+      "Record": "focused-v18-trial2/results.json",
+      "Group": "replication",
+      "Source": {
+        "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "RelevanceFixtureSHA256": "c80be53a8acd4dc468784ab7148dc64343e9df324e222a7d3088ddf0a6eac2f8",
+      "ReplicationFixtureSHA256": "421487aacd1420cda2b2daed3775b9b3f6fae7608fbcdcab9fe0dc281cf2a74a",
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 2,
+      "UnexpectedReports": [],
+      "Seconds": 7.219000000040978
+    },
+    {
+      "Record": "focused-v18-trial2/results.json",
+      "Group": "functions",
+      "Source": {
+        "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "RelevanceFixtureSHA256": "c80be53a8acd4dc468784ab7148dc64343e9df324e222a7d3088ddf0a6eac2f8",
+      "ReplicationFixtureSHA256": "421487aacd1420cda2b2daed3775b9b3f6fae7608fbcdcab9fe0dc281cf2a74a",
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 6,
+      "UnexpectedReports": [],
+      "Seconds": 19.483999999705702
+    },
+    {
+      "Record": "focused-v18-trial2/results.json",
+      "Group": "characters",
+      "Source": {
+        "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "RelevanceFixtureSHA256": "c80be53a8acd4dc468784ab7148dc64343e9df324e222a7d3088ddf0a6eac2f8",
+      "ReplicationFixtureSHA256": "421487aacd1420cda2b2daed3775b9b3f6fae7608fbcdcab9fe0dc281cf2a74a",
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 20,
+      "UnexpectedReports": [],
+      "Seconds": 144.70300000021234
+    },
+    {
+      "Record": "focused-v18-trial2/results.json",
+      "Group": "animation",
+      "Source": {
+        "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "RelevanceFixtureSHA256": "c80be53a8acd4dc468784ab7148dc64343e9df324e222a7d3088ddf0a6eac2f8",
+      "ReplicationFixtureSHA256": "421487aacd1420cda2b2daed3775b9b3f6fae7608fbcdcab9fe0dc281cf2a74a",
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 10,
+      "UnexpectedReports": [],
+      "Seconds": 92.98400000017136
+    },
+    {
+      "Record": "focused-v18-limits3/results.json",
+      "Group": "relevance",
+      "Source": {
+        "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+        "Files": 94,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "RelevanceFixtureSHA256": "ae1c93acecd62334c24a79867ca0e90fb9a2e8673fef7436d5a8756b5f94c526",
+      "ReplicationFixtureSHA256": "421487aacd1420cda2b2daed3775b9b3f6fae7608fbcdcab9fe0dc281cf2a74a",
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 6,
+      "UnexpectedReports": [],
+      "Seconds": 24.70299999974668
+    }
+  ],
+  "NativeSource": {
+    "SHA256": "a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7",
+    "Files": 94,
+    "Newlines": "LF normalized"
+  },
+  "Products": {
+    "godot_luau.dll": "962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec",
+    "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+    "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+  },
+  "IndexCoreBodies": {
+    "Result": "PASS",
+    "PrototypeOnly": false,
+    "Scope": "Four exact new production-core test bodies against snapshot-v16 gl_replication_index.h; not the full core suite",
+    "Command": [
+      "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.EXE",
+      "/nologo",
+      "/std:c++17",
+      "/EHsc",
+      "/W4",
+      "/Od",
+      "/Zi",
+      "/fsanitize=address",
+      "C:\\Sandbox\\Codex\\Temp\\ProductionIndexTest.cpp",
+      "/Fe:C:\\Sandbox\\Codex\\Networking2\\policy-production-v16\\Policy.exe",
+      "/Fo:C:\\Sandbox\\Codex\\Networking2\\policy-production-v16\\Policy.obj",
+      "/Fd:C:\\Sandbox\\Codex\\Networking2\\policy-production-v16\\Policy.pdb"
+    ],
+    "CompilerSHA256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+    "Files": {
+      "gl_replication_index.h": "e88975c03dfed9aaa00420b9023c44348f741bcab21a244e0d712fef777e6ee8",
+      "ProductionIndexTest.cpp": "ffa29db62897d6ce298b42279ebe73ab603489a1597ece7512a820f147de4d68",
+      "Policy.exe": "35e72d5c2eaced4bf526833e08fcd91b3f4dd5379190dc632a5dc32ae30f2077",
+      "build.log": "c6c474ad1612c7af625c227e1011029066bd48b80c879ad4a8fd807fe666cc4a",
+      "run.log": "42a7a9dacf38b59b8a57dc4a8a26d5b08de63922be03f1f052f2d1f4256c238d"
+    }
+  },
+  "Limitations": [
+    "Full 85-case core suite not locally run; four new exact bodies are independently exercised.",
+    "Full hosted native/core/sanitizer/candidate gates at the projection revision pending.",
+    "GL-033 pressure replay fails on both new and qualified baseline products; no suppression.",
+    "Graphical behavior, 32-peer workload and general mixed-traffic scalability are not qualified."
+  ]
+}

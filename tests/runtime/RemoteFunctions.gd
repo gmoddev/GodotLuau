@@ -176,9 +176,10 @@ game:SetAttribute('BlockedReverseDone',true)
         var Attack: Dictionary = State().Requests[0]
         var EncodedHeader: Array = []
         for Value in Attack.Header: EncodedHeader.append(str(Value))
-        var AttackFile := FileAccess.open("res://function-attack.json", FileAccess.WRITE)
+        var AttackFile := FileAccess.open("res://function-attack.tmp", FileAccess.WRITE)
         AttackFile.store_string(JSON.stringify({"Peer": Attack.Peer, "Header": EncodedHeader}))
         AttackFile.close()
+        Check(DirAccess.rename_absolute(ProjectSettings.globalize_path("res://function-attack.tmp"), ProjectSettings.globalize_path("res://function-attack.json")) == OK, "complete attack metadata published before reader visibility")
         await Until(func(): return Marked("attacked-1") and Marked("attacked-2"), "both actual ENet peers submitted adversarial responses")
         await Until(func(): return Game.has_meta("BlockedReverseDone"), "wrong sender session and generation cannot settle an invocation")
         Mark("send-late")

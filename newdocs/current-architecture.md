@@ -4,7 +4,8 @@ GL-018's development branch qualifies the admitted matching headless sanitizer
 hosts and production extension at `46427d0`: Windows ASan and Linux ASan/LSan each
 pass 80 core cases and 110 native actors. See [closure and retained limits](gl018-closure.md).
 The derived engine binding-retirement correction does not establish stock-host
-unload safety, and the branch remains unmerged.
+unload safety. Main now preserves this historical branch through the combined
+[GL-018/GL-029 integration](gl018-gl029-main-integration.md).
 
 Main integrates GL-007 through normal merge `4d4694e8ea5f05120ded9b116bcd06a2c95e4ead`
 and Model-based Character V2 through `1c3176c0d9331dc1fa6849b98f8ed8e90e59c110`.
@@ -441,9 +442,33 @@ The development branch `foundation/networking-2` adds the
 finite request/handler deadlines, full-width correlation, existing native
 publication/session admission, exact serving-task cancellation and protected
 terminal completion. The [campaign journal](networking-foundation-2-work.md)
-separates executed development coverage, retained failures and pending platform
-qualification. This branch is unmerged; statements below about earlier main
+separates exact-revision qualification, retained failures and broader coverage
+limits. This branch is unmerged; statements below about earlier main
 integration remain historical scope, not qualification of this candidate.
+
+The same branch implements the opt-in [ADR-011 projection and batching
+contract](adr-011-peer-replication-relevance.md). The native catalog and spatial
+index feed bounded desired/planned/known/materialized peer views through the
+existing NetworkService tick and GL-029 queue/admission capability. Immutable
+reliable structural groups, cached property snapshots and explicit application
+ACKs are distinct from native transport ACKs. Runtime physics carries view
+generation/session identity; unanchored bodies remain global. This is a narrow
+runtime anchored-leaf-Part slice, disabled by default, with matching-build/setting
+requirements and explicit Remote-reference restrictions. At `436850a`, all four
+hosted workflows and targeted repeated 1/16/32-peer Release workloads verify;
+broader campaign coverage remains distinct. The journal records actual limits.
+GL-031 fixes static-parent late join; GL-032 adds the missing ObjectValue Instance
+getter/setter without broadening scalar conversion or reflection authority.
+The GL-034 implementation extracts the existing record validator into bounded private
+cache/index sweep turns and refreshes only affected published reparent closures.
+New peer selection waits for sweep completion while accepted immutable frames
+drain; native identity/visibility is revalidated before new admission. Sweep state
+retires with NetworkService reset. GL-034 closes with exact current
+[runtime](evidence/networking2-436850a-runtime-verification.json),
+[candidate](evidence/networking2-436850a-candidate-verification.json) and
+[Release](evidence/networking2-436850a-release-qualification.json) receipts.
+GL-039 records approximately seven-second structural convergence in the 32-peer
+burst workload; no general latency or 64-player guarantee is established.
 
 Main includes the qualified Phase 1 native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen

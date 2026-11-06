@@ -70,6 +70,26 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 ## Multiplayer authority
 
+- Opted-in structural replication follows [ADR-011](adr-011-peer-replication-relevance.md):
+  native server registrations and validated Character focus own selection.
+  Client metadata or camera coordinates cannot grant visibility or ownership.
+  Planned, native-accepted Known, and application-reported Materialized state
+  remain distinct and session/generation bound. Required dependency groups are
+  admitted together; accepted reparent barriers are never coalesced away.
+  Leave does not destroy canonical state. Runtime physics and public Remote
+  references must respect current materialization; ACKs do not prove an honest
+  client or manufacture an ownership decision. Explicit limits/timeout failure
+  retire exact state without silently dropping accepted reliable work.
+  Incremental source maintenance must not admit partial dependency groups or
+  overwrite newer accepted structural barriers. Retire its owned cursor/cache
+  work on service reset; bound turns and unresolved source-dependency waits.
+  ObjectValue targets are weak Node references: validate the engine Variant
+  before asking godot-cpp to convert its pointer or obtain an instance binding.
+  Expired targets read as nil through both native and Luau getters (GL-038).
+  Control ACKs describe the snapshot's captured revision. Do not label older
+  cached data with a newer live control version or let an immediate runtime
+  ownership RPC race the ordered structural ownership state.
+
 - Application RemoteEvent delivery configuration is native Server authority.
   Publication/readiness binds the current native transport session, endpoint
   generation, delivery carrier and local ObjectID; neither a payload path nor a

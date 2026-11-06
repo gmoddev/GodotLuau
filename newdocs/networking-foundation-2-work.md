@@ -1,5 +1,545 @@
 # Networking Foundation 2 campaign journal
 
+## GL-034/037 qualification complete within recorded profiles — 436850a
+
+GL-037 remains closed by its corrected fixture/actual native matrix. GL-034 now
+closes on this unmerged campaign: the bounded catalog source passes all four
+hosted workflows and current repeated Release 1/16/32-peer small/large workloads.
+The [Release receipt](evidence/networking2-436850a-release-qualification.json)
+independently checks 16 passing candidate configurations, twelve passing baseline
+configurations and three retained baseline large-world warmup failures. There
+are 392 actor runs in successful configurations, zero successful-case stderr
+files, zero candidate replication failures and no resource-guard/report failures.
+No comparison is invented where the baseline failed.
+
+Separate real ENet loss/reordering pairs pass at one peer/512 objects and
+16 peers/64 objects, with one impaired peer alongside 15 healthy peers in the
+latter. The [measurement record](networking2-benchmarks.md#release-qualification--436850a)
+preserves frame, CPU, wire, convergence and memory-observation limits. GL-039
+records the measured 6.58–6.96-second structural convergence at 32 peers; it is
+not hidden by the frame-cost closure. Broader long-duration/graphical/allocation
+coverage remains distinct from this targeted qualification.
+
+The worker reservation starts 11:08:48 UTC with a hard 11:28:48 bound. Current
+Release products are verified/staged/sealed before execution. Window
+`2b6ef821-205c-4989-9f68-f154b82cb1de` retains failed baseline cases and retires
+all Jobs. Fresh sealed follow-up
+`b7cdd6fc-5325-4bec-9de0-c0525c98a591` passes the supported-world fairness pair
+and skips its unnecessary candidate-only repeat. Final census at 11:24:10 finds
+zero owned processes/listeners; archive/transfers exit before checked release at
+11:26:11. Raw archive SHA-256 is
+`886d2c136c1d2998a7a4adc8684c80879a99a75bfba8854b26e860bc2018dec3`,
+19,469 members with ZIP integrity verified. Earlier GL-038 ASan failure and the
+subsequent current v31 proof are retained in the same archive.
+
+This final checkpoint changes documentation/evidence only; qualified runtime
+remains `436850a` / native fingerprint `770c9ff5...`. Main, dependency pins,
+admitted host patch and release/updater controls remain unchanged. The campaign
+stays unmerged. No further worker job or broad refactor is queued.
+
+## Complete current CI and package verification — 436850a
+
+The [candidate workflow](https://github.com/gmoddev/GodotLuau/actions/runs/41807864382)
+passes all gates. Independent frozen-source checks establish four Windows/Linux
+Debug/Release profiles with 85 core cases and 131 native actors each, required
+log/product/harness hashes, actual ownership/RPC admission proof, 4,000 unique
+UUID samples per profile, Linux core ASan/LSan, and both 133-member packages with
+two extracted startup actors each. Nonpublishing acceptance SHA-256 is
+`48833621d1db5af55e2e7ba49c94840f1ff805c507b238519b01e106e3237af2`;
+the [receipt](evidence/networking2-436850a-candidate-verification.json) retains the
+exact profile/host/extension/companion/package hashes. Together with the current
+runtime receipt below, all four hosted workflows are independently qualified.
+
+The current Windows Release qualification adapter matches the existing admitted
+Release host's compiler hash. Its immutable benchmark input archive SHA-256 is
+`266901c2e85d49a52eed765f46015feb66457112b1bfd0a92ca05af3848ee6bc`.
+The larger-peer worker window is queued after other chats' checked handoffs;
+no worker execution or transfer has started. GL-034 stays open for those actual
+performance/admission trials. Releases/updater remain disabled and main unchanged.
+
+## Release qualification preparation — 2026-11-04
+
+The current `436850a` candidate's Linux Debug and Release profiles pass, as does
+its Linux core sanitizer; Windows Debug/Release remain running. Core, ordinary
+native and full-native sanitizer matrices already independently verify below.
+Documentation checkpoint `61b9ee5` preserves that evidence without changing the
+runtime or triggering new native builds. Remote main remains `9f52b27`.
+
+Prepare a separate local fixed-profile coordinator installation for the exact
+current CI Release adapter, baseline `9f52b27`, and the existing admitted Release
+host/compiler. Stage only after independent artifact verification. Six profiles
+cover repeated paired 1/16/32-peer, 64/512-object workloads; separate profiles can
+retain a current candidate result when an older baseline fails. The finite outer
+window is 1,100 seconds with checked task-owned Job retirement. No worker recipe
+has executed during this preparation or other chats' reserved timing windows.
+
+Two separate impaired-link profiles use one task-owned UDP proxy with a fixed
+every-17th-datagram loss pattern and 40-ms delay plus 0/35/70-ms jitter. Other
+clients remain direct, and production assertions/admission/settings are unchanged.
+A bounded socket-only preparation check passes with 86 echoes, ten intentional
+drops, 114 reordered forwards, no overflow and checked shutdown. This is helper
+evidence, not real ENet qualification. Current larger-peer, impaired-link and
+package acceptance remain pending; no performance or scalability closure follows
+from preparation.
+
+## Current native matrix verified — 436850a
+
+All current [core](https://github.com/gmoddev/GodotLuau/actions/runs/41807722427),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41807722519), and
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41807859581)
+workflows pass Windows/Linux. Independent frozen-source verification establishes
+85 core cases and 131 native actors per profile, 23 Windows/24 Linux sanitizer
+checks, and 1,161 native plus three core instrumented units per platform.
+Required captured logs and source/harness/product/host/compiler identities verify.
+The [receipt](evidence/networking2-436850a-runtime-verification.json) separately
+records two absent ephemeral GL-003 mailbox hashes. No unexpected sanitizer
+finding occurs. GL-038 closes at this exact unmerged source; GL-037 remains closed.
+
+The [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41807864382)
+four-profile/package matrix still runs. GL-034's one-peer frame correction is
+measured, but larger-peer Release acceptance remains pending. The branch stays
+unmerged with distribution disabled. No further runtime changes are justified
+by the established current acceptance facts unless qualification exposes a new
+failure.
+
+## v31 worker qualification — 436850a
+
+The explicitly released five-minute worker window completes successfully: two-job
+build in 25.25 s, all seven strengthened relevance actors, then all eight paired
+one-peer 64/512-object ASan configurations. Native fingerprint is `770c9ff5...`;
+DLL SHA-256 is `47cf79e9faa6fd7eb90479ec1a91dee2ea4932ccacc02533297ad4aee792ea6d`.
+Both fresh coordinator profiles exit zero without timeout/output errors; outer
+owned Jobs are checked empty and window
+`4421afe7-792d-4ed6-ac9a-584e8a73e0f6` retires before release to Studio at 09:46 UTC.
+No additional worker job is queued.
+
+At 512 objects, fresh candidate frame p95 is 9.61/9.98 ms versus main 9.34/9.45 ms,
+with no replication failure. Maximum sweep turn is 2.706/2.813 ms; final client
+structural convergence is 711.104/84.991 ms. Preserve the convergence tradeoff
+and changed worker background context in the
+[measurement record](networking2-benchmarks.md#bounded-sweep-measurements--436850a)
+and [receipt](evidence/networking2-436850a-asandebug-benchmark.json). This resolves
+the reproduced one-peer frame-cost symptom, but GL-034 remains open pending
+current complete matrix and larger-world admission/Release qualification.
+
+## Bounded catalog first execution — GL-038
+
+Both `712ea47` full-native sanitizer jobs now pass and independently verify:
+23 Windows/24 Linux checks, 85 core cases and 131 native actors per platform,
+1,161 native plus three core instrumented units. All required captured logs and
+source/harness/product/host identities verify; the two absent ephemeral GL-003
+mailbox hashes are recorded in the
+[receipt](evidence/networking2-712ea47-sanitizer-verification.json). No unexpected
+report occurs in this corrected matrix. Ordinary Linux's physical-owner failure
+remains separate evidence, so the campaign is not qualified by this pass alone.
+
+The subsequent source-control correction is `436850aca89e87e6ee8bc2e520740318ba0be27c`,
+snapshot v31 / native fingerprint `770c9ff5...`. Fresh
+[core](https://github.com/gmoddev/GodotLuau/actions/runs/41807722427),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41807722519),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41807859581)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41807864382)
+workflows are running/queued. The next worker reservation is explicitly retained
+after Studio Recovery04 and Steward's bounded tail; v31 preparation is staged,
+with no uncoordinated execution. Other chats report retiring stale SSH child
+processes while preserving service/configuration and live sessions; new paired
+measurements must record their own fresh resource context rather than treating
+old absolute timings as a controlled before/after across that environment change.
+
+At `712ea47`, Linux ordinary native qualification passes the expired-value and
+new service-replacement assertions, but fails the authorized client-physics
+positive case. Its complete Linux full-native sanitizer job subsequently reports
+success; independent artifact verification is pending. Preserve both results:
+the ordinary failure is not erased by the sanitizer pass.
+
+Source review identifies an ordering/acknowledgment discrepancy: runtime
+`net_set_owner` sends an immediate legacy RPC while cached structural snapshots
+also carry ownership, and queue admission labels a snapshot using the live
+control map. A snapshot captured before a later control write can therefore be
+tagged with the newer revision. Capture the control version with the source
+record and route opted-in runtime ownership through the ordered snapshot.
+Keep native immediate revocation and the existing ACK/readiness check. The
+fixture now waits for the exact requested owner, rather than any nonzero owner,
+and uses the established functional ENet unthrottled profile, retaining all
+wrong-generation/owner assertions. Production transport defaults stay unchanged.
+The precise cause of the observed ordinary physics failure is not independently
+attributed yet; the source discrepancy and stricter precondition are verified.
+
+The [failure receipt](evidence/networking2-6b6ee8b-objectvalue-failure.json)
+retains source/product/fixture identities, the actual report hash and checked
+coordinator disposition. The focused getter correction is published as
+`712ea478a6d503f85655cc20219de21c84a7e4c2`; its
+[core](https://github.com/gmoddev/GodotLuau/actions/runs/41802226872) passes and
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41802226887),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41802340597)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41802343918)
+workflows are running. The concurrency queue supersedes the unstarted `6b6ee8b`
+candidate with this corrected source; the failed source's ordinary/sanitizer
+runs and local failure remain retained.
+
+The earlier `bd18580` candidate now completes and independently verifies all
+four 85-core/131-actor profiles, both 133-member extracted packages and startup
+actors, with acceptance hash
+`a271d89c8f99dc1f503dc3033d4c24e38538097fa61cf4762e1b55526a8000cf`
+([receipt](evidence/networking2-bd18580-candidate-verification.json)). All four
+workflows are qualified at that exact earlier source. This does not qualify the
+new catalog/getter changes or close GL-034/038.
+
+Candidate `6b6ee8b93caa88898b80875fc5929c5e6899eb2c` compiles on the existing
+worker MSVC Debug ASan toolchain in 35.656 seconds with two jobs; DLL SHA-256 is
+`8b9373158642305af2457296f69556adc4a550e13a51bacb23bff95e2c474751`.
+Its first strengthened relevance execution fails after the forced unfinished
+sweep mutation and produces an actual ASan heap-use-after-free report in the
+ObjectValue target conversion. Preserve report SHA-256
+`8e56bc427561db8776b75cbfb319858b869cf6d7244168ec290e449b299024e5`.
+GL-038 records the stack/source attribution. The shared value getter now validates
+the engine Variant before godot-cpp pointer conversion, and Luau value pushing
+uses that getter. Native/Luau nil assertions are added; they are not yet run.
+
+The new coordinator profile exits 1 without timeout/output error and the outer
+owned Job is checked empty. No benchmark profile starts. The worker is released
+early to the next chat, and there is no uncoordinated retry. Fresh source
+[core CI](https://github.com/gmoddev/GodotLuau/actions/runs/41800928567) passes;
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41800928440),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41801098115)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41801102051)
+qualification at the failing source remain running/queued and cannot qualify
+the subsequent lifetime correction. GL-034/038 remain open. The earlier GL-037
+closure applies to its independently verified `bd18580` checkpoint.
+
+## Verified resumed checkpoint — bd18580
+
+The narrow patch is published as `bd18580d65d29a60fa90a2fc53f2fccfec0febea`.
+Fresh hosted [core](https://github.com/gmoddev/GodotLuau/actions/runs/41789098795),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/41789098680), and
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41789196521)
+workflows all pass Windows/Linux. Independent frozen-revision verification checks
+85 core cases and 131 native actors per profile; full-native controls require
+23 Windows/24 Linux checks, with 1,161 instrumented native translation units and
+three core units per platform. Required logs, actual harnesses, host/compiler,
+products and instrumentation hashes verify; two missing ephemeral GL-003
+mailboxes are listed explicitly. GL-037 and GL-035 close on this unmerged branch
+with the [runtime receipt](evidence/networking2-bd18580-runtime-verification.json).
+
+The earlier `cbd91d0` [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41781834809)
+also completes: all four 85-core/131-actor profiles, Linux core sanitizer, both
+extracted 133-member packages and startup processes verify independently
+([receipt](evidence/networking2-cbd91d0-candidate-verification.json)). The newer
+`6ae1b9` candidate completes as well, but its separate receipt is pending.
+The exact `bd18580` [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41789199528)
+is now running; it is not yet accepted.
+
+All eight new paired ASan benchmark configurations pass, but 512-object server
+frame p95 is still 98–101 ms versus baseline 14–16 ms, with full catalog refresh
+dominant. See the [measurements](networking2-benchmarks.md#focused-refresh-correction--bd18580).
+GL-034 remains open. Rechecking the original campaign attachment confirms explicit
+bounded-refactor authority; the approval question was unnecessary. A bounded
+catalog candidate is now implemented locally and awaits compilation/execution.
+It reuses the private cache/index across 64-item/two-ms cooperative sweep turns,
+drains accepted immutable frames while withholding new incomplete selection, and
+refreshes only a published barrier's bounded dependency closure. The expanded
+production relevance fixture covers mutation/reference-target destruction after
+the sweep cursor passes, same-turn reparent ordering, and server service
+replacement with unfinished work. These changes are not yet qualified.
+
+Following the user's cross-chat worker coordination, prepare a project-local
+adapter pinned to coordinator `cf1628de...`, three fixed numeric profiles, hashed
+inputs, fresh UUIDs, loopback bootstrap, bounded output/deadlines, and checked
+owned Job cleanup. Its static schema preparation passes; no endpoint or recipe
+ran during preparation. After the coordinated release, both fresh profiles pass
+(seven relevance and 34 Character/legacy/Function actors), with no timeout or
+output errors and checked empty owned Jobs. Window
+`39a6360a-0dda-4070-b681-bb93569a57ba` retires successfully; the worker is released
+to Steward, with Studio queued afterward. The new catalog candidate has not run.
+The installed input lock seals 176 files; four static schema/denial tests pass.
+After Studio's checked release, a second five-minute window starts at 08:36 UTC.
+Final review produces snapshot `v29`, native fingerprint
+`34e4ff3d1e4d6bfe97ed01bdc16f1e1da47c12030591c67a25fa40f472f15d97`;
+its source archive SHA-256 is
+`29f75ce7f93722da5f72cda0a90b53e22cac3174244a72a200aa7476ce806774`.
+Intermediate v27/v28 snapshots were not executed. The candidate also verifies
+live source identity/visibility before new frame admission and catches barrier
+allocation failure. Unchanged dependency traversal stops only at prerequisites
+already accepted by every affected view, avoiding an accidental new ancestry
+limit or treating an unfinished source record as accepted proof. The build and
+new fixture/measurement runs must establish the result.
+Intermittent SSH pre-authentication failures are retained, with bounded retries;
+no machine settings, services, tooling, coordinator wire format or other
+repository files change. Main, release publication and updater admission remain
+unchanged and disabled.
+
+Raw archive 9 retains 14,806 members / 50,931,527 bytes, SHA-256
+`4402b57d182ea7fb30bfc2ce8db918d60ebe286fe1733542c9d496c47467e69a`.
+It includes the 41 focused v26 actors, eight paired ASan configurations and
+coordinator preparation/inputs. The later coordinator execution needs its next
+archive. Actual Movement ascent is 5.0999998 units before the strengthened
+post-sync rejection probe; required actor logs pass.
+
+## Resumed qualification — 2026-11-04
+
+At resume, `6ae1b9` core CI passes; native/full-native sanitizer qualification
+is running and its candidate is queued behind `cbd91d0`. The latter candidate
+has passed Linux Debug/Release and Windows Debug; Windows Release is running.
+These partial results are not complete acceptance.
+
+Retained Linux legacy stderr identifies `RemoteFunction not ready`: the fixture
+waited only for Event publication before invoking the separately published
+Function. Require both identities with an explicit wall-clock deadline. Character
+functional profiles previously disabled ENet unreliable throttling only in 2D;
+apply the same carrier profile in 3D, retaining the impaired latency proxy. Retry
+the final positive movement sample until the observer comparison completes.
+The airborne negative test must first approach the ascent ceiling, then request
+more than its remaining headroom; the previous 0.2-unit proposal could legally
+fit below that ceiling. Keep the exact no-movement comparison and strengthen
+the measured precondition. These fixture corrections need fresh execution.
+
+GL-034 source inspection finds three narrow costs: unpublished reparent edits
+unnecessarily rebuild the full catalog, refresh cadence starts before a costly
+refresh, and that refresh consumes the peer submission budget. Skip rebuilding
+only when no accepted peer view contains the identity, measure the next refresh
+interval from completion, and start the unchanged 4-ms/eight-peer submission
+budget after catalog maintenance. Published reparent barriers, admission bounds
+and native authority remain intact. Measurements and full qualification follow;
+GL-034/037 stay open until their acceptance evidence exists.
+
+The first worker run of this patch passes 41 Windows Debug ASan actors: 20
+Character (143.375 s), eight legacy regression (57.937 s), seven relevance
+(28.765 s) and six Functions (18.797 s), with no unexpected ASan report. Native
+fingerprint is `554af399b8ea76a9934c9d3b7d1bc3d398b9be3099f103f6ff2bb81226d8a728`;
+DLL SHA-256 is `851e48e7b0566e0b0a0c60d1bdfa5f3de1cd6bfaf9bfdd65b30643b1a6fadc90`.
+Source snapshot `v26` SHA-256 is
+`311557ff04bb0ddc89d7a1969eaab32e59669c448759f32428f0e4132d183859`.
+Actual harness hashes and per-actor logs are retained in the worker's unique
+`focused-v26-first` output. Paired 64/512-object ASan measurements are running.
+This focused result is not a substitute for hosted Windows/Linux qualification.
+
+## Campaign checkpoint — 2026-11-04
+
+Final evidence follow-up: Windows full-native ASan at `cbd91d0` completes all
+23 checks, 85 core cases and 131 native actors. Independent verification checks
+636 files, 383 captured native logs, source/harness/product identities and
+1,161 instrumented native translation units plus three core units. One ephemeral
+GL-003 mailbox is absent, with its expected hash recorded. The
+[Windows receipt](evidence/networking2-cbd91d0-windows-sanitizer-verification.json)
+does not erase the Linux failure or establish complete cross-platform acceptance.
+
+Fixture/evidence checkpoint `6ae1b9784e881c2c448f20b86ee19df425e41ac0`
+preserves the same native fingerprint and passes fresh
+[core CI](https://github.com/gmoddev/GodotLuau/actions/runs/41785670768).
+Fresh [native](https://github.com/gmoddev/GodotLuau/actions/runs/41785670839),
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41785760383)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41785763061)
+qualification remain running/queued. Final documentation validation found the
+older Phase 1 receipt contained a truncated tool rendering. Regenerate its
+compact valid JSON directly from the original hashed archive, retaining all eight
+measurements, six exhaustion reports and nonempty stderr; measurements do not
+change. All versioned JSON and local documentation links are checked afterward.
+
+| Phase | Classification | Established scope |
+| --- | --- | --- |
+| 1 — GL-030 | QUALIFIED | Exact `2296c96` four-workflow qualification; finite terminal outcomes and real ENet lifecycle/adversarial checks |
+| 2 — Relevance | PARTIALLY QUALIFIED | Default-disabled anchored-leaf slice; cross-platform Debug gates and scoped native evidence; broader lifecycle and current complete matrix outstanding |
+| 3 — Structural admission | PARTIALLY QUALIFIED | Bounded batching/coalescing, dependency closure, exact accepted state, WouldBlock/healthy-peer and cancellation checks; larger mixed-load admission remains limited |
+| 4 — Scalability | PARTIALLY QUALIFIED | Repeated 1/16/32-peer small-world Release comparisons and isolated large-world attempts; large-world failures, loss/fairness/memory-rate gaps remain |
+
+Runtime checkpoint `cbd91d08c4384348b4b29cf91dc461fff109e120`, native fingerprint
+`c702c86c...`, passes [core](https://github.com/gmoddev/GodotLuau/actions/runs/41781831570)
+(85 cases each) and [ordinary native](https://github.com/gmoddev/GodotLuau/actions/runs/41781831679)
+(131 actors each) on Windows/Linux Debug. Independent frozen-source verification
+checks required logs/harness/product hashes, host proofs, the new root guard and
+4,000 UUIDs per platform in the [receipt](evidence/networking2-cbd91d0-ordinary-verification.json).
+Its [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41781834809)
+remains in progress. Its [full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/41781831880)
+Linux profile fails legacy Dedicated barriers; Windows was still running at this
+checkpoint. Do not equate ordinary-native success with complete qualification.
+GL-037 records this and the preceding failed matrix, without suppressing checks.
+
+The [local receipt](evidence/networking2-scopeguard-checkpoint.json) records 43
+selected native actors at this source, six repeated Function actors after the
+verified JSON publication-race fix, and the corrected two-product Debug ASan
+benchmark smoke. No unexpected ASan report occurs in these selected runs.
+Atomic Function fixture hash is `4ba5d63b...`. The temporary-file publication
+change preserves every adversarial assertion and avoids the actual empty-JSON
+reader failure. Character/legacy follow-up attribution remains open.
+
+The original relevance checkpoint additionally completes candidate workflow
+`41774926042`: all four 85-core/130-actor profiles and both extracted packages
+verify independently, with acceptance hash
+`a33bfc47e9dcec5fc0e170427fe63f079ee5f32de615e254a621670c42bb1f19`
+([receipt](evidence/networking2-9884bf7-candidate-verification.json)). This is
+historical `9884bf7`, not current-source acceptance. The queued `0428413`
+candidate was superseded by the newer request and cancelled without profiles.
+
+The [Release measurements](networking2-benchmarks.md#release-follow-up) preserve
+18 measured passing configurations, two passing smoke configurations, one
+failed setup smoke and three large-world failures. They use immutable main and
+`532650f` products; the newer native correction is not silently substituted.
+GL-036 fixes Release-elided benchmark setup/checks. A local compiler lookup finds
+a different executable hash from the CI toolchain; no compiler installation,
+mixed-toolchain comparison or fabricated current Release result is performed.
+
+Raw archive 8 contains 13,508 members / 46,843,412 bytes, SHA-256
+`f30e914a718451c4202563d62478724817562eff8c5533dee935dd4c61db1d3f`.
+It retains baseline root removal, corrected actor logs, failed and successful
+benchmarks, exact fixtures/helpers, worker host admission and product identities.
+
+**Integration recommendation:** retain the experimental opt-in branch unmerged.
+Finish GL-037 attribution/current complete qualification, GL-034 larger-world
+cost/admission work, server service replacement and impaired-link/fairness,
+reconnect-storm, allocation/retained-memory and graphical evidence before wider
+adoption. Main stays `9f52b27`; all commits are retained, dependency/host patches
+are unchanged, releases and updater distribution remain disabled.
+
+## Empty-catalog authority follow-up — GL-035
+
+A separate actual listen-host LocalScript probe reproduces removal of the shared
+scene through `game:Destroy()` before any source records or Character authority
+exist. Snapshot `v22` exits with the two required preservation/completion checks
+failed and no ASan report. Original fixture hash is `34fb0067...`; baseline
+stdout hash is `5f298184...`. Source trace shows registered-object ancestors are
+protected, while scope roots themselves were checked only by exact identity.
+Extend that same native boundary to their live ancestors for structural writes.
+Promote the reproduction to the required native suite, retaining the empty
+precondition and positive callback-completion assertion; the matrix now requires
+131 actors. Snapshot `v23`, fingerprint
+`c702c86c162bc4c9f655052fbcefb4f99a5460c1a7ea22d87724022bbe065c85`,
+is under qualification. Sixteen candidate-policy tests pass with the stricter
+131-actor requirement. No main or distribution activation is performed.
+
+The corrected `v23` passes all seven relevance actors, including the promoted
+empty-root test, in 28.97 s, and six Function actors in 18.69 s, without an
+unexpected ASan report. DLL SHA-256 is
+`f9f171dbc3805c28fb1ae9b07c2d1eac5108089aca50a1ba5af07159f31e3008`.
+Twelve retention-policy tests also pass. Character/animation and fresh complete
+platform gates remain required; GL-035 is not closed from these selected checks.
+
+The [refresh checkpoint](evidence/networking2-refresh-checkpoint.json) preserves
+44 selected final-refresh actors and four supplemental incompatible-mode actors,
+all passing. Both mismatch directions terminate without materializing a replica.
+They do not replace complete cross-platform qualification. Raw archive 7 has
+10,066 members / 31,288,516 bytes, SHA-256
+`4ddd0da2763babde443b09786b21cca814370658506cb47ea8acd4b81dc2a7b6`.
+
+## Targeted refresh correction
+
+Stage probe `v20` records 81.21 s total refresh time, with 0.79 s encoding,
+5.49 s index work, 11.33 s metadata and 16.55 s admitted-record visibility
+checks. Excluded components are outside those stage subtotals; all work remains
+inside total refresh timing. Only 585 snapshots rebuild across 256 refreshes,
+so wholesale re-encoding is not the measured bottleneck.
+
+The bounded correction excludes Part-owned geometry before visibility traversal,
+verifies the three captured scope roots once per refresh, and checks the direct
+child's own server-only exclusions rather than repeatedly traversing the same
+verified ancestry. Deeper objects retain the existing full visibility check.
+Reuse the resolved parent and Part pose origin. No dirty-only source cache,
+new scheduler, authority grant or structural ordering change is introduced.
+
+Snapshot `v21` passes all six relevance actors, including a new direct-root and
+descendant server-only-name exclusion check; fixture hash is
+`7ebfa5ec995f6649f7768923646813d10670f8293335ffa2c8fee31cd5f2f295`.
+The one-peer 512-object probe passes both products: candidate refresh total is
+23.26 s / 280 calls (maximum 149.7 ms), versus the preceding probe's 81.21 s /
+256 calls. Candidate whole-server user CPU is 40.80 s and frame p95 148.2 ms;
+paired main is 24.80 s and 11.8 ms. These are diagnostic probes with changing
+worker background load, not repeated general performance qualification. GL-034
+remains open. The earlier write-boundary timing experiment is removed from the
+final correction; final snapshot `v22` requires its own tests and hosted gates.
+
+Final native fingerprint
+`738a60cf761be0b691f67d689cb2016cf9260af5f68282f66a3e192f206eccbc`
+builds on DockerPC and passes the six-actor relevance fixture in 23.75 s, with
+the exact committed fixture and no unexpected ASan report. DLL SHA-256 is
+`53a1f38f7c986b7aea7580f065f2305de18a768aa2db2a4ee57dbb78bf2beeb9`.
+Legacy replication, Function, Character and animation follow-ups are running;
+fresh hosted qualification is required for this source change.
+
+The exact-main baseline candidate replay `41773880784` is rejected because Linux
+Release's Dedicated observer fails orientation/configuration/correction and
+replacement checks. Captured `characters.log` SHA-256 is
+`213f6c7b099b57797528e7905d199ba0f0cb7dc72ceef50fd34c500ff46f086f`.
+This is retained baseline counterevidence, not a new candidate regression.
+Windows Release at that same run passes and is independently strict-rechecked
+against the frozen main worktree for a possible Windows-only Release comparison.
+Do not describe the whole baseline candidate as qualified.
+
+## Platform checkpoint completed at `532650f`
+
+All four hosted workflows finish successfully: [core](https://github.com/gmoddev/GodotLuau/actions/runs/41771508468),
+[ordinary native](https://github.com/gmoddev/GodotLuau/actions/runs/41771508432),
+[full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/41771578913)
+and [candidate](https://github.com/gmoddev/GodotLuau/actions/runs/41771581733).
+Independent frozen-revision verification establishes 85 core cases and 130 native
+actors per Windows/Linux Debug/Release candidate profile, both sanitizer profiles
+and their detection controls, matching source/product/host/log/harness hashes,
+4,000 rehashed unique UUIDs per candidate profile, and both extracted 133-member
+packages with Debug/Release companion startup. Nonpublishing acceptance hash is
+`30aed5118e66f0ef5d8d6fdc339adf89d7278f61b8ceb987b25a5ae823dc7412`.
+The [runtime](evidence/networking2-532650f-runtime-verification.json) and
+[candidate](evidence/networking2-532650f-candidate-verification.json) receipts
+preserve exact identities. One ephemeral GL-003 mailbox per sanitizer archive
+is absent; required captured logs are checked. GL-031 and GL-032 close within
+their exercised scope. GL-033 and GL-034 remain open, and the broader Phase 2–4
+qualification remains partial. No main merge or publication follows this gate.
+
+## Mixed-workload regression — investigation, not qualification
+
+The complete ordinary core/native and full-native sanitizer workflows for
+`532650f` now pass on Windows and Linux. Downloaded artifacts independently
+verify 85 core cases, 130 native actors, matching source/products and admitted
+hosts ([receipt](evidence/networking2-532650f-runtime-verification.json)).
+Candidate Windows Release remains running; package acceptance is pending.
+
+The two paired one-peer mixed-world ASan trials expose a substantial performance
+regression, tracked as GL-034. At 512 objects the candidate server frame p95 is
+414.5/426.2 ms versus main's 12.2/12.9 ms; Fire/echo RTT p95 is approximately
+1.44 s versus 37.4/41.1 ms. Both products satisfy the workload's functional
+assertions. Fewer candidate replicas do not establish an optimization when CPU,
+frame time and wire traffic worsen. Preserve the negative result. Raw archive 6
+contains 8,368 members / 26,021,928 bytes, SHA-256
+`f183c5a502d82e6dea71ea4bff4c8ecd9ab5000f2785b9d8c62de2aa32ca00e3`.
+The [versioned mixed receipt](evidence/networking2-mixed-asandebug.json) records
+all eight passing and sixteen resource-blocked configurations separately.
+
+A focused probe moves the existing Character-authority denial before the new
+world projection scan in `CanWriteCharacter`; the same denial predicates remain
+required. Read-only cumulative/max timings separately observe this boundary and
+catalog refresh. Snapshot `v19`, fingerprint
+`d68590d1e22aee4358d7b0b88aa5360dbeb11d09435b4fd44b9cd377ac56edf9`,
+builds on DockerPC Windows Debug ASan. It is an investigation product, not a
+qualified replacement for `532650f`. Its measured outcome and any further fix
+require their own evidence. No main merge or publication is authorized.
+
+The `v19` probe reproduces the cost: 254 catalog refreshes total 85.26 s of
+wall time, maximum 836.5 ms, versus 91.69 s of whole-server user CPU. The shared
+Client guard has zero observed calls in this dedicated-server workload. Revert
+the unhelpful denial-order experiment; retain focused stage timings to isolate
+refresh work. This timing attribution does not establish a fix or a comparable
+before/after speedup. Other worker builds are active during follow-up probes.
+
+## Hosted checkpoint and mixed measurement follow-up
+
+Implementation checkpoint `532650f926723b588b04559ec242d8fa20e07239` is pushed;
+main remains `9f52b273cf977dce9c0541ff718cfb44dfb54c31`. Fresh core workflow
+`41771508468` passes 85 cases on Windows/Linux; candidate `41771581733` also
+passes Linux core ASan/LSan. Linux ordinary native `41771508432` and Linux
+full-native sanitizer `41771578913` pass their complete exercised matrices;
+other profiles were still running at this checkpoint. Do not infer their
+outcomes from the successful Linux records. Baseline nonpublishing candidate
+`41773880784` is dispatched against exact main to obtain comparable Release
+products; no main source is modified.
+
+The [mixed benchmark method](networking2-benchmarks.md) adds actual worlds,
+Character/animation, Functions, property/structural and relevance churn.
+One-peer 64/512-world comparisons pass both products in two interleaved trials
+of 64 samples each. All sixteen/32-peer ASan configurations are explicitly
+resource-blocked before launch, with about 9 GB available commit. The first
+smoke attempt correctly rejected a TYPE_VALUE animation track; switch the
+fixture to the existing approved TYPE_SCALE_3D presentation contract. Do not
+weaken GL-007 animation policy. Exporting a qualified, nonpublishing Release host
+provides a lighter experiment profile without a dependency/host patch or machine
+configuration change. Full campaign qualification remains incomplete.
+
 ## Qualified Phase 1 checkpoint — 2026-11-04 UTC
 
 GL-030 is QUALIFIED at `2296c966937223994a94cc2f15af29e9f829557b`, native
@@ -26,6 +566,69 @@ preserved, rather than asserted verified. Required captured actor stdout/stderr,
 case evidence and sanitizer reports/controls remain independently checked.
 
 ## Phase 2/3 implementation checkpoint — qualification in progress
+
+The expanded six-actor Listen/Dedicated relevance fixture now passes Windows
+Debug ASan in 25.188 seconds on snapshot `v18`, native fingerprint
+`a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7`,
+DLL `962ac28821ad2ecd38adccb1cb7b4e204980db95f6303d3249d4651f0ce360ec`.
+Actual fixture overlay hash is
+`c80be53a8acd4dc468784ab7148dc64343e9df324e222a7d3088ddf0a6eac2f8`.
+It exercises source/replica identity, spatial enter/leave/reentry, independent
+peer state, wrong-session/future ACK rejection, shared Client mutation denial,
+64-write coalescing, deterministic native WouldBlock and healthy-peer progress,
+both reparent barriers, reference closure/clearing/cycles, sticky global pin,
+generation-tagged server/owned physics, forged physics rejection by effects,
+same-name replacement, reconnect and cancellation inside a property callback.
+No unexpected ASan report occurs. The full platform matrix remains pending.
+
+At the same native source, the selected follow-up passes 20 Character actors
+(144.703 s), ten animation actors (92.984 s), six Function actors (19.484 s),
+and the two legacy replication actors (7.219 s). A further six-actor run adds
+explicit 9,000-byte snapshot overflow and verifies terminal rejection without
+partial materialization or retained queue ownership (24.703 s). Latest relevance
+fixture hash is `ae1c93acecd62334c24a79867ca0e90fb9a2e8673fef7436d5a8756b5f94c526`.
+The [checkpoint receipt](evidence/networking2-projection-checkpoint.json) records
+50 selected process executions, including the six repeated relevance actors;
+this is not a 130-actor complete native gate. Raw checkpoint 5 contains 1,877
+members, 3,077,527 bytes, SHA-256
+`887ab8a28504d8c7e570f71ed8b19f9bbac97d87e957b50443eaeb60c9a10f78`.
+The [Phase 1 benchmark receipt](evidence/networking2-phase1-benchmark.json)
+preserves all eight completed paired configurations, raw summary metrics,
+six allocator/mapping reports and nonempty teardown stderr. It compares GL-030
+with exact main, not the later relevance implementation.
+
+Four new exact production-core index test bodies separately pass MSVC ASan:
+spatial/global queries, cyclic/missing dependency closure, invalid-input
+nonmutation and 16,384-source/4,096-view boundaries. This focused execution is
+not the complete core suite. Required hosted gates increase from 81 to 85 core
+cases and from 122 to 130 native actors; existing cases are retained.
+
+Development failures are preserved. New-frame queue age initially subtracted a
+later enqueue timestamp from the tick's earlier unsigned timestamp; saturating
+comparison fixes immediate false expiry. Same-name replacement initially
+created before retirement; canonical retirement and receiver teardown now
+precede replacement attachment. Listen Client attribute protection initially
+treated Game attributes as subtree mutations and suppressed the fixture marker;
+protect the actual attribute owner without conflating it with destruction.
+ObjectValue's inherited scalar bridge omitted Instance read/write (GL-032), so
+native source references remained nil despite a legacy shadow. Add a focused
+live Instance/nil path, retain scalar-converter boundaries, and qualify actual
+native reference closure. An unsupported Changed:Once test assumption was
+corrected to the existing Connect interface. The successful cancellation check
+still requires disconnect during the actual production callback.
+
+Local RemoteEvent pressure replays fail at unrelated readiness/final-sequence
+steps on both candidate and the qualified GL-030 binary; GL-033 tracks the
+unresolved attribution. They are not suppressed or reported passing. Earlier
+GL-030 hosted successes remain exact-revision counterevidence.
+
+The 32-peer benchmark archive contains six ASan allocator exhaustion/failed
+mapping reports on the baseline. This identifies resource exhaustion in that
+profile rather than an established lifetime report. No 32-peer candidate result
+exists. Preserve the negative run and do not retry the same oversized ASan
+workload without a resource-supported profile. Completed 1/16-peer measurements
+remain narrow network-only evidence, with two candidate teardown channel errors
+also retained; they do not establish the complete Phase 4 acceptance matrix.
 
 An opt-in native projection now compiles on DockerPC Windows Debug ASan as
 snapshot `v9`, fingerprint `b8f2ff1faef41ac544cd8cf5c20f1a7d1a67648fc0ffe63d372437628a07d685`.

@@ -38,6 +38,22 @@ Networking Foundation 2 is in progress on `foundation/networking-2` from main
 milestones and failures. [ADR-010](adr-010-remotefunction-terminal-outcomes.md)
 defines the authorized GL-030 implementation contract; development builds do
 not establish qualification or authorize a main merge/publication.
+GL-030 is qualified at `2296c96` with exact-revision receipts in the journal.
+[ADR-011](adr-011-peer-replication-relevance.md) defines the experimental,
+default-disabled runtime relevance/batching slice and its compatibility limits.
+The journal's campaign checkpoint classifies relevance, structural admission and
+scalability as partially qualified. At `bd18580`, Windows/Linux core, 131-actor
+native and full-native sanitizer gates pass and independently verify; GL-035/037
+close on this unmerged branch. At `436850a`, the new catalog/getter/control
+corrections pass both platforms' core/native/full-native sanitizer matrices;
+GL-038 closes with linked evidence. All four current source profiles and both
+extracted packages independently verify at `436850a`.
+GL-034's [bounded maintenance correction](gl-034-catalog-proposal.md) is qualified
+at `436850a`: repeated current 1/16/32-peer Release worlds and separate impaired
+profiles pass. The [receipt](evidence/networking2-436850a-release-qualification.json)
+retains baseline failures and limits. GL-034 closes within those profiles;
+GL-039 records approximately seven-second structural convergence at 32 peers.
+This branch is not ready for automatic integration or distribution.
 
 GL-018 / GL-029 are integrated through normal merge
 `6a7fedf8354cf00a0fc9eb417bcc24d3eeb1b851`, preserving all 39 integration-branch

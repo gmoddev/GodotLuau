@@ -1,0 +1,128 @@
+{
+  "Revision": "9884bf7e9aa9865feab89344b6634dbb90b9283a",
+  "Profiles": [
+    {
+      "Profile": "Windows-Debug",
+      "CoreCases": 85,
+      "Actors": 130,
+      "RemoteCases": 459,
+      "HostPacketMeasurements": {
+        "CachedSubmittedCommands": 1,
+        "CachedSubmittedPacketBytes": 819,
+        "MTU": 1392,
+        "NodePathUTF8Bytes": 256,
+        "RemoteFrameBytes": 816,
+        "RetainedNativePacketBytes": 282,
+        "UncachedSubmittedCommands": 1,
+        "UncachedSubmittedPacketBytes": 1066,
+        "UnfragmentedPacketBytes": 1364
+      },
+      "LogHashes": 387,
+      "UUIDSamplesRehashed": 4000,
+      "FilesVerified": 6,
+      "ProfileSHA256": "12493e3c30ed55dc9b4e221043ece62c6d6e5bc2c8144f0624e7b277662abaf3",
+      "HostSHA256": "f4c5b30e9b5edcbad725c32eb1b20cea7ce3971fdb6a9928096613353ac71ee9",
+      "ExtensionSHA256": "8c59bf42132490c5ad7fffedfe7944963264f33b9a9110b142e8fa8f4b7f0e68",
+      "CompanionSHA256": "b0f338f717e9cec14a0d70e32bcdbaf8d8cfaaaeeaf56271d6971885ef80bf95"
+    },
+    {
+      "Profile": "Windows-Release",
+      "CoreCases": 85,
+      "Actors": 130,
+      "RemoteCases": 460,
+      "HostPacketMeasurements": {
+        "CachedSubmittedCommands": 1,
+        "CachedSubmittedPacketBytes": 819,
+        "MTU": 1392,
+        "NodePathUTF8Bytes": 256,
+        "RemoteFrameBytes": 816,
+        "RetainedNativePacketBytes": 282,
+        "UncachedSubmittedCommands": 1,
+        "UncachedSubmittedPacketBytes": 1066,
+        "UnfragmentedPacketBytes": 1364
+      },
+      "LogHashes": 382,
+      "UUIDSamplesRehashed": 4000,
+      "FilesVerified": 6,
+      "ProfileSHA256": "3174961d3fe58f12ab7443fa45d39aa90a55659ef18f1b0f85aedf5823f98344",
+      "HostSHA256": "7dff2a21c778f156b600b03160f74e77bb1055cbd1648a2de0f585afb6a837d9",
+      "ExtensionSHA256": "785935c4bb06ab34d42b5686386c5418dd605a4a7208b33ad6f9bddc83932894",
+      "CompanionSHA256": "0ac75ce883a5eea381c3ed40fa25e7c08ada2812f19b0d39f7dc363716832ce1"
+    },
+    {
+      "Profile": "Linux-Debug",
+      "CoreCases": 85,
+      "Actors": 130,
+      "RemoteCases": 460,
+      "HostPacketMeasurements": {
+        "CachedSubmittedCommands": 1,
+        "CachedSubmittedPacketBytes": 819,
+        "MTU": 1392,
+        "NodePathUTF8Bytes": 256,
+        "RemoteFrameBytes": 816,
+        "RetainedNativePacketBytes": 282,
+        "UncachedSubmittedCommands": 1,
+        "UncachedSubmittedPacketBytes": 1066,
+        "UnfragmentedPacketBytes": 1364
+      },
+      "LogHashes": 384,
+      "UUIDSamplesRehashed": 4000,
+      "FilesVerified": 6,
+      "ProfileSHA256": "2a3746f2e749f21a2900f5962f3d5aefd3a20e6472f652014992702b6f7d4208",
+      "HostSHA256": "9c9597ad3be743521778c34269a395ed1ebb050a810b3e19481da9a4ed18ff99",
+      "ExtensionSHA256": "149d9c728df5b45c01a5af0a8b52bc3ef5824c82b76fda8a6e2591d18e801bda",
+      "CompanionSHA256": "f495e3f37dc32616a6df6951d9f9d7515213a4c00decbe1e8a7246bb8e5d83fc"
+    },
+    {
+      "Profile": "Linux-Release",
+      "CoreCases": 85,
+      "Actors": 130,
+      "RemoteCases": 460,
+      "HostPacketMeasurements": {
+        "CachedSubmittedCommands": 1,
+        "CachedSubmittedPacketBytes": 819,
+        "MTU": 1392,
+        "NodePathUTF8Bytes": 256,
+        "RemoteFrameBytes": 816,
+        "RetainedNativePacketBytes": 282,
+        "UncachedSubmittedCommands": 1,
+        "UncachedSubmittedPacketBytes": 1066,
+        "UnfragmentedPacketBytes": 1364
+      },
+      "LogHashes": 380,
+      "UUIDSamplesRehashed": 4000,
+      "FilesVerified": 6,
+      "ProfileSHA256": "212a4dd876346dfa9db078e47ab43481e50daff84507b1f4b61b04274d9f3f0c",
+      "HostSHA256": "5ceeff3881483604aa60e194fc5be46f9e1009241632b82203ea1867ef17ea6e",
+      "ExtensionSHA256": "654d3116f8cee363005412bb23077cab1cf3545ef61ebb651afbb062b2558bf4",
+      "CompanionSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0"
+    }
+  ],
+  "Scope": "Downloaded profile products, strict native rechecks, exact packages and acceptance.",
+  "CoreSanitizer": {
+    "Result": "PASS",
+    "Cases": 85
+  },
+  "Packages": [
+    {
+      "Platform": "Linux",
+      "Result": "PASS",
+      "StartupActors": 2,
+      "Members": 133,
+      "PackageSHA256": "cbd3e89c153fa602bff2aacbc916172497ad4a023ed78d8916dd0b75fcb1da7d",
+      "RecordSHA256": "ba59a927dfed9776aab2569519039b1decc05e483c377f5e00b01faa66ba28a2"
+    },
+    {
+      "Platform": "Windows",
+      "Result": "PASS",
+      "StartupActors": 2,
+      "Members": 133,
+      "PackageSHA256": "ca8310b8de892db5f64b1a734192ed33c73688a98a0fcd20a47bd812adb79592",
+      "RecordSHA256": "2736b303fb3aaf0895f3af3a2957d22f57741c7bebc5f1275c82b1867d375d75"
+    }
+  ],
+  "Acceptance": {
+    "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+    "SHA256": "a33bfc47e9dcec5fc0e170427fe63f079ee5f32de615e254a621670c42bb1f19"
+  }
+}

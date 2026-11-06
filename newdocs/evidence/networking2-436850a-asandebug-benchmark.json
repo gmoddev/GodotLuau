@@ -1,0 +1,247 @@
+{
+  "Revision": "436850aca89e87e6ee8bc2e520740318ba0be27c",
+  "CandidateNativeSource": "770c9ff58ef2d684d62f355eed686f2e296c935b91f0cab51ae162b09962b668",
+  "BaselineRevision": "9f52b273cf977dce9c0541ff718cfb44dfb54c31",
+  "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+  "SummarySHA256": "7952fcce12e550ade82db514b091347374e6af7b0cee082a3ed3177b99b0b972",
+  "Configuration": "Windows Debug ASan",
+  "Results": [
+    {
+      "Product": "Baseline",
+      "Peers": 1,
+      "WorldObjects": 64,
+      "Trial": 0,
+      "ServerFrameP95Milliseconds": 9.171000000000001,
+      "ServerFrameP99Milliseconds": 9.57,
+      "ClientRTTP95Milliseconds": 33.7098999880254,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.359375,
+        "WholeLifecycleUserSeconds": 4.703125
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 77903.0,
+        "ReceivedPackets": 286.0,
+        "SentBytes": 68854.0,
+        "SentPackets": 442.0
+      },
+      "Refresh": {},
+      "ReplicationFailures": null,
+      "ClientConvergenceUsec": 461,
+      "NonemptyStderr": []
+    },
+    {
+      "Product": "Candidate",
+      "Peers": 1,
+      "WorldObjects": 64,
+      "Trial": 0,
+      "ServerFrameP95Milliseconds": 9.512,
+      "ServerFrameP99Milliseconds": 13.121,
+      "ClientRTTP95Milliseconds": 34.0729001909494,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.3125,
+        "WholeLifecycleUserSeconds": 5.375
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 78411.0,
+        "ReceivedPackets": 242.0,
+        "SentBytes": 98573.0,
+        "SentPackets": 351.0
+      },
+      "Refresh": {
+        "RefreshCalls": 342,
+        "RefreshCursor": 0,
+        "RefreshEncodeUsec": 45340,
+        "RefreshGeneration": 35,
+        "RefreshIndexUsec": 31613,
+        "RefreshMaximumUsec": 2571,
+        "RefreshMetadataUsec": 62027,
+        "RefreshRebuilt": 101,
+        "RefreshScanUsec": 39333,
+        "RefreshStage": 0,
+        "RefreshUsec": 263437,
+        "RefreshVisited": 6911
+      },
+      "ReplicationFailures": 0,
+      "ClientConvergenceUsec": 486,
+      "NonemptyStderr": []
+    },
+    {
+      "Product": "Candidate",
+      "Peers": 1,
+      "WorldObjects": 64,
+      "Trial": 1,
+      "ServerFrameP95Milliseconds": 9.318,
+      "ServerFrameP99Milliseconds": 13.889999999999999,
+      "ClientRTTP95Milliseconds": 33.304600045085,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.421875,
+        "WholeLifecycleUserSeconds": 5.390625
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 77063.0,
+        "ReceivedPackets": 237.0,
+        "SentBytes": 97957.0,
+        "SentPackets": 351.0
+      },
+      "Refresh": {
+        "RefreshCalls": 342,
+        "RefreshCursor": 0,
+        "RefreshEncodeUsec": 46027,
+        "RefreshGeneration": 35,
+        "RefreshIndexUsec": 31856,
+        "RefreshMaximumUsec": 2519,
+        "RefreshMetadataUsec": 62789,
+        "RefreshRebuilt": 103,
+        "RefreshScanUsec": 39523,
+        "RefreshStage": 0,
+        "RefreshUsec": 264820,
+        "RefreshVisited": 6911
+      },
+      "ReplicationFailures": 0,
+      "ClientConvergenceUsec": 25529,
+      "NonemptyStderr": []
+    },
+    {
+      "Product": "Baseline",
+      "Peers": 1,
+      "WorldObjects": 64,
+      "Trial": 1,
+      "ServerFrameP95Milliseconds": 9.547,
+      "ServerFrameP99Milliseconds": 9.9,
+      "ClientRTTP95Milliseconds": 26.1137997731566,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.265625,
+        "WholeLifecycleUserSeconds": 4.40625
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 76910.0,
+        "ReceivedPackets": 258.0,
+        "SentBytes": 57050.0,
+        "SentPackets": 401.0
+      },
+      "Refresh": {},
+      "ReplicationFailures": null,
+      "ClientConvergenceUsec": 413,
+      "NonemptyStderr": []
+    },
+    {
+      "Product": "Baseline",
+      "Peers": 1,
+      "WorldObjects": 512,
+      "Trial": 0,
+      "ServerFrameP95Milliseconds": 9.344,
+      "ServerFrameP99Milliseconds": 10.587,
+      "ClientRTTP95Milliseconds": 34.0650002472103,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.78125,
+        "WholeLifecycleUserSeconds": 11.40625
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 77533.0,
+        "ReceivedPackets": 276.0,
+        "SentBytes": 60098.0,
+        "SentPackets": 415.0
+      },
+      "Refresh": {},
+      "ReplicationFailures": null,
+      "ClientConvergenceUsec": 463,
+      "NonemptyStderr": []
+    },
+    {
+      "Product": "Candidate",
+      "Peers": 1,
+      "WorldObjects": 512,
+      "Trial": 0,
+      "ServerFrameP95Milliseconds": 9.612,
+      "ServerFrameP99Milliseconds": 11.827,
+      "ClientRTTP95Milliseconds": 33.080100081861,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.3125,
+        "WholeLifecycleUserSeconds": 10.71875
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 76831.0,
+        "ReceivedPackets": 227.0,
+        "SentBytes": 86989.0,
+        "SentPackets": 332.0
+      },
+      "Refresh": {
+        "RefreshCalls": 761,
+        "RefreshCursor": 171,
+        "RefreshEncodeUsec": 261606,
+        "RefreshGeneration": 10,
+        "RefreshIndexUsec": 75596,
+        "RefreshMaximumUsec": 2706,
+        "RefreshMetadataUsec": 124614,
+        "RefreshRebuilt": 533,
+        "RefreshScanUsec": 78917,
+        "RefreshStage": 4,
+        "RefreshUsec": 750674,
+        "RefreshVisited": 15426
+      },
+      "ReplicationFailures": 0,
+      "ClientConvergenceUsec": 711104,
+      "NonemptyStderr": []
+    },
+    {
+      "Product": "Candidate",
+      "Peers": 1,
+      "WorldObjects": 512,
+      "Trial": 1,
+      "ServerFrameP95Milliseconds": 9.981,
+      "ServerFrameP99Milliseconds": 11.771,
+      "ClientRTTP95Milliseconds": 33.9780002832413,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.265625,
+        "WholeLifecycleUserSeconds": 10.703125
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 77001.0,
+        "ReceivedPackets": 231.0,
+        "SentBytes": 102284.0,
+        "SentPackets": 352.0
+      },
+      "Refresh": {
+        "RefreshCalls": 766,
+        "RefreshCursor": 0,
+        "RefreshEncodeUsec": 253826,
+        "RefreshGeneration": 10,
+        "RefreshIndexUsec": 75607,
+        "RefreshMaximumUsec": 2813,
+        "RefreshMetadataUsec": 125318,
+        "RefreshRebuilt": 533,
+        "RefreshScanUsec": 79384,
+        "RefreshStage": 0,
+        "RefreshUsec": 742130,
+        "RefreshVisited": 15426
+      },
+      "ReplicationFailures": 0,
+      "ClientConvergenceUsec": 84991,
+      "NonemptyStderr": []
+    },
+    {
+      "Product": "Baseline",
+      "Peers": 1,
+      "WorldObjects": 512,
+      "Trial": 1,
+      "ServerFrameP95Milliseconds": 9.453,
+      "ServerFrameP99Milliseconds": 9.843,
+      "ClientRTTP95Milliseconds": 25.6660003215075,
+      "ServerCPU": {
+        "WholeLifecycleKernelSeconds": 0.328125,
+        "WholeLifecycleUserSeconds": 11.703125
+      },
+      "MeasuredServerWire": {
+        "ReceivedBytes": 77059.0,
+        "ReceivedPackets": 264.0,
+        "SentBytes": 54227.0,
+        "SentPackets": 396.0
+      },
+      "Refresh": {},
+      "ReplicationFailures": null,
+      "ClientConvergenceUsec": 409,
+      "NonemptyStderr": []
+    }
+  ],
+  "Scope": "Eight paired one-peer 64/512-object trials pass functional checks. Candidate frame p95 is near the fresh paired baseline. Structural convergence latency remains measured separately and larger-peer qualification is outstanding. Graphical, impaired-link and 16/32-peer results are not established here. CPU covers full actor lifetime."
+}

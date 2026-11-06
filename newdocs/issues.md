@@ -66,11 +66,270 @@ four successful workflows and independently checked artifacts.
 | GL-028 | P2 | Integrated; fixed and rendered-qualified within exercised scope | Character fade cache can retain first-person dither pixels |
 | GL-029 | P2 | Integrated; resolved within ADR-008/009 admitted-host scope | Three-mode RemoteEvent publication and bounded application/native admission |
 | GL-030 | P2 | Closed on campaign branch; qualified at 2296c96 | Bounded RemoteFunction terminal outcomes; integration remains unmerged |
-| GL-031 | P2 | Open; reproduced late-join omission | Runtime child under a static place parent is not synchronized |
+| GL-031 | P2 | Closed on campaign branch; qualified at 532650f | Static prerequisite seeding restores runtime-child late join |
+| GL-032 | P2 | Closed on campaign branch; qualified at 532650f | ObjectValue Instance/nil bridge and native reference projection |
+| GL-033 | P3 | Open; local fixture reliability gap | RemoteEvent pressure/queue-age replay loses unrelated readiness on the qualified baseline |
+| GL-034 | P2 | Closed on unmerged campaign; qualified at 436850a | Bounded catalog maintenance removes the reproduced mixed-world frame/CPU regression |
+| GL-035 | P1 | Closed on unmerged campaign; native matrix verified | Empty-catalog listen Client can remove structural scope-root ancestor |
+| GL-036 | P2 | Closed on campaign within exercised profiles | Benchmark setup and assertions were omitted by Release GDScript |
+| GL-037 | P2 | Closed on unmerged campaign; native/sanitizer matrix verified | Follow-up full-native runs fail Character/legacy barriers; fixture races corrected |
+| GL-038 | P1 | Closed on unmerged campaign; verified at 436850a | Live ObjectValue can convert a destroyed target through a stale instance binding |
+| GL-039 | P3 | Open; measured performance limitation | 32-peer structural burst takes about seven seconds to converge |
+
+## GL-039: Structural convergence under a 32-peer burst
+
+**Status: OPEN; measured performance limitation, not a reproduced ordering or
+admission failure.** At `436850a`, both 32-peer Release trials pass the mixed
+workload in 64- and 512-object worlds with zero replication failures. Final
+structural convergence nevertheless takes 6.58–6.96 seconds after coordinated
+close; the 64-object baseline takes 0.096–0.399 ms. Required reparent barriers
+remain ordered. Frame p95 improves in that paired small world, so frame cost
+and structural convergence must be assessed separately.
+
+The [receipt](evidence/networking2-436850a-release-qualification.json) retains
+all cases, source/product identities, wire/queue diagnostics and actual cleanup.
+Convergence stays inside the existing ten-second failure policy in these runs.
+No exact bottleneck attribution or general latency guarantee follows from this
+measurement. A follow-up should profile barrier production/draining and the
+coalesced tail before selecting an optimization; preserve every required
+transition, native admission, fairness and existing limits. Do not increase
+limits or drop barriers to improve this number.
+
+## GL-038: ObjectValue read after target destruction
+
+**Status: CLOSED on the unmerged campaign at `436850a`.** The focused shared
+getter correction passes actual native/Luau target-destruction reads, unfinished
+sweep mutation and server replacement. Fresh Windows/Linux core, ordinary native
+and full-native sanitizer matrices independently verify: 85 core cases and 131
+native actors per profile, with 23 Windows/24 Linux sanitizer checks and no
+unexpected reports. The [receipt](evidence/networking2-436850a-runtime-verification.json)
+preserves required log/source/product/instrumentation hashes and separately lists
+two absent ephemeral GL-003 mailboxes. All four source profiles and both extracted
+packages also [verify](evidence/networking2-436850a-candidate-verification.json).
+Larger-peer performance/admission also verifies within the GL-034 profiles below;
+GL-039 records the measured convergence limitation.
+
+Historical reproduced failure:
+The strengthened GL-034 native fixture retains an ObjectValue, destroys its
+target after the source sweep cursor passes, and preserves the value for later
+native/Luau reads. Windows Debug ASan on native fingerprint `34e4ff3d...`, DLL
+`8b937315...`, fixture `c78993cf...` reports heap-use-after-free in
+`godot::Variant::operator Object*()` / `get_object_instance_binding`, reached from
+`RefreshReplicationRecord` at source line 143. The target was freed by the
+SceneTree delete queue on the same main thread. Raw report SHA-256 is
+`8e56bc427561db8776b75cbfb319858b869cf6d7244168ec290e449b299024e5`.
+The coordinator stops the failed relevance profile and does not start benchmarks;
+its entire owned Job is verified empty. This is an actual sanitizer finding,
+separate from GL-037's historical fixture barriers.
+
+Source inspection verifies the earlier projection and `RobloxValue::_push_value`
+also convert the stored Variant without first validating its weak Node target;
+an independent older-build crash has not been reproduced. The focused correction
+validates in the shared `get_value()` method and uses that method for Luau reads,
+so expired object values read as nil before pointer conversion. No ownership,
+storage format, scheduler or automatic Changed-signal behavior is added.
+The pinned engine's [Variant validity utility](https://github.com/godotengine/godot/blob/a13da4feb8d8aefc283c3763d33a2f170a18d541/core/variant/variant_utility.cpp)
+uses `get_validated_object()`; the pinned godot-cpp conversion accesses instance
+binding after extracting the raw object pointer. Preserve the target-destruction
+case and verify both native and Luau getter paths under fresh sanitizers before
+closing this issue or GL-034.
+
+At `712ea47`, Linux's complete full-native sanitizer workflow reports success;
+the ordinary Linux native job passes expired-value and replacement assertions
+but fails its client-physics positive case. Artifact verification and a complete
+fresh matrix remain required. Source review separately corrects captured control
+revision labeling and orders runtime ownership through structural snapshots.
+That discrepancy is source-verified; it is not yet an independently attributed
+explanation of the intermittent physics failure. The fixture now requires the
+exact requested owner and retains wrong-owner/generation rejection assertions.
+
+## GL-036: Release benchmark omits setup and checks
+
+**Status: corrected and checked on Windows Debug ASan and Release hosts.** The
+first uninstrumented Release smoke exits before readiness: extension loading
+and animation saving occur inside GDScript `assert` expressions, which Release
+omits. This is a fixture defect, not failure to load the qualified native DLL.
+Move those operations and input/sample/deadline checks into ordinary checked
+calls. Luau payload/API assertions remain intact. Corrected Debug and Release
+smokes pass both immutable products; subsequent Release comparisons retain
+functional failures rather than silently passing them. See the
+[release receipt](evidence/networking2-release-benchmark.json) and
+[local checkpoint](evidence/networking2-scopeguard-checkpoint.json).
+
+## GL-037: Full-native follow-up assertion failures
+
+**Status: CLOSED on the unmerged campaign at `bd18580`.**
+The focused fixture corrections pass 41 local ASan actors and fresh Windows/Linux
+core, native and full-native sanitizer workflows. Independent exact-revision
+verification checks 85 core cases per profile, 131 native actors per profile,
+23 Windows/24 Linux sanitizer checks, 1,161 instrumented native units and three
+core units per platform, with no unexpected reports. The
+[receipt](evidence/networking2-bd18580-runtime-verification.json) preserves
+missing ephemeral GL-003 mailbox identities separately from required logs.
+Package/scalability acceptance remains separate; GL-034 is still open.
+
+Historical failures and attribution:
+At `0428413`, Linux fails Movement's airborne resynchronization comparison;
+Windows fails its final native movement sample comparison and a Function
+adversarial-response barrier. At `cbd91d0`, Linux passes Character and Function
+groups but fails the legacy Dedicated `BothClients`/`BothClosed` barriers.
+Detection controls pass and these retained attempts report no unexpected
+sanitizer finding. Ordinary Windows/Linux native gates pass at both revisions;
+the earlier `532650f` sanitizer matrix passes. Preserve this counterevidence and
+the [failed receipts](evidence/networking2-sanitizer-follow-up-failures.json).
+
+Windows Function client stderr proves a separate fixture race: the attack JSON
+file exists while still empty, and the reader sets its one-shot flag before
+parsing fails. Stage the complete metadata in a temporary file, close it, then
+publish the final path. The corrected fixture passes six local ASan actors;
+this does not resolve or suppress the Character/legacy barrier failures.
+Do not classify the remaining failures as fixture-only or close them without
+attribution and complete fresh checks.
+
+Resume investigation identifies `RemoteFunction not ready` in the retained
+Linux legacy client: its startup barrier checked only Event publication. The
+focused correction requires both endpoints. Character functional transport now
+uses the existing unthrottled profile in 3D as well as 2D, retries the final pose
+until the observer comparison completes, and first measures near-ceiling ascent
+before testing a proposal larger than remaining headroom. The old 0.2-unit
+proposal could still be valid. Production Character authority is unchanged;
+fresh native/sanitizer results are required before closing this repeatability gap.
+
+## GL-035: Empty-catalog listen Client can remove scope-root ancestor
+
+**Status: CLOSED on the unmerged campaign; exact-revision matrix verified.**
+The `cbd91d0` fix passes all four 85-core/131-actor package profiles and extracted
+Windows/Linux packages ([receipt](evidence/networking2-cbd91d0-candidate-verification.json)).
+The subsequent `bd18580` revision also passes both ordinary native and full-native
+sanitizer matrices, including the empty-catalog guard
+([receipt](evidence/networking2-bd18580-runtime-verification.json)).
+On native fingerprint `738a60cf...` / DLL `53a1f38f...`, an actual LocalScript in
+an opted-in listen host with no registered instances or Character authority can
+execute `game:Destroy()` and remove the server's shared scene. The headless
+Windows Debug ASan process exits cleanly without an unexpected sanitizer report;
+this is authority failure, not a reproduced memory defect. Fixture SHA-256 is
+`34fb006757c72edd87761abbc0a6e3c62a893cf96d43c4d60597199062e3b5bf`;
+captured baseline stdout is `5f2981842e97902433b51fc1e8d3b0b43d28e885741017b8e94679249489b9b8`.
+
+The existing Client boundary protects registered objects and their ancestors,
+but checks captured scope roots only for exact identity. The focused fix also
+rejects structural mutation of their live native ancestors, independently of
+catalog population. Ordinary Client attribute writes retain their existing path.
+The [required native regression](../tests/runtime/RelevanceRootGuard.gd) checks
+the empty precondition, actual Client mutation, preserved scene identity and
+ordinary callback completion after rejection. The required native matrix grows
+from 130 to 131 actors; no existing actor/assertion is removed. This experimental
+protocol remains unmerged.
+
+## GL-034: Opt-in relevance mixed-world performance regression
+
+**Status: CLOSED on the unmerged campaign at `436850a`, within the documented
+qualification profiles.** Current four-profile/package, core/native and
+full-native sanitizer matrices independently verify. The
+[Release receipt](evidence/networking2-436850a-release-qualification.json)
+establishes 16 passing candidate configurations: repeated 1/16/32-peer,
+64/512-object worlds, plus impaired one-peer/512-object and 16-peer/64-object
+workloads. There are zero candidate replication failures, unexpected report
+files, successful-case stderr files or resource-guard aborts. Twelve baseline
+configurations pass; three unchanged-baseline large-world warmup failures are
+retained separately. Those failures do not produce paired speedup claims.
+
+Release candidate server frame p95 is 8.44–9.44 ms at 1/16 peers and
+10.87–12.14 ms at 32 peers. All four hosted workflows independently verify at
+this source. See the [measurement record](networking2-benchmarks.md) for exact
+trials, CPU/wire/convergence data and the GL-039 follow-up. This closes the
+reproduced catalog frame-cost regression; it does not establish general
+64-player, graphical or long-duration performance qualification.
+
+The earlier fresh paired
+512-object Windows ASan trials give candidate frame p95 9.61/9.98 ms versus
+main 9.34/9.45 ms, with zero replication failures. Final client structural
+convergence is 711.104/84.991 ms, an explicit asynchronous tradeoff. All seven
+strengthened relevance actors pass locally, including unfinished-sweep mutation,
+exact ownership, expired values and server replacement. See the
+[receipt](evidence/networking2-436850a-asandebug-benchmark.json).
+
+Historical baseline: two paired
+one-peer Windows Debug ASan trials compare exact main `9f52b27` with relevance
+fingerprint `a7c63d0...`, using the same admitted host/compiler and public/native
+workload. At 512 objects the candidate server frame p95 is 414.5/426.2 ms versus
+12.2/12.9 ms, and Fire/echo RTT p95 is approximately 1.44 s versus 37.4/41.1 ms.
+The 64-object candidate also regresses. Functional assertions pass; this does not
+qualify scalability. The [measurement record](networking2-benchmarks.md) retains
+resource-blocked larger configurations separately. Raw archive 6 SHA-256 is
+`f183c5a502d82e6dea71ea4bff4c8ecd9ab5000f2785b9d8c62de2aa32ca00e3`.
+
+Initial candidate hypotheses included the shared Client write-boundary world
+scan and catalog refresh work. Focused timings and a denial-order probe were
+required to establish attribution. Native authority,
+reliable structural ordering, resource bounds and test assertions remain required.
+
+Profiling excludes the write-boundary hypothesis and attributes the dominant
+cost to catalog refresh; early exclusion and ancestry reuse already reduce the
+512-object ASan diagnostic refresh cost from about 81 seconds/256 calls to 23
+seconds/280 calls, without establishing acceptable paired performance. Resume
+corrections avoid full refresh on unpublished reparent, measure periodic cadence
+from refresh completion, and start the unchanged peer submission budget after
+maintenance. Published barriers still refresh synchronously. At that checkpoint,
+new paired measurements, larger-world admission and full qualification remained
+required; the current proof above supplies the targeted acceptance facts.
+
+A bounded maintenance candidate now reuses source records/index memberships
+across 64-item/two-ms cooperative turns. Selection waits for a completed sweep;
+accepted frames still drain. Published reparent refreshes its bounded affected
+closure, and native unregistration removes its cache immediately. Expanded actual
+ENet coverage passes mutation/reference destruction after cursor advance and
+service replacement during unfinished work at `436850a`. The original campaign
+explicitly authorizes this necessary bounded refactoring. Current qualification
+above supersedes the earlier pending state while preserving its negative results.
+
+## GL-032: ObjectValue lacks an Instance bridge
+
+**Status: closed on the unmerged campaign at `532650f`.**
+`WriteLuauInstanceProperty` delegates to the intentionally scalar/Vector3/Color3
+converter. It cannot assign a Godot Instance to ObjectValue.Value; the matching
+generic getter cannot return an Instance either. Legacy shadow encoding could
+still carry the write, so this is not a claim that every historical wire
+reference failed. The new source projection exposed the discrepancy when the
+native value remained nil despite its encoded shadow.
+
+The focused fix handles ObjectValue's live Instance/nil property in its existing
+API owner; it does not broaden the generic converter or expose reflection.
+Native projection reads the live authorized target identity, normalizes missing
+or unavailable weak targets to nil and tracks registration changes. The actual
+ENet relevance fixture asserts source Luau assignment/readback, cross-peer
+reference closure, clearing and cyclic reference creation/retirement. Windows
+Debug ASan passes the expanded six-actor fixture at native fingerprint
+`a7c63d0ea12364a85a6358863dc0d3f5e77cbb33a6ccbc219f358564fac710d7`.
+Windows/Linux Debug/Release, ordinary native and full-native sanitizer gates
+also pass, with exact-revision [runtime](evidence/networking2-532650f-runtime-verification.json)
+and [candidate](evidence/networking2-532650f-candidate-verification.json) receipts.
+This scoped fix does not close the broader relevance/performance campaign.
+
+## GL-033: Local RemoteEvent pressure replay loses readiness
+
+**Status: OPEN; test/runtime attribution remains under investigation.**
+DockerPC replay of the pressure/queue-age fixture fails after the pressure stage,
+then cascades into final-sequence/replacement assertions. A control replay on
+the previously qualified GL-030 binary also fails: native fingerprint
+`3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc`,
+DLL `677df7f2d71e8941a16d3c72a2de4f4bcc86c26fb8b54bf7ece90c952a072310`.
+No unexpected ASan report occurs in these runs. This does not establish a new
+relevance regression or a security defect. Exact-revision GL-030 hosted gates
+remain successful counterevidence. Preserve the failed logs, investigate actual
+native session/readiness transitions, and keep all assertions required.
 
 ## GL-031: Late join omits runtime children of static parents
 
-**Status: OPEN; reproduced in two independent admitted-host ENet processes.**
+**Status: closed on the unmerged campaign at `532650f`; original failure
+reproduced in two independent admitted-host ENet processes.**
+The campaign seeds existing static prerequisites and adds a production two-actor
+fixture covering deeper/later-ID ancestry, identity-preserving reparenting,
+removal and replacement. All four Windows/Linux Debug/Release profiles and both
+full-native sanitizer profiles pass the two-actor fixture; the six-actor opted-in
+relevance fixture separately exercises reconnect. Exact [runtime](evidence/networking2-532650f-runtime-verification.json)
+and [candidate](evidence/networking2-532650f-candidate-verification.json) receipts
+retain product/source/host and packaging identities.
 The existing `_rep_sync_peer` collects static identities separately, but starts
 its topological `sent` set empty. A runtime child whose parent is in
 `net_instances` waits for that parent to enter `sent`; static parents never do.
