@@ -427,6 +427,7 @@ func RunClient() -> void:
     else:
         await Wait("reconnect")
         Check(not Cache().has(First), "server removal clears client animation cache")
+        await Wait("client1.newpeer")
     await Authority.Reconnected(Identity if Index == 1 else int(Read("client1.newpeer")))
     await Wait("close" + str(Index))
     Network.call("disconnect_net")

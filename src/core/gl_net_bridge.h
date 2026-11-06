@@ -321,14 +321,20 @@ static inline int gl_net_decode_args(lua_State* L, const Array& a, Node* ctx, bo
 // El invocador (cliente) genera un call_id, cede su hilo y espera; cuando la
 // respuesta llega por RPC, NetworkService la deposita aquí; el ScriptNodeBase
 // El host del dominio recoge la respuesta, la decodifica y reanuda el hilo dueño.
-struct GLNetResponse { Array rets; bool ok = true; bool ready = false; double age = 0.0; };
+struct GLNetResponse {
+    Array rets, Header;
+    bool ok = true, ready = false;
+    int Peer = 0;
+    uint64_t Object = 0, Generation = 0;
+};
 inline std::unordered_map<int64_t, GLNetResponse>& gl_net_responses() {
     static std::unordered_map<int64_t, GLNetResponse> m;
     return m;
 }
+inline int64_t& gl_net_call_counter() { static int64_t Next = 0; return Next; }
 inline int64_t gl_net_new_call_id() {
-    static int64_t next = 1;
-    return next++;
+    auto& Next = gl_net_call_counter();
+    return Next < INT64_MAX ? ++Next : 0; // Never wrap or reuse, including after service replacement.
 }
 
 #endif // GL_NET_BRIDGE_H

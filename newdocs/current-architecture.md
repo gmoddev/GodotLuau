@@ -436,6 +436,15 @@ return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
 
 ## Networking and persistence
 
+The development branch `foundation/networking-2` adds the
+[ADR-010 RemoteFunction lifecycle](adr-010-remotefunction-terminal-outcomes.md):
+finite request/handler deadlines, full-width correlation, existing native
+publication/session admission, exact serving-task cancellation and protected
+terminal completion. The [campaign journal](networking-foundation-2-work.md)
+separates executed development coverage, retained failures and pending platform
+qualification. This branch is unmerged; statements below about earlier main
+integration remain historical scope, not qualification of this candidate.
+
 Main includes the qualified Phase 1 native RemoteEvent
 DeliveryType (reliable ordered/unreliable unordered), Server-owned frozen
 configuration, per-session descriptors/readiness and ObjectID-bound publication.

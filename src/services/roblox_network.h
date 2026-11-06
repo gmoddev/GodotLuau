@@ -314,7 +314,7 @@ class NetworkService : public Node {
         int64_t Endpoint = 0, Generation = 0, NetId = 0;
         int Delivery = 0;
         String Path;
-        bool Bound = false, Active = false, Legacy = false;
+        bool Bound = false, Active = false, Legacy = false, Function = false;
         uint64_t SentSequence = 0, ReceivedSequence = 0;
         std::map<int, RemotePeer> Peers;
     };
@@ -624,14 +624,24 @@ class NetworkService : public Node {
     };
     std::map<int, ChatBudget> ChatBudgets;
 
-    // ── RemoteFunction en vuelo (1.14.9.1) ──────────────────────────────
-    // call_id -> a quién le pedimos la respuesta. Sirve para tres cosas: validar
-    // que la respuesta viene del peer al que invocamos (si no, cualquier cliente
-    // podría falsificar la respuesta de otro), fallar al invocador en el acto si
-    // ese peer se cae, y purgar por edad lo que quede huérfano.
-    struct RFPending { int peer; double age; };
+    // RemoteFunction requests share native publication/session authority.
+    // Domain waits own one terminal delivery; these maps never silently expire.
+    struct RFPending {
+        int peer = 0;
+        int64_t User = 0, Epoch = 0, Endpoint = 0, Generation = 0;
+        uint64_t Object = 0, LocalGeneration = 0, Deadline = 0;
+        Array Header;
+    };
     std::map<int64_t, RFPending> rf_expect;
-    double rf_gc_timer = 0.0;
+    struct RFServing {
+        RFPending Request;
+        lua_State* Thread = nullptr;
+        lua_State* Anchor = nullptr;
+        int Guard = LUA_NOREF;
+    };
+    std::map<int64_t, RFServing> FunctionServing;
+    std::map<int, int64_t> FunctionReceived;
+    uint64_t FunctionRejected = 0, FunctionCompleted = 0, FunctionExpired = 0;
 
     // Última salud que difundió cada peer (1.14.11). El servidor la compara con
     // la de su copia para saber si un ServerScript la cambió y avisar al dueño.
@@ -1151,6 +1161,7 @@ private:
         rpc_config("_rf_invoke_server",   r);   // RemoteFunction (1.14.6): invocar server
         rpc_config("_rf_invoke_client",   r);   // RemoteFunction: invocar cliente
         rpc_config("_rf_return",          r);   // RemoteFunction: respuesta al invocador
+        rpc_config("_rf_cancel",          r);
         rpc_config("_phys_state",         u);   // física en red (1.14.7): estado (no confiable, último gana)
         rpc_config("_phys_owned",         u);   // física: estado del cliente-dueño al servidor
         rpc_config("_phys_owner",         r);   // física: cambio de dueño (confiable)
@@ -1616,6 +1627,7 @@ protected:
         ClassDB::bind_method(D_METHOD("_relay_character", "epoch", "sequence", "position", "yaw", "speed", "air"), &NetworkService::_relay_character);
         ClassDB::bind_method(D_METHOD("_recv_character", "who", "epoch", "sequence", "position", "yaw", "health", "maximum", "speed", "air", "is_2d", "life", "contract"), &NetworkService::_recv_character, DEFVAL(Dictionary()));
         ClassDB::bind_method(D_METHOD("GetCharacterStates"), &NetworkService::GetCharacterStates);
+        ClassDB::bind_method(D_METHOD("GetCharacterReplicaState", "peer"), &NetworkService::GetCharacterReplicaState);
         ClassDB::bind_method(D_METHOD("RespawnCharacter", "peer"), &NetworkService::SpawnCharacter);
         ClassDB::bind_method(D_METHOD("_on_peer_disconnected", "id"), &NetworkService::_on_peer_disconnected);
         ClassDB::bind_method(D_METHOD("_on_connected_ok"),            &NetworkService::_on_connected_ok);
@@ -1709,12 +1721,17 @@ protected:
         ClassDB::bind_method(D_METHOD("_rep_destroy", "id"),                        &NetworkService::_rep_destroy);
         ClassDB::bind_method(D_METHOD("_gl_peer_uid", "peer", "uid"),               &NetworkService::_gl_peer_uid);
         // RemoteFunction por red (1.14.6)
-        ClassDB::bind_method(D_METHOD("net_invoke_server", "path", "call_id", "args"),          &NetworkService::net_invoke_server);
-        ClassDB::bind_method(D_METHOD("net_invoke_client", "peer", "path", "call_id", "args"),  &NetworkService::net_invoke_client);
-        ClassDB::bind_method(D_METHOD("net_rf_respond", "reply_peer", "call_id", "ok", "rets"), &NetworkService::net_rf_respond);
-        ClassDB::bind_method(D_METHOD("_rf_invoke_server", "path", "call_id", "args"),          &NetworkService::_rf_invoke_server);
-        ClassDB::bind_method(D_METHOD("_rf_invoke_client", "path", "call_id", "args"),          &NetworkService::_rf_invoke_client);
-        ClassDB::bind_method(D_METHOD("_rf_return", "call_id", "ok", "rets"),                   &NetworkService::_rf_return);
+        // Submission is a private C++ boundary reached only after capturing the
+        // live Lua wait. Reflection must not allocate ownerless response slots.
+        ClassDB::bind_method(D_METHOD("GetInvokeTimeout"), &NetworkService::GetInvokeTimeout);
+        ClassDB::bind_method(D_METHOD("GetFunctionState"), &NetworkService::GetFunctionState);
+#ifdef GL_RUNTIME_TESTS
+        ClassDB::bind_method(D_METHOD("QualificationFunctionCounter", "value"), &NetworkService::QualificationFunctionCounter);
+#endif
+        ClassDB::bind_method(D_METHOD("_rf_invoke_server", "frame"), &NetworkService::_rf_invoke_server);
+        ClassDB::bind_method(D_METHOD("_rf_invoke_client", "frame"), &NetworkService::_rf_invoke_client);
+        ClassDB::bind_method(D_METHOD("_rf_return", "frame"), &NetworkService::_rf_return);
+        ClassDB::bind_method(D_METHOD("_rf_cancel", "frame"), &NetworkService::_rf_cancel);
         // Física en red / Network Ownership (1.14.7)
         ClassDB::bind_method(D_METHOD("net_set_owner", "net_id", "owner_peer", "is_auto"),      &NetworkService::net_set_owner);
         ClassDB::bind_method(D_METHOD("net_is_owner", "net_id"),                                &NetworkService::net_is_owner);
@@ -1900,13 +1917,23 @@ public:
         Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
         return gl_net_service_id() == uint64_t(get_instance_id()) && Scene && Scene->is_ancestor_of(this) && !is_queued_for_deletion();
     }
-    RemoteEventNode* LiveRemote(const RemotePublication& Publication) {
+    Node* LiveEndpoint(const RemotePublication& Publication) {
+        if (Publication.Function) {
+            auto Remote = Object::cast_to<RemoteFunctionNode>(ObjectDB::get_instance(Publication.Object));
+            Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
+            return RemoteServiceActive() && Remote && Scene && Scene->is_ancestor_of(Remote) && Remote->GetScope() &&
+                Remote->GetScope() == Publication.Scope && Remote->Generation == Publication.LocalGeneration ? Remote : nullptr;
+        }
         auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Publication.Object));
         Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
         return RemoteServiceActive() && Remote && Scene && Scene->is_ancestor_of(Remote) && Remote->GetScope() && Remote->GetScope() == Publication.Scope &&
             Remote->Generation == Publication.LocalGeneration && Remote->GetDeliveryType() == Publication.Delivery ? Remote : nullptr;
     }
+    RemoteEventNode* LiveRemote(const RemotePublication& Publication) {
+        return Object::cast_to<RemoteEventNode>(LiveEndpoint(Publication));
+    }
     bool ResetRemotes() {
+        _rf_fail_pending(0, "RemoteFunction invoke cancelled: left the game");
         auto Retired = std::move(RemotePublications);
         RemoteOutgoing.Clear(); RemoteIncoming.Clear(); RemoteBlockedSince.clear(); RemotePendingFailures.clear();
         RemoteSendCursor = 0; RemoteReceiveCursor = 0;
@@ -1936,13 +1963,26 @@ public:
             Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
             if (Remote && Scene && Scene->is_ancestor_of(Remote) && Remote->BootstrapEligible && Remote->GetScope()) RemoteBootstrap[String(Remote->get_path())] = Identity;
         }
+        for (auto Identity : RemoteFunctionNode::Registry()) {
+            auto Remote = Object::cast_to<RemoteFunctionNode>(ObjectDB::get_instance(Identity));
+            if (Remote && Scene && Scene->is_ancestor_of(Remote) && Remote->BootstrapEligible && Remote->GetScope()) RemoteBootstrap[String(Remote->get_path())] = Identity;
+        }
     }
     bool BindRemote(RemotePublication& Publication) {
-        if (Publication.Bound) return LiveRemote(Publication) != nullptr;
+        if (Publication.Bound) return LiveEndpoint(Publication) != nullptr;
         Node* Candidate = Publication.NetId ? _rep_node(uint64_t(Publication.NetId)) : nullptr;
         if (!Publication.NetId) {
             auto Found = RemoteBootstrap.find(Publication.Path);
             if (Found != RemoteBootstrap.end()) Candidate = Object::cast_to<Node>(ObjectDB::get_instance(Found->second));
+        }
+        if (Publication.Function) {
+            auto Remote = Object::cast_to<RemoteFunctionNode>(Candidate);
+            if (!Remote || !Remote->GetScope()) return false;
+            Remote->ServerAdmitted = true;
+            Publication.Object = uint64_t(Remote->get_instance_id()); Publication.Scope = Remote->GetScope();
+            Publication.LocalGeneration = Remote->Generation; Publication.Bound = true;
+            rpc_id(1, "_remote_ack", RemoteEpoch, gl_local_user_id(), Publication.Endpoint, Publication.Generation);
+            return true;
         }
         auto Remote = Object::cast_to<RemoteEventNode>(Candidate);
         if (!Remote || !Remote->GetScope() || Remote->is_class("UnreliableRemoteEventNode") != Publication.Legacy) return false;
@@ -1963,7 +2003,7 @@ public:
                 if (Remote && !Remote->Frozen) Publication.Delivery = Remote->GetDeliveryType();
             }
             if (mode == 2 && !Publication.Bound) { BindRemote(Publication); ++Iterator; continue; }
-            if (!LiveRemote(Publication)) {
+            if (!LiveEndpoint(Publication)) {
                 if (mode == 1) for (const auto& Peer : Publication.Peers)
                     if (_mp()->get_peers().has(Peer.first)) rpc_id(Peer.first, "_remote_retire", RemoteEpoch, Peer.second.User, Publication.Endpoint, Publication.Generation);
                 Retired.push_back(Publication.Object);
@@ -2002,6 +2042,20 @@ public:
             Publication.Path = String(Remote->get_path()); Publication.Bound = true;
             RemotePublications.emplace(Publication.Endpoint, Publication);
         }
+        for (auto Identity : RemoteFunctionNode::Registry()) {
+            auto Remote = Object::cast_to<RemoteFunctionNode>(ObjectDB::get_instance(Identity));
+            if (!Remote || !Remote->ServerAdmitted || !Remote->GetScope() || Published.count(Identity) ||
+                RemotePublications.size() >= 4096 || NextRemoteEndpoint == INT64_MAX) continue;
+            Node* Scene = get_tree()->get_current_scene();
+            if (!Scene || !Scene->is_ancestor_of(Remote)) continue;
+            RemotePublication Publication;
+            Publication.Function = true; Publication.Object = Identity; Publication.Scope = Remote->GetScope();
+            Publication.LocalGeneration = Remote->Generation; Publication.Endpoint = NextRemoteEndpoint++;
+            Publication.Generation = Publication.Endpoint; Publication.Bound = true;
+            Publication.NetId = Remote->has_meta("_gl_netid") ? int64_t(Remote->get_meta("_gl_netid")) : 0;
+            Publication.Path = String(Remote->get_path());
+            RemotePublications.emplace(Publication.Endpoint, Publication);
+        }
         int Offered = 0;
         for (auto& Entry : RemotePublications) for (const auto& Peer : peer_seq_uid) {
             if (Peer.first <= 1 || !_mp()->get_peers().has(Peer.first) || Entry.second.Peers.count(Peer.first)) continue;
@@ -2014,6 +2068,7 @@ public:
             Descriptor.push_back(Publication.Generation); Descriptor.push_back(Publication.NetId); Descriptor.push_back(Publication.Path);
             Descriptor.push_back(Publication.Delivery); Descriptor.push_back(Publication.Legacy);
             Descriptor.push_back(2); // No mixed GER1/GER2 interpretation or mode downgrade.
+            if (Publication.Function) Descriptor.push_back(true); // Explicit function descriptor extension; event wire stays GER2.
             rpc_id(Peer.first, "_remote_descriptor", Descriptor);
         }
     }
@@ -2021,7 +2076,8 @@ public:
     void _remote_descriptor(const Variant& Input) {
         if (!NativeRemoteCall("_remote_descriptor") || !RemoteServiceActive() || !AcceptServerRpc() || Input.get_type() != Variant::ARRAY) { ++RemoteRejected; return; }
         Array Descriptor = Input;
-        if (Descriptor.size() != 9 || Descriptor[8].get_type() != Variant::INT || int64_t(Descriptor[8]) != 2) { ++RemoteRejected; return; }
+        if ((Descriptor.size() != 9 && Descriptor.size() != 10) || Descriptor[8].get_type() != Variant::INT || int64_t(Descriptor[8]) != 2 ||
+            (Descriptor.size() == 10 && (Descriptor[9].get_type() != Variant::BOOL || !bool(Descriptor[9])))) { ++RemoteRejected; return; }
         for (int Index = 0; Index < 4; ++Index) if (!PositiveRemoteInteger(Descriptor[Index])) { ++RemoteRejected; return; }
         if (Descriptor[4].get_type() != Variant::INT || Descriptor[5].get_type() != Variant::STRING ||
             Descriptor[6].get_type() != Variant::INT || Descriptor[7].get_type() != Variant::BOOL ||
@@ -2033,6 +2089,7 @@ public:
         if (Endpoint <= HighestRemoteEndpoint || RemotePublications.size() >= 4096) { ++RemoteRejected; return; }
         HighestRemoteEndpoint = Endpoint;
         RemotePublication Publication;
+        Publication.Function = Descriptor.size() == 10;
         Publication.Endpoint = Endpoint; Publication.Generation = Descriptor[3]; Publication.NetId = Descriptor[4];
         Publication.Path = Descriptor[5]; Publication.Delivery = int64_t(Descriptor[6]); Publication.Legacy = Descriptor[7];
         RemotePublications.emplace(Endpoint, Publication);
@@ -2042,7 +2099,7 @@ public:
         if (!PositiveRemoteInteger(Epoch) || !PositiveRemoteInteger(User) || !PositiveRemoteInteger(Endpoint) || !PositiveRemoteInteger(Generation) ||
             int64_t(Epoch) != RemoteEpoch) return false;
         auto Found = RemotePublications.find(int64_t(Endpoint));
-        return Found != RemotePublications.end() && Found->second.Generation == int64_t(Generation) && LiveRemote(Found->second);
+        return Found != RemotePublications.end() && Found->second.Generation == int64_t(Generation) && LiveEndpoint(Found->second);
     }
     void _remote_ack(const Variant& Epoch, const Variant& User, const Variant& Endpoint, const Variant& Generation) {
         if (!NativeRemoteCall("_remote_ack")) { ++RemoteRejected; return; }
@@ -2584,99 +2641,249 @@ public:
     // Deposita un fallo SIN pasar por la red, para que el invocador lo re-lance
     // en el acto en vez de quedarse colgado esperando una respuesta imposible.
     void _rf_fail_local(int64_t call_id, const String& msg) {
-        GLNetResponse& r = gl_net_responses()[call_id];
+        auto Found = gl_net_responses().find(call_id);
+        if (Found == gl_net_responses().end() || Found->second.ready) return;
+        GLNetResponse& r = Found->second;
         r.rets = Array();
         r.rets.push_back(msg);
         r.ok = false;
         r.ready = true;
-        r.age = 0.0;
     }
     void CancelInvoke(int64_t CallId) {
-        rf_expect.erase(CallId);
+        auto Found = rf_expect.find(CallId);
+        if (Found != rf_expect.end()) {
+            RFPending Request = Found->second; rf_expect.erase(Found);
+            if (LiveFunctionRequest(Request)) rpc_id(Request.peer, "_rf_cancel", Request.Header);
+        }
         gl_net_responses().erase(CallId);
     }
-    void net_invoke_server(String path, int call_id, Array args) {
-        Ref<MultiplayerAPI> m = _mp();
-        if (m.is_null() || !m->has_multiplayer_peer() || (mode == 2 && !net_connected)) {
-            _rf_fail_local((int64_t)call_id, "InvokeServer: not connected to a server");
-            return;
+    double GetInvokeTimeout() const {
+        auto Settings = ProjectSettings::get_singleton();
+        Variant Value = Settings->get_setting("godot_luau/network/remote_function_timeout_seconds", 30.0);
+        bool Numeric = Value.get_type() == Variant::INT || Value.get_type() == Variant::FLOAT;
+        double Timeout = Numeric ? double(Value) : 0;
+        return std::isfinite(Timeout) && Timeout >= 0.05 && Timeout <= 300 ? Timeout : 30.0;
+    }
+#ifdef GL_RUNTIME_TESTS
+    bool QualificationFunctionCounter(int64_t Value) {
+        if (!rf_expect.empty() || !FunctionServing.empty() || Value < gl_net_call_counter()) return false;
+        gl_net_call_counter() = Value; return true;
+    }
+#endif
+    Dictionary GetFunctionState() const {
+        Dictionary Result;
+        Result["Pending"] = int64_t(rf_expect.size()); Result["Serving"] = int64_t(FunctionServing.size());
+        Result["Responses"] = int64_t(gl_net_responses().size()); Result["Rejected"] = int64_t(FunctionRejected);
+        Result["Completed"] = int64_t(FunctionCompleted); Result["Expired"] = int64_t(FunctionExpired);
+        Result["TimeoutSeconds"] = GetInvokeTimeout(); Result["ProtocolVersion"] = 1;
+#ifdef GL_RUNTIME_TESTS
+        Array Requests;
+        for (const auto& Entry : rf_expect) {
+            Dictionary Request; Request["Peer"] = Entry.second.peer; Request["Header"] = Entry.second.Header;
+            Requests.push_back(Request);
         }
-        rf_expect[(int64_t)call_id] = { 1, 0.0 };
-        rpc_id(1, "_rf_invoke_server", path, call_id, args);
+        Result["Requests"] = Requests;
+#endif
+        return Result;
     }
-    void net_invoke_client(int peer, String path, int call_id, Array args) {
-        Ref<MultiplayerAPI> m = _mp();
-        if (m.is_null() || !m->has_multiplayer_peer() || !m->get_peers().has(peer)) {
-            _rf_fail_local((int64_t)call_id, "InvokeClient: the player has left the game");
-            return;
+    bool LiveFunctionSession(const RFPending& Request) {
+        if (!RemoteServiceActive() || Request.Epoch != RemoteEpoch || !_mp()->get_peers().has(Request.peer)) return false;
+        int64_t User = mode == 2 ? gl_local_user_id() : (peer_seq_uid.count(Request.peer) ? peer_seq_uid.at(Request.peer) : 0);
+        return User > 0 && User == Request.User;
+    }
+    bool LiveFunctionRequest(const RFPending& Request) {
+        if (!LiveFunctionSession(Request)) return false;
+        auto Found = RemotePublications.find(Request.Endpoint);
+        return Found != RemotePublications.end() && Found->second.Function &&
+            Found->second.Generation == Request.Generation && Found->second.Object == Request.Object &&
+            Found->second.LocalGeneration == Request.LocalGeneration && LiveEndpoint(Found->second);
+    }
+    bool FunctionPayload(Array& Arguments, bool Receiving) {
+        if (Arguments.size() > GLRemotePayload::MaxArguments) return false;
+        GLRemotePayload::Codec Codec; Codec.Value(Arguments);
+        if (!Codec.Valid || Codec.Bytes.size() > 65536 - 128) return false;
+        Variant Values = Arguments.duplicate(true);
+        if (!RemoteReferences(Values, Receiving)) return false;
+        if (Receiving && !RemoteReferences(Values, true, 0, true, true)) return false;
+        Arguments = Values; return true;
+    }
+    bool AdmitFunctionFrame(const Variant& Input, int Sender) {
+        if (Input.get_type() != Variant::ARRAY || Array(Input).size() > 8) return false;
+        GLRemotePayload::Codec Codec; Codec.Value(Input);
+        if (!Codec.Valid) return false;
+        const int Bytes = Codec.Bytes.size();
+        auto& Budget = RemoteBudgets[Sender];
+        if (Budget.Messages >= 256 || Budget.Bytes > 256 * 1024 - Bytes ||
+            RemoteAggregate.Messages >= 1024 || RemoteAggregate.Bytes > 1024 * 1024 - Bytes) {
+            int64_t User = mode == 2 ? gl_local_user_id() : (peer_seq_uid.count(Sender) ? peer_seq_uid.at(Sender) : 0);
+            QueueRemoteFailure(Sender, User); return false;
         }
-        rf_expect[(int64_t)call_id] = { peer, 0.0 };
-        rpc_id(peer, "_rf_invoke_client", path, call_id, args);
+        ++Budget.Messages; Budget.Bytes += Bytes; ++RemoteAggregate.Messages; RemoteAggregate.Bytes += Bytes;
+        return true;
     }
-    // Enviar la respuesta al invocador (peer 1 = servidor, o un cliente concreto).
-    void _rf_send_return(int reply_peer, int call_id, bool ok, const Array& rets) {
-        Ref<MultiplayerAPI> m = _mp();
-        if (m.is_null() || !m->has_multiplayer_peer()) return;
-        if (reply_peer == 1 || m->get_peers().has(reply_peer))
-            rpc_id(reply_peer, "_rf_return", call_id, ok, rets);
+    String BeginFunction(int Peer, Object* Target, int64_t CallId, Array Arguments) {
+        if (!RemoteServiceActive() || CallId <= 0 || gl_net_responses().size() >= 256 ||
+            gl_net_responses().count(CallId) || !_mp()->get_peers().has(Peer)) return "[Network:Function] Request unavailable or pending limit reached";
+        RemotePublication* Publication = nullptr;
+        for (auto& Entry : RemotePublications) if (Entry.second.Function && LiveEndpoint(Entry.second) == Target) { Publication = &Entry.second; break; }
+        if (!Publication || (mode == 2 && !Publication->Active) ||
+            (mode == 1 && (!Publication->Peers.count(Peer) || !Publication->Peers.at(Peer).Ready))) return "[Network:Function] RemoteFunction not ready";
+        size_t Count = 0;
+        for (const auto& Entry : rf_expect) if (Entry.second.peer == Peer) ++Count;
+        if (Count >= 64) return "[Network:Function] Peer pending limit reached";
+        if (!FunctionPayload(Arguments, false)) return "[Network:Function] Invalid or oversized payload";
+        RFPending Request;
+        Request.peer = Peer; Request.User = mode == 2 ? gl_local_user_id() : peer_seq_uid.at(Peer);
+        Request.Epoch = RemoteEpoch; Request.Endpoint = Publication->Endpoint; Request.Generation = Publication->Generation;
+        Request.Object = Publication->Object; Request.LocalGeneration = Publication->LocalGeneration;
+        Request.Deadline = RemoteNow() + uint64_t(GetInvokeTimeout() * 1000000);
+        Request.Header = Array::make(1, Request.Epoch, Request.User, Request.Endpoint, Request.Generation, CallId);
+        rf_expect.emplace(CallId, Request); gl_net_responses().emplace(CallId, GLNetResponse());
+        Array Frame = Request.Header.duplicate(); Frame.push_back(Arguments);
+        Error Result = mode == 2 ? rpc_id(Peer, "_rf_invoke_server", Frame) : rpc_id(Peer, "_rf_invoke_client", Frame);
+        if (Result != OK) { rf_expect.erase(CallId); _rf_fail_local(CallId, "[Network:Function] Request transport admission failed"); }
+        return String();
     }
-    // Lo llama __gl_rf_respond (C) cuando el handler termina.
-    void net_rf_respond(int reply_peer, int call_id, bool ok, Array rets) {
-        _rf_send_return(reply_peer, call_id, ok, rets);
+    String net_invoke_server(Object* Target, int64_t CallId, Array Arguments) {
+        if (mode != 2 || !net_connected) return "InvokeServer: not connected to a server";
+        return BeginFunction(1, Target, CallId, Arguments);
     }
-    // Responder al invocador con un error (lo re-lanza allí, como Roblox).
-    void _rf_send_error(int reply_peer, int call_id, const String& msg) {
-        Array a;
-        a.push_back(msg);
-        _rf_send_return(reply_peer, call_id, false, a);
+    String net_invoke_client(int Peer, Object* Target, int64_t CallId, Array Arguments) {
+        if (mode != 1 || GLExecutionDomain::IsClientExecution() || Peer <= 1 || !peer_seq_uid.count(Peer)) return "InvokeClient: the player has left the game";
+        return BeginFunction(Peer, Target, CallId, Arguments);
     }
-    // Corre el handler (OnServerInvoke/OnClientInvoke) vía __gl_rf_serve, que lo
-    // envuelve en task.spawn (soporta yield) y responde al terminar.
-    void _rf_run_handler(lua_State* L, int handler_ref, Node* player, int call_id, int reply_peer, const Array& args, bool is_server) {
-        if (!GLReferenceAlive(L, handler_ref)) {
-            _rf_send_error(reply_peer, call_id, is_server
-                ? "InvokeServer: OnServerInvoke is not set for this RemoteFunction"
-                : "InvokeClient: OnClientInvoke is not set for this RemoteFunction");
-            return;
+    bool ReadFunctionHeader(const Array& Frame, int Sender, RFPending& Request) {
+        if (Frame.size() < 6 || Frame[0].get_type() != Variant::INT || int64_t(Frame[0]) != 1) return false;
+        for (int Index = 1; Index < 6; ++Index) if (!PositiveRemoteInteger(Frame[Index])) return false;
+        int64_t User = mode == 2 ? gl_local_user_id() : (peer_seq_uid.count(Sender) ? peer_seq_uid.at(Sender) : 0);
+        auto Found = RemotePublications.find(int64_t(Frame[3]));
+        if (int64_t(Frame[1]) != RemoteEpoch || int64_t(Frame[2]) != User || Found == RemotePublications.end() ||
+            !Found->second.Function || Found->second.Generation != int64_t(Frame[4]) || !LiveEndpoint(Found->second) ||
+            (mode == 2 && !Found->second.Active) || (mode == 1 && (!Found->second.Peers.count(Sender) || !Found->second.Peers.at(Sender).Ready))) return false;
+        Request.peer = Sender; Request.User = User; Request.Epoch = RemoteEpoch; Request.Endpoint = Found->first;
+        Request.Generation = Found->second.Generation; Request.Object = Found->second.Object; Request.LocalGeneration = Found->second.LocalGeneration;
+        Request.Deadline = RemoteNow() + uint64_t(GetInvokeTimeout() * 1000000);
+        Request.Header.clear(); for (int Index = 0; Index < 6; ++Index) Request.Header.push_back(Frame[Index]);
+        return true;
+    }
+    void SendFunctionResult(const RFPending& Request, bool Ok, Array Returns) {
+        if (!LiveFunctionRequest(Request)) return;
+        Array Frame = Request.Header.duplicate(); Frame.push_back(Ok); Frame.push_back(Returns);
+        if (rpc_id(Request.peer, "_rf_return", Frame) != OK) QueueRemoteFailure(Request.peer, Request.User);
+    }
+    void FinishFunction(int64_t Token, bool Ok, Array Returns, bool Cancel = false) {
+        auto Found = FunctionServing.find(Token);
+        if (Found == FunctionServing.end()) return;
+        RFServing Serving = Found->second; FunctionServing.erase(Found);
+        bool Alive = GLReferenceAlive(Serving.Anchor, Serving.Guard);
+        if (Cancel && Alive) GLGetOwner(Serving.Thread)->Domain->CancelThread(Serving.Thread);
+        GLUnreference(nullptr, Serving.Guard);
+        SendFunctionResult(Serving.Request, Ok, Returns);
+    }
+    void RespondFunction(lua_State* Thread, int64_t Token, bool Ok, Array Returns) {
+        auto Found = FunctionServing.find(Token);
+        if (Found == FunctionServing.end() || Found->second.Thread != Thread || !GLReferenceAlive(Found->second.Anchor, Found->second.Guard)) return;
+        if (!FunctionPayload(Returns, false)) { Ok = false; Returns = Array::make("[Network:Function] Invalid or oversized handler result"); }
+        FinishFunction(Token, Ok, Returns);
+    }
+    void ReceiveFunction(const Variant& Input, bool Server) {
+        uint64_t ServiceIdentity = uint64_t(get_instance_id());
+        const char* Method = Server ? "_rf_invoke_server" : "_rf_invoke_client";
+        int Sender = Server ? GetClientRpcSender() : (AcceptServerRpc() ? 1 : 0);
+        if (!Sender || !NativeRemoteCall(Method) || !AdmitFunctionFrame(Input, Sender)) { ++FunctionRejected; return; }
+        Array Frame = Input; RFPending Request;
+        if (Frame.size() != 7 || !ReadFunctionHeader(Frame, Sender, Request) || Frame[6].get_type() != Variant::ARRAY) { ++FunctionRejected; return; }
+        int64_t CallId = Frame[5];
+        if (CallId <= FunctionReceived[Sender]) { ++FunctionRejected; return; }
+        Array Arguments = Frame[6];
+        bool Valid = FunctionPayload(Arguments, true);
+        if (ObjectDB::get_instance(ServiceIdentity) != this) return;
+        if (!Valid) { ++FunctionRejected; return; }
+        if (!LiveFunctionRequest(Request)) { ++FunctionRejected; return; }
+        FunctionReceived[Sender] = CallId;
+        size_t Count = 0; for (const auto& Entry : FunctionServing) if (Entry.second.Request.peer == Sender) ++Count;
+        if (FunctionServing.size() >= 256 || Count >= 64) { SendFunctionResult(Request, false, Array::make("[Network:Function] Handler admission limit reached")); return; }
+        auto Remote = Object::cast_to<RemoteFunctionNode>(ObjectDB::get_instance(Request.Object));
+        lua_State* Anchor = Server ? Remote->server_invoke_L : Remote->client_invoke_L;
+        int Reference = Server ? Remote->server_invoke_ref : Remote->client_invoke_ref;
+        if (!GLReferenceAlive(Anchor, Reference)) { SendFunctionResult(Request, false, Array::make("[Network:Function] Invoke handler is not set")); return; }
+        int64_t Token = gl_net_new_call_id();
+        if (!Token) { SendFunctionResult(Request, false, Array::make("[Network:Function] Handler identity exhausted")); return; }
+        FunctionServing.emplace(Token, RFServing{Request});
+        uint64_t Identity = uint64_t(get_instance_id());
+        if (Server) _ensure_peer_player(Sender);
+        if (ObjectDB::get_instance(Identity) != this) return;
+        if (!LiveFunctionRequest(Request) || !GLReferenceAlive(Anchor, Reference)) {
+            FinishFunction(Token, false, Array::make("[Network:Function] Handler retired before dispatch"), true); return;
         }
-        int Status = GLDispatch(handler_ref, [&](lua_State* Thread) -> int {
-            // Prepare supplied the handler; insert the trusted serving wrapper
-            // ahead of it so the handler becomes the wrapper's first argument.
-            lua_getglobal(Thread, "__gl_rf_serve");
-            luaL_checktype(Thread, -1, LUA_TFUNCTION);
-            lua_insert(Thread, 1);
-            if (player) _gl_push_node(Thread, player); else lua_pushnil(Thread);
-            lua_pushnumber(Thread, (double)call_id);
-            lua_pushnumber(Thread, (double)reply_peer);
-            lua_pushboolean(Thread, is_server ? 1 : 0);
-            return 5 + gl_net_decode_args(Thread, args, this);
+        int Status = GLDispatch(Reference, [&](lua_State* Thread) -> int {
+            lua_getglobal(Thread, "__gl_rf_serve"); luaL_checktype(Thread, -1, LUA_TFUNCTION); lua_insert(Thread, 1);
+            auto& Serving = FunctionServing.at(Token); Serving.Thread = Thread; Serving.Anchor = GLGetOwnerState(Thread);
+            lua_pushthread(Thread); Serving.Guard = GLReference(Thread, -1); lua_pop(Thread, 1);
+            if (Server) _gl_push_node(Thread, _peer_player(Sender)); else lua_pushnil(Thread);
+            lua_pushstring(Thread, String::num_int64(Token).utf8().get_data()); lua_pushboolean(Thread, Server);
+            return 4 + gl_net_decode_args(Thread, Arguments, this, true);
         });
-        if (Status != LUA_OK && Status != LUA_YIELD)
-            _rf_send_error(reply_peer, call_id, "[Runtime:Callback] RemoteFunction handler could not be started");
+        if (ObjectDB::get_instance(Identity) != this) return;
+        if (Status != LUA_OK && Status != LUA_YIELD) FinishFunction(Token, false, Array::make("[Network:Function] Handler could not be started"), true);
     }
-    void _rf_invoke_server(String path, int call_id, Array args) {
-        if (!is_server()) return;
-        int sender = get_multiplayer()->get_remote_sender_id();
-        RemoteFunctionNode* rfn = Object::cast_to<RemoteFunctionNode>(get_node_or_null(NodePath(path)));
-        if (!rfn) { _rf_send_error(sender, call_id, "InvokeServer: RemoteFunction not found on the server (" + path + ")"); return; }
-        Node* player = _ensure_peer_player(sender);   // como OnServerEvent: Player válido
-        _rf_run_handler(rfn->server_invoke_L, rfn->server_invoke_ref, player, call_id, sender, args, true);
+    void _rf_invoke_server(const Variant& Frame) { ReceiveFunction(Frame, true); }
+    void _rf_invoke_client(const Variant& Frame) { ReceiveFunction(Frame, false); }
+    void _rf_return(const Variant& Input) {
+        uint64_t ServiceIdentity = uint64_t(get_instance_id());
+        int Sender = mode == 1 ? GetClientRpcSender() : (AcceptServerRpc() ? 1 : 0);
+        if (!Sender || !NativeRemoteCall("_rf_return") || !AdmitFunctionFrame(Input, Sender)) { ++FunctionRejected; return; }
+        Array Frame = Input; RFPending Request;
+        if (Frame.size() != 8 || !ReadFunctionHeader(Frame, Sender, Request) || Frame[6].get_type() != Variant::BOOL || Frame[7].get_type() != Variant::ARRAY) { ++FunctionRejected; return; }
+        auto Found = rf_expect.find(int64_t(Frame[5]));
+        if (Found == rf_expect.end() || Found->second.peer != Sender || Found->second.Header != Request.Header) { ++FunctionRejected; return; }
+        if (RemoteNow() >= Found->second.Deadline) return; // Tick owns the terminal timeout.
+        Array Returns = Frame[7];
+        if (!bool(Frame[6]) && (Returns.size() != 1 || Returns[0].get_type() != Variant::STRING)) { ++FunctionRejected; return; }
+        bool Valid = FunctionPayload(Returns, true);
+        if (ObjectDB::get_instance(ServiceIdentity) != this) return;
+        if (!Valid) { ++FunctionRejected; return; }
+        Found = rf_expect.find(int64_t(Frame[5]));
+        if (Found == rf_expect.end() || Found->second.peer != Sender || Found->second.Header != Request.Header || !LiveFunctionRequest(Found->second)) return;
+        int64_t CallId = Found->first; rf_expect.erase(Found);
+        auto Response = gl_net_responses().find(CallId);
+        if (Response == gl_net_responses().end() || Response->second.ready) return;
+        Response->second.rets = Returns; Response->second.ok = Frame[6]; Response->second.ready = true;
+        Response->second.Object = Request.Object; Response->second.Generation = Request.LocalGeneration;
+        Response->second.Header = Request.Header; Response->second.Peer = Sender;
+        ++FunctionCompleted;
     }
-    void _rf_invoke_client(String path, int call_id, Array args) {
-        if (get_multiplayer()->get_remote_sender_id() != 1) return;   // solo el servidor invoca al cliente
-        RemoteFunctionNode* rfn = Object::cast_to<RemoteFunctionNode>(get_node_or_null(NodePath(path)));
-        if (!rfn) { _rf_send_error(1, call_id, "InvokeClient: RemoteFunction not found on the client (" + path + ")"); return; }
-        _rf_run_handler(rfn->client_invoke_L, rfn->client_invoke_ref, nullptr, call_id, 1, args, false);
+    bool ValidateFunctionResponse(const GLNetResponse& Response) {
+        RFPending Request;
+        return ReadFunctionHeader(Response.Header, Response.Peer, Request) && Request.Object == Response.Object &&
+            Request.LocalGeneration == Response.Generation && LiveFunctionRequest(Request);
     }
-    void _rf_return(int call_id, bool ok, Array rets) {
-        // Solo vale la respuesta del peer al que realmente invocamos: si no,
-        // cualquier cliente podría falsificar el retorno de una llamada ajena.
-        int sender = get_multiplayer()->get_remote_sender_id();
-        auto it = rf_expect.find((int64_t)call_id);
-        if (it == rf_expect.end() || it->second.peer != sender) return;
-        rf_expect.erase(it);
-        GLNetResponse& r = gl_net_responses()[(int64_t)call_id];
-        r.rets = rets; r.ok = ok; r.ready = true; r.age = 0.0;
+    void _rf_cancel(const Variant& Input) {
+        int Sender = mode == 1 ? GetClientRpcSender() : (AcceptServerRpc() ? 1 : 0);
+        if (!Sender || !NativeRemoteCall("_rf_cancel") || !AdmitFunctionFrame(Input, Sender)) { ++FunctionRejected; return; }
+        Array Frame = Input; RFPending Request;
+        if (Frame.size() != 6 || !ReadFunctionHeader(Frame, Sender, Request)) { ++FunctionRejected; return; }
+        std::vector<int64_t> Tokens;
+        for (const auto& Entry : FunctionServing) if (Entry.second.Request.peer == Sender && Entry.second.Request.Header == Frame) Tokens.push_back(Entry.first);
+        for (int64_t Token : Tokens) FinishFunction(Token, false, Array::make("[Network:Function] Caller cancelled"), true);
+    }
+    void TickFunctions() {
+        for (auto Iterator = rf_expect.begin(); Iterator != rf_expect.end();) {
+            if (LiveFunctionRequest(Iterator->second) && RemoteNow() < Iterator->second.Deadline) { ++Iterator; continue; }
+            int64_t CallId = Iterator->first;
+            bool Timeout = RemoteNow() >= Iterator->second.Deadline;
+            RFPending Request = Iterator->second; Iterator = rf_expect.erase(Iterator);
+            _rf_fail_local(CallId, Timeout ? "RemoteFunction invoke timed out" : "[Network:Function] Endpoint or session retired");
+            if (Timeout) { ++FunctionExpired; if (LiveFunctionRequest(Request)) rpc_id(Request.peer, "_rf_cancel", Request.Header); }
+        }
+        std::vector<std::pair<int64_t, bool>> Retired;
+        for (const auto& Entry : FunctionServing) {
+            const auto& Serving = Entry.second;
+            if (!LiveFunctionRequest(Serving.Request) || RemoteNow() >= Serving.Request.Deadline ||
+                !GLReferenceAlive(Serving.Anchor, Serving.Guard) || !GLGetOwner(Serving.Thread)->Domain->CanResume(Serving.Thread))
+                Retired.emplace_back(Entry.first, LiveFunctionSession(Serving.Request));
+        }
+        for (const auto& Entry : Retired) FinishFunction(Entry.first, false, Array::make("[Network:Function] Handler cancelled or timed out"), Entry.second);
     }
     // Falla las llamadas en vuelo hacia un peer que ya no está (o hacia todos).
     void _rf_fail_pending(int peer, const String& msg) {
@@ -2686,6 +2893,13 @@ public:
                 it = rf_expect.erase(it);
             } else ++it;
         }
+        if (peer) FunctionReceived.erase(peer); else FunctionReceived.clear();
+        std::vector<int64_t> Retired;
+        for (const auto& Entry : FunctionServing) if (!peer || Entry.second.Request.peer == peer) Retired.push_back(Entry.first);
+        // Retire transport ownership, not unrelated application work. Existing
+        // running handlers may finish in their live domain after disconnect;
+        // their detached tokens cannot reply through a replacement service.
+        for (int64_t Token : Retired) FinishFunction(Token, false, Array::make(msg));
     }
 
     // ── Replicación automática de instancias/propiedades (1.14.5) ─────────
@@ -3475,6 +3689,15 @@ public:
         }
         else _update_puppet3d(Who, static_cast<int>(peer_seq_uid.at(Who)), Position, Yaw, Health, Speed, Air, Maximum, Contract);
     }
+    Dictionary GetCharacterReplicaState(int Peer) const {
+        Dictionary Result;
+        auto Found = CharacterSnapshots.find(Peer);
+        if (Found != CharacterSnapshots.end()) {
+            Result["Epoch"] = Found->second.Epoch; Result["Life"] = Found->second.Life;
+            Result["Sequence"] = Found->second.Sequence; Result["Removed"] = Found->second.Removed;
+        }
+        return Result; // Read-only receive state; never a writer/visibility grant.
+    }
     Dictionary GetCharacterStates() {
         Dictionary Result;
         for (const auto& Entry : CharacterAuthorities) {
@@ -4012,6 +4235,8 @@ public:
         RemoteBudgets.clear(); RemoteAggregate = RemoteBudget();
         TickRemotes();
         if (ObjectDB::get_instance(RemoteServiceIdentity) != this || is_queued_for_deletion()) return;
+        TickFunctions();
+        if (ObjectDB::get_instance(RemoteServiceIdentity) != this || is_queued_for_deletion()) return;
         DrainRemoteOutgoing();
         if (ObjectDB::get_instance(RemoteServiceIdentity) != this || is_queued_for_deletion()) return;
         DrainRemoteIncoming();
@@ -4135,22 +4360,6 @@ public:
             }
             // Salud autoritativa del servidor (1.14.11): ~4Hz, solo manda si un
             // ServerScript cambió la salud de alguien.
-            // Purga de RemoteFunction huérfanos (1.14.9.1): una respuesta que llega
-            // cuando ya nadie la espera, o un pendiente que nunca se cerró, se
-            // quedaba en el mapa PARA SIEMPRE. Nadie los espera pasado un minuto.
-            rf_gc_timer += dt;
-            if (rf_gc_timer >= 5.0) {
-                rf_gc_timer = 0.0;
-                for (auto it = rf_expect.begin(); it != rf_expect.end(); ) {
-                    it->second.age += 5.0;
-                    if (it->second.age > 60.0) it = rf_expect.erase(it); else ++it;
-                }
-                auto& rs = gl_net_responses();
-                for (auto it = rs.begin(); it != rs.end(); ) {
-                    it->second.age += 5.0;
-                    if (it->second.age > 60.0) it = rs.erase(it); else ++it;
-                }
-            }
         }
     }
 
@@ -4402,7 +4611,6 @@ public:
         // RemoteFunction en vuelo: depositar el fallo (NO limpiar las respuestas,
         // que es justo lo que el invocador tiene que recoger para re-lanzarlo).
         _rf_fail_pending(0, "RemoteFunction invoke cancelled: left the game");
-        rf_gc_timer = 0.0;
         gl_server_unix_offset() = 0.0; gl_dgt_offset() = 0.0; time_synced = false;   // reloj: volver al local
         net_connected = false;
         target_address = "";

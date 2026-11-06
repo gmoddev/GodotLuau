@@ -1,0 +1,153 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-03",
+  "Status": "LOCAL_SELECTED_GROUPS_PASS_HOSTED_QUALIFICATION_PENDING",
+  "RuntimeRevision": "2f08e441ad22a49fa1c74d2ccef6e7a50b14a91b",
+  "NativeSource": {
+    "SHA256": "7a4af3b79e002ac005fcc86a1d7de5bc6ff65291b45b280bbe3a521bde02ba9b",
+    "Files": 91,
+    "Newlines": "LF normalized"
+  },
+  "Archive": {
+    "File": "local-evidence-checkpoint2.zip",
+    "SHA256": "b8f2fafc92ecb49f570fa22adb5db700d9de34e6647982564fb11a79b3d6948c",
+    "Bytes": 353839,
+    "Members": 590
+  },
+  "Baseline": {
+    "Revision": "9f52b273cf977dce9c0541ff718cfb44dfb54c31",
+    "Source": {
+      "SHA256": "27822f8ec52e43c440c20dad7f6038d6d70fc8d28332b6665eabb2b8c6d279fa",
+      "Files": 91,
+      "Newlines": "LF normalized"
+    },
+    "Products": {
+      "godot_luau.dll": "5f3799751dbd8e1fcf1ecd4238f2d240c284ba160c9cbe2b5514b06f24160a56",
+      "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+      "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+    },
+    "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+    "Observation": {
+      "Completed": false,
+      "ElapsedMilliseconds": 70006,
+      "Observation": "Valid handler entered; caller remains waiting beyond old sixty-second GC",
+      "Result": "REPRODUCED"
+    },
+    "Actors": [
+      {
+        "Label": "baseline-server",
+        "Exit": 0,
+        "Diagnostics": ""
+      },
+      {
+        "Label": "baseline-client",
+        "Exit": 0,
+        "Diagnostics": ""
+      }
+    ],
+    "Logs": {
+      "baseline-client.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "baseline-client.stdout.log": "6eb60b9ae6ebd105438dc001d24ffdfb1113a6a6f75d53ac4285321909eb42cd",
+      "baseline-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "baseline-server.stdout.log": "cb6fdec8c528b6bcdb11fe2b030454ff0a93e299d478728970907da0a56162bb"
+    }
+  },
+  "LocalGroups": [
+    {
+      "Group": "functions",
+      "Source": {
+        "SHA256": "7a4af3b79e002ac005fcc86a1d7de5bc6ff65291b45b280bbe3a521bde02ba9b",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "c17b3689af87a0598a4b42e3d7251e62981613051e61b695a7d1e86e73eec782",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "Result": "PASS",
+      "Actors": 6,
+      "UnexpectedReports": [],
+      "Seconds": 19.469000000040978
+    },
+    {
+      "Group": "regression",
+      "Source": {
+        "SHA256": "7a4af3b79e002ac005fcc86a1d7de5bc6ff65291b45b280bbe3a521bde02ba9b",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "c17b3689af87a0598a4b42e3d7251e62981613051e61b695a7d1e86e73eec782",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "Result": "PASS",
+      "Actors": 8,
+      "UnexpectedReports": [],
+      "Seconds": 58.985000000335276
+    },
+    {
+      "Group": "remote",
+      "Source": {
+        "SHA256": "7a4af3b79e002ac005fcc86a1d7de5bc6ff65291b45b280bbe3a521bde02ba9b",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "c17b3689af87a0598a4b42e3d7251e62981613051e61b695a7d1e86e73eec782",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "Result": "PASS",
+      "Actors": 12,
+      "UnexpectedReports": [],
+      "Seconds": 75.73499999986961
+    }
+  ],
+  "ActorReports": [
+    {
+      "File": "focused-v7-trial3/functions/function-evidence.json",
+      "SHA256": "b0104e2270fd872e02e805829d0451f2eca8336e8f1edb6c449bb34edb095002",
+      "Actors": 6,
+      "Assertions": 109
+    },
+    {
+      "File": "focused-v7-trial3/remote/function-evidence.json",
+      "SHA256": "792f46b8e2523168cfeafaa3a3f5a72d348bcdc53d4b9bf19883bf641b00de01",
+      "Actors": 6,
+      "Assertions": 109
+    },
+    {
+      "File": "focused-v7-trial3/remote/native-evidence.json",
+      "SHA256": "feabf59f99f2055290e882fb67629ad84b2f024ac8000c8d2ce45c2dc7456b25",
+      "Actors": 6,
+      "Assertions": 461
+    }
+  ],
+  "Scope": "Windows MSVC 18 Debug ASan matching admitted host; 26 selected actor process runs including repeated function actors. Not the full 122-actor matrix; no graphical or release qualification claim. Failed development attempts remain in the archive and campaign journal.",
+  "HostedCore": {
+    "Revision": "2f08e441ad22a49fa1c74d2ccef6e7a50b14a91b",
+    "Run": 41745944382,
+    "Platforms": [
+      "Windows",
+      "Linux"
+    ],
+    "CasesEach": 81
+  },
+  "ProtectedBehavior": {
+    "MainMerged": false,
+    "ReleasesEnabled": false,
+    "UpdaterEnabled": false,
+    "DependencyOrHostPatchChanged": false
+  }
+}

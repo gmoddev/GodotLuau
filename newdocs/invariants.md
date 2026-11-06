@@ -123,6 +123,13 @@ the inherited runtime already satisfies them. Baseline gaps link to
 - Match asynchronous replies to the expected request and peer; keep disconnect,
   timeout, and cancellation semantics explicit. Preserve existing checks when
   refactoring. A coordinator file/key is not connection/account authentication.
+- Touched RemoteFunction behavior follows [ADR-010](adr-010-remotefunction-terminal-outcomes.md):
+  finite snapshotted deadlines, checked full-width identities, expected native
+  sender/session/publication, bounded correlation and serving state, and one
+  detached terminal delivery through the exact owner wait. Manual resumption
+  cannot let an old response resume a newer wait. Cancellation does not roll
+  back handler side effects and must not trigger automatic application retries.
+  Campaign implementation/qualification status is recorded separately.
 - Service destruction resolves outstanding invokes before discarding response
   state. Application peer-disconnect callbacks run after the transport poll;
   a functional PASS never erases engine transport diagnostics or sanitizer leaks.

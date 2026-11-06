@@ -1,0 +1,85 @@
+{
+  "Status": "FOCUSED_WINDOWS_PASS_LATEST_HOSTED_PENDING",
+  "NativeSource": {
+    "SHA256": "3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc",
+    "Files": 91,
+    "Newlines": "LF normalized"
+  },
+  "RawArchive": {
+    "File": "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\networking2\\local-evidence-checkpoint3.zip",
+    "SHA256": "2223893064da009f048cc4ed4d63451a4269fd53d7bcb20966abe3c6f0a899ec",
+    "Members": 877
+  },
+  "SelectedGroups": [
+    {
+      "Group": "animation",
+      "Source": {
+        "SHA256": "3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "677df7f2d71e8941a16d3c72a2de4f4bcc86c26fb8b54bf7ece90c952a072310",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b4cd8ff9a4302bea684c2a530e37ab73567155c6c07b0f9de520ae780c530f01",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 10,
+      "UnexpectedReports": [],
+      "Seconds": 92.18699999991804
+    },
+    {
+      "Group": "characters",
+      "Source": {
+        "SHA256": "3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "677df7f2d71e8941a16d3c72a2de4f4bcc86c26fb8b54bf7ece90c952a072310",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 20,
+      "UnexpectedReports": [],
+      "Seconds": 145.59400000004098
+    },
+    {
+      "Group": "functions",
+      "Source": {
+        "SHA256": "3ba654399e4af64bb5da99b6befe9ff4a2137fb6af5d0045649fc498498771dc",
+        "Files": 91,
+        "Newlines": "LF normalized"
+      },
+      "HostSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+      "Products": {
+        "godot_luau.dll": "677df7f2d71e8941a16d3c72a2de4f4bcc86c26fb8b54bf7ece90c952a072310",
+        "godot_luau_store_worker.exe": "d5df19fa8bcc0d6c17a2004e9ef7bdaedb783bb230854c360c7994f835838460",
+        "DatastoreBackendProbe.exe": "53b5faf0d970881c2d4e5682b2704973c1fa0363210ec83b8a99d33df1c168b7"
+      },
+      "FunctionFixtureSHA256": "614cb95da39c6d8edbdd1e746151317d089c3c61482403b4bc7496f6e99d5106",
+      "IntegrationFixtureSHA256": "6032454cc0f3b787f577e88fcf24c53a0ac31b81cd72b426dc1cfc807ad8f4db",
+      "CharacterFixtureSHA256": "b813cdb7472323000e7c381d9e427e31a8ecf77c733001e25b0f843e9e0aabea",
+      "AnimationAdversarialSHA256": "37f157c90c8dda6da1d2f0a79a62dd43cf3807e4f2414a21e58fa443a8d71985",
+      "AnimationIntegrationSHA256": "be748b9a752b9e9be9d1fae6f852506b1754d1306706c03a6c575bcfbd354473",
+      "Result": "PASS",
+      "Actors": 6,
+      "UnexpectedReports": [],
+      "Seconds": 20.032000000122935
+    }
+  ],
+  "Scope": "Selected production native Windows Debug ASan actors. Not the complete 122-actor or latest hosted platform matrix. Failed attempts and exact fixture overlays are retained in the archive."
+}
