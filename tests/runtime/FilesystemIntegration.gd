@@ -8,6 +8,11 @@ func Check(Value: bool, Label: String) -> void:
         Failed = true
         print("[Runtime:FilesystemTest] FAIL ", Label)
 
+func Until(Name: String) -> void:
+    var Deadline := Time.get_ticks_msec()+15000
+    while not Game.has_meta(Name) and Time.get_ticks_msec()<Deadline: await process_frame
+    Check(Game.has_meta(Name),Name)
+
 func Script(Type: String, Name: String, Source: String, Parent: Node) -> Node:
     var Result: Node = ClassDB.instantiate(Type)
     var Resource: Script = ClassDB.instantiate("LuauScript")
@@ -208,7 +213,9 @@ end)
     if Baseline:
         ClientSource += "\nlocal Ok=pcall(function() game:GetService('DataStoreService'):GetDataStore('Probe'):GetAsync('Key') end); assert(not Ok); game:SetAttribute('ClientServiceDenied',true)"
     Script("LocalScript", "Client", ClientSource, Game)
-    for Index in range(5): await process_frame
+    # Native DataStore completion precedes callback registration in this source.
+    await Until("ServerPassed")
+    await Until("ClientPassed")
     var Trigger := Node.new()
     Trigger.name = "CallbackProbe"
     Game.add_child(Trigger)
@@ -249,7 +256,7 @@ end)
         root.add_child(Game)
         current_scene=Game
         Script("ServerScript","Fresh","assert(not pcall(_FileAccess.read,'user://ds_GL003_Existing.json')); local Store=game:GetService('DataStoreService'):GetDataStore('GL003'); assert(Store:GetAsync('Existing')==17); game:BindToClose(function() assert(not pcall(_FileAccess.read,'user://ds_GL003_Existing.json')); Store:SetAsync('Close',99) end); game:SetAttribute('Fresh',true)",Game)
-        for Index in range(5): await process_frame
+        await Until("Fresh")
         Check(bool(Game.get_meta("Fresh",false)),"fresh scene storage authority")
         Game.queue_free()
         await process_frame

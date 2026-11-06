@@ -11,6 +11,7 @@
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/time.hpp>
+#include <cmath>
 
 using namespace godot;
 
@@ -88,6 +89,111 @@ static Variant _gdluau_lua_to_variant(lua_State* L, int idx, int depth = 0) {
     return Variant();
 }
 
+
+namespace {
+struct GLDataCodecBudget { size_t Nodes=0,Bytes=0; };
+Variant GLDataValue(lua_State* Thread,int Position,int Depth,GLDataCodecBudget& Budget) {
+    if (Depth>20 || ++Budget.Nodes>65536) luaL_error(Thread,"[Persistence:DataStore] Value traversal limit exceeded");
+    if (!lua_checkstack(Thread,4)) luaL_error(Thread,"[Persistence:DataStore] Value stack limit exceeded");
+    if (Position<0) Position=lua_gettop(Thread)+Position+1;
+    int Type=lua_type(Thread,Position);
+    if (Type==LUA_TNIL) return Variant();
+    if (Type==LUA_TBOOLEAN) return Variant(bool(lua_toboolean(Thread,Position)));
+    if (Type==LUA_TNUMBER) {
+        double Value=lua_tonumber(Thread,Position);
+        if (!std::isfinite(Value)) luaL_error(Thread,"[Persistence:DataStore] Nonfinite number");
+        if (Value>=-9223372036854775808.0 && Value<9223372036854775808.0 && Value==double(int64_t(Value))) return Variant(int64_t(Value));
+        return Variant(Value);
+    }
+    if (Type==LUA_TSTRING) {
+        size_t Size=0; const char* Bytes=lua_tolstring(Thread,Position,&Size);
+        if (Size>GLStorage::MaxBytes || Budget.Bytes>GLStorage::MaxBytes-Size || std::memchr(Bytes,0,Size)) luaL_error(Thread,"[Persistence:DataStore] Invalid or oversized string");
+        Budget.Bytes+=Size;
+        return Variant(String(Bytes)); // deliberately retain legacy Latin-1 conversion
+    }
+    if (Type!=LUA_TTABLE) luaL_error(Thread,"[Persistence:DataStore] Unsupported value type");
+    int Length=lua_objlen(Thread,Position);
+    if (Length>65536) luaL_error(Thread,"[Persistence:DataStore] Table limit exceeded");
+    Array Values; Dictionary Object;
+    size_t Count=0;
+    lua_pushnil(Thread);
+    while (lua_next(Thread,Position)) {
+        if (++Count>65536) luaL_error(Thread,"[Persistence:DataStore] Table limit exceeded");
+        if (Length) {
+            double Key=lua_type(Thread,-2)==LUA_TNUMBER?lua_tonumber(Thread,-2):0;
+            if (Key<1 || Key>Length || Key!=std::floor(Key)) luaL_error(Thread,"[Persistence:DataStore] Mixed or sparse table");
+        } else {
+            if (lua_type(Thread,-2)!=LUA_TSTRING) luaL_error(Thread,"[Persistence:DataStore] Dictionary keys must be strings");
+            Variant Key=GLDataValue(Thread,-2,Depth+1,Budget);
+            Object[Key]=GLDataValue(Thread,-1,Depth+1,Budget);
+        }
+        lua_pop(Thread,1);
+    }
+    if (Length) {
+        if (Count!=size_t(Length)) luaL_error(Thread,"[Persistence:DataStore] Sparse table");
+        for (int Index=1;Index<=Length;++Index) {
+            lua_rawgeti(Thread,Position,Index); Values.push_back(GLDataValue(Thread,-1,Depth+1,Budget)); lua_pop(Thread,1);
+        }
+        return Values;
+    }
+    return Object;
+}
+bool GLDataDecoded(const Variant& Value,int Depth,size_t& Nodes) {
+    if (Depth>20 || ++Nodes>65536) return false;
+    if (Value.get_type()==Variant::FLOAT && !std::isfinite(double(Value))) return false;
+    if (Value.get_type()==Variant::STRING) { CharString Bytes=String(Value).utf8(); if (std::memchr(Bytes.get_data(),0,Bytes.length())) return false; }
+    if (Value.get_type()==Variant::ARRAY) { Array Items=Value; for (int64_t Index=0;Index<Items.size();++Index) if (!GLDataDecoded(Items[Index],Depth+1,Nodes)) return false; }
+    if (Value.get_type()==Variant::DICTIONARY) { Dictionary Items=Value; Array Keys=Items.keys(); for (int64_t Index=0;Index<Keys.size();++Index) if (!GLDataDecoded(Keys[Index],Depth+1,Nodes) || !GLDataDecoded(Items[Keys[Index]],Depth+1,Nodes)) return false; }
+    return true;
+}
+}
+int GLDataStoreEncode(lua_State* Thread) {
+    if (lua_isnoneornil(Thread,1)) luaL_error(Thread,"[Persistence:DataStore] Nil value; use RemoveAsync");
+    GLDataCodecBudget Budget;
+    Variant Value=GLDataValue(Thread,1,0,Budget);
+    String Encoded=JSON::stringify(Value,"",false,true);
+    CharString Bytes=Encoded.utf8();
+    if (Bytes.length()>int64_t(GLStorage::MaxBytes)) luaL_error(Thread,"[Persistence:DataStore] Encoded value limit exceeded");
+    lua_pushlstring(Thread,Bytes.get_data(),Bytes.length()); return 1;
+}
+int GLDataStoreDecode(lua_State* Thread) {
+    size_t Size=0; const char* Bytes=luaL_checklstring(Thread,1,&Size);
+    if (Size>GLStorage::MaxBytes || std::memchr(Bytes,0,Size)) luaL_error(Thread,"[Persistence:DataStore] Corrupt committed data");
+    if (Size>=3 && std::memcmp(Bytes,"\xef\xbb\xbf",3)==0) { Bytes+=3; Size-=3; }
+    // Bound parser allocation/nesting before building Godot Variants. This is
+    // only a lexical limit pass; JSON::parse remains the syntax authority.
+    size_t Tokens=0; int Depth=0; bool Quoted=false,Escaped=false,Token=false;
+    for (size_t Index=0;Index<Size;++Index) {
+        unsigned char Byte=Bytes[Index];
+        if (Quoted) {
+            if (Escaped) {
+                // Godot replaces escaped NUL while constructing a String and
+                // emits an engine diagnostic; reject before that lossy parse.
+                if (Byte=='u' && Size-Index>4 && std::memcmp(Bytes+Index+1,"0000",4)==0)
+                    luaL_error(Thread,"[Persistence:DataStore] Committed value contains NUL");
+                Escaped=false;
+            }
+            else if (Byte=='\\') Escaped=true;
+            else if (Byte=='"') Quoted=false;
+            continue;
+        }
+        if (Byte==' ' || Byte=='\r' || Byte=='\n' || Byte=='\t' || Byte==',' || Byte==':') { Token=false; continue; }
+        if (Byte==']' || Byte=='}') { if (--Depth<0) luaL_error(Thread,"[Persistence:DataStore] Corrupt committed data"); Token=false; continue; }
+        if (!Token && ++Tokens>65536) luaL_error(Thread,"[Persistence:DataStore] Committed value limit exceeded");
+        Token=true;
+        if (Byte=='"') { Quoted=true; Token=false; }
+        else if (Byte=='[' || Byte=='{') { if (++Depth>21) luaL_error(Thread,"[Persistence:DataStore] Committed value limit exceeded"); Token=false; }
+    }
+    Ref<JSON> Parser; Parser.instantiate();
+    if (!Size || Parser->parse(String(Bytes))!=OK) luaL_error(Thread,"[Persistence:DataStore] Corrupt committed data");
+    size_t Nodes=0;
+    Variant Value=Parser->get_data();
+    if (!GLDataDecoded(Value,0,Nodes)) luaL_error(Thread,"[Persistence:DataStore] Committed value limit exceeded");
+    // The legacy converter uses up to two slots per level; the checked
+    // traversal above bounds nesting before reserving its entire stack.
+    if (!lua_checkstack(Thread,64)) luaL_error(Thread,"[Persistence:DataStore] Value stack limit exceeded");
+    _gdluau_variant_to_lua(Thread,Value); return 1;
+}
 
 void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
     lua_State* L_main = Runtime.GetState();

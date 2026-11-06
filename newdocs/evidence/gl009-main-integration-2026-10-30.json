@@ -1,0 +1,1573 @@
+{
+  "DateUTC": "2026-10-30",
+  "Objective": "Controlled GL-009 main integration with writer exclusion, data preservation and companion packaging",
+  "PreviousMain": "bc8ca88771a2170350e539de48f2cff89044d924",
+  "Merge": "fc923d2713c39e39fa8db87576bd8e7a5b91ef6d",
+  "MergeParents": [
+    "bc8ca88771a2170350e539de48f2cff89044d924",
+    "d5e855b39a9bcee0c074c96f321e2472235583af"
+  ],
+  "RetainedBranch": "persistence/gl-009-transactional-datastore",
+  "RetainedBranchTip": "d5e855b39a9bcee0c074c96f321e2472235583af",
+  "PreservedCommits": [
+    "0792f6915f7c07ad6c4020985fac1cf772e8125b",
+    "d987c8e571a06d36ac2ee91553b8a19305409952",
+    "d4dfb32ee89aef0968725597371db753259acbac",
+    "d5e855b39a9bcee0c074c96f321e2472235583af"
+  ],
+  "MergeTreeEqualsQualifiedTip": true,
+  "QualifiedMainRevision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+  "PackagingFollowup": "ZIP companion inclusion, Linux0755 metadata, missing-helper preflight and native CI package tests; no native runtime change",
+  "NativeSource": {
+    "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+    "Files": 87,
+    "Newlines": "LF normalized"
+  },
+  "Preservation": {
+    "OriginalQualificationPath": "newdocs/evidence/gl009-transactional-datastore-2026-10-30.json",
+    "GitBlob": "61935d69cd73258317988b5df2ba6044876e81ad",
+    "SHA256": "a4dcea43f09abb3dfe2b89dbdb5ebd0a47613d4452b22fd9d4b7068603d8809a",
+    "Unchanged": true,
+    "PackagerSHA256": "35852bdab7b5885685bb525328f1557dcab6cd33f663d0820795495e82019f48",
+    "PackagingTestsSHA256": "b8e065d1732090665b12a7e3e06b7506fe2483a5263f847bf82c2559f1ae1566"
+  },
+  "WriterGate": {
+    "CheckedAtUTC": "2026-10-30T04:36:12.4342421Z",
+    "Scope": [
+      "Controlling Windows PC",
+      "dockerbox Windows worker",
+      "linuxbox including container processes"
+    ],
+    "Source": "Read-only process-name and loaded-native-module scans recorded in pre-merge tool transcript",
+    "CandidateProcesses": 0,
+    "LoadedNativeModules": 0,
+    "InspectionFailures": 0,
+    "LegacySeedWritersExitedBeforeNewReaders": true,
+    "ExistingApplicationRootActivated": false,
+    "DefaultApplicationRootsDataStoreFiles": 0,
+    "UnknownDeployments": "Not inspected or activated; deployment requires its own quiescence/backup gate"
+  },
+  "LocalQualification": {
+    "Windows": {
+      "Platform": "Windows",
+      "Merge": "fc923d2713c39e39fa8db87576bd8e7a5b91ef6d",
+      "PackagingRevision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+      "NativeSource": {
+        "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+        "Files": 87,
+        "Newlines": "LF normalized"
+      },
+      "Core": {
+        "debug": {
+          "Cases": 72,
+          "JUnitSHA256": "7dd074b03980c5dd2325e095e04cfef210db275ba2d4207dcc2e72f729f80aa2",
+          "LogSHA256": "829f3116124e007c57490bdc149c8915ffa2e349d6613e15c94a9a6cd39b0e72"
+        },
+        "release": {
+          "Cases": 72,
+          "JUnitSHA256": "744808f1fcc1d7b6bf7e28b5702efd6c3e807431b85277a7be9a89941c49e107",
+          "LogSHA256": "e8852aa522c57695dfa78d27bf4ed29f1311dcead109b58bcd7bbfaa516b0dbd"
+        }
+      },
+      "FocusedNative": {
+        "datastore": {
+          "Actors": [
+            {
+              "Label": "datastore-basic-basic-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-update-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-update-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-set-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-set-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-remove-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-remove-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-increment-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-increment-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-failures-failures-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-lifecycle-lifecycle-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-memory-memory-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-contention-contention-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-unavailable-unavailable-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-incompatible-incompatible-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ],
+          "ResultsSHA256": "231b3c782281f59fc60efdb6864d076d920fe683d76020b3dad7a678b148520b",
+          "LogsSHA256": "5b2fb3499bb473764485fc0d11b03e1931cefd3d2f725fb82b7f08dc01930d07"
+        },
+        "filesystem": {
+          "Actors": [
+            {
+              "Label": "filesystem-capabilities",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "filesystem-writer",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "filesystem-reader",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ],
+          "ResultsSHA256": "b0e4d43987a0bf7243d8e9ac1ab36ae03421fa0b06fb5b02952a8341c0f35b39",
+          "LogsSHA256": "09d7b5ad3eba3e7848aa1f0c07e5aff60c09aad034dbfbe132a13340bc7acd41"
+        }
+      },
+      "Compatibility": {
+        "Revision": "d5e855b39a9bcee0c074c96f321e2472235583af",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "Phase": "compatibility",
+        "Packages": [
+          {
+            "Product": "CMake-debug",
+            "LibrarySHA256": "b713e143b18896126d04c43c06c88c054c2d92d167f7be433650b62c33169064",
+            "WorkerSHA256": "bc48d49174dbc515d846537569464d6cf9977e3164f944258228e65057adcbde",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "CMake-release",
+            "LibrarySHA256": "cf1b2f855f1ab85ad20e0956ae97713dbbac17a0eeae99ee343cf16b322f4a0c",
+            "WorkerSHA256": "7d3db2519f06f7b42743faef278ec2c8fd76d35069a65845c98e11c245543ec8",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_debug",
+            "LibrarySHA256": "9b4723ace7b095143624bd532a53c823135271c7688b096fdaa083b8a208bdaf",
+            "WorkerSHA256": "3eac302c21d301b260d0bbda3e55536763ceb0a7d1978f13c193cfd399a79959",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_release",
+            "LibrarySHA256": "b1ae8bf149e63db21ae04d85f90fd26588bb2b060cf1b913135f6bfc24cbd30f",
+            "WorkerSHA256": "3f9b0fe179c37aa62ca251eb1ea7ad428ba91c8eb296e9fa24f761e3437bbf51",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          }
+        ],
+        "Legacy": {
+          "LegacyLibrarySHA256": "9f886fae5431b186697644c465cd09242e78d2eab03157c7cb3f4f2a3d596332",
+          "LegacyWriterExited": true,
+          "Root": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-main-integration\\isolated-profile\\APPDATA\\GodotLuauRuntimeQualification",
+          "UnicodeHex": "c383c283c382c2a9c383c282c382c29bc383c282c382c2aa",
+          "OriginalFiles": {
+            "ds_GL009CompatScope_Alias_Key.json": "535fa30d7e25dd8a49f1536779734ec8286108d115da5045d77f3b4185d8f790",
+            "ds_GL009Compat_Bom.json": "9e9f8ef0dbc0a60fb65c89c2473303e66820f419c4920ed71ecd19b73c53413c",
+            "ds_GL009Compat_False.json": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+            "ds_GL009Compat_Number.json": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+            "ds_GL009Compat_Object.json": "15f98caba69372be8e905f22b6fd0d62e22dcadbdc6ce3bc5382daa3719b233c",
+            "ds_GL009Compat_UnicodeValue.json": "0fa5758b78225c54b9bcbaf2a22eb6729091a11f304ffc5439d8aeee393f43e3",
+            "ds_GL009Compat_éª_Existing.json": "4523540f1504cd17100c4835e85b7eefd49911580f8efff0599a8f283be6b9e3",
+            "ds___ord_GL009Compat_Rank.json": "35135aaa6cc23891b40cb3f378c53a17a1127210ce60e125ccf03efcfdaec458",
+            "UnrelatedSentinel.txt": "03aa68ddeac9b773caa4a1b95eef138f154aeab232e5376e8804621e08423d5c"
+          },
+          "Backup": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-main-integration\\legacy-backup",
+          "Actors": [
+            {
+              "Label": "compatibility-seed",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ]
+        },
+        "Actors": [
+          {
+            "Label": "compatibility-seed",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "Scope": "Isolated old-writer seed, stopped writer, backup, then new read-only readers; existing application roots never activated"
+      },
+      "IntegratedReaders": {
+        "Revision": "fc923d2713c39e39fa8db87576bd8e7a5b91ef6d",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "Phase": "integrated",
+        "Packages": [
+          {
+            "Product": "CMake-debug",
+            "LibrarySHA256": "b713e143b18896126d04c43c06c88c054c2d92d167f7be433650b62c33169064",
+            "WorkerSHA256": "bc48d49174dbc515d846537569464d6cf9977e3164f944258228e65057adcbde",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "CMake-release",
+            "LibrarySHA256": "cf1b2f855f1ab85ad20e0956ae97713dbbac17a0eeae99ee343cf16b322f4a0c",
+            "WorkerSHA256": "7d3db2519f06f7b42743faef278ec2c8fd76d35069a65845c98e11c245543ec8",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_debug",
+            "LibrarySHA256": "9b4723ace7b095143624bd532a53c823135271c7688b096fdaa083b8a208bdaf",
+            "WorkerSHA256": "3eac302c21d301b260d0bbda3e55536763ceb0a7d1978f13c193cfd399a79959",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_release",
+            "LibrarySHA256": "b1ae8bf149e63db21ae04d85f90fd26588bb2b060cf1b913135f6bfc24cbd30f",
+            "WorkerSHA256": "3f9b0fe179c37aa62ca251eb1ea7ad428ba91c8eb296e9fa24f761e3437bbf51",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          }
+        ],
+        "Legacy": {
+          "LegacyLibrarySHA256": "9f886fae5431b186697644c465cd09242e78d2eab03157c7cb3f4f2a3d596332",
+          "LegacyWriterExited": true,
+          "Root": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-main-integration\\isolated-profile\\APPDATA\\GodotLuauRuntimeQualification",
+          "UnicodeHex": "c383c283c382c2a9c383c282c382c29bc383c282c382c2aa",
+          "OriginalFiles": {
+            "ds_GL009CompatScope_Alias_Key.json": "535fa30d7e25dd8a49f1536779734ec8286108d115da5045d77f3b4185d8f790",
+            "ds_GL009Compat_Bom.json": "9e9f8ef0dbc0a60fb65c89c2473303e66820f419c4920ed71ecd19b73c53413c",
+            "ds_GL009Compat_False.json": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+            "ds_GL009Compat_Number.json": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+            "ds_GL009Compat_Object.json": "15f98caba69372be8e905f22b6fd0d62e22dcadbdc6ce3bc5382daa3719b233c",
+            "ds_GL009Compat_UnicodeValue.json": "0fa5758b78225c54b9bcbaf2a22eb6729091a11f304ffc5439d8aeee393f43e3",
+            "ds_GL009Compat_éª_Existing.json": "4523540f1504cd17100c4835e85b7eefd49911580f8efff0599a8f283be6b9e3",
+            "ds___ord_GL009Compat_Rank.json": "35135aaa6cc23891b40cb3f378c53a17a1127210ce60e125ccf03efcfdaec458",
+            "UnrelatedSentinel.txt": "03aa68ddeac9b773caa4a1b95eef138f154aeab232e5376e8804621e08423d5c"
+          },
+          "Backup": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl009-main-integration\\legacy-backup",
+          "Actors": [
+            {
+              "Label": "compatibility-seed",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ]
+        },
+        "Actors": [
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "Scope": "Isolated old-writer seed, stopped writer, backup, then new read-only readers; existing application roots never activated"
+      },
+      "Archive": {
+        "Revision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+        "Platform": "windows",
+        "PackageSHA256": "82b0784b24b92c7159242a70736760a26126c6585e7dbb635c2e76928a061909",
+        "EntriesSHA256": {
+          "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": "9b4723ace7b095143624bd532a53c823135271c7688b096fdaa083b8a208bdaf",
+          "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": "b1ae8bf149e63db21ae04d85f90fd26588bb2b060cf1b913135f6bfc24cbd30f",
+          "GodotLuau/bin/godot_luau_store_worker.exe": "3f9b0fe179c37aa62ca251eb1ea7ad428ba91c8eb296e9fa24f761e3437bbf51"
+        },
+        "Actors": [
+          {
+            "Label": "archive-debug",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "archive-release",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "Companion": "One source-matching Release companion serves both Debug/Release libraries",
+        "LegacyBytesAndBackupPreserved": true,
+        "Scope": "Native installation subset; extraction respects Unix mode metadata; no production release/updater qualification",
+        "PackagerSHA256": "35852bdab7b5885685bb525328f1557dcab6cd33f663d0820795495e82019f48"
+      },
+      "FixtureHashes": {
+        "ArchiveIntegration.py": "a5ae66428a9a4b792e771b8b17b20602941d4ccf6373ee6ad25a822d6c9c92cc",
+        "Compatibility.gd": "ca1830f0c04c93ef37ad12b5b3a99b98661ce9fff394de4320de948e46b59e43",
+        "QualifyIntegration.py": "67eb27267ae06ad55c429b7619c12ff820173df161b2a7aa76ab150ada56c393"
+      },
+      "PackagerSHA256": "35852bdab7b5885685bb525328f1557dcab6cd33f663d0820795495e82019f48",
+      "PackagingTestsSHA256": "b8e065d1732090665b12a7e3e06b7506fe2483a5263f847bf82c2559f1ae1566",
+      "CommitRecovery": {
+        "FaultStages": 4,
+        "KillStages": 4,
+        "IndependentIncrements": 40,
+        "PowerLossTest": false
+      },
+      "CompatibilityLogsSHA256": "1e7828fbcdf417a88355a3b12acf59faf145ce368ac59aa6551c61c57f5555f2",
+      "BaselineStoredFiles": 9
+    },
+    "Linux": {
+      "Platform": "Linux",
+      "Merge": "fc923d2713c39e39fa8db87576bd8e7a5b91ef6d",
+      "PackagingRevision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+      "NativeSource": {
+        "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+        "Files": 87,
+        "Newlines": "LF normalized"
+      },
+      "Core": {
+        "debug": {
+          "Cases": 72,
+          "JUnitSHA256": "4c0374ce547d541a3bd0c221c4985a1452c3342e6ca74b72cf6a06bd878f0f61",
+          "LogSHA256": "fe5a42f3f25111177b6ab32aceee69860059bd77a600acc094817278606d2102"
+        },
+        "release": {
+          "Cases": 72,
+          "JUnitSHA256": "b411e81541f16cea08890e9d17c311d6849642b2eacbab34d9165e8fbc49b554",
+          "LogSHA256": "3f4147305d9298fe0e1a504507eaadc425c7d4266588f1142cc069575bec9be7"
+        }
+      },
+      "FocusedNative": {
+        "datastore": {
+          "Actors": [
+            {
+              "Label": "datastore-basic-basic-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-update-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-update-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-update-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-set-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-set-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-set-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-remove-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-remove-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-remove-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-seed-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-increment-A",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-increment-B",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-increment-verify-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-failures-failures-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-lifecycle-lifecycle-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-memory-memory-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-contention-contention-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-unavailable-unavailable-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "datastore-incompatible-incompatible-single",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ],
+          "ResultsSHA256": "57776668edbc09c6b0302a2e845331ca7fca86fde48f3ecf88d291aa658774d8",
+          "LogsSHA256": "c8a04de97e3a33a02b9ae1a64f386df4937b8ce3a1f4d156e1eedb8bd3791bab"
+        },
+        "filesystem": {
+          "Actors": [
+            {
+              "Label": "filesystem-capabilities",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "filesystem-writer",
+              "Exit": 0,
+              "Diagnostics": ""
+            },
+            {
+              "Label": "filesystem-reader",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ],
+          "ResultsSHA256": "dfcea25ce18e566d8587dd7de60ace8d2216a774804e6882cac4377d0464c503",
+          "LogsSHA256": "bc50eef2e4fc76a8c148184fd4285c8632a3e327739d223d341fb8aba58d09b5"
+        }
+      },
+      "Compatibility": {
+        "Revision": "d5e855b39a9bcee0c074c96f321e2472235583af",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "Phase": "compatibility",
+        "Packages": [
+          {
+            "Product": "CMake-debug",
+            "LibrarySHA256": "94ae954ad4b1f2249ebee6bbaf9757c6b4077a8fc7c696c37f665ab58b65787f",
+            "WorkerSHA256": "889de813a254905c4ef9bccf32d8e099df83f2a838bd97e3f85c02288807a675",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "CMake-release",
+            "LibrarySHA256": "4f27e81ea5a686ae3726266052dbe2c015fad5f607b6e9de8accb48d03aada2a",
+            "WorkerSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_debug",
+            "LibrarySHA256": "3b768cdef437fd2c4745da23cd0bc833783405c1d0849536c8e73fcda588543f",
+            "WorkerSHA256": "7e2e0b1c7ca9e078f7a28f3a9950b6a9c114bedefca54325a4d1c21902823b91",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_release",
+            "LibrarySHA256": "a4070aea523d777d7cc15365ccc88333b89ed5b4eaca9e12865e9c6c460a5871",
+            "WorkerSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          }
+        ],
+        "Legacy": {
+          "LegacyLibrarySHA256": "6fd1f7854c80c7ac26703713cd31b1fcd538af2a8699baacb4fc5a6bf7ea8024",
+          "LegacyWriterExited": true,
+          "Root": "/work/results/gl009-main-integration/isolated-profile/XDG_DATA_HOME/GodotLuauRuntimeQualification",
+          "UnicodeHex": "c383c283c382c2a9c383c282c382c29bc383c282c382c2aa",
+          "OriginalFiles": {
+            "ds___ord_GL009Compat_Rank.json": "35135aaa6cc23891b40cb3f378c53a17a1127210ce60e125ccf03efcfdaec458",
+            "ds_GL009CompatScope_Alias_Key.json": "535fa30d7e25dd8a49f1536779734ec8286108d115da5045d77f3b4185d8f790",
+            "ds_GL009Compat_Number.json": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+            "UnrelatedSentinel.txt": "03aa68ddeac9b773caa4a1b95eef138f154aeab232e5376e8804621e08423d5c",
+            "ds_GL009Compat_éª_Existing.json": "4523540f1504cd17100c4835e85b7eefd49911580f8efff0599a8f283be6b9e3",
+            "ds_GL009Compat_UnicodeValue.json": "0fa5758b78225c54b9bcbaf2a22eb6729091a11f304ffc5439d8aeee393f43e3",
+            "ds_GL009Compat_Object.json": "15f98caba69372be8e905f22b6fd0d62e22dcadbdc6ce3bc5382daa3719b233c",
+            "ds_GL009Compat_Bom.json": "9e9f8ef0dbc0a60fb65c89c2473303e66820f419c4920ed71ecd19b73c53413c",
+            "ds_GL009Compat_False.json": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+          },
+          "Backup": "/work/results/gl009-main-integration/legacy-backup",
+          "Actors": [
+            {
+              "Label": "compatibility-seed",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ]
+        },
+        "Actors": [
+          {
+            "Label": "compatibility-seed",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "Scope": "Isolated old-writer seed, stopped writer, backup, then new read-only readers; existing application roots never activated"
+      },
+      "IntegratedReaders": {
+        "Revision": "fc923d2713c39e39fa8db87576bd8e7a5b91ef6d",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "Phase": "integrated",
+        "Packages": [
+          {
+            "Product": "CMake-debug",
+            "LibrarySHA256": "94ae954ad4b1f2249ebee6bbaf9757c6b4077a8fc7c696c37f665ab58b65787f",
+            "WorkerSHA256": "889de813a254905c4ef9bccf32d8e099df83f2a838bd97e3f85c02288807a675",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "CMake-release",
+            "LibrarySHA256": "4f27e81ea5a686ae3726266052dbe2c015fad5f607b6e9de8accb48d03aada2a",
+            "WorkerSHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_debug",
+            "LibrarySHA256": "3b768cdef437fd2c4745da23cd0bc833783405c1d0849536c8e73fcda588543f",
+            "WorkerSHA256": "7e2e0b1c7ca9e078f7a28f3a9950b6a9c114bedefca54325a4d1c21902823b91",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          },
+          {
+            "Product": "SCons-template_release",
+            "LibrarySHA256": "a4070aea523d777d7cc15365ccc88333b89ed5b4eaca9e12865e9c6c460a5871",
+            "WorkerSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "ReadCompatibility": true,
+            "OriginalBytesPreserved": true
+          }
+        ],
+        "Legacy": {
+          "LegacyLibrarySHA256": "6fd1f7854c80c7ac26703713cd31b1fcd538af2a8699baacb4fc5a6bf7ea8024",
+          "LegacyWriterExited": true,
+          "Root": "/work/results/gl009-main-integration/isolated-profile/XDG_DATA_HOME/GodotLuauRuntimeQualification",
+          "UnicodeHex": "c383c283c382c2a9c383c282c382c29bc383c282c382c2aa",
+          "OriginalFiles": {
+            "ds___ord_GL009Compat_Rank.json": "35135aaa6cc23891b40cb3f378c53a17a1127210ce60e125ccf03efcfdaec458",
+            "ds_GL009CompatScope_Alias_Key.json": "535fa30d7e25dd8a49f1536779734ec8286108d115da5045d77f3b4185d8f790",
+            "ds_GL009Compat_Number.json": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+            "UnrelatedSentinel.txt": "03aa68ddeac9b773caa4a1b95eef138f154aeab232e5376e8804621e08423d5c",
+            "ds_GL009Compat_éª_Existing.json": "4523540f1504cd17100c4835e85b7eefd49911580f8efff0599a8f283be6b9e3",
+            "ds_GL009Compat_UnicodeValue.json": "0fa5758b78225c54b9bcbaf2a22eb6729091a11f304ffc5439d8aeee393f43e3",
+            "ds_GL009Compat_Object.json": "15f98caba69372be8e905f22b6fd0d62e22dcadbdc6ce3bc5382daa3719b233c",
+            "ds_GL009Compat_Bom.json": "9e9f8ef0dbc0a60fb65c89c2473303e66820f419c4920ed71ecd19b73c53413c",
+            "ds_GL009Compat_False.json": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+          },
+          "Backup": "/work/results/gl009-main-integration/legacy-backup",
+          "Actors": [
+            {
+              "Label": "compatibility-seed",
+              "Exit": 0,
+              "Diagnostics": ""
+            }
+          ]
+        },
+        "Actors": [
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "compatibility-read",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "Scope": "Isolated old-writer seed, stopped writer, backup, then new read-only readers; existing application roots never activated"
+      },
+      "Archive": {
+        "Revision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+        "Platform": "linux",
+        "PackageSHA256": "43cf983438e72d1de64760640275987af1a015bd4dbaec2e9f0616b8b9b8b81e",
+        "EntriesSHA256": {
+          "GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so": "3b768cdef437fd2c4745da23cd0bc833783405c1d0849536c8e73fcda588543f",
+          "GodotLuau/bin/godot_luau.linux.template_release.x86_64.so": "a4070aea523d777d7cc15365ccc88333b89ed5b4eaca9e12865e9c6c460a5871",
+          "GodotLuau/bin/godot_luau_store_worker": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0"
+        },
+        "Actors": [
+          {
+            "Label": "archive-debug",
+            "Exit": 0,
+            "Diagnostics": ""
+          },
+          {
+            "Label": "archive-release",
+            "Exit": 0,
+            "Diagnostics": ""
+          }
+        ],
+        "Companion": "One source-matching Release companion serves both Debug/Release libraries",
+        "LegacyBytesAndBackupPreserved": true,
+        "Scope": "Native installation subset; extraction respects Unix mode metadata; no production release/updater qualification",
+        "PackagerSHA256": "35852bdab7b5885685bb525328f1557dcab6cd33f663d0820795495e82019f48"
+      },
+      "FixtureHashes": {
+        "ArchiveIntegration.py": "a5ae66428a9a4b792e771b8b17b20602941d4ccf6373ee6ad25a822d6c9c92cc",
+        "Compatibility.gd": "ca1830f0c04c93ef37ad12b5b3a99b98661ce9fff394de4320de948e46b59e43",
+        "QualifyIntegration.py": "67eb27267ae06ad55c429b7619c12ff820173df161b2a7aa76ab150ada56c393"
+      },
+      "PackagerSHA256": "35852bdab7b5885685bb525328f1557dcab6cd33f663d0820795495e82019f48",
+      "PackagingTestsSHA256": "b8e065d1732090665b12a7e3e06b7506fe2483a5263f847bf82c2559f1ae1566",
+      "CommitRecovery": {
+        "FaultStages": 4,
+        "KillStages": 4,
+        "IndependentIncrements": 40,
+        "PowerLossTest": false
+      },
+      "CompatibilityLogsSHA256": "b1ecabc3e8130cf3091f317bb11a933662d4e976ac5ea225cf0bced71ac91722",
+      "BaselineStoredFiles": 9
+    }
+  },
+  "HostedCI": {
+    "Revision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+    "Runs": {
+      "Core": {
+        "conclusion": "success",
+        "databaseId": 41004373508,
+        "headSha": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+        "jobs": [
+          {
+            "completedAt": "2026-10-30T04:42:55Z",
+            "conclusion": "success",
+            "databaseId": 123895807473,
+            "name": "Core (Linux, Debug)",
+            "startedAt": "2026-10-30T04:42:27Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T04:42:29Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T04:42:28Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:35Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T04:42:29Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:37Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-30T04:42:35Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:51Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-30T04:42:37Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:51Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-30T04:42:51Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:52Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-30T04:42:51Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:54Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-30T04:42:52Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:54Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-30T04:42:54Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:54Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-30T04:42:54Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/41004373508/job/123895807473"
+          },
+          {
+            "completedAt": "2026-10-30T04:43:47Z",
+            "conclusion": "success",
+            "databaseId": 123895807927,
+            "name": "Core (Windows, Debug)",
+            "startedAt": "2026-10-30T04:42:28Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T04:42:29Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T04:42:29Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:45Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T04:42:29Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:18Z",
+                "conclusion": "success",
+                "name": "Configure production core",
+                "number": 3,
+                "startedAt": "2026-10-30T04:42:45Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:38Z",
+                "conclusion": "success",
+                "name": "Build ExecutionDomainTests",
+                "number": 4,
+                "startedAt": "2026-10-30T04:43:18Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:40Z",
+                "conclusion": "success",
+                "name": "Require production regression discovery",
+                "number": 5,
+                "startedAt": "2026-10-30T04:43:38Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:42Z",
+                "conclusion": "success",
+                "name": "Run production core through CTest",
+                "number": 6,
+                "startedAt": "2026-10-30T04:43:40Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:43Z",
+                "conclusion": "success",
+                "name": "Retain qualification diagnostics",
+                "number": 7,
+                "startedAt": "2026-10-30T04:43:42Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:45Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 14,
+                "startedAt": "2026-10-30T04:43:43Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:45Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 15,
+                "startedAt": "2026-10-30T04:43:45Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/41004373508/job/123895807927"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/41004373508"
+      },
+      "Native": {
+        "conclusion": "success",
+        "databaseId": 41004373448,
+        "headSha": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d",
+        "jobs": [
+          {
+            "completedAt": "2026-10-30T04:51:37Z",
+            "conclusion": "success",
+            "databaseId": 123895803068,
+            "name": "Native (Linux, Debug)",
+            "startedAt": "2026-10-30T04:42:26Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T04:42:28Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T04:42:27Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:36Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T04:42:28Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:36Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-30T04:42:36Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:37Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-30T04:42:36Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:39Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-30T04:42:37Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:39Z",
+                "conclusion": "success",
+                "name": "Verify DataStore companion archive packaging",
+                "number": 6,
+                "startedAt": "2026-10-30T04:42:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:42Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 7,
+                "startedAt": "2026-10-30T04:42:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:50:10Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 8,
+                "startedAt": "2026-10-30T04:42:42Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:50:10Z",
+                "conclusion": "skipped",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 9,
+                "startedAt": "2026-10-30T04:50:10Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:50:19Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 10,
+                "startedAt": "2026-10-30T04:50:10Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:50:36Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 11,
+                "startedAt": "2026-10-30T04:50:19Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:50:50Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 12,
+                "startedAt": "2026-10-30T04:50:36Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:50:53Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 13,
+                "startedAt": "2026-10-30T04:50:50Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:50:59Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 14,
+                "startedAt": "2026-10-30T04:50:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:51:20Z",
+                "conclusion": "success",
+                "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                "number": 15,
+                "startedAt": "2026-10-30T04:50:59Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:51:33Z",
+                "conclusion": "success",
+                "name": "GL-009 transactional persistence and interrupted commit recovery",
+                "number": 16,
+                "startedAt": "2026-10-30T04:51:20Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:51:33Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 17,
+                "startedAt": "2026-10-30T04:51:33Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:51:35Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 18,
+                "startedAt": "2026-10-30T04:51:33Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:51:35Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 36,
+                "startedAt": "2026-10-30T04:51:35Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:51:35Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 37,
+                "startedAt": "2026-10-30T04:51:35Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/41004373448/job/123895803068"
+          },
+          {
+            "completedAt": "2026-10-30T04:54:52Z",
+            "conclusion": "success",
+            "databaseId": 123895803524,
+            "name": "Native (Windows, Debug)",
+            "startedAt": "2026-10-30T04:42:27Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-30T04:42:28Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-30T04:42:27Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:41Z",
+                "conclusion": "success",
+                "name": "Run actions/checkout@v4",
+                "number": 2,
+                "startedAt": "2026-10-30T04:42:28Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:43Z",
+                "conclusion": "success",
+                "name": "Record source and dependency identity",
+                "number": 3,
+                "startedAt": "2026-10-30T04:42:41Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:44Z",
+                "conclusion": "success",
+                "name": "Verify fixture process ownership and failure handling",
+                "number": 4,
+                "startedAt": "2026-10-30T04:42:43Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:47Z",
+                "conclusion": "success",
+                "name": "Provision verified official Godot 4.7.1",
+                "number": 5,
+                "startedAt": "2026-10-30T04:42:44Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:42:48Z",
+                "conclusion": "success",
+                "name": "Verify DataStore companion archive packaging",
+                "number": 6,
+                "startedAt": "2026-10-30T04:42:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:43:04Z",
+                "conclusion": "success",
+                "name": "Configure production native adapter",
+                "number": 7,
+                "startedAt": "2026-10-30T04:42:48Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:53:11Z",
+                "conclusion": "success",
+                "name": "Build GodotLuauAdapter",
+                "number": 8,
+                "startedAt": "2026-10-30T04:43:04Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:53:11Z",
+                "conclusion": "success",
+                "name": "Expose installed MSVC Debug runtime",
+                "number": 9,
+                "startedAt": "2026-10-30T04:53:11Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:53:21Z",
+                "conclusion": "success",
+                "name": "Single-player listen dedicated and editor lifecycle",
+                "number": 10,
+                "startedAt": "2026-10-30T04:53:11Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:53:39Z",
+                "conclusion": "success",
+                "name": "GL-006 and GL-008 existing network regressions",
+                "number": 11,
+                "startedAt": "2026-10-30T04:53:21Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:53:54Z",
+                "conclusion": "success",
+                "name": "GL-020 existing functional animation lifecycle",
+                "number": 12,
+                "startedAt": "2026-10-30T04:53:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:53:58Z",
+                "conclusion": "success",
+                "name": "GL-004 isolated resource and recovery cases",
+                "number": 13,
+                "startedAt": "2026-10-30T04:53:54Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:54:04Z",
+                "conclusion": "success",
+                "name": "GL-003 confined filesystem and cross-process services",
+                "number": 14,
+                "startedAt": "2026-10-30T04:53:58Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:54:30Z",
+                "conclusion": "success",
+                "name": "GL-005 asynchronous HTTP authority bounds and lifecycle",
+                "number": 15,
+                "startedAt": "2026-10-30T04:54:04Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:54:47Z",
+                "conclusion": "success",
+                "name": "GL-009 transactional persistence and interrupted commit recovery",
+                "number": 16,
+                "startedAt": "2026-10-30T04:54:30Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:54:47Z",
+                "conclusion": "success",
+                "name": "Require all native actors and retain identity",
+                "number": 17,
+                "startedAt": "2026-10-30T04:54:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:54:49Z",
+                "conclusion": "success",
+                "name": "Retain native qualification diagnostics",
+                "number": 18,
+                "startedAt": "2026-10-30T04:54:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:54:51Z",
+                "conclusion": "success",
+                "name": "Post Run actions/checkout@v4",
+                "number": 36,
+                "startedAt": "2026-10-30T04:54:49Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-30T04:54:51Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 37,
+                "startedAt": "2026-10-30T04:54:51Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/41004373448/job/123895803524"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/41004373448"
+      }
+    },
+    "Artifacts": [
+      {
+        "ID": 12954578537,
+        "Name": "runtime-core-Windows-Debug",
+        "Digest": "sha256:4dea465b8fabf1f747baeefdfbc199a7b96d1fc2fd34f402cae7236b059a6d0b",
+        "Bytes": 12172,
+        "Run": 41004373508,
+        "Revision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d"
+      },
+      {
+        "ID": 12954329394,
+        "Name": "runtime-core-Linux-Debug",
+        "Digest": "sha256:178086fca60c65842c72ba5526bea7278c0ce31280135378c23da5ec22c79beb",
+        "Bytes": 13529,
+        "Run": 41004373508,
+        "Revision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d"
+      },
+      {
+        "ID": 12955387276,
+        "Name": "runtime-native-Windows-Debug",
+        "Digest": "sha256:edd0e37c4aa657626d134a1e6595dab2d4dc34d7214718f86b9b9032fc7c9a5c",
+        "Bytes": 102995,
+        "Run": 41004373448,
+        "Revision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d"
+      },
+      {
+        "ID": 12954583232,
+        "Name": "runtime-native-Linux-Debug",
+        "Digest": "sha256:ae8bd37f93ae1635d02ca42ccd5f2a2ce52d89b70e2eb7543ca05a754a65f477",
+        "Bytes": 106463,
+        "Run": 41004373448,
+        "Revision": "31d0f1f502f75dfa1c530acdf5a21ab1b1d3c16d"
+      }
+    ],
+    "NativeVerified": {
+      "Linux": {
+        "SummarySHA256": "28798c6dc2aaf5ffcb1aeceebbf397b097895e5f5e751f2905253506cc2d92a5",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "4ba73b8d976d77d6f9ac3df0e63939c9275b3212f0ef4e64229c5d54a334d07b",
+          "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+          "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+          "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+          "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+          "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+          "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+          "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "ExecutionDomainTests.cpp": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+          "FilesystemIntegration.gd": "62b97405f675cc47dce9a371efd02cb27be64bc2ab9fe6b5c52085b48fff2229",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+          "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "9c97b09b7f1c85bafcc14bf9380ef7501f9682100fe7e4d0e0256f4807e25346",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "WorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+        "ExtensionSHA256": "54b35730959494e7f5a087979fe11e186ae8d8feb514f956ac0bae39aec769ca",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992009,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+            "Bytes": 76056717,
+            "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+          },
+          "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 212,
+        "Actors": 66,
+        "CommitInterruption": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        }
+      },
+      "Windows": {
+        "SummarySHA256": "d843b34947a7cb0c7b680b0a736dd4106ed062012449f841e3b29c8dbce31076",
+        "NativeSource": {
+          "SHA256": "c88311513a6a91e195a6f37712a19dada19754c02222f26ad02b7ac6048e622c",
+          "Files": 87,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CheckCoreCI.py": "6c8b20865ef5d5ae670e2c8f7b804edc63b1e9f41f415d264d74de809d39baa7",
+          "CheckNativeCI.py": "4ba73b8d976d77d6f9ac3df0e63939c9275b3212f0ef4e64229c5d54a334d07b",
+          "CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+          "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+          "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+          "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+          "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+          "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+          "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+          "DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "ExecutionDomainTests.cpp": "67357a54722b532a0de27f6e5ecd87e46c508480fb5a5bdfa4b0b045c5d6db20",
+          "FilesystemIntegration.gd": "62b97405f675cc47dce9a371efd02cb27be64bc2ab9fe6b5c52085b48fff2229",
+          "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+          "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+          "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+          "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+          "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+          "HttpFixtureServer.py": "13e31ecca871b0b6dc05d411f7219ca92589a9d35fb9c0f6f87c54d87a4510ec",
+          "HttpIntegration.gd": "04859a094f4a0a3c7f26e4fffc9f16b50e802184476e827d83e1fc66d3f2a101",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "c16ab5bc94100061b42e8ee17d9bef3fba63748a7dbf7661aca1a11fc91f3f5e",
+          "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+          "RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "9c97b09b7f1c85bafcc14bf9380ef7501f9682100fe7e4d0e0256f4807e25346",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "WorkerSHA256": "91c39b31dcac78487d689dbafc5e37431125657d20a533d533faf850d8b84a8c",
+        "ExtensionSHA256": "8594d9ace38910dee240ec85271b783cabae7e1dd083db8ba3badebe815db5fb",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992673,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+            "Bytes": 84198557,
+            "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "Executable": "Godot_v4.7.1-stable_win64.exe"
+          },
+          "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 214,
+        "Actors": 66,
+        "CommitInterruption": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        }
+      }
+    },
+    "VerifiedNativeLogs": 426,
+    "PackagingTestsPerPlatform": 5,
+    "PackageSourceDigestsVerified": true,
+    "Result": "Four hosted jobs pass at integrated main revision; four archive digests, core72/native66 per platform, package5 per platform and all native log hashes verified"
+  },
+  "Guardrails": {
+    "ReleaseWorkflowUnchanged": true,
+    "ReleaseJobsLiteralFalse": true,
+    "ReleasePermissions": "contents read",
+    "UpdaterUnchanged": true,
+    "RuntimeUpdatesAllowed": false,
+    "OriginalQualifiedRuntimeUnchanged": true,
+    "DependencyPinsUnchanged": true,
+    "WindowsWorkerGodotOrHelpersRemaining": 0,
+    "LinuxOwnedQualificationContainer": "Stopped; no remaining owned Godot/helper descendants",
+    "CachesAndCanonicalProducts": "Retained",
+    "LegacyCompatibilityBackups": "Retained; all nine seeded files byte-identical",
+    "PublishedNativeBinariesOrReleaseArchives": false
+  },
+  "Limitations": [
+    "No production-root rollout; future deployments must stop all legacy writers and preserve offline backups",
+    "Only supported legacy JSON shapes/bounds; no general data migration or historical versions; false decoding intentionally corrected",
+    "Local same-account cooperating writers; no network filesystem/replica guarantee; controlled interruption is not physical power-loss proof",
+    "Archive qualification is a native installation subset with Unix-mode-respecting extraction; disabled inherited release pipeline and updater extraction remain unqualified",
+    "Host init/supervisor reaping required; native extension hot reload with unretired children unqualified",
+    "Windows full native ASan GL-018, GL-017 engine diagnostics and GL-020 adversarial qualification unchanged"
+  ]
+}

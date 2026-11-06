@@ -32,7 +32,7 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
 | GL-008 | P2 | Integrated; resolved within stated scope | Qualified server-owned chat identity, typed/bounded messages and receive authority |
-| GL-009 | P1 | Verified persistence defect | DataStore lacks competing-writer and crash-atomic semantics |
+| GL-009 | P1 | Integrated; fixed and qualified within scope | Controlled main merge, stopped-writer gate, preserved data and verified companion packages |
 | GL-010 | P1 | Verified release gap | Windows artifacts are reused from a committed ZIP |
 | GL-011 | P1 | Open; core and qualified native CI integrated | Sanitizers and release enforcement remain manual/incomplete |
 | GL-012 | P2 | Integrated; resolved within stated scope | Historical releases/tags retained; publication disabled |
@@ -351,21 +351,49 @@ retains these limits and records fresh focused checks without a new security pha
 
 ## GL-009: DataStore loses updates and has no crash-atomic write protocol
 
-**Evidence:** `src/core/luau_stdlib.h:639-677` implements Get/Set/Update/Increment
+Work starts from main `bc8ca88` on `persistence/gl-009-transactional-datastore`.
+Windows/Linux deterministic lost-update and controlled truncation-interruption
+reproductions now exist in the [work record](datastore-validation.md).
+[ADR-005](adr-005-transactional-datastore.md) selects confined transactional files
+and a companion native I/O process. Implementation `d4dfb32` is fixed and qualified
+within that supported contract. Normal merge `fc923d2` integrates all four commits
+at branch tip `d5e855b`; its tree equals that qualified tip. Main integration
+verification is in the [integration record](datastore-integration.md#final-disposition).
+Fresh Windows/Linux hosted core72/native66 and five packaging tests per platform
+pass at follow-up `31d0f1f`, with all four artifacts and 426 native log hashes
+verified. The legacy-writer gate clears before merge, all nine seeded legacy files
+and their backups remain byte-identical, and extracted native packages pass on
+both OSes. No existing application root is activated. No release
+or updater enablement is authorized. See the
+[final evidence and CI](datastore-validation.md#final-disposition).
+
+**Verified starting-main evidence:** `src/core/luau_stdlib.h` implements Get/Set/Update/Increment
 as local JSON access. `UpdateAsync` is Get/transform/Set with no lock, version,
-transaction, or CAS. Native writes at `luau_script.h:1614-1619` directly overwrite
+transaction, or CAS. Native `GLStorage::WriteFile` in `gl_storage.h` truncates
 the target. README's coordinator limits explicitly document shared `user://`.
 
 **Consequence/limits:** Two world processes can read the same value and overwrite
 one another; interruption can leave incomplete JSON. A single non-yielding
-transform is not cross-process serialization. No corruption or competing-writer
-failure was reproduced. The optional Nakama stack is not wired into DataStore.
+transform is not cross-process serialization. Windows/Linux baseline tests now
+reproduce competing-writer loss and loss of a prior acknowledged sentinel after
+controlled truncation/interruption; see the linked work record. The optional
+Nakama stack is not wired into DataStore.
 
-**Fix boundary and closure:** Select/document one persistence authority and
-concurrency/durability contract. SQLite or Nakama are options, not accepted
-decisions. An atomic rename alone does not fix lost updates. Cover independent
+**Fix boundary and closure:** ADR-005 selects confined files after evaluating
+SQLite and the unqualified optional external stack. Rename alone is insufficient;
+the fix adds shared locking, conditional commit, flush/ack and bounded ownership.
+Qualification covers independent
 process writers, retries/conflicts, cancellation, disk failure, interrupted commit,
 restart, and preserving the previous committed value on failure.
+
+**Remaining limits:** same-account cooperating local writers; stop old writers
+before upgrade. NTFS/ext4 are executed configurations. Ordered sorting remains
+local cache and public history methods remain stubs. Callback effects are not
+exactly-once. Power loss, unsupported/network filesystems and independent replicas
+are not qualified. Host init/supervisor must reap terminated orphaned helpers;
+hot reload with unretired children is unqualified. Native codec/startup latency
+and aggregate disk capacity remain operational limits. Windows native ASan GL-018,
+GL-017 engine diagnostics and GL-020 adversarial qualification remain separate.
 
 ## GL-010: Windows release binaries lack same-revision build evidence
 
@@ -386,6 +414,14 @@ archive reuse as a substitute for source builds.
 explicit-input local package are recorded in the shared-domain validation report.
 The inherited release workflow still reuses its ZIP; GL-010 remains open for
 published release provenance and workflow correction.
+
+GL-009 integration follow-up `31d0f1f` fixes the source ZIP builder's omitted
+Windows/extensionless Linux companion, executable metadata and missing-helper
+preflight; real extracted source-built packages pass on both platforms. The
+disabled inherited release workflow still stages only Linux `.so` files and
+reuses its Windows ZIP. Its pipeline/provenance and updater extraction remain
+unqualified; publication stays disabled. See the
+[integration record](datastore-integration.md#companion-archive-follow-up).
 
 ## GL-011: Automated runtime qualification is missing from release gates
 

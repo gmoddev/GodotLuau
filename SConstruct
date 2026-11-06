@@ -53,4 +53,14 @@ target_name = "GodotLuau/bin/godot_luau" + env["suffix"] + env["SHLIBSUFFIX"]
 
 library = env.SharedLibrary(target=target_name, source=sources)
 
-Default(library)
+WorkerEnv = env.Clone()
+WorkerEnv["LIBS"] = []
+WorkerEnv["LIBPATH"] = []
+if WorkerEnv.get("is_msvc", False):
+    for Key in ("CCFLAGS", "CXXFLAGS"):
+        WorkerEnv[Key] = [Flag for Flag in WorkerEnv.get(Key, []) if str(Flag) not in ("/MD", "/MDd")]
+    WorkerEnv.Append(CCFLAGS=["/MT"])
+Worker = WorkerEnv.Program(target="GodotLuau/bin/godot_luau_store_worker", source=["src/persistence/worker_main.cpp"])
+if env["platform"] == "linux":
+    env.Append(LIBS=["dl"])
+Default(library, Worker)

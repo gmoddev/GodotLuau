@@ -38,6 +38,9 @@ def Prepare(Output, Extension):
     (Cache / "global_script_class_cache.cfg").write_text("list=[]\n")
     Suffix = ".dll" if os.name == "nt" else ".so"
     shutil.copyfile(Extension, Output / ("godot_luau" + Suffix))
+    Worker=Extension.parent/('godot_luau_store_worker.exe' if os.name=='nt' else 'godot_luau_store_worker')
+    if Worker.is_file():
+        shutil.copy2(Worker,Output/Worker.name)
     (Output / "project.godot").write_text('config_version=5\n[application]\nconfig/name="GodotLuauQualification"\nconfig/use_custom_user_dir=true\nconfig/custom_user_dir_name="GodotLuauRuntimeQualification"\n[threading]\nworker_pool/max_threads=2\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n')
     Platform = "windows" if os.name == "nt" else "linux"
     (Output / "godot_luau.gdextension").write_text('[configuration]\nentry_symbol="luau_extension_init"\ncompatibility_minimum="4.3"\n[libraries]\n' + "\n".join(f'{Platform}.{Config}.x86_64="res://godot_luau{Suffix}"' for Config in ("debug", "release")))
@@ -347,6 +350,8 @@ def Main():
     Parser.add_argument("--resources", action="store_true")
     Parser.add_argument("--filesystem", action="store_true")
     Parser.add_argument("--http", action="store_true")
+    Parser.add_argument("--datastore", action="store_true")
+    Parser.add_argument("--datastore-probe", type=Path)
     Parser.add_argument("--animation-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Editor"), default=["Local", "Listen", "Dedicated", "Editor"])
     Parser.add_argument("--security-modes", nargs="+", choices=("Local", "Listen", "Dedicated", "Handler"), default=["Local", "Listen", "Dedicated", "Handler"])
     Parser.add_argument("--probe", action="store_true")
@@ -388,6 +393,13 @@ def Main():
         Results = Filesystem(Args, Args.output, Environment)
     elif Args.http:
         Results = Http(Args, Args.output, Environment)
+    elif Args.datastore:
+        from RunDatastoreQualification import Qualify, Native
+        from types import SimpleNamespace
+        Probe=Args.datastore_probe or Args.extension.parent/('DatastoreBackendProbe.exe' if os.name=='nt' else 'DatastoreBackendProbe')
+        Results=Qualify(SimpleNamespace(godot=Args.godot,extension=Args.extension,timeout=Args.timeout,probe=Probe),Args.output,Environment)
+        NativeResults=Native(Probe,Args.output/'native',Environment)
+        (Args.output/'native-evidence.json').write_text(json.dumps(NativeResults,indent=2))
     elif Args.probe:
         Results = Probes(Args, Args.output, Environment)
     elif Args.baseline or Args.benchmark:
