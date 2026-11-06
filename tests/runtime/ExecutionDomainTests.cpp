@@ -1,5 +1,6 @@
 #include "gl_execution_domain.h"
 #include "gl_storage.h"
+#include "gl_http_policy.h"
 #include "gl_stackguard.h"
 #include <cstdio>
 #include <functional>
@@ -862,6 +863,36 @@ shared.Waited = true
         Check(!Escaped,"Concurrent reparse/link replacement escaped");
         std::ifstream File(F.Outside/"ds_race.json"); File>>Data;
         Check(Data=="sentinel","Concurrent replacement modified outside sentinel");
+    });
+    Test("HTTP production origin parsing separates authority and target",[] {
+        GLHttpPolicy::Url Url;
+        Check(GLHttpPolicy::Parse("https://Example.COM:0443?value=a%20b",Url),"Valid exact origin rejected");
+        Check(Url.Origin=="https://example.com:443" && Url.Target=="/?value=a%20b","Origin or query-only target misparsed");
+        Check(GLHttpPolicy::Parse("http://127.0.0.1:7350/echo",Url) && Url.Port==7350 && !Url.Tls,"Explicit local origin rejected");
+        for (const std::string& Value:std::vector<std::string>{"", "file:///tmp/x", "http://a@b/", "http://a:0/", "http://a:65536/", "http://a:+80/", "http://a:80:90/", "http://[::1]/", "http://a./", "http://a..b/", "http://-a/", "http://a-.b/", "http://a%2eb/", "http://a/#fragment", "http://a/\\x", "http://a/\r\nx", "http://a/%zz", std::string("http://a/\0tail",14), std::string(4097,'x')})
+            Check(!GLHttpPolicy::Parse(Value,Url),"Invalid or ambiguous URL admitted");
+        Check(GLHttpPolicy::Parse("https://allowed.test:444/path",Url) && Url.Origin!="https://allowed.test:443","Port omitted from authority");
+        Check(GLHttpPolicy::Parse("http://allowed.test/path",Url) && Url.Origin!="https://allowed.test:443","Scheme omitted from authority");
+    });
+    Test("HTTP production request headers reject injection and framing control",[] {
+        Check(GLHttpPolicy::Header("X-Token","value\tvalue") && GLHttpPolicy::Header("Content-Type","application/json"),"Normal header rejected");
+        for (const char* Name:{"Host","CONTENT-LENGTH","transfer-encoding","Accept-Encoding","Connection","Proxy-Authorization","Upgrade","Expect","TE"})
+            Check(!GLHttpPolicy::Header(Name,"value"),"Caller-controlled framing accepted");
+        for (const auto& Entry:std::vector<std::pair<std::string,std::string>>{{"X\r\nY","value"},{"Bad:Name","value"},{"X","value\r\nInjected: yes"},{"X",std::string("a\0b",3)},{std::string(129,'x'),"value"},{"X",std::string(4097,'x')}})
+            Check(!GLHttpPolicy::Header(Entry.first,Entry.second),"Invalid header accepted");
+        for (const char* Method:{"GET","POST","PUT","PATCH","DELETE","HEAD","OPTIONS"}) Check(GLHttpPolicy::Method(Method),"Supported method rejected");
+        Check(!GLHttpPolicy::Method("CONNECT") && !GLHttpPolicy::Method("TRACE") && !GLHttpPolicy::Method("unknown"),"Unsupported method silently allowed");
+    });
+    Test("HTTP production wire budgets bound cumulative and per tick work",[] {
+        GLHttpPolicy::WireBudget Budget;
+        Check(Budget.ConsumeWire(65536) && Budget.Read==0,"Normal read allowance lost");
+        Budget.Tick();
+        Check(Budget.Read==65536 && Budget.Wire==65536,"Tick reset cumulative wire accounting");
+        for (size_t Index=1;Index<GLHttpPolicy::MaxWire/65536;++Index) { Check(Budget.ConsumeWire(65536),"Valid wire allowance rejected"); Budget.Tick(); }
+        Check(!Budget.ConsumeWire(1) && Budget.Wire==GLHttpPolicy::MaxWire,"Oversized wire mutated accounting");
+        GLHttpPolicy::WireBudget Headers;
+        for (size_t Index=0;Index<GLHttpPolicy::MaxHeaderBytes/2048;++Index) { Check(Headers.ConsumeHeader(2048),"Valid header allowance rejected"); Headers.Tick(); }
+        Check(!Headers.ConsumeHeader(1) && Headers.Headers==GLHttpPolicy::MaxHeaderBytes,"Header bound or no-side-effect rejection failed");
     });
     std::printf("[Runtime:Test] %d passed, %d failed\n", Passed, Failed);
     return Failed == 0 ? 0 : 1;

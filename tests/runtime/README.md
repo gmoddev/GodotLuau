@@ -541,6 +541,32 @@ rejected candidates and qualification are in the
 [GL-019 report](../../newdocs/shared-domains-validation.md#gl-019-optimization-2026-10-26).
 
 
+### GL-005 asynchronous HTTP
+
+Run `RunQualification.py --godot <engine> --extension <library> --output <fresh-directory>
+--http --timeout 60` through the existing bounded launcher. Four isolated actors
+exercise enabled methods/binary bodies/limits/progress, default and Client denial,
+owner/module/task/scene/shutdown/OOM cleanup, and validated TLS. The existing
+filesystem, resources, regression, security and animation groups remain required.
+Core qualification now requires 72 cases; native CI requires 43 actors.
+
+`HttpFixtureServer.py` owns loopback listeners, settles bounded connection cleanup
+and records server observations. Rejected `/forbidden` requests must never arrive.
+TLS listeners cover both localhost loopback families. The four PEM files are
+public test-only keys/certificates, trusted only by a disposable fixture project's
+CA-bundle override. They are included in harness hashes. Hostname/untrusted-chain
+cases must fail before HTTP; a stalled handshake must hit its native deadline.
+Never reuse these fixture keys or trust settings in a deployed project.
+
+`HttpIntegration.gd --baseline` intentionally asserts the old synchronous stall
+and truncated-success behavior; use a preserved pre-GL-005 extension only. Normal
+qualification asserts progress below a 250 ms observed frame-gap threshold, a
+deadline during continuous body delivery, and no partial successful responses.
+Mixed-case chunked framing and manual task/coroutine resumption have regressions.
+These functional measurements are not a hard real-time or total-process-memory
+guarantee. See the [work record](../../newdocs/http-validation.md) and
+[authority/compatibility decision](../../newdocs/adr-004-asynchronous-http.md).
+
 ### GL-013 Instance reflection extraction
 
 `Integration.gd` exercises the production generic property bridge in both Server
