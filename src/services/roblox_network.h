@@ -1,5 +1,6 @@
 #ifndef ROBLOX_NETWORK_H
 #define ROBLOX_NETWORK_H
+#include "input_actions.h"
 
 // ════════════════════════════════════════════════════════════════════
 //  NetworkService — multijugador local estilo Roblox Studio.
@@ -2148,6 +2149,7 @@ public:
         if (auto Remote = Object::cast_to<RemoteEventNode>(ObjectDB::get_instance(Identity))) Remote->CancelWaits();
     }
     bool VisibleRemoteReference(Node* Reference) {
+        if (GLInputLocal(Reference)) return false;
         Node* Scene = is_inside_tree() ? get_tree()->get_current_scene() : nullptr;
         if (!Reference || !Scene || (Reference != Scene && !Scene->is_ancestor_of(Reference)) || !Reference->is_inside_tree() || Reference->is_queued_for_deletion()) return false;
         bool Visible = false;
@@ -2973,7 +2975,7 @@ public:
     // net_instances y _phys_tick/_phys_auto_tick las recogen sin más cambios.
     // Idempotente: se puede re-llamar (p.ej. al reconectar).
     void _stamp_subtree(Node* n, int depth, int& count) {
-        if (!n || depth > 64) return;
+        if (!n || depth > 64 || GLInputLocal(n)) return;
         // Solo lo que viene en el place: Godot le pone owner a los nodos
         // guardados en la escena. Lo creado en runtime (personaje local,
         // muñecos, lo que hagan los scripts) tiene owner nulo y ya recibe su

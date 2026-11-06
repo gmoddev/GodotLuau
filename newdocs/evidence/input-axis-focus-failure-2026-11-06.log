@@ -1,0 +1,10 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+[GodotLuau] ////////////////////////////////////////////////////
+[GodotLuau]   GodotLuau ? - by PimpoliDev
+[GodotLuau]   Luau System for Godot [Active]
+[GodotLuau] ////////////////////////////////////////////////////
+[Input:Actions] FAIL held stick cannot reactivate after focus loss
+[Input:Actions] FAIL partial axis updates cannot fake a fully neutral stick
+[Input:Actions] {"Checks":51,"DiagnosticsBeforeRetire":{"Actions":0,"Active":true,"Bindings":0,"EvaluatedBindings":728,"Frames":235,"PhysicsTicks":97,"RejectedEvents":0,"RejectedGraphs":0,"Revision":11}}
+[Input:Actions] FAIL

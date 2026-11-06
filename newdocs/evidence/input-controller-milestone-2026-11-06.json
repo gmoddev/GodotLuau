@@ -1,0 +1,65 @@
+{
+  "Scope": "Functional four-phase milestone; broader hosted and sanitizer qualification pending",
+  "Worker": "HostPC",
+  "Platform": "Windows-11-10.0.26200-SP0",
+  "BaseMain": "091c13da85b1d082249b525123f5cae4d3c17dd1",
+  "Build": {
+    "Configuration": "Release",
+    "Source": {
+      "SHA256": "0cf632015b905ead12291e1dc148f6a8606f1ef169a6cccddd3c39c096bccedf",
+      "Files": 99,
+      "Newlines": "LF normalized"
+    },
+    "Library": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-release\\godot_luau.dll",
+    "SHA256": "37bcb8dc08168120d87cb9cfa0aa0b47991f39e7fc71ee2c82f4810e297b8822",
+    "Driver": "C:/Sandbox/Codex/Workspaces/GodotLuau/tests/runtime",
+    "ProductionSource": "C:\\Sandbox\\Codex\\InputAction20261106\\source",
+    "CoreTests": "Separate current-source task build; old driver core target not used"
+  },
+  "FixtureHashes": {
+    "InputActions.gd": "b5146be7a3523a380cf5740f192734658378449ad43fc169b633ddc88c49c6a9",
+    "InputController.gd": "605a5ebff05dc50051e81e2fbecf741b1f0e1aff33ad34cdcfbb223dee494fe1",
+    "InputControllerDemo.gd": "e7c5ee23acfb4434594959d0e618055d3e44a24c1936aecc66ea3e721144ec78",
+    "InputBenchmarks.gd": "95bcbc54c77a02a4dfa6d43ad7d0582c61acbf82371cbe9cbd544564778f097d",
+    "HotPathBenchmarks.cpp": "f80e5b2bf1da2ce9440cce643ab2733215cd8b99e00fddcb851c26b0fee60bab"
+  },
+  "ControllerSHA256LF": "20695393adbc496c4fa165146bb66386f026b18cf3086122dc7970eab175b0f6",
+  "NativeInputChecks": 51,
+  "NativeMotorChecks": 20,
+  "Graphical": {
+    "Checks": 23,
+    "Graphical": true,
+    "NodeDelta": 0,
+    "RestartCycles": 20,
+    "Result": "PASS",
+    "StaticMemoryDeltaBytes": -5160.0,
+    "WalkingDistance": 0.91666841506958
+  },
+  "ScreenshotSHA256": "f03535ba7c9f26d17ab2b53c9c48da3fd37bc1f1340f4ca091eda8bf30cb50e3",
+  "ProjectionCppAllocations": "Zero counted C++ new allocations in all 40 warmed evaluator profiles; excludes Godot/Luau malloc and authoring",
+  "Performance": {
+    "MainComparisonSHA256": "e9ec97b508c416b05c56d677807a356f4d144eb23bb2ea2b379f15c82ac4c580",
+    "OptimizationComparisonSHA256": "7cf2eb0335d3bd04bef8f1e6d5a0e527908d2a0ccbe35f2bfafdb6edec875f73",
+    "TrialsEach": 5
+  },
+  "FailedRuntimeAttempt": "input-axis-repro: diagonal focus loss falsely rearmed from partial axis updates; fixed by preserving reconstruction cache",
+  "Logs": {
+    "input-axis-repro/input.stdout.log": "059ff28c0a85500626ee7ae33daf2cd621bc8f861d70822b671c456c478913be",
+    "input-optimized-final/input.stdout.log": "f3300c6ea2c3c820a48bc695ec0ba7d2db8ea80a893e0b8aa43ad1132053d425",
+    "input-optimized-final/input.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "motor-optimized-final/motor.stdout.log": "5bbd309c91e46fb3820a640db6ba3904d175c985217d6c2c2e2b1d1ae36679a0",
+    "motor-optimized-final/motor.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "graphical-optimized-final/demo.stdout.log": "b51eb14e63bd4cb01074a2aa25d3cfd0624aaa7438980cfad712e81afa57c24b",
+    "graphical-optimized-final/demo.stderr.log": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c",
+    "coreperf-run-v1/stdout.log": "46ffd007b70ccbbdc4150fc60bf9ebace06f6c033f405ef61c53ddcc41955eb1",
+    "linux-primary-v1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "linux-fallback-v1/stdout.log": "660e9ec75ae0165f88f1908d3a114fe4f3c4e3d7acd7e1e7bf5e0642c8820f5f"
+  },
+  "Limitations": [
+    "Physical keyboard/gamepad/touch/device behavior and actual OS mouse capture not qualified by synthetic replay",
+    "No local Linux engine on permitted workers; hosted Linux qualification required",
+    "Full-native sanitizers and expanded 134-actor CI pending",
+    "Windows LSan unsupported; matching-host and GL-017/018 scope limitations retained",
+    "Periodic Performance.TIME_PROCESS diagnostics are stale monitors, not per-frame CPU distributions"
+  ]
+}

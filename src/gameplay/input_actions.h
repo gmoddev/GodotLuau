@@ -10,6 +10,7 @@
 
 using namespace godot;
 class InputService;
+class UserInputService;
 
 // Configuration is serialized; device admission, callbacks and owner guards are
 // never serialized or duplicated. Only direct Service/Context/Action/Binding
@@ -51,6 +52,8 @@ class InputAction : public InputDefinition {
     struct Callback { int Reference=0, Signal=0; bool Once=false; };
     std::vector<Callback> Callbacks;
     GLInputGraph::Value Current;
+    GLInputGraph::Value PhysicsSample;
+    int CurrentType=-1;
 protected:
     static void _bind_methods();
 public:
@@ -58,7 +61,11 @@ public:
     ~InputAction();
     GLInputGraph::Value GetCurrent() const { return Current; }
     Variant GetValue() const;
-    void Commit(GLInputGraph::Value Value) { Current=Value; }
+    Variant GetPhysicsValue() const;
+    int GetValueType() const { return CurrentType<0?int(int64_t(GetOption("ValueType"))):CurrentType; }
+    GLInputGraph::Value GetPhysicsSample() const { return PhysicsSample; }
+    void Commit(GLInputGraph::Value Value, int Type=-1) { Current=Value; CurrentType=Type; }
+    void CommitPhysics(GLInputGraph::Value Value) { PhysicsSample=Value; }
     int Connect(lua_State* Thread, int Index, int Signal, bool Once);
     void _gl_disconnect(int Reference);
     void Publish(const GLInputGraph::Transition& Change);
@@ -76,9 +83,12 @@ class InputService : public Node {
     GDCLASS(InputService, Node);
     GLInputGraph Graph;
     bool Dirty=true, Publishing=false, Active=false;
-    uint64_t ViewportId=0, AdapterId=0, Rejections=0;
+    uint64_t ViewportId=0, AdapterId=0, Rejections=0, RejectedEvents=0, Frames=0, PhysicsTicks=0;
+    std::array<Vector2,32> StickValues{};
+    UserInputService* GetAdapter();
     void Compile();
     void Publish();
+    void CommitPhysics();
 protected:
     static void _bind_methods();
     void _notification(int What);
@@ -86,6 +96,7 @@ public:
     InputService();
     void _ready() override;
     void _process(double Delta) override;
+    void _physics_process(double Delta) override;
     void MarkDirty() { Dirty=true; }
     void Deliver(uint64_t Adapter, const Ref<InputEvent>& Event, bool Processed);
     void Cancel(const String& Reason);
@@ -94,6 +105,8 @@ public:
 };
 
 bool GLInputAllowed();
+// Local input definitions and motor subtrees never become network objects.
+bool GLInputLocal(Node* Target);
 bool GLInputIndex(lua_State* Thread, Node* Target, const char* Key);
 bool GLInputWrite(lua_State* Thread, Node* Target, const char* Key);
 void GLInputAdoptOwner(lua_State* Thread, Node* Target);

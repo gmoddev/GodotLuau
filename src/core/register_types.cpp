@@ -35,6 +35,7 @@
 #include "roblox_interactive.h"
 #include "roblox_billboard.h"
 #include "roblox_input.h"
+#include "local_motor.h"
 #include "roblox_animation.h"
 #include "rbx_instances.h"
 #include "rbx_importer.h"
@@ -257,6 +258,7 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
         ClassDB::register_class<InputAction>();
         ClassDB::register_class<InputBinding>();
         ClassDB::register_class<InputService>();
+        ClassDB::register_class<KinematicMotor3D>();
         ClassDB::register_class<CollectionService>();
 
         // Animation

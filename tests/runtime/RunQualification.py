@@ -46,6 +46,8 @@ def Prepare(Output, Extension):
     (Output / "godot_luau.gdextension").write_text('[configuration]\nentry_symbol="luau_extension_init"\ncompatibility_minimum="4.3"\n[libraries]\n' + "\n".join(f'{Platform}.{Config}.x86_64="res://godot_luau{Suffix}"' for Config in ("debug", "release")))
     for Script in Path(__file__).parent.glob("*.gd"):
         shutil.copyfile(Script, Output / Script.name)
+    Controller = Path(__file__).resolve().parents[2] / 'examples/input-controller/Controller.luau'
+    if Controller.is_file(): shutil.copyfile(Controller, Output / Controller.name)
 
 
 def Start(Godot, Output, Script, Label, Extra, Environment):
@@ -685,8 +687,13 @@ def Main():
     elif Args.characters:
         Results = CharacterFixtures(Args, Args.output, Environment)
     elif Args.input:
-        Process = Start(Args.godot, Args.output, "InputActions.gd", "input-actions", [], Environment)
-        Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "input-actions", "[Input:Actions] PASS")]
+        Results = []
+        for Script, Label, Marker, Extra in [
+            ("InputActions.gd", "input-actions", "[Input:Actions] PASS", []),
+            ("InputController.gd", "input-controller", "[Input:Controller] PASS", []),
+            ("InputControllerDemo.gd", "input-demo", "[Input:Demo] PASS", ["--fixture"])]:
+            Process = Start(Args.godot, Args.output, Script, Label, Extra, Environment)
+            Results.append(Check(Process, time.monotonic() + Args.timeout, Args.output, Label, Marker))
     elif Args.resources:
         Results = Resources(Args, Args.output, Environment)
     elif Args.filesystem:

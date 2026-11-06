@@ -69,6 +69,33 @@ input, with distinct documented frame/physics samples. Phase 3 uses Godot's
 CharacterBody3D for a separately instantiated, locally owned motor with bounded
 commands consumed once per native physics tick. It does not expose arbitrary
 move_and_slide, raw RIDs or authority over Player.Character/server objects.
-A local owner-scoped camera/capture surface must arbitrate native ownership.
+A local owner-scoped camera/capture surface arbitrates motor ownership.
 The runnable Luau sample computes intent through actions and uses these narrow
 primitives. Character V2 and networking/authority remain unchanged.
+
+Implementation uses `KinematicMotor3D`, not a proxy accepting arbitrary native
+body handles. A scene-authored motor starts inert/noncolliding; its first Client
+command adopts a lifetime guard. Created/adopted motors stop with that owner.
+The shared Client execution domain remains the security boundary; creator guards
+do not isolate Client scripts from one another. Internal collider/camera children
+are recreated, never public handles or copied active state. Motor priority 100
+consumes one bounded command after established RunService.Stepped at priority 0;
+input's physics fence is -100. No extra scheduler or physics solver is introduced.
+
+Digital/level values are projected normally. Relative mouse actions are separate
+from level sources and have independent frame/physics accumulators with
+non-consuming reads. All graph configuration changes discard pending relative
+motion. Configuration ValueType and projected value/kind commit at separate
+authoring/evaluation boundaries; active values retain their projected kind until
+the next evaluation. Stick reconstruction keeps both last physical components
+across focus/pause cancellation; admission/output clear, not physical history.
+Otherwise an update to one axis could falsely establish full neutral state.
+
+Local input definitions, services and motor subtrees are excluded from static
+network stamping, generic replication and remote reference visibility. This is
+an additive local-type boundary in existing GL-029/031 machinery, not a wire or
+authority redesign. Legacy native Character polling remains independent.
+Motor leases arbitrate against other motors and restore a previous camera only
+while still owning the active one; legacy camera/mouse APIs remain compatible.
+Actual physical device and OS mouse-capture coverage must be distinguished from
+synthetic viewport replay and real offscreen rendering.

@@ -58,7 +58,8 @@ Enum = {
     HttpContentType = { ApplicationJson = 0, ApplicationXml = 1, ApplicationUrlEncoded = 2, TextPlain = 3, TextXml = 4 },
     HttpCompression = { None = 0, Gzip = 1 },
     InputActionValueType = { Bool = 0, Scalar = 1, Vector2 = 2 },
-    InputBindingSource = { Key = 0, MouseButton = 1, GamepadButton = 2 },
+    InputBindingSource = { Key = 0, MouseButton = 1, GamepadButton = 2, GamepadStick = 3, MouseMotion = 4 },
+    InputStick = { Left = 0, Right = 1 },
     HumanoidStateType = {
         None = 0, Running = 1, Jumping = 2, Landed = 3,
         Swimming = 4, Climbing = 5, Seated = 6, Dead = 7,

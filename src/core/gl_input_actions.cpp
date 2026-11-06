@@ -1,4 +1,5 @@
 #include "input_actions.h"
+#include "local_motor.h"
 #include "gl_execution_domain.h"
 #include "gl_runtime.h"
 #include "roblox_input.h"
@@ -24,7 +25,15 @@ int Button(int Code) {
 }
 int PhysicalCode(int Source, int Code) { return Source==GLInputGraph::GamepadButton?Button(Code):Code; }
 bool KeyCode(int Code) { return Code>0 && Code<512 && roblox_keycode_to_godot(Code)!=KEY_UNKNOWN; }
+bool Compatible(InputAction* Action, int Source, InputBinding* Excluded=nullptr) {
+    if (Source>=3 && Integer(Action->GetOption("ValueType"))!=2) return false;
+    for (int Index=0;Index<Action->get_child_count();++Index) if (auto Binding=Object::cast_to<InputBinding>(Action->get_child(Index))) {
+        if (Binding!=Excluded && ((Integer(Binding->GetOption("SourceType"))==4)!=(Source==4))) return false;
+    }
+    return true;
+}
 void PushNode(lua_State* Thread, Node* Target) {
+    if (!Target) { lua_pushnil(Thread); return; }
     GLPushNodeHandle(Thread,Target);
     luaL_getmetatable(Thread,"GodotObject"); lua_setmetatable(Thread,-2);
 }
@@ -42,6 +51,11 @@ void RequireClient(lua_State* Thread) {
 }
 
 bool GLInputAllowed() { return !GLExecutionDomain::IsExecuting() || GLExecutionDomain::IsClientExecution(); }
+bool GLInputLocal(Node* Target) {
+    for (Node* Item=Target;Item;Item=Item->get_parent())
+        if (Object::cast_to<InputDefinition>(Item) || Object::cast_to<InputService>(Item) || Object::cast_to<KinematicMotor3D>(Item)) return true;
+    return false;
+}
 
 InputDefinition::InputDefinition() { set_meta("_gl_bridge",true); Define("Enabled",true); }
 void InputDefinition::_bind_methods() {
@@ -55,7 +69,10 @@ bool InputDefinition::Valid(const String& Key, const Variant& Value) const {
     if (!HasOption(Key)) return false;
     if (Key=="Enabled" || Key=="Consume" || Key=="ExactModifiers") return Value.get_type()==Variant::BOOL;
     if (Key=="Priority") return Whole(Value,-10000,10000);
-    if (Key=="ValueType" || Key=="SourceType") return Whole(Value,0,2);
+    if (Key=="ValueType") return Whole(Value,0,2);
+    if (Key=="SourceType") return Whole(Value,0,4);
+    if (Key=="Axis") return Whole(Value,0,1);
+    if (Key=="Deadzone") return (Value.get_type()==Variant::INT || Value.get_type()==Variant::FLOAT) && std::isfinite(double(Value)) && double(Value)>=0 && double(Value)<=0.95;
     if (Key=="KeyCode") return Whole(Value,0,1015);
     if (Key=="Device") return Whole(Value,-1,15);
     if (Key=="Scale") return (Value.get_type()==Variant::INT || Value.get_type()==Variant::FLOAT) && std::isfinite(double(Value)) && std::abs(double(Value))<=1000;
@@ -86,6 +103,10 @@ bool InputDefinition::Configure(const Dictionary& Options) {
         if ((Source==0 && !KeyCode(Code)) || (Source==1 && (Code<1 || Code>3)) || (Source==2 && Button(Code)<0)) return false;
         PackedInt32Array Mods=Next["Modifiers"];
         if (Source==0) for (int Modifier:Mods) if (Modifier==Code) return false;
+        if (auto Action=Object::cast_to<InputAction>(get_parent())) if (!Compatible(Action,Source,Object::cast_to<InputBinding>(this))) return false;
+    }
+    if (Object::cast_to<InputAction>(this) && Integer(Next["ValueType"])!=2) {
+        for (int Index=0;Index<get_child_count();++Index) if (auto Binding=Object::cast_to<InputBinding>(get_child(Index))) if (Integer(Binding->GetOption("SourceType"))>=3) return false;
     }
     if (Changed) { Configuration=Next; ++Revision; MarkDirty(); }
     return true;
@@ -112,10 +133,12 @@ InputBinding::InputBinding() {
     Define("SourceType",0); Define("KeyCode",32); Define("Device",0); Define("Priority",0);
     Define("Consume",false); Define("ExactModifiers",false); Define("Modifiers",PackedInt32Array());
     Define("Scale",1.0); Define("Vector",Vector2(1,0));
+    Define("Axis",0); Define("Deadzone",0.2);
 }
 void InputAction::_bind_methods() {
     ClassDB::bind_method(D_METHOD("_gl_disconnect","Reference"),&InputAction::_gl_disconnect);
     ClassDB::bind_method(D_METHOD("GetValue"),&InputAction::GetValue);
+    ClassDB::bind_method(D_METHOD("GetPhysicsValue"),&InputAction::GetPhysicsValue);
     ADD_SIGNAL(MethodInfo("Pressed")); ADD_SIGNAL(MethodInfo("Released"));
     ADD_SIGNAL(MethodInfo("Changed",PropertyInfo(Variant::NIL,"Value",PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NIL_IS_VARIANT)));
     ADD_SIGNAL(MethodInfo("Canceled",PropertyInfo(Variant::STRING,"Reason")));
@@ -123,9 +146,15 @@ void InputAction::_bind_methods() {
 InputAction::~InputAction() { for (const auto& Item:Callbacks) GLUnreference(nullptr,Item.Reference); }
 Variant InputAction::GetValue() const {
     if (!GLInputAllowed()) return Variant();
-    int Type=Integer(GetOption("ValueType"));
+    int Type=GetValueType();
     if (Type==0) return Current.Down(); if (Type==1) return Current.X;
     return Vector2(Current.X,Current.Y);
+}
+Variant InputAction::GetPhysicsValue() const {
+    if (!GLInputAllowed()) return Variant();
+    int Type=GetValueType();
+    if (Type==0) return PhysicsSample.Down(); if (Type==1) return PhysicsSample.X;
+    return Vector2(PhysicsSample.X,PhysicsSample.Y);
 }
 int InputAction::Connect(lua_State* Thread, int Index, int Signal, bool Once) {
     if (!GLInputAllowed() || Signal<0 || Signal>3) return 0;
@@ -145,12 +174,12 @@ void InputAction::Publish(const GLInputGraph::Transition& Change) {
         else if (Signal==3) emit_signal(Names[Signal],String(Change.Reason));
         else emit_signal(Names[Signal]);
         if (Resolve<InputAction>(Id)!=this) return false;
-        std::array<Callback,128> Snapshot{}; size_t Count=0;
-        for (const auto& Item:Callbacks) if (Item.Signal==Signal) Snapshot[Count++]=Item;
+        std::array<int,128> Snapshot; size_t Count=0;
+        for (const auto& Item:Callbacks) if (Item.Signal==Signal) Snapshot[Count++]=Item.Reference;
         for (size_t Index=0;Index<Count;++Index) {
-            auto Item=Snapshot[Index];
-            auto Present=std::find_if(Callbacks.begin(),Callbacks.end(),[&](const Callback& Entry){return Entry.Reference==Item.Reference;});
-            if (Present==Callbacks.end() || !GLReferenceState(Item.Reference)) continue;
+            auto Present=std::find_if(Callbacks.begin(),Callbacks.end(),[&](const Callback& Entry){return Entry.Reference==Snapshot[Index];});
+            if (Present==Callbacks.end() || !GLReferenceState(Present->Reference)) continue;
+            const auto Item=*Present;
             if (Item.Once) Callbacks.erase(Present); // disconnect before reentrant dispatch, release after it
             GLDispatch(Item.Reference,[&](lua_State* Thread)->int {
                 // GLDispatch has already rooted the function on its owned
@@ -185,17 +214,32 @@ void InputService::_ready() {
         UtilityFunctions::print("[Input:Routing] Duplicate InputService is inactive"); return;
     }
     if (Services.size()>=16) return;
-    Services[ViewportId]=get_instance_id(); Active=true; set_process(true); set_process_priority(-100);
+    Services[ViewportId]=get_instance_id(); Active=true; set_process(true); set_physics_process(true);
+    set_process_priority(-100); set_physics_process_priority(-100);
     Input::get_singleton()->connect("joy_connection_changed",Callable(this,"DeviceChanged"));
     // Reuse the raw service as the single Godot event adapter.
-    Node* Parent=get_parent(); bool Present=false;
-    if (Parent) for (int Index=0;Index<Parent->get_child_count();++Index) if (Object::cast_to<UserInputService>(Parent->get_child(Index))) {
-        AdapterId=Parent->get_child(Index)->get_instance_id(); Present=true; break;
+    GetAdapter();
+}
+UserInputService* InputService::GetAdapter() {
+    auto Raw=Resolve<UserInputService>(AdapterId);
+    if (Raw && Raw->is_inside_tree() && !Raw->is_queued_for_deletion() && uint64_t(Raw->get_viewport()->get_instance_id())==ViewportId) return Raw;
+    if (AdapterId) {
+        const uint64_t Id=get_instance_id(); Cancel("AdapterRetired");
+        if (Resolve<InputService>(Id)!=this) return nullptr;
+        AdapterId=0;
     }
-    if (Parent && !Present) { auto Raw=memnew(UserInputService); AdapterId=Raw->get_instance_id(); Raw->set_name("UserInputService"); Parent->add_child(Raw); }
+    Node* Parent=get_parent(); if (!Parent) return nullptr;
+    for (int Index=0;Index<Parent->get_child_count();++Index) if (auto Candidate=Object::cast_to<UserInputService>(Parent->get_child(Index))) {
+        if (!Candidate->is_queued_for_deletion()) { AdapterId=Candidate->get_instance_id(); return Candidate; }
+    }
+    Raw=memnew(UserInputService); AdapterId=Raw->get_instance_id(); Raw->set_name("UserInputService");
+    const uint64_t ServiceId=get_instance_id(), RawId=AdapterId; Parent->add_child(Raw);
+    if (Resolve<InputService>(ServiceId)!=this) return nullptr;
+    return Resolve<UserInputService>(RawId);
 }
 void InputService::_notification(int What) {
     if (What==NOTIFICATION_APPLICATION_FOCUS_OUT) Cancel("FocusLost");
+    if (What==NOTIFICATION_PAUSED) Cancel("Paused");
     if (What==NOTIFICATION_EXIT_TREE && Active) {
         Active=false;
         auto Found=Services.find(ViewportId);
@@ -225,9 +269,12 @@ void InputService::Compile() {
                 GLInputGraph::Binding Row;
                 Row.Id=Binding->get_instance_id(); Row.Revision=Binding->GetRevision(); Row.ActionId=Action->get_instance_id();
                 Row.Type=Integer(Binding->GetOption("SourceType")); Row.Code=PhysicalCode(Row.Type,Integer(Binding->GetOption("KeyCode")));
+                if (Row.Type==GLInputGraph::GamepadStick) Row.Code=Integer(Binding->GetOption("Axis"));
+                if (Row.Type==GLInputGraph::MouseMotion) Row.Code=0;
                 Row.Device=Integer(Binding->GetOption("Device")); Row.Priority=Integer(Binding->GetOption("Priority"));
                 Row.Enabled=Binding->GetOption("Enabled"); Row.Consume=Binding->GetOption("Consume"); Row.ExactModifiers=Binding->GetOption("ExactModifiers");
                 Row.Scale=Binding->GetOption("Scale"); Vector2 Direction=Binding->GetOption("Vector"); Row.X=Direction.x; Row.Y=Direction.y;
+                Row.Deadzone=Binding->GetOption("Deadzone");
                 PackedInt32Array Mods=Binding->GetOption("Modifiers"); for (int M=0;M<Mods.size();++M) Row.Modifiers[M]=Mods[M];
                 Bindings.push_back(Row);
             }
@@ -239,10 +286,12 @@ void InputService::Compile() {
         Removed[Count++]={Old.Definition.Id,Old.Definition.Type,Old.Current,{},Overflow?"CapacityExceeded":"DefinitionRetired"};
     }
     if (!Graph.Compile(Contexts,Actions,Bindings)) {
-        ++Rejections; Graph.Cancel("InvalidDefinition"); Publish(); return;
+        const uint64_t Id=get_instance_id(); ++Rejections; Graph.Cancel("InvalidDefinition"); CommitPhysics(); Publish();
+        if (Resolve<InputService>(Id)==this) Graph.Compile({}, {}, {});
+        return;
     }
-    for (size_t Index=0;Index<Count;++Index) if (auto Action=Resolve<InputAction>(Removed[Index].Id)) Action->Commit({});
-    for (const auto& State:Graph.GetStates()) if (auto Action=Resolve<InputAction>(State.Definition.Id)) Action->Commit(State.Current);
+    for (size_t Index=0;Index<Count;++Index) if (auto Action=Resolve<InputAction>(Removed[Index].Id)) { Action->Commit({}); Action->CommitPhysics({}); }
+    for (const auto& State:Graph.GetStates()) if (auto Action=Resolve<InputAction>(State.Definition.Id)) { Action->Commit(State.Current,State.Definition.Type); Action->CommitPhysics(State.PhysicsSample); }
     const uint64_t Id=get_instance_id(); Publishing=true;
     for (size_t Index=0;Index<Count;++Index) {
         if (auto Action=Resolve<InputAction>(Removed[Index].Id)) Action->Publish(Removed[Index]);
@@ -252,9 +301,12 @@ void InputService::Compile() {
 }
 void InputService::Publish() {
     // Never retain a graph-vector reference across script dispatch.
+    size_t Count=Graph.GetChanges().size(); if (!Count) return;
     std::array<GLInputGraph::Transition,GLInputGraph::MaximumActions> Changes{};
-    size_t Count=Graph.GetChanges().size(); std::copy(Graph.GetChanges().begin(),Graph.GetChanges().end(),Changes.begin());
-    for (const auto& State:Graph.GetStates()) if (auto Action=Resolve<InputAction>(State.Definition.Id)) Action->Commit(State.Current);
+    std::copy(Graph.GetChanges().begin(),Graph.GetChanges().end(),Changes.begin());
+    // Unchanged values are already committed. Resolve only changed ObjectIDs,
+    // still committing the complete change set before the first callback.
+    for (size_t Index=0;Index<Count;++Index) if (auto Action=Resolve<InputAction>(Changes[Index].Id)) Action->Commit(Changes[Index].After,Changes[Index].Type);
     const uint64_t Id=get_instance_id(); Publishing=true;
     for (size_t Index=0;Index<Count;++Index) {
         if (auto Action=Resolve<InputAction>(Changes[Index].Id)) Action->Publish(Changes[Index]);
@@ -262,17 +314,41 @@ void InputService::Publish() {
     }
     Publishing=false;
 }
+void InputService::CommitPhysics() {
+    for (const auto& State:Graph.GetStates()) if (auto Action=Resolve<InputAction>(State.Definition.Id)) Action->CommitPhysics(State.PhysicsSample);
+}
 void InputService::_process(double) {
     if (!Active) return;
+    const uint64_t Id=get_instance_id();
+    if (auto Raw=GetAdapter()) Raw->_CommitInput();
+    if (Resolve<InputService>(Id)!=this) return;
     for (int Index=0;Index<get_child_count();++Index) if (auto Context=Object::cast_to<InputContext>(get_child(Index))) if (!Context->OwnerAlive()) Dirty=true;
     Compile();
+    if (Resolve<InputService>(Id)!=this) return;
+    Graph.SampleFrame(); ++Frames; Publish();
+}
+void InputService::_physics_process(double) {
+    if (!Active) return;
+    const uint64_t Id=get_instance_id();
+    if (auto Raw=GetAdapter()) Raw->_CommitInput();
+    if (Resolve<InputService>(Id)!=this) return;
+    Compile(); if (Resolve<InputService>(Id)!=this) return;
+    Graph.SamplePhysics(); ++PhysicsTicks;
+    CommitPhysics();
 }
 void InputService::Cancel(const String& Reason) {
     if (!GLInputAllowed() || Publishing) return;
     // Reason storage must outlive the graph's synchronous publication.
-    CharString Text=Reason.utf8(); Graph.Cancel(Text.get_data()); Publish();
+    // Keep physical axis reconstruction across cancellation. Axis events update
+    // one component: clearing the other could invent a neutral vector while it
+    // is still held. Graph admission, output and samples are canceled separately.
+    CharString Text=Reason.utf8(); Graph.Cancel(Text.get_data()); CommitPhysics(); Publish();
 }
-void InputService::DeviceChanged(int Device, bool Connected) { if (Active && !Connected && !Publishing) { Graph.Disconnect(Device); Publish(); } }
+void InputService::DeviceChanged(int Device, bool Connected) {
+    if (Active && !Connected && !Publishing && Device>=0 && Device<16) {
+        StickValues[Device*2]=StickValues[Device*2+1]=Vector2(); Graph.Disconnect(Device); Publish();
+    }
+}
 void InputService::Deliver(uint64_t Adapter, const Ref<InputEvent>& Event, bool Processed) {
     if (!Active || Publishing || Adapter!=AdapterId) return;
     const uint64_t Id=get_instance_id(); Compile(); if (Resolve<InputService>(Id)!=this) return;
@@ -282,6 +358,15 @@ void InputService::Deliver(uint64_t Adapter, const Ref<InputEvent>& Event, bool 
         Graph.Event(GLInputGraph::Key,Code,0,Key->is_pressed(),Processed,Key->is_echo());
     } else if (auto Mouse=Object::cast_to<InputEventMouseButton>(*Event)) Graph.Event(GLInputGraph::MouseButton,int(Mouse->get_button_index()),0,Mouse->is_pressed(),Processed);
     else if (auto Pad=Object::cast_to<InputEventJoypadButton>(*Event)) Graph.Event(GLInputGraph::GamepadButton,int(Pad->get_button_index()),Pad->get_device(),Pad->is_pressed(),Processed);
+    else if (auto Axis=Object::cast_to<InputEventJoypadMotion>(*Event)) {
+        int Device=Axis->get_device(), Index=int(Axis->get_axis());
+        if (Device<0 || Device>=16 || Index<0 || Index>3 || !std::isfinite(Axis->get_axis_value()) || std::abs(Axis->get_axis_value())>1) { ++RejectedEvents; return; }
+        auto& Value=StickValues[Device*2+Index/2];
+        if (Index%2) Value.y=Axis->get_axis_value(); else Value.x=Axis->get_axis_value();
+        if (!Graph.Stick(Device,Index/2,Value.x,Value.y,Processed)) { ++RejectedEvents; return; }
+    } else if (auto Motion=Object::cast_to<InputEventMouseMotion>(*Event)) {
+        Vector2 Delta=Motion->get_relative(); if (!Graph.Motion(Delta.x,Delta.y,Processed)) { ++RejectedEvents; return; }
+    }
     else return;
     Publish();
 }
@@ -289,6 +374,8 @@ Dictionary InputService::GetDiagnostics() const {
     Dictionary Result; if (!GLInputAllowed()) return Result;
     Result["Active"]=Active; Result["Actions"]=int64_t(Graph.GetStates().size()); Result["Bindings"]=int64_t(Graph.GetBindingCount());
     Result["Revision"]=int64_t(Graph.GetRevision()); Result["EvaluatedBindings"]=int64_t(Graph.GetEvaluatedBindings()); Result["RejectedGraphs"]=int64_t(Rejections);
+    Result["Frames"]=int64_t(Frames); Result["PhysicsTicks"]=int64_t(PhysicsTicks);
+    Result["RejectedEvents"]=int64_t(RejectedEvents);
     return Result;
 }
 void GLInputDeliver(Viewport* View, uint64_t Adapter, const Ref<InputEvent>& Event, bool Processed) {
@@ -301,6 +388,7 @@ void GLInputCancel(Viewport* View, const char* Reason) {
 }
 void GLInputAdoptOwner(lua_State* Thread, Node* Target) {
     if (auto Context=Object::cast_to<InputContext>(Target)) Context->AdoptOwner(Thread);
+    if (auto Motor=Object::cast_to<KinematicMotor3D>(Target)) Motor->AdoptOwner(Thread);
 }
 
 namespace {
@@ -313,8 +401,10 @@ Variant ReadOption(lua_State* Thread, const char* Key, int Index) {
         return Result;
     }
     if (!strcmp(Key,"Vector")) {
-        luaL_checktype(Thread,Index,LUA_TTABLE); lua_getfield(Thread,Index,"X"); double X=luaL_checknumber(Thread,-1); lua_pop(Thread,1);
-        lua_getfield(Thread,Index,"Y"); double Y=luaL_checknumber(Thread,-1); lua_pop(Thread,1); return Vector2(X,Y);
+        // Authoring is data, not a callback boundary. In particular a proxy
+        // __index must not retire the target while its native setter runs.
+        luaL_checktype(Thread,Index,LUA_TTABLE); lua_rawgetfield(Thread,Index,"X"); double X=luaL_checknumber(Thread,-1); lua_pop(Thread,1);
+        lua_rawgetfield(Thread,Index,"Y"); double Y=luaL_checknumber(Thread,-1); lua_pop(Thread,1); return Vector2(X,Y);
     }
     if (lua_isboolean(Thread,Index)) return bool(lua_toboolean(Thread,Index));
     if (lua_type(Thread,Index)==LUA_TNUMBER) return lua_tonumber(Thread,Index);
@@ -333,8 +423,9 @@ int InputMethod(lua_State* Thread) {
     RequireClient(Thread); Node* Target=GLNodeUpvalue(Thread,1);
     if (!Target || Target->is_queued_for_deletion()) luaL_error(Thread,"[Input:Lifetime] Retired input Instance");
     const char* Method=lua_tostring(Thread,lua_upvalueindex(2));
-    if (!strcmp(Method,"GetValue")) {
-        auto Action=Object::cast_to<InputAction>(Target); PushValue(Thread,Integer(Action->GetOption("ValueType")),Action->GetCurrent()); return 1;
+    if (!strcmp(Method,"GetValue") || !strcmp(Method,"GetPhysicsValue")) {
+        auto Action=Object::cast_to<InputAction>(Target);
+        PushValue(Thread,Action->GetValueType(),!strcmp(Method,"GetValue")?Action->GetCurrent():Action->GetPhysicsSample()); return 1;
     }
     if (!strcmp(Method,"GetDiagnostics")) {
         Dictionary Values=Object::cast_to<InputService>(Target)->GetDiagnostics(); lua_newtable(Thread); Array Keys=Values.keys();
@@ -342,6 +433,41 @@ int InputMethod(lua_State* Thread) {
     }
     if (!strcmp(Method,"Configure")) {
         if (!Object::cast_to<InputDefinition>(Target)->Configure(ReadOptions(Thread,2))) luaL_error(Thread,"[Input:Definition] Rejected input configuration"); return 0;
+    }
+    if (!strcmp(Method,"BindKeyboardVector2")) {
+        auto Action=Object::cast_to<InputAction>(Target);
+        if (Integer(Action->GetOption("ValueType"))!=2 || !Compatible(Action,0)) luaL_error(Thread,"[Input:Definition] Level Vector2 action required");
+        Dictionary Options=ReadOptions(Thread,2); Array Keys=Options.keys();
+        static const char* Names[]={"Up","Down","Left","Right"};
+        int Codes[]={87,83,65,68}; Vector2 Directions[]={Vector2(0,-1),Vector2(0,1),Vector2(-1,0),Vector2(1,0)};
+        for (int Index=0;Index<Keys.size();++Index) {
+            String Key=Keys[Index]; bool Known=false; for (const char* Name:Names) Known |= Key==Name;
+            if (!Known) luaL_error(Thread,"[Input:Definition] Unknown keyboard composite option");
+        }
+        for (int Index=0;Index<4;++Index) if (Options.has(Names[Index])) {
+            if (!Whole(Options[Names[Index]],1,511) || !KeyCode(Integer(Options[Names[Index]]))) luaL_error(Thread,"[Input:Definition] Invalid composite key");
+            Codes[Index]=Integer(Options[Names[Index]]);
+        }
+        const uint64_t Id=Target->get_instance_id(); lua_newtable(Thread);
+        for (int Index=0;Index<4;++Index) {
+            auto Parent=Resolve<InputAction>(Id); if (!Parent) luaL_error(Thread,"[Input:Lifetime] Composite parent retired");
+            auto Binding=memnew(InputBinding); Dictionary Config; Config["KeyCode"]=Codes[Index]; Config["Vector"]=Directions[Index];
+            Binding->Configure(Config); Binding->set_name(Names[Index]); const uint64_t BindingId=Binding->get_instance_id(); Parent->add_child(Binding);
+            PushNode(Thread,Resolve<InputBinding>(BindingId)); lua_setfield(Thread,-2,Names[Index]);
+        }
+        return 1;
+    }
+    if (!strcmp(Method,"BindGamepadStick") || !strcmp(Method,"BindMouseMotion")) {
+        auto Action=Object::cast_to<InputAction>(Target);
+        if (Integer(Action->GetOption("ValueType"))!=2) luaL_error(Thread,"[Input:Definition] Vector2 action required");
+        const bool Stick=!strcmp(Method,"BindGamepadStick"); Dictionary Options=ReadOptions(Thread,Stick?3:2);
+        if (!Compatible(Action,Stick?3:4)) luaL_error(Thread,"[Input:Definition] Relative motion requires a separate Vector2 action");
+        Options["SourceType"]=Stick?3:4;
+        if (Stick) { double Index=luaL_checknumber(Thread,2); if (Index!=0 && Index!=1) luaL_error(Thread,"[Input:Definition] Stick must be Left or Right"); Options["Axis"]=Index; }
+        auto Binding=memnew(InputBinding);
+        if (!Binding->Configure(Options)) { memdelete(Binding); luaL_error(Thread,"[Input:Definition] Invalid analog binding"); }
+        Binding->set_name(Stick?"Stick":"Motion"); const uint64_t Id=Binding->get_instance_id(); Target->add_child(Binding);
+        PushNode(Thread,Resolve<InputBinding>(Id)); return 1;
     }
     if (!strcmp(Method,"AddContext") || !strcmp(Method,"AddAction") || !strcmp(Method,"AddBinding")) {
         Dictionary Options=ReadOptions(Thread,3); InputDefinition* Created=nullptr;
@@ -358,6 +484,9 @@ int InputMethod(lua_State* Thread) {
             if (!strcmp(Method,"AddContext")) Created=memnew(InputContext); else Created=memnew(InputAction);
         }
         if (!Created->Configure(Options)) { memdelete(Created); luaL_error(Thread,"[Input:Definition] Rejected input configuration"); }
+        if (auto Action=Object::cast_to<InputAction>(Target)) if (auto Binding=Object::cast_to<InputBinding>(Created)) {
+            if (!Compatible(Action,Integer(Binding->GetOption("SourceType")))) { memdelete(Created); luaL_error(Thread,"[Input:Definition] Incompatible action binding"); }
+        }
         gl_track_orphan(Created);
         GLInputAdoptOwner(Thread,Created); Created->set_name(Name);
         const uint64_t Id=Created->get_instance_id(); Target->add_child(Created);
@@ -385,7 +514,7 @@ bool GLInputIndex(lua_State* Thread, Node* Target, const char* Key) {
         else lua_pushnumber(Thread,double(Value)); return true;
     }
     if (auto Action=Object::cast_to<InputAction>(Target)) {
-        if (!strcmp(Key,"Value")) { RequireClient(Thread); PushValue(Thread,Integer(Action->GetOption("ValueType")),Action->GetCurrent()); return true; }
+        if (!strcmp(Key,"Value")) { RequireClient(Thread); PushValue(Thread,Action->GetValueType(),Action->GetCurrent()); return true; }
         static const char* Signals[]={"Pressed","Changed","Released","Canceled"};
         for (int Signal=0;Signal<4;++Signal) if (!strcmp(Key,Signals[Signal])) {
             RequireClient(Thread); lua_newtable(Thread);
@@ -394,7 +523,8 @@ bool GLInputIndex(lua_State* Thread, Node* Target, const char* Key) {
         }
     }
     bool Method=(Definition && !strcmp(Key,"Configure")) || (Service && (!strcmp(Key,"AddContext") || !strcmp(Key,"GetDiagnostics"))) ||
-        (Object::cast_to<InputContext>(Target) && !strcmp(Key,"AddAction")) || (Object::cast_to<InputAction>(Target) && (!strcmp(Key,"AddBinding") || !strcmp(Key,"GetValue")));
+        (Object::cast_to<InputContext>(Target) && !strcmp(Key,"AddAction")) || (Object::cast_to<InputAction>(Target) &&
+        (!strcmp(Key,"AddBinding") || !strcmp(Key,"GetValue") || !strcmp(Key,"GetPhysicsValue") || !strcmp(Key,"BindKeyboardVector2") || !strcmp(Key,"BindGamepadStick") || !strcmp(Key,"BindMouseMotion")));
     if (Method) { RequireClient(Thread); GLPushNodeHandle(Thread,Target); lua_pushstring(Thread,Key); lua_pushcclosure(Thread,InputMethod,Key,2); return true; }
     return false;
 }
@@ -402,7 +532,14 @@ bool GLInputWrite(lua_State* Thread, Node* Target, const char* Key) {
     auto Definition=Object::cast_to<InputDefinition>(Target); if (!Definition && !Object::cast_to<InputService>(Target)) return false;
     // Parenting/name retain the established Instance contract. Every semantic
     // property is closed, typed and checked before generic bridge fallbacks.
-    if (!strcmp(Key,"Parent") || !strcmp(Key,"Name")) { RequireClient(Thread); GLInputAdoptOwner(Thread,Target); return false; }
+    if (!strcmp(Key,"Parent") || !strcmp(Key,"Name")) {
+        RequireClient(Thread);
+        if (!strcmp(Key,"Parent") && lua_isuserdata(Thread,3)) if (auto Binding=Object::cast_to<InputBinding>(Target)) {
+            auto Wrapper=static_cast<GodotObjectWrapper*>(luaL_checkudata(Thread,3,"GodotObject"));
+            if (auto Action=Object::cast_to<InputAction>(gow_node(Wrapper))) if (!Compatible(Action,Integer(Binding->GetOption("SourceType")),Binding)) luaL_error(Thread,"[Input:Definition] Incompatible binding parent");
+        }
+        GLInputAdoptOwner(Thread,Target); return false;
+    }
     RequireClient(Thread); Dictionary Options; Options[String(Key)]=ReadOption(Thread,Key,3);
     if (!Definition || !Definition->Configure(Options)) luaL_error(Thread,"[Input:Definition] Unknown, read-only or invalid input property");
     return true;

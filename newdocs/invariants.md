@@ -16,6 +16,12 @@ and retire script-owned contexts and callbacks with their execution owner. Focus
 loss, GUI-consumed releases, reconfiguration and owner/device removal must leave
 neutral state without synthetic reactivation from held input. Keep independent
 controller primitives separate from authoritative Character V2 physics.
+Local input/motor subtrees must not acquire static network identities, enter
+generic replication or become remote reference capabilities. Scene-authored
+motors stay inert until Client adoption. Movement commands target only that
+independent body, occupy bounded slots and execute at the native physics fence;
+observation setters cannot bypass them. Frame and physics readers must not drain
+one another's relative input samples.
 
 - Persistent script-visible references to Godot objects use stable ObjectIDs and
   resolve/check type and liveness immediately before use. A non-null raw pointer

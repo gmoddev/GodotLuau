@@ -87,3 +87,82 @@ do not restart shared services or delete historical caches to recover them.
   Release candidate gates use the same fixture and updated actor count; release
   publication remains disabled. Linux, Release, sanitizer, analog/controller and
   performance qualification are not yet established for this campaign.
+
+## Analog, motor and runnable controller follow-up
+
+Digital implementation `9ce9382bd6afc0f946f425c7a480e2f1f9d8e20b` is published.
+Fresh [core CI](https://github.com/gmoddev/GodotLuau/actions/runs/42170148571)
+and [native CI](https://github.com/gmoddev/GodotLuau/actions/runs/42170148520)
+pass on Windows/Linux. Downloaded native artifacts `13482356149` (Windows) and
+`13480898480` (Linux) contain all 132 actors, the actual input fixture PASS and
+production fingerprint `a37b92d484d4964e1f46ef2080d00a64d5f6bc1e04e061709784729656593d74`,
+matching the local receipt. This establishes that digital revision's scope,
+not the uncommitted analog/controller follow-up.
+
+The follow-up implements keyboard composites, radial gamepad sticks and
+relative mouse input within the same graph. Frame/physics fences rotate separate
+accumulators before existing RunService callbacks. Retained raw input views now
+use ObjectIDs; adapter replacement and destruction release old subscriptions.
+Source-verified private native callback boundaries revalidate lifetime before
+continuing. Vector options are raw typed data, so an __index proxy cannot run
+arbitrary code during a native setter. Projected values retain their kind until
+the next safe evaluation after authoring changes; pause clears input and commands.
+
+`KinematicMotor3D` provides an independent Godot collision body, bounded
+physics-tick commands, observations and viewport camera/capture leases. It never
+targets Character V2. Scene-authored bodies are inactive until Client adoption.
+The existing ENet replication fixture gains local-type stamping/activation
+assertions; local input/motor subtrees are excluded from existing replication
+and remote reference admission without changing the wire contract.
+
+The [runnable controller](../examples/input-controller/README.md) uses actions
+and the motor for keyboard/gamepad movement, look, sprint/jump, GUI, remapping and
+restart. Native tests execute that exact Luau source; source identity includes it
+in existing harness hashes. The shared input group now has three actors, making
+134 total while retaining all preceding actors. The existing sanitizer runner
+also invokes the group. Source-backed editor completion metadata is added for
+the implemented surface, with Connect/Once rather than an invented signal Wait.
+
+Interim DockerPC MSVC Debug results: 29 evaluator assertions; input v5 passes 44
+native checks, motor v1 passes 20 and the first runnable-demo replay passes 19,
+all with clean stderr and successful process exit. Later coverage adds projected
+type transitions, pause, service destruction during adapter creation and repeated
+restarts. Final-profile results remain to be recorded.
+
+The extended Release input attempt `input-axis-repro` establishes an actual
+diagonal-stick focus defect in the first analog implementation: clearing the
+adapter's reconstruction cache allowed X-only updates to invent full neutral
+while Y was still held. Both focus/rearming assertions fail. The correction
+preserves physical axis reconstruction and clears graph admission/output instead;
+the failed log remains under the task-owned DockerPC evidence directory.
+
+DockerPC's Docker endpoint is local `npipe:////./pipe/dockerDesktopLinuxEngine`,
+but `docker info` times out after ten seconds. The permitted MainPC fallback is
+DESKTOP-B8V8NAN; its CLI reports the Linux engine pipe absent. Its SSH wrapper
+reports exit 0 despite that error, which is not accepted as engine availability.
+No shared backend is restarted and no other workers are used. Local Linux
+qualification is unavailable; hosted Linux qualification remains permitted.
+
+The axis-cache correction passes the expanded **51-check Release input fixture**,
+including the diagonal focus regression, raw-data proxy rejection, pause and
+service destruction inside adapter creation. The final optimized Release motor
+fixture passes 20 checks. Real offscreen rendering on DockerPC's existing NVIDIA
+GTX 1650 SUPER passes 23 example checks; 20 restart cycles leave node count
+unchanged and observed Godot static memory 5,160 bytes lower (not a whole-process
+allocation/leak proof). The only stderr diagnostic is the host's unsuccessful
+display-timeout override request. Automated replay deliberately avoids physical
+mouse capture. The [receipt](evidence/input-controller-milestone-2026-11-06.json)
+records exact source/fixture/binary identities and the
+[screenshot](evidence/input-controller-2026-11-06.png).
+
+Five interleaved main/candidate trials and five same-API optimization trials are
+retained with [performance analysis](input-action-performance.md). Sparse
+256-action publication improves from median 635 to 211 microseconds per
+32-event burst. The small correction skips unchanged ObjectID commits and unused
+callback snapshot initialization, preserving all-changes-before-callbacks and
+explicit physics cancellation. Dense/tail and unchanged raw-control measurements
+remain mixed; they are not hidden. The existing evaluator benchmark records zero
+hot C++ allocations within its stated scope. All 16 existing candidate rejection
+tests pass with the 134-actor gate and example source identity. Expanded hosted
+134-actor CI, final core profiles and full-native sanitizer results are pending;
+this milestone does not claim their completion.

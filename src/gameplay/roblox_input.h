@@ -277,6 +277,14 @@ public:
     std::vector<LuaCallback> input_changed_cbs;
     std::vector<LuaCallback> touch_tap_cbs;
 
+    ~UserInputService() {
+        for (auto List:{&input_began_cbs,&input_ended_cbs,&input_changed_cbs,&touch_tap_cbs})
+            for (const auto& Item:*List) GLUnreference(nullptr,Item.ref);
+    }
+    std::vector<LuaCallback>& GetCallbacks(int Kind) {
+        return Kind==0?input_began_cbs:Kind==1?input_ended_cbs:input_changed_cbs;
+    }
+
 private:
     bool    mouse_behavior_lock = false;
     Vector2 mouse_delta_accum;   // acumulado durante el frame en curso
@@ -288,7 +296,7 @@ private:
 
 protected:
     void _notification(int What) {
-        if (What==NOTIFICATION_APPLICATION_FOCUS_OUT || What==NOTIFICATION_EXIT_TREE) {
+        if (What==NOTIFICATION_APPLICATION_FOCUS_OUT || What==NOTIFICATION_EXIT_TREE || What==NOTIFICATION_PAUSED) {
             Pending.clear(); mouse_delta_accum=Vector2(); mouse_delta_frame=Vector2();
         }
     }
@@ -321,9 +329,9 @@ public:
         for (auto& cb : input_changed_cbs) if (cb.main_L==L) cb.active=false;
     }
     void _gl_disconnect(int ref) {
-        for (auto& cb : input_began_cbs)   if (cb.ref==ref) cb.active=false;
-        for (auto& cb : input_ended_cbs)   if (cb.ref==ref) cb.active=false;
-        for (auto& cb : input_changed_cbs) if (cb.ref==ref) cb.active=false;
+        for (auto List:{&input_began_cbs,&input_ended_cbs,&input_changed_cbs,&touch_tap_cbs})
+            List->erase(std::remove_if(List->begin(),List->end(),[&](const LuaCallback& Item){return Item.ref==ref;}),List->end());
+        GLUnreference(nullptr,ref);
     }
 
     // Antes casteaba (Key)keycode directo → las teclas especiales (Shift, flechas,
@@ -349,6 +357,7 @@ public:
     Vector2 get_mouse_delta_v() const { return mouse_delta_frame; }
 
     void set_mouse_behavior(int b) {
+        if (!GLInputAllowed()) return;
         mouse_behavior_lock = (b != 0);
         if (mouse_behavior_lock) {
             Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
@@ -400,6 +409,7 @@ public:
             DispatchInput(Item.Event,Item.Processed);
             if (ObjectDB::get_instance(Identity)!=this) return;
         }
+        if (Pending.empty()) { Batch.clear(); Pending.swap(Batch); }
     }
     void DispatchInput(const Ref<InputEvent>& event, bool Processed) {
         Vector2 mloc = get_mouse_location_v();

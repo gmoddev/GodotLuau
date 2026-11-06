@@ -67,6 +67,7 @@ def Identity(Revision):
         Require(Actual == Expected and all(GeneratedObject(Line, TrackedDependency) for Line in DirtyDependency.splitlines()), 'Missing, dirty or mismatched dependency: '+Name)
         Dependencies[Name] = Actual
     Harness = {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.gd', '.py', '.cpp', '.pem'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']}
+    Harness['Controller.luau'] = hashlib.sha256((Source/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     return {'Revision': Revision, 'Tree': Git('rev-parse', Revision+'^{tree}'), 'Dependencies': Dependencies,
             'NativeSource': GetFingerprint(Source), 'HarnessHashes': Harness,
             'PolicySHA256': hashlib.sha256(Path(__file__).with_name('ReleaseCandidatePolicy.json').read_bytes().replace(b'\r\n', b'\n')).hexdigest()}
@@ -160,7 +161,7 @@ def Build(Args):
     Native(Host['Executable'], Adapter/AdapterName, Output/'native', Args.revision, Output/'host/remote-host.json', Engine)
     Require(Identity(Args.revision) == Before, 'Source inputs changed during build/qualification')
     Summary = Load(Output/'native/summary.json')
-    Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 132 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')
+    Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 134 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')
     Payload = Output/'evidence.zip'
     with zipfile.ZipFile(Payload, 'w', zipfile.ZIP_DEFLATED) as Archive:
         for Directory in [Output/'core', Output/'native', Output/'godot', Output/'host']:
@@ -169,7 +170,7 @@ def Build(Args):
         for File in sorted(Output.glob('*.log')): Archive.write(File, File.name)
     Files = {File.relative_to(Output).as_posix(): {'SHA256': Hash(File), 'Bytes': File.stat().st_size} for Directory in [Products, Adapter] for File in sorted(Directory.iterdir())}
     Files['evidence.zip'] = {'SHA256': Hash(Payload), 'Bytes': Payload.stat().st_size}
-    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'RemoteHost': Host, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 132}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
+    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'RemoteHost': Host, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 134}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
     print('[Release:Candidate] PASS source-built '+Selected+' '+Args.configuration, flush=True)
 
 
@@ -196,7 +197,7 @@ def CheckProfile(Record, Expected, Selected, Configuration):
     Require(Record['Source'] == Expected, 'Stale or mixed source/fixture/dependency inputs')
     VerifyRemoteHost(Record.get('RemoteHost', {}))
     Require(Record['RemoteHost'].get('Platform') == Selected and Record['RemoteHost'].get('Configuration') == Configuration, 'GL-029 host profile mismatch')
-    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 132}}, 'Failed, skipped or incomplete qualification gate')
+    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 134}}, 'Failed, skipped or incomplete qualification gate')
     Require(Record['Commands'] and all(Item['Exit'] == 0 for Item in Record['Commands']), 'Failed build/qualification command')
     Require(Record['Toolchain']['SCons'] == Policy['SCons'] and Record['Toolchain']['CompilerVersion'], 'Missing toolchain identity')
     LibraryName, WorkerName = Names(Selected, Configuration)

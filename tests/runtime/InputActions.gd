@@ -4,6 +4,23 @@ var Game: Node
 var Failed := false
 var Checks := 0
 
+class Samples extends Node:
+    var Action: Node
+    var Capture := false
+    var FrameSum := Vector2.ZERO
+    var PhysicsSum := Vector2.ZERO
+    var Stable := true
+    func _process(_Delta: float) -> void:
+        if Capture:
+            var Value: Vector2 = Action.call("GetValue")
+            FrameSum += Value
+            Stable = Stable and Value == Action.call("GetValue")
+    func _physics_process(_Delta: float) -> void:
+        if Capture:
+            var Value: Vector2 = Action.call("GetPhysicsValue")
+            PhysicsSum += Value
+            Stable = Stable and Value == Action.call("GetPhysicsValue")
+
 func Check(Value: bool, Description: String) -> void:
     Checks += 1
     if not Value:
@@ -33,6 +50,21 @@ func Probe(Name: String, Source: String) -> void:
     await create_timer(0.05).timeout
     Check(Game.get_meta(Name, false), "Luau " + Name)
 
+func Axis(Index: JoyAxis, Value: float) -> void:
+    var Event := InputEventJoypadMotion.new()
+    Event.device = 3
+    Event.axis = Index
+    Event.axis_value = Value
+    root.push_input(Event, true)
+    await create_timer(0.04).timeout
+
+func Motion(Delta: Vector2, Position := Vector2(400,400)) -> void:
+    var Event := InputEventMouseMotion.new()
+    Event.position = Position
+    Event.global_position = Position
+    Event.relative = Delta
+    root.push_input(Event, true)
+
 func _initialize() -> void:
     call_deferred("Run")
 
@@ -58,10 +90,18 @@ Chord:AddBinding(Enum.KeyCode.F, {Modifiers={Enum.KeyCode.LeftShift}, ExactModif
 local Pad = C:AddAction('Pad')
 Pad:AddBinding(Enum.KeyCode.ButtonA, {Device=-1})
 local Move = C:AddAction('Move', {ValueType=Enum.InputActionValueType.Vector2})
-Move:AddBinding(Enum.KeyCode.W, {Vector=Vector2.new(0,-1)})
-Move:AddBinding(Enum.KeyCode.D, {Vector=Vector2.new(1,0)})
+local Keys=Move:BindKeyboardVector2()
+assert(Keys.Up.KeyCode==Enum.KeyCode.W and Keys.Right.KeyCode==Enum.KeyCode.D)
+local Stick=C:AddAction('Stick', {ValueType=Enum.InputActionValueType.Vector2})
+Stick:BindGamepadStick(Enum.InputStick.Left, {Device=3, Deadzone=0.2})
+local LookContext=S:AddContext('LookContext', {Enabled=false, Priority=20})
+local Look=LookContext:AddAction('Look', {ValueType=Enum.InputActionValueType.Vector2})
+Look:BindMouseMotion()
+assert(not pcall(function() Look:AddBinding(Enum.KeyCode.Q) end))
 local Scalar = C:AddAction('Scalar', {ValueType=Enum.InputActionValueType.Scalar})
 Scalar:AddBinding(Enum.KeyCode.E, {Scale=0.5})
+local Typed = C:AddAction('Typed')
+Typed:AddBinding(Enum.KeyCode.T)
 Jump.Pressed:Connect(function()
     local Valid=Jump.Value == true and (Binding.KeyCode ~= Enum.KeyCode.Space or Other:GetValue() == true)
     if not Valid then game:SetAttribute('CallbackFailed', true) end
@@ -78,9 +118,16 @@ Jump.Released:Connect(function() game:SetAttribute('Releases', (game:GetAttribut
 game:GetService('UserInputService').InputBegan:Connect(function(Input, Processed)
     if Input.KeyCode == Enum.KeyCode.Space then game:SetAttribute('RawProcessed', Processed) end
 end)
+game:GetService('UserInputService').InputChanged:Connect(function(Input, Processed)
+    if Input.UserInputType==Enum.UserInputType.MouseMovement then game:SetAttribute('MotionProcessed', Processed) end
+end)
 shared.Input = {Service=S, Context=C, Jump=Jump, Binding=Binding, Menu=Menu, Confirm=Confirm, Chord=Chord, Pad=Pad, Move=Move, Scalar=Scalar}
 shared.Input.RetainedGet=Jump.GetValue
 shared.Input.RetainedConnect=Jump.Changed.Connect
+shared.Input.LookContext=LookContext
+shared.Input.Typed=Typed
+shared.Input.RawConnect=game:GetService('UserInputService').InputBegan.Connect
+shared.Input.RawPoll=game:GetService('UserInputService').IsKeyDown
 game:SetAttribute('Ready', true)
 """)
     await create_timer(0.15).timeout
@@ -136,6 +183,10 @@ game:SetAttribute('Ready', true)
     await Key(KEY_E, true)
     Check(Context.get_node("Scalar").call("GetValue") == 0.5, "scalar binding")
     await Key(KEY_E, false)
+    await Key(KEY_T, true)
+    await Probe("TypeProjection", "local T=shared.Input.Typed; assert(T.Value==true); T.ValueType=Enum.InputActionValueType.Vector2; assert(type(T.Value)=='boolean')")
+    Check(Context.get_node("Typed").call("GetValue") == Vector2.ZERO, "value kind changes with projection at next safe boundary")
+    await Key(KEY_T, false)
     var Button := InputEventJoypadButton.new()
     Button.device = 3
     Button.button_index = JOY_BUTTON_A
@@ -146,6 +197,52 @@ game:SetAttribute('Ready', true)
     Check(Context.get_node("Pad").call("GetValue") == true, "native gamepad device admission")
     Service.call("DeviceChanged", 3, false)
     Check(Context.get_node("Pad").call("GetValue") == false, "disconnect neutral state")
+    await Axis(JOY_AXIS_LEFT_X, 0.1)
+    Check(Context.get_node("Stick").call("GetValue") == Vector2.ZERO, "native stick deadzone")
+    await Axis(JOY_AXIS_LEFT_X, 0.6)
+    var StickValue: Vector2 = Context.get_node("Stick").call("GetValue")
+    Check(StickValue.is_equal_approx(Vector2(0.5,0)), "native stick rescaled value")
+    Check(Context.get_node("Stick").call("GetPhysicsValue").is_equal_approx(StickValue), "level physics sample matches native tick")
+    await Axis(JOY_AXIS_LEFT_Y, 0.6)
+    Service.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+    await Axis(JOY_AXIS_LEFT_X, 0.0)
+    await Axis(JOY_AXIS_LEFT_X, 0.8)
+    Check(Context.get_node("Stick").call("GetValue") == Vector2.ZERO, "held stick cannot reactivate after focus loss")
+    await Axis(JOY_AXIS_LEFT_Y, 0.0)
+    Check(Context.get_node("Stick").call("GetValue") == Vector2.ZERO, "partial axis updates cannot fake a fully neutral stick")
+    await Axis(JOY_AXIS_LEFT_X, 0.0)
+    await Axis(JOY_AXIS_LEFT_X, 0.6)
+    Check(Context.get_node("Stick").call("GetValue").is_equal_approx(Vector2(0.5,0)), "neutral stick crossing reactivates")
+    Service.call("DeviceChanged", 3, false)
+    Check(Context.get_node("Stick").call("GetValue") == Vector2.ZERO, "analog disconnect cancellation")
+    await Probe("EnableLook", "shared.Input.LookContext.Enabled=true")
+    var Observer := Samples.new()
+    Observer.Action = Service.get_node("LookContext/Look")
+    Game.add_child(Observer)
+    Observer.Capture = true
+    Motion(Vector2(4,-2))
+    Motion(Vector2(1,-3))
+    await create_timer(0.12).timeout
+    Observer.Capture = false
+    Check(Observer.FrameSum.is_equal_approx(Vector2(5,-5)), "relative input consumed once per rendered frame sample")
+    Check(Observer.PhysicsSum.is_equal_approx(Vector2(5,-5)), "physics samples retain all deltas independently of frame rotation")
+    Check(Observer.Stable, "repeated sample reads are non-consuming")
+    var Panel := Control.new()
+    Panel.size = Vector2(120,120)
+    Panel.mouse_filter = Control.MOUSE_FILTER_STOP
+    Game.add_child(Panel)
+    Panel.gui_input.connect(func(Event: InputEvent) -> void:
+        if Event is InputEventMouseMotion: Panel.accept_event())
+    Observer.FrameSum = Vector2.ZERO
+    Observer.PhysicsSum = Vector2.ZERO
+    Observer.Capture = true
+    Motion(Vector2(8,9), Vector2(20,20))
+    await create_timer(0.1).timeout
+    Observer.Capture = false
+    Check(Observer.FrameSum == Vector2.ZERO and Observer.PhysicsSum == Vector2.ZERO and Game.get_meta("MotionProcessed", false), "real GUI consumes pointer motion before semantic sampling")
+    Observer.queue_free()
+    Panel.queue_free()
+    await Probe("DisableLook", "shared.Input.LookContext.Enabled=false")
     await Key(KEY_SPACE, true)
     await Probe("Rebind", "shared.Input.Binding.KeyCode=Enum.KeyCode.Q")
     Check(Jump.call("GetValue") == false, "rebind cancels held primary")
@@ -157,6 +254,9 @@ local I=shared.Input
 assert(not pcall(function() I.Binding.KeyCode=0/0 end))
 assert(not pcall(function() I.Jump.ValueType=0.5 end))
 assert(not pcall(function() I.Service:AddContext('Invalid', {Typo=true}) end))
+local Proxy=setmetatable({}, {__index=function() game:SetAttribute('ProxyInvoked',true); return 1 end})
+assert(not pcall(function() I.Binding.Vector=Proxy end))
+assert(not game:GetAttribute('ProxyInvoked'))
 assert(I.Binding.KeyCode==Enum.KeyCode.Q and I.Jump.ValueType==Enum.InputActionValueType.Bool)
 local C=Instance.new('InputContext'); C.Name='Manual'; C.Parent=I.Service
 local A=Instance.new('InputAction', C); local B=Instance.new('InputBinding', A)
@@ -176,6 +276,20 @@ game:SetAttribute('ServerRejected', true)
     Check(Jump.call("GetValue") == false and Game.get_meta("Cancel", "") == "FocusLost", "focus-loss cancellation")
     await Key(KEY_Q, true, true)
     Check(Jump.call("GetValue") == false, "focus-loss echo cannot resurrect held action")
+    await Key(KEY_Q, false)
+    await Key(KEY_Q, true)
+    paused = true
+    Check(Jump.call("GetValue") == false and Game.get_meta("Cancel", "") == "Paused", "scene pause cancels semantic state")
+    paused = false
+    await Key(KEY_Q, true, true)
+    Check(Jump.call("GetValue") == false, "unpause cannot revive held echo")
+    var Raw := Game.get_node("UserInputService")
+    var RawId := Raw.get_instance_id()
+    Raw.free()
+    await process_frame
+    await process_frame
+    Check(Game.get_node("UserInputService").get_instance_id() != RawId, "canonical raw adapter restarts after destruction")
+    await Probe("RawRetainedSafe", "assert(shared.Input.RawConnect({}, function() error('stale') end)==nil); assert(shared.Input.RawPoll({}, Enum.KeyCode.Q)==false)")
     var OldContext := Context.get_instance_id()
     Owner.free()
     await process_frame
@@ -185,8 +299,19 @@ game:SetAttribute('ServerRejected', true)
 assert(not pcall(function() shared.Input.RetainedGet(shared.Input.Jump) end))
 assert(not pcall(function() shared.Input.RetainedConnect({}, function() error('stale') end) end))
 """)
-    Check(not Game.get_meta("CallbackFailed", false) and Game.get_meta("Presses", 0) == 4, "callbacks completed for original and rebound inputs")
-    print("[Input:Actions] ", JSON.stringify({"Checks":Checks, "Diagnostics":Service.call("GetDiagnostics")}))
+    Check(not Game.get_meta("CallbackFailed", false) and Game.get_meta("Presses", 0) == 5, "callbacks completed for original and rebound inputs")
+    var Diagnostics: Dictionary = Service.call("GetDiagnostics")
+    await Probe("RetireDuringAdapter", """
+game.ChildAdded:Connect(function(Child)
+    if Child.ClassName=='UserInputService' then shared.Input.Service:Destroy() end
+end)
+""")
+    var ServiceId := Service.get_instance_id()
+    Game.get_node("UserInputService").free()
+    await process_frame
+    await process_frame
+    Check(not is_instance_id_valid(ServiceId), "adapter creation callback can retire service without stale native access")
+    print("[Input:Actions] ", JSON.stringify({"Checks":Checks, "DiagnosticsBeforeRetire":Diagnostics}))
     Game.free()
     await process_frame
     print("[Input:Actions] ", "FAIL" if Failed else "PASS")
