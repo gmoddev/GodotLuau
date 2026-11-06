@@ -122,6 +122,45 @@ the pre-commit diagnostic-name defect; matching focused ASan passes after its
 static-name correction. Full matching sanitizer/hosted matrices and affected
 regressions are still pending. No final qualification claim is made here.
 
+### Linux authority-baseline follow-up
+
+At implementation `9b1d67e6dc9ba5c77c5d5408115177200c96aa8c`, hosted core CI
+passes 85 cases and 29 graph assertions on each platform. DockerPC's affected
+Release regressions pass 3 input, 20 Character and 10 animation actors. Its full
+matching Windows ASan run passes controls, production registration/reload, all
+85 core cases, all 141 native actors and strict completeness checking, with
+1,165 instrumented compilation units and no unexpected reports. The new bridge
+and all 100 normalized harness/example hashes match the committed implementation.
+
+Hosted [Linux ASan/LSan](https://github.com/gmoddev/GodotLuau/actions/runs/42196754665)
+attempt 1 fails the dedicated movement assertion, with no unexpected sanitizer
+report. Other groups, including controls, core, Character, animation, HTTP,
+DataStore and presentation, pass. The
+[retained trace](evidence/player-controller-linux-initial-baseline-failure-2026-11-06.log)
+shows Scripted control active and accelerating to 24 units/s at epoch 2, followed
+by a trusted correction to epoch 3 and a different starting lane before the sample
+was checked. A peer-ready file did not establish a settled initial authority
+baseline. This is a failed functional qualification attempt, not a sanitizer pass
+for the complete suite and not evidence that movement admission should loosen.
+
+The fixture now reuses CharacterIntegration's existing production
+`_character_sync` handshake before starting the controlled movement interval.
+Both sides assert the same actual baseline and the server asserts that the
+movement interval retains that epoch. The original movement distance/convergence
+assertion and all limits/timeouts remain unchanged. No runtime, networking,
+dependency or host change is made by this follow-up. DockerPC's Release listen
+and dedicated actors pass the revised baseline assertions. Matching Windows ASan
+also passes all seven revised controller actors, reusing the already instrumented
+binary and detection controls. Fresh hosted qualification remains pending here.
+
+The ordinary Linux native job at
+[the same implementation](https://github.com/gmoddev/GodotLuau/actions/runs/42196561908)
+times out after five minutes downloading Clang from the Ubuntu mirror, before
+any extension build or fixture execution. Failed artifact `13492318470` and its
+job log remain retained. Linux sanitizer failure artifact `13493083408` has digest
+`63b55d7b9efe1c939f2db3ed8522a0d3950a4ec19c0a4c8a45e11b045e4524b6`.
+Neither incomplete/failed job is accepted as passing.
+
 Release publication, updater distribution, dependency pins and the admitted Godot
 host remain unchanged. GL-040/041 and documented device, allocation and sanitizer
 scope limitations remain independent.

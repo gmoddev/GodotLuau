@@ -396,6 +396,19 @@ func WaitGrant() -> int:
     Check(false,"native Character grant deadline")
     return 0
 
+func SyncBaseline(Peer: int) -> void:
+    # Reuse CharacterIntegration's production sync handshake. A peer-ready file
+    # alone does not establish receipt of the final initial authority baseline.
+    var Previous: int = States()[Peer].Epoch
+    var Deadline := Time.get_ticks_msec()+8000
+    while int(States()[Peer].Epoch)==Previous and Time.get_ticks_msec()<Deadline:
+        Network.rpc_id(1,"_character_sync",Previous)
+        await create_timer(0.05).timeout
+    var Position: Vector3 = States()[Peer].Position
+    var C := Character()
+    Check(int(States()[Peer].Epoch)>Previous and Vector2(C.global_position.x-Position.x,C.global_position.z-Position.z).length()<0.02 and C.call("IsControllerActive"),"initial native authority baseline agrees before input")
+    Mark("client"+str(Index)+".baseline",JSON.stringify({"Epoch":States()[Peer].Epoch,"X":C.global_position.x,"Y":C.global_position.y,"Z":C.global_position.z}))
+
 func ScriptedServer() -> void:
     if Mode!="Listen": Character().free()
     Game.get_node("Players").call("set_respawn_time",0.05)
@@ -408,6 +421,12 @@ func ScriptedServer() -> void:
     await Wait("client2.ready")
     First = int(Read("client1.ready"))
     Second = int(Read("client2.ready"))
+    Mark("baseline")
+    await Wait("client1.baseline")
+    await Wait("client2.baseline")
+    var Baseline: Dictionary = JSON.parse_string(Read("client1.baseline"))
+    var BaselinePosition := Vector3(Baseline.X,Baseline.Y,Baseline.Z)
+    Check(int(States()[First].Epoch)==int(Baseline.Epoch) and Vector2(States()[First].Position.x-BaselinePosition.x,States()[First].Position.z-BaselinePosition.z).length()<0.02,"initial native authority baseline agrees before input")
     var Original: Vector3 = States()[First].Position
     var InitialEpoch: int = States()[First].Epoch
     var C: Node3D = Puppet(First)
@@ -419,6 +438,7 @@ func ScriptedServer() -> void:
     var Sample: Dictionary = JSON.parse_string(Read("moved"))
     var Actual: Vector3 = States()[First].Position
     print("[Character:Controller] movement ",JSON.stringify({"Original":str(Original),"Authoritative":str(Actual),"Client":Sample,"Authority":States()[First]}))
+    Check(int(States()[First].Epoch)==InitialEpoch,"movement trial retains its admitted native authority epoch")
     Check(Actual.distance_to(Original)>2 and Actual.distance_to(Vector3(Sample.X,Sample.Y,Sample.Z))<1,"scripted movement reaches authoritative ENet observer")
     Check(C.get_instance_id()==Identity and C.call("GetPhysicsBody").get_instance_id()==BodyIdentity and C.call("get_health")==100,"movement preserves native body and server-owned health")
     Check(C.call("GetControllerMode")==0,"client controller selection does not replicate authority configuration")
@@ -462,6 +482,8 @@ func ScriptedClient() -> void:
     var Identity := C.get_instance_id()
     var BodyIdentity := Body.get_instance_id()
     Mark("client"+str(Index)+".ready",str(Peer))
+    await Wait("baseline")
+    await SyncBaseline(Peer)
     await Wait("move")
     if Index==1:
         var Observations: Array[Dictionary] = []

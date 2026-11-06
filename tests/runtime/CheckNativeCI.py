@@ -54,9 +54,9 @@ def Main():
         if Actor['Mode'] == 'Local':
             Required |= {'default native hardware movement remains compatible', 'GUI focus stops an already held gameplay action', 'old controller owner cannot stop its replacement', 'respawn replaces native life and reattaches the Luau controller', 'owner teardown leaves Scripted mode neutral without hardware fallback'}
         elif Actor['Role'] == 'server':
-            Required |= {'scripted movement reaches authoritative ENet observer', 'client controller selection does not replicate authority configuration', 'multiplayer respawn replaces one native life', 'disconnect retires authoritative peer Character state'}
+            Required |= {'initial native authority baseline agrees before input', 'movement trial retains its admitted native authority epoch', 'scripted movement reaches authoritative ENet observer', 'client controller selection does not replicate authority configuration', 'multiplayer respawn replaces one native life', 'disconnect retires authoritative peer Character state'}
         else:
-            Required |= {'network controller preserves owned Character identity', 'OtherCharacterRejected'}
+            Required |= {'initial native authority baseline agrees before input', 'network controller preserves owned Character identity', 'OtherCharacterRejected'}
             Required.add('CharacterAdded reattaches scripted controller after network respawn' if Actor['Index'] == 1 else 'disconnect neutralizes held intent without Native fallback')
         if not Actor.get('Complete') or Actor.get('Result') != 'PASS' or not Required <= Labels or any(not Case.get('Passed') for Case in Actor.get('Cases', [])):
             raise ValueError('Player.Character controller assertions missing or failed')
