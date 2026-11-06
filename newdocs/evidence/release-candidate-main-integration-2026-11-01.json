@@ -1,0 +1,2747 @@
+{
+  "Schema": 1,
+  "Disposition": "INTEGRATED WITH LIMITATIONS",
+  "StartingMain": "34ab42ee4e160a6d8ba85bded00bd9dce1c1cd93",
+  "NormalMerge": "b88a88b64c3f576d8b51e51908c0141ac9231a18",
+  "MergeTree": "4031c533e2ea23835920c4e72ef3e2a5bc754fb0",
+  "SourceBranch": "ci/gl-010-011-release-qualification",
+  "RetainedSourceTip": "1ce5018e1aa3e216ced2ba56bf17aff48e4e0aa8",
+  "QualifiedImplementation": "ca8cefbafbe6012e6ae0699ae433b7d5355edfa6",
+  "PreservedCommits": [
+    "2360e9ffcfac575574bb5bb7f8ae566bfd431669",
+    "fa58c436f6d7260c2948f54c384ee4a30062135f",
+    "35a578ee4f78a035a5163ec8e10da6508d5bdb49",
+    "fea42f459a40f4e634fba8f48c66f29edcb5a724",
+    "ca8cefbafbe6012e6ae0699ae433b7d5355edfa6",
+    "1ce5018e1aa3e216ced2ba56bf17aff48e4e0aa8"
+  ],
+  "IdentityReview": {
+    "MergeTreeEqualsSourceTip": true,
+    "FinalSourceEvidenceCommitDocumentationOnly": true,
+    "NonDocumentationInputsEqualQualifiedImplementation": true,
+    "NativeAndExistingRuntimeFixturesEqualStartingMain": true,
+    "ProfileTreesAnd63FixtureHashesComparedToMergeGitInputs": true,
+    "Pins": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    }
+  },
+  "LocalFocusedChecks": {
+    "SourceRevision": "b88a88b64c3f576d8b51e51908c0141ac9231a18",
+    "ArchiveSHA256": "742cbdc3e4dabd8c54608212dc4273e9af8a01cd2a15067a73f40c0f80b83e5a",
+    "Worker": "DockerPC",
+    "Scope": "Focused integration tooling, packaging, rejection and process ownership",
+    "InputHashes": {
+      ".github/workflows/build-release.yml": "17fce9eba5e46ba4f39e76aeb87dbff309baa4aa87b3b2314ba9bb0e61144272",
+      ".github/workflows/release-candidate.yml": "73e2fbd1a77161f45dc603afbd9f18599f791ac619a3adf5715acbef59d633c2",
+      ".github/workflows/runtime-core-ci.yml": "5e52f917bb7ef565100546ef46afc6d78b3260d190561ef8d4495fe7eaef60e6",
+      ".github/workflows/runtime-native-ci.yml": "d58a53950b87362a4b0adfb8fc9be02957187f9d2da05fe34c4c220517c9be6c",
+      "tests/editor/README.md": "ed0d2529b2fcae6e43556333a83b5a6b5a5356f76ce676e0310886575f66577a",
+      "tests/editor/RunUpdaterIsolation.py": "72887dc85203ba63ad79818d6e3fc752aa1c568f662aa1ca212bc1344799d2aa",
+      "tests/editor/UpdaterIsolation.gd": "7a170bc40e8029dab109dbd5c146956788badd678a387167141d281cd6f95ea4",
+      "tests/packaging/PackagingTests.py": "b8e065d1732090665b12a7e3e06b7506fe2483a5263f847bf82c2559f1ae1566",
+      "tests/release/README.md": "291fa6b0a8a8e2c00dc8133c74de475019de04cfc66c3bd9ac370104b8ed0d53",
+      "tests/release/ReleaseCandidateTests.py": "45ae7c095bb576b51db8776bb4c7e6afabcd7db6c4ced6a751df5d86fcf942c5",
+      "tests/release/ReleaseRetentionTests.py": "d17c3b0770b4865cf571b1471885a6c824807b3a9923f742778f75b92fa00f42",
+      "tests/runtime/AnimationIntegration.gd": "212970c1ee016c7b644233fcb1600a5bb15cf0afddf257a14dbdf440280ba177",
+      "tests/runtime/Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+      "tests/runtime/BuildLinux.sh": "2efe15099d91418ab5dd13808fab3e5b9ba6dd757512e1e1d730f0c738924c22",
+      "tests/runtime/BuildSanitizedGodot.sh": "2449c90fa79e8ad596d77fccb67b4fe71f2bf371decb7a247de76716c090675e",
+      "tests/runtime/CMakeLists.txt": "1c29128997d18e5d3d5ae7fa103afa58fc871ea6275acb7d8e16f4f2165a06ce",
+      "tests/runtime/CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+      "tests/runtime/CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+      "tests/runtime/CharacterDispatchProbe.gd": "2e58edaa60b956daff1181a36cdbf7107f0ff68024187f3324c525378dcd9ae5",
+      "tests/runtime/CharacterIntegration.gd": "d55240cd898aa2a6889753aa95e1ecee883cf080f7220bde9663d43fce8876ef",
+      "tests/runtime/CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+      "tests/runtime/CharacterNetworkBenchmarks.gd": "663513466c665205c1b105b7a2688a6d11c71d66c0dc0cc083ab51301b176c5e",
+      "tests/runtime/CharacterPerformance.gd": "76b6431487b0691de069f517b0bb09b6716f691841214660c7ab0f54df74fd67",
+      "tests/runtime/CharacterPresentation.gd": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f",
+      "tests/runtime/CharacterV2.gd": "08000a8307702721d6e951ad3ac2944709517f1c7d0c4db07639c7cccdb96859",
+      "tests/runtime/CheckCoreCI.py": "a47e2bcd0bd0fe28897006859ff0169bb60e09ee03a6ae8753a7c0ea668fff24",
+      "tests/runtime/CheckNativeCI.py": "e603f5bb39dbce743ed880f328d762e13b5b4cf19052c154ec17a53d6cb20b52",
+      "tests/runtime/DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+      "tests/runtime/DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+      "tests/runtime/DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+      "tests/runtime/DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+      "tests/runtime/DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+      "tests/runtime/DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+      "tests/runtime/DatastoreTransactions.gd": "91ed9354f0d93e14f6c16d1985fdba21d57b393aad7d47712367ee124cc23ed0",
+      "tests/runtime/DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+      "tests/runtime/ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+      "tests/runtime/ExecutionDomainTests.cpp": "d023eef5af8635167bf9f76d2a1585a54b21468b9e9e3733926017cc030b730d",
+      "tests/runtime/FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+      "tests/runtime/FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+      "tests/runtime/FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+      "tests/runtime/FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+      "tests/runtime/GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+      "tests/runtime/HotPathBenchmarks.cpp": "427440d6d8d954f1c543f74494bb7816d3fff2e5412a840a4a8eaf9af2bf83aa",
+      "tests/runtime/HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+      "tests/runtime/HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+      "tests/runtime/HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+      "tests/runtime/HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+      "tests/runtime/HttpFixtureServer.py": "5c2559ebe6a41e4532fc9244c259ec3acbd5ef48be0b636f9f1c5c5b56749663",
+      "tests/runtime/HttpIntegration.gd": "f6c1cafd5e930b84d7b918d2761775f0a228f0dd5ddf010a5a1b57ceeadb7d83",
+      "tests/runtime/HttpServiceBaseline.gd": "d001b05eac5f8c3e1042cc51f97ce10a8a50beaf00383d32533313137739f429",
+      "tests/runtime/HttpServiceCallers.gd": "231b96bbd3e40f9469686cbce72a11b2da1c0b942385af05c14a143d454bc4d6",
+      "tests/runtime/HttpServiceIntegration.gd": "71371f4e642d0bfbab929c8c6aa8d4432498a3721542f722e3b8397093a74905",
+      "tests/runtime/Integration.gd": "44426f90ae9e2fcbc71854cee70d5efbeaa008abfc93ca9c19fbc86054014a4a",
+      "tests/runtime/NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+      "tests/runtime/NetworkSecurity.gd": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+      "tests/runtime/PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+      "tests/runtime/ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+      "tests/runtime/Qualification.Dockerfile": "152029a74c864de770bdcfb62d97ecf7d97cbcdec0f9c7cb171853c891041380",
+      "tests/runtime/README.md": "1cedb257fa0bd22793f443d0946c2fb236123d6913fb17d0ec7b5333f9ed8599",
+      "tests/runtime/RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+      "tests/runtime/ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+      "tests/runtime/RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+      "tests/runtime/RunCharacterNetworkBenchmarks.py": "0727ab7c1c180d37ec0250cb4aa0d8af0deac0d3a82fdc06fc2e8a39ad029e0b",
+      "tests/runtime/RunCharacterPerformance.py": "339f0e3ca7da21870e06238a45e75b77dc64b8819eded119f81efece2576e69d",
+      "tests/runtime/RunCharacterPresentation.py": "5256f4294849982da80f8a7e155167963d08348641d0bc68e993e47c3a3e1bd8",
+      "tests/runtime/RunCoreQualification.py": "640bd280768b212f9312b340e7fae42e58d418d68dd85fe0480e22b1cbdef1f9",
+      "tests/runtime/RunCoreTests.py": "a7693433d239e5a4a64d9e065a891e05052be4a8cd7a72ab79cb1bf64d8c20d9",
+      "tests/runtime/RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+      "tests/runtime/RunDatastoreQualification.py": "290f8d1486d7b5920a9a5ae01cdc8033f4b6434e92627c7d8480c89324d9119b",
+      "tests/runtime/RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+      "tests/runtime/RunHttpServiceBaseline.py": "1128b038d7069434df6afd47f502fe0f797d0f05db9eddca04963564ecf7e980",
+      "tests/runtime/RunHttpServiceCallers.py": "a999d6eaa0fd6bfdf1ed3cc9242a3a57983fce07ced8bad28ebf2d5200714462",
+      "tests/runtime/RunIntegration.ps1": "ff05e1306f317cecbf9ec9ec1a8de39519f0850845265d0ffe69e20db79fc109",
+      "tests/runtime/RunNetworkIntegration.ps1": "142aca117c489c9693fcc5b82e208ad8cd864815047737caec20b6c400580cfd",
+      "tests/runtime/RunQualification.py": "bad51b6a4c6e7081b47333ed4c55bfd688ff76c12f5bdf2baa7f4cc121d9ce7f",
+      "tests/runtime/RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+      "tests/runtime/RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+      "tests/runtime/SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+      "tests/runtime/SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+      "tests/runtime/SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f",
+      "tools/CheckReleaseIdentity.py": "14e71b5cf4be09e1d85212afa380eb1c577ca53371887fbe5cc366969d1d1fea",
+      "tools/InitializeReleaseToolchain.ps1": "cbe50b7b3becfb45cc0afccf1350202d7d0d8731d36fbc324c02efa6620707ff",
+      "tools/ReleaseBuildRequirements.txt": "80dfe556ebf5a28b7ad82cf1d4a25eccf996ec2dffbc70ea31b0cc8e275cb4ff",
+      "tools/ReleaseCandidate.py": "ed6daea0fead963b45a35747b3a2a738ac83935ed830bc97699ccf8caa702b88",
+      "tools/ReleaseCandidatePolicy.json": "934fe9e055690ced8a4cdeef31d6b3a4468c3805d8ff81c0e222f930fa35e04e",
+      "tools/crear_plantilla.py": "65b75f0216444c9d7b7fa2ddaa8784bde56221cdcbb6bd080475b708cc26c011",
+      "tools/entrenar_modelo.py": "f8e9b7354496441dacc778fba12ce3ccd5b9987aa9c62a7026753e275ae8e76a",
+      "tools/fix_face.py": "1ecf97338e70304b34aa370ec2cfd522e7bc63d06bba4d17b56e8516afe56f3a",
+      "tools/generar_plantillas_luau.py": "952b68acce1c2a356790a7aeab0f56499392410b7f4843c2f1ecc88daf923ff7",
+      "tools/generar_release.py": "35852bdab7b5885685bb525328f1557dcab6cd33f663d0820795495e82019f48",
+      "tools/nuevo_proyecto.py": "c1f0b46d15ccfa13de5d8dd39b0beb724a73ace522cbeb3e04d202a57c33d1c1",
+      "tools/rbxl_import.py": "3f7edbb8e2a6d3ff34a9626ca2f290e3f1be8efaa997cb74d67448bc8a0b2433",
+      "tools/release.ps1": "68042bb2c179d9df8b9f174fb277db809ab8cbf0a591379c622f4316e046a992",
+      "tools/render_preview.py": "1c637d07ee459bcd6b47ce1fc69c42eae8c89e24b5ab1e2cb872e8ca05bf09ad",
+      "tools/rig_character.py": "db9b2d49a7f8ba70248e2b8dc4357977e28e5d51550c61da5c04f34bb8d60897"
+    },
+    "Results": [
+      {
+        "Suite": "tests/release/ReleaseCandidateTests.py",
+        "Exit": 0,
+        "LogSHA256": "642d9d046339296647ca55461ad56b44fff36339e93a8569212ed2f27c5cbb8b"
+      },
+      {
+        "Suite": "tests/release/ReleaseRetentionTests.py",
+        "Exit": 0,
+        "LogSHA256": "1cf7604b57f3d3e400f99c85f4c383b93eab2b85c46e10264160acb6108665e8"
+      },
+      {
+        "Suite": "tests/packaging/PackagingTests.py",
+        "Exit": 0,
+        "LogSHA256": "29c08afc05d35aa028971c3fd0c55f8ee13edf9ed427cfe8166afdc0b3359feb"
+      },
+      {
+        "Suite": "tests/runtime/FixtureProcessTests.py",
+        "Exit": 0,
+        "LogSHA256": "e9bbd4ca719665a9bf60b40f8cb1f4ef90a186725b531fb582a2e9ad0c74e5f3"
+      }
+    ],
+    "GitBlobVerifiedInputCount": 95,
+    "Counts": {
+      "Candidate": 14,
+      "Retention": 12,
+      "Packaging": 5,
+      "ProcessOwnershipExecuted": 8,
+      "ProcessOwnershipNotApplicable": 6
+    },
+    "RecordLocation": "C:/Sandbox/Codex/ReleaseQualification/integration-b88a88b/local-tests.json",
+    "NoLocalNativeBuildOrDependencyInstall": true
+  },
+  "CandidateCI": {
+    "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/41276341255",
+    "Run": 41276341255,
+    "Jobs": [
+      {
+        "id": 124759173328,
+        "name": "Candidate rejection and retention checks (windows-2022)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:17:10Z",
+        "completed_at": "2026-11-01T05:17:28Z"
+      },
+      {
+        "id": 124759173459,
+        "name": "Linux production core ASan and LSan",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:17:10Z",
+        "completed_at": "2026-11-01T05:17:40Z"
+      },
+      {
+        "id": 124759173491,
+        "name": "Candidate rejection and retention checks (ubuntu-24.04)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:17:11Z",
+        "completed_at": "2026-11-01T05:17:18Z"
+      },
+      {
+        "id": 124759236194,
+        "name": "Source build and qualify (Linux, Release)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:17:35Z",
+        "completed_at": "2026-11-01T05:42:50Z"
+      },
+      {
+        "id": 124759236236,
+        "name": "Source build and qualify (Linux, Debug)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:17:31Z",
+        "completed_at": "2026-11-01T05:41:34Z"
+      },
+      {
+        "id": 124759236249,
+        "name": "Source build and qualify (Windows, Debug)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:17:30Z",
+        "completed_at": "2026-11-01T05:38:47Z"
+      },
+      {
+        "id": 124759236269,
+        "name": "Source build and qualify (Windows, Release)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:17:31Z",
+        "completed_at": "2026-11-01T05:52:27Z"
+      },
+      {
+        "id": 124765666422,
+        "name": "Extract and start candidate (Linux)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:52:30Z",
+        "completed_at": "2026-11-01T05:52:59Z"
+      },
+      {
+        "id": 124765666445,
+        "name": "Extract and start candidate (Windows)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:52:30Z",
+        "completed_at": "2026-11-01T05:53:22Z"
+      },
+      {
+        "id": 124765821422,
+        "name": "Require every candidate gate (no publication)",
+        "conclusion": "success",
+        "started_at": "2026-11-01T05:53:25Z",
+        "completed_at": "2026-11-01T05:53:42Z"
+      }
+    ],
+    "Artifacts": [
+      {
+        "id": 13072670688,
+        "name": "profile-Windows-Release",
+        "digest": "sha256:df271da557173c16436bae56e184cdc66e60b889a4932ac2e36575037f37e692",
+        "size_in_bytes": 4111962
+      },
+      {
+        "id": 13072416198,
+        "name": "candidate-Windows",
+        "digest": "sha256:02b3089f33c4b1460c5c932e7b8006d7c8b2099357bbdf21377a6dfb8412ae0e",
+        "size_in_bytes": 8010364
+      },
+      {
+        "id": 13072326287,
+        "name": "candidate-Linux",
+        "digest": "sha256:1c75f078b43029a3bb01062748dc4dad57246933502b88b82f180e78a9f59722",
+        "size_in_bytes": 10783397
+      },
+      {
+        "id": 13072277501,
+        "name": "accepted-candidate",
+        "digest": "sha256:425c21dc382418c0fe37fb57eda453b7b4e68f9c033b6d5f71160cce3292e476",
+        "size_in_bytes": 22253
+      },
+      {
+        "id": 13072240592,
+        "name": "profile-Linux-Debug",
+        "digest": "sha256:03844bc58573deba45a9bece34a6ad4e12b35980898a8719253ca0fbc85defa6",
+        "size_in_bytes": 33446580
+      },
+      {
+        "id": 13071827614,
+        "name": "profile-Linux-Release",
+        "digest": "sha256:c8cf85bce220d6910c1e84aaa63b221d927ec3b949142823b36a07bd0643acea",
+        "size_in_bytes": 7793359
+      },
+      {
+        "id": 13071642868,
+        "name": "profile-Windows-Debug",
+        "digest": "sha256:96383be8a715c72376aab4d3713ecee19d0069a7778c087887afeef00421cb58",
+        "size_in_bytes": 8288734
+      },
+      {
+        "id": 13071388152,
+        "name": "sanitizer",
+        "digest": "sha256:388d0914522bae905ab33a573d0fd4c159f19c904d34b1e6d2baf00a5373b8f4",
+        "size_in_bytes": 11801
+      }
+    ],
+    "Revision": "b88a88b64c3f576d8b51e51908c0141ac9231a18",
+    "Conclusion": "success",
+    "VerifiedInspection": {
+      "Run": "41276341255",
+      "Revision": "b88a88b64c3f576d8b51e51908c0141ac9231a18",
+      "Profiles": [
+        {
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "callers": 3,
+            "presentation": 14,
+            "performance": 1,
+            "datastore": 23
+          },
+          "Configuration": "Debug",
+          "ProfileJSONSHA256": "77530f41df360650cce6f585b500f4e1e54aff508e92a3420169d59a05aff5d5",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992673,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+              "Bytes": 84198557,
+              "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "Executable": "Godot_v4.7.1-stable_win64.exe"
+            },
+            "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+            "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "VersionStderr": ""
+          },
+          "Products": {
+            "products/godot_luau.windows.template_debug.x86_64.dll": {
+              "SHA256": "6a70d3726bf58723a196a04885b4897734b2359723723604d6906c9a8a68432e",
+              "Bytes": 6676992
+            },
+            "products/godot_luau_store_worker.exe": {
+              "SHA256": "a9bd1296b5b69dd9bb64cc9295b5e9c662fd4245e92acbbbf2c0db2776dd8dad",
+              "Bytes": 176128
+            },
+            "adapter/DatastoreBackendProbe.exe": {
+              "SHA256": "a17ef058a0d8cb6fbcf0c83d778e4d8e61793fe9ca72beae5f8401ae5cf6f4e0",
+              "Bytes": 753664
+            },
+            "adapter/godot_luau.dll": {
+              "SHA256": "a2c5dcac27c982110a97dafb1a730427f9806ad96ca5626d51929183938492a7",
+              "Bytes": 24357376
+            },
+            "adapter/godot_luau_store_worker.exe": {
+              "SHA256": "a30b915661c350be1deebb5d5e2996c4a0ffa04c660b3cd1e74fe108a2dc23a8",
+              "Bytes": 1865216
+            },
+            "evidence.zip": {
+              "SHA256": "25e0536a1fb02189794fc4e2e7b85c0cbd3d7d878107ff2b8b49f61cabb39f97",
+              "Bytes": 315355
+            }
+          },
+          "Toolchain": {
+            "OS": "Windows-2022Server-10.0.20348-SP0",
+            "Machine": "AMD64",
+            "Python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+            "SCons": "4.10.0",
+            "Compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.EXE",
+            "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+            "CompilerVersion": "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64\nCopyright (C) Microsoft Corporation.  All rights reserved.\n\nCompiler Passes:\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.EXE:        Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c1.dll:        Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c1xx.dll:      Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c2.dll:        Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c1xx.dll:      Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe:      Version 14.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\mspdb140.dll:  Version 14.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\1033\\clui.dll: Version 19.44.35229.0\n\ncl : Command line error D8003 : missing source filename\n",
+            "CMake": "cmake version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n",
+            "CTest": "ctest version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n"
+          },
+          "CoreCases": 80,
+          "FixtureFiles": 63,
+          "NativeSource": {
+            "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "Platform": "Windows",
+          "NativeActors": 110,
+          "Graphical": false
+        },
+        {
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "callers": 3,
+            "presentation": 14,
+            "performance": 1,
+            "datastore": 23
+          },
+          "Configuration": "Release",
+          "ProfileJSONSHA256": "676c6133c1abc275760c477b90dcd7c1ecb1a030647c7e11ade9234c8efff8b3",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992673,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+              "Bytes": 84198557,
+              "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+              "Executable": "Godot_v4.7.1-stable_win64.exe"
+            },
+            "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+            "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "VersionStderr": ""
+          },
+          "Products": {
+            "products/godot_luau.windows.template_release.x86_64.dll": {
+              "SHA256": "709e0322fccf3e6cba596ef63a1f79f63164934c5465bcb37c83e9a429b6c2ff",
+              "Bytes": 4737536
+            },
+            "products/godot_luau_store_worker.exe": {
+              "SHA256": "a28056bdf5085eaf3ddeabc267c7a82a8228d3d1f503ac1fcad8a84ac45e0b11",
+              "Bytes": 171008
+            },
+            "adapter/DatastoreBackendProbe.exe": {
+              "SHA256": "52ac9848c0d114e571dc857276f03be82540462d15608be4400792cf8bcc50c0",
+              "Bytes": 95232
+            },
+            "adapter/godot_luau.dll": {
+              "SHA256": "6acc7dba29e72757cb9dcc23f73a0dd18f60abd9e0ea6ccac814700bd2b71e81",
+              "Bytes": 4450816
+            },
+            "adapter/godot_luau_store_worker.exe": {
+              "SHA256": "647c62985a727736b5bb9de299af81872e4047c2059716d8380455acd5f337f1",
+              "Bytes": 171520
+            },
+            "evidence.zip": {
+              "SHA256": "0d0e1265212e89bd9513837b92d3dbba1dc0b34974d45699ad08f9e357c957fc",
+              "Bytes": 312240
+            }
+          },
+          "Toolchain": {
+            "OS": "Windows-2022Server-10.0.20348-SP0",
+            "Machine": "AMD64",
+            "Python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+            "SCons": "4.10.0",
+            "Compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.EXE",
+            "CompilerSHA256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+            "CompilerVersion": "Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x64\nCopyright (C) Microsoft Corporation.  All rights reserved.\n\nCompiler Passes:\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.EXE:        Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c1.dll:        Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c1xx.dll:      Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c2.dll:        Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\c1xx.dll:      Version 19.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe:      Version 14.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\mspdb140.dll:  Version 14.44.35229.0\n C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\1033\\clui.dll: Version 19.44.35229.0\n\ncl : Command line error D8003 : missing source filename\n",
+            "CMake": "cmake version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n",
+            "CTest": "ctest version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n"
+          },
+          "CoreCases": 80,
+          "FixtureFiles": 63,
+          "NativeSource": {
+            "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "Platform": "Windows",
+          "NativeActors": 110,
+          "Graphical": false
+        },
+        {
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "callers": 3,
+            "presentation": 14,
+            "performance": 1,
+            "datastore": 23
+          },
+          "Configuration": "Debug",
+          "ProfileJSONSHA256": "88fa208b5dbdef51d4276b19b44db8c8747cb2090e3e92e829d6819ce6068a7e",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992009,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+              "Bytes": 76056717,
+              "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+            },
+            "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+            "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "VersionStderr": ""
+          },
+          "Products": {
+            "products/godot_luau.linux.template_debug.x86_64.so": {
+              "SHA256": "87fce2ca42dda5d5cab3c0c481c4f73df0ceaa19fefb3a7e1a75a77b44b6b0c8",
+              "Bytes": 10570240
+            },
+            "products/godot_luau_store_worker": {
+              "SHA256": "7e2e0b1c7ca9e078f7a28f3a9950b6a9c114bedefca54325a4d1c21902823b91",
+              "Bytes": 26856
+            },
+            "adapter/DatastoreBackendProbe": {
+              "SHA256": "3b615f1011d636c8078a5ed220dcd56e9fa0486aec5d59b89a72ddd57be4fefa",
+              "Bytes": 444032
+            },
+            "adapter/godot_luau.so": {
+              "SHA256": "c965f07c0b9d17a4a7d0e84fa67697555f021c78227ff5f58fe14ca3195ba267",
+              "Bytes": 82871704
+            },
+            "adapter/godot_luau_store_worker": {
+              "SHA256": "f495e3f37dc32616a6df6951d9f9d7515213a4c00decbe1e8a7246bb8e5d83fc",
+              "Bytes": 378048
+            },
+            "evidence.zip": {
+              "SHA256": "8f1f35e97393c18e767f87bffb712dc340a1787857856428e95df8b16617dfc9",
+              "Bytes": 315965
+            }
+          },
+          "Toolchain": {
+            "OS": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+            "Machine": "x86_64",
+            "Python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+            "SCons": "4.10.0",
+            "Compiler": "/usr/bin/g++",
+            "CompilerSHA256": "1353e9bdd29a7295c7226bf6c63abccce056d8cac31f112e5cdbecc3f28c2769",
+            "CompilerVersion": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+            "CMake": "cmake version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n",
+            "CTest": "ctest version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n"
+          },
+          "CoreCases": 80,
+          "FixtureFiles": 63,
+          "NativeSource": {
+            "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "Platform": "Linux",
+          "NativeActors": 110,
+          "Graphical": false
+        },
+        {
+          "Groups": {
+            "regression": 8,
+            "security": 10,
+            "animation": 10,
+            "characters": 20,
+            "resources": 8,
+            "filesystem": 3,
+            "http": 4,
+            "httpservice": 6,
+            "callers": 3,
+            "presentation": 14,
+            "performance": 1,
+            "datastore": 23
+          },
+          "Configuration": "Release",
+          "ProfileJSONSHA256": "6449eeb631bd186e352c84039c78c417a2ebd57e5d653ff850606c7e1128f3a5",
+          "Godot": {
+            "Version": "4.7.1.stable.official.a13da4feb",
+            "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+            "ReleaseID": 353974774,
+            "Asset": {
+              "AssetID": 476992009,
+              "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+              "Bytes": 76056717,
+              "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+              "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+            },
+            "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+            "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "VersionStderr": ""
+          },
+          "Products": {
+            "products/godot_luau.linux.template_release.x86_64.so": {
+              "SHA256": "14e1ec16e5916913117ed61b8d54a06d3da8ed769f64d82538c0f1fd1f71694d",
+              "Bytes": 9995800
+            },
+            "products/godot_luau_store_worker": {
+              "SHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+              "Bytes": 26856
+            },
+            "adapter/DatastoreBackendProbe": {
+              "SHA256": "cd63c6354baa32cc796623998f409e63faca9f10cf1a27148f8b6fd653ac4587",
+              "Bytes": 62896
+            },
+            "adapter/godot_luau.so": {
+              "SHA256": "46d6fed8e0551113f364f3b363e324757467be8ac59ac54e6b2b88e049f54b85",
+              "Bytes": 13228808
+            },
+            "adapter/godot_luau_store_worker": {
+              "SHA256": "6b4f95407c8ad981322468446a42dbd1f24c1209e1467205b47add4842cd0ff0",
+              "Bytes": 32224
+            },
+            "evidence.zip": {
+              "SHA256": "555910d0c199b2c6633cdc6685ac9168b264c2bc508c8a72e54a5123368aa89f",
+              "Bytes": 315216
+            }
+          },
+          "Toolchain": {
+            "OS": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+            "Machine": "x86_64",
+            "Python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+            "SCons": "4.10.0",
+            "Compiler": "/usr/bin/g++",
+            "CompilerSHA256": "1353e9bdd29a7295c7226bf6c63abccce056d8cac31f112e5cdbecc3f28c2769",
+            "CompilerVersion": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+            "CMake": "cmake version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n",
+            "CTest": "ctest version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n"
+          },
+          "CoreCases": 80,
+          "FixtureFiles": 63,
+          "NativeSource": {
+            "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+            "Files": 89,
+            "Newlines": "LF normalized"
+          },
+          "Platform": "Linux",
+          "NativeActors": 110,
+          "Graphical": false
+        }
+      ],
+      "Candidates": [
+        {
+          "File": "GodotLuau-Windows.zip",
+          "Members": 133,
+          "ProvenanceSHA256": "8b1dfa0c697a4158acd1ff4370e745702bcc607f9fbb1aad5484ca9628d581f9",
+          "Limitations": [
+            "Candidate artifacts only; publication and runtime updater admission remain disabled",
+            "Recorded build inputs and hashes do not establish byte-for-byte reproducibility",
+            "Hosted presentation assertions are headless; no hosted GPU or physical-input qualification",
+            "Linux production-core ASan/LSan is required; Windows core and full-native sanitizer qualification are not automated by this candidate profile",
+            "GL-017 external engine defect, GL-018 native sanitizer host and broader GL-020 adversarial animation qualification remain open",
+            "GL-027 template authoring, arbitrary assets, production scale and asset redistribution rights remain separate limits"
+          ],
+          "SHA256": "3b6c574eb3373664e64584fb9ecf6b39a9987bb81272abefcaf27123092b4893",
+          "Bytes": 8055447,
+          "Platform": "Windows",
+          "Startup": [
+            {
+              "Configuration": "Debug",
+              "Label": "package-Debug",
+              "Exit": 0,
+              "Diagnostics": "",
+              "ExtensionSHA256": "6a70d3726bf58723a196a04885b4897734b2359723723604d6906c9a8a68432e",
+              "CompanionSHA256": "a28056bdf5085eaf3ddeabc267c7a82a8228d3d1f503ac1fcad8a84ac45e0b11",
+              "Logs": {
+                "stdout": "0be2e68c991b1c35ad74872e60f67dbaa2571090a7ce5f5ebd98c4d734ec22ab",
+                "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              }
+            },
+            {
+              "Configuration": "Release",
+              "Label": "package-Release",
+              "Exit": 0,
+              "Diagnostics": "",
+              "ExtensionSHA256": "709e0322fccf3e6cba596ef63a1f79f63164934c5465bcb37c83e9a429b6c2ff",
+              "CompanionSHA256": "a28056bdf5085eaf3ddeabc267c7a82a8228d3d1f503ac1fcad8a84ac45e0b11",
+              "Logs": {
+                "stdout": "f031ae6067896c5bf797ea4ca41aa61a3961ed68b900c1ceabfa86e2526950a0",
+                "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              }
+            }
+          ]
+        },
+        {
+          "File": "GodotLuau-Linux.zip",
+          "Members": 133,
+          "ProvenanceSHA256": "f478f614ef14b95d1ee05be00976c424be04b35cb102b27d6c8aa814801dd9d7",
+          "Limitations": [
+            "Candidate artifacts only; publication and runtime updater admission remain disabled",
+            "Recorded build inputs and hashes do not establish byte-for-byte reproducibility",
+            "Hosted presentation assertions are headless; no hosted GPU or physical-input qualification",
+            "Linux production-core ASan/LSan is required; Windows core and full-native sanitizer qualification are not automated by this candidate profile",
+            "GL-017 external engine defect, GL-018 native sanitizer host and broader GL-020 adversarial animation qualification remain open",
+            "GL-027 template authoring, arbitrary assets, production scale and asset redistribution rights remain separate limits"
+          ],
+          "SHA256": "836a66ee1264df8a0e0eb25f6ff31df16e48b84036e1f5b10417baa039fd6c3c",
+          "Bytes": 10849132,
+          "Platform": "Linux",
+          "Startup": [
+            {
+              "Configuration": "Debug",
+              "Label": "package-Debug",
+              "Exit": 0,
+              "Diagnostics": "",
+              "ExtensionSHA256": "87fce2ca42dda5d5cab3c0c481c4f73df0ceaa19fefb3a7e1a75a77b44b6b0c8",
+              "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+              "Logs": {
+                "stdout": "025b1b07420b4a1cdcf0092f037de856e2d6c6a01590edd156a78b5800abb088",
+                "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              }
+            },
+            {
+              "Configuration": "Release",
+              "Label": "package-Release",
+              "Exit": 0,
+              "Diagnostics": "",
+              "ExtensionSHA256": "14e1ec16e5916913117ed61b8d54a06d3da8ed769f64d82538c0f1fd1f71694d",
+              "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+              "Logs": {
+                "stdout": "325ce8fadd49a17be620d76a1c2ce6bb7dd7cf8b2e9bc34a4abfdbecbaf48bb5",
+                "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              }
+            }
+          ]
+        }
+      ],
+      "Inspection": "Read-only downloaded-artifact identity/count/hash inspection; runtime tests executed on hosted runners",
+      "AcceptedSHA256": "122b4a7c365932455f79d998a3ce0f8f2fd71d80f5c317c1c8c26ab052046c9e"
+    },
+    "Sanitizer": {
+      "Cases": 80,
+      "InstrumentedTranslationUnits": 2,
+      "ASanSymbolVerified": true,
+      "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+      "Compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+      "AllDeclaredDiagnosticHashesVerified": true
+    },
+    "RawEvidenceLocation": "C:/Users/aiden/.codex/artifacts/godotluau/release-qualification/41276341255"
+  },
+  "OrdinaryCI": {
+    "Metadata": {
+      "Revision": "b88a88b64c3f576d8b51e51908c0141ac9231a18",
+      "Runs": [
+        {
+          "Artifacts": [
+            {
+              "id": 13071585816,
+              "name": "runtime-core-Linux-Debug",
+              "digest": "sha256:7bd44ca1edd8ecbb65f1dc5af2b8134df8898e7b612e8acbc0efcec694cb000f",
+              "size_in_bytes": 14279
+            },
+            {
+              "id": 13070423985,
+              "name": "runtime-core-Windows-Debug",
+              "digest": "sha256:958fb373d33f91a7fc79ad2109184050ef58834c5013ab94a3c5adbb520006f8",
+              "size_in_bytes": 12921
+            }
+          ],
+          "Kind": "core",
+          "conclusion": "success",
+          "id": 41276343797,
+          "Jobs": [
+            {
+              "id": 124759179909,
+              "name": "Core (Windows, Debug)",
+              "conclusion": "success",
+              "started_at": "2026-11-01T05:17:12Z",
+              "completed_at": "2026-11-01T05:18:15Z"
+            },
+            {
+              "id": 124759180051,
+              "name": "Core (Linux, Debug)",
+              "conclusion": "success",
+              "started_at": "2026-11-01T05:17:12Z",
+              "completed_at": "2026-11-01T05:17:37Z"
+            }
+          ],
+          "html_url": "https://github.com/gmoddev/GodotLuau/actions/runs/41276343797",
+          "head_sha": "b88a88b64c3f576d8b51e51908c0141ac9231a18"
+        },
+        {
+          "Artifacts": [
+            {
+              "id": 13072260054,
+              "name": "runtime-native-Windows-Debug",
+              "digest": "sha256:9553ac16c5eaf77639d005d845df5f90495ac63ae7649c559f456da810b0bd99",
+              "size_in_bytes": 281042
+            },
+            {
+              "id": 13071573607,
+              "name": "runtime-native-Linux-Debug",
+              "digest": "sha256:2e4e7682e024904c28747f67765ce81e8974963235406bcb1fb5bf81128a0ce2",
+              "size_in_bytes": 297681
+            }
+          ],
+          "Kind": "native",
+          "conclusion": "success",
+          "id": 41276346183,
+          "Jobs": [
+            {
+              "id": 124759186953,
+              "name": "Native (Linux, Debug)",
+              "conclusion": "success",
+              "started_at": "2026-11-01T05:17:14Z",
+              "completed_at": "2026-11-01T05:29:26Z"
+            },
+            {
+              "id": 124759187065,
+              "name": "Native (Windows, Debug)",
+              "conclusion": "success",
+              "started_at": "2026-11-01T05:17:15Z",
+              "completed_at": "2026-11-01T05:35:42Z"
+            }
+          ],
+          "html_url": "https://github.com/gmoddev/GodotLuau/actions/runs/41276346183",
+          "head_sha": "b88a88b64c3f576d8b51e51908c0141ac9231a18"
+        }
+      ],
+      "NativeSource": {
+        "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+        "Files": 89,
+        "Newlines": "LF normalized"
+      }
+    },
+    "Verified": [
+      {
+        "Run": 41276343797,
+        "Kind": "core",
+        "ArtifactID": 13071585816,
+        "Name": "runtime-core-Linux-Debug",
+        "SHA256": "7bd44ca1edd8ecbb65f1dc5af2b8134df8898e7b612e8acbc0efcec694cb000f",
+        "Cases": [
+          "VM allocator accounts growth shrink rejection and frees",
+          "VM allocator rejects invalid sizes and arithmetic overflow",
+          "Actual VM allocation failure is protected and close releases accounting",
+          "Sandbox preserves custom typeof shared facades and function environments",
+          "Task quota rejects admission before creating extra coroutine and recovers after tick",
+          "Reference quota and owner quota reject without replacing valid work",
+          "Live coroutine quota includes untracked manual coroutines and frees on collection",
+          "Memory quota retirement covers caught Lua failure and fresh domain recovery",
+          "Memory failure during callback marshalling retires without unprotected unwind",
+          "Insufficient VM bootstrap quota produces a controlled unavailable domain",
+          "Shared module allocations use the domain quota and retire all owners on exhaustion",
+          "Server module sharing and ordering",
+          "Client module sharing and ordering",
+          "Server and Client VMs and caches are distinct",
+          "Concurrent yielding module initializes exactly once",
+          "Scalar false, number, string and function results preserve identity",
+          "Recursive and indirect cyclic requires fail predictably",
+          "Concurrent initializer dependency cycle does not deadlock",
+          "Module failure is sticky and unrelated execution survives",
+          "Missing and multiple module results fail",
+          "Source revision and explicit destruction invalidate only that module",
+          "Invalidated pending module wakes callers with an error",
+          "Revision cache loads only on misses and distinguishes replacement resources",
+          "Revision change cancels pending initialization and wakes all old waiters",
+          "Revision loader preserves dependency cycles and sticky failures",
+          "Destroying first caller does not cancel shared initialization",
+          "Script environments and identities survive interleaved yields",
+          "Module global assignments do not leak to caller or another module",
+          "_G and shared are domain-shared but ordinary globals are local",
+          "Script errors leave unrelated scripts and domain alive",
+          "spawn, defer, delay, wait arguments and reentrant scheduling",
+          "Cancel owner suppresses all pending task kinds",
+          "Cancellation during callback and child task spawn is reentrant-safe",
+          "External callbacks that yield remain scheduler-owned",
+          "Cancelled callback references cannot alias new owners",
+          "Repeated creation cancellation GC and restart",
+          "Repeated domain shutdown and no work after shutdown",
+          "Context authority is independent of mutable compatibility globals",
+          "Task cancellation detaches native condition wait ownership",
+          "Close callbacks run once with admission closed and cached require available",
+          "Completed coroutines cannot be resumed a second time",
+          "A module child task is not a blocking initializer dependency",
+          "Deep requires and spawn dispatch yield at a bounded native depth",
+          "Service callbacks keep their registering owner across dispatch and yields",
+          "Trusted service polling survives its first subscriber and hides its bootstrap hook",
+          "Wait guards invalidate independently of an orphaned native source",
+          "A manually resumed coroutine joins scheduler ownership when it waits externally",
+          "Manual coroutines adopt timed and module waits and cannot revive dead owners",
+          "Explicit getfenv and setfenv retain Luau function environment behavior",
+          "Native stack guard uses real thread bounds under sanitizer instrumentation",
+          "Filesystem native operation grants and bounded storage",
+          "Filesystem hostile names and final links reject without mutation",
+          "Filesystem intermediate links and replacement races stay confined",
+          "HTTP production origin parsing separates authority and target",
+          "HTTP production request headers reject injection and framing control",
+          "HTTP production wire budgets bound cumulative and per tick work",
+          "Native character authority observes synchronous domain and restores nesting",
+          "HttpService strict JSON preserves scalars containers null and UTF8 bytes",
+          "HttpService strict JSON rejects malformed and ambiguous syntax",
+          "HttpService JSON rejects cycles sparse mixed and unsupported values",
+          "HttpService JSON enforces byte node and depth bounds without stale state",
+          "HttpService public facade propagates errors and validates options before transport",
+          "HTTP response capture preserves duplicates and rejects bounds without mutation",
+          "UUID v4 formatting fixes version variant braces and byte order",
+          "Isolated execution resource case infinite",
+          "Isolated execution resource case nested",
+          "Isolated execution resource case pcall",
+          "Isolated execution resource case finite-exceeded",
+          "Isolated execution resource case finite-within",
+          "Isolated execution resource case module",
+          "Isolated execution resource case callback",
+          "Isolated execution resource case marshal",
+          "Isolated execution resource case invoke",
+          "Isolated execution resource case native",
+          "Isolated execution resource case cross-time",
+          "Isolated execution resource case cross-count",
+          "Isolated execution resource case cross-reentry",
+          "Isolated execution resource case cross-memory",
+          "Isolated execution resource case memory-catch",
+          "Isolated execution resource case shutdown"
+        ]
+      },
+      {
+        "Run": 41276343797,
+        "Kind": "core",
+        "ArtifactID": 13070423985,
+        "Name": "runtime-core-Windows-Debug",
+        "SHA256": "958fb373d33f91a7fc79ad2109184050ef58834c5013ab94a3c5adbb520006f8",
+        "Cases": [
+          "VM allocator accounts growth shrink rejection and frees",
+          "VM allocator rejects invalid sizes and arithmetic overflow",
+          "Actual VM allocation failure is protected and close releases accounting",
+          "Sandbox preserves custom typeof shared facades and function environments",
+          "Task quota rejects admission before creating extra coroutine and recovers after tick",
+          "Reference quota and owner quota reject without replacing valid work",
+          "Live coroutine quota includes untracked manual coroutines and frees on collection",
+          "Memory quota retirement covers caught Lua failure and fresh domain recovery",
+          "Memory failure during callback marshalling retires without unprotected unwind",
+          "Insufficient VM bootstrap quota produces a controlled unavailable domain",
+          "Shared module allocations use the domain quota and retire all owners on exhaustion",
+          "Server module sharing and ordering",
+          "Client module sharing and ordering",
+          "Server and Client VMs and caches are distinct",
+          "Concurrent yielding module initializes exactly once",
+          "Scalar false, number, string and function results preserve identity",
+          "Recursive and indirect cyclic requires fail predictably",
+          "Concurrent initializer dependency cycle does not deadlock",
+          "Module failure is sticky and unrelated execution survives",
+          "Missing and multiple module results fail",
+          "Source revision and explicit destruction invalidate only that module",
+          "Invalidated pending module wakes callers with an error",
+          "Revision cache loads only on misses and distinguishes replacement resources",
+          "Revision change cancels pending initialization and wakes all old waiters",
+          "Revision loader preserves dependency cycles and sticky failures",
+          "Destroying first caller does not cancel shared initialization",
+          "Script environments and identities survive interleaved yields",
+          "Module global assignments do not leak to caller or another module",
+          "_G and shared are domain-shared but ordinary globals are local",
+          "Script errors leave unrelated scripts and domain alive",
+          "spawn, defer, delay, wait arguments and reentrant scheduling",
+          "Cancel owner suppresses all pending task kinds",
+          "Cancellation during callback and child task spawn is reentrant-safe",
+          "External callbacks that yield remain scheduler-owned",
+          "Cancelled callback references cannot alias new owners",
+          "Repeated creation cancellation GC and restart",
+          "Repeated domain shutdown and no work after shutdown",
+          "Context authority is independent of mutable compatibility globals",
+          "Task cancellation detaches native condition wait ownership",
+          "Close callbacks run once with admission closed and cached require available",
+          "Completed coroutines cannot be resumed a second time",
+          "A module child task is not a blocking initializer dependency",
+          "Deep requires and spawn dispatch yield at a bounded native depth",
+          "Service callbacks keep their registering owner across dispatch and yields",
+          "Trusted service polling survives its first subscriber and hides its bootstrap hook",
+          "Wait guards invalidate independently of an orphaned native source",
+          "A manually resumed coroutine joins scheduler ownership when it waits externally",
+          "Manual coroutines adopt timed and module waits and cannot revive dead owners",
+          "Explicit getfenv and setfenv retain Luau function environment behavior",
+          "Native stack guard uses real thread bounds under sanitizer instrumentation",
+          "Filesystem native operation grants and bounded storage",
+          "Filesystem hostile names and final links reject without mutation",
+          "Filesystem intermediate links and replacement races stay confined",
+          "HTTP production origin parsing separates authority and target",
+          "HTTP production request headers reject injection and framing control",
+          "HTTP production wire budgets bound cumulative and per tick work",
+          "Native character authority observes synchronous domain and restores nesting",
+          "HttpService strict JSON preserves scalars containers null and UTF8 bytes",
+          "HttpService strict JSON rejects malformed and ambiguous syntax",
+          "HttpService JSON rejects cycles sparse mixed and unsupported values",
+          "HttpService JSON enforces byte node and depth bounds without stale state",
+          "HttpService public facade propagates errors and validates options before transport",
+          "HTTP response capture preserves duplicates and rejects bounds without mutation",
+          "UUID v4 formatting fixes version variant braces and byte order",
+          "Isolated execution resource case infinite",
+          "Isolated execution resource case nested",
+          "Isolated execution resource case pcall",
+          "Isolated execution resource case finite-exceeded",
+          "Isolated execution resource case finite-within",
+          "Isolated execution resource case module",
+          "Isolated execution resource case callback",
+          "Isolated execution resource case marshal",
+          "Isolated execution resource case invoke",
+          "Isolated execution resource case native",
+          "Isolated execution resource case cross-time",
+          "Isolated execution resource case cross-count",
+          "Isolated execution resource case cross-reentry",
+          "Isolated execution resource case cross-memory",
+          "Isolated execution resource case memory-catch",
+          "Isolated execution resource case shutdown"
+        ]
+      },
+      {
+        "Run": 41276346183,
+        "Kind": "native",
+        "ArtifactID": 13072260054,
+        "Name": "runtime-native-Windows-Debug",
+        "SHA256": "9553ac16c5eaf77639d005d845df5f90495ac63ae7649c559f456da810b0bd99",
+        "Processes": 110,
+        "NativeSource": {
+          "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+          "Files": 89,
+          "Newlines": "LF normalized"
+        },
+        "FixtureFiles": 63,
+        "VerifiedLogHashes": 336,
+        "Groups": {
+          "regression": 8,
+          "security": 10,
+          "animation": 10,
+          "characters": 20,
+          "resources": 8,
+          "filesystem": 3,
+          "http": 4,
+          "httpservice": 6,
+          "callers": 3,
+          "presentation": 14,
+          "performance": 1,
+          "datastore": 23
+        },
+        "HttpService": {
+          "Actors": 6,
+          "GuidProcesses": 2,
+          "GuidSamples": 4000,
+          "UniqueGuids": 4000,
+          "UnauthorizedRequests": 0
+        },
+        "Callers": {
+          "Actors": 3,
+          "UnauthorizedRequests": 0,
+          "PublishedSnippetSHA256": {
+            "Http": "7669e12f21387d40f3a8d86efc9ebf821323bfcb29c6da96bebe19edbd5816f5",
+            "Json": "213e3fdb325c924848385a7fef858b13deec7624eeea19037dff3df939d42033"
+          }
+        },
+        "Persistence": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        },
+        "CharacterLatency": [
+          {
+            "Received": 1103,
+            "Forwarded": 1103,
+            "Dropped": 0,
+            "PeakPending": 503,
+            "ConfiguredDelaySeconds": 0.2,
+            "JitterSeconds": [
+              0,
+              0.035,
+              0.07
+            ],
+            "MinimumObservedSeconds": 0.20299999999997453
+          },
+          {
+            "Received": 415,
+            "Forwarded": 415,
+            "Dropped": 0,
+            "PeakPending": 18,
+            "ConfiguredDelaySeconds": 0.2,
+            "JitterSeconds": [
+              0,
+              0.035,
+              0.07
+            ],
+            "MinimumObservedSeconds": 0.20299999999997453
+          }
+        ],
+        "Performance": {
+          "Actors": 1,
+          "Graphical": false,
+          "Counts": [
+            1,
+            16
+          ],
+          "Profiles": 5,
+          "SpeedGate": false
+        },
+        "Presentation": [
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Result": "PASS",
+            "Checks": 47,
+            "Graphical": false
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Result": "PASS",
+            "Checks": 47,
+            "Graphical": false
+          },
+          {
+            "Case": "listen",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 20,
+            "Graphical": false
+          },
+          {
+            "Case": "listen",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 19,
+            "Graphical": false
+          },
+          {
+            "Case": "listen",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 19,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 19,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 13,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 13,
+            "Graphical": false
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 22,
+            "Graphical": false
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 21,
+            "Graphical": false
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 21,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 21,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 14,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 14,
+            "Graphical": false
+          }
+        ],
+        "AllActorExitsZero": true
+      },
+      {
+        "Run": 41276346183,
+        "Kind": "native",
+        "ArtifactID": 13071573607,
+        "Name": "runtime-native-Linux-Debug",
+        "SHA256": "2e4e7682e024904c28747f67765ce81e8974963235406bcb1fb5bf81128a0ce2",
+        "Processes": 110,
+        "NativeSource": {
+          "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+          "Files": 89,
+          "Newlines": "LF normalized"
+        },
+        "FixtureFiles": 63,
+        "VerifiedLogHashes": 333,
+        "Groups": {
+          "regression": 8,
+          "security": 10,
+          "animation": 10,
+          "characters": 20,
+          "resources": 8,
+          "filesystem": 3,
+          "http": 4,
+          "httpservice": 6,
+          "callers": 3,
+          "presentation": 14,
+          "performance": 1,
+          "datastore": 23
+        },
+        "HttpService": {
+          "Actors": 6,
+          "GuidProcesses": 2,
+          "GuidSamples": 4000,
+          "UniqueGuids": 4000,
+          "UnauthorizedRequests": 0
+        },
+        "Callers": {
+          "Actors": 3,
+          "UnauthorizedRequests": 0,
+          "PublishedSnippetSHA256": {
+            "Http": "7669e12f21387d40f3a8d86efc9ebf821323bfcb29c6da96bebe19edbd5816f5",
+            "Json": "213e3fdb325c924848385a7fef858b13deec7624eeea19037dff3df939d42033"
+          }
+        },
+        "Persistence": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        },
+        "CharacterLatency": [
+          {
+            "Received": 1107,
+            "Forwarded": 1107,
+            "Dropped": 0,
+            "PeakPending": 503,
+            "ConfiguredDelaySeconds": 0.2,
+            "JitterSeconds": [
+              0,
+              0.035,
+              0.07
+            ],
+            "MinimumObservedSeconds": 0.20006108399991263
+          },
+          {
+            "Received": 421,
+            "Forwarded": 420,
+            "Dropped": 0,
+            "PeakPending": 19,
+            "ConfiguredDelaySeconds": 0.2,
+            "JitterSeconds": [
+              0,
+              0.035,
+              0.07
+            ],
+            "MinimumObservedSeconds": 0.20002365100003772
+          }
+        ],
+        "Performance": {
+          "Actors": 1,
+          "Graphical": false,
+          "Counts": [
+            1,
+            16
+          ],
+          "Profiles": 5,
+          "SpeedGate": false
+        },
+        "Presentation": [
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Result": "PASS",
+            "Checks": 47,
+            "Graphical": false
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Result": "PASS",
+            "Checks": 47,
+            "Graphical": false
+          },
+          {
+            "Case": "listen",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 20,
+            "Graphical": false
+          },
+          {
+            "Case": "listen",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 19,
+            "Graphical": false
+          },
+          {
+            "Case": "listen",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 19,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 19,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 13,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 13,
+            "Graphical": false
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 22,
+            "Graphical": false
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 21,
+            "Graphical": false
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 21,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "server0",
+            "Result": "PASS",
+            "Checks": 21,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client1",
+            "Result": "PASS",
+            "Checks": 14,
+            "Graphical": false
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client2",
+            "Result": "PASS",
+            "Checks": 14,
+            "Graphical": false
+          }
+        ],
+        "AllActorExitsZero": true
+      }
+    ]
+  },
+  "RenderedPackages": {
+    "Revision": "b88a88b64c3f576d8b51e51908c0141ac9231a18",
+    "Worker": "DockerPC",
+    "PackageSHA256": "3b6c574eb3373664e64584fb9ecf6b39a9987bb81272abefcaf27123092b4893",
+    "NativeSourceFromHostedPackage": {
+      "SHA256": "559961ab22bc22ec349b8bb80cc4dd0fdc4cc4a2b180c78d37f06a59a4d401b0",
+      "Files": 89,
+      "Newlines": "LF normalized"
+    },
+    "Graphical": [
+      {
+        "Configuration": "Debug",
+        "Actors": 14,
+        "Assertions": 454,
+        "CaptureCount": 48,
+        "EvidenceSHA256": "b8a236f09d9458e04343cfdb6e9e004d6eb2011cf2be5e612c889beedd2451ca",
+        "ExtensionSHA256": "6a70d3726bf58723a196a04885b4897734b2359723723604d6906c9a8a68432e",
+        "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+        "FixtureSHA256": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f",
+        "Adapters": [
+          "NVIDIA GeForce GTX 1650 SUPER"
+        ],
+        "Cases": [
+          "custom",
+          "dedicated",
+          "dedicated-custom",
+          "listen",
+          "listen-custom",
+          "r6"
+        ],
+        "AssetInputs": {
+          "GodotLuau/assets/avatars/r6/R6.mtl": "d1bc49ba06f03ce419633c57b2d1e52e33869b401aa1795c942b15a329d15824",
+          "GodotLuau/assets/avatars/r6/R6_Head.obj": "d71c5736ba8e38a9223dd346df16eadaa1ab1abcd1b7237764b647c9d3e8c72a",
+          "GodotLuau/assets/avatars/r6/R6_Head.obj.import": "eefb5e4e943ad59b4db6f7c43934c3cb878ad47fc4ab70409ae02b35b648801d",
+          "GodotLuau/assets/avatars/r6/R6_LeftArm.obj": "f80e9a50998b27f263fd438d7408ab88ee8fa272760dd63593d49a3756e5df49",
+          "GodotLuau/assets/avatars/r6/R6_LeftArm.obj.import": "b8f44522609cccb25b613a70d05d69860fd0b6e9217d56db97730f1bbffca394",
+          "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj": "ff4dd3712a02b2bf9340bd2ee6cf26874d2e6eb0fa9650586fddf420eb9265c4",
+          "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj.import": "49c9a264a5a6c8f71c1d9e7f8174e74f0818381126e76c1d6a6285ea22c796e4",
+          "GodotLuau/assets/avatars/r6/R6_RightArm.obj": "1aab9a15ed4002d94bc19f7af0fc82f91f0c8e2456b25b344d2319f366d9c67a",
+          "GodotLuau/assets/avatars/r6/R6_RightArm.obj.import": "0cf92f5052ee8c96d3dd513891720e0b3775db6860353948653f0b03db9d30b6",
+          "GodotLuau/assets/avatars/r6/R6_RightLeg.obj": "603241299830fddc8a796154c3850ee354f75bbf5866c6366ed36e0e55ac0549",
+          "GodotLuau/assets/avatars/r6/R6_RightLeg.obj.import": "e810bacc9cec35a94fc3138d6042a4165bb8085dd166a75d345994214ce311f0",
+          "GodotLuau/assets/avatars/r6/R6_Torso.obj": "3b74c114a547ed53abf3e110e6679af44bbc1a912a2569ea002e5da62c2bdeb7",
+          "GodotLuau/assets/avatars/r6/R6_Torso.obj.import": "689a7efcd3c985a8451fbdbd58927e922ba4a98c4b7b537ad1d0359a1d958b0d",
+          "GodotLuau/assets/avatars/r6/Rig1_diff.png": "f6ad52139deaef50f673cbb639f4bda531edb93c8babe42ec5b9cbfb065c3e02",
+          "GodotLuau/assets/avatars/r6/Rig1_diff.png.import": "3e191d5d8de8cc19a7abb7d0e937ba83db32711d4877048027c5b262b5d7fd38",
+          "GodotLuau/shaders/character_fade.gdshader": "87ca8506406339c274f1d75ec76e7b34f83e3c3c77c1e93e231ab3342bd17353"
+        },
+        "Captures": [
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 175,
+            "Label": "third-person",
+            "PhysicsSeconds": 0.000195,
+            "ProcessSeconds": 0.001185,
+            "SampledColors": 287,
+            "Screenshot": "presentation-r6-single0-third-person.png",
+            "SHA256": "d79b024d20440b9ab57b46039b61b5693110369f68e40d75e20579664db5d221"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 1.699997)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 235,
+            "Label": "walking",
+            "PhysicsSeconds": 0.000195,
+            "ProcessSeconds": 0.001185,
+            "SampledColors": 298,
+            "Screenshot": "presentation-r6-single0-walking.png",
+            "SHA256": "d9246fd250fedfb449fb3d84bd39ecec2e36f1cdc4aeafb3ae57750446425bec"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, -0.0), Y: (-0.0, 0.999032, -0.043986), Z: (0.0, 0.043986, 0.999032), O: (0.0, 2.903241, 9.990315)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 693,
+            "Label": "jumping",
+            "PhysicsSeconds": 0.000252,
+            "ProcessSeconds": 0.001026,
+            "SampledColors": 310,
+            "Screenshot": "presentation-r6-single0-jumping.png",
+            "SHA256": "6bb6845af90db17de436fc796de352fd28973f4dd485593ac3e6d0a4f467d2c7"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, -0.0), Y: (-0.0, 0.999032, -0.043986), Z: (0.0, 0.043986, 0.999032), O: (0.0, 1.940327, 9.990315)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 893,
+            "Label": "landed",
+            "PhysicsSeconds": 0.000247,
+            "ProcessSeconds": 0.001327,
+            "SampledColors": 295,
+            "Screenshot": "presentation-r6-single0-landed.png",
+            "SHA256": "50057d0ff3014736ee9e9f752976b939ea1ba26501a05492ca4cff01e20f7148"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, -0.0), Y: (-0.0, 0.999032, -0.043986), Z: (0.0, 0.043986, 0.999032), O: (0.0, 1.522541, 0.501302)]",
+            "DrawCalls": 17,
+            "DrawnFrames": 981,
+            "Label": "first-person",
+            "PhysicsSeconds": 0.000286,
+            "ProcessSeconds": 0.073492,
+            "SampledColors": 297,
+            "Screenshot": "presentation-r6-single0-first-person.png",
+            "SHA256": "1437cb659455579cb76878ad132a2378d8ead4139a7156257e9a1f8463711607"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.500469, 2.167859)]",
+            "DrawCalls": 26,
+            "DrawnFrames": 1085,
+            "Label": "camera-collision",
+            "PhysicsSeconds": 0.000256,
+            "ProcessSeconds": 0.07171,
+            "SampledColors": 342,
+            "Screenshot": "presentation-r6-single0-camera-collision.png",
+            "SHA256": "516a1665d47dfe602ed8b5704cad5a461d06417a1e7e4ffb4bb590ade6c8b3d4"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (5.0, 1.700514, 61.99721)]",
+            "DrawCalls": 26,
+            "DrawnFrames": 1085,
+            "Label": "parent-transform",
+            "PhysicsSeconds": 0.000256,
+            "ProcessSeconds": 0.07171,
+            "SampledColors": 288,
+            "Screenshot": "presentation-r6-single0-parent-transform.png",
+            "SHA256": "447560da5acd3bac068f8ecf0d4e1e2efba2300d155cd016b212a35ca0c45b93"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.4625, 59.99931)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 1087,
+            "Label": "teleported",
+            "PhysicsSeconds": 0.000256,
+            "ProcessSeconds": 0.07171,
+            "SampledColors": 277,
+            "Screenshot": "presentation-r6-single0-teleported.png",
+            "SHA256": "ca58680e52235a060160e862e407f5aadb14baae5129690caf83350d5162199f"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, -0.0), Y: (-0.0, 1.0, -0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.3625, 59.99997)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 1108,
+            "Label": "animation",
+            "PhysicsSeconds": 0.000256,
+            "ProcessSeconds": 0.07171,
+            "SampledColors": 277,
+            "Screenshot": "presentation-r6-single0-animation.png",
+            "SHA256": "35e922f05e4d821d4dbccca71fd98e289931f9c5000200c1e3e59e553fb7694c"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.3375, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 1223,
+            "Label": "respawn",
+            "PhysicsSeconds": 0.007002,
+            "ProcessSeconds": 0.087343,
+            "SampledColors": 284,
+            "Screenshot": "presentation-r6-single0-respawn.png",
+            "SHA256": "dfb5ad6bad9759e890414a7fcdab7be7082985ca63a09c15e69bd3120d9f3a47"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (6.966669, 1.49974, 10.0)]",
+            "DrawCalls": 40,
+            "DrawnFrames": 1490,
+            "Label": "mobile-simulation",
+            "PhysicsSeconds": 0.002283,
+            "ProcessSeconds": 0.004117,
+            "SampledColors": 312,
+            "Screenshot": "presentation-r6-single0-mobile-simulation.png",
+            "SHA256": "b4fff18a3bf3492e1a22787edc6d51cd390167e494eb77dba3878cc1787bcdb4"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 6.425, 10.0)]",
+            "DrawCalls": 38,
+            "DrawnFrames": 1597,
+            "Label": "repeated-respawns",
+            "PhysicsSeconds": 0.001937,
+            "ProcessSeconds": 0.073722,
+            "SampledColors": 325,
+            "Screenshot": "presentation-r6-single0-repeated-respawns.png",
+            "SHA256": "29f46ea8786784457c58b61a717efb7ad8b81f6698341bca133ef361706aff5f"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 175,
+            "Label": "third-person",
+            "PhysicsSeconds": 0.000188,
+            "ProcessSeconds": 0.001249,
+            "SampledColors": 291,
+            "Screenshot": "presentation-custom-single0-third-person.png",
+            "SHA256": "0cbdbd9c8c0bc05b5dec728e9aa72b50bd0554020dec2877facd228625c3edb4"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 1.699997)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 236,
+            "Label": "walking",
+            "PhysicsSeconds": 0.000188,
+            "ProcessSeconds": 0.001249,
+            "SampledColors": 300,
+            "Screenshot": "presentation-custom-single0-walking.png",
+            "SHA256": "0569e33e59227dbff459ce8f7c71110aba1cf14e94a15ec14e08bf9cd2565f10"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 2.903241, 9.990319)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 694,
+            "Label": "jumping",
+            "PhysicsSeconds": 0.000229,
+            "ProcessSeconds": 0.001004,
+            "SampledColors": 313,
+            "Screenshot": "presentation-custom-single0-jumping.png",
+            "SHA256": "b6491fb3864ae705ae9488a1b789d3c276feb236fe979f5c432ee5be6a5bcd03"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 1.940327, 9.990319)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 893,
+            "Label": "landed",
+            "PhysicsSeconds": 0.000227,
+            "ProcessSeconds": 0.001247,
+            "SampledColors": 291,
+            "Screenshot": "presentation-custom-single0-landed.png",
+            "SHA256": "d5b3d5a25bbf3366ff05f0969389c5b15a1039fadb8fa36cb5c7f6636340fb6d"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 1.522547, 0.501443)]",
+            "DrawCalls": 19,
+            "DrawnFrames": 980,
+            "Label": "first-person",
+            "PhysicsSeconds": 0.000275,
+            "ProcessSeconds": 0.077575,
+            "SampledColors": 298,
+            "Screenshot": "presentation-custom-single0-first-person.png",
+            "SHA256": "d3e5b327b5d1a90e00b2a452cdfd4d7d6bb115764551f941965de877be5c745e"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (0.0, 1.500469, 2.167868)]",
+            "DrawCalls": 22,
+            "DrawnFrames": 1080,
+            "Label": "camera-collision",
+            "PhysicsSeconds": 0.000271,
+            "ProcessSeconds": 0.084701,
+            "SampledColors": 290,
+            "Screenshot": "presentation-custom-single0-camera-collision.png",
+            "SHA256": "98781fe91fab182483aaa652e1bf80d0e84ddf5a19fc6cad886b7d9a329b93fa"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (5.0, 1.700514, 61.99745)]",
+            "DrawCalls": 22,
+            "DrawnFrames": 1080,
+            "Label": "parent-transform",
+            "PhysicsSeconds": 0.000271,
+            "ProcessSeconds": 0.084701,
+            "SampledColors": 284,
+            "Screenshot": "presentation-custom-single0-parent-transform.png",
+            "SHA256": "5977e87696611603790ef4582cc3eea9f957ff5fde962ae6e3ef9f2058cb7951"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (0.0, 3.425, 59.99912)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 1082,
+            "Label": "teleported",
+            "PhysicsSeconds": 0.000271,
+            "ProcessSeconds": 0.084701,
+            "SampledColors": 283,
+            "Screenshot": "presentation-custom-single0-teleported.png",
+            "SHA256": "a42ac75161541b4144953060d7d080027a68673f4dea7cd374049154ab61ee36"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (0.0, 1.3625, 59.99997)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 1102,
+            "Label": "animation",
+            "PhysicsSeconds": 0.000271,
+            "ProcessSeconds": 0.084701,
+            "SampledColors": 277,
+            "Screenshot": "presentation-custom-single0-animation.png",
+            "SHA256": "a3c5fe955e36c84e7eafe76a53f68e9e2399c00140954176bc265a89c9c54fb7"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.3375, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 1217,
+            "Label": "respawn",
+            "PhysicsSeconds": 0.008725,
+            "ProcessSeconds": 0.084121,
+            "SampledColors": 292,
+            "Screenshot": "presentation-custom-single0-respawn.png",
+            "SHA256": "c52d774efdda9803b2f8718a0ebb1cd0750d1ff74ac2cdcf9b4101d77b0562cd"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (6.966669, 1.49974, 10.0)]",
+            "DrawCalls": 40,
+            "DrawnFrames": 1485,
+            "Label": "mobile-simulation",
+            "PhysicsSeconds": 0.002942,
+            "ProcessSeconds": 0.004506,
+            "SampledColors": 318,
+            "Screenshot": "presentation-custom-single0-mobile-simulation.png",
+            "SHA256": "639e5c25f6139f0e338222c7b24a76adcbc2bb464e8d26bf3c1e2483b0fa3161"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 6.425, 10.0)]",
+            "DrawCalls": 38,
+            "DrawnFrames": 1592,
+            "Label": "repeated-respawns",
+            "PhysicsSeconds": 0.000856,
+            "ProcessSeconds": 0.073553,
+            "SampledColors": 333,
+            "Screenshot": "presentation-custom-single0-repeated-respawns.png",
+            "SHA256": "2f2d436532067033d45adf1d378391703e755744c61c891a477bb399d40d30a2"
+          },
+          {
+            "Case": "listen",
+            "Role": "server0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (38.53816, 1.500785, 10.0)]",
+            "DrawCalls": 61,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000664,
+            "ProcessSeconds": 0.001178,
+            "SampledColors": 282,
+            "Screenshot": "presentation-listen-server0-owner-camera.png",
+            "SHA256": "6f215f823b91da5d189860a7e3e658566dbb76359cc150cf92eefa8231bdce9f"
+          },
+          {
+            "Case": "listen",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (50.53816, 10.00078, 22.0)]",
+            "DrawCalls": 61,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000664,
+            "ProcessSeconds": 0.001178,
+            "SampledColors": 367,
+            "Screenshot": "presentation-listen-server0-multiplayer-overview.png",
+            "SHA256": "00b90f09dd2b9f4fd098f94c9d04b854afaebfadedb8ad836592ff1d8ad7c268"
+          },
+          {
+            "Case": "listen",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (54.26929, 1.50094, 10.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 307,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.00103,
+            "ProcessSeconds": 0.001248,
+            "SampledColors": 299,
+            "Screenshot": "presentation-listen-client1-owner-camera.png",
+            "SHA256": "32d4286a5b0c5119a247be56f30d112d22233269242a6653f13986d9f9a70eb0"
+          },
+          {
+            "Case": "listen",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (66.26929, 10.00094, 22.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 308,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.00103,
+            "ProcessSeconds": 0.001248,
+            "SampledColors": 353,
+            "Screenshot": "presentation-listen-client1-multiplayer-overview.png",
+            "SHA256": "e5cb5e9f2a2ac669e88723d01d15b2eac268f96b09af370c3b2bdad4b05acf59"
+          },
+          {
+            "Case": "listen",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (54.43957, 1.500942, 10.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 310,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000871,
+            "ProcessSeconds": 0.001263,
+            "SampledColors": 284,
+            "Screenshot": "presentation-listen-client2-owner-camera.png",
+            "SHA256": "c9628881f2d74b1c171b08c7f2d9a9d38ee1a9b1e73694c9bb698bd62c97aa2a"
+          },
+          {
+            "Case": "listen",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (66.43958, 10.00094, 22.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 311,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000871,
+            "ProcessSeconds": 0.001263,
+            "SampledColors": 356,
+            "Screenshot": "presentation-listen-client2-multiplayer-overview.png",
+            "SHA256": "6273c9a87c74b44fe12b669d3dd793997f83cba065ea55fe255657b57a08e5d6"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "server0",
+            "Camera": "[X: (0.882353, 0.0, -0.470588), Y: (-0.156621, 0.94299, -0.293665), Z: (0.44376, 0.33282, 0.83205), O: (8.0, 11.0, 15.0)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 313,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000717,
+            "ProcessSeconds": 0.001636,
+            "SampledColors": 348,
+            "Screenshot": "presentation-dedicated-server0-owner-camera.png",
+            "SHA256": "95bfdc18ad8ff6c45820ea65e3a4961265593977841b111f10264d83f68399af"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (49.71738, 10.00071, 22.0)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 314,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000717,
+            "ProcessSeconds": 0.001636,
+            "SampledColors": 355,
+            "Screenshot": "presentation-dedicated-server0-multiplayer-overview.png",
+            "SHA256": "dbfcfdc6135b4712001459c20b663a98c5d0afd8749267cde73730042a789812"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (41.05994, 1.500465, 10.59305)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.001025,
+            "ProcessSeconds": 0.001251,
+            "SampledColors": 292,
+            "Screenshot": "presentation-dedicated-client1-owner-camera.png",
+            "SHA256": "b5cbb81fa7d92408a6d41a9af9e9341f4cae9b858ed2ad9f4e2b300a14729a75"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (53.05994, 10.00046, 22.59305)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.001025,
+            "ProcessSeconds": 0.001251,
+            "SampledColors": 338,
+            "Screenshot": "presentation-dedicated-client1-multiplayer-overview.png",
+            "SHA256": "e0681116a2abc95956f6227ebfcd3f0315c1fa0c8bf2b2d73fe89a3d655e2061"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (38.25071, 1.500713, 10.0)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.001055,
+            "ProcessSeconds": 0.001117,
+            "SampledColors": 290,
+            "Screenshot": "presentation-dedicated-client2-owner-camera.png",
+            "SHA256": "58577d18b8d0860a3aa2e414feb22bed8f9657cc5fc0416245b025eec91b6ac0"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (50.25071, 10.00071, 22.0)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.001055,
+            "ProcessSeconds": 0.001117,
+            "SampledColors": 341,
+            "Screenshot": "presentation-dedicated-client2-multiplayer-overview.png",
+            "SHA256": "8dcbe79c6e21a6638e4372da0606579cf0c5d1f6e6aa44dfc1785f936a8a15b1"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "server0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (35.58569, 1.500775, 10.0)]",
+            "DrawCalls": 57,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.00073,
+            "ProcessSeconds": 0.001364,
+            "SampledColors": 293,
+            "Screenshot": "presentation-listen-custom-server0-owner-camera.png",
+            "SHA256": "3743a451e341983f77ab17c4e2ebe15c9b2a05de9125863a1f2819a1cf01c56e"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (47.58569, 10.00078, 22.0)]",
+            "DrawCalls": 57,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.00073,
+            "ProcessSeconds": 0.001364,
+            "SampledColors": 360,
+            "Screenshot": "presentation-listen-custom-server0-multiplayer-overview.png",
+            "SHA256": "27c1de9a92cf15a927d3965d5914eab64e6a0b14034e609ecedb0989449c4382"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.72331, 1.500943, 10.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 307,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000989,
+            "ProcessSeconds": 0.001171,
+            "SampledColors": 294,
+            "Screenshot": "presentation-listen-custom-client1-owner-camera.png",
+            "SHA256": "9df875baf4e931ce3bdc123c1cd71359c08da8168487de23632993b1ecc225e6"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.72331, 10.00094, 22.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 308,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000989,
+            "ProcessSeconds": 0.001171,
+            "SampledColors": 358,
+            "Screenshot": "presentation-listen-custom-client1-multiplayer-overview.png",
+            "SHA256": "03d82f41fb29ce60c88928a806408d2142174f8538b8a99914f2550e0bbb77d9"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.80654, 1.500941, 10.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 311,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000669,
+            "ProcessSeconds": 0.001155,
+            "SampledColors": 285,
+            "Screenshot": "presentation-listen-custom-client2-owner-camera.png",
+            "SHA256": "e056c9a7c2a41e3e816dea2153d083c7f847113eeacf28ec94747bd7aba4a308"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.80653, 10.00094, 22.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 312,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000669,
+            "ProcessSeconds": 0.001155,
+            "SampledColors": 352,
+            "Screenshot": "presentation-listen-custom-client2-multiplayer-overview.png",
+            "SHA256": "b8aa7bc4fa91542e69e48eb2ed6dae8aabfd96b60fd141f80dfd30230a3c3484"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "server0",
+            "Camera": "[X: (0.882353, 0.0, -0.470588), Y: (-0.156621, 0.94299, -0.293665), Z: (0.44376, 0.33282, 0.83205), O: (8.0, 11.0, 15.0)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000869,
+            "ProcessSeconds": 0.001225,
+            "SampledColors": 348,
+            "Screenshot": "presentation-dedicated-custom-server0-owner-camera.png",
+            "SHA256": "95bfdc18ad8ff6c45820ea65e3a4961265593977841b111f10264d83f68399af"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (48.43886, 10.0004, 22.01457)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000869,
+            "ProcessSeconds": 0.001225,
+            "SampledColors": 360,
+            "Screenshot": "presentation-dedicated-custom-server0-multiplayer-overview.png",
+            "SHA256": "6c776299fa58aa10b8da5f6b416ede9f675b3aa3f5a56c3c1fed4aae41787d11"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (39.65808, 1.50016, 9.673538)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000769,
+            "ProcessSeconds": 0.001236,
+            "SampledColors": 284,
+            "Screenshot": "presentation-dedicated-custom-client1-owner-camera.png",
+            "SHA256": "64290fe0d72d0970779a26c487ba8c1e25cf99d30602e017525f24f2e2a0818e"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (51.65808, 10.00016, 21.67354)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000769,
+            "ProcessSeconds": 0.001236,
+            "SampledColors": 355,
+            "Screenshot": "presentation-dedicated-custom-client1-multiplayer-overview.png",
+            "SHA256": "542a318a6ff5b1220a53891b00a6cd146acae11777f187a5a0be68339c01a024"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (36.97219, 1.500403, 10.01457)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 313,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000827,
+            "ProcessSeconds": 0.001301,
+            "SampledColors": 293,
+            "Screenshot": "presentation-dedicated-custom-client2-owner-camera.png",
+            "SHA256": "589033502aa8ca2c8cd9e5737f993e7bc2c4490408bc0eaa2f7155e59aeb240c"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (48.97219, 10.0004, 22.01457)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 314,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000827,
+            "ProcessSeconds": 0.001301,
+            "SampledColors": 351,
+            "Screenshot": "presentation-dedicated-custom-client2-multiplayer-overview.png",
+            "SHA256": "2424366ad9a985113a8e459c40b7c3cbc227f074cd9666fd8acc0850a73b6d75"
+          }
+        ]
+      },
+      {
+        "Configuration": "Release",
+        "Actors": 14,
+        "Assertions": 454,
+        "CaptureCount": 48,
+        "EvidenceSHA256": "cde59749718e094e8272551e67835994b3a2cae6313943abbce2c8e8958244bd",
+        "ExtensionSHA256": "709e0322fccf3e6cba596ef63a1f79f63164934c5465bcb37c83e9a429b6c2ff",
+        "GodotSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+        "FixtureSHA256": "2a45c61716975658be4bd8d1e1051543ada4cc04288725e03466b372a120f38f",
+        "Adapters": [
+          "NVIDIA GeForce GTX 1650 SUPER"
+        ],
+        "Cases": [
+          "custom",
+          "dedicated",
+          "dedicated-custom",
+          "listen",
+          "listen-custom",
+          "r6"
+        ],
+        "AssetInputs": {
+          "GodotLuau/assets/avatars/r6/R6.mtl": "d1bc49ba06f03ce419633c57b2d1e52e33869b401aa1795c942b15a329d15824",
+          "GodotLuau/assets/avatars/r6/R6_Head.obj": "d71c5736ba8e38a9223dd346df16eadaa1ab1abcd1b7237764b647c9d3e8c72a",
+          "GodotLuau/assets/avatars/r6/R6_Head.obj.import": "eefb5e4e943ad59b4db6f7c43934c3cb878ad47fc4ab70409ae02b35b648801d",
+          "GodotLuau/assets/avatars/r6/R6_LeftArm.obj": "f80e9a50998b27f263fd438d7408ab88ee8fa272760dd63593d49a3756e5df49",
+          "GodotLuau/assets/avatars/r6/R6_LeftArm.obj.import": "b8f44522609cccb25b613a70d05d69860fd0b6e9217d56db97730f1bbffca394",
+          "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj": "ff4dd3712a02b2bf9340bd2ee6cf26874d2e6eb0fa9650586fddf420eb9265c4",
+          "GodotLuau/assets/avatars/r6/R6_LeftLeg.obj.import": "49c9a264a5a6c8f71c1d9e7f8174e74f0818381126e76c1d6a6285ea22c796e4",
+          "GodotLuau/assets/avatars/r6/R6_RightArm.obj": "1aab9a15ed4002d94bc19f7af0fc82f91f0c8e2456b25b344d2319f366d9c67a",
+          "GodotLuau/assets/avatars/r6/R6_RightArm.obj.import": "0cf92f5052ee8c96d3dd513891720e0b3775db6860353948653f0b03db9d30b6",
+          "GodotLuau/assets/avatars/r6/R6_RightLeg.obj": "603241299830fddc8a796154c3850ee354f75bbf5866c6366ed36e0e55ac0549",
+          "GodotLuau/assets/avatars/r6/R6_RightLeg.obj.import": "e810bacc9cec35a94fc3138d6042a4165bb8085dd166a75d345994214ce311f0",
+          "GodotLuau/assets/avatars/r6/R6_Torso.obj": "3b74c114a547ed53abf3e110e6679af44bbc1a912a2569ea002e5da62c2bdeb7",
+          "GodotLuau/assets/avatars/r6/R6_Torso.obj.import": "689a7efcd3c985a8451fbdbd58927e922ba4a98c4b7b537ad1d0359a1d958b0d",
+          "GodotLuau/assets/avatars/r6/Rig1_diff.png": "f6ad52139deaef50f673cbb639f4bda531edb93c8babe42ec5b9cbfb065c3e02",
+          "GodotLuau/assets/avatars/r6/Rig1_diff.png.import": "3e191d5d8de8cc19a7abb7d0e937ba83db32711d4877048027c5b262b5d7fd38",
+          "GodotLuau/shaders/character_fade.gdshader": "87ca8506406339c274f1d75ec76e7b34f83e3c3c77c1e93e231ab3342bd17353"
+        },
+        "Captures": [
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 175,
+            "Label": "third-person",
+            "PhysicsSeconds": 0.00022,
+            "ProcessSeconds": 0.001148,
+            "SampledColors": 287,
+            "Screenshot": "presentation-r6-single0-third-person.png",
+            "SHA256": "af54bce5492ca535b7039c02e406c8d3c8f98044e3676563f252cdab6ecff7b1"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 1.699997)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 237,
+            "Label": "walking",
+            "PhysicsSeconds": 0.00022,
+            "ProcessSeconds": 0.001148,
+            "SampledColors": 298,
+            "Screenshot": "presentation-r6-single0-walking.png",
+            "SHA256": "1a7087f7104ed181d14a7220fe37175a7fbfba512c16d4cdaccdcf4f7e36d38f"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 2.903241, 9.99032)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 693,
+            "Label": "jumping",
+            "PhysicsSeconds": 0.00025,
+            "ProcessSeconds": 0.001136,
+            "SampledColors": 311,
+            "Screenshot": "presentation-r6-single0-jumping.png",
+            "SHA256": "c704d5eba121dc68d4b8a5a15a947a329e90a96cb531beef4f06c0a91e8438ec"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 1.940327, 9.99032)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 893,
+            "Label": "landed",
+            "PhysicsSeconds": 0.000258,
+            "ProcessSeconds": 0.001184,
+            "SampledColors": 291,
+            "Screenshot": "presentation-r6-single0-landed.png",
+            "SHA256": "943ce3c232b17c4e85bd290f85574ce673fdadd491095d67bf038a6605932241"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 1.522537, 0.501208)]",
+            "DrawCalls": 17,
+            "DrawnFrames": 982,
+            "Label": "first-person",
+            "PhysicsSeconds": 0.000292,
+            "ProcessSeconds": 0.075465,
+            "SampledColors": 296,
+            "Screenshot": "presentation-r6-single0-first-person.png",
+            "SHA256": "74a743ee9bc66424b0e89891e51c41cc7929fa09028ad1534dbe26aa7274488b"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (0.0, 1.500469, 2.167876)]",
+            "DrawCalls": 26,
+            "DrawnFrames": 1083,
+            "Label": "camera-collision",
+            "PhysicsSeconds": 0.000241,
+            "ProcessSeconds": 0.085136,
+            "SampledColors": 342,
+            "Screenshot": "presentation-r6-single0-camera-collision.png",
+            "SHA256": "56e4dd756087ac16a1f5fe0b07f03b7e090b1ceb02e6f85ea931d76b950fb28e"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (5.0, 1.700514, 61.99765)]",
+            "DrawCalls": 26,
+            "DrawnFrames": 1083,
+            "Label": "parent-transform",
+            "PhysicsSeconds": 0.000241,
+            "ProcessSeconds": 0.085136,
+            "SampledColors": 285,
+            "Screenshot": "presentation-r6-single0-parent-transform.png",
+            "SHA256": "108e478e1eddf4515435152ac0dac1a260e3e66ffaeb43ca9588c832b0a442bb"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (0.0, 3.425, 59.99918)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 1085,
+            "Label": "teleported",
+            "PhysicsSeconds": 0.000241,
+            "ProcessSeconds": 0.085136,
+            "SampledColors": 284,
+            "Screenshot": "presentation-r6-single0-teleported.png",
+            "SHA256": "73cb4fc61c435a83253f80d755f8ce70661c122c09051ff3e3ebc4c35df4c1f4"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.0), Z: (-0.0, 0.0, 1.0), O: (0.0, 1.3625, 59.99997)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 1105,
+            "Label": "animation",
+            "PhysicsSeconds": 0.000241,
+            "ProcessSeconds": 0.085136,
+            "SampledColors": 277,
+            "Screenshot": "presentation-r6-single0-animation.png",
+            "SHA256": "ba95ee70951af0cd2cd42690333776885c65deb39be76d15dbdf1e72dc23f3a5"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.3375, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 1221,
+            "Label": "respawn",
+            "PhysicsSeconds": 0.007113,
+            "ProcessSeconds": 0.081456,
+            "SampledColors": 284,
+            "Screenshot": "presentation-r6-single0-respawn.png",
+            "SHA256": "dfb5ad6bad9759e890414a7fcdab7be7082985ca63a09c15e69bd3120d9f3a47"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (6.966669, 1.49974, 10.0)]",
+            "DrawCalls": 40,
+            "DrawnFrames": 1490,
+            "Label": "mobile-simulation",
+            "PhysicsSeconds": 0.002096,
+            "ProcessSeconds": 0.004087,
+            "SampledColors": 312,
+            "Screenshot": "presentation-r6-single0-mobile-simulation.png",
+            "SHA256": "b4fff18a3bf3492e1a22787edc6d51cd390167e494eb77dba3878cc1787bcdb4"
+          },
+          {
+            "Case": "r6",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 6.425, 10.0)]",
+            "DrawCalls": 38,
+            "DrawnFrames": 1597,
+            "Label": "repeated-respawns",
+            "PhysicsSeconds": 0.000969,
+            "ProcessSeconds": 0.071021,
+            "SampledColors": 325,
+            "Screenshot": "presentation-r6-single0-repeated-respawns.png",
+            "SHA256": "bcf3a5b282a105cb2c76e5ee1f0b671dd9646838568be561d2a93ef8d730cf63"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 171,
+            "Label": "third-person",
+            "PhysicsSeconds": 0.000199,
+            "ProcessSeconds": 0.001239,
+            "SampledColors": 291,
+            "Screenshot": "presentation-custom-single0-third-person.png",
+            "SHA256": "63079b24b6700f59355ed49a42835e366a95e1a7d87a3d2f28a89095c7f53761"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 1.49974, 1.699997)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 234,
+            "Label": "walking",
+            "PhysicsSeconds": 0.000199,
+            "ProcessSeconds": 0.001239,
+            "SampledColors": 297,
+            "Screenshot": "presentation-custom-single0-walking.png",
+            "SHA256": "942398dc77b5807429d7912bb884295eee59681425db5ab6115ba5e680d324dd"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.999032, -0.043986), Z: (-0.0, 0.043986, 0.999032), O: (0.0, 2.903241, 9.990316)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 693,
+            "Label": "jumping",
+            "PhysicsSeconds": 0.000296,
+            "ProcessSeconds": 0.001114,
+            "SampledColors": 312,
+            "Screenshot": "presentation-custom-single0-jumping.png",
+            "SHA256": "7f47f36e56f09c4f24c91c24d9cf8a0007d8bdcd4db0ab7324e7eeb2178642e8"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.999032, -0.043987), Z: (-0.0, 0.043987, 0.999032), O: (0.0, 1.940327, 9.990316)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 893,
+            "Label": "landed",
+            "PhysicsSeconds": 0.000248,
+            "ProcessSeconds": 0.001013,
+            "SampledColors": 289,
+            "Screenshot": "presentation-custom-single0-landed.png",
+            "SHA256": "1e3e696bbd0cd5a9027d3365d37a34aa459a62f60c2bea64ce2ac2b7a6ba7904"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 0.999032, -0.043987), Z: (-0.0, 0.043987, 0.999032), O: (0.0, 1.52254, 0.501281)]",
+            "DrawCalls": 19,
+            "DrawnFrames": 980,
+            "Label": "first-person",
+            "PhysicsSeconds": 0.000215,
+            "ProcessSeconds": 0.074117,
+            "SampledColors": 296,
+            "Screenshot": "presentation-custom-single0-first-person.png",
+            "SHA256": "8580c8d50c15f1b0a0b26813fd6049d8a5d85fa207d19cdd2e0a23f5c578b16e"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (0.0, 1.500469, 2.167889)]",
+            "DrawCalls": 22,
+            "DrawnFrames": 1082,
+            "Label": "camera-collision",
+            "PhysicsSeconds": 0.00029,
+            "ProcessSeconds": 0.086327,
+            "SampledColors": 292,
+            "Screenshot": "presentation-custom-single0-camera-collision.png",
+            "SHA256": "e93aa06a0f7f3f2aea7e0d35faf5570529fabc73ac7c85f1a96188857b33a195"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (5.0, 1.700514, 61.99797)]",
+            "DrawCalls": 22,
+            "DrawnFrames": 1082,
+            "Label": "parent-transform",
+            "PhysicsSeconds": 0.00029,
+            "ProcessSeconds": 0.086327,
+            "SampledColors": 285,
+            "Screenshot": "presentation-custom-single0-parent-transform.png",
+            "SHA256": "1c1fc3d05280d9067ca39f116266b0de6a90c2635d0c5853b92e9c18bff9bc4c"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (0.0, 3.4625, 59.9992)]",
+            "DrawCalls": 34,
+            "DrawnFrames": 1084,
+            "Label": "teleported",
+            "PhysicsSeconds": 0.00029,
+            "ProcessSeconds": 0.086327,
+            "SampledColors": 277,
+            "Screenshot": "presentation-custom-single0-teleported.png",
+            "SHA256": "4b2fdfc507099fa6c5fd3b0f91e8d872436ac54c62ec1fd9e4355213dd75a94c"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, -0.0, 0.0), Y: (0.0, 1.0, -0.000002), Z: (-0.0, 0.000002, 1.0), O: (0.0, 1.5875, 59.99995)]",
+            "DrawCalls": 37,
+            "DrawnFrames": 1106,
+            "Label": "animation",
+            "PhysicsSeconds": 0.00029,
+            "ProcessSeconds": 0.086327,
+            "SampledColors": 289,
+            "Screenshot": "presentation-custom-single0-animation.png",
+            "SHA256": "a0ef0f4c62166ac8d577755059fa49886a9fc721e637026df26142ca37361436"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 3.05, 10.0)]",
+            "DrawCalls": 36,
+            "DrawnFrames": 1221,
+            "Label": "respawn",
+            "PhysicsSeconds": 0.007118,
+            "ProcessSeconds": 0.07864,
+            "SampledColors": 290,
+            "Screenshot": "presentation-custom-single0-respawn.png",
+            "SHA256": "0e2dcf311e19899f5dd7e557d1e5ce2d44107bdeb9246646544a83cd47fe600c"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (6.966669, 1.49974, 10.0)]",
+            "DrawCalls": 40,
+            "DrawnFrames": 1489,
+            "Label": "mobile-simulation",
+            "PhysicsSeconds": 0.002189,
+            "ProcessSeconds": 0.004003,
+            "SampledColors": 318,
+            "Screenshot": "presentation-custom-single0-mobile-simulation.png",
+            "SHA256": "f52c5031d182de90ca2f71ecea844655fef783bca97568115403883e22a54820"
+          },
+          {
+            "Case": "custom",
+            "Role": "single0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 6.425, 10.0)]",
+            "DrawCalls": 38,
+            "DrawnFrames": 1596,
+            "Label": "repeated-respawns",
+            "PhysicsSeconds": 0.000759,
+            "ProcessSeconds": 0.074988,
+            "SampledColors": 333,
+            "Screenshot": "presentation-custom-single0-repeated-respawns.png",
+            "SHA256": "9f5fc56d33876238b260f105015c3f16286074843c0ad5d6d0a7634409f607cc"
+          },
+          {
+            "Case": "listen",
+            "Role": "server0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.48285, 3.217935, 9.26879)]",
+            "DrawCalls": 69,
+            "DrawnFrames": 308,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.001059,
+            "ProcessSeconds": 0.001292,
+            "SampledColors": 308,
+            "Screenshot": "presentation-listen-server0-owner-camera.png",
+            "SHA256": "026d8ae6b0ca801b626d9b56c22b9628c38ae3bfdb597642b31db16c80d0fd61"
+          },
+          {
+            "Case": "listen",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.48285, 11.71793, 21.26879)]",
+            "DrawCalls": 69,
+            "DrawnFrames": 309,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.001059,
+            "ProcessSeconds": 0.001292,
+            "SampledColors": 330,
+            "Screenshot": "presentation-listen-server0-multiplayer-overview.png",
+            "SHA256": "d9cef245b37c7906511df33e9fd0564f3c72e39b89581ee9f3fff6c31b2e7ac2"
+          },
+          {
+            "Case": "listen",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (56.33255, 1.500941, 10.0)]",
+            "DrawCalls": 75,
+            "DrawnFrames": 308,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000699,
+            "ProcessSeconds": 0.001471,
+            "SampledColors": 291,
+            "Screenshot": "presentation-listen-client1-owner-camera.png",
+            "SHA256": "32841f596eda5aea5fcfd8959f4f3762c36617ef20f9a2b234a00ab92feb88b0"
+          },
+          {
+            "Case": "listen",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (68.33255, 10.00094, 22.0)]",
+            "DrawCalls": 75,
+            "DrawnFrames": 309,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000699,
+            "ProcessSeconds": 0.001471,
+            "SampledColors": 355,
+            "Screenshot": "presentation-listen-client1-multiplayer-overview.png",
+            "SHA256": "f126e1f9d03303575a64c1626735fa6af334b0a7cae665e3c0f7a668ac11f2a3"
+          },
+          {
+            "Case": "listen",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.9849, 1.500941, 10.0)]",
+            "DrawCalls": 75,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000565,
+            "ProcessSeconds": 0.001249,
+            "SampledColors": 293,
+            "Screenshot": "presentation-listen-client2-owner-camera.png",
+            "SHA256": "b38ccd0bea160a036a118066cf859a728fa68b894372ade04a697cec08ef4aaf"
+          },
+          {
+            "Case": "listen",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.98489, 10.00094, 22.0)]",
+            "DrawCalls": 75,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000565,
+            "ProcessSeconds": 0.001249,
+            "SampledColors": 351,
+            "Screenshot": "presentation-listen-client2-multiplayer-overview.png",
+            "SHA256": "230fd8f415e75438f001b8b3ffe28eddcf607baa4d1f38a2676ee572192340da"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "server0",
+            "Camera": "[X: (0.882353, 0.0, -0.470588), Y: (-0.156621, 0.94299, -0.293665), Z: (0.44376, 0.33282, 0.83205), O: (8.0, 10.9875, 15.0)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 310,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000558,
+            "ProcessSeconds": 0.001229,
+            "SampledColors": 348,
+            "Screenshot": "presentation-dedicated-server0-owner-camera.png",
+            "SHA256": "70cc9345493a49a616c6356e7fb53b9c56b90f5997c25904416dffdf1d5dfeb3"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (49.98404, 10.00071, 22.0)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 311,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000558,
+            "ProcessSeconds": 0.001229,
+            "SampledColors": 347,
+            "Screenshot": "presentation-dedicated-server0-multiplayer-overview.png",
+            "SHA256": "5bc19009f3ea5fcbafec1c2d5885859da77cd917cedc4d21fadc434aea646579"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (38.25071, 1.500713, 10.0)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 313,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000793,
+            "ProcessSeconds": 0.001037,
+            "SampledColors": 290,
+            "Screenshot": "presentation-dedicated-client1-owner-camera.png",
+            "SHA256": "2ee1e74d13b9243688474aa662de9b36ddf9830128abbca6b777f545c3f599a0"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (50.25071, 10.00071, 22.0)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 314,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000793,
+            "ProcessSeconds": 0.001037,
+            "SampledColors": 341,
+            "Screenshot": "presentation-dedicated-client1-multiplayer-overview.png",
+            "SHA256": "e4c795864c5e5872b3db14b739367138ce5f04a010bffdd3165921ddb3ecec7c"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (40.67646, 1.500847, 10.28915)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 311,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000896,
+            "ProcessSeconds": 0.001262,
+            "SampledColors": 300,
+            "Screenshot": "presentation-dedicated-client2-owner-camera.png",
+            "SHA256": "18c0e334bccff67786bbfec3c1e83748d97caf7f337773c8a0b23556ab2c5edc"
+          },
+          {
+            "Case": "dedicated",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (52.67646, 10.00085, 22.28915)]",
+            "DrawCalls": 54,
+            "DrawnFrames": 312,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000896,
+            "ProcessSeconds": 0.001262,
+            "SampledColors": 347,
+            "Screenshot": "presentation-dedicated-client2-multiplayer-overview.png",
+            "SHA256": "45979a57857fae554f540644ba8f5a18f6a9de361b0967b154fea1a36bdcf9b4"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "server0",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (35.01657, 1.500662, 10.0)]",
+            "DrawCalls": 57,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000918,
+            "ProcessSeconds": 0.001348,
+            "SampledColors": 288,
+            "Screenshot": "presentation-listen-custom-server0-owner-camera.png",
+            "SHA256": "71142b1a48e6093ef30286fcce9ec863d98665206bd970c048fe10a075638390"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (47.01657, 10.00066, 22.0)]",
+            "DrawCalls": 57,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000918,
+            "ProcessSeconds": 0.001348,
+            "SampledColors": 357,
+            "Screenshot": "presentation-listen-custom-server0-multiplayer-overview.png",
+            "SHA256": "373c1ee5a0d3a9104b24ec610938aed0aaed0ad6f7c1d3a5a247a1dd7138b8c9"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.48737, 1.500943, 10.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 313,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000692,
+            "ProcessSeconds": 0.001309,
+            "SampledColors": 289,
+            "Screenshot": "presentation-listen-custom-client1-owner-camera.png",
+            "SHA256": "74e11e7649a3d0e87a3608460fac7bf3d5ad742f6c3431a7f45ca606745b9a87"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.48737, 10.00094, 22.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 314,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000692,
+            "ProcessSeconds": 0.001309,
+            "SampledColors": 349,
+            "Screenshot": "presentation-listen-custom-client1-multiplayer-overview.png",
+            "SHA256": "094c284a478b0d2f747522732dbfeaaabfbd698e18f847ad378e88afa0c18f06"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.43119, 1.500942, 10.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 309,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000814,
+            "ProcessSeconds": 0.001397,
+            "SampledColors": 284,
+            "Screenshot": "presentation-listen-custom-client2-owner-camera.png",
+            "SHA256": "78b74bf25283c21552b2309d9a4a8556b38251f47f9ab2056927ae7f09de0289"
+          },
+          {
+            "Case": "listen-custom",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.43118, 10.00094, 22.0)]",
+            "DrawCalls": 65,
+            "DrawnFrames": 310,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000814,
+            "ProcessSeconds": 0.001397,
+            "SampledColors": 350,
+            "Screenshot": "presentation-listen-custom-client2-multiplayer-overview.png",
+            "SHA256": "17cadf44c66f5cced7c35fb3fb3ca025e23b05f21516e5a25ca1c5c681096d0f"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "server0",
+            "Camera": "[X: (0.882353, 0.0, -0.470588), Y: (-0.156621, 0.94299, -0.293665), Z: (0.44376, 0.33282, 0.83205), O: (8.0, 11.0, 15.0)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 311,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000598,
+            "ProcessSeconds": 0.001223,
+            "SampledColors": 348,
+            "Screenshot": "presentation-dedicated-custom-server0-owner-camera.png",
+            "SHA256": "95bfdc18ad8ff6c45820ea65e3a4961265593977841b111f10264d83f68399af"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "server0",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.91681, 10.00094, 22.0)]",
+            "DrawCalls": 16,
+            "DrawnFrames": 312,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000598,
+            "ProcessSeconds": 0.001223,
+            "SampledColors": 352,
+            "Screenshot": "presentation-dedicated-custom-server0-multiplayer-overview.png",
+            "SHA256": "3d9c4d38097fc1d0035605d747cb427a46e25fbcde1c1a30e6c82dfe74088cdd"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client1",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.91681, 1.500941, 10.0)]",
+            "DrawCalls": 53,
+            "DrawnFrames": 307,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.00104,
+            "ProcessSeconds": 0.001114,
+            "SampledColors": 298,
+            "Screenshot": "presentation-dedicated-custom-client1-owner-camera.png",
+            "SHA256": "b5bbdfada5d9ba1ff88f1a1b8d564a5cfe2eb55b971b0c267eb5742eb8cd58ae"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client1",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.91681, 10.00094, 22.0)]",
+            "DrawCalls": 53,
+            "DrawnFrames": 308,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.00104,
+            "ProcessSeconds": 0.001114,
+            "SampledColors": 355,
+            "Screenshot": "presentation-dedicated-custom-client1-multiplayer-overview.png",
+            "SHA256": "c78e3cdbff953b8c9b902049fd94fb80f2cdd8d2e79ce349d3f9e9205a66e548"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client2",
+            "Camera": "[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (55.99176, 1.50094, 10.0)]",
+            "DrawCalls": 53,
+            "DrawnFrames": 306,
+            "Label": "owner-camera",
+            "PhysicsSeconds": 0.000621,
+            "ProcessSeconds": 0.001266,
+            "SampledColors": 289,
+            "Screenshot": "presentation-dedicated-custom-client2-owner-camera.png",
+            "SHA256": "72187788bb433639691146e4af7524254c5324cc4f8864028e3110b87a772410"
+          },
+          {
+            "Case": "dedicated-custom",
+            "Role": "client2",
+            "Camera": "[X: (0.877896, 0.0, -0.478852), Y: (-0.177474, 0.928783, -0.32537), Z: (0.44475, 0.370625, 0.815374), O: (67.99176, 10.00094, 22.0)]",
+            "DrawCalls": 53,
+            "DrawnFrames": 307,
+            "Label": "multiplayer-overview",
+            "PhysicsSeconds": 0.000621,
+            "ProcessSeconds": 0.001266,
+            "SampledColors": 356,
+            "Screenshot": "presentation-dedicated-custom-client2-multiplayer-overview.png",
+            "SHA256": "f6c0a5f528a3996df90d2445f55425183fd07c8544199fdc692998574f8699b1"
+          }
+        ]
+      }
+    ],
+    "Archive": {
+      "File": "graphical-packages-b88a88b.zip",
+      "SHA256": "52ad4b45aad6b15b7c0ebc447e0fb30e1481a33df44379ab974ee9de699d4629",
+      "Bytes": 33953806,
+      "Entries": 1018,
+      "IncludesCaptures": 96,
+      "IncludesOriginalCandidateZIP": true
+    }
+  },
+  "VisualInspection": {
+    "Images": [
+      "Debug/r6/presentation-r6-single0-third-person.png",
+      "Release/custom/presentation-custom-single0-first-person.png"
+    ],
+    "Findings": "R6 third-person rig visible; custom first-person rig invisible. Images sampled from the hash-verified capture archive."
+  },
+  "AuxiliaryObservations": [
+    "One optional remote directory listing failed because cmd interpreted a PowerShell pipeline; capture inspection instead used the verified downloaded ZIP. No test or artifact changed.",
+    "The first evidence aggregation output was truncated by the tool output limit and rejected by JSON parsing before writing. Separate bounded reads and compact aggregation corrected collection; no tests were rerun or assertions changed."
+  ],
+  "Cleanup": {
+    "Worker": "DockerPC",
+    "NoTaskOwnedRuntimeProcesses": true,
+    "PreservedLinuxContainer": "codex-character-linux",
+    "LinuxContainerState": "exited",
+    "MainPCFallbackUsed": false,
+    "OtherLocalWorkersUsed": false
+  },
+  "Publication": {
+    "CandidateArtifactsOnly": true,
+    "InheritedPublishingJobsLiteralFalse": 2,
+    "ContentsPermission": "read",
+    "UpdaterAdmission": false,
+    "NoReleaseTagOrDeploymentCreated": true
+  },
+  "EvidenceCommitScope": "Subsequent main commit changes documentation/evidence only; executable qualification identifies the normal merge above.",
+  "RemainingLimitations": [
+    "GL-017 external engine defect and GL-018 Windows native sanitizer host gap",
+    "Deferred broader GL-020 adversarial qualification",
+    "Windows core and full-native sanitizer configurations are not automated/fully qualified by this candidate profile",
+    "Older-glibc portability and pristine consumer-environment testing are unqualified",
+    "DockerPC NVIDIA/OpenGL Windows fixtures only; Linux GPU, Vulkan, other hardware and physical-device coverage remain unqualified",
+    "Allocation-event profiling and existing performance uncertainty remain documented; no new speed or production-scale claim",
+    "No byte-for-byte reproducibility guarantee; rolling hosted compilers and SDKs are recorded rather than hermetically pinned",
+    "Historical binary provenance, GL-015 asset redistribution rights and GL-027 template authoring remain separate",
+    "Production releases and updater distribution remain disabled"
+  ]
+}

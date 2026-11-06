@@ -90,16 +90,17 @@ class ReleaseRetentionTests(unittest.TestCase):
         self.assertIn('cancel-in-progress: false', Workflow)
         self.assertIn('GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}', Workflow)
         Guard = Workflow.index('run: python3 tools/CheckReleaseIdentity.py')
-        self.assertLess(Guard, Workflow.index('python3 tools/generar_release.py'))
-        self.assertLess(Guard, Workflow.index('git add GodotLuau.zip'))
+        self.assertLess(Guard, Workflow.index('cp candidates/candidate-Windows/'))
         self.assertLess(Guard, Workflow.index('uses: softprops/action-gh-release@v2'))
+        self.assertNotRegex(Workflow, r'git\s+(?:add|commit|push)\b|unzip\s+-o\s+GodotLuau.zip')
         self.assertNotRegex(Workflow, re.compile(r'^  (?:push|pull_request|pull_request_target|workflow_run|workflow_call|schedule):', re.MULTILINE))
         self.assertIn('  contents: read', Workflow)
         self.assertNotIn('contents: write', Workflow)
         self.assertEqual(Workflow.count('if: ${{ false }}'), 2)
-        self.assertEqual(Workflow.count('persist-credentials: false'), 2)
+        self.assertEqual(Workflow.count('persist-credentials: false'), 1)
         self.assertIn('workflow_dispatch:', Workflow)
-        self.assertIn('unzip -o GodotLuau.zip', Workflow) # GL-010 remains explicit.
+        self.assertIn('uses: ./.github/workflows/release-candidate.yml', Workflow)
+        self.assertIn('pattern: candidate-*', Workflow)
 
 
 if __name__ == '__main__':

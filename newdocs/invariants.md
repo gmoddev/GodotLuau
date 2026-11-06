@@ -147,6 +147,11 @@ the inherited runtime already satisfies them. Baseline gaps link to
 - Release binaries must be traceable to the claimed source and pinned
   dependencies, with supported platforms built and checked for that revision.
   A committed archive/hash alone does not establish this. Gaps: GL-010, GL-011.
+- Candidate admission binds every supported platform/configuration to one
+  immutable revision, pinned dependencies, actual product and fixture hashes,
+  complete required qualification and extracted companion startup. Any failed,
+  skipped, incomplete or timed-out required gate rejects acceptance. Candidate
+  artifacts do not grant release publication or updater distribution authority.
 - Preserve published release provenance and history. Update provenance and
   target/version selection are explicit fork policy. GL-012 now preserves history
   with publication disabled; GL-016 rejects runtime updates before side effects.

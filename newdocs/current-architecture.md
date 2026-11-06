@@ -562,12 +562,18 @@ The inherited `.github/workflows/build-release.yml` is disabled during fork
 integration: only manual dispatch remains, both jobs have literal false admission
 conditions, repository permissions are read-only, and checkout credentials are
 not persisted. Ordinary pushes cannot start its builds, archive commits or release
-publication. Its dormant implementation still extracts Windows binaries from a
-committed ZIP. Historical release/tag deletion has been removed by GL-012. No
-sanitizer workflow exists yet. Main integrates the qualified core CI branch via
+publication. Normal merge `b88a88b64c3f576d8b51e51908c0141ac9231a18` integrates
+the GL-010/011 candidate pipeline, preserving all six development commits.
+Its dormant build delegates to the separate non-publishing candidate workflow;
+no committed ZIP supplies Windows binaries or repository archive commits. The
+[candidate contract](release-candidate-qualification.md) records source-built
+four-profile qualification, provenance and required Linux core ASan/LSan gates;
+fresh main qualification and exact artifact identities remain in that record.
+Historical release/tag deletion stays
+removed by GL-012. Main integrates the qualified core CI branch via
 `f0199004d56485ec7a9de14d5454d1907822ba11`. The separate
 `runtime-core-ci.yml` builds the production `ExecutionDomainTests` target and
-runs its current 73 cases through CTest on hosted Windows/Linux Debug. Read-only access,
+runs its current 80 cases through CTest on hosted Windows/Linux Debug. Read-only access,
 recursive pinned checkout, two build jobs, explicit deadlines and checked
 discovery/completion are independent of publication. Only diagnostic reports/logs
 are uploaded. Fresh hosted integration succeeds on Windows/Linux; outcomes and the continuing
@@ -616,8 +622,9 @@ remain separate. See the [native CI record](shared-domains-validation.md#gl-011b
 GL-012 is integrated, preserving `maintenance/gl-012-release-retention` at
 `169fd98be216c4322f4c820c7d77f3081761982b`. A bounded read-only release/tag-absence
 preflight rejects reused identities before package/commit/publish; workflow
-publishing runs are serialized and asset overwrite is disabled. Existing build
-provenance and runtime-gate gaps remain GL-010/011. See
+publishing runs are serialized and asset overwrite is disabled. Production
+publication and historical provenance gaps remain GL-010/011;
+the bounded non-publishing candidate gates are integrated and verified. See
 [retention policy](release-retention.md).
 
 ## Task routing

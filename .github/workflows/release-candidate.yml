@@ -1,0 +1,209 @@
+name: Release candidate qualification (no publication)
+
+on:
+  push:
+    branches: [ci/gl-010-011-release-qualification]
+    paths:
+      - '.github/workflows/release-candidate.yml'
+      - '.github/workflows/build-release.yml'
+      - 'tools/ReleaseCandidate*'
+      - 'tools/ReleaseBuildRequirements.txt'
+      - 'tools/InitializeReleaseToolchain.ps1'
+      - 'tests/release/**'
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: godotluau-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  Policy:
+    name: Candidate rejection and retention checks (${{ matrix.Runner }})
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        Runner: [windows-2022, ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tests/release/ReleaseCandidateTests.py
+      - run: python tests/release/ReleaseRetentionTests.py
+      - run: python tests/packaging/PackagingTests.py
+      - run: python tests/runtime/FixtureProcessTests.py
+
+  Sanitizer:
+    name: Linux production core ASan and LSan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require instrumented core qualification
+        run: python tools/ReleaseCandidate.py sanitize --revision "$GITHUB_SHA" --output "$RUNNER_TEMP/sanitizer"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: sanitizer
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/sanitizer/*.json
+            ${{ runner.temp }}/sanitizer/*.log
+            ${{ runner.temp }}/sanitizer/core/**
+
+  Profiles:
+    name: Source build and qualify (${{ matrix.Platform }}, ${{ matrix.Configuration }})
+    needs: Policy
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        Configuration: [Debug, Release]
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+          - Platform: Linux
+            Runner: ubuntu-24.04
+        Platform: [Windows, Linux]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select existing Windows compiler and runtime
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: ./tools/InitializeReleaseToolchain.ps1
+      - name: Provision pinned build tool
+        run: |
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r tools/ReleaseBuildRequirements.txt
+      - name: Verify official Godot archive and executable
+        timeout-minutes: 5
+        run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
+      - name: Source-built production products and existing complete qualification
+        run: python tools/ReleaseCandidate.py build --revision "$GITHUB_SHA" --configuration "${{ matrix.Configuration }}" --godot "$RUNNER_TEMP/godot" --output "$RUNNER_TEMP/profile"
+      - name: Retain profile products and complete diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: profile-${{ matrix.Platform }}-${{ matrix.Configuration }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/profile/products/*
+            ${{ runner.temp }}/profile/adapter/*
+            ${{ runner.temp }}/profile/profile.json
+            ${{ runner.temp }}/profile/evidence.zip
+            ${{ runner.temp }}/profile/*.log
+            ${{ runner.temp }}/profile/core/**
+            ${{ runner.temp }}/profile/native/**/*.log
+            ${{ runner.temp }}/profile/native/**/results.json
+
+  Packages:
+    name: Extract and start candidate (${{ matrix.Platform }})
+    needs: [Policy, Profiles, Sanitizer]
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+          - Platform: Linux
+            Runner: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select existing Windows runtime
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: ./tools/InitializeReleaseToolchain.ps1
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/inputs
+      - name: Verify official Godot
+        timeout-minutes: 5
+        run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
+      - name: Require exact inputs, complete gates and extracted companion startup
+        run: python tools/ReleaseCandidate.py package --revision "$GITHUB_SHA" --inputs "$RUNNER_TEMP/inputs" --godot "$RUNNER_TEMP/godot" --output "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: candidate-${{ matrix.Platform }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/candidate/*.zip
+            ${{ runner.temp }}/candidate/*.sha256
+            ${{ runner.temp }}/candidate/*.json
+            ${{ runner.temp }}/candidate/*.log
+            ${{ runner.temp }}/candidate/startup/**/*.log
+
+  Acceptance:
+    name: Require every candidate gate (no publication)
+    if: ${{ always() }}
+    needs: [Policy, Profiles, Sanitizer, Packages]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require successful outcomes before downloading candidates
+        env:
+          RC_GATE_RESULTS: ${{ toJSON(needs) }}
+        run: python -c "import sys,json,os; sys.path.insert(0,'tools'); from ReleaseCandidate import CheckJobs; CheckJobs(json.loads(os.environ['RC_GATE_RESULTS']))"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: candidate-*
+          path: ${{ runner.temp }}/inputs
+      - name: Reject any failed, skipped, missing or timed-out gate
+        env:
+          RC_GATE_RESULTS: ${{ toJSON(needs) }}
+        run: python tools/ReleaseCandidate.py accept --revision "$GITHUB_SHA" --inputs "$RUNNER_TEMP/inputs" --output "$RUNNER_TEMP/accepted"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: accepted-candidate
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{ runner.temp }}/accepted/accepted.json

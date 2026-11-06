@@ -1,0 +1,2 @@
+# Official PyPI SCons 4.10.0 wheel; no transitive build dependencies.
+SCons==4.10.0 --hash=sha256:df6f86828035a5c03abce64d4cf2f9c5cbd0051b58af498016bc58bfc05559b0
