@@ -309,18 +309,49 @@ CI status is recorded in the integration section of that record.
 
 ## Script capabilities and scheduling
 
-Domain setup publishes `_FileAccess` and `_HTTP` into gameplay VMs.
-The native file bridge accepts script paths directly without a role/capability
-check or extension-level root confinement. The higher
-level DataStore wrapper rejects network clients, but this does not remove the
-native global. OS permissions and platform restrictions still apply.
+Before GL-003, main `2e89995` publishes an unrestricted `_FileAccess` bridge and
+`_HTTP` into gameplay VMs. Normal merge `5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2`
+integrates both GL-003 source commits with the same tree as qualified tip
+`9824faf5937654ba48558b43d09a3064d25a71fa`. Main replaces the raw file
+operations with native denial and typed native service operations, with live
+owner/domain and native role checks. Storage uses the same shared `user://`
+filenames through bounded, handle-relative platform operations. Client persistence
+is denied; Client Messaging stays local. Editor structure mutation and arbitrary
+network helper dispatch are gated; dynamic assets receive only trusted-project
+resource access. See [ADR-003](adr-003-native-storage-authority.md) and its
+[qualification record](filesystem-capabilities-validation.md) for exact authority,
+compatibility and limits. Fresh main hosted CI status is in the integration record.
 
 HTTP uses synchronous `HTTPClient` polling and delays on the calling thread
 in `luau_script.cpp`. It has a nominal ten-second timeout; this is not a
 nonblocking scheduler or a demonstrated bound on every network/body path.
-No explicit sandbox setup, instruction-interrupt budget, or custom memory quota
-was found in extension VM initialization or the searched extension source.
-Imported/community script isolation is not an established supported contract.
+After GL-004 integration on main, VM creation uses an allocator-backed domain
+account with a hard requested-byte quota. Trusted registration/stdlib bootstrap
+precedes sandbox sealing; intrinsic libraries/root globals become read-only,
+while existing mutable custom facades and `_G`/`shared` retain their contracts.
+Owner environments use luaL_sandboxthread with safeenv disabled so custom typeof,
+mutable facades and getfenv/setfenv keep their actual behavior. GL-004 itself
+introduces no filesystem or HTTP gate. Imported/hostile script isolation remains
+outside the supported claim. See [ADR-002](adr-002-domain-resource-policy.md)
+and the [qualification/integration record](execution-limits-validation.md).
+
+Gameplay resumes, synchronous invokes and native argument preparation use
+protected boundaries on the state that allocates/executes. Active C++ execution
+scopes share elapsed/safepoint constraints through nested Server/Client calls,
+including reentry into an already active domain. A thread-local domain scope
+chain exists only during synchronous execution; it does not retain Lua pointers
+or change scheduler/VM ownership. A yield ends the attempt; later managed resumes
+start fresh budgets. Ordinary per-entry limits do not establish a frame latency
+budget, and blocking native/compiler work cannot be preempted by Luau.
+
+Execution violations cancel participating owners; module initialization keeps
+sticky failure semantics. Allocator rejection is sticky even if Lua catches it
+with elapsed enforcement disabled. At the protected return the domain retires,
+rejects admission, invalidates owners/references and skips close hooks. Actual
+lua_close waits for normal host destruction, preserving allocator context lifetime.
+There is no automatic restart. Task, live-coroutine, external-reference and
+retained-owner admission caps plus host resource statistics are configurable
+separately for Server/Client. Earlier native/Lua mutations are not rolled back.
 
 The domain scheduler owns task roots and snapshots its work before dispatch.
 Snapshots reserve their current task count and keep shared_ptr ownership across
@@ -341,8 +372,8 @@ Disable/destroy/source reload invalidates a run's callbacks, waits and tasks;
 re-enable/reload starts a fresh environment. Unrelated owners and module caches
 survive. Shutdown closes admission in both domains before a finite BindToClose
 snapshot, then invalidates owners; close hooks cannot initialize modules or
-schedule new work, and yielded close hooks are cancelled. A running non-yielding
-script/close hook has no instruction budget (GL-004). Local synchronous
+schedule new work, and yielded close hooks are cancelled. Integrated GL-004 adds
+VM safepoint/elapsed interruption and one aggregate close-hook deadline. Local synchronous
 RemoteFunction fallback remains non-yielding; network handlers support yields.
 Native stack guards use per-thread OS bounds on Windows/Linux and real frame/
 return-slot addresses so ASan fake-stack locals are not mistaken for exhaustion.
@@ -411,7 +442,8 @@ no account authentication and no incoming connection validation against
 `host.key`. The presence of that key is not authentication.
 
 `DataStoreService` is embedded Luau in `src/core/luau_stdlib.h`.
-It serializes local JSON through `_FileAccess`; `UpdateAsync` is read/transform/
+Before GL-003 it serializes local JSON through `_FileAccess`; integrated main
+uses typed native service storage instead. `UpdateAsync` remains read/transform/
 write, without a cross-process transaction or compare-and-swap. Worlds can share
 `user://`, so competing processes can lose updates. The write bridge overwrites
 the target directly. `backend/` contains an optional Nakama/PostgreSQL development

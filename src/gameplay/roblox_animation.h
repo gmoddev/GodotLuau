@@ -51,7 +51,7 @@ static inline bool GLLoadAnimation(AnimationPlayer* Player, const String& Identi
         (Identity.is_empty() || String(Resources.get(Name, Identity)) == Identity)) return true;
     ResourceLoader* Loader = ResourceLoader::get_singleton();
     String Path = gl_is_roblox_asset(Identity) ? gl_local_asset_path(Identity) : Identity;
-    if (!Loader || Path.is_empty() || !Loader->exists(Path, "Animation")) return false;
+    if (!Loader || !GLProjectResourcePath(Path) || !Loader->exists(Path, "Animation")) return false;
     Ref<Animation> Loaded = Loader->load(Path, "Animation");
     if (Loaded.is_null()) return false;
     // Loop mode belongs to this character, not ResourceLoader's shared cache.
@@ -280,11 +280,7 @@ private:
         for (int i=(int)list.size()-1; i>=0; --i) {
             const auto& cb=list[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)) continue;
-            lua_State* th=lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L,LUA_REGISTRYINDEX,cb.ref);
-            if(lua_isfunction(cb.main_L,-1)){lua_xmove(cb.main_L,th,1);gl_check_resume(th,GLResume(th,nullptr,0));}
-            else lua_pop(cb.main_L,1);
-            lua_pop(cb.main_L,1);
+            GLDispatch(cb.ref, [](lua_State*) -> int { return 0; });
         }
     }
 };

@@ -10,6 +10,8 @@ func _initialize() -> void:
     var Arguments := OS.get_cmdline_user_args()
     Count = int(Arguments[0])
     Output = Arguments[1]
+    if Arguments.size() > 2:
+        ProjectSettings.set_setting("godot_luau/server_limits/resume_milliseconds", float(Arguments[2]))
     call_deferred("Run")
 
 func ScriptNode(Type: String, Name: String, Source: String, Parent: Node) -> Node:
@@ -25,12 +27,20 @@ func Phase(Name: String, Values: Dictionary) -> void:
     Values["Phase"] = Name
     Values["Count"] = Count
     Values["GodotBytes"] = int(Performance.get_monitor(Performance.MEMORY_STATIC))
+    Values["Resources"] = ResourceStats()
     var File := FileAccess.open(Output, FileAccess.WRITE)
     File.store_string(JSON.stringify(Values))
     File.close()
     var Ack := Output + ".ack"
     while not FileAccess.file_exists(Ack): await process_frame
     DirAccess.remove_absolute(Ack)
+
+func ResourceStats() -> Dictionary:
+    if is_instance_valid(Game):
+        for Child in Game.get_children():
+            if Child.is_class("GLDomainHost") and Child.has_method("GetResourceStats"):
+                return Child.call("GetResourceStats", false)
+    return {}
 
 func Run() -> void:
     var Loaded := GDExtensionManager.load_extension("res://godot_luau.gdextension")

@@ -1,5 +1,62 @@
 # Shared-domain regression fixtures
 
+## GL-003 filesystem qualification branch
+
+`security/gl-003-filesystem-capabilities` extends the production core suite to
+69 cases (53 ordinary, 16 isolated resource children) and native CI to 39 actors.
+The three added core cases exercise the actual native filesystem backend against
+disposable roots, operation grants, invalid path representations, Unicode,
+hard links, Linux symlinks/FIFOs, Windows junctions and replacement races.
+Native `--filesystem` adds one Server/Client/module/callback/reload/scene/asset
+actor plus two real server processes sharing service storage. All three must
+exit zero with filesystem PASS markers. Failure assertions are not satisfied by
+Lua-only permission mocks or watchdog kills.
+
+```text
+python tests/runtime/RunQualification.py --godot <engine> --extension <library> --output <fresh>/filesystem --filesystem --timeout 60
+```
+
+Run `FilesystemIntegration.gd -- --baseline` only against the original qualified
+baseline to reproduce raw access, using the existing bounded launcher and a
+disposable project/profile. See [ADR-003](../../newdocs/adr-003-native-storage-authority.md)
+and [the work record](../../newdocs/filesystem-capabilities-validation.md) for
+actual qualification status and compatibility limitations. Main is unchanged.
+
+## GL-004 resource qualification
+
+The development branch extends core CI to **66 distinct cases**: 50 normal cases
+in one owned child and sixteen separately owned interruption cases. CTest invokes
+`RunCoreTests.py`; run CTest rather than only ExecutionDomainTests to include
+the non-yielding children. Their three-second watchdogs must not fire. Windows
+uses hidden jobs and crash-UI suppression; POSIX uses owned sessions, CPU limits
+and disabled core dumps. VM quota tests allocate beyond a small actual allocator
+cap; they do not intentionally exhaust host memory. ASan virtual reservations
+preclude a small RLIMIT_AS; worker container memory provides outer containment.
+
+Native CI retains the existing 28 actors and adds eight isolated resource actors
+(execution, module, native callback, synchronous invoke, memory, tasks, shutdown,
+configuration). The checker requires **36 actors**, resource PASS markers and the
+existing GL-022 markers. Run the new group before CheckNativeCI:
+
+```text
+python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/resources --resources --timeout 15
+```
+
+The resource fixture measures baseline service polling before asserting cleanup;
+zero tasks is not the healthy native baseline. Gameplay/native failure cases must
+be stopped by runtime enforcement. The process watchdog is containment only.
+Read [ADR-002](../../newdocs/adr-002-domain-resource-policy.md) for configuration,
+compatibility decisions and the distinction between VM limits and native process
+resources; [the validation record](../../newdocs/execution-limits-validation.md)
+states which configurations have actually run. Release/updater remain disabled.
+
+`RunQualification.py --benchmark --counts 1000` runs the existing population
+workload on a candidate alone; `--baseline` retains the existing comparison mode.
+Resource metrics are additive to benchmark output. `RunRequireBenchmark.py
+--resume-ms 0` explicitly disables elapsed enforcement for profiling only;
+omitting it exercises the production default. Neither mode disables VM memory
+or admission caps. Production projects can choose lower elapsed budgets.
+
 ## Native CI (GL-011B)
 
 `ci/gl-011-native-integration` adds independent
@@ -27,6 +84,7 @@ cmake --build <build-directory> --config Debug --target GodotLuauAdapter --paral
 python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/regression --teardown --coordinated-close --timeout 60
 python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/security --security --timeout 60
 python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/animation --animation --timeout 60
+python tests/runtime/RunQualification.py --godot <verified-engine> --extension <built-library> --output <fresh-root>/resources --resources --timeout 15
 python tests/runtime/CheckNativeCI.py --output <fresh-root> --extension <built-library> --godot-evidence <engine-directory>/provenance.json --revision <candidate-SHA>
 ```
 

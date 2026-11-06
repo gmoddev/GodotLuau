@@ -12,11 +12,38 @@
 
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/variant/callable_custom.hpp>
 #include <algorithm>
 #include <functional>
+#include <cmath>
 
 namespace {
+GLDomainLimits GLLimits(GLDomainKind Kind) {
+    GLDomainLimits Limits;
+    auto Settings = ProjectSettings::get_singleton();
+    String Prefix = Kind == GLDomainKind::Server ? "godot_luau/server_limits/" : "godot_luau/client_limits/";
+    auto Read = [&](const char* Name, double Default, double Maximum, bool Integer) -> double {
+        String Key = Prefix + Name;
+        if (!Settings || !Settings->has_setting(Key)) return Default;
+        Variant Value = Settings->get_setting(Key);
+        bool ValidType = Value.get_type() == Variant::INT || (!Integer && Value.get_type() == Variant::FLOAT);
+        double Number = ValidType ? static_cast<double>(Value) : -1;
+        if (!std::isfinite(Number) || Number < 0 || Number > Maximum) {
+            UtilityFunctions::print("[Runtime:Configuration] Invalid ", Key, "; using default ", Default);
+            return Default;
+        }
+        return Number;
+    };
+    Limits.ResumeMilliseconds = Read("resume_milliseconds", Limits.ResumeMilliseconds, 60000, false);
+    Limits.MaxSafepoints = static_cast<uint64_t>(Read("max_safepoints", 0, 1000000000, true));
+    Limits.MemoryBytes = static_cast<size_t>(Read("vm_memory_bytes", Limits.MemoryBytes, 16.0*1024*1024*1024, true));
+    Limits.Tasks = static_cast<size_t>(Read("tasks", Limits.Tasks, 1000000, true));
+    Limits.Coroutines = static_cast<size_t>(Read("coroutines", Limits.Coroutines, 2000000, true));
+    Limits.References = static_cast<size_t>(Read("references", Limits.References, 1000000, true));
+    Limits.Owners = static_cast<size_t>(Read("owners", Limits.Owners, 1000000, true));
+    return Limits;
+}
 uint64_t GLHostIdentity = 0;
 // Godot strips bind() arguments when comparing signal slots. The immutable
 // callback reference must be part of the base Callable's identity instead.
@@ -103,7 +130,7 @@ GLDomainHost::~GLDomainHost() {
 GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
     size_t Index = Kind == GLDomainKind::Server ? 0 : 1;
     if (!Domains[Index]) {
-        Domains[Index] = std::make_unique<GLExecutionDomain>(Kind);
+        Domains[Index] = std::make_unique<GLExecutionDomain>(Kind, GLLimits(Kind));
         Domains[Index]->SetTimeProvider([]() { return static_cast<double>(Time::get_singleton()->get_ticks_msec()) / 1000.0; });
         Domains[Index]->SetEnvironmentHook([](lua_State* Thread, uint64_t Identity) {
             Node* Script = Object::cast_to<Node>(ObjectDB::get_instance(Identity));
@@ -133,11 +160,52 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
         Domains[Index]->SetInvalidationHook([this](lua_State* Anchor) { InvalidateOwner(Anchor); });
         Domains[Index]->SetThreadInvalidationHook([this](lua_State* Thread) { InvalidateThread(Thread); });
         Domains[Index]->SetErrorHandler([](lua_State* Thread, const std::string& Error) {
-            UtilityFunctions::print(String("[Runtime:Script] ") + String::utf8(Error.c_str()));
-            if (Thread) gl_report_script_error(Thread);
+            auto Owner = GLGetOwner(Thread);
+            Node* Script = Owner ? Object::cast_to<Node>(ObjectDB::get_instance(Owner->NativeId)) : nullptr;
+            String Context = Script ? gl_instance_fullname(Script) : Owner && Owner->NativeId
+                ? String("retired owner ") + String::num_uint64(Owner->Token)
+                : String("domain bootstrap");
+            UtilityFunctions::print(String("[Runtime:Script] ") + Context + ": " + String::utf8(Error.c_str()));
+            // An exhausted VM must not allocate while collecting a Lua trace.
+            if (Owner && Owner->Domain->HasMemoryFailure()) gl_unregister_state(Owner->Domain->GetState());
+            if (Owner && !Owner->Domain->HasMemoryFailure()) gl_report_script_error(Thread);
         });
+        if (Domains[Index]->GetFailure()) UtilityFunctions::print(String::utf8(Domains[Index]->GetFailure()));
     }
     return *Domains[Index];
+}
+Dictionary GLDomainHost::GetResourceStats(bool Client) const {
+    Dictionary Stats;
+    const auto& Domain = Domains[Client ? 1 : 0];
+    Stats["Created"] = static_cast<bool>(Domain);
+    if (!Domain) return Stats;
+    const auto& Memory = Domain->GetMemoryAccount();
+    const auto& Limits = Domain->GetLimits();
+    Stats["Closing"] = Domain->IsClosing();
+    Stats["MemoryFailed"] = Domain->HasMemoryFailure();
+    Stats["HostOperationsAvailable"] = Domain->CanRunNative();
+    Stats["Sandboxed"] = Domain->IsSandboxed();
+    Stats["VmLiveBytes"] = static_cast<int64_t>(Memory.Live);
+    Stats["VmPeakBytes"] = static_cast<int64_t>(Memory.Peak);
+    Stats["VmLimitBytes"] = static_cast<int64_t>(Memory.Limit);
+    Stats["AllocationRejections"] = static_cast<int64_t>(Memory.Rejections);
+    Stats["AdmissionRejections"] = static_cast<int64_t>(Domain->GetAdmissionRejections());
+    Stats["Tasks"] = static_cast<int64_t>(Domain->GetTaskCount());
+    Stats["Coroutines"] = static_cast<int64_t>(Domain->GetCoroutineCount());
+    Stats["References"] = static_cast<int64_t>(Domain->GetReferenceCount());
+    Stats["Owners"] = static_cast<int64_t>(Domain->GetOwnerCount());
+    Stats["TaskPeak"] = static_cast<int64_t>(Domain->GetTaskPeak());
+    Stats["CoroutinePeak"] = static_cast<int64_t>(Domain->GetCoroutinePeak());
+    Stats["ReferencePeak"] = static_cast<int64_t>(Domain->GetReferencePeak());
+    Stats["OwnerPeak"] = static_cast<int64_t>(Domain->GetOwnerPeak());
+    Stats["TaskLimit"] = static_cast<int64_t>(Limits.Tasks);
+    Stats["CoroutineLimit"] = static_cast<int64_t>(Limits.Coroutines);
+    Stats["ReferenceLimit"] = static_cast<int64_t>(Limits.References);
+    Stats["OwnerLimit"] = static_cast<int64_t>(Limits.Owners);
+    Stats["ResumeMilliseconds"] = Limits.ResumeMilliseconds;
+    Stats["MaxSafepoints"] = static_cast<int64_t>(Limits.MaxSafepoints);
+    if (Domain->GetFailure()) Stats["Failure"] = String::utf8(Domain->GetFailure());
+    return Stats;
 }
 bool GLDomainHost::ClaimInitialization(GLDomainKind Kind) {
     size_t Index = Kind == GLDomainKind::Server ? 0 : 1;
@@ -290,7 +358,9 @@ void GLDomainHost::_process(double Delta) {
         }
         if (!Domain || Ready) {
             ChildWaits.erase(ChildWaits.begin() + Index);
-            if (Domain) { PushLuauInstance(Wait.Thread, Found); GLResume(Wait.Thread, nullptr, 1); }
+            if (Domain) Domain->ResumePrepared(Wait.Thread, [&](lua_State* Thread) -> int {
+                PushLuauInstance(Thread, Found); return 1;
+            });
             GLUnreference(nullptr, Wait.Reference);
         } else ++Index;
     }
@@ -303,13 +373,16 @@ void GLDomainHost::_process(double Delta) {
             continue;
         }
         GLUnreference(nullptr, Resume.Guard);
-        int Arguments = 1;
-        if (Resume.use_args) {
-            Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(Resume.ctx_id));
-            Arguments = gl_net_decode_args(Resume.thread, Resume.args, Context);
-        } else if (Resume.NodeId) PushLuauInstance(Resume.thread, Object::cast_to<Node>(ObjectDB::get_instance(Resume.NodeId)));
-        else lua_pushnumber(Resume.thread, Resume.delta);
-        GLResume(Resume.thread, nullptr, Arguments);
+        auto Domain = GLGetOwner(Resume.thread)->Domain;
+        Domain->ResumePrepared(Resume.thread, [&](lua_State* Thread) -> int {
+            if (Resume.use_args) {
+                Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(Resume.ctx_id));
+                return gl_net_decode_args(Thread, Resume.args, Context);
+            }
+            if (Resume.NodeId) PushLuauInstance(Thread, Object::cast_to<Node>(ObjectDB::get_instance(Resume.NodeId)));
+            else lua_pushnumber(Thread, Resume.delta);
+            return 1;
+        });
     }
     for (size_t Index = 0; Index < InvokeWaits.size();) {
         InvokeWaits[Index].Elapsed += Delta;
@@ -329,11 +402,14 @@ void GLDomainHost::_process(double Delta) {
         if (Domain) {
             if (Ready && Response.ok) {
                 Node* Context = Object::cast_to<Node>(ObjectDB::get_instance(gl_net_service_id()));
-                int Arguments = gl_net_decode_args(Wait.Thread, Response.rets, Context);
-                GLResume(Wait.Thread, nullptr, Arguments);
+                Domain->ResumePrepared(Wait.Thread, [&](lua_State* Thread) -> int {
+                    return gl_net_decode_args(Thread, Response.rets, Context);
+                });
             } else {
                 String Error = Ready && !Response.rets.is_empty() ? String(Response.rets[0]) : String("RemoteFunction invoke timed out");
-                lua_pushstring(Wait.Thread, Error.utf8().get_data()); GLResumeError(Wait.Thread, nullptr);
+                Domain->ResumePrepared(Wait.Thread, [&](lua_State* Thread) -> int {
+                    lua_pushstring(Thread, Error.utf8().get_data()); return 1;
+                }, true);
             }
         }
         GLUnreference(nullptr, Wait.Reference);

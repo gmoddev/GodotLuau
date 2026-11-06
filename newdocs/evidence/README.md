@@ -1,5 +1,19 @@
 # Shared-domain qualification evidence
 
+[GL-004 main integration](gl004-main-integration-2026-10-29.json) records the
+normal merge and exact source/configuration identity, fresh worker Debug/Release
+core and Debug lifecycle/resource checks. Fresh main Windows/Linux core/native
+CI passes; all four artifact digests and native identities/log hashes verify.
+The result is recorded in
+the [integration record](../execution-limits-validation.md#main-integration).
+
+[GL-004 execution limits](gl004-execution-limits-2026-10-29.json) records the
+dedicated branch's six core configurations, 180 native actors, four SCons products,
+default-policy workloads, input/binary/log hashes and retained limitations.
+Fresh Windows/Linux core/native CI passes on `040996e`; all four artifact digests
+and native input/log identities verify. The original Windows fixture failure and
+its qualified bounded-delivery correction remain recorded. No main merge is claimed.
+
 [GL-022 main integration](gl022-main-integration-2026-10-29.json) records the
 normal merge, source identity and successful fresh hosted Windows/Linux core
 and native gates, with verified artifact digests and executed GL-022 markers.
@@ -127,3 +141,9 @@ Task artifacts are retained for review and reproduction, not promised permanent
 hosting. The repository keeps the commands, source fixtures, benchmark records
 and immutable qualification/package identities. No binary is committed or
 published as a release, and the inherited ZIP is never a qualification input.
+
+GL-003's [filesystem manifest](gl003-filesystem-capabilities-2026-10-29.json)
+records the final worker matrix, native source/fixture/core-test identities,
+engine/product hashes and retained baseline log hashes. Its
+[work record](../filesystem-capabilities-validation.md) separates baseline,
+intermediate failures, local qualification and hosted CI status.

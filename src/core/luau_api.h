@@ -480,13 +480,7 @@ static void gl_fire_attribute_changed(Node* n, const String& attr) {
         GLAttrWatch w = v[i];
         if (!w.active || !GLReferenceAlive(w.main_L, w.ref)) { v.erase(v.begin() + i); continue; }
         if (w.node_id != id || w.attr != attr) continue;
-        lua_State* th = lua_newthread(w.main_L);
-        lua_rawgeti(w.main_L, LUA_REGISTRYINDEX, w.ref);
-        if (lua_isfunction(w.main_L, -1)) {
-            lua_xmove(w.main_L, th, 1);
-            gl_check_resume(th, GLResume(th, nullptr, 0));
-        } else lua_pop(w.main_L, 1);
-        lua_pop(w.main_L, 1);
+        GLDispatch(w.ref, [](lua_State*) -> int { return 0; });
     }
 }
 
@@ -494,6 +488,8 @@ static int method_setattribute(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
         const char* key = luaL_checkstring(L, 2);
+        if (strcmp(key,"_gl_bridge")==0)
+            luaL_error(L,"[Runtime:Capabilities] Native bridge metadata is host-owned");
         if (lua_isnumber(L, 3)) {
             gow_node(w)->set_meta(key, lua_tonumber(L, 3));
         } else if (lua_isboolean(L, 3)) {
@@ -1202,14 +1198,11 @@ static int godot_object_index(lua_State* L) {
 
     // game:UpdateStructure() — actualizador incremental (1.15): rellena lo que
     // falte y migra nodos sin borrar ni pisar la config. Mismo efecto que la
-    // opción "Actualizar estructura" del inspector; útil para scripts de build.
+    // opción del inspector. Gameplay cannot invoke this editor authority.
     if (strcmp(key, "UpdateStructure") == 0 && n->has_method("_gl_update_structure")) {
-        lua_pushlightuserdata(L, (void*)n);
-        lua_pushcclosure(L, [](lua_State* pL) -> int {
-            Node* nd = (Node*)lua_touserdata(pL, lua_upvalueindex(1));
-            if (nd && nd->has_method("_gl_update_structure")) nd->call("_gl_update_structure");
-            return 0;
-        }, "UpdateStructure", 1);
+        lua_pushcfunction(L, [](lua_State* pL) -> int {
+            luaL_error(pL,"[Runtime:Capabilities] Editor filesystem operation denied");
+        }, "UpdateStructure");
         return 1;
     }
 
@@ -4753,12 +4746,12 @@ static void gl_rep_apply_prop(Node* target, const String& key, const Variant& en
         }
         return;
     }
-    lua_State* th = lua_newthread(L);
-    wrap_node(th, target);                          // idx 1
-    lua_pushstring(th, key.utf8().get_data());      // idx 2
-    gl_net_decode(th, enc, target);                 // idx 3
-    godot_object_newindex_impl(th);                 // aplica SIN volver a replicar
-    lua_pop(L, 1);                                  // quita el hilo
+    GLGetOwner(L)->Domain->RunNative([&](lua_State* Thread) {
+        wrap_node(Thread, target);
+        lua_pushstring(Thread, key.utf8().get_data());
+        gl_net_decode(Thread, enc, target);
+        godot_object_newindex_impl(Thread);
+    });
 }
 
 // __newindex real: aplica y (si somos servidor de red) difunde el delta.

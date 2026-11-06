@@ -1,0 +1,1039 @@
+{
+  "Date": "2026-10-29",
+  "Branch": "runtime/gl-004-execution-limits",
+  "Disposition": "FIXED AND QUALIFIED on development branch; not merged to main",
+  "MainUnchanged": "8aec90252d10f7dcec97e97423ca390467087711",
+  "PinnedDependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "CoreTestInputsRawSHA256": {
+    "ExecutionDomainTests.cpp": "440fa6cdbbad6583309495d9b46c8be0ca52f5af19ae5a6e49b14125882fdd37",
+    "HotPathBenchmarks.cpp": "6e9e89010412cc4e09d8a35512e1ba11a88a43ba3e04ec5f7975bc5d8d409fe6"
+  },
+  "LocalQualification": {
+    "Windows": {
+      "Platform": "Windows",
+      "NativeSource": {
+        "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+        "Files": 75,
+        "Newlines": "LF normalized"
+      },
+      "Base": "8aec90252d10f7dcec97e97423ca390467087711",
+      "Core": {
+        "debug": {
+          "Cases": 66,
+          "JUnitSHA256": "05757f7dbef472e96a6a8858b85754805404ebb2e79a60e4eda9e7acfb6a1e4d",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl004-8037-debug-core.xml"
+        },
+        "release": {
+          "Cases": 66,
+          "JUnitSHA256": "fbb25675c13125f8529b338a330483c5e9f405934e79f0544945114fab67267d",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl004-8037-release-core.xml"
+        },
+        "asan": {
+          "Cases": 66,
+          "JUnitSHA256": "39c2bcbadbeaa18dc0c88c599ae6bff723b0a9e50959b81dd3c6bbc13953f230",
+          "Report": "C:\\Sandbox\\Codex\\Logs\\GodotLuau\\gl004-8037-asan-core.xml"
+        }
+      },
+      "Native": {
+        "debug": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+              "LogsSHA256": "9bbd2628eee629326a8d26a1b546e7e1c71ed00de0fb145ab43b2467e88a3ae0"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "78c5414c0fad584c6f78c7f972c3d732529aa7eeb92dfdf2f0648bb7626ebafc",
+              "LogsSHA256": "8676d816e672cd3027897ac62cdcdff1297f94b18fa024d27a0fbc9978f24633"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+              "LogsSHA256": "7d38b27e5f61535ca27198898d533657a766dde28115cdf969bc219a0bdd19c5"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "af41d2c9d4ed27627ae08f27c082b2f4777344c74cc48a2e170bc34f1b0d58b3"
+            }
+          },
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-8037-windows-debug",
+          "ExtensionSHA256": "c32090578b5af7f2d6923e8fed951ddde666dfd2be91627a05125f8b8610f26b"
+        },
+        "release": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "e78e24182f75c0e48e214d8709df2a78cbc9665b36feb1485db32588a2517ce9",
+              "LogsSHA256": "d8ffc4102e4d12381615ccdd4f142933cc4dcb914322b053a9444f0c484a7f3b"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "d1fa615d633b57e49a60a7ea893f2f2d83edd6e584a8f8c03849d25e18ad3c42",
+              "LogsSHA256": "5f632279aa81ce3ba008229a5f0a65a0e759405fb4f89c85e5de89d9c826fc44"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "00a89d9a0f8aa12095cc7db5a91cff51aa8a15e367a994380fe3cf5f9140d318",
+              "LogsSHA256": "85137f9bddde3a8c3db42ebe8479d8e7bf9a4902817d5a335f54da716bca818b"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+              "LogsSHA256": "49e1ef88ef940de57fa380bfbe2e9167fe99f0818b610f3139e90c3981076565"
+            }
+          },
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-8037-windows-release",
+          "ExtensionSHA256": "c0845c918db4b527a49ad8ad95cd60cf40e5efdedd9b638b69f58c4dfd7a22e6"
+        }
+      },
+      "SCons": {
+        "template_debug": {
+          "ResourceActors": 8,
+          "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+          "LogsSHA256": "cbaee2488e57ae19fb0535aba5e3233ce504bdf642c882c68edb08bea80d190d",
+          "ExtensionSHA256": "0bc5defcec23b931f0d488bd2f63a75f23c8d686eef5814c20c462f77b18635f",
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-8037-scons-windows-template_debug"
+        },
+        "template_release": {
+          "ResourceActors": 8,
+          "ResultsSHA256": "c26ac74312ad2c3f84960e5dccf415136228281622da348f6e3ab90542610854",
+          "LogsSHA256": "ffba0fb978a766e5c5f0cc73fca08d3f345fb1a7199d60e3989702b8bcd56db4",
+          "ExtensionSHA256": "de1ca15df759691a88af2f8aeb4769a2f65b4bfd543d8ec8c399f8d0355d73ab",
+          "Output": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-8037-scons-windows-template_release"
+        }
+      },
+      "Benchmarks": {
+        "population": [
+          {
+            "Count": 1000,
+            "GodotBytes": 27613121,
+            "Phase": "Before",
+            "Resources": {},
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": null
+          },
+          {
+            "ColdMs": 16.7999970726669,
+            "Coroutine32Ms": 167.051902040839,
+            "Count": 1000,
+            "GodotBytes": 30453953,
+            "Hot100Ms": 601.257195696235,
+            "ModuleExecutions": 1.0,
+            "Phase": "Startup",
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 34004,
+              "Coroutines": 34004,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 1001,
+              "Owners": 1001,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1000,
+              "References": 1000,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 33002,
+              "Tasks": 1001,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 50312384,
+              "VmPeakBytes": 50312384
+            },
+            "StartupMs": 1596.004,
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": null
+          },
+          {
+            "Count": 1000,
+            "FrameMedianMs": 6.896,
+            "FrameP95Ms": 7.334,
+            "Frames": 21,
+            "GodotBytes": 30455765,
+            "MaxFps": 0,
+            "Phase": "Scheduler",
+            "ProcessMedianMs": 1596.321,
+            "ProcessP95Ms": 1596.321,
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 34004,
+              "Coroutines": 34004,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 1001,
+              "Owners": 1001,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1000,
+              "References": 1000,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 33002,
+              "Tasks": 1,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 50508704,
+              "VmPeakBytes": 50508704
+            },
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": null
+          },
+          {
+            "Count": 1000,
+            "DestroyMs": 736.561,
+            "GodotBytes": 27705125,
+            "Phase": "Destroy",
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 34004,
+              "Coroutines": 34004,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 1001,
+              "Owners": 1,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1000,
+              "References": 0,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 33002,
+              "Tasks": 1,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 50508704,
+              "VmPeakBytes": 50508704
+            },
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": null
+          },
+          {
+            "Count": 1000,
+            "GodotBytes": 27670385,
+            "Phase": "Shutdown",
+            "Resources": {},
+            "ShutdownMs": 20.438,
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": null
+          }
+        ],
+        "require": [
+          {
+            "Calls": 1000000,
+            "ColdMs": 0.184800010174513,
+            "HotMs": 2473.02939975634,
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 6,
+              "Coroutines": 6,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 2,
+              "Owners": 2,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1,
+              "References": 1,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 3,
+              "Tasks": 3,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 1098880,
+              "VmPeakBytes": 1098880
+            },
+            "Mode": "Candidate",
+            "Trial": 0
+          }
+        ]
+      },
+      "Engines": {
+        "official": {
+          "Path": "C:\\Sandbox\\Codex\\Tools\\Godot_v4.7.1-stable_win64.exe",
+          "SHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+        "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+        "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "NetworkSecurity.gd": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+      },
+      "Limitations": [
+        "VM allocator bytes do not bound process/native/compiler allocations",
+        "Blocking native/compiler work is not preempted; entries are not an aggregate frame budget",
+        "Functional animation only; GL-020 adversarial qualification remains open",
+        "Windows full native ASan GL-018 remains open; Windows core ASan passes",
+        "GL-003 filesystem and GL-005 HTTP capability issues remain open",
+        "No main merge, release or updater enablement"
+      ]
+    },
+    "Linux": {
+      "Platform": "Linux",
+      "NativeSource": {
+        "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+        "Files": 75,
+        "Newlines": "LF normalized"
+      },
+      "Base": "8aec90252d10f7dcec97e97423ca390467087711",
+      "Core": {
+        "debug": {
+          "Cases": 66,
+          "JUnitSHA256": "d3ce55a9b052d38552cb9463eb85dd68d181a948bb92777396d0e7b54a2a6112",
+          "Report": "/work/logs/gl004-qualified-debug-core.xml"
+        },
+        "release": {
+          "Cases": 66,
+          "JUnitSHA256": "04f897b6a70d3ca6df175ecb6f7373ee566e1465a13fe3310edac7f88ff7f81d",
+          "Report": "/work/logs/gl004-qualified-release-core.xml"
+        },
+        "asan": {
+          "Cases": 66,
+          "JUnitSHA256": "d3100c16f2371b758e70387b13dc48c4082e99e4f3e0114e4ef48459a3bb5232",
+          "Report": "/work/logs/gl004-qualified-asan-core.xml"
+        }
+      },
+      "Native": {
+        "debug": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+              "LogsSHA256": "190a07d866c2dafd262355abf79c33da3c63142b66f636a6b1929802488cd5ea"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "b990ac0f7d9d6d64c9ace797f5294f9bfbb8058882179482882556494230e87a",
+              "LogsSHA256": "14f5998bcbbc528b8153d68369351e8517a6cc9ac58901df6ac34d762eed8c21"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+              "LogsSHA256": "d80518734e5533d5be212b7cfb585505e89b0cf147ba72312215f9fc4b008a29"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "8018a91afa4522eb809d7d99edad4f59853b91692dbe5f8f17dc4ff53a7ceb06"
+            }
+          },
+          "Output": "/work/results/gl004-qualified-linux-debug",
+          "ExtensionSHA256": "abc2ce73ae7f49a296c41979d1f9a0458d98b08df6c8088ebcd46d76ca7623be"
+        },
+        "release": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "81f4eedfcd6e573c3acc9bbd4927976d8179c3d53498639b0c7c2628ad6160a8",
+              "LogsSHA256": "6c7e03c3b022cab42b8ce9ee15d57cb69dbeb8aedab1fa4950fb16b6bad4dfdc"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "8da937c58d0946c77f911f369722d24054261371078d0c8caf4301eab8a8c7b3",
+              "LogsSHA256": "59dd3ec09ac97e372ba6c7410251e272415f01662ea300330650674b4f4b7ff8"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "797363d0f9a69e742d09d179fabd5a29eb38ecba75ad048f61ef5759891cfdb8",
+              "LogsSHA256": "21af80b3fb06cc3c93f215f6ade19469ed91f89f05d22fecbd332167cc35221d"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+              "LogsSHA256": "f57d853dd96592a9e67188cdc5ef431c05570ba8e469c136fa22a435bb3137ed"
+            }
+          },
+          "Output": "/work/results/gl004-qualified-linux-release",
+          "ExtensionSHA256": "4ee325fd333adf1017dd9f0ac850d4b1ff3f7362c65d9c95586c9eb8e75b81a5"
+        },
+        "asan": {
+          "Groups": {
+            "regression": {
+              "Actors": 8,
+              "ResultsSHA256": "dfaabcdd0f54f89450cd2615dc6ea7c35df624de2017f0af082a45c0d3a712ff",
+              "LogsSHA256": "9b9a477d1cc1021f64c816307b020fa0cd4db1be71f45aaf428c9819bec2ee65"
+            },
+            "security": {
+              "Actors": 10,
+              "ResultsSHA256": "4204c92c6bf2f91a844916e1b83431e862c0ee18853f2427e7d774fab6a1c1cc",
+              "LogsSHA256": "f6bd441b6998db15f226475c6c0ddf104c5c87047b414d937367deb25f610506"
+            },
+            "animation": {
+              "Actors": 10,
+              "ResultsSHA256": "a29a4ea5b89cbd61f12ec9a08f6292329c1de58c51735a7788c5d9a9fbf892a3",
+              "LogsSHA256": "f2f07792cd96090d59c8fbb174caa817130613bbb37fb07094875c028c801733"
+            },
+            "resources": {
+              "Actors": 8,
+              "ResultsSHA256": "b2d4e7fc7ef1aa62016b3b13050b838504b12eee81821733a111ccace7b77e60",
+              "LogsSHA256": "4ad2801c31c0df726d3305c036ff3b1e166384548651c89033c9d282d4d9ede3"
+            }
+          },
+          "Output": "/work/results/gl004-qualified-linux-asan",
+          "ExtensionSHA256": "ad02bfb912d794ebb37f48497f3386c74b1771c958c2c6595b279e7ea9fd6981"
+        }
+      },
+      "SCons": {
+        "template_debug": {
+          "ResourceActors": 8,
+          "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+          "LogsSHA256": "4f804c0b03c664a50fe5122a1bf366151143d15957af04dfde5b391b8ae243fa",
+          "ExtensionSHA256": "25086be57fa31800aa521697f5405235983e18f251f09ef0068fd30bedf1ecdb",
+          "Output": "/work/results/gl004-qualified-scons-linux-template_debug"
+        },
+        "template_release": {
+          "ResourceActors": 8,
+          "ResultsSHA256": "b2f9b76fdaa552cd602415af2672d40ea17e395b598636ef14a1193cde6f37af",
+          "LogsSHA256": "1ddd8133622b6dfeb88e63b556dc10be2d637df02ac6e58a0cb30b4fe134c7da",
+          "ExtensionSHA256": "cae460e4ba71b06a97b9c1e45bd8b8412e0500a8dfacba9ead88c6d2ddac1f78",
+          "Output": "/work/results/gl004-qualified-scons-linux-template_release"
+        }
+      },
+      "Benchmarks": {
+        "population": [
+          {
+            "Count": 1000,
+            "GodotBytes": 27489981,
+            "Phase": "Before",
+            "Resources": {},
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": 119390208
+          },
+          {
+            "ColdMs": 8.94855381920934,
+            "Coroutine32Ms": 58.3163308911026,
+            "Count": 1000,
+            "GodotBytes": 30370829,
+            "Hot100Ms": 169.21769734472,
+            "ModuleExecutions": 1.0,
+            "Phase": "Startup",
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 34004,
+              "Coroutines": 34004,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 1001,
+              "Owners": 1001,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1000,
+              "References": 1000,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 33002,
+              "Tasks": 1001,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 50279664,
+              "VmPeakBytes": 50279664
+            },
+            "StartupMs": 508.527,
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": 180051968
+          },
+          {
+            "Count": 1000,
+            "FrameMedianMs": 6.891,
+            "FrameP95Ms": 7.182,
+            "Frames": 21,
+            "GodotBytes": 30372641,
+            "MaxFps": 0,
+            "Phase": "Scheduler",
+            "ProcessMedianMs": 0.0,
+            "ProcessP95Ms": 0.0,
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 34004,
+              "Coroutines": 34004,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 1001,
+              "Owners": 1001,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1000,
+              "References": 1000,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 33002,
+              "Tasks": 1,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 50475984,
+              "VmPeakBytes": 50475984
+            },
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": 180051968
+          },
+          {
+            "Count": 1000,
+            "DestroyMs": 173.506,
+            "GodotBytes": 27582001,
+            "Phase": "Destroy",
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 34004,
+              "Coroutines": 34004,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 1001,
+              "Owners": 1,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1000,
+              "References": 0,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 33002,
+              "Tasks": 1,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 50475984,
+              "VmPeakBytes": 50475984
+            },
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": 180051968
+          },
+          {
+            "Count": 1000,
+            "GodotBytes": 27547197,
+            "Phase": "Shutdown",
+            "Resources": {},
+            "ShutdownMs": 13.83,
+            "Mode": "Shared",
+            "Trial": 0,
+            "RssBytes": 180051968
+          }
+        ],
+        "require": [
+          {
+            "Calls": 1000000,
+            "ColdMs": 0.092649832367897,
+            "HotMs": 625.418054871261,
+            "Resources": {
+              "AdmissionRejections": 0,
+              "AllocationRejections": 0,
+              "Closing": false,
+              "CoroutineLimit": 131072,
+              "CoroutinePeak": 6,
+              "Coroutines": 6,
+              "Created": true,
+              "HostOperationsAvailable": true,
+              "MaxSafepoints": 0,
+              "MemoryFailed": false,
+              "OwnerLimit": 16384,
+              "OwnerPeak": 2,
+              "Owners": 2,
+              "ReferenceLimit": 65536,
+              "ReferencePeak": 1,
+              "References": 1,
+              "ResumeMilliseconds": 10000.0,
+              "Sandboxed": true,
+              "TaskLimit": 65536,
+              "TaskPeak": 3,
+              "Tasks": 1,
+              "VmLimitBytes": 536870912,
+              "VmLiveBytes": 1098880,
+              "VmPeakBytes": 1098880
+            },
+            "Mode": "Candidate",
+            "Trial": 0
+          }
+        ]
+      },
+      "Engines": {
+        "official": {
+          "Path": "/work/tools/Godot_v4.7.1-stable_linux.x86_64",
+          "SHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde"
+        },
+        "matching_asan": {
+          "Path": "/work/godot-asan/bin/godot.linuxbsd.template_debug.dev.x86_64.san",
+          "SHA256": "a0845cdbbcf315f3d42320e6c8e9a9c8f8dcb8b4fe2910ad087020f5e38f3232"
+        }
+      },
+      "HarnessHashes": {
+        "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+        "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+        "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+        "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+        "NetworkSecurity.gd": "221c4c4dbdc8e417418429819173856026edeca530e068d505fff50e2cb998a0",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+      },
+      "Limitations": [
+        "VM allocator bytes do not bound process/native/compiler allocations",
+        "Blocking native/compiler work is not preempted; entries are not an aggregate frame budget",
+        "Functional animation only; GL-020 adversarial qualification remains open",
+        "Windows full native ASan GL-018 remains open; Windows core ASan passes",
+        "GL-003 filesystem and GL-005 HTTP capability issues remain open",
+        "No main merge, release or updater enablement"
+      ]
+    }
+  },
+  "ScopeNotes": [
+    "Six 66-case production core configurations; 180 native actors; four SCons products with eight resource actors each",
+    "Linux full native sanitizer uses matching ASan/LSan engine; leak detection and exit leak check defaults verified true",
+    "Worker builds reuse pinned dependency caches with two compilation jobs",
+    "Benchmarks are one trial per platform under production defaults, not statistical speed comparisons",
+    "Releases and runtime updater remain disabled; no main merge",
+    "Initial hosted Windows native network fixture failure retained; bounded positive-control correction passes five local configurations and five Handler trials, then fresh hosted native CI"
+  ],
+  "Implementation": "1e201ed9f229a5d9b39043c303e573e9566fa69c",
+  "NetworkFixtureFollowup": {
+    "Reason": "Initial Windows hosted Handler client1 failed a fixed-delay one-shot unreliable positive 2D state control; actual packet late/lost cause unproven",
+    "Policy": "Exact-state observation and both-client acknowledgements; valid-state RPC resend every 50 ms bounded to five seconds; all authority/rejection checks retained",
+    "OriginalHostedCoreRun": 40855056067,
+    "OriginalHostedNativeRun": 40855056031,
+    "OriginalWindowsArtifact": {
+      "ID": 12888959312,
+      "SHA256": "bce66b4130640f1ee473fc64c2c46c5cef47506cd456f34b9c80afaaec661331",
+      "Result": "Network fixture failure; lifecycle passed; remaining groups skipped"
+    },
+    "Windows": {
+      "NativeSource": {
+        "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+        "Files": 75,
+        "Newlines": "LF normalized"
+      },
+      "NetworkFixtureSHA256": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+      "Groups": {
+        "gl004-network-ack-windows-debug": {
+          "Actors": 10,
+          "ResultsSHA256": "f4d3243437b807df1820254a01623dbe058aa2ae85d56b12ab338c6dd5b66677",
+          "LogsSHA256": "951febc562c23077acd5c4bbd6b5e734cd3812441aef70842dda13cb0171112e",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-network-ack-windows-debug"
+        },
+        "gl004-network-ack-windows-release": {
+          "Actors": 10,
+          "ResultsSHA256": "5174dccbfb6decdf77137547543181beafab1ce3687cc89932962dfdb183fa96",
+          "LogsSHA256": "4ad6aee3d1d7b127bb45a884c55537b966f4ce788e659d00206789ede85d2550",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-network-ack-windows-release"
+        },
+        "gl004-network-ack-handler-0": {
+          "Actors": 3,
+          "ResultsSHA256": "0b0f0ae7684c1061c7b5bf4f092ad98175f5d439b1e6354bdd7286fce1c7b610",
+          "LogsSHA256": "b5ea12be1c86e45afe280707f584f1f6fcfb843c7d3ada810e364ddc99f49b56",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-network-ack-handler-0"
+        },
+        "gl004-network-ack-handler-1": {
+          "Actors": 3,
+          "ResultsSHA256": "696fa35b994dfc3f21bdc02d19041bec8b6ab63ab479cedcf54431479b90717c",
+          "LogsSHA256": "039844b0641cae55cc9999e8535ed417c04756fd2580662bdeaa18db25955b84",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-network-ack-handler-1"
+        },
+        "gl004-network-ack-handler-2": {
+          "Actors": 3,
+          "ResultsSHA256": "9dbd10e87988a9a4739657e9e0614bfecec05fb9379582630455f5bbbbe98ab3",
+          "LogsSHA256": "87ec70499de487de3a68a414f5e0a77046c67e559a4d6b75ea746cd807788380",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-network-ack-handler-2"
+        },
+        "gl004-network-ack-handler-3": {
+          "Actors": 3,
+          "ResultsSHA256": "58c648484af3e2fbd940cef78fb0def80877c66c91a02c93adee83466a5d394b",
+          "LogsSHA256": "9854d5b79857cf95e90c4ce37b5ec6aecd4759310cfcafd6e8f5f817428a5ea8",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-network-ack-handler-3"
+        },
+        "gl004-network-ack-handler-4": {
+          "Actors": 3,
+          "ResultsSHA256": "b89066e006399012e840e1bc21ac9c0b79a822497ae85df4fa2dceb95b0dc04c",
+          "LogsSHA256": "adc4b3587fc18a4d2e69f61842fa2d2167df7c85367d019dacb4b1e8a779b250",
+          "Path": "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl004-network-ack-handler-4"
+        }
+      }
+    },
+    "Linux": {
+      "NativeSource": {
+        "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+        "Files": 75,
+        "Newlines": "LF normalized"
+      },
+      "NetworkFixtureSHA256": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+      "Groups": {
+        "gl004-network-ack-linux-debug": {
+          "Actors": 10,
+          "ResultsSHA256": "f6a4df3108dae0b49f2ec0ede49cba5e93c9b63f12fb2d50d4287d491c33e62a",
+          "LogsSHA256": "c0a65044280d30a08e9d765343684996e3f63ceb73599b6712f47b9dc9a529ee",
+          "Path": "/work/results/gl004-network-ack-linux-debug"
+        },
+        "gl004-network-ack-linux-release": {
+          "Actors": 10,
+          "ResultsSHA256": "17d43c3d070ed009dd95ef0e6d5133adf96d1d4f61c3ad16078d6df117430b58",
+          "LogsSHA256": "302a5a0ca1d85df9fa42e9feac3ca38cc9b8f597249b82382b4c486e7b4b8c00",
+          "Path": "/work/results/gl004-network-ack-linux-release"
+        },
+        "gl004-network-ack-linux-asan": {
+          "Actors": 10,
+          "ResultsSHA256": "d0d8b0efe741f696d99cf882e1f8b8ee94d513d5ec2d263b2efe1c3e4c94d0a9",
+          "LogsSHA256": "54625383b56fb73aa98414cc3244a0a6455f9c963f1a281f5a450a4fd05e8ccf",
+          "Path": "/work/results/gl004-network-ack-linux-asan"
+        }
+      }
+    }
+  },
+  "EffectiveHarnessHashes": {
+    "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+    "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+    "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+    "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+    "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+    "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+    "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+    "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+    "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+    "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+    "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+    "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+    "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+    "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+    "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+    "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+    "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+    "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+    "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+    "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+    "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+    "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+    "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+    "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+  },
+  "HostedRevision": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+  "Hosted": {
+    "Revision": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+    "Runs": {
+      "Core": {
+        "conclusion": "success",
+        "databaseId": 40857805897,
+        "headSha": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+        "jobs": [
+          {
+            "databaseId": 123393095858,
+            "name": "Core (Windows, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857805897/job/123393095858",
+            "startedAt": "2026-10-29T10:28:15Z",
+            "completedAt": "2026-10-29T10:29:21Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Configure production core": "success",
+              "Build ExecutionDomainTests": "success",
+              "Require production regression discovery": "success",
+              "Run production core through CTest": "success",
+              "Retain qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          },
+          {
+            "databaseId": 123393096142,
+            "name": "Core (Linux, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857805897/job/123393096142",
+            "startedAt": "2026-10-29T10:28:15Z",
+            "completedAt": "2026-10-29T10:28:43Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Configure production core": "success",
+              "Build ExecutionDomainTests": "success",
+              "Require production regression discovery": "success",
+              "Run production core through CTest": "success",
+              "Retain qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857805897"
+      },
+      "Native": {
+        "conclusion": "success",
+        "databaseId": 40857806041,
+        "headSha": "040996e7d176bd4427644b14f5b4bf30ac45ce9d",
+        "jobs": [
+          {
+            "databaseId": 123393097280,
+            "name": "Native (Linux, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857806041/job/123393097280",
+            "startedAt": "2026-10-29T10:28:16Z",
+            "completedAt": "2026-10-29T10:39:02Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Record source and dependency identity": "success",
+              "Verify fixture process ownership and failure handling": "success",
+              "Provision verified official Godot 4.7.1": "success",
+              "Configure production native adapter": "success",
+              "Build GodotLuauAdapter": "success",
+              "Expose installed MSVC Debug runtime": "skipped",
+              "Single-player listen dedicated and editor lifecycle": "success",
+              "GL-006 and GL-008 existing network regressions": "success",
+              "GL-020 existing functional animation lifecycle": "success",
+              "GL-004 isolated resource and recovery cases": "success",
+              "Require all native actors and retain identity": "success",
+              "Retain native qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          },
+          {
+            "databaseId": 123393097890,
+            "name": "Native (Windows, Debug)",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857806041/job/123393097890",
+            "startedAt": "2026-10-29T10:28:16Z",
+            "completedAt": "2026-10-29T10:46:50Z",
+            "Steps": {
+              "Set up job": "success",
+              "Run actions/checkout@v4": "success",
+              "Record source and dependency identity": "success",
+              "Verify fixture process ownership and failure handling": "success",
+              "Provision verified official Godot 4.7.1": "success",
+              "Configure production native adapter": "success",
+              "Build GodotLuauAdapter": "success",
+              "Expose installed MSVC Debug runtime": "success",
+              "Single-player listen dedicated and editor lifecycle": "success",
+              "GL-006 and GL-008 existing network regressions": "success",
+              "GL-020 existing functional animation lifecycle": "success",
+              "GL-004 isolated resource and recovery cases": "success",
+              "Require all native actors and retain identity": "success",
+              "Retain native qualification diagnostics": "success",
+              "Post Run actions/checkout@v4": "success",
+              "Complete job": "success"
+            }
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/gmoddev/GodotLuau/actions/runs/40857806041"
+      }
+    },
+    "Artifacts": {
+      "runtime-core-Windows-Debug": {
+        "ID": 12890665366,
+        "SHA256": "341e1210cf05492161c6f41a0e22de292b7763ff649786c6eebc28676d27e6d8",
+        "Bytes": 11693,
+        "Run": 40857805897,
+        "Cases": 66
+      },
+      "runtime-core-Linux-Debug": {
+        "ID": 12889533865,
+        "SHA256": "89b9b9814219b90a2978671bedd93a89f51c0d86fbdebfc6909099d7b5287e4c",
+        "Bytes": 13046,
+        "Run": 40857805897,
+        "Cases": 66
+      },
+      "runtime-native-Linux-Debug": {
+        "ID": 12890736513,
+        "SHA256": "fc9322bbee1550d62cbac065444f42f9bf2c16fc8cf81a7e1bae464bebaf3662",
+        "Bytes": 62694,
+        "Run": 40857806041,
+        "Processes": 36,
+        "SummarySHA256": "6de8caeb765ced8ed4ec82c2ae13a959473a976c0e502ad4592a1270d6c60708",
+        "NativeSource": {
+          "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+          "Files": 75,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+          "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "7dbfdba57dd771e2c24981407b1a4ac2823df83bf0622d98e10808445411dfc8",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992009,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",
+            "Bytes": 76056717,
+            "SHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+            "Executable": "Godot_v4.7.1-stable_linux.x86_64"
+          },
+          "ExecutableSHA256": "32f8d7596c4b41185512b1c49d69f2da3be018fd784a53e349fa92a98a97bcde",
+          "ArchiveSHA256": "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 94,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8
+      },
+      "runtime-native-Windows-Debug": {
+        "ID": 12890159570,
+        "SHA256": "e2d39d31b2711d8ee37453a20eb72081ca35f73e679772b0a52e6e5fc3611114",
+        "Bytes": 58000,
+        "Run": 40857806041,
+        "Processes": 36,
+        "SummarySHA256": "e9aaf6e856465d5a9c83358341a7d00d2cd5f2918aa3ad612073f2c33b3f6380",
+        "NativeSource": {
+          "SHA256": "8037d8046c9136d3dc9736fe06a6308d5b38698c0b4e381b47f4092784d79a7c",
+          "Files": 75,
+          "Newlines": "LF normalized"
+        },
+        "HarnessHashes": {
+          "AnimationIntegration.gd": "1ea3dcf8c180bb3019192e9be932ce36d088d58a41d33a07528dffaffacfaf88",
+          "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+          "CheckCoreCI.py": "3860b2e843bfd323edfd6e75ce764db4938399ac23572ee6f474daceaaf8a91d",
+          "CheckNativeCI.py": "9aedb74b1f9a25b20215aec80e221c3c6090b7e838a9bad237120db89007b876",
+          "CMakeLists.txt": "60c7a1e62d8c588d8c4204d6b91e6b38645c05bcfad2b890d6edb74d44ea8d6e",
+          "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+          "FixtureProcesses.py": "36887ab0fe5ed46342f0cc0f81f9431ba6f3363d56369bf568adfbf94ab9cf1e",
+          "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+          "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+          "Integration.gd": "d28774560c3fa0b396a2632926e73c149f5bbce3b49116eb95e52e0b23a2d401",
+          "NetworkIntegration.gd": "e4eefecefe35df479cf104a5a0d847a2c7b89b4b367855ffc42575cfc67ccdae",
+          "NetworkSecurity.gd": "eb9681b7111c3f1ae83ee8949836bb38e1b12b399135b12ccfaa15bf639ad051",
+          "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+          "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+          "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+          "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+          "RunCoreTests.py": "9702731f1757e132db286018e49a50e53829d8eb6540a966f92e2939d73445dc",
+          "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+          "RunQualification.py": "dc1c4aa39b9341db4963927d20e8425f506388d5fd00d05e4dcefb5222ebd462",
+          "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+          "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+          "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+          "SourceFingerprint.py": "96a240f01c72b0a34de453a755c422437497634ad2cf4193b7c14ace338e7d2b",
+          "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f"
+        },
+        "ExtensionSHA256": "a87940486e9a19d11e6919fb56eb566dfd8625ce0f381c198749ea0900a90c41",
+        "Godot": {
+          "Version": "4.7.1.stable.official.a13da4feb",
+          "SourceRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+          "ReleaseID": 353974774,
+          "Asset": {
+            "AssetID": 476992673,
+            "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip",
+            "Bytes": 84198557,
+            "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+            "Executable": "Godot_v4.7.1-stable_win64.exe"
+          },
+          "ExecutableSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+          "ArchiveSHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
+          "VersionStderr": ""
+        },
+        "VerifiedLogCount": 96,
+        "GL022Markers": 4,
+        "ResourceMarkers": 8
+      }
+    },
+    "Result": "Four successful hosted Debug jobs; all artifact digests, cases, source/harness/engine identities and native log hashes verified"
+  }
+}

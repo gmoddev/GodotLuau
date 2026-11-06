@@ -442,29 +442,21 @@ private:
         for (int i=(int)list.size()-1; i>=0; --i) {
             auto& cb=list[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)){list.erase(list.begin()+i);continue;}
-            lua_State* th=lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L,LUA_REGISTRYINDEX,cb.ref);
-            if(lua_isfunction(cb.main_L,-1)){
-                lua_xmove(cb.main_L,th,1);
+            GLDispatch(cb.ref, [&](lua_State* Thread) -> int {
                 if(arg){
-                    GodotObjectWrapper* w=(GodotObjectWrapper*)lua_newuserdata(th,sizeof(GodotObjectWrapper));
+                    GodotObjectWrapper* w=(GodotObjectWrapper*)lua_newuserdata(Thread,sizeof(GodotObjectWrapper));
                     gow_set(w,arg);
-                    luaL_getmetatable(th,"GodotObject"); lua_setmetatable(th,-2);
-                } else lua_pushnil(th);
-                gl_check_resume(th, GLResume(th,nullptr,1));
-            } else lua_pop(cb.main_L,1);
-            lua_pop(cb.main_L,1);
+                    luaL_getmetatable(Thread,"GodotObject"); lua_setmetatable(Thread,-2);
+                } else lua_pushnil(Thread);
+                return 1;
+            });
         }
     }
     void _fire_noarg(std::vector<LuaCallback>& list) {
         for (int i=(int)list.size()-1; i>=0; --i) {
             auto& cb=list[i];
             if (!cb.active || !GLReferenceAlive(cb.main_L, cb.ref)){list.erase(list.begin()+i);continue;}
-            lua_State* th=lua_newthread(cb.main_L);
-            lua_rawgeti(cb.main_L,LUA_REGISTRYINDEX,cb.ref);
-            if(lua_isfunction(cb.main_L,-1)){lua_xmove(cb.main_L,th,1);gl_check_resume(th,GLResume(th,nullptr,0));}
-            else lua_pop(cb.main_L,1);
-            lua_pop(cb.main_L,1);
+            GLDispatch(cb.ref, [](lua_State*) -> int { return 0; });
         }
     }
 };

@@ -26,8 +26,8 @@ the baseline; preserve IDs when a refactor moves the implementation.
 | --- | --- | --- | --- |
 | GL-001 | P1 | Resolved within stated scope | Live receiver resolution; native ASan lifecycle evidence |
 | GL-002 | P1 | Resolved within stated scope | ObjectID captures; service replacement and pending invoke cleanup |
-| GL-003 | P1 | Verified exposure; boundary needs review | Native file global bypasses higher-level role restrictions |
-| GL-004 | P1 | Verified control gap; impact needs review | No explicit VM sandbox or execution/memory quotas found |
+| GL-003 | P1 | Resolved within ADR-003; integrated and verified | Native file global bypassed higher-level role restrictions |
+| GL-004 | P1 | Integrated and resolved within ADR-002 | Shared-domain sandbox, interruption, allocator/admission limits |
 | GL-005 | P2 | Verified blocking path; boundary needs review | HTTP blocks the calling thread and has no capability gate |
 | GL-006 | P1 | Integrated; resolved within stated scope | Qualified native state/removal sender and receiver-role enforcement |
 | GL-007 | P1 | Verified acceptance; gameplay impact needs review | Character state is relayed without semantic validation |
@@ -114,7 +114,27 @@ criteria are satisfied; this does not qualify every service binding. See
 
 ## GL-003: FileAccess global bypasses DataStore's role guard
 
-**Evidence:** `src/core/luau_script.h:1604-1642` unconditionally installs
+Development on `security/gl-003-filesystem-capabilities` records actual native
+Windows/Linux baseline reproduction and boundary inventory in the
+[work/qualification record](filesystem-capabilities-validation.md).
+Native enforcement at `c3fc544a686b5d43bf67f0f5e864105957c52171` is fixed and
+qualified on that branch. Final six 69-case core configurations, 195 full-native
+actors and four SCons products each with eleven resource/filesystem actors pass.
+Fresh hosted core `40881074709` passes all 69 cases per platform; native
+`40881074701` passes all 39 actors per platform. All four downloaded artifact
+digests, source/harness/engine identities and native log hashes are verified in
+the linked record and manifest. Normal merge
+`5ba96ad0ca74f63ac92910633ba1c0d4fd6050e2` integrates both commits with an
+identical tree. Fresh Windows/Linux Debug/Release core passes 69 cases each and
+Debug native passes all 39 actors per platform. Fresh main core `40970974054`
+passes all 69 cases per platform; native `40970974142` passes all 39 actors per
+platform, including GL-003 filesystem/service fixtures. Four downloaded archive
+digests, exact merge/source/harness/engine identities and every native log hash
+are verified. **Resolved within ADR-003's bounded native-storage authority
+contract.** GL-005/009/017/018, adversarial GL-020, trusted project resources,
+same-credential OS writers and native I/O/allocation limitations remain separate.
+
+**Inherited review evidence:** `src/core/luau_script.h:1604-1642` unconditionally installs
 `_FileAccess.read/write/exists/delete/list`; supplied paths reach FileAccess or
 DirAccess without a native role, capability, or root check.
 `src/core/luau_stdlib.h:627-633` rejects network clients only at the DataStore layer.
@@ -122,7 +142,8 @@ DirAccess without a native role, capability, or root check.
 **Consequence/limits:** A running gameplay script can call the lower-level global
 directly. This is not evidence that a remote player can inject script code, and
 the supported hostile-package boundary is undocumented. OS/platform permissions
-still apply. Security verdict: `needs_review`, rank 1 in that queue.
+still apply. The original triage verdict was `needs_review`, rank 1 in that queue;
+the new controlled native baseline now confirms the local gameplay exposure.
 
 **Fix boundary and closure:** First specify trusted-host versus gameplay grants.
 Enforce grants and canonical root confinement at native entry points, including
@@ -130,9 +151,9 @@ alternate path forms and failure paths. Test denied client/ungranted access,
 absolute/traversal paths, permitted server persistence, and no partial mutation.
 Keep any intentionally trusted host API distinct and explicit.
 
-## GL-004: Explicit VM sandbox and execution limits are absent
+## GL-004: Explicit VM sandbox and execution limits
 
-**Evidence:** `src/core/luau_script.h:960-983` uses `luaL_newstate()` and
+**Inherited evidence:** `src/core/luau_script.h:960-983` uses `luaL_newstate()` and
 `luaL_openlibs()`. Targeted searches of `src/` found no sandbox initialization,
 instruction-interrupt callback installation, or custom VM memory quota. Task and
 callback execution resumes Luau synchronously; importer batching is unrelated.
@@ -146,6 +167,34 @@ limits. No infinite loop or exhaustion test was executed. Security verdict:
 bounded resume/cancellation, and error propagation before implementation. Add
 headless bounded tests for non-yielding work, excessive allocation, denied globals,
 valid tasks, and shutdown. Run failure cases with crash UI suppressed.
+
+**Development status:** `runtime/gl-004-execution-limits`, based on main
+`8aec90252d10f7dcec97e97423ca390467087711`, implements explicit intrinsic/root
+sandbox sealing, private owner environments, shared attempt deadlines, actual
+allocator quotas with terminal domain retirement, admission caps and diagnostics.
+The [policy decision](adr-002-domain-resource-policy.md) distinguishes gameplay
+from trusted bootstrap and preserves GL-003/005 as separate capability issues.
+The [work/validation record](execution-limits-validation.md) and linked manifest
+record six final 66-case core configurations, 180 native actors, four SCons
+products with 32 resource actors, representative default-policy workloads and
+the failures/corrections that led to this source. Implementation `1e201ed` and
+fixture follow-up `040996e` preserve published history. Fresh hosted
+[core 40857805897](https://github.com/gmoddev/GodotLuau/actions/runs/40857805897)
+passes 66 cases on both platforms; fresh
+[native 40857806041](https://github.com/gmoddev/GodotLuau/actions/runs/40857806041)
+passes all 36 actors on both. All downloaded artifact digests, source/harness/
+engine identities and retained native log hashes verify. The initial Windows
+fixture failure remains recorded, with bounded positive-state delivery correction
+and 65 passing follow-up actors across the existing worker configurations/trials.
+**FIXED AND QUALIFIED on this branch**, within the linked resource contract.
+It is not a hostile-script isolation claim. Normal merge `55a9c20` integrates the
+qualified source. Fresh main core `40861479206` passes 66 cases per platform;
+native `40861479365` passes all 36 actors per platform, including resource and
+GL-022 markers. Artifact digests and source/harness/log identities verify.
+**INTEGRATED AND RESOLVED within ADR-002**, with no resource-policy expansion.
+GL-003/005, GL-018 and GL-020 adversarial qualification remain open.
+See the integration record below
+the historical branch evidence in [the work record](execution-limits-validation.md#main-integration).
 
 ## GL-005: HTTP is synchronous and broadly exposed
 

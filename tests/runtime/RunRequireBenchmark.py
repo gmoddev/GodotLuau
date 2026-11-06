@@ -16,6 +16,7 @@ def Main():
     Parser.add_argument("--output", type=Path, required=True)
     Parser.add_argument("--calls", type=int, default=1000000)
     Parser.add_argument("--repeat", type=int, default=7)
+    Parser.add_argument("--resume-ms", type=float, help="Explicit profiling policy; zero disables elapsed limit")
     Args = Parser.parse_args()
     Output = Args.output.resolve()
     if os.name == "nt":
@@ -32,8 +33,11 @@ def Main():
             Metrics = Output / "require-metrics.json"
             Metrics.unlink(missing_ok=True)
             Label = f"require-{Mode}-{Trial}"
+            Extra = [str(Args.calls), str(Metrics)]
+            if Args.resume_ms is not None:
+                Extra.append(str(Args.resume_ms))
             Process = Start(Args.godot.resolve(), Output, "RequireBenchmark.gd", Label,
-                            [str(Args.calls), str(Metrics)], dict(os.environ, GODOT_SILENCE_ROOT_WARNING="1"))
+                            Extra, dict(os.environ, GODOT_SILENCE_ROOT_WARNING="1"))
             Check(Process, time.monotonic() + 90, Output, Label, "[Runtime:RequireBenchmark] PASS")
             Results.append(dict(json.loads(Metrics.read_text()), Mode=Mode, Trial=Trial))
             (Output / "results.json").write_text(json.dumps(Results, indent=2))

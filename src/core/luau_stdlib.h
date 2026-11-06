@@ -18,6 +18,8 @@ static const char* LUAU_STDLIB_CODE = R"LUAU(
 -- Trusted bootstrap captures this hook before any gameplay environment exists.
 local DomainSpawn = _GLDomainSpawn
 _GLDomainSpawn = nil
+local ServiceStorage = _ServiceStorage
+_ServiceStorage = nil
 
 -- ══════════════════════════════════════════════════════════════════════
 --  class(base) — Roblox-style OOP inheritance with setmetatable
@@ -622,10 +624,6 @@ local function _ds_safe_decode(s)
     return ok and r or nil
 end
 
-local function _ds_path(storeName, key)
-    return "user://ds_" .. storeName .. "_" .. tostring(key) .. ".json"
-end
-
 -- En Roblox tocar un DataStore desde el cliente es error. Aquí ademas TODAS las
 -- ventanas del proyecto comparten user://, asi que un cliente escribiendo
 -- pisaria los archivos del servidor. Rol 2 = cliente puro.
@@ -646,8 +644,8 @@ local function _make_datastore(name)
         -- otra instancia podia haber guardado datos nuevos y esta seguiria
         -- devolviendo los viejos sin que nada avisara. La cache queda solo como
         -- respaldo por si el archivo no se puede leer.
-        if _FileAccess then
-            local content = _FileAccess.read(_ds_path(self._name, sk))
+        if ServiceStorage then
+            local content = ServiceStorage.DataRead(self._name, sk)
             if content and content ~= "" then
                 local v = _ds_safe_decode(content)
                 self._cache[sk] = v
@@ -660,10 +658,10 @@ local function _make_datastore(name)
     function store:SetAsync(key, value)
         _ds_assert_server("SetAsync")
         local sk = tostring(key)
-        self._cache[sk] = value
-        if _FileAccess then
-            _FileAccess.write(_ds_path(self._name, sk), _ds_safe_encode(value))
+        if ServiceStorage then
+            ServiceStorage.DataWrite(self._name, sk, _ds_safe_encode(value))
         end
+        self._cache[sk] = value
     end
 
     function store:UpdateAsync(key, transform)
@@ -683,10 +681,10 @@ local function _make_datastore(name)
         _ds_assert_server("RemoveAsync")
         local sk = tostring(key)
         local old = self._cache[sk]
-        self._cache[sk] = nil
-        if _FileAccess then
-            pcall(function() _FileAccess.delete(_ds_path(self._name, sk)) end)
+        if ServiceStorage then
+            ServiceStorage.DataDelete(self._name, sk)
         end
+        self._cache[sk] = nil
         return old
     end
 
@@ -2184,14 +2182,8 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
     local polling = false
     local S = {}
     -- One mailbox per domain VM; local delivery shares its domain subscriptions.
-    local _vmid = tostring((_GL_VM_ID and _GL_VM_ID()) or 0)
-
-    local function _box(topic, who)
-        return "user://msg_" .. topic .. "__" .. who .. ".json"
-    end
     local function _me()
-        local id = game and game.JobId or ""
-        return ((id ~= "" and id) or "local") .. "_" .. _vmid
+        return ServiceStorage.Mailbox()
     end
     local function _deliver(topic, msg)
         local l = topics[topic]
@@ -2200,12 +2192,13 @@ do  -- MessagingService: pub/sub ENTRE INSTANCIAS del mismo coordinador (1.14.16
     end
     -- Lee los buzones de las OTRAS instancias y entrega lo que no se haya visto.
     local function _poll()
-        if not _FileAccess or not _FileAccess.list then return end
+        if not ServiceStorage.Enabled() then return end
         local mine = _me()
-        for _, fname in ipairs(_FileAccess.list("user://")) do
-            local topic, who = string.match(fname, "^msg_(.+)__(.+)%.json$")
-            if topic and who and who ~= mine and topics[topic] then
-                local raw = _FileAccess.read("user://" .. fname)
+        for topic in pairs(topics) do
+        for _, who in ipairs(ServiceStorage.MessageList(topic)) do
+            local fname = "msg_" .. topic .. "__" .. who .. ".json"
+            if who ~= mine then
+                local raw = ServiceStorage.MessageRead(topic, who)
                 local ok, list = pcall(function() return _JSON and _JSON.decode(raw) end)
                 if ok and type(list) == "table" then
 )LUAU"
@@ -2227,6 +2220,7 @@ R"LUAU(                    local mark = topic .. "|" .. fname
                 end
             end
         end
+        end
     end
     local function _ensure_polling()
         if polling then return end
@@ -2240,19 +2234,20 @@ R"LUAU(                    local mark = topic .. "|" .. fname
     end
 
     function S:SubscribeAsync(topic, cb)
+        ServiceStorage.Topic(topic)
         if not topics[topic] then topics[topic] = _gl_signal() end
         local Connection = topics[topic]:Connect(cb)
         _ensure_polling()
         return Connection
     end
     function S:PublishAsync(topic, message)
+        ServiceStorage.Topic(topic)
         local msg = { Data = message, Sent = os.time() }
-        _deliver(topic, msg)   -- entrega local inmediata (como antes)
+        if not ServiceStorage.Enabled() then _deliver(topic, msg); return end
         -- ...y dejarlo en MI buzon para que lo lean las otras instancias.
-        if not (_FileAccess and _JSON) then return end
-        local path = _box(topic, _me())
+        if not _JSON then return end
         local list = {}
-        local raw = _FileAccess.read(path)
+        local raw = ServiceStorage.MessageRead(topic, _me())
         if raw and raw ~= "" then
             local ok, prev = pcall(_JSON.decode, raw)
             if ok and type(prev) == "table" then list = prev end
@@ -2262,7 +2257,8 @@ R"LUAU(                    local mark = topic .. "|" .. fname
         table.insert(list, { seq = seq, Data = message, Sent = msg.Sent })
         -- Solo se guarda una cola corta: es un buzon, no un historial.
         while #list > 64 do table.remove(list, 1) end
-        pcall(function() _FileAccess.write(path, _JSON.encode(list)) end)
+        ServiceStorage.MessageWrite(topic, _JSON.encode(list))
+        _deliver(topic, msg)
     end
     _G["__SVC_MessagingService"] = S
 end
@@ -2274,17 +2270,16 @@ do  -- MemoryStoreService: mapas/colas COMPARTIDOS entre instancias (1.14.16)
     -- comparten, con expiracion real (el MemoryStore de Roblox es efimero).
     local _maps = {}   -- name -> mapa (uno por nombre, como Roblox)
 
-    local function _path(name) return "user://mem_" .. name .. ".json" end
     local function _read(name)
-        if not (_FileAccess and _JSON) then return {} end
-        local raw = _FileAccess.read(_path(name))
+        if not _JSON then return {} end
+        local raw = ServiceStorage.MemoryRead(name)
         if not raw or raw == "" then return {} end
         local ok, d = pcall(_JSON.decode, raw)
         return (ok and type(d) == "table") and d or {}
     end
     local function _write(name, d)
-        if not (_FileAccess and _JSON) then return end
-        pcall(function() _FileAccess.write(_path(name), _JSON.encode(d)) end)
+        if not _JSON then return end
+        ServiceStorage.MemoryWrite(name, _JSON.encode(d))
     end
     local function _alive(e)
         return e ~= nil and (e.exp == nil or e.exp == 0 or e.exp > os.time())

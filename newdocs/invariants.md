@@ -26,11 +26,16 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 - Client/server context describes execution, not a privilege grant. Check native
   operations at the boundary rather than relying on a higher-level wrapper or
-  the name/visibility of a global. Gap: GL-003.
+  the name/visibility of a global. Integrated GL-003 implements the bounded native
+  storage contract in [ADR-003](adr-003-native-storage-authority.md); qualification
+  and integration status remain in the issue ledger.
 - Define supported script trust explicitly before advertising sandboxing.
   Lower-trust script support requires restricted globals, explicit capabilities,
   confined filesystem roots, bounded input/output, cancellation, and accountable
-  execution/memory limits. Gaps: GL-003, GL-004, GL-005.
+  execution/memory limits. Integrated resource controls follow ADR-002;
+  native storage authority follows ADR-003 on main; HTTP capability
+  and scheduling remain GL-005. Trusted project assets are not hostile-package
+  isolation or a race-resistant ResourceLoader sandbox.
 - One VM exists per applicable Server/Client domain in a running game process;
   executable scripts must not allocate individual VMs or mix domain authority.
   Script/module environments retain their own identity and ordinary globals;
@@ -48,6 +53,19 @@ the inherited runtime already satisfies them. Baseline gaps link to
   within a running callback. GL-014's source-qualification evidence is recorded;
   bounded remaining platform gaps are GL-017/GL-018. GL-019's measured
   optimizations are integrated; retained task-creation costs remain documented.
+- Gameplay entry, marshalling and resumed execution use same-state protected VM
+  boundaries. Nested Server/Client calls inherit active ancestor time/count
+  constraints; catching an inner error must not reset an active attempt.
+- Allocator accounting/quota applies to requested VM bytes, including bootstrap,
+  shared modules and registry roots. Its context remains valid through lua_close;
+  it performs no Lua calls, throwing operations or reentrant container allocation.
+- Memory rejection remains latched through caught errors and disabled timers.
+  Resource exhaustion retires that domain at a protected boundary, invalidates
+  future work and does not close a currently executing VM or restart it.
+- Nonterminal admission rejection does not retain excess work or cancel a valid
+  previous owner before a replacement is admitted. Cancelled records and dead tokens
+  remain bounded until safe reaping/GC. Error reporting does not allocate Lua
+  strings outside protection. See [ADR-002](adr-002-domain-resource-policy.md).
 
 ## Multiplayer authority
 

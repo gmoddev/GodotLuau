@@ -27,7 +27,7 @@ game:SetAttribute('Done', true)
     ScriptNode("ServerScript", "Caller", Source, Game)
     while not Game.get_meta("Done", false): await process_frame
     var File := FileAccess.open(Output, FileAccess.WRITE)
-    File.store_string(JSON.stringify({"Calls": Count, "ColdMs": Game.get_meta("ColdMs"), "HotMs": Game.get_meta("HotMs")}))
+    File.store_string(JSON.stringify({"Calls": Count, "ColdMs": Game.get_meta("ColdMs"), "HotMs": Game.get_meta("HotMs"), "Resources": ResourceStats()}))
     File.close()
     Game.queue_free()
     await process_frame

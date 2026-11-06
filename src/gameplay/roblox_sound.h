@@ -75,6 +75,7 @@ class RobloxSound : public Node {
 
         // exists() antes de load() evita el error rojo del cargador cuando la
         // ruta simplemente no esta: preferimos un aviso propio y legible.
+        if (!GLProjectResourcePath(src_path)) return;
         ResourceLoader* rl = ResourceLoader::get_singleton();
         if (!rl || !rl->exists(src_path, "AudioStream")) {
             UtilityFunctions::print("[Sound] No se encontro el audio: ", sound_id);
