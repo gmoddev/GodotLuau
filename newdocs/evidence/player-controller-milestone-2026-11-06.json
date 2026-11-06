@@ -1,0 +1,699 @@
+{
+  "Schema": 1,
+  "Scope": "Functional milestone; complete hosted/regression qualification pending",
+  "BaseMain": "9ef59d12dbfbd8b1a695e09c993760b5b458a375",
+  "Build": {
+    "Source": {
+      "SHA256": "2278df21b72670c189c6206a5a49582a50d4cd835448f3f0708629ae0fd7d52e",
+      "Files": 101,
+      "Newlines": "LF normalized"
+    },
+    "Binary": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\runtime-msvc-release\\godot_luau.dll",
+    "SHA256": "6012efd287e17b9242c758a883f2cd1c052766652854e2a2cd8d27f3fc9a0043"
+  },
+  "Native": {
+    "Actors": 7,
+    "Transport": "ENet",
+    "Evidence": [
+      {
+        "Cases": [
+          {
+            "Label": "load production extension",
+            "Passed": true
+          },
+          {
+            "Label": "Native default and grounded existing body",
+            "Passed": true
+          },
+          {
+            "Label": "default native hardware movement remains compatible",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "Scripted mode owns a live local lease",
+            "Passed": true
+          },
+          {
+            "Label": "semantic movement controls actual Player.Character",
+            "Passed": true
+          },
+          {
+            "Label": "scripted sprint uses native multiplier",
+            "Passed": true
+          },
+          {
+            "Label": "scripted grounded jump uses native physics",
+            "Passed": true
+          },
+          {
+            "Label": "scripted jump falls and lands",
+            "Passed": true
+          },
+          {
+            "Label": "custom runtime jump binding",
+            "Passed": true
+          },
+          {
+            "Label": "old jump binding cannot compete through native polling",
+            "Passed": true
+          },
+          {
+            "Label": "remapped jump reaches native controller",
+            "Passed": true
+          },
+          {
+            "Label": "GUI focus stops an already held gameplay action",
+            "Passed": true
+          },
+          {
+            "Label": "GUI release requires fresh semantic admission",
+            "Passed": true
+          },
+          {
+            "Label": "fresh input resumes after GUI focus",
+            "Passed": true
+          },
+          {
+            "Label": "semantic gamepad stick controls actual Character",
+            "Passed": true
+          },
+          {
+            "Label": "gamepad disconnection leaves neutral Character intent",
+            "Passed": true
+          },
+          {
+            "Label": "native focus loss clears held Character input",
+            "Passed": true
+          },
+          {
+            "Label": "focus restoration does not rearm held input",
+            "Passed": true
+          },
+          {
+            "Label": "scene pause cancels semantic movement before resuming",
+            "Passed": true
+          },
+          {
+            "Label": "menu context transition",
+            "Passed": true
+          },
+          {
+            "Label": "scripted menu has no native hardware fallback",
+            "Passed": true
+          },
+          {
+            "Label": "native UI resumes gameplay context",
+            "Passed": true
+          },
+          {
+            "Label": "semantic mouse rotates existing camera without native duplication",
+            "Passed": true
+          },
+          {
+            "Label": "actual camera-relative steering",
+            "Passed": true
+          },
+          {
+            "Label": "mode changes preserve Model body and Animator identity",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Native restoration",
+            "Passed": true
+          },
+          {
+            "Label": "Native to Scripted clears held hardware movement",
+            "Passed": true
+          },
+          {
+            "Label": "controller replacement never replaces the Character body",
+            "Passed": true
+          },
+          {
+            "Label": "LeaseA",
+            "Passed": true
+          },
+          {
+            "Label": "LeaseB",
+            "Passed": true
+          },
+          {
+            "Label": "old controller owner cannot stop its replacement",
+            "Passed": true
+          },
+          {
+            "Label": "one scripted Move sample does not persist across physics ticks",
+            "Passed": true
+          },
+          {
+            "Label": "ServerControllerRejected",
+            "Passed": true
+          },
+          {
+            "Label": "controller retirement is dormant Scripted mode",
+            "Passed": true
+          },
+          {
+            "Label": "owner retirement cancels commands queued earlier in the same tick",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "death retires scripted input before lifecycle callbacks",
+            "Passed": true
+          },
+          {
+            "Label": "respawn replaces native life and reattaches the Luau controller",
+            "Passed": true
+          },
+          {
+            "Label": "owner teardown leaves Scripted mode neutral without hardware fallback",
+            "Passed": true
+          }
+        ],
+        "Complete": true,
+        "Graphical": false,
+        "Index": 0,
+        "Mode": "Local",
+        "Result": "PASS",
+        "Role": "server"
+      },
+      {
+        "Cases": [
+          {
+            "Label": "load production extension",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "scripted movement reaches authoritative ENet observer",
+            "Passed": true
+          },
+          {
+            "Label": "movement preserves native body and server-owned health",
+            "Passed": true
+          },
+          {
+            "Label": "client controller selection does not replicate authority configuration",
+            "Passed": true
+          },
+          {
+            "Label": "scripted mode cannot grant health or speed authority",
+            "Passed": true
+          },
+          {
+            "Label": "server correction advances existing Character authority epoch",
+            "Passed": true
+          },
+          {
+            "Label": "multiplayer respawn replaces one native life",
+            "Passed": true
+          },
+          {
+            "Label": "disconnect retires authoritative peer Character state",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "reconnect obtains a fresh native peer and grant",
+            "Passed": true
+          },
+          {
+            "Label": "observer remains connected through other peer replacement",
+            "Passed": true
+          }
+        ],
+        "Complete": true,
+        "Graphical": false,
+        "Index": 0,
+        "Mode": "Listen",
+        "Result": "PASS",
+        "Role": "server"
+      },
+      {
+        "Cases": [
+          {
+            "Label": "load production extension",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet client scripted grounded jump",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet client scripted landing",
+            "Passed": true
+          },
+          {
+            "Label": "OtherCharacterRejected",
+            "Passed": true
+          },
+          {
+            "Label": "network controller preserves owned Character identity",
+            "Passed": true
+          },
+          {
+            "Label": "trusted correction preserves same local scripted controller",
+            "Passed": true
+          },
+          {
+            "Label": "CharacterAdded reattaches scripted controller after network respawn",
+            "Passed": true
+          }
+        ],
+        "Complete": true,
+        "Graphical": false,
+        "Index": 1,
+        "Mode": "Listen",
+        "Result": "PASS",
+        "Role": "client"
+      },
+      {
+        "Cases": [
+          {
+            "Label": "load production extension",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "OtherCharacterRejected",
+            "Passed": true
+          },
+          {
+            "Label": "network controller preserves owned Character identity",
+            "Passed": true
+          },
+          {
+            "Label": "disconnect neutralizes held intent without Native fallback",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "fresh controller attaches to reconnected native transport",
+            "Passed": true
+          }
+        ],
+        "Complete": true,
+        "Graphical": false,
+        "Index": 2,
+        "Mode": "Listen",
+        "Result": "PASS",
+        "Role": "client"
+      },
+      {
+        "Cases": [
+          {
+            "Label": "load production extension",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "scripted movement reaches authoritative ENet observer",
+            "Passed": true
+          },
+          {
+            "Label": "movement preserves native body and server-owned health",
+            "Passed": true
+          },
+          {
+            "Label": "client controller selection does not replicate authority configuration",
+            "Passed": true
+          },
+          {
+            "Label": "scripted mode cannot grant health or speed authority",
+            "Passed": true
+          },
+          {
+            "Label": "server correction advances existing Character authority epoch",
+            "Passed": true
+          },
+          {
+            "Label": "multiplayer respawn replaces one native life",
+            "Passed": true
+          },
+          {
+            "Label": "disconnect retires authoritative peer Character state",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "reconnect obtains a fresh native peer and grant",
+            "Passed": true
+          },
+          {
+            "Label": "observer remains connected through other peer replacement",
+            "Passed": true
+          }
+        ],
+        "Complete": true,
+        "Graphical": false,
+        "Index": 0,
+        "Mode": "Dedicated",
+        "Result": "PASS",
+        "Role": "server"
+      },
+      {
+        "Cases": [
+          {
+            "Label": "load production extension",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet client scripted grounded jump",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet client scripted landing",
+            "Passed": true
+          },
+          {
+            "Label": "OtherCharacterRejected",
+            "Passed": true
+          },
+          {
+            "Label": "network controller preserves owned Character identity",
+            "Passed": true
+          },
+          {
+            "Label": "trusted correction preserves same local scripted controller",
+            "Passed": true
+          },
+          {
+            "Label": "CharacterAdded reattaches scripted controller after network respawn",
+            "Passed": true
+          }
+        ],
+        "Complete": true,
+        "Graphical": false,
+        "Index": 1,
+        "Mode": "Dedicated",
+        "Result": "PASS",
+        "Role": "client"
+      },
+      {
+        "Cases": [
+          {
+            "Label": "load production extension",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "OtherCharacterRejected",
+            "Passed": true
+          },
+          {
+            "Label": "network controller preserves owned Character identity",
+            "Passed": true
+          },
+          {
+            "Label": "disconnect neutralizes held intent without Native fallback",
+            "Passed": true
+          },
+          {
+            "Label": "functional carrier throttle profile configured",
+            "Passed": true
+          },
+          {
+            "Label": "actual Luau PlayerController attached",
+            "Passed": true
+          },
+          {
+            "Label": "fresh controller attaches to reconnected native transport",
+            "Passed": true
+          }
+        ],
+        "Complete": true,
+        "Graphical": false,
+        "Index": 2,
+        "Mode": "Dedicated",
+        "Result": "PASS",
+        "Role": "client"
+      }
+    ]
+  },
+  "Rendered": {
+    "Cases": [
+      {
+        "Label": "load production extension",
+        "Passed": true
+      },
+      {
+        "Label": "Native default and grounded existing body",
+        "Passed": true
+      },
+      {
+        "Label": "default native hardware movement remains compatible",
+        "Passed": true
+      },
+      {
+        "Label": "actual Luau PlayerController attached",
+        "Passed": true
+      },
+      {
+        "Label": "Scripted mode owns a live local lease",
+        "Passed": true
+      },
+      {
+        "Label": "actual R6 animation progresses under scripted movement",
+        "Passed": true
+      },
+      {
+        "Label": "rendered scripted walking evidence",
+        "Passed": true
+      },
+      {
+        "Label": "semantic movement controls actual Player.Character",
+        "Passed": true
+      },
+      {
+        "Label": "scripted sprint uses native multiplier",
+        "Passed": true
+      },
+      {
+        "Label": "scripted grounded jump uses native physics",
+        "Passed": true
+      },
+      {
+        "Label": "scripted jump falls and lands",
+        "Passed": true
+      },
+      {
+        "Label": "custom runtime jump binding",
+        "Passed": true
+      },
+      {
+        "Label": "old jump binding cannot compete through native polling",
+        "Passed": true
+      },
+      {
+        "Label": "remapped jump reaches native controller",
+        "Passed": true
+      },
+      {
+        "Label": "GUI focus stops an already held gameplay action",
+        "Passed": true
+      },
+      {
+        "Label": "GUI release requires fresh semantic admission",
+        "Passed": true
+      },
+      {
+        "Label": "fresh input resumes after GUI focus",
+        "Passed": true
+      },
+      {
+        "Label": "semantic gamepad stick controls actual Character",
+        "Passed": true
+      },
+      {
+        "Label": "gamepad disconnection leaves neutral Character intent",
+        "Passed": true
+      },
+      {
+        "Label": "native focus loss clears held Character input",
+        "Passed": true
+      },
+      {
+        "Label": "focus restoration does not rearm held input",
+        "Passed": true
+      },
+      {
+        "Label": "scene pause cancels semantic movement before resuming",
+        "Passed": true
+      },
+      {
+        "Label": "menu context transition",
+        "Passed": true
+      },
+      {
+        "Label": "scripted menu has no native hardware fallback",
+        "Passed": true
+      },
+      {
+        "Label": "native UI resumes gameplay context",
+        "Passed": true
+      },
+      {
+        "Label": "semantic mouse rotates existing camera without native duplication",
+        "Passed": true
+      },
+      {
+        "Label": "actual camera-relative steering",
+        "Passed": true
+      },
+      {
+        "Label": "mode changes preserve Model body and Animator identity",
+        "Passed": true
+      },
+      {
+        "Label": "explicit Native restoration",
+        "Passed": true
+      },
+      {
+        "Label": "Native to Scripted clears held hardware movement",
+        "Passed": true
+      },
+      {
+        "Label": "controller replacement never replaces the Character body",
+        "Passed": true
+      },
+      {
+        "Label": "LeaseA",
+        "Passed": true
+      },
+      {
+        "Label": "LeaseB",
+        "Passed": true
+      },
+      {
+        "Label": "old controller owner cannot stop its replacement",
+        "Passed": true
+      },
+      {
+        "Label": "one scripted Move sample does not persist across physics ticks",
+        "Passed": true
+      },
+      {
+        "Label": "ServerControllerRejected",
+        "Passed": true
+      },
+      {
+        "Label": "controller retirement is dormant Scripted mode",
+        "Passed": true
+      },
+      {
+        "Label": "owner retirement cancels commands queued earlier in the same tick",
+        "Passed": true
+      },
+      {
+        "Label": "actual Luau PlayerController attached",
+        "Passed": true
+      },
+      {
+        "Label": "death retires scripted input before lifecycle callbacks",
+        "Passed": true
+      },
+      {
+        "Label": "respawn replaces native life and reattaches the Luau controller",
+        "Passed": true
+      },
+      {
+        "Label": "owner teardown leaves Scripted mode neutral without hardware fallback",
+        "Passed": true
+      },
+      {
+        "Label": "actual rendered Player.Character evidence",
+        "Passed": true
+      }
+    ],
+    "Complete": true,
+    "Graphical": true,
+    "Index": 0,
+    "Mode": "Local",
+    "Result": "PASS",
+    "Role": "server"
+  },
+  "RenderedFinalAttempt": "graphical-release-v2 (same 43 assertions; lighting/reference markers corrected after image inspection)",
+  "WorkerRoot": "C:/Sandbox/Codex/ScriptedCharacter20261106",
+  "CorrectedDiagnosticUAF": "player-controller-diagnostic-uaf-2026-11-06.log",
+  "RetainedMixedProfileFailure": "Debug extension / older admitted Release host exits 0xC0000374 after PASS; not an accepted profile",
+  "Pending": [
+    "Affected full regressions",
+    "Current matching full-native sanitizer matrix",
+    "Windows/Linux hosted core/native CI"
+  ],
+  "Limitations": [
+    "Synthetic events and offscreen Windows rendering only; physical devices and actual OS capture unqualified",
+    "No local Linux runtime available on permitted workers",
+    "Windows LSan unsupported; admitted host and existing GL-017/018 limits retained",
+    "Controller branch is not merged; release/updater distribution remains disabled"
+  ]
+}

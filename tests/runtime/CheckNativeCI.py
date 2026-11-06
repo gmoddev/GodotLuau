@@ -22,6 +22,7 @@ def Main():
         raise ValueError('GL-029 admitted host runtime qualification missing or failed')
     Expected = {
         'input': ['input-actions', 'input-controller', 'input-demo'],
+        'controller': [f'controller-{Mode}-{Role}' for Mode in ['Local','Listen','Dedicated'] for Role in (['server'] if Mode=='Local' else ['server','client1','client2'])],
         'regression': ['integration-0', 'Listen-0-listen', *[f'{Mode}-0-{Role}' for Mode in ['Dedicated', 'Editor'] for Role in ['server', 'client1', 'client2']]],
         'security': [f'security-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Handler'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
         'animation': [f'animation-{Mode}-{Role}' for Mode in ['Local', 'Listen', 'Dedicated', 'Editor'] for Role in (['server'] if Mode == 'Local' else ['server', 'client1', 'client2'])],
@@ -44,6 +45,21 @@ def Main():
         if [Result['Label'] for Result in Results] != Labels or any(Result['Exit'] != 0 for Result in Results):
             raise ValueError('Missing or failed native fixture results: ' + Name)
         Groups[Name] = Results
+    Controllers = json.loads((Args.output/'controller/controller-evidence.json').read_text())
+    if Controllers.get('Actors') != 7 or Controllers.get('Transport') != 'ENet' or len(Controllers.get('Evidence', [])) != 7:
+        raise ValueError('Player.Character controller actors incomplete')
+    for Actor in Controllers['Evidence']:
+        Labels = {Case['Label'] for Case in Actor.get('Cases', []) if Case.get('Passed')}
+        Required = {'load production extension'}
+        if Actor['Mode'] == 'Local':
+            Required |= {'default native hardware movement remains compatible', 'GUI focus stops an already held gameplay action', 'old controller owner cannot stop its replacement', 'respawn replaces native life and reattaches the Luau controller', 'owner teardown leaves Scripted mode neutral without hardware fallback'}
+        elif Actor['Role'] == 'server':
+            Required |= {'scripted movement reaches authoritative ENet observer', 'client controller selection does not replicate authority configuration', 'multiplayer respawn replaces one native life', 'disconnect retires authoritative peer Character state'}
+        else:
+            Required |= {'network controller preserves owned Character identity', 'OtherCharacterRejected'}
+            Required.add('CharacterAdded reattaches scripted controller after network respawn' if Actor['Index'] == 1 else 'disconnect neutralizes held intent without Native fallback')
+        if not Actor.get('Complete') or Actor.get('Result') != 'PASS' or not Required <= Labels or any(not Case.get('Passed') for Case in Actor.get('Cases', [])):
+            raise ValueError('Player.Character controller assertions missing or failed')
     Remote = json.loads((Args.output / 'remote/native-evidence.json').read_text())
     Functions = json.loads((Args.output / 'remote/function-evidence.json').read_text())
     Replication = json.loads((Args.output / 'remote/replication-evidence.json').read_text())
@@ -195,11 +211,12 @@ def Main():
         'RemoteFunctions': Functions,
         'ReplicationNative': Replication,
         'RelevanceNative': Relevance,
+        'PlayerController': Controllers,
         'AnimationAuthority': AnimationAuthority,
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
-        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']} | {'Controller.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()},
+        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']} | {'PlayerController.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), 'Controller.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
         'Scope': 'Native fixtures including actual GL-020 ENet authority/handler/life cases, GL-023 public HTTP/JSON/native UUID, Model Character V2 and inherited GL-007 authority; sanitizer configuration and remaining qualification limits are recorded by the invoking matrix'

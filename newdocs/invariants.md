@@ -23,6 +23,15 @@ independent body, occupy bounded slots and execute at the native physics fence;
 observation setters cannot bypass them. Frame and physics readers must not drain
 one another's relative input samples.
 
+Optional Player.Character control (ADR-013) supplies local intent to the existing
+Character V2 body, never a second motor or arbitrary physics capability. Native
+is the default. Scripted commands require the exact live native local Character,
+current Client execution owner, private lease generation and existing transport
+identity. Consume bounded intent once per physics tick; retain server-owned
+configuration and pose admission. Retirement must neutralize intent and owned
+capture without falling back to held hardware. New lives/clones default Native.
+Retained old commands cannot control a replacement lease or Character life.
+
 - Persistent script-visible references to Godot objects use stable ObjectIDs and
   resolve/check type and liveness immediately before use. A non-null raw pointer
   is not a liveness check. Closure lifetime must not exceed native owner lifetime

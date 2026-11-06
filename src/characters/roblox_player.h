@@ -65,6 +65,8 @@ class RobloxPlayer : public CharacterBody3D {
 
 private:
     bool LocalControl = true;
+    bool ScriptedInput = false, ScriptedCaptured = false;
+    int ScriptedPreviousMouseMode = 0;
     GLCharacterNodeRef<Node3D> pivot_h;  // Horizontal pivot (mouse X) / Pivote horizontal (mouse X)
     GLCharacterNodeRef<Node3D> pivot_v;  // Vertical pivot (mouse Y) / Pivote vertical (mouse Y)
     GLCharacterNodeRef<SpringArm3D> spring_arm; // Prevents camera clipping through walls / Evita que la cámara atraviese paredes
@@ -241,6 +243,43 @@ protected:
 public:
     void SetLocalControl(bool Enabled) { LocalControl = Enabled; }
     bool IsLocalControl() const { return LocalControl; }
+    // Scripted Character control supplies intent; this body keeps camera follow,
+    // occlusion and fade, but does not also consume physical look/mobile events.
+    void SetScriptedInput(bool Enabled) {
+        if (ScriptedInput==Enabled) return;
+        ScriptedInput=Enabled;
+        mouse_move_drag=mouse_look_drag=false; move_touch=look_touch=-1;
+        gl_mobile().move=Vector2(); gl_mobile().jump=false;
+        if (touch_ui) touch_ui->set_visible(!Enabled);
+    }
+    void ReleaseScriptedCapture() {
+        const bool Owned=ScriptedCaptured; ScriptedCaptured=false;
+        if (Owned && is_inside_tree() && camera && get_viewport()->get_camera_3d()==camera.Get() &&
+            Input::get_singleton()->get_mouse_mode()==Input::MOUSE_MODE_CAPTURED)
+            Input::get_singleton()->set_mouse_mode(Input::MouseMode(ScriptedPreviousMouseMode));
+    }
+    bool CaptureScriptedMouse(bool Capture) {
+        if (!Capture) { ReleaseScriptedCapture(); return true; }
+        if (!LocalControl || !ScriptedInput || !camera || get_viewport()->get_camera_3d()!=camera.Get()) return false;
+        if (!ScriptedCaptured) {
+            ScriptedPreviousMouseMode=Input::get_singleton()->get_mouse_mode(); ScriptedCaptured=true;
+        }
+        Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
+        return true;
+    }
+    bool RotateScriptedCamera(Vector2 Delta) {
+        if (!LocalControl || !ScriptedInput || !pivot_h || !pivot_v || !camera ||
+            get_viewport()->get_camera_3d()!=camera.Get()) return false;
+        Vector3 Horizontal=pivot_h->get_rotation();
+        Vector3 Vertical=pivot_v->get_rotation();
+        if (!Horizontal.is_finite() || !Vertical.is_finite()) return false;
+        Horizontal.y=std::remainder(double(Horizontal.y)-Delta.x,6.283185307179586);
+        pivot_h->set_rotation(Horizontal);
+        Vertical.x=Math::clamp(Vertical.x-Delta.y,-1.4f,1.4f);
+        pivot_v->set_rotation(Vertical);
+        return true;
+    }
+
     // ── Camera / Mouse ─────────────────────────────────────────────
     void  set_camera_mode(int m)       { camera_mode = Math::clamp(m, 1, 3); }
     int   get_camera_mode() const      { return camera_mode; }
@@ -420,7 +459,7 @@ public:
 
     // ── Input: Mouse ───────────────────────────────────────────────
     void _input(const Ref<InputEvent>& p_event) override {
-        if (!LocalControl) return;
+        if (!LocalControl || ScriptedInput) return;
         if (Engine::get_singleton()->is_editor_hint()) return;
         if (gl_freecam().active) return;   // Vista de Servidor: la cámara libre maneja el input
         if (gl_menu_open()) return;        // Menú abierto: la rueda desplaza el menú, no la cámara
@@ -568,7 +607,7 @@ public:
 
         // ── Gamepad: stick derecho rota la camara ──────────────────
         Input* gp_input = Input::get_singleton();
-        if (pivot_v) {
+        if (!ScriptedInput && pivot_v) {
             Vector2 rs(gp_input->get_joy_axis(0, JOY_AXIS_RIGHT_X),
                        gp_input->get_joy_axis(0, JOY_AXIS_RIGHT_Y));
             if (rs.length() > 0.15f) {
@@ -579,7 +618,7 @@ public:
             }
         }
         // Boton de salto tactil → estado compartido que lee el Humanoid
-        if (jump_btn) gl_mobile().jump = jump_btn->is_pressed();
+        if (!ScriptedInput && jump_btn) gl_mobile().jump = jump_btn->is_pressed();
         // Joystick visual: la perilla sigue al movimiento actual
         _update_knob();
 
@@ -636,7 +675,7 @@ public:
         if (was_fp && !fp_now
             && gp_input->get_mouse_mode() == Input::MOUSE_MODE_CAPTURED
             && !gp_input->is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)) {
-            gp_input->set_mouse_mode(Input::MOUSE_MODE_VISIBLE);
+            if (!ScriptedInput) gp_input->set_mouse_mode(Input::MOUSE_MODE_VISIBLE);
         }
         was_fp = fp_now;
 

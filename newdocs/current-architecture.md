@@ -17,6 +17,17 @@ replication and reference admission; no protocol or Character controller is
 replaced. [Performance evidence](input-action-performance.md) separates the
 evaluator, real event routing and callback publication costs.
 
+On `codex/scripted-character-control`, the optional
+[Character controller](player-character-control.md) supplies bounded local intent
+to the existing Character V2 body. `src/core/gl_character_controller.cpp` owns a
+script/generation lease checked against the exact native Player.Character and
+current transport. Scripted mode gates native hardware movement/look polling;
+Native remains the default. The existing physics, Animator, health and protocol
+admission paths remain authoritative. [ADR-013](adr-013-scripted-character-control.md)
+defines dormant retirement and explicit switching; the
+[journal](player-controller-development.md) distinguishes implemented source from
+completed qualification.
+
 GL-018's development branch qualifies the admitted matching headless sanitizer
 hosts and production extension at `46427d0`: Windows ASan and Linux ASan/LSan each
 pass 80 core cases and 110 native actors. See [closure and retained limits](gl018-closure.md).
