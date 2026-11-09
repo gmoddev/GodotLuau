@@ -89,10 +89,11 @@ local function Attach(Character)
             else Detach(false) end
             return
         end
-        local Enabled = not MenuOpen and Current.ControllerInputEnabled
+        local Enabled = not MenuOpen and not game:GetAttribute("PlayerControllerSuspended") and Current.ControllerInputEnabled
         if Gameplay.Enabled ~= Enabled then
             Gameplay.Enabled = Enabled
             Current:Move(Vector3.new())
+            if not Enabled then Current:CaptureMouse(false) end
             return -- do not reuse a sample from before this context transition
         end
         if not Enabled then return end
@@ -164,7 +165,7 @@ Connect(Run.RenderStepped, function(Delta)
     if game:GetAttribute("PlayerControllerReplaceRequested") then
         game:SetAttribute("PlayerControllerReplaceRequested", false); Replace()
     end
-    if not Current or not Current.ControllerActive or MenuOpen or not Current.ControllerInputEnabled then return end
+    if not Current or not Current.ControllerActive or MenuOpen or game:GetAttribute("PlayerControllerSuspended") or not Current.ControllerInputEnabled then return end
     local Pad = PadLook:GetValue()
     local Mouse = Capture:GetValue() and MouseLook:GetValue() or Vector2.new()
     Current:RotateCamera(Mouse + Pad * (1.8 * math.min(Delta, 0.1)))

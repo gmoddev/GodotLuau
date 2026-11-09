@@ -15,6 +15,8 @@ local Reload = Gameplay:AddAction("Reload")
 Reload:AddBinding(Enum.KeyCode.R)
 local Impulse = Gameplay:AddAction("Impulse")
 Impulse:AddBinding(Enum.KeyCode.P)
+local Cloth = Gameplay:AddAction("Cloth")
+Cloth:AddBinding(Enum.KeyCode.O)
 local LastShot = -1
 local LastState = Network:GetConnectionState()
 local function Send(Action, Value)
@@ -22,11 +24,16 @@ local function Send(Action, Value)
 end
 game.ReplicatedStorage.State.OnClientEvent:Connect(function(Encoded)
     Snapshot = Http:JSONDecode(Encoded)
+    game:SetAttribute("PlayerControllerSuspended", Snapshot.Phase ~= "Active")
     game:SetAttribute("ClientSnapshot", Encoded)
 end)
 Interact.Pressed:Connect(function() Send("Interact") end)
 Reload.Pressed:Connect(function() Send("Reload") end)
 Impulse.Pressed:Connect(function() Send("Impulse") end)
+Cloth.Pressed:Connect(function()
+    -- Decorative local physics, not gameplay authority or network vertex state.
+    game:SetAttribute("ClothReleaseRequested", true)
+end)
 Run.RenderStepped:Connect(function()
     if Players.LocalPlayer then game:SetAttribute("LocalUserId", Players.LocalPlayer.UserId) end
     local C = Players.LocalPlayer and Players.LocalPlayer.Character
@@ -40,7 +47,10 @@ Run.RenderStepped:Connect(function()
         LastShot = os.clock()
         local Camera = game.Workspace.CurrentCamera
         if Camera then
-            Send("Shoot", Camera.CFrame.LookVector)
+            -- Native Node3D CFrame currently exposes matrix fields, not the
+            -- stdlib CFrame directional convenience fields (GL-044).
+            local Frame = Camera.CFrame
+            Send("Shoot", Vector3.new(-Frame.m02, -Frame.m12, -Frame.m22).Unit)
             game:SetAttribute("LocalShot", (game:GetAttribute("LocalShot") or 0) + 1)
         end
     end

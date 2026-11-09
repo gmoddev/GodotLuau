@@ -8,6 +8,7 @@ var MaxGap := 0.0
 var Frames := 0
 var Elapsed := 0.0
 var Started := 0
+var Screenshot := ""
 
 func _initialize() -> void:
     var Args := OS.get_cmdline_user_args()
@@ -17,6 +18,10 @@ func _initialize() -> void:
     call_deferred("Run")
 
 func _process(Delta: float) -> bool:
+    # The offscreen window must never take the user's OS focus. Supply synthetic
+    # focus alongside synthetic hardware input; production focus gates stay intact.
+    if Graphical and is_instance_valid(Game):
+        Game.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
     MaxGap = maxf(MaxGap,Delta)
     Frames += 1
     Elapsed += Delta
@@ -101,6 +106,12 @@ func Run() -> void:
     root.add_child(Game)
     current_scene = Game
     await process_frame
+    if Scenario == "server":
+        Check(await Until(func(): return Game.get_meta("ServerReady",false),12),"actual dedicated game Server ready")
+        while not FileAccess.file_exists("res://stop-game"):
+            await process_frame
+        Check(State().get("Progress",{}).get("Wins",0)>=1,"dedicated server commits actual team victory")
+        Finish(); return
     if not Game.Session:
         Check(Game.Menu.visible,"functional main menu")
         for Child in Game.Menu.get_child(0).get_children():
@@ -110,6 +121,8 @@ func Run() -> void:
     if not Ready: Finish(); return
     var Original := Character().get_instance_id()
     Check(Character().call("GetControllerMode")==1,"explicit Scripted opt-in")
+    if Scenario == "coop":
+        Check(await Until(func(): return State().get("Players",[]).size()==4,20),"four actual ENet players share the arena")
     var Before := Character().global_position
     Key(KEY_W,true); await create_timer(0.35).timeout; Key(KEY_W,false)
     await create_timer(0.15).timeout
@@ -117,6 +130,27 @@ func Run() -> void:
     await Press(KEY_SPACE)
     Check(Character().call("GetPhysicsBody").velocity.y>0,"actual input jumps")
     await create_timer(1).timeout
+    Game.ScriptRun("SoftBodyVisibility","local C=game.Workspace.PhysicsCanopy; assert(C:IsA('SoftBody3D')); game:SetAttribute('SoftBodyLuauVisible',typeof(C.Position)=='Vector3')",true)
+    await create_timer(0.1).timeout
+    Check(Game.get_meta("SoftBodyLuauVisible",false),"Luau can observe actual SoftBody3D identity and transform")
+    var Canopy: SoftBody3D = Game.World.get_node("PhysicsCanopy")
+    var Pinned := Canopy.get_point_transform(0)
+    await Press(KEY_O)
+    await create_timer(0.4).timeout
+    Check(Canopy.get_point_transform(0).distance_to(Pinned)>0.1,"local semantic interaction releases actual native soft-body anchor")
+    if Scenario == "combat":
+        await Until(func(): return State().get("Bots",[]).size()>0,6)
+        var Bot: Dictionary = State().Bots[0]
+        await Aim(Vector3(Bot.Position.X,Bot.Position.Y,Bot.Position.Z))
+        Mouse(MOUSE_BUTTON_LEFT,true)
+        await create_timer(0.2).timeout
+        var InputRoot := Game.get_node("InputService")
+        print("[Game:Playtest] mouse state ",JSON.stringify({"Shoot":InputRoot.get_node("RelaySiegeWeapon/Shoot").call("GetValue"),"Capture":InputRoot.get_node("PlayerControllerGameplay/Capture").call("GetValue"),"Motion":str(InputRoot.get_node("PlayerControllerGameplay/MouseLook").call("GetValue")),"WeaponEnabled":InputRoot.get_node("RelaySiegeWeapon").get("Enabled"),"MovementEnabled":InputRoot.get_node("PlayerControllerGameplay").get("Enabled"),"Direction":str(-root.get_camera_3d().global_basis.z)}))
+        await create_timer(0.8).timeout
+        Mouse(MOUSE_BUTTON_LEFT,false)
+        print("[Game:Playtest] focused combat localshots=",Game.get_meta("LocalShot",0)," ",JSON.stringify(State()))
+        Check(State().get("Shots",0)>=2,"held input submits actual weapon intent")
+        Finish(); return
     if Scenario == "recovery":
         Check(State().Progress.Rounds>=2 and State().Progress.Wins>=1,"fresh process recovers acknowledged career progress")
         Finish(); return
@@ -126,7 +160,28 @@ func Run() -> void:
         Check(await Until(func(): return State().get("Phase","")=="Victory",110),"observer receives authoritative victory")
         Check(State().Round==Epoch,"shared round identity")
         Finish(); return
-    Check(await GoTo(Vector3(-8,0,12)),"walk to physics playground")
+    var Health: float = Character().call("get_health")
+    var Epoch: int = State().Round
+    Game.ScriptRun("RejectForgedRules","""
+local R = game.ReplicatedStorage.Request
+local Epoch = %d
+pcall(function() game.Players.LocalPlayer.Character.Health=1 end)
+R:FireServer('Victory',Epoch,999999)
+task.wait(0.06)
+R:FireServer('Damage',Epoch,999999)
+task.wait(0.06)
+R:FireServer('Interact',Epoch+99,1)
+task.wait(0.06)
+R:FireServer('Shoot',Epoch,{X=1,Y=0,Z=0})
+task.wait(0.06)
+R:FireServer('Shoot',Epoch,Vector3.new(100,0,0))
+game:SetAttribute('InvalidGameRequestsDone',true)
+""" % Epoch,true)
+    Check(await Until(func(): return Game.get_meta("InvalidGameRequestsDone",false),3),"adversarial requests traverse actual public game endpoint")
+    await create_timer(0.3).timeout
+    Check(State().Phase=="Active" and State().Round==Epoch and State().Kills==0 and State().Relays==[false,false,false],"clients cannot claim victory, kills, damage or stale-round interactions")
+    Check(Character().call("get_health")==Health,"Client cannot overwrite authoritative health")
+    Check(await GoTo(Vector3(-16,0,14)),"walk to physics playground")
     var Crate: Node3D = Game.World.get_node_or_null("ImpulseCrate")
     if Crate:
         var CrateBefore := Crate.global_position
@@ -162,12 +217,23 @@ func Run() -> void:
     Check(State().get("Kills",0)>=6,"actual weapon defeats six authoritative drones")
     Check(State().get("Phase","")=="Victory","complete playable victory")
     Check(await Until(func(): return State().get("Save","")=="Saved",8),"round result acknowledged by actual DataStore")
+    var ResultPose := Character().global_position
+    Key(KEY_W,true)
+    await create_timer(0.2).timeout
+    Check(Character().global_position.distance_to(ResultPose)<0.03,"results suspend existing movement context")
     if Graphical:
         await RenderingServer.frame_post_draw
         var ImageName := "victory.png" if State().get("Phase","")=="Victory" else "failed-round.png"
-        Check(root.get_texture().get_image().save_png("res://"+ImageName)==OK,"rendered game and results captured")
+        var Saved := root.get_texture().get_image().save_png("res://"+ImageName)==OK
+        if Saved: Screenshot = ImageName
+        Check(Saved,"rendered game and results captured")
     Game.set_meta("UIRequest","Again")
     Check(await Until(func(): return State().get("Phase","")=="Active",4),"results UI starts another round")
+    await create_timer(0.2).timeout
+    var StartPose := Character().global_position
+    await create_timer(0.15).timeout
+    Check(Vector2(Character().global_position.x-StartPose.x,Character().global_position.z-StartPose.z).length()<0.03,"held result-screen input cannot reactivate in the next round")
+    Key(KEY_W,false)
     await GoTo(Vector3(6,0,12))
     await GoTo(Vector3(6,0,-9))
     Check(await GoTo(Vector3(0,0,-9)),"walk into marked hazard")
@@ -181,8 +247,8 @@ func Finish() -> void:
     StopMove()
     Mouse(MOUSE_BUTTON_LEFT,false); Mouse(MOUSE_BUTTON_RIGHT,false)
     var Failed := Cases.filter(func(C): return not C.Passed).size()
-    var Report := {"Cases":Cases,"Failed":Failed,"Scenario":Scenario,"Graphical":Graphical,"Seconds":float(Time.get_ticks_msec()-Started)/1000,"Frames":Frames,"MeanFrameMS":Elapsed/maxi(1,Frames)*1000,"PeakFrameMS":MaxGap*1000,"NativeObjects":Performance.get_monitor(Performance.OBJECT_NODE_COUNT),"Snapshot":State()}
+    var Report := {"Cases":Cases,"Failed":Failed,"Scenario":Scenario,"Graphical":Graphical,"Screenshot":Screenshot,"Seconds":float(Time.get_ticks_msec()-Started)/1000,"Frames":Frames,"MeanFrameMS":Elapsed/maxi(1,Frames)*1000,"PeakFrameMS":MaxGap*1000,"NativeObjects":Performance.get_monitor(Performance.OBJECT_NODE_COUNT),"Snapshot":State()}
     var File := FileAccess.open("res://gameplay-result.json",FileAccess.WRITE)
     File.store_string(JSON.stringify(Report)); File.close()
     print("[Game:Playtest] ","PASS" if Failed==0 else "FAIL"," scenario=",Scenario," cases=",Cases.size())
-    quit(0 if Failed==0 else 1)
+    await Game.Shutdown(0 if Failed==0 else 1)

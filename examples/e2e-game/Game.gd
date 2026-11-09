@@ -21,13 +21,12 @@ var Port := 24870
 var Host := "127.0.0.1"
 var Auto := false
 var Audio: AudioStreamPlayer
-var Tone: AudioStreamGeneratorPlayback
-var ToneLeft := 0
-var TonePhase := 0.0
 var LastShot := 0
+var ShuttingDown := false
 
 func _ready() -> void:
     name = "Game"
+    get_tree().auto_accept_quit = false
     var Args := OS.get_cmdline_user_args()
     for I in range(Args.size() - 1):
         match Args[I]:
@@ -105,7 +104,7 @@ func BuildUI() -> void:
     PortField.placeholder_text = "UDP port (1024–65535)"
     Box.add_child(PortField)
     ButtonFor("JOIN SERVER", Box, func(): StartSession("join"))
-    ButtonFor("QUIT", Box, func(): get_tree().quit())
+    ButtonFor("QUIT", Box, Shutdown)
     HUD = TextFor("", Layer, 22)
     HUD.position = Vector2(22, 18)
     HUD.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -125,7 +124,7 @@ func BuildUI() -> void:
     ResultText = TextFor("", ResultBox, 25)
     ButtonFor("PLAY ANOTHER ROUND", ResultBox, func(): set_meta("UIRequest", "Again"))
     ButtonFor("RETRY SAVE", ResultBox, func(): set_meta("UIRequest", "Save"))
-    ButtonFor("QUIT", ResultBox, func(): get_tree().quit())
+    ButtonFor("QUIT", ResultBox, Shutdown)
     HUD.hide(); Status.hide(); Feedback.hide()
 
 func StartSession(Selected: String) -> void:
@@ -160,8 +159,10 @@ func StartSession(Selected: String) -> void:
         ScriptRun("PhysicsProps", """
 local Part = Instance.new('Part')
 Part.Name = 'ImpulseCrate'; Part.Size = Vector3.new(2,2,2)
-Part.Position = Vector3.new(-8,3,10); Part.Anchored = false
+Part.Position = Vector3.new(-18,3,14); Part.Anchored = false
 Part.Color = Color3.new(0.3,0.7,1); Part.Parent = game.Workspace
+task.wait(0.1)
+Part:SetNetworkOwner(nil) -- this interaction is simulated by the authoritative server
 """)
     if Mode != "server":
         ScriptRun("PlayerController", FileAccess.get_file_as_string("res://PlayerController.luau"), true)
@@ -200,6 +201,7 @@ func Block(Position: Vector3, Size: Vector3, Colour: Color, Solid := true) -> Me
 func BuildArena() -> void:
     World = ClassDB.instantiate("RobloxWorkspace") as Node3D
     World.name = "Workspace"
+    World.child_entered_tree.connect(ConfigureCharacter)
     # Geometry exists before Workspace's native character construction.
     Block(Vector3(0,-1.5,0), Vector3(48,1,56), Color(0.12,0.18,0.23))
     for X in [-24,24]: Block(Vector3(X,2,0),Vector3(1,7,56),Color(0.19,0.28,0.34))
@@ -250,19 +252,39 @@ func BuildArena() -> void:
     World.add_child(Canopy)
     Canopy.set_point_pinned(0,true)
 
+func ConfigureCharacter(Value: Node) -> void:
+    if Value.is_class("RBXCharacter"):
+        ConfigureBody.call_deferred(Value.get_instance_id())
+
+func ConfigureBody(Identity: int) -> void:
+    var Value := instance_from_id(Identity)
+    if not is_instance_valid(Value): return
+    var Body = Value.call("GetPhysicsBody")
+    if Body:
+        # Co-op players do not block one another. Keep the native world mask,
+        # body, movement and authority; exclude player hulls from world rays.
+        Body.collision_layer = 0
+
 func SetUpAudio() -> void:
     Audio = AudioStreamPlayer.new()
-    var Generator := AudioStreamGenerator.new()
-    Generator.mix_rate = 22050
-    Generator.buffer_length = 0.1
-    Audio.stream = Generator
+    var Sound := AudioStreamWAV.new()
+    Sound.format = AudioStreamWAV.FORMAT_16_BITS
+    Sound.mix_rate = 22050
+    var Samples := PackedByteArray()
+    Samples.resize(3000)
+    for I in range(1500):
+        Samples.encode_s16(I*2,int(sin(TAU*220*I/22050.0)*(1.0-I/1500.0)*16000))
+    Sound.data = Samples
+    Audio.stream = Sound
     Audio.volume_db = -25
     add_child(Audio)
-    Audio.play()
-    Tone = Audio.get_stream_playback() as AudioStreamGeneratorPlayback
 
 func _process(Delta: float) -> void:
     if not Session: return
+    if get_meta("ClothReleaseRequested",false):
+        set_meta("ClothReleaseRequested",false)
+        var Canopy := World.get_node_or_null("PhysicsCanopy") as SoftBody3D
+        if Canopy: Canopy.set_point_pinned(0,false)
     var Raw: String = get_meta("ClientSnapshot",get_meta("ServerSnapshot",""))
     if Raw != "" and Raw != LastJSON:
         LastJSON = Raw
@@ -279,14 +301,8 @@ func _process(Delta: float) -> void:
     if Shot != LastShot:
         LastShot = Shot
         Feedback.modulate = Color(1,0.75,0.25)
-        ToneLeft = 1500
+        Audio.play()
     else: Feedback.modulate = Feedback.modulate.lerp(Color.WHITE,minf(1,Delta*12))
-    if Tone:
-        for I in range(Tone.get_frames_available()):
-            var Wave := sin(TonePhase)*float(ToneLeft)/1500.0 if ToneLeft > 0 else 0.0
-            Tone.push_frame(Vector2(Wave,Wave))
-            TonePhase += TAU*220/22050
-            ToneLeft = maxi(0,ToneLeft-1)
     if is_instance_valid(Results):
         Results.visible = Snapshot.get("Phase","") in ["Victory","Defeat","StorageError"] or bool(get_meta("PlayerControllerMenu",false))
 
@@ -319,3 +335,20 @@ func DrawState() -> void:
             Visuals[Key] = Value
     for Key in Visuals.keys():
         if not Present.has(Key): Visuals[Key].queue_free(); Visuals.erase(Key)
+
+func _exit_tree() -> void:
+    if is_instance_valid(Audio):
+        Audio.stop()
+        Audio.stream = null
+
+func _notification(What: int) -> void:
+    if What == NOTIFICATION_WM_CLOSE_REQUEST: Shutdown()
+
+func Shutdown(ExitCode := 0) -> void:
+    if ShuttingDown: return
+    ShuttingDown = true
+    set_meta("PlayerControllerSuspended",true)
+    if is_instance_valid(Network):
+        Network.call("disconnect_net")
+        await get_tree().create_timer(0.35).timeout
+    get_tree().quit(ExitCode)

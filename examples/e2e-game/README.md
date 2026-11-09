@@ -24,7 +24,7 @@ RelaySiege.exe --headless --path . -- --mode server --port 24870 --glserver 2487
 
 WASD/left stick moves; Shift/L3 sprints; Space/A jumps. Hold RMB and move mouse,
 or right stick, to look. LMB/R1 shoots; R reloads; E/X activates a nearby relay;
-P impulses the blue physics crate. Escape/Start opens the native-controller
+P impulses the blue physics crate; O releases the local soft-body anchor. Escape/Start opens the native-controller
 menu; Escape resumes. Results allow another round or retry of a failed save.
 
 Progress is the **server's shared arena career**, not authenticated personal
@@ -40,7 +40,7 @@ From this repository, using a previously accepted Windows candidate ZIP and the
 authorized renderer-enabled host plus its `remote-host.json`:
 
 ```text
-python examples/e2e-game/PrepareGame.py --candidate GodotLuau-Windows.zip --engine godot.windows.template_release.x86_64.exe --host-manifest remote-host.json --output C:/Sandbox/RelaySiege --archive C:/Sandbox/RelaySiege-Windows.zip
+python examples/e2e-game/PrepareGame.py --candidate GodotLuau-Windows.zip --engine godot.windows.template_release.x86_64.exe --host-manifest remote-host.json --assets imported-character-assets --output C:/Sandbox/RelaySiege --archive C:/Sandbox/RelaySiege-Windows.zip
 ```
 
 No source checkout is needed by the resulting game. `game-package.json` records
@@ -56,8 +56,10 @@ The blue crate uses RobloxPart/ApplyImpulse and native rigid-body collisions.
 `Game.gd` authors geometry/UI/presentation; server/client Luau owns game rules,
 intent and persistence. Drones use simple server-authored point movement and
 bounded sphere hitscan; existing workspace raycast handles world occlusion.
-Current RaycastParams exclusion is not implemented; shots begin beyond the
-shooter's capsule. This is a game workaround, not a claim of full Roblox raycast
+Current RaycastParams exclusion is not implemented; cooperative Character hulls
+use collision layer 0 while retaining their world collision mask. Players slide
+against arena geometry but do not block allies or eye-origin ray queries. This
+is scene configuration, not a claim of full Roblox raycast
 compatibility or an unrestricted API audit.
 
 Qualification and performance observations are in

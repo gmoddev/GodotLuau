@@ -24,6 +24,14 @@ end)
 Use the complete example for lifecycle, GUI focus and context transitions. A new
 Character life needs a new controller lease; subscribe to CharacterAdded.
 
+The supplied example also accepts the optional game attribute
+`PlayerControllerSuspended`. A truthy value suspends its existing gameplay
+context, neutralizes movement and releases owned capture. Clearing it requires
+fresh input, like other context transitions. It defaults false and is only an
+additional application pause gate, never a grant of native authority. Relay
+Siege uses it for result screens; this is example integration, not a new native
+Character property or another controller.
+
 | Member | Contract |
 | --- | --- |
 | ControllerMode | Native = 0, Scripted = 1. Live local Client selection only. Fresh Scripted assignment replaces the lease. Not replicated/serialized. |

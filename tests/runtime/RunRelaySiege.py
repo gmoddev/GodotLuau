@@ -13,12 +13,13 @@ def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     Parser.add_argument('--game',type=Path,required=True)
     Parser.add_argument('--output',type=Path,required=True)
-    Parser.add_argument('--scenario',default='local',choices=['local','observer','recovery'])
-    Parser.add_argument('--mode',choices=['solo','host','join'])
+    Parser.add_argument('--scenario',default='local',choices=['local','observer','recovery','combat','coop','server'])
+    Parser.add_argument('--mode',choices=['solo','host','join','server'])
     Parser.add_argument('--address',default='127.0.0.1')
     Parser.add_argument('--port',default=24870,type=int)
     Parser.add_argument('--graphical',action='store_true')
     Parser.add_argument('--timeout',type=int,default=240)
+    Parser.add_argument('--verbose',action='store_true')
     Args = Parser.parse_args()
     Root = Args.game.resolve()
     Args.output.mkdir(parents=True,exist_ok=False)
@@ -26,8 +27,10 @@ def Main():
     Command = [str(Root/'RelaySiege.exe'),'--path',str(Root),'--script','res://RelaySiege.gd','--max-fps','30']
     if Args.graphical: Command += ['--position','16000,16000','--resolution','1152x720']
     else: Command += ['--headless']
+    if Args.verbose: Command += ['--verbose']
     Command += ['--','--probe','--scenario',Args.scenario,'--port',str(Args.port),'--address',Args.address]
     if Args.mode: Command += ['--mode',Args.mode]
+    if Args.mode=='server': Command += ['--glserver',str(Args.port)]
     if Args.graphical: Command += ['--graphical']
     Environment = dict(os.environ,APPDATA=str(Root/'Data'))
     if os.name=='nt': ctypes.windll.kernel32.SetErrorMode(0x8003)
@@ -45,7 +48,8 @@ def Main():
         else: Process = StartProcess(Command,Out,Err,Environment)
         try: Code = Process.wait(timeout=Args.timeout)
         finally: StopProcess(Process)
-    for Name in ['gameplay-result.json','victory.png','failed-round.png']:
+    Report = json.loads((Root/'gameplay-result.json').read_text())
+    for Name in ['gameplay-result.json',*([Report['Screenshot']] if Report.get('Screenshot') else [])]:
         if (Root/Name).exists(): shutil.copy2(Root/Name,Args.output/Name)
     (Args.output/'command.json').write_text(json.dumps({'Command':Command,'Exit':Code,'Timeout':Args.timeout,'Graphical':Args.graphical},indent=2))
     print('[Game:Playtest] Exit',Code,'evidence',Args.output)

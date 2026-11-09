@@ -81,3 +81,62 @@ focus-in notification before synthetic input; it must not activate a Windows
 window or relax the production focus guard. This remains simulated input plus
 actual rendering, never physical-device qualification. Its failed result and
 image remain retained. A completed victory is still pending.
+
+## Rendered local loop completed
+
+Play-v7 passes all 21 game checks using the renderer-enabled admitted host on
+MainPC's RX 7900 XT (actual OpenGL 3.3), synthetic input/focus and an offscreen
+non-activating window. It activates three relays, defeats six drones, wins,
+acknowledges persistence, starts a second round, takes hazard damage, dies,
+respawns with the existing controller, loses to reactor pressure and saves again.
+The victory image is visually inspected. No physical-device claim follows.
+
+The 58.252-second run averages 33.514 ms/frame at an intentional 30 FPS cap;
+peak including startup is 148.373 ms; final native node count is 161. This is a
+functional observation, not an optimization claim. Earlier failures and writes
+remain retained: the disposable career now has 14 rounds and one actual win.
+
+GL-044 records missing native CFrame direction conveniences; the gun reads the
+existing matrix fields. GL-045 records colon Dot reading self as the operand;
+the gun uses the existing immediate dot-style API. World rays now start at the
+true eye: cooperative hulls use layer 0 while retaining their native world mask,
+avoiding self hits without weakening occlusion or adding a query framework.
+The existing Character asset-bundling helper supplies six self-contained meshes
+with preserved geometry/textures, eliminating editor-cache dependencies.
+
+One ObjectDB object is reported at exit; identify it from a verbose real run.
+Fresh-process recovery, real multiplayer and final extracted-package startup
+remain pending. No main merge or publication has occurred.
+
+## Multiplayer and cleanup
+
+Listen-v1 passes four actual rendered ENet players: 28 leader checks and nine
+checks per observer, including the late joiner. The leader completes victory,
+saved reward, another round, damage/death/respawn and defeat; clients receive
+the same authoritative result. Mean frames are 33.49–33.72 ms at the 30 FPS cap,
+with startup peaks 142.67–145.83 ms. The fresh server career acknowledges two
+rounds, one win and 72 credits. Native game-input forgery checks also pass.
+
+The verbose recovery run identifies the one leaked object as continuous
+AudioStreamGeneratorPlayback. Replace it with a short generated PCM WAV played
+on demand; recovery-v3 exits without that leak. It passes eight checks, including
+fresh-process progress and actual local SoftBody3D anchor release through a Luau
+InputService action and the native scene adapter. Luau can observe SoftBody
+identity/transform; point/pin APIs require the scene adapter, not a new solver.
+
+Dedicated-v1 completes the entire four-client gameplay loop, but fails its crate
+motion check: default automatic ownership transfers simulation to a nearby
+client, while the validated impulse runs on the server. Configure that specific
+crate using existing SetNetworkOwner(nil); do not redesign physics replication.
+Both sessions retain an inherited ENet retired-channel diagnostic at peer exit;
+dedicated-v1 also retains one rejected Character-transform warning, with no
+established cause. Neither is hidden by gameplay PASS claims. The normal game
+quit path now explicitly disconnects and yields a short drain before scene exit.
+The package includes the already-established empty global-script cache to avoid
+consumer startup errors. No native source or admitted patch is changed.
+
+The controller example gains one optional additional pause attribute,
+PlayerControllerSuspended, for result screens. It defaults false and reuses
+the same context cancellation/fresh-input rules. Dedicated gameplay verifies
+stopped results input and no held-key reactivation after restart. Original
+native behavior remains untouched; current native regressions are required.

@@ -108,6 +108,13 @@ local function Publish()
     State:FireAllClients(Encoded)
 end
 Request.OnServerEvent:Connect(function(P, Action, Epoch, Value)
+    if game:GetAttribute("AutomatedFixture") then
+        local Count = game:GetAttribute("DebugRequests") or 0
+        if Count < 12 then
+            game:SetAttribute("DebugRequests", Count + 1)
+            print("[Game:Combat] request", Action, Epoch, typeof(Value))
+        end
+    end
     if type(Action) ~= "string" or Epoch ~= Round then return end
     local R = Records[P.UserId]
     if not R or R.Player ~= P then return end
@@ -134,20 +141,27 @@ Request.OnServerEvent:Connect(function(P, Action, Epoch, Value)
         end
     elseif Action == "Impulse" then
         local Crate = game.Workspace:FindFirstChild("ImpulseCrate")
-        if Crate and (C.Position - Crate.Position).Magnitude < 9 then Crate:ApplyImpulse({X = 0, Y = 80, Z = -100}) end
+        if Crate and (C.Position - Crate.Position).Magnitude < 9 then Crate:ApplyImpulse({X = 0, Y = 80, Z = 100}) end
     elseif Action == "Shoot" then
         if typeof(Value) ~= "Vector3" or not Finite(Value.X) or not Finite(Value.Y) or not Finite(Value.Z) then return end
         if math.abs(Value.Magnitude - 1) > 0.01 or Now - R.LastShot < 0.22 or R.Reload > 0 or R.Ammo == 0 then return end
         R.LastShot = Now
         R.Ammo -= 1
-        -- Start beyond our native capsule; no unsupported RaycastParams filtering.
-        local Origin = C.Position + Vector3.new(0, 1.5, 0) + Value * 2
+        -- Scene-authored cooperative hulls are query-invisible, but retain their
+        -- world collision mask. Cast from the true eye, including point-blank hits.
+        local Origin = C.Position + Vector3.new(0, 1.5, 0)
         local Hit = game.Workspace:Raycast(Origin, Value, 70)
         local Limit = Hit and Hit.Distance or 70
+        if game:GetAttribute("AutomatedFixture") and (game:GetAttribute("RaySamples") or 0) < 6 then
+            game:SetAttribute("RaySamples", (game:GetAttribute("RaySamples") or 0) + 1)
+            local B = Bots[1]
+            print("[Game:Ray]", tostring(Origin), tostring(Value), Limit, Hit and Hit.Instance and Hit.Instance.Name or "clear", B and tostring(B.Position) or "none")
+        end
         local Selected = nil
         for _, B in ipairs(Bots) do
             local Offset = B.Position - Origin
-            local Along = Offset:Dot(Value)
+            -- Existing native Vector3.Dot is a bound closure taking one argument.
+            local Along = Offset.Dot(Value)
             if Along > 0 and Along < Limit and (Offset - Value * Along).Magnitude < 1.2 then Selected = B; Limit = Along end
         end
         if Selected then
@@ -193,6 +207,7 @@ Run.Heartbeat:Connect(function(Delta)
         local C = P.Character
         if C ~= R.Character then
             R.Character = C; R.Dead = false; R.Ammo = 12; R.Reload = 0
+            R.SpawnUntil = os.clock() + 3
             if C then C.WalkSpeed = 10; C.JumpPower = 14 end
         end
         if C and C.Health <= 0 and not R.Dead then R.Deaths += 1; R.Dead = true end
@@ -210,12 +225,13 @@ Run.Heartbeat:Connect(function(Delta)
         for _, B in ipairs(Bots) do
             local Target = Vector3.new(0, 1.5, 0)
             local Victim = nil
+            local VictimRecord = nil
             local Distance = 10
             for _, P in ipairs(Live) do
                 local C = Character(P)
                 if C then
                     local D = (C.Position - B.Position).Magnitude
-                    if D < Distance then Victim = C; Distance = D; Target = C.Position end
+                    if D < Distance then Victim = C; VictimRecord = Records[P.UserId]; Distance = D; Target = C.Position end
                 end
             end
             local Direction = Vector3.new(Target.X - B.Position.X, 0, Target.Z - B.Position.Z)
@@ -223,8 +239,10 @@ Run.Heartbeat:Connect(function(Delta)
             if Direction.Magnitude > StopDistance then B.Position += Direction.Unit * Step * 2.5 end
             B.Attack = math.max(0, B.Attack - Step)
             if Direction.Magnitude < (Victim and 3 or 5) and B.Attack == 0 then
-                B.Attack = 1
-                if Victim then Victim:TakeDamage(15) else Reactor = math.max(0, Reactor - 5) end
+                B.Attack = 1.3
+                if Victim then
+                    if os.clock() >= (VictimRecord.SpawnUntil or 0) then Victim:TakeDamage(8) end
+                else Reactor = math.max(0, Reactor - 5) end
             end
         end
         for _, P in ipairs(Live) do
