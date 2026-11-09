@@ -34,6 +34,8 @@ qualification is separate from a successful host build.
 GitHub rejects dispatch of a new workflow absent from default main (HTTP 404).
 Its branch/path-restricted push trigger starts the initial build without changing
 main or publication workflows. Later game-only commits do not rebuild the host.
+The first workflow text also needs a YAML block for pip's `:all:` argument;
+GitHub's validation failures are retained rather than treated as host attempts.
 
 Implementation and gameplay qualification remain pending at this checkpoint.
 Releases and updater distribution remain disabled.
