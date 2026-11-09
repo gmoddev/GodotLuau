@@ -33,7 +33,7 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-043 is in progress on unmerged `fix/gl-043-raycast-impulses`. See the
+GL-043 is fixed and qualified on unmerged `fix/gl-043-raycast-impulses`. See the
 [development/qualification journal](gl-043-development.md) and
 [physics binding contract](gl-043-physics-api.md). Main, release publication and
 updater distribution remain unchanged.

@@ -1,9 +1,8 @@
 # GL-043 physics binding contract
 
-This is the candidate contract on `fix/gl-043-raycast-impulses`.
-[Qualification progress](gl-043-development.md) determines its verified scope;
-it is not merged into main. Existing engine, dependency, authority and controller
-contracts remain in place.
+This contract is [qualified](gl-043-development.md#scoped-qualification-complete)
+at `3227290` on `fix/gl-043-raycast-impulses`. It is not merged into main.
+Existing engine, dependency, authority and controller contracts remain in place.
 
 ## Workspace raycasts
 

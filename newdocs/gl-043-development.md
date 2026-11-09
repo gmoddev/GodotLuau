@@ -129,3 +129,31 @@ receipt confirms detection controls, full qualification and zero unexpected
 reports at the same native fingerprint. This does not claim Windows LSan support.
 Linux Debug and Release candidate profiles pass. Windows candidate profiles and
 extracted-package acceptance remain the only pending checks.
+
+## Scoped qualification complete
+
+Qualified runtime and fixture revision: `3227290c1137fe4c52237aab7eecf001aee83e18`.
+The subsequent commits document evidence only. The one production file changed
+is `src/core/luau_api.h`; the existing Model fixture carries the 20 additional
+checks without adding another actor or changing the shared runner/workflows.
+
+| Check | Outcome |
+| --- | --- |
+| [Core](https://github.com/gmoddev/GodotLuau/actions/runs/42610522541) | Windows/Linux Debug pass |
+| [Native](https://github.com/gmoddev/GodotLuau/actions/runs/42610522588) | 141 actors per platform; 96 Model checks including all 20 GL-043 checks |
+| [Full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/42610532744) | Windows ASan and Linux ASan/LSan pass; detection controls active, zero unexpected reports |
+| [Non-publishing candidate](https://github.com/gmoddev/GodotLuau/actions/runs/42610528726) | All ten jobs pass, including four Windows/Linux Debug/Release source profiles, both extracted Debug/Release package startups and acceptance |
+
+The downloaded candidate manifest passes the existing CheckJobs and both
+CheckPackage checks. Each ZIP has 133 verified members and matching native
+source/dependency identity; both actual companion startup profiles pass. The
+[receipt](evidence/gl043/qualification-2026-11-09.json) retains artifact IDs,
+hashes, baseline failures and the earlier compiler failure. Qualification is
+headless in the existing admitted profiles. No graphical, Windows LSan or
+unrelated RaycastParams option coverage is claimed.
+
+GL-043 is resolved within the [scoped contract](gl-043-physics-api.md) on the
+unmerged branch. GL-044/045, other raycast options and Relay Siege's existing
+collision configuration remain separate. Main stays at
+`eee10f8779a1002c664a81267d9ab96d1dae1e62`; dependency/engine pins and admitted
+patches are unchanged. Releases and updater distribution remain disabled.
