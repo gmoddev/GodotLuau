@@ -1,0 +1,25 @@
+Godot Engine v4.7.1.stable.custom_build - https://godotengine.org
+
+[GodotLuau] ////////////////////////////////////////////////////
+[GodotLuau]   GodotLuau ? - by PimpoliDev
+[GodotLuau]   Luau System for Godot [Active]
+[GodotLuau] ////////////////////////////////////////////////////
+[Physics:Bindings] PASS Unfiltered
+[Physics:Bindings] FAIL Exclude
+[Character:V2] FAIL GL-043 raycast Exclude
+[Physics:Bindings] FAIL Include
+[Character:V2] FAIL GL-043 raycast Include
+[Physics:Bindings] FAIL Result
+[Character:V2] FAIL GL-043 raycast Result
+[Physics:Bindings] PASS Descendant
+[Physics:Bindings] FAIL EmptyInclude
+[Character:V2] FAIL GL-043 raycast EmptyInclude
+[Physics:Bindings] PASS EmptyExclude
+[Physics:Bindings] FAIL Duplicate
+[Character:V2] FAIL GL-043 raycast Duplicate
+[Physics:Bindings] PASS Distance
+[Physics:Bindings] Vector3 linear=(0.0, 0.0, 0.0) angular=(0.0, 0.0, 0.0)
+[Character:V2] FAIL GL-043 native Vector3 central impulse
+[Character:V2] FAIL GL-043 native Vector3 angular impulse
+[Physics:Bindings] Baseline FAIL
+[Runtime:BindingRetirement] Retired 0 bindings before library close

@@ -1,0 +1,77 @@
+{
+  "Schema": 1,
+  "BaseMain": "eee10f8779a1002c664a81267d9ab96d1dae1e62",
+  "ProductionInput": "36ec3224e9328f4334291880f21536fc87931046",
+  "NativeSource": {
+    "SHA256": "9dcb962297bccdefe173c2a26b78c9d47d322e1fa3a4ccd12b36a4123916e18b",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "BaselineNativeSource": "2278df21b72670c189c6206a5a49582a50d4cd835448f3f0708629ae0fd7d52e",
+  "BaselineProductRevision": "d76d6896db5790bc0b99f1b40de12a2663a2c9db",
+  "BaselineExit": 1,
+  "ArtifactRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl043-20261109",
+  "Baselines": {
+    "baseline": {
+      "StdoutSHA256": "b70e54a637062c1c884f5443e585602643e0e0695bc2e3c331f472f9d73edcf9",
+      "StderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "FixtureSHA256LF": "6f299ca1f92212557ce3f6c68e1810cc45cd4d991cc8161ae3fbfa4907fcc811",
+      "FailedAssertions": [
+        "[Character:V2] FAIL GL-043 raycast Exclude",
+        "[Character:V2] FAIL GL-043 raycast Include",
+        "[Character:V2] FAIL GL-043 raycast Result",
+        "[Character:V2] FAIL GL-043 raycast EmptyInclude",
+        "[Character:V2] FAIL GL-043 raycast Duplicate",
+        "[Character:V2] FAIL GL-043 native Vector3 central impulse",
+        "[Character:V2] FAIL GL-043 native Vector3 angular impulse"
+      ]
+    },
+    "baseline-v2": {
+      "StdoutSHA256": "b08b48adead5271bdff204986cfab9947ec6464bb59c50c49cf1a5148c3f4bdb",
+      "StderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "FixtureSHA256LF": "661068947ce5a8a126d0329a09aaaf6052669c3920ddba599c53491921000679",
+      "FailedAssertions": [
+        "[Character:V2] FAIL GL-043 raycast Exclude",
+        "[Character:V2] FAIL GL-043 raycast Include",
+        "[Character:V2] FAIL GL-043 raycast Result",
+        "[Character:V2] FAIL GL-043 raycast EmptyInclude",
+        "[Character:V2] FAIL GL-043 raycast Duplicate",
+        "[Character:V2] FAIL GL-043 Character root filters include/exclude its actual PhysicsBody",
+        "[Character:V2] FAIL GL-043 native Vector3 central impulse",
+        "[Character:V2] FAIL GL-043 native Vector3 angular impulse"
+      ]
+    }
+  },
+  "CI": {
+    "Core": {
+      "Run": 42608023119,
+      "Conclusion": "success"
+    },
+    "Native": {
+      "Run": 42608023128,
+      "Conclusion": "pending"
+    },
+    "Candidate": {
+      "Run": 42608030253,
+      "Conclusion": "pending"
+    },
+    "FullNativeSanitizers": {
+      "Run": 42608033830,
+      "Conclusion": "pending"
+    }
+  },
+  "SupersededRuns": [
+    42605274565,
+    42605659742,
+    42605782412,
+    42605786410,
+    42606697263,
+    42606704630,
+    42606709015
+  ],
+  "SupersededDisposition": "Cancelled during builds when production/fixture inputs were corrected; not passing evidence or suppressed product failures",
+  "MainUnchanged": true,
+  "Unmerged": true,
+  "ReleasePublicationDisabled": true,
+  "UpdaterDistributionDisabled": true
+}

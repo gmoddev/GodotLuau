@@ -75,3 +75,19 @@ distance. Keep a separate hit-present flag and exercise a real anonymous native
 body. This is a correction to the new filtering implementation, not a new API
 or a change to existing no-hit semantics. Final qualification must use this
 complete production/fixture input; earlier superseded runs remain recorded.
+
+## Qualification checkpoint
+
+Production and fixture inputs are frozen at `36ec322`, native fingerprint
+`9dcb962297bccdefe173c2a26b78c9d47d322e1fa3a4ccd12b36a4123916e18b`
+(101 files). The second baseline uses the corrected fixture with the old native
+binary and reproduces eight failures, including Character-body exclusion. Its
+anonymous-body and other compatibility checks pass, with empty stderr. Both
+baseline logs and original hashes are retained in the
+[qualification receipt](evidence/gl043/qualification-2026-11-09.json).
+
+Current core CI `42608023119` passes. Native `42608023128`, four-profile
+non-publishing candidate `42608030253`, and matching Windows/Linux full-native
+sanitizers `42608033830` are running at that exact source. These are existing
+workflows with unchanged assertions, dependencies, hosts and publication policy.
+No renderer or engine patch is changed. Do not treat pending runs as qualified.
