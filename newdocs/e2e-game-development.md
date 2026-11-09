@@ -233,3 +233,20 @@ and the unchanged native fingerprint. Core at that checkpoint also passes.
 The fixture correction at `78b7f65` passes current core CI; its automatic native
 run `42590964418` is still building. The game ZIP remains the qualified `3f61704`
 payload; no repackaging or gameplay replay is needed for this test-only change.
+
+## Completion
+
+Final core `42590964403` and native `42590964418` both pass Windows/Linux at
+`78b7f65`. Downloaded native summaries retain all 141 required actors on each
+platform, the exact fixture source revision and unchanged 101-file native
+fingerprint. The final receipt includes both artifact identities and hashes.
+No CI check remains outstanding. Normal source history and all failed attempts
+are preserved; the final documentation commit changes no package/runtime input.
+
+The complete playable Windows game, local and four-player listen/dedicated
+rounds, restart persistence, physics/soft-body interaction and extracted package
+are delivered within the stated qualification scopes. Physical devices, Linux
+rendered gameplay, WAN/authentication and full instrumented victory remain
+unqualified, and the inherited peer-exit diagnostic remains visible. Main stays
+at `a3c62e9333fbf2a7dd7d095b9f12d9a3d71eba96`; releases and updater distribution
+remain disabled. No further infrastructure or unrelated work is started.

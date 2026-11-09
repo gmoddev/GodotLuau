@@ -69,7 +69,21 @@
       "CoreRun": 42590964403,
       "CoreConclusion": "success",
       "NativeRun": 42590964418,
-      "NativeConclusion": "pending",
+      "NativeConclusion": "success",
+      "NativeProfiles": {
+        "Windows": {
+          "Actors": 141,
+          "SummarySHA256": "5e581625bce1e8471b44592d31bc9537536b756956e28a298a2ec27302048696",
+          "ArtifactId": 13662539581,
+          "ArtifactDigest": "sha256:7a3207d33ffaeac0086057a86eea6d35f9e1823a424865308d855f79db469dcb"
+        },
+        "Linux": {
+          "Actors": 141,
+          "SummarySHA256": "1d99d1f8f6e8adb6d8af5057ab9866322b785c56b7935b6ebd77446183ddc67d",
+          "ArtifactId": 13661434990,
+          "ArtifactDigest": "sha256:57cb09fdec00bbd381f1b03e35de1b4a8f69e80f89f6802540950bc4a120d26b"
+        }
+      },
       "FocusedASanActors": 7,
       "FocusedASanReportSHA256": "1de0f0d900ddd17a2826e23bc6f6b0794af0224790e6ecde5607bf6e01d7dc14"
     },

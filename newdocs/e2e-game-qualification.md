@@ -93,11 +93,14 @@ changes are only the game's ready log and dedicated-startup ordering, exercised
 by the package and dedicated tests above. No new native compilation or duplicate
 sanitizer campaign is needed for unchanged C++ inputs.
 
-The subsequent two-line fixture correction is `78b7f65`: core run 42590964403
-passes both platforms; its automatically triggered native run 42590964418 is
-pending at this documentation checkpoint. The focused seven-actor matching
-ASan relevance run already passes. No production game file changed after the
-packaged and dedicated qualification source.
+The subsequent two-line fixture correction is `78b7f65`:
+[core run 42590964403](https://github.com/gmoddev/GodotLuau/actions/runs/42590964403)
+and [native run 42590964418](https://github.com/gmoddev/GodotLuau/actions/runs/42590964418)
+pass both platforms, with all 141 native actors per platform. Both downloaded
+native summaries identify that revision and the unchanged 101-file fingerprint;
+artifact IDs/digests and summary hashes are in the receipt. The focused
+seven-actor matching ASan relevance run also passes. No production game file
+changed after the packaged and dedicated qualification source.
 
 ## Remaining scope
 
