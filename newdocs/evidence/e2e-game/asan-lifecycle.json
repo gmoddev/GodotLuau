@@ -1,0 +1,168 @@
+{
+  "Cases": [
+    {
+      "Label": "functional main menu",
+      "Passed": true
+    },
+    {
+      "Label": "actual Luau game, native Character and Scripted controller ready",
+      "Passed": true
+    },
+    {
+      "Label": "explicit Scripted opt-in",
+      "Passed": true
+    },
+    {
+      "Label": "actual input moves native Character",
+      "Passed": true
+    },
+    {
+      "Label": "actual input jumps",
+      "Passed": true
+    },
+    {
+      "Label": "Luau can observe actual SoftBody3D identity and transform",
+      "Passed": true
+    },
+    {
+      "Label": "local semantic interaction releases actual native soft-body anchor",
+      "Passed": true
+    },
+    {
+      "Label": "adversarial requests traverse actual public game endpoint",
+      "Passed": true
+    },
+    {
+      "Label": "clients cannot claim victory, kills, damage or stale-round interactions",
+      "Passed": true
+    },
+    {
+      "Label": "Client cannot overwrite authoritative health",
+      "Passed": true
+    },
+    {
+      "Label": "actual instrumented movement reaches hazard approach",
+      "Passed": true
+    },
+    {
+      "Label": "actual instrumented movement reaches hazard",
+      "Passed": true
+    },
+    {
+      "Label": "instrumented public weapon path executes",
+      "Passed": true
+    },
+    {
+      "Label": "instrumented death retires and replaces native Character",
+      "Passed": true
+    },
+    {
+      "Label": "instrumented controller resumes on the replacement life",
+      "Passed": true
+    },
+    {
+      "Label": "instrumented actual game reaches defeat",
+      "Passed": true
+    },
+    {
+      "Label": "instrumented actual round persists before shutdown",
+      "Passed": true
+    }
+  ],
+  "Failed": 0,
+  "Frames": 979,
+  "Graphical": false,
+  "MeanFrameMS": 33.5964416070828,
+  "NativeObjects": 166,
+  "PeakFrameMS": 150,
+  "Scenario": "lifecycle",
+  "Screenshot": "",
+  "Seconds": 33.962,
+  "Snapshot": {
+    "Bots": [
+      {
+        "Health": 60,
+        "Id": 1,
+        "Position": {
+          "X": 1.52209210395813,
+          "Y": 1.5,
+          "Z": -3.48569345474243
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 2,
+        "Position": {
+          "X": 0.369706749916077,
+          "Y": 1.5,
+          "Z": -3.91422367095947
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 3,
+        "Position": {
+          "X": 3.7693395614624,
+          "Y": 1.5,
+          "Z": 1.25644814968109
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 4,
+        "Position": {
+          "X": -2.79507422447205,
+          "Y": 1.5,
+          "Z": -2.79507422447205
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 5,
+        "Position": {
+          "X": 3.35786247253418,
+          "Y": 1.5,
+          "Z": -1.86548089981079
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 6,
+        "Position": {
+          "X": -3.837153673172,
+          "Y": 1.5,
+          "Z": -0.426349937915802
+        }
+      }
+    ],
+    "Kills": 0,
+    "Phase": "Defeat",
+    "Players": [
+      {
+        "Ammo": 12,
+        "Deaths": 1,
+        "Health": 100,
+        "Id": 1,
+        "Name": "Player",
+        "Reload": false
+      }
+    ],
+    "Progress": {
+      "Credits": 114,
+      "Rounds": 10,
+      "Wins": 0
+    },
+    "Reactor": 0,
+    "Relays": [
+      false,
+      false,
+      false
+    ],
+    "Reward": 10,
+    "Round": 1,
+    "Save": "Saved",
+    "Shots": 3,
+    "Time": 119,
+    "Version": 1
+  }
+}

@@ -186,3 +186,23 @@ deferred CLI initialization has not completed when the bootstrap checks its role
 so the fallback script tries to bind the same port again. Move that check after
 the existing frame boundary. This is a game bootstrap correction, not a native
 transport change. Preserve the failed diagnostic and repeat the affected session.
+
+## Final gameplay and package evidence
+
+At `3f61704`, the corrected dedicated session passes 57 checks across its five
+actual actors, without the duplicate-bind error. The remaining retired-channel
+diagnostic is retained separately. The final package workflow `42588812901`
+passes, and its downloaded 25,365,119-byte ZIP starts independently of the source
+checkout. All 157 manifest payload hashes/sizes match; no saves, fixture driver
+or updater add-on is packaged. A rendered test of that ZIP passes all four menu
+failure/recovery checks with empty stderr.
+
+The previous extracted `b0b9010` package passes all 28 rendered gameplay checks,
+including both complete outcomes and saves; the only later gameplay correction
+affects dedicated startup. The final matching full-native ASan lifecycle passes
+17 checks without sanitizer findings. It emits only two unavailable-navigation-
+module fallback warnings. The original full-victory sanitizer failures remain
+failed and retained. Actual reports, source scopes, performance observations,
+package/host identities and limitations are now in
+[qualification](e2e-game-qualification.md) and its linked receipt/reports.
+Current core CI passes both platforms; final native CI is still finishing.

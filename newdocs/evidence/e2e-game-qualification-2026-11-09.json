@@ -1,0 +1,349 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-09",
+  "Branch": "feature/e2e-gameplay-foundation",
+  "MainBaseline": "a3c62e9333fbf2a7dd7d095b9f12d9a3d71eba96",
+  "GameRevision": "3f617040ab7d7edeb94721ed4f7cd7a0af3345e6",
+  "NativeSource": {
+    "SHA256": "2278df21b72670c189c6206a5a49582a50d4cd835448f3f0708629ae0fd7d52e",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "CandidateRevision": "d76d6896db5790bc0b99f1b40de12a2663a2c9db",
+  "EngineRevision": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+  "EnginePatchesLF": {
+    "BindingRetirement": "adfde942eb64b8f99e5a4dab4075678e201693cf3069a01675697c64b49b3fa1",
+    "RemoteAdmission": "df10215b62e125d3595972e5f16e0c7b45a9b0b9141564a91f1741b413f7568b"
+  },
+  "FinalPackage": {
+    "SHA256": "a0ce9f1760b8f359fdfdadc43ba1c1f0acae3646c17dec0288bca83ee3013645",
+    "Bytes": 25365119,
+    "GameRevision": "3f617040ab7d7edeb94721ed4f7cd7a0af3345e6",
+    "CandidateSHA256": "1883a6be5361a111004d78dd5c225bbac2f76012aa2b86a29ea94c3034634229",
+    "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+    "ManifestSHA256": "419ffaf6cc1c23f7ff85ca677a827f018ff923e4684aad6c5ec8159bd2605841",
+    "PayloadFiles": 157,
+    "MembersVerified": true
+  },
+  "PackageArtifact": {
+    "Run": 42588812901,
+    "Conclusion": "success",
+    "Name": "RelaySiege-Windows",
+    "Id": 13659639962,
+    "ArchiveDigest": "2157c31daac5ec4d16a5f5e2373cc701669f7628b3a689632bcd69c03c079160",
+    "RetentionDays": 14
+  },
+  "CI": {
+    "Core": {
+      "Run": 42587537286,
+      "Revision": "43f513bcb94d74aaf38bc9226c188af28caeb3ae",
+      "Conclusion": "success",
+      "Profiles": [
+        "Windows Debug",
+        "Linux Debug"
+      ]
+    },
+    "Native": {
+      "Run": 42587537271,
+      "Revision": "43f513bcb94d74aaf38bc9226c188af28caeb3ae",
+      "Conclusion": "pending",
+      "Linux": {
+        "Conclusion": "success",
+        "Actors": 141,
+        "SummarySHA256": "ce7968a2839bfffab820d4996f9c71d29b156750fa0137c92f0dced609a48f34",
+        "ArtifactId": 13661021078
+      }
+    },
+    "RenderedHost": {
+      "Run": 42576293787,
+      "Conclusion": "success"
+    },
+    "NativeCandidate": {
+      "Run": 42216970390,
+      "Attempt": 2,
+      "Conclusion": "success"
+    }
+  },
+  "RetainedArtifactRoot": "C:/Users/aiden/.codex/artifacts/godotluau/e2e-game-20261109",
+  "ReportHashScope": "SHA256 fields below identify original files in the retained artifact root; repository JSON reports are formatted for readability.",
+  "Results": {
+    "package-play-final": {
+      "Failed": 0,
+      "Graphical": true,
+      "MeanFrameMS": 33.4901068870518,
+      "PeakFrameMS": 144.833,
+      "Seconds": 63.354,
+      "NativeObjects": 166,
+      "Scenario": "local",
+      "Cases": 28,
+      "ReportSHA256": "7086fa825c44315440a1692c734cc257cddac22fbce24a7f7dcd1c9b5897d6a1",
+      "Progress": {
+        "Credits": 72,
+        "Rounds": 2,
+        "Wins": 1
+      },
+      "StderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "recovery-v3": {
+      "Failed": 0,
+      "Graphical": false,
+      "MeanFrameMS": 32.5768652482269,
+      "PeakFrameMS": 33.834,
+      "Seconds": 3.058,
+      "NativeObjects": 159,
+      "Scenario": "recovery",
+      "Cases": 8,
+      "ReportSHA256": "236ee8874edde34e79e8dbcf9fecb593699c27c7c3023e8dbc4fb39075a79188",
+      "Progress": {
+        "Credits": 198,
+        "Rounds": 14,
+        "Wins": 1
+      },
+      "StderrSHA256": "cf8b91ea022eed87d8c1bef4f65dd83451e48cc1dffd0fe9b68a05387e0aade7"
+    },
+    "listen-v1": {
+      "Dedicated": false,
+      "Actors": [
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Cases": 28,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.4886584474883,
+          "PeakFrameMS": 145.831,
+          "Seconds": 63.867,
+          "NativeObjects": 166,
+          "ReportSHA256": "c322e8c2d1f7e98b219f1e14cbc1797477e0061ea07af638ae12e8133846e96c",
+          "SnapshotProgress": {
+            "Credits": 72,
+            "Rounds": 2,
+            "Wins": 1
+          }
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.6961160904829,
+          "PeakFrameMS": 143.333,
+          "Seconds": 29.134,
+          "NativeObjects": 238,
+          "ReportSHA256": "c6b57c9b85026c0dc1f9c25494e81ff7a95a9fbe9ed7e26f0772fbcf2742acf0",
+          "SnapshotProgress": {
+            "Credits": 62,
+            "Rounds": 1,
+            "Wins": 1
+          }
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.7179709201395,
+          "PeakFrameMS": 145.042666666667,
+          "Seconds": 28.709,
+          "NativeObjects": 238,
+          "ReportSHA256": "9d4b2480663ff6784215bdfff372dadcdf75b9f8fa7e68dbf8e9c02531cc78db",
+          "SnapshotProgress": {
+            "Credits": 62,
+            "Rounds": 1,
+            "Wins": 1
+          }
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.7161123919313,
+          "PeakFrameMS": 142.665666666667,
+          "Seconds": 26.105,
+          "NativeObjects": 238,
+          "ReportSHA256": "e14b6887e381a2e4aa088e2c8aaffae27b30f19050e8b92879375855c927e127",
+          "SnapshotProgress": {
+            "Credits": 62,
+            "Rounds": 1,
+            "Wins": 1
+          }
+        }
+      ],
+      "SessionSHA256": "52053da7abf2ae796f9f7b9e9c111ae781d1f5afa298c3e491820a430cb137a0"
+    },
+    "dedicated-startup-fixed": {
+      "Dedicated": true,
+      "Actors": [
+        {
+          "Actor": "server",
+          "Exit": 0,
+          "Cases": 2,
+          "Failed": 0,
+          "Graphical": false,
+          "MeanFrameMS": 33.3109518592291,
+          "PeakFrameMS": 37.39,
+          "Seconds": 66.88,
+          "NativeObjects": 94,
+          "ReportSHA256": "afa1216464266911123e1ffd0106aa2730b471ec2912ed159044274dc3757362",
+          "SnapshotProgress": {
+            "Credits": 72,
+            "Rounds": 2,
+            "Wins": 1
+          }
+        },
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Cases": 28,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.5186226688391,
+          "PeakFrameMS": 150,
+          "Seconds": 64.438,
+          "NativeObjects": 167,
+          "ReportSHA256": "6028bedc9790fcf5d0460fd55d22d33d1123808f4939b580e09d73a4d292b0d6",
+          "SnapshotProgress": {
+            "Credits": 72,
+            "Rounds": 2,
+            "Wins": 1
+          }
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.7408280329807,
+          "PeakFrameMS": 144.126666666666,
+          "Seconds": 31.429,
+          "NativeObjects": 218,
+          "ReportSHA256": "316fa6bb0c70b0583c1b4cc9b9282f9e0783497b80d4728960def8aa354de659",
+          "SnapshotProgress": {
+            "Credits": 0,
+            "Rounds": 0,
+            "Wins": 0
+          }
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.7524950099807,
+          "PeakFrameMS": 150,
+          "Seconds": 31.004,
+          "NativeObjects": 240,
+          "ReportSHA256": "120037239f61d146b48fa577cf9f1e5d03b373f1128895cdc55afff915c303a6",
+          "SnapshotProgress": {
+            "Credits": 0,
+            "Rounds": 0,
+            "Wins": 0
+          }
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "MeanFrameMS": 33.7853738441221,
+          "PeakFrameMS": 137.118666666667,
+          "Seconds": 28.297,
+          "NativeObjects": 218,
+          "ReportSHA256": "99c62ba05ab290a9a54c9b2a1b06ecc22f518984f544a44d3623e8c943fba63e",
+          "SnapshotProgress": {
+            "Credits": 0,
+            "Rounds": 0,
+            "Wins": 0
+          }
+        }
+      ],
+      "SessionSHA256": "2aa0f5dbebf8097921ff6e808f09b887b1ebf3d9be053eafb50c4aaf7b9e460d"
+    },
+    "asan-lifecycle-final": {
+      "Failed": 0,
+      "Graphical": false,
+      "MeanFrameMS": 33.5964416070828,
+      "PeakFrameMS": 150,
+      "Seconds": 33.962,
+      "NativeObjects": 166,
+      "Scenario": "lifecycle",
+      "Cases": 17,
+      "ReportSHA256": "6ea790175252398fab94f4cde95c3cdd9e4b92dde61c2cefa923ada630a9ada2",
+      "Progress": {
+        "Credits": 114,
+        "Rounds": 10,
+        "Wins": 0
+      },
+      "StderrSHA256": "cf8b91ea022eed87d8c1bef4f65dd83451e48cc1dffd0fe9b68a05387e0aade7"
+    },
+    "package-menu-final": {
+      "Failed": 0,
+      "Graphical": true,
+      "MeanFrameMS": 33.6612840579709,
+      "PeakFrameMS": 150,
+      "Seconds": 17.406,
+      "NativeObjects": 25,
+      "Scenario": "menu",
+      "Cases": 4,
+      "ReportSHA256": "9059d4c5e1f3ee09d0835dde1351f7c3e6150c781813a4089b818e9c08319593",
+      "Progress": null,
+      "StderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "SourceScope": {
+    "PackagedLocal": "b0b90103d73d2ddcd87291ade73b1ec411df3c5b; 3f61704 changes only dedicated startup ordering and package triggers",
+    "Listen": "7826a7b89a9786f32004f78777a51c44fb0bf653; final dedicated test covers later join/retirement changes",
+    "DedicatedSanitizerAndMenu": "3f617040ab7d7edeb94721ed4f7cd7a0af3345e6",
+    "Recovery": "7826a7b89a9786f32004f78777a51c44fb0bf653; persistence implementation unchanged afterward"
+  },
+  "ReproducibleArchiveCheck": {
+    "Revision": "b0b90103d73d2ddcd87291ade73b1ec411df3c5b",
+    "ArchiveNames": [
+      "RelaySiege-Windows.zip",
+      "RelaySiege-repeat.zip"
+    ],
+    "Bytes": 25364953,
+    "SHA256": "5cbc290de785d052d496187ec309be692c80cf025fa7af31c09094292f445929",
+    "Scope": "Same explicit engine, native candidate, bundled assets and game source; not independent engine compilation or cross-producer byte identity"
+  },
+  "FullNativeASan": {
+    "Scope": "17-case headless game lifecycle, not full victory",
+    "ASAN_OPTIONS": "halt_on_error=1",
+    "EngineSHA256": "d68f6f49e8f5aba0a00768aaa3e971d1c86cde1ff49e4784ded7fb91d28a0cf7",
+    "LibrarySHA256": "32571a809e39567e75a5e6b7108e058ac431e289f55f964997654eb33f156e90",
+    "CompanionSHA256": "b9a9d7b68dce290a59730cd92e73ea20bd4cba47af21c0b8a993d3fd23f05549",
+    "Findings": 0,
+    "Stderr": "Two unavailable-navigation-module fallback warnings; no sanitizer report",
+    "WindowsLSan": "unsupported"
+  },
+  "FailedAttemptsRetained": [
+    "play-v1 through play-v6",
+    "combat-v1 through combat-v4",
+    "recovery-v2",
+    "dedicated-v1 (crate motion assertion)",
+    "menu-v1 and menu-v2",
+    "asan-play-v1 through asan-play-v4 (victory not established; no sanitizer report)",
+    "dedicated-final (gameplay passes but duplicate-bind diagnostic; corrected and rerun)",
+    "native 42583617472 attempt 1 Windows official-editor HTTP 504"
+  ],
+  "Limitations": [
+    "Simulated input and synthetic focus; no physical-device or actual OS-capture qualification",
+    "Windows rendered game only; Linux core/native baseline is a separate scope",
+    "Inherited retired-channel diagnostic on multiplayer peer exit; exact cause unproven",
+    "Full ASan victory replays remain failed, separately from passing 17-case lifecycle",
+    "GL-017/018, GL-043/044/045 and inherited asset-provenance limitations remain",
+    "No WAN/NAT matchmaking, authentication or pristine OS runtime installation qualification",
+    "No release publication, updater distribution or merge into main"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "Cases": [
+    {
+      "Label": "functional main menu",
+      "Passed": true
+    },
+    {
+      "Label": "actual Luau game, native Character and Scripted controller ready",
+      "Passed": true
+    },
+    {
+      "Label": "explicit Scripted opt-in",
+      "Passed": true
+    },
+    {
+      "Label": "actual input moves native Character",
+      "Passed": true
+    },
+    {
+      "Label": "actual input jumps",
+      "Passed": true
+    },
+    {
+      "Label": "Luau can observe actual SoftBody3D identity and transform",
+      "Passed": true
+    },
+    {
+      "Label": "local semantic interaction releases actual native soft-body anchor",
+      "Passed": true
+    },
+    {
+      "Label": "fresh process recovers acknowledged career progress",
+      "Passed": true
+    }
+  ],
+  "Failed": 0,
+  "Frames": 94,
+  "Graphical": false,
+  "MeanFrameMS": 32.5768652482269,
+  "NativeObjects": 159,
+  "PeakFrameMS": 33.834,
+  "Scenario": "recovery",
+  "Screenshot": "",
+  "Seconds": 3.058,
+  "Snapshot": {
+    "Bots": [
+      {
+        "Health": 60,
+        "Id": 1,
+        "Position": {
+          "X": 13.8477458953857,
+          "Y": 1.5,
+          "Z": -7.69320154190063
+        }
+      }
+    ],
+    "Kills": 0,
+    "Phase": "Active",
+    "Players": [
+      {
+        "Ammo": 12,
+        "Deaths": 0,
+        "Health": 100,
+        "Id": 1,
+        "Name": "Player",
+        "Reload": false
+      }
+    ],
+    "Progress": {
+      "Credits": 198,
+      "Rounds": 14,
+      "Wins": 1
+    },
+    "Reactor": 300,
+    "Relays": [
+      false,
+      false,
+      false
+    ],
+    "Reward": 0,
+    "Round": 1,
+    "Save": "Progress loaded",
+    "Shots": 0,
+    "Time": 148,
+    "Version": 1
+  }
+}
