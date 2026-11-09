@@ -49,7 +49,18 @@
     },
     "Native": {
       "Run": 42610522588,
-      "Conclusion": "pending"
+      "Conclusion": "pending",
+      "Linux": {
+        "Conclusion": "success",
+        "Actors": 141,
+        "ModelChecks": 96,
+        "NewPhysicsChecks": 20,
+        "SummarySHA256": "e40f2419618f9524e6cca518e3835388318abf837354b235bedece731065a789",
+        "ArtifactId": 13670718652,
+        "ArtifactDigest": "sha256:2d46ca6ead0f937e7a5258b7f5901d062f067c0a6d3756250d162879076e9fd8",
+        "ObservedNativeLinearX": 3.966778,
+        "ObservedNativeAngularY": 2.380067
+      }
     },
     "Candidate": {
       "Run": 42610528726,
@@ -57,7 +68,16 @@
     },
     "FullNativeSanitizers": {
       "Run": 42610532744,
-      "Conclusion": "pending"
+      "Conclusion": "pending",
+      "Linux": {
+        "Conclusion": "success",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "SummarySHA256": "a854c98af608e2b1b6689830e4dcf1ec40eccd71e2e38acd12b9368a0da096c2",
+        "ArtifactId": 13671685440,
+        "ArtifactDigest": "sha256:4fd492f805ffde189a3edde0b76b9d54aaad45200b787ca777238924f1901666"
+      }
     }
   },
   "SupersededRuns": [

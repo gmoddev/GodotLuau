@@ -103,6 +103,16 @@ not a passing candidate or a runtime physics failure.
 The corrected source is `3227290`, fingerprint
 `7d540a81ecf0bcf83742e94386796df6e4df36310ad330ec1d9bfe54bdac2f56`
 (101 files). Core `42610522541` passes. Native `42610522588`, candidate
-`42610528726` and full-native sanitizers `42610532744` now qualify this input.
+`42610528726` and full-native sanitizers `42610532744` run against this input.
 The failed profile's full log hash is retained in the receipt. Main, dependency
 pins, admitted patches, release policy and updater code remain unchanged.
+
+Linux ordinary native CI passes all 141 actors. The Model fixture passes 96
+checks, including 20 new physics checks; native Vector3 impulse velocities are
+now linear X=3.966778 and angular Y=2.380067, versus zero in the baseline.
+Include/Exclude, Character PhysicsBody ancestry, anonymous bodies, legacy input,
+finite validation, owner retirement/destruction and explicit work exhaustion all
+pass within that fixture. Matching Linux full-native ASan/LSan also passes with
+FullQualification=true, detection controls passed and no unexpected reports.
+Downloaded source identity matches the corrected 101-file fingerprint. Windows
+and the complete candidate matrix remain pending; the issue is not closed yet.
