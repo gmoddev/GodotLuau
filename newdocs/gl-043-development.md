@@ -91,3 +91,11 @@ non-publishing candidate `42608030253`, and matching Windows/Linux full-native
 sanitizers `42608033830` are running at that exact source. These are existing
 workflows with unchanged assertions, dependencies, hosts and publication policy.
 No renderer or engine patch is changed. Do not treat pending runs as qualified.
+
+Linux Debug candidate `42608030253` fails SCons compilation before runtime tests:
+Luau's lua_pushcfunction macro treats commas in three local declarations inside
+the lambda as argument separators. Split those declarations in place; no runtime
+algorithm or test assertion changes. The failed profile artifact and scons.log
+remain retained under `gl043-20261109/failed-Linux-Debug-1`. Other jobs using
+the same uncompilable header are superseded; this is an actual compile failure,
+not a passing candidate or a runtime physics failure.

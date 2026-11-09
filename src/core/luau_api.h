@@ -1793,7 +1793,8 @@ static int godot_object_index(lua_State* L) {
                     lua_rawgetfield(pL, 4, "FilterDescendantsInstances");
                     if (!lua_isnil(pL, -1)) {
                         luaL_checktype(pL, -1, LUA_TTABLE);
-                        int Length = lua_objlen(pL, -1), Entries = 0;
+                        int Length = lua_objlen(pL, -1);
+                        int Entries = 0;
                         if (Length > 64) luaL_error(pL, "Raycast filter exceeds 64 instances");
                         lua_pushnil(pL);
                         while (lua_next(pL, -2)) {
@@ -1819,8 +1820,10 @@ static int godot_object_index(lua_State* L) {
                 Vector3 To = from + dir_norm * max_d;
                 if (!To.is_finite()) luaL_error(pL, "Ray endpoint is outside finite physics coordinates");
                 Node* hit = nullptr;
-                Vector3 pos, normal;
-                bool Finished = false, HasHit = false;
+                Vector3 pos;
+                Vector3 normal;
+                bool Finished = false;
+                bool HasHit = false;
                 {
                     Ref<PhysicsRayQueryParameters3D> params;
                     params.instantiate(); params->set_from(from); params->set_to(To);
