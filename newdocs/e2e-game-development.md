@@ -167,3 +167,12 @@ reported separately; Windows LSan remains unsupported.
 Native CI at `7826a7b` passes Linux; Windows attempt 1 fails official-editor
 download with HTTP 504 before building/testing. Only that failed job is retried,
 preserving Linux evidence. Final source/packaging verification remains pending.
+
+The final game source is checkpointed at `43f513b`. Native gameplay code still
+has the same 101-file fingerprint as main's qualified controller integration;
+only the explicitly authorized renderer build and example's optional suspension
+hook extend the baseline. The separate game-package workflow reuses the accepted
+native ZIP and exported rendered host, imports through the existing helper,
+stages a fresh self-contained archive and starts its actual Main scene after
+extraction. It uploads an Actions artifact only, with read-only repository
+permissions. No release or updater workflow is enabled.

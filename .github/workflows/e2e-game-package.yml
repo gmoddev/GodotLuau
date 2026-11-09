@@ -1,0 +1,60 @@
+name: Relay Siege game package (no publication)
+on:
+  push:
+    branches: [feature/e2e-gameplay-foundation]
+    paths: [.github/workflows/e2e-game-package.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  Package:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: e2e-game-host-Windows-Release
+          run-id: 42576293787
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/host
+      - uses: actions/download-artifact@v4
+        with:
+          name: candidate-Windows
+          run-id: 42216970390
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify reused native product and admitted host
+        run: |
+          python -c "import sys,json; from pathlib import Path; sys.path.insert(0,'tools'); import ReleaseCandidate as R; sys.path.insert(0,'tests/runtime'); from SourceFingerprint import GetFingerprint; from RemoteHostIdentity import VerifyRemoteHost; D=Path(r'$env:RUNNER_TEMP/candidate'); P=R.Load(D/'candidate.json'); R.CheckPackage(D,P['Source'],'Windows'); assert P['Source']['NativeSource']==GetFingerprint(Path.cwd()); H=Path(r'$env:RUNNER_TEMP/host'); VerifyRemoteHost(R.Load(H/'remote-host.json'),H/'godot.windows.template_release.x86_64.exe')"
+      - name: Provision existing pinned asset editor
+        run: python tests/runtime/ProvisionGodot.py --output "$env:RUNNER_TEMP/editor"
+      - name: Stage self-contained game with existing asset bundling
+        run: |
+          python examples/e2e-game/PrepareGame.py --candidate "$env:RUNNER_TEMP/candidate/GodotLuau-Windows.zip" --engine "$env:RUNNER_TEMP/host/godot.windows.template_release.x86_64.exe" --host-manifest "$env:RUNNER_TEMP/host/remote-host.json" --asset-editor "$env:RUNNER_TEMP/editor/Godot_v4.7.1-stable_win64.exe" --output "$env:RUNNER_TEMP/game" --archive "$env:RUNNER_TEMP/RelaySiege-Windows.zip"
+      - name: Actual extracted-package startup independent of source paths
+        run: |
+          Expand-Archive -LiteralPath "$env:RUNNER_TEMP/RelaySiege-Windows.zip" -DestinationPath "$env:RUNNER_TEMP/extracted"
+          $Game = "$env:RUNNER_TEMP/extracted/RelaySiege"
+          $env:APPDATA = "$Game/Data"
+          python -c "import ctypes,subprocess; from pathlib import Path; ctypes.windll.kernel32.SetErrorMode(0x8003); D=Path(r'$Game'); R=subprocess.run([str(D/'RelaySiege.exe'),'--disable-crash-handler','--headless','--path',str(D),'--max-fps','30','--quit-after','120','--','--mode','solo','--probe'],capture_output=True,text=True,timeout=20); (D/'startup.stdout.log').write_text(R.stdout); (D/'startup.stderr.log').write_text(R.stderr); assert R.returncode==0 and '[Game:Rules] Ready' in R.stdout and '[Runtime:Script]' not in R.stdout and 'SCRIPT ERROR' not in R.stderr"
+          Copy-Item "$Game/game-package.json" "$env:RUNNER_TEMP/game-package.json"
+          Copy-Item "$Game/startup.*.log" "$env:RUNNER_TEMP/"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RelaySiege-Windows
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/RelaySiege-Windows.zip
+            ${{ runner.temp }}/game-package.json
+            ${{ runner.temp }}/startup.*.log

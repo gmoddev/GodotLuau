@@ -192,6 +192,7 @@ task.spawn(function()
     Started = true
     StartRound()
     game:SetAttribute("ServerReady", true)
+    print("[Game:Rules] Ready", Progress.Rounds, Progress.Wins)
 end)
 Run.Heartbeat:Connect(function(Delta)
     if not Started then return end
