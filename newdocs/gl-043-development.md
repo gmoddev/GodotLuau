@@ -123,3 +123,9 @@ downloaded native summaries identify `3227290` and the same production
 fingerprint. Linux Debug candidate qualification passes; full candidate
 acceptance and Windows full-native ASan remain pending. No runtime assertion
 has failed on the corrected source at this checkpoint.
+
+Full-native `42610532744` finishes successfully on both platforms. The Windows
+receipt confirms detection controls, full qualification and zero unexpected
+reports at the same native fingerprint. This does not claim Windows LSan support.
+Linux Debug and Release candidate profiles pass. Windows candidate profiles and
+extracted-package acceptance remain the only pending checks.

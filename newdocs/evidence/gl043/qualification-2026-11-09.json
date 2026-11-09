@@ -79,7 +79,17 @@
     },
     "FullNativeSanitizers": {
       "Run": 42610532744,
-      "Conclusion": "pending",
+      "Conclusion": "success",
+      "Windows": {
+        "Conclusion": "success",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "SummarySHA256": "ebaf2aee5b9986a9d68a75ab74f1433e834d3fc43724cce98ba8928232e4bb2c",
+        "ArtifactId": 13671703186,
+        "ArtifactDigest": "sha256:c3c18387d93cde10927cc3d9fb4501c9d983541ff1174edb28edf8f2125cbacb",
+        "LSan": "unsupported on Windows"
+      },
       "Linux": {
         "Conclusion": "success",
         "FullQualification": true,
