@@ -26,12 +26,15 @@ def Main():
     Parser.add_argument('--timeout', type=int, default=7200)
     Parser.add_argument('--remote-admission', action='store_true', help='Apply the approved hash-pinned GL-029 native data admission adapter')
     Parser.add_argument('--configuration', choices=['Debug', 'Release'], help='Build an uninstrumented GL-029 network host instead of the default ASan host')
+    Parser.add_argument('--rendered', action='store_true', help='Build the authorized Windows OpenGL production host using the same admitted patches')
     Args = Parser.parse_args()
     if not 1 <= Args.jobs <= 4 or not 1 <= Args.timeout <= 10800:
         Parser.error('Use 1–4 jobs and a finite timeout of at most three hours')
     if Args.configuration and not Args.remote_admission:
         Parser.error('A production network-host profile requires the admitted GL-029 adapter')
     Platform = 'Windows' if os.name == 'nt' else 'Linux'
+    if Args.rendered and (Platform != 'Windows' or not Args.configuration):
+        Parser.error('Rendered profile requires an uninstrumented Windows production configuration')
     if Platform == 'Linux' and not Args.configuration:
         ResourceDirectory = Path(subprocess.check_output(['clang++-19', '-print-resource-dir'], text=True, timeout=15).strip())
         if not (ResourceDirectory/'include/sanitizer/asan_interface.h').is_file():
@@ -148,6 +151,8 @@ def Main():
     if not Compiler:
         raise ValueError('Matching compiler/developer environment is required')
     Arguments = Policy['Common'] + Policy[Platform]
+    if Args.rendered:
+        Arguments = ['opengl3=yes' if Value == 'opengl3=no' else Value for Value in Arguments]
     if Args.configuration:
         Removed = ['target=', 'use_asan=', 'use_lsan=', 'dev_build=', 'optimize=', 'debug_crt=']
         Arguments = [Value for Value in Arguments if not any(Value.startswith(Prefix) for Prefix in Removed)]
@@ -173,6 +178,9 @@ def Main():
     if Args.configuration:
         Identity['Configuration'] = Args.configuration
         Identity['Scope'] = 'Headless GL-029 network host with admitted native data ownership bounds; no sanitizer, editor, rendering or device qualification'
+        if Args.rendered:
+            Identity['Rendered'] = True
+            Identity['Scope'] = 'Windows OpenGL GL-029 production host; unchanged admitted source patches. Rendering and gameplay require separate execution evidence; no sanitizer or physical-device claim'
     (Attempt / 'inputs.json').write_text(json.dumps(Identity, indent=2))
     if os.name == 'nt':
         ctypes.windll.kernel32.SetErrorMode(0x8003)
