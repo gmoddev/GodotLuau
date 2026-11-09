@@ -80,7 +80,25 @@
     "Native": {
       "Run": 42597456728,
       "Revision": "025401f307c7dc8b47f84c36885158b01c4e402c",
-      "Conclusion": "pending"
+      "Conclusion": "success",
+      "Profiles": {
+        "Windows-Debug": {
+          "Actors": 141,
+          "SummarySHA256": "63ca2c56ff31f72b00a3a0bc58aa3b6322681b7dc9c1871339ef32185baaca38",
+          "HarnessFiles": 103,
+          "SourceAndHarnessMatchQualifiedBranch": true,
+          "ArtifactId": 13664964647,
+          "ArtifactDigest": "sha256:d239ffe6f5c01c42a70f9cad8c4fc204059348d7d49c1c4227af5a504f6c58fb"
+        },
+        "Linux-Debug": {
+          "Actors": 141,
+          "SummarySHA256": "b03c7b69ea911f43f1358f9b36085f4ef31b51a21ee67a4c313088d7b1f4488f",
+          "HarnessFiles": 103,
+          "SourceAndHarnessMatchQualifiedBranch": true,
+          "ArtifactId": 13664758778,
+          "ArtifactDigest": "sha256:4a3300997206a255f96fc93a7b5bcaa599148c00acbb4b76f91dcac15c94db42"
+        }
+      }
     },
     "Package": {
       "Run": 42597457773,

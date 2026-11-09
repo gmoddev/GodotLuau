@@ -1,5 +1,10 @@
 # Relay Siege main integration
 
+Main contains normal merge `025401f`, preserving all 12 feature commits and the
+exact qualified source tree. Post-merge Windows/Linux core/native CI and the
+non-publishing game package check pass. No runtime correction was needed.
+Native remains the default controller and Scripted remains an explicit opt-in.
+
 ## Preparation and merge — 2026-11-09
 
 The owner authorized a normal merge of qualified
@@ -62,11 +67,15 @@ branch package's payload. Only the enclosing provenance revision changes. The
 new ZIP SHA-256 is
 `c189ffe29ed9f15cf64d7254cb56aab87b68dfd72306f298a30eb49bcf18e44c`.
 
-[Native CI](https://github.com/gmoddev/GodotLuau/actions/runs/42597456728) is
-still building at this checkpoint. The separate
+[Native CI](https://github.com/gmoddev/GodotLuau/actions/runs/42597456728) also
+passes Windows/Linux Debug at the exact merge SHA. Downloaded summaries confirm
+141 required actors on each platform, the same 101-file native fingerprint and
+all 103 harness/example hashes equal to the qualified branch. No retry or
+assertion change was needed. The separate
 [integration receipt](evidence/e2e-game-main-integration-2026-11-09.json) records
-fresh artifact identities and results without changing the historical branch
-receipt. Integration documentation commits change no runtime/package inputs.
+fresh artifact identities, digests and summary hashes without changing the
+historical branch receipt. No required CI check remains outstanding.
+Integration documentation commits change no runtime/package inputs.
 
 ## Retained limitations
 

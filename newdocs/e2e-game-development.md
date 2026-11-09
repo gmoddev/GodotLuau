@@ -5,6 +5,13 @@ preserves qualified feature tip `1ed3ee5` and all 12 commits. See the
 [integration record](e2e-game-main-integration.md) for fresh CI and package
 results. The chronological campaign evidence below retains its original scope.
 
+**Integration completed:** post-merge core `42597456749`, native `42597456728`
+and non-publishing package `42597457773` pass at merge `025401f`. Core reports
+retain 85 cases plus 29 graph assertions per platform; native receipts retain
+141 actors per platform and identical qualified source/harness hashes. All 157
+game payload files equal the branch package. No runtime correction or new
+qualification campaign is needed; releases and updater distribution stay off.
+
 ## 2026-11-09 — Preparation
 
 Branch `feature/e2e-gameplay-foundation` starts from verified remote main
