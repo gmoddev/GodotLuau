@@ -39,3 +39,45 @@ GitHub's validation failures are retained rather than treated as host attempts.
 
 Implementation and gameplay qualification remain pending at this checkpoint.
 Releases and updater distribution remain disabled.
+
+## First game launch
+
+The initial headless local launch exposes two game mistakes: ButtonR2 is absent
+from the actual KeyCode enum (use supported ButtonR1), and native PlayerObject's
+UserId is a Luau binding, not a GDScript get_user_id method. The Client publishes
+its read-only local ID to presentation instead. No engine contract changes.
+
+MainPC's normal Roaming qualification leaf returns NTSTATUS `0xc000050b` from
+the existing no-reparse relative directory open despite ordinary attributes
+showing a directory. The same DataStore companion reads correctly in the private
+artifact root; C: is NTFS. Do not weaken GL-003. Portable game launchers select
+their own `Data` directory through child-local APPDATA, the existing Godot user-
+data mechanism. No machine-wide environment or arbitrary Lua storage grant is
+introduced. Subsequent tests use that actual package convention.
+
+Local headless play-v1 executes the actual menu, input movement/jump, pressure,
+death/respawn, defeat, another round and two acknowledged DataStore saves. It
+fails six gameplay checks: weapon/interaction input incorrectly consulted the
+movement lease's owner-scoped property from a different LocalScript; routing can
+also become stuck after a death respawns at the default reactor origin. Correct
+the game ownership check and provide a native SpawnLocation. Retain this failed
+49.8-second run; do not call it a completed gameplay loop. Reactor health is
+tuned to 300 to give a solo player time to learn and complete the objectives.
+
+Local play-v2 activates all three relays and again exercises real saves/respawn,
+but combat cannot finish: drones stop within the solid reactor footprint and
+the raycast correctly occludes them. Stop drones outside reactor geometry.
+The crate impulse moves only 0.12 units; increase its game-level strength for
+visible feedback rather than relaxing the playtest assertion. The hazard route
+also needs to walk around the reactor instead of through it. GL-043 records
+source-verified inherited raycast-filter/native-Vector3-impulse limitations;
+the game uses supported arguments and does not expand into a physics refactor.
+
+The authorized renderer-host workflow `42576293787` builds and passes the
+existing real ENet host checks; its exported host/provenance is downloaded.
+Rendered local play-v3 confirms visible crate motion, but character input stops
+after the offscreen window loses focus. The fixture must synthesize the existing
+focus-in notification before synthetic input; it must not activate a Windows
+window or relax the production focus guard. This remains simulated input plus
+actual rendering, never physical-device qualification. Its failed result and
+image remain retained. A completed victory is still pending.

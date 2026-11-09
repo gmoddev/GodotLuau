@@ -84,6 +84,19 @@ four successful workflows and independently checked artifacts.
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
+| GL-043 | P2 | Source-verified compatibility limitation | Workspace raycast filtering and Vector3 impulse arguments are incomplete |
+
+## GL-043: Physics query and impulse compatibility
+
+Discovered during [Relay Siege development](e2e-game-development.md). Source in
+`src/core/luau_api.h` implements Workspace RaycastParams.MaxDistance, but does
+not apply FilterDescendantsInstances or FilterType. ApplyImpulse and
+ApplyAngularImpulse read components only from a Lua table; the native Vector3
+userdata branch is absent. This is a source-verified contract discrepancy,
+not a reproduced memory-safety vulnerability. No broad physics refactor is
+included in the game campaign. The game uses a table for its rigid-body impulse
+and starts hitscan beyond the shooter capsule, with explicit native world
+occlusion. Full raycast-filter/impulse argument compatibility remains follow-up.
 
 ## GL-042: UserInputService GUI routing flag
 

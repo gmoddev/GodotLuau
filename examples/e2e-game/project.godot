@@ -1,0 +1,19 @@
+config_version=5
+
+[application]
+config/name="Relay Siege"
+run/main_scene="res://Main.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="GodotLuauRelaySiege"
+
+[display]
+window/size/viewport_width=1152
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.035,0.055,0.09,1)
+
+[physics]
+common/physics_ticks_per_second=60
