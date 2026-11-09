@@ -1,0 +1,47 @@
+name: E2E game rendered host (no publication)
+on:
+  push:
+    branches: [feature/e2e-gameplay-foundation]
+    paths: [.github/workflows/e2e-game-host.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  Host:
+    runs-on: windows-2022
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: ./tools/InitializeReleaseToolchain.ps1
+      - run: |
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r tools/ReleaseBuildRequirements.txt
+      - name: Build authorized renderer profile with unchanged admitted patches
+        run: python tests/runtime/BuildSanitizedGodot.py --output "$env:RUNNER_TEMP/rendered-host" --remote-admission --configuration Release --rendered --jobs 2 --timeout 6500
+      - name: Existing real ENet host qualification
+        run: |
+          $Record = Get-Content "$env:RUNNER_TEMP/rendered-host/remote-host.json" -Raw | ConvertFrom-Json
+          python tests/runtime/RunRemoteHostQualification.py --godot "$($Record.Executable)" --host-manifest "$env:RUNNER_TEMP/rendered-host/remote-host.json" --output "$env:RUNNER_TEMP/host-check"
+      - name: Export self-contained qualification host
+        run: python tests/runtime/ExportRemoteHost.py --manifest "$env:RUNNER_TEMP/rendered-host/remote-host.json" --output "$env:RUNNER_TEMP/game-host"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: e2e-game-host-Windows-Release
+          retention-days: 14
+          path: ${{ runner.temp }}/game-host/*
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-host-diagnostics
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/host-check/**
+            ${{ runner.temp }}/rendered-host-attempts/**

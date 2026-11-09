@@ -1,0 +1,580 @@
+{
+  "Dedicated": false,
+  "Graphical": true,
+  "Port": 50903,
+  "Results": [
+    {
+      "Actor": "leader",
+      "Exit": 0,
+      "Report": {
+        "Cases": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "four actual ENet players share the arena",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "adversarial requests traverse actual public game endpoint",
+            "Passed": true
+          },
+          {
+            "Label": "clients cannot claim victory, kills, damage or stale-round interactions",
+            "Passed": true
+          },
+          {
+            "Label": "Client cannot overwrite authoritative health",
+            "Passed": true
+          },
+          {
+            "Label": "walk to physics playground",
+            "Passed": true
+          },
+          {
+            "Label": "Luau interaction applies native rigid-body impulse",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (-14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (0.0, 0.0, -20.0)",
+            "Passed": true
+          },
+          {
+            "Label": "three authoritative interactions activate relays",
+            "Passed": true
+          },
+          {
+            "Label": "actual weapon defeats six authoritative drones",
+            "Passed": true
+          },
+          {
+            "Label": "complete playable victory",
+            "Passed": true
+          },
+          {
+            "Label": "round result acknowledged by actual DataStore",
+            "Passed": true
+          },
+          {
+            "Label": "results suspend existing movement context",
+            "Passed": true
+          },
+          {
+            "Label": "rendered game and results captured",
+            "Passed": true
+          },
+          {
+            "Label": "results UI starts another round",
+            "Passed": true
+          },
+          {
+            "Label": "held result-screen input cannot reactivate in the next round",
+            "Passed": true
+          },
+          {
+            "Label": "walk into marked hazard",
+            "Passed": true
+          },
+          {
+            "Label": "damage, death and native automatic respawn",
+            "Passed": true
+          },
+          {
+            "Label": "controller follows replacement Character",
+            "Passed": true
+          },
+          {
+            "Label": "reactor pressure produces real failure condition",
+            "Passed": true
+          },
+          {
+            "Label": "failed round also persists",
+            "Passed": true
+          }
+        ],
+        "Failed": 0,
+        "Frames": 1825,
+        "Graphical": true,
+        "MeanFrameMS": 33.4886584474883,
+        "NativeObjects": 166,
+        "PeakFrameMS": 145.831,
+        "Scenario": "coop",
+        "Screenshot": "victory.png",
+        "Seconds": 63.867,
+        "Snapshot": {
+          "Bots": [
+            {
+              "Health": 60,
+              "Id": 8,
+              "Position": {
+                "X": -0.319131106138229,
+                "Y": 1.5,
+                "Z": -3.77713656425476
+              }
+            },
+            {
+              "Health": 60,
+              "Id": 9,
+              "Position": {
+                "X": 1.38737034797668,
+                "Y": 1.5,
+                "Z": -3.59915518760681
+              }
+            },
+            {
+              "Health": 60,
+              "Id": 10,
+              "Position": {
+                "X": -3.67164707183838,
+                "Y": 1.5,
+                "Z": -0.407960742712021
+              }
+            },
+            {
+              "Health": 60,
+              "Id": 11,
+              "Position": {
+                "X": 3.61176896095276,
+                "Y": 1.5,
+                "Z": 1.20392334461212
+              }
+            },
+            {
+              "Health": 60,
+              "Id": 12,
+              "Position": {
+                "X": -2.62057709693909,
+                "Y": 1.5,
+                "Z": -2.62057709693909
+              }
+            },
+            {
+              "Health": 60,
+              "Id": 13,
+              "Position": {
+                "X": 3.21232056617737,
+                "Y": 1.5,
+                "Z": -1.78462290763855
+              }
+            }
+          ],
+          "Kills": 0,
+          "Phase": "Defeat",
+          "Players": [
+            {
+              "Ammo": 12,
+              "Deaths": 1,
+              "Health": 100,
+              "Id": 1,
+              "Name": "Player",
+              "Reload": false
+            }
+          ],
+          "Progress": {
+            "Credits": 72,
+            "Rounds": 2,
+            "Wins": 1
+          },
+          "Reactor": 0,
+          "Relays": [
+            false,
+            false,
+            false
+          ],
+          "Reward": 10,
+          "Round": 2,
+          "Save": "Saved",
+          "Shots": 20,
+          "Time": 118,
+          "Version": 1
+        }
+      }
+    },
+    {
+      "Actor": "observer1",
+      "Exit": 0,
+      "Report": {
+        "Cases": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ],
+        "Failed": 0,
+        "Frames": 781,
+        "Graphical": true,
+        "MeanFrameMS": 33.6961160904829,
+        "NativeObjects": 238,
+        "PeakFrameMS": 143.333,
+        "Scenario": "observer",
+        "Screenshot": "",
+        "Seconds": 29.134,
+        "Snapshot": {
+          "Bots": [
+            {
+              "Health": 60,
+              "Id": 7,
+              "Position": {
+                "X": 12.3078918457031,
+                "Y": 1.5,
+                "Z": 4.10263252258301
+              }
+            }
+          ],
+          "Kills": 6,
+          "Phase": "Victory",
+          "Players": [
+            {
+              "Ammo": 4,
+              "Deaths": 0,
+              "Health": 84,
+              "Id": 1,
+              "Name": "Player",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 3,
+              "Name": "Player3",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 2,
+              "Name": "Player2",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 4,
+              "Name": "Player4",
+              "Reload": false
+            }
+          ],
+          "Progress": {
+            "Credits": 62,
+            "Rounds": 1,
+            "Wins": 1
+          },
+          "Reactor": 220,
+          "Relays": [
+            true,
+            true,
+            true
+          ],
+          "Reward": 62,
+          "Round": 1,
+          "Save": "Saved",
+          "Shots": 20,
+          "Time": 123,
+          "Version": 1
+        }
+      }
+    },
+    {
+      "Actor": "observer2",
+      "Exit": 0,
+      "Report": {
+        "Cases": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ],
+        "Failed": 0,
+        "Frames": 768,
+        "Graphical": true,
+        "MeanFrameMS": 33.7179709201395,
+        "NativeObjects": 238,
+        "PeakFrameMS": 145.042666666667,
+        "Scenario": "observer",
+        "Screenshot": "",
+        "Seconds": 28.709,
+        "Snapshot": {
+          "Bots": [
+            {
+              "Health": 60,
+              "Id": 7,
+              "Position": {
+                "X": 12.3078918457031,
+                "Y": 1.5,
+                "Z": 4.10263252258301
+              }
+            }
+          ],
+          "Kills": 6,
+          "Phase": "Victory",
+          "Players": [
+            {
+              "Ammo": 4,
+              "Deaths": 0,
+              "Health": 84,
+              "Id": 1,
+              "Name": "Player",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 3,
+              "Name": "Player3",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 2,
+              "Name": "Player2",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 4,
+              "Name": "Player4",
+              "Reload": false
+            }
+          ],
+          "Progress": {
+            "Credits": 62,
+            "Rounds": 1,
+            "Wins": 1
+          },
+          "Reactor": 220,
+          "Relays": [
+            true,
+            true,
+            true
+          ],
+          "Reward": 62,
+          "Round": 1,
+          "Save": "Saved",
+          "Shots": 20,
+          "Time": 123,
+          "Version": 1
+        }
+      }
+    },
+    {
+      "Actor": "latejoin",
+      "Exit": 0,
+      "Report": {
+        "Cases": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ],
+        "Failed": 0,
+        "Frames": 694,
+        "Graphical": true,
+        "MeanFrameMS": 33.7161123919313,
+        "NativeObjects": 238,
+        "PeakFrameMS": 142.665666666667,
+        "Scenario": "observer",
+        "Screenshot": "",
+        "Seconds": 26.105,
+        "Snapshot": {
+          "Bots": [
+            {
+              "Health": 60,
+              "Id": 7,
+              "Position": {
+                "X": 12.3078918457031,
+                "Y": 1.5,
+                "Z": 4.10263252258301
+              }
+            }
+          ],
+          "Kills": 6,
+          "Phase": "Victory",
+          "Players": [
+            {
+              "Ammo": 4,
+              "Deaths": 0,
+              "Health": 84,
+              "Id": 1,
+              "Name": "Player",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 3,
+              "Name": "Player3",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 2,
+              "Name": "Player2",
+              "Reload": false
+            },
+            {
+              "Ammo": 12,
+              "Deaths": 0,
+              "Health": 100,
+              "Id": 4,
+              "Name": "Player4",
+              "Reload": false
+            }
+          ],
+          "Progress": {
+            "Credits": 62,
+            "Rounds": 1,
+            "Wins": 1
+          },
+          "Reactor": 220,
+          "Relays": [
+            true,
+            true,
+            true
+          ],
+          "Reward": 62,
+          "Round": 1,
+          "Save": "Saved",
+          "Shots": 20,
+          "Time": 123,
+          "Version": 1
+        }
+      }
+    }
+  ]
+}

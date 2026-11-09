@@ -1,0 +1,212 @@
+{
+  "Cases": [
+    {
+      "Label": "functional main menu",
+      "Passed": true
+    },
+    {
+      "Label": "actual Luau game, native Character and Scripted controller ready",
+      "Passed": true
+    },
+    {
+      "Label": "explicit Scripted opt-in",
+      "Passed": true
+    },
+    {
+      "Label": "actual input moves native Character",
+      "Passed": true
+    },
+    {
+      "Label": "actual input jumps",
+      "Passed": true
+    },
+    {
+      "Label": "Luau can observe actual SoftBody3D identity and transform",
+      "Passed": true
+    },
+    {
+      "Label": "local semantic interaction releases actual native soft-body anchor",
+      "Passed": true
+    },
+    {
+      "Label": "adversarial requests traverse actual public game endpoint",
+      "Passed": true
+    },
+    {
+      "Label": "clients cannot claim victory, kills, damage or stale-round interactions",
+      "Passed": true
+    },
+    {
+      "Label": "Client cannot overwrite authoritative health",
+      "Passed": true
+    },
+    {
+      "Label": "walk to physics playground",
+      "Passed": true
+    },
+    {
+      "Label": "Luau interaction applies native rigid-body impulse",
+      "Passed": true
+    },
+    {
+      "Label": "walk to relay (-14.0, 0.0, -10.0)",
+      "Passed": true
+    },
+    {
+      "Label": "walk to relay (14.0, 0.0, -10.0)",
+      "Passed": true
+    },
+    {
+      "Label": "walk to relay (0.0, 0.0, -20.0)",
+      "Passed": true
+    },
+    {
+      "Label": "three authoritative interactions activate relays",
+      "Passed": true
+    },
+    {
+      "Label": "actual weapon defeats six authoritative drones",
+      "Passed": true
+    },
+    {
+      "Label": "complete playable victory",
+      "Passed": true
+    },
+    {
+      "Label": "round result acknowledged by actual DataStore",
+      "Passed": true
+    },
+    {
+      "Label": "results suspend existing movement context",
+      "Passed": true
+    },
+    {
+      "Label": "rendered game and results captured",
+      "Passed": true
+    },
+    {
+      "Label": "results UI starts another round",
+      "Passed": true
+    },
+    {
+      "Label": "held result-screen input cannot reactivate in the next round",
+      "Passed": true
+    },
+    {
+      "Label": "walk into marked hazard",
+      "Passed": true
+    },
+    {
+      "Label": "damage, death and native automatic respawn",
+      "Passed": true
+    },
+    {
+      "Label": "controller follows replacement Character",
+      "Passed": true
+    },
+    {
+      "Label": "reactor pressure produces real failure condition",
+      "Passed": true
+    },
+    {
+      "Label": "failed round also persists",
+      "Passed": true
+    }
+  ],
+  "Failed": 0,
+  "Frames": 1815,
+  "Graphical": true,
+  "MeanFrameMS": 33.4901068870518,
+  "NativeObjects": 166,
+  "PeakFrameMS": 144.833,
+  "Scenario": "local",
+  "Screenshot": "victory.png",
+  "Seconds": 63.354,
+  "Snapshot": {
+    "Bots": [
+      {
+        "Health": 60,
+        "Id": 8,
+        "Position": {
+          "X": -0.208473458886147,
+          "Y": 1.5,
+          "Z": -3.81776905059814
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 9,
+        "Position": {
+          "X": 1.41300189495087,
+          "Y": 1.5,
+          "Z": -3.47414064407349
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 10,
+        "Position": {
+          "X": -3.837153673172,
+          "Y": 1.5,
+          "Z": -0.426349937915802
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 11,
+        "Position": {
+          "X": 3.76973819732666,
+          "Y": 1.5,
+          "Z": 1.25658106803894
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 12,
+        "Position": {
+          "X": -2.7970130443573,
+          "Y": 1.5,
+          "Z": -2.7970130443573
+        }
+      },
+      {
+        "Health": 60,
+        "Id": 13,
+        "Position": {
+          "X": 3.35786247253418,
+          "Y": 1.5,
+          "Z": -1.86548089981079
+        }
+      }
+    ],
+    "Kills": 0,
+    "Phase": "Defeat",
+    "Players": [
+      {
+        "Ammo": 12,
+        "Deaths": 1,
+        "Health": 100,
+        "Id": 1,
+        "Name": "Player",
+        "Reload": false
+      }
+    ],
+    "Progress": {
+      "Credits": 72,
+      "Rounds": 2,
+      "Wins": 1
+    },
+    "Reactor": 0,
+    "Relays": [
+      false,
+      false,
+      false
+    ],
+    "Reward": 10,
+    "Round": 2,
+    "Save": "Saved",
+    "Shots": 26,
+    "Time": 118,
+    "Version": 1
+  }
+}

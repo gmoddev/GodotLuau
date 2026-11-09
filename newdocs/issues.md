@@ -84,6 +84,45 @@ four successful workflows and independently checked artifacts.
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
+| GL-043 | P2 | Source-verified compatibility limitation | Workspace raycast filtering and Vector3 impulse arguments are incomplete |
+| GL-044 | P2 | Confirmed gameplay contract discrepancy | Native Node3D CFrame lacks stdlib directional convenience fields |
+| GL-045 | P2 | Confirmed gameplay math discrepancy | Vector3 colon Dot reads self as the other operand |
+
+## GL-045: Vector3 method calling convention
+
+Relay Siege's controlled ray trace gets approximately 564 instead of 24 from
+`Offset:Dot(Direction)`: the native bound closure in
+`src/core/luau_value_bindings.cpp` reads argument 1, which colon syntax supplies
+as self. Dot-style `Offset.Dot(Direction)` is the currently supported call.
+Cross and Lerp use the same bound-closure argument convention in source.
+The game uses immediate dot-style calls with a live local receiver; standard
+Roblox colon compatibility and retained value-method lifetime remain separate
+native-binding follow-up work, not a math-framework refactor in this campaign.
+
+## GL-044: Native CFrame shape differs from stdlib CFrame
+
+Relay Siege's actual gun initially sends nil when reading
+`Workspace.CurrentCamera.CFrame.LookVector`. The native Node3D getter in
+`src/core/luau_api.h` returns raw matrix/position tables, whereas stdlib
+`CFrame.new` in `src/core/luau_stdlib.h` provides LookVector/RightVector/UpVector
+and methods. The controlled game trace observes four Shoot requests with nil
+direction and correct server rejection. The game obtains the same native
+direction from `(-m02,-m12,-m22)` and constructs a native Vector3, keeping strict
+server input validation. Unifying the returned CFrame contract is a separately
+scoped follow-up; this campaign does not replace or refactor the math binding.
+
+## GL-043: Physics query and impulse compatibility
+
+Discovered during [Relay Siege development](e2e-game-development.md). Source in
+`src/core/luau_api.h` implements Workspace RaycastParams.MaxDistance, but does
+not apply FilterDescendantsInstances or FilterType. ApplyImpulse and
+ApplyAngularImpulse read components only from a Lua table; the native Vector3
+userdata branch is absent. This is a source-verified contract discrepancy,
+not a reproduced memory-safety vulnerability. No broad physics refactor is
+included in the game campaign. The game uses a table for its rigid-body impulse
+and configures cooperative player hulls as query-invisible, retaining their
+native world collision mask. Eye-origin hitscan has native world occlusion.
+Full raycast-filter/impulse argument compatibility remains follow-up.
 
 ## GL-042: UserInputService GUI routing flag
 

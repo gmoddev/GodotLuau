@@ -162,6 +162,8 @@ game:SetAttribute('Created',true)
     ScriptNode("PhysicsBody", "local P=Instance.new('Part'); P.Name='Body'; P.Anchored=false; P.Position=Vector3.new(50,5,0); P.Parent=game.Workspace; game:SetAttribute('PhysicsCreated',true)")
     await Until(func(): return Game.has_meta("PhysicsCreated"), "unanchored global body created")
     var Body: RigidBody3D = World.get_node("Body")
+    # This phase tests server-driven physics; transfer to FirstPeer below.
+    Network.call("net_set_owner", int(Body.get_meta("_gl_netid")), 0, false)
     Body.gravity_scale = 0; Body.linear_velocity = Vector3(1,0,0); Body.sleeping = false
     Mark("physics.go"); await Wait("client1.physics"); await Wait("client2.physics")
     Network.call("net_set_owner", int(Body.get_meta("_gl_netid")), FirstPeer, false)

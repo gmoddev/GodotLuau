@@ -1,0 +1,30 @@
+{
+  "Cases": [
+    {
+      "Label": "main menu available before a session",
+      "Passed": true
+    },
+    {
+      "Label": "unreachable server produces an in-game connection error",
+      "Passed": true
+    },
+    {
+      "Label": "retry controls remain accessible",
+      "Passed": true
+    },
+    {
+      "Label": "main menu returns after actual session teardown",
+      "Passed": true
+    }
+  ],
+  "Failed": 0,
+  "Frames": 460,
+  "Graphical": true,
+  "MeanFrameMS": 33.6612840579709,
+  "NativeObjects": 25,
+  "PeakFrameMS": 150,
+  "Scenario": "menu",
+  "Screenshot": "",
+  "Seconds": 17.406,
+  "Snapshot": {}
+}
