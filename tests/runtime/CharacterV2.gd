@@ -312,6 +312,9 @@ for _, Value in ipairs({W, Color3.new(), {X=1,Y=2}, Vector3.new(0/0,0,0), {X=mat
     assert(not pcall(function() B:ApplyImpulse(Value) end))
     assert(not pcall(function() B:ApplyAngularImpulse(Value) end))
 end
+local Called = false
+local Proxy = setmetatable({X=1,Y=0}, {__index=function() Called=true; B:Destroy(); return 0 end})
+assert(not pcall(function() B:ApplyImpulse(Proxy) end) and not Called)
 local Dead = Instance.new('Folder'); Dead:Destroy()
 P = RaycastParams.new(); P.MaxDistance=20; P.FilterDescendantsInstances={Dead}
 assert(Ray(P).Instance==W.PhysicsFilterGroup.PhysicsNear)

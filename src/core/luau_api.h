@@ -1837,8 +1837,9 @@ static int godot_object_index(lua_State* L) {
                         Node* Ancestor = Candidate;
                         if (RootCount) {
                             for (int Depth = 0; Ancestor && Depth < 256 && !Match; ++Depth) {
+                                const uint64_t AncestorId = uint64_t(Ancestor->get_instance_id());
                                 for (int Index = 0; Index < RootCount; ++Index)
-                                    if (Roots[Index] == uint64_t(Ancestor->get_instance_id())) { Match = true; break; }
+                                    if (Roots[Index] == AncestorId) { Match = true; break; }
                                 if (!Match) Ancestor = Ancestor->get_parent();
                             }
                             if (!Match && Ancestor) break;
