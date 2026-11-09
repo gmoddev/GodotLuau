@@ -23,6 +23,8 @@ var Auto := false
 var Audio: AudioStreamPlayer
 var LastShot := 0
 var ShuttingDown := false
+var SessionAge := 0.0
+var SessionError := ""
 
 func _ready() -> void:
     name = "Game"
@@ -33,6 +35,9 @@ func _ready() -> void:
             "--mode": Mode = Args[I + 1]; Auto = true
             "--port": Port = int(Args[I + 1])
             "--address": Host = Args[I + 1]
+    if get_tree().get_meta("RelaySiegeMenu",false):
+        Auto = false
+        get_tree().remove_meta("RelaySiegeMenu")
     set_meta("AutomatedFixture", "--probe" in Args)
     if get_meta("AutomatedFixture"):
         get_window().set_flag(Window.FLAG_NO_FOCUS, true)
@@ -124,6 +129,7 @@ func BuildUI() -> void:
     ResultText = TextFor("", ResultBox, 25)
     ButtonFor("PLAY ANOTHER ROUND", ResultBox, func(): set_meta("UIRequest", "Again"))
     ButtonFor("RETRY SAVE", ResultBox, func(): set_meta("UIRequest", "Save"))
+    ButtonFor("MAIN MENU", ResultBox, MainMenu)
     ButtonFor("QUIT", ResultBox, Shutdown)
     HUD.hide(); Status.hide(); Feedback.hide()
 
@@ -139,6 +145,7 @@ func StartSession(Selected: String) -> void:
     Menu.hide()
     Menu.get_parent().get_node("Backdrop").hide()
     HUD.show(); Status.show(); Feedback.show()
+    HUD.text = "Starting session…"
     Native("Players", "Players")
     Native("RunService", "RunService")
     Native("ReplicatedStorage", "ReplicatedStorage")
@@ -146,14 +153,14 @@ func StartSession(Selected: String) -> void:
     Native("RemoteEventNode", "State", get_node("ReplicatedStorage"))
     Native("Node", "SettingsMenu")
     Network = Native("NetworkService", "NetworkService")
-    if Mode == "server":
-        ScriptRun("Listen", "assert(game.NetworkService:StartServer(%d,4), '[Game:Session] Server startup failed')" % Port)
+    if Mode == "server" and int(Network.call("get_mode")) != 1:
+        ScriptRun("Listen", "game:SetAttribute('SessionStartupFailed',not game.NetworkService:StartServer(%d,4))" % Port)
     BuildArena()
     await get_tree().process_frame
     if Mode == "host":
-        ScriptRun("Listen", "assert(game.NetworkService:StartServer(%d,3), '[Game:Session] Host startup failed')" % Port)
+        ScriptRun("Listen", "game:SetAttribute('SessionStartupFailed',not game.NetworkService:StartServer(%d,3))" % Port)
     elif Mode == "join":
-        ScriptRun("Connect", "assert(game.NetworkService:Connect(%s,%d), '[Game:Session] Join failed')" % [JSON.stringify(Host), Port], true)
+        ScriptRun("Connect", "game:SetAttribute('SessionStartupFailed',not game.NetworkService:Connect(%s,%d)); game:SetAttribute('SessionConnectAttempted',true)" % [JSON.stringify(Host), Port], true)
     if Mode != "join":
         ScriptRun("Rules", FileAccess.get_file_as_string("res://Server.luau"))
         ScriptRun("PhysicsProps", """
@@ -165,6 +172,13 @@ task.wait(0.1)
 Part:SetNetworkOwner(nil) -- this interaction is simulated by the authoritative server
 """)
     if Mode != "server":
+        if Mode == "join":
+            var Deadline := Time.get_ticks_msec()+15000
+            while (not get_meta("SessionConnectAttempted",false) or str(Network.call("get_connection_state")) == "Connecting") and Time.get_ticks_msec()<Deadline:
+                await get_tree().process_frame
+            if str(Network.call("get_connection_state")) != "Connected": return
+            await get_tree().process_frame
+            await get_tree().process_frame
         ScriptRun("PlayerController", FileAccess.get_file_as_string("res://PlayerController.luau"), true)
         ScriptRun("GameClient", FileAccess.get_file_as_string("res://Client.luau"), true)
     SetUpAudio()
@@ -281,6 +295,15 @@ func SetUpAudio() -> void:
 
 func _process(Delta: float) -> void:
     if not Session: return
+    SessionAge += Delta
+    if not ShuttingDown:
+        if get_meta("SessionStartupFailed",false): SessionError = "Session startup failed. Check the address/port."
+        if Mode == "join":
+            var Connection: String = Network.call("get_connection_state")
+            if Connection == "Disconnected" and SessionAge > 2: SessionError = "Disconnected from server."
+            if Connection == "Connecting" and SessionAge > 15:
+                SessionError = "Could not reach server. Check its address and UDP port."
+                Network.call("disconnect_net")
     if get_meta("ClothReleaseRequested",false):
         set_meta("ClothReleaseRequested",false)
         var Canopy := World.get_node_or_null("PhysicsCanopy") as SoftBody3D
@@ -304,7 +327,10 @@ func _process(Delta: float) -> void:
         Audio.play()
     else: Feedback.modulate = Feedback.modulate.lerp(Color.WHITE,minf(1,Delta*12))
     if is_instance_valid(Results):
-        Results.visible = Snapshot.get("Phase","") in ["Victory","Defeat","StorageError"] or bool(get_meta("PlayerControllerMenu",false))
+        Results.visible = Snapshot.get("Phase","") in ["Victory","Defeat","StorageError"] or bool(get_meta("PlayerControllerMenu",false)) or not SessionError.is_empty()
+        if not SessionError.is_empty():
+            ResultText.text = SessionError+"\nReturn to the main menu to retry."
+            set_meta("PlayerControllerSuspended",true)
 
 func DrawState() -> void:
     var PlayerID := int(get_meta("LocalUserId",0))
@@ -348,7 +374,25 @@ func Shutdown(ExitCode := 0) -> void:
     if ShuttingDown: return
     ShuttingDown = true
     set_meta("PlayerControllerSuspended",true)
+    await RetireInput()
     if is_instance_valid(Network):
         Network.call("disconnect_net")
         await get_tree().create_timer(0.35).timeout
     get_tree().quit(ExitCode)
+
+func MainMenu() -> void:
+    if ShuttingDown: return
+    ShuttingDown = true
+    set_meta("PlayerControllerSuspended",true)
+    await RetireInput()
+    if is_instance_valid(Network):
+        Network.call("disconnect_net")
+        await get_tree().create_timer(0.35).timeout
+    get_tree().set_meta("RelaySiegeMenu",true)
+    get_tree().reload_current_scene()
+
+func RetireInput() -> void:
+    for NodeName in ["PlayerController","GameClient"]:
+        var Owner := get_node_or_null(NodeName)
+        if Owner: Owner.queue_free()
+    await get_tree().process_frame

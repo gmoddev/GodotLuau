@@ -39,7 +39,7 @@ Run.RenderStepped:Connect(function()
     local C = Players.LocalPlayer and Players.LocalPlayer.Character
     -- The movement lease belongs to PlayerController, not this weapon owner.
     -- InputService still supplies post-GUI/focus-cancelled values to this context.
-    local Enabled = C ~= nil and C.Health > 0 and game:GetAttribute("PlayerControllerRunning") and not game:GetAttribute("PlayerControllerMenu") and Snapshot ~= nil and Snapshot.Phase == "Active"
+    local Enabled = C ~= nil and C.Health > 0 and game:GetAttribute("PlayerControllerRunning") == true and not game:GetAttribute("PlayerControllerMenu") and Snapshot ~= nil and Snapshot.Phase == "Active"
     Gameplay.Enabled = Enabled
     local Request = game:GetAttribute("UIRequest")
     if Request then game:SetAttribute("UIRequest", nil); Send(Request) end

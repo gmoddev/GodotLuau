@@ -43,6 +43,22 @@ authorized renderer-enabled host plus its `remote-host.json`:
 python examples/e2e-game/PrepareGame.py --candidate GodotLuau-Windows.zip --engine godot.windows.template_release.x86_64.exe --host-manifest remote-host.json --assets imported-character-assets --output C:/Sandbox/RelaySiege --archive C:/Sandbox/RelaySiege-Windows.zip
 ```
 
+Use `--asset-editor Godot_v4.7.1-stable_win64.exe` instead of `--assets` to run
+the existing six-mesh import/bundling helper from explicit editor input. Archive
+creation requires a fresh staging folder so progress, logs and test scripts
+cannot enter the delivered ZIP. Extract to a writable folder for portable data.
+
+The reliable game endpoint accepts `(Action, Round, Value?)`; only Shoot takes a
+finite unit native Vector3. Server identity, live Character, round, rate,
+ammunition, range and world occlusion are authoritative. Other supported intents
+are Interact, Reload, Impulse, Again and Save. Snapshot Version 1 is a complete
+server-owned view sent at 5 Hz; it includes relays, drones, roster, health,
+ammunition, reactor, timer, result and shared career. It changes no native wire
+protocol. Unknown/stale/forged requests cannot grant damage, rewards or victory.
+The last 32 round receipts make normal save retries idempotent within that
+bounded history. A failed/unacknowledged save remains explicit; another round
+cannot start until it is acknowledged.
+
 No source checkout is needed by the resulting game. `game-package.json` records
 supplied input and payload hashes. The official stock editor can stage local
 rendered development without `--host-manifest`; it cannot host/join GL-029.

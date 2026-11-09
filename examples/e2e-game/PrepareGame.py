@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import zipfile
 
@@ -25,13 +26,25 @@ def Main():
     Parser.add_argument('--archive', type=Path)
     Parser.add_argument('--profile', help='Disposable user-data leaf for qualification; omit for normal play')
     Parser.add_argument('--assets',type=Path,help='Existing BundleCharacterAssets/runtime-remaps output')
+    Parser.add_argument('--asset-editor',type=Path,help='Prepare assets with the existing editor helper instead of --assets')
     Args = Parser.parse_args()
     Source = Path(__file__).resolve().parent
     Repository = Source.parents[1]
+    if Args.archive and subprocess.check_output(['git','-C',str(Repository),'status','--porcelain','--','examples/e2e-game','examples/player-controller'],text=True).strip():
+        Parser.error('Commit game sources before creating an identified archive')
     Output = Args.output.resolve()
     if Args.archive and Output.exists(): Parser.error('Archive packaging requires a fresh staging directory')
     if Output == Source or Source in Output.parents:
         Parser.error('Use a staging directory outside the source game project')
+    if Args.assets and Args.asset_editor: Parser.error('Select one asset source')
+    if Args.asset_editor:
+        sys.path.insert(0,str(Repository/'tests/runtime'))
+        from RunCharacterPresentation import Assets
+        from FixtureProcesses import StopAll
+        import os
+        try: Args.assets = Assets(Args.asset_editor.resolve(),Repository,Output.with_name(Output.name+'-asset-inputs'),dict(os.environ),True)
+        finally: StopAll()
+    if Args.archive and (not Args.host_manifest or not Args.assets): Parser.error('A game archive requires the admitted host manifest and bundled assets')
     if Args.host_manifest:
         sys.path.insert(0, str(Repository/'tests/runtime'))
         from RemoteHostIdentity import VerifyRemoteHost
@@ -67,13 +80,14 @@ def Main():
     shutil.copy2(Args.engine,Output/'RelaySiege.exe')
     for Name in ['LICENSE.txt','COPYRIGHT.txt']:
         if (Args.engine.parent/Name).exists(): shutil.copy2(Args.engine.parent/Name,Output/('ENGINE-'+Name))
-    shutil.copy2(Repository/'newdocs/e2e-game-development.md',Output/'QUALIFICATION.md')
+    shutil.copy2(Source/'QUALIFICATION.md',Output/'QUALIFICATION.md')
     Readme = Output/'README.md'
     Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md'))
     if Args.host_manifest: shutil.copy2(Args.host_manifest,Output/'remote-host.json')
     (Output/'Play.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --path "%~dp0" %*\r\n')
     (Output/'Server.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --headless --path "%~dp0" -- --mode server --port 24870 --glserver 24870\r\n')
-    Manifest = {'Schema':1,'CandidateSource':Provenance['Source'],'CandidateSHA256':Hash(Args.candidate),'EngineSHA256':Hash(Args.engine),
+    Manifest = {'Schema':1,'GameRevision':subprocess.check_output(['git','-C',str(Repository),'rev-parse','HEAD'],text=True).strip(),
+                'CandidateSource':Provenance['Source'],'CandidateSHA256':Hash(Args.candidate),'EngineSHA256':Hash(Args.engine),
                 'NetworkHostVerified':Args.host_manifest is not None,'Files':{}}
     for File in sorted(Output.rglob('*')):
         if File.is_file() and ('.godot' not in File.parts or File.name=='global_script_class_cache.cfg') and File.name != 'game-package.json':

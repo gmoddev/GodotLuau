@@ -1,5 +1,14 @@
 # Current architecture
 
+The unmerged [Relay Siege game campaign](e2e-game-development.md) composes these
+existing systems under `examples/e2e-game`: Server Luau owns round/combat/save
+rules, Client Luau supplies semantic input and reads server snapshots, and a
+project-specific Godot scene builds geometry/UI/local soft-body presentation.
+It adds no transport, VM, solver or persistence backend. The controller example
+has an optional additional application suspension gate for result screens.
+Cooperative game hulls retain world collision masks but use layer 0 to avoid
+ally/query collisions. These are game scene choices, not new native defaults.
+
 Integrated on main by [normal merge](input-main-integration.md), native `InputService`, `InputContext`,
 `InputAction` and `InputBinding` Nodes author one disposable `GLInputGraph`.
 `src/core/gl_input_actions.cpp` supplies the typed Luau surface and owner-aware

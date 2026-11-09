@@ -140,3 +140,30 @@ PlayerControllerSuspended, for result screens. It defaults false and reuses
 the same context cancellation/fresh-input rules. Dedicated gameplay verifies
 stopped results input and no held-key reactivation after restart. Original
 native behavior remains untouched; current native regressions are required.
+
+## Qualification follow-up
+
+Dedicated-v2 passes all five actors: 28 leader checks, nine per each of three
+observers and two server checks. Pinning the crate with SetNetworkOwner(nil)
+restores its actual client-visible impulse motion. The redundant second server
+start caused an avoidable bind failure; the bootstrap now respects the native
+CLI-created dedicated session. Connection failures stay in the game UI, and
+owned client scripts retire before transport teardown/main-menu reload.
+Menu-v3 exercises failed join and return to a fresh menu with four passing
+checks and no script errors. Pending joins now defer controller creation until
+native connection/Player ownership is live; weapon context Enabled is always
+boolean rather than nil during initial startup.
+
+Matching Windows full-native ASan lifecycle-v1 passes 17 actual game checks,
+including forged-intent rejection, native input, cloth release, weapon dispatch,
+death/respawn, defeat, acknowledged persistence and shutdown. No sanitizer report
+is emitted. Full instrumented victory attempts remain failed: headless synthetic
+mouse aiming does not behave like rendered input, and the right-stick replay
+loses the reactor before completing six kills. Their reports remain failed;
+they do not establish a sanitizer fault or passing full victory. Game difficulty
+and complete-loop assertions are unchanged. The scoped passing lifecycle is
+reported separately; Windows LSan remains unsupported.
+
+Native CI at `7826a7b` passes Linux; Windows attempt 1 fails official-editor
+download with HTTP 504 before building/testing. Only that failed job is retried,
+preserving Linux evidence. Final source/packaging verification remains pending.

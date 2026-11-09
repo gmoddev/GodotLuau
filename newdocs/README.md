@@ -33,6 +33,12 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+[Relay Siege](../examples/e2e-game/README.md) is the end-to-end cooperative arena
+campaign on `feature/e2e-gameplay-foundation`. Its
+[journal and qualification](e2e-game-development.md) distinguish completed
+Windows local/listen/dedicated play from pending package/CI checks and limits.
+It remains unmerged; releases and updater distribution stay disabled.
+
 The qualified input foundation is integrated by normal merge `f3c5757`.
 See the [integration and package verification](input-main-integration.md).
 See [ADR-012](adr-012-input-actions.md), the [API](input-actions-api.md) and

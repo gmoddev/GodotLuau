@@ -20,7 +20,7 @@ func _initialize() -> void:
 func _process(Delta: float) -> bool:
     # The offscreen window must never take the user's OS focus. Supply synthetic
     # focus alongside synthetic hardware input; production focus gates stay intact.
-    if Graphical and is_instance_valid(Game):
+    if is_instance_valid(Game):
         Game.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
     MaxGap = maxf(MaxGap,Delta)
     Frames += 1
@@ -58,6 +58,8 @@ func Press(Code: Key) -> void:
 func Mouse(Button: MouseButton, Down: bool) -> void:
     var Event := InputEventMouseButton.new()
     Event.button_index = Button; Event.pressed = Down
+    Event.position = Vector2(1000,580)
+    Event.global_position = Event.position
     Input.parse_input_event(Event)
 
 func StopMove() -> void:
@@ -87,6 +89,21 @@ func GoTo(Target: Vector3, Seconds := 10.0) -> bool:
 
 func Aim(Target: Vector3) -> void:
     Game.propagate_notification(Node.NOTIFICATION_APPLICATION_FOCUS_IN)
+    if not Graphical:
+        # Instrumented headless profile uses the existing semantic right stick;
+        # it does not claim rendered-window mouse routing.
+        for I in range(120):
+            if not Character() or not root.get_camera_3d(): break
+            var Desired := (Target-Character().global_position-Vector3(0,1.5,0)).normalized()
+            var Forward := -root.get_camera_3d().global_basis.z
+            var Yaw := wrapf(atan2(-Desired.x,-Desired.z)-atan2(-Forward.x,-Forward.z),-PI,PI)
+            var Pitch := asin(clampf(Desired.y,-1,1))-asin(clampf(Forward.y,-1,1))
+            if absf(Yaw)<0.02 and absf(Pitch)<0.02: break
+            Stick(JOY_AXIS_RIGHT_X,clampf(-Yaw*8,-1,1))
+            Stick(JOY_AXIS_RIGHT_Y,clampf(-Pitch*8,-1,1))
+            await create_timer(0.035).timeout
+        Stick(JOY_AXIS_RIGHT_X,0); Stick(JOY_AXIS_RIGHT_Y,0)
+        return
     Mouse(MOUSE_BUTTON_RIGHT,true)
     for I in range(45):
         if not Character() or not root.get_camera_3d(): break
@@ -96,9 +113,16 @@ func Aim(Target: Vector3) -> void:
         var Pitch := asin(clampf(Desired.y,-1,1))-asin(clampf(Forward.y,-1,1))
         if absf(Yaw)<0.015 and absf(Pitch)<0.015: break
         var Event := InputEventMouseMotion.new()
+        Event.position = Vector2(1000,580)
+        Event.global_position = Event.position
         Event.relative = Vector2(clampf(-Yaw/0.0022,-200,200),clampf(-Pitch/0.0022,-200,200))
         Input.parse_input_event(Event)
         await create_timer(0.035).timeout
+
+func Stick(Axis: JoyAxis, Value: float) -> void:
+    var Event := InputEventJoypadMotion.new()
+    Event.device = 0; Event.axis = Axis; Event.axis_value = Value
+    Input.parse_input_event(Event)
 
 func Run() -> void:
     Started = Time.get_ticks_msec()
@@ -106,6 +130,16 @@ func Run() -> void:
     root.add_child(Game)
     current_scene = Game
     await process_frame
+    if Scenario == "menu":
+        Check(Game.Menu.visible,"main menu available before a session")
+        Game.StartSession("join")
+        Check(await Until(func(): return not Game.SessionError.is_empty(),20),"unreachable server produces an in-game connection error")
+        Check(Game.Results.visible,"retry controls remain accessible")
+        var Old := Game.get_instance_id()
+        Game.MainMenu()
+        Check(await Until(func(): return is_instance_valid(current_scene) and current_scene.get_instance_id()!=Old and current_scene.Menu.visible,5),"main menu returns after actual session teardown")
+        Game = current_scene
+        Finish(); return
     if Scenario == "server":
         Check(await Until(func(): return Game.get_meta("ServerReady",false),12),"actual dedicated game Server ready")
         while not FileAccess.file_exists("res://stop-game"):
@@ -181,6 +215,18 @@ game:SetAttribute('InvalidGameRequestsDone',true)
     await create_timer(0.3).timeout
     Check(State().Phase=="Active" and State().Round==Epoch and State().Kills==0 and State().Relays==[false,false,false],"clients cannot claim victory, kills, damage or stale-round interactions")
     Check(Character().call("get_health")==Health,"Client cannot overwrite authoritative health")
+    if Scenario == "lifecycle":
+        Check(await GoTo(Vector3(6,0,-9)),"actual instrumented movement reaches hazard approach")
+        Check(await GoTo(Vector3(0,0,-9)),"actual instrumented movement reaches hazard")
+        Mouse(MOUSE_BUTTON_LEFT,true)
+        await create_timer(0.6).timeout
+        Mouse(MOUSE_BUTTON_LEFT,false)
+        Check(State().get("Shots",0)>0,"instrumented public weapon path executes")
+        Check(await Until(func(): return Character() and Character().get_instance_id()!=Original,35),"instrumented death retires and replaces native Character")
+        Check(await Until(func(): return Game.get_meta("PlayerControllerRunning",false),4),"instrumented controller resumes on the replacement life")
+        Check(await Until(func(): return State().get("Phase","")=="Defeat",100),"instrumented actual game reaches defeat")
+        Check(await Until(func(): return State().get("Save","")=="Saved",8),"instrumented actual round persists before shutdown")
+        Finish(); return
     Check(await GoTo(Vector3(-16,0,14)),"walk to physics playground")
     var Crate: Node3D = Game.World.get_node_or_null("ImpulseCrate")
     if Crate:
@@ -202,9 +248,23 @@ game:SetAttribute('InvalidGameRequestsDone',true)
         if Mine.get("Ammo",0)==0: await Press(KEY_R); await create_timer(1.5).timeout
         if State().Bots.size()>0 and Character() and Character().call("get_health")>0:
             var Bot: Dictionary = State().Bots[0]
+            var Found := false
+            for Candidate in State().Bots:
+                var Position := Vector3(Candidate.Position.X,Candidate.Position.Y,Candidate.Position.Z)
+                var Query := PhysicsRayQueryParameters3D.create(Character().global_position+Vector3(0,1.5,0),Position)
+                if Game.World.get_world_3d().direct_space_state.intersect_ray(Query).is_empty():
+                    Bot = Candidate; Found = true; break
+            if not Found:
+                # Walk around the central cover, like a player, instead of
+                # repeatedly firing at a correctly occluded target.
+                await GoTo(Vector3(5,0,Character().global_position.z),2)
+                await GoTo(Vector3(5,0,0),2)
+                continue
             var Target := Vector3(Bot.Position.X,Bot.Position.Y,Bot.Position.Z)
             if Character().global_position.distance_to(Target)>18:
-                await GoTo(Target,2.0)
+                var StandOff := Target+(Character().global_position-Target).normalized()*12
+                StandOff.y = 0
+                await GoTo(StandOff,2.0)
             await Aim(Target)
             Mouse(MOUSE_BUTTON_LEFT,true)
             await create_timer(0.6).timeout

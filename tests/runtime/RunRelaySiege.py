@@ -13,7 +13,7 @@ def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     Parser.add_argument('--game',type=Path,required=True)
     Parser.add_argument('--output',type=Path,required=True)
-    Parser.add_argument('--scenario',default='local',choices=['local','observer','recovery','combat','coop','server'])
+    Parser.add_argument('--scenario',default='local',choices=['local','observer','recovery','combat','coop','server','menu','lifecycle'])
     Parser.add_argument('--mode',choices=['solo','host','join','server'])
     Parser.add_argument('--address',default='127.0.0.1')
     Parser.add_argument('--port',default=24870,type=int)
@@ -24,7 +24,7 @@ def Main():
     Root = Args.game.resolve()
     Args.output.mkdir(parents=True,exist_ok=False)
     shutil.copy2(Path(__file__).with_name('RelaySiege.gd'),Root/'RelaySiege.gd')
-    Command = [str(Root/'RelaySiege.exe'),'--path',str(Root),'--script','res://RelaySiege.gd','--max-fps','30']
+    Command = [str(Root/'RelaySiege.exe'),'--disable-crash-handler','--path',str(Root),'--script','res://RelaySiege.gd','--max-fps','30']
     if Args.graphical: Command += ['--position','16000,16000','--resolution','1152x720']
     else: Command += ['--headless']
     if Args.verbose: Command += ['--verbose']
