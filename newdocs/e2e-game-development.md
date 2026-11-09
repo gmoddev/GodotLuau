@@ -226,3 +226,10 @@ GL_RUNTIME_TESTS. Those are unsuitable fixture configurations, not evidence of
 a production replication failure. Preserve their logs; do not add a product
 issue or change the production diagnostic boundary. The game continues to use
 the actual production DLL and its separate passing four-player evidence.
+
+Native `42587537271` finishes successfully on Windows and Linux, with all 141
+required actors on each platform. Both downloaded summaries identify `43f513b`
+and the unchanged native fingerprint. Core at that checkpoint also passes.
+The fixture correction at `78b7f65` passes current core CI; its automatic native
+run `42590964418` is still building. The game ZIP remains the qualified `3f61704`
+payload; no repackaging or gameplay replay is needed for this test-only change.

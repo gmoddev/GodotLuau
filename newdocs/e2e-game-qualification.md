@@ -87,12 +87,17 @@ profile. Full instrumented victory replays failed to complete gameplay and are
 retained as failures, without reported sanitizer faults. The passing lifecycle
 does not relabel those attempts. Windows LSan remains unsupported.
 
-Core CI run 42587537286 passes Windows/Linux Debug. Native run 42587537271 passes
-all 141 Linux actors; Windows is pending at this documentation checkpoint.
-Both use `43f513b`; subsequent runtime
+Core CI run 42587537286 and native run 42587537271 pass Windows/Linux Debug,
+with all 141 required native actors per platform. Both use `43f513b`; subsequent runtime
 changes are only the game's ready log and dedicated-startup ordering, exercised
 by the package and dedicated tests above. No new native compilation or duplicate
 sanitizer campaign is needed for unchanged C++ inputs.
+
+The subsequent two-line fixture correction is `78b7f65`: core run 42590964403
+passes both platforms; its automatically triggered native run 42590964418 is
+pending at this documentation checkpoint. The focused seven-actor matching
+ASan relevance run already passes. No production game file changed after the
+packaged and dedicated qualification source.
 
 ## Remaining scope
 
@@ -101,7 +106,7 @@ The exact cause is unproven; no engine patch or assertion is changed to hide it.
 The duplicate dedicated bind was a separate, corrected game-bootstrap bug.
 An earlier Windows CI relevance attempt fails its server-motion observation.
 The fixture now explicitly pins that phase to the server before the unchanged
-later client-owner grant. All seven existing relevance actors pass with the
+later client-owner grant. [All seven existing relevance actors pass](evidence/e2e-game/relevance-ownership.json) with the
 matching ASan test adapter. Two initial local runs used the production DLL,
 which intentionally omits fixture-only peer diagnostics; those runs are invalid
 fixture configurations and do not establish a product defect.

@@ -1,0 +1,58 @@
+{
+  "Revision": "78b7f65a54e30bf1b781290e78830e4b738a4e27",
+  "Scope": "Existing RelevanceFixtures, matching CMake GL_RUNTIME_TESTS full-native ASan adapter; only server-phase ownership configuration changed",
+  "OriginalReport": "C:/Users/aiden/.codex/artifacts/godotluau/e2e-game-20261109/relevance-owner-fixed-asan/relevance-evidence.json",
+  "OriginalReportSHA256": "1de0f0d900ddd17a2826e23bc6f6b0794af0224790e6ecde5607bf6e01d7dc14",
+  "Actors": 7,
+  "Results": [
+    {
+      "Role": "server0",
+      "Mode": "Listen",
+      "Result": "PASS",
+      "Cases": 81,
+      "Failed": 0
+    },
+    {
+      "Role": "client1",
+      "Mode": "Listen",
+      "Result": "PASS",
+      "Cases": 49,
+      "Failed": 0
+    },
+    {
+      "Role": "client2",
+      "Mode": "Listen",
+      "Result": "PASS",
+      "Cases": 43,
+      "Failed": 0
+    },
+    {
+      "Role": "server0",
+      "Mode": "Dedicated",
+      "Result": "PASS",
+      "Cases": 77,
+      "Failed": 0
+    },
+    {
+      "Role": "client1",
+      "Mode": "Dedicated",
+      "Result": "PASS",
+      "Cases": 49,
+      "Failed": 0
+    },
+    {
+      "Role": "client2",
+      "Mode": "Dedicated",
+      "Result": "PASS",
+      "Cases": 43,
+      "Failed": 0
+    }
+  ],
+  "RootGuard": {
+    "Result": "PASS",
+    "Cases": 6,
+    "Failed": 0
+  },
+  "ASAN_OPTIONS": "halt_on_error=1",
+  "SanitizerReports": 0
+}

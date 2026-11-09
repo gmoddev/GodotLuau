@@ -50,13 +50,28 @@
     "Native": {
       "Run": 42587537271,
       "Revision": "43f513bcb94d74aaf38bc9226c188af28caeb3ae",
-      "Conclusion": "pending",
+      "Conclusion": "success",
+      "Windows": {
+        "Conclusion": "success",
+        "Actors": 141,
+        "SummarySHA256": "5cc674a04386f07dbea2906d2188094f7c8d67b460e8f27c004b998884528442",
+        "ArtifactId": 13660729491
+      },
       "Linux": {
         "Conclusion": "success",
         "Actors": 141,
         "SummarySHA256": "ce7968a2839bfffab820d4996f9c71d29b156750fa0137c92f0dced609a48f34",
         "ArtifactId": 13661021078
       }
+    },
+    "FixtureCorrection": {
+      "Revision": "78b7f65a54e30bf1b781290e78830e4b738a4e27",
+      "CoreRun": 42590964403,
+      "CoreConclusion": "success",
+      "NativeRun": 42590964418,
+      "NativeConclusion": "pending",
+      "FocusedASanActors": 7,
+      "FocusedASanReportSHA256": "1de0f0d900ddd17a2826e23bc6f6b0794af0224790e6ecde5607bf6e01d7dc14"
     },
     "RenderedHost": {
       "Run": 42576293787,
@@ -328,6 +343,8 @@
     "WindowsLSan": "unsupported"
   },
   "FailedAttemptsRetained": [
+    "native 42583617472 attempt 2 Windows relevance-Dedicated client1.physics/server motion assertion",
+    "relevance-owner-fixed and relevance-owner-fixed-current-host (invalid fixture profile: production DLL omits GL_RUNTIME_TESTS diagnostics)",
     "play-v1 through play-v6",
     "combat-v1 through combat-v4",
     "recovery-v2",
