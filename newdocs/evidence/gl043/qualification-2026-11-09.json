@@ -49,7 +49,18 @@
     },
     "Native": {
       "Run": 42610522588,
-      "Conclusion": "pending",
+      "Conclusion": "success",
+      "Windows": {
+        "Conclusion": "success",
+        "Actors": 141,
+        "ModelChecks": 96,
+        "NewPhysicsChecks": 20,
+        "SummarySHA256": "c874351e4e50399102d3e0073c929744c4482f03235d3893961b3a0669cea392",
+        "ArtifactId": 13671498453,
+        "ArtifactDigest": "sha256:1fd2407f2902eb6689eb8df62c03f381cbc8ae7adc443da19edee71d9bdb4c10",
+        "ObservedNativeLinearX": 3.966778,
+        "ObservedNativeAngularY": 2.380067
+      },
       "Linux": {
         "Conclusion": "success",
         "Actors": 141,

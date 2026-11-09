@@ -116,3 +116,10 @@ pass within that fixture. Matching Linux full-native ASan/LSan also passes with
 FullQualification=true, detection controls passed and no unexpected reports.
 Downloaded source identity matches the corrected 101-file fingerprint. Windows
 and the complete candidate matrix remain pending; the issue is not closed yet.
+
+Windows ordinary native now also passes all 141 actors and 96 Model checks,
+including the same 20 focused checks and measured impulse velocities. Both
+downloaded native summaries identify `3227290` and the same production
+fingerprint. Linux Debug candidate qualification passes; full candidate
+acceptance and Windows full-native ASan remain pending. No runtime assertion
+has failed on the corrected source at this checkpoint.
