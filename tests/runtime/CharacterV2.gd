@@ -227,6 +227,133 @@ func InputCases(Character: Node3D) -> void:
     Freeze(Character)
 
 
+func PhysicsCases(Character: Node3D) -> void:
+    var Baseline := "--gl043-baseline" in OS.get_cmdline_user_args()
+    var Group := Create("Folder", "PhysicsFilterGroup", World)
+    var Near: RigidBody3D = Create("RobloxPart", "PhysicsNear", Group)
+    var Far: RigidBody3D = Create("RobloxPart", "PhysicsFar", World)
+    for Part in [Near, Far]:
+        Part.call("set_anchored", true)
+        Part.call("set_size", Vector3(2,2,2))
+    Near.global_position = Vector3(0,100,0)
+    Far.global_position = Vector3(6,100,0)
+    var Body: RigidBody3D = Create("RobloxPart", "PhysicsImpulse", World)
+    Body.call("set_anchored", false)
+    Body.gravity_scale = 0; Body.mass = 1
+    Body.global_position = Vector3(0,200,0)
+    await physics_frame; await physics_frame
+    Script("PhysicsFilters", """
+local W = game.Workspace
+local Near, Far = W.PhysicsFilterGroup.PhysicsNear, W.PhysicsFar
+local P = RaycastParams.new(); P.MaxDistance = 20
+local function Hit(Params)
+    return W:Raycast(Vector3.new(-5,100,0), Vector3.new(1,0,0), Params)
+end
+local function Is(Result, Part) return Result and Result.Instance == Part end
+game:SetAttribute('Physics_Unfiltered', Is(Hit(P), Near))
+game:SetAttribute('Physics_LegacyRay', Is(W:Raycast({X=-5,Y=100,Z=0},{X=1,Y=0,Z=0},20),Near) and Is(W:FindPartOnRay(Vector3.new(-5,100,0),Vector3.new(1,0,0),20),Near))
+P.FilterDescendantsInstances = {W.PhysicsFilterGroup}
+game:SetAttribute('Physics_Exclude', Is(Hit(P), Far))
+P.FilterType = Enum.RaycastFilterType.Include
+P.FilterDescendantsInstances = {Far}
+local R = Hit(P)
+game:SetAttribute('Physics_Include', Is(R, Far))
+game:SetAttribute('Physics_Result', R and math.abs(R.Distance-10)<0.01 and math.abs(R.Position.X-5)<0.01 and R.Normal.X< -0.99)
+P.FilterDescendantsInstances = {W.PhysicsFilterGroup}
+game:SetAttribute('Physics_Descendant', Is(Hit(P), Near))
+P.FilterDescendantsInstances = {Near, Far}
+game:SetAttribute('Physics_Nearest', Is(Hit(P), Near))
+P.FilterDescendantsInstances = {}
+game:SetAttribute('Physics_EmptyInclude', Hit(P) == nil)
+P.FilterType = Enum.RaycastFilterType.Exclude
+game:SetAttribute('Physics_EmptyExclude', Is(Hit(P), Near))
+P.FilterDescendantsInstances = {Near, Near}
+game:SetAttribute('Physics_Duplicate', Is(Hit(P), Far))
+P.MaxDistance = 3
+game:SetAttribute('Physics_Distance', Hit(P) == nil)
+game:SetAttribute('PhysicsFiltersDone', true)
+""")
+    await create_timer(0.1).timeout
+    for Name in ["Unfiltered", "LegacyRay", "Exclude", "Include", "Result", "Descendant", "Nearest", "EmptyInclude", "EmptyExclude", "Duplicate", "Distance"]:
+        var Passed: bool = Game.get_meta("Physics_"+Name,false)
+        print("[Physics:Bindings] ","PASS " if Passed else "FAIL ",Name)
+        Check(Passed,"GL-043 raycast "+Name)
+    Script("PhysicsVectorImpulse", "game.Workspace.PhysicsImpulse:ApplyImpulse(Vector3.new(4,0,0)); game.Workspace.PhysicsImpulse:ApplyAngularImpulse(Vector3.new(0,4,0)); game:SetAttribute('PhysicsImpulseDone',true)")
+    await create_timer(0.1).timeout
+    var NativeLinear := Body.linear_velocity.x > 1.9
+    var NativeAngular := Body.angular_velocity.y > 0.5
+    print("[Physics:Bindings] Vector3 linear=",Body.linear_velocity," angular=",Body.angular_velocity)
+    Check(NativeLinear,"GL-043 native Vector3 central impulse")
+    Check(NativeAngular,"GL-043 native Vector3 angular impulse")
+    Body.linear_velocity = Vector3.ZERO; Body.angular_velocity = Vector3.ZERO
+    Script("PhysicsTableImpulse", "game.Workspace.PhysicsImpulse:ApplyImpulse({X=0,Y=4,Z=0}); game.Workspace.PhysicsImpulse:ApplyAngularImpulse({X=0,Y=0,Z=4}); game:SetAttribute('PhysicsTableDone',true)")
+    await create_timer(0.1).timeout
+    Check(Body.linear_velocity.y>1.9 and Body.angular_velocity.z>0.5,"GL-043 legacy component table impulses")
+    if not Baseline:
+        Body.linear_velocity = Vector3.ZERO; Body.angular_velocity = Vector3.ZERO
+        var InvalidOwner := Script("PhysicsInvalid", """
+local W, B = game.Workspace, game.Workspace.PhysicsImpulse
+local function Ray(P) return W:Raycast(Vector3.new(-5,100,0),Vector3.new(1,0,0),P) end
+local P = RaycastParams.new(); P.FilterType = 9
+assert(not pcall(function() Ray(P) end))
+P.FilterType = 1; P.FilterDescendantsInstances = {Vector3.new()}
+assert(not pcall(function() Ray(P) end))
+P.FilterDescendantsInstances = {[2]=W}
+assert(not pcall(function() Ray(P) end))
+P.FilterDescendantsInstances = {}; for I=1,64 do P.FilterDescendantsInstances[I]=W.PhysicsFilterGroup end
+assert(Ray(P).Instance==W.PhysicsFar)
+P.FilterDescendantsInstances = {}; for I=1,65 do P.FilterDescendantsInstances[I]=W end
+assert(not pcall(function() Ray(P) end))
+P.FilterDescendantsInstances = {}; P.MaxDistance = math.huge
+assert(not pcall(function() Ray(P) end))
+assert(not pcall(function() W:Raycast(W,Vector3.new(1,0,0)) end))
+assert(not pcall(function() W:Raycast(Vector3.new(0/0,0,0),Vector3.new(1,0,0)) end))
+for _, Value in ipairs({W, Color3.new(), {X=1,Y=2}, Vector3.new(0/0,0,0), {X=math.huge,Y=0,Z=0}}) do
+    assert(not pcall(function() B:ApplyImpulse(Value) end))
+    assert(not pcall(function() B:ApplyAngularImpulse(Value) end))
+end
+local Dead = Instance.new('Folder'); Dead:Destroy()
+P = RaycastParams.new(); P.MaxDistance=20; P.FilterDescendantsInstances={Dead}
+assert(Ray(P).Instance==W.PhysicsFilterGroup.PhysicsNear)
+P.FilterType=0; assert(Ray(P)==nil)
+shared.PhysicsRetained = B.ApplyImpulse; shared.PhysicsAngularRetained = B.ApplyAngularImpulse
+game:SetAttribute('PhysicsInvalidDone',true)
+""")
+        await create_timer(0.1).timeout
+        Check(Game.get_meta("PhysicsInvalidDone",false) and Body.linear_velocity.is_zero_approx() and Body.angular_velocity.is_zero_approx(),"GL-043 invalid input rejects without physics mutation and dead filters are safe")
+        InvalidOwner.call("set_enabled",false)
+        Script("PhysicsReloadUse", "shared.PhysicsRetained(nil,Vector3.new(4,0,0)); game:SetAttribute('PhysicsReloadDone',true)")
+        await create_timer(0.05).timeout
+        Check(Game.get_meta("PhysicsReloadDone",false) and Body.linear_velocity.x>1.9,"GL-043 retained method uses a live Part from a fresh execution owner")
+        Body.reparent(Character)
+        Script("PhysicsCharacterFilter", "local P=RaycastParams.new(); P.FilterType=0; P.MaxDistance=20; P.FilterDescendantsInstances={game.Workspace.LocalPlayer}; local R=game.Workspace:Raycast(Vector3.new(-10,200,0),Vector3.new(1,0,0),P); game:SetAttribute('PhysicsCharacterFilterDone',R and R.Instance==game.Workspace.LocalPlayer.PhysicsImpulse)")
+        await create_timer(0.05).timeout
+        Check(Game.get_meta("PhysicsCharacterFilterDone",false),"GL-043 Character root filter includes its physical descendants")
+        Body.queue_free(); await process_frame
+        Script("PhysicsRetired", "shared.PhysicsRetained(nil,Vector3.new(1,0,0)); shared.PhysicsAngularRetained(nil,Vector3.new(1,0,0)); game:SetAttribute('PhysicsRetiredDone',true)")
+        await create_timer(0.05).timeout
+        Check(Game.get_meta("PhysicsRetiredDone",false),"GL-043 retained impulse methods survive native Part destruction")
+        var Blockers := Create("Folder","PhysicsBlockers",World)
+        for Index in range(129):
+            var Part: RigidBody3D = Create("RobloxPart","Blocker"+str(Index),Blockers)
+            Part.call("set_anchored",true); Part.call("set_size",Vector3.ONE)
+            Part.global_position = Vector3(Index*2,300,0)
+        await physics_frame; await physics_frame
+        Script("PhysicsBound", """
+local P=RaycastParams.new(); P.MaxDistance=300; P.FilterDescendantsInstances={game.Workspace.PhysicsBlockers}
+for I=1,3 do
+    local OK,Error=pcall(function() game.Workspace:Raycast(Vector3.new(-2,300,0),Vector3.new(1,0,0),P) end)
+    assert(not OK and string.find(Error,'work limit exceeded',1,true))
+end
+game:SetAttribute('PhysicsBoundDone',true)
+""")
+        await create_timer(0.1).timeout
+        Check(Game.get_meta("PhysicsBoundDone",false),"GL-043 excessive filtered collider work fails explicitly and cleans native query resources")
+        Blockers.queue_free()
+    else: Body.queue_free()
+    Group.queue_free(); Far.queue_free()
+    await process_frame
+
 func _initialize() -> void:
     call_deferred("Run")
 
@@ -247,6 +374,11 @@ func Run() -> void:
     await process_frame
     var Character: Node3D = World.get_node("LocalPlayer")
     Freeze(Character)
+    await PhysicsCases(Character)
+    if "--gl043-baseline" in OS.get_cmdline_user_args():
+        Game.free(); await process_frame; await process_frame
+        print("[Physics:Bindings] Baseline ","FAIL" if Failed else "PASS")
+        quit(1 if Failed else 0); return
     var Rig := "R6" if Character.has_node("Torso") else "Fallback"
     Check(Character.is_class("RBXCharacter") and Character.is_class("RBXModel"), "actual native Model inheritance")
     Check(not Character.has_node("Humanoid") and not ClassDB.class_exists("Humanoid"), "separate 3D Humanoid removed")

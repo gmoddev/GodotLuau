@@ -89,7 +89,7 @@ four successful workflows and independently checked artifacts.
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
-| GL-043 | P2 | Source-verified compatibility limitation | Workspace raycast filtering and Vector3 impulse arguments are incomplete |
+| GL-043 | P2 | Reproduced; bounded fix on unmerged branch, qualification pending | Workspace raycast filtering and Vector3 impulse arguments are incomplete |
 | GL-044 | P2 | Confirmed gameplay contract discrepancy | Native Node3D CFrame lacks stdlib directional convenience fields |
 | GL-045 | P2 | Confirmed gameplay math discrepancy | Vector3 colon Dot reads self as the other operand |
 
@@ -117,6 +117,12 @@ server input validation. Unifying the returned CFrame contract is a separately
 scoped follow-up; this campaign does not replace or refactor the math binding.
 
 ## GL-043: Physics query and impulse compatibility
+
+Work on `fix/gl-043-raycast-impulses` reproduces ignored Include/Exclude filters
+and zero native Vector3 linear/angular impulses in an isolated native probe.
+The bounded in-place correction and actual qualification progress are in the
+[GL-043 journal](gl-043-development.md). Qualification is pending; this entry
+remains open and main is unchanged. The original game discovery follows.
 
 Discovered during [Relay Siege development](e2e-game-development.md). Source in
 `src/core/luau_api.h` implements Workspace RaycastParams.MaxDistance, but does
