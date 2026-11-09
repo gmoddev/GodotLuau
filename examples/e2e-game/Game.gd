@@ -153,11 +153,13 @@ func StartSession(Selected: String) -> void:
     Native("RemoteEventNode", "State", get_node("ReplicatedStorage"))
     Native("Node", "SettingsMenu")
     Network = Native("NetworkService", "NetworkService")
-    if Mode == "server" and int(Network.call("get_mode")) != 1:
-        ScriptRun("Listen", "game:SetAttribute('SessionStartupFailed',not game.NetworkService:StartServer(%d,4))" % Port)
     BuildArena()
     await get_tree().process_frame
-    if Mode == "host":
+    # NetworkService resolves --glserver through its deferred native startup.
+    # Inspect the live role only after that initialization has run.
+    if Mode == "server" and int(Network.call("get_mode")) != 1:
+        ScriptRun("Listen", "game:SetAttribute('SessionStartupFailed',not game.NetworkService:StartServer(%d,4))" % Port)
+    elif Mode == "host":
         ScriptRun("Listen", "game:SetAttribute('SessionStartupFailed',not game.NetworkService:StartServer(%d,3))" % Port)
     elif Mode == "join":
         ScriptRun("Connect", "game:SetAttribute('SessionStartupFailed',not game.NetworkService:Connect(%s,%d)); game:SetAttribute('SessionConnectAttempted',true)" % [JSON.stringify(Host), Port], true)

@@ -176,3 +176,13 @@ native ZIP and exported rendered host, imports through the existing helper,
 stages a fresh self-contained archive and starts its actual Main scene after
 extraction. It uploads an Actions artifact only, with read-only repository
 permissions. No release or updater workflow is enabled.
+
+The first final package workflow passes at `b0b9010`, including extracted Main
+startup with empty stderr. Two local archives from identical supplied inputs
+have identical SHA-256 `5cbc290de785d052d496187ec309be692c80cf025fa7af31c09094292f445929`.
+Its extracted rendered playthrough reaches victory and acknowledges persistence.
+The final dedicated run exposes a startup ordering mistake: NetworkService's
+deferred CLI initialization has not completed when the bootstrap checks its role,
+so the fallback script tries to bind the same port again. Move that check after
+the existing frame boundary. This is a game bootstrap correction, not a native
+transport change. Preserve the failed diagnostic and repeat the affected session.

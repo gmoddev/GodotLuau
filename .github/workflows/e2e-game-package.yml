@@ -2,7 +2,7 @@ name: Relay Siege game package (no publication)
 on:
   push:
     branches: [feature/e2e-gameplay-foundation]
-    paths: [.github/workflows/e2e-game-package.yml]
+    paths: [.github/workflows/e2e-game-package.yml, 'examples/e2e-game/**', 'examples/player-controller/PlayerController.luau']
   workflow_dispatch:
 permissions:
   contents: read
