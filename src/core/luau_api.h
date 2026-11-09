@@ -1820,7 +1820,7 @@ static int godot_object_index(lua_State* L) {
                 if (!To.is_finite()) luaL_error(pL, "Ray endpoint is outside finite physics coordinates");
                 Node* hit = nullptr;
                 Vector3 pos, normal;
-                bool Finished = false;
+                bool Finished = false, HasHit = false;
                 {
                     Ref<PhysicsRayQueryParameters3D> params;
                     params.instantiate(); params->set_from(from); params->set_to(To);
@@ -1846,7 +1846,7 @@ static int godot_object_index(lua_State* L) {
                         }
                         if (Include ? Match : !Match) {
                             hit = Candidate; pos = Result.get("position", Vector3()); normal = Result.get("normal", Vector3());
-                            Finished = true; break;
+                            HasHit = true; Finished = true; break;
                         }
                         RID Rejected = Result.get("rid", RID());
                         if (!Rejected.is_valid()) break;
@@ -1854,7 +1854,7 @@ static int godot_object_index(lua_State* L) {
                     }
                 } // Release all native containers before a bounded-work error.
                 if (!Finished) luaL_error(pL, "Raycast filter work limit exceeded (128 queries / 256 ancestors)");
-                if (!hit) { lua_pushnil(pL); return 1; }
+                if (!HasHit) { lua_pushnil(pL); return 1; }
                 lua_newtable(pL);
                 if (hit) wrap_node(pL, hit); else lua_pushnil(pL);
                 lua_setfield(pL, -2, "Instance");

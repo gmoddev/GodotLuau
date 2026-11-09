@@ -36,7 +36,7 @@ implementation results remain pending at this checkpoint.
 
 ## Controlled baseline and correction
 
-The isolated MainPC headless probe finishes in under a second, exit 1 with empty
+The isolated MainPC headless probe returns exit 1 with empty
 stderr. Against the unchanged main native fingerprint it reproduces seven failed
 assertions: Exclude, Include, eligible-hit distance/normal, empty Include,
 duplicate exclusions, native linear impulse and native angular impulse. The
@@ -68,3 +68,10 @@ instead. The production patch is unchanged. Superseded runs are retained as
 cancelled, not passing or product failures; final qualification uses this
 corrected test input. An earlier superseded native run at `a784073` was also
 cancelled while building after the bounded ancestry lookup was tightened.
+
+Compatibility review also retains anonymous Godot PhysicsServer bodies: an
+unfiltered hit can have a nil Instance and must still return position/normal/
+distance. Keep a separate hit-present flag and exercise a real anonymous native
+body. This is a correction to the new filtering implementation, not a new API
+or a change to existing no-hit semantics. Final qualification must use this
+complete production/fixture input; earlier superseded runs remain recorded.

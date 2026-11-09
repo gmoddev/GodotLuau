@@ -31,6 +31,8 @@ are valid and count toward the entry limit. Destroyed or queued-for-deletion
 roots do not match. Parameters are read afresh on every invocation. The returned
 Instance remains the actual collision node, including the internal PhysicsBody
 for Character hits; a Character filter root still includes that descendant.
+Anonymous Godot server bodies retain the existing hit table with nil Instance;
+they have no Node ancestry to match an Include root.
 
 Filtering reissues the same original segment with rejected collision RIDs in a
 native exclusion array. It does not shift the origin, mutate collision layers,

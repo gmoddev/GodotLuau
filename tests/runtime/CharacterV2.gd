@@ -242,6 +242,18 @@ func PhysicsCases(Character: Node3D) -> void:
     Body.gravity_scale = 0; Body.mass = 1
     Body.global_position = Vector3(0,200,0)
     await physics_frame; await physics_frame
+    var Anonymous := PhysicsServer3D.body_create()
+    var AnonymousShape := PhysicsServer3D.box_shape_create()
+    PhysicsServer3D.shape_set_data(AnonymousShape,Vector3(0.5,0.5,0.5))
+    PhysicsServer3D.body_set_mode(Anonymous,PhysicsServer3D.BODY_MODE_STATIC)
+    PhysicsServer3D.body_add_shape(Anonymous,AnonymousShape)
+    PhysicsServer3D.body_set_state(Anonymous,PhysicsServer3D.BODY_STATE_TRANSFORM,Transform3D(Basis(),Vector3(0,500,0)))
+    PhysicsServer3D.body_set_space(Anonymous,World.get_world_3d().space)
+    await physics_frame; await physics_frame
+    Script("PhysicsAnonymous", "local R=game.Workspace:Raycast(Vector3.new(-5,500,0),Vector3.new(1,0,0),20); game:SetAttribute('PhysicsAnonymousDone',R and R.Instance==nil and math.abs(R.Distance-4.5)<0.01)")
+    await create_timer(0.05).timeout
+    Check(Game.get_meta("PhysicsAnonymousDone",false),"GL-043 unfiltered anonymous Godot body preserves hit result with nil Instance")
+    PhysicsServer3D.free_rid(Anonymous); PhysicsServer3D.free_rid(AnonymousShape)
     Script("PhysicsFilters", """
 local W = game.Workspace
 local Near, Far = W.PhysicsFilterGroup.PhysicsNear, W.PhysicsFar
