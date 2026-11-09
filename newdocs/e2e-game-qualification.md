@@ -1,10 +1,12 @@
 # Relay Siege — gameplay qualification
 
-The playable Windows game is complete on the unmerged
-`feature/e2e-gameplay-foundation` branch. Production game source and the supplied
-Actions ZIP identify `3f617040ab7d7edeb94721ed4f7cd7a0af3345e6`.
-Later evidence-only commits do not change that package. Main remains
-`a3c62e9333fbf2a7dd7d095b9f12d9a3d71eba96`.
+The playable Windows game is integrated into main by normal merge `025401f`,
+preserving `feature/e2e-gameplay-foundation` at `1ed3ee5` and all 12 commits.
+The original production game source and supplied branch Actions ZIP identify
+`3f617040ab7d7edeb94721ed4f7cd7a0af3345e6`. Later evidence-only commits do not
+change that package. See the [main integration record](e2e-game-main-integration.md)
+for the exact merge tree and fresh integrated CI/package outcomes. The evidence
+below retains its original branch scope and identities.
 
 Download the `RelaySiege-Windows` artifact from the
 [non-publishing package run](https://github.com/gmoddev/GodotLuau/actions/runs/42588812901).
@@ -120,5 +122,6 @@ called through the scene adapter, with no vertex replication.
 Linux rendered gameplay, physical devices, WAN/NAT traversal, authentication,
 matchmaking and pristine-machine runtime installation remain unqualified.
 Existing GL-017/018 and asset-provenance limitations remain. No broad refactor,
-dependency update, transport replacement, release publication, updater admission
-or merge into main is part of this campaign.
+dependency update, transport replacement, release publication or updater admission
+is part of this campaign. The separately authorized main integration preserves
+these same limitations.

@@ -1,5 +1,10 @@
 # End-to-end gameplay foundation — Relay Siege
 
+**Main integration:** the separately authorized normal merge `025401f` now
+preserves qualified feature tip `1ed3ee5` and all 12 commits. See the
+[integration record](e2e-game-main-integration.md) for fresh CI and package
+results. The chronological campaign evidence below retains its original scope.
+
 ## 2026-11-09 — Preparation
 
 Branch `feature/e2e-gameplay-foundation` starts from verified remote main

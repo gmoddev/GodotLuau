@@ -25,6 +25,11 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 ## Index
 
+The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
+qualified game and its original evidence. GL-043/044/045 remain open: the game
+uses documented supported calls and scene configuration, which does not resolve
+the underlying compatibility gaps. No issue is closed merely by this merge.
+
 Networking Foundation 2 source `cb2014f` is now integrated by a normal merge into
 compacted main `41acd27`, preserving three foundation commits and every historical
 receipt. See the [integration record](networking-foundation-2-work.md#main-integration-2026-11-05).

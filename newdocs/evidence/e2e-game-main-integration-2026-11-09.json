@@ -1,0 +1,121 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-09",
+  "StartingMain": "a3c62e9333fbf2a7dd7d095b9f12d9a3d71eba96",
+  "SourceBranch": "feature/e2e-gameplay-foundation",
+  "SourceTip": "1ed3ee555f07922f5bb3e18a4126e6bfd74d09e1",
+  "NormalMerge": "025401f307c7dc8b47f84c36885158b01c4e402c",
+  "MergeTree": "a4b2fc4d3e1e33dae4cdb2593e9bbe5d194d9e1f",
+  "MergeTreeEqualsSourceTree": true,
+  "PreservedCommits": [
+    "d6e4124e8628092c19cda42b9a6436d11ec069f9",
+    "277292f8e5aee6f15a62ed3df3c8bb5e5899a70b",
+    "e2ef0ff83efd3a36e4698fc781b3e7051dd7c8f8",
+    "46ae98f62186e588e92f6178d771dcda54b82559",
+    "7826a7b89a9786f32004f78777a51c44fb0bf653",
+    "43f513bcb94d74aaf38bc9226c188af28caeb3ae",
+    "b0b90103d73d2ddcd87291ade73b1ec411df3c5b",
+    "3f617040ab7d7edeb94721ed4f7cd7a0af3345e6",
+    "546ef22b1b1295f2322110624413409470d23006",
+    "78b7f65a54e30bf1b781290e78830e4b738a4e27",
+    "9c3c05a594498443e4e61dd1683f8f07ed972113",
+    "1ed3ee555f07922f5bb3e18a4126e6bfd74d09e1"
+  ],
+  "NativeSource": {
+    "SHA256": "2278df21b72670c189c6206a5a49582a50d4cd835448f3f0708629ae0fd7d52e",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "ReusedQualification": {
+    "Receipt": "e2e-game-qualification-2026-11-09.json",
+    "Reason": "Exact merge/source tree equality; no runtime, fixture, dependency or admitted-patch correction introduced by integration",
+    "BranchCore": 42590964403,
+    "BranchNative": 42590964418,
+    "BranchPackage": 42588812901,
+    "ControllerCandidate": 42216970390,
+    "ControllerCandidateAttempt": 2,
+    "LocalRenderedCases": 28,
+    "ListenActors": 4,
+    "DedicatedActors": 5,
+    "GameASanLifecycleCases": 17,
+    "FocusedRelevanceASanActors": 7,
+    "FullASanVictory": "Not qualified; failed attempts retained"
+  },
+  "PostMergeCI": {
+    "Core": {
+      "Run": 42597456749,
+      "Revision": "025401f307c7dc8b47f84c36885158b01c4e402c",
+      "Conclusion": "success",
+      "Profiles": {
+        "runtime-core-Linux-Debug": {
+          "CTests": 1,
+          "CoreCasesPassed": 85,
+          "CoreCasesFailed": 0,
+          "InputGraphAssertions": 29,
+          "ResultsSHA256": "db6a2957234f282cd5dd72b584197c0b51b0608d204ef1f2552611d36f665a39",
+          "InputGraphLogSHA256": "7bc2077ccc8cecd3153ad74a95e3eb1260355c56a902eaa5be6cb7be0b92e813"
+        },
+        "runtime-core-Windows-Debug": {
+          "CTests": 1,
+          "CoreCasesPassed": 85,
+          "CoreCasesFailed": 0,
+          "InputGraphAssertions": 29,
+          "ResultsSHA256": "ebc0893ddac42b6991288b8d855370553e4422ceb540ba8bbbb9182df1d55ea2",
+          "InputGraphLogSHA256": "21305e8e2c261fb3f49a39384a118e7f80fbf8060fdd625275c308bf276a13b1"
+        }
+      },
+      "Artifacts": [
+        {
+          "Name": "runtime-core-Windows-Debug",
+          "Id": 13664276876,
+          "Digest": "sha256:2a473235159445476b4feafc93653573845ba41af6541d5c2c12559a26b9af9a"
+        },
+        {
+          "Name": "runtime-core-Linux-Debug",
+          "Id": 13663882621,
+          "Digest": "sha256:99fac2dd98dce5bd9c60d2068b353161095e29092b6afcf5fb1e25664bbdf0b0"
+        }
+      ]
+    },
+    "Native": {
+      "Run": 42597456728,
+      "Revision": "025401f307c7dc8b47f84c36885158b01c4e402c",
+      "Conclusion": "pending"
+    },
+    "Package": {
+      "Run": 42597457773,
+      "Revision": "025401f307c7dc8b47f84c36885158b01c4e402c",
+      "Conclusion": "success",
+      "Artifact": {
+        "Name": "RelaySiege-Windows",
+        "Id": 13663299476,
+        "Digest": "sha256:71dfb8847e17bf3635acf1df56347de6ae139c10af3ac9799da6386d62ca0e11"
+      },
+      "Product": {
+        "GameRevision": "025401f307c7dc8b47f84c36885158b01c4e402c",
+        "CandidateSHA256": "1883a6be5361a111004d78dd5c225bbac2f76012aa2b86a29ea94c3034634229",
+        "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+        "NetworkHostVerified": true,
+        "SHA256": "c189ffe29ed9f15cf64d7254cb56aab87b68dfd72306f298a30eb49bcf18e44c",
+        "Bytes": 25365116,
+        "ManifestSHA256": "5e4fbaa2ffcd3ba1060d0a5919867138f368e293a98bedb0ee6e721ac991b164",
+        "PayloadFiles": 157,
+        "StartupStdout": "Godot Engine v4.7.1.stable.custom_build - https://godotengine.org\n\n[GodotLuau] ////////////////////////////////////////////////////\n[GodotLuau]   GodotLuau ? - by PimpoliDev\n[GodotLuau]   Luau System for Godot [Active]\n[GodotLuau] ////////////////////////////////////////////////////\n[Game:Session] Started solo port=24870\n[Luau] [Game:Rules] Ready\t0\t0\n[Runtime:BindingRetirement] Retired 0 bindings before library close\n",
+        "StartupStderr": "",
+        "ChangedPayloadFilesAgainstBranch": []
+      }
+    }
+  },
+  "RuntimeCorrections": [],
+  "Distribution": {
+    "ReleaseJobsDisabled": true,
+    "ReleasePermissions": "contents: read",
+    "UpdaterRuntimeUpdatesAllowed": false,
+    "PackageOmitsUpdaterAddon": true,
+    "ReleaseOrTagCreated": false,
+    "AdmittedPatchesUnchanged": true,
+    "DependenciesUnchanged": true
+  },
+  "RetainedArtifactRoot": "C:/Users/aiden/.codex/artifacts/godotluau/e2e-game-main-integration-20261109",
+  "Limits": "Original branch limitations retained: peer-exit diagnostic, full instrumented victory replay, Windows LSan, physical input/OS capture, Linux rendering, WAN/authentication, pristine OS/runtime and asset provenance. GL-043/044/045 remain open."
+}

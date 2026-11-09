@@ -1,6 +1,6 @@
 # Current architecture
 
-The unmerged [Relay Siege game campaign](e2e-game-development.md) composes these
+The [Relay Siege example integrated on main](e2e-game-main-integration.md) composes these
 existing systems under `examples/e2e-game`: Server Luau owns round/combat/save
 rules, Client Luau supplies semantic input and reads server snapshots, and a
 project-specific Godot scene builds geometry/UI/local soft-body presentation.
