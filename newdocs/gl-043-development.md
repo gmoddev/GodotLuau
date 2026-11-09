@@ -99,3 +99,10 @@ algorithm or test assertion changes. The failed profile artifact and scons.log
 remain retained under `gl043-20261109/failed-Linux-Debug-1`. Other jobs using
 the same uncompilable header are superseded; this is an actual compile failure,
 not a passing candidate or a runtime physics failure.
+
+The corrected source is `3227290`, fingerprint
+`7d540a81ecf0bcf83742e94386796df6e4df36310ad330ec1d9bfe54bdac2f56`
+(101 files). Core `42610522541` passes. Native `42610522588`, candidate
+`42610528726` and full-native sanitizers `42610532744` now qualify this input.
+The failed profile's full log hash is retained in the receipt. Main, dependency
+pins, admitted patches, release policy and updater code remain unchanged.
