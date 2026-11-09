@@ -206,3 +206,23 @@ failed and retained. Actual reports, source scopes, performance observations,
 package/host identities and limitations are now in
 [qualification](e2e-game-qualification.md) and its linked receipt/reports.
 Current core CI passes both platforms; final native CI is still finishing.
+
+The earlier Windows retry `42583617472` fails relevance-Dedicated client1's
+server-motion assertion and its server barrier; subsequent owner-transfer and
+forgery checks pass. The retained client log identifies the actual failure.
+Source inspection finds that this phase expects server-driven physics while
+leaving the body on automatic ownership, so a nearby client can acquire it
+before the fixture's explicit later grant. Fix that configuration with the
+existing net_set_owner(..., 0, false), then retain the original motion, transfer,
+wrong-owner and generation assertions unchanged. This is a bounded fixture
+correction, not a product-physics redesign or a longer timeout. The logs do not
+establish the exact automatic-transfer timing in the historical failed process.
+
+The corrected existing relevance suite passes all seven actors using the
+matching full-native ASan adapter, with no sanitizer report. Two initial local
+attempts used the SCons production DLL and stopped at the earlier peer-view
+assertion: Entries and the injected BusyPeer control are compiled only under
+GL_RUNTIME_TESTS. Those are unsuitable fixture configurations, not evidence of
+a production replication failure. Preserve their logs; do not add a product
+issue or change the production diagnostic boundary. The game continues to use
+the actual production DLL and its separate passing four-player evidence.

@@ -99,6 +99,12 @@ sanitizer campaign is needed for unchanged C++ inputs.
 The inherited ENet retired-channel diagnostic still occurs during peer exit.
 The exact cause is unproven; no engine patch or assertion is changed to hide it.
 The duplicate dedicated bind was a separate, corrected game-bootstrap bug.
+An earlier Windows CI relevance attempt fails its server-motion observation.
+The fixture now explicitly pins that phase to the server before the unchanged
+later client-owner grant. All seven existing relevance actors pass with the
+matching ASan test adapter. Two initial local runs used the production DLL,
+which intentionally omits fixture-only peer diagnostics; those runs are invalid
+fixture configurations and do not establish a product defect.
 GL-043/044/045 retain real raycast/CFrame/vector compatibility gaps; the game uses
 supported calls. SoftBody deformation is local; its native point/pin API is
 called through the scene adapter, with no vertex replication.
