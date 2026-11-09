@@ -60,3 +60,11 @@ Lua metamethod callbacks. Existing normalized-direction/MaxDistance behavior,
 including the zero-direction fallback, remains. IgnoreWater/RespectCanCollide
 and broader Roblox ray semantics are not added by this fix. Qualification is
 pending; no issue closure or passing build is claimed yet.
+
+Source review corrects the new Character-specific fixture before qualification:
+RBXCharacter::ConfigureVisual deliberately freezes and disables collision on
+added rig Parts. Query its existing PhysicsBody at the actual capsule center
+instead. The production patch is unchanged. Superseded runs are retained as
+cancelled, not passing or product failures; final qualification uses this
+corrected test input. An earlier superseded native run at `a784073` was also
+cancelled while building after the bounded ancestry lookup was tightened.

@@ -278,6 +278,19 @@ game:SetAttribute('PhysicsFiltersDone', true)
         var Passed: bool = Game.get_meta("Physics_"+Name,false)
         print("[Physics:Bindings] ","PASS " if Passed else "FAIL ",Name)
         Check(Passed,"GL-043 raycast "+Name)
+    var CharacterBody: Node3D = Character.call("GetPhysicsBody")
+    var Origin: Vector3 = CharacterBody.get_node("CollisionShape3D").global_position-Vector3(10,0,0)
+    Script("PhysicsCharacterFilter", """
+local C=game.Workspace.LocalPlayer
+local P=RaycastParams.new(); P.FilterType=0; P.MaxDistance=20; P.FilterDescendantsInstances={C}
+local Origin=Vector3.new(%f,%f,%f)
+local R=game.Workspace:Raycast(Origin,Vector3.new(1,0,0),P)
+game:SetAttribute('PhysicsCharacterInclude',R and R.Instance.Parent==C)
+P.FilterType=1
+game:SetAttribute('PhysicsCharacterExclude',game.Workspace:Raycast(Origin,Vector3.new(1,0,0),P)==nil)
+""" % [Origin.x,Origin.y,Origin.z])
+    await create_timer(0.05).timeout
+    Check(Game.get_meta("PhysicsCharacterInclude",false) and Game.get_meta("PhysicsCharacterExclude",false),"GL-043 Character root filters include/exclude its actual PhysicsBody")
     Script("PhysicsVectorImpulse", "game.Workspace.PhysicsImpulse:ApplyImpulse(Vector3.new(4,0,0)); game.Workspace.PhysicsImpulse:ApplyAngularImpulse(Vector3.new(0,4,0)); game:SetAttribute('PhysicsImpulseDone',true)")
     await create_timer(0.1).timeout
     var NativeLinear := Body.linear_velocity.x > 1.9
@@ -328,10 +341,6 @@ game:SetAttribute('PhysicsInvalidDone',true)
         Script("PhysicsReloadUse", "shared.PhysicsRetained(nil,Vector3.new(4,0,0)); game:SetAttribute('PhysicsReloadDone',true)")
         await create_timer(0.05).timeout
         Check(Game.get_meta("PhysicsReloadDone",false) and Body.linear_velocity.x>1.9,"GL-043 retained method uses a live Part from a fresh execution owner")
-        Body.reparent(Character)
-        Script("PhysicsCharacterFilter", "local P=RaycastParams.new(); P.FilterType=0; P.MaxDistance=20; P.FilterDescendantsInstances={game.Workspace.LocalPlayer}; local R=game.Workspace:Raycast(Vector3.new(-10,200,0),Vector3.new(1,0,0),P); game:SetAttribute('PhysicsCharacterFilterDone',R and R.Instance==game.Workspace.LocalPlayer.PhysicsImpulse)")
-        await create_timer(0.05).timeout
-        Check(Game.get_meta("PhysicsCharacterFilterDone",false),"GL-043 Character root filter includes its physical descendants")
         Body.queue_free(); await process_frame
         Script("PhysicsRetired", "shared.PhysicsRetained(nil,Vector3.new(1,0,0)); shared.PhysicsAngularRetained(nil,Vector3.new(1,0,0)); game:SetAttribute('PhysicsRetiredDone',true)")
         await create_timer(0.05).timeout
