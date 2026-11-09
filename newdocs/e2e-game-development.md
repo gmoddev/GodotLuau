@@ -31,5 +31,9 @@ and sanitizer profiles remain unchanged. The non-publishing host workflow runs
 the existing real ENet host checks before export. Runtime rendering/gameplay
 qualification is separate from a successful host build.
 
+GitHub rejects dispatch of a new workflow absent from default main (HTTP 404).
+Its branch/path-restricted push trigger starts the initial build without changing
+main or publication workflows. Later game-only commits do not rebuild the host.
+
 Implementation and gameplay qualification remain pending at this checkpoint.
 Releases and updater distribution remain disabled.

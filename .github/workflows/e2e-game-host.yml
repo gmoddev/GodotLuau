@@ -1,5 +1,8 @@
 name: E2E game rendered host (no publication)
 on:
+  push:
+    branches: [feature/e2e-gameplay-foundation]
+    paths: [.github/workflows/e2e-game-host.yml]
   workflow_dispatch:
 permissions:
   contents: read
