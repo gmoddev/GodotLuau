@@ -338,3 +338,29 @@ The standalone game workflow now selects accepted candidate `42752234638` and
 retains read-only permissions. Final fresh game-package startup/payload
 verification follows this checkpoint. Main stays `6db2e2c`, development history
 is preserved, and release/updater publication remains disabled.
+
+## Final standalone package and closure
+
+**QUALIFIED WITH DOCUMENTED LIMITATIONS** within the native API and rendered
+Windows game profiles above. [Game package run 42762178179](https://github.com/gmoddev/GodotLuau/actions/runs/42762178179)
+passes at source `c9c03b0c573bda5a351cbc806b90af6bc5ac6189`, reusing accepted
+native candidate `42752234638`. Actual extracted startup exits 0, reaches Rules
+ready and has empty stderr. Artifact `13738073089` has GitHub digest
+`9f40aa00133647ed303286315b0ff89fa6c9e6edd4dc3c8027de31b6057f3d02`.
+
+DockerPC [verifies the downloaded archive](evidence/gl044045/standalone-game-package-verification.json):
+157 payloads/158 ZIP members, every recorded size/hash, embedded native candidate
+files and all four LF-normalized game/controller runtime scripts match qualified
+inputs. Game ZIP SHA-256 is
+`29e1348146a0b9417b114d3f62146462c87a1ea9e7cbc9f346bb93ed5a46c521`
+(25,369,076 bytes). This evidence update changes no qualified runtime/test input;
+the package's exact source revision remains the value above.
+
+Final process inspection finds no task-owned test processes on DockerPC or
+MainPC. Caches, source snapshots and original failure evidence remain retained;
+unrelated workloads are untouched. DockerPC has 7,366,324,224 free bytes at the
+final observation, reflecting continuing disk activity after the earlier cleanup;
+MainPC has 250,082,082,816. No further builds are started. Main remains
+`6db2e2c563dfb4680dc09f1451f05dba5b778069`; GL-043's source branch is retained.
+The compatibility/game branch stays unmerged. Releases and updater distribution
+remain disabled. Stop here; no additional development phase is started.
