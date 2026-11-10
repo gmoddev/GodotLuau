@@ -26,9 +26,10 @@ the baseline; preserve IDs when a refactor moves the implementation.
 ## Index
 
 The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
-qualified game and its original evidence. GL-043/044/045 remain open: the game
-uses documented supported calls and scene configuration, which does not resolve
-the underlying compatibility gaps. No issue is closed merely by this merge.
+qualified game and its original evidence. GL-043 is now separately qualified and
+[integrated](gl-043-main-integration.md). GL-044/045 have focused corrections on
+`codex/gl-044-045-relay-luau`; hosted qualification is pending. The original game
+merge did not itself close any of those native compatibility findings.
 
 Networking Foundation 2 source `cb2014f` is now integrated by a normal merge into
 compacted main `41acd27`, preserving three foundation commits and every historical
@@ -89,11 +90,18 @@ four successful workflows and independently checked artifacts.
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
-| GL-043 | P2 | Fixed and qualified within scope on unmerged branch | Bounded Workspace raycast root filters and native Vector3 impulses |
-| GL-044 | P2 | Confirmed gameplay contract discrepancy | Native Node3D CFrame lacks stdlib directional convenience fields |
-| GL-045 | P2 | Confirmed gameplay math discrepancy | Vector3 colon Dot reads self as the other operand |
+| GL-043 | P2 | Integrated; fixed and qualified within scope | Bounded Workspace raycast root filters and native Vector3 impulses |
+| GL-044 | P2 | Focused correction; hosted qualification pending | Native Node3D CFrame lacks stdlib directional convenience fields |
+| GL-045 | P2 | Focused correction; hosted qualification pending | Vector3 colon Dot reads self as the other operand |
 
 ## GL-045: Vector3 method calling convention
+
+The [focused follow-up](gl-044-045-relay-development.md) at `30682a3` fixes colon
+argument selection and roots retained bound receivers as userdata upvalues while
+preserving legacy dot calls. The native baseline fails six checks; corrected
+Release math and 107-check Character fixtures pass, as does actual rendered
+Relay Siege gameplay. Hosted native/sanitizer/candidate qualification is pending.
+The original discovery is retained below.
 
 Relay Siege's controlled ray trace gets approximately 564 instead of 24 from
 `Offset:Dot(Direction)`: the native bound closure in
@@ -105,6 +113,12 @@ Roblox colon compatibility and retained value-method lifetime remain separate
 native-binding follow-up work, not a math-framework refactor in this campaign.
 
 ## GL-044: Native CFrame shape differs from stdlib CFrame
+
+The [focused follow-up](gl-044-045-relay-development.md) at `30682a3` reuses the
+existing stdlib constructor for native getters, preserving coordinate tables,
+matrix layout and write authority. Native rotated Part/Camera/snapshot checks
+and actual rendered gameplay pass; hosted qualification is pending. The
+historical discovery below refers to the original game source.
 
 Relay Siege's actual gun initially sends nil when reading
 `Workspace.CurrentCamera.CFrame.LookVector`. The native Node3D getter in

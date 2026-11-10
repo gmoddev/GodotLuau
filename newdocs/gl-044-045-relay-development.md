@@ -82,3 +82,36 @@ to remove a small presentation adapter. Gameplay, authoritative query policy,
 input, movement and persistence stay in Luau. No new wire format or authority
 grant is required. Actual game replay and native compatibility qualification
 remain pending here.
+
+## Passing focused and actual game results
+
+Native/fixture input is `30682a33c418cde73c710c168fe09c1c14af4155`, fingerprint
+`40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c` (101 files).
+DockerPC's two-thread Release build passes, reusing pinned dependency caches.
+The math-only probe exits 0 with empty stderr; the full existing CharacterV2
+actor passes 107 checks, preserving all 96 prior checks. Its expected rejected
+nonuniform-transform diagnostic remains visible. The first build setup failed
+before configure because inherited PATH exceeded cmd limits; the task child now
+uses a bounded explicit PATH. No system environment or toolchain changed.
+
+Actual rendered MainPC replay at game source `b92b256` passes all
+[28 checks](evidence/gl044045/rendered-local.json) with the current Release test
+adapter, including victory/save, round restart, death/respawn and defeat/save.
+This is a development replay over copied admitted game assets/host, explicitly
+marked with `development-inputs.json`; it is not accepted-candidate packaging.
+The adapter SHA-256 is
+`ea3c850f23b64c245bc98bd47cf7288e034bdea1396282de89f0503eecadbb39`.
+The [actual capture](evidence/gl044045/victory.png) was visually inspected.
+Two acknowledged rounds produce one win and 72 shared career credits.
+The 63.329-second replay averages 33.466 ms at the intentional 30 FPS cap,
+peaks at 145.118 ms including startup and finishes with 166 scene nodes.
+These are functional observations, not an uncapped performance comparison.
+stderr retains `Failed to request display timeout override.`; there is no script
+error or unexpected runtime failure. Physical devices/OS capture, Linux rendering
+and wider allocation profiling remain outside this claim.
+
+The [failed baseline](evidence/gl044045/baseline.txt) remains retained.
+Fresh ordinary core passes at `30682a3`; native/full-native sanitizer and the
+four-profile non-publishing candidate are still running. Their exact run IDs are
+`42743902074`, `42744024821` and `42744369456` respectively. No required pending
+gate is being called passed, and neither GL-044 nor GL-045 closes at this point.
