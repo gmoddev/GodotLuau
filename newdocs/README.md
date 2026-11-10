@@ -40,9 +40,10 @@ qualified `fix/gl-043-raycast-impulses`. See the
 updater distribution remain disabled.
 
 The separate [GL-044/045 compatibility and Relay Siege migration](gl-044-045-relay-development.md)
-records native CFrame/Vector3 corrections, rendered development gameplay and
-current qualification gates. It remains development-branch work; its receipt
-preserves both failed candidate attempts and the scoped GL-046 fixture fixes.
+records qualified native CFrame/Vector3 corrections, rendered production gameplay
+and package evidence. It remains development-branch work; its receipt preserves
+failed attempts, scoped GL-046/047 fixture corrections and the GL-048 game caller
+migration. Existing engine, sanitizer and device limits remain explicit.
 
 [Relay Siege](../examples/e2e-game/README.md) is the end-to-end cooperative arena
 integrated by normal merge `025401f`, preserving all 12 feature commits. Its

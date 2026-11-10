@@ -289,3 +289,52 @@ new peer negotiates. No new queue, scheduler, readiness probe or Godot adapter
 is introduced. Re-run the two actual game sessions and inspect their diagnostics
 before packaging or calling the game migration qualified. The accepted native
 product and unchanged core/native inputs need no rebuild for this Luau change.
+
+## Qualified runtime and rendered game checkpoint
+
+The GL-048 replay at `0ecc2b5443f3f3405479a53a50c5b0b63a6283eb` passes all
+112 checks, with no unhandled script diagnostics. Readiness remains native
+authority; the example only handles the precise pre-admission failure.
+The [listen report](evidence/gl044045/game-listen.json) has four successful actor
+processes and 55 checks; the [dedicated report](evidence/gl044045/game-dedicated.json)
+has a headless server/four rendered clients and 57 checks. Both leaders complete
+28 checks and finish two acknowledged rounds/one win/72 career credits. Current
+[listen](evidence/gl044045/listen-victory.png) and
+[dedicated](evidence/gl044045/dedicated-victory.png) victory captures were inspected.
+The [summary](evidence/gl044045/game-rendered-summary.json) records actual engine,
+production-library and supplied-candidate identities for every actor.
+
+| Rendered production replay | Seconds | Mean frame ms | Peak frame ms | Final native objects |
+| --- | ---: | ---: | ---: | ---: |
+| Listen leader | 64.304 | 33.473 | 145.494 | 167 |
+| Dedicated leader | 64.473 | 33.479 | 141.394 | 167 |
+
+Both use the intentional 30 FPS cap on MainPC's admitted OpenGL host. These are
+functional frame observations, not an uncapped benchmark or improvement claim.
+The four retired-channel engine errors and eight display warnings remain
+visible; neither is suppressed or called sanitizer-clean teardown. The first
+diagnostic-bearing replay is retained in
+[its own record](evidence/gl044045/game-admission-original.json).
+
+The [downloaded-package verification](evidence/gl044045/candidate-package-verification.json)
+checks Windows ZIP `41551f6e5a73a3b49df99e535359a071ac20fc55c93c31e50044cc8945a07a6c`
+and Linux ZIP `4be5781d60da06fdab0095336f23cb5e5a56e54acd8af1445b2eda377f8e1e4d`.
+Each has 133 verified members and matching provenance/companions/startup logs.
+Windows production Release DLL is
+`bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8`.
+The two native fixes remain `30682a3`; accepted products use `4510ab4`; final
+native fixture qualification uses `e65e3b8`; final game runtime uses `0ecc2b5`.
+No qualified C++/dependency input changes between these revisions.
+
+GL-044/045 close within those native API profiles; GL-046/047 close within their
+recorded fixture profiles; GL-048 closes within the rendered game replay. The
+corrected test harness is not falsely attributed to the older sanitizer or
+candidate revision. Existing GL-017/018, full-game sanitizer, asset-provenance,
+physical-device, Linux-rendering, WAN, older-glibc/pristine-consumer and allocation
+profiling limitations remain. There is no independent byte-for-byte build
+reproducibility or distribution claim.
+
+The standalone game workflow now selects accepted candidate `42752234638` and
+retains read-only permissions. Final fresh game-package startup/payload
+verification follows this checkpoint. Main stays `6db2e2c`, development history
+is preserved, and release/updater publication remains disabled.

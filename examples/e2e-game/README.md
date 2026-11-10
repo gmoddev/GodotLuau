@@ -53,7 +53,11 @@ finite unit native Vector3. Server identity, live Character, round, rate,
 ammunition, range and world occlusion are authoritative. Other supported intents
 are Interact, Reload, Impulse, Again and Save. Snapshot Version 1 is a complete
 server-owned view sent at 5 Hz; it includes relays, drones, roster, health,
-ammunition, reactor, timer, result and shared career. It changes no native wire
+ammunition, reactor, timer, result and shared career. Each live Player receives
+it independently. A peer still
+negotiating Remote publication receives the next current snapshot; its rejection
+does not interrupt updates to ready peers. Other send errors remain visible.
+This changes no native wire
 protocol. Unknown/stale/forged requests cannot grant damage, rewards or victory.
 The last 32 round receipts make normal save retries idempotent within that
 bounded history. A failed/unacknowledged save remains explicit; another round
