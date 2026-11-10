@@ -38,6 +38,11 @@ Retained old commands cannot control a replacement lease or Character life.
   without a safe resolution/cancellation mechanism. GL-001/GL-002 now have
   capture-specific fixes and native sanitizer evidence; other bindings need
   their own verification.
+- Bound value-method closures must retain their VM-owned receiver rather than
+  borrowing a userdata address across collection. Vector3 colon calls resolve
+  their explicit receiver by identity; supported legacy bound dot calls remain
+  valid. Native CFrame getters preserve the same shape and orientation convention
+  as existing stdlib CFrames, without changing transform write authority.
 - VM shutdown invalidates callbacks and pending work before freeing their state.
   Reload, destruction during callback execution, and pending yields require
   explicit ownership and regression coverage. Existing live-VM guards are useful

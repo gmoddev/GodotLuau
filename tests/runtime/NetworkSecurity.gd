@@ -31,9 +31,16 @@ func Check(Value: bool, Description: String) -> void:
         print("[Network:SecurityTest] FAIL ", Role, " ", Description)
 
 func Mark(Name: String, Value := "ready") -> void:
-    var File := FileAccess.open("res://security-" + Name, FileAccess.WRITE)
+    var Target := "res://security-" + Name
+    var Pending := Target + "." + str(OS.get_process_id()) + ".tmp"
+    var File := FileAccess.open(Pending, FileAccess.WRITE)
+    if File == null:
+        Check(false, "open fixture marker " + Name)
+        return
     File.store_string(Value)
     File.close()
+    if DirAccess.rename_absolute(ProjectSettings.globalize_path(Pending), ProjectSettings.globalize_path(Target)) != OK:
+        Check(false, "publish complete fixture marker " + Name)
 
 func Read(Name: String) -> String:
     return FileAccess.get_file_as_string("res://security-" + Name)

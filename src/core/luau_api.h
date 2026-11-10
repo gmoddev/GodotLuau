@@ -1737,34 +1737,8 @@ static int godot_object_index(lua_State* L) {
             push_vector3(L, s.x, s.y, s.z); return 1;
         }
         if (strcmp(key, "CFrame") == 0) {
-            Transform3D t = n3d->get_global_transform();
-            // Push as a Lua table matching CFrame structure
-            lua_newtable(L);
-            lua_pushnumber(L, t.origin.x); lua_setfield(L, -2, "X");
-            lua_pushnumber(L, t.origin.y); lua_setfield(L, -2, "Y");
-            lua_pushnumber(L, t.origin.z); lua_setfield(L, -2, "Z");
-            lua_pushnumber(L, t.basis.rows[0][0]); lua_setfield(L, -2, "m00");
-            lua_pushnumber(L, t.basis.rows[0][1]); lua_setfield(L, -2, "m01");
-            lua_pushnumber(L, t.basis.rows[0][2]); lua_setfield(L, -2, "m02");
-            lua_pushnumber(L, t.basis.rows[1][0]); lua_setfield(L, -2, "m10");
-            lua_pushnumber(L, t.basis.rows[1][1]); lua_setfield(L, -2, "m11");
-            lua_pushnumber(L, t.basis.rows[1][2]); lua_setfield(L, -2, "m12");
-            lua_pushnumber(L, t.basis.rows[2][0]); lua_setfield(L, -2, "m20");
-            lua_pushnumber(L, t.basis.rows[2][1]); lua_setfield(L, -2, "m21");
-            lua_pushnumber(L, t.basis.rows[2][2]); lua_setfield(L, -2, "m22");
-            // Position sub-table
-            lua_newtable(L);
-            lua_pushnumber(L, t.origin.x); lua_setfield(L, -2, "X");
-            lua_pushnumber(L, t.origin.y); lua_setfield(L, -2, "Y");
-            lua_pushnumber(L, t.origin.z); lua_setfield(L, -2, "Z");
-            lua_pushnumber(L, t.origin.x); lua_setfield(L, -2, "x");
-            lua_pushnumber(L, t.origin.y); lua_setfield(L, -2, "y");
-            lua_pushnumber(L, t.origin.z); lua_setfield(L, -2, "z");
-            lua_setfield(L, -2, "Position");
-            // Set CFrame metatable from Lua registry
-            lua_getglobal(L, "CFrame");
-            if (lua_istable(L, -1)) lua_setmetatable(L, -2);
-            else lua_pop(L, 1);
+            // Use the same constructor and shape as Model pivots and Luau code.
+            PushModelCFrame(L, n3d->get_global_transform());
             return 1;
         }
         // workspace:Raycast(origin, direction, [RaycastParams]) — igual que Roblox

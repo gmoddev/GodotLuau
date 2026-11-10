@@ -1,0 +1,908 @@
+{
+  "Result": "PASS",
+  "Host": "MainPC / DESKTOP-B8V8NAN",
+  "Source": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+  "CandidateRun": 42752234638,
+  "CandidateSource": "4510ab4006f3e13a80f564cc3088aae01406192e",
+  "ProbeSHA256": "90576d437075e4d4ce94460c54372d57843b4127d7bb781169aadee1670e5326",
+  "Sessions": [
+    {
+      "Mode": "listen",
+      "Dedicated": false,
+      "Graphical": true,
+      "Actors": [
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Cases": 28,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 1843,
+            "Graphical": true,
+            "MeanFrameMS": 33.4728408392109,
+            "NativeObjects": 167.0,
+            "PeakFrameMS": 145.494333333333,
+            "Scenario": "coop",
+            "Screenshot": "victory.png",
+            "Seconds": 64.304,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 8.0,
+                  "Position": {
+                    "X": -0.41167950630188,
+                    "Y": 1.5,
+                    "Z": -3.89322233200073
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 9.0,
+                  "Position": {
+                    "X": 1.29889059066772,
+                    "Y": 1.5,
+                    "Z": -3.61905384063721
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 10.0,
+                  "Position": {
+                    "X": -3.837153673172,
+                    "Y": 1.5,
+                    "Z": -0.426349937915802
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 11.0,
+                  "Position": {
+                    "X": 3.76961994171143,
+                    "Y": 1.5,
+                    "Z": 1.25654149055481
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 12.0,
+                  "Position": {
+                    "X": -2.79718947410583,
+                    "Y": 1.5,
+                    "Z": -2.79718947410583
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 13.0,
+                  "Position": {
+                    "X": 3.35786247253418,
+                    "Y": 1.5,
+                    "Z": -1.86548089981079
+                  }
+                }
+              ],
+              "Kills": 0.0,
+              "Phase": "Defeat",
+              "Players": [
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 1.0,
+                  "Health": 100.0,
+                  "Id": 1.0,
+                  "Name": "Player",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 72.0,
+                "Rounds": 2.0,
+                "Wins": 1.0
+              },
+              "Reactor": 0.0,
+              "Relays": [
+                false,
+                false,
+                false
+              ],
+              "Reward": 10.0,
+              "Round": 2.0,
+              "Save": "Saved",
+              "Shots": 23.0,
+              "Time": 118.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "af8915adca208044a33934f6eb471351f94ce9a536b6881e42ea2aa364d84ebb",
+            "stderr": "b0c7e9a94e7681733c7b89e14853e9f47ce4b52eb9b4b579457e18a0e2a7a752"
+          },
+          "Screenshot": {
+            "File": "listen.png",
+            "SHA256": "6a0ffcadbed877b8a6fab42d19be345fc7db06cb93b3f0d11afe397249260efd"
+          }
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 786,
+            "Graphical": true,
+            "MeanFrameMS": 33.6938083121295,
+            "NativeObjects": 239.0,
+            "PeakFrameMS": 147.554,
+            "Scenario": "observer",
+            "Screenshot": "",
+            "Seconds": 29.09,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 7.0,
+                  "Position": {
+                    "X": 10.8848648071289,
+                    "Y": 1.5,
+                    "Z": 3.62829041481018
+                  }
+                }
+              ],
+              "Kills": 6.0,
+              "Phase": "Victory",
+              "Players": [
+                {
+                  "Ammo": 1.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 1.0,
+                  "Name": "Player",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 3.0,
+                  "Name": "Player3",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 4.0,
+                  "Name": "Player4",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 2.0,
+                  "Name": "Player2",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 62.0,
+                "Rounds": 1.0,
+                "Wins": 1.0
+              },
+              "Reactor": 165.0,
+              "Relays": [
+                true,
+                true,
+                true
+              ],
+              "Reward": 62.0,
+              "Round": 1.0,
+              "Save": "Saved",
+              "Shots": 23.0,
+              "Time": 123.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "2c74bdc203131e24d2f28ab2025107de0b88c5dbfadcc23ba9952ca6e149d2f1",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 765,
+            "Graphical": true,
+            "MeanFrameMS": 33.7037037037043,
+            "NativeObjects": 217.0,
+            "PeakFrameMS": 146.178,
+            "Scenario": "observer",
+            "Screenshot": "",
+            "Seconds": 28.443,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 7.0,
+                  "Position": {
+                    "X": 10.8848648071289,
+                    "Y": 1.5,
+                    "Z": 3.62829041481018
+                  }
+                }
+              ],
+              "Kills": 6.0,
+              "Phase": "Victory",
+              "Players": [
+                {
+                  "Ammo": 1.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 1.0,
+                  "Name": "Player",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 3.0,
+                  "Name": "Player3",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 4.0,
+                  "Name": "Player4",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 2.0,
+                  "Name": "Player2",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 62.0,
+                "Rounds": 1.0,
+                "Wins": 1.0
+              },
+              "Reactor": 165.0,
+              "Relays": [
+                true,
+                true,
+                true
+              ],
+              "Reward": 62.0,
+              "Round": 1.0,
+              "Save": "Saved",
+              "Shots": 23.0,
+              "Time": 123.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "2c74bdc203131e24d2f28ab2025107de0b88c5dbfadcc23ba9952ca6e149d2f1",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 673,
+            "Graphical": true,
+            "MeanFrameMS": 33.7700733036161,
+            "NativeObjects": 217.0,
+            "PeakFrameMS": 145.425,
+            "Scenario": "observer",
+            "Screenshot": "",
+            "Seconds": 25.416,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 7.0,
+                  "Position": {
+                    "X": 10.8848648071289,
+                    "Y": 1.5,
+                    "Z": 3.62829041481018
+                  }
+                }
+              ],
+              "Kills": 6.0,
+              "Phase": "Victory",
+              "Players": [
+                {
+                  "Ammo": 1.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 1.0,
+                  "Name": "Player",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 3.0,
+                  "Name": "Player3",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 4.0,
+                  "Name": "Player4",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 2.0,
+                  "Name": "Player2",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 62.0,
+                "Rounds": 1.0,
+                "Wins": 1.0
+              },
+              "Reactor": 165.0,
+              "Relays": [
+                true,
+                true,
+                true
+              ],
+              "Reward": 62.0,
+              "Round": 1.0,
+              "Save": "Saved",
+              "Shots": 23.0,
+              "Time": 123.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "2c74bdc203131e24d2f28ab2025107de0b88c5dbfadcc23ba9952ca6e149d2f1",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        }
+      ]
+    },
+    {
+      "Mode": "dedicated",
+      "Dedicated": true,
+      "Graphical": true,
+      "Actors": [
+        {
+          "Actor": "server",
+          "Exit": 0,
+          "Cases": 2,
+          "Failed": 0,
+          "Graphical": false,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 2014,
+            "Graphical": false,
+            "MeanFrameMS": 33.3250579278378,
+            "NativeObjects": 94.0,
+            "PeakFrameMS": 66.6666666666667,
+            "Scenario": "server",
+            "Screenshot": "",
+            "Seconds": 67.099,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 8.0,
+                  "Position": {
+                    "X": -0.0493469499051571,
+                    "Y": 1.5,
+                    "Z": -3.77049398422241
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 9.0,
+                  "Position": {
+                    "X": 1.50891017913818,
+                    "Y": 1.5,
+                    "Z": -3.55900096893311
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 10.0,
+                  "Position": {
+                    "X": -3.837153673172,
+                    "Y": 1.5,
+                    "Z": -0.426349937915802
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 11.0,
+                  "Position": {
+                    "X": 3.76973819732666,
+                    "Y": 1.5,
+                    "Z": 1.25658106803894
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 12.0,
+                  "Position": {
+                    "X": -2.79718947410583,
+                    "Y": 1.5,
+                    "Z": -2.79718947410583
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 13.0,
+                  "Position": {
+                    "X": 3.35786247253418,
+                    "Y": 1.5,
+                    "Z": -1.86548089981079
+                  }
+                }
+              ],
+              "Kills": 0.0,
+              "Phase": "Defeat",
+              "Players": [],
+              "Progress": {
+                "Credits": 72.0,
+                "Rounds": 2.0,
+                "Wins": 1.0
+              },
+              "Reactor": 0.0,
+              "Relays": [
+                false,
+                false,
+                false
+              ],
+              "Reward": 10.0,
+              "Round": 2.0,
+              "Save": "Saved",
+              "Shots": 23.0,
+              "Time": 118.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "18c90a20944b5d4f94d6a775d169c2954494732decdec53a1a6f31a1ecc6ee57",
+            "stderr": "ec4dcf06f5fcb66b31dc81e36187cacd7a2a81029caaa3232aeced56b527e830"
+          }
+        },
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Cases": 28,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 1849,
+            "Graphical": true,
+            "MeanFrameMS": 33.478625202812,
+            "NativeObjects": 167.0,
+            "PeakFrameMS": 141.394333333333,
+            "Scenario": "coop",
+            "Screenshot": "victory.png",
+            "Seconds": 64.473,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 8.0,
+                  "Position": {
+                    "X": -0.0493469499051571,
+                    "Y": 1.5,
+                    "Z": -3.77049398422241
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 9.0,
+                  "Position": {
+                    "X": 1.50891017913818,
+                    "Y": 1.5,
+                    "Z": -3.55900096893311
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 10.0,
+                  "Position": {
+                    "X": -3.837153673172,
+                    "Y": 1.5,
+                    "Z": -0.426349937915802
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 11.0,
+                  "Position": {
+                    "X": 3.76973819732666,
+                    "Y": 1.5,
+                    "Z": 1.25658106803894
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 12.0,
+                  "Position": {
+                    "X": -2.79718947410583,
+                    "Y": 1.5,
+                    "Z": -2.79718947410583
+                  }
+                },
+                {
+                  "Health": 60.0,
+                  "Id": 13.0,
+                  "Position": {
+                    "X": 3.35786247253418,
+                    "Y": 1.5,
+                    "Z": -1.86548089981079
+                  }
+                }
+              ],
+              "Kills": 0.0,
+              "Phase": "Defeat",
+              "Players": [
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 1.0,
+                  "Health": 100.0,
+                  "Id": 2.0,
+                  "Name": "Player2",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 72.0,
+                "Rounds": 2.0,
+                "Wins": 1.0
+              },
+              "Reactor": 0.0,
+              "Relays": [
+                false,
+                false,
+                false
+              ],
+              "Reward": 10.0,
+              "Round": 2.0,
+              "Save": "Saved",
+              "Shots": 23.0,
+              "Time": 118.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "49320ace32e8d7f95eb09c3f0a6c12a1067e0ab8e5821d74d1df050498e4c9fd",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          },
+          "Screenshot": {
+            "File": "dedicated.png",
+            "SHA256": "02ffc83ac7ca910353d54d11abb836dd6e6793e3d9b843d42e56c2e6706c19e1"
+          }
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 822,
+            "Graphical": true,
+            "MeanFrameMS": 33.6756196269268,
+            "NativeObjects": 239.0,
+            "PeakFrameMS": 145.957,
+            "Scenario": "observer",
+            "Screenshot": "",
+            "Seconds": 30.27,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 6.0,
+                  "Position": {
+                    "X": -3.837153673172,
+                    "Y": 1.5,
+                    "Z": -0.426349937915802
+                  }
+                }
+              ],
+              "Kills": 6.0,
+              "Phase": "Victory",
+              "Players": [
+                {
+                  "Ammo": 1.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 2.0,
+                  "Name": "Player2",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 3.0,
+                  "Name": "Player3",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 4.0,
+                  "Name": "Player4",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 5.0,
+                  "Name": "Player5",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 0.0,
+                "Rounds": 0.0,
+                "Wins": 0.0
+              },
+              "Reactor": 180.0,
+              "Relays": [
+                true,
+                true,
+                true
+              ],
+              "Reward": 62.0,
+              "Round": 1.0,
+              "Save": "Saving",
+              "Shots": 23.0,
+              "Time": 122.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "ab8debfd3adf1886ce3a223a099c07a3a76c4899467dc1c6266628346ed373b9",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 798,
+            "Graphical": true,
+            "MeanFrameMS": 33.6824553049296,
+            "NativeObjects": 239.0,
+            "PeakFrameMS": 146.176,
+            "Scenario": "observer",
+            "Screenshot": "",
+            "Seconds": 29.568,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 6.0,
+                  "Position": {
+                    "X": -3.837153673172,
+                    "Y": 1.5,
+                    "Z": -0.426349937915802
+                  }
+                }
+              ],
+              "Kills": 6.0,
+              "Phase": "Victory",
+              "Players": [
+                {
+                  "Ammo": 1.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 2.0,
+                  "Name": "Player2",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 3.0,
+                  "Name": "Player3",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 4.0,
+                  "Name": "Player4",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 5.0,
+                  "Name": "Player5",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 0.0,
+                "Rounds": 0.0,
+                "Wins": 0.0
+              },
+              "Reactor": 180.0,
+              "Relays": [
+                true,
+                true,
+                true
+              ],
+              "Reward": 62.0,
+              "Round": 1.0,
+              "Save": "Saving",
+              "Shots": 23.0,
+              "Time": 122.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "ab8debfd3adf1886ce3a223a099c07a3a76c4899467dc1c6266628346ed373b9",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Metrics": {
+            "Failed": 0,
+            "Frames": 705,
+            "Graphical": true,
+            "MeanFrameMS": 33.7352245862889,
+            "NativeObjects": 239.0,
+            "PeakFrameMS": 145.099,
+            "Scenario": "observer",
+            "Screenshot": "",
+            "Seconds": 26.491,
+            "Snapshot": {
+              "Bots": [
+                {
+                  "Health": 60.0,
+                  "Id": 6.0,
+                  "Position": {
+                    "X": -3.837153673172,
+                    "Y": 1.5,
+                    "Z": -0.426349937915802
+                  }
+                }
+              ],
+              "Kills": 6.0,
+              "Phase": "Victory",
+              "Players": [
+                {
+                  "Ammo": 1.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 2.0,
+                  "Name": "Player2",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 3.0,
+                  "Name": "Player3",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 4.0,
+                  "Name": "Player4",
+                  "Reload": false
+                },
+                {
+                  "Ammo": 12.0,
+                  "Deaths": 0.0,
+                  "Health": 100.0,
+                  "Id": 5.0,
+                  "Name": "Player5",
+                  "Reload": false
+                }
+              ],
+              "Progress": {
+                "Credits": 0.0,
+                "Rounds": 0.0,
+                "Wins": 0.0
+              },
+              "Reactor": 180.0,
+              "Relays": [
+                true,
+                true,
+                true
+              ],
+              "Reward": 62.0,
+              "Round": 1.0,
+              "Save": "Saving",
+              "Shots": 23.0,
+              "Time": 122.0,
+              "Version": 1.0
+            }
+          },
+          "GameRevision": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+          "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+          "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Logs": {
+            "stdout": "ab8debfd3adf1886ce3a223a099c07a3a76c4899467dc1c6266628346ed373b9",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        }
+      ]
+    }
+  ],
+  "Evidence": "C:\\Sandbox\\Codex\\GL04404520261109",
+  "FrameCap": 30,
+  "Scope": "Rendered automated ENet fixtures using the accepted SCons production candidate; no physical-device or uncapped performance claim"
+}

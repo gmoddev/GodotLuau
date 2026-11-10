@@ -1,0 +1,296 @@
+{
+  "Scope": "Private diagnostic overlays plus unmodified corrected fixture; no production change",
+  "Host": "DockerPC / HostPC",
+  "Configuration": "Release",
+  "Control": [
+    {
+      "Label": "diagnostic-normal-v1",
+      "Inputs": {
+        "Scope": "Diagnostic overlay, not a source correction or accepted qualification",
+        "StallMS": 0,
+        "ExtensionSHA256": "ea3c850f23b64c245bc98bd47cf7288e034bdea1396282de89f0503eecadbb39",
+        "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+        "FixtureSHA256": "e475cfa307baca071ec1832c101ca53fd5f71d937a1c8bd420526f18f8bfc3af"
+      },
+      "Diagnostics": [
+        {
+          "Actor": "Dedicated-0-client1",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 1,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Dedicated-0-client2",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 2,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Editor-0-client1",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 1,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Editor-0-client2",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 2,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        }
+      ],
+      "Failures": [],
+      "Logs": {
+        "Dedicated-0-client1.stdout.log": "080a4e640822f5ca6a9ec17cb8051a5966b85e1aa26a71c2ac6def8b88548b10",
+        "Dedicated-0-client2.stdout.log": "b2ae4eff9ff8f060a24c1dde670c86494818abdf88ba818a1c491d3c0e57f054",
+        "Dedicated-0-server.stdout.log": "b6cf447c920393c98142cc3becbaa9fc863147b907c97c45f53b91951082dfab",
+        "Editor-0-client1.stdout.log": "080a4e640822f5ca6a9ec17cb8051a5966b85e1aa26a71c2ac6def8b88548b10",
+        "Editor-0-client2.stdout.log": "b2ae4eff9ff8f060a24c1dde670c86494818abdf88ba818a1c491d3c0e57f054",
+        "Editor-0-server.stdout.log": "dc93d4bf979d4613243d2d265949cc6d2c0ad04ab2d347a252b5257fc40a82f8",
+        "integration-0.stdout.log": "aedc1fb4b93863684f1d7f48525922ba0a3b83b7730953fa4f161fd70a87a54b",
+        "Listen-0-listen.stdout.log": "8ed7193fa4fd73e8aaadc94b1ff0598a5578139b95465c263dae67b403fce451"
+      },
+      "PassedActors": 8
+    },
+    {
+      "Label": "diagnostic-stall-v1",
+      "Inputs": {
+        "Scope": "Diagnostic overlay, not a source correction or accepted qualification",
+        "StallMS": 250,
+        "ExtensionSHA256": "ea3c850f23b64c245bc98bd47cf7288e034bdea1396282de89f0503eecadbb39",
+        "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+        "FixtureSHA256": "78580afa5757aa10dc4c1d450cca6e08e7382df668a5afff8e8b9b33eb6ba958"
+      },
+      "Diagnostics": [
+        {
+          "Actor": "Dedicated-0-client1",
+          "State": {
+            "BeforeExit": true,
+            "BeforeQueue": false,
+            "CanceledContinuation": true,
+            "ClientIndex": 1,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Dedicated-0-client2",
+          "State": {
+            "BeforeExit": true,
+            "BeforeQueue": false,
+            "CanceledContinuation": true,
+            "ClientIndex": 2,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        }
+      ],
+      "Failures": [
+        {
+          "Actor": "Dedicated-0-client1.stdout.log",
+          "Line": "[Runtime:NetworkTest] client FAIL"
+        },
+        {
+          "Actor": "Dedicated-0-client2.stdout.log",
+          "Line": "[Runtime:NetworkTest] client FAIL"
+        }
+      ],
+      "Logs": {
+        "Dedicated-0-client1.stdout.log": "987f72ee5d896aaa37d9e8aac12533693b8a476003cc7f179e0a69c18a90b162",
+        "Dedicated-0-client2.stdout.log": "5dd25195245dda1130dabe8fc72bdac3147e4d6ff709f9cc380448ac1943de14",
+        "Dedicated-0-server.stdout.log": "5cabd81039d84a5502f036a4d2f2c37631d97cdaa34b493cb52c4b585f30b8ff",
+        "integration-0.stdout.log": "aedc1fb4b93863684f1d7f48525922ba0a3b83b7730953fa4f161fd70a87a54b",
+        "Listen-0-listen.stdout.log": "8ed7193fa4fd73e8aaadc94b1ff0598a5578139b95465c263dae67b403fce451"
+      }
+    },
+    {
+      "Label": "diagnostic-normal-v2",
+      "Inputs": {
+        "Scope": "Diagnostic overlay, not a source correction or accepted qualification",
+        "StallMS": 0,
+        "ExtensionSHA256": "ea3c850f23b64c245bc98bd47cf7288e034bdea1396282de89f0503eecadbb39",
+        "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+        "FixtureSHA256": "7c271290383ecd8e04d853081411ee4e209f04f02202d2b4e3c7bdcdc035546a"
+      },
+      "Diagnostics": [
+        {
+          "Actor": "Dedicated-0-client1",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 1,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Dedicated-0-client2",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 2,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Editor-0-client1",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 1,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Editor-0-client2",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 2,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        }
+      ],
+      "Failures": [],
+      "Logs": {
+        "Dedicated-0-client1.stdout.log": "080a4e640822f5ca6a9ec17cb8051a5966b85e1aa26a71c2ac6def8b88548b10",
+        "Dedicated-0-client2.stdout.log": "b2ae4eff9ff8f060a24c1dde670c86494818abdf88ba818a1c491d3c0e57f054",
+        "Dedicated-0-server.stdout.log": "1d6f12960d625e2354d48e023a94bb304ba4826d26038c308fab2a25133f39e9",
+        "Editor-0-client1.stdout.log": "080a4e640822f5ca6a9ec17cb8051a5966b85e1aa26a71c2ac6def8b88548b10",
+        "Editor-0-client2.stdout.log": "b2ae4eff9ff8f060a24c1dde670c86494818abdf88ba818a1c491d3c0e57f054",
+        "Editor-0-server.stdout.log": "dc93d4bf979d4613243d2d265949cc6d2c0ad04ab2d347a252b5257fc40a82f8",
+        "integration-0.stdout.log": "aedc1fb4b93863684f1d7f48525922ba0a3b83b7730953fa4f161fd70a87a54b",
+        "Listen-0-listen.stdout.log": "8ed7193fa4fd73e8aaadc94b1ff0598a5578139b95465c263dae67b403fce451"
+      },
+      "PassedActors": 8
+    },
+    {
+      "Label": "diagnostic-stall-v2",
+      "Inputs": {
+        "Scope": "Diagnostic overlay, not a source correction or accepted qualification",
+        "StallMS": 250,
+        "ExtensionSHA256": "ea3c850f23b64c245bc98bd47cf7288e034bdea1396282de89f0503eecadbb39",
+        "HostSHA256": "b6283bfccbd21ee3e9d68abd1de0c3c076b703618e66f73fa93683f327890f1d",
+        "FixtureSHA256": "bbf5074819aea245b5b6aea1551b140142893a2d586d667b0e15963cc3b4526a"
+      },
+      "Diagnostics": [
+        {
+          "Actor": "Dedicated-0-client1",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 1,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Dedicated-0-client2",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 2,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Editor-0-client1",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 1,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        },
+        {
+          "Actor": "Editor-0-client2",
+          "State": {
+            "BeforeExit": false,
+            "BeforeQueue": false,
+            "CanceledContinuation": false,
+            "ClientIndex": 2,
+            "Role": "client",
+            "VictimLive": false,
+            "WrongRole": false
+          }
+        }
+      ],
+      "Failures": [],
+      "Logs": {
+        "Dedicated-0-client1.stdout.log": "080a4e640822f5ca6a9ec17cb8051a5966b85e1aa26a71c2ac6def8b88548b10",
+        "Dedicated-0-client2.stdout.log": "b2ae4eff9ff8f060a24c1dde670c86494818abdf88ba818a1c491d3c0e57f054",
+        "Dedicated-0-server.stdout.log": "7eb8dabf7e720e5e8611747e8befd25d2ac6f7234072b6370673885038b16a25",
+        "Editor-0-client1.stdout.log": "080a4e640822f5ca6a9ec17cb8051a5966b85e1aa26a71c2ac6def8b88548b10",
+        "Editor-0-client2.stdout.log": "b2ae4eff9ff8f060a24c1dde670c86494818abdf88ba818a1c491d3c0e57f054",
+        "Editor-0-server.stdout.log": "dc93d4bf979d4613243d2d265949cc6d2c0ad04ab2d347a252b5257fc40a82f8",
+        "integration-0.stdout.log": "aedc1fb4b93863684f1d7f48525922ba0a3b83b7730953fa4f161fd70a87a54b",
+        "Listen-0-listen.stdout.log": "8ed7193fa4fd73e8aaadc94b1ff0598a5578139b95465c263dae67b403fce451"
+      },
+      "PassedActors": 8
+    }
+  ],
+  "CorrectedUnmodified": {
+    "Actors": 16,
+    "Repeat": 2,
+    "Result": "PASS",
+    "ResultsSHA256": "a9429b9b4ccc6a17e49e95291a6c03d6273f6b17a8e92f66fabe6be112c0b296",
+    "Evidence": "C:\\Sandbox\\Codex\\GL04404520261109\\regression-retirement-v1"
+  },
+  "ProbeSource": "\"\"\"Private diagnostic overlay; invoke the existing regression driver unchanged.\"\"\"\nimport ctypes\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport sys\nfrom types import SimpleNamespace\n\nctypes.windll.kernel32.SetErrorMode(0x8003)\nRoot = Path('C:/Sandbox/Codex/GL04404520261109')\nSource = Root/'source'\nsys.path.insert(0, str(Source/'tests/runtime'))\nfrom RunQualification import Prepare, Fixtures\nfrom FixtureProcesses import StopAll\n\nHost = Path('C:/Sandbox/Codex/Networking2/benchmark-host-release-standalone/godot.windows.template_release.x86_64.exe')\nLibrary = Path('C:/Sandbox/Codex/Builds/GodotLuau/runtime-msvc-release/godot_luau.dll')\nOutput = Root/sys.argv[1]\nOutput.mkdir(exist_ok=False)\nPrepare(Output, Library)\nFixture = Output/'NetworkIntegration.gd'\nText = Fixture.read_text()\nText = Text.replace('        await Until(\"VictimWaiting\")', '''        await Until(\"VictimWaiting\")\n        Victim.tree_exited.connect(func():\n            Game.set_meta(\"VictimExitedAfterContinuation\", Game.has_meta(\"CancelledInvokeRan\")))\n        BEFORE_FRAME''')\nText = Text.replace('        Victim.queue_free()', '''        Game.set_meta(\"ContinuationBeforeQueue\", Game.has_meta(\"CancelledInvokeRan\"))\n        Victim.queue_free()''')\nText = Text.replace('        BEFORE_FRAME', '        OS.delay_msec(250)' if '--stall' in sys.argv else '        pass')\nText = Text.replace('        if Game.has_meta(\"CancelledInvokeRan\"):', '''        print(\"[Runtime:NetworkDiagnostic] \", JSON.stringify({\"Role\":Role,\"ClientIndex\":ClientIndex,\"CanceledContinuation\":Game.has_meta(\"CancelledInvokeRan\"),\"BeforeQueue\":Game.get_meta(\"ContinuationBeforeQueue\",false),\"BeforeExit\":Game.get_meta(\"VictimExitedAfterContinuation\",false),\"VictimLive\":is_instance_valid(Victim),\"WrongRole\":Game.has_meta(\"WrongRole\")}))\n        if Game.has_meta(\"CancelledInvokeRan\"):''')\nFixture.write_text(Text)\n(Output/'diagnostic-inputs.json').write_text(json.dumps({'Scope':'Diagnostic overlay, not a source correction or accepted qualification','StallMS':250 if '--stall' in sys.argv else 0,'ExtensionSHA256':hashlib.sha256(Library.read_bytes()).hexdigest(),'HostSHA256':hashlib.sha256(Host.read_bytes()).hexdigest(),'FixtureSHA256':hashlib.sha256(Fixture.read_bytes()).hexdigest()},indent=2))\nEnvironment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING='1')\nfor Name in ['APPDATA','LOCALAPPDATA','XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME']:\n    Profile = Output/'profile'/Name\n    Profile.mkdir(parents=True)\n    Environment[Name] = str(Profile)\ntry:\n    Results = Fixtures(SimpleNamespace(repeat=1,godot=Host,teardown=True,coordinated_close=True,timeout=60),Output,Environment)\n    (Output/'results.json').write_text(json.dumps(Results,indent=2))\n    print('[Runtime:NetworkDiagnostic] PASS',len(Results),'actors',flush=True)\nfinally:\n    StopAll()\n",
+  "OriginalFixtureRevision": "4510ab4006f3e13a80f564cc3088aae01406192e",
+  "HostedFailure": {
+    "Run": 42752081142,
+    "Job": 129617797855,
+    "Artifact": 13734034796,
+    "Digest": "sha256:6c1575a12d998d736bcd0a6b898a7896bc66793409ebcb36ab22ce82251ab65f",
+    "Actor": "Dedicated-0-client2",
+    "Exit": 1,
+    "HistoricalFlagsRecorded": false,
+    "Attribution": "Original bare FAIL did not distinguish wrong role from canceled continuation. Deferred-retirement mechanism is reproduced by the separate delayed-frame control; exact historical attribution is inferred."
+  },
+  "Correction": "Remove victim script and retiring NetworkService from the tree before queue_free; existing assertions and timeouts preserved. No production changes."
+}

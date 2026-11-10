@@ -19,9 +19,18 @@ func Check(Value: bool, Description: String) -> void:
         print("[Network:CharacterTest] FAIL ", Role, " ", Description)
 
 func Mark(Name: String, Value := "ready") -> void:
-    var File := FileAccess.open("res://character-" + Name, FileAccess.WRITE)
+    var Target := "res://character-" + Name
+    var Pending := Target + "." + str(OS.get_process_id()) + ".tmp"
+    var File := FileAccess.open(Pending, FileAccess.WRITE)
+    if File == null:
+        Check(false, "open fixture marker " + Name)
+        return
     File.store_string(Value)
     File.close()
+    # A reader must never observe the newly created target before its payload.
+    # Same-directory publication follows the existing RemoteFunctions fixture.
+    if DirAccess.rename_absolute(ProjectSettings.globalize_path(Pending), ProjectSettings.globalize_path(Target)) != OK:
+        Check(false, "publish complete fixture marker " + Name)
 
 func Read(Name: String) -> String:
     return FileAccess.get_file_as_string("res://character-" + Name)

@@ -60,6 +60,16 @@ static int godot_vector3_new(lua_State* L) {
     return 1;
 }
 
+// Preserve bound dot calls, while recognizing an explicit colon receiver by
+// identity (not value equality). The userdata upvalue also roots the receiver
+// for retained methods across normal VM collection.
+static int GetVector3OperandIndex(lua_State* Thread, int Arguments) {
+    if (lua_gettop(Thread) == Arguments) return 1;
+    if (lua_gettop(Thread) == Arguments + 1 && lua_rawequal(Thread, 1, lua_upvalueindex(1))) return 2;
+    luaL_error(Thread, "Expected a bound Vector3 method call or its matching colon receiver");
+    return 0;
+}
+
 static int godot_vector3_index(lua_State* L) {
     LuauVector3* vec = check_vector3(L, 1);
     const char* key  = luaL_checkstring(L, 2);
@@ -78,11 +88,12 @@ static int godot_vector3_index(lua_State* L) {
     }
 
     if (strcmp(key, "Lerp") == 0) {
-        lua_pushlightuserdata(L, vec);
+        lua_pushvalue(L, 1);
         lua_pushcclosure(L, [](lua_State* pL) -> int {
-            LuauVector3* self = (LuauVector3*)lua_touserdata(pL, lua_upvalueindex(1));
-            LuauVector3* goal = check_vector3(pL, 1);
-            float alpha = (float)luaL_checknumber(pL, 2);
+            int Operand = GetVector3OperandIndex(pL, 2);
+            LuauVector3* self = check_vector3(pL, lua_upvalueindex(1));
+            LuauVector3* goal = check_vector3(pL, Operand);
+            float alpha = (float)luaL_checknumber(pL, Operand + 1);
             if (!self || !goal) { lua_pushnil(pL); return 1; }
             LuauVector3 r = self->lerp(*goal, alpha);
             push_vector3(pL, r.x, r.y, r.z);
@@ -92,10 +103,11 @@ static int godot_vector3_index(lua_State* L) {
     }
 
     if (strcmp(key, "Dot") == 0) {
-        lua_pushlightuserdata(L, vec);
+        lua_pushvalue(L, 1);
         lua_pushcclosure(L, [](lua_State* pL) -> int {
-            LuauVector3* self = (LuauVector3*)lua_touserdata(pL, lua_upvalueindex(1));
-            LuauVector3* other = check_vector3(pL, 1);
+            int Operand = GetVector3OperandIndex(pL, 1);
+            LuauVector3* self = check_vector3(pL, lua_upvalueindex(1));
+            LuauVector3* other = check_vector3(pL, Operand);
             if (!self || !other) { lua_pushnumber(pL, 0); return 1; }
             lua_pushnumber(pL, self->dot(*other));
             return 1;
@@ -104,10 +116,11 @@ static int godot_vector3_index(lua_State* L) {
     }
 
     if (strcmp(key, "Cross") == 0) {
-        lua_pushlightuserdata(L, vec);
+        lua_pushvalue(L, 1);
         lua_pushcclosure(L, [](lua_State* pL) -> int {
-            LuauVector3* self = (LuauVector3*)lua_touserdata(pL, lua_upvalueindex(1));
-            LuauVector3* other = check_vector3(pL, 1);
+            int Operand = GetVector3OperandIndex(pL, 1);
+            LuauVector3* self = check_vector3(pL, lua_upvalueindex(1));
+            LuauVector3* other = check_vector3(pL, Operand);
             if (!self || !other) { lua_pushnil(pL); return 1; }
             LuauVector3 c = self->cross(*other);
             push_vector3(pL, c.x, c.y, c.z);

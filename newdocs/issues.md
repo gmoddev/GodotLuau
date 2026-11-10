@@ -26,10 +26,11 @@ the baseline; preserve IDs when a refactor moves the implementation.
 ## Index
 
 The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
-qualified game and its original evidence. GL-043 is separately qualified and
-[integrated normally](gl-043-main-integration.md). GL-044/045 remain open on main: the game
-uses documented supported calls and scene configuration, which does not resolve
-the underlying compatibility gaps. No issue is closed merely by this merge.
+qualified game and its original evidence. GL-043 is now separately qualified and
+[integrated](gl-043-main-integration.md). GL-044/045 have focused corrections on
+`codex/gl-044-045-relay-luau` and are qualified within its recorded profiles.
+That development branch remains unmerged. The original game
+merge did not itself close any of those native compatibility findings.
 
 Networking Foundation 2 source `cb2014f` is now integrated by a normal merge into
 compacted main `41acd27`, preserving three foundation commits and every historical
@@ -91,10 +92,90 @@ four successful workflows and independently checked artifacts.
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
 | GL-043 | P2 | Integrated; fixed and qualified within scope | Bounded Workspace raycast root filters and native Vector3 impulses |
-| GL-044 | P2 | Confirmed gameplay contract discrepancy | Native Node3D CFrame lacks stdlib directional convenience fields |
-| GL-045 | P2 | Confirmed gameplay math discrepancy | Vector3 colon Dot reads self as the other operand |
+| GL-044 | P2 | Fixed and qualified within branch scope; unmerged | Native Node3D CFrame lacks stdlib directional convenience fields |
+| GL-045 | P2 | Fixed and qualified within branch scope; unmerged | Vector3 colon Dot reads self as the other operand |
+| GL-046 | P3 | Corrected and qualified within recorded fixture profiles | Character/security barrier files can appear before their peer-ID payloads are written |
+| GL-047 | P3 | Corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
+| GL-048 | P3 | Corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
+
+## GL-048: Relay Siege publication readiness
+
+Accepted-candidate rendered listen/dedicated replays at game source `e65e3b8`
+pass their functional checks, but log `Rules:108: Remote peer not ready` during
+joining. `Publish` used FireAllClients, whose native validation rejects the
+broadcast before commit when a destination has not completed publication.
+The game driver reports functional outcomes; its PASS does not establish absence
+of script diagnostics. Preserve the raw first replay instead of relabeling it
+diagnostic-clean.
+
+The caller now uses the existing FireClient API per live Player, deferring only
+the exact native peer-not-ready error until the next current snapshot. Other
+errors propagate unchanged. No accepted reliable work is discarded, no retry
+queue or readiness authority is added, and one negotiating peer cannot prevent
+updates to ready recipients. Native transport/admission stays unchanged. Real
+rendered listen/dedicated replay at `0ecc2b5` passes 55/57 checks with no unhandled
+script diagnostics. Four known engine retired-channel diagnostics remain under
+GL-017/018 limits. The [receipt](evidence/gl044045/qualification-2026-11-09.json)
+separates the original diagnostic-bearing replay from the corrected one.
+
+## GL-047: Legacy cancellation fixture retires the owner too late
+
+Windows native run `42752081142` builds successfully, then reports bare FAIL in
+Dedicated client2. Its old log does not distinguish the canceled-invoke flag from
+wrong-role execution; retain that attribution limit. The
+[retained failure](evidence/gl044045/native-windows-lifecycle-failure.txt) and
+[controlled reproduction](evidence/gl044045/network-retirement-control.json)
+remain separate from the math fixes and GL-046's file publication corrections.
+
+On DockerPC's unchanged Release adapter, a diagnostic eight-actor run passes.
+Adding a deliberate 250 ms client stall makes both Dedicated clients resume the
+pending invoke after `queue_free()` is requested but before tree exit. Wrong-role
+flags stay false. ScriptNodeBase retires the execution owner in
+`NOTIFICATION_EXIT_TREE`; requesting queued deletion alone has not done so yet.
+This establishes the fixture timing mechanism, not the original missing flag.
+
+The correction removes the victim script and retiring NetworkService from the
+tree before queuing destruction. Assertions and deadlines remain unchanged;
+failure diagnostics identify the two previously silent conditions. Corrected
+normal/delayed controls each pass eight actors, and the unmodified corrected
+fixture passes 16 actors over two repetitions. Fresh Windows/Linux native
+`42755853334` passes all 141 actors at `e65e3b8`, including this corrected fixture.
+The historical missing failure flag remains unproven; this closes the controlled
+retirement race within those tested profiles, without relabeling the old run.
+No production code, callback ownership policy or networking authority changes.
+
+## GL-046: Character and security qualification marker publication
+
+Windows Debug candidate `42744369456` fails reconnect at `States()[0]`, despite
+a later PASS marker/zero exit; strict checking rejects the GDScript error. Its
+retained artifact and the bounded correction are in the
+[follow-up journal](gl-044-045-relay-development.md#retained-candidate-failure-and-bounded-fixture-correction).
+A native Godot FileAccess control confirms that opening the final marker path
+exposes an empty payload before close. The historical empty read is inferred,
+not directly captured. Mark now uses the existing fixture pattern of a completed
+temporary file plus same-directory rename. Production/authority code and all
+gameplay assertions/deadlines remain unchanged. All four candidate profiles at
+`4510ab4` and fresh Windows/Linux native at `e65e3b8` pass with both completed-file
+writers. This does not reclassify the failed attempts as accepted. A second Linux Release
+candidate failure records peer zero in NetworkSecurity's wrong-recipient setup;
+that fixture had the same publication gap. Its writer receives the same narrow
+correction, preserving all authority assertions and chat token expectations.
+The retained journal distinguishes the resulting valid broadcast relay from an
+actual forged-sender admission. No production authority code changes.
 
 ## GL-045: Vector3 method calling convention
+
+The [focused follow-up](gl-044-045-relay-development.md) at `30682a3` fixes colon
+argument selection and roots retained bound receivers as userdata upvalues while
+preserving legacy dot calls. The native baseline fails six checks; corrected
+Release math and 107-check Character fixtures pass, as does actual rendered
+Relay Siege gameplay. Windows/Linux core/native, matching-host full-native
+sanitizers and all ten candidate gates pass for the recorded inputs. Actual
+Windows SCons-production game replays at `0ecc2b5` also pass. The
+[receipt](evidence/gl044045/qualification-2026-11-09.json) preserves exact fixture
+revisions and the unsupported sanitizer/device profiles.
+
+Historical discovery in the original game campaign:
 
 Relay Siege's controlled ray trace gets approximately 564 instead of 24 from
 `Offset:Dot(Direction)`: the native bound closure in
@@ -106,6 +187,15 @@ Roblox colon compatibility and retained value-method lifetime remain separate
 native-binding follow-up work, not a math-framework refactor in this campaign.
 
 ## GL-044: Native CFrame shape differs from stdlib CFrame
+
+The [focused follow-up](gl-044-045-relay-development.md) at `30682a3` reuses the
+existing stdlib constructor for native getters, preserving coordinate tables,
+matrix layout and write authority. Native rotated Part/Camera/snapshot checks
+and actual rendered production gameplay pass, alongside both platforms'
+core/native, matching-host sanitizer and four-profile candidate qualification.
+The [receipt](evidence/gl044045/qualification-2026-11-09.json) separates unchanged
+native inputs from later fixture/game-only changes. The
+historical discovery below refers to the original game source.
 
 Relay Siege's actual gun initially sends nil when reading
 `Workspace.CurrentCamera.CFrame.LookVector`. The native Node3D getter in

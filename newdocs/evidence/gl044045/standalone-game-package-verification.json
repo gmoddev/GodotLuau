@@ -1,0 +1,30 @@
+{
+  "Result": "PASS",
+  "Host": "DockerPC / HostPC",
+  "Run": 42762178179,
+  "Artifact": 13738073089,
+  "ArtifactDigest": "sha256:9f40aa00133647ed303286315b0ff89fa6c9e6edd4dc3c8027de31b6057f3d02",
+  "GameRevision": "c9c03b0c573bda5a351cbc806b90af6bc5ac6189",
+  "CandidateSource": "4510ab4006f3e13a80f564cc3088aae01406192e",
+  "NativeSource": {
+    "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "Payloads": 157,
+  "ZIPMembers": 158,
+  "PackageSHA256": "29e1348146a0b9417b114d3f62146462c87a1ea9e7cbc9f346bb93ed5a46c521",
+  "Bytes": 25369076,
+  "ManifestSHA256": "01a526cbad286e035cc8ba1e1d8b9a855a775c9b95dbe765039e0fbfa8a992ab",
+  "RuntimeFilesSHA256LF": {
+    "Server.luau": "2064f94f4d86a23acc6c633a794b3a796f3ff48054d74e40722200b39f2483f7",
+    "Client.luau": "795ea1bad67fa449610fc10b01334b75859753b56c02c057ead706a13a980cd8",
+    "Game.gd": "755ed21ebcd92e5cfbdf178875d1fa771bf1fc8429283386333ae2940ecdfb91",
+    "PlayerController.luau": "fd4fbc542d161a956c341b4b7e348322cd7f95ac3144968dc1c3853bc7b11de1"
+  },
+  "Startup": "Hosted actual extracted package, exit 0; Rules ready; stderr empty",
+  "StartupLogs": {
+    "stdout": "477bb6563cf60a31d071ec363878a2316c9bcf966ec28f3fe51d875136edcc30",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "Result": "PASS",
+  "Verifier": "Existing ReleaseCandidate.CheckJobs and CheckPackage",
+  "Host": "DockerPC / HostPC",
+  "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+  "NativeSource": {
+    "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "AcceptedManifestSHA256": "eab54a2fadaf25b8fb925b4cac4cd8512c7985b249204b7559f3b2dbee28c98c",
+  "Packages": [
+    {
+      "Platform": "Windows",
+      "PackageSHA256": "41551f6e5a73a3b49df99e535359a071ac20fc55c93c31e50044cc8945a07a6c",
+      "Bytes": 8489520,
+      "Members": 133,
+      "ProvenanceSHA256": "d0fae2595c536a9344a832d0314a84317dd9e4819e66508852ce0b275f091e72",
+      "NativeFiles": {
+        "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": {
+          "SHA256": "5bf88de3b400f94f9564797765319ab9dc38e361716cabbd01bea1c92b0e8c5e",
+          "Bytes": 7227904,
+          "Mode": 438
+        },
+        "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": {
+          "SHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "Bytes": 5170176,
+          "Mode": 438
+        },
+        "GodotLuau/bin/godot_luau_store_worker.exe": {
+          "SHA256": "bccad97f7dd45b66ba14b6c6af2606adf86a9978f0ce937203ec0319a675fbd5",
+          "Bytes": 171008,
+          "Mode": 511
+        }
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "ExtensionSHA256": "5bf88de3b400f94f9564797765319ab9dc38e361716cabbd01bea1c92b0e8c5e",
+          "CompanionSHA256": "bccad97f7dd45b66ba14b6c6af2606adf86a9978f0ce937203ec0319a675fbd5",
+          "Logs": {
+            "stdout": "f9e050e69597160c3eec89eca5a9c558d7c84a6062742d28e66f4b313b4da8b4",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "ExtensionSHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+          "CompanionSHA256": "bccad97f7dd45b66ba14b6c6af2606adf86a9978f0ce937203ec0319a675fbd5",
+          "Logs": {
+            "stdout": "fdf06d7fac77efa95ee474128b58a2031c9bd6fcae99eaaef4a24bacec3d6436",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    },
+    {
+      "Platform": "Linux",
+      "PackageSHA256": "4be5781d60da06fdab0095336f23cb5e5a56e54acd8af1445b2eda377f8e1e4d",
+      "Bytes": 11425653,
+      "Members": 133,
+      "ProvenanceSHA256": "08084aeb9907de8831c0fb78a36ec09c3f2da19d797c5448d2bc908b925fd49c",
+      "NativeFiles": {
+        "GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so": {
+          "SHA256": "5b230606581cb13db953bf06f47a42563d189041e61d355266577e38f7e2b853",
+          "Bytes": 11182368,
+          "Mode": 420
+        },
+        "GodotLuau/bin/godot_luau_store_worker": {
+          "SHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Bytes": 26856,
+          "Mode": 493
+        },
+        "GodotLuau/bin/godot_luau.linux.template_release.x86_64.so": {
+          "SHA256": "72202433501fd087cf9ca6fb1d7d5f6a778cd7f22367ffa875b07a46bcec0c70",
+          "Bytes": 10640760,
+          "Mode": 420
+        }
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "ExtensionSHA256": "5b230606581cb13db953bf06f47a42563d189041e61d355266577e38f7e2b853",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "ff4fc8eea5e3021937fc32639bef8b9f1c25ce6bf7cef9a05df5c343bcb42dd0",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "ExtensionSHA256": "72202433501fd087cf9ca6fb1d7d5f6a778cd7f22367ffa875b07a46bcec0c70",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "32e038dbf8dbdc8bb1adbd97069ce25ffbbba17f8683dcdee8c80e274baf87a3",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    }
+  ],
+  "NoRuntimeExecutionRepeated": true,
+  "SetupAttempt": "Initial worker snapshot omitted verifier tools; unchanged ReleaseCandidate.py/policy were copied from the verified source, then verification retried."
+}

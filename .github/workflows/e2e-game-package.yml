@@ -9,7 +9,7 @@ on:
         description: "Accepted native candidate run matching the checked-out native source"
         type: string
         required: true
-        default: '42610528726'
+        default: '42752234638'
 permissions:
   contents: read
   actions: read
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: candidate-Windows
-          run-id: ${{ inputs.CandidateRun || '42610528726' }}
+          run-id: ${{ inputs.CandidateRun || '42752234638' }}
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/candidate
       - name: Verify reused native product and admitted host

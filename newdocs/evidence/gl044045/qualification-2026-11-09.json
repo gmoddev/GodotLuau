@@ -1,0 +1,841 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-09",
+  "Classification": "QUALIFIED WITH DOCUMENTED LIMITATIONS within the recorded native API and Windows rendered game profiles",
+  "Branch": "codex/gl-044-045-relay-luau",
+  "MainIntegrationReceipt": "../gl043/main-integration-2026-11-09.json",
+  "IntegratedMain": "6db2e2c563dfb4680dc09f1451f05dba5b778069",
+  "RuntimeImplementation": "30682a33c418cde73c710c168fe09c1c14af4155",
+  "GameImplementation": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+  "FixtureCorrection": [
+    "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+    "4510ab4006f3e13a80f564cc3088aae01406192e"
+  ],
+  "NativeSource": {
+    "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+  "PreCorrectionQualification": {
+    "Source": "30682a33c418cde73c710c168fe09c1c14af4155",
+    "Core": {
+      "Run": 42743902179,
+      "Result": "success",
+      "Artifacts": [
+        {
+          "Platform": "Windows",
+          "ID": 13731075443,
+          "Digest": "sha256:97879a05da27e803592deef6b9441d20273867b049ca7346c82576c4e738fdb0"
+        },
+        {
+          "Platform": "Linux",
+          "ID": 13729784967,
+          "Digest": "sha256:bd874921096ba83983e423b8bcb8b077f8f57e639929e08256b2bdd79afdfd44"
+        }
+      ],
+      "Reports": [
+        {
+          "Scope": "gl044045-core",
+          "Platform": "Windows",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "ReportSHA256": "ec35ed56f688c10c2a34cf2acd280698a7d41524ba33fd859f34c1934d852707"
+        },
+        {
+          "Scope": "gl044045-core",
+          "Platform": "Linux",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "ReportSHA256": "dbea3cb9b3257dba035fda2080395cf2e6a213164f59a3ac3cb2ec5802227062"
+        }
+      ]
+    },
+    "Native": {
+      "Run": 42743902074,
+      "Result": "success",
+      "Windows": {
+        "Scope": "gl044045-native-Windows",
+        "Revision": "30682a33c418cde73c710c168fe09c1c14af4155",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "Fixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "Model107": true,
+        "Model96": false,
+        "ExtensionSHA256": "9c1407a85770f0833aa84d5eea28f025b0a0587c49c755cce297f91a9e3352ea",
+        "SummarySHA256": "65dc2b1d0f79d206e67e5565da7335e081e2613700a96b21835d746eba677f2f",
+        "Artifact": 13731980592,
+        "Digest": "sha256:88c1f3694997bd36b67fb209db5aa302a82fe762475caf5aa724d4dfb1197e73"
+      },
+      "Linux": {
+        "Revision": "30682a33c418cde73c710c168fe09c1c14af4155",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "Fixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "Model107": true,
+        "ExtensionSHA256": "34bc99d54c67b0ccd11d2e66273ec0ae566e8253d41240e5cee1312cdd80a482",
+        "SummarySHA256": "de30247680ddb53b80e79ce71cd7d64502a7b1cc73cc4e3b0a54015e19d8f392",
+        "Artifact": 13731317573,
+        "Digest": "sha256:e3f1d7e859eb0b7986096ef30a62da98e878c512f978be4f79d60e8b63b5c43a"
+      }
+    },
+    "Sanitizers": {
+      "Run": 42744024821,
+      "Result": "success",
+      "Windows": {
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Revision": "30682a33c418cde73c710c168fe09c1c14af4155",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "InstrumentedFiles": 1165,
+        "Fixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "ExtensionSHA256": "c7fecfdb5653785942cc64061bd8afaf04319d8ac5a390219a3f859f50f9ec04",
+        "SummarySHA256": "6240ae39ebac24dd4d85e635d8cdbebd5b706e4f7bd45e3b43a40b232a1f4ab5",
+        "CoreCases": 85,
+        "Model107": true,
+        "Artifact": 13732586120,
+        "Digest": "sha256:8c18f5ea497dd5c2f453fb6ead5bcbad1872fde4baf42f53de9bea4167aa754c",
+        "LSan": "unsupported"
+      },
+      "Linux": {
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Revision": "30682a33c418cde73c710c168fe09c1c14af4155",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "CoreCases": 85,
+        "InstrumentedFiles": 1165,
+        "Fixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "ExtensionSHA256": "c67b1fbb2e7dd71ff79929baf47cfb05cc24014f1d31edc30bffa27b56fe29cb",
+        "SummarySHA256": "bb1ff2f1e59cdbbf62e4745cbee3e4a406eb8e374e143e71c538b4baa5a6506c",
+        "ModelLog": "C:\\Users\\aiden\\OneDrive\\Documents\\ChatGPT\\godotluau\\.runtime-tests\\gl044045-san-Linux\\_temp\\native-sanitizer-evidence\\native\\characters\\Model\\character-model.stdout.log",
+        "DetectionControls": [
+          {
+            "Label": "standalone-uaf",
+            "ExpectedFinding": "heap-use-after-free",
+            "Passed": true
+          },
+          {
+            "Label": "host-uaf",
+            "ExpectedFinding": "heap-use-after-free",
+            "Passed": true
+          },
+          {
+            "Label": "host-leak",
+            "ExpectedFinding": "detected memory leaks",
+            "Passed": true
+          }
+        ],
+        "AllStepsPassed": true,
+        "Model107": true,
+        "Artifact": 13730839016,
+        "Digest": "sha256:2b986db9b09cf26650722305110b64b1da3366de4d11c8b97c155e61b1dd9c23",
+        "LeakDetection": true
+      }
+    }
+  },
+  "CurrentQualification": {
+    "Source": "e65e3b89a72c4e8a2017410f2eb67f54e44d1938",
+    "Scope": "Native implementation and harness; later game-only changes do not modify these inputs",
+    "NativeUnchanged": true,
+    "Core": {
+      "Run": 42755853368,
+      "Result": "success",
+      "Reports": [
+        {
+          "Platform": "Windows",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "GraphFailures": 0,
+          "ReportSHA256": "d3a6d03338e4344f191312519f38658a51e1d376cb9407732fffc7cf6ba37307"
+        },
+        {
+          "Platform": "Linux",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "GraphFailures": 0,
+          "ReportSHA256": "b0547c0bc540c9b8b2eb626e35e97024ded3f2311f39cf28b2458a6a2bb26342"
+        }
+      ],
+      "Artifacts": [
+        {
+          "Platform": "Windows",
+          "ID": 13735926006,
+          "Digest": "sha256:247cdc3f5a3a8878d23c7f23505f52b1656a3b80d5551af80224561bc6ed8f0d"
+        },
+        {
+          "Platform": "Linux",
+          "ID": 13735158302,
+          "Digest": "sha256:2655c26df00fa3fdd1327cb3758a76cc862f978df2d93d4936f20ac008ee48b9"
+        }
+      ],
+      "OptionalBenchmarkHost": "Not requested; optional job skipped"
+    },
+    "Native": {
+      "Run": 42755853334,
+      "Result": "success",
+      "Windows": {
+        "Revision": "e65e3b89a72c4e8a2017410f2eb67f54e44d1938",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "0d0f346486e2df97f765c6eaaf07f01542cfd379669ef23c2925151720915c99",
+        "RetirementFixture": "036366beeb6618668852192d700691388e243cbb9eb33c7393d828bd393c3d4c",
+        "ExtensionSHA256": "c34158d26267f2269eec19daab1e02bb5289da5d10bb3784d489bb4972ece2b8",
+        "SummarySHA256": "393522021ec36b822ced509886cc0134c79104f98dbade43a02e7ada9cdafc5a",
+        "Model107": true,
+        "Artifact": 13736369482,
+        "Digest": "sha256:19e81a6be4d8b5403e7363f2226746fc1e39edd1f97428a095af16f6f3ee680c"
+      },
+      "Linux": {
+        "Revision": "e65e3b89a72c4e8a2017410f2eb67f54e44d1938",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "0d0f346486e2df97f765c6eaaf07f01542cfd379669ef23c2925151720915c99",
+        "RetirementFixture": "036366beeb6618668852192d700691388e243cbb9eb33c7393d828bd393c3d4c",
+        "ExtensionSHA256": "34bc99d54c67b0ccd11d2e66273ec0ae566e8253d41240e5cee1312cdd80a482",
+        "SummarySHA256": "098fed17edc37ca641c9cbc2574a9aa25545f90ec2a49e7340fc51dd10b32d0b",
+        "Model107": true,
+        "Artifact": 13737135661,
+        "Digest": "sha256:7e535aafbc6ae96b3580c3f93cc873a2a7f9e5e73329aabb4f4b442781c7b477"
+      }
+    },
+    "Sanitizers": {
+      "Run": 42748739079,
+      "Result": "success",
+      "Source": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+      "NativeSourceUnchanged": true,
+      "MathFixtureUnchanged": true,
+      "LaterMarkerAndRetirementFixturesNotIncluded": true,
+      "Scope": "Reused matching-host full-native C++ qualification, not a fresh full-game or final-harness sanitizer claim"
+    }
+  },
+  "LocalDevelopment": {
+    "NativeSource": "30682a3",
+    "Host": "DockerPC / HostPC",
+    "Configuration": "Release",
+    "NativeBinarySHA256": "ea3c850f23b64c245bc98bd47cf7288e034bdea1396282de89f0503eecadbb39",
+    "MathProbe": {
+      "Exit": 0,
+      "Stderr": "empty"
+    },
+    "Model": {
+      "Checks": 107,
+      "Result": "PASS",
+      "ExpectedDiagnostic": "Rejected nonfinite, singular, sheared or nonuniform Character transform"
+    },
+    "Game": {
+      "Host": "MainPC / DESKTOP-B8V8NAN",
+      "Source": "b92b256",
+      "Scope": "Development adapter replay using retained admitted rendered host/assets; not candidate acceptance",
+      "Result": "PASS",
+      "Cases": 28,
+      "Failed": 0,
+      "Seconds": 63.329,
+      "MeanFrameMS": 33.4656495961818,
+      "PeakFrameMS": 145.118333333333,
+      "CapFPS": 30,
+      "Report": "rendered-local.json",
+      "Screenshot": "victory.png",
+      "ScreenshotSHA256": "ab6eb58a1b2148e22661534b209432af398f5365250e6b16f88834c3bffb74c2",
+      "Stderr": "Failed to request display timeout override."
+    }
+  },
+  "RetainedFailures": [
+    {
+      "Kind": "Native math baseline",
+      "SourceFixture": "f002461",
+      "Exit": 1,
+      "FailedChecks": 6,
+      "Report": "baseline.txt"
+    },
+    {
+      "Kind": "Local build setup",
+      "Exit": 255,
+      "Error": "Inherited PATH exceeds cmd line bound before configure; child-only explicit PATH corrected setup",
+      "RuntimeFailure": false
+    },
+    {
+      "Kind": "Candidate Windows Debug",
+      "Run": 42744369456,
+      "Job": 129592964693,
+      "Source": "b92b256",
+      "Artifact": 13731907377,
+      "Digest": "sha256:bf38737e20f73d8c0751f9e71ad536e19bd1e9e75943fe6e487cf7908edd19c5",
+      "Error": "Character Listen reconnect States()[0] GDScript error despite exit 0/PASS; rejected by strict checker",
+      "Report": "candidate-windows-debug-failure.txt",
+      "Disposition": "Failed job retained. Remaining old candidate jobs cancelled as superseded after fixture correction; old run is not accepted."
+    },
+    {
+      "Kind": "Candidate Linux Release",
+      "Run": 42748734970,
+      "Source": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+      "Artifact": 13733596670,
+      "Digest": "sha256:ec250710173778df8cceab6284bf055210c466faec963dba66b4e7a75066202c",
+      "Error": "NetworkSecurity Listen peer-zero wrong-recipient setup; authentic own-sender broadcast consumes one token, violating expected burst. Historical empty marker read inferred, not directly captured.",
+      "Report": "candidate-linux-release-failure.txt",
+      "Disposition": "Failed profile retained; remaining jobs cancelled as superseded after second marker correction. Not an accepted candidate."
+    },
+    {
+      "Kind": "Ordinary native Windows Debug legacy lifecycle",
+      "Run": 42752081142,
+      "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+      "Job": 129617797855,
+      "Artifact": 13734034796,
+      "Digest": "sha256:6c1575a12d998d736bcd0a6b898a7896bc66793409ebcb36ab22ce82251ab65f",
+      "Error": "Dedicated-0-client2 exit1, bare FAIL; exact failure flag not logged",
+      "Report": "native-windows-lifecycle-failure.txt",
+      "Attribution": "Deferred retirement reproduced separately with delayed-frame control; exact historical attribution inferred, not directly captured."
+    },
+    {
+      "Kind": "First production game replay",
+      "Source": "e65e3b89a72c4e8a2017410f2eb67f54e44d1938",
+      "FunctionalChecks": 112,
+      "FunctionalFailures": 0,
+      "UnhandledScriptDiagnostics": 2,
+      "Issue": "GL-048",
+      "Report": "game-admission-original.json",
+      "ArchiveSHA256": "0e7b7b2a75c47baae8f433d62209df0778abaf30733d428ffbe0e1581ba45e5e",
+      "Disposition": "Retained as functional success with unhandled publication errors; corrected game caller replayed rather than claiming diagnostic-clean success"
+    }
+  ],
+  "MarkerControl": {
+    "Host": "DockerPC",
+    "VisibleBeforeClose": true,
+    "EarlyValue": "",
+    "ParsedEarly": 0,
+    "CompleteAfterClose": "1234",
+    "Evidence": "C:/Sandbox/Codex/GL04404520261109/marker-control",
+    "HistoricalAttribution": "Consistent with observed peer-zero failure; original marker bytes not retained, so historical empty read is inferred."
+  },
+  "DockerCleanup": {
+    "RemovedFiles": 7548,
+    "RecoveredBytes": 34193801216,
+    "AfterFreeBytes": 34497626112,
+    "FailedDeletions": 0,
+    "Roots": [
+      "C:/Sandbox/Codex/Builds/gargantuan",
+      "C:/Sandbox/Codex/Builds/gargantuan-input"
+    ],
+    "Receipt": "C:/Sandbox/Codex/Artifacts/Cleanup-20261109-GodotLuau",
+    "Excluded": "CarbonLuau archive junction; source, reports, toolchains, GodotLuau caches, active and unrelated workloads",
+    "LatestObservedFreeBytes": 18625212416,
+    "LatestObservation": "2026-11-10T03:58:00Z; other disk activity changed free space after cleanup"
+  },
+  "Limitations": [
+    "CFrame direction/Position fields retain stdlib coordinate tables; game explicitly converts to native Vector3 for existing endpoint",
+    "Bound vector dot calls are preserved; wrong arity or mismatched explicit receiver now fails",
+    "Godot scene/UI/audio and local SoftBody pin presentation remain native adapters; no general Godot-call surface introduced",
+    "Physical devices/OS capture, Linux rendered gameplay, WAN/authentication and pristine consumer environments remain unqualified",
+    "Windows LSan unsupported; prior full instrumented game victory failures and GL-017/018/asset/allocation profiling limits retained",
+    "No byte-for-byte independently built binary reproducibility or production distribution claim",
+    "Four known retired-channel engine diagnostics remain in current rendered multiplayer logs; no unhandled script error remains"
+  ],
+  "ReleasePublicationDisabled": true,
+  "UpdaterDistributionDisabled": true,
+  "ControllerAndNetworkingAuthorityUnchanged": true,
+  "DevelopmentBranchUnmerged": true,
+  "ObservationUTC": "2026-11-10T05:35:00Z",
+  "PriorFixtureQualification": {
+    "Source": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+    "Core": {
+      "Run": 42748698003,
+      "Result": "success",
+      "Reports": [
+        {
+          "Platform": "Windows",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "ReportSHA256": "30794081b6429808848d7a94499f751f17f31255833a911ebc4efa1c03beb558"
+        },
+        {
+          "Platform": "Linux",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "ReportSHA256": "cdaa3770db0a6cae2e4596097539305c3d7d5ad2a50678e1a4dcfad213875e0d"
+        }
+      ]
+    },
+    "Native": {
+      "Run": 42748697994,
+      "Result": "success",
+      "Windows": {
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+        "ExtensionSHA256": "e3a5f89c2acf453a271ac566228e65184eaff799d7d52035f07907ab662916f4",
+        "SummarySHA256": "67d78c9f612c969aa35b771edf70fe46b146b22f6b52dd52b1b4779e67bb4dbf",
+        "Model107": true,
+        "Artifact": 13733548419,
+        "Digest": "sha256:e535b462d160933aa3466d9bb86b9f60e0d394a3969b9323d9aa48459c6d038b"
+      },
+      "Linux": {
+        "Kind": "native",
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "MarkerFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "Model107": true,
+        "ExtensionSHA256": "34bc99d54c67b0ccd11d2e66273ec0ae566e8253d41240e5cee1312cdd80a482",
+        "SummarySHA256": "d407b8ca5a6bad6451b2d5500d55e408a7bac88583a07e57b876bb81ca956929",
+        "Artifact": 13732608933,
+        "Digest": "sha256:41e45f6a4d07d6c9db0d0c381fd279f9fa2357ce0485256ce9e8ee9c954fef8e"
+      }
+    },
+    "Sanitizers": {
+      "Run": 42748739079,
+      "Result": "success",
+      "Windows": {
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+        "CoreCases": 85,
+        "InstrumentedFiles": 1165,
+        "ExtensionSHA256": "0a69f02c58f70c3792d983c10566ca9270aae1542885ae84cf2d16464231e293",
+        "SummarySHA256": "bd3aa8e357d4281c159b2eeac01af86c8dab03eb532373a9d5e09c3a9f9b0a1b",
+        "Model107": true,
+        "AllStepsPassed": true,
+        "Artifact": 13734177718,
+        "Digest": "sha256:b17b160331c41bb22de2d095d1cd5fb239c441a703d40e39e6cb62f80076986d",
+        "LSan": "unsupported"
+      },
+      "Linux": {
+        "Kind": "san",
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "MarkerFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "Model107": true,
+        "ExtensionSHA256": "c67b1fbb2e7dd71ff79929baf47cfb05cc24014f1d31edc30bffa27b56fe29cb",
+        "SummarySHA256": "f32700aafe22596d72c68a23f45cfd8a3c137b3f2c5b63a01c0435a84aac54c8",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Artifact": 13732964101,
+        "Digest": "sha256:c9db866edd85d25077a524f9aa20e2651127d770e019235c292a581e3fc3c909",
+        "CoreCases": 85,
+        "InstrumentedFiles": 1165,
+        "LeakDetection": true
+      }
+    },
+    "Scope": "Both platforms passed with corrected Character markers; predates the NetworkSecurity marker-only correction. C++/math fixture unchanged."
+  },
+  "RetirementCorrection": {
+    "Issue": "GL-047",
+    "ProductionChanges": false,
+    "Report": "network-retirement-control.json",
+    "UnmodifiedCorrectedActors": 16,
+    "Repeat": 2,
+    "Result": "PASS",
+    "CorrectedControlActors": 16,
+    "OriginalControl": "normal8 PASS; delayed Dedicated clients FAIL before tree exit, wrong-role=false",
+    "HostedQualification": {
+      "Run": 42755853334,
+      "Result": "success",
+      "WindowsActors": 141,
+      "LinuxActors": 141
+    },
+    "Source": "e65e3b89a72c4e8a2017410f2eb67f54e44d1938",
+    "FixtureIdentity": {
+      "NetworkIntegration": "036366beeb6618668852192d700691388e243cbb9eb33c7393d828bd393c3d4c",
+      "Blob": "f6a1cb4207c0a17a447d86a0808a20eb8b08cb1d"
+    }
+  },
+  "CompletedLocalDate": "2026-11-10",
+  "GameMigrationBase": "b92b256c696f20aebca0d4bacdd4743d2d9b1602",
+  "PreRetirementQualification": {
+    "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+    "NativeUnchanged": true,
+    "Core": {
+      "Run": 42752080974,
+      "Result": "success",
+      "Reports": [
+        {
+          "Platform": "Windows",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "GraphFailures": 0,
+          "ReportSHA256": "af63f09858a83af9138d55ce9b1bc77bc7a8eb7fdfd9df685a474fae08369e0d"
+        },
+        {
+          "Platform": "Linux",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "GraphFailures": 0,
+          "ReportSHA256": "dffba05f5fb1a90e960dcc3819ec86c74288194f4275f44044c15b0f9999fda7"
+        }
+      ],
+      "Artifacts": [
+        {
+          "Platform": "Windows",
+          "ID": 13733433236,
+          "Digest": "sha256:aadb4eaa910d8998880cf88a77fcdf24b4f00a459318c85a205356f8dad3def0"
+        },
+        {
+          "Platform": "Linux",
+          "ID": 13733074567,
+          "Digest": "sha256:fc2f8db16b0316ab87273424293ef873c5a43f177f852d145e9bdfe235a79b53"
+        }
+      ]
+    },
+    "Native": {
+      "Run": 42752081142,
+      "Result": "failure",
+      "Linux": {
+        "Revision": "4510ab4006f3e13a80f564cc3088aae01406192e",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "0d0f346486e2df97f765c6eaaf07f01542cfd379669ef23c2925151720915c99",
+        "ExtensionSHA256": "34bc99d54c67b0ccd11d2e66273ec0ae566e8253d41240e5cee1312cdd80a482",
+        "SummarySHA256": "91f6c94caefd02886408ce2a7f9be688f8bb78fb748319ebbae74d718a7c16e8",
+        "Model107": true,
+        "Groups": {
+          "controller": 7,
+          "input": 3,
+          "datastore": 23,
+          "httpservice": 6,
+          "remote": 21,
+          "regression": 8,
+          "http": 4,
+          "performance": 1,
+          "security": 10,
+          "presentation": 14,
+          "filesystem": 3,
+          "characters": 20,
+          "animation": 10,
+          "callers": 3,
+          "resources": 8
+        },
+        "Artifact": 13733439852,
+        "Digest": "sha256:e7b68c1d7bbe0cff32f159c9eb0ac85e8e3c14bef4c2a994d1de1cb4c265a107"
+      },
+      "Windows": {
+        "Result": "failure",
+        "Actor": "Dedicated-0-client2",
+        "Exit": 1,
+        "Artifact": 13734034796,
+        "Digest": "sha256:6c1575a12d998d736bcd0a6b898a7896bc66793409ebcb36ab22ce82251ab65f",
+        "Build": "success",
+        "MathActorExecuted": false,
+        "Report": "native-windows-lifecycle-failure.txt"
+      }
+    },
+    "Candidate": {
+      "Run": 42752234638,
+      "Result": "success",
+      "PassedGates": [
+        "Linux core ASan/LSan",
+        "Windows rejection and retention",
+        "Linux rejection and retention"
+      ],
+      "Pending": "Four source profiles, extracted packages and final acceptance",
+      "CoreASan": {
+        "Artifact": 13733184379,
+        "Digest": "sha256:98b3aee4d778d2ead81059b3133468f16fbd99d2e8ee307397ad39e30b7ec2de",
+        "Result": "PASS",
+        "Cases": 85,
+        "ASanSymbolVerified": true,
+        "SummarySHA256": "f2b7f9bc85dc50b22aca041a83533b0f169697bbcdc0eb096a116995f050e8cb"
+      },
+      "RequiredGates": 10
+    },
+    "Sanitizers": {
+      "ReusedRun": 42748739079,
+      "NativeSourceUnchanged": true,
+      "FixtureSource": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+      "FinalSecurityMarkerFixtureNotIncluded": true
+    },
+    "LocalAffected": {
+      "Host": "DockerPC / HostPC",
+      "Configuration": "Release",
+      "CharacterActors": 20,
+      "ControllerActors": 7,
+      "SecurityActors": 10,
+      "Result": "PASS",
+      "CharacterEvidence": "C:/Sandbox/Codex/GL04404520261109/marker-v1",
+      "SecurityEvidence": "C:/Sandbox/Codex/GL04404520261109/security-marker-v1"
+    },
+    "FixtureHashes": {
+      "CharacterV2.gd": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+      "CharacterIntegration.gd": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+      "NetworkSecurity.gd": "0d0f346486e2df97f765c6eaaf07f01542cfd379669ef23c2925151720915c99"
+    }
+  },
+  "CandidateQualification": {
+    "Run": 42752234638,
+    "Result": "success",
+    "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+    "RequiredGates": 10,
+    "Profiles": [
+      {
+        "Profile": "Windows-Debug",
+        "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+        "Gates": {
+          "Core": {
+            "Result": "PASS",
+            "Cases": 85
+          },
+          "Native": {
+            "Result": "PASS",
+            "Actors": 141
+          }
+        },
+        "Actors": 141,
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "Model107": true,
+        "ProfileSHA256": "25656e9d4782434ab69db3d0b7d5d42a66d0c75e17ecf65e81651b2a94ae9f02",
+        "EvidenceSHA256": "7ccbc895356de2c51bd531b09ae0274e0bc7a714e9e34626b4f99d1366c87d12",
+        "QualificationProduct": "Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging",
+        "Artifact": {
+          "ID": 13736280939,
+          "Digest": "sha256:d6df65c5ce43bdb4b4dbf1c3a8b9e61c5ece9b267a6c7bb34a9b3090b1358fed"
+        }
+      },
+      {
+        "Profile": "Linux-Debug",
+        "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+        "Gates": {
+          "Core": {
+            "Result": "PASS",
+            "Cases": 85
+          },
+          "Native": {
+            "Result": "PASS",
+            "Actors": 141
+          }
+        },
+        "Actors": 141,
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "Model107": true,
+        "ProfileSHA256": "d89d6b8497d95f1c018ed2ca4a12869763cc125b4fd806c7265c3674cc73f420",
+        "EvidenceSHA256": "251bef3a8f1aa07b7a4940cc7f0d7263c4adfac73ee164b60ff51ced48a8ac65",
+        "QualificationProduct": "Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging",
+        "Artifact": {
+          "ID": 13735048375,
+          "Digest": "sha256:4049818d0d2fd5294eb51056f5554a2ff733b7ccc6bbc5ab16aabf7cf67e7484"
+        }
+      },
+      {
+        "Profile": "Linux-Release",
+        "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+        "Gates": {
+          "Core": {
+            "Result": "PASS",
+            "Cases": 85
+          },
+          "Native": {
+            "Result": "PASS",
+            "Actors": 141
+          }
+        },
+        "Actors": 141,
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "Model107": true,
+        "ProfileSHA256": "d00e448e61264ea50456fb3e18e7ab28ad53dd70a4c6b0df33903744f6e4ce1a",
+        "EvidenceSHA256": "9573825f6e6dda0798a301c13264cec0d5453183c4df7f0543de210b7ee527fb",
+        "QualificationProduct": "Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging",
+        "Artifact": {
+          "ID": 13735508824,
+          "Digest": "sha256:42eafc4abb690b877a759f456602a832fe9811fe2a18c580894516e4f2eac965"
+        }
+      },
+      {
+        "Profile": "Windows-Release",
+        "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+        "Gates": {
+          "Core": {
+            "Result": "PASS",
+            "Cases": 85
+          },
+          "Native": {
+            "Result": "PASS",
+            "Actors": 141
+          }
+        },
+        "Actors": 141,
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "Model107": true,
+        "ProfileSHA256": "e1d35d313498cc758a8a6ea5fb9ab98fd53e01a8aab6297dc0167e33d345d696",
+        "EvidenceSHA256": "4522ff8a1cdc89d76ff9c8467abb0660a10d7d594547daa7f115a06521b95232",
+        "QualificationProduct": "Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging",
+        "Artifact": {
+          "ID": 13736328688,
+          "Digest": "sha256:14eec3e1e4ab5dd7fd8632950f1f42b7acc452ee5daed2776f31ef3693529e47"
+        }
+      }
+    ],
+    "PackagesVerifiedOn": "DockerPC / HostPC",
+    "Verification": "candidate-package-verification.json",
+    "AcceptedManifestSHA256": "eab54a2fadaf25b8fb925b4cac4cd8512c7985b249204b7559f3b2dbee28c98c",
+    "Artifacts": [
+      {
+        "Name": "candidate-Windows",
+        "ID": 13737195978,
+        "Digest": "sha256:ed460f72147d7f35ca941cf968b789d7bbaf0d2a5dfdf7cb405562c258ff10b7"
+      },
+      {
+        "Name": "candidate-Linux",
+        "ID": 13735894824,
+        "Digest": "sha256:a46d442a8bcf2e0a8dcc1f62936c8be4ecf7489d3bf4e6b8bd77552890e3d429"
+      },
+      {
+        "Name": "accepted-candidate",
+        "ID": 13737165828,
+        "Digest": "sha256:fa7814f27d9b6348844e2dd907497eeee1277a10c22cc9481f0361f192764c42"
+      }
+    ],
+    "LaterRetirementFixtureNotIncluded": true
+  },
+  "ProductionGame": {
+    "Source": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+    "CandidateSource": "4510ab4006f3e13a80f564cc3088aae01406192e",
+    "CandidateRun": 42752234638,
+    "Host": "MainPC / DESKTOP-B8V8NAN",
+    "Result": "PASS within documented rendered functional scope",
+    "Actors": 9,
+    "Checks": 112,
+    "Failed": 0,
+    "ScriptDiagnostics": 0,
+    "KnownRetiredChannelDiagnostics": 4,
+    "KnownDisplayWarnings": 8,
+    "FrameCap": 30,
+    "Summary": "game-rendered-summary.json",
+    "ListenReport": "game-listen.json",
+    "DedicatedReport": "game-dedicated.json",
+    "Screenshots": [
+      "listen-victory.png",
+      "dedicated-victory.png"
+    ],
+    "ArchiveSHA256": "b8cb8c0bc2670fc162fabc492eab689cb1f83e19747315775c36710eea258ff7",
+    "NativeBinarySHA256": "bf97e93b4638c8e47cb39b7bf6d7a7dc12c8ce70b8f2d3c62739f962e2853bd8",
+    "Instrumentation": "Uninstrumented accepted SCons production ZIP; earlier development adapter results remain separate",
+    "Scope": "Four rendered players in listen mode, four rendered clients plus headless server in dedicated mode; simulated input/loopback ENet, not physical devices or WAN"
+  },
+  "StandaloneGamePackage": {
+    "Result": "PASS",
+    "Host": "DockerPC / HostPC",
+    "Run": 42762178179,
+    "Artifact": 13738073089,
+    "ArtifactDigest": "sha256:9f40aa00133647ed303286315b0ff89fa6c9e6edd4dc3c8027de31b6057f3d02",
+    "GameRevision": "c9c03b0c573bda5a351cbc806b90af6bc5ac6189",
+    "CandidateSource": "4510ab4006f3e13a80f564cc3088aae01406192e",
+    "NativeSource": {
+      "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+      "Files": 101,
+      "Newlines": "LF normalized"
+    },
+    "Payloads": 157,
+    "ZIPMembers": 158,
+    "PackageSHA256": "29e1348146a0b9417b114d3f62146462c87a1ea9e7cbc9f346bb93ed5a46c521",
+    "Bytes": 25369076,
+    "ManifestSHA256": "01a526cbad286e035cc8ba1e1d8b9a855a775c9b95dbe765039e0fbfa8a992ab",
+    "RuntimeFilesSHA256LF": {
+      "Server.luau": "2064f94f4d86a23acc6c633a794b3a796f3ff48054d74e40722200b39f2483f7",
+      "Client.luau": "795ea1bad67fa449610fc10b01334b75859753b56c02c057ead706a13a980cd8",
+      "Game.gd": "755ed21ebcd92e5cfbdf178875d1fa771bf1fc8429283386333ae2940ecdfb91",
+      "PlayerController.luau": "fd4fbc542d161a956c341b4b7e348322cd7f95ac3144968dc1c3853bc7b11de1"
+    },
+    "Startup": "Hosted actual extracted package, exit 0; Rules ready; stderr empty",
+    "StartupLogs": {
+      "stdout": "477bb6563cf60a31d071ec363878a2316c9bcf966ec28f3fe51d875136edcc30",
+      "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Verification": "standalone-game-package-verification.json",
+    "Workflow": "https://github.com/gmoddev/GodotLuau/actions/runs/42762178179"
+  },
+  "Cleanup": {
+    "DockerPCOwnedProcesses": 0,
+    "MainPCOwnedProcesses": 0,
+    "CheckedAtUTC": "2026-11-10T05:35:00Z",
+    "DockerPCFreeBytes": 7366324224,
+    "MainPCFreeBytes": 250082082816,
+    "TaskCachesAndEvidenceRetained": true,
+    "UnrelatedWorkloadsUntouched": true
+  }
+}

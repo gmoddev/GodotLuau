@@ -1,0 +1,20 @@
+Run: https://github.com/gmoddev/GodotLuau/actions/runs/42752081142
+Job: 129617797855
+Source: 4510ab4006f3e13a80f564cc3088aae01406192e
+Artifact: 13734034796
+Artifact digest: sha256:6c1575a12d998d736bcd0a6b898a7896bc66793409ebcb36ab22ce82251ab65f
+Failed actor: Dedicated-0-client2, exit 1
+Build succeeded; new Character/math actor not reached on Windows.
+Original internal FAIL flag was not logged; retain attribution uncertainty.
+
+Godot Engine v4.7.1.stable.custom_build - https://godotengine.org
+
+[GodotLuau] ////////////////////////////////////////////////////
+[GodotLuau]   GodotLuau ? - by PimpoliDev
+[GodotLuau]   Luau System for Godot [Active]
+[GodotLuau] ////////////////////////////////////////////////////
+[Runtime:NetworkTest] client FAIL
+[Runtime:BindingRetirement] Retired 0 bindings before library close
+
+ERROR: [GodotLuau] LocalScript no puede acceder a 'ServerStorage' â este servicio es exclusivo del servidor.
+   at: VariantUtilityFunctions::push_error (core\variant\variant_utility.cpp:1023)
