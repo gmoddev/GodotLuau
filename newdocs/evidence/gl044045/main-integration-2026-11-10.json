@@ -1,0 +1,93 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-10",
+  "Classification": "INTEGRATED WITH LIMITATIONS; fresh native CI pending",
+  "StartingMain": "6db2e2c563dfb4680dc09f1451f05dba5b778069",
+  "Merge": "ee8e059a1c5d6a45cb64e6c1e104caa6f5590ad4",
+  "MergeParents": [
+    "6db2e2c563dfb4680dc09f1451f05dba5b778069",
+    "67ae0d31618765a0d72a52c3e21c784a7c3bffcf"
+  ],
+  "MergeTree": "5551063caef823662622eb82450d2322b59d1ee1",
+  "SourceBranch": "codex/gl-044-045-relay-luau",
+  "SourceTip": "67ae0d31618765a0d72a52c3e21c784a7c3bffcf",
+  "PreservedCommits": 17,
+  "MergeTreeMatchesSource": true,
+  "SourceBranchRetained": true,
+  "VerifiedPublishedMainBeforeFinalEvidence": "98a45ebd38786a32bf0840c39cd299979fd16e2a",
+  "QualifiedNativeImplementation": "30682a33c418cde73c710c168fe09c1c14af4155",
+  "QualifiedFinalFixtures": "e65e3b89a72c4e8a2017410f2eb67f54e44d1938",
+  "QualifiedGameRuntime": "0ecc2b5443f3f3405479a53a50c5b0b63a6283eb",
+  "QualifiedInputGitEqualityVerified": true,
+  "NativeSource": {
+    "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "Pins": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "ReusedReceipt": "qualification-2026-11-09.json",
+  "ReusedRuns": {
+    "Core": 42755853368,
+    "Native": 42755853334,
+    "FullNativeSanitizers": 42748739079,
+    "AcceptedCandidate": 42752234638,
+    "StandaloneGamePackage": 42762178179
+  },
+  "ReuseScope": "Exact native inputs preserved. Final native fixtures at e65e3b8 qualified separately from earlier sanitizer 8eddb82 and candidate 4510ab4 fixtures. Rendered Windows production game at 0ecc2b5: 55 listen plus 57 dedicated checks. No fresh full-game sanitizer or graphical-platform coverage claim.",
+  "FreshCore": {
+    "Run": 42764545794,
+    "Revision": "ee8e059a1c5d6a45cb64e6c1e104caa6f5590ad4",
+    "Conclusion": "success",
+    "OptionalBenchmarkHost": "skipped, not requested",
+    "DownloadedReports": [
+      {
+        "Platform": "Windows",
+        "CoreCases": 85,
+        "GraphAssertions": 29,
+        "Artifact": 13739531164,
+        "ArtifactDigest": "sha256:ea98b3484dc26c2f9e5a1da5ce6a0214d7c0fa02033606c3c85d4422dbaf7359",
+        "ReportSHA256": "969d0c97a4f3afa28fe544c5b55d66829affc69258753f022774b97fb7d5e85f"
+      },
+      {
+        "Platform": "Linux",
+        "CoreCases": 85,
+        "GraphAssertions": 29,
+        "Artifact": 13738578294,
+        "ArtifactDigest": "sha256:d70d66d8cbf41b4f7d25672430c97e26bf73044d9ca53c19338db35f332aa058",
+        "ReportSHA256": "d9e458b850759215da9870e64b0c60e3e3916a83dc97796638a37cca380905ad"
+      }
+    ]
+  },
+  "FreshNative": {
+    "Run": 42764545584,
+    "ObservationUTC": "2026-11-10T05:52:58Z",
+    "Revision": "ee8e059a1c5d6a45cb64e6c1e104caa6f5590ad4",
+    "ObservedStatus": "in_progress",
+    "Windows": "in_progress: Build admitted GL-029 headless network host",
+    "Linux": "in_progress: Build admitted GL-029 headless network host",
+    "FreshActorExecutionVerified": false
+  },
+  "LocalVerification": [
+    "Fetch and verify fork origin, remote main and source refs; zero behind and 17 ahead",
+    "Normal merge with exact parents/tree and all 17 commits verified as ancestors",
+    "Git equality of native, dependency, fixture and game runtime inputs against their qualified revisions",
+    "Review workflow triggers and permissions; publication jobs remain if:false",
+    "git diff --check and integration documentation links",
+    "No local builds or runtime tests repeated for unchanged inputs"
+  ],
+  "Limitations": [
+    "Fresh integrated native CI remains pending; reused exact-input branch native run passed",
+    "GL-017 retired-channel engine diagnostics remain, including four in the qualified game replay",
+    "Admitted matching headless sanitizer scope; Windows LSan unsupported; no final-harness/full-game sanitizer claim",
+    "Linux rendered gameplay, physical devices, WAN/NAT and pristine consumer environment not qualified",
+    "Asset provenance, older-glibc portability and allocation-profiling limitations retained",
+    "Capped frame observations are not uncapped performance improvements; no byte-for-byte reproducibility claim"
+  ],
+  "NoTaskOwnedLocalBuildOrTestProcessesStarted": true,
+  "ReleasePublicationDisabled": true,
+  "UpdaterDistributionDisabled": true,
+  "UpstreamUnchanged": true
+}

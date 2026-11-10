@@ -53,9 +53,22 @@ repeating the expensive candidate, sanitizer or rendered gameplay matrices.
 
 ## Fresh integration observation
 
-Ordinary push-triggered Windows/Linux core/native CI is observed separately from
-the reused qualification. Its results will be recorded here after bounded
-observation; pending jobs are not passed qualification.
+[Fresh core CI](https://github.com/gmoddev/GodotLuau/actions/runs/42764545794)
+passes Windows/Linux at the exact merge `ee8e059`. Downloaded XML/logs confirm
+85 core cases and 29 input-graph assertions on each platform. The optional
+benchmark-host export job is skipped because it was not requested; it is not a
+required core gate.
+
+[Fresh native CI](https://github.com/gmoddev/GodotLuau/actions/runs/42764545584)
+is still running on both platforms during bounded integration observation.
+Neither job has yet produced its required complete summary. Do not count these
+pending jobs as passed or as fresh execution of all 141 actors. The successful
+exact-input branch qualification above remains the reused native evidence.
+The [integration receipt](evidence/gl044045/main-integration-2026-11-10.json)
+records observed states separately from those historical results.
+
+Classification: **INTEGRATED WITH LIMITATIONS**. The qualified source and all
+17 commits are integrated and published; fresh native CI remains pending.
 
 ## Retained scope
 
