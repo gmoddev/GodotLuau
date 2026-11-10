@@ -115,3 +115,33 @@ Fresh ordinary core passes at `30682a3`; native/full-native sanitizer and the
 four-profile non-publishing candidate are still running. Their exact run IDs are
 `42743902074`, `42744024821` and `42744369456` respectively. No required pending
 gate is being called passed, and neither GL-044 nor GL-045 closes at this point.
+
+## Retained candidate failure and bounded fixture correction
+
+Candidate `42744369456` Windows Debug builds both products successfully, then
+fails Character Listen reconnect: `States()[0]` raises a GDScript error at
+CharacterIntegration line 457. Although the process later prints PASS and exits
+0, the existing strict checker correctly rejects the script error. Failed profile
+artifact `13731907377`, digest
+`bf38737e20f73d8c0751f9e71ad536e19bd1e9e75943fe6e487cf7908edd19c5`,
+retains the complete failure. No GL-044/045 math assertion fails. Independent
+ordinary Windows/Linux 141-actor and matching full-native sanitizer qualification
+at `30682a3` passes; that does not make this candidate attempt successful.
+
+The fixture's Mark opened its final path before writing/closing its contents,
+while Wait checked existence alone. A DockerPC Godot-only control reproduces
+`VisibleBeforeClose=true`, `EarlyValue=""`, `ParsedEarly=0`, followed by complete
+`1234` after close. Its logs are retained at
+`C:/Sandbox/Codex/GL04404520261109/marker-control/`. The historical peer-zero
+failure is consistent with this demonstrated publication window; its actual
+marker bytes were not retained, so this is not a claim to have captured the
+original empty read directly. It is separate from the native math fixes.
+
+Mark now closes a per-process temporary file and renames it within the same
+directory, following RemoteFunctions.gd's existing publication pattern. Open or
+rename failure fails the fixture explicitly. No assertion, deadline, production
+runtime, authority or networking implementation changes. This actual failed
+qualification justifies the small fixture correction (GL-046), rather than a
+new verification framework or accepting PASS after a script error. Affected
+Character/controller groups and candidate inputs must be requalified; the
+original failed attempt remains failed. Native fingerprint stays unchanged.
