@@ -72,12 +72,20 @@ The blue crate uses RobloxPart/ApplyImpulse and native rigid-body collisions.
 `Game.gd` authors geometry/UI/presentation; server/client Luau owns game rules,
 intent and persistence. Drones use simple server-authored point movement and
 bounded sphere hitscan; existing workspace raycast handles world occlusion.
-The original game qualification used a native build without raycast filtering.
-The game retains its cooperative Character hull configuration: hulls
+The original game qualification used a native build without raycast filtering;
+the current game requires the GL-043/044/045 compatibility fixes. Authoritative
+Luau now excludes current Character subtrees with RaycastParams, uses colon Dot
+and native Vector3 impulses, and reads Camera.CFrame.LookVector. The game retains
+its cooperative Character hull configuration: hulls
 use collision layer 0 while retaining their world collision mask. Players slide
 against arena geometry but do not block allies or eye-origin ray queries. This
 is scene configuration, not a claim of full Roblox raycast
-compatibility or an unrestricted API audit.
+compatibility or an unrestricted API audit. Shot filtering no longer depends on
+the query invisibility of those hulls. Godot still authors geometry, menus/HUD,
+audio and local SoftBody mesh/pin presentation; the existing Luau API has no
+qualified cloth-point surface. No raw Godot method/physics handle is exposed to
+Luau to remove that small presentation adapter. See the
+[migration qualification](../../newdocs/gl-044-045-relay-development.md).
 
 Qualification and performance observations are in
 [`newdocs/e2e-game-development.md`](../../newdocs/e2e-game-development.md).

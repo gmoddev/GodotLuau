@@ -141,16 +141,25 @@ Request.OnServerEvent:Connect(function(P, Action, Epoch, Value)
         end
     elseif Action == "Impulse" then
         local Crate = game.Workspace:FindFirstChild("ImpulseCrate")
-        if Crate and (C.Position - Crate.Position).Magnitude < 9 then Crate:ApplyImpulse({X = 0, Y = 80, Z = 100}) end
+        if Crate and (C.Position - Crate.Position).Magnitude < 9 then Crate:ApplyImpulse(Vector3.new(0, 80, 100)) end
     elseif Action == "Shoot" then
         if typeof(Value) ~= "Vector3" or not Finite(Value.X) or not Finite(Value.Y) or not Finite(Value.Z) then return end
         if math.abs(Value.Magnitude - 1) > 0.01 or Now - R.LastShot < 0.22 or R.Reload > 0 or R.Ammo == 0 then return end
         R.LastShot = Now
         R.Ammo -= 1
-        -- Scene-authored cooperative hulls are query-invisible, but retain their
-        -- world collision mask. Cast from the true eye, including point-blank hits.
+        -- Query policy belongs to authoritative Luau, independently of the
+        -- scene's cooperative player collision choice. Ignore current Character
+        -- subtrees; retain all other geometry for eye-origin world occlusion.
         local Origin = C.Position + Vector3.new(0, 1.5, 0)
-        local Hit = game.Workspace:Raycast(Origin, Value, 70)
+        local Ignored = {}
+        for _, Participant in ipairs(Players:GetPlayers()) do
+            if Participant.Character then Ignored[#Ignored + 1] = Participant.Character end
+        end
+        local Params = RaycastParams.new()
+        Params.FilterType = Enum.RaycastFilterType.Exclude
+        Params.FilterDescendantsInstances = Ignored
+        Params.MaxDistance = 70
+        local Hit = game.Workspace:Raycast(Origin, Value, Params)
         local Limit = Hit and Hit.Distance or 70
         if game:GetAttribute("AutomatedFixture") and (game:GetAttribute("RaySamples") or 0) < 6 then
             game:SetAttribute("RaySamples", (game:GetAttribute("RaySamples") or 0) + 1)
@@ -160,8 +169,7 @@ Request.OnServerEvent:Connect(function(P, Action, Epoch, Value)
         local Selected = nil
         for _, B in ipairs(Bots) do
             local Offset = B.Position - Origin
-            -- Existing native Vector3.Dot is a bound closure taking one argument.
-            local Along = Offset.Dot(Value)
+            local Along = Offset:Dot(Value)
             if Along > 0 and Along < Limit and (Offset - Value * Along).Magnitude < 1.2 then Selected = B; Limit = Along end
         end
         if Selected then

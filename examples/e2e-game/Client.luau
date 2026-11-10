@@ -47,10 +47,10 @@ Run.RenderStepped:Connect(function()
         LastShot = os.clock()
         local Camera = game.Workspace.CurrentCamera
         if Camera then
-            -- Native Node3D CFrame currently exposes matrix fields, not the
-            -- stdlib CFrame directional convenience fields (GL-044).
-            local Frame = Camera.CFrame
-            Send("Shoot", Vector3.new(-Frame.m02, -Frame.m12, -Frame.m22).Unit)
+            local Direction = Camera.CFrame.LookVector
+            -- CFrame directions retain the stdlib coordinate-table shape;
+            -- the endpoint intentionally requires a native Vector3 payload.
+            Send("Shoot", Vector3.new(Direction.X, Direction.Y, Direction.Z).Unit)
             game:SetAttribute("LocalShot", (game:GetAttribute("LocalShot") or 0) + 1)
         end
     end

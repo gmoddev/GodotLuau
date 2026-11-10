@@ -59,3 +59,26 @@ temporary methods under allocation pressure, same-value self operands, invalid
 receivers/alpha, rotated Part and Camera frames, inverse/composition and snapshot
 independence. No new actor or parallel qualification framework is introduced.
 Qualification is pending; GL-044/045 remain open until execution passes.
+
+## Relay Siege migration
+
+The weapon client reads `Camera.CFrame.LookVector` instead of interpreting native
+matrix layout. It explicitly converts the established CFrame coordinate table
+to the native Vector3 required by the existing endpoint. Server hitscan uses
+colon Dot and builds an Exclude RaycastParams list of current Character roots;
+queries retain the 70-unit range and all world occlusion. The list is server
+authored and bounded by the existing four-player game limit. It is rebuilt from
+live Player.Character identities per shot, covering respawn/replacement without
+retained raw body references. Crate impulses use native Vector3.
+
+The cooperative layer-0 hull setting still means players do not block allies;
+its retained Godot scene hook is no longer the weapon's filtering mechanism.
+Changing it would change game collision behavior, independently of raycasts.
+Keep Godot geometry/UI/audio construction and local SoftBody mesh/pin handling:
+none has a matching qualified reusable Luau surface in this scope. In particular
+do not introduce an unrestricted Godot-call bridge, a pretend PhysicsService
+collision implementation, another solver, or a new cloth ownership model merely
+to remove a small presentation adapter. Gameplay, authoritative query policy,
+input, movement and persistence stay in Luau. No new wire format or authority
+grant is required. Actual game replay and native compatibility qualification
+remain pending here.
