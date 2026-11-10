@@ -685,6 +685,22 @@ static Vector3 ReadModelVector(lua_State* Thread, int Index) {
     if (!Result.is_finite()) luaL_error(Thread, "Expected finite Vector3 coordinates");
     return Result;
 }
+// Physics keeps the existing numeric X/Y/Z table form as well as native values.
+static Vector3 ReadPhysicsVector(lua_State* Thread, int Index) {
+    Vector3 Result;
+    if (auto Value = check_vector3(Thread, Index)) Result = Vector3(Value->x, Value->y, Value->z);
+    else {
+        luaL_checktype(Thread, Index, LUA_TTABLE);
+        const char* Fields[] = {"X", "Y", "Z"};
+        for (int Axis = 0; Axis < 3; ++Axis) {
+            lua_rawgetfield(Thread, Index, Fields[Axis]);
+            luaL_checktype(Thread, -1, LUA_TNUMBER);
+            Result[Axis] = lua_tonumber(Thread, -1); lua_pop(Thread, 1);
+        }
+    }
+    if (!Result.is_finite()) luaL_error(Thread, "Expected finite physics vector coordinates");
+    return Result;
+}
 static Transform3D ReadModelCFrame(lua_State* Thread, int Index) {
     luaL_checktype(Thread, Index, LUA_TTABLE);
     Transform3D Result;
@@ -1754,54 +1770,97 @@ static int godot_object_index(lua_State* L) {
         // workspace:Raycast(origin, direction, [RaycastParams]) — igual que Roblox
         if (strcmp(key, "Raycast") == 0 || strcmp(key, "FindPartOnRay") == 0) {
             lua_pushcfunction(L, [](lua_State* pL) -> int {
-                GodotObjectWrapper* wr = (GodotObjectWrapper*)lua_touserdata(pL, 1);
-                if (!wr || !gow_node(wr)) { lua_pushnil(pL); return 1; }
-
-                auto read_v3 = [&](int idx) -> Vector3 {
-                    if (lua_isuserdata(pL, idx)) {
-                        LuauVector3* v = (LuauVector3*)lua_touserdata(pL, idx);
-                        return Vector3(v->x, v->y, v->z);
-                    } else if (lua_istable(pL, idx)) {
-                        auto gf = [&](const char* k) -> float {
-                            lua_getfield(pL, idx, k); float v = (float)lua_tonumber(pL,-1); lua_pop(pL,1); return v;
-                        };
-                        return Vector3(gf("X"), gf("Y"), gf("Z"));
-                    }
-                    return Vector3();
-                };
-
-                Vector3 from = read_v3(2);
-                Vector3 dir  = read_v3(3);
+                auto Workspace = Object::cast_to<Node3D>(_gl_node_from_lua(pL, 1));
+                if (!Workspace || Workspace->is_queued_for_deletion() || !Workspace->is_inside_tree()) { lua_pushnil(pL); return 1; }
+                Vector3 from = ReadPhysicsVector(pL, 2);
+                Vector3 dir = ReadPhysicsVector(pL, 3);
                 float max_d  = 1000.0f;
+                uint64_t Roots[64]; int RootCount = 0;
+                bool Include = false;
                 // RaycastParams table at arg 4
                 if (lua_istable(pL, 4)) {
-                    lua_getfield(pL, 4, "MaxDistance");
-                    if (lua_isnumber(pL, -1)) max_d = (float)lua_tonumber(pL, -1);
+                    lua_rawgetfield(pL, 4, "MaxDistance");
+                    if (!lua_isnil(pL, -1)) { luaL_checktype(pL, -1, LUA_TNUMBER); max_d = (float)lua_tonumber(pL, -1); }
                     lua_pop(pL, 1);
-                } else if (lua_isnumber(pL, 4)) {
+                    lua_rawgetfield(pL, 4, "FilterType");
+                    if (!lua_isnil(pL, -1)) {
+                        luaL_checktype(pL, -1, LUA_TNUMBER);
+                        double Type = lua_tonumber(pL, -1);
+                        if (Type != 0 && Type != 1) luaL_error(pL, "Expected Include (0) or Exclude (1) FilterType");
+                        Include = Type == 0;
+                    }
+                    lua_pop(pL, 1);
+                    lua_rawgetfield(pL, 4, "FilterDescendantsInstances");
+                    if (!lua_isnil(pL, -1)) {
+                        luaL_checktype(pL, -1, LUA_TTABLE);
+                        int Length = lua_objlen(pL, -1);
+                        int Entries = 0;
+                        if (Length > 64) luaL_error(pL, "Raycast filter exceeds 64 instances");
+                        lua_pushnil(pL);
+                        while (lua_next(pL, -2)) {
+                            if (++Entries > 64) luaL_error(pL, "Raycast filter exceeds 64 instances");
+                            double Key = lua_type(pL, -2) == LUA_TNUMBER ? lua_tonumber(pL, -2) : 0;
+                            if (Key < 1 || Key > Length || std::floor(Key) != Key || !_gl_has_metatable(pL, -1, "GodotObject"))
+                                luaL_error(pL, "Raycast filter must be a dense Instance array");
+                            Node* Root = _gl_node_from_lua(pL, -1);
+                            if (Root && !Root->is_queued_for_deletion()) Roots[RootCount++] = uint64_t(Root->get_instance_id());
+                            lua_pop(pL, 1);
+                        }
+                        if (Entries != Length) luaL_error(pL, "Raycast filter must be a dense Instance array");
+                    }
+                    lua_pop(pL, 1);
+                } else if (lua_type(pL, 4) == LUA_TNUMBER) {
                     max_d = (float)lua_tonumber(pL, 4);
-                }
-
-                Node3D* ws3d = Object::cast_to<Node3D>(gow_node(wr));
-                if (!ws3d || !ws3d->is_inside_tree()) { lua_pushnil(pL); return 1; }
-                PhysicsDirectSpaceState3D* space = ws3d->get_world_3d()->get_direct_space_state();
+                } else if (!lua_isnoneornil(pL, 4)) luaL_error(pL, "Expected RaycastParams, distance or nil");
+                if (!std::isfinite(max_d) || max_d < 0 || !std::isfinite(dir.length_squared())) luaL_error(pL, "Expected finite ray distance and direction magnitude");
+                if (max_d == 0 || (Include && RootCount == 0)) { lua_pushnil(pL); return 1; }
+                PhysicsDirectSpaceState3D* space = Workspace->get_world_3d()->get_direct_space_state();
                 if (!space) { lua_pushnil(pL); return 1; }
-
                 Vector3 dir_norm = dir.length_squared() > 1e-6f ? dir.normalized() : Vector3(0,0,-1);
-                Ref<PhysicsRayQueryParameters3D> params;
-                params.instantiate();
-                params->set_from(from);
-                params->set_to(from + dir_norm * max_d);
-                Dictionary res = space->intersect_ray(params);
-                if (res.is_empty()) { lua_pushnil(pL); return 1; }
-                lua_newtable(pL);
-                Variant cv = res.get("collider", Variant());
+                Vector3 To = from + dir_norm * max_d;
+                if (!To.is_finite()) luaL_error(pL, "Ray endpoint is outside finite physics coordinates");
                 Node* hit = nullptr;
-                if (cv.get_type() == Variant::OBJECT) hit = Object::cast_to<Node>(cv.operator Object*());
+                Vector3 pos;
+                Vector3 normal;
+                bool Finished = false;
+                bool HasHit = false;
+                {
+                    Ref<PhysicsRayQueryParameters3D> params;
+                    params.instantiate(); params->set_from(from); params->set_to(To);
+                    TypedArray<RID> Excluded;
+                    // Keep the original ray origin: skipping a collider must not
+                    // alter nearest-hit ordering, surface normals or distances.
+                    for (int Attempt = 0; Attempt < 128; ++Attempt) {
+                        params->set_exclude(Excluded);
+                        const Dictionary Result = space->intersect_ray(params);
+                        if (Result.is_empty()) { Finished = true; break; }
+                        Variant Collider = Result.get("collider", Variant());
+                        Node* Candidate = Collider.get_type() == Variant::OBJECT ? Object::cast_to<Node>(Collider.operator Object*()) : nullptr;
+                        bool Match = false;
+                        Node* Ancestor = Candidate;
+                        if (RootCount) {
+                            for (int Depth = 0; Ancestor && Depth < 256 && !Match; ++Depth) {
+                                const uint64_t AncestorId = uint64_t(Ancestor->get_instance_id());
+                                for (int Index = 0; Index < RootCount; ++Index)
+                                    if (Roots[Index] == AncestorId) { Match = true; break; }
+                                if (!Match) Ancestor = Ancestor->get_parent();
+                            }
+                            if (!Match && Ancestor) break;
+                        }
+                        if (Include ? Match : !Match) {
+                            hit = Candidate; pos = Result.get("position", Vector3()); normal = Result.get("normal", Vector3());
+                            HasHit = true; Finished = true; break;
+                        }
+                        RID Rejected = Result.get("rid", RID());
+                        if (!Rejected.is_valid()) break;
+                        Excluded.push_back(Rejected);
+                    }
+                } // Release all native containers before a bounded-work error.
+                if (!Finished) luaL_error(pL, "Raycast filter work limit exceeded (128 queries / 256 ancestors)");
+                if (!HasHit) { lua_pushnil(pL); return 1; }
+                lua_newtable(pL);
                 if (hit) wrap_node(pL, hit); else lua_pushnil(pL);
                 lua_setfield(pL, -2, "Instance");
-                Vector3 pos    = res.get("position", Vector3());
-                Vector3 normal = res.get("normal",   Vector3());
                 push_vector3(pL, pos.x,    pos.y,    pos.z);    lua_setfield(pL, -2, "Position");
                 push_vector3(pL, normal.x, normal.y, normal.z); lua_setfield(pL, -2, "Normal");
                 lua_pushnumber(pL, (double)from.distance_to(pos)); lua_setfield(pL, -2, "Distance");
@@ -2628,37 +2687,25 @@ static int godot_object_index(lua_State* L) {
 
         // Methods
         if (strcmp(key, "ApplyImpulse") == 0) {
-            lua_pushlightuserdata(L, (void*)part);
+            GLPushNodeHandle(L, part);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RobloxPart* p = (RobloxPart*)lua_touserdata(pL, lua_upvalueindex(1));
-                if (!p) return 0;
+                auto p = Object::cast_to<RobloxPart>(GLNodeUpvalue(pL, 1));
+                if (!p || p->is_queued_for_deletion()) return 0;
                 if (auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
                     if (!Service->CanWriteCharacter(p)) return 0;
-                float ix = 0; float iy = 0; float iz = 0;
-                if (lua_istable(pL,2)) {
-                    lua_getfield(pL,2,"X"); ix=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                    lua_getfield(pL,2,"Y"); iy=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                    lua_getfield(pL,2,"Z"); iz=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                }
-                p->apply_central_impulse(Vector3(ix,iy,iz));
+                p->apply_central_impulse(ReadPhysicsVector(pL, 2));
                 return 0;
             }, "ApplyImpulse", 1);
             return 1;
         }
         if (strcmp(key, "ApplyAngularImpulse") == 0) {
-            lua_pushlightuserdata(L, (void*)part);
+            GLPushNodeHandle(L, part);
             lua_pushcclosure(L, [](lua_State* pL) -> int {
-                RobloxPart* p = (RobloxPart*)lua_touserdata(pL, lua_upvalueindex(1));
-                if (!p) return 0;
+                auto p = Object::cast_to<RobloxPart>(GLNodeUpvalue(pL, 1));
+                if (!p || p->is_queued_for_deletion()) return 0;
                 if (auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id())))
                     if (!Service->CanWriteCharacter(p)) return 0;
-                float ix = 0; float iy = 0; float iz = 0;
-                if (lua_istable(pL,2)) {
-                    lua_getfield(pL,2,"X"); ix=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                    lua_getfield(pL,2,"Y"); iy=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                    lua_getfield(pL,2,"Z"); iz=(float)lua_tonumber(pL,-1); lua_pop(pL,1);
-                }
-                p->apply_torque_impulse(Vector3(ix,iy,iz));
+                p->apply_torque_impulse(ReadPhysicsVector(pL, 2));
                 return 0;
             }, "ApplyAngularImpulse", 1);
             return 1;

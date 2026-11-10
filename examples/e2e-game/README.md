@@ -72,7 +72,8 @@ The blue crate uses RobloxPart/ApplyImpulse and native rigid-body collisions.
 `Game.gd` authors geometry/UI/presentation; server/client Luau owns game rules,
 intent and persistence. Drones use simple server-authored point movement and
 bounded sphere hitscan; existing workspace raycast handles world occlusion.
-Current RaycastParams exclusion is not implemented; cooperative Character hulls
+The original game qualification used a native build without raycast filtering.
+The game retains its cooperative Character hull configuration: hulls
 use collision layer 0 while retaining their world collision mask. Players slide
 against arena geometry but do not block allies or eye-origin ray queries. This
 is scene configuration, not a claim of full Roblox raycast

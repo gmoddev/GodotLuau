@@ -1,0 +1,161 @@
+{
+  "Schema": 1,
+  "BaseMain": "eee10f8779a1002c664a81267d9ab96d1dae1e62",
+  "ProductionInput": "3227290c1137fe4c52237aab7eecf001aee83e18",
+  "NativeSource": {
+    "SHA256": "7d540a81ecf0bcf83742e94386796df6e4df36310ad330ec1d9bfe54bdac2f56",
+    "Files": 101,
+    "Newlines": "LF normalized"
+  },
+  "BaselineNativeSource": "2278df21b72670c189c6206a5a49582a50d4cd835448f3f0708629ae0fd7d52e",
+  "BaselineProductRevision": "d76d6896db5790bc0b99f1b40de12a2663a2c9db",
+  "BaselineExit": 1,
+  "ArtifactRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl043-20261109",
+  "Baselines": {
+    "baseline": {
+      "StdoutSHA256": "b70e54a637062c1c884f5443e585602643e0e0695bc2e3c331f472f9d73edcf9",
+      "StderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "FixtureSHA256LF": "6f299ca1f92212557ce3f6c68e1810cc45cd4d991cc8161ae3fbfa4907fcc811",
+      "FailedAssertions": [
+        "[Character:V2] FAIL GL-043 raycast Exclude",
+        "[Character:V2] FAIL GL-043 raycast Include",
+        "[Character:V2] FAIL GL-043 raycast Result",
+        "[Character:V2] FAIL GL-043 raycast EmptyInclude",
+        "[Character:V2] FAIL GL-043 raycast Duplicate",
+        "[Character:V2] FAIL GL-043 native Vector3 central impulse",
+        "[Character:V2] FAIL GL-043 native Vector3 angular impulse"
+      ]
+    },
+    "baseline-v2": {
+      "StdoutSHA256": "b08b48adead5271bdff204986cfab9947ec6464bb59c50c49cf1a5148c3f4bdb",
+      "StderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "FixtureSHA256LF": "661068947ce5a8a126d0329a09aaaf6052669c3920ddba599c53491921000679",
+      "FailedAssertions": [
+        "[Character:V2] FAIL GL-043 raycast Exclude",
+        "[Character:V2] FAIL GL-043 raycast Include",
+        "[Character:V2] FAIL GL-043 raycast Result",
+        "[Character:V2] FAIL GL-043 raycast EmptyInclude",
+        "[Character:V2] FAIL GL-043 raycast Duplicate",
+        "[Character:V2] FAIL GL-043 Character root filters include/exclude its actual PhysicsBody",
+        "[Character:V2] FAIL GL-043 native Vector3 central impulse",
+        "[Character:V2] FAIL GL-043 native Vector3 angular impulse"
+      ]
+    }
+  },
+  "CI": {
+    "Core": {
+      "Run": 42610522541,
+      "Conclusion": "success"
+    },
+    "Native": {
+      "Run": 42610522588,
+      "Conclusion": "success",
+      "Windows": {
+        "Conclusion": "success",
+        "Actors": 141,
+        "ModelChecks": 96,
+        "NewPhysicsChecks": 20,
+        "SummarySHA256": "c874351e4e50399102d3e0073c929744c4482f03235d3893961b3a0669cea392",
+        "ArtifactId": 13671498453,
+        "ArtifactDigest": "sha256:1fd2407f2902eb6689eb8df62c03f381cbc8ae7adc443da19edee71d9bdb4c10",
+        "ObservedNativeLinearX": 3.966778,
+        "ObservedNativeAngularY": 2.380067
+      },
+      "Linux": {
+        "Conclusion": "success",
+        "Actors": 141,
+        "ModelChecks": 96,
+        "NewPhysicsChecks": 20,
+        "SummarySHA256": "e40f2419618f9524e6cca518e3835388318abf837354b235bedece731065a789",
+        "ArtifactId": 13670718652,
+        "ArtifactDigest": "sha256:2d46ca6ead0f937e7a5258b7f5901d062f067c0a6d3756250d162879076e9fd8",
+        "ObservedNativeLinearX": 3.966778,
+        "ObservedNativeAngularY": 2.380067
+      }
+    },
+    "Candidate": {
+      "Run": 42610528726,
+      "Conclusion": "success",
+      "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+      "SuccessfulWorkflowJobs": 10,
+      "PolicyGateGroups": 4,
+      "SourceTree": "93d0e2a7edb0b9101d0a83efb5390f1e0ea3f04e",
+      "Profiles": ["Windows Debug", "Windows Release", "Linux Debug", "Linux Release"],
+      "CoreCasesPerProfile": 85,
+      "NativeActorsPerProfile": 141,
+      "AcceptedManifestSHA256": "f6228d626146ab0db10fb01f19d28380b1eaca86ba7bbc9774d96f0a6b30e6af",
+      "AcceptedArtifactId": 13673012210,
+      "AcceptedArtifactDigest": "sha256:ab97bf36c3e86c4b82ef0512ed1c13d782dfe065a8f539680c6324733f8b80d9",
+      "Verification": "Existing CheckJobs and CheckPackage pass for the downloaded accepted manifest and both ZIPs",
+      "Packages": {
+        "Windows": {
+          "SHA256": "bd69b66870d04244679a31124c037cb0ab70b2fa7a12ef9457def4975e441b69",
+          "Bytes": 8489376,
+          "Members": 133,
+          "StartupConfigurations": ["Debug", "Release"],
+          "ArtifactId": 13672188545,
+          "ArtifactDigest": "sha256:2a1acb53bb9dfe754ddb85e02ddd8aa619af41c167d0187051057cfb47976568"
+        },
+        "Linux": {
+          "SHA256": "c1f8d015ddea79b4e1eea9877dbfe9e6857ac2370b93472b378dae54cb1730dc",
+          "Bytes": 11425940,
+          "Members": 133,
+          "StartupConfigurations": ["Debug", "Release"],
+          "ArtifactId": 13673545550,
+          "ArtifactDigest": "sha256:f1081c87c56d9ee918343008a616cc587a986c7c6f6457fc4ccf6a14c10fa7b7"
+        }
+      }
+    },
+    "FullNativeSanitizers": {
+      "Run": 42610532744,
+      "Conclusion": "success",
+      "Windows": {
+        "Conclusion": "success",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "SummarySHA256": "ebaf2aee5b9986a9d68a75ab74f1433e834d3fc43724cce98ba8928232e4bb2c",
+        "ArtifactId": 13671703186,
+        "ArtifactDigest": "sha256:c3c18387d93cde10927cc3d9fb4501c9d983541ff1174edb28edf8f2125cbacb",
+        "LSan": "unsupported on Windows"
+      },
+      "Linux": {
+        "Conclusion": "success",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "SummarySHA256": "a854c98af608e2b1b6689830e4dcf1ec40eccd71e2e38acd12b9368a0da096c2",
+        "ArtifactId": 13671685440,
+        "ArtifactDigest": "sha256:4fd492f805ffde189a3edde0b76b9d54aaad45200b787ca777238924f1901666"
+      }
+    }
+  },
+  "SupersededRuns": [
+    42605274565,
+    42605659742,
+    42605782412,
+    42605786410,
+    42606697263,
+    42606704630,
+    42606709015,
+    42608023128,
+    42608030253,
+    42608033830
+  ],
+  "SupersededDisposition": "Superseded builds are not passing evidence. Remaining jobs were cancelled after input corrections; the observed compile failure is recorded separately.",
+  "FailedProfiles": [
+    {
+      "Run": 42608030253,
+      "Revision": "36ec3224e9328f4334291880f21536fc87931046",
+      "Profile": "Linux Debug SCons",
+      "Stage": "Compilation; no runtime tests reached",
+      "Error": "lua_pushcfunction macro parsed comma-separated local declarations as extra arguments",
+      "RetainedLog": "failed-Linux-Debug-1/scons.log",
+      "LogSHA256": "1d2ecca169f5ef449e1c26dfe8bca11d3e433b4cb60a1bf8f84da67b9c93c138"
+    }
+  ],
+  "MainUnchanged": true,
+  "Unmerged": true,
+  "ReleasePublicationDisabled": true,
+  "UpdaterDistributionDisabled": true
+}

@@ -89,7 +89,7 @@ four successful workflows and independently checked artifacts.
 | GL-040 | P3 | Open; observed coincident-spawn physics interaction | Presentation listen host rises while overlapping peer bodies share its spawn |
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
-| GL-043 | P2 | Source-verified compatibility limitation | Workspace raycast filtering and Vector3 impulse arguments are incomplete |
+| GL-043 | P2 | Fixed and qualified within scope on unmerged branch | Bounded Workspace raycast root filters and native Vector3 impulses |
 | GL-044 | P2 | Confirmed gameplay contract discrepancy | Native Node3D CFrame lacks stdlib directional convenience fields |
 | GL-045 | P2 | Confirmed gameplay math discrepancy | Vector3 colon Dot reads self as the other operand |
 
@@ -117,6 +117,17 @@ server input validation. Unifying the returned CFrame contract is a separately
 scoped follow-up; this campaign does not replace or refactor the math binding.
 
 ## GL-043: Physics query and impulse compatibility
+
+**Resolved within scope on unmerged `fix/gl-043-raycast-impulses` at `3227290`.**
+An isolated native probe reproduces ignored Include/Exclude filters and zero
+native Vector3 linear/angular impulses. The one-header correction passes 20
+focused physics checks inside the existing native fixture, both platforms'
+core/native and full-native sanitizer gates, and all four Debug/Release
+non-publishing candidate profiles and extracted packages. See the
+[contract](gl-043-physics-api.md), [journal](gl-043-development.md) and
+[receipt](evidence/gl043/qualification-2026-11-09.json). Other raycast options
+and GL-044/045 remain separate. Main is unchanged. The original game discovery
+below describes the pre-fix native profile.
 
 Discovered during [Relay Siege development](e2e-game-development.md). Source in
 `src/core/luau_api.h` implements Workspace RaycastParams.MaxDistance, but does

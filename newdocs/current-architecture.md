@@ -1,5 +1,13 @@
 # Current architecture
 
+The unmerged [GL-043 correction](gl-043-development.md) changes only existing
+physics bindings: bounded ancestry-based raycast Include/Exclude filtering,
+typed finite Vector3/legacy-table impulse input, and ObjectID-backed impulse
+closures. Its [scoped API contract](gl-043-physics-api.md) preserves the current
+distance convention and authority checks. Windows/Linux qualification passes
+within the documented scope. No physics solver, dependency, wire format or game
+collision configuration changes.
+
 The [Relay Siege example integrated on main](e2e-game-main-integration.md) composes these
 existing systems under `examples/e2e-game`: Server Luau owns round/combat/save
 rules, Client Luau supplies semantic input and reads server snapshots, and a
