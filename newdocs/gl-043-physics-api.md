@@ -1,7 +1,8 @@
 # GL-043 physics binding contract
 
 This contract is [qualified](gl-043-development.md#scoped-qualification-complete)
-at `3227290` on `fix/gl-043-raycast-impulses`. It is not merged into main.
+at `3227290` on retained `fix/gl-043-raycast-impulses` and
+[normally integrated into main](gl-043-main-integration.md).
 Existing engine, dependency, authority and controller contracts remain in place.
 
 ## Workspace raycasts

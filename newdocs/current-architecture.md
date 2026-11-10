@@ -1,6 +1,6 @@
 # Current architecture
 
-The unmerged [GL-043 correction](gl-043-development.md) changes only existing
+The integrated [GL-043 correction](gl-043-main-integration.md) changes only existing
 physics bindings: bounded ancestry-based raycast Include/Exclude filtering,
 typed finite Vector3/legacy-table impulse input, and ObjectID-backed impulse
 closures. Its [scoped API contract](gl-043-physics-api.md) preserves the current

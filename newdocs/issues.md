@@ -118,7 +118,7 @@ scoped follow-up; this campaign does not replace or refactor the math binding.
 
 ## GL-043: Physics query and impulse compatibility
 
-**Resolved within scope on unmerged `fix/gl-043-raycast-impulses` at `3227290`.**
+**Resolved within scope at `3227290`; [integrated normally](gl-043-main-integration.md).**
 An isolated native probe reproduces ignored Include/Exclude filters and zero
 native Vector3 linear/angular impulses. The one-header correction passes 20
 focused physics checks inside the existing native fixture, both platforms'
@@ -126,7 +126,7 @@ core/native and full-native sanitizer gates, and all four Debug/Release
 non-publishing candidate profiles and extracted packages. See the
 [contract](gl-043-physics-api.md), [journal](gl-043-development.md) and
 [receipt](evidence/gl043/qualification-2026-11-09.json). Other raycast options
-and GL-044/045 remain separate. Main is unchanged. The original game discovery
+and GL-044/045 remain separate. The original game discovery
 below describes the pre-fix native profile.
 
 Discovered during [Relay Siege development](e2e-game-development.md). Source in

@@ -33,10 +33,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-GL-043 is fixed and qualified on unmerged `fix/gl-043-raycast-impulses`. See the
+GL-043 is integrated by [normal merge](gl-043-main-integration.md), preserving
+qualified `fix/gl-043-raycast-impulses`. See the
 [development/qualification journal](gl-043-development.md) and
-[physics binding contract](gl-043-physics-api.md). Main, release publication and
-updater distribution remain unchanged.
+[physics binding contract](gl-043-physics-api.md). Release publication and
+updater distribution remain disabled.
 
 [Relay Siege](../examples/e2e-game/README.md) is the end-to-end cooperative arena
 integrated by normal merge `025401f`, preserving all 12 feature commits. Its
