@@ -38,3 +38,26 @@ unsupported RaycastParams options, graphical/device and Windows LSan limitations
 remain as recorded. Both release jobs remain disabled with read-only permissions;
 updater distribution and upstream remain unchanged. GL-044/045 and Relay Siege
 migration are separate follow-up work on a development branch.
+
+## Fresh integrated verification
+
+[Core](https://github.com/gmoddev/GodotLuau/actions/runs/42743050365) and
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/42743050607) CI pass
+Windows/Linux at `82d831a`. Downloaded reports confirm 85 core cases, 29 graph
+assertions and 141 native actors per platform, including all 96 Model checks and
+the exact qualified CharacterV2 fixture hash. Source fingerprint remains the
+qualified 101-file value above. No new sanitizer/candidate matrix is needed for
+the source-identical merge; those original successful gates remain applicable.
+
+The [actual game-package run](https://github.com/gmoddev/GodotLuau/actions/runs/42744711762)
+passes at packaging-only follow-up `e690ed0`, reusing accepted GL-043 candidate
+`42610528726`. Downloaded ZIP SHA-256 is
+`43f87334b4b08814f132e26d4674ca8441ba1beb9716047701fc8a3c407e435e`.
+All 157 payload hashes/sizes match its manifest, the candidate identifies exact
+qualified `3227290`, and extracted Main startup reaches Rules Ready with empty
+stderr. The [integration receipt](evidence/gl043/main-integration-2026-11-09.json)
+records fresh artifact identities independently of the preserved branch receipt.
+
+Classification: **INTEGRATED AND VERIFIED** within the retained scope. Later
+integration documentation changes no native, fixture or game inputs. GL-044/045
+follow-up is unmerged; releases/updater distribution remain disabled.
