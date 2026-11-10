@@ -160,3 +160,22 @@ Matching Windows/Linux full-native qualification at the prior native/fixture
 revision `30682a3` independently passes 85 core/141 native actors and controls,
 with no unexpected reports; its native fingerprint is still the current value.
 Those successful results do not replace the new fixture-input gates.
+
+The next candidate `42748734970` Linux Release builds successfully but fails
+NetworkSecurity Listen: client1 reports `State deadline peer=0`, its `FORGED_RELAY`
+text appears under the correct authenticated name Player2, and the expected
+two-message burst has one message. The unchanged fixture reads First/Second from
+its own non-atomic peer marker files. Attack(Second) with Second=0 broadcasts;
+its `_relay_chat` reaches the server as a valid own-sender request, consuming one
+token and invalidating the intended wrong-recipient test setup. Native
+wrong-role receive RPCs remain rejected in the retained logs. This is evidence
+of invalid fixture target setup, not proof of a new authority bypass; exact
+historical marker bytes were again not uploaded.
+
+Failed profile artifact `13733596670` has digest
+`ec250710173778df8cceab6284bf055210c466faec963dba66b4e7a75066202c`.
+NetworkSecurity.Mark receives the same completed-file publication correction;
+all attacks, sender/role checks, message/token expectations and deadlines remain
+unchanged. GL-046 therefore covers both observed marker-writer gaps. No other
+runtime or networking correction is bundled. Affected security/Character/
+controller qualification and fresh candidate inputs remain required.

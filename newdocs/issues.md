@@ -93,9 +93,9 @@ four successful workflows and independently checked artifacts.
 | GL-043 | P2 | Integrated; fixed and qualified within scope | Bounded Workspace raycast root filters and native Vector3 impulses |
 | GL-044 | P2 | Focused correction; hosted qualification pending | Native Node3D CFrame lacks stdlib directional convenience fields |
 | GL-045 | P2 | Focused correction; hosted qualification pending | Vector3 colon Dot reads self as the other operand |
-| GL-046 | P3 | Reproduced fixture publication gap; correction pending qualification | Character barrier file can appear before its peer-ID payload is written |
+| GL-046 | P3 | Reproduced fixture publication gaps; corrections pending qualification | Character/security barrier files can appear before their peer-ID payloads are written |
 
-## GL-046: Character qualification marker publication
+## GL-046: Character and security qualification marker publication
 
 Windows Debug candidate `42744369456` fails reconnect at `States()[0]`, despite
 a later PASS marker/zero exit; strict checking rejects the GDScript error. Its
@@ -106,7 +106,12 @@ exposes an empty payload before close. The historical empty read is inferred,
 not directly captured. Mark now uses the existing fixture pattern of a completed
 temporary file plus same-directory rename. Production/authority code and all
 gameplay assertions/deadlines remain unchanged. Qualification is pending; this
-does not reclassify the failed candidate as accepted.
+does not reclassify the failed candidate as accepted. A second Linux Release
+candidate failure records peer zero in NetworkSecurity's wrong-recipient setup;
+that fixture had the same publication gap. Its writer receives the same narrow
+correction, preserving all authority assertions and chat token expectations.
+The retained journal distinguishes the resulting valid broadcast relay from an
+actual forged-sender admission. No production authority code changes.
 
 ## GL-045: Vector3 method calling convention
 
