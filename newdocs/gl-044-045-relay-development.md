@@ -216,3 +216,36 @@ the original before/after values and per-file audit remain retained. No task-own
 test processes remained on DockerPC or MainPC at that observation. Source,
 toolchain caches and historical evidence remain available. Follow-up work stays
 on `codex/gl-044-045-relay-luau`, unmerged; main remains `6db2e2c`.
+
+## Legacy cancellation fixture: reproduced deferred-retirement window
+
+Final-input Linux native `42752081142` passes all 141 actors, with the expected
+107 Model checks and both corrected marker hashes. Windows builds successfully
+but fails legacy Dedicated client2 before reaching the new math actor. The
+[original diagnostic](evidence/gl044045/native-windows-lifecycle-failure.txt)
+contains a bare FAIL; the old fixture did not log whether wrong-role execution
+or the canceled-invoke flag caused it. Do not claim that missing historical flag
+was captured or that this is a new runtime authority defect.
+
+DockerPC's [diagnostic control](evidence/gl044045/network-retirement-control.json)
+uses the unchanged Release adapter and existing regression driver. Normal input
+passes eight actors. A deliberate 250 ms client stall makes both Dedicated
+clients fail: continuation is false before `queue_free`, true before tree exit,
+and wrong-role flags remain false. The response resumes an owner that has not
+yet retired. Source confirms `ScriptNodeBase::StopRun` cancels its owner on
+`NOTIFICATION_EXIT_TREE`; deferred deletion requests are not that boundary.
+
+GL-047's fixture correction explicitly removes the victim script and retiring
+NetworkService from the tree before queuing destruction. Existing assertions,
+timeouts, queued destruction and actual ENet transport remain. Two formerly
+silent failure conditions now log their reason. No production behavior changes.
+Corrected normal and delayed controls each pass eight actors; the actual
+corrected fixture, without diagnostic overlays, passes 16 actors over two
+repetitions. All controls/log identities and the diagnostic source are retained.
+
+Fresh Windows/Linux native qualification must cover this corrected fixture.
+Candidate `42752234638` remains running at its original immutable `4510ab4`
+inputs. If accepted, its products qualify that recorded source and unchanged
+native fingerprint; they do not imply execution of this later fixture correction.
+The prior Windows/Linux full-native passes likewise retain their exact fixture
+revisions. The development branch stays unmerged, and failed runs stay failed.

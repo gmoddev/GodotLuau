@@ -192,7 +192,51 @@
     },
     "Native": {
       "Run": 42752081142,
-      "Result": "pending"
+      "Result": "failure",
+      "Linux": {
+        "Revision": "4510ab4006f3e13a80f564cc3088aae01406192e",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "0d0f346486e2df97f765c6eaaf07f01542cfd379669ef23c2925151720915c99",
+        "ExtensionSHA256": "34bc99d54c67b0ccd11d2e66273ec0ae566e8253d41240e5cee1312cdd80a482",
+        "SummarySHA256": "91f6c94caefd02886408ce2a7f9be688f8bb78fb748319ebbae74d718a7c16e8",
+        "Model107": true,
+        "Groups": {
+          "controller": 7,
+          "input": 3,
+          "datastore": 23,
+          "httpservice": 6,
+          "remote": 21,
+          "regression": 8,
+          "http": 4,
+          "performance": 1,
+          "security": 10,
+          "presentation": 14,
+          "filesystem": 3,
+          "characters": 20,
+          "animation": 10,
+          "callers": 3,
+          "resources": 8
+        },
+        "Artifact": 13733439852,
+        "Digest": "sha256:e7b68c1d7bbe0cff32f159c9eb0ac85e8e3c14bef4c2a994d1de1cb4c265a107"
+      },
+      "Windows": {
+        "Result": "failure",
+        "Actor": "Dedicated-0-client2",
+        "Exit": 1,
+        "Artifact": 13734034796,
+        "Digest": "sha256:6c1575a12d998d736bcd0a6b898a7896bc66793409ebcb36ab22ce82251ab65f",
+        "Build": "success",
+        "MathActorExecuted": false,
+        "Report": "native-windows-lifecycle-failure.txt"
+      }
     },
     "Candidate": {
       "Run": 42752234638,
@@ -202,7 +246,15 @@
         "Windows rejection and retention",
         "Linux rejection and retention"
       ],
-      "Pending": "Four source profiles, extracted packages and final acceptance"
+      "Pending": "Four source profiles, extracted packages and final acceptance",
+      "CoreASan": {
+        "Artifact": 13733184379,
+        "Digest": "sha256:98b3aee4d778d2ead81059b3133468f16fbd99d2e8ee307397ad39e30b7ec2de",
+        "Result": "PASS",
+        "Cases": 85,
+        "ASanSymbolVerified": true,
+        "SummarySHA256": "f2b7f9bc85dc50b22aca041a83533b0f169697bbcdc0eb096a116995f050e8cb"
+      }
     },
     "Sanitizers": {
       "ReusedRun": 42748739079,
@@ -219,6 +271,11 @@
       "Result": "PASS",
       "CharacterEvidence": "C:/Sandbox/Codex/GL04404520261109/marker-v1",
       "SecurityEvidence": "C:/Sandbox/Codex/GL04404520261109/security-marker-v1"
+    },
+    "FixtureHashes": {
+      "CharacterV2.gd": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+      "CharacterIntegration.gd": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+      "NetworkSecurity.gd": "0d0f346486e2df97f765c6eaaf07f01542cfd379669ef23c2925151720915c99"
     }
   },
   "LocalDevelopment": {
@@ -286,6 +343,17 @@
       "Error": "NetworkSecurity Listen peer-zero wrong-recipient setup; authentic own-sender broadcast consumes one token, violating expected burst. Historical empty marker read inferred, not directly captured.",
       "Report": "candidate-linux-release-failure.txt",
       "Disposition": "Failed profile retained; remaining jobs cancelled as superseded after second marker correction. Not an accepted candidate."
+    },
+    {
+      "Kind": "Ordinary native Windows Debug legacy lifecycle",
+      "Run": 42752081142,
+      "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
+      "Job": 129617797855,
+      "Artifact": 13734034796,
+      "Digest": "sha256:6c1575a12d998d736bcd0a6b898a7896bc66793409ebcb36ab22ce82251ab65f",
+      "Error": "Dedicated-0-client2 exit1, bare FAIL; exact failure flag not logged",
+      "Report": "native-windows-lifecycle-failure.txt",
+      "Attribution": "Deferred retirement reproduced separately with delayed-frame control; exact historical attribution inferred, not directly captured."
     }
   ],
   "MarkerControl": {
@@ -323,7 +391,7 @@
   "UpdaterDistributionDisabled": true,
   "ControllerAndNetworkingAuthorityUnchanged": true,
   "DevelopmentBranchUnmerged": true,
-  "ObservationUTC": "2026-11-10T04:03:00Z",
+  "ObservationUTC": "2026-11-10T04:26:00Z",
   "PriorFixtureQualification": {
     "Source": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
     "Core": {
@@ -435,5 +503,16 @@
       }
     },
     "Scope": "Both platforms passed with corrected Character markers; predates the NetworkSecurity marker-only correction. C++/math fixture unchanged."
+  },
+  "RetirementCorrection": {
+    "Issue": "GL-047",
+    "ProductionChanges": false,
+    "Report": "network-retirement-control.json",
+    "UnmodifiedCorrectedActors": 16,
+    "Repeat": 2,
+    "Result": "PASS",
+    "CorrectedControlActors": 16,
+    "OriginalControl": "normal8 PASS; delayed Dedicated clients FAIL before tree exit, wrong-role=false",
+    "HostedQualification": "pending"
   }
 }

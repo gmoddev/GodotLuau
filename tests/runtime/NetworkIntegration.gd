@@ -86,6 +86,9 @@ func Run() -> void:
         var Victim := CreateScript("LocalScript", "PendingInvokeVictim", "game:SetAttribute('VictimWaiting', true); game.ReplicatedStorage.Function:InvokeServer(-1); game:SetAttribute('CancelledInvokeRan', true)", Game)
         await Until("VictimWaiting")
         await process_frame
+        # queue_free alone defers owner retirement until frame-end. A response
+        # already waiting in ENet may legitimately resume that still-live owner.
+        Game.remove_child(Victim)
         Victim.queue_free()
         CreateScript("LocalScript", "ClientA", """
 assert(game:GetService('RunService'):IsClient())
@@ -107,7 +110,9 @@ game.ReplicatedStorage.Event:FireServer(32)
         CreateScript("LocalScript", "ClientB", "local Counter = require(game.ReplicatedStorage.Counter); while not _G.ADone do task.wait() end; assert(Counter == shared.Counter and Counter.Value == 1 and _G.Inits == 1); game:SetAttribute('CacheDone', true)", Game)
         for Key in ["EventDone", "FunctionDone", "CacheDone"]: await Until(Key)
         await create_timer(0.3).timeout
-        if Game.has_meta("CancelledInvokeRan"): Failed = true
+        if Game.has_meta("CancelledInvokeRan"):
+            Failed = true
+            print("[Runtime:NetworkTest] FAIL client canceled invoke continuation")
         if CoordinatedClose and ClientIndex == 2:
             while not FileAccess.file_exists("res://client1.closed"): await process_frame
         if OS.get_cmdline_user_args().has("--fixture-teardown"):
@@ -119,6 +124,7 @@ game:SetAttribute('ServiceInvokeCancelled', true)
 """, Game)
             await Until("ServiceInvokeWaiting")
             await process_frame
+            Game.remove_child(Network)
             Network.queue_free()
             await Until("ServiceInvokeCancelled")
     else:
@@ -181,6 +187,8 @@ game:SetAttribute('ServiceReleasedSafely', true)
             await Until("BothClients")
             if CoordinatedClose: await Until("BothClosed")
             else: await create_timer(0.4).timeout
-    if Game.has_meta("WrongRole"): Failed = true
+    if Game.has_meta("WrongRole"):
+        Failed = true
+        print("[Runtime:NetworkTest] FAIL ", Role, " wrong-role script execution")
     print("[Runtime:NetworkTest] ", Role, " ", "FAIL" if Failed else "PASS")
     quit(1 if Failed else 0)

@@ -94,6 +94,30 @@ four successful workflows and independently checked artifacts.
 | GL-044 | P2 | Focused correction; hosted qualification pending | Native Node3D CFrame lacks stdlib directional convenience fields |
 | GL-045 | P2 | Focused correction; hosted qualification pending | Vector3 colon Dot reads self as the other operand |
 | GL-046 | P3 | Reproduced fixture publication gaps; corrections pending qualification | Character/security barrier files can appear before their peer-ID payloads are written |
+| GL-047 | P3 | Reproduced fixture retirement race; focused correction passes, hosted pending | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
+
+## GL-047: Legacy cancellation fixture retires the owner too late
+
+Windows native run `42752081142` builds successfully, then reports bare FAIL in
+Dedicated client2. Its old log does not distinguish the canceled-invoke flag from
+wrong-role execution; retain that attribution limit. The
+[retained failure](evidence/gl044045/native-windows-lifecycle-failure.txt) and
+[controlled reproduction](evidence/gl044045/network-retirement-control.json)
+remain separate from the math fixes and GL-046's file publication corrections.
+
+On DockerPC's unchanged Release adapter, a diagnostic eight-actor run passes.
+Adding a deliberate 250 ms client stall makes both Dedicated clients resume the
+pending invoke after `queue_free()` is requested but before tree exit. Wrong-role
+flags stay false. ScriptNodeBase retires the execution owner in
+`NOTIFICATION_EXIT_TREE`; requesting queued deletion alone has not done so yet.
+This establishes the fixture timing mechanism, not the original missing flag.
+
+The correction removes the victim script and retiring NetworkService from the
+tree before queuing destruction. Assertions and deadlines remain unchanged;
+failure diagnostics identify the two previously silent conditions. Corrected
+normal/delayed controls each pass eight actors, and the unmodified corrected
+fixture passes 16 actors over two repetitions. Hosted qualification is pending.
+No production code, callback ownership policy or networking authority changes.
 
 ## GL-046: Character and security qualification marker publication
 
