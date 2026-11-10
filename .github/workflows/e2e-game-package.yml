@@ -4,6 +4,12 @@ on:
     branches: [feature/e2e-gameplay-foundation]
     paths: [.github/workflows/e2e-game-package.yml, 'examples/e2e-game/**', 'examples/player-controller/PlayerController.luau']
   workflow_dispatch:
+    inputs:
+      CandidateRun:
+        description: "Accepted native candidate run matching the checked-out native source"
+        type: string
+        required: true
+        default: '42610528726'
 permissions:
   contents: read
   actions: read
@@ -30,7 +36,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: candidate-Windows
-          run-id: 42216970390
+          run-id: ${{ inputs.CandidateRun || '42610528726' }}
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/candidate
       - name: Verify reused native product and admitted host
