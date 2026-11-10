@@ -82,7 +82,7 @@ def Main():
         if (Args.engine.parent/Name).exists(): shutil.copy2(Args.engine.parent/Name,Output/('ENGINE-'+Name))
     shutil.copy2(Source/'QUALIFICATION.md',Output/'QUALIFICATION.md')
     Readme = Output/'README.md'
-    Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md'))
+    Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md').replace('../../newdocs/gl-044-045-relay-development.md','QUALIFICATION.md'))
     if Args.host_manifest: shutil.copy2(Args.host_manifest,Output/'remote-host.json')
     (Output/'Play.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --path "%~dp0" %*\r\n')
     (Output/'Server.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --headless --path "%~dp0" -- --mode server --port 24870 --glserver 24870\r\n')

@@ -1,5 +1,11 @@
 # Relay Siege qualification scope
 
+The current API migration requires GL-043/044/045 fixes. It uses Camera CFrame
+directions, colon Vector3 math, native Vector3 impulses and server-authored
+raycast filters. Its [separate qualification journal](https://github.com/gmoddev/GodotLuau/blob/codex/gl-044-045-relay-luau/newdocs/gl-044-045-relay-development.md)
+records current-source execution and limits. The original campaign's wider
+evidence below remains historical; it does not automatically qualify new inputs.
+
 This is a non-publishing Windows qualification game, not an updater channel.
 Use the matching supplied runtime, libraries and DataStore companion together.
 The engine uses the pinned GL-018/GL-029 patches with an explicitly authorized
@@ -30,9 +36,10 @@ Physical devices, actual OS capture, Linux rendered game play, WAN/NAT discovery
 authentication, internet matchmaking and pristine OS runtime installation are
 not qualified. Use direct addresses and a reachable UDP port. The admitted
 engine can retain a retired-channel diagnostic at peer exit; existing GL-017/018
-and asset-provenance limits remain. GL-043/044/045 record physics/CFrame/vector
-compatibility limitations and the supported game calls used here. No safety or
-authority assertions are disabled.
+and asset-provenance limits remain. The original GL-043/044/045 findings and
+their baseline failures remain preserved in the corresponding issue records;
+the migration journal distinguishes their corrections and actual qualification.
+No safety or authority assertions are disabled.
 
 Package startup/archive identities are recorded separately in the campaign
 receipt. `game-package.json` identifies supplied inputs and payload hashes; it
