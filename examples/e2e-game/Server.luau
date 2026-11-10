@@ -91,8 +91,9 @@ local function Register(P)
     Records[P.UserId] = {Player = P, Ammo = 12, Reload = 0, LastShot = -10, LastRequest = -10, Deaths = 0, Dead = false}
 end
 local function Publish()
+    local Recipients = Players:GetPlayers()
     local List = {}
-    for _, P in ipairs(Players:GetPlayers()) do
+    for _, P in ipairs(Recipients) do
         Register(P)
         local R = Records[P.UserId]
         local C = P.Character
@@ -105,7 +106,15 @@ local function Publish()
         Save = SaveState, Reward = Result and Result.Credits or 0}
     local Encoded = Http:JSONEncode(Snapshot)
     game:SetAttribute("ServerSnapshot", Encoded)
-    State:FireAllClients(Encoded)
+    for _, P in ipairs(Recipients) do
+        local Ok, Failure = pcall(function() State:FireClient(P, Encoded) end)
+        local NotReady = "[Network:Remote] Remote peer not ready"
+        -- Publication rejects before admission. A joining peer receives the next
+        -- current snapshot; it must not interrupt updates to ready recipients.
+        if not Ok and (type(Failure) ~= "string" or string.sub(Failure, -#NotReady) ~= NotReady) then
+            error(Failure, 0)
+        end
+    end
 end
 Request.OnServerEvent:Connect(function(P, Action, Epoch, Value)
     if game:GetAttribute("AutomatedFixture") then

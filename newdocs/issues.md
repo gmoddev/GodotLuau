@@ -95,6 +95,24 @@ four successful workflows and independently checked artifacts.
 | GL-045 | P2 | Focused correction; hosted qualification pending | Vector3 colon Dot reads self as the other operand |
 | GL-046 | P3 | Reproduced fixture publication gaps; corrections pending qualification | Character/security barrier files can appear before their peer-ID payloads are written |
 | GL-047 | P3 | Reproduced fixture retirement race; focused correction passes, hosted pending | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
+| GL-048 | P3 | Reproduced game publication error; caller correction pending replay | Relay Siege broadcasts snapshots before every joining peer is ready |
+
+## GL-048: Relay Siege publication readiness
+
+Accepted-candidate rendered listen/dedicated replays at game source `e65e3b8`
+pass their functional checks, but log `Rules:108: Remote peer not ready` during
+joining. `Publish` used FireAllClients, whose native validation rejects the
+broadcast before commit when a destination has not completed publication.
+The game driver reports functional outcomes; its PASS does not establish absence
+of script diagnostics. Preserve the raw first replay instead of relabeling it
+diagnostic-clean.
+
+The caller now uses the existing FireClient API per live Player, deferring only
+the exact native peer-not-ready error until the next current snapshot. Other
+errors propagate unchanged. No accepted reliable work is discarded, no retry
+queue or readiness authority is added, and one negotiating peer cannot prevent
+updates to ready recipients. Native transport/admission stays unchanged. Real
+rendered listen/dedicated replay and diagnostic review remain required.
 
 ## GL-047: Legacy cancellation fixture retires the owner too late
 

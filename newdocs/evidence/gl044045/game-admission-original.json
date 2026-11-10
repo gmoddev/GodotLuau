@@ -1,0 +1,143 @@
+{
+  "Classification": "FUNCTIONAL CHECKS PASS; unhandled publication error prevents diagnostic-clean game qualification",
+  "Source": "e65e3b89a72c4e8a2017410f2eb67f54e44d1938",
+  "GameRuntimeImplementation": "b92b256c696f20aebca0d4bacdd4743d2d9b1602",
+  "CandidateRun": 42752234638,
+  "CandidateSource": "4510ab4006f3e13a80f564cc3088aae01406192e",
+  "ArchiveSHA256": "0e7b7b2a75c47baae8f433d62209df0778abaf30733d428ffbe0e1581ba45e5e",
+  "DurableEvidence": "C:/Sandbox/Codex/GL04404520261109/game-accepted-export-v1",
+  "Sessions": [
+    {
+      "Mode": "listen",
+      "Actors": [
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Cases": 28,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "2490f35e366ea3bc4d387657473329c4f15cb4e3dc6941f05576de9c7106dd17",
+            "stderr": "3e5561081c036608295b5f22b1eb84b7ed2bad14bf96806bcd5769b3dfc434d0"
+          },
+          "Screenshot": {
+            "File": "listen.png",
+            "SHA256": "21ffc8e9bd204d051b66a0333bf73e85c28cfcce3e9391a949ab0f3f21a90240"
+          }
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "42b08686b49637ed7923555dd744ccd82f06674ff0182617b5dabfaf4ed60ea4",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "42b08686b49637ed7923555dd744ccd82f06674ff0182617b5dabfaf4ed60ea4",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "42b08686b49637ed7923555dd744ccd82f06674ff0182617b5dabfaf4ed60ea4",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        }
+      ]
+    },
+    {
+      "Mode": "dedicated",
+      "Actors": [
+        {
+          "Actor": "server",
+          "Exit": 0,
+          "Cases": 2,
+          "Failed": 0,
+          "Graphical": false,
+          "Logs": {
+            "stdout": "b15e4336b9d3fde22ca654ed7732a9b6c128868bc443c01ea81975c988206083",
+            "stderr": "ec4dcf06f5fcb66b31dc81e36187cacd7a2a81029caaa3232aeced56b527e830"
+          }
+        },
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Cases": 28,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "e9231d7de9882b47431d70f6b11598659d46f485fe7fe606a5f31cf6e5c02e1b",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          },
+          "Screenshot": {
+            "File": "dedicated.png",
+            "SHA256": "3f43d1d1963203c057add8adcf1351d2e2656fd96c5c972023b5c9de7c0cc96b"
+          }
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "8e070349b777e9947372c65137f01e582d70229afcda6402dd578f70afb5e304",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "8e070349b777e9947372c65137f01e582d70229afcda6402dd578f70afb5e304",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Cases": 9,
+          "Failed": 0,
+          "Graphical": true,
+          "Logs": {
+            "stdout": "8e070349b777e9947372c65137f01e582d70229afcda6402dd578f70afb5e304",
+            "stderr": "ee961776a509e3b0a2d89ebc1c190e21d87145e8e29f7fe4fe191fc200d88c2c"
+          }
+        }
+      ]
+    }
+  ],
+  "UnexpectedDiagnostics": [
+    {
+      "Actor": "listen-leader",
+      "Message": "[Runtime:Script] Rules: Rules:108: [Network:Remote] Remote peer not ready"
+    },
+    {
+      "Actor": "dedicated-server",
+      "Message": "[Runtime:Script] Rules: Rules:108: [Network:Remote] Remote peer not ready"
+    }
+  ],
+  "KnownDiagnostics": {
+    "RetiredChannelErrors": 6,
+    "DisplayWarnings": 8
+  },
+  "Correction": "Per-Player FireClient; defer only exact native not-ready admission rejection, propagate all other errors, replay before acceptance."
+}

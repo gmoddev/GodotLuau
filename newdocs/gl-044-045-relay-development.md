@@ -249,3 +249,43 @@ inputs. If accepted, its products qualify that recorded source and unchanged
 native fingerprint; they do not imply execution of this later fixture correction.
 The prior Windows/Linux full-native passes likewise retain their exact fixture
 revisions. The development branch stays unmerged, and failed runs stay failed.
+
+## Accepted products and game diagnostic follow-up
+
+Candidate [42752234638](https://github.com/gmoddev/GodotLuau/actions/runs/42752234638)
+passes all ten gates at immutable `4510ab4`: four 85-core/141-native profiles,
+Linux core ASan/LSan, both rejection/retention jobs, both extracted-package
+startups and final acceptance. All four downloaded profiles execute 107 Model
+checks with the expected math fixture hash. Existing CheckPackage/CheckJobs on
+DockerPC verifies both downloaded 133-member packages, their provenance, native
+binaries, Release persistence companions and startup logs. The first verifier
+setup attempt lacked the archived tools directory; unchanged authoritative
+checker/policy files were supplied before the successful check. It was a setup
+failure, not an invalid candidate or runtime failure.
+
+Fresh corrected-fixture [core](https://github.com/gmoddev/GodotLuau/actions/runs/42755853368)
+and [native](https://github.com/gmoddev/GodotLuau/actions/runs/42755853334)
+finish successfully on both platforms at `e65e3b8`: 85 core/29 graph assertions,
+141 actors/107 Model checks and exact Character/security/retirement fixture
+hashes. Native C++ inputs remain identical to the accepted product. Existing
+full-native ASan/LSan results retain their earlier exact fixture revisions.
+
+Rendered production-ZIP listen/dedicated sessions at game `e65e3b8` finish with
+all 112 functional checks passing across nine actor processes. Both leaders
+complete 28 gameplay checks; each observer/late joiner completes nine, and the
+dedicated server completes two. Actual victory images were visually inspected.
+However, log inspection finds an unhandled `Remote peer not ready` in each
+server's Publish callback during joining. Preserve this first replay as
+functional success with an unresolved diagnostic, not a clean qualification.
+The known display warning and three retired-channel engine diagnostics in each
+server stderr are also retained under the existing GL-017/018 limits.
+
+GL-048 corrects the Luau snapshot producer, not native admission. Publish takes
+one bounded live-Player list and calls FireClient independently. Only the exact
+peer-not-ready rejection is deferred until the next current snapshot; every
+other error is rethrown. Nothing has been admitted for that peer, so this does
+not silently discard reliable work. Ready peers keep receiving state while a
+new peer negotiates. No new queue, scheduler, readiness probe or Godot adapter
+is introduced. Re-run the two actual game sessions and inspect their diagnostics
+before packaging or calling the game migration qualified. The accepted native
+product and unchanged core/native inputs need no rebuild for this Luau change.
