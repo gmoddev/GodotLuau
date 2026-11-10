@@ -378,6 +378,69 @@ game:SetAttribute('PhysicsBoundDone',true)
     Group.queue_free(); Far.queue_free()
     await process_frame
 
+func MathCompatibilityCases() -> void:
+    Script("MathCompatibility", """
+local function Check(Label, Test)
+    local Ok, Value = pcall(Test)
+    game:SetAttribute(Label, Ok and Value == true)
+    if not Ok then print('[Math:Compatibility]', Label, tostring(Value)) end
+end
+local V = Vector3.new(3, 4, 0)
+local Other = Vector3.new(5, 6, 2)
+Check('MathDotColon', function() return V:Dot(Other) == 39 and V:Dot(V) == 25 end)
+Check('MathCrossColon', function() return V:Cross(Other) == Vector3.new(8,-6,-2) end)
+Check('MathLerpColon', function() return V:Lerp(Other,0.5) == Vector3.new(4,5,1) end)
+Check('MathLegacyDot', function()
+    return V.Dot(Other) == 39 and V.Dot(V) == 25 and V.Cross(Other) == Vector3.new(8,-6,-2)
+        and V.Lerp(Other,0.5) == Vector3.new(4,5,1)
+end)
+Check('MathRetained', function()
+    local Dot = Vector3.new(7,8,9).Dot
+    local Cross = Vector3.new(7,8,9).Cross
+    local Lerp = Vector3.new(7,8,9).Lerp
+    -- Allocation pressure uses normal production GC; no privileged GC hook.
+    for I = 1, 20000 do local Temporary = Vector3.new(I,I+1,I+2) end
+    return Dot(Vector3.one) == 24 and Cross(Vector3.one) == Vector3.new(-1,2,-1)
+        and Lerp(Vector3.new(9,10,11),0.5) == Vector3.new(8,9,10)
+end)
+local Native = game.Workspace.MathPart
+local Expected = CFrame.new(3,5,7) * CFrame.Angles(0.2,0.7,-0.3)
+Native.CFrame = Expected
+local Actual = Native.CFrame
+Check('MathCFrameShape', function()
+    return getmetatable(Actual) == getmetatable(Expected)
+        and math.abs(Actual.LookVector.X - Expected.LookVector.X) < 0.00001
+        and math.abs(Actual.RightVector.Y - Expected.RightVector.Y) < 0.00001
+        and math.abs(Actual.UpVector.Z - Expected.UpVector.Z) < 0.00001
+        and Actual.Position.X == 3 and Actual.X == 3
+end)
+Check('MathCFrameMethods', function()
+    local Identity = Actual:Inverse() * Actual
+    local X,Y,Z,M00 = Actual:GetComponents()
+    local Copy = Actual:Lerp(Expected,0.5)
+    return math.abs(Identity.X) < 0.00001 and math.abs(Identity.m00-1) < 0.00001
+        and X == 3 and Y == 5 and Z == 7 and math.abs(M00-Expected.m00) < 0.00001
+        and math.abs(Copy.m12-Expected.m12) < 0.00001
+end)
+Check('MathCFrameSnapshot', function()
+    Native.CFrame = CFrame.new(20,30,40)
+    return Actual.X == 3 and Native.CFrame.X == 20
+        and math.abs(Actual.m02-Expected.m02) < 0.00001
+end)
+local Camera = game.Workspace.CurrentCamera
+Check('MathCameraCFrame', function()
+    local Frame = Camera.CFrame
+    return type(Frame.LookVector.X) == 'number' and type(Frame.UpVector.Y) == 'number'
+        and math.abs(Frame.LookVector.X + Frame.m02) < 0.00001
+        and math.abs(Frame.LookVector.Z + Frame.m22) < 0.00001
+end)
+game:SetAttribute('MathComplete',true)
+""")
+    await create_timer(0.2).timeout
+    Check(Game.get_meta("MathComplete",false), "GL-044/045 production math fixture completes")
+    for Label in ["MathDotColon","MathCrossColon","MathLerpColon","MathLegacyDot","MathRetained","MathCFrameShape","MathCFrameMethods","MathCFrameSnapshot","MathCameraCFrame"]:
+        Check(Game.get_meta(Label,false), "GL-044/045 " + Label)
+
 func _initialize() -> void:
     call_deferred("Run")
 
@@ -398,6 +461,14 @@ func Run() -> void:
     await process_frame
     var Character: Node3D = World.get_node("LocalPlayer")
     Freeze(Character)
+    var MathPart: Node3D = Create("Part", "MathPart", World)
+    MathPart.call("set_anchored", true)
+    await MathCompatibilityCases()
+    MathPart.queue_free()
+    if "--math-baseline" in OS.get_cmdline_user_args():
+        Game.free(); await process_frame; await process_frame
+        print("[Math:Compatibility] ", "FAIL" if Failed else "PASS")
+        quit(1 if Failed else 0); return
     await PhysicsCases(Character)
     if "--gl043-baseline" in OS.get_cmdline_user_args():
         Game.free(); await process_frame; await process_frame
