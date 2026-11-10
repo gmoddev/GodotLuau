@@ -28,8 +28,9 @@ the baseline; preserve IDs when a refactor moves the implementation.
 The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
 qualified game and its original evidence. GL-043 is now separately qualified and
 [integrated](gl-043-main-integration.md). GL-044/045 have focused corrections on
-`codex/gl-044-045-relay-luau` and are qualified within its recorded profiles.
-That development branch remains unmerged. The original game
+retained `codex/gl-044-045-relay-luau` and are qualified within its recorded profiles.
+The [normal integration](gl-044-045-main-integration.md) preserves all 17 commits.
+The original game
 merge did not itself close any of those native compatibility findings.
 
 Networking Foundation 2 source `cb2014f` is now integrated by a normal merge into
@@ -92,11 +93,11 @@ four successful workflows and independently checked artifacts.
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
 | GL-043 | P2 | Integrated; fixed and qualified within scope | Bounded Workspace raycast root filters and native Vector3 impulses |
-| GL-044 | P2 | Fixed and qualified within branch scope; unmerged | Native Node3D CFrame lacks stdlib directional convenience fields |
-| GL-045 | P2 | Fixed and qualified within branch scope; unmerged | Vector3 colon Dot reads self as the other operand |
-| GL-046 | P3 | Corrected and qualified within recorded fixture profiles | Character/security barrier files can appear before their peer-ID payloads are written |
-| GL-047 | P3 | Corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
-| GL-048 | P3 | Corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
+| GL-044 | P2 | Integrated; fixed and qualified within recorded scope | Native Node3D CFrame lacks stdlib directional convenience fields |
+| GL-045 | P2 | Integrated; fixed and qualified within recorded scope | Vector3 colon Dot reads self as the other operand |
+| GL-046 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Character/security barrier files can appear before their peer-ID payloads are written |
+| GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
+| GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 
 ## GL-048: Relay Siege publication readiness
 

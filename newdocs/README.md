@@ -41,7 +41,8 @@ updater distribution remain disabled.
 
 The separate [GL-044/045 compatibility and Relay Siege migration](gl-044-045-relay-development.md)
 records qualified native CFrame/Vector3 corrections, rendered production gameplay
-and package evidence. It remains development-branch work; its receipt preserves
+and package evidence. It is now [integrated normally](gl-044-045-main-integration.md);
+its branch receipt preserves
 failed attempts, scoped GL-046/047 fixture corrections and the GL-048 game caller
 migration. Existing engine, sanitizer and device limits remain explicit.
 

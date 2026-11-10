@@ -1,11 +1,12 @@
 # Current architecture
 
-The GL-044/045 follow-up on `codex/gl-044-045-relay-luau` reuses the existing
+The [integrated GL-044/045 follow-up](gl-044-045-main-integration.md) reuses the existing
 Model CFrame constructor for Node3D/Camera getters and retains Vector3 method
 receivers as userdata upvalues. Colon and legacy dot calls share the same native
 value math. No new transform representation, VM, physics or networking layer is
 introduced. The [work and qualification record](gl-044-045-relay-development.md)
-distinguishes passing focused/gameplay checks from pending hosted gates.
+distinguishes exact qualified native, fixture, sanitizer, package and rendered
+game inputs. Integration preserves those inputs and their documented limits.
 
 The integrated [GL-043 correction](gl-043-main-integration.md) changes only existing
 physics bindings: bounded ancestry-based raycast Include/Exclude filtering,
