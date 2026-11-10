@@ -23,6 +23,15 @@ workflows. Reuse those unchanged source/fixture/profile/package results; no
 second candidate build is needed merely for the identical normal merge.
 Ordinary push-triggered main CI is separate fresh integration observation.
 
+The game-package workflow previously pinned the older controller candidate
+`42216970390`, whose native fingerprint no longer matches integrated GL-043.
+Its existing source-fingerprint gate correctly rejects that combination. The
+integration follow-up makes the accepted candidate run an explicit manual input
+and defaults to already-qualified GL-043 candidate `42610528726`. Host identity,
+package verification, extracted startup, read-only permissions and publication
+policy are unchanged. This reuses the qualified candidate rather than rebuilding
+it; later native work must supply its own matching accepted candidate.
+
 Authority, normalized-ray/MaxDistance convention, collision configuration,
 dependencies, admitted hosts and pins remain unchanged. Headless profile scope,
 unsupported RaycastParams options, graphical/device and Windows LSan limitations
