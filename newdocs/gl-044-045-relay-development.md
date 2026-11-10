@@ -179,3 +179,40 @@ all attacks, sender/role checks, message/token expectations and deadlines remain
 unchanged. GL-046 therefore covers both observed marker-writer gaps. No other
 runtime or networking correction is bundled. Affected security/Character/
 controller qualification and fresh candidate inputs remain required.
+
+## Current qualification checkpoint (2026-11-10 UTC)
+
+At `8eddb826667fe1dc95dc92f875ef9be89e971d40`, both platforms' ordinary
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/42748697994) and
+[full-native sanitizer](https://github.com/gmoddev/GodotLuau/actions/runs/42748739079)
+runs finish successfully. Downloaded artifacts verify 141 actors, the 107-check
+Model fixture and unchanged native fingerprint `40270fc0...`. Sanitizer controls
+pass, all 1,165 instrumented translation units are recorded and no unexpected
+reports occur. Linux leak detection is enabled; Windows LSan remains unsupported.
+These runs include the Character marker correction, but precede the security
+marker correction. They are not represented as a full sanitizer run of the final
+security fixture.
+
+Final fixture input is `4510ab4006f3e13a80f564cc3088aae01406192e`. DockerPC's
+affected ten security actors pass in Release, in addition to the earlier 20
+Character/seven controller actors. The final input's downloaded
+[core artifacts](https://github.com/gmoddev/GodotLuau/actions/runs/42752080974)
+verify 85 cases and 29 input-graph assertions per platform.
+[Native](https://github.com/gmoddev/GodotLuau/actions/runs/42752081142) and
+[candidate](https://github.com/gmoddev/GodotLuau/actions/runs/42752234638)
+qualification remain pending at this checkpoint. Candidate core ASan/LSan and
+both rejection/retention jobs pass; pending source profiles, package startup and
+final acceptance are not counted as passing.
+
+No C++ input has changed since `30682a3`, and no game runtime script has changed
+since `b92b256`. The [machine-readable receipt](evidence/gl044045/qualification-2026-11-09.json)
+distinguishes these identities, both failed candidate attempts and final-input
+results. An accepted current candidate is still required for production-package
+listen/dedicated game replay; the passing development replay is not relabeled.
+
+DockerPC cleanup remains complete: 31.85 GiB recovered without deletion failures.
+A later capacity observation shows 17.35 GiB free after unrelated disk activity;
+the original before/after values and per-file audit remain retained. No task-owned
+test processes remained on DockerPC or MainPC at that observation. Source,
+toolchain caches and historical evidence remain available. Follow-up work stays
+on `codex/gl-044-045-relay-luau`, unmerged; main remains `6db2e2c`.

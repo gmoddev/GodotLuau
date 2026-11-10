@@ -39,6 +39,11 @@ qualified `fix/gl-043-raycast-impulses`. See the
 [physics binding contract](gl-043-physics-api.md). Release publication and
 updater distribution remain disabled.
 
+The separate [GL-044/045 compatibility and Relay Siege migration](gl-044-045-relay-development.md)
+records native CFrame/Vector3 corrections, rendered development gameplay and
+current qualification gates. It remains development-branch work; its receipt
+preserves both failed candidate attempts and the scoped GL-046 fixture fixes.
+
 [Relay Siege](../examples/e2e-game/README.md) is the end-to-end cooperative arena
 integrated by normal merge `025401f`, preserving all 12 feature commits. Its
 [journal and qualification](e2e-game-development.md) distinguish completed

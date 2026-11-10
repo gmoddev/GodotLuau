@@ -7,7 +7,10 @@
   "IntegratedMain": "6db2e2c563dfb4680dc09f1451f05dba5b778069",
   "RuntimeImplementation": "30682a33c418cde73c710c168fe09c1c14af4155",
   "GameImplementation": "b92b256c696f20aebca0d4bacdd4743d2d9b1602",
-  "FixtureCorrection": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+  "FixtureCorrection": [
+    "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+    "4510ab4006f3e13a80f564cc3088aae01406192e"
+  ],
   "NativeSource": {
     "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
     "Files": 101,
@@ -153,31 +156,69 @@
     }
   },
   "CurrentQualification": {
-    "Source": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+    "Source": "4510ab4006f3e13a80f564cc3088aae01406192e",
     "NativeUnchanged": true,
     "Core": {
-      "Run": 42748698003,
-      "Result": "pending"
+      "Run": 42752080974,
+      "Result": "success",
+      "Reports": [
+        {
+          "Platform": "Windows",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "GraphFailures": 0,
+          "ReportSHA256": "af63f09858a83af9138d55ce9b1bc77bc7a8eb7fdfd9df685a474fae08369e0d"
+        },
+        {
+          "Platform": "Linux",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "GraphFailures": 0,
+          "ReportSHA256": "dffba05f5fb1a90e960dcc3819ec86c74288194f4275f44044c15b0f9999fda7"
+        }
+      ],
+      "Artifacts": [
+        {
+          "Platform": "Windows",
+          "ID": 13733433236,
+          "Digest": "sha256:aadb4eaa910d8998880cf88a77fcdf24b4f00a459318c85a205356f8dad3def0"
+        },
+        {
+          "Platform": "Linux",
+          "ID": 13733074567,
+          "Digest": "sha256:fc2f8db16b0316ab87273424293ef873c5a43f177f852d145e9bdfe235a79b53"
+        }
+      ]
     },
     "Native": {
-      "Run": 42748697994,
-      "Result": "pending"
-    },
-    "Sanitizers": {
-      "Run": 42748739079,
+      "Run": 42752081142,
       "Result": "pending"
     },
     "Candidate": {
-      "Run": 42748734970,
-      "Result": "pending"
+      "Run": 42752234638,
+      "Result": "pending",
+      "PassedGates": [
+        "Linux core ASan/LSan",
+        "Windows rejection and retention",
+        "Linux rejection and retention"
+      ],
+      "Pending": "Four source profiles, extracted packages and final acceptance"
+    },
+    "Sanitizers": {
+      "ReusedRun": 42748739079,
+      "NativeSourceUnchanged": true,
+      "FixtureSource": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+      "FinalSecurityMarkerFixtureNotIncluded": true
     },
     "LocalAffected": {
       "Host": "DockerPC / HostPC",
       "Configuration": "Release",
       "CharacterActors": 20,
       "ControllerActors": 7,
+      "SecurityActors": 10,
       "Result": "PASS",
-      "Evidence": "C:/Sandbox/Codex/GL04404520261109/marker-v1"
+      "CharacterEvidence": "C:/Sandbox/Codex/GL04404520261109/marker-v1",
+      "SecurityEvidence": "C:/Sandbox/Codex/GL04404520261109/security-marker-v1"
     }
   },
   "LocalDevelopment": {
@@ -235,6 +276,16 @@
       "Error": "Character Listen reconnect States()[0] GDScript error despite exit 0/PASS; rejected by strict checker",
       "Report": "candidate-windows-debug-failure.txt",
       "Disposition": "Failed job retained. Remaining old candidate jobs cancelled as superseded after fixture correction; old run is not accepted."
+    },
+    {
+      "Kind": "Candidate Linux Release",
+      "Run": 42748734970,
+      "Source": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+      "Artifact": 13733596670,
+      "Digest": "sha256:ec250710173778df8cceab6284bf055210c466faec963dba66b4e7a75066202c",
+      "Error": "NetworkSecurity Listen peer-zero wrong-recipient setup; authentic own-sender broadcast consumes one token, violating expected burst. Historical empty marker read inferred, not directly captured.",
+      "Report": "candidate-linux-release-failure.txt",
+      "Disposition": "Failed profile retained; remaining jobs cancelled as superseded after second marker correction. Not an accepted candidate."
     }
   ],
   "MarkerControl": {
@@ -256,7 +307,9 @@
       "C:/Sandbox/Codex/Builds/gargantuan-input"
     ],
     "Receipt": "C:/Sandbox/Codex/Artifacts/Cleanup-20261109-GodotLuau",
-    "Excluded": "CarbonLuau archive junction; source, reports, toolchains, GodotLuau caches, active and unrelated workloads"
+    "Excluded": "CarbonLuau archive junction; source, reports, toolchains, GodotLuau caches, active and unrelated workloads",
+    "LatestObservedFreeBytes": 18625212416,
+    "LatestObservation": "2026-11-10T03:58:00Z; other disk activity changed free space after cleanup"
   },
   "Limitations": [
     "CFrame direction/Position fields retain stdlib coordinate tables; game explicitly converts to native Vector3 for existing endpoint",
@@ -269,5 +322,118 @@
   "ReleasePublicationDisabled": true,
   "UpdaterDistributionDisabled": true,
   "ControllerAndNetworkingAuthorityUnchanged": true,
-  "DevelopmentBranchUnmerged": true
+  "DevelopmentBranchUnmerged": true,
+  "ObservationUTC": "2026-11-10T04:03:00Z",
+  "PriorFixtureQualification": {
+    "Source": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+    "Core": {
+      "Run": 42748698003,
+      "Result": "success",
+      "Reports": [
+        {
+          "Platform": "Windows",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "ReportSHA256": "30794081b6429808848d7a94499f751f17f31255833a911ebc4efa1c03beb558"
+        },
+        {
+          "Platform": "Linux",
+          "Core85": true,
+          "GraphAssertions": 29,
+          "ReportSHA256": "cdaa3770db0a6cae2e4596097539305c3d7d5ad2a50678e1a4dcfad213875e0d"
+        }
+      ]
+    },
+    "Native": {
+      "Run": 42748697994,
+      "Result": "success",
+      "Windows": {
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+        "ExtensionSHA256": "e3a5f89c2acf453a271ac566228e65184eaff799d7d52035f07907ab662916f4",
+        "SummarySHA256": "67d78c9f612c969aa35b771edf70fe46b146b22f6b52dd52b1b4779e67bb4dbf",
+        "Model107": true,
+        "Artifact": 13733548419,
+        "Digest": "sha256:e535b462d160933aa3466d9bb86b9f60e0d394a3969b9323d9aa48459c6d038b"
+      },
+      "Linux": {
+        "Kind": "native",
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "MarkerFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "Model107": true,
+        "ExtensionSHA256": "34bc99d54c67b0ccd11d2e66273ec0ae566e8253d41240e5cee1312cdd80a482",
+        "SummarySHA256": "d407b8ca5a6bad6451b2d5500d55e408a7bac88583a07e57b876bb81ca956929",
+        "Artifact": 13732608933,
+        "Digest": "sha256:41e45f6a4d07d6c9db0d0c381fd279f9fa2357ce0485256ce9e8ee9c954fef8e"
+      }
+    },
+    "Sanitizers": {
+      "Run": 42748739079,
+      "Result": "success",
+      "Windows": {
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CharacterFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "SecurityFixture": "3fecb92e3c7be8f3085d5dd7b8dc264ef79c9553b9a2d18abb8adb1427758f79",
+        "CoreCases": 85,
+        "InstrumentedFiles": 1165,
+        "ExtensionSHA256": "0a69f02c58f70c3792d983c10566ca9270aae1542885ae84cf2d16464231e293",
+        "SummarySHA256": "bd3aa8e357d4281c159b2eeac01af86c8dab03eb532373a9d5e09c3a9f9b0a1b",
+        "Model107": true,
+        "AllStepsPassed": true,
+        "Artifact": 13734177718,
+        "Digest": "sha256:b17b160331c41bb22de2d095d1cd5fb239c441a703d40e39e6cb62f80076986d",
+        "LSan": "unsupported"
+      },
+      "Linux": {
+        "Kind": "san",
+        "Revision": "8eddb826667fe1dc95dc92f875ef9be89e971d40",
+        "NativeSource": {
+          "SHA256": "40270fc0232566b9cd3f06584feba29cfbf88902be7609cdb140f2e12e00132c",
+          "Files": 101,
+          "Newlines": "LF normalized"
+        },
+        "Actors": 141,
+        "MathFixture": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "MarkerFixture": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "Model107": true,
+        "ExtensionSHA256": "c67b1fbb2e7dd71ff79929baf47cfb05cc24014f1d31edc30bffa27b56fe29cb",
+        "SummarySHA256": "f32700aafe22596d72c68a23f45cfd8a3c137b3f2c5b63a01c0435a84aac54c8",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Artifact": 13732964101,
+        "Digest": "sha256:c9db866edd85d25077a524f9aa20e2651127d770e019235c292a581e3fc3c909",
+        "CoreCases": 85,
+        "InstrumentedFiles": 1165,
+        "LeakDetection": true
+      }
+    },
+    "Scope": "Both platforms passed with corrected Character markers; predates the NetworkSecurity marker-only correction. C++/math fixture unchanged."
+  }
 }
