@@ -394,6 +394,14 @@ Check('MathLegacyDot', function()
     return V.Dot(Other) == 39 and V.Dot(V) == 25 and V.Cross(Other) == Vector3.new(8,-6,-2)
         and V.Lerp(Other,0.5) == Vector3.new(4,5,1)
 end)
+Check('MathArgumentRejection', function()
+    local Dot, Cross, Lerp = V.Dot, V.Cross, V.Lerp
+    return not pcall(function() Dot(Other,Vector3.one) end)
+        and not pcall(function() Cross(Other,Vector3.one) end)
+        and not pcall(function() Lerp(Other,Vector3.one,0.5) end)
+        and not pcall(function() V:Lerp(Other,'invalid') end)
+        and V:Dot(Other) == 39
+end)
 Check('MathRetained', function()
     local Dot = Vector3.new(7,8,9).Dot
     local Cross = Vector3.new(7,8,9).Cross
@@ -438,7 +446,7 @@ game:SetAttribute('MathComplete',true)
 """)
     await create_timer(0.2).timeout
     Check(Game.get_meta("MathComplete",false), "GL-044/045 production math fixture completes")
-    for Label in ["MathDotColon","MathCrossColon","MathLerpColon","MathLegacyDot","MathRetained","MathCFrameShape","MathCFrameMethods","MathCFrameSnapshot","MathCameraCFrame"]:
+    for Label in ["MathDotColon","MathCrossColon","MathLerpColon","MathLegacyDot","MathArgumentRejection","MathRetained","MathCFrameShape","MathCFrameMethods","MathCFrameSnapshot","MathCameraCFrame"]:
         Check(Game.get_meta(Label,false), "GL-044/045 " + Label)
 
 func _initialize() -> void:
