@@ -145,3 +145,18 @@ qualification justifies the small fixture correction (GL-046), rather than a
 new verification framework or accepting PASS after a script error. Affected
 Character/controller groups and candidate inputs must be requalified; the
 original failed attempt remains failed. Native fingerprint stays unchanged.
+
+The complete [failed profile diagnostic](evidence/gl044045/candidate-windows-debug-failure.txt)
+is versioned as well as retained in its original artifact. After preserving that
+artifact, remaining old candidate jobs are cancelled as superseded, not counted
+as passing. Current qualification inputs are `8eddb826667fe1dc95dc92f875ef9be89e971d40`:
+[candidate](https://github.com/gmoddev/GodotLuau/actions/runs/42748734970),
+[native](https://github.com/gmoddev/GodotLuau/actions/runs/42748697994),
+[core](https://github.com/gmoddev/GodotLuau/actions/runs/42748698003) and
+[full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/42748739079).
+DockerPC's affected Release qualification passes all 20 Character and seven
+controller actors with the corrected marker and unchanged native binary.
+Matching Windows/Linux full-native qualification at the prior native/fixture
+revision `30682a3` independently passes 85 core/141 native actors and controls,
+with no unexpected reports; its native fingerprint is still the current value.
+Those successful results do not replace the new fixture-input gates.
