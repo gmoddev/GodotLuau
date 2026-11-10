@@ -91,8 +91,13 @@ four successful workflows and independently checked artifacts.
 | GL-041 | P3 | Open; observed Windows ASan startup limitation | Raised authoritative lane can leave a walking client in a falling state |
 | GL-042 | P2 | Integrated; qualified within documented profiles | Raw input reports GUI consumption only after native GUI routing |
 | GL-043 | P2 | Integrated; fixed and qualified within scope | Bounded Workspace raycast root filters and native Vector3 impulses |
+<<<<<<< HEAD
 | GL-044 | P2 | Focused correction; hosted qualification pending | Native Node3D CFrame lacks stdlib directional convenience fields |
 | GL-045 | P2 | Focused correction; hosted qualification pending | Vector3 colon Dot reads self as the other operand |
+=======
+| GL-044 | P2 | Confirmed gameplay contract discrepancy | Native Node3D CFrame lacks stdlib directional convenience fields |
+| GL-045 | P2 | Confirmed gameplay math discrepancy | Vector3 colon Dot reads self as the other operand |
+>>>>>>> main
 
 ## GL-045: Vector3 method calling convention
 

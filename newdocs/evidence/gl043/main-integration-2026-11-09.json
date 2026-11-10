@@ -1,0 +1,100 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-09",
+  "Classification": "INTEGRATED AND VERIFIED within retained GL-043 scope",
+  "StartingMain": "eee10f8779a1002c664a81267d9ab96d1dae1e62",
+  "Merge": "e7f8ac42919041421d80a6d81653bfbfbc32deb6",
+  "MergeTree": "7dcf605c82867740dcdca5b21df43fc15283fc3e",
+  "SourceBranch": "fix/gl-043-raycast-impulses",
+  "SourceTip": "49440c05eff582c20c62e993021763a2c0c2f0e2",
+  "QualifiedInputs": "3227290c1137fe4c52237aab7eecf001aee83e18",
+  "PreservedSourceCommits": 12,
+  "MergeTreeMatchesSource": true,
+  "ReusedReceipt": "newdocs/evidence/gl043/qualification-2026-11-09.json",
+  "ObservedMain": "e690ed0f2171938e74474eb95a7e0849d1f3387e",
+  "Core": {
+    "Run": 42743050365,
+    "Conclusion": "success",
+    "Platforms": [
+      {
+        "Scope": "gl043-main-core",
+        "Platform": "Windows",
+        "Core85": true,
+        "GraphAssertions": 29,
+        "ReportSHA256": "60ac2b2691c6100fbc84efd2ba65caba6b48146814a5b2f235b661a3ee378f1d"
+      },
+      {
+        "Scope": "gl043-main-core",
+        "Platform": "Linux",
+        "Core85": true,
+        "GraphAssertions": 29,
+        "ReportSHA256": "33612977f5b149be629922b60d8a5326471befec5174af7f7d758591ccf4edaf"
+      }
+    ]
+  },
+  "Native": {
+    "Run": 42743050607,
+    "Conclusion": "success",
+    "Linux": {
+      "Revision": "82d831a59c79c81065c5822751c44c9ecca24d01",
+      "NativeSource": {
+        "SHA256": "7d540a81ecf0bcf83742e94386796df6e4df36310ad330ec1d9bfe54bdac2f56",
+        "Files": 101,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "SummarySHA256": "828549eb97de90a39118d7014e48e45647a42e985986a4ee175f2938aa851d7d",
+      "Artifact": 13731485501,
+      "Digest": "sha256:2fdf352da97339309ff992007d514b58459e0b3c2894febb43cb514fcc0e431a"
+    },
+    "Windows": {
+      "Scope": "gl043-main-native-Windows",
+      "Revision": "82d831a59c79c81065c5822751c44c9ecca24d01",
+      "NativeSource": {
+        "SHA256": "7d540a81ecf0bcf83742e94386796df6e4df36310ad330ec1d9bfe54bdac2f56",
+        "Files": 101,
+        "Newlines": "LF normalized"
+      },
+      "Actors": 141,
+      "Fixture": "661068947ce5a8a126d0329a09aaaf6052669c3920ddba599c53491921000679",
+      "Model107": false,
+      "Model96": true,
+      "ExtensionSHA256": "eb143e00fcd596d5418d7f16963f42f33f17050918b1636d5eb2887ffe02c995",
+      "SummarySHA256": "1662e1d8cfeb397fb73dfe52238103f30f97936b551345962a6b22096a735901",
+      "Artifact": 13731715856,
+      "Digest": "sha256:a4fac14da52f3b0897e368adc26acdf690f7098bf6f60954de219463ceabe942"
+    }
+  },
+  "GamePackage": {
+    "GameRevision": "e690ed0f2171938e74474eb95a7e0849d1f3387e",
+    "CandidateRevision": "3227290c1137fe4c52237aab7eecf001aee83e18",
+    "NativeSource": {
+      "SHA256": "7d540a81ecf0bcf83742e94386796df6e4df36310ad330ec1d9bfe54bdac2f56",
+      "Files": 101,
+      "Newlines": "LF normalized"
+    },
+    "ZipSHA256": "43f87334b4b08814f132e26d4674ca8441ba1beb9716047701fc8a3c407e435e",
+    "PayloadFiles": 157,
+    "StartupErrors": 0,
+    "ReadyMarker": true,
+    "Mismatches": [],
+    "ArtifactID": 13731271123,
+    "ArtifactDigest": "sha256:ab7241229b22891d928593f263dcca91717219675cf6db968e91b607dcf74b6f",
+    "Run": 42744711762
+  },
+  "Policy": {
+    "NormalMerge": true,
+    "SourceBranchRetained": true,
+    "DependencyPinsUnchanged": true,
+    "AdmittedHostsUnchanged": true,
+    "ReleasePublicationDisabled": true,
+    "UpdaterDistributionDisabled": true,
+    "GL044045Unmerged": true
+  },
+  "Limitations": [
+    "Retained headless admitted-profile and Windows LSan limitations",
+    "Unsupported RaycastParams options and established MaxDistance convention remain",
+    "Original failed GL-043 attempts remain retained; historical unmerged receipts are not rewritten",
+    "No new distribution, upstream or reproducibility claim"
+  ]
+}
