@@ -61,7 +61,23 @@
     },
     "Native": {
       "Run": 43027816240,
-      "Result": "in_progress"
+      "Result": "success",
+      "Platforms": {
+        "Windows": {
+          "NativeActors": 141,
+          "AuthoringPassed": true,
+          "AuthoringFixtureSHA256": "8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69",
+          "SummarySHA256": "8259949dd8628d87accccbaa9dd29151c37d1989aa6e647859d6bef3d5f08fdc",
+          "IntegrationLogSHA256": "46d0e769012243f2ae9180dd6624fb60ece8550af4873dd47a66b476aff2b0eb"
+        },
+        "Linux": {
+          "NativeActors": 141,
+          "AuthoringPassed": true,
+          "AuthoringFixtureSHA256": "8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69",
+          "SummarySHA256": "6848d7ef241f3a86940763c82bb1639d91c99118580c4ea25bbde30cd9b72ee0",
+          "IntegrationLogSHA256": "3a74bd99cefbecd589accdb1c5a42d90048608010e823a1a434cc9418f0e0ab7"
+        }
+      }
     }
   },
   "ReleasePublication": "Disabled; no workflow dispatched",

@@ -56,8 +56,20 @@ run on integrated revision `244b3b83c2aedaabd3c3e1ab37954d905cf4e247`.
 Core passes Windows/Linux. Downloaded XMLs pass the existing `CheckCoreCI.py
 report` checks (85 distinct cases each); input graph logs pass 29 assertions per
 platform. The optional benchmark-host export is correctly skipped because it
-was not requested. Native is still building its admitted hosts and is not yet
-counted as a fresh pass. Its final result will be recorded after completion.
+was not requested.
+
+Native passes Windows/Linux with all 141 actors per platform. Downloaded
+summaries identify the tested revision above, the unchanged 103-file native
+fingerprint and authoring fixture hash
+`8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69`.
+Both Integration logs contain `[Scene:Qualification] PASS`. Summary and log
+hashes are retained in the [integration receipt](evidence/native-authoring/main-integration-20261111.json).
+No runtime correction, assertion change or retry was required for this integration.
+
+Classification: **INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS**. Final
+post-CI commits update documentation only; native, fixture and gameplay inputs
+remain identical to the tested integrated revision. No additional qualification
+matrix is needed for those unchanged inputs.
 
 ## Preserved limits and publication policy
 
