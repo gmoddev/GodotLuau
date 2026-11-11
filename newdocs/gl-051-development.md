@@ -209,3 +209,16 @@ assertion. Startup also exposes three inherited missing required public-metadata
 hooks; implement explicit empty function/constant/annotation lists, and reject
 those observed missing-hook errors. Do not advertise unimplemented public globals.
 The completion-shape correction and actual UI completion still await execution.
+
+Latest Linux `43052421375` stops in provisioning: the working kernel mirror's TLS
+handshake exceeds the four-second connect bound after two DNS failures. Retain
+that attempt, prefer the empirically working mirror and allow one bounded retry
+with a ten-second connection/fifteen-second transfer limit. The five-minute step
+deadline and signed APT checks stay unchanged; no machine DNS settings change.
+
+The next candidate cohort also runs the existing real-editor fixture against
+each SCons production library before the adapter build, using the already pinned
+official editor. This directly qualifies the new editor feature in Debug/Release
+on both platforms and retains its normal logs/results in existing profile
+evidence. It adds no new harness, host profile, assertion relaxation or qualifier
+test suite. Core/native/sanitizer and package gates remain intact.

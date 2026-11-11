@@ -5,8 +5,8 @@ set -euo pipefail
 # selected compiler/engine profiles remain unchanged.
 if [[ -f /etc/apt/apt-mirrors.txt ]]; then
     Selected=""
-    for Mirror in https://archive.ubuntu.com/ubuntu https://azure.archive.ubuntu.com/ubuntu https://mirrors.edge.kernel.org/ubuntu; do
-        if curl --fail --silent --show-error --connect-timeout 4 --max-time 8 "$Mirror/dists/noble/InRelease" -o /dev/null; then
+    for Mirror in https://mirrors.edge.kernel.org/ubuntu https://archive.ubuntu.com/ubuntu https://azure.archive.ubuntu.com/ubuntu; do
+        if curl --fail --silent --show-error --connect-timeout 10 --max-time 15 --retry 1 --retry-all-errors --retry-delay 1 "$Mirror/dists/noble/InRelease" -o /dev/null; then
             Selected="$Mirror"
             break
         fi

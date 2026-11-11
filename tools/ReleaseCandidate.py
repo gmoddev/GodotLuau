@@ -150,6 +150,8 @@ def Build(Args):
         Require((Source/'GodotLuau/bin'/Name).is_file(), 'Missing source-built product: '+Name)
         shutil.copy2(Source/'GodotLuau/bin'/Name, Products/Name)
     Require(Identity(Args.revision) == Before, 'Source inputs changed during the production build')
+    Commands.append(Execute([sys.executable, Source/'tests/editor/RunNativeAuthoring.py', '--godot', Engine,
+        '--extension', Products/LibraryName, '--output', Output/'native/editor', '--timeout', '60'], Output/'editor-check.log', 90))
     BuildDirectory = Output/'build'
     Generator = 'Visual Studio 17 2022' if Selected == 'Windows' else 'Ninja'
     Commands.append(Execute(['cmake', '-S', Source/'tests/runtime', '-B', BuildDirectory, '-G', Generator, '-DCMAKE_BUILD_TYPE='+Args.configuration, '-DGL_BUILD_GODOT_ADAPTER=ON', '-DGL_BUILD_CORE_TESTS=ON'], Output/'configure.log', 300))
