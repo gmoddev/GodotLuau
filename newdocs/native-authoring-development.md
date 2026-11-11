@@ -264,3 +264,25 @@ Post-restoration core `42999540021` and native `42999540348` also pass both
 platforms. No prior failure is erased or assigned a guessed cause. The final
 game package will use accepted candidate run `42987296894` through the existing
 read-only-permission, non-publishing game-package workflow.
+
+## Completed qualification checkpoint
+
+[Game package 43005466053](https://github.com/gmoddev/GodotLuau/actions/runs/43005466053)
+passes at `55a0c5f53b8214ca9b059c82993850a42c6c6782`, using accepted native run
+`42987296894` and the unchanged admitted renderer. The actual extracted archive
+starts solo rules with empty stderr. Downloaded manifest/archive verification
+matches all 160 payloads; game ZIP SHA256 is
+`1e7a57fb5180d107525885a55ea4f323cd0cf9d8cb471d744130b1fa395a0c96`.
+The [qualification record](native-authoring-qualification.md) and receipt retain
+exact inputs, CI URLs, report hashes, observations and limits. GL-049 is resolved
+within ADR-014's delivered slice on this unmerged branch; GL-050 remains separate.
+
+Final documentation changes do not change native, fixture or gameplay behavior.
+All requested acceptance scenarios have evidence within their stated profiles.
+There is no claim of arbitrary Godot parity, hostile-resource isolation, physical
+device qualification, Linux rendering or complete rendered-game sanitizer proof.
+No local qualification game/companion remains running. DockerPC received only
+small task-owned runner files; no lease was acquired or heavy job launched there.
+MainPC ran bounded no-focus runtime checks; hosted CI built the native profiles.
+Preserve caches, failed attempts and source. No merge, release publication,
+updater distribution, dependency, admitted-host or protocol change is performed.

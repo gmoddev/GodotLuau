@@ -962,6 +962,28 @@
     },
     "RenderedProductsEqualAcceptedWindows": true
   },
+  "AcceptedGamePackage": {
+    "WorkflowRun": 43005466053,
+    "WorkflowResult": "success",
+    "GameRevision": "55a0c5f53b8214ca9b059c82993850a42c6c6782",
+    "GameArchiveSHA256": "1e7a57fb5180d107525885a55ea4f323cd0cf9d8cb471d744130b1fa395a0c96",
+    "GameManifestSHA256": "dbb26b44632845db601c451792a9998274a6a926f97e8c0a802ab1c39067e1c5",
+    "CandidateSHA256": "8f3369779e26eacab599f835611dc51b4210533640075bbaed46ad88c4e607bf",
+    "NativeSource": {
+      "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+      "Files": 103,
+      "Newlines": "LF normalized"
+    },
+    "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+    "NetworkHostVerified": true,
+    "FilesVerified": 160,
+    "ExtractedStartup": "PASS in existing hosted package job",
+    "StartupLogSHA256": {
+      "startup.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "startup.stdout.log": "477bb6563cf60a31d071ec363878a2316c9bcf966ec28f3fe51d875136edcc30"
+    }
+  },
+  "PostRestorationCI": {"Core": 42999540021, "Native": 42999540348, "Result": "PASS", "Revision": "7f78ed42867476df02883d7aaf1ebbda8df1f013"},
   "EvidenceRoot": "native-authoring-20261111",
   "Limits": [
     "Windows rendered automation uses Godot-simulated input, not physical devices or OS capture",

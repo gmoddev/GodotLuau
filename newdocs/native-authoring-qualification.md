@@ -58,11 +58,17 @@ The original private archives keep their development marker and original identit
 | Same multiplayer driver with `--dedicated` | 57/57 across headless server and four rendered clients, after dedicated bootstrap correction `81cd1c5`. |
 | `RunRelaySiege.py --scenario menu` | 5/5: native menu, connection failure/retry UI, actual session teardown and scene reload. Headless. |
 | Fresh private game archive extraction/startup | 160 payload hashes match; headless solo startup reaches `[Game:Rules] Ready`, exit 0, no script errors. |
+| [Accepted-input game package 43005466053](https://github.com/gmoddev/GodotLuau/actions/runs/43005466053) | Pass at game revision `55a0c5f`: actual extracted solo startup, empty stderr, 160 verified payload hashes. No checkout paths required by the extracted game. |
 
 Accepted native ZIP SHA256: Windows
 `8f3369779e26eacab599f835611dc51b4210533640075bbaed46ad88c4e607bf`, Linux
 `c5ed75aa34b9990878724652a757ef1a82e53dbc33b29e3392003abbc7a140cb`.
-The accepted-input Relay Siege package job is the remaining packaging step.
+The accepted-input Relay Siege archive has SHA256
+`1e7a57fb5180d107525885a55ea4f323cd0cf9d8cb471d744130b1fa395a0c96`.
+Its manifest identifies game revision `55a0c5f53b8214ca9b059c82993850a42c6c6782`
+and the supplied accepted native/engine inputs. The hosted job performs the
+actual extracted startup; the retained archive/manifest payload verification also
+passes. This is a non-publishing qualification artifact, not an updater channel.
 
 Game source identities are retained separately from the native fingerprint.
 Local/listen checks precede `81cd1c5`, which changes only dedicated startup's
@@ -98,3 +104,7 @@ is not claimed as that cause or fixed by this campaign.
 
 No release or updater distribution is enabled. Dependency pins, admitted hosts,
 network protocols and `main` remain unchanged.
+
+GL-049 is qualified within the delivered ADR-014 slice. The branch is ready for
+review; main integration requires separate authorization. Remaining API/platform
+limits above and the independent GL-050 follow-up stay visible.

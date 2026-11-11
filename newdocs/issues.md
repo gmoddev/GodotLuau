@@ -98,7 +98,7 @@ four successful workflows and independently checked artifacts.
 | GL-046 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Character/security barrier files can appear before their peer-ID payloads are written |
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
-| GL-049 | P2 | Implementation on isolated branch; qualification pending | Native resource/UI/scene authoring requires application GDScript adapters |
+| GL-049 | P2 | Qualified within ADR-014 scope on isolated branch; unmerged | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
 
 ## GL-050: DataStore receive/exit ordering
@@ -129,9 +129,20 @@ The [campaign journal](native-authoring-development.md),
 [ADR-014](adr-014-native-scene-authoring.md) and [API](native-scene-api.md) define
 the isolated implementation. Fixed-family SceneScope construction keeps existing
 ObjectID/VM identity, provides typed resource ownership, and migrates the game's
-ordinary construction into Luau. Native integration, gameplay, sanitizer and
-package evidence are pending. Do not close this issue or claim universal Godot
-API parity from source implementation alone.
+ordinary construction into Luau. Implementation starts at `b8c09bc`; `b6b21a0`
+corrects the environment enum and `81cd1c5` corrects dedicated startup's client-UI
+wait. The [qualification record](native-authoring-qualification.md) and versioned
+receipt establish native Windows/Linux, full-native sanitizers, actual Windows
+local/listen/dedicated play, recovery/menu teardown, accepted native candidate
+`42987296894` and extracted game package `43005466053`. Both accepted Windows
+libraries and the companion match the rendered inputs exactly.
+
+Resolved within this fixed-family API scope on `feature/luau-native-authoring`;
+unmerged. No universal Godot API parity is claimed. Synchronous trusted resource
+loading, unsupported native families/serialization/analyzer declarations,
+Windows LSan and graphical/device limits remain documented. The original
+candidate failures and independent GL-050 finding are preserved, not relabeled
+as fixed by source implementation or the successful retry.
 
 ## GL-048: Relay Siege publication readiness
 
