@@ -1270,6 +1270,110 @@
       "Kind": "Number",
       "Min": 0.001,
       "Max": 10000
+    },
+    {
+      "Class": "Control",
+      "Name": "OffsetLeft",
+      "Native": "offset_left",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Control",
+      "Name": "OffsetRight",
+      "Native": "offset_right",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Control",
+      "Name": "OffsetTop",
+      "Native": "offset_top",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Control",
+      "Name": "OffsetBottom",
+      "Native": "offset_bottom",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Control",
+      "Name": "AnchorLeft",
+      "Native": "anchor_left",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Control",
+      "Name": "AnchorRight",
+      "Native": "anchor_right",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Control",
+      "Name": "AnchorTop",
+      "Native": "anchor_top",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Control",
+      "Name": "AnchorBottom",
+      "Native": "anchor_bottom",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Control",
+      "Name": "GrowHorizontal",
+      "Native": "grow_horizontal",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 2
+    },
+    {
+      "Class": "Control",
+      "Name": "GrowVertical",
+      "Native": "grow_vertical",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 2
+    },
+    {
+      "Class": "Control",
+      "Name": "FocusMode",
+      "Native": "focus_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 2
+    },
+    {
+      "Class": "Control",
+      "Name": "LayoutMode",
+      "Native": "layout_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 3
+    },
+    {
+      "Class": "Control",
+      "Name": "ClipContents",
+      "Native": "clip_contents",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0
     }
   ],
   "Methods": [
@@ -2172,7 +2276,8 @@
       "Native": "from_position",
       "Kind": "Number",
       "Min": 0,
-      "Max": 3600
+      "Max": 3600,
+      "Default": "0.0"
     },
     {
       "Class": "",
@@ -2188,7 +2293,8 @@
       "Native": "include_internal",
       "Kind": "Boolean",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Default": "false"
     },
     {
       "Class": "",
@@ -2231,6 +2337,6 @@
     "PackedScene"
   ],
   "Schema": 1,
-  "PolicySHA256": "115d4506bef5b4285bedc8a209952fb615b28eedee3a1c339cb8d65696601020",
+  "PolicySHA256": "0dff082b83e04fb6ed2cd077ec4e8922077136348c858e58a39d2cc021abbddc",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f"
 }

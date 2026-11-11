@@ -1,6 +1,6 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: 115d4506bef5b4285bedc8a209952fb615b28eedee3a1c339cb8d65696601020
-type NativeVector2 = { X: number, Y: number }
+-- Policy SHA256: 0dff082b83e04fb6ed2cd077ec4e8922077136348c858e58a39d2cc021abbddc
+export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number
     Y: number
@@ -15,7 +15,7 @@ end
 declare Vector3: { new: (number, number, number) -> NativeVector3 }
 declare Vector2: { new: (number, number) -> NativeVector2 }
 declare Color3: { new: (number, number, number) -> NativeColor3 }
-type NativeConnection = { Disconnect: (self: NativeConnection) -> (), Connected: boolean }
+export type NativeConnection = { Disconnect: (self: NativeConnection) -> (), Connected: boolean }
 declare class NativeObject
 end
 declare class NativeNode extends NativeObject
@@ -73,14 +73,25 @@ declare class NativeCollisionShape3D extends NativeNode3D
     Disabled: boolean
 end
 declare class NativeControl extends NativeCanvasItem
-    Visible: boolean
     Position: NativeVector2
     Size: NativeVector2
     MinSize: NativeVector2
     MouseFilter: number
-    Modulate: NativeColor3
     FontSize: number
     Font: NativeFont?
+    OffsetLeft: number
+    OffsetRight: number
+    OffsetTop: number
+    OffsetBottom: number
+    AnchorLeft: number
+    AnchorRight: number
+    AnchorTop: number
+    AnchorBottom: number
+    GrowHorizontal: number
+    GrowVertical: number
+    FocusMode: number
+    LayoutMode: number
+    ClipContents: boolean
 end
 declare class NativeEnvironment extends NativeResource
 end
@@ -289,17 +300,17 @@ declare class NativeVBoxContainer extends NativeBoxContainer
 end
 declare class NativeVSlider extends NativeSlider
 end
-type NativeArrayMeshProperties = {
+export type NativeArrayMeshProperties = {
 }
-type NativeAudioStreamProperties = {
+export type NativeAudioStreamProperties = {
 }
-type NativeAudioStreamPlayerProperties = {
+export type NativeAudioStreamPlayerProperties = {
     Name: (string)?,
     Stream: (NativeAudioStream?)?,
     VolumeDb: (number)?,
     PitchScale: (number)?,
 }
-type NativeBaseButtonProperties = {
+export type NativeBaseButtonProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -313,13 +324,26 @@ type NativeBaseButtonProperties = {
     Disabled: (boolean)?,
     ToggleMode: (boolean)?,
     ButtonPressed: (boolean)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeBaseMaterial3DProperties = {
+export type NativeBaseMaterial3DProperties = {
     AlbedoTexture: (NativeTexture2D?)?,
     Metallic: (number)?,
     Transparency: (number)?,
 }
-type NativeBoxContainerProperties = {
+export type NativeBoxContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -331,14 +355,27 @@ type NativeBoxContainerProperties = {
     FullRect: (boolean)?,
     Separation: (number)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeBoxMeshProperties = {
+export type NativeBoxMeshProperties = {
     Size: (NativeVector3)?,
 }
-type NativeBoxShape3DProperties = {
+export type NativeBoxShape3DProperties = {
     Size: (NativeVector3)?,
 }
-type NativeButtonProperties = {
+export type NativeButtonProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -354,8 +391,21 @@ type NativeButtonProperties = {
     Disabled: (boolean)?,
     ToggleMode: (boolean)?,
     ButtonPressed: (boolean)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeCamera3DProperties = {
+export type NativeCamera3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -365,26 +415,26 @@ type NativeCamera3DProperties = {
     Near: (number)?,
     Far: (number)?,
 }
-type NativeCanvasItemProperties = {
+export type NativeCanvasItemProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Modulate: (NativeColor3)?,
 }
-type NativeCanvasLayerProperties = {
+export type NativeCanvasLayerProperties = {
     Name: (string)?,
     Layer: (number)?,
 }
-type NativeCapsuleMeshProperties = {
+export type NativeCapsuleMeshProperties = {
     Radius: (number)?,
     Height: (number)?,
     RadialSegments: (number)?,
     Rings: (number)?,
 }
-type NativeCapsuleShape3DProperties = {
+export type NativeCapsuleShape3DProperties = {
     Radius: (number)?,
     Height: (number)?,
 }
-type NativeCenterContainerProperties = {
+export type NativeCenterContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -395,8 +445,21 @@ type NativeCenterContainerProperties = {
     FontSize: (number)?,
     FullRect: (boolean)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeCheckBoxProperties = {
+export type NativeCheckBoxProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -412,8 +475,21 @@ type NativeCheckBoxProperties = {
     Disabled: (boolean)?,
     ToggleMode: (boolean)?,
     ButtonPressed: (boolean)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeCheckButtonProperties = {
+export type NativeCheckButtonProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -429,8 +505,21 @@ type NativeCheckButtonProperties = {
     Disabled: (boolean)?,
     ToggleMode: (boolean)?,
     ButtonPressed: (boolean)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeCollisionObject3DProperties = {
+export type NativeCollisionObject3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -439,7 +528,7 @@ type NativeCollisionObject3DProperties = {
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
 }
-type NativeCollisionShape3DProperties = {
+export type NativeCollisionShape3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -448,7 +537,7 @@ type NativeCollisionShape3DProperties = {
     Shape: (NativeShape3D?)?,
     Disabled: (boolean)?,
 }
-type NativeColorRectProperties = {
+export type NativeColorRectProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -460,8 +549,21 @@ type NativeColorRectProperties = {
     FullRect: (boolean)?,
     Color: (NativeColor3)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeContainerProperties = {
+export type NativeContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -472,8 +574,21 @@ type NativeContainerProperties = {
     FontSize: (number)?,
     FullRect: (boolean)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeControlProperties = {
+export type NativeControlProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -484,19 +599,32 @@ type NativeControlProperties = {
     FontSize: (number)?,
     FullRect: (boolean)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeCylinderMeshProperties = {
+export type NativeCylinderMeshProperties = {
     TopRadius: (number)?,
     BottomRadius: (number)?,
     Height: (number)?,
     RadialSegments: (number)?,
     Rings: (number)?,
 }
-type NativeCylinderShape3DProperties = {
+export type NativeCylinderShape3DProperties = {
     Radius: (number)?,
     Height: (number)?,
 }
-type NativeDirectionalLight3DProperties = {
+export type NativeDirectionalLight3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -506,16 +634,16 @@ type NativeDirectionalLight3DProperties = {
     Energy: (number)?,
     ShadowEnabled: (boolean)?,
 }
-type NativeEnvironmentProperties = {
+export type NativeEnvironmentProperties = {
     BackgroundMode: (number)?,
     BackgroundColor: (NativeColor3)?,
     AmbientLightSource: (number)?,
     AmbientLightColor: (NativeColor3)?,
     AmbientLightEnergy: (number)?,
 }
-type NativeFontProperties = {
+export type NativeFontProperties = {
 }
-type NativeGeometryInstance3DProperties = {
+export type NativeGeometryInstance3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -523,7 +651,7 @@ type NativeGeometryInstance3DProperties = {
     Visible: (boolean)?,
     Material: (NativeMaterial?)?,
 }
-type NativeGridContainerProperties = {
+export type NativeGridContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -535,8 +663,21 @@ type NativeGridContainerProperties = {
     FullRect: (boolean)?,
     Font: (NativeFont?)?,
     Columns: (number)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeHBoxContainerProperties = {
+export type NativeHBoxContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -548,8 +689,21 @@ type NativeHBoxContainerProperties = {
     FullRect: (boolean)?,
     Separation: (number)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeHSliderProperties = {
+export type NativeHSliderProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -564,8 +718,21 @@ type NativeHSliderProperties = {
     MaxValue: (number)?,
     Value: (number)?,
     Step: (number)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeLabelProperties = {
+export type NativeLabelProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -577,8 +744,21 @@ type NativeLabelProperties = {
     FullRect: (boolean)?,
     Text: (string)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeLabel3DProperties = {
+export type NativeLabel3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -590,7 +770,7 @@ type NativeLabel3DProperties = {
     FontSize: (number)?,
     Font: (NativeFont?)?,
 }
-type NativeLight3DProperties = {
+export type NativeLight3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -600,7 +780,7 @@ type NativeLight3DProperties = {
     Energy: (number)?,
     ShadowEnabled: (boolean)?,
 }
-type NativeLineEditProperties = {
+export type NativeLineEditProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -613,8 +793,21 @@ type NativeLineEditProperties = {
     Text: (string)?,
     PlaceholderText: (string)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeMarginContainerProperties = {
+export type NativeMarginContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -625,12 +818,25 @@ type NativeMarginContainerProperties = {
     FontSize: (number)?,
     FullRect: (boolean)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeMaterialProperties = {
+export type NativeMaterialProperties = {
 }
-type NativeMeshProperties = {
+export type NativeMeshProperties = {
 }
-type NativeMeshInstance3DProperties = {
+export type NativeMeshInstance3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -639,10 +845,10 @@ type NativeMeshInstance3DProperties = {
     Mesh: (NativeMesh?)?,
     Material: (NativeMaterial?)?,
 }
-type NativeNodeProperties = {
+export type NativeNodeProperties = {
     Name: (string)?,
 }
-type NativeNode2DProperties = {
+export type NativeNode2DProperties = {
     Name: (string)?,
     Position: (NativeVector2)?,
     RotationDegrees: (number)?,
@@ -650,16 +856,16 @@ type NativeNode2DProperties = {
     Visible: (boolean)?,
     Modulate: (NativeColor3)?,
 }
-type NativeNode3DProperties = {
+export type NativeNode3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
 }
-type NativeObjectProperties = {
+export type NativeObjectProperties = {
 }
-type NativeOmniLight3DProperties = {
+export type NativeOmniLight3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -670,9 +876,9 @@ type NativeOmniLight3DProperties = {
     ShadowEnabled: (boolean)?,
     Range: (number)?,
 }
-type NativePackedSceneProperties = {
+export type NativePackedSceneProperties = {
 }
-type NativePanelContainerProperties = {
+export type NativePanelContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -683,8 +889,21 @@ type NativePanelContainerProperties = {
     FontSize: (number)?,
     FullRect: (boolean)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativePhysicsBody3DProperties = {
+export type NativePhysicsBody3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -693,12 +912,12 @@ type NativePhysicsBody3DProperties = {
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
 }
-type NativePlaneMeshProperties = {
+export type NativePlaneMeshProperties = {
     Size: (NativeVector2)?,
 }
-type NativePrimitiveMeshProperties = {
+export type NativePrimitiveMeshProperties = {
 }
-type NativeProgressBarProperties = {
+export type NativeProgressBarProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -713,11 +932,24 @@ type NativeProgressBarProperties = {
     MaxValue: (number)?,
     Value: (number)?,
     Step: (number)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeQuadMeshProperties = {
+export type NativeQuadMeshProperties = {
     Size: (NativeVector2)?,
 }
-type NativeRangeProperties = {
+export type NativeRangeProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -732,12 +964,25 @@ type NativeRangeProperties = {
     MaxValue: (number)?,
     Value: (number)?,
     Step: (number)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeRefCountedProperties = {
+export type NativeRefCountedProperties = {
 }
-type NativeResourceProperties = {
+export type NativeResourceProperties = {
 }
-type NativeRigidBody3DProperties = {
+export type NativeRigidBody3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -749,7 +994,7 @@ type NativeRigidBody3DProperties = {
     GravityScale: (number)?,
     Freeze: (boolean)?,
 }
-type NativeScrollContainerProperties = {
+export type NativeScrollContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -760,10 +1005,23 @@ type NativeScrollContainerProperties = {
     FontSize: (number)?,
     FullRect: (boolean)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeShape3DProperties = {
+export type NativeShape3DProperties = {
 }
-type NativeSliderProperties = {
+export type NativeSliderProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -778,8 +1036,21 @@ type NativeSliderProperties = {
     MaxValue: (number)?,
     Value: (number)?,
     Step: (number)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeSoftBody3DProperties = {
+export type NativeSoftBody3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -792,16 +1063,16 @@ type NativeSoftBody3DProperties = {
     SimulationPrecision: (number)?,
     TotalMass: (number)?,
 }
-type NativeSphereMeshProperties = {
+export type NativeSphereMeshProperties = {
     Radius: (number)?,
     Height: (number)?,
     RadialSegments: (number)?,
     Rings: (number)?,
 }
-type NativeSphereShape3DProperties = {
+export type NativeSphereShape3DProperties = {
     Radius: (number)?,
 }
-type NativeSpotLight3DProperties = {
+export type NativeSpotLight3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -812,7 +1083,7 @@ type NativeSpotLight3DProperties = {
     ShadowEnabled: (boolean)?,
     Range: (number)?,
 }
-type NativeSprite2DProperties = {
+export type NativeSprite2DProperties = {
     Name: (string)?,
     Texture: (NativeTexture2D?)?,
     Position: (NativeVector2)?,
@@ -821,7 +1092,7 @@ type NativeSprite2DProperties = {
     Visible: (boolean)?,
     Modulate: (NativeColor3)?,
 }
-type NativeSprite3DProperties = {
+export type NativeSprite3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -831,7 +1102,7 @@ type NativeSprite3DProperties = {
     Texture: (NativeTexture2D?)?,
     PixelSize: (number)?,
 }
-type NativeSpriteBase3DProperties = {
+export type NativeSpriteBase3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -840,7 +1111,7 @@ type NativeSpriteBase3DProperties = {
     Material: (NativeMaterial?)?,
     PixelSize: (number)?,
 }
-type NativeStandardMaterial3DProperties = {
+export type NativeStandardMaterial3DProperties = {
     Color: (NativeColor3)?,
     Roughness: (number)?,
     EmissionEnabled: (boolean)?,
@@ -849,7 +1120,7 @@ type NativeStandardMaterial3DProperties = {
     Metallic: (number)?,
     Transparency: (number)?,
 }
-type NativeStaticBody3DProperties = {
+export type NativeStaticBody3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -858,11 +1129,11 @@ type NativeStaticBody3DProperties = {
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
 }
-type NativeTextureProperties = {
+export type NativeTextureProperties = {
 }
-type NativeTexture2DProperties = {
+export type NativeTexture2DProperties = {
 }
-type NativeTextureRectProperties = {
+export type NativeTextureRectProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -876,8 +1147,21 @@ type NativeTextureRectProperties = {
     ExpandMode: (number)?,
     StretchMode: (number)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeVBoxContainerProperties = {
+export type NativeVBoxContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -889,8 +1173,21 @@ type NativeVBoxContainerProperties = {
     FullRect: (boolean)?,
     Separation: (number)?,
     Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeVSliderProperties = {
+export type NativeVSliderProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Position: (NativeVector2)?,
@@ -905,15 +1202,28 @@ type NativeVSliderProperties = {
     MaxValue: (number)?,
     Value: (number)?,
     Step: (number)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
 }
-type NativeVisualInstance3DProperties = {
+export type NativeVisualInstance3DProperties = {
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
 }
-type NativeWorldEnvironmentProperties = {
+export type NativeWorldEnvironmentProperties = {
     Name: (string)?,
     Environment: (NativeEnvironment?)?,
 }
@@ -1117,7 +1427,20 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeRange, Property: "MinValue") -> number) &
         ((self: NativeSceneScope, Target: NativeRange, Property: "MaxValue") -> number) &
         ((self: NativeSceneScope, Target: NativeRange, Property: "Value") -> number) &
-        ((self: NativeSceneScope, Target: NativeRange, Property: "Step") -> number)
+        ((self: NativeSceneScope, Target: NativeRange, Property: "Step") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "OffsetLeft") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "OffsetRight") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "OffsetTop") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "OffsetBottom") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "AnchorLeft") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "AnchorRight") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "AnchorTop") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "AnchorBottom") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "GrowHorizontal") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "GrowVertical") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "FocusMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "LayoutMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "ClipContents") -> boolean)
     Call: ((self: NativeSceneScope, Target: NativeNode3D, Method: "GetGlobalPosition") -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeControl, Method: "GetGlobalPosition") -> NativeVector2) &
         ((self: NativeSceneScope, Target: NativeNode3D, Method: "ToLocal", global_point: NativeVector3) -> NativeVector3) &
@@ -1171,5 +1494,5 @@ declare class NativeSceneScope extends NativeNode3D
     Stop: (self: NativeSceneScope, Player: NativeAudioStreamPlayer) -> ()
     Impulse: (self: NativeSceneScope, Body: NativeRigidBody3D, Impulse: NativeVector3) -> ()
 end
-declare Scene: { new: (Parent: any) -> NativeSceneScope, Classes: () -> {string},
-    Describe: (Class: string) -> { [string]: any }?, Enums: {Control: {MouseFilter: {MOUSE_FILTER_STOP: number, MOUSE_FILTER_PASS: number, MOUSE_FILTER_IGNORE: number}}, TextureRect: {ExpandMode: {EXPAND_KEEP_SIZE: number, EXPAND_IGNORE_SIZE: number, EXPAND_FIT_WIDTH: number, EXPAND_FIT_WIDTH_PROPORTIONAL: number, EXPAND_FIT_HEIGHT: number, EXPAND_FIT_HEIGHT_PROPORTIONAL: number}, StretchMode: {STRETCH_SCALE: number, STRETCH_TILE: number, STRETCH_KEEP: number, STRETCH_KEEP_CENTERED: number, STRETCH_KEEP_ASPECT: number, STRETCH_KEEP_ASPECT_CENTERED: number, STRETCH_KEEP_ASPECT_COVERED: number}}, BaseMaterial3D: {Transparency: {TRANSPARENCY_DISABLED: number, TRANSPARENCY_ALPHA: number, TRANSPARENCY_ALPHA_SCISSOR: number, TRANSPARENCY_ALPHA_HASH: number, TRANSPARENCY_ALPHA_DEPTH_PRE_PASS: number, TRANSPARENCY_MAX: number}}} }
+declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string},
+    PolicySHA256: string, ApiSHA256: string, Describe: (Class: string) -> { [string]: any }?, Enums: {Control: {MouseFilter: {MOUSE_FILTER_STOP: number, MOUSE_FILTER_PASS: number, MOUSE_FILTER_IGNORE: number}}, TextureRect: {ExpandMode: {EXPAND_KEEP_SIZE: number, EXPAND_IGNORE_SIZE: number, EXPAND_FIT_WIDTH: number, EXPAND_FIT_WIDTH_PROPORTIONAL: number, EXPAND_FIT_HEIGHT: number, EXPAND_FIT_HEIGHT_PROPORTIONAL: number}, StretchMode: {STRETCH_SCALE: number, STRETCH_TILE: number, STRETCH_KEEP: number, STRETCH_KEEP_CENTERED: number, STRETCH_KEEP_ASPECT: number, STRETCH_KEEP_ASPECT_CENTERED: number, STRETCH_KEEP_ASPECT_COVERED: number}}, BaseMaterial3D: {Transparency: {TRANSPARENCY_DISABLED: number, TRANSPARENCY_ALPHA: number, TRANSPARENCY_ALPHA_SCISSOR: number, TRANSPARENCY_ALPHA_HASH: number, TRANSPARENCY_ALPHA_DEPTH_PRE_PASS: number, TRANSPARENCY_MAX: number}}} }

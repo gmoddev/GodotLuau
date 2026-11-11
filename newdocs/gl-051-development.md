@@ -62,3 +62,25 @@ Compilation, generated-type analysis, new adversarial/native cases, editor
 integration and migrated gameplay are not yet qualified. Start fresh hosted
 compilation/regression while independent editor/fixture work continues. Existing
 GL-049 tests remain intact; new behavior receives separate assertions.
+
+## Typed declarations and first adversarial fixtures
+
+The next policy revision adds bounded native UI anchors/offsets needed by real
+serialized controls. Metadata reports 4.3 offsets as integers, so their policy
+matches that pinned type. Optional native arguments now use checked pinned
+defaults rather than silently inheriting a newer host default.
+
+Generation and nine adversarial policy tests pass locally. A real pinned-Luau
+type-checker probe is added for emitted definitions and positive/negative calls;
+its hosted execution is pending. The new native Integration cases cover texture/
+material reuse, metadata/enums, native methods, typed signals, PackedScene
+preflight, clone/reparent, foreign owner/domain denial and callback retirement.
+Godot headless syntax checking passes after correcting a fixture variable that
+shadowed the native Button type; the failed parse log is retained.
+
+First native run `43039608365` fails Linux **before C++ compilation**: the Azure
+Ubuntu mirror stalls downloading clang-19 packages until the existing five-minute
+provisioning deadline. The retained job log establishes that environmental cause.
+Windows continues compiling. No product defect or deadline change is inferred.
+The next changed-source run includes the new fixtures; do not relabel this failed
+provisioning attempt as runtime qualification.

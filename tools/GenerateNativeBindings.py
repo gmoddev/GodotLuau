@@ -6,6 +6,7 @@ writing. Changing policy is a native capability change requiring qualification.
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -74,11 +75,16 @@ def Build(Policy, Api):
             return 'ResourceValue'
         raise ValueError('Unsupported native Variant signature: ' + Type)
 
-    def Value(Name, Type, Bounds=None):
+    def Value(Name, Type, Bounds=None, Default=None):
         K = Kind(Type)
         Low, High = Bounds if Bounds else ([0, 8192] if K == 'Text' else [-100000, 100000])
+        Require(math.isfinite(Low) and math.isfinite(High) and Low<=High, 'Invalid argument bounds: ' + Name)
+        if Default is not None:
+            Require(K in ['Number','Integer','Boolean'] and re.fullmatch(r'-?[0-9]+(?:\.[0-9]+)?|true|false',Default), 'Unsupported native default: ' + Name)
+            if K in ['Number','Integer']:
+                Require(Low<=float(Default)<=High, 'Default outside policy bounds: ' + Name)
         return {'Class': '', 'Name': Name, 'Native': Name, 'Kind': K, 'Min': Low, 'Max': High,
-                **({'ResourceClass': Type} if K == 'ResourceValue' else {})}
+                **({'ResourceClass': Type} if K == 'ResourceValue' else {}), **({'Default':Default} if Default is not None else {})}
 
     Construct = {}
     Selected = set(Policy['LoadTypes'])
@@ -105,7 +111,7 @@ def Build(Policy, Api):
             Require(M.get('getter') and M.get('setter'), f'Property must support checked read/write: {C}.{N}')
             if P['Kind'] == 'ResourceValue':
                 Require(all(Inherits(T, P['ResourceClass']) or Inherits(P['ResourceClass'], T) for T in M['type'].split(',')), f'Resource type mismatch: {C}.{N}')
-        Require(P.get('Min', 0) <= P.get('Max', 0), f'Invalid bounds: {C}.{N}')
+        Require(all(math.isfinite(P.get(K,0)) for K in ['Min','Max']) and P.get('Min', 0) <= P.get('Max', 0), f'Invalid bounds: {C}.{N}')
         Properties.append(P)
         Selected.add(C)
         if P.get('ResourceClass'):
@@ -120,7 +126,7 @@ def Build(Policy, Api):
         First = len(Arguments)
         Required = 0
         for A in Args:
-            Arguments.append(Value(A['name'], A['type'], P.get('Bounds', {}).get(A['name'])))
+            Arguments.append(Value(A['name'], A['type'], P.get('Bounds', {}).get(A['name']), A.get('default_value')))
             Required += 'default_value' not in A
         Return = M.get('return_value', {}).get('type')
         Methods.append({**P, 'Arguments': len(Args), 'Required': Required, 'FirstArgument': First,
@@ -156,7 +162,7 @@ def Quote(Value):
 
 def PropertyLine(P):
     return '{' + ','.join([Quote(P['Class']), Quote(P['Name']), Quote(P['Native']), P['Kind'],
-                          str(P.get('Min', 0)), str(P.get('Max', 0)), Quote(P.get('ResourceClass'))]) + '}'
+                          str(P.get('Min', 0)), str(P.get('Max', 0)), Quote(P.get('ResourceClass')), Quote(P.get('Default'))]) + '}'
 
 
 def Type(P, Mutable=False):
@@ -199,22 +205,23 @@ def Generate(Policy, Api):
         return list(Values.values())
 
     T = ['-- Generated approved native definitions. Load as a definitions file, never require it.',
-         '-- Policy SHA256: ' + PolicyHash, 'type NativeVector2 = { X: number, Y: number }',
+         '-- Policy SHA256: ' + PolicyHash, 'export type NativeVector2 = { X: number, Y: number }',
          'declare class NativeVector3', '    X: number', '    Y: number', '    Z: number',
          '    Lerp: (self: NativeVector3, Other: NativeVector3, Alpha: number) -> NativeVector3', 'end',
          'declare class NativeColor3', '    R: number', '    G: number', '    B: number', 'end',
          'declare Vector3: { new: (number, number, number) -> NativeVector3 }',
          'declare Vector2: { new: (number, number) -> NativeVector2 }',
          'declare Color3: { new: (number, number, number) -> NativeColor3 }',
-         'type NativeConnection = { Disconnect: (self: NativeConnection) -> (), Connected: boolean }']
+         'export type NativeConnection = { Disconnect: (self: NativeConnection) -> (), Connected: boolean }']
     # Base classes precede their derived declarations.
     Ordered = sorted(D['Classes'], key=lambda C: (sum(Inherits(C['Name'], N) for N in ByName), C['Name']))
     for C in Ordered:
         N, Base = C['Name'], C['Base']
         T.append('declare class Native' + N + (' extends Native' + Base if Base else ''))
         if not C['Resource']:
+            Inherited={P['Name']:Type(P) for P in Effective(Base)} if Base else {}
             for P in D['Properties']:
-                if P['Class'] == N and P['Name'] != 'FullRect':
+                if P['Class'] == N and P['Name'] != 'FullRect' and Inherited.get(P['Name'])!=Type(P):
                     T.append('    ' + P['Name'] + ': ' + Type(P))
             if N == 'Node':
                 T += ['    Parent: NativeNode?', '    ClassName: string', '    Destroy: (self: NativeNode) -> ()',
@@ -225,7 +232,7 @@ def Generate(Policy, Api):
         if C['Resource']:
             T += ['declare class MutableNative' + N + ' extends Native' + N, 'end']
     for C in D['Classes']:
-        T += ['type Native' + C['Name'] + 'Properties = {']
+        T += ['export type Native' + C['Name'] + 'Properties = {']
         T += ['    ' + P['Name'] + ': (' + Type(P) + ')?,' for P in Effective(C['Name'])]
         T += ['}']
     T += ['declare class NativeSceneScope extends NativeNode3D']
@@ -265,8 +272,8 @@ def Generate(Policy, Api):
     for C in D['Constants']:
         Enums.setdefault(C['Class'], {}).setdefault(C['Enum'], {})[C['Name']] = C['Value']
     EnumType = '{' + ', '.join(C + ': {' + ', '.join(E + ': {' + ', '.join(N + ': number' for N in V) + '}' for E, V in Es.items()) + '}' for C, Es in Enums.items()) + '}'
-    T += ['declare Scene: { new: (Parent: any) -> NativeSceneScope, Classes: () -> {string},',
-          '    Describe: (Class: string) -> { [string]: any }?, Enums: ' + EnumType + ' }']
+    T += ['declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string},',
+          '    PolicySHA256: string, ApiSHA256: string, Describe: (Class: string) -> { [string]: any }?, Enums: ' + EnumType + ' }']
     D['Schema'] = 1
     D['PolicySHA256'] = PolicyHash
     D['ApiSHA256'] = Policy['ApiSHA256']

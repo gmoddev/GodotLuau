@@ -12,6 +12,7 @@ struct Property {
     double Min = 0;
     double Max = 0;
     const char* ResourceClass = nullptr;
+    const char* Default = nullptr;
 };
 struct Class { const char* Name; const char* Base; bool Construct; bool Resource; };
 struct Method {

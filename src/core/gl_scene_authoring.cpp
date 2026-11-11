@@ -88,6 +88,15 @@ using ResourceHandle=std::shared_ptr<GLSceneResource>;
 ResourceHandle* HandleAt(lua_State* Thread, int Index) {
     return _gl_has_metatable(Thread,Index,"SceneResource") ? static_cast<ResourceHandle*>(lua_touserdata(Thread,Index)) : nullptr;
 }
+int ResourceEqual(lua_State* Thread) {
+    auto Left=HandleAt(Thread,1), Right=HandleAt(Thread,2);
+    bool Equal=false;
+    if (Left && Right && *Left && *Right && (*Left)->Value.is_valid() && (*Right)->Value.is_valid()) {
+        auto A=Resolve<SceneScope>((*Left)->Scope), B=Resolve<SceneScope>((*Right)->Scope);
+        Equal=A && B && A->CanUse(Thread) && B->CanUse(Thread) && (*Left)->Value==(*Right)->Value;
+    }
+    lua_pushboolean(Thread,Equal); return 1;
+}
 void PushResource(lua_State* Thread, SceneScope* Scope, Ref<Resource> Value, bool ReadOnly=false) {
     if (Value.is_null()) { lua_pushnil(Thread); return; }
     Scope->Resources.erase(std::remove_if(Scope->Resources.begin(),Scope->Resources.end(),[](const auto& Entry){return Entry.expired();}),Scope->Resources.end());
@@ -312,14 +321,21 @@ int Call(lua_State* Thread) {
     int Count=lua_gettop(Thread)-3;
     if (Count<Item->Required || Count>Item->Arguments) luaL_error(Thread,"[Scene:Arguments] %s requires %d..%d arguments",Name,Item->Required,Item->Arguments);
     std::array<Variant,4> Values; std::array<const Variant*,4> Pointers;
-    for (int Index=0;Index<Count;++Index) {
-        Values[Index]=ReadValue(Thread,Scope,GLNative::Arguments[Item->FirstArgument+Index],4+Index);
+    for (int Index=0;Index<Item->Arguments;++Index) {
+        const auto& Argument=GLNative::Arguments[Item->FirstArgument+Index];
+        if (Index<Count) Values[Index]=ReadValue(Thread,Scope,Argument,4+Index);
+        else {
+            if (!Argument.Default) luaL_error(Thread,"[Scene:Arguments] Missing required %s",Argument.Name);
+            if (Argument.Type==Boolean) Values[Index]=!strcmp(Argument.Default,"true");
+            else if (Argument.Type==Integer) Values[Index]=String(Argument.Default).to_int();
+            else Values[Index]=String(Argument.Default).to_float();
+        }
         Pointers[Index]=&Values[Index];
     }
     uint64_t ScopeId=Scope->get_instance_id();
     Ref<Resource> KeepAlive=Object::cast_to<Resource>(Target);
     Variant Receiver=Target, Result; GDExtensionCallError Error{};
-    Receiver.callp(Item->Native,Pointers.data(),Count,Result,Error);
+    Receiver.callp(Item->Native,Pointers.data(),Item->Arguments,Result,Error);
     if (Error.error!=GDEXTENSION_CALL_OK) luaL_error(Thread,"[Scene:Invocation] %s rejected (code %d, argument %d)",Name,int(Error.error),Error.argument);
     Scope=Resolve<SceneScope>(ScopeId);
     if (!Scope || !Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Lifetime] Owner retired during %s",Name);
@@ -753,7 +769,8 @@ void SceneScope::OnSignal(int Reference, int Signature, const std::vector<Varian
 }
 void GLRegisterScene(lua_State* Thread) {
     luaL_newmetatable(Thread,"SceneResource");
-    lua_pushliteral(Thread,"SceneResource"); lua_setfield(Thread,-2,"__type"); lua_pop(Thread,1);
+    lua_pushliteral(Thread,"SceneResource"); lua_setfield(Thread,-2,"__type");
+    lua_pushcfunction(Thread,ResourceEqual,"ResourceIdentity"); lua_setfield(Thread,-2,"__eq"); lua_pop(Thread,1);
     lua_newtable(Thread);
     lua_pushcfunction(Thread,Root,"new"); lua_setfield(Thread,-2,"new");
     lua_pushcfunction(Thread,Classes,"Classes"); lua_setfield(Thread,-2,"Classes");
