@@ -98,7 +98,7 @@ four successful workflows and independently checked artifacts.
 | GL-046 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Character/security barrier files can appear before their peer-ID payloads are written |
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
-| GL-049 | P2 | Qualified within ADR-014 scope on isolated branch; unmerged | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
+| GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
 
 ## GL-050: DataStore receive/exit ordering
@@ -137,8 +137,8 @@ local/listen/dedicated play, recovery/menu teardown, accepted native candidate
 `42987296894` and extracted game package `43005466053`. Both accepted Windows
 libraries and the companion match the rendered inputs exactly.
 
-Resolved within this fixed-family API scope on `feature/luau-native-authoring`;
-unmerged. No universal Godot API parity is claimed. Synchronous trusted resource
+Resolved within this fixed-family API scope and [integrated normally](gl-049-main-integration.md),
+preserving all 15 commits on `feature/luau-native-authoring`. No universal Godot API parity is claimed. Synchronous trusted resource
 loading, unsupported native families/serialization/analyzer declarations,
 Windows LSan and graphical/device limits remain documented. The original
 candidate failures and independent GL-050 finding are preserved, not relabeled

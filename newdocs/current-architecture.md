@@ -1,6 +1,6 @@
 # Current architecture
 
-On `feature/luau-native-authoring`, `gl_scene_authoring.cpp` adds an opt-in
+The [integrated GL-049 change](gl-049-main-integration.md) in `gl_scene_authoring.cpp` adds an opt-in
 SceneScope in the existing Godot hierarchy, fixed typed native properties and
 Ref-backed resource slots. Existing ObjectDB/GLReference/shared domains remain
 authoritative. Owner invalidation retires scopes; network publication excludes

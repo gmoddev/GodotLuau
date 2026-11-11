@@ -1,6 +1,7 @@
 # Native authoring qualification — 2026-11-11
 
-Branch `feature/luau-native-authoring` remains unmerged. The reusable surface is
+Qualified branch `feature/luau-native-authoring` is now [integrated normally](gl-049-main-integration.md).
+This record preserves its branch evidence; fresh integration CI is recorded separately. The reusable surface is
 the fixed-family [API](native-scene-api.md), under [ADR-014](adr-014-native-scene-authoring.md).
 The [journal](native-authoring-development.md) preserves the development sequence
 and failed attempts; the [receipt](evidence/native-authoring/qualification-20261111.json)
@@ -102,9 +103,9 @@ cause remains unproven. No storage behavior, timeout or assertion is weakened.
 The separate source finding [GL-050](issues.md#gl-050-datastore-receiveexit-ordering)
 is not claimed as that cause or fixed by this campaign.
 
-No release or updater distribution is enabled. Dependency pins, admitted hosts,
-network protocols and `main` remain unchanged.
+No release or updater distribution is enabled. Branch qualification changed no
+dependency pins, admitted hosts or network protocols. The later authorized main
+merge preserves those exact runtime inputs.
 
-GL-049 is qualified within the delivered ADR-014 slice. The branch is ready for
-review; main integration requires separate authorization. Remaining API/platform
+GL-049 is qualified and integrated within the delivered ADR-014 slice. Remaining API/platform
 limits above and the independent GL-050 follow-up stay visible.

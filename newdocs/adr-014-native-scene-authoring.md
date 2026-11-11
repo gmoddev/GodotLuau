@@ -1,6 +1,7 @@
 # ADR-014: Owner-scoped native scene authoring
 
-Status: accepted for implementation on `feature/luau-native-authoring`.
+Status: accepted and [integrated into main](gl-049-main-integration.md), preserving
+qualified `feature/luau-native-authoring`.
 Baseline: `5d5bb84cfecfff46d7d5048db3171a199fd754be`.
 
 The existing Instance bridge resolves Nodes through ObjectDB, converts scalar,

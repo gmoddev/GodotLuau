@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-11",
+  "Repository": "https://github.com/gmoddev/GodotLuau",
+  "MainBaseline": "5d5bb84cfecfff46d7d5048db3171a199fd754be",
+  "SourceBranch": "feature/luau-native-authoring",
+  "SourceHead": "99fdfcfc0cdec6532c5b014bc6dbf3526af8dda7",
+  "MergeCommit": "f11c4537bc705096c2872b209b805fbc2cb215ab",
+  "MergeTree": "fec5e04fd8835a1de8784fc46ecf405af0788f8b",
+  "QualifiedTree": "fec5e04fd8835a1de8784fc46ecf405af0788f8b",
+  "PreservedFeatureCommits": [
+    "b8c09bcf18e6dad807a3768e7d01c59c3170936f",
+    "4d54fff98e474650152e07739e4f1b3a48d1a240",
+    "9bd790f54b68f3e19273faef947a25150ec9205e",
+    "c9f680746afca627f214a2fa1729986f8b7812ec",
+    "0329372b0e44ab7588216260f5e78e642dc42001",
+    "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+    "76daf64e4734ae762410a10c90951b375423be45",
+    "c4f07635814d78e0106b8658d3ff234d81a42d08",
+    "fd03d7cfb630f18da0b8fd5cc3638ad1569aff54",
+    "81cd1c5b52629d3e015dead318493d50c21b3b62",
+    "7f78ed42867476df02883d7aaf1ebbda8df1f013",
+    "76613ab02d7a390ddba36800a3048beb5d4ff93b",
+    "00c429bf47f60ddc911c83b43503945a5f051366",
+    "55a0c5f53b8214ca9b059c82993850a42c6c6782",
+    "99fdfcfc0cdec6532c5b014bc6dbf3526af8dda7"
+  ],
+  "NativeSource": {
+    "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+    "Files": 103,
+    "Newlines": "LF normalized"
+  },
+  "RuntimeFixturesGameplayAndBuildInputsEqualSource": true,
+  "OriginalQualificationBlob": "195f01ffb3dae2116e76f5c9e49b89fb1f8d1e27",
+  "ReusedRuns": {
+    "Core": 42999540021,
+    "Native": 42999540348,
+    "FullNativeSanitizers": 42987292678,
+    "AcceptedCandidate": 42987296894,
+    "GamePackage": 43005466053
+  },
+  "PostMergeCI": {
+    "Status": "Pending push and fresh core/native completion"
+  },
+  "ReleasePublication": "Disabled; no workflow dispatched",
+  "UpdaterDistribution": "Fail-closed; unchanged",
+  "Scope": "Exact qualified runtime integration; documentation-only integration notes; original failures and limitations retained"
+}

@@ -33,7 +33,7 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-The unmerged [Luau-first authoring campaign](native-authoring-development.md)
+The [normally integrated GL-049 campaign](gl-049-main-integration.md)
 adds an opt-in [typed native scene API](native-scene-api.md) under
 [ADR-014](adr-014-native-scene-authoring.md), and migrates Relay Siege's arena,
 UI and audio construction into Luau. Its [qualification record](native-authoring-qualification.md)

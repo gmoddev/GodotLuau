@@ -1,6 +1,6 @@
 # Relay Siege qualification scope
 
-The unmerged `feature/luau-native-authoring` campaign replaces ordinary
+The normally integrated GL-049 `feature/luau-native-authoring` campaign replaces ordinary
 geometry/UI/audio presentation construction with owner-scoped native Luau APIs.
 Its [current qualification](https://github.com/gmoddev/GodotLuau/blob/feature/luau-native-authoring/newdocs/native-authoring-qualification.md)
 records native Windows/Linux, full-native sanitizer and actual Windows rendered

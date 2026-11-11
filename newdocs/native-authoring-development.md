@@ -1,5 +1,10 @@
 # Luau-first native authoring development
 
+The later [main integration record](gl-049-main-integration.md) supersedes this
+journal's historical unmerged/no-merge disposition. It preserves the source,
+failed attempts and exact-input qualification below, and records fresh main CI
+separately. Integration was explicitly authorized after branch qualification.
+
 ## Baseline and acceptance — 2026-11-11
 
 Isolated branch `feature/luau-native-authoring` starts at verified main
