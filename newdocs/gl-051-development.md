@@ -362,3 +362,9 @@ reused within its recorded scope. Following changes document integration only.
 The [integration record](gl-051-main-integration.md) tracks fresh Windows/Linux
 core/native/type CI after the main push. Those outcomes remain pending until
 actual completion and evidence review. No publishing workflow is dispatched.
+
+Main push succeeds at `397dde847b736d8d14ea222754124c44dde2d38d`. Fresh workflows
+are core `43112156523`, native `43112156884` and definitions `43112156562`.
+Windows core completes successfully and its downloaded XML/discovery pass the
+existing 85-case checker. Linux jobs await hosted runners; Windows native/types
+are building. Integration is not marked verified while those jobs are pending.

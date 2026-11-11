@@ -47,13 +47,25 @@ checks across twelve actors. Its documented reuse covers unchanged game/binding
 inputs, with later editor corrections qualified separately. Integration changes
 none of those inputs. Existing sanitizer, candidate, package and rendered results
 are reused; no repeated expensive matrix or local engine build is required.
+Retained packages keep their recorded source identities; they are not represented
+as newly built main archives. Integration edits change documentation only.
 
 ## Fresh integrated CI
 
-Status: **pending after main push**. The push starts the existing Windows/Linux
-core, native and native-definition workflows. Record exact integrated revision,
-run IDs, final outcomes and downloaded evidence here before marking integration
-verified. Dispatch is not a pass. Optional benchmark export is not requested.
+Status: **in progress**, testing main revision
+`397dde847b736d8d14ea222754124c44dde2d38d` after the normal merge and initial
+integration notes.
+
+- [Core 43112156523](https://github.com/gmoddev/GodotLuau/actions/runs/43112156523):
+  Windows passes; downloaded discovery and XML pass the existing CheckCoreCI
+  checks for all 85 distinct cases. Linux remains queued.
+- [Native 43112156884](https://github.com/gmoddev/GodotLuau/actions/runs/43112156884):
+  Windows is building; Linux remains queued.
+- [Definitions 43112156562](https://github.com/gmoddev/GodotLuau/actions/runs/43112156562):
+  Windows is building; Linux remains queued.
+
+Final results and evidence remain pending. Optional benchmark export is correctly
+skipped because it was not requested. Dispatch is not a pass.
 
 ## Preserved limits and distribution policy
 
