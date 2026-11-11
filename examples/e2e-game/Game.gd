@@ -59,8 +59,8 @@ func Native(Type: String, NodeName: String, Parent: Node = null) -> Node:
     (Parent if Parent else self).add_child(Value)
     return Value
 
-func ScriptRun(NodeName: String, Source: String, Client := false, Parent: Node = null) -> Node:
-    var Value: Node = ClassDB.instantiate("LocalScript" if Client else "ServerScript")
+func ScriptRun(NodeName: String, Source: String, Client := false, Parent: Node = null, Module := false) -> Node:
+    var Value: Node = ClassDB.instantiate("ModuleScript" if Module else ("LocalScript" if Client else "ServerScript"))
     var Resource: Script = ClassDB.instantiate("LuauScript")
     Resource.source_code = Source
     Value.name = NodeName
@@ -160,6 +160,7 @@ func BuildArena() -> void:
     Spawn.name = "ArenaSpawn"
     Spawn.position = Vector3(0,-1,16)
     World.add_child(Spawn)
+    ScriptRun("RelayFactory", FileAccess.get_file_as_string("res://RelayFactory.luau"), false, World, true)
     ScriptRun("ArenaAuthor", FileAccess.get_file_as_string("res://Arena.luau"), false, World)
     add_child(World)
     World.set_process(false)

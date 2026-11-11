@@ -1,0 +1,54 @@
+name: Approved native bindings and Luau declarations
+on:
+  push:
+    paths: ['bindings/**', 'GodotLuau/Types/**', 'tools/GenerateNativeBindings.py', 'tests/bindings/**', '.github/workflows/native-bindings.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  Types:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Generator: Ninja
+          - Platform: Windows
+            Runner: windows-2022
+            Generator: Visual Studio 17 2022
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check approved policy and generated output drift
+        run: |
+          python tools/GenerateNativeBindings.py --check
+          python tests/bindings/NativePolicyTests.py
+      - name: Build pinned Luau type checker probe
+        run: |
+          cmake -S tests/bindings -B build/native-types -G "${{ matrix.Generator }}" -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/native-types --config Release --target NativeTypeTests --parallel 2
+      - name: Typecheck emitted definitions and representative calls
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then Probe=build/native-types/Release/NativeTypeTests.exe; else Probe=build/native-types/NativeTypeTests; fi
+          "$Probe" GodotLuau/Types/Native.d.luau examples/e2e-game/RelayFactory.luau 2>&1 | tee native-types.log
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: native-types-${{ matrix.Platform }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            native-types.log
+            GodotLuau/Types/Native.d.luau
+            bindings/NativeCatalog.json

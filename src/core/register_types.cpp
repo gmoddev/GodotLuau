@@ -4,6 +4,7 @@
 #include "gl_scene_authoring.h"
 #include "luau_script.h"
 #include "luau_language.h"
+#include "gl_native_editor_plugin.h"
 // Workspace/network implementation headers require this concrete type first.
 #include "rbx_character.h"
 #include "roblox_workspace.h"
@@ -318,12 +319,17 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
     // Nivel EDITOR: el importador de .rbxl anade su entrada en
     // Proyecto > Herramientas. Solo existe dentro del editor.
     if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
+        ClassDB::register_internal_class<GLNativeEditorPlugin>();
+        EditorPlugins::add_by_type<GLNativeEditorPlugin>();
         ClassDB::register_internal_class<RBXImportPlugin>();
         EditorPlugins::add_by_type<RBXImportPlugin>();
     }
 }
 
 void uninitialize_luau_module(ModuleInitializationLevel p_level) {
+    if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
+        EditorPlugins::remove_by_type<GLNativeEditorPlugin>();
+    }
     if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
         if (auto Host = GLGetDomainHost()) Host->Shutdown();
         GLDataStoreManager::StopAll();

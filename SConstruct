@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+import os
+import subprocess
+import sys
+
+# Policy, runtime descriptors and shipped declarations must describe one API.
+subprocess.run([sys.executable, os.path.join(Dir("#").abspath, "tools", "GenerateNativeBindings.py"), "--check"], check=True)
 env = SConscript("godot-cpp/SConstruct")
 
 # 0. Luau usa excepciones de C++ en su bucle de ejecucion (luau/VM/src/ldo.cpp).

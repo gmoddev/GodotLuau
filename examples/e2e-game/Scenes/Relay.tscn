@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3]
+
+[sub_resource type="BoxMesh" id="RelayMesh"]
+size = Vector3(2, 3, 2)
+
+[sub_resource type="BoxShape3D" id="RelayShape"]
+size = Vector3(2, 3, 2)
+
+[node name="Relay" type="Node3D"]
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.5, 0)
+mesh = SubResource("RelayMesh")
+
+[node name="Collision" type="StaticBody3D" parent="."]
+position = Vector3(0, 0.5, 0)
+
+[node name="Shape" type="CollisionShape3D" parent="Collision"]
+shape = SubResource("RelayShape")
+
+[node name="Title" type="Label3D" parent="."]
+position = Vector3(0, 3.5, 0)
+billboard = 1
+text = "RELAY"

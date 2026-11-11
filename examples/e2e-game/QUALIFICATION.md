@@ -1,5 +1,12 @@
 # Relay Siege qualification scope
 
+The unmerged GL-051 campaign adds policy-driven native bindings, reusable relay
+PackedScene/module composition, shared textures and typed native signals/calls.
+Fresh game/native/package qualification is tracked in the
+[GL-051 journal](https://github.com/gmoddev/GodotLuau/blob/feature/gl-051-first-class-luau/newdocs/gl-051-development.md).
+The retained GL-049 outcomes below do not qualify those changed inputs.
+See `NATIVE-BINDINGS-API.md` in a staged package for the extended authoring API.
+
 The normally integrated GL-049 `feature/luau-native-authoring` campaign replaces ordinary
 geometry/UI/audio presentation construction with owner-scoped native Luau APIs.
 Its [current qualification](https://github.com/gmoddev/GodotLuau/blob/feature/luau-native-authoring/newdocs/native-authoring-qualification.md)

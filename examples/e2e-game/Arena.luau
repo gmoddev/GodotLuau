@@ -7,6 +7,9 @@ local Visuals = {}
 local RelayVisuals = {}
 local Snapshot = {}
 local LastJSON = ""
+local RelayFactory = require(script.Parent:FindFirstChild("RelayFactory"))
+local RelayTemplate = Scope:Load("PackedScene", "res://Scenes/Relay.tscn")
+local RelayTexture = Scope:Load("Texture2D", "res://Textures/RelayPattern.tres")
 
 local function Material(Colour, Emission)
     return Scope:New("StandardMaterial3D", {
@@ -45,12 +48,7 @@ end
 Block(Vector3.new(0, -0.94, -9), Vector3.new(6, 0.1, 6), Color3.new(0.9, 0.12, 0.05), false)
 Block(Vector3.new(0, 1, 0), Vector3.new(3, 4, 3), Color3.new(0.1, 0.55, 0.8))
 for Index, Position in ipairs({Vector3.new(-14, 0, -10), Vector3.new(14, 0, -10), Vector3.new(0, 0, -20)}) do
-    RelayVisuals[Index] = Block(Position + Vector3.new(0, 0.5, 0), Vector3.new(2, 3, 2), Color3.new(0.95, 0.6, 0.1))
-    Scope:New("Label3D", {
-        Text = string.format("RELAY %d\nE to activate", Index),
-        Position = Position + Vector3.new(0, 3.5, 0),
-        Billboard = 1,
-    })
+    RelayVisuals[Index] = RelayFactory(Scope, RelayTemplate, Position, Index, Material(Color3.new(0.95, 0.6, 0.1)))
 end
 
 Scope:New("DirectionalLight3D", {RotationDegrees = Vector3.new(-45, -30, 0)})
@@ -76,6 +74,8 @@ Scope:Pin(Canopy, 0, true)
 
 local RelayActive = Material(Color3.new(0.1, 0.9, 0.6), true)
 local RelayInactive = Material(Color3.new(0.95, 0.6, 0.1), true)
+Scope:Configure(RelayActive, {AlbedoTexture = RelayTexture})
+Scope:Configure(RelayInactive, {AlbedoTexture = RelayTexture})
 local BotMesh = Scope:New("SphereMesh", {Radius = 1, Height = 2})
 local BotMaterial = Material(Color3.new(0.95, 0.2, 0.18), true)
 

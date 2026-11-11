@@ -30,6 +30,7 @@ def Main():
     Args = Parser.parse_args()
     Source = Path(__file__).resolve().parent
     Repository = Source.parents[1]
+    Revision = subprocess.check_output(['git','-C',str(Repository),'rev-parse','HEAD'],text=True).strip()
     if Args.archive and subprocess.check_output(['git','-C',str(Repository),'status','--porcelain','--','examples/e2e-game','examples/player-controller'],text=True).strip():
         Parser.error('Commit game sources before creating an identified archive')
     Output = Args.output.resolve()
@@ -70,8 +71,10 @@ def Main():
             (Output/Target.parent).mkdir(parents=True,exist_ok=True)
             shutil.copy2(Product,Output/Target)
             (Output/Name).write_text('[remap]\npath="res://'+Target.as_posix()+'"\n')
-    for Name in ['project.godot','Main.tscn','Game.gd','Arena.luau','Presentation.luau','Server.luau','Client.luau','README.md']:
+    for Name in ['project.godot','Main.tscn','Game.gd','Arena.luau','Presentation.luau','RelayFactory.luau','Server.luau','Client.luau','README.md']:
         shutil.copy2(Source/Name,Output/Name)
+    for Name in ['Scenes','Textures']:
+        shutil.copytree(Source/Name,Output/Name,dirs_exist_ok=True)
     if Args.profile:
         if not Args.profile.replace('-','').replace('_','').isalnum(): Parser.error('Profile must be a simple leaf')
         File = Output/'project.godot'
@@ -83,14 +86,20 @@ def Main():
     shutil.copy2(Source/'QUALIFICATION.md',Output/'QUALIFICATION.md')
     shutil.copy2(Repository/'newdocs/native-scene-api.md',Output/'NATIVE-SCENE-API.md')
     Api = Output/'NATIVE-SCENE-API.md'
-    Docs = 'https://github.com/gmoddev/GodotLuau/blob/feature/luau-native-authoring/newdocs/'
-    Api.write_text(Api.read_text().replace('(native-authoring-development.md)', '('+Docs+'native-authoring-development.md)').replace('(adr-014-native-scene-authoring.md)', '('+Docs+'adr-014-native-scene-authoring.md)').replace('(native-authoring-qualification.md)', '('+Docs+'native-authoring-qualification.md)').replace('(../examples/e2e-game/', '('))
+    RepoURL = 'https://github.com/gmoddev/GodotLuau/blob/'+Revision+'/'
+    Docs = RepoURL+'newdocs/'
+    Api.write_text(Api.read_text().replace('(native-authoring-development.md)', '('+Docs+'native-authoring-development.md)').replace('(adr-014-native-scene-authoring.md)', '('+Docs+'adr-014-native-scene-authoring.md)').replace('(native-authoring-qualification.md)', '('+Docs+'native-authoring-qualification.md)').replace('(gl-051-native-api.md)', '(NATIVE-BINDINGS-API.md)').replace('(../examples/e2e-game/', '('))
+    BindingApi = (Repository/'newdocs/gl-051-native-api.md').read_text()
+    for Name in ['adr-015-policy-driven-native-bindings.md','gl-051-development.md']:
+        BindingApi = BindingApi.replace('('+Name+')','('+Docs+Name+')')
+    BindingApi = BindingApi.replace('(native-scene-api.md)','(NATIVE-SCENE-API.md)').replace('(../bindings/','('+RepoURL+'bindings/').replace('(../GodotLuau/','(GodotLuau/').replace('(../examples/e2e-game/','(')
+    (Output/'NATIVE-BINDINGS-API.md').write_text(BindingApi)
     Readme = Output/'README.md'
-    Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md').replace('../../newdocs/gl-044-045-relay-development.md','QUALIFICATION.md').replace('../../newdocs/native-scene-api.md','NATIVE-SCENE-API.md').replace('../../newdocs/native-authoring-development.md','QUALIFICATION.md'))
+    Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md').replace('../../newdocs/gl-044-045-relay-development.md','QUALIFICATION.md').replace('../../newdocs/native-scene-api.md','NATIVE-SCENE-API.md').replace('../../newdocs/gl-051-native-api.md','NATIVE-BINDINGS-API.md').replace('../../newdocs/native-authoring-development.md','QUALIFICATION.md'))
     if Args.host_manifest: shutil.copy2(Args.host_manifest,Output/'remote-host.json')
     (Output/'Play.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --path "%~dp0" %*\r\n')
     (Output/'Server.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --headless --path "%~dp0" -- --mode server --port 24870 --glserver 24870\r\n')
-    Manifest = {'Schema':1,'GameRevision':subprocess.check_output(['git','-C',str(Repository),'rev-parse','HEAD'],text=True).strip(),
+    Manifest = {'Schema':1,'GameRevision':Revision,
                 'CandidateSource':Provenance['Source'],'CandidateSHA256':Hash(Args.candidate),'EngineSHA256':Hash(Args.engine),
                 'NetworkHostVerified':Args.host_manifest is not None,'Files':{}}
     for File in sorted(Output.rglob('*')):

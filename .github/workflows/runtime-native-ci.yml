@@ -70,6 +70,10 @@ jobs:
           fi
           python tests/runtime/SourceFingerprint.py . > "$RUNNER_TEMP/native-ci/source.json"
 
+      - name: Require approved native policy and generated API identity
+        timeout-minutes: 1
+        run: python tools/GenerateNativeBindings.py --check
+
       - name: Verify fixture process ownership and failure handling
         timeout-minutes: 2
         run: python tests/runtime/FixtureProcessTests.py 2>&1 | tee "$RUNNER_TEMP/native-ci/process-tests.log"
@@ -86,9 +90,7 @@ jobs:
       - name: Prepare Linux host compiler
         if: runner.os == 'Linux'
         timeout-minutes: 5
-        run: |
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y clang-19 lld-19 pkg-config ninja-build
+        run: bash tools/PrepareLinuxCompiler.sh
 
       - name: Install hash-pinned host build frontend
         timeout-minutes: 3
@@ -146,6 +148,14 @@ jobs:
             --godot "$GODOT_RUNTIME" \
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/regression" --teardown --coordinated-close --timeout 60
+
+      - name: Actual Godot ScriptEditor native bindings and diagnostics
+        timeout-minutes: 2
+        run: |
+          python tests/editor/RunNativeAuthoring.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/native-editor" --timeout 60
 
       - name: GL-006 and GL-008 existing network regressions
         timeout-minutes: 4
