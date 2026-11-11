@@ -32,10 +32,10 @@ public:
 
     String _get_name()      const override { return "Luau"; }
     String _get_type()      const override { return "LuauScript"; }
-    String _get_extension() const override { return "lua"; }
+    String _get_extension() const override { return "luau"; }
 
     PackedStringArray _get_recognized_extensions() const override {
-        PackedStringArray a; a.append("lua"); return a;
+        PackedStringArray a; a.append("lua"); a.append("luau"); return a;
     }
     Object* _create_script() const override { return memnew(LuauScript); }
     bool    _can_inherit_from_file() const override { return true; }
@@ -172,18 +172,21 @@ class LuauLoader : public ResourceFormatLoader {
 protected:
     static void _bind_methods() {}
 public:
-    PackedStringArray _get_recognized_extensions() const override { PackedStringArray a; a.append("lua"); return a; }
+    PackedStringArray _get_recognized_extensions() const override { PackedStringArray a; a.append("lua"); a.append("luau"); return a; }
     bool _handles_type(const StringName& t) const override { return t == StringName("LuauScript") || t == StringName("Script"); }
     // SOLO los .lua son nuestros. Antes devolvia "LuauScript" para CUALQUIER
     // ruta y el editor intentaba cargar plugin.cfg/README.md/.luau_ids.cfg
     // como recursos → "No loader found for resource" en cada arranque.
     String _get_resource_type(const String& p) const override {
-        return p.get_extension().to_lower() == "lua" ? String("LuauScript") : String();
+        String Extension=p.get_extension().to_lower();
+        return Extension == "lua" || Extension == "luau" ? String("LuauScript") : String();
     }
     Variant _load(const String& p, const String& op, bool st, int cm) const override {
         Ref<LuauScript> s; s.instantiate();
         Ref<FileAccess> f = FileAccess::open(p, FileAccess::READ);
-        if (f.is_valid()) { s->_set_source_code(f->get_as_text()); f->close(); }
+        if (f.is_null()) return ERR_CANT_OPEN;
+        if (f->get_length()>16*1024*1024) return ERR_FILE_CORRUPT;
+        s->_set_source_code(f->get_as_text()); f->close();
         return s;
     }
 };
@@ -204,7 +207,7 @@ public:
         return OK;
     }
     bool _recognize(const Ref<Resource>& r) const override { return Object::cast_to<LuauScript>(r.ptr()) != nullptr; }
-    PackedStringArray _get_recognized_extensions(const Ref<Resource>& r) const override { PackedStringArray a; a.append("lua"); return a; }
+    PackedStringArray _get_recognized_extensions(const Ref<Resource>& r) const override { PackedStringArray a; a.append("luau"); a.append("lua"); return a; }
 };
 
 #endif

@@ -322,6 +322,9 @@ int Call(lua_State* Thread) {
     const char* Name=CheckedString(Thread,3);
     const auto* Item=FindMethod(Target,Name);
     if (!Item || !Target->has_method(Item->Native)) luaL_error(Thread,"[Scene:Method] Method %s is not admitted on this target",Name);
+    if (GLGetOwner(Thread)->Domain->GetKind()==GLDomainKind::EditorPreview &&
+        Target->is_class("AudioStreamPlayer") && !strcmp(Item->Native,"play"))
+        luaL_error(Thread,"[Authoring:Preview] Audio playback is runtime-only");
     if (Item->Mutates) TargetAt(Thread,Scope,2,true);
     int Count=lua_gettop(Thread)-3;
     if (Count<Item->Required || Count>Item->Arguments) luaL_error(Thread,"[Scene:Arguments] %s requires %d..%d arguments",Name,Item->Required,Item->Arguments);
@@ -539,6 +542,8 @@ int Reparent(lua_State* Thread) {
     return 0;
 }
 int Play(lua_State* Thread) {
+    if (auto Owner=GLGetOwner(Thread)) if (Owner->Domain->GetKind()==GLDomainKind::EditorPreview)
+        luaL_error(Thread,"[Authoring:Preview] Audio playback is runtime-only");
     auto Scope=ScopeAt(Thread); auto Audio=Object::cast_to<AudioStreamPlayer>(TargetAt(Thread,Scope,2,true));
     if (!Audio || Audio->get_stream().is_null()) luaL_error(Thread,"[Scene:Type] Play requires an audio player with a stream");
     Audio->play(); return 0;
@@ -641,7 +646,9 @@ int Root(lua_State* Thread) {
     Node* Script=Owner?Resolve<Node>(Owner->NativeId):nullptr;
     if (!Owner || !Owner->Alive || !Script || Script->get_parent()!=Parent)
         luaL_error(Thread,"[Scene:Authority] Scene.new requires the executing script's parent");
-    for (Node* Item=Parent;Item;Item=Item->get_parent()) {
+    // Preview's private native driver/root are supplied only by the editor host.
+    // Its viewport ancestry is intentionally not a gameplay bootstrap container.
+    for (Node* Item=Owner->Domain->GetKind()==GLDomainKind::EditorPreview?nullptr:Parent;Item;Item=Item->get_parent()) {
         String Type=Item->get_class();
         if (Type!="Node" && Type!="Node3D" && Type!="RobloxWorkspace" && Type!="Folder" && Type!="Window")
             luaL_error(Thread,"[Scene:Authority] Scene parent must be a plain bootstrap container");

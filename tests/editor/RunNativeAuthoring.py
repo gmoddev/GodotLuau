@@ -20,6 +20,8 @@ def Main():
     Parser.add_argument("--extension", type=Path, required=True)
     Parser.add_argument("--output", type=Path, required=True)
     Parser.add_argument("--timeout", type=float, default=60)
+    Parser.add_argument("--workflow", action="store_true", help="Exercise the clean-project GL-052 production workflow")
+    Parser.add_argument("--baseline", action="store_true", help="Record missing workflow capabilities in the qualified GL-051 product")
     Args = Parser.parse_args()
     Output = Args.output.resolve()
     Output.mkdir(parents=True, exist_ok=False)
@@ -27,10 +29,13 @@ def Main():
     (Output / ".godot/extension_list.cfg").write_text('res://godot_luau.gdextension\n')
     Plugin = Output / "addons/NativeEditor"
     Plugin.mkdir(parents=True)
-    shutil.copyfile(Path(__file__).with_name("NativeAuthoring.gd"), Plugin / "plugin.gd")
+    shutil.copyfile(Path(__file__).with_name("LuauWorkflow.gd" if Args.workflow else "NativeAuthoring.gd"), Plugin / "plugin.gd")
     (Plugin / "plugin.cfg").write_text('[plugin]\nname="NativeEditorFixture"\ndescription="Bounded GL-051 editor integration"\nauthor="GodotLuau"\nversion="1"\nscript="plugin.gd"\n')
     with (Output / "project.godot").open("a") as File:
         File.write('[editor_plugins]\nenabled=PackedStringArray("res://addons/NativeEditor/plugin.cfg")\n')
+        if Args.baseline:
+            assert Args.workflow, "Baseline observation belongs to the GL-052 workflow"
+            File.write('[godot_luau]\nqualification_baseline=true\n')
     (Output / "NativeEditor.lua").write_text('local Scope = Scene.new(script.Parent)\nlocal Button = Scope:New("Button", {Text="Native editor"})\nerror("[Bindings:Editor] Editor source must never execute")\n')
     Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING="1")
     for Name in ["APPDATA", "LOCALAPPDATA", "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME"]:

@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/script_editor.hpp>
 #include <godot_cpp/classes/script_editor_base.hpp>
 #include <godot_cpp/variant/callable.hpp>
+#include "luau_script.h"
 
 using namespace godot;
 
@@ -17,14 +18,30 @@ ScriptEditor* GetEditor() {
 void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OnScriptChanged", "Script"), &GLNativeEditorPlugin::OnScriptChanged);
     ClassDB::bind_method(D_METHOD("ConfigureEditor"), &GLNativeEditorPlugin::ConfigureEditor);
+    ClassDB::bind_method(D_METHOD("CreateLuauScene", "Path"), &GLNativeEditorPlugin::CreateLuauScene);
+    ClassDB::bind_method(D_METHOD("PreviewScript", "Source"), &GLNativeEditorPlugin::PreviewScript);
+    ClassDB::bind_method(D_METHOD("StopPreview"), &GLNativeEditorPlugin::StopPreview);
+    ClassDB::bind_method(D_METHOD("SavePreview", "Path"), &GLNativeEditorPlugin::SavePreview);
+    ClassDB::bind_method(D_METHOD("PreviewSelected"), &GLNativeEditorPlugin::PreviewSelected);
+    ClassDB::bind_method(D_METHOD("NewSceneDialog"), &GLNativeEditorPlugin::NewSceneDialog);
+    ClassDB::bind_method(D_METHOD("SavePreviewDialog"), &GLNativeEditorPlugin::SavePreviewDialog);
+    ClassDB::bind_method(D_METHOD("OnAuthoringPath", "Path"), &GLNativeEditorPlugin::OnAuthoringPath);
+    ClassDB::bind_method(D_METHOD("InspectPreviewNode"), &GLNativeEditorPlugin::InspectPreviewNode);
 }
 
 void GLNativeEditorPlugin::_enter_tree() {
+    SetupAuthoring();
     if (auto Editor = GetEditor()) Editor->connect("editor_script_changed", Callable(this, "OnScriptChanged"));
     OnScriptChanged(Ref<Script>());
 }
 
 void GLNativeEditorPlugin::_exit_tree() {
+    StopPreview();
+    if (auto Panel=Object::cast_to<Control>(ObjectDB::get_instance(PreviewPanel))) {
+        remove_control_from_bottom_panel(Panel);
+        Panel->queue_free();
+    }
+    PreviewPanel=0;
     if (auto Editor = GetEditor()) {
         Callable Handler(this, "OnScriptChanged");
         if (Editor->is_connected("editor_script_changed", Handler)) Editor->disconnect("editor_script_changed", Handler);
