@@ -368,3 +368,10 @@ are core `43112156523`, native `43112156884` and definitions `43112156562`.
 Windows core completes successfully and its downloaded XML/discovery pass the
 existing 85-case checker. Linux jobs await hosted runners; Windows native/types
 are building. Integration is not marked verified while those jobs are pending.
+
+Fresh main core and definitions now pass both platforms at `397dde8`.
+Downloaded core XML/discovery pass the established 85-case checker and both
+input logs contain 29 passing assertions. Each generated-type log passes eleven
+representative programs plus actual RelayFactory, and its declarations/catalog
+match main. Both native jobs are building their existing admitted host/adapter;
+final integration verification still awaits those results and retained evidence.

@@ -57,14 +57,15 @@ Status: **in progress**, testing main revision
 integration notes.
 
 - [Core 43112156523](https://github.com/gmoddev/GodotLuau/actions/runs/43112156523):
-  Windows passes; downloaded discovery and XML pass the existing CheckCoreCI
-  checks for all 85 distinct cases. Linux remains queued.
+  Windows/Linux pass. Both downloaded discovery/XML artifacts pass the existing
+  CheckCoreCI checks for all 85 distinct cases; input logs pass 29 assertions each.
 - [Native 43112156884](https://github.com/gmoddev/GodotLuau/actions/runs/43112156884):
-  Windows is building; Linux remains queued.
+  Windows/Linux are building the admitted host and adapter; results remain pending.
 - [Definitions 43112156562](https://github.com/gmoddev/GodotLuau/actions/runs/43112156562):
-  Windows is building; Linux remains queued.
+  Windows/Linux pass all eleven representative programs and the production
+  RelayFactory module. Both downloaded definitions/catalogs match main.
 
-Final results and evidence remain pending. Optional benchmark export is correctly
+Final native results and evidence remain pending. Optional benchmark export is correctly
 skipped because it was not requested. Dispatch is not a pass.
 
 ## Preserved limits and distribution policy
