@@ -25,6 +25,10 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 ## Index
 
+GL-052's [implementation journal](gl-052-development.md) tracks the new-project
+Luau-only authoring, preview, native persistence and export campaign. It is not
+yet qualified. GL-050 remains separately unresolved.
+
 The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
 qualified game and its original evidence. GL-043 is now separately qualified and
 [integrated](gl-043-main-integration.md). GL-044/045 have focused corrections on

@@ -33,6 +33,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+The unmerged [GL-052 campaign](gl-052-development.md) targets a clean-project,
+Luau-only authoring/editor/export workflow. [ADR-016](adr-016-luau-editor-authoring.md)
+defines the new explicit preview boundary; its journal distinguishes implementation
+from pending editor, runtime and export qualification.
+
 The [normally integrated GL-051 campaign](gl-051-main-integration.md) preserves
 all 22 qualified feature commits and their evidence. It implements
 [policy-driven native bindings and authoring tools](gl-051-native-api.md) under
