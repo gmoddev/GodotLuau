@@ -1,0 +1,1369 @@
+{
+  "Schema": 1,
+  "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
+  "Classes": [
+    {
+      "Name": "Node3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "MeshInstance3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "StaticBody3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "RigidBody3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "CollisionShape3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "DirectionalLight3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "OmniLight3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "SpotLight3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Camera3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "WorldEnvironment",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Label3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "CanvasLayer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Control",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "ColorRect",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "PanelContainer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "VBoxContainer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "HBoxContainer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Label",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Button",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "AudioStreamPlayer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "SoftBody3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "LineEdit",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Node",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Node2D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Sprite2D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "Sprite3D",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "TextureRect",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "MarginContainer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "CenterContainer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "GridContainer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "ScrollContainer",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "CheckBox",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "CheckButton",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "ProgressBar",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "HSlider",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "VSlider",
+      "Kind": "Node",
+      "Construct": true
+    },
+    {
+      "Name": "BoxMesh",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "SphereMesh",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "BoxShape3D",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "SphereShape3D",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "StandardMaterial3D",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "Environment",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "PlaneMesh",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "QuadMesh",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "CylinderMesh",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "CapsuleMesh",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "CapsuleShape3D",
+      "Kind": "Resource",
+      "Construct": true
+    },
+    {
+      "Name": "CylinderShape3D",
+      "Kind": "Resource",
+      "Construct": true
+    }
+  ],
+  "Properties": [
+    {
+      "Class": "Node",
+      "Name": "Name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "Node3D",
+      "Name": "Position",
+      "Native": "position",
+      "Kind": "Vector",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Node3D",
+      "Name": "RotationDegrees",
+      "Native": "rotation_degrees",
+      "Kind": "Vector",
+      "Min": -360000,
+      "Max": 360000
+    },
+    {
+      "Class": "Node3D",
+      "Name": "Scale",
+      "Native": "scale",
+      "Kind": "Vector",
+      "Min": 0.001,
+      "Max": 100
+    },
+    {
+      "Class": "Node3D",
+      "Name": "Visible",
+      "Native": "visible",
+      "Kind": "Boolean"
+    },
+    {
+      "Class": "MeshInstance3D",
+      "Name": "Mesh",
+      "Native": "mesh",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Mesh"
+    },
+    {
+      "Class": "GeometryInstance3D",
+      "Name": "Material",
+      "Native": "material_override",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Material"
+    },
+    {
+      "Class": "CollisionObject3D",
+      "Name": "CollisionLayer",
+      "Native": "collision_layer",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295
+    },
+    {
+      "Class": "CollisionObject3D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295
+    },
+    {
+      "Class": "RigidBody3D",
+      "Name": "Mass",
+      "Native": "mass",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 10000
+    },
+    {
+      "Class": "RigidBody3D",
+      "Name": "GravityScale",
+      "Native": "gravity_scale",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100
+    },
+    {
+      "Class": "RigidBody3D",
+      "Name": "Freeze",
+      "Native": "freeze",
+      "Kind": "Boolean"
+    },
+    {
+      "Class": "CollisionShape3D",
+      "Name": "Shape",
+      "Native": "shape",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Shape3D"
+    },
+    {
+      "Class": "CollisionShape3D",
+      "Name": "Disabled",
+      "Native": "disabled",
+      "Kind": "Boolean"
+    },
+    {
+      "Class": "Light3D",
+      "Name": "Color",
+      "Native": "light_color",
+      "Kind": "Colour"
+    },
+    {
+      "Class": "Light3D",
+      "Name": "Energy",
+      "Native": "light_energy",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 64
+    },
+    {
+      "Class": "Light3D",
+      "Name": "ShadowEnabled",
+      "Native": "shadow_enabled",
+      "Kind": "Boolean"
+    },
+    {
+      "Class": "OmniLight3D",
+      "Name": "Range",
+      "Native": "omni_range",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 10000
+    },
+    {
+      "Class": "SpotLight3D",
+      "Name": "Range",
+      "Native": "spot_range",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 10000
+    },
+    {
+      "Class": "Camera3D",
+      "Name": "Fov",
+      "Native": "fov",
+      "Kind": "Number",
+      "Min": 1,
+      "Max": 179
+    },
+    {
+      "Class": "Camera3D",
+      "Name": "Near",
+      "Native": "near",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 100
+    },
+    {
+      "Class": "Camera3D",
+      "Name": "Far",
+      "Native": "far",
+      "Kind": "Number",
+      "Min": 100,
+      "Max": 100000
+    },
+    {
+      "Class": "WorldEnvironment",
+      "Name": "Environment",
+      "Native": "environment",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Environment"
+    },
+    {
+      "Class": "Label3D",
+      "Name": "Text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
+    },
+    {
+      "Class": "Label3D",
+      "Name": "Billboard",
+      "Native": "billboard",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 3
+    },
+    {
+      "Class": "Label3D",
+      "Name": "FontSize",
+      "Native": "font_size",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 256
+    },
+    {
+      "Class": "CanvasLayer",
+      "Name": "Layer",
+      "Native": "layer",
+      "Kind": "Integer",
+      "Min": -128,
+      "Max": 128
+    },
+    {
+      "Class": "Control",
+      "Name": "Visible",
+      "Native": "visible",
+      "Kind": "Boolean"
+    },
+    {
+      "Class": "Control",
+      "Name": "Position",
+      "Native": "position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Control",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector2Value",
+      "Min": 0,
+      "Max": 100000
+    },
+    {
+      "Class": "Control",
+      "Name": "MinSize",
+      "Native": "custom_minimum_size",
+      "Kind": "Vector2Value",
+      "Min": 0,
+      "Max": 100000
+    },
+    {
+      "Class": "Control",
+      "Name": "MouseFilter",
+      "Native": "mouse_filter",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 2
+    },
+    {
+      "Class": "Control",
+      "Name": "Modulate",
+      "Native": "modulate",
+      "Kind": "Colour"
+    },
+    {
+      "Class": "Control",
+      "Name": "FontSize",
+      "Native": "@font_size",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 256
+    },
+    {
+      "Class": "Control",
+      "Name": "FullRect",
+      "Native": "@full_rect",
+      "Kind": "Boolean"
+    },
+    {
+      "Class": "BoxContainer",
+      "Name": "Separation",
+      "Native": "@separation",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1024
+    },
+    {
+      "Class": "ColorRect",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour"
+    },
+    {
+      "Class": "Label",
+      "Name": "Text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
+    },
+    {
+      "Class": "Button",
+      "Name": "Text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
+    },
+    {
+      "Class": "LineEdit",
+      "Name": "Text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
+    },
+    {
+      "Class": "LineEdit",
+      "Name": "PlaceholderText",
+      "Native": "placeholder_text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 1024
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "Stream",
+      "Native": "stream",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "AudioStream"
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "VolumeDb",
+      "Native": "volume_db",
+      "Kind": "Number",
+      "Min": -80,
+      "Max": 6
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "PitchScale",
+      "Native": "pitch_scale",
+      "Kind": "Number",
+      "Min": 0.1,
+      "Max": 4
+    },
+    {
+      "Class": "SoftBody3D",
+      "Name": "Mesh",
+      "Native": "mesh",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "ArrayMesh"
+    },
+    {
+      "Class": "SoftBody3D",
+      "Name": "CollisionLayer",
+      "Native": "collision_layer",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295
+    },
+    {
+      "Class": "SoftBody3D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295
+    },
+    {
+      "Class": "SoftBody3D",
+      "Name": "SimulationPrecision",
+      "Native": "simulation_precision",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 20
+    },
+    {
+      "Class": "SoftBody3D",
+      "Name": "TotalMass",
+      "Native": "total_mass",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 10000
+    },
+    {
+      "Class": "BoxMesh",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "SphereMesh",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "SphereMesh",
+      "Name": "Height",
+      "Native": "height",
+      "Kind": "Number",
+      "Min": 0.002,
+      "Max": 20000
+    },
+    {
+      "Class": "SphereMesh",
+      "Name": "RadialSegments",
+      "Native": "radial_segments",
+      "Kind": "Integer",
+      "Min": 4,
+      "Max": 64
+    },
+    {
+      "Class": "SphereMesh",
+      "Name": "Rings",
+      "Native": "rings",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32
+    },
+    {
+      "Class": "BoxShape3D",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "SphereShape3D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "StandardMaterial3D",
+      "Name": "Color",
+      "Native": "albedo_color",
+      "Kind": "Colour"
+    },
+    {
+      "Class": "StandardMaterial3D",
+      "Name": "Roughness",
+      "Native": "roughness",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "StandardMaterial3D",
+      "Name": "EmissionEnabled",
+      "Native": "emission_enabled",
+      "Kind": "Boolean"
+    },
+    {
+      "Class": "StandardMaterial3D",
+      "Name": "Emission",
+      "Native": "emission",
+      "Kind": "Colour"
+    },
+    {
+      "Class": "Environment",
+      "Name": "BackgroundMode",
+      "Native": "background_mode",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 1
+    },
+    {
+      "Class": "Environment",
+      "Name": "BackgroundColor",
+      "Native": "background_color",
+      "Kind": "Colour"
+    },
+    {
+      "Class": "Environment",
+      "Name": "AmbientLightSource",
+      "Native": "ambient_light_source",
+      "Kind": "Integer",
+      "Min": 2,
+      "Max": 2
+    },
+    {
+      "Class": "Environment",
+      "Name": "AmbientLightColor",
+      "Native": "ambient_light_color",
+      "Kind": "Colour"
+    },
+    {
+      "Class": "Environment",
+      "Name": "AmbientLightEnergy",
+      "Native": "ambient_light_energy",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 16
+    },
+    {
+      "Class": "TextureRect",
+      "Name": "Texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "Sprite3D",
+      "Name": "Texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "Texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "TextureRect",
+      "Name": "ExpandMode",
+      "Native": "expand_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 5
+    },
+    {
+      "Class": "TextureRect",
+      "Name": "StretchMode",
+      "Native": "stretch_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 6
+    },
+    {
+      "Class": "SpriteBase3D",
+      "Name": "PixelSize",
+      "Native": "pixel_size",
+      "Kind": "Number",
+      "Min": 0.0001,
+      "Max": 1000
+    },
+    {
+      "Class": "Node2D",
+      "Name": "Position",
+      "Native": "position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Node2D",
+      "Name": "RotationDegrees",
+      "Native": "rotation_degrees",
+      "Kind": "Number",
+      "Min": -360000,
+      "Max": 360000
+    },
+    {
+      "Class": "Node2D",
+      "Name": "Scale",
+      "Native": "scale",
+      "Kind": "Vector2Value",
+      "Min": 0.001,
+      "Max": 100
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "Visible",
+      "Native": "visible",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "Modulate",
+      "Native": "modulate",
+      "Kind": "Colour",
+      "Min": 0,
+      "Max": 0
+    },
+    {
+      "Class": "BaseMaterial3D",
+      "Name": "AlbedoTexture",
+      "Native": "albedo_texture",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "BaseMaterial3D",
+      "Name": "Metallic",
+      "Native": "metallic",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "BaseMaterial3D",
+      "Name": "Transparency",
+      "Native": "transparency",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4
+    },
+    {
+      "Class": "Control",
+      "Name": "Font",
+      "Native": "@font",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Font"
+    },
+    {
+      "Class": "Label3D",
+      "Name": "Font",
+      "Native": "font",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Font"
+    },
+    {
+      "Class": "Button",
+      "Name": "Icon",
+      "Native": "icon",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "PlaneMesh",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector2Value",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "QuadMesh",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector2Value",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "CapsuleMesh",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "CapsuleMesh",
+      "Name": "Height",
+      "Native": "height",
+      "Kind": "Number",
+      "Min": 0.002,
+      "Max": 20000
+    },
+    {
+      "Class": "CapsuleShape3D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "CapsuleShape3D",
+      "Name": "Height",
+      "Native": "height",
+      "Kind": "Number",
+      "Min": 0.002,
+      "Max": 20000
+    },
+    {
+      "Class": "CylinderShape3D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "CylinderShape3D",
+      "Name": "Height",
+      "Native": "height",
+      "Kind": "Number",
+      "Min": 0.002,
+      "Max": 20000
+    },
+    {
+      "Class": "CylinderMesh",
+      "Name": "TopRadius",
+      "Native": "top_radius",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "CylinderMesh",
+      "Name": "BottomRadius",
+      "Native": "bottom_radius",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    },
+    {
+      "Class": "CylinderMesh",
+      "Name": "Height",
+      "Native": "height",
+      "Kind": "Number",
+      "Min": 0.002,
+      "Max": 20000
+    },
+    {
+      "Class": "CapsuleMesh",
+      "Name": "RadialSegments",
+      "Native": "radial_segments",
+      "Kind": "Integer",
+      "Min": 4,
+      "Max": 64
+    },
+    {
+      "Class": "CapsuleMesh",
+      "Name": "Rings",
+      "Native": "rings",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32
+    },
+    {
+      "Class": "CylinderMesh",
+      "Name": "RadialSegments",
+      "Native": "radial_segments",
+      "Kind": "Integer",
+      "Min": 4,
+      "Max": 64
+    },
+    {
+      "Class": "CylinderMesh",
+      "Name": "Rings",
+      "Native": "rings",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "Disabled",
+      "Native": "disabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "ToggleMode",
+      "Native": "toggle_mode",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "ButtonPressed",
+      "Native": "button_pressed",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0
+    },
+    {
+      "Class": "GridContainer",
+      "Name": "Columns",
+      "Native": "columns",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32
+    },
+    {
+      "Class": "Range",
+      "Name": "MinValue",
+      "Native": "min_value",
+      "Kind": "Number",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Range",
+      "Name": "MaxValue",
+      "Native": "max_value",
+      "Kind": "Number",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Range",
+      "Name": "Value",
+      "Native": "value",
+      "Kind": "Number",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Range",
+      "Name": "Step",
+      "Native": "step",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 10000
+    }
+  ],
+  "Methods": [
+    {
+      "Class": "Node3D",
+      "Name": "GetGlobalPosition",
+      "Native": "get_global_position",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "Control",
+      "Name": "GetGlobalPosition",
+      "Native": "get_global_position",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "Node3D",
+      "Name": "ToLocal",
+      "Native": "to_local",
+      "Mutates": false,
+      "Bounds": {
+        "global_point": [
+          -100000,
+          100000
+        ]
+      }
+    },
+    {
+      "Class": "Node3D",
+      "Name": "ToGlobal",
+      "Native": "to_global",
+      "Mutates": false,
+      "Bounds": {
+        "local_point": [
+          -100000,
+          100000
+        ]
+      }
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "Show",
+      "Native": "show",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "Hide",
+      "Native": "hide",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "IsVisible",
+      "Native": "is_visible",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "Control",
+      "Name": "GrabFocus",
+      "Native": "grab_focus",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "Control",
+      "Name": "ReleaseFocus",
+      "Native": "release_focus",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "Control",
+      "Name": "HasFocus",
+      "Native": "has_focus",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "Control",
+      "Name": "GetMinimumSize",
+      "Native": "get_combined_minimum_size",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "SetPressedNoSignal",
+      "Native": "set_pressed_no_signal",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "IsPressed",
+      "Native": "is_pressed",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "LineEdit",
+      "Name": "Clear",
+      "Native": "clear",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "LineEdit",
+      "Name": "SelectAll",
+      "Native": "select_all",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "LineEdit",
+      "Name": "Deselect",
+      "Native": "deselect",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "Range",
+      "Name": "SetValueNoSignal",
+      "Native": "set_value_no_signal",
+      "Mutates": true,
+      "Bounds": {
+        "value": [
+          -100000,
+          100000
+        ]
+      }
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "Play",
+      "Native": "play",
+      "Mutates": true,
+      "Bounds": {
+        "from_position": [
+          0,
+          3600
+        ]
+      }
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "Stop",
+      "Native": "stop",
+      "Mutates": true,
+      "Bounds": {}
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "IsPlaying",
+      "Native": "is_playing",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "GetPlaybackPosition",
+      "Native": "get_playback_position",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "Seek",
+      "Native": "seek",
+      "Mutates": true,
+      "Bounds": {
+        "to_position": [
+          0,
+          3600
+        ]
+      }
+    },
+    {
+      "Class": "Texture2D",
+      "Name": "GetWidth",
+      "Native": "get_width",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "Texture2D",
+      "Name": "GetHeight",
+      "Native": "get_height",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "Mesh",
+      "Name": "GetSurfaceCount",
+      "Native": "get_surface_count",
+      "Mutates": false,
+      "Bounds": {}
+    },
+    {
+      "Class": "Node",
+      "Name": "GetChildCount",
+      "Native": "get_child_count",
+      "Mutates": false,
+      "Bounds": {}
+    }
+  ],
+  "Signals": [
+    {
+      "Class": "BaseButton",
+      "Name": "Pressed",
+      "Native": "pressed"
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "Toggled",
+      "Native": "toggled"
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "ButtonDown",
+      "Native": "button_down"
+    },
+    {
+      "Class": "BaseButton",
+      "Name": "ButtonUp",
+      "Native": "button_up"
+    },
+    {
+      "Class": "LineEdit",
+      "Name": "TextSubmitted",
+      "Native": "text_submitted"
+    },
+    {
+      "Class": "LineEdit",
+      "Name": "TextChanged",
+      "Native": "text_changed"
+    },
+    {
+      "Class": "AudioStreamPlayer",
+      "Name": "Finished",
+      "Native": "finished"
+    },
+    {
+      "Class": "Control",
+      "Name": "Resized",
+      "Native": "resized"
+    },
+    {
+      "Class": "Control",
+      "Name": "FocusEntered",
+      "Native": "focus_entered"
+    },
+    {
+      "Class": "Control",
+      "Name": "FocusExited",
+      "Native": "focus_exited"
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "VisibilityChanged",
+      "Native": "visibility_changed"
+    },
+    {
+      "Class": "Range",
+      "Name": "ValueChanged",
+      "Native": "value_changed"
+    }
+  ],
+  "Enums": [
+    {
+      "Class": "Control",
+      "Name": "MouseFilter"
+    },
+    {
+      "Class": "TextureRect",
+      "Name": "ExpandMode"
+    },
+    {
+      "Class": "TextureRect",
+      "Name": "StretchMode"
+    },
+    {
+      "Class": "BaseMaterial3D",
+      "Name": "Transparency"
+    }
+  ],
+  "LoadTypes": [
+    "Texture2D",
+    "AudioStream",
+    "Mesh",
+    "Font",
+    "PackedScene"
+  ]
+}

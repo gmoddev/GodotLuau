@@ -42,3 +42,23 @@ builds while the worker is unavailable; retain bounded headless local probes.
 contract. This is implementation work; no runtime expansion is qualified merely
 because metadata or declarations have been generated. Commit and push coherent
 milestones, leave main untouched and keep releases/updater disabled.
+
+## First runtime milestone
+
+`bindings/NativePolicy.json` now declares 48 constructible classes, 105 property
+entries, 26 typed native methods and 12 signal selections. These are implementation
+counts, not independent runtime qualification claims. Pinned metadata validates
+names/types/inheritance, and generation emits runtime tables, an inspectable
+catalog and Luau definitions. SCons/native CI reject output drift. The native
+fingerprint now includes the policy, generator, catalog and shipped declarations.
+
+The runtime uses those constructors/properties, checked native calls, bounded
+signal marshalling and immutable enum/discovery data. Composition implements
+preflighted PackedScene adoption, same-owner clone and reparent with node/depth
+budgets and reentrant liveness checks. Stored scripts/signals/groups and nested/
+inherited scenes are rejected. Loading remains trusted project-only/synchronous.
+
+Compilation, generated-type analysis, new adversarial/native cases, editor
+integration and migrated gameplay are not yet qualified. Start fresh hosted
+compilation/regression while independent editor/fixture work continues. Existing
+GL-049 tests remain intact; new behavior receives separate assertions.

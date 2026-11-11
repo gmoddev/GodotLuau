@@ -35,8 +35,7 @@ public:
     bool CanUse(lua_State* Thread) const;
     void Retire(bool Delete = true);
     void Disconnect(int Reference);
-    void OnEvent(int Reference);
-    void OnText(godot::String Text, int Reference);
+    void OnSignal(int Reference, int Signature, const std::vector<godot::Variant>& Arguments);
 protected:
     static void _bind_methods();
     void _notification(int What);

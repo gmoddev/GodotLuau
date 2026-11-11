@@ -70,6 +70,10 @@ jobs:
           fi
           python tests/runtime/SourceFingerprint.py . > "$RUNNER_TEMP/native-ci/source.json"
 
+      - name: Require approved native policy and generated API identity
+        timeout-minutes: 1
+        run: python tools/GenerateNativeBindings.py --check
+
       - name: Verify fixture process ownership and failure handling
         timeout-minutes: 2
         run: python tests/runtime/FixtureProcessTests.py 2>&1 | tee "$RUNNER_TEMP/native-ci/process-tests.log"
