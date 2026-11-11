@@ -235,3 +235,19 @@ Review separately identifies the [GL-050](issues.md#gl-050-datastore-receiveexit
 receive/exit race. It is source verified, not reproduced as the current cause;
 do not bundle an unqualified persistence change into the authoring campaign.
 The diagnostic commits remain in history while their temporary code is removed.
+
+## Retained qualification and package progress
+
+The [qualification record](native-authoring-qualification.md) and its versioned
+receipt now retain the corrected-source native/sanitizer results, exact game
+inputs, 27 local checks, 55 listen checks and 57 dedicated checks. The bounded
+dedicated startup correction `81cd1c5` passes the original four-player driver.
+Headless menu teardown/reload passes five checks; fresh-process recovery passes
+seven. A clean extraction of the private development game verifies all 160
+payload hashes and reaches actual rules startup with exit 0 and no script errors.
+The private archive is not presented as an accepted native candidate.
+
+Restoration commit `7f78ed4` is pushed with a clean tree and the exact `b6b21a0`
+native fingerprint. Candidate `42987296894` attempt 2 reruns only Linux Debug
+and required dependents; the other three successful profiles are reused.
+Aggregate acceptance and the accepted-input game package remain pending.

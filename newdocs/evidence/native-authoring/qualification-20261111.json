@@ -1,0 +1,927 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-11",
+  "Branch": "feature/luau-native-authoring",
+  "MainBaseline": "5d5bb84cfecfff46d7d5048db3171a199fd754be",
+  "NativeRevision": "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+  "DedicatedBootstrapCorrection": "81cd1c5b52629d3e015dead318493d50c21b3b62",
+  "Runs": {
+    "Core": 42987291392,
+    "Native": 42987291389,
+    "FullNativeSanitizers": 42987292678,
+    "Candidate": 42987296894,
+    "TemporaryCloseDiagnostics": 42994671128
+  },
+  "Native": {
+    "runtime-native-Linux-Debug": {
+      "Summary": "native-b6/runtime-native-Linux-Debug/_temp/native-ci/summary.json",
+      "SummarySHA256": "4f718a85f59d76c8e6a15039fae00bbd8716ee91e2446891cd5a9132fdb6de59",
+      "Revision": "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+      "NativeSource": {
+        "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+        "Files": 103,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "AuthoringFixtureSHA256": "8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69",
+      "AuthoringPassed": true,
+      "ConstructionSample": {
+        "BatchChildren": 64,
+        "Microseconds": 29437,
+        "Objects": 122.0,
+        "Resources": 1.0
+      },
+      "LogSHA256": "6f46ae730d621a07802b7e6e224220fb67fa0e3490a43e09eccecb926edac37a"
+    },
+    "runtime-native-Windows-Debug": {
+      "Summary": "native-b6/runtime-native-Windows-Debug/_temp/native-ci/summary.json",
+      "SummarySHA256": "e82a11960a23bd4f6a2a15ba0037405d5cd155dd9fa07272e068a1d5997dd808",
+      "Revision": "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+      "NativeSource": {
+        "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+        "Files": 103,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "AuthoringFixtureSHA256": "8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69",
+      "AuthoringPassed": true,
+      "ConstructionSample": {
+        "BatchChildren": 64,
+        "Microseconds": 22247,
+        "Objects": 121.0,
+        "Resources": 1.0
+      },
+      "LogSHA256": "c79295908de1338a311adde0ff38c5f3fa17c61b49ee859b84a4dedff800719b"
+    },
+    "runtime-native-sanitizers-Linux": {
+      "Summary": "san-b6/runtime-native-sanitizers-Linux/_temp/native-sanitizer-evidence/native/summary.json",
+      "SummarySHA256": "e415019f286dd09b05ac5666f2b10e9a7e1ef683d86c9790b8a6a38124e11232",
+      "Revision": "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+      "NativeSource": {
+        "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+        "Files": 103,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "AuthoringFixtureSHA256": "8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69",
+      "AuthoringPassed": true,
+      "ConstructionSample": {
+        "BatchChildren": 64,
+        "Microseconds": 60110,
+        "Objects": 122.0,
+        "Resources": 1.0
+      },
+      "LogSHA256": "429b772860b8430f3581f9c45f2e0e4d99c7eb83511bc29bc1d3cae9f191a8bf"
+    },
+    "runtime-native-sanitizers-Windows": {
+      "Summary": "san-b6/runtime-native-sanitizers-Windows/_temp/native-sanitizer-evidence/native/summary.json",
+      "SummarySHA256": "bc01bf024010b240ac04e6e7ac856e12f3ea0835abbb7ae0ca02d61503db38a2",
+      "Revision": "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+      "NativeSource": {
+        "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+        "Files": 103,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "AuthoringFixtureSHA256": "8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69",
+      "AuthoringPassed": true,
+      "ConstructionSample": {
+        "BatchChildren": 64,
+        "Microseconds": 173605,
+        "Objects": 122.0,
+        "Resources": 1.0
+      },
+      "LogSHA256": "fad1843573fd64bdd6a88f66e4cafd271462953cba9e108dab77c68e45742075"
+    }
+  },
+  "Gameplay": {
+    "b6-rendered-local": [
+      {
+        "Report": "b6-rendered-local/gameplay-result.json",
+        "SHA256": "0042332207bf1df005a3136dfa42a42d273f261dcae50ef0c86b7ba42afabc6b",
+        "Cases": 27,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 65.517,
+        "MeanFrameMS": 33.4890492037926,
+        "PeakFrameMS": 144.856,
+        "NativeObjects": 170.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "adversarial requests traverse actual public game endpoint",
+            "Passed": true
+          },
+          {
+            "Label": "clients cannot claim victory, kills, damage or stale-round interactions",
+            "Passed": true
+          },
+          {
+            "Label": "Client cannot overwrite authoritative health",
+            "Passed": true
+          },
+          {
+            "Label": "walk to physics playground",
+            "Passed": true
+          },
+          {
+            "Label": "Luau interaction applies native rigid-body impulse",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (-14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (0.0, 0.0, -20.0)",
+            "Passed": true
+          },
+          {
+            "Label": "three authoritative interactions activate relays",
+            "Passed": true
+          },
+          {
+            "Label": "actual weapon defeats six authoritative drones",
+            "Passed": true
+          },
+          {
+            "Label": "complete playable victory",
+            "Passed": true
+          },
+          {
+            "Label": "round result acknowledged by actual DataStore",
+            "Passed": true
+          },
+          {
+            "Label": "results suspend existing movement context",
+            "Passed": true
+          },
+          {
+            "Label": "rendered game and results captured",
+            "Passed": true
+          },
+          {
+            "Label": "results UI starts another round",
+            "Passed": true
+          },
+          {
+            "Label": "held result-screen input cannot reactivate in the next round",
+            "Passed": true
+          },
+          {
+            "Label": "walk into marked hazard",
+            "Passed": true
+          },
+          {
+            "Label": "damage, death and native automatic respawn",
+            "Passed": true
+          },
+          {
+            "Label": "controller follows replacement Character",
+            "Passed": true
+          },
+          {
+            "Label": "reactor pressure produces real failure condition",
+            "Passed": true
+          },
+          {
+            "Label": "failed round also persists",
+            "Passed": true
+          }
+        ]
+      }
+    ],
+    "b6-recovery": [
+      {
+        "Report": "b6-recovery/gameplay-result.json",
+        "SHA256": "78dcef5c4c5a809283f12f4cd449136fa098356665ee348b28aa43c25877cab3",
+        "Cases": 7,
+        "Failed": 0,
+        "Graphical": false,
+        "Seconds": 2.878,
+        "MeanFrameMS": 32.8539318181818,
+        "PeakFrameMS": 37.621,
+        "NativeObjects": 164.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "fresh process recovers acknowledged career progress",
+            "Passed": true
+          }
+        ]
+      }
+    ],
+    "b6-menu-reload": [
+      {
+        "Report": "b6-menu-reload/gameplay-result.json",
+        "SHA256": "dc16170e3092055b356a5160c0b84cb87ff74091334cf926ab98b4dd02980f4a",
+        "Cases": 5,
+        "Failed": 0,
+        "Graphical": false,
+        "Seconds": 15.492,
+        "MeanFrameMS": 33.2843197424893,
+        "PeakFrameMS": 60.6473333333333,
+        "NativeObjects": 29.0,
+        "Assertions": [
+          {
+            "Label": "Luau-authored menu ready",
+            "Passed": true
+          },
+          {
+            "Label": "main menu available before a session",
+            "Passed": true
+          },
+          {
+            "Label": "unreachable server produces an in-game connection error",
+            "Passed": true
+          },
+          {
+            "Label": "retry controls remain accessible",
+            "Passed": true
+          },
+          {
+            "Label": "main menu returns after actual session teardown",
+            "Passed": true
+          }
+        ]
+      }
+    ],
+    "b6-rendered-listen": [
+      {
+        "Report": "b6-rendered-listen/latejoin/evidence/gameplay-result.json",
+        "SHA256": "34cb3c7cf361391e7ce44644669e6ba171aeb67f3074049b25b24903b93e0159",
+        "Cases": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 23.989,
+        "MeanFrameMS": 33.7207489106757,
+        "PeakFrameMS": 141.793,
+        "NativeObjects": 244.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ]
+      },
+      {
+        "Report": "b6-rendered-listen/leader/evidence/gameplay-result.json",
+        "SHA256": "99af1e60c925d40da6ebf5178739b3818d93863bee7569ded4a8ca908f4d7310",
+        "Cases": 28,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 66.144,
+        "MeanFrameMS": 33.4873790536943,
+        "PeakFrameMS": 143.126666666666,
+        "NativeObjects": 171.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "four actual ENet players share the arena",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "adversarial requests traverse actual public game endpoint",
+            "Passed": true
+          },
+          {
+            "Label": "clients cannot claim victory, kills, damage or stale-round interactions",
+            "Passed": true
+          },
+          {
+            "Label": "Client cannot overwrite authoritative health",
+            "Passed": true
+          },
+          {
+            "Label": "walk to physics playground",
+            "Passed": true
+          },
+          {
+            "Label": "Luau interaction applies native rigid-body impulse",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (-14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (0.0, 0.0, -20.0)",
+            "Passed": true
+          },
+          {
+            "Label": "three authoritative interactions activate relays",
+            "Passed": true
+          },
+          {
+            "Label": "actual weapon defeats six authoritative drones",
+            "Passed": true
+          },
+          {
+            "Label": "complete playable victory",
+            "Passed": true
+          },
+          {
+            "Label": "round result acknowledged by actual DataStore",
+            "Passed": true
+          },
+          {
+            "Label": "results suspend existing movement context",
+            "Passed": true
+          },
+          {
+            "Label": "rendered game and results captured",
+            "Passed": true
+          },
+          {
+            "Label": "results UI starts another round",
+            "Passed": true
+          },
+          {
+            "Label": "held result-screen input cannot reactivate in the next round",
+            "Passed": true
+          },
+          {
+            "Label": "walk into marked hazard",
+            "Passed": true
+          },
+          {
+            "Label": "damage, death and native automatic respawn",
+            "Passed": true
+          },
+          {
+            "Label": "controller follows replacement Character",
+            "Passed": true
+          },
+          {
+            "Label": "reactor pressure produces real failure condition",
+            "Passed": true
+          },
+          {
+            "Label": "failed round also persists",
+            "Passed": true
+          }
+        ]
+      },
+      {
+        "Report": "b6-rendered-listen/observer1/evidence/gameplay-result.json",
+        "SHA256": "86995924e62a3a402cad218c5bc8b5c47e81ebcb85ce2f41ac0833e5d5d75d91",
+        "Cases": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 26.838,
+        "MeanFrameMS": 33.6967495210733,
+        "PeakFrameMS": 148.928333333334,
+        "NativeObjects": 244.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ]
+      },
+      {
+        "Report": "b6-rendered-listen/observer2/evidence/gameplay-result.json",
+        "SHA256": "9aea19ef5cf907258b92b5a757c1eaeb2e3dda2472ed6c08fd86bd0d76833bd8",
+        "Cases": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 26.479,
+        "MeanFrameMS": 33.7126681243931,
+        "PeakFrameMS": 150.0,
+        "NativeObjects": 244.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ]
+      }
+    ],
+    "dedicated-bootstrap-fixed": [
+      {
+        "Report": "dedicated-bootstrap-fixed/latejoin/evidence/gameplay-result.json",
+        "SHA256": "5900150fa04a9d09bea592eea94584d4fabb6c2bac2b26e6d7fb6d79f6e3e21d",
+        "Cases": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 30.922,
+        "MeanFrameMS": 33.6565082508257,
+        "PeakFrameMS": 137.740333333333,
+        "NativeObjects": 245.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ]
+      },
+      {
+        "Report": "dedicated-bootstrap-fixed/leader/evidence/gameplay-result.json",
+        "SHA256": "4356804ba86a8b59ea4ef5b418f3f8192924b83133acb283f6e2f97ed2ef25a4",
+        "Cases": 28,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 68.695,
+        "MeanFrameMS": 33.5178445934326,
+        "PeakFrameMS": 144.348333333333,
+        "NativeObjects": 171.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "four actual ENet players share the arena",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "adversarial requests traverse actual public game endpoint",
+            "Passed": true
+          },
+          {
+            "Label": "clients cannot claim victory, kills, damage or stale-round interactions",
+            "Passed": true
+          },
+          {
+            "Label": "Client cannot overwrite authoritative health",
+            "Passed": true
+          },
+          {
+            "Label": "walk to physics playground",
+            "Passed": true
+          },
+          {
+            "Label": "Luau interaction applies native rigid-body impulse",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (-14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (14.0, 0.0, -10.0)",
+            "Passed": true
+          },
+          {
+            "Label": "walk to relay (0.0, 0.0, -20.0)",
+            "Passed": true
+          },
+          {
+            "Label": "three authoritative interactions activate relays",
+            "Passed": true
+          },
+          {
+            "Label": "actual weapon defeats six authoritative drones",
+            "Passed": true
+          },
+          {
+            "Label": "complete playable victory",
+            "Passed": true
+          },
+          {
+            "Label": "round result acknowledged by actual DataStore",
+            "Passed": true
+          },
+          {
+            "Label": "results suspend existing movement context",
+            "Passed": true
+          },
+          {
+            "Label": "rendered game and results captured",
+            "Passed": true
+          },
+          {
+            "Label": "results UI starts another round",
+            "Passed": true
+          },
+          {
+            "Label": "held result-screen input cannot reactivate in the next round",
+            "Passed": true
+          },
+          {
+            "Label": "walk into marked hazard",
+            "Passed": true
+          },
+          {
+            "Label": "damage, death and native automatic respawn",
+            "Passed": true
+          },
+          {
+            "Label": "controller follows replacement Character",
+            "Passed": true
+          },
+          {
+            "Label": "reactor pressure produces real failure condition",
+            "Passed": true
+          },
+          {
+            "Label": "failed round also persists",
+            "Passed": true
+          }
+        ]
+      },
+      {
+        "Report": "dedicated-bootstrap-fixed/observer1/evidence/gameplay-result.json",
+        "SHA256": "7cfe4b97baea9d07af8af8de3697546252bd00f1ee046228cb48319bddab5834",
+        "Cases": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 34.593,
+        "MeanFrameMS": 33.6322265938077,
+        "PeakFrameMS": 144.850666666667,
+        "NativeObjects": 245.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ]
+      },
+      {
+        "Report": "dedicated-bootstrap-fixed/observer2/evidence/gameplay-result.json",
+        "SHA256": "786c8b9da1899180cafa0d067d40ab1a0b6b058d4e04405754a43b6ca9d7ab01",
+        "Cases": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "Seconds": 34.026,
+        "MeanFrameMS": 33.6266204325138,
+        "PeakFrameMS": 143.885666666667,
+        "NativeObjects": 245.0,
+        "Assertions": [
+          {
+            "Label": "actual Luau game, native Character and Scripted controller ready",
+            "Passed": true
+          },
+          {
+            "Label": "explicit Scripted opt-in",
+            "Passed": true
+          },
+          {
+            "Label": "actual input moves native Character",
+            "Passed": true
+          },
+          {
+            "Label": "actual input jumps",
+            "Passed": true
+          },
+          {
+            "Label": "Luau can observe actual SoftBody3D identity and transform",
+            "Passed": true
+          },
+          {
+            "Label": "local semantic interaction releases actual native soft-body anchor",
+            "Passed": true
+          },
+          {
+            "Label": "real ENet peer roster",
+            "Passed": true
+          },
+          {
+            "Label": "observer receives authoritative victory",
+            "Passed": true
+          },
+          {
+            "Label": "shared round identity",
+            "Passed": true
+          }
+        ]
+      },
+      {
+        "Report": "dedicated-bootstrap-fixed/server/evidence/gameplay-result.json",
+        "SHA256": "3eafb4d412be5c89d571472e901b8f037e9fc38f3af5550f7b1f78a31e777a2e",
+        "Cases": 2,
+        "Failed": 0,
+        "Graphical": false,
+        "Seconds": 71.6,
+        "MeanFrameMS": 33.315054418604,
+        "PeakFrameMS": 34.768,
+        "NativeObjects": 72.0,
+        "Assertions": [
+          {
+            "Label": "actual dedicated game Server ready",
+            "Passed": true
+          },
+          {
+            "Label": "dedicated server commits actual team victory",
+            "Passed": true
+          }
+        ]
+      }
+    ]
+  },
+  "GameInputSHA256": {
+    "b6-development-game": {
+      "Arena.luau": "dafd030ca558fcd9a54b3ea14e667d511d03c0227a4cefb3a1762583163c477d",
+      "Client.luau": "a9947dc23cf4da53a8dd5d0b5159b35525dc4ca22dcee0da937be8fb3e414ecb",
+      "PlayerController.luau": "55dca8a3da95cab22ce1a8d5d87b49e663f40bb9ab7e57da13dbb17e077ad413",
+      "Presentation.luau": "fcc80e7fac340c82a75189c1e7297edc0345700df656fb85ddfeb1ebff2c4b94",
+      "Server.luau": "ff86f4a219fbc21c6d0e157c4883d93e3ccaee8ab69963023ca4b0d83d05665c",
+      "Game.gd": "f151e9353712b0bfa0a4cd27204a7776eeaea2b83c0668d351987f7f2e56720d",
+      "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": "39b0d3839536c035d30fa64499c6120059d3409aedfd32b36fcea50ec8b21a3c",
+      "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": "4a33ac5e29e6d2cee5de7279993bda43d18243b3f434cc639cd1567c9b03e32c",
+      "GodotLuau/bin/godot_luau_store_worker.exe": "a2378d76bb738d97887a2b538422839d4c3bb439797a46ebeb395cd7280f9685"
+    },
+    "b6-menu-game": {
+      "Arena.luau": "dafd030ca558fcd9a54b3ea14e667d511d03c0227a4cefb3a1762583163c477d",
+      "Client.luau": "a9947dc23cf4da53a8dd5d0b5159b35525dc4ca22dcee0da937be8fb3e414ecb",
+      "PlayerController.luau": "55dca8a3da95cab22ce1a8d5d87b49e663f40bb9ab7e57da13dbb17e077ad413",
+      "Presentation.luau": "fcc80e7fac340c82a75189c1e7297edc0345700df656fb85ddfeb1ebff2c4b94",
+      "Server.luau": "ff86f4a219fbc21c6d0e157c4883d93e3ccaee8ab69963023ca4b0d83d05665c",
+      "Game.gd": "641e60992e4bcaae6850384be814f8c8618dcb43a93ff75bc9da244b911e90d9",
+      "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": "39b0d3839536c035d30fa64499c6120059d3409aedfd32b36fcea50ec8b21a3c",
+      "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": "4a33ac5e29e6d2cee5de7279993bda43d18243b3f434cc639cd1567c9b03e32c",
+      "GodotLuau/bin/godot_luau_store_worker.exe": "a2378d76bb738d97887a2b538422839d4c3bb439797a46ebeb395cd7280f9685"
+    }
+  },
+  "PrivatePackageStartup": {
+    "Kind": "PRIVATE_DEVELOPMENT_PACKAGE_STARTUP",
+    "Passed": true,
+    "Exit": 0,
+    "ArchiveSHA256": "14dcd2849e4d5753a2d44e3a98c358988133e65156a79cf263c3e885eb2ac4ce",
+    "GameRevision": "81cd1c5b52629d3e015dead318493d50c21b3b62",
+    "CandidateSource": {
+      "Revision": "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+      "Tree": "db79adcedf180b3cd989dbd120da206a563e5ce3",
+      "Dependencies": {
+        "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+        "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+      },
+      "NativeSource": {
+        "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+        "Files": 103,
+        "Newlines": "LF normalized"
+      }
+    },
+    "FilesVerified": 160,
+    "AggregateNativeAcceptance": false
+  },
+  "CandidateAcceptance": "Pending Linux Debug retry and dependent package gates",
+  "EvidenceRoot": "native-authoring-20261111",
+  "Limits": [
+    "Windows rendered automation uses Godot-simulated input, not physical devices or OS capture",
+    "Dedicated server is headless; all four clients render",
+    "Full-native sanitizer evidence does not qualify complete rendered game sessions",
+    "Windows LSan remains unsupported",
+    "Graph construction samples include bootstrap/loading and coarse monitor deltas; not isolated API overhead or allocation profiles",
+    "Known retired ENet channel diagnostics occur during multiplayer teardown",
+    "Prior close-save failures remain retained; their cause is unproven",
+    "Private development archives are explicitly unaccepted native candidates; no distribution authorized"
+  ]
+}
