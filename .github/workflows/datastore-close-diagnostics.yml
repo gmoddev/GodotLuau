@@ -1,0 +1,61 @@
+name: DataStore close failure diagnostics (no publication)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  Diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Use the existing pinned frontend and host toolchain
+        run: |
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r tools/ReleaseBuildRequirements.txt
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y clang-19 lld-19 pkg-config ninja-build
+      - name: Provision the existing official asset host
+        run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
+      - name: Build the unchanged admitted Debug host
+        run: python tests/runtime/BuildSanitizedGodot.py --output "$RUNNER_TEMP/remote-host" --remote-admission --configuration Debug --jobs 2 --timeout 7000
+      - name: Repeat the exact existing Linux Debug candidate profile
+        id: profile
+        continue-on-error: true
+        run: python tools/ReleaseCandidate.py build --revision "$GITHUB_SHA" --configuration Debug --godot "$RUNNER_TEMP/godot" --remote-host "$RUNNER_TEMP/remote-host/remote-host.json" --output "$RUNNER_TEMP/profile"
+      - name: Bounded existing actor replays for the unresolved close failure
+        if: always()
+        id: replay
+        run: |
+          ENGINE=$(python -c 'import json,os; print(json.load(open(os.environ["RUNNER_TEMP"]+"/remote-host/remote-host.json"))["Executable"])')
+          test -f "$RUNNER_TEMP/profile/adapter/godot_luau.so"
+          for TRIAL in 1 2 3 4 5; do
+            python tests/runtime/RunQualification.py --godot "$ENGINE" --extension "$RUNNER_TEMP/profile/adapter/godot_luau.so" --output "$RUNNER_TEMP/replay-filesystem-$TRIAL" --filesystem --timeout 60
+          done
+      - name: Retain cause evidence without accepting a candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: datastore-close-diagnostics-Linux-Debug
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/profile/**/*.log
+            ${{ runner.temp }}/profile/**/*.json
+            ${{ runner.temp }}/replay-filesystem-*/**/*.log
+            ${{ runner.temp }}/remote-host/remote-host.json
+            ${{ runner.temp }}/remote-host-attempts/**
+      - name: Preserve every failed profile or actor outcome
+        if: always()
+        env:
+          PROFILE_OUTCOME: ${{ steps.profile.outcome }}
+          REPLAY_OUTCOME: ${{ steps.replay.outcome }}
+        run: test "$PROFILE_OUTCOME" = success && test "$REPLAY_OUTCOME" = success

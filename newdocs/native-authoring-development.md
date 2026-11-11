@@ -139,8 +139,8 @@ API benchmarks. The coarse monitor reports 121/122 Objects and 1 Resource, not
 an allocation profile. Initialized impulse velocity is 1.996667 on all lanes.
 
 Candidate `42979201593` first passes Windows Debug/Linux Release, but Linux Debug
-exceeds the existing 250 ms synchronous close-save budget in HTTP lifecycle
-(explicit indeterminate outcome), and Windows Release times out on the existing
+has an indeterminate synchronous close-save outcome and fails the HTTP fixture's
+250 ms teardown assertion, and Windows Release times out on the existing
 adversarial replacement-life receipt barrier. Those actors pass the ordinary
 native/sanitizer lanes. Attempt 2 retries only the two failed profiles, preserving
 the original logs and every assertion/deadline. It is not yet accepted.
@@ -174,3 +174,30 @@ resolved by that canceled retry. Current-source profile results will be recorded
 separately. Prior gameplay includes 27 rendered local checks, successful restart
 recovery and rendered four-player listen play, all on its explicitly retained
 development inputs. It is not relabeled as corrected-enum qualification.
+
+## Close-save cause investigation
+
+The corrected cohort's native Windows/Linux lanes pass. Linux ASan/LSan passes;
+candidate Linux Release also passes. Linux Debug candidate `42987296894` fails
+the existing filesystem actor's Fresh close-save with another indeterminate
+outcome. No scene scope is constructed in either failing storage actor, and the
+storage implementation/fixtures are unchanged from the campaign baseline.
+
+Focused read-only review establishes that Work::Fail discards its fixed internal
+cause once a complete mutation request enters the pipe. The evidence therefore
+does **not** establish a timeout or cold-start cause. HTTP also exceeds its 250 ms
+teardown assertion; filesystem's Fresh script successfully reads immediately
+before registering its close hook. No competing writer is introduced. There is
+no FD-limit/close-all loop in the Linux spawn implementation, and no relevant
+Debug worker compile-option difference was found between passing ordinary native
+and failing candidate lanes. The earlier timeout interpretation is corrected.
+
+Temporary `GL_RUNTIME_TESTS` parent-side diagnostics retain only fixed cause,
+operation, byte counts, reply/exit status and deadline distance. They preserve the
+public error and every deadline, emit no values/paths/tokens and never write into
+the helper's binary response pipe. A manual read-only-permission diagnostics job
+reuses the exact existing Linux Debug profile and at most five existing filesystem
+actor replays. Failures remain failed; logs are always retained. This is bounded
+investigation of an actual blocker, not a new candidate acceptance gate. Remove
+temporary instrumentation after cause capture; do not change persistence behavior
+or relax the qualification contract on the basis of a guessed cause.
