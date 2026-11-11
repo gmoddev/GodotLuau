@@ -307,7 +307,7 @@ int Get(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); Object* Target=TargetAt(Thread,Scope,2,false);
     const char* Key=CheckedString(Thread,3); PushProperty(Thread,Scope,Target,Key); return 1;
 }
-int Mesh(lua_State* Thread) {
+int BuildMesh(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); auto Primitive=Object::cast_to<PrimitiveMesh>(TargetAt(Thread,Scope,2,false));
     if (!Primitive) luaL_error(Thread,"[Scene:Type] Mesh requires a primitive resource");
     Array Arrays=Primitive->get_mesh_arrays();
@@ -319,7 +319,8 @@ int Mesh(lua_State* Thread) {
 int Pin(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); auto Body=Object::cast_to<SoftBody3D>(TargetAt(Thread,Scope,2,true));
     double Index=luaL_checknumber(Thread,3); luaL_checktype(Thread,4,LUA_TBOOLEAN);
-    Ref<ArrayMesh> Geometry=Body?Body->get_mesh():Ref<ArrayMesh>();
+    Ref<ArrayMesh> Geometry;
+    if (Body) Geometry=Body->get_mesh();
     if (!Body || !Body->is_inside_tree() || Geometry.is_null() || Geometry->get_surface_count()!=1 || !Bounded(Index,0,8191) || Index!=std::floor(Index) || Index>=Geometry->surface_get_array_len(0))
         luaL_error(Thread,"[Scene:Type] Pin requires an active soft body and valid vertex");
     Body->set_point_pinned(int(Index),lua_toboolean(Thread,4)!=0); return 0;
@@ -513,7 +514,7 @@ bool GLSceneIndex(lua_State* Thread, Node* Target, const char* Key) {
     if (Scope->Retired || Scope->is_queued_for_deletion()) luaL_error(Thread,"[Scene:Lifetime] Scene was retired");
     if (Target==Scope) {
         struct Method { const char* Name; lua_CFunction Function; };
-        static const Method Methods[]={{"New",New},{"Configure",Configure},{"Get",Get},{"Mesh",Mesh},{"Pin",Pin},{"Tone",Tone},{"Load",Load},{"Play",Play},{"Stop",Stop},{"Impulse",Impulse},{"Connect",Connect}};
+        static const Method Methods[]={{"New",New},{"Configure",Configure},{"Get",Get},{"Mesh",BuildMesh},{"Pin",Pin},{"Tone",Tone},{"Load",Load},{"Play",Play},{"Stop",Stop},{"Impulse",Impulse},{"Connect",Connect}};
         for (const auto& Item:Methods) if (!strcmp(Key,Item.Name)) {
             if (!Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Authority] Scope methods require its live execution owner");
             lua_pushcfunction(Thread,Item.Function,Item.Name); return true;

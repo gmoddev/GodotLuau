@@ -79,3 +79,14 @@ DockerPC's heavy lease is still held at 06:52 UTC; no worker build is admitted.
 Godot 4.7.1 headless `--check-only` passes Game.gd, RelaySiege.gd and
 NativeAuthoringCases.gd with empty stderr after correcting fixture type inference.
 This syntax observation is distinct from executing native runtime cases.
+
+### First native compile correction
+
+Run `42975096521` fails Linux compilation in the new adapter: the soft-body mesh
+getter returns `Ref<Mesh>`, making a conditional with `Ref<ArrayMesh>` ambiguous;
+the internal helper `Mesh` also conflicts with the imported Godot class name.
+Use explicit checked Ref assignment and rename only that internal helper to
+BuildMesh. The public API is unchanged. The Linux job log is retained under
+`native-authoring-20261111/failed-b8c09bc/Linux-job.log`; the obsolete Windows
+job is canceled instead of continuing inputs known to fail. No runtime pass is
+attributed to this attempt. Retry uses these concrete compilation corrections.
