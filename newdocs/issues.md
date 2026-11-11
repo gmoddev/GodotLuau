@@ -99,6 +99,24 @@ four successful workflows and independently checked artifacts.
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 | GL-049 | P2 | Implementation on isolated branch; qualification pending | Native resource/UI/scene authoring requires application GDScript adapters |
+| GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
+
+## GL-050: DataStore receive/exit ordering
+
+Focused review during [native authoring qualification](native-authoring-development.md)
+finds a source-verified race in `gl_datastore.cpp` Work::Advance: Receive can
+return empty, the helper can then write its reply and exit, and the following
+Finished check reports failure without another drain. Finished preserves the
+output pipe on both platforms. Snapshotting exit state before draining is a
+small proposed correction; it is not implemented or qualified by this campaign.
+
+This is not an established cause of the recorded candidate close-save failures.
+A missed OK reply would leave its committed value present; those failures also
+observe missing final values. The temporary cause diagnostics reproduce no
+unexpected failure in one full Linux Debug profile and five filesystem replays.
+Keep this transport finding separate from the unproven close-save cause. A
+follow-up needs controlled transport interleaving coverage and preservation of
+the existing reply, deadline and helper-exit checks, without a storage refactor.
 
 ## GL-049: Typed native game authoring
 

@@ -8,9 +8,6 @@
 #include <godot_cpp/classes/time.hpp>
 #include <array>
 #include <vector>
-#ifdef GL_RUNTIME_TESTS
-#include <cstdio>
-#endif
 #ifndef _WIN32
 #include <dlfcn.h>
 #endif
@@ -63,9 +60,6 @@ struct Work {
     uint64_t Deadline=0;
     Result Answer;
     const char* Error=nullptr;
-#ifdef GL_RUNTIME_TESTS
-    const char* FailureReason=nullptr;
-#endif
     bool Done=false,OwnSlot=false,Replied=false;
     ~Work() {
         if (Child) {
@@ -75,9 +69,6 @@ struct Work {
         if (OwnSlot) --Slots;
     }
     void Fail(const char* Reason) {
-#ifdef GL_RUNTIME_TESTS
-        FailureReason=Reason;
-#endif
         Error=Op!=Operation::Read && Sent==Input.size()?Message(Status::Indeterminate):Reason;
         Done=true;
     }
@@ -127,15 +118,6 @@ struct Work {
         if (Child->Failed || (Empty && Child->Finished())) Fail("Helper exited without completion");
     }
     int Marshal(lua_State* Thread) {
-#ifdef GL_RUNTIME_TESTS
-        if (Error) {
-            // Parent-side, bounded metadata only. The helper's stdout/stderr
-            // share its binary response pipe and must not receive trace text.
-            std::fprintf(stderr,"[Persistence:Diagnostic] Cause=%s Op=%u Sent=%zu/%zu Received=%zu Replied=%d Reply=%d Exit=%d PipeFailed=%d DeadlineRemainingMs=%lld\n",
-                FailureReason?FailureReason:"Start or backend status",unsigned(Op),Sent,Input.size(),Output.size(),int(Replied),Replied?int(Answer.Code):-1,
-                Child?Child->Exit:-1,Child?int(Child->Failed):0,static_cast<long long>(Deadline)-static_cast<long long>(Now()));
-        }
-#endif
         if (Error) { lua_pushfstring(Thread,"[Persistence:DataStore] %s",Error); return 1; }
         if (Op==Operation::Read) {
             if (Answer.Exists) lua_pushlstring(Thread,Answer.Data.data(),Answer.Data.size()); else lua_pushnil(Thread);

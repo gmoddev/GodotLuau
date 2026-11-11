@@ -217,3 +217,21 @@ dedicated startup and validate its CLI port directly. Keep all native transport,
 arena/rules, Character and persistence code unchanged. Preserve the failed replay
 under `b6-rendered-dedicated`; run the same existing dedicated driver after this
 bounded bootstrap correction. No client UI is moved into Server execution.
+
+### Diagnostic outcome and retained limits
+
+[Diagnostic run 42994671128](https://github.com/gmoddev/GodotLuau/actions/runs/42994671128)
+passes the exact Linux Debug profile (85 core/141 native) and five additional
+existing filesystem actor replays. The only eight diagnostic lines belong to
+expected contention/failure/incompatible/missing-helper cases. No unexpected
+close failure is reproduced, so its cause remains unproven. No deadline,
+assertion, storage location or persistence behavior is changed. Remove the
+temporary test-only instrumentation/workflow; restore exact native fingerprint
+`350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68`.
+Retry only the failed `b6b21a0` Linux Debug profile on a fresh runner, reusing the
+three already-passed profiles. Prior failures remain evidence and a scope limit.
+
+Review separately identifies the [GL-050](issues.md#gl-050-datastore-receiveexit-ordering)
+receive/exit race. It is source verified, not reproduced as the current cause;
+do not bundle an unqualified persistence change into the authoring campaign.
+The diagnostic commits remain in history while their temporary code is removed.
