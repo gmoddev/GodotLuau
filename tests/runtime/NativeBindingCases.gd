@@ -6,6 +6,28 @@ func Write(Path: String, Text: String) -> void:
     File.store_string(Text)
 
 func Run(Runner, Game: Node) -> void:
+    Write("res://BindingFont.tres", """[gd_resource type="SystemFont" format=3]
+[resource]
+font_names = PackedStringArray("sans-serif")
+""")
+    Write("res://BindingUI.tscn", """[gd_scene format=3]
+[node name="NativeUI" type="Control"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 6.0
+offset_right = 104.0
+offset_bottom = 36.0
+""")
+    var Deep := "[gd_scene format=3]\n[node name=\"Deep\" type=\"Node3D\"]\n"
+    var ParentPath := "."
+    for Index in range(33):
+        Deep += "[node name=\"N%d\" type=\"Node3D\" parent=\"%s\"]\n" % [Index, ParentPath]
+        ParentPath = "N0" if Index==0 else ParentPath+"/N%d" % Index
+    Write("res://BindingDeep.tscn", Deep)
+    var Wide := "[gd_scene format=3]\n[node name=\"Wide\" type=\"Node3D\"]\n"
+    for Index in range(2048):
+        Wide += "[node name=\"N%d\" type=\"Node3D\" parent=\".\"]\n" % Index
+    Write("res://BindingWide.tscn", Wide)
     Write("res://BindingTexture.tres", """[gd_resource type="GradientTexture2D" load_steps=2 format=3]
 [sub_resource type="Gradient" id="Gradient_native"]
 colors = PackedColorArray(0.1,0.8,0.9,1,0.9,0.4,0.1,1)
@@ -62,6 +84,12 @@ assert(Info.Properties.Position.Type=='Vector2' and Info.Signals.Resized~=nil)
 assert(#Scene.PolicySHA256==64 and #Scene.ApiSHA256==64)
 assert(not pcall(function() Scene.Enums.Control.MouseFilter.MOUSE_FILTER_IGNORE=100 end))
 local Texture=S:Load('Texture2D','res://BindingTexture.tres')
+local Font=S:Load('Font','res://BindingFont.tres')
+local Caption=S:New('Label',{Name='Caption',Text='Native font',Font=Font})
+S:New('Label3D',{Name='WorldCaption',Text='Native font',Font=Font})
+assert(S:Get(Caption,'Font')==Font)
+local UI=S:Instantiate(S:Load('PackedScene','res://BindingUI.tscn'))
+assert(UI:IsA('Control') and UI.Position.X==4 and UI.Size.X==100)
 assert(Texture==S:Load('Texture2D','res://BindingTexture.tres'))
 assert(S:Call(Texture,'GetWidth')==16 and S:Call(Texture,'GetHeight')==16)
 local Image=S:New('TextureRect',{Name='Image',Texture=Texture,MinSize=Vector2.new(48,48),
@@ -126,6 +154,9 @@ local Bad={
  function() S:Clone(game) end,
  function() S:Instantiate(Texture) end,
  function() S:Call(Toggle,'IsPressed'..string.char(0)..'extra') end,
+ function() S:Connect(Texture,'Pressed',function() end) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingDeep.tscn')) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingWide.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingScripted.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingConnected.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingNested.tscn')) end,
@@ -144,6 +175,10 @@ game:SetAttribute('BindingReady',true)
         return
     var Scope := Game.get_node("BindingScope")
     var Image := Scope.get_node("Image") as TextureRect
+    var Caption := Scope.get_node("Caption") as Label
+    var WorldCaption := Scope.get_node("WorldCaption") as Label3D
+    Runner.Check(Caption.get_theme_font("font") is SystemFont and Caption.get_theme_font("font")==WorldCaption.font,
+        "Binding project fonts share typed native UI and 3D label resources")
     var Material := (Scope.get_node("Display") as MeshInstance3D).material_override as StandardMaterial3D
     Runner.Check(Image.texture is GradientTexture2D and Image.texture.get_width()==16, "Binding typed texture loading and native UI presentation")
     Runner.Check(Material.albedo_texture==Image.texture and is_equal_approx(Material.metallic,0.3), "Binding native material shares the loaded texture")

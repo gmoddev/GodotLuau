@@ -605,6 +605,7 @@ public:
 int Connect(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); auto Source=Object::cast_to<Node>(TargetAt(Thread,Scope,2,false));
     const char* Signal=CheckedString(Thread,3); luaL_checktype(Thread,4,LUA_TFUNCTION);
+    if (!Source) luaL_error(Thread,"[Scene:Signal] Signals require a scoped Node source");
     const auto* Item=FindSignal(Source,Signal);
     if (!Item || !Source->has_signal(Item->Native)) luaL_error(Thread,"[Scene:Signal] Unsupported source/signal %s",Signal);
     const char* Native=Item->Native;

@@ -149,3 +149,11 @@ ScriptEditor and requests completion through its public CodeEdit API, in additio
 to reusing production diagnostics cases. It exercises the actual language hook,
 does not execute the source, and adds no debugger/IDE abstraction. Hosted execution
 and the new scene/resource/game migration remain pending, not passing by syntax.
+
+Focused boundary review finds a concrete new dispatch gap: Connect cast a valid
+resource target to Node and consulted signal metadata without checking the cast.
+Reject non-Node sources first, and add a resource/Pressed negative case. This is
+a source-verified null-dereference path, not a claimed reproduced crash. The same
+fixture adds real Font UI/3D reuse, serialized Control layout and pre-instantiation
+node/depth-budget rejection. These cover new behavior rather than retesting the
+qualification runner. Native execution remains pending.

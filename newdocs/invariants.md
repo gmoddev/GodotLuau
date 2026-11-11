@@ -8,12 +8,21 @@ the inherited runtime already satisfies them. Baseline gaps link to
 ## Native identity and lifetime
 
 SceneScope authoring follows [ADR-014](adr-014-native-scene-authoring.md): exact
-execution-generation ownership, fixed native families/properties, separate typed
+execution-generation ownership, approved native families/properties, separate typed
 resource handles, bounded construction, and owner retirement before reuse.
 Resources obtained from project loading/getters remain immutable. Neither a
 retained legacy method nor generic subtree replication may bypass scope ownership
 or publish its local native objects. Godot ObjectDB and existing owner-aware
 dispatch remain the identity and callback authorities.
+
+GL-051's [ADR-015](adr-015-policy-driven-native-bindings.md) extends that boundary:
+discovery never grants execution, and runtime/type/editor surfaces must derive
+from the same checked policy. Native calls validate ownership, mutability, arity
+and bounded arguments; resource targets cannot become Node signal sources.
+PackedScenes require preflight before instantiation and ownership before tree
+entry. Clone/reparent remain within one live scope and preserve Godot identity.
+Stored scripts/connections/groups or unreviewed scene inheritance must not execute
+through composition. Analysis/completion must not execute game code.
 
 Local semantic input (ADR-012) must share UserInputService's physical adapter and
 post-GUI routing facts. Client execution owns input APIs; mutable Lua properties
