@@ -108,9 +108,9 @@ class LuauAutocomplete {
 private:
 
     static Ref<PlaceholderTexture2D> get_dummy_icon() {
-        static Ref<PlaceholderTexture2D> icon;
-        if (icon.is_null()) { icon.instantiate(); icon->set_size(Vector2(16,16)); }
-        return icon;
+        // Godot chooses themed completion icons by kind. Do not keep a GPU
+        // resource in a static Ref beyond RenderingServer shutdown.
+        return Ref<PlaceholderTexture2D>();
     }
 
     static bool is_lua_keyword(const String& w) {

@@ -254,3 +254,13 @@ Cast byte classifiers to unsigned char, bound the UTF-32 identifier scan to ASCI
 and correct the remaining early completion status returns. This is a bounded
 editor fix, not a completion refactor. Native/legacy actual-editor assertions
 remain required; no timeout or assertion is weakened.
+
+Four-player dedicated rendered play also passes with the same verified runtime;
+the server is headless and four clients render. In the `358d613` production Linux
+Debug editor attempt, legacy math completes but the first native request precedes
+initial editor-layout loading. This supports the readiness/focus fixture fix.
+That execution additionally reports a concrete shutdown diagnostic from the
+legacy static PlaceholderTexture2D icon Ref after RenderingServer destruction.
+Return an empty optional icon instead: Godot already selects themed icons by
+completion kind. No static rendering resource is needed. Keep this small lifetime
+correction separate from the passing gameplay/runtime evidence.
