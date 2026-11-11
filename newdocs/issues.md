@@ -109,7 +109,9 @@ The [campaign journal](gl-051-development.md) and
 GL-049's manually curated bindings. Preserve its ownership/domain guarantees and
 qualification while generating runtime/type/editor surfaces from one checked
 policy. New methods, native scene composition and resources require executable
-evidence. Status is implementation in progress, not completed API parity.
+evidence. [Qualification](gl-051-qualification.md) records passing generated-type
+and first full-native sanitizer cohorts, with final editor/package/game checks
+still pending. This is not completed API parity or integration readiness.
 GL-050 remains separate and unfixed.
 
 ## GL-050: DataStore receive/exit ordering

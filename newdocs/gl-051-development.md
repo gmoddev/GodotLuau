@@ -222,3 +222,12 @@ official editor. This directly qualifies the new editor feature in Debug/Release
 on both platforms and retains its normal logs/results in existing profile
 evidence. It adds no new harness, host profile, assertion relaxation or qualifier
 test suite. Core/native/sanitizer and package gates remain intact.
+
+Full-native run `43049541634` passes both platforms at `6a04029`: 1167 instrumented
+translation units, all controls, 85 core/141 native actors and expanded binding
+assertions pass without unexpected reports. Retained required evidence/hashes
+verify. [The qualification record](gl-051-qualification.md) separates that exact
+product from the corrected current editor source and pending final cohorts.
+The current language-header syntax probe passes in 2.55 seconds after matching
+the pinned Windows TYPED_METHOD_BIND compile definition; the initial probe-only
+configuration failure is retained and is not a product build failure.
