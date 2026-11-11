@@ -452,7 +452,7 @@ void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Sc
         if (!Class || !Class->Construct || Class->Resource || State->get_node_instance(Index).is_valid() || !State->get_node_groups(Index).is_empty())
             luaL_error(Thread,"[Scene:Composition] Unapproved class, nested/inherited instance or group");
         String Name=State->get_node_name(Index); auto Bytes=Name.utf8();
-        if (Bytes.length()==0 || Bytes.length()>128 || Name.contains("/") || Name.contains(":") || Name.contains(".") || Name.contains("@"))
+        if (Bytes.length()==0 || Bytes.length()>128 || std::memchr(Bytes.get_data(),0,Bytes.length()) || Name.contains("/") || Name.contains(":") || Name.contains(".") || Name.contains("@"))
             luaL_error(Thread,"[Scene:Composition] Invalid bounded scene node name");
         NodePath Path=State->get_node_path(Index);
         int LocalDepth=String(Path)=="."?0:Path.get_name_count();

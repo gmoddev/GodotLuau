@@ -149,6 +149,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/regression" --teardown --coordinated-close --timeout 60
 
+      - name: Actual Godot ScriptEditor native bindings and diagnostics
+        timeout-minutes: 2
+        run: |
+          python tests/editor/RunNativeAuthoring.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/native-editor" --timeout 60
+
       - name: GL-006 and GL-008 existing network regressions
         timeout-minutes: 4
         run: |

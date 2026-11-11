@@ -75,6 +75,10 @@ green object is a local Godot SoftBody3D demonstration, not networked cloth.
 The blue crate uses RobloxPart/ApplyImpulse and native rigid-body collisions.
 `Arena.luau` authors native geometry/materials/lighting/collision and local cloth;
 `Presentation.luau` authors native UI, HUD/results and generated audio.
+On GL-051, `RelayFactory.luau` composes the caller-owned native
+`Scenes/Relay.tscn`; materials and UI reuse `Textures/RelayPattern.tres` through
+typed project resource handles. Native text-change signals update observed menu
+fields, and checked metadata-driven audio calls retain the existing playback.
 `Game.gd` retains session/transport/lifecycle bootstrap. Server/client Luau keeps
 the existing game rules, intent and persistence. Drones use server-authored point movement and
 bounded sphere hitscan; existing workspace raycast handles world occlusion.
@@ -88,8 +92,9 @@ against arena geometry but do not block allies or eye-origin ray queries. This
 is scene configuration, not a claim of full Roblox raycast
 compatibility or an unrestricted API audit. Shot filtering no longer depends on
 the query invisibility of those hulls. The opt-in
-[native authoring API](../../newdocs/native-scene-api.md) exposes fixed typed
-families, resources and bounded pin operations while Godot remains the engine.
+[native authoring API](../../newdocs/native-scene-api.md), extended by
+[GL-051's policy-driven surface](../../newdocs/gl-051-native-api.md), exposes
+typed families, resources and bounded pin operations while Godot remains the engine.
 The [authoring journal](../../newdocs/native-authoring-development.md) tracks
 qualification of these new inputs; the earlier
 [compatibility qualification](../../newdocs/gl-044-045-relay-development.md)

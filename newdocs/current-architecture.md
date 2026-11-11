@@ -1,5 +1,14 @@
 # Current architecture
 
+On the unmerged GL-051 branch, [ADR-015](adr-015-policy-driven-native-bindings.md)
+replaces manual native selection lists with a checked declarative policy against
+the unchanged pinned Godot metadata. Generated descriptors drive runtime dispatch,
+Luau definitions and editor diagnostics/completion. Checked native calls and
+preflighted PackedScene/clone/reparent operations extend the same GL-049 scope,
+ObjectID/Ref ownership and owner-aware callbacks. No new VM, graph, scheduler or
+filesystem authority is introduced. The [API](gl-051-native-api.md) and
+[journal](gl-051-development.md) record coverage and qualification separately.
+
 The [integrated GL-049 change](gl-049-main-integration.md) in `gl_scene_authoring.cpp` adds an opt-in
 SceneScope in the existing Godot hierarchy, fixed typed native properties and
 Ref-backed resource slots. Existing ObjectDB/GLReference/shared domains remain

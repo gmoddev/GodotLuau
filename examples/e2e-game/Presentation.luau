@@ -15,6 +15,14 @@ local Menu = Scope:New("PanelContainer", {
     Size = Vector2.new(440, 540),
 }, Layer)
 local Box = Scope:New("VBoxContainer", {Name = "Box", Separation = 13}, Menu)
+Scope:New("TextureRect", {
+    Name = "NativeBadge",
+    Texture = Scope:Load("Texture2D", "res://Textures/RelayPattern.tres"),
+    MinSize = Vector2.new(32, 12),
+    ExpandMode = Scene.Enums.TextureRect.ExpandMode.EXPAND_IGNORE_SIZE,
+    StretchMode = Scene.Enums.TextureRect.StretchMode.STRETCH_KEEP_ASPECT_CENTERED,
+    MouseFilter = 2,
+}, Box)
 
 local function TextFor(Text, Parent, FontSize, Name)
     return Scope:New("Label", {Name = Name or "Label", Text = Text, FontSize = FontSize or 20}, Parent)
@@ -47,6 +55,8 @@ local PortField = Scope:New("LineEdit", {
 }, Box)
 ButtonFor("JOIN SERVER", Box, "join")
 ButtonFor("QUIT", Box, "quit")
+Scope:Connect(Address, "TextChanged", function(Value) game:SetAttribute("UIHost", Value) end)
+Scope:Connect(PortField, "TextChanged", function(Value) game:SetAttribute("UIPort", Value) end)
 local HUD = TextFor("", Layer, 22, "HUD")
 Scope:Configure(HUD, {Position = Vector2.new(22, 18), MouseFilter = 2, Visible = false})
 local Status = TextFor("WASD move • RMB look • Space jump • Shift sprint\nLMB fire • R reload • E relay • P impulse crate • Esc menu", Layer, 17, "Status")
@@ -132,7 +142,7 @@ while not game:GetAttribute("ShuttingDown") do
         if Shot ~= LastShot then
             LastShot = Shot
             FeedbackColour = Color3.new(1, 0.75, 0.25)
-            Scope:Play(Audio)
+            Scope:Call(Audio, "Play")
         else
             FeedbackColour = Color3.lerp(FeedbackColour, White, math.min(1, Delta * 12))
         end
@@ -148,4 +158,4 @@ while not game:GetAttribute("ShuttingDown") do
     end
     task.wait()
 end
-Scope:Stop(Audio)
+Scope:Call(Audio, "Stop")

@@ -33,6 +33,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+The unmerged [GL-051 campaign](gl-051-development.md) implements
+[policy-driven native bindings and authoring tools](gl-051-native-api.md) under
+[ADR-015](adr-015-policy-driven-native-bindings.md). Its journal separates new
+implementation from retained GL-049 and fresh qualification evidence.
+
 The [normally integrated GL-049 campaign](gl-049-main-integration.md)
 adds an opt-in [typed native scene API](native-scene-api.md) under
 [ADR-014](adr-014-native-scene-authoring.md), and migrates Relay Siege's arena,

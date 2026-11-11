@@ -1,5 +1,19 @@
 # Editor updater isolation
 
+GL-051 native authoring uses the actual registered Luau ScriptEditor path:
+
+```text
+python tests/editor/RunNativeAuthoring.py --godot <existing-official-Godot-4.7.1-editor> --extension <matching-GodotLuau-library> --output <fresh-directory> --timeout 60
+```
+
+This runs a hidden headless editor with an isolated profile and one fixture plugin.
+It reuses production metadata/diagnostic cases, opens a real `.lua` resource and
+requests completion through Godot's CodeEdit/ScriptLanguage route. No game source
+executes; no updater plugin is enabled. Logs/results retain the library hash.
+This does not establish a runtime debugger or graphical game correctness.
+
+The separate updater isolation check follows.
+
 Run a controlled headless editor, not the repository project:
 
 ```text

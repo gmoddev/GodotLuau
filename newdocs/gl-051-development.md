@@ -117,3 +117,35 @@ source-located native policy diagnostics without executing scripts. It conserves
 dynamic child lookup and unrelated legacy completion. This is focused native
 analysis, not a complete replacement Luau type checker or runtime debugger.
 The new production-path editor fixture and changed native code await execution.
+
+## Representative migration and current evidence
+
+At `26e281f`, core workflow `43045290405` and generated-binding workflow
+`43045290450` pass on Windows/Linux, including the actual pinned Luau checker.
+Native workflow `43045290491` still fails Linux before compilation. Its retained
+log now identifies temporary DNS failure for archive.ubuntu.com; the prior
+configured Azure mirror also failed DNS. The next bounded provisioning correction
+selects a reachable signed Ubuntu archive before APT, forces IPv4, and rejects
+index-update errors. It keeps clang-19, all engine/dependency pins and deadlines.
+Windows is still building the admitted host; no native pass is claimed.
+
+Relay Siege now uses a preauthored native relay PackedScene through a caller-scope
+Luau module factory, shared native texture/material/UI references, typed text
+signals and metadata-driven audio calls. Geometry, collision positions, gameplay
+rules, session/network/persistence and shutdown ordering stay the same. The
+bootstrap's remaining ClassDB/NetworkService/Player lifecycle duties are native
+authority and initialization boundaries; moving them through this scoped scene
+API would improperly widen authority. The module setup is the appropriate small
+bootstrap addition, not a cosmetic rewrite. Graphical/game execution is pending.
+
+Local `Game.gd` headless syntax checking, generation drift and all nine policy
+tests pass. Source review also adds embedded-NUL rejection to PackedScene node
+names, matching existing authored-name validation. DockerPC remains leased by
+the unrelated LuiSdkRecovery campaign at 15:17 UTC; no worker workload is started.
+[The API guide](gl-051-native-api.md) records exact supported behavior and limits.
+
+A focused editor fixture now opens a real Luau resource in Godot's headless
+ScriptEditor and requests completion through its public CodeEdit API, in addition
+to reusing production diagnostics cases. It exercises the actual language hook,
+does not execute the source, and adds no debugger/IDE abstraction. Hosted execution
+and the new scene/resource/game migration remain pending, not passing by syntax.
