@@ -98,6 +98,51 @@ four successful workflows and independently checked artifacts.
 | GL-046 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Character/security barrier files can appear before their peer-ID payloads are written |
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
+| GL-049 | P2 | Qualified within ADR-014 scope on isolated branch; unmerged | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
+| GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
+
+## GL-050: DataStore receive/exit ordering
+
+Focused review during [native authoring qualification](native-authoring-development.md)
+finds a source-verified race in `gl_datastore.cpp` Work::Advance: Receive can
+return empty, the helper can then write its reply and exit, and the following
+Finished check reports failure without another drain. Finished preserves the
+output pipe on both platforms. Snapshotting exit state before draining is a
+small proposed correction; it is not implemented or qualified by this campaign.
+
+This is not an established cause of the recorded candidate close-save failures.
+A missed OK reply would leave its committed value present; those failures also
+observe missing final values. The temporary cause diagnostics reproduce no
+unexpected failure in one full Linux Debug profile and five filesystem replays.
+Keep this transport finding separate from the unproven close-save cause. A
+follow-up needs controlled transport interleaving coverage and preservation of
+the existing reply, deadline and helper-exit checks, without a storage refactor.
+
+## GL-049: Typed native game authoring
+
+Baseline `5d5bb84` has Node-only Instance handles and a narrow Variant bridge;
+`_InstanceNew` discards non-Node resources. Relay Siege constructs its arena,
+materials, UI/audio and local cloth in GDScript. This is a source-verified
+authoring limitation, not a claimed sandbox vulnerability or reproduced crash.
+
+The [campaign journal](native-authoring-development.md),
+[ADR-014](adr-014-native-scene-authoring.md) and [API](native-scene-api.md) define
+the isolated implementation. Fixed-family SceneScope construction keeps existing
+ObjectID/VM identity, provides typed resource ownership, and migrates the game's
+ordinary construction into Luau. Implementation starts at `b8c09bc`; `b6b21a0`
+corrects the environment enum and `81cd1c5` corrects dedicated startup's client-UI
+wait. The [qualification record](native-authoring-qualification.md) and versioned
+receipt establish native Windows/Linux, full-native sanitizers, actual Windows
+local/listen/dedicated play, recovery/menu teardown, accepted native candidate
+`42987296894` and extracted game package `43005466053`. Both accepted Windows
+libraries and the companion match the rendered inputs exactly.
+
+Resolved within this fixed-family API scope on `feature/luau-native-authoring`;
+unmerged. No universal Godot API parity is claimed. Synchronous trusted resource
+loading, unsupported native families/serialization/analyzer declarations,
+Windows LSan and graphical/device limits remain documented. The original
+candidate failures and independent GL-050 finding are preserved, not relabeled
+as fixed by source implementation or the successful retry.
 
 ## GL-048: Relay Siege publication readiness
 

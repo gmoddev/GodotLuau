@@ -2,6 +2,7 @@
 #include "luau_script.h"
 #include "luau_instance_access.h"
 #include "gl_runtime.h"
+#include "gl_scene_authoring.h"
 #include "gl_errors.h"
 #include "gl_net_bridge.h"
 #include "rbx_character.h"
@@ -254,6 +255,7 @@ GLExecutionDomain* GLDomainHost::WaitingDomain(lua_State* Thread) const {
     return nullptr;
 }
 void GLDomainHost::InvalidateOwner(lua_State* Anchor) {
+    GLRetireScenes(Anchor);
     if (DataStore) DataStore->CancelOwner(Anchor);
     if (Http) Http->CancelOwner(Anchor);
     for (size_t Index = ChildConnections.size(); Index > 0; --Index)

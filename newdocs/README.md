@@ -33,6 +33,14 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+The unmerged [Luau-first authoring campaign](native-authoring-development.md)
+adds an opt-in [typed native scene API](native-scene-api.md) under
+[ADR-014](adr-014-native-scene-authoring.md), and migrates Relay Siege's arena,
+UI and audio construction into Luau. Its [qualification record](native-authoring-qualification.md)
+retains Windows/Linux native/sanitizer, actual Windows gameplay and accepted
+non-publishing package evidence, with explicit API/platform limits. It changes
+no release/updater policy.
+
 GL-043 is integrated by [normal merge](gl-043-main-integration.md), preserving
 qualified `fix/gl-043-raycast-impulses`. See the
 [development/qualification journal](gl-043-development.md) and

@@ -70,7 +70,7 @@ def Main():
             (Output/Target.parent).mkdir(parents=True,exist_ok=True)
             shutil.copy2(Product,Output/Target)
             (Output/Name).write_text('[remap]\npath="res://'+Target.as_posix()+'"\n')
-    for Name in ['project.godot','Main.tscn','Game.gd','Server.luau','Client.luau','README.md']:
+    for Name in ['project.godot','Main.tscn','Game.gd','Arena.luau','Presentation.luau','Server.luau','Client.luau','README.md']:
         shutil.copy2(Source/Name,Output/Name)
     if Args.profile:
         if not Args.profile.replace('-','').replace('_','').isalnum(): Parser.error('Profile must be a simple leaf')
@@ -81,8 +81,12 @@ def Main():
     for Name in ['LICENSE.txt','COPYRIGHT.txt']:
         if (Args.engine.parent/Name).exists(): shutil.copy2(Args.engine.parent/Name,Output/('ENGINE-'+Name))
     shutil.copy2(Source/'QUALIFICATION.md',Output/'QUALIFICATION.md')
+    shutil.copy2(Repository/'newdocs/native-scene-api.md',Output/'NATIVE-SCENE-API.md')
+    Api = Output/'NATIVE-SCENE-API.md'
+    Docs = 'https://github.com/gmoddev/GodotLuau/blob/feature/luau-native-authoring/newdocs/'
+    Api.write_text(Api.read_text().replace('(native-authoring-development.md)', '('+Docs+'native-authoring-development.md)').replace('(adr-014-native-scene-authoring.md)', '('+Docs+'adr-014-native-scene-authoring.md)').replace('(native-authoring-qualification.md)', '('+Docs+'native-authoring-qualification.md)').replace('(../examples/e2e-game/', '('))
     Readme = Output/'README.md'
-    Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md').replace('../../newdocs/gl-044-045-relay-development.md','QUALIFICATION.md'))
+    Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md').replace('../../newdocs/gl-044-045-relay-development.md','QUALIFICATION.md').replace('../../newdocs/native-scene-api.md','NATIVE-SCENE-API.md').replace('../../newdocs/native-authoring-development.md','QUALIFICATION.md'))
     if Args.host_manifest: shutil.copy2(Args.host_manifest,Output/'remote-host.json')
     (Output/'Play.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --path "%~dp0" %*\r\n')
     (Output/'Server.cmd').write_text('@echo off\r\nsetlocal\r\ncd /d "%~dp0"\r\nset "APPDATA=%~dp0Data"\r\n"%~dp0RelaySiege.exe" --headless --path "%~dp0" -- --mode server --port 24870 --glserver 24870\r\n')
