@@ -6,4 +6,5 @@
 // Shared by the actual Godot language hooks and inspectable Script resource API.
 // No VM, scene execution, filesystem access or mutable native object is involved.
 godot::Dictionary GLInspectNativeCode(const godot::String& Code, const godot::String& Path);
+godot::Dictionary GLNavigateNativeCode(const godot::String& Code, const godot::String& Symbol, const godot::String& Path);
 #endif

@@ -1,5 +1,16 @@
 # Current architecture
 
+On the unmerged GL-052 branch, native editor actions create a plain scene and
+LocalScript-associated `.luau` entrypoint. The existing runtime domains remain
+the execution authority. [ADR-016](adr-016-luau-editor-authoring.md) defines a
+separate restricted EditorPreview domain using the same scheduler/limits, with
+explicit evaluation, private native hierarchy/world, no gameplay bootstrap and
+no runtime service capabilities. Save As produces independent native PackedScene
+content rather than serializing VM scopes. Project-local module resources use
+the existing require evaluator and per-domain cache. The
+[journal](gl-052-development.md) separates implemented paths from pending native,
+interactive, game and export qualification.
+
 The [integrated GL-051 change](gl-051-main-integration.md), under
 [ADR-015](adr-015-policy-driven-native-bindings.md),
 replaces manual native selection lists with a checked declarative policy against

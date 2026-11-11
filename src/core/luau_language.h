@@ -71,12 +71,8 @@ public:
     // Hover documentation — language-aware, with BBCode formatting and Learn More link
     bool _supports_documentation() const override { return true; }
 
-    Dictionary _lookup_code(const String& symbol, const String& code, const String& path, Object* owner) const override {
-        Dictionary res;
-        String doc = LuauAutocomplete::lookup_symbol(symbol, code);
-        res["result"] = doc;
-        res["type"]   = (int)1;
-        return res;
+    Dictionary _lookup_code(const String& code, const String& symbol, const String& path, Object* owner) const override {
+        return GLNavigateNativeCode(code,symbol,path);
     }
 
     void _frame()            override {}

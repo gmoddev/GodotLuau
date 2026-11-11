@@ -14,6 +14,7 @@
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/classes/engine_debugger.hpp>
 #include <godot_cpp/variant/callable_custom.hpp>
 #include <algorithm>
 #include <functional>
@@ -137,7 +138,8 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
             Node* Script = Object::cast_to<Node>(ObjectDB::get_instance(Identity));
             PushLuauInstance(Thread, Script); lua_setglobal(Thread, "script");
         });
-        Domains[Index]->SetModuleResolver([](lua_State* Thread, int Argument, GLModuleSource& Module) {
+        Domains[Index]->SetModuleResolver([this,Index](lua_State* Thread, int Argument, GLModuleSource& Module) {
+            if (lua_type(Thread,Argument)==LUA_TSTRING) return ProjectModules[Index].Resolve(Thread,Argument,Module);
             auto Wrapper = static_cast<GodotObjectWrapper*>(lua_touserdata(Thread, Argument));
             auto Script = Wrapper ? Object::cast_to<ModuleScript>(gow_node(Wrapper)) : nullptr;
             if (!Script || !Script->is_inside_tree()) return false;
@@ -148,7 +150,9 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
             Module.Revision = Resource->GetSourceRevision();
             return true;
         });
-        Domains[Index]->SetModuleLoader([](GLModuleSource& Module) {
+        Domains[Index]->SetModuleLoader([this,Index](GLModuleSource& Module) {
+            if (Module.Identity==Module.ResourceIdentity && Object::cast_to<LuauScript>(ObjectDB::get_instance(Module.ResourceIdentity)))
+                return ProjectModules[Index].Load(Module);
             auto Script = Object::cast_to<ModuleScript>(ObjectDB::get_instance(Module.Identity));
             if (!Script || !Script->is_inside_tree()) return false;
             Ref<LuauScript> Resource = Script->get_codigo_luau();
@@ -167,6 +171,15 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
                 ? String("retired owner ") + String::num_uint64(Owner->Token)
                 : String("domain bootstrap");
             UtilityFunctions::print(String("[Runtime:Script] ") + Context + ": " + String::utf8(Error.c_str()));
+            if (auto Debugger=EngineDebugger::get_singleton()) if (Debugger->is_active()) {
+                Ref<LuauScript> Source;
+                if (auto Entry=Object::cast_to<ScriptNodeBase>(Script)) Source=Entry->get_codigo_luau();
+                else if (Owner) Source=Object::cast_to<LuauScript>(ObjectDB::get_instance(Owner->NativeId));
+                Array Data;Data.push_back(Source.is_valid()?Source->get_path():String());
+                Data.push_back(String::utf8(Error.c_str()).left(4096));
+                Data.push_back(Owner && !Owner->Domain->HasMemoryFailure()?String::utf8(lua_debugtrace(Thread)).left(8192):String());
+                Debugger->send_message("godotluau:runtime_error",Data);
+            }
             // An exhausted VM must not allocate while collecting a Lua trace.
             if (Owner && Owner->Domain->HasMemoryFailure()) gl_unregister_state(Owner->Domain->GetState());
             if (Owner && !Owner->Domain->HasMemoryFailure()) gl_report_script_error(Thread);

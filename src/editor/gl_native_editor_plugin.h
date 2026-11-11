@@ -3,10 +3,12 @@
 
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/script.hpp>
+#include <godot_cpp/classes/editor_debugger_plugin.hpp>
 #include <memory>
 class GLExecutionDomain;
 struct GLExecutionOwner;
 class LuauScript;
+class GLProjectModules;
 
 // Configure the existing Godot editor through public APIs, without owning tabs,
 // Script resources or CodeEdit pointers beyond each callback.
@@ -14,11 +16,15 @@ class GLNativeEditorPlugin : public godot::EditorPlugin {
     GDCLASS(GLNativeEditorPlugin, godot::EditorPlugin);
     bool Pending = false;
     std::unique_ptr<GLExecutionDomain> PreviewDomain;
+    std::unique_ptr<GLProjectModules> PreviewModules;
     GLExecutionOwner* PreviewOwner = nullptr;
     uint64_t PreviewRoot = 0, PreviewViewport = 0, PreviewPanel = 0;
     uint64_t PreviewTree = 0, StatusLabel = 0, PathDialog = 0;
     bool SavingPreview = false;
     godot::String PreviewError;
+    godot::Ref<LuauScript> PreviewSource;
+    godot::Ref<godot::EditorDebuggerPlugin> Debugger;
+    godot::Array LastRuntimeError;
     void SetupAuthoring();
     void ShowStatus(const godot::String& Text);
     void BuildPreviewTree();
@@ -35,12 +41,17 @@ public:
     godot::Dictionary CreateLuauScene(const godot::String& Path);
     godot::Dictionary PreviewScript(const godot::Ref<LuauScript>& Source);
     void StopPreview();
+    void ResetPreviewContext();
+    void OnPreviewSourceChanged();
     godot::Error SavePreview(const godot::String& Path);
     void PreviewSelected();
     void NewSceneDialog();
     void SavePreviewDialog();
     void OnAuthoringPath(const godot::String& Path);
     void InspectPreviewNode();
+    void ReceiveRuntimeError(const godot::Array& Data);
+    void OpenRuntimeError();
+    godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(); }
 };
 
 #endif

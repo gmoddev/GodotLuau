@@ -21,12 +21,16 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("CreateLuauScene", "Path"), &GLNativeEditorPlugin::CreateLuauScene);
     ClassDB::bind_method(D_METHOD("PreviewScript", "Source"), &GLNativeEditorPlugin::PreviewScript);
     ClassDB::bind_method(D_METHOD("StopPreview"), &GLNativeEditorPlugin::StopPreview);
+    ClassDB::bind_method(D_METHOD("ResetPreviewContext"), &GLNativeEditorPlugin::ResetPreviewContext);
+    ClassDB::bind_method(D_METHOD("OnPreviewSourceChanged"), &GLNativeEditorPlugin::OnPreviewSourceChanged);
     ClassDB::bind_method(D_METHOD("SavePreview", "Path"), &GLNativeEditorPlugin::SavePreview);
     ClassDB::bind_method(D_METHOD("PreviewSelected"), &GLNativeEditorPlugin::PreviewSelected);
     ClassDB::bind_method(D_METHOD("NewSceneDialog"), &GLNativeEditorPlugin::NewSceneDialog);
     ClassDB::bind_method(D_METHOD("SavePreviewDialog"), &GLNativeEditorPlugin::SavePreviewDialog);
     ClassDB::bind_method(D_METHOD("OnAuthoringPath", "Path"), &GLNativeEditorPlugin::OnAuthoringPath);
     ClassDB::bind_method(D_METHOD("InspectPreviewNode"), &GLNativeEditorPlugin::InspectPreviewNode);
+    ClassDB::bind_method(D_METHOD("OpenRuntimeError"), &GLNativeEditorPlugin::OpenRuntimeError);
+    ClassDB::bind_method(D_METHOD("GetRuntimeDiagnostics"), &GLNativeEditorPlugin::GetRuntimeDiagnostics);
 }
 
 void GLNativeEditorPlugin::_enter_tree() {
@@ -37,6 +41,7 @@ void GLNativeEditorPlugin::_enter_tree() {
 
 void GLNativeEditorPlugin::_exit_tree() {
     StopPreview();
+    if (Debugger.is_valid()) { remove_debugger_plugin(Debugger);Debugger.unref(); }
     if (auto Panel=Object::cast_to<Control>(ObjectDB::get_instance(PreviewPanel))) {
         remove_control_from_bottom_panel(Panel);
         Panel->queue_free();

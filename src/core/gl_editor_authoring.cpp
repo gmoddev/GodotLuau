@@ -4,6 +4,8 @@
 #include "gl_scene_authoring.h"
 #include "luau_value_bindings.h"
 #include "gl_runtime.h"
+#include "gl_project_modules.h"
+#include "gl_authoring_debugger.h"
 #include <godot_cpp/classes/button.hpp>
 #include <godot_cpp/classes/editor_file_dialog.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
@@ -64,7 +66,8 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     Panel->set_custom_minimum_size(Vector2(600,260));
     auto Buttons=memnew(HBoxContainer); Panel->add_child(Buttons);
     for (auto Entry : {std::pair<const char*,const char*>("New Luau Scene","NewSceneDialog"),
-        {"Preview Luau","PreviewSelected"},{"Clear Preview","StopPreview"},{"Save Preview As","SavePreviewDialog"}}) {
+        {"Preview Luau","PreviewSelected"},{"Clear Preview","StopPreview"},{"Save Preview As","SavePreviewDialog"},
+        {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"}}) {
         auto ButtonNode=memnew(Button); ButtonNode->set_text(Entry.first);
         ButtonNode->connect("pressed",Callable(this,Entry.second)); Buttons->add_child(ButtonNode);
     }
@@ -79,6 +82,8 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     auto Viewport=memnew(SubViewport); PreviewViewport=Viewport->get_instance_id();
     Viewport->set_size(Vector2i(600,320)); Viewport->set_use_own_world_3d(true); Container->add_child(Viewport);
     add_control_to_bottom_panel(Panel,"Luau Authoring");
+    Ref<GLAuthoringDebugger> Capture;Capture.instantiate();Capture->SetReceiver(get_instance_id());
+    Debugger=Capture;add_debugger_plugin(Debugger);
     auto Dialog=memnew(EditorFileDialog); PathDialog=Dialog->get_instance_id();
     Dialog->set_access(EditorFileDialog::ACCESS_RESOURCES); Dialog->set_file_mode(EditorFileDialog::FILE_MODE_SAVE_FILE);
     Dialog->add_filter("*.tscn","Native scene"); Dialog->connect("file_selected",Callable(this,"OnAuthoringPath"));
@@ -111,8 +116,12 @@ Dictionary GLNativeEditorPlugin::CreateLuauScene(const String& Path) {
 }
 
 void GLNativeEditorPlugin::StopPreview() {
+    Callable Changed(this,"OnPreviewSourceChanged");
+    if (PreviewSource.is_valid() && PreviewSource->is_connected("changed",Changed)) PreviewSource->disconnect("changed",Changed);
+    PreviewSource.unref();
     if (PreviewDomain && PreviewOwner) PreviewDomain->CancelOwner(PreviewOwner);
     PreviewOwner=nullptr;
+    if (PreviewDomain && PreviewModules) PreviewModules->Retire(*PreviewDomain);
     if (auto Root=Resolve<Node>(PreviewRoot)) memdelete(Root);
     PreviewRoot=0;
     if (auto Hierarchy=Resolve<Tree>(PreviewTree)) Hierarchy->clear();
@@ -122,10 +131,17 @@ void GLNativeEditorPlugin::StopPreview() {
         PreviewDomain->Tick(0);
     }
 }
+void GLNativeEditorPlugin::OnPreviewSourceChanged() {
+    StopPreview(); ShowStatus("Source changed; use Preview Luau to reconstruct before saving");
+}
 void GLNativeEditorPlugin::_process(double) {
     if (!PreviewDomain || PreviewDomain->IsClosing()) return;
     if (PreviewDomain->GetPendingTaskCount()) { StopPreview(); ShowStatus("Preview callbacks cannot yield or retain tasks"); }
     else PreviewDomain->Tick(0);
+}
+void GLNativeEditorPlugin::ResetPreviewContext() {
+    StopPreview(); PreviewDomain.reset(); PreviewModules.reset();
+    ShowStatus("Preview context reset explicitly; no gameplay domain changed");
 }
 
 Dictionary GLNativeEditorPlugin::PreviewScript(const Ref<LuauScript>& Source) {
@@ -138,6 +154,9 @@ Dictionary GLNativeEditorPlugin::PreviewScript(const Ref<LuauScript>& Source) {
         GLDomainLimits Limits; Limits.ResumeMilliseconds=100; Limits.MaxSafepoints=500000;
         Limits.MemoryBytes=64*1024*1024; Limits.Tasks=512; Limits.Coroutines=1024; Limits.References=2048; Limits.Owners=128;
         PreviewDomain=std::make_unique<GLExecutionDomain>(GLDomainKind::EditorPreview,Limits);
+        PreviewModules=std::make_unique<GLProjectModules>();
+        PreviewDomain->SetModuleResolver([this](lua_State* Thread,int Argument,GLModuleSource& Module) { return PreviewModules->Resolve(Thread,Argument,Module); });
+        PreviewDomain->SetModuleLoader([this](GLModuleSource& Module) { return PreviewModules->Load(Module); });
         PreviewDomain->SetInvalidationHook([](lua_State* Anchor){ GLRetireScenes(Anchor); });
         PreviewDomain->SetErrorHandler([this](lua_State*,const std::string& Error){ PreviewError=String::utf8(Error.c_str()).left(4096); });
         PreviewDomain->InitializeHost([](lua_State* Thread) {
@@ -160,7 +179,7 @@ Dictionary GLNativeEditorPlugin::PreviewScript(const Ref<LuauScript>& Source) {
             PushPreviewNode(Thread,Resolve<Node>(Id)); lua_setglobal(Thread,"script");
         });
     }
-    if (PreviewDomain->IsClosing()) { Result["Error"]="Preview context is closed after resource exhaustion; reload the plugin"; return Result; }
+    if (PreviewDomain->IsClosing()) { Result["Error"]="Preview context is closed after resource exhaustion; use Reset Context"; return Result; }
     auto Root=memnew(Node3D); Root->set_name("LuauPreview"); PreviewRoot=Root->get_instance_id();
     auto Driver=memnew(Node); Driver->set_name("PreviewDriver"); Root->add_child(Driver);
     PreviewOwner=PreviewDomain->CreateOwner(Driver->get_instance_id());
@@ -177,6 +196,7 @@ Dictionary GLNativeEditorPlugin::PreviewScript(const Ref<LuauScript>& Source) {
         if (World.is_valid()) PhysicsServer3D::get_singleton()->space_set_active(World->get_space(),false);
     }
     Result["Passed"]=true; Result["Nodes"]=Root->find_children("*","",true,false).size();
+    PreviewSource=Source; Source->connect("changed",Callable(this,"OnPreviewSourceChanged"));
     Result["Microseconds"]=int64_t(Time::get_singleton()->get_ticks_usec()-Started);
     Result["VMBytes"]=int64_t(PreviewDomain->GetMemoryAccount().Live);
     BuildPreviewTree(); ShowStatus("Preview built; transient content. Save As creates an independent native scene.");

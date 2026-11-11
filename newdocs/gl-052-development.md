@@ -91,3 +91,39 @@ new acceptance gameplay, graphical interaction and export remain unfinished.
 DockerPC's heavy lease is held by unrelated `StudioCreatorFoundation3` at the
 initial admission check. No worker load is started or lease bypassed; sustained
 compilation uses the existing hosted CI. No full native build runs locally.
+
+## Project modules, recovery and diagnostics
+
+The first cohort is `a1b14d7`; hosted core `43121590203` passes Windows/Linux.
+Native `43121590194` is still building. No runtime or graphical preview pass is
+inferred from the successful syntax probes.
+
+The next source cohort adds `require("res://Module.luau")` / `.lua` through the
+existing domain evaluator/cache. A per-domain native cache retains at most 64
+project script resources, each limited to 1 MiB on admission. Existing
+ModuleScript-node require retains its resolver/lifetime contract. String modules
+have a resource identity rather than a native node; factories receive the caller's
+scope explicitly and do not acquire an editor/gameplay node through `script`.
+Explicit resource reload updates the source revision and normal runtime owners
+use their existing changed/cancellation behavior. Preview rebuild invalidates its
+module initializers/results as well as retiring the selected script generation,
+so a yielding module cannot survive a failed preview and poison later rebuilds.
+
+The native panel now offers explicit Reset Context, without automatically
+restarting exhausted VMs or touching game domains. Editing the active source
+clears the old preview rather than permitting an unnoticed stale save.
+
+Source review against the admitted engine's
+[ScriptLanguage adapter](https://github.com/godotengine/godot/blob/a13da4feb8d8aefc283c3763d33a2f170a18d541/core/object/script_language_extension.h)
+verifies an inherited lookup contract error: arguments were reversed and result
+was a documentation string rather than an integer Error. Correct that interface
+and provide bounded top-level function, explicit project-module path and approved
+native-class navigation. The observer requests declaration navigation through
+the actual ScriptEditor CodeEdit signal; a helper result alone is not UI proof.
+
+Runtime errors now also use Godot's supported EngineDebugger message capture to
+the native authoring panel, with bounded source/message/trace and explicit Open
+Runtime Error navigation. This does not implement breakpoints/stepping. Actual
+editor-run message capture remains pending qualification. Adapter artifacts are
+retained for bounded interactive investigation; they include test hooks and are
+not production distribution or accepted export candidates.

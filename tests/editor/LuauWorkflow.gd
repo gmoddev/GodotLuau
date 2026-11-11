@@ -65,9 +65,36 @@ func Run() -> void:
                 Check(Plugin.call("PreviewScript", Source).get("Passed", false), "Preview may retain an ordinary handle in its own domain")
                 Source.source_code = 'assert(not pcall(function() shared.Previous:New("Node3D", {}) end))\nlocal Scope = Scene.new(script.Parent)\nScope:New("Node3D", {})'
                 Check(Plugin.call("PreviewScript", Source).get("Passed", false), "Old generation handle cannot mutate the next preview")
+                var Module: Script = ClassDB.instantiate("LuauScript")
+                Module.source_code = 'return function(Scope) Scope:New("Node3D", {Name="ModuleChild"}) end'
+                Check(ResourceSaver.save(Module, "res://Module.luau") == OK, "Native Luau module saves as a project resource")
+                Module.take_over_path("res://Module.luau")
+                Source.source_code = 'local Scope = Scene.new(script.Parent)\nrequire("res://Module.luau")(Scope)'
+                Check(Plugin.call("PreviewScript", Source).get("Passed", false), "Project module factory composes caller-owned native content")
+                Module.source_code = 'return function(Scope) error("revised module observed") end'
+                Check(not Plugin.call("PreviewScript", Source).get("Passed", false), "Module revisions invalidate cached results")
+                Module.source_code = 'task.wait(1)\nreturn {}'
+                Check(not Plugin.call("PreviewScript", Source).get("Passed", false), "Yielding preview modules are rejected")
+                Source.source_code = Original
+                Check(Plugin.call("PreviewScript", Source).get("Passed", false), "Module initializers retire before a fresh preview")
+                Source.source_code = 'require("user://outside.luau")'
+                Check(not Plugin.call("PreviewScript", Source).get("Passed", false), "Module resolution rejects external storage authority")
                 Source.source_code = Original
                 Plugin.call("StopPreview")
                 await get_tree().process_frame
+                EditorInterface.set_main_screen_editor("Script")
+                EditorInterface.edit_script(Source, -1, 0, true)
+                for Index in range(10): await get_tree().process_frame
+                var Code := EditorInterface.get_script_editor().get_current_editor().get_base_editor() as CodeEdit
+                Check(Code != null, "Created .luau opens in the actual native ScriptEditor")
+                if Code:
+                    Code.text = 'local function Build()\n return 1\nend\n\nBuild()\n'
+                    Code.set_caret_line(4)
+                    Code.set_caret_column(3)
+                    Code.emit_signal("symbol_lookup", "Build", 4, 3)
+                    for Index in range(3): await get_tree().process_frame
+                    Check(Code.get_caret_line() == 0, "Actual ScriptEditor navigation reaches the Luau declaration")
+                    Code.text = Original
     var File := FileAccess.open("res://editor-results.json", FileAccess.WRITE)
     File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks}))
     File.close()

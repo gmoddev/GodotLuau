@@ -318,3 +318,17 @@ jobs:
             ${{ runner.temp }}/native-ci/hostqualification/**/*.json
             build/native/*.log
             build/native/CMakeFiles/CMakeConfigureLog.yaml
+
+      - name: Retain adapter for bounded interactive editor qualification
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: authoring-adapter-${{ matrix.Platform }}-Debug
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            build/native/${{ matrix.Library }}
+            build/native/**/godot_luau_store_worker*
+            ${{ runner.temp }}/native-ci/source.json
+            ${{ runner.temp }}/native-ci/revision.log
+            ${{ runner.temp }}/native-ci/dependencies.log
