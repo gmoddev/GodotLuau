@@ -28,6 +28,11 @@ and the root Window. Native template-specific root classes, SubViewport and
 authoring beneath Player/Character hierarchies are outside this admission profile.
 Properties are checked at runtime; this change does not regenerate editor/analyzer
 declarations or promise static typing for arbitrary native classes.
+Position, RotationDegrees and Scale use local Godot coordinates, including when
+these authored Nodes are reached through ordinary Instance hierarchy queries.
+Raycast result positions remain world coordinates. Existing Character/Part
+transform aliases are unchanged; arbitrary global-transform setters are not
+part of this slice.
 
 | Operation | Contract |
 | --- | --- |

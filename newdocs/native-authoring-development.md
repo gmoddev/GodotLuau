@@ -125,7 +125,7 @@ rigid-body velocity `(1.996667,0,0)`. Its 64-child construction sample is
 16519 microseconds with monitor deltas 121 Objects/1 Resource, with the same
 measurement limitations as the earlier sample. Windows native, full-native
 sanitizers, four candidate profiles and actual migrated gameplay remain pending.
-No qualified C++ input changes after `9bd790f`.
+At this checkpoint, C++ inputs remain those of `9bd790f`.
 
 ## Native gates and first rendered gameplay
 
@@ -163,3 +163,14 @@ native ambient source in the integration actor. This is a confirmed contract
 discrepancy, not a reproduced renderer crash. The preceding receipts retain
 their original inputs and do not qualify the changed enum/caller. Fresh changed-
 source qualification follows; no host, dependency, protocol or solver changes.
+
+The corrected revision is `b6b21a0913f35acff56434eb5ff71daffa2c519f`, native
+fingerprint `350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68`
+(103 files). Core `42987291392`, native `42987291389`, full-native sanitizers
+`42987292678` and candidate `42987296894` are the new cohort. The obsolete
+candidate retry at `c9f6807` was canceled to release the serialized candidate
+lane for corrected inputs; neither original timing failure is erased or claimed
+resolved by that canceled retry. Current-source profile results will be recorded
+separately. Prior gameplay includes 27 rendered local checks, successful restart
+recovery and rendered four-player listen play, all on its explicitly retained
+development inputs. It is not relabeled as corrected-enum qualification.
