@@ -33,8 +33,8 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-The [GL-051 campaign](gl-051-development.md) is qualified within its recorded
-scope and remains unmerged. It implements
+The [normally integrated GL-051 campaign](gl-051-main-integration.md) preserves
+all 22 qualified feature commits and their evidence. It implements
 [policy-driven native bindings and authoring tools](gl-051-native-api.md) under
 [ADR-015](adr-015-policy-driven-native-bindings.md). Its journal separates new
 implementation from retained GL-049 and fresh

@@ -342,3 +342,23 @@ Final inspection finds a clean isolated checkout, no task-owned game/editor
 process, unchanged dependency pins and remote main still at `c60919a`. All work is
 pushed on `feature/gl-051-first-class-luau`, unmerged. Native controller default,
 Scripted opt-in, release disablement and updater rejection are unchanged.
+
+## Authorized main integration — 2026-11-11
+
+The owner now explicitly requests a normal main merge, preserving all commits,
+verifying CI and keeping releases/updater distribution disabled. This supersedes
+the earlier campaign's unmerged/no-merge disposition without changing its
+historical evidence or expanding qualification claims.
+
+Freshly fetched main `c60919a` and source `2307c04` match the last verified refs.
+Normal merge `11be0e8f6d5f1d1e2a0f8fb8ad70d74faba151d7` preserves all 22 feature
+commits. Its tree exactly matches qualified source tree
+`8a12d2c7d02fb0d3238216c5b314913f13397356`, with no conflicts or runtime
+corrections. GitHub confirms the six retained qualification workflows passed.
+Native/fixture/gameplay/build inputs and original qualification receipt remain
+unchanged, so prior expensive sanitizer, candidate and gameplay evidence is
+reused within its recorded scope. Following changes document integration only.
+
+The [integration record](gl-051-main-integration.md) tracks fresh Windows/Linux
+core/native/type CI after the main push. Those outcomes remain pending until
+actual completion and evidence review. No publishing workflow is dispatched.

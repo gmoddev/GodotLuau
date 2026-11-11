@@ -1,6 +1,7 @@
 # Current architecture
 
-On the unmerged GL-051 branch, [ADR-015](adr-015-policy-driven-native-bindings.md)
+The [integrated GL-051 change](gl-051-main-integration.md), under
+[ADR-015](adr-015-policy-driven-native-bindings.md),
 replaces manual native selection lists with a checked declarative policy against
 the unchanged pinned Godot metadata. Generated descriptors drive runtime dispatch,
 Luau definitions and editor diagnostics/completion. Checked native calls and

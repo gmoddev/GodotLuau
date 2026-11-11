@@ -1,7 +1,9 @@
 # GL-051 qualification
 
-Status: **qualified within the recorded scope; ready for integration review,
-unmerged**. The [versioned receipt](evidence/gl051/qualification-20261111.json)
+Status: **qualified within the recorded scope; normally integrated into main**.
+The [integration record](gl-051-main-integration.md) separates retained branch
+evidence from fresh main CI. The original
+[versioned receipt](evidence/gl051/qualification-20261111.json)
 records immutable sources, CI outcomes, package and retained evidence hashes. The
 [journal](gl-051-development.md) preserves implementation and failed attempts;
 [ADR-015](adr-015-policy-driven-native-bindings.md) and the
@@ -134,9 +136,11 @@ executions of later binaries. No new regression is observed in these profiles.
 
 The registry, native dispatch/ownership, composition/resources, generated types,
 editor completion/diagnostics and representative Relay Siege migration are
-implemented and qualified within this record. The feature branch is committed
-and pushed for integration review; no merge is authorized. Remote main remains
-`c60919a42416d5e6c72d2b23f7801500879c3195`. Release/updater code, dependency pins
+implemented and qualified within this record. At the branch qualification
+checkpoint, the feature was pushed unmerged and main remained
+`c60919a42416d5e6c72d2b23f7801500879c3195`. The later authorized
+[normal integration](gl-051-main-integration.md) supersedes that disposition and
+preserves the original receipt. Release/updater code, dependency pins
 and admitted hosts are unchanged. Native remains the default controller and
 Scripted remains explicit opt-in. No task-owned game or editor process remains.
 

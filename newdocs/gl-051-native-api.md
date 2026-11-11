@@ -1,6 +1,6 @@
 # Policy-driven native authoring
 
-This GL-051 branch extends the [qualified GL-049 API](native-scene-api.md).
+GL-051 extends the [qualified GL-049 API](native-scene-api.md).
 [ADR-015](adr-015-policy-driven-native-bindings.md) defines the selection and
 composition contract. The [campaign journal](gl-051-development.md) distinguishes
 implementation from qualification. Nothing here grants arbitrary ClassDB,

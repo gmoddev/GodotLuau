@@ -1,7 +1,8 @@
 # ADR-015: Policy-driven native bindings and scene composition
 
 Status: accepted; implemented and [qualified within recorded scope](gl-051-qualification.md)
-on unmerged `feature/gl-051-first-class-luau`.
+and [normally integrated into main](gl-051-main-integration.md), preserving
+`feature/gl-051-first-class-luau`.
 Baseline: `c60919a42416d5e6c72d2b23f7801500879c3195`.
 
 GL-049 establishes exact execution-generation ownership, real ObjectID-backed
@@ -56,4 +57,6 @@ debugger where the existing ScriptLanguageExtension does not implement one.
 Native controller defaults, Scripted opt-in, domains, networking, persistence,
 dependency pins and admitted hosts are unchanged. GL-050 remains separate.
 Qualification and implementation progress belong in the campaign journal.
-No main merge, release publication or updater distribution is authorized.
+The original campaign did not authorize a main merge. The later explicit
+[integration request](gl-051-main-integration.md) supersedes that disposition.
+Release publication and updater distribution remain unauthorized and disabled.
