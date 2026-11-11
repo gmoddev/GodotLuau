@@ -1,5 +1,12 @@
 # Relay Siege qualification scope
 
+The unmerged `feature/luau-native-authoring` campaign replaces ordinary
+geometry/UI/audio presentation construction with owner-scoped native Luau APIs.
+Its [current journal](https://github.com/gmoddev/GodotLuau/blob/feature/luau-native-authoring/newdocs/native-authoring-development.md)
+records pending/completed evidence for those changed inputs. The receipts below
+remain historical; their exact source identities must not be relabeled as new
+authoring qualification.
+
 The current API migration uses qualified GL-043/044/045 behavior: Camera CFrame
 directions, colon Vector3 math, native Vector3 impulses and server-authored
 raycast filters. Native implementation `30682a3` has fingerprint

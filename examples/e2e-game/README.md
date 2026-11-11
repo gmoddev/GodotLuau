@@ -73,8 +73,10 @@ movement or input framework.
 The game uses primitive geometry, generated tones and Godot physics. The hanging
 green object is a local Godot SoftBody3D demonstration, not networked cloth.
 The blue crate uses RobloxPart/ApplyImpulse and native rigid-body collisions.
-`Game.gd` authors geometry/UI/presentation; server/client Luau owns game rules,
-intent and persistence. Drones use simple server-authored point movement and
+`Arena.luau` authors native geometry/materials/lighting/collision and local cloth;
+`Presentation.luau` authors native UI, HUD/results and generated audio.
+`Game.gd` retains session/transport/lifecycle bootstrap. Server/client Luau keeps
+the existing game rules, intent and persistence. Drones use server-authored point movement and
 bounded sphere hitscan; existing workspace raycast handles world occlusion.
 The original game qualification used a native build without raycast filtering;
 the current game requires the GL-043/044/045 compatibility fixes. Authoritative
@@ -85,11 +87,13 @@ use collision layer 0 while retaining their world collision mask. Players slide
 against arena geometry but do not block allies or eye-origin ray queries. This
 is scene configuration, not a claim of full Roblox raycast
 compatibility or an unrestricted API audit. Shot filtering no longer depends on
-the query invisibility of those hulls. Godot still authors geometry, menus/HUD,
-audio and local SoftBody mesh/pin presentation; the existing Luau API has no
-qualified cloth-point surface. No raw Godot method/physics handle is exposed to
-Luau to remove that small presentation adapter. See the
-[migration qualification](../../newdocs/gl-044-045-relay-development.md).
+the query invisibility of those hulls. The opt-in
+[native authoring API](../../newdocs/native-scene-api.md) exposes fixed typed
+families, resources and bounded pin operations while Godot remains the engine.
+The [authoring journal](../../newdocs/native-authoring-development.md) tracks
+qualification of these new inputs; the earlier
+[compatibility qualification](../../newdocs/gl-044-045-relay-development.md)
+does not automatically qualify the new construction/lifetime boundary.
 
 Qualification and performance observations are in
 [`newdocs/e2e-game-development.md`](../../newdocs/e2e-game-development.md).

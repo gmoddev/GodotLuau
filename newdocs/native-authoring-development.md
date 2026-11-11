@@ -61,3 +61,21 @@ after readiness, and actual spawn/physics qualification must exercise this order
 
 Both new Luau files pass `luau-compile --null`; `git diff --check` passes.
 Runtime/platform qualification has not yet run at this milestone.
+
+## Hosted qualification started
+
+Implementation milestone `b8c09bcf18e6dad807a3768e7d01c59c3170936f` is pushed and
+remote-verified. Native fingerprint is
+`2cbc7deb03c7f898ee1edca14a92e0c6dbb48468d2198bf617cbb445797657fb`
+(103 LF-normalized input files). Both dependency pins are unchanged. The
+[core run](https://github.com/gmoddev/GodotLuau/actions/runs/42975096443)
+passes Windows/Linux Debug; downloaded XMLs independently pass existing
+`CheckCoreCI.py report` (85 cases each), and input graph logs pass 29 assertions.
+The optional benchmark-host export job was not requested and is skipped.
+
+The [native run](https://github.com/gmoddev/GodotLuau/actions/runs/42975096521)
+is building its admitted hosts. No native runtime success is claimed yet.
+DockerPC's heavy lease is still held at 06:52 UTC; no worker build is admitted.
+Godot 4.7.1 headless `--check-only` passes Game.gd, RelaySiege.gd and
+NativeAuthoringCases.gd with empty stderr after correcting fixture type inference.
+This syntax observation is distinct from executing native runtime cases.
