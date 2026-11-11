@@ -52,7 +52,7 @@ as newly built main archives. Integration edits change documentation only.
 
 ## Fresh integrated CI
 
-Status: **in progress**, testing main revision
+Status: **INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS**, testing main revision
 `397dde847b736d8d14ea222754124c44dde2d38d` after the normal merge and initial
 integration notes.
 
@@ -60,16 +60,25 @@ integration notes.
   Windows/Linux pass. Both downloaded discovery/XML artifacts pass the existing
   CheckCoreCI checks for all 85 distinct cases; input logs pass 29 assertions each.
 - [Native 43112156884](https://github.com/gmoddev/GodotLuau/actions/runs/43112156884):
-  Linux passes all 141 actors and 19 actual editor checks. Its downloaded summary
-  identifies `397dde8` and the unchanged native fingerprint; all 420 native log
-  hashes verify, expanded bindings report PASS and editor shutdown has no errors.
-  Windows is still building its adapter; its final result remains pending.
+  Windows/Linux each pass all 141 actors and 19 actual editor checks. Both
+  downloaded summaries identify `397dde8` and the unchanged native fingerprint.
+  All 424 Windows / 420 Linux native log hashes verify, expanded bindings report
+  PASS and both actual editors shut down without unhandled errors.
 - [Definitions 43112156562](https://github.com/gmoddev/GodotLuau/actions/runs/43112156562):
   Windows/Linux pass all eleven representative programs and the production
   RelayFactory module. Both downloaded definitions/catalogs match main.
 
-Final Windows native results and evidence remain pending. Optional benchmark export is correctly
-skipped because it was not requested. Dispatch is not a pass.
+The [main integration receipt](evidence/gl051/main-integration-20261111.json)
+records exact merge parents/tree, all 22 preserved commits, original evidence
+identity and fresh results/hashes. Optional benchmark export is correctly skipped
+because it was not requested. No runtime correction, CI retry, assertion change,
+deadline change or additional qualification layer was needed.
+
+All commits after the merge update documentation only, including the staged
+game's qualification/API guidance. Runtime, fixture, gameplay and build inputs
+remain identical to tested main `397dde8`; closing documentation does not require
+another native, sanitizer, candidate or gameplay replay. The source branch stays
+at `2307c043581e4f6dd785226a8926936ef102aff8`.
 
 ## Preserved limits and distribution policy
 

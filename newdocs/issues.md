@@ -100,7 +100,7 @@ four successful workflows and independently checked artifacts.
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
-| GL-051 | P2 | Integrated; qualified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
+| GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 
 ## GL-051: First-class native Luau integration
 
@@ -115,7 +115,9 @@ Windows/Linux Debug/Release, core/native/sanitizer, actual editor, generated-typ
 accepted candidate and extracted game package passes. Retained rendered gameplay
 qualifies the unchanged binding/game inputs within its documented Windows scope.
 The [normal main integration](gl-051-main-integration.md) preserves all 22 feature
-commits and original evidence; fresh integrated CI is recorded separately there.
+commits and original evidence. Fresh Windows/Linux core/native/editor/type CI
+passes at `397dde8`; the [main receipt](evidence/gl051/main-integration-20261111.json)
+records verified artifacts separately from retained branch qualification.
 This is not full
 Godot API parity, a complete embedded debugger/type checker or Linux rendered
 qualification. Remaining composition/loading limits stay explicit.

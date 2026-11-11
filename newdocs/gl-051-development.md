@@ -382,3 +382,19 @@ inputs; all 420 retained log hashes verify, including expanded-binding PASS
 markers, and actual editor shutdown has no unhandled errors. Windows native is
 still building its adapter. No runtime change, retry or assertion change has
 been required for integration.
+
+Windows main native CI now also passes. Both platforms complete 141 actors and
+19 actual editor checks at integrated revision `397dde8`, with the unchanged
+728d/114-file native fingerprint. All 424 Windows / 420 Linux retained native
+log hashes verify; expanded bindings report PASS and editor shutdown has no
+unhandled errors. All three fresh core/native/definition workflows are successful.
+
+Classification: **INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS**. The
+[integration record](gl-051-main-integration.md) and
+[main receipt](evidence/gl051/main-integration-20261111.json) distinguish these
+fresh main results from reused branch sanitizer, candidate and gameplay evidence.
+No runtime correction, retry or weakened check was required. Closing commits
+update documentation only; source branch `2307c04`, all 22 feature commits and
+the original qualification receipt remain preserved. Existing limitations and
+GL-050 stay visible; Native default, Scripted opt-in, disabled release jobs and
+fail-closed updater are unchanged.

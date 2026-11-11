@@ -1,0 +1,217 @@
+{
+  "Schema": 1,
+  "Date": "2026-11-11",
+  "Repository": "https://github.com/gmoddev/GodotLuau",
+  "Status": "INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS",
+  "MainBaseline": "c60919a42416d5e6c72d2b23f7801500879c3195",
+  "SourceBranch": "feature/gl-051-first-class-luau",
+  "SourceHead": "2307c043581e4f6dd785226a8926936ef102aff8",
+  "MergeCommit": "11be0e8f6d5f1d1e2a0f8fb8ad70d74faba151d7",
+  "MergeTree": "8a12d2c7d02fb0d3238216c5b314913f13397356",
+  "QualifiedTree": "8a12d2c7d02fb0d3238216c5b314913f13397356",
+  "PreservedFeatureCommits": [
+    "2307c043581e4f6dd785226a8926936ef102aff8",
+    "94de286b9a80e1fd68d27cc00a887d11f964dfd8",
+    "31b082ceeac0e64a70493166453ec1ddb25c1945",
+    "62cbfcc06a58b39b252aa5767b87e647786bfe22",
+    "d4d87113d8fbee324bb692d374109167fdb18c9b",
+    "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+    "6da3442fef34981e3330fd9f6f3826839cd7e54f",
+    "a1d49b6a0a9788ecdcb9e01a80c6fdc54505408e",
+    "2fdb8c23e7be8eb10b8a5cdd342532ed693fd1ba",
+    "358d6136d32642bcf65e6f359ecf9329310b1cd9",
+    "a2761116923639735e3f9102463df072b9f182be",
+    "21d3d748ce1f6c0a4567fdb49701ffa1c3ed3c8a",
+    "2b2aab41e5a0d969f90eaac703058217f3148270",
+    "6a040294512948a5353fb4a047ee72f4e90570b7",
+    "8b95ecf775bd2afe395a5241ca3daf7dd0159d8a",
+    "3150d9c0bfdc4139349085d27ed761bc0969d9a8",
+    "1f2a5a41e035be71252f63b69fcd9d1d4d9acaac",
+    "26e281ff760ba999d226749bc46c4c4fdf6080f6",
+    "23d7a67033cfdacd279a7abf9e50c9fa0f624f92",
+    "7454536c22af144c19d7d83848b7cca5711643c5",
+    "38c1f56d29750e23477d7b11e4b14e0ff945d086",
+    "5fd94f8ac9f58bb1dfbc1d7cf0df1fe6bf8a4b0e"
+  ],
+  "NativeSource": {
+    "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+    "Files": 114,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "OriginalQualificationBlob": "8491fb123a794530b13663332eb509678f4bd167",
+  "RuntimeFixturesGameplayAndBuildInputsEqualSource": true,
+  "ReusedQualification": {
+    "Definitions": {
+      "Run": 43050098215,
+      "conclusion": "success",
+      "headSha": "2b2aab41e5a0d969f90eaac703058217f3148270",
+      "status": "completed"
+    },
+    "Core": {
+      "Run": 43063379932,
+      "conclusion": "success",
+      "headSha": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "status": "completed"
+    },
+    "Native": {
+      "Run": 43063379869,
+      "conclusion": "success",
+      "headSha": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "status": "completed"
+    },
+    "FullNativeSanitizers": {
+      "Run": 43066333042,
+      "conclusion": "success",
+      "headSha": "d4d87113d8fbee324bb692d374109167fdb18c9b",
+      "status": "completed"
+    },
+    "Candidate": {
+      "Run": 43063482878,
+      "conclusion": "success",
+      "headSha": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "status": "completed"
+    },
+    "RelaySiegePackage": {
+      "Run": 43073257426,
+      "conclusion": "success",
+      "headSha": "94de286b9a80e1fd68d27cc00a887d11f964dfd8",
+      "status": "completed"
+    }
+  },
+  "PostMergeCI": {
+    "Revision": "397dde847b736d8d14ea222754124c44dde2d38d",
+    "Core": {
+      "Run": 43112156523,
+      "Platforms": {
+        "Windows": {
+          "CoreCases": 85,
+          "InputGraphAssertions": 29,
+          "CoreReportSHA256": "9b4ad1a835c5b61754f229846c5ecfafccdd1a425dd01a65dfc8b3ab0ef9656a",
+          "InputGraphLogSHA256": "21305e8e2c261fb3f49a39384a118e7f80fbf8060fdd625275c308bf276a13b1"
+        },
+        "Linux": {
+          "CoreCases": 85,
+          "InputGraphAssertions": 29,
+          "CoreReportSHA256": "74724401a50ed45b6c9c27885c82b6ea2bca0bd04dad34b5a0c5c34e6f66562c",
+          "InputGraphLogSHA256": "7bc2077ccc8cecd3153ad74a95e3eb1260355c56a902eaa5be6cb7be0b92e813"
+        }
+      },
+      "Result": "success",
+      "Jobs": [
+        {
+          "Name": "Core (Linux, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Core (Windows, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Qualification-only Windows Release benchmark host",
+          "Conclusion": "skipped"
+        }
+      ]
+    },
+    "Native": {
+      "Run": 43112156884,
+      "Platforms": {
+        "Linux": {
+          "NativeActors": 141,
+          "EditorChecks": 19,
+          "EditorPassed": true,
+          "NativeSource": {
+            "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+            "Files": 114,
+            "Newlines": "LF normalized"
+          },
+          "SummarySHA256": "98ecef879f95ba74eae1e72d81dacf09543df0fda9e3022f3435184cf35edf04",
+          "VerifiedLogHashes": 420,
+          "EditorSHA256": "e6a09d4d1a6e4887ceff16fa7e53dadc7cc4f974e3f031551f36f4097202014e",
+          "BindingPassLogs": [
+            "regression/integration-0.stdout.log",
+            "regression/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/logs/godot2026-11-11T22.51.40.log"
+          ]
+        },
+        "Windows": {
+          "NativeActors": 141,
+          "EditorChecks": 19,
+          "EditorPassed": true,
+          "NativeSource": {
+            "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+            "Files": 114,
+            "Newlines": "LF normalized"
+          },
+          "SummarySHA256": "44e4160a85fbfd4cafd52092eb4ba16dddf6b5d35be14a30c284c807e11118af",
+          "VerifiedLogHashes": 424,
+          "EditorSHA256": "d6c32f1ec29c41305af9da2d50ae512580e567aa2f51071ab804159622e3a939",
+          "BindingPassLogs": [
+            "regression\\integration-0.stdout.log",
+            "regression\\profile\\APPDATA\\GodotLuauRuntimeQualification\\logs\\godot2026-11-11T23.00.59.log"
+          ]
+        }
+      },
+      "Result": "success",
+      "Jobs": [
+        {
+          "Name": "Native (Windows, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Native (Linux, Debug)",
+          "Conclusion": "success"
+        }
+      ]
+    },
+    "Definitions": {
+      "Run": 43112156562,
+      "Platforms": {
+        "Windows": {
+          "Programs": 12,
+          "ProductionModule": "examples/e2e-game/RelayFactory.luau",
+          "LogSHA256": "15781ae0547b8b2d1444581cfb961f26f6d9f46d47c87e06c63773699e809969",
+          "DefinitionsAndCatalogMatchMain": true
+        },
+        "Linux": {
+          "Programs": 12,
+          "ProductionModule": "examples/e2e-game/RelayFactory.luau",
+          "LogSHA256": "394a0fde551dc3c7a0b1063c7540918944c0211ee79522d224cf9de541a29ad9",
+          "DefinitionsAndCatalogMatchMain": true
+        }
+      },
+      "Result": "success",
+      "Jobs": [
+        {
+          "Name": "Types (Linux, ubuntu-24.04, Ninja)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Types (Windows, windows-2022, Visual Studio 17 2022)",
+          "Conclusion": "success"
+        }
+      ]
+    }
+  },
+  "ReleasePublication": "Disabled; no publishing workflow dispatched",
+  "UpdaterDistribution": "Fail-closed; unchanged",
+  "Scope": "Exact qualified runtime integration; documentation-only integration changes; original evidence, failed attempts and limitations retained",
+  "ArtifactRoot": "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl051-main-20261111",
+  "DocumentationChangesAfterMerge": [
+    "examples/e2e-game/QUALIFICATION.md",
+    "newdocs/README.md",
+    "newdocs/adr-015-policy-driven-native-bindings.md",
+    "newdocs/current-architecture.md",
+    "newdocs/evidence/gl051/main-integration-20261111.json",
+    "newdocs/gl-051-development.md",
+    "newdocs/gl-051-main-integration.md",
+    "newdocs/gl-051-native-api.md",
+    "newdocs/gl-051-qualification.md",
+    "newdocs/issues.md",
+    "newdocs/native-scene-api.md"
+  ],
+  "RuntimeCorrectionsRequired": false,
+  "CIRetries": 0
+}
