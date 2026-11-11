@@ -912,7 +912,56 @@
     "FilesVerified": 160,
     "AggregateNativeAcceptance": false
   },
-  "CandidateAcceptance": "Pending Linux Debug retry and dependent package gates",
+  "CandidateAcceptance": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+  "AcceptedCandidate": {
+    "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+    "Jobs": {
+      "Policy": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Profiles": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Sanitizer": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Packages": {
+        "result": "success",
+        "outputs": {}
+      }
+    },
+    "SourceRevision": "b6b21a0913f35acff56434eb5ff71daffa2c519f",
+    "NativeSource": {
+      "SHA256": "350392bb4f5613a1722333e3de44f60adb9a4ac4b08ded4430a26a42e9f94b68",
+      "Files": 103,
+      "Newlines": "LF normalized"
+    },
+    "AcceptedRecordSHA256": "b6c7000f91631e49409e500fdb4cca6a2604bf2ccd188dc3285cdf4e3c4bd01d",
+    "Packages": {
+      "Windows": {
+        "SHA256": "8f3369779e26eacab599f835611dc51b4210533640075bbaed46ad88c4e607bf",
+        "File": "GodotLuau-Windows.zip",
+        "Result": "PASS",
+        "StartupConfigurations": [
+          "Debug",
+          "Release"
+        ]
+      },
+      "Linux": {
+        "SHA256": "c5ed75aa34b9990878724652a757ef1a82e53dbc33b29e3392003abbc7a140cb",
+        "File": "GodotLuau-Linux.zip",
+        "Result": "PASS",
+        "StartupConfigurations": [
+          "Debug",
+          "Release"
+        ]
+      }
+    },
+    "RenderedProductsEqualAcceptedWindows": true
+  },
   "EvidenceRoot": "native-authoring-20261111",
   "Limits": [
     "Windows rendered automation uses Godot-simulated input, not physical devices or OS capture",

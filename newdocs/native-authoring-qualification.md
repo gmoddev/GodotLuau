@@ -19,7 +19,12 @@ these exact inputs. The authoring fixture hash is
 | [Core 42987291392](https://github.com/gmoddev/GodotLuau/actions/runs/42987291392) | Windows/Linux pass, 85 core cases and 29 input-graph assertions each. |
 | [Native 42987291389](https://github.com/gmoddev/GodotLuau/actions/runs/42987291389) | Windows/Linux Debug pass, 141 actors each; actual authoring Integration cases pass. |
 | [Full-native sanitizers 42987292678](https://github.com/gmoddev/GodotLuau/actions/runs/42987292678) | Windows ASan and Linux ASan/LSan pass; 85 core/141 native, controls pass, no unexpected reports. |
-| [Candidate 42987296894](https://github.com/gmoddev/GodotLuau/actions/runs/42987296894) | Windows Debug/Release and Linux Release pass. Linux Debug retry and aggregate/extracted-package gates pending. |
+| [Candidate 42987296894](https://github.com/gmoddev/GodotLuau/actions/runs/42987296894) | Accepted non-publishing candidate: Windows/Linux Debug/Release, core sanitizer, policy, both extracted-companion profiles per platform and aggregate acceptance pass. |
+
+Post-restoration [core 42999540021](https://github.com/gmoddev/GodotLuau/actions/runs/42999540021)
+and [native 42999540348](https://github.com/gmoddev/GodotLuau/actions/runs/42999540348)
+also pass on both platforms at `7f78ed4`. This does not relabel the retained
+`b6b21a0` sanitizer run as a fresh run on later documentation commits.
 
 Native tests exercise actual constructors/properties, whole-batch rejection,
 finite/type/count bounds, exact execution ownership and cross-domain rejection,
@@ -38,8 +43,12 @@ establish a performance improvement over GDScript.
 The game uses the source-built SCons products from the passed `b6b21a0` Windows
 profiles, unchanged admitted rendered host (SHA256
 `09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc`) and existing
-verified R6 asset bundle. These private development inputs are explicitly marked
-`DEVELOPMENT_BUILD_UNACCEPTED` while aggregate candidate qualification is pending.
+verified R6 asset bundle. At test time the private archives were explicitly marked
+`DEVELOPMENT_BUILD_UNACCEPTED`. Candidate acceptance subsequently passed; existing
+`CheckJobs`/`CheckPackage` verification passes on downloaded artifacts, and both
+Windows DLLs and the companion are byte-identical to the retained rendered inputs.
+Reuse those actual gameplay observations without repeating unchanged sessions.
+The original private archives keep their development marker and original identity.
 
 | Existing driver/scenario | Result |
 | --- | --- |
@@ -49,6 +58,11 @@ verified R6 asset bundle. These private development inputs are explicitly marked
 | Same multiplayer driver with `--dedicated` | 57/57 across headless server and four rendered clients, after dedicated bootstrap correction `81cd1c5`. |
 | `RunRelaySiege.py --scenario menu` | 5/5: native menu, connection failure/retry UI, actual session teardown and scene reload. Headless. |
 | Fresh private game archive extraction/startup | 160 payload hashes match; headless solo startup reaches `[Game:Rules] Ready`, exit 0, no script errors. |
+
+Accepted native ZIP SHA256: Windows
+`8f3369779e26eacab599f835611dc51b4210533640075bbaed46ad88c4e607bf`, Linux
+`c5ed75aa34b9990878724652a757ef1a82e53dbc33b29e3392003abbc7a140cb`.
+The accepted-input Relay Siege package job is the remaining packaging step.
 
 Game source identities are retained separately from the native fingerprint.
 Local/listen checks precede `81cd1c5`, which changes only dedicated startup's

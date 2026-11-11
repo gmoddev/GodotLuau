@@ -251,3 +251,16 @@ Restoration commit `7f78ed4` is pushed with a clean tree and the exact `b6b21a0`
 native fingerprint. Candidate `42987296894` attempt 2 reruns only Linux Debug
 and required dependents; the other three successful profiles are reused.
 Aggregate acceptance and the accepted-input game package remain pending.
+
+### Accepted native candidate
+
+Candidate `42987296894` attempt 2 passes Linux Debug, both platform extraction/
+companion startup jobs and aggregate acceptance. The other three successful
+profiles are retained. Existing `CheckJobs` and `CheckPackage` accept the downloaded
+Windows/Linux artifacts, whose native fingerprint matches this checkout. Both
+Windows DLLs and the companion match the rendered-game inputs byte for byte;
+reuse the completed local/listen/dedicated evidence within that exact scope.
+Post-restoration core `42999540021` and native `42999540348` also pass both
+platforms. No prior failure is erased or assigned a guessed cause. The final
+game package will use accepted candidate run `42987296894` through the existing
+read-only-permission, non-publishing game-package workflow.
