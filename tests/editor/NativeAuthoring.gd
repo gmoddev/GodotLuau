@@ -37,6 +37,7 @@ func Run() -> void:
                 var Code := Controls[0] as CodeEdit
                 Code.grab_focus()
                 Check(Code.is_visible_in_tree() and Code.has_focus(), "Headless editor completion has its normal visible focused control")
+                Check(":" in Code.get_code_completion_prefixes(), "Native editor plugin admits Luau colon completion")
                 Code.text="local Scope = Scene.new(script.Parent)\nScope:"
                 Code.set_caret_line(1)
                 Code.set_caret_column(6)
@@ -60,6 +61,11 @@ func Run() -> void:
                 Check(MathCompletion, "Actual ScriptLanguage completion preserves the legacy math path")
                 # Restore a valid source before editor shutdown; no script is run.
                 Code.text=Original
+                EditorInterface.edit_script(load("res://NativeEditorCases.gd"), -1, 0, true)
+                for Index in range(3):
+                    await get_tree().process_frame
+                var Other := EditorInterface.get_script_editor().get_current_editor().get_base_editor() as CodeEdit
+                Check(Other != null and ":" not in Other.get_code_completion_prefixes(), "Native editor configuration is restricted to Luau tabs")
     var File := FileAccess.open("res://editor-results.json", FileAccess.WRITE)
     File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks}))
     File.close()

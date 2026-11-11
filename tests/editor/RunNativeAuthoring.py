@@ -42,7 +42,7 @@ def Main():
     with (Output / "editor.stdout.log").open("w") as Stdout, (Output / "editor.stderr.log").open("w") as Stderr:
         Process = StartProcess(Command, Stdout, Stderr, Environment)
     Result = Check(Process, time.monotonic() + Args.timeout, Output, "editor", "[Bindings:EditorIntegration] PASS")
-    assert "Required virtual method LuauLanguage::" not in (Output / "editor.stderr.log").read_text(errors="replace"), "Missing required language metadata hook"
+    assert "ERROR:" not in (Output / "editor.stderr.log").read_text(errors="replace"), "Unhandled editor or language error"
     Detail = json.loads((Output / "editor-results.json").read_text())
     assert Detail["Passed"], Detail
     Result.update(Detail, Command=Command, ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest())

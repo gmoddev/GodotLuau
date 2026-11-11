@@ -264,3 +264,19 @@ legacy static PlaceholderTexture2D icon Ref after RenderingServer destruction.
 Return an empty optional icon instead: Godot already selects themed icons by
 completion kind. No static rendering resource is needed. Keep this small lifetime
 correction separate from the passing gameplay/runtime evidence.
+
+The focused local execution with the retained `358d613` SCons product establishes
+that readiness/focus alone does not fix colon completion. The exact Godot source
+configures CodeEdit prefixes without `:`; its candidate filter cancels the empty
+word after a colon even when forced. The same exact cursor text returns native
+options from InspectNativeCode, and a controlled diagnostic addition of the colon
+prefix makes the real language/UI route pass. That experiment is attribution,
+not final product qualification.
+
+Add a small editor-only native plugin using public ScriptEditor/CodeEdit APIs to
+configure colon completion for Luau tabs. It holds no tab/resource pointers,
+coalesces deferred changes and disconnects on exit. Register it only at Godot's
+existing editor module level. The production fixture must observe this automatic
+configuration, exercise native/legacy completion and leave GDScript tabs alone;
+it does not set the prefix itself. Also reject any unhandled editor error,
+including the observed shutdown diagnostic. No engine or admitted-host change.

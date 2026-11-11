@@ -109,6 +109,12 @@ arity and immutable-handle errors with source locations. Dynamic child lookup
 and unrelated legacy completion remain. Analysis never executes game code.
 `LuauScript.InspectNativeCode(Code, Path)` exposes the same readonly analysis.
 
+An editor-only plugin configures the existing ScriptEditor CodeEdit for Luau's
+colon member syntax through public APIs. Godot's default prefix set lacks `:`.
+The plugin applies only to Luau tabs, keeps no tab/resource pointers and uses
+ordinary deferred editor callbacks with explicit signal cleanup. It changes no
+engine build, project settings or desktop focus.
+
 Inference is partial: it is not a full embedded type checker, flow-sensitive
 language server or debugger. Runtime errors retain script identity; the existing
 debug-stack callback remains unimplemented. Stepping, breakpoints and live stack
