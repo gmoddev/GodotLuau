@@ -23,6 +23,11 @@ Server/Client identity. A script completing its initial chunk keeps its scope;
 disable/reload/destruction retires it. Ordinary Node wrappers retain ObjectID
 identity. Safe scalar/transform reads and hierarchy queries are observable by
 other scripts; mutation, resources and scope operations require the creator.
+This first slice admits ancestry made from Node, Node3D, RobloxWorkspace, Folder
+and the root Window. Native template-specific root classes, SubViewport and
+authoring beneath Player/Character hierarchies are outside this admission profile.
+Properties are checked at runtime; this change does not regenerate editor/analyzer
+declarations or promise static typing for arbitrary native classes.
 
 | Operation | Contract |
 | --- | --- |

@@ -111,3 +111,18 @@ does not qualify a complete suite. The native graph workload initially records
 deltas of 121 Objects/1 Resource; those coarse engine monitors are not allocation
 profiles or claims of steady-state memory cost. Raw failed job/output and the
 controlled baseline script/log remain in `native-authoring-20261111` artifacts.
+
+## First complete native platform result
+
+At `c9f680746afca627f214a2fa1729986f8b7812ec`, the
+[Linux native job](https://github.com/gmoddev/GodotLuau/actions/runs/42979197181/job/130385333282)
+passes all 141 required process results. Downloaded summary/source/logs retain
+native fingerprint `f9658ea9a6105f754e1e55c355e65b326f89069af60c199c0ae8bcde4b249c9d`
+(103 files) and authoring fixture hash
+`4d18f636de2f861d014c2e9bbf36c407b506610a8fdc00b34f437a1b260fbf8b`.
+The Integration log reports `[Scene:Qualification] PASS` with initialized
+rigid-body velocity `(1.996667,0,0)`. Its 64-child construction sample is
+16519 microseconds with monitor deltas 121 Objects/1 Resource, with the same
+measurement limitations as the earlier sample. Windows native, full-native
+sanitizers, four candidate profiles and actual migrated gameplay remain pending.
+No qualified C++ input changes after `9bd790f`.
