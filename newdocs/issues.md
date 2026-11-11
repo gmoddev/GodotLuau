@@ -100,6 +100,17 @@ four successful workflows and independently checked artifacts.
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
+| GL-051 | P2 | Implementation campaign on isolated feature branch | Scalable policy-driven native bindings, composition, resources and editor/type integration |
+
+## GL-051: First-class native Luau integration
+
+The [campaign journal](gl-051-development.md) and
+[ADR-015](adr-015-policy-driven-native-bindings.md) define implementation beyond
+GL-049's manually curated bindings. Preserve its ownership/domain guarantees and
+qualification while generating runtime/type/editor surfaces from one checked
+policy. New methods, native scene composition and resources require executable
+evidence. Status is implementation in progress, not completed API parity.
+GL-050 remains separate and unfixed.
 
 ## GL-050: DataStore receive/exit ordering
 
