@@ -1,5 +1,8 @@
 name: DataStore close failure diagnostics (no publication)
 on:
+  push:
+    branches: [feature/luau-native-authoring]
+    paths: [.github/workflows/datastore-close-diagnostics.yml]
   workflow_dispatch:
 permissions:
   contents: read
