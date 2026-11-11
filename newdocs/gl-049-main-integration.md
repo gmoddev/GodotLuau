@@ -50,9 +50,14 @@ for this source-identical merge.
 
 ## Fresh integrated CI
 
-Fresh Windows/Linux core and native CI will run on the pushed integrated
-revision. Their results are pending at this preparation checkpoint and are not
-counted as fresh passes. Final results will be recorded here after completion.
+Fresh [core 43027816338](https://github.com/gmoddev/GodotLuau/actions/runs/43027816338)
+and [native 43027816240](https://github.com/gmoddev/GodotLuau/actions/runs/43027816240)
+run on integrated revision `244b3b83c2aedaabd3c3e1ab37954d905cf4e247`.
+Core passes Windows/Linux. Downloaded XMLs pass the existing `CheckCoreCI.py
+report` checks (85 distinct cases each); input graph logs pass 29 assertions per
+platform. The optional benchmark-host export is correctly skipped because it
+was not requested. Native is still building its admitted hosts and is not yet
+counted as a fresh pass. Its final result will be recorded after completion.
 
 ## Preserved limits and publication policy
 
