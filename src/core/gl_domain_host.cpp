@@ -174,7 +174,7 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
             if (auto Debugger=EngineDebugger::get_singleton()) if (Debugger->is_active()) {
                 Ref<LuauScript> Source;
                 if (auto Entry=Object::cast_to<ScriptNodeBase>(Script)) Source=Entry->get_codigo_luau();
-                else if (Owner) Source=Object::cast_to<LuauScript>(ObjectDB::get_instance(Owner->NativeId));
+                else if (Owner) Source=Ref<LuauScript>(Object::cast_to<LuauScript>(ObjectDB::get_instance(Owner->NativeId)));
                 Array Data;Data.push_back(Source.is_valid()?Source->get_path():String());
                 Data.push_back(String::utf8(Error.c_str()).left(4096));
                 Data.push_back(Owner && !Owner->Domain->HasMemoryFailure()?String::utf8(lua_debugtrace(Thread)).left(8192):String());
