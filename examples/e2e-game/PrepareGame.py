@@ -84,7 +84,7 @@ def Main():
     shutil.copy2(Repository/'newdocs/native-scene-api.md',Output/'NATIVE-SCENE-API.md')
     Api = Output/'NATIVE-SCENE-API.md'
     Docs = 'https://github.com/gmoddev/GodotLuau/blob/feature/luau-native-authoring/newdocs/'
-    Api.write_text(Api.read_text().replace('(native-authoring-development.md)', '('+Docs+'native-authoring-development.md)').replace('(adr-014-native-scene-authoring.md)', '('+Docs+'adr-014-native-scene-authoring.md)'))
+    Api.write_text(Api.read_text().replace('(native-authoring-development.md)', '('+Docs+'native-authoring-development.md)').replace('(adr-014-native-scene-authoring.md)', '('+Docs+'adr-014-native-scene-authoring.md)').replace('(native-authoring-qualification.md)', '('+Docs+'native-authoring-qualification.md)').replace('(../examples/e2e-game/', '('))
     Readme = Output/'README.md'
     Readme.write_text(Readme.read_text().replace('../../newdocs/e2e-game-development.md','QUALIFICATION.md').replace('../../newdocs/gl-044-045-relay-development.md','QUALIFICATION.md').replace('../../newdocs/native-scene-api.md','NATIVE-SCENE-API.md').replace('../../newdocs/native-authoring-development.md','QUALIFICATION.md'))
     if Args.host_manifest: shutil.copy2(Args.host_manifest,Output/'remote-host.json')

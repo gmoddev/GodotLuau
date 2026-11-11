@@ -3,6 +3,8 @@
 Implementation/qualification work is tracked in the
 [journal](native-authoring-development.md). [ADR-014](adr-014-native-scene-authoring.md)
 defines ownership. This surface is opt-in; existing Instance APIs are unchanged.
+The [qualification record](native-authoring-qualification.md) separates supported
+native behavior, rendered gameplay and remaining platform/package limits.
 
 ```luau
 local Scope = Scene.new(script.Parent)
@@ -110,3 +112,36 @@ not yet admitted. Serialization/cloning of live scopes is unsupported; replay
 the Luau scene description instead. Local soft-body configuration is not vertex
 replication. Nothing in this API changes native Character, network, persistence,
 release or updater authority.
+
+## Native UI and audio example
+
+In a LocalScript beneath a plain bootstrap Node, create controls and subscribe
+through the same owner scope. No GDScript signal adapter is required:
+
+```luau
+local Scope = Scene.new(script.Parent)
+local Layer = Scope:New("CanvasLayer", {Name = "Interface"})
+local Button = Scope:New("Button", {
+    Text = "PLAY TONE",
+    Position = Vector2.new(24, 24),
+    MinSize = Vector2.new(200, 48),
+}, Layer)
+local Audio = Scope:New("AudioStreamPlayer", {
+    Stream = Scope:Tone(440, 0.12),
+    VolumeDb = -12,
+})
+local Connection = Scope:Connect(Button, "Pressed", function()
+    Scope:Play(Audio)
+    Button.Text = "PLAY AGAIN"
+end)
+
+-- Connection:Disconnect() ends this subscription early.
+-- Scope:Destroy() retires the entire authored subtree early.
+-- Script disable/reload/destruction also retires its scopes automatically.
+```
+
+See [Presentation.luau](../examples/e2e-game/Presentation.luau) for live menus,
+layout, results, audio and input consumption, and
+[Arena.luau](../examples/e2e-game/Arena.luau) for shared materials, geometry,
+collision, lights and bounded soft-body pins. Those examples consume existing
+game snapshots; the scene API does not grant gameplay authority.
