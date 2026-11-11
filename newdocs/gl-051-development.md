@@ -157,3 +157,11 @@ a source-verified null-dereference path, not a claimed reproduced crash. The sam
 fixture adds real Font UI/3D reuse, serialized Control layout and pre-instantiation
 node/depth-budget rejection. These cover new behavior rather than retesting the
 qualification runner. Native execution remains pending.
+
+The corrected Linux provisioning step passes in `43047956663` and reaches the
+unchanged admitted host build. Its Windows job also builds the host. The preceding
+Windows revision reaches extension compilation. The next complete qualification
+cohort is `3150d9c` with the non-Node signal guard and expanded boundary fixture;
+later package documentation changes preserve those native/fixture inputs.
+Staging now ships both API guides and keeps external source links at the exact
+game commit, alongside the already packaged generated native definitions.
