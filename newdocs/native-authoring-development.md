@@ -201,3 +201,19 @@ actor replays. Failures remain failed; logs are always retained. This is bounded
 investigation of an actual blocker, not a new candidate acceptance gate. Remove
 temporary instrumentation after cause capture; do not change persistence behavior
 or relax the qualification contract on the basis of a guessed cause.
+
+## Corrected-source game progress
+
+Retained `b6b21a0` Windows Debug/Release profile products both pass their complete
+profile checks. A development-only archive records both real profile manifests
+and product hashes; it is explicitly unaccepted while Linux Debug blocks the
+aggregate candidate. Corrected-enum rendered local play passes 27 checks with
+empty stderr; actual fresh-process recovery and four-player rendered listen play
+pass on those inputs.
+
+The first dedicated replay fails startup because bootstrap waits for a LocalScript
+UI, which dedicated mode intentionally does not execute. Skip that UI only for
+dedicated startup and validate its CLI port directly. Keep all native transport,
+arena/rules, Character and persistence code unchanged. Preserve the failed replay
+under `b6-rendered-dedicated`; run the same existing dedicated driver after this
+bounded bootstrap correction. No client UI is moved into Server execution.

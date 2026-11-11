@@ -46,6 +46,10 @@ func _ready() -> void:
     if Loaded not in [GDExtensionManager.LOAD_STATUS_OK, GDExtensionManager.LOAD_STATUS_ALREADY_LOADED]:
         push_error("[Game:Bootstrap] Missing staged runtime; use PrepareGame.py")
         return
+    # Dedicated mode intentionally does not execute LocalScripts.
+    if Auto and Mode == "server":
+        StartSession(Mode)
+        return
     if not await BuildUI(): return
     if Auto: StartSession(Mode)
 
@@ -86,12 +90,18 @@ func BuildUI() -> bool:
     return true
 
 func StartSession(Selected: String) -> void:
-    if Session or not is_instance_valid(PortField) or not is_instance_valid(Address): return
-    if not PortField.text.is_valid_int() or int(PortField.text) < 1024 or int(PortField.text) > 65535:
-        set_meta("UIMessage", "Choose a UDP port from 1024 to 65535"); return
-    Port = int(PortField.text)
-    Host = Address.text.strip_edges()
-    if Host.is_empty() or Host.length() > 253: return
+    if Session: return
+    if Selected == "server":
+        if Port < 1024 or Port > 65535:
+            push_error("[Game:Session] Choose a UDP port from 1024 to 65535")
+            return
+    else:
+        if not is_instance_valid(PortField) or not is_instance_valid(Address): return
+        if not PortField.text.is_valid_int() or int(PortField.text) < 1024 or int(PortField.text) > 65535:
+            set_meta("UIMessage", "Choose a UDP port from 1024 to 65535"); return
+        Port = int(PortField.text)
+        Host = Address.text.strip_edges()
+        if Host.is_empty() or Host.length() > 253: return
     Mode = Selected
     Session = true
     remove_meta("UIMessage")
