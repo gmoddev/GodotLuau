@@ -18,6 +18,7 @@ func Run() -> void:
     var Resource: Script = load("res://NativeEditor.lua")
     Check(Resource != null and Resource.get_class()=="LuauScript", "Project .lua resolves through the registered native language loader")
     if Resource:
+        var Original := Resource.source_code
         load("res://NativeEditorCases.gd").new().Run(self)
         EditorInterface.edit_script(Resource, -1, 0, false)
         for Index in range(10):
@@ -39,8 +40,17 @@ func Run() -> void:
                     Names.append(str(Option.insert_text))
                 Check("New" in Names and "Instantiate" in Names and "Call" in Names and "free" not in Names,
                     "Actual ScriptLanguage completion reaches the generated native policy")
+                Code.text="math."
+                Code.set_caret_line(0)
+                Code.set_caret_column(5)
+                Code.request_code_completion(true)
+                await get_tree().create_timer(0.5).timeout
+                var MathCompletion := false
+                for Option in Code.get_code_completion_options():
+                    MathCompletion = MathCompletion or str(Option.insert_text).contains("abs") or str(Option.insert_text).contains("floor")
+                Check(MathCompletion, "Actual ScriptLanguage completion preserves the legacy math path")
                 # Restore a valid source before editor shutdown; no script is run.
-                Code.text=Resource.source_code
+                Code.text=Original
     var File := FileAccess.open("res://editor-results.json", FileAccess.WRITE)
     File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks}))
     File.close()

@@ -188,3 +188,12 @@ outside the generated native contract. Add actual RelayFactory source checking
 to the existing pinned checker probe; this qualifies a production composition
 module, without pretending every inherited game/service global is statically
 declared. The shipped example settings do not modify user editor preferences.
+
+Review against the exact admitted Godot revision's ScriptLanguageExtension
+adapter finds a real editor contract discrepancy before UI execution: `result`
+must be an Error integer, not the options Array, and each option requires icon
+and font_color fields. Correct the new native completion shape and the two
+inherited legacy result assignments; no completion algorithm is refactored.
+Use PackedInt32Array matches and test the production response shape plus actual
+native and legacy CodeEdit completion. Validation's error dictionaries already
+match the engine contract. This is source-verified evidence, not a claimed UI pass.

@@ -1093,7 +1093,7 @@ public:
         Array out;
 
         if (p_code.is_empty()) {
-            res["result"]=out; res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
+            res["result"]=int(OK); res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
         }
 
         bool ai_enabled = false;
@@ -1632,7 +1632,7 @@ public:
             s["location"]=0; s["default_value"]=Variant(); s["matches"]=Array();
             out.push_back(s);
         }
-        res["result"]=out; res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
+        res["result"]=int(OK); res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
     }
 
     static String lookup_symbol(const String& symbol, const String& code) {

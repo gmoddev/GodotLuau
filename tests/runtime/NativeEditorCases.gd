@@ -13,6 +13,10 @@ func Run(Runner) -> void:
     var Prefix := "local Scope = Scene.new(script.Parent)\n"
     var Info: Dictionary = Resource.call("InspectNativeCode",Prefix+"Scope:"+Marker,"res://NativeEditor.lua")
     var Options := Names(Info.Options)
+    var Shape: bool = typeof(Info.result)==TYPE_INT and Info.result==OK
+    for Option in Info.Options:
+        Shape = Shape and Option.has("icon") and typeof(Option.font_color)==TYPE_COLOR and typeof(Option.matches)==TYPE_PACKED_INT32_ARRAY
+    Runner.Check(Shape, "Native completion follows the actual Godot ScriptLanguageExtension option contract")
     Runner.Check(Info.Handled and "New" in Options and "Call" in Options and "Instantiate" in Options and "free" not in Options, "Native editor completion uses approved scope operations")
     Info = Resource.call("InspectNativeCode",Prefix+"Scope:New(\"Tex"+Marker+"\", {})","res://NativeEditor.lua")
     Options = Names(Info.Options)

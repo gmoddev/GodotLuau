@@ -7,6 +7,7 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/variant.hpp>
+#include <godot_cpp/classes/global_constants.hpp>
 #include <cmath>
 #include <string>
 #include <unordered_map>
@@ -63,7 +64,9 @@ class Visitor : public Luau::AstVisitor {
         if (Options.size()>=128 || std::string(Name).find(Filter)!=0 || !Suggestions.insert(Name).second) return;
         godot::Dictionary Item;
         Item["display"]=Name; Item["insert_text"]=Name; Item["kind"]=Kind; Item["type"]=1;
-        Item["description"]=Signature; Item["location"]=0; Item["default_value"]=godot::Variant(); Item["matches"]=godot::Array();
+        Item["description"]=Signature; Item["location"]=0; Item["default_value"]=godot::Variant();
+        Item["font_color"]=godot::Color(0.85f,0.9f,1.f); Item["icon"]=godot::Variant();
+        Item["matches"]=godot::PackedInt32Array();
         Options.push_back(Item);
     }
     bool Cursor(const std::string& Name, std::string& Filter) {
@@ -247,7 +250,7 @@ inline godot::Dictionary Inspect(const godot::String& Source, const godot::Strin
     auto Parsed=Luau::Parser::parse(Bytes.get_data(),Bytes.length(),Names,Allocator);
     Visitor Analyzer(Path); if (Parsed.root) Parsed.root->visit(&Analyzer);
     Result["Handled"]=Analyzer.Handled; Result["Diagnostics"]=Analyzer.Diagnostics; Result["Options"]=Analyzer.Options;
-    Result["result"]=Analyzer.Options; Result["options"]=Analyzer.Options; Result["force"]=true; Result["call_hint"]="";
+    Result["result"]=int(godot::OK); Result["options"]=Analyzer.Options; Result["force"]=true; Result["call_hint"]="";
     return Result;
 }
 }
