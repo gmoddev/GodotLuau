@@ -298,3 +298,13 @@ Luau colon prefix automatically, preserve legacy math completion and GDScript
 tabs, and shut down without unhandled errors. Core `43063379932` also passes
 Windows/Linux at `5f876d3`. Production candidate and final sanitizer gates remain
 pending; no feature code changes are needed for these passing outcomes.
+
+Final full-native sanitizer `43066333042` passes both platforms at `d4d8711`,
+whose native/fixture inputs match `5f876d3`. The final 728d set instruments 1168
+translation units, including the editor plugin: Windows has 25 passing stages,
+Linux 26, all detection controls and 85 core/141 native actors pass without
+unexpected reports. All 680 Windows / 684 Linux retained file hashes verify.
+Linux omits only one disposable messaging JSON; required evidence is present.
+Current candidate Linux Debug/Release profiles also pass all existing gates and
+19 actual editor checks each. Windows production profiles and extracted-package
+acceptance are still running. Retain all earlier failed and passing cohorts.

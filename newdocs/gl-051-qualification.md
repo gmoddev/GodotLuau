@@ -19,24 +19,26 @@ Branch: `feature/gl-051-first-class-luau`.
 | Next sanitizer-qualified set, `a276111` / `358d613` | `e855b3faeac811a7c276cd2c73255816b13efb89b4dbe18542145a919752d108`, 112 files |
 | Current native input set, `5f876d3` | `728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc`, 114 files |
 
-The later native differences correct editor completion response fields/status
-and supply required public-metadata hooks. They are not relabeled as part of the
-earlier sanitizer product. Dependency pins and admitted engine profiles remain
+The later native differences correct editor completion fields/status, required
+metadata hooks, UTF-8 classification and icon shutdown lifetime, and add the
+editor-only colon-prefix plugin. They are not relabeled as part of the earlier
+sanitizer product. Dependency pins and admitted engine profiles remain
 unchanged. The pinned API describes Godot 4.3; runtime/editor hosts remain 4.7.1.
 
 ## Established outcomes
 
 | Evidence | Actual outcome |
 | --- | --- |
-| [Core 43052421400](https://github.com/gmoddev/GodotLuau/actions/runs/43052421400), `a276111` | Windows/Linux Debug pass: 85 core cases and 29 input assertions; current core inputs unchanged. |
+| [Core 43063379932](https://github.com/gmoddev/GodotLuau/actions/runs/43063379932), `5f876d3` | Windows/Linux Debug pass: 85 core cases and 29 input assertions. |
 | [Definitions 43050098215](https://github.com/gmoddev/GodotLuau/actions/runs/43050098215), `2b2aab4` | Windows/Linux pinned Luau checker loads generated definitions, passes eleven positive/negative cases and the actual RelayFactory module; nine policy tests pass. Downloaded declarations/catalog match the branch. |
 | [Initial native 43049375469](https://github.com/gmoddev/GodotLuau/actions/runs/43049375469), `6a04029` | Linux extension compiles and initial binding/lifecycle stage passes. Full job fails at the actual editor fixture; this is partial evidence, not a full native pass. |
 | [Current native 43063379869](https://github.com/gmoddev/GodotLuau/actions/runs/43063379869), `5f876d3` | Windows/Linux Debug each pass all 141 native actors and 19 actual editor checks. All 425 Windows / 420 Linux native log hashes verify, source is the current 728d/114-file set, and both editors have no unhandled errors. |
 | [Full-native sanitizers 43049541634](https://github.com/gmoddev/GodotLuau/actions/runs/43049541634), `6a04029` | Windows ASan and Linux ASan/LSan pass: controls, reload/lifetime, 85 core cases and 141 native actors per platform, including expanded binding cases. No unexpected sanitizer reports. |
 | [Candidate 43049547160](https://github.com/gmoddev/GodotLuau/actions/runs/43049547160), `6a04029` | Accepted non-publishing candidate: Windows/Linux Debug/Release source profiles, policy/core sanitizer, both extracted-companion profiles per platform and aggregate acceptance pass. Downloaded Windows package/startup hashes and aggregate CheckJobs verify. |
 | [Full-native sanitizers 43055223210](https://github.com/gmoddev/GodotLuau/actions/runs/43055223210), `358d613` | Windows/Linux pass at the e855 native inputs. All 679/684 retained file hashes verify, all 25/26 stages pass and no unexpected reports occur; this does not include subsequent editor fixes/plugin. |
+| [Final full-native sanitizers 43066333042](https://github.com/gmoddev/GodotLuau/actions/runs/43066333042), `d4d8711` | Windows ASan / Linux ASan-LSan pass at the final 728d inputs: 1168 instrumented translation units, 25/26 stages, all detection controls, 85 core cases and 141 native actors per platform, no unexpected reports. All 680/684 retained file hashes verify. |
 
-The sanitizer records verify 1167 instrumented translation units, 25 Windows /
+The earlier sanitizer records verify 1167 instrumented translation units, 25 Windows /
 26 Linux stages and actual expanded-binding PASS markers. All 679 Windows / 685
 Linux retained file hashes verify without mismatches. One transient filesystem
 messaging JSON from each snapshot manifest is absent from the upload; required
@@ -64,10 +66,14 @@ at `5f876d3` retains all existing gates and the production editor check. Ordinar
 passes those corrected editor inputs on both platforms. The candidate is still
 pending; dispatch is no acceptance.
 
-The [final sanitizer cohort 43066333042](https://github.com/gmoddev/GodotLuau/actions/runs/43066333042)
-at documentation tip `d4d8711` has identical current native/fixture inputs and is
-running on both platforms. It does not replace the earlier passing identities
-until it completes and its retained evidence is verified.
+The final sanitizer cohort at documentation tip `d4d8711` passes and verifies
+the current native/fixture inputs on both platforms. Its extra instrumented
+translation unit is the new editor plugin. All Windows manifest files are retained;
+Linux omits one disposable GL-003 messaging JSON, as in earlier uploads, with no
+missing required evidence. Linux production Debug/Release profiles in the current
+candidate also pass, including all 19 actual editor checks against each SCons
+library. Windows production qualification and final package acceptance remain
+pending.
 
 The real editor fixture loads a `.lua` resource, shares production diagnostics
 cases and requests completion through Godot CodeEdit/ScriptLanguage. Its first
