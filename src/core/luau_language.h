@@ -88,6 +88,9 @@ public:
     bool _handles_global_class_type(const String& p_type) const override { return p_type == "LuauScript"; }
     Dictionary _get_global_class_name(const String& p_path) const override { return Dictionary(); }
     TypedArray<Dictionary> _debug_get_current_stack_info() override { return TypedArray<Dictionary>(); }
+    TypedArray<Dictionary> _get_public_functions() const override { return TypedArray<Dictionary>(); }
+    Dictionary _get_public_constants() const override { return Dictionary(); }
+    TypedArray<Dictionary> _get_public_annotations() const override { return TypedArray<Dictionary>(); }
 
     bool _supports_builtin_mode()  const override { return false; }
     bool _can_make_function()      const override { return false; }

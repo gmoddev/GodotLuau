@@ -197,3 +197,15 @@ inherited legacy result assignments; no completion algorithm is refactored.
 Use PackedInt32Array matches and test the production response shape plus actual
 native and legacy CodeEdit completion. Validation's error dictionaries already
 match the engine contract. This is source-verified evidence, not a claimed UI pass.
+
+Linux `43049375469` compiles the runtime and passes the initial Integration,
+listen/dedicated/editor lifecycle stage at `6a04029`. Retained logs include
+`[Bindings:Qualification] PASS`: actual font/layout/resource calls, scene
+preflight and budgets, clone/reparent, foreign/stale owners and callback retirement
+all execute successfully. Its subsequent real ScriptEditor stage fails because
+the fixture searched only CodeEdit descendants: get_base_editor can itself be
+the CodeEdit. Correct that fixture selection without weakening its completion
+assertion. Startup also exposes three inherited missing required public-metadata
+hooks; implement explicit empty function/constant/annotation lists, and reject
+those observed missing-hook errors. Do not advertise unimplemented public globals.
+The completion-shape correction and actual UI completion still await execution.

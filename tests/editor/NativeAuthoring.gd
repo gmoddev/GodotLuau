@@ -26,7 +26,8 @@ func Run() -> void:
         var Editor := EditorInterface.get_script_editor().get_current_editor()
         Check(Editor != null, "Godot ScriptEditor opens the native Luau resource")
         if Editor:
-            var Controls := Editor.get_base_editor().find_children("*", "CodeEdit", true, false)
+            var Base := Editor.get_base_editor()
+            var Controls: Array = [Base] if Base is CodeEdit else Base.find_children("*", "CodeEdit", true, false)
             Check(Controls.size()==1, "Godot exposes its normal native-script CodeEdit")
             if Controls.size()==1:
                 var Code := Controls[0] as CodeEdit
