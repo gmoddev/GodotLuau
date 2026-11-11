@@ -86,6 +86,11 @@ Callbacks already executing belong to their script and may finish if only their
 source is removed. Partial application interrupted by native destruction does not
 roll back arbitrary external notification effects.
 
+Physics operations retain Godot initialization rules: allow physics frames after
+constructing/configuring a body and shape before mass-dependent impulses. An
+impulse issued during construction can use the engine's initial inverse mass.
+The API does not add a second physics scheduler or silently defer commands.
+
 Loading remains synchronous trusted project loading. The encoded size bound
 does not bound decoded/imported dependencies or make hostile Godot resources
 safe. PackedScene, scripts, external/user paths, arbitrary resource subclasses,

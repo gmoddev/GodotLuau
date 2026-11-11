@@ -36,7 +36,6 @@ local Body = Scope:New('RigidBody3D', {
     Name='Body', Position=Vector3.new(0, 100, 0), Mass=2,
     GravityScale=0, CollisionLayer=0, CollisionMask=0}, Root)
 Scope:New('CollisionShape3D', {Name='BodyShape', Shape=SphereShape}, Body)
-Scope:Impulse(Body, Vector3.new(4, 0, 0))
 local Environment = Scope:New('Environment', {
     BackgroundMode=1, BackgroundColor=Color3.new(0.1, 0.2, 0.3),
     AmbientLightSource=3, AmbientLightColor=Color3.new(0.4, 0.5, 0.6), AmbientLightEnergy=0.7})
@@ -141,6 +140,9 @@ shared.NativeAuthoring = {
     Scope=Scope, Configure=Scope.Configure, New=Scope.New,
     Mesh=Mesh, Material=Material, Display=Display, Primary=Primary, Secondary=Secondary}
 game:SetAttribute('NAReady', true)
+while not game:GetAttribute('NAImpulseReady') do task.wait() end
+Scope:Impulse(Body, Vector3.new(4, 0, 0))
+game:SetAttribute('NAImpulseApplied', true)
 while not game:GetAttribute('NAAudioPlay') do task.wait() end
 Scope:Play(Audio)
 game:SetAttribute('NAAudioPlaying', true)
@@ -214,6 +216,12 @@ game:SetAttribute('NAGcReleased', true)
         "BatchChildren": 64}))
     await Host.physics_frame
     await Host.physics_frame
+    Game.set_meta("NAImpulseReady", true)
+    if not await Runner.Until("NAImpulseApplied"):
+        return
+    await Host.physics_frame
+    await Host.physics_frame
+    print("[Scene:Qualification] Initialized rigid-body velocity=", Body.linear_velocity)
     Runner.Check(Body.linear_velocity.x > 1.0 and Body.linear_velocity.x < 3.0, "Scene impulse reaches native rigid-body simulation")
     ButtonNode.pressed.emit()
     Runner.Check(Game.get_meta("NAClickA", 0) == 1 and Game.get_meta("NAClickB", 0) == 1, "Scene duplicate subscriptions each dispatch exactly once")

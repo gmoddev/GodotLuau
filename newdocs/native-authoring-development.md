@@ -90,3 +90,24 @@ BuildMesh. The public API is unchanged. The Linux job log is retained under
 `native-authoring-20261111/failed-b8c09bc/Linux-job.log`; the obsolete Windows
 job is canceled instead of continuing inputs known to fail. No runtime pass is
 attributed to this attempt. Retry uses these concrete compilation corrections.
+
+### Native execution and physics fixture phasing
+
+At `9bd790f`, Linux compiles and runs the new native cases. The only reported
+authoring failure is the impulse velocity assertion: construction called impulse
+before Godot's first mass update. The controlled native-only Godot 4.7.1 baseline
+(`a13da4feb`, no extension) reproduces velocity `(3.986678,0,0)` for mass 2,
+impulse 4 immediately after construction, versus `(1.993339,0,0)` after physics
+initialization. This is an engine initialization assumption in the fixture;
+it does not justify changing physics or broadening the assertion.
+
+Match the established GL-043 fixture phasing: await native physics initialization,
+request the Luau impulse, then observe native velocity after physics frames. Keep
+the strict velocity assertion and record the observed value. The public API
+documents Godot's initialization rule and keeps direct native impulse behavior.
+Other checks execute without reported authoring failures, but the failed actor
+does not qualify a complete suite. The native graph workload initially records
+64 children, 16048 microseconds including script/bootstrap/load work, and monitor
+deltas of 121 Objects/1 Resource; those coarse engine monitors are not allocation
+profiles or claims of steady-state memory cost. Raw failed job/output and the
+controlled baseline script/log remain in `native-authoring-20261111` artifacts.
