@@ -1,5 +1,14 @@
 # Current architecture
 
+On `feature/luau-native-authoring`, `gl_scene_authoring.cpp` adds an opt-in
+SceneScope in the existing Godot hierarchy, fixed typed native properties and
+Ref-backed resource slots. Existing ObjectDB/GLReference/shared domains remain
+authoritative. Owner invalidation retires scopes; network publication excludes
+their local subtrees. [ADR-014](adr-014-native-scene-authoring.md) and the
+[API](native-scene-api.md) define the new boundary; the
+[journal](native-authoring-development.md) records qualification status. Relay
+Siege now authors arena/UI/audio in Luau with a native session/lifecycle bootstrap.
+
 The [integrated GL-044/045 follow-up](gl-044-045-main-integration.md) reuses the existing
 Model CFrame constructor for Node3D/Camera getters and retains Vector3 method
 receivers as userdata upvalues. Colon and legacy dot calls share the same native

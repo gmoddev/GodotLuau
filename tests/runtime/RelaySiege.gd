@@ -131,13 +131,14 @@ func Run() -> void:
     current_scene = Game
     await process_frame
     if Scenario == "menu":
+        Check(await Until(func(): return Game.get_meta("UIReady",false) and is_instance_valid(Game.Menu),5),"Luau-authored menu ready")
         Check(Game.Menu.visible,"main menu available before a session")
         Game.StartSession("join")
         Check(await Until(func(): return not Game.SessionError.is_empty(),20),"unreachable server produces an in-game connection error")
-        Check(Game.Results.visible,"retry controls remain accessible")
+        Check(await Until(func(): return Game.Results.visible,2),"retry controls remain accessible")
         var Old := Game.get_instance_id()
         Game.MainMenu()
-        Check(await Until(func(): return is_instance_valid(current_scene) and current_scene.get_instance_id()!=Old and current_scene.Menu.visible,5),"main menu returns after actual session teardown")
+        Check(await Until(func(): return is_instance_valid(current_scene) and current_scene.get_instance_id()!=Old and is_instance_valid(current_scene.Menu) and current_scene.Menu.visible,5),"main menu returns after actual session teardown")
         Game = current_scene
         Finish(); return
     if Scenario == "server":
@@ -147,6 +148,7 @@ func Run() -> void:
         Check(State().get("Progress",{}).get("Wins",0)>=1,"dedicated server commits actual team victory")
         Finish(); return
     if not Game.Session:
+        Check(await Until(func(): return Game.get_meta("UIReady",false) and is_instance_valid(Game.Menu),5),"Luau-authored menu ready")
         Check(Game.Menu.visible,"functional main menu")
         for Child in Game.Menu.get_child(0).get_children():
             if Child is Button and Child.text == "PLAY SOLO": Child.pressed.emit(); break
@@ -164,10 +166,10 @@ func Run() -> void:
     await Press(KEY_SPACE)
     Check(Character().call("GetPhysicsBody").velocity.y>0,"actual input jumps")
     await create_timer(1).timeout
-    Game.ScriptRun("SoftBodyVisibility","local C=game.Workspace.PhysicsCanopy; assert(C:IsA('SoftBody3D')); game:SetAttribute('SoftBodyLuauVisible',typeof(C.Position)=='Vector3')",true)
+    Game.ScriptRun("SoftBodyVisibility","local C=game.Workspace.Arena.PhysicsCanopy; assert(C:IsA('SoftBody3D')); game:SetAttribute('SoftBodyLuauVisible',typeof(C.Position)=='Vector3')",true)
     await create_timer(0.1).timeout
     Check(Game.get_meta("SoftBodyLuauVisible",false),"Luau can observe actual SoftBody3D identity and transform")
-    var Canopy: SoftBody3D = Game.World.get_node("PhysicsCanopy")
+    var Canopy: SoftBody3D = Game.World.get_node("Arena/PhysicsCanopy")
     var Pinned := Canopy.get_point_transform(0)
     await Press(KEY_O)
     await create_timer(0.4).timeout

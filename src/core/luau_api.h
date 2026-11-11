@@ -9,6 +9,7 @@
 #include "gl_errors.h"
 #include "gl_stackguard.h"
 #include "gl_domain_host.h"
+#include "gl_scene_authoring.h"
 #include "folder.h"
 #include "rbx_character.h"
 #include "humanoid2d.h"
@@ -253,6 +254,7 @@ static int method_destroy(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     Node* n = w ? gow_node(w) : nullptr;
     if (n) {
+        if (!GLSceneMutation(L,n)) luaL_error(L,"[Scene:Authority] Destroy would retire another scene owner");
         auto Service = Object::cast_to<NetworkService>(ObjectDB::get_instance(gl_net_service_id()));
         if (Service && !Service->CanWriteCharacter(n, true)) return 0;
         // Replicación (1.14.5): si somos servidor y la instancia está replicada,
@@ -292,6 +294,7 @@ static void CopyRemoteConfigurations(Node* Source, Node* Destination) {
 static int method_clone(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
+        if (!GLSceneMutation(L,gow_node(w),true)) luaL_error(L,"[Scene:Authority] Live scene scopes cannot be cloned");
         Node* cloned = gow_node(w)->duplicate();
         if (cloned) {
             CopyRemoteConfigurations(gow_node(w), cloned);
@@ -303,6 +306,7 @@ static int method_clone(lua_State* L) {
 }
 
 static int method_clearallchildren(lua_State* L) {
+    if (!GLSceneMutation(L,_gl_node_from_lua(L,1))) luaL_error(L,"[Scene:Authority] ClearAllChildren would retire another scene owner");
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     if (w && gow_node(w)) {
         // Replicación (1.14.5): en el servidor, avisar a los clientes que destruyan
@@ -4006,6 +4010,7 @@ static int godot_object_newindex_impl(lua_State* L) {
 
     if (GLInputWrite(L,gow_node(wrapper),key)) return 0;
     if (GLMotorWrite(L,gow_node(wrapper),key)) return 0;
+    if (GLSceneWrite(L,gow_node(wrapper),key)) return 0;
     if (GLCharacterControllerWrite(L,gow_node(wrapper),key)) return 0;
 
     if (strcmp(key, "DeliveryType") == 0) {
@@ -4129,6 +4134,8 @@ static int godot_object_newindex_impl(lua_State* L) {
     }
 
     if (strcmp(key, "Parent") == 0) {
+        if (!GLSceneMutation(L,n)) luaL_error(L,"[Scene:Authority] Reparent would move another scene owner");
+        if (!lua_isnil(L,3) && GLSceneLocal(_gl_node_from_lua(L,3))) luaL_error(L,"[Scene:Authority] Use scoped construction for scene children");
         if (lua_isnil(L, 3)) {
             if (n->get_parent()) n->get_parent()->remove_child(n);
         } else {
@@ -4766,7 +4773,7 @@ static bool IsPlayerCharacterNode(Node* Item) {
 }
 
 static bool gl_rep_is_replicable(Node* n) {
-    if (GLInputLocal(n)) return false;
+    if (GLInputLocal(n) || GLSceneLocal(n)) return false;
     if (IsPlayerCharacterNode(n)) return false;
     for (Node* p = n ? n->get_parent() : nullptr; p; p = p->get_parent()) {
         StringName nm = p->get_name();
@@ -4792,7 +4799,7 @@ static String gl_rep_parent_ref(Node* parent) {
 // Replica el nodo y su subárbol como creaciones nuevas (asigna netId + snapshot
 // vía NetworkService::rep_build_props, que resuelve el transform global).
 static void gl_rep_replicate_subtree(NetworkService* ns, Node* n) {
-    if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n) || GLInputLocal(n)) return;
+    if (!ns || !n || n->has_meta("_gl_netid") || IsPlayerCharacterNode(n) || GLInputLocal(n) || GLSceneLocal(n)) return;
     if (auto Remote = Object::cast_to<RemoteEventNode>(n)) if (!Remote->IsServerAdmitted()) return;
     int64_t id = ns->rep_next_id();
     if (id <= 0) return; // Checked exhaustion never enters the static ID namespace.
@@ -4810,7 +4817,7 @@ static void gl_rep_on_newindex(lua_State* L) {
     GodotObjectWrapper* w = (GodotObjectWrapper*)lua_touserdata(L, 1);
     Node* n = w ? gow_node(w) : nullptr;
     if (!n || !lua_isstring(L, 2)) return;
-    if (GLInputLocal(n)) return;
+    if (GLInputLocal(n) || GLSceneLocal(n)) return;
     String key = String(lua_tostring(L, 2));
     if (key == "DeliveryType" && Object::cast_to<RemoteEventNode>(n)) return; // Frozen descriptor owns this property, not generic deltas.
     if (key == "Parent") {

@@ -7,6 +7,14 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 ## Native identity and lifetime
 
+SceneScope authoring follows [ADR-014](adr-014-native-scene-authoring.md): exact
+execution-generation ownership, fixed native families/properties, separate typed
+resource handles, bounded construction, and owner retirement before reuse.
+Resources obtained from project loading/getters remain immutable. Neither a
+retained legacy method nor generic subtree replication may bypass scope ownership
+or publish its local native objects. Godot ObjectDB and existing owner-aware
+dispatch remain the identity and callback authorities.
+
 Local semantic input (ADR-012) must share UserInputService's physical adapter and
 post-GUI routing facts. Client execution owns input APIs; mutable Lua properties
 cannot grant hardware, Character or network authority. Context/action/binding

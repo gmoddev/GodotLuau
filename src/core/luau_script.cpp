@@ -210,6 +210,7 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
         if (ptr && gow_node(ptr)) {
             Node* node = gow_node(ptr);
 
+            if (GLSceneIndex(L,node,key.utf8().get_data())) return 1;
             if (GLInputIndex(L,node,key.utf8().get_data())) return 1;
             if (GLMotorIndex(L,node,key.utf8().get_data())) return 1;
             if (GLCharacterControllerIndex(L,node,key.utf8().get_data())) return 1;
@@ -291,6 +292,7 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
 
     lua_pushcfunction(L_main, godot_object_newindex, "__newindex");
     lua_setfield(L_main, -2, "__newindex");
+    GLRegisterScene(L_main);
 
     // ── __eq (1.14.17) ────────────────────────────────────────────────────
     // Cada acceso a una propiedad crea un envoltorio NUEVO, asi que sin esto
@@ -764,6 +766,7 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
     // ── _InstanceNew — crear instancias en runtime ────────────────────────
     lua_pushcfunction(L_main, [](lua_State* L) -> int {
         const char* class_name = luaL_checkstring(L, 1);
+        if (strcmp(class_name,"SceneScope")==0) luaL_error(L,"[Scene:Authority] Use Scene.new for owned scope construction");
         Object* obj = ClassDB::instantiate(StringName(class_name));
         Node* node  = Object::cast_to<Node>(obj);
         if (!node) { if (obj) memdelete(obj); lua_pushnil(L); return 1; }

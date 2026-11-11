@@ -98,6 +98,22 @@ four successful workflows and independently checked artifacts.
 | GL-046 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Character/security barrier files can appear before their peer-ID payloads are written |
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
+| GL-049 | P2 | Implementation on isolated branch; qualification pending | Native resource/UI/scene authoring requires application GDScript adapters |
+
+## GL-049: Typed native game authoring
+
+Baseline `5d5bb84` has Node-only Instance handles and a narrow Variant bridge;
+`_InstanceNew` discards non-Node resources. Relay Siege constructs its arena,
+materials, UI/audio and local cloth in GDScript. This is a source-verified
+authoring limitation, not a claimed sandbox vulnerability or reproduced crash.
+
+The [campaign journal](native-authoring-development.md),
+[ADR-014](adr-014-native-scene-authoring.md) and [API](native-scene-api.md) define
+the isolated implementation. Fixed-family SceneScope construction keeps existing
+ObjectID/VM identity, provides typed resource ownership, and migrates the game's
+ordinary construction into Luau. Native integration, gameplay, sanitizer and
+package evidence are pending. Do not close this issue or claim universal Godot
+API parity from source implementation alone.
 
 ## GL-048: Relay Siege publication readiness
 

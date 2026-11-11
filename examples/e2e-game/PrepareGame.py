@@ -70,7 +70,7 @@ def Main():
             (Output/Target.parent).mkdir(parents=True,exist_ok=True)
             shutil.copy2(Product,Output/Target)
             (Output/Name).write_text('[remap]\npath="res://'+Target.as_posix()+'"\n')
-    for Name in ['project.godot','Main.tscn','Game.gd','Server.luau','Client.luau','README.md']:
+    for Name in ['project.godot','Main.tscn','Game.gd','Arena.luau','Presentation.luau','Server.luau','Client.luau','README.md']:
         shutil.copy2(Source/Name,Output/Name)
     if Args.profile:
         if not Args.profile.replace('-','').replace('_','').isalnum(): Parser.error('Profile must be a simple leaf')
