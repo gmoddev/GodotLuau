@@ -2,6 +2,7 @@
 #define LUAU_AUTOCOMPLETE_H
 
 #include "luau_type_database.h"
+#include "gl_native_editor_api.h"
 
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
@@ -1086,6 +1087,8 @@ public:
     }
 
     static Dictionary get_suggestions(const String& p_code, const String& p_path = String(), Object* p_owner = nullptr) {
+        Dictionary Native=GLInspectNativeCode(p_code,p_path);
+        if (bool(Native["Handled"])) return Native;
         Dictionary res;
         Array out;
 

@@ -108,9 +108,7 @@ jobs:
       - name: Prepare Linux network-host compiler
         if: runner.os == 'Linux'
         timeout-minutes: 5
-        run: |
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y clang-19 lld-19 pkg-config ninja-build
+        run: bash tools/PrepareLinuxCompiler.sh
       - name: Build admitted GL-029 network host for this profile
         timeout-minutes: 120
         run: python tests/runtime/BuildSanitizedGodot.py --output "$RUNNER_TEMP/remote-host" --remote-admission --configuration "${{ matrix.Configuration }}" --jobs 2 --timeout 7000

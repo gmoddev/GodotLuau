@@ -1,5 +1,5 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: 0dff082b83e04fb6ed2cd077ec4e8922077136348c858e58a39d2cc021abbddc
+-- Policy SHA256: 8322ba0504ed0b2f4d45a5d89b87ef20ba65e154bbb79b7bf898dfee5607585f
 export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number
@@ -1466,7 +1466,8 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeTexture2D, Method: "GetWidth") -> number) &
         ((self: NativeSceneScope, Target: NativeTexture2D, Method: "GetHeight") -> number) &
         ((self: NativeSceneScope, Target: NativeMesh, Method: "GetSurfaceCount") -> number) &
-        ((self: NativeSceneScope, Target: NativeNode, Method: "GetChildCount", include_internal: boolean?) -> number)
+        ((self: NativeSceneScope, Target: NativeNode, Method: "GetChildCount", include_internal: boolean?) -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeStandardMaterial3D), Method: "SetRoughness", roughness: number) -> ())
     Connect: ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Pressed", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Toggled", Callback: (boolean) -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "ButtonDown", Callback: () -> ()) -> NativeConnection) &

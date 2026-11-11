@@ -84,3 +84,36 @@ provisioning deadline. The retained job log establishes that environmental cause
 Windows continues compiling. No product defect or deadline change is inferred.
 The next changed-source run includes the new fixtures; do not relabel this failed
 provisioning attempt as runtime qualification.
+
+## Editor/native follow-up
+
+The declaration workflow `43042497368` passes Windows/Linux at `23d7a67`, after
+correcting the test probe's call to the actual pinned five-argument definition
+loader. It loads/checks the emitted definitions and eleven positive/negative
+programs; the earlier compile failures remain retained. This is type evidence,
+not native runtime evidence.
+
+Windows run `43039608365` exposes two C++ namespace collisions: the imported
+Vector kind conflicts with godot::Vector, and the Classes callback conflicts with
+the generated class table. Qualify the two enum uses and rename only the private
+callback. Linux run `43041827223` independently repeats the Azure mirror stall;
+it also never compiles C++. Cancel its obsolete Windows build, which has the same
+known source collisions. No canceled attempt counts as qualification.
+
+The next revision routes ephemeral Ubuntu provisioning through the official
+HTTPS archive with bounded APT retries/timeouts. Compiler package selection,
+signature verification, step deadlines, engine pins and admission remain unchanged.
+This corrects observed mirror behavior, not product tests.
+
+Review also corrects the new ClassDB resource-construction path to retain its
+owning Variant until the scoped Ref acquires ownership. This is a source-verified
+ownership correction, not a claimed reproduced crash. New runtime coverage tests
+resource identity/cache reuse and immutable getter handles through native methods.
+
+Editor implementation now shares checked metadata/AST inspection between actual
+Godot language completion/validation hooks and `LuauScript.InspectNativeCode`.
+It provides approved constructor/property/method/signal completion and bounded,
+source-located native policy diagnostics without executing scripts. It conserves
+dynamic child lookup and unrelated legacy completion. This is focused native
+analysis, not a complete replacement Luau type checker or runtime debugger.
+The new production-path editor fixture and changed native code await execution.

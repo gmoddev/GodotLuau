@@ -127,6 +127,7 @@ def Build(Policy, Api):
         Required = 0
         for A in Args:
             Arguments.append(Value(A['name'], A['type'], P.get('Bounds', {}).get(A['name']), A.get('default_value')))
+            Arguments[-1]['Class']=C+'.'+N
             Required += 'default_value' not in A
         Return = M.get('return_value', {}).get('type')
         Methods.append({**P, 'Arguments': len(Args), 'Required': Required, 'FirstArgument': First,
@@ -140,6 +141,7 @@ def Build(Policy, Api):
         First = len(Arguments)
         for A in Args:
             Arguments.append(Value(A['name'], A['type']))
+            Arguments[-1]['Class']=P['Class']+'.'+P['Name']
         Signals.append({**P, 'FirstArgument': First, 'Arguments': len(Args)})
         Selected.add(P['Class'])
     for P in Policy['Enums']:
@@ -188,6 +190,10 @@ def Generate(Policy, Api):
     for Cpp, Name, Lines in Tables:
         H += ['inline constexpr ' + Cpp + ' ' + Name + '[] = {', *['    ' + L + ',' for L in Lines], '};']
     H += ['inline constexpr const char* LoadTypes[] = {' + ','.join(map(Quote, D['LoadTypes'])) + '};', '}']
+    H += ['#define GL_NATIVE_SCOPE_OPERATIONS(X) \\']
+    for Index,(Name,_) in enumerate(ScopeOperations):
+        Function='BuildMesh' if Name=='Mesh' else Name
+        H.append('    X('+Name+','+Function+')'+(' \\' if Index+1<len(ScopeOperations) else ''))
     ByName = {C['Name']: C for C in D['Classes']}
 
     def Inherits(Name, Base):
@@ -249,7 +255,12 @@ def Generate(Policy, Api):
     for M in D['Methods']:
         Args = D['Arguments'][M['FirstArgument']:M['FirstArgument'] + M['Arguments']]
         Tail = ''.join(', ' + A['Name'] + ': ' + Type(A) + ('?' if I >= M['Required'] else '') for I, A in enumerate(Args))
-        C = ('MutableNative' if ByName[M['Class']]['Resource'] and M['Mutates'] else 'Native') + M['Class']
+        if ByName[M['Class']]['Resource'] and M['Mutates']:
+            Receivers=['MutableNative'+C['Name'] for C in D['Classes'] if C['Construct'] and C['Resource'] and Inherits(C['Name'],M['Class'])]
+            Require(bool(Receivers),'No approved mutable receiver for '+M['Name'])
+            C='('+' | '.join(Receivers)+')'
+        else:
+            C='Native'+M['Class']
         Return = Type({'Kind': M['Return'], 'ResourceClass': M['ReturnClass']})
         Call.append(f'(self: NativeSceneScope, Target: {C}, Method: "{M["Name"]}"{Tail}) -> {Return}')
     for S in D['Signals']:
@@ -277,6 +288,7 @@ def Generate(Policy, Api):
     D['Schema'] = 1
     D['PolicySHA256'] = PolicyHash
     D['ApiSHA256'] = Policy['ApiSHA256']
+    D['ScopeOperations'] = [{'Name':N,'Signature':S} for N,S in ScopeOperations]
     return {'src/core/gl_native_registry.gen.h': '\n'.join(H) + '\n',
             'GodotLuau/Types/Native.d.luau': '\n'.join(T) + '\n',
             'bindings/NativeCatalog.json': json.dumps(D, indent=2) + '\n'}

@@ -151,6 +151,12 @@ public:
             return d;
         }
         d["valid"] = true;
+        Dictionary Native=GLInspectNativeCode(s,p);
+        Array Diagnostics=Native["Diagnostics"];
+        if (!Diagnostics.is_empty()) {
+            d["valid"]=false;
+            if (pe) d["errors"]=Diagnostics;
+        }
         return d;
     }
 

@@ -2,7 +2,7 @@
 #pragma once
 #include "gl_native_registry.h"
 namespace GLNative {
-inline constexpr const char* PolicySHA256 = "0dff082b83e04fb6ed2cd077ec4e8922077136348c858e58a39d2cc021abbddc";
+inline constexpr const char* PolicySHA256 = "8322ba0504ed0b2f4d45a5d89b87ef20ba65e154bbb79b7bf898dfee5607585f";
 inline constexpr const char* ApiSHA256 = "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f";
 inline constexpr Class Classes[] = {
     {"ArrayMesh","Mesh",false,true},
@@ -201,17 +201,18 @@ inline constexpr Property Properties[] = {
     {"Control","ClipContents","clip_contents",Boolean,0,0,nullptr,nullptr},
 };
 inline constexpr Property Arguments[] = {
-    {"","global_point","global_point",Vector,-100000,100000,nullptr,nullptr},
-    {"","local_point","local_point",Vector,-100000,100000,nullptr,nullptr},
-    {"","pressed","pressed",Boolean,-100000,100000,nullptr,nullptr},
-    {"","value","value",Number,-100000,100000,nullptr,nullptr},
-    {"","from_position","from_position",Number,0,3600,nullptr,"0.0"},
-    {"","to_position","to_position",Number,0,3600,nullptr,nullptr},
-    {"","include_internal","include_internal",Boolean,-100000,100000,nullptr,"false"},
-    {"","toggled_on","toggled_on",Boolean,-100000,100000,nullptr,nullptr},
-    {"","new_text","new_text",Text,0,8192,nullptr,nullptr},
-    {"","new_text","new_text",Text,0,8192,nullptr,nullptr},
-    {"","value","value",Number,-100000,100000,nullptr,nullptr},
+    {"Node3D.ToLocal","global_point","global_point",Vector,-100000,100000,nullptr,nullptr},
+    {"Node3D.ToGlobal","local_point","local_point",Vector,-100000,100000,nullptr,nullptr},
+    {"BaseButton.SetPressedNoSignal","pressed","pressed",Boolean,-100000,100000,nullptr,nullptr},
+    {"Range.SetValueNoSignal","value","value",Number,-100000,100000,nullptr,nullptr},
+    {"AudioStreamPlayer.Play","from_position","from_position",Number,0,3600,nullptr,"0.0"},
+    {"AudioStreamPlayer.Seek","to_position","to_position",Number,0,3600,nullptr,nullptr},
+    {"Node.GetChildCount","include_internal","include_internal",Boolean,-100000,100000,nullptr,"false"},
+    {"BaseMaterial3D.SetRoughness","roughness","roughness",Number,0,1,nullptr,nullptr},
+    {"BaseButton.Toggled","toggled_on","toggled_on",Boolean,-100000,100000,nullptr,nullptr},
+    {"LineEdit.TextSubmitted","new_text","new_text",Text,0,8192,nullptr,nullptr},
+    {"LineEdit.TextChanged","new_text","new_text",Text,0,8192,nullptr,nullptr},
+    {"Range.ValueChanged","value","value",Number,-100000,100000,nullptr,nullptr},
 };
 inline constexpr Method Methods[] = {
     {"Node3D","GetGlobalPosition","get_global_position",false,0,0,0,Vector,nullptr},
@@ -240,20 +241,21 @@ inline constexpr Method Methods[] = {
     {"Texture2D","GetHeight","get_height",false,6,0,0,Integer,nullptr},
     {"Mesh","GetSurfaceCount","get_surface_count",false,6,0,0,Integer,nullptr},
     {"Node","GetChildCount","get_child_count",false,6,1,0,Integer,nullptr},
+    {"BaseMaterial3D","SetRoughness","set_roughness",true,7,1,1,Void,nullptr},
 };
 inline constexpr Signal Signals[] = {
-    {"BaseButton","Pressed","pressed",7,0},
-    {"BaseButton","Toggled","toggled",7,1},
-    {"BaseButton","ButtonDown","button_down",8,0},
-    {"BaseButton","ButtonUp","button_up",8,0},
-    {"LineEdit","TextSubmitted","text_submitted",8,1},
-    {"LineEdit","TextChanged","text_changed",9,1},
-    {"AudioStreamPlayer","Finished","finished",10,0},
-    {"Control","Resized","resized",10,0},
-    {"Control","FocusEntered","focus_entered",10,0},
-    {"Control","FocusExited","focus_exited",10,0},
-    {"CanvasItem","VisibilityChanged","visibility_changed",10,0},
-    {"Range","ValueChanged","value_changed",10,1},
+    {"BaseButton","Pressed","pressed",8,0},
+    {"BaseButton","Toggled","toggled",8,1},
+    {"BaseButton","ButtonDown","button_down",9,0},
+    {"BaseButton","ButtonUp","button_up",9,0},
+    {"LineEdit","TextSubmitted","text_submitted",9,1},
+    {"LineEdit","TextChanged","text_changed",10,1},
+    {"AudioStreamPlayer","Finished","finished",11,0},
+    {"Control","Resized","resized",11,0},
+    {"Control","FocusEntered","focus_entered",11,0},
+    {"Control","FocusExited","focus_exited",11,0},
+    {"CanvasItem","VisibilityChanged","visibility_changed",11,0},
+    {"Range","ValueChanged","value_changed",11,1},
 };
 inline constexpr Constant Constants[] = {
     {"Control","MouseFilter","MOUSE_FILTER_STOP",0},
@@ -298,3 +300,19 @@ inline constexpr Operation ScopeOperations[] = {
 };
 inline constexpr const char* LoadTypes[] = {"Texture2D","AudioStream","Mesh","Font","PackedScene"};
 }
+#define GL_NATIVE_SCOPE_OPERATIONS(X) \
+    X(New,New) \
+    X(Configure,Configure) \
+    X(Get,Get) \
+    X(Call,Call) \
+    X(Connect,Connect) \
+    X(Load,Load) \
+    X(Instantiate,Instantiate) \
+    X(Clone,Clone) \
+    X(Reparent,Reparent) \
+    X(Mesh,BuildMesh) \
+    X(Pin,Pin) \
+    X(Tone,Tone) \
+    X(Play,Play) \
+    X(Stop,Stop) \
+    X(Impulse,Impulse)

@@ -1381,6 +1381,18 @@
       "Native": "get_child_count",
       "Mutates": false,
       "Bounds": {}
+    },
+    {
+      "Class": "BaseMaterial3D",
+      "Name": "SetRoughness",
+      "Native": "set_roughness",
+      "Mutates": true,
+      "Bounds": {
+        "roughness": [
+          0,
+          1
+        ]
+      }
     }
   ],
   "Signals": [

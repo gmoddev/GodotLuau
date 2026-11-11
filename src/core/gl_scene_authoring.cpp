@@ -140,7 +140,7 @@ Variant ReadValue(lua_State* Thread, SceneScope* Scope, const Property& Item, in
             if (!strcmp(Item.Name,"Name") && (Value.contains("/") || Value.contains(":") || Value.contains(".") || Value.contains("@"))) break;
             return Value;
         } break;
-        case Vector: if (auto Value=check_vector3(Thread,Index)) {
+        case GLNative::Vector: if (auto Value=check_vector3(Thread,Index)) {
             if (Bounded(Value->x,Item.Min,Item.Max) && Bounded(Value->y,Item.Min,Item.Max) && Bounded(Value->z,Item.Min,Item.Max)) return Vector3(Value->x,Value->y,Value->z);
         } break;
         case Vector2Value: if (lua_istable(Thread,Index)) {
@@ -200,18 +200,23 @@ bool RegistryIsA(const char* Name, const char* Base);
 Node* CreateNode(const char* Name) {
     const auto* Item=FindClass(Name);
     if (!Item || !Item->Construct || Item->Resource || !ClassDB::can_instantiate(Name)) return nullptr;
-    Object* Value=ClassDB::instantiate(StringName(Name));
+    Variant Created=ClassDB::instantiate(StringName(Name));
+    Object* Value=Created;
     auto Target=Object::cast_to<Node>(Value);
-    if (!Target) { if (Value) memdelete(Value); return nullptr; }
+    if (!Target) { if (Value && !Object::cast_to<RefCounted>(Value)) memdelete(Value); return nullptr; }
     if (auto Edit=Object::cast_to<LineEdit>(Target)) Edit->set_max_length(8192);
     return Target;
 }
 Ref<Resource> CreateResource(const char* Name) {
     const auto* Item=FindClass(Name);
     if (!Item || !Item->Construct || !Item->Resource || !ClassDB::can_instantiate(Name)) return Ref<Resource>();
-    Object* Value=ClassDB::instantiate(StringName(Name));
+    // ClassDB returns a Variant owning the initial RefCounted reference. Keep it
+    // alive until the scoped Ref has acquired ownership; never borrow a pointer
+    // from a temporary Variant whose destruction could release the resource.
+    Variant Created=ClassDB::instantiate(StringName(Name));
+    Object* Value=Created;
     auto Target=Object::cast_to<Resource>(Value);
-    if (!Target) { if (Value) memdelete(Value); return Ref<Resource>(); }
+    if (!Target) { if (Value && !Object::cast_to<RefCounted>(Value)) memdelete(Value); return Ref<Resource>(); }
     return Ref<Resource>(Target);
 }
 void PushProperty(lua_State* Thread, SceneScope* Scope, Object* Target, const char* Key) {
@@ -283,7 +288,7 @@ bool ValidNative(const Property& Item, const Variant& Value) {
             String Text=Value; auto Bytes=Text.utf8();
             return Bytes.length()>=Item.Min && Bytes.length()<=Item.Max && !std::memchr(Bytes.get_data(),0,Bytes.length());
         }
-        case Vector: {
+        case GLNative::Vector: {
             if (Value.get_type()!=Variant::VECTOR3) return false;
             Vector3 Point=Value; return Bounded(Point.x,Item.Min,Item.Max) && Bounded(Point.y,Item.Min,Item.Max) && Bounded(Point.z,Item.Min,Item.Max);
         }
@@ -668,7 +673,7 @@ void PushShape(lua_State* Thread, const Property& Item) {
     lua_pushnumber(Thread,Item.Max); lua_setfield(Thread,-2,"Maximum");
     if (Item.ResourceClass) { lua_pushstring(Thread,Item.ResourceClass); lua_setfield(Thread,-2,"ResourceClass"); }
 }
-int Classes(lua_State* Thread) {
+int GetClasses(lua_State* Thread) {
     lua_newtable(Thread); int Index=1;
     for (const auto& Item:GLNative::Classes) { lua_pushstring(Thread,Item.Name); lua_rawseti(Thread,-2,Index++); }
     return 1;
@@ -773,7 +778,7 @@ void GLRegisterScene(lua_State* Thread) {
     lua_pushcfunction(Thread,ResourceEqual,"ResourceIdentity"); lua_setfield(Thread,-2,"__eq"); lua_pop(Thread,1);
     lua_newtable(Thread);
     lua_pushcfunction(Thread,Root,"new"); lua_setfield(Thread,-2,"new");
-    lua_pushcfunction(Thread,Classes,"Classes"); lua_setfield(Thread,-2,"Classes");
+    lua_pushcfunction(Thread,GetClasses,"Classes"); lua_setfield(Thread,-2,"Classes");
     lua_pushcfunction(Thread,Describe,"Describe"); lua_setfield(Thread,-2,"Describe");
     lua_pushstring(Thread,GLNative::PolicySHA256); lua_setfield(Thread,-2,"PolicySHA256");
     lua_pushstring(Thread,GLNative::ApiSHA256); lua_setfield(Thread,-2,"ApiSHA256");
@@ -797,7 +802,9 @@ bool GLSceneIndex(lua_State* Thread, Node* Target, const char* Key) {
     if (Scope->Retired || Scope->is_queued_for_deletion()) luaL_error(Thread,"[Scene:Lifetime] Scene was retired");
     if (Target==Scope) {
         struct Method { const char* Name; lua_CFunction Function; };
-        static const Method Methods[]={{"New",New},{"Configure",Configure},{"Get",Get},{"Call",Call},{"Instantiate",Instantiate},{"Clone",Clone},{"Reparent",Reparent},{"Mesh",BuildMesh},{"Pin",Pin},{"Tone",Tone},{"Load",Load},{"Play",Play},{"Stop",Stop},{"Impulse",Impulse},{"Connect",Connect}};
+#define GL_SCENE_OPERATION(Name, Function) {#Name,Function},
+        static const Method Methods[]={GL_NATIVE_SCOPE_OPERATIONS(GL_SCENE_OPERATION)};
+#undef GL_SCENE_OPERATION
         for (const auto& Item:Methods) if (!strcmp(Key,Item.Name)) {
             if (!Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Authority] Scope methods require its live execution owner");
             lua_pushcfunction(Thread,Item.Function,Item.Name); return true;

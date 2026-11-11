@@ -44,6 +44,8 @@ local P:boolean=S:Call(B,"IsPressed")
 local M=S:New("BoxMesh",{Size=Vector3.new(2,3,4)})
 S:Configure(M,{Size=Vector3.new(1,1,1)})
 local V:NativeVector3=S:Get(M,"Size")
+local Material=S:New("StandardMaterial3D",{})
+S:Call(Material,"SetRoughness",0.4)
 )",true},
         {"resource references",R"(local S=Scene.new(Parent)
 local T=S:Load("Texture2D","res://Image.tres")

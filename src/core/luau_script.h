@@ -61,6 +61,7 @@ static const char* LUAU_TEMPLATE_MODULE_OOP =
 #include "gl_domain_host.h"
 #include "gl_runtime.h"
 #include "gl_errors.h"
+#include "gl_native_editor_api.h"
 
 #include <godot_cpp/classes/script_extension.hpp>
 #include <godot_cpp/classes/script_language.hpp>
@@ -222,11 +223,14 @@ class LuauScript : public ScriptExtension {
     GDCLASS(LuauScript, ScriptExtension);
 
 protected:
-    static void _bind_methods() {}
+    static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("InspectNativeCode","Code","Path"),&LuauScript::InspectNativeCode,DEFVAL(String()));
+    }
     String source_code;
     uint64_t SourceRevision = 0;
 
 public:
+    Dictionary InspectNativeCode(const String& Code, const String& Path) const { return GLInspectNativeCode(Code,Path); }
     String _get_source_code() const override { return source_code; }
     uint64_t GetSourceRevision() const { return SourceRevision; }
     void _set_source_code(const String &p_code) override {

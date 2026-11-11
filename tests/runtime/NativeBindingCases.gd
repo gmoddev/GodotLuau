@@ -72,6 +72,8 @@ local Text=S:New('LineEdit',{Name='Text',Text='original'})
 local Material=S:New('StandardMaterial3D',{AlbedoTexture=Texture,Metallic=0.3})
 local Mesh=S:New('PlaneMesh',{Size=Vector2.new(4,5)})
 local Display=S:New('MeshInstance3D',{Name='Display',Mesh=Mesh,Material=Material})
+S:Call(Material,'SetRoughness',0.4)
+assert(not pcall(function() S:Call(S:Get(Display,'Material'),'SetRoughness',0.5) end))
 local A=S:New('Node3D',{Name='A',Position=Vector3.new(3,0,0)})
 local B=S:New('Node3D',{Name='B',Position=Vector3.new(7,0,0)})
 local Child=S:New('Node3D',{Name='Child',Position=Vector3.new(2,0,0)},A)
@@ -145,6 +147,7 @@ game:SetAttribute('BindingReady',true)
     var Material := (Scope.get_node("Display") as MeshInstance3D).material_override as StandardMaterial3D
     Runner.Check(Image.texture is GradientTexture2D and Image.texture.get_width()==16, "Binding typed texture loading and native UI presentation")
     Runner.Check(Material.albedo_texture==Image.texture and is_equal_approx(Material.metallic,0.3), "Binding native material shares the loaded texture")
+    Runner.Check(is_equal_approx(Material.roughness,0.4), "Binding resource methods enforce getter immutability without mutation")
     var First := Scope.get_node("A/First/Visual") as MeshInstance3D
     var Copy := Scope.get_node("B/Copy/Visual") as MeshInstance3D
     Runner.Check(First.mesh==Copy.mesh and First.mesh is BoxMesh, "Binding native PackedScene and clone preserve reusable resources")

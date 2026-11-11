@@ -90,9 +90,7 @@ jobs:
       - name: Prepare Linux host compiler
         if: runner.os == 'Linux'
         timeout-minutes: 5
-        run: |
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y clang-19 lld-19 pkg-config ninja-build
+        run: bash tools/PrepareLinuxCompiler.sh
 
       - name: Install hash-pinned host build frontend
         timeout-minutes: 3
