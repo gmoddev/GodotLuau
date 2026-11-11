@@ -375,3 +375,10 @@ input logs contain 29 passing assertions. Each generated-type log passes eleven
 representative programs plus actual RelayFactory, and its declarations/catalog
 match main. Both native jobs are building their existing admitted host/adapter;
 final integration verification still awaits those results and retained evidence.
+
+Linux main native CI now passes all 141 actors and 19 actual editor checks at
+`397dde8`. The downloaded summary matches the qualified 728d/114-file native
+inputs; all 420 retained log hashes verify, including expanded-binding PASS
+markers, and actual editor shutdown has no unhandled errors. Windows native is
+still building its adapter. No runtime change, retry or assertion change has
+been required for integration.

@@ -60,12 +60,15 @@ integration notes.
   Windows/Linux pass. Both downloaded discovery/XML artifacts pass the existing
   CheckCoreCI checks for all 85 distinct cases; input logs pass 29 assertions each.
 - [Native 43112156884](https://github.com/gmoddev/GodotLuau/actions/runs/43112156884):
-  Windows/Linux are building the admitted host and adapter; results remain pending.
+  Linux passes all 141 actors and 19 actual editor checks. Its downloaded summary
+  identifies `397dde8` and the unchanged native fingerprint; all 420 native log
+  hashes verify, expanded bindings report PASS and editor shutdown has no errors.
+  Windows is still building its adapter; its final result remains pending.
 - [Definitions 43112156562](https://github.com/gmoddev/GodotLuau/actions/runs/43112156562):
   Windows/Linux pass all eleven representative programs and the production
   RelayFactory module. Both downloaded definitions/catalogs match main.
 
-Final native results and evidence remain pending. Optional benchmark export is correctly
+Final Windows native results and evidence remain pending. Optional benchmark export is correctly
 skipped because it was not requested. Dispatch is not a pass.
 
 ## Preserved limits and distribution policy
