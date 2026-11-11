@@ -6,6 +6,7 @@
 #include "Luau/Parser.h"
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/array.hpp>
+#include <godot_cpp/variant/variant.hpp>
 #include <cmath>
 #include <string>
 #include <unordered_map>

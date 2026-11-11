@@ -165,3 +165,11 @@ cohort is `3150d9c` with the non-Node signal guard and expanded boundary fixture
 later package documentation changes preserve those native/fixture inputs.
 Staging now ships both API guides and keeps external source links at the exact
 game commit, alongside the already packaged generated native definitions.
+
+Windows `43045290491` compiles the expanded scene runtime but fails the new
+standalone editor translation unit: Dictionary/Array headers forward-declare
+Variant, so the inspector needs an explicit variant.hpp include. Add that one
+include; retained diagnostics identify this compile error rather than a runtime
+failure. Obsolete `1f2a5a4`/`3150d9c` native builds have the same missing include
+and are canceled to avoid repeating known failed inputs. Core passes remain
+valid for their unchanged core sources. No canceled run counts as native evidence.
