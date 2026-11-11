@@ -38,7 +38,7 @@ local Body = Scope:New('RigidBody3D', {
 Scope:New('CollisionShape3D', {Name='BodyShape', Shape=SphereShape}, Body)
 local Environment = Scope:New('Environment', {
     BackgroundMode=1, BackgroundColor=Color3.new(0.1, 0.2, 0.3),
-    AmbientLightSource=3, AmbientLightColor=Color3.new(0.4, 0.5, 0.6), AmbientLightEnergy=0.7})
+    AmbientLightSource=2, AmbientLightColor=Color3.new(0.4, 0.5, 0.6), AmbientLightEnergy=0.7})
 Scope:New('WorldEnvironment', {Name='WorldEnvironment', Environment=Environment}, Root)
 Scope:New('DirectionalLight3D', {Name='Sun', Energy=1.5, ShadowEnabled=true}, Root)
 Scope:New('Camera3D', {Name='Camera', Fov=65, Near=0.1, Far=200}, Root)
@@ -200,6 +200,7 @@ game:SetAttribute('NAGcReleased', true)
     var World := Scope.get_node("Root/WorldEnvironment") as WorldEnvironment
     var NativeEnvironment: Environment = World.environment
     Runner.Check(NativeEnvironment != null and is_equal_approx(NativeEnvironment.ambient_light_energy, 0.7), "Scene native environment")
+    Runner.Check(NativeEnvironment != null and NativeEnvironment.ambient_light_source == Environment.AMBIENT_SOURCE_COLOR, "Scene color ambient source matches the pinned native enum")
     NativeEnvironment = null
     var LoadedMesh := (Scope.get_node("Root/Loaded") as MeshInstance3D).mesh as BoxMesh
     Runner.Check(LoadedMesh != null and LoadedMesh.size == Vector3(7, 8, 9), "Scene immutable loaded resource and cache hit")

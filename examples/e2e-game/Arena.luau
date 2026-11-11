@@ -58,7 +58,7 @@ Scope:New("WorldEnvironment", {
     Environment = Scope:New("Environment", {
         BackgroundMode = 1,
         BackgroundColor = Color3.new(0.07, 0.12, 0.2),
-        AmbientLightSource = 3,
+        AmbientLightSource = 2,
         AmbientLightColor = Color3.new(0.6, 0.8, 1),
         AmbientLightEnergy = 0.8,
     }),

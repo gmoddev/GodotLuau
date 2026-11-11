@@ -69,7 +69,7 @@ save or ownership restoration is exposed. FullRect is a write-only layout preset
 | SphereMesh | Radius, Height, RadialSegments, Rings |
 | SphereShape3D | Radius |
 | StandardMaterial3D | Color, Roughness, EmissionEnabled, Emission |
-| Environment | BackgroundMode (1/color), BackgroundColor, AmbientLightSource (3/color), AmbientLightColor, AmbientLightEnergy |
+| Environment | BackgroundMode (1/color), BackgroundColor, AmbientLightSource (2/color), AmbientLightColor, AmbientLightEnergy |
 
 Numeric properties reject NaN/infinity and out-of-range values. Positions allow
 ±100000, rotations ±360000 degrees, scales 0.001–100, shape dimensions

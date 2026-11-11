@@ -126,3 +126,40 @@ rigid-body velocity `(1.996667,0,0)`. Its 64-child construction sample is
 measurement limitations as the earlier sample. Windows native, full-native
 sanitizers, four candidate profiles and actual migrated gameplay remain pending.
 No qualified C++ input changes after `9bd790f`.
+
+## Native gates and first rendered gameplay
+
+At `c9f6807`, Windows/Linux native run `42979197181` and full-native sanitizer
+run `42979198239` pass. All four downloaded summaries retain the same 103-file
+fingerprint and authoring fixture hash, 141 actors and `[Scene:Qualification] PASS`.
+Windows ASan retains the established LSan limitation. Construction samples are
+42.590 ms Windows Debug, 16.519 ms Linux Debug, 128.844 ms Windows ASan and
+71.734 ms Linux ASan/LSan; these include bootstrap/loading and are not isolated
+API benchmarks. The coarse monitor reports 121/122 Objects and 1 Resource, not
+an allocation profile. Initialized impulse velocity is 1.996667 on all lanes.
+
+Candidate `42979201593` first passes Windows Debug/Linux Release, but Linux Debug
+exceeds the existing 250 ms synchronous close-save budget in HTTP lifecycle
+(explicit indeterminate outcome), and Windows Release times out on the existing
+adversarial replacement-life receipt barrier. Those actors pass the ordinary
+native/sanitizer lanes. Attempt 2 retries only the two failed profiles, preserving
+the original logs and every assertion/deadline. It is not yet accepted.
+
+The retained source-built SCons products support a private development game,
+explicitly marked `DEVELOPMENT_BUILD_UNACCEPTED`; no accepted package is claimed.
+With the unchanged admitted MainPC renderer, actual local play passes 27 checks
+(victory, defeat, saves, respawn, UI consumption, impulse and pin release), fresh
+process recovery passes, and four-player rendered listen play passes. Runtime
+stderr is empty for local play. DockerPC admission is Busy with another owner;
+only runner files were staged there, with no heavy process started or lease held.
+
+### Corrected native environment enum
+
+Review of the rendered output prompted a pinned-engine constant inspection:
+Godot 4.7.1 reports BG_COLOR=1, AMBIENT_SOURCE_COLOR=2, AMBIENT_SOURCE_SKY=3.
+The first API mislabeled/admitted 3 as Color. Correct the one schema entry using
+the native C++ constants, change the arena input to 2, and assert the actual
+native ambient source in the integration actor. This is a confirmed contract
+discrepancy, not a reproduced renderer crash. The preceding receipts retain
+their original inputs and do not qualify the changed enum/caller. Fresh changed-
+source qualification follows; no host, dependency, protocol or solver changes.

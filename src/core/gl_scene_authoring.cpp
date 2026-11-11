@@ -165,9 +165,9 @@ const Property Properties[]={
     {"StandardMaterial3D","Roughness","roughness",Number,0,1},
     {"StandardMaterial3D","EmissionEnabled","emission_enabled",Boolean},
     {"StandardMaterial3D","Emission","emission",Colour},
-    {"Environment","BackgroundMode","background_mode",Integer,1,1},
+    {"Environment","BackgroundMode","background_mode",Integer,Environment::BG_COLOR,Environment::BG_COLOR},
     {"Environment","BackgroundColor","background_color",Colour},
-    {"Environment","AmbientLightSource","ambient_light_source",Integer,3,3},
+    {"Environment","AmbientLightSource","ambient_light_source",Integer,Environment::AMBIENT_SOURCE_COLOR,Environment::AMBIENT_SOURCE_COLOR},
     {"Environment","AmbientLightColor","ambient_light_color",Colour},
     {"Environment","AmbientLightEnergy","ambient_light_energy",Number,0,16}
 };
