@@ -290,3 +290,11 @@ and four production profiles continue. Final sanitizer run `43066333042` targets
 the same native/fixture inputs at docs tip `d4d8711`; no pending pass is inferred.
 Obsolete native runs at `a1d49b6`/`6da3442` were canceled for the known missing-prefix
 input; the `358d613` candidate already completed with its retained editor failures.
+
+Windows native `43063379869` now also passes the final 728d/114-file inputs:
+141 actors and 19 actual editor checks. All 425 Windows retained native log
+hashes verify, alongside the 420 Linux hashes. Both actual editors configure the
+Luau colon prefix automatically, preserve legacy math completion and GDScript
+tabs, and shut down without unhandled errors. Core `43063379932` also passes
+Windows/Linux at `5f876d3`. Production candidate and final sanitizer gates remain
+pending; no feature code changes are needed for these passing outcomes.
