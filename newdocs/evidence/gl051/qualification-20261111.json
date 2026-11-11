@@ -1,0 +1,720 @@
+{
+  "Schema": 1,
+  "Branch": "feature/gl-051-first-class-luau",
+  "MainBaseline": "c60919a42416d5e6c72d2b23f7801500879c3195",
+  "RuntimeRevision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+  "ArtifactRoot": "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl051-20261111",
+  "Status": "Qualified within documented scope; ready for integration review; unmerged",
+  "Native": {
+    "Windows": {
+      "Summary": "native-5f876d3-Windows/_temp/native-ci/summary.json",
+      "SummarySHA256": "ab056b2675ddcf2f0d119f3581a18332c442ebbf70697fd4fcdae77ff74cdaa2",
+      "Revision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "VerifiedLogHashes": 425,
+      "EditorChecks": 19,
+      "EditorPassed": true,
+      "EditorSHA256": "470054d8c989f60c327324ec75a846d664c9a15fa15ed3404979b7128879aa8e"
+    },
+    "Linux": {
+      "Summary": "native-5f876d3-Linux/_temp/native-ci/summary.json",
+      "SummarySHA256": "e7f7ca2e0536610713da9bb42f44878a6b9cc9ae01c483b2383b1ca9286bee8f",
+      "Revision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "VerifiedLogHashes": 420,
+      "EditorChecks": 19,
+      "EditorPassed": true,
+      "EditorSHA256": "e6a09d4d1a6e4887ceff16fa7e53dadc7cc4f974e3f031551f36f4097202014e"
+    }
+  },
+  "Gameplay": {
+    "rendered-6a04029-dedicated": [
+      {
+        "Report": "rendered-6a04029-dedicated/latejoin/evidence/gameplay-result.json",
+        "SHA256": "0219ea6bc6f7caa753c3b07dd900da8bd4f8deef7f2aa9580ed360a30e18b850",
+        "Checks": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.6468914334188,
+        "PeakFrameMS": 146.832333333333,
+        "Seconds": 29.102,
+        "NativeObjects": 250.0
+      },
+      {
+        "Report": "rendered-6a04029-dedicated/leader/evidence/gameplay-result.json",
+        "SHA256": "e2f19796dbd9b0d24fc782cfe8411ac8625e50ce1f2f0686520957d2144d6e53",
+        "Checks": 28,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.4856069705091,
+        "PeakFrameMS": 150.0,
+        "Seconds": 65.128,
+        "NativeObjects": 176.0
+      },
+      {
+        "Report": "rendered-6a04029-dedicated/observer1/evidence/gameplay-result.json",
+        "SHA256": "679903d1704a31be14ce2bdfd626c68105a90fbbffca1322702f15ce2f3b32e6",
+        "Checks": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.6099508692373,
+        "PeakFrameMS": 147.225666666667,
+        "Seconds": 32.364,
+        "NativeObjects": 250.0
+      },
+      {
+        "Report": "rendered-6a04029-dedicated/observer2/evidence/gameplay-result.json",
+        "SHA256": "2b082cd1690a107f8ab634c209ae72f1cab19bdab39120ec72187e78b1ab8ca0",
+        "Checks": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.6066235067444,
+        "PeakFrameMS": 150.0,
+        "Seconds": 31.79,
+        "NativeObjects": 250.0
+      },
+      {
+        "Report": "rendered-6a04029-dedicated/server/evidence/gameplay-result.json",
+        "SHA256": "476b77e6545bba986be903035efa3bcd44f1160a13aa9f75e28dfef44ceee706",
+        "Checks": 2,
+        "Failed": 0,
+        "Graphical": false,
+        "MeanFrameMS": 33.3064974635896,
+        "PeakFrameMS": 33.8800000000001,
+        "Seconds": 67.838,
+        "NativeObjects": 76.0
+      }
+    ],
+    "rendered-6a04029-listen": [
+      {
+        "Report": "rendered-6a04029-listen/latejoin/evidence/gameplay-result.json",
+        "SHA256": "8009de4d86cec1ad213165270fcb86529e33d8e50246214f5c570d24c99db6c3",
+        "Checks": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.7108980139563,
+        "PeakFrameMS": 147.779333333333,
+        "Seconds": 23.722,
+        "NativeObjects": 249.0
+      },
+      {
+        "Report": "rendered-6a04029-listen/leader/evidence/gameplay-result.json",
+        "SHA256": "5be846f828f947d6a1f684ff93cee26594cf3dda785f4fb89234794dc7a1828d",
+        "Checks": 28,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.4778360626865,
+        "PeakFrameMS": 150.0,
+        "Seconds": 65.959,
+        "NativeObjects": 176.0
+      },
+      {
+        "Report": "rendered-6a04029-listen/observer1/evidence/gameplay-result.json",
+        "SHA256": "7c93a30d0d9e89065abff7ce6ba387f2074b733c98492df91b79ae5ccf11b1d0",
+        "Checks": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.6766746366625,
+        "PeakFrameMS": 142.708666666667,
+        "Seconds": 26.65,
+        "NativeObjects": 249.0
+      },
+      {
+        "Report": "rendered-6a04029-listen/observer2/evidence/gameplay-result.json",
+        "SHA256": "83ff12ce30c5856512f71c1488a303d3f5303d48225aa277eb519a2c911fd6dc",
+        "Checks": 9,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.6856786398472,
+        "PeakFrameMS": 150.0,
+        "Seconds": 26.151,
+        "NativeObjects": 249.0
+      }
+    ],
+    "rendered-6a04029-menu": [
+      {
+        "Report": "rendered-6a04029-menu/gameplay-result.json",
+        "SHA256": "25fdf2d4eafec687ff3816aed531b3adc3e396d99d8ff87bed4c58aab7859c8a",
+        "Checks": 5,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.6495820679681,
+        "PeakFrameMS": 150.0,
+        "Seconds": 17.286,
+        "NativeObjects": 30.0
+      }
+    ],
+    "rendered-6a04029-recovery": [
+      {
+        "Report": "rendered-6a04029-recovery/gameplay-result.json",
+        "SHA256": "89c075c83d653f8dc1e46d9988dcfb480cace8c6abf5384363739a45a4927e9c",
+        "Checks": 7,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 36.7400196078431,
+        "PeakFrameMS": 150.0,
+        "Seconds": 5.412,
+        "NativeObjects": 169.0
+      }
+    ],
+    "rendered-6a04029-solo": [
+      {
+        "Report": "rendered-6a04029-solo/gameplay-result.json",
+        "SHA256": "9bbb5d310126b8de21d1c7f42287c25029327bd805ce2a014252ceb1d66207bb",
+        "Checks": 27,
+        "Failed": 0,
+        "Graphical": true,
+        "MeanFrameMS": 33.4759290139844,
+        "PeakFrameMS": 150.0,
+        "Seconds": 65.482,
+        "NativeObjects": 175.0
+      }
+    ]
+  },
+  "Reuse": {
+    "RenderedRuntime": "6a040294512948a5353fb4a047ee72f4e90570b7",
+    "Scope": "Binding implementation, game sources and NativeBindingCases unchanged since this accepted runtime; later native differences are editor-only. Final product startup is qualified separately.",
+    "NativeChangesFromRendered": [
+      "src/core/gl_native_editor_plugin.cpp",
+      "src/core/luau_language.h",
+      "src/core/register_types.cpp",
+      "src/editor/gl_native_editor.h",
+      "src/editor/gl_native_editor_plugin.h",
+      "src/editor/luau_autocomplete.h"
+    ],
+    "GameSourcesUnchanged": true,
+    "SceneBindingSourcesUnchanged": true,
+    "NativeBindingFixtureUnchanged": true
+  },
+  "PerformanceReference": {
+    "Report": "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\native-authoring-20261111\\b6-rendered-local\\gameplay-result.json",
+    "SHA256": "0042332207bf1df005a3136dfa42a42d273f261dcae50ef0c86b7ba42afabc6b",
+    "MeanFrameMS": 33.4890492037926,
+    "PeakFrameMS": 144.856,
+    "NativeObjects": 170.0,
+    "Interpretation": "Comparable capped 30 FPS workload; no speed improvement claim."
+  },
+  "Coverage": {
+    "ConstructibleClasses": 48,
+    "ClassesWithBaseClosure": 74,
+    "PropertyEntries": 118,
+    "Methods": 27,
+    "Signals": 12
+  },
+  "Limitations": [
+    "Trusted synchronous project loading; no hostile resource isolation or decoded asset/dependency bound",
+    "No nested/inherited PackedScenes, live-scope serialization or async resource API",
+    "Bounded native editor inference, not a full type checker/debugger/navigation implementation",
+    "Generated native declarations do not cover all inherited Roblox globals",
+    "Windows LSan unsupported; Linux rendered gameplay and physical input devices not qualified",
+    "GL-050 remains separate and unfixed",
+    "Branch unmerged; release publication and updater distribution disabled"
+  ],
+  "FullNativeSanitizers": {
+    "Windows": {
+      "Platform": "Windows",
+      "Summary": "san-final/runtime-native-sanitizers-Windows/_temp/native-sanitizer-evidence/sanitizer-summary.json",
+      "SummarySHA256": "797f901ae3f09fd3963f632742acb432db670adb04035617a070f88a11ddabc7",
+      "InputsSHA256": "513ea9f713414847f4d170b296b0896329bc04f36d4355259c8efaf7db3a7f6a",
+      "Revision": "d4d87113d8fbee324bb692d374109167fdb18c9b",
+      "Result": "PASS",
+      "Stages": 25,
+      "InstrumentedFiles": 1168,
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "VerifiedFiles": 680,
+      "AbsentEphemeral": [],
+      "UnexpectedReports": [],
+      "ControlsPassed": true
+    },
+    "Linux": {
+      "Platform": "Linux",
+      "Summary": "san-final/runtime-native-sanitizers-Linux/_temp/native-sanitizer-evidence/sanitizer-summary.json",
+      "SummarySHA256": "c55354d0f627369586afc78080b63bbe8f3f641e8630c50e6f79fe70801bbdeb",
+      "InputsSHA256": "287964c387b25d345ca8752bbaf92e16e6a6fabb0bbdd14ee14096bcab178ef7",
+      "Revision": "d4d87113d8fbee324bb692d374109167fdb18c9b",
+      "Result": "PASS",
+      "Stages": 26,
+      "InstrumentedFiles": 1168,
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "Processes": 141,
+      "VerifiedFiles": 684,
+      "AbsentEphemeral": [
+        "native/filesystem/profile/XDG_DATA_HOME/GodotLuauRuntimeQualification/msg_GL003-shared__6af4a921-1a2e-4d77-869a-000ef989869a_1.json"
+      ],
+      "UnexpectedReports": [],
+      "ControlsPassed": true
+    }
+  },
+  "BindingPolicySHA256": "8322ba0504ed0b2f4d45a5d89b87ef20ba65e154bbb79b7bf898dfee5607585f",
+  "Definitions": {
+    "Run": 43050098215,
+    "Revision": "2b2aab4",
+    "Checker": "Pinned Luau.Analysis",
+    "Platforms": [
+      "Windows",
+      "Linux"
+    ],
+    "Programs": 11,
+    "ProductionModule": "examples/e2e-game/RelayFactory.luau",
+    "ProductionModulePassed": true,
+    "PolicyTests": 9,
+    "InputsUnchanged": true,
+    "Artifacts": {
+      "Windows": {
+        "Log": "types-2b2aab4/native-types-Windows/native-types.log",
+        "SHA256": "15781ae0547b8b2d1444581cfb961f26f6d9f46d47c87e06c63773699e809969"
+      },
+      "Linux": {
+        "Log": "types-2b2aab4/native-types-Linux/native-types.log",
+        "SHA256": "394a0fde551dc3c7a0b1063c7540918944c0211ee79522d224cf9de541a29ad9"
+      }
+    }
+  },
+  "GeneratedInputs": {
+    "bindings/NativePolicy.json": "bdbcca8f4a35b95c6d15fd252b17e81be967a54eea73912d99d9ce80d5f70a79",
+    "bindings/NativeCatalog.json": "d3f33ca513352ee21a8b8ac4526ab884e75fa5a5142418e67dc69990d50018d7",
+    "tools/GenerateNativeBindings.py": "02587338f201c555fa92e939446daf884fbaa8a9bdcdfb7b58af554faee57ad5",
+    "GodotLuau/Types/Native.d.luau": "4da829ee0f703a3c9604daa7435a6edb19805875479e4d961a4555c64977e139"
+  },
+  "ProductionProfiles": {
+    "Windows-Debug": {
+      "Profile": "profile-5f876d3-Windows-Debug/profile.json",
+      "ProfileSHA256": "5fc3cb98d378b8532b728ef92d270f3295d1956d797bdf92a760145decdab463",
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "EditorChecks": 19,
+      "EditorPassed": true,
+      "EditorSHA256": "4a3fd3cea62989da278b2c42db733151ce8315c3ad642662ba30f685a9b14c54"
+    },
+    "Windows-Release": {
+      "Profile": "profile-5f876d3-Windows-Release/profile.json",
+      "ProfileSHA256": "c861fb3a820890315867397d52ef86bc4d00396ad93c62641604adb4d271ee41",
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "EditorChecks": 19,
+      "EditorPassed": true,
+      "EditorSHA256": "c8a592b96dcbaf4a75da7eba7ba5c2355b69624fb841f84cb110711a58bb0693"
+    },
+    "Linux-Debug": {
+      "Profile": "profile-5f876d3-Linux-Debug/profile.json",
+      "ProfileSHA256": "cac1426c66c66244deef436fa69db69cb33296e28edfa22e6925f3d0ccc7a61f",
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "EditorChecks": 19,
+      "EditorPassed": true,
+      "EditorSHA256": "f385dd8dbd5e81b4c4fd5c452976a1bfd7da53aca2a8ad618aa5381b6e1e59fc"
+    },
+    "Linux-Release": {
+      "Profile": "profile-5f876d3-Linux-Release/profile.json",
+      "ProfileSHA256": "062bd96730b72eddf2e92b9d79f58fb339850a7adc618080b8fba5cc653eed1b",
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "EditorChecks": 19,
+      "EditorPassed": true,
+      "EditorSHA256": "0f6a3fc3a7509c06e7b284d0b4a2ee80552bf92be508a00b38dd9a0386a208da"
+    }
+  },
+  "Candidate": {
+    "Run": 43063482878,
+    "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+    "AcceptedSHA256": "632d088d5ea8a987f1a7110ea4578b6a624a1b26ca50183be7397b2392e609bd",
+    "Source": {
+      "Revision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "Tree": "692d059c2ed48a75e795376e4b8563eb56770410",
+      "Dependencies": {
+        "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+        "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+      },
+      "NativeSource": {
+        "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+        "Files": 114,
+        "Newlines": "LF normalized"
+      },
+      "HarnessHashes": {
+        "AnimationAdversarial.gd": "05e0a4f64a4f2cd18cd2416606b180f74d8b321604658758220a454aab182db8",
+        "AnimationIntegration.gd": "0420f0ace4ae74d4981135424e7b85623f10278561d5cfdf214c1b1aab7759c6",
+        "Benchmark.gd": "a543ddcced52e498f91ac5293b874b701cf04f8ea720d49d1397ace087acd9cc",
+        "BuildNativeSanitizers.py": "5b861d5c859d5f4a27f8656a5f0609a2aba0e32b351c2b499112f7e92f10487b",
+        "BuildSanitizedGodot.py": "f17d0130388df932c0008b4cfa5598c319c7e9edc9130bdc873fdb26c013ee4d",
+        "BundleCharacterAssets.gd": "77834d4630760fcdf0ccf2fd5860bbc74c51e25a03dad415e7faab2446b1a57a",
+        "CMakeLists.txt": "891f215981287e1d8752eb41b85a91e538a64dc4b124af15b6bd36161587656e",
+        "CharacterBaseline.gd": "698447dc1061a04f6d2c91a1aa046cc858d430ea12859554b4d2359aca75e0a7",
+        "CharacterBenchmarks.gd": "e96c29a47d3cd61fa9b8875bb3ab0c4a7d05d9bec398c99ee4ab95fba351e513",
+        "CharacterDispatchProbe.gd": "2e58edaa60b956daff1181a36cdbf7107f0ff68024187f3324c525378dcd9ae5",
+        "CharacterIntegration.gd": "3ad8646eee5d30d380236c16edb3419278fb9579b6ab5e64c98c82e2a25053dc",
+        "CharacterManual.gd": "5e9f00aada63c274cc302b10e70d9cf3a9b1f858006f380878880f4938e7069f",
+        "CharacterNetworkBenchmarks.gd": "663513466c665205c1b105b7a2688a6d11c71d66c0dc0cc083ab51301b176c5e",
+        "CharacterPerformance.gd": "76b6431487b0691de069f517b0bb09b6716f691841214660c7ab0f54df74fd67",
+        "CharacterPresentation.gd": "8f2076432ae2a66468cc2016b90b65990b1843b69fea75efa70a0d1b89f8ed75",
+        "CharacterV2.gd": "5a0e74f3bbf0181f4ce36856f4e03e24bb60826554a2805d1bc9e9e301b6eddb",
+        "CheckCoreCI.py": "20136181f352d65b95f71584beccf19d789c54b9988eeb781a27bb6112d127ab",
+        "CheckNativeCI.py": "7ebe367d151706e84669e8bbd18b45fae1f302df7985e4ba5b95bfd56d0f9ac3",
+        "DatastoreBackendProbe.cpp": "aad109811eda3982393c9acc1d37d4decc016f66c7fd08eeef7e3ddb0082bd95",
+        "DatastoreBaseline.gd": "b1e210c167ab2c3352fce3c5cb9acac1a46d4fe184b638f06ef54b81d2491528",
+        "DatastoreBaselineWrite.cpp": "e6e56e00f54884e405084f0802e77d4677f7429d7c2870457a595ec55d9cea32",
+        "DatastoreIntegration.gd": "f6257e6e02b11a4016292417c6a3d1749170869f7b601caf636a1a2869c03c58",
+        "DatastoreLifecycle.gd": "75797b59fc377e9b32fdbf10b844ed1c41bbc5f388e12fcc3ff780812ac9e58d",
+        "DatastoreProcessProbe.cpp": "5b34ffd1870a09dc382f35caa5508f1de615c5b365cbcc7f602fe0f4e7c52d5c",
+        "DatastoreTransactions.gd": "86e02ae4b440f6c6b3b2f43f8461dd1acfc4d06c0aec92423cdafdb8d09e5d07",
+        "DelayedDatagrams.py": "5345fe96c5cd291005e196b4e88def439b49a7bdae92e57fc3831ff0f97cb961",
+        "DiagnoseSanitizerUnload.py": "b12586e76aea174353f8dc580aa06c55416371829e7196e127a793cff2c8ac5b",
+        "ENetDisconnectProbe.gd": "1458e2b278e201a036a390b9ef58d16c8700f453fabae865fe149d6d173150ff",
+        "ExecutionDomainTests.cpp": "525b25161b86ee2ad3fe2d8fe000b4edea98fc5fd9dc467016583988bb56d2ee",
+        "ExportRemoteHost.py": "9b5022119f47d4fe205f66c598492b98c1209b8a9d926a97750b80434717313b",
+        "FilesystemIntegration.gd": "9a35b535b5480b6983f17bc05f27f08ba3498585da3940887af6902388f74079",
+        "FilesystemServices.gd": "67b0f5ccfe79197abbd21d26e5397f3fc0a5f6cb071e0406a76c1b1e0d40626c",
+        "FixtureProcessTests.py": "c8c7ed39b64a436e8723a62676ec4c4836406dcf0ee7f1ced7f82cabf1ad67aa",
+        "FixtureProcesses.py": "5755cfe133f6fb4b9aae7695de8fd55e90dad42fe640dfcf44c230f8a75168a1",
+        "FoundationBenchmark.gd": "ce96d01bef0ce408753f18433a3c27ee136136ff9839050d6240beb25f32381f",
+        "GodotDistribution.json": "c3cd3eb456787f0e32422e90937b3fbf5ea3f79507bdcf5409732398dbc8988c",
+        "HotPathBenchmarks.cpp": "f80e5b2bf1da2ce9440cce643ab2733215cd8b99e00fddcb851c26b0fee60bab",
+        "HttpFixtureCA.pem": "ec80d0bf4c064e9e5124470e31ff8155e5912aa83db5c64a9bba3c349d7a57d7",
+        "HttpFixtureKey.pem": "aa1306ad823bc39cd099204cda72515c245c8fc558431943e6bdb3ba1618dba7",
+        "HttpFixtureOtherCA.pem": "e0a6176d1a76cf9c76ebb1287e0cf8ae58a1dcab5d42a825d5806858777d0e4d",
+        "HttpFixtureOtherKey.pem": "7b5b596c1cc8c5ba5c7ebca11baeef784564b39d7fc5b031f6b5b61e4b7d02c3",
+        "HttpFixtureServer.py": "5c2559ebe6a41e4532fc9244c259ec3acbd5ef48be0b636f9f1c5c5b56749663",
+        "HttpIntegration.gd": "bd1ec37260d7e1e17809930ea3bc133ba23b2c7dccdf4748cb8a80681c76a345",
+        "HttpServiceBaseline.gd": "d001b05eac5f8c3e1042cc51f97ce10a8a50beaf00383d32533313137739f429",
+        "HttpServiceCallers.gd": "231b96bbd3e40f9469686cbce72a11b2da1c0b942385af05c14a143d454bc4d6",
+        "HttpServiceIntegration.gd": "2ac75cbecacb50e0ab45595b7d7ba9c04d928f01f878834ac7174f865830aa1b",
+        "InputActionTests.cpp": "7a2ad92b901e57564d7a22c8629fb3f8fc7e1baaf6f180758036867d665a7456",
+        "InputActions.gd": "b5146be7a3523a380cf5740f192734658378449ad43fc169b633ddc88c49c6a9",
+        "InputBenchmarks.gd": "95bcbc54c77a02a4dfa6d43ad7d0582c61acbf82371cbe9cbd544564778f097d",
+        "InputController.gd": "605a5ebff05dc50051e81e2fbecf741b1f0e1aff33ad34cdcfbb223dee494fe1",
+        "InputControllerDemo.gd": "e7c5ee23acfb4434594959d0e618055d3e44a24c1936aecc66ea3e721144ec78",
+        "InputRoutingBaseline.gd": "66dcb8e4360edad73d4845861a27276648ca6bd53332e84ba35314a67915fd74",
+        "InspectHttpUtilities.gd": "2566bcb220076a9802a4e282d08cc51059a64f2cd18b05fae2afd9454ee77954",
+        "Integration.gd": "8caccdc82b1b60a42aa05b6b947dcb2264237b262861bfaf73881ad41356c55f",
+        "InvestigateProductionBindings.py": "6afaf5579062cb8f3be1890df44932532ef3aced1a87ab7e01793f83f92189f1",
+        "InvestigateSanitizerBindings.py": "819e77d957ae84dfbe3459a683bcc4152061f6c1b3f3046beaa911bcad70d1bb",
+        "NativeAdmission.gd": "45bd0f5f59a44266220995175f78c2aab4730ad1d5f159444c0ea22a26828cc5",
+        "NativeAuthoringCases.gd": "8320500cf078996abc7e5ac8535d8bee3eba02ba82a3107bd9ac76c7032aab69",
+        "NativeBindingCases.gd": "b19586be4d519d7c01a16d78fd584d05d0556ff6669c79fac13a2e5a8b00d267",
+        "NativeEditorCases.gd": "049e969a4af3d444002f109b6f32f0accffdef2ade4ba22643bfea73e27e142c",
+        "NativeRpcAdmission.gd": "83aa8686c6feebd043980b94c7af046905b1c7755cb218a763c020e087dad4cf",
+        "NetworkIntegration.gd": "036366beeb6618668852192d700691388e243cbb9eb33c7393d828bd393c3d4c",
+        "NetworkSecurity.gd": "0d0f346486e2df97f765c6eaaf07f01542cfd379669ef23c2925151720915c99",
+        "PackageQualification.py": "1f24e04e4cbe988116ec6e4129b93fb9c4066b6e0f612e8b65703c8ee83299da",
+        "PlayerController.gd": "b6069a668c5cce135080f41348b0d2539e739d8d095f904e8ef044d12f8d984e",
+        "ProvisionGodot.py": "d794f763ea79bcb9d5ddab11e9e061e3219163aac63d1460acfd46bc2c280a34",
+        "RelaySiege.gd": "fb7e4d38eda529bdebd25f62c01cd7b7b187dcb59d20912d2e693dc8ef7b0559",
+        "RelevanceIntegration.gd": "32c8e8e7dc764623012405219ad02705a3dcea688056f34651f6f8e232fadee6",
+        "RelevanceRootGuard.gd": "34fb006757c72edd87761abbc0a6e3c62a893cf96d43c4d60597199062e3b5bf",
+        "RemoteDeliveryBenchmark.gd": "3da04d72df4df71aabbe855304afadff36e9fba871bb3060f2d357d3caadffd1",
+        "RemoteEvents.gd": "9edd8471d46158fdc052758549654ad43039282ce4b39bd56508f03db4bc9349",
+        "RemoteFunctionBaseline.gd": "fe81409a57c9d2d345137ae3af1f906e080884a6bd2b8301ab639378fb3c360b",
+        "RemoteFunctions.gd": "4ba5d63bda449770b3e4ef0868f6d6a9600e2ac760a44982dab2dce302542c1b",
+        "RemoteHostIdentity.py": "7c601fad6c297c39171c909784e432bc8736cb708061d8ebbd776a06072a1586",
+        "ReplicationIntegration.gd": "2ac995c614e6514c1095a40105eef2446eb616af694cc3974ea3884cad233767",
+        "RequireBenchmark.gd": "c8ff49bd9c4fe109c0fc869b07ba27367bc4a01369c6b99f8a362b2cd0342f37",
+        "ResourceIntegration.gd": "48e409fe6ca3cb2073f4c2927736b1ecc9347437a0879babcdf3e24223b0058e",
+        "RunCharacterBenchmarks.py": "50b755a8318c7915dda95ad776952771d7769ff642e90524858fc83c96092f4e",
+        "RunCharacterNetworkBenchmarks.py": "0727ab7c1c180d37ec0250cb4aa0d8af0deac0d3a82fdc06fc2e8a39ad029e0b",
+        "RunCharacterPerformance.py": "eb045d9ec5e66024d72cdebb17daaacbb748232aa7ad08127a5bb238602cd128",
+        "RunCharacterPresentation.py": "b99193a3377da56b79a52543fb94998fc588ceafa68a1c689c42f3e7f110026e",
+        "RunCoreQualification.py": "0649f1b82f7b17cd58e78c91d8477b236c1577a1476bfccbfbd4bbdc9b46ed7c",
+        "RunCoreTests.py": "fdd97eb57c2e5b26e523e5053094eae676c7e3a421b27fdad0757bed72961522",
+        "RunDatastoreBaseline.py": "0fc5472649c7de991f072849ec7c6ef721a4093f4caebedad4ad57ea2cb8e749",
+        "RunDatastoreQualification.py": "1b66520fb5ec260d2da26f3370a0e8c74ce6003669432e5865df197a30e1e394",
+        "RunFoundationBenchmarks.py": "b168ca402e7b8497ea63f950e0c50ac6236e7ba244c54ac4f03111e873a51320",
+        "RunHotPathBenchmarks.py": "6ea25aa8254479a432a9da4d732e06071cdb14378b05c18745f30419f642ad56",
+        "RunHttpServiceBaseline.py": "1128b038d7069434df6afd47f502fe0f797d0f05db9eddca04963564ecf7e980",
+        "RunHttpServiceCallers.py": "a999d6eaa0fd6bfdf1ed3cc9242a3a57983fce07ced8bad28ebf2d5200714462",
+        "RunInputBenchmarks.py": "af14a5588338a3cda59f3c17b044ba2f683cf30252d49b16cfd1372586bebaab",
+        "RunInputController.py": "aa8ac17fb8b03eb9b55ea7d28fda752a6c7840d9c1bea5de165380a111bc03b9",
+        "RunNativeSanitizers.py": "3b507c089cb2de40613069a2d005c677cb51d00e9a022dc3f712ec354c46aee5",
+        "RunPlayerController.py": "8c5f946a7de0085d5593e731ee8a31655800702b8594f1b48a37ace1b3c02f98",
+        "RunQualification.py": "44685c15327c36d32143e5563c8e303dbb0a2e559d884dbe489db45004726b3e",
+        "RunRelaySiege.py": "3b401207a78adb6332f2fb44b81ec3723d093eb06be841831e8b506adf1ab0ff",
+        "RunRelaySiegeMultiplayer.py": "dba4aabb85f9fbcc8f6f514ff282168609ff7a63f7a58c70486cffd94b75b0c7",
+        "RunRemoteDeliveryBenchmarks.py": "91c2d2a2bcd3a30b944f583d4073e31f9cb6f498ddcddcf3468df655a8a82128",
+        "RunRemoteHostQualification.py": "45ea4e2ff75ed6168f904ff883271dd6eb103e8abc0604f12b7cbfc05cfbed6d",
+        "RunRequireBenchmark.py": "baaa2c371f6acfd09b03a689f1066e79c164d4efbebcc0afe850573ea83ae12d",
+        "RunSConsPortable.py": "ed7a3e3c3d7ec85c5ae2b2085ebd45ad3cfa15b5183dfdba31e15311e0b0db69",
+        "SanitizerLifecycle.gd": "9b5f0f892df88015a98e15b449f198f3c682cfd3538fb3314d17597fe58a9252",
+        "SanitizerLoadProbe.gd": "51523d673e05a6cb07ac6cd6b2a4c8b6589236610a7353a35387b7201d049982",
+        "SourceFingerprint.py": "707cc2e4ea754899f6078cc17cd66a3dd3b7ffeb71330f237b9984e135e51dff",
+        "SummarizeBenchmark.py": "8913e7cd5468b63f2d402c0ff7a1dcd94ba051f6a1f047abcda7c6e13985900f",
+        "PlayerController.luau": "fd4fbc542d161a956c341b4b7e348322cd7f95ac3144968dc1c3853bc7b11de1",
+        "Controller.luau": "20695393adbc496c4fa165146bb66386f026b18cf3086122dc7970eab175b0f6"
+      },
+      "PolicySHA256": "934fe9e055690ced8a4cdeef31d6b3a4468c3805d8ff81c0e222f930fa35e04e"
+    },
+    "Jobs": {
+      "Policy": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Profiles": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Sanitizer": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Packages": {
+        "result": "success",
+        "outputs": {}
+      }
+    },
+    "Packages": {
+      "Windows": {
+        "PackageSHA256": "698c1d50c2494d2ab4bde33f525f165a87f5e66308c5bfc798ab0cf82d15c83f",
+        "Archive": "candidate-final\\candidate-Windows\\GodotLuau-Windows.zip",
+        "Bytes": 8625754,
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Label": "package-Debug",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "15a1c913c9b8f80ffb92fa95bb09b750dd821e59a1a9ff740c92c21635273043",
+            "CompanionSHA256": "27ab26282c38ff07efa8f1da9cc4156976d679f24481692082ab90e189f7b5fb",
+            "Logs": {
+              "stdout": "44142ddd660b18653771978b2a05676794b62f4d7d8b9a4af5d0d32d58db00b9",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          {
+            "Configuration": "Release",
+            "Label": "package-Release",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "beca43a24d214c3ba92a69f71c4dc66361e1a02ba83e47ab2d7a2a0635e8a645",
+            "CompanionSHA256": "27ab26282c38ff07efa8f1da9cc4156976d679f24481692082ab90e189f7b5fb",
+            "Logs": {
+              "stdout": "25997dd1c452b77411e03d04e11a526da479d7c3de06840aae468efda7300730",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ]
+      },
+      "Linux": {
+        "PackageSHA256": "5b9d3fc75b2d0462aa794797ba1b2e14b388674d6eae46ed5aff8399d0540c6d",
+        "Archive": "candidate-final\\candidate-Linux\\GodotLuau-Linux.zip",
+        "Bytes": 11671816,
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Label": "package-Debug",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "f8d0f2fd531697f97a078fd17125e98460a9856f321c39e8bf4b74e00f0c23ad",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "Logs": {
+              "stdout": "527621a511f5fff52863e615766bd37b4f6346c484d05488401450f98ca2d7af",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          {
+            "Configuration": "Release",
+            "Label": "package-Release",
+            "Exit": 0,
+            "Diagnostics": "",
+            "ExtensionSHA256": "aae0db3f1c8ad8e9ca247490866bf51355c9dd244882074b76150ce72aa9f29a",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "Logs": {
+              "stdout": "b74cb39d6e414f71545ae870b6dc9ce17d44b13c1daf5d9d856c5f337380abc5",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "CI": {
+    "Definitions": {
+      "Run": 43050098215,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43050098215",
+      "Revision": "2b2aab41e5a0d969f90eaac703058217f3148270",
+      "Conclusion": "success",
+      "Jobs": [
+        {
+          "Name": "Types (Linux, ubuntu-24.04, Ninja)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Types (Windows, windows-2022, Visual Studio 17 2022)",
+          "Conclusion": "success"
+        }
+      ]
+    },
+    "Core": {
+      "Run": 43063379932,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43063379932",
+      "Revision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "Conclusion": "success",
+      "Jobs": [
+        {
+          "Name": "Core (Linux, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Core (Windows, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Qualification-only Windows Release benchmark host",
+          "Conclusion": "skipped"
+        }
+      ]
+    },
+    "Native": {
+      "Run": 43063379869,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43063379869",
+      "Revision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "Conclusion": "success",
+      "Jobs": [
+        {
+          "Name": "Native (Linux, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Native (Windows, Debug)",
+          "Conclusion": "success"
+        }
+      ]
+    },
+    "FullNativeSanitizers": {
+      "Run": 43066333042,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43066333042",
+      "Revision": "d4d87113d8fbee324bb692d374109167fdb18c9b",
+      "Conclusion": "success",
+      "Jobs": [
+        {
+          "Name": "Full-native ASan (Linux)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Full-native ASan (Windows)",
+          "Conclusion": "success"
+        }
+      ]
+    },
+    "Candidate": {
+      "Run": 43063482878,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43063482878",
+      "Revision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+      "Conclusion": "success",
+      "Jobs": [
+        {
+          "Name": "Candidate rejection and retention checks (ubuntu-24.04)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Candidate rejection and retention checks (windows-2022)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Linux production core ASan and LSan",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Source build and qualify (Windows, Release)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Source build and qualify (Windows, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Source build and qualify (Linux, Release)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Source build and qualify (Linux, Debug)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Extract and start candidate (Windows)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Extract and start candidate (Linux)",
+          "Conclusion": "success"
+        },
+        {
+          "Name": "Require every candidate gate (no publication)",
+          "Conclusion": "success"
+        }
+      ]
+    },
+    "RelaySiegePackage": {
+      "Run": 43073257426,
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43073257426",
+      "Revision": "94de286b9a80e1fd68d27cc00a887d11f964dfd8",
+      "Conclusion": "success",
+      "Jobs": [
+        {
+          "Name": "Package",
+          "Conclusion": "success"
+        }
+      ]
+    }
+  },
+  "RelaySiegePackage": {
+    "Run": 43073257426,
+    "Archive": "game-package-final/RelaySiege-Windows.zip",
+    "ArchiveSHA256": "d7c4225f2aad0523620bfee3834e8140e490630608e29d2229ed13754164f6d5",
+    "Bytes": 25518102,
+    "ManifestSHA256": "ec885dfadb6783f12a5ba1edc71ebb85d0e176e76e3d2478f3e77442164b5138",
+    "PayloadHashesVerified": 167,
+    "GameRevision": "94de286b9a80e1fd68d27cc00a887d11f964dfd8",
+    "CandidateRevision": "5f876d3705d2506c6e243cd72a0f27a224fc3785",
+    "NativeSource": {
+      "SHA256": "728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc",
+      "Files": 114,
+      "Newlines": "LF normalized"
+    },
+    "CandidateSHA256": "698c1d50c2494d2ab4bde33f525f165a87f5e66308c5bfc798ab0cf82d15c83f",
+    "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+    "NativeFiles": {
+      "GodotLuau/bin/godot_luau.windows.template_debug.x86_64.dll": "15a1c913c9b8f80ffb92fa95bb09b750dd821e59a1a9ff740c92c21635273043",
+      "GodotLuau/bin/godot_luau.windows.template_release.x86_64.dll": "beca43a24d214c3ba92a69f71c4dc66361e1a02ba83e47ab2d7a2a0635e8a645",
+      "GodotLuau/bin/godot_luau_store_worker.exe": "27ab26282c38ff07efa8f1da9cc4156976d679f24481692082ab90e189f7b5fb"
+    },
+    "StartupPassed": true,
+    "StartupLogs": {
+      "startup.stdout.log": "477bb6563cf60a31d071ec363878a2316c9bcf966ec28f3fe51d875136edcc30",
+      "startup.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "Date": "2026-11-11",
+  "MainUnchanged": true,
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false,
+  "QualificationTree": "692d059c2ed48a75e795376e4b8563eb56770410",
+  "KnownRegressions": "No new regression observed in the recorded profiles; retained project findings and platform limits remain."
+}

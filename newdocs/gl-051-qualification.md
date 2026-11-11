@@ -1,6 +1,8 @@
 # GL-051 qualification
 
-Status: **in progress on the unmerged feature branch**. The
+Status: **qualified within the recorded scope; ready for integration review,
+unmerged**. The [versioned receipt](evidence/gl051/qualification-20261111.json)
+records immutable sources, CI outcomes, package and retained evidence hashes. The
 [journal](gl-051-development.md) preserves implementation and failed attempts;
 [ADR-015](adr-015-policy-driven-native-bindings.md) and the
 [API guide](gl-051-native-api.md) define supported behavior. No release or updater
@@ -10,6 +12,9 @@ distribution is authorized.
 
 Baseline remote main: `c60919a42416d5e6c72d2b23f7801500879c3195`.
 Branch: `feature/gl-051-first-class-luau`.
+Final implementation/candidate revision: `5f876d3705d2506c6e243cd72a0f27a224fc3785`,
+tree `692d059c2ed48a75e795376e4b8563eb56770410`. Subsequent campaign commits
+only document qualification; they do not change native or fixture inputs.
 
 | Input | Identity |
 | --- | --- |
@@ -37,6 +42,8 @@ unchanged. The pinned API describes Godot 4.3; runtime/editor hosts remain 4.7.1
 | [Candidate 43049547160](https://github.com/gmoddev/GodotLuau/actions/runs/43049547160), `6a04029` | Accepted non-publishing candidate: Windows/Linux Debug/Release source profiles, policy/core sanitizer, both extracted-companion profiles per platform and aggregate acceptance pass. Downloaded Windows package/startup hashes and aggregate CheckJobs verify. |
 | [Full-native sanitizers 43055223210](https://github.com/gmoddev/GodotLuau/actions/runs/43055223210), `358d613` | Windows/Linux pass at the e855 native inputs. All 679/684 retained file hashes verify, all 25/26 stages pass and no unexpected reports occur; this does not include subsequent editor fixes/plugin. |
 | [Final full-native sanitizers 43066333042](https://github.com/gmoddev/GodotLuau/actions/runs/43066333042), `d4d8711` | Windows ASan / Linux ASan-LSan pass at the final 728d inputs: 1168 instrumented translation units, 25/26 stages, all detection controls, 85 core cases and 141 native actors per platform, no unexpected reports. All 680/684 retained file hashes verify. |
+| [Final candidate 43063482878](https://github.com/gmoddev/GodotLuau/actions/runs/43063482878), `5f876d3` | Accepted: all ten jobs pass, including four production Debug/Release profiles, core sanitizer, rejection/retention checks, both extracted packages and aggregate acceptance. All four production libraries also pass 19 actual editor checks each. Both downloaded packages pass CheckPackage; aggregate acceptance passes CheckJobs. |
+| [Final game package 43073257426](https://github.com/gmoddev/GodotLuau/actions/runs/43073257426), `94de286` | Current native inputs match the accepted candidate. Extracted self-contained Relay Siege startup passes with empty stderr; all 167 archived payload hashes verify, including all three candidate native products. |
 
 The earlier sanitizer records verify 1167 instrumented translation units, 25 Windows /
 26 Linux stages and actual expanded-binding PASS markers. All 679 Windows / 685
@@ -52,7 +59,7 @@ yielded callback retirement and stale handles. Existing GL-049 reload/destructio
 coverage remains intact. Source inspection alone is not claimed as a crash
 reproduction or graphical qualification.
 
-## Pending final cohort
+## Final candidate and editor outcomes
 
 The older ordinary native run at `a276111` failed Linux provisioning before
 compilation and failed Windows editor completion. The journal preserves both
@@ -60,20 +67,19 @@ failures and their corrections; the current native run passes both platforms.
 
 Candidate `43053904413` at `358d613` fails at real-editor completion. Its retained
 products enable focused diagnosis; they are not accepted as a complete candidate.
-The [current candidate 43063482878](https://github.com/gmoddev/GodotLuau/actions/runs/43063482878)
-at `5f876d3` retains all existing gates and the production editor check. Ordinary
+The final candidate at `5f876d3` retains all existing gates and the production
+editor check, and is accepted. Ordinary
 [native CI 43063379869](https://github.com/gmoddev/GodotLuau/actions/runs/43063379869)
-passes those corrected editor inputs on both platforms. The candidate is still
-pending; dispatch is no acceptance.
+passes those corrected editor inputs on both platforms. The native and candidate
+artifacts match the current 728d/114-file native fingerprint.
 
 The final sanitizer cohort at documentation tip `d4d8711` passes and verifies
 the current native/fixture inputs on both platforms. Its extra instrumented
 translation unit is the new editor plugin. All Windows manifest files are retained;
 Linux omits one disposable GL-003 messaging JSON, as in earlier uploads, with no
-missing required evidence. Linux production Debug/Release profiles in the current
-candidate also pass, including all 19 actual editor checks against each SCons
-library. Windows production qualification and final package acceptance remain
-pending.
+missing required evidence. All four Windows/Linux production Debug/Release
+profiles pass, including all 19 actual editor checks against each SCons library.
+Final candidate and game package acceptance are complete.
 
 The real editor fixture loads a `.lua` resource, shares production diagnostics
 cases and requests completion through Godot CodeEdit/ScriptLanguage. Its first
@@ -112,9 +118,27 @@ nodes correspond to relay composition roots, module and texture control.
 The captured victory frame was visually inspected. A fresh non-publishing archive
 using those inputs verifies all 166 payload hashes after extraction, including
 factory, scene, texture and generated declarations; independent headless solo
-startup passes. These results qualify the recorded runtime/game inputs, not later
-untested editor binaries. Current-product package/startup verification remains
-pending.
+startup passes. These rendered results qualify the recorded runtime/game inputs.
+The six later native file changes are editor-only; scene bindings, gameplay and
+the expanded binding fixture are unchanged. Their final native/sanitizer/editor
+cohorts pass separately. Final current-product game package/startup also passes
+at `94de286`, with 167 payload hashes verified and the same admitted renderer.
+Its Windows Release extension SHA256 is
+`beca43a24d214c3ba92a69f71c4dc66361e1a02ba83e47ab2d7a2a0635e8a645`;
+the archive SHA256 is
+`d7c4225f2aad0523620bfee3834e8140e490630608e29d2229ed13754164f6d5`.
+The receipt records both input sets instead of relabeling rendered runs as fresh
+executions of later binaries. No new regression is observed in these profiles.
+
+## Delivery disposition
+
+The registry, native dispatch/ownership, composition/resources, generated types,
+editor completion/diagnostics and representative Relay Siege migration are
+implemented and qualified within this record. The feature branch is committed
+and pushed for integration review; no merge is authorized. Remote main remains
+`c60919a42416d5e6c72d2b23f7801500879c3195`. Release/updater code, dependency pins
+and admitted hosts are unchanged. Native remains the default controller and
+Scripted remains explicit opt-in. No task-owned game or editor process remains.
 
 ## Remaining scope limits
 

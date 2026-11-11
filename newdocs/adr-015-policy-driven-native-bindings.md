@@ -1,6 +1,7 @@
 # ADR-015: Policy-driven native bindings and scene composition
 
-Status: accepted for implementation on `feature/gl-051-first-class-luau`.
+Status: accepted; implemented and [qualified within recorded scope](gl-051-qualification.md)
+on unmerged `feature/gl-051-first-class-luau`.
 Baseline: `c60919a42416d5e6c72d2b23f7801500879c3195`.
 
 GL-049 establishes exact execution-generation ownership, real ObjectID-backed

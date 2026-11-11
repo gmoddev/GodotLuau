@@ -100,7 +100,7 @@ four successful workflows and independently checked artifacts.
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
-| GL-051 | P2 | Implementation campaign on isolated feature branch | Scalable policy-driven native bindings, composition, resources and editor/type integration |
+| GL-051 | P2 | Implemented and qualified within ADR-015 scope; unmerged | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 
 ## GL-051: First-class native Luau integration
 
@@ -109,9 +109,14 @@ The [campaign journal](gl-051-development.md) and
 GL-049's manually curated bindings. Preserve its ownership/domain guarantees and
 qualification while generating runtime/type/editor surfaces from one checked
 policy. New methods, native scene composition and resources require executable
-evidence. [Qualification](gl-051-qualification.md) records passing generated-type
-and first full-native sanitizer cohorts, with final editor/package/game checks
-still pending. This is not completed API parity or integration readiness.
+evidence. [Qualification](gl-051-qualification.md) and the
+[versioned receipt](evidence/gl051/qualification-20261111.json) record final
+Windows/Linux Debug/Release, core/native/sanitizer, actual editor, generated-type,
+accepted candidate and extracted game package passes. Retained rendered gameplay
+qualifies the unchanged binding/game inputs within its documented Windows scope.
+The branch is ready for integration review and remains unmerged. This is not full
+Godot API parity, a complete embedded debugger/type checker or Linux rendered
+qualification. Remaining composition/loading limits stay explicit.
 GL-050 remains separate and unfixed.
 
 ## GL-050: DataStore receive/exit ordering

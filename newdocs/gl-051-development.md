@@ -308,3 +308,37 @@ Linux omits only one disposable messaging JSON; required evidence is present.
 Current candidate Linux Debug/Release profiles also pass all existing gates and
 19 actual editor checks each. Windows production profiles and extracted-package
 acceptance are still running. Retain all earlier failed and passing cohorts.
+
+## Final qualification and delivery — 2026-11-11
+
+Candidate `43063482878` is accepted at implementation `5f876d3`, tree
+`692d059c2ed48a75e795376e4b8563eb56770410`: all ten jobs pass. Downloaded Windows
+and Linux candidate archives, provenance and Debug/Release extracted-companion
+startup records pass the existing CheckPackage/CheckJobs checks. All four SCons
+production libraries separately pass 19 actual editor checks. Ordinary core/native
+and final full-native sanitizer cohorts pass with the same 728d native inputs.
+No checks, deadlines or admission requirements are weakened.
+
+Non-publishing game package `43073257426` at docs tip `94de286` uses that exact
+accepted candidate. It passes extracted startup independently of source paths,
+with empty stderr. All 167 payload hashes verify, including the factory, scene,
+texture, generated declarations, guides and three exact candidate native files.
+The archive SHA256 is `d7c4225f2aad0523620bfee3834e8140e490630608e29d2229ed13754164f6d5`.
+Retained Windows rendered solo/recovery/menu/listen/dedicated runs total 151
+passing checks across twelve actors, with no failed checks. Reuse is explicit:
+the later six native file changes affect only editor integration; scene binding,
+gameplay and native-binding fixture sources are unchanged since that rendered
+runtime. Current-product package/startup and editor/sanitizer checks are fresh.
+
+The [qualification record](gl-051-qualification.md) and
+[versioned receipt](evidence/gl051/qualification-20261111.json) retain exact
+identities, verified hashes, performance samples and remaining limitations.
+No new regression is observed in the exercised profiles. Partial native inference
+does not supply a full debugger/navigation system; asynchronous loading, nested
+scene inheritance and scope serialization remain outside the admitted contract.
+GL-050 remains separately recorded and unfixed.
+
+Final inspection finds a clean isolated checkout, no task-owned game/editor
+process, unchanged dependency pins and remote main still at `c60919a`. All work is
+pushed on `feature/gl-051-first-class-luau`, unmerged. Native controller default,
+Scripted opt-in, release disablement and updater rejection are unchanged.
