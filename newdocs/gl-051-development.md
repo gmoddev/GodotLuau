@@ -231,3 +231,26 @@ product from the corrected current editor source and pending final cohorts.
 The current language-header syntax probe passes in 2.55 seconds after matching
 the pinned Windows TYPED_METHOD_BIND compile definition; the initial probe-only
 configuration failure is retained and is not a product build failure.
+
+The first candidate `43049547160` is accepted at `6a04029`: all four production
+profiles and both extracted-package gates pass. Verified Windows package hashes
+and aggregate acceptance are retained. With its exact Windows libraries and the
+unchanged admitted renderer, actual solo play passes 27 checks, fresh-process
+recovery seven, menu teardown/retry five and four-player listen play passes.
+Solo mean frame time is 33.476 ms at the same 30 FPS cap versus retained 33.489 ms;
+this is not a speed improvement claim. The reporting-point node count is 175
+versus 170, matching the additional relay roots/module/texture control.
+
+Actual Windows editor run `43052421375` removes the missing-hook errors but has
+an inactive completion list and then times out on legacy math completion. The
+fixture now waits for initial filesystem scanning and activates/focuses the
+Script CodeEdit inside the headless process before requesting completion.
+This changes no desktop focus or user editor settings.
+
+The timeout also exposes a genuine inherited native bug: analyze_usage passes
+signed UTF-8 cursor bytes to std::isalnum. A tiny controlled MSVC Debug CRT probe
+reproduces the c>=-1 && c<=255 assertion with report dialogs explicitly disabled.
+Cast byte classifiers to unsigned char, bound the UTF-32 identifier scan to ASCII,
+and correct the remaining early completion status returns. This is a bounded
+editor fix, not a completion refactor. Native/legacy actual-editor assertions
+remain required; no timeout or assertion is weakened.

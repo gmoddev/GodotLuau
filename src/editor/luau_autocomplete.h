@@ -139,7 +139,7 @@ private:
         int score = 0, fi = 0;
         for(int i=0; i<(int)t.size() && fi<(int)f.size(); i++) {
             if(tl[i] == fl[fi]) { 
-                score += std::isupper(t[i]) && std::islower(f[fi]) ? 15 : 5; 
+                score += std::isupper(static_cast<unsigned char>(t[i])) && std::islower(static_cast<unsigned char>(f[fi])) ? 15 : 5;
                 fi++; 
             }
         }
@@ -155,7 +155,7 @@ private:
         std::unordered_map<std::string,int> freq;
         std::string raw=code.utf8().get_data(), word;
         for(char c:raw) {
-            if(std::isalnum(c)||c=='_') word+=c;
+            if(std::isalnum(static_cast<unsigned char>(c))||c=='_') word+=c;
             else { if(!word.empty()) { freq[word]++; word=""; } }
         }
         if(!word.empty()) freq[word]++;
@@ -259,7 +259,7 @@ private:
                 while(sidx!=-1) {
                     int start=sidx+String(sep).length();
                     int end=start;
-                    while(end<line.length()&&(std::isalnum(line[end])||line[end]=='_')) end++;
+                    while(end<line.length()&&((line[end]<=0x7f&&std::isalnum(int(line[end])))||line[end]=='_')) end++;
                     if(end>start){
                         String child=line.substr(start,end-start);
                         if(!is_lua_keyword(child)){
@@ -1133,10 +1133,10 @@ public:
 
         bool in_string = in_str_d || in_str_s;
         if(in_comm||in_block_comm) {
-            res["result"]=out; res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
+            res["result"]=int(OK); res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
         }
         if(in_string && (str_ctx==STR_CTX_NONE||str_ctx==STR_CTX_SUPPRESS)) {
-            res["result"]=out; res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
+            res["result"]=int(OK); res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
         }
 
         int last_sep=-1;
@@ -1368,7 +1368,7 @@ public:
                 s["location"]=0; s["default_value"]=Variant(); s["matches"]=Array();
                 out.push_back(s);
             }
-            res["result"]=out; res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
+            res["result"]=int(OK); res["options"]=out; res["force"]=true; res["call_hint"]=""; return res;
         }
 
         if(!target_prefix.is_empty()) {

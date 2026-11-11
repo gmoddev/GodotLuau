@@ -15,12 +15,16 @@ func Check(Condition: bool, Message: String) -> void:
 
 func Run() -> void:
     await get_tree().process_frame
+    while EditorInterface.get_resource_filesystem().is_scanning():
+        await get_tree().process_frame
     var Resource: Script = load("res://NativeEditor.lua")
     Check(Resource != null and Resource.get_class()=="LuauScript", "Project .lua resolves through the registered native language loader")
     if Resource:
         var Original := Resource.source_code
         load("res://NativeEditorCases.gd").new().Run(self)
-        EditorInterface.edit_script(Resource, -1, 0, false)
+        # This editor is headless: focus is only internal to its CodeEdit.
+        EditorInterface.set_main_screen_editor("Script")
+        EditorInterface.edit_script(Resource, -1, 0, true)
         for Index in range(10):
             await get_tree().process_frame
         var Editor := EditorInterface.get_script_editor().get_current_editor()
@@ -31,9 +35,12 @@ func Run() -> void:
             Check(Controls.size()==1, "Godot exposes its normal native-script CodeEdit")
             if Controls.size()==1:
                 var Code := Controls[0] as CodeEdit
+                Code.grab_focus()
+                Check(Code.is_visible_in_tree() and Code.has_focus(), "Headless editor completion has its normal visible focused control")
                 Code.text="local Scope = Scene.new(script.Parent)\nScope:"
                 Code.set_caret_line(1)
                 Code.set_caret_column(6)
+                print("[Bindings:Editor] Request native completion")
                 Code.request_code_completion(true)
                 await get_tree().create_timer(0.5).timeout
                 var Names: Array[String] = []
@@ -44,6 +51,7 @@ func Run() -> void:
                 Code.text="math."
                 Code.set_caret_line(0)
                 Code.set_caret_column(5)
+                print("[Bindings:Editor] Request legacy completion")
                 Code.request_code_completion(true)
                 await get_tree().create_timer(0.5).timeout
                 var MathCompletion := false
