@@ -1,8 +1,8 @@
 # Native scene authoring API
 
-This records the qualified GL-049 surface. The unmerged GL-051 campaign extends
+This records the qualified GL-049 surface. The integrated GL-051 campaign extends
 it with [policy-driven bindings, resources, composition and tooling](gl-051-native-api.md);
-see that branch's journal for fresh qualification status.
+see its journal for implementation and qualification details.
 
 Implementation/qualification work is tracked in the
 [journal](native-authoring-development.md). [ADR-014](adr-014-native-scene-authoring.md)
