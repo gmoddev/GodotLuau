@@ -27,7 +27,7 @@ int main(int Count, char** Arguments) {
     Luau::unfreeze(Frontend.globals.globalTypes);
     Luau::registerBuiltinGlobals(Frontend,Frontend.globals);
     auto Definition=Frontend.loadDefinitionFile(Frontend.globals,Frontend.globals.globalScope,
-        Buffer.str()+"\ndeclare Parent: NativeNode\n","GodotLuauNative");
+        Buffer.str()+"\ndeclare Parent: NativeNode\n","GodotLuauNative",false);
     if (!Definition.success) {
         for (const auto& Error:Definition.parseResult.errors) std::cerr<<Error.what()<<'\n';
         if (Definition.module) for (const auto& Error:Definition.module->errors)
