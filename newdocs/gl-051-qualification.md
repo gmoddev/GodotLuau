@@ -16,7 +16,8 @@ Branch: `feature/gl-051-first-class-luau`.
 | Policy | `8322ba0504ed0b2f4d45a5d89b87ef20ba65e154bbb79b7bf898dfee5607585f` |
 | Pinned extension API, LF SHA256 | `dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f` |
 | First sanitizer-qualified native input set, `6a04029` | `1555b83381465ae18844c0de09f40484d924cf1d13fbf2fb8fc3581b5a3495a0`, 112 files |
-| Current native input set, `a276111` / `358d613` | `e855b3faeac811a7c276cd2c73255816b13efb89b4dbe18542145a919752d108`, 112 files |
+| Next sanitizer-qualified set, `a276111` / `358d613` | `e855b3faeac811a7c276cd2c73255816b13efb89b4dbe18542145a919752d108`, 112 files |
+| Current native input set, `5f876d3` | `728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc`, 114 files |
 
 The later native differences correct editor completion response fields/status
 and supply required public-metadata hooks. They are not relabeled as part of the
@@ -31,6 +32,8 @@ unchanged. The pinned API describes Godot 4.3; runtime/editor hosts remain 4.7.1
 | [Definitions 43050098215](https://github.com/gmoddev/GodotLuau/actions/runs/43050098215), `2b2aab4` | Windows/Linux pinned Luau checker loads generated definitions, passes eleven positive/negative cases and the actual RelayFactory module; nine policy tests pass. Downloaded declarations/catalog match the branch. |
 | [Initial native 43049375469](https://github.com/gmoddev/GodotLuau/actions/runs/43049375469), `6a04029` | Linux extension compiles and initial binding/lifecycle stage passes. Full job fails at the actual editor fixture; this is partial evidence, not a full native pass. |
 | [Full-native sanitizers 43049541634](https://github.com/gmoddev/GodotLuau/actions/runs/43049541634), `6a04029` | Windows ASan and Linux ASan/LSan pass: controls, reload/lifetime, 85 core cases and 141 native actors per platform, including expanded binding cases. No unexpected sanitizer reports. |
+| [Candidate 43049547160](https://github.com/gmoddev/GodotLuau/actions/runs/43049547160), `6a04029` | Accepted non-publishing candidate: Windows/Linux Debug/Release source profiles, policy/core sanitizer, both extracted-companion profiles per platform and aggregate acceptance pass. Downloaded Windows package/startup hashes and aggregate CheckJobs verify. |
+| [Full-native sanitizers 43055223210](https://github.com/gmoddev/GodotLuau/actions/runs/43055223210), `358d613` | Windows/Linux pass at the e855 native inputs. All 679/684 retained file hashes verify, all 25/26 stages pass and no unexpected reports occur; this does not include subsequent editor fixes/plugin. |
 
 The sanitizer records verify 1167 instrumented translation units, 25 Windows /
 26 Linux stages and actual expanded-binding PASS markers. All 679 Windows / 685
@@ -52,27 +55,52 @@ The latest ordinary native run at `a276111` has a Linux provisioning failure
 before compilation: mirror DNS/TLS timeouts. The journal records the bounded
 correction. Windows is still running.
 
-The [current candidate 43053904413](https://github.com/gmoddev/GodotLuau/actions/runs/43053904413)
-at `358d613` retains all existing Windows/Linux Debug/Release/core/native/package
-gates and adds the actual editor fixture against each SCons production library.
-It uses the already provisioned official editor. The
-[current sanitizer cohort 43055223210](https://github.com/gmoddev/GodotLuau/actions/runs/43055223210)
-qualifies the final native input set. These runs are pending; no acceptance is
-inferred from dispatch.
+Candidate `43053904413` at `358d613` fails at real-editor completion. Its retained
+products enable focused diagnosis; they are not accepted as a complete candidate.
+The [current candidate 43063482878](https://github.com/gmoddev/GodotLuau/actions/runs/43063482878)
+at `5f876d3` retains all existing gates and the production editor check. Ordinary
+[native CI 43063379869](https://github.com/gmoddev/GodotLuau/actions/runs/43063379869)
+also runs those corrected editor inputs. These runs are pending; dispatch is no
+acceptance.
 
 The real editor fixture loads a `.lua` resource, shares production diagnostics
 cases and requests completion through Godot CodeEdit/ScriptLanguage. Its first
 failure exposed a fixture root-selection error and inherited missing required
 metadata hooks; both are corrected. Native/legacy completion results also now
 follow the exact admitted Godot adapter contract. Actual UI completion still
-needs a passing execution at those corrected inputs.
+needs a passing execution at those corrected inputs. Follow-up fixes remove Debug
+CRT assertions on signed UTF-8 cursor bytes and the legacy static icon's renderer
+shutdown diagnostic. A small editor-only plugin adds Godot's missing colon
+completion prefix through public APIs for Luau tabs. A manual diagnostic prefix
+experiment proves attribution, not final automatic-plugin qualification.
 
-Relay Siege's representative migration and extracted package still need actual
-local/listen/dedicated/restart playtests. Use the existing drivers and retained
-renderer/asset identities; no additional gameplay framework is introduced.
-The unchanged driver reports frame timing/node counts. The retained GL-049 solo
-reference is 33.489 ms mean at the deliberate 30 FPS cap and 170 nodes at its
-reporting point; it does not establish candidate performance.
+## Actual rendered Relay Siege
+
+The accepted `6a04029` Windows runtime, unchanged admitted renderer SHA256
+`09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc`
+and existing verified R6 bundle run the actual migrated game on MainPC. DockerPC
+remains leased by another task at the 16:18 UTC admission check. Processes use
+the existing bounded offscreen/no-focus drivers and isolated data roots.
+
+| Workload | Outcome |
+| --- | --- |
+| Solo | 27 checks, zero failures; victory, save, another round, input cleanup and rendered screenshot |
+| Fresh-process recovery | Seven checks, zero failures |
+| Menu/retry/teardown | Five checks, zero failures |
+| Four-player listen | Leader 28 checks plus three observers with nine each; zero failures, late join included |
+| Dedicated with four rendered clients | Server two checks, leader 28 plus three observers with nine each; zero failures |
+
+Solo records 65.482 seconds, 1883 frames, 33.476 ms mean, 150 ms peak and 175
+nodes at the reporting point. The retained GL-049 reference is 33.489 ms mean,
+144.856 ms peak and 170 nodes with the same 30 FPS cap. These comparable samples
+do not establish a speed improvement or isolated per-call costs. The five extra
+nodes correspond to relay composition roots, module and texture control.
+The captured victory frame was visually inspected. A fresh non-publishing archive
+using those inputs verifies all 166 payload hashes after extraction, including
+factory, scene, texture and generated declarations; independent headless solo
+startup passes. These results qualify the recorded runtime/game inputs, not later
+untested editor binaries. Current-product package/startup verification remains
+pending.
 
 ## Remaining scope limits
 
