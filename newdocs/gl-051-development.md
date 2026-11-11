@@ -173,3 +173,18 @@ include; retained diagnostics identify this compile error rather than a runtime
 failure. Obsolete `1f2a5a4`/`3150d9c` native builds have the same missing include
 and are canceled to avoid repeating known failed inputs. Core passes remain
 valid for their unchanged core sources. No canceled run counts as native evidence.
+
+At `6a04029` the single corrected editor translation unit passes a local MSVC
+syntax-only probe in 1.91 seconds, using headers generated from the pinned API.
+The initial command quoting failure is retained separately. This is a lightweight
+compile check, not a local full build or native runtime pass. Fresh workflows are
+native `43049375469`, full-native sanitizers `43049541634`, and non-publishing
+candidate `43049547160`; all remain pending.
+
+External tooling documentation now gives an explicit standard-platform Luau-LSP
+profile instead of suggesting the inherited Roblox definitions are appropriate.
+Those historical definitions advertise unsupported compatibility APIs and remain
+outside the generated native contract. Add actual RelayFactory source checking
+to the existing pinned checker probe; this qualifies a production composition
+module, without pretending every inherited game/service global is statically
+declared. The shipped example settings do not modify user editor preferences.

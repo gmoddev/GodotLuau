@@ -18,7 +18,7 @@ struct Sources : Luau::FileResolver {
     }
 };
 int main(int Count, char** Arguments) {
-    if (Count!=2) return 2;
+    if (Count<2) return 2;
     std::ifstream Input(Arguments[1]); std::stringstream Buffer; Buffer<<Input.rdbuf();
     if (!Input || Buffer.str().empty()) return 2;
     Sources Resolver; Luau::NullConfigResolver Config;
@@ -77,6 +77,18 @@ C:Disconnect()
         bool Passed=Result.errors.empty()==Cases[Index].Valid;
         std::cout<<"[Bindings:Types] "<<(Passed?"PASS ":"FAIL ")<<Cases[Index].Name<<'\n';
         if (!Passed) {
+            ++Failed;
+            for (const auto& Error:Result.errors) std::cerr<<Luau::toString(Error)<<'\n';
+        }
+    }
+    for (int Index=2;Index<Count;++Index) {
+        std::ifstream ModuleInput(Arguments[Index]); std::stringstream ModuleSource; ModuleSource<<ModuleInput.rdbuf();
+        if (!ModuleInput || ModuleSource.str().empty()) return 2;
+        std::string Name="NativeProductionModule"+std::to_string(Index);
+        Resolver.Files[Name]=ModuleSource.str();
+        auto Result=Frontend.check(Name);
+        std::cout<<"[Bindings:Types] "<<(Result.errors.empty()?"PASS ":"FAIL ")<<Arguments[Index]<<'\n';
+        if (!Result.errors.empty()) {
             ++Failed;
             for (const auto& Error:Result.errors) std::cerr<<Luau::toString(Error)<<'\n';
         }

@@ -41,7 +41,7 @@ jobs:
       - name: Typecheck emitted definitions and representative calls
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then Probe=build/native-types/Release/NativeTypeTests.exe; else Probe=build/native-types/NativeTypeTests; fi
-          "$Probe" GodotLuau/Types/Native.d.luau 2>&1 | tee native-types.log
+          "$Probe" GodotLuau/Types/Native.d.luau examples/e2e-game/RelayFactory.luau 2>&1 | tee native-types.log
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
