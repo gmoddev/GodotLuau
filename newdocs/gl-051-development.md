@@ -280,3 +280,13 @@ existing editor module level. The production fixture must observe this automatic
 configuration, exercise native/legacy completion and leave GDScript tabs alone;
 it does not set the prefix itself. Also reject any unhandled editor error,
 including the observed shutdown diagnostic. No engine or admitted-host change.
+
+At `5f876d3`, Linux native `43063379869` passes all 141 actors and 19 actual editor
+checks. Downloaded evidence matches the current 114-file native fingerprint
+`728d0c69fb1f717448897166514b500ee097c50815c777e574fdc866f2d2b5dc`;
+all 420 native log hashes verify. Automatic colon setup, actual native/legacy
+completion, GDScript-tab isolation and error-free editor shutdown pass. Windows
+and four production profiles continue. Final sanitizer run `43066333042` targets
+the same native/fixture inputs at docs tip `d4d8711`; no pending pass is inferred.
+Obsolete native runs at `a1d49b6`/`6da3442` were canceled for the known missing-prefix
+input; the `358d613` candidate already completed with its retained editor failures.
