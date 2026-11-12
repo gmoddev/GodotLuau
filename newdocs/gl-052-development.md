@@ -385,3 +385,53 @@ the pre-compilation Linux Release mirror failure. Rerun failed/dependent work
 only. Attempt 2 clears the compiler provisioning step and builds Linux Release's
 existing admitted host. Original successful profiles and failed attempt logs
 remain preserved; package acceptance and exported startup are still pending.
+
+## Focused production export
+
+While Linux Release builds, stage the exact successful Windows Release profile
+products with the new app sources and current extension descriptor. The isolated
+editor qualification copy maps its debug feature to that supplied Release library,
+as the existing production editor checks do. This is explicitly a profile stage,
+not an accepted whole-candidate archive. Use the unchanged admitted Release
+renderer as the custom export template; no dependency/host change is made.
+
+`export-profile-release` passes normal bounded editor open, Godot export and
+independent standalone startup, all exit 0 with no runtime/script/editor errors.
+The app prints its real Luau entrypoint readiness marker. Export emits the exact
+qualified DLL and companion hashes stated above. No `.gd` file is present in the
+application project. The original binary-remap startup defect is fixed in actual
+production export; native scenes/texture and string modules load from the pack.
+Retain commands, logs, product/profile identity and `qualification.json`.
+This is headless export/startup evidence, not interactive export or a rendered
+standalone claim. Final candidate-based package/export remains a separate gate.
+
+A single bounded desktop recheck with a fresh isolated project-manager process
+still returns a black capture and activation error `GetCursorPos: Access is
+denied (0x80070005)`. Stop the owned process; do not send guessed UI inputs or
+substitute headless evidence for interactive qualification. The environment gap
+remains current after the production-profile work.
+
+## Package evidence layout repair
+
+Candidate `43135980287` attempt 2 passes all four production profiles, then both
+package jobs reject strict native-summary equality. The new game was invoked
+after Native's summary and wrote three supplementary logs beneath `native/`.
+The package checker correctly sees new logs when rerunning the same strict gate.
+No product or actor assertion failed. Preserve the original run and artifacts.
+
+Store future game evidence in a separate top-level workload directory. For the
+already qualified profiles, move only the unrecorded `native/luau-game` directory
+in the package job's extracted copy to that separate location. Reject relocation
+if any recorded native log belongs to it. Never change original archives,
+profile receipts, recorded log bytes or strict-checker assertions. The focused
+recheck preserves all 418 Windows Release native log entries and reproduces the
+exact original native summary; all 141 process results pass. The 17 candidate
+rejection/retention tests pass with the new layout regression.
+
+A bounded read-only repackage workflow reuses the original four source products
+and sanitizer artifacts. It requires their actual successful original CI jobs,
+an immutable original source checkout, unchanged native inputs/policy and a
+repair diff limited to package tooling/tests/docs. Existing package, provenance,
+core/native/sanitizer and extracted-companion checks all still run. The repair
+tool revision is recorded separately; it does not relabel the source or rebuild
+identical native inputs. Release and updater publication remain disabled.

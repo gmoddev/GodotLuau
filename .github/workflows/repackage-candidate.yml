@@ -1,0 +1,129 @@
+name: Repackage qualified GL-052 profiles (no publication)
+on:
+  workflow_dispatch:
+    inputs:
+      SourceRun:
+        description: Completed original candidate run with all source-build gates passing
+        required: true
+        type: string
+      SourceRevision:
+        description: Exact original qualified source SHA
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  Policy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tests/release/ReleaseCandidateTests.py
+      - run: python tests/release/ReleaseRetentionTests.py
+  Packages:
+    needs: Policy
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+          - Platform: Linux
+            Runner: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve immutable qualified source checkout
+        env:
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+        run: |
+          [[ "$QUALIFIED_REVISION" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git worktree add --detach "$RUNNER_TEMP/qualified-source" "$QUALIFIED_REVISION"
+          git -C "$RUNNER_TEMP/qualified-source" submodule update --init --recursive
+      - name: Select existing Windows runtime
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./tools/InitializeReleaseToolchain.ps1
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.SourceRun }}
+          github-token: ${{ github.token }}
+          pattern: profile-*
+          path: ${{ runner.temp }}/inputs
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.SourceRun }}
+          github-token: ${{ github.token }}
+          name: sanitizer
+          path: ${{ runner.temp }}/inputs/sanitizer
+      - run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
+      - name: Reuse exact products and require every existing package check
+        env:
+          SOURCE_RUN: ${{ inputs.SourceRun }}
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+        run: python tools/RepackageCandidate.py package --run "$SOURCE_RUN" --revision "$QUALIFIED_REVISION" --source "$RUNNER_TEMP/qualified-source" --inputs "$RUNNER_TEMP/inputs" --godot "$RUNNER_TEMP/godot" --output "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: candidate-${{ matrix.Platform }}
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/candidate/*.zip
+            ${{ runner.temp }}/candidate/*.json
+            ${{ runner.temp }}/candidate/*.log
+            ${{ runner.temp }}/candidate/startup/**/*.log
+  Acceptance:
+    if: ${{ always() }}
+    needs: [Policy, Packages]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPACKAGE_RESULTS: ${{ toJSON(needs) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve immutable qualified source checkout
+        env:
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+        run: |
+          [[ "$QUALIFIED_REVISION" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git worktree add --detach "$RUNNER_TEMP/qualified-source" "$QUALIFIED_REVISION"
+          git -C "$RUNNER_TEMP/qualified-source" submodule update --init --recursive
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: candidate-*
+          path: ${{ runner.temp }}/inputs
+      - name: Require actual original and current successful gates
+        env:
+          SOURCE_RUN: ${{ inputs.SourceRun }}
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+        run: python tools/RepackageCandidate.py accept --run "$SOURCE_RUN" --revision "$QUALIFIED_REVISION" --source "$RUNNER_TEMP/qualified-source" --inputs "$RUNNER_TEMP/inputs" --output "$RUNNER_TEMP/accepted"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: accepted-candidate
+          retention-days: 7
+          if-no-files-found: error
+          path: ${{ runner.temp }}/accepted/*.json
