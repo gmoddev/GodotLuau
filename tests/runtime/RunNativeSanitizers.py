@@ -154,6 +154,9 @@ def Main():
                 Observe([sys.executable, Runtime/'InvestigateSanitizerBindings.py', '--godot', Args.godot,
                          '--probe', Args.probe, '--output', Args.output/'binding-controls'], 'binding-investigation', 180)
             Native = Args.output/'native'
+            Observe([sys.executable, Runtime/'RunLuauOnly.py', '--godot', Args.godot,
+                     '--extension', Args.extension, '--source', Args.build_identity,
+                     '--output', Args.output/'luau-game'], 'suite-luau-game', 70)
             Observe([sys.executable, Runtime/'RunRemoteHostQualification.py', '--godot', Args.godot,
                      '--host-manifest', Args.host_manifest, '--output', Args.output/'remote-host'], 'remote-host-qualification', 300)
             for Group, Flags in [('regression',['--teardown','--coordinated-close']),('security',['--security']),('animation',['--animation']),('remote',['--remote']),('characters',['--characters']),('input',['--input']),('controller',['--player-controller']),('resources',['--resources']),('filesystem',['--filesystem']),('http',['--http']),('httpservice',['--httpservice']),('callers',['--callers']),('datastore',['--datastore'])]:

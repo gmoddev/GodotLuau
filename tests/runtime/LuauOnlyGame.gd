@@ -4,6 +4,8 @@ var Checks: Array[Dictionary] = []
 var Main: Node
 
 func _initialize() -> void:
+    if "--graphical" in OS.get_cmdline_user_args():
+        DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS, true)
     Run.call_deferred()
 
 func Check(Value: bool, Message: String) -> void:
@@ -95,6 +97,10 @@ func Run() -> void:
     await Frames(3)
     var Passed := true
     for Item in Checks: Passed = Passed and Item.Passed
+    if "--graphical" in OS.get_cmdline_user_args():
+        await RenderingServer.frame_post_draw
+        Check(root.get_texture().get_image().save_png("res://orb-run.png") == OK, "Real renderer captures the Luau-only native scene")
+        Passed = Passed and Checks.back().Passed
     var File := FileAccess.open("res://luau-only-results.json", FileAccess.WRITE)
     File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks}))
     File.close()

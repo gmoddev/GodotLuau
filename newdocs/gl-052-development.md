@@ -247,3 +247,31 @@ Root cause is not established; this is a retained stock-editor/import exit
 limitation, not a newly attributed GL-052 defect. Normal bounded editor reopen
 succeeds. Do not claim the fast-import profile is qualified or change admitted
 engine patches/dependencies to hide it.
+
+## Rendered new game and remaining shutdown investigation
+
+`game-b357-official-rendered` passes all fourteen production-game observations
+and clean process exit under the existing official editor, using the retained
+`b357239` Debug adapter. The offscreen/no-focus profile reuses Relay Siege's
+established mechanism. The captured 960x640 frame shows the native floor, orb,
+three markers and readable UI; it is visually inspected. This is actual Windows
+rendering, not interactive editor manipulation or a production Release result.
+
+The same adapter under the admitted Release renderer runs every observation but
+exits `3221226356` during shutdown, both rendered and headless. Keep both attempts
+as failures. Do not attribute this to graphics or accept a printed PASS marker
+over a bad exit. Matching production profiles and a new-game invocation within
+the existing full-native sanitizer runner will investigate this concrete failure;
+no additional qualifier or weakened cleanup/assertion is introduced.
+
+DockerPC remains held by StudioCreatorFoundation3 at 00:57 UTC; no worker job or
+lease bypass is attempted. The accepted native source is still pending at
+`4dba726`: candidate `43130538511`, sanitizers `43130541887` and ordinary hosted
+native/core CI. The fixture/export follow-up keeps that native code unchanged.
+
+The existing game-package workflow now additionally stages the real Luau-only
+game from a verified matching candidate, opens the editor, exports through
+Godot, verifies emitted library/companion bytes and launches independently from
+the standalone directory. It retains separate logs/results and checks no
+application GDScript. New-game staging omits the disabled updater addon, which
+is not needed by the application; it never alters the verified fork archive.

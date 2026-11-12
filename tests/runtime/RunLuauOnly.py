@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 
-from FixtureProcesses import StartProcess, StopAll, GetProfileFolder
+from FixtureProcesses import StartProcess, StopAll, GetProfileFolder, WindowsJob, Processes
 from RunQualification import Check
 
 
@@ -20,6 +20,7 @@ def Main():
     Parser.add_argument('--extension',type=Path,required=True)
     Parser.add_argument('--source',type=Path,required=True)
     Parser.add_argument('--output',type=Path,required=True)
+    Parser.add_argument('--graphical',action='store_true',help='Bounded offscreen rendering, separate from interactive UI qualification')
     Args=Parser.parse_args()
     Output=Args.output.resolve();Output.mkdir(parents=True,exist_ok=False)
     Project=Output/'project'
@@ -38,17 +39,28 @@ def Main():
     for Name in ('APPDATA','LOCALAPPDATA','XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_CACHE_HOME'):
         Environment[Name]=str(GetProfileFolder(Output,Name))
     if os.name=='nt':ctypes.windll.kernel32.SetErrorMode(0x8003)
-    Command=[str(Args.godot.resolve()),'--disable-crash-handler','--headless','--single-threaded-scene',
+    Command=[str(Args.godot.resolve()),'--disable-crash-handler','--single-threaded-scene',
              '--path',str(Project),'--max-fps','30','--script','res://LuauOnlyGame.gd']
+    if Args.graphical: Command+=['--position','16000,16000','--resolution','960x640','--','--graphical']
+    else: Command+=['--headless']
     with (Output/'game.stdout.log').open('w') as Stdout,(Output/'game.stderr.log').open('w') as Stderr:
-        Process=StartProcess(Command,Stdout,Stderr,Environment)
+        if os.name=='nt' and Args.graphical:
+            Startup=subprocess.STARTUPINFO();Startup.dwFlags=subprocess.STARTF_USESHOWWINDOW
+            Startup.wShowWindow=4 # Existing Relay Siege no-activate profile.
+            Job=WindowsJob()
+            Process=subprocess.Popen(Command,stdout=Stdout,stderr=Stderr,env=Environment,startupinfo=Startup,creationflags=subprocess.CREATE_NO_WINDOW|subprocess.CREATE_NEW_PROCESS_GROUP)
+            if not Job[0].AssignProcessToJobObject(Job[1],int(Process._handle)):
+                Process.kill();Process.wait();Job[0].CloseHandle(Job[1]);raise ctypes.WinError()
+            Process.FixtureJob=Job;Processes.append(Process)
+        else: Process=StartProcess(Command,Stdout,Stderr,Environment)
     Result=Check(Process,time.monotonic()+40,Output,'game','[Authoring:GameQualification] PASS')
     Detail=json.loads((Project/'luau-only-results.json').read_text());assert Detail['Passed'],Detail
     Stdout=(Output/'game.stdout.log').read_text(errors='replace')
     Stderr=(Output/'game.stderr.log').read_text(errors='replace')
     assert '[Runtime:Script]' not in Stdout and 'SCRIPT ERROR' not in Stderr and 'ERROR:' not in Stderr
     Result.update(Detail,Command=Command,NativeSource=json.loads(Args.source.read_text()),
-                  ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest(),Graphical=False)
+                  ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest(),Graphical=Args.graphical,Interactive=False)
+    if Args.graphical: shutil.copy2(Project/'orb-run.png',Output/'orb-run.png')
     (Output/'results.json').write_text(json.dumps(Result,indent=2)+'\n')
     print('[Authoring:GameQualification] PASS',Output)
 

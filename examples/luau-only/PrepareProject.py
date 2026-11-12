@@ -48,7 +48,10 @@ def Main():
         Record.update(Profile='Qualified candidate',CandidateSource=Package['Source'],CandidateSHA256=Package['Package']['SHA256'])
         Output.mkdir(parents=True)
         with zipfile.ZipFile(Args.candidate/Package['Package']['File']) as Archive:
-            Archive.extractall(Output) # CheckPackage already validated every member.
+            # The disabled updater is not an application dependency. Keep the
+            # verified fork archive intact; omit that addon from this new game.
+            Archive.extractall(Output,[Name for Name in Archive.namelist() if not Name.startswith('addons/GodotLuauUpdater/')])
+        Record['OmittedAddon']='Disabled GodotLuauUpdater; not required by the application'
     else:
         if not Args.adapter_source: Parser.error('Adapter staging requires its retained source.json identity')
         Record.update(Profile='CMake Debug adapter with test hooks; qualification only',
