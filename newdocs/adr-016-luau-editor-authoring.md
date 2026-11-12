@@ -35,6 +35,12 @@ targets rather than overwriting user edits. It grants no script-visible write
 operation and is not gameplay DataStore persistence. Normal Godot editing and
 scene saving apply after opening that independent saved scene.
 
+The snapshot flattens instantiated PackedScene nodes into independently owned
+native descendants. Clear their scene-instance paths before packing so the saved
+file cannot both instantiate a source scene and serialize its expanded children.
+Native resource references and the authored node properties/transforms remain;
+later edits to the original PackedScene do not reconstruct a saved snapshot.
+
 Godot stores Node3D position/rotation/scale as a native Transform3D in saved
 scenes. Composition admits this serialization only for classes already allowed
 those properties, with their existing position/positive-scale bounds, finite

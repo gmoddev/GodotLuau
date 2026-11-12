@@ -60,6 +60,16 @@ def Main():
     Detail = json.loads((Output / "editor-results.json").read_text())
     assert Detail["Passed"], Detail
     Result.update(Detail, Command=Command, ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest())
+    if Args.workflow and not Args.baseline:
+        ReopenCommand = Command + ["--", "--gl052-reopen"]
+        with (Output / "reopen.stdout.log").open("w") as Stdout, (Output / "reopen.stderr.log").open("w") as Stderr:
+            Process = StartProcess(ReopenCommand, Stdout, Stderr, Environment)
+        Reopen = Check(Process, time.monotonic() + Args.timeout, Output, "reopen", "[Bindings:EditorReopen] PASS")
+        assert "ERROR:" not in (Output / "reopen.stderr.log").read_text(errors="replace"), "Unhandled native scene reopen error"
+        ReopenDetail = json.loads((Output / "reopen-results.json").read_text())
+        assert ReopenDetail["Passed"], ReopenDetail
+        Reopen.update(ReopenDetail, Command=ReopenCommand)
+        Result["Reopen"] = Reopen
     (Output / "results.json").write_text(json.dumps(Result, indent=2))
     print("[Bindings:EditorQualification] PASS", Output)
 

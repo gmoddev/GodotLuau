@@ -31,8 +31,10 @@ partially qualified and unmerged. GL-050 remains separately unresolved.
 The [qualification record](gl-052-qualification.md) preserves actual editor/game
 passes, completed Windows/Linux core/native/types/sanitizers, accepted production
 packages and Windows export/rendered multiplayer. Interactive desktop access
-remains unavailable. Fresh-process scene opening observes both saved roots but
-emits Godot dialog errors; clean editor-reopen acceptance remains outstanding.
+remains unavailable. Fresh-process reopening exposes duplicated PackedScene
+children in saved previews; load warnings trigger Godot dialog errors. The
+bounded snapshot-path correction has a controlled failing pre-fix regression;
+clean post-fix editor-reopen qualification remains outstanding.
 
 The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
 qualified game and its original evidence. GL-043 is now separately qualified and

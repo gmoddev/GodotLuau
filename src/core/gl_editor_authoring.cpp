@@ -256,6 +256,9 @@ Error GLNativeEditorPlugin::SavePreview(const String& Path) {
         for (int ChildIndex=0;ChildIndex<Scope->get_child_count();++ChildIndex) {
             auto Copy=Scope->get_child(ChildIndex)->duplicate(0); Branch->add_child(Copy);
             std::function<void(Node*)> Own=[&](Node* Value) {
+                // Snapshot descendants are saved explicitly. Retaining an instance
+                // path would instantiate those children again when Godot reopens it.
+                Value->set_scene_file_path(String());
                 Value->set_owner(Saved);
                 // The private preview viewport selects its camera implicitly.
                 // That viewport-local state is not an authored takeover grant.

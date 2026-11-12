@@ -17,6 +17,9 @@ func Run() -> void:
     await get_tree().process_frame
     while EditorInterface.get_resource_filesystem().is_scanning():
         await get_tree().process_frame
+    if OS.get_cmdline_user_args().has("--gl052-reopen"):
+        await ReopenSavedScenes()
+        return
     var Extensions := ResourceLoader.get_recognized_extensions_for_type("LuauScript")
     if ProjectSettings.get_setting("godot_luau/qualification_baseline", false):
         Check("lua" in Extensions and "luau" not in Extensions, "Baseline only advertises .lua")
@@ -161,4 +164,32 @@ func Run() -> void:
     File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks, "Measurements": Measurements}))
     File.close()
     print("[Bindings:EditorIntegration] ", "PASS" if Passed else "FAIL")
+    get_tree().quit(0 if Passed else 1)
+
+func ReopenSavedScenes() -> void:
+    for Path in ["res://Generated.tscn", "res://OrbSaved.tscn"]:
+        EditorInterface.open_scene_from_path(Path)
+        for Index in range(5): await get_tree().process_frame
+        var Root := EditorInterface.get_edited_scene_root()
+        Check(Root != null and Root.scene_file_path == Path and Root.get_child_count() > 0, "Fresh native editor opens saved scene " + Path)
+        if Root != null and Path == "res://OrbSaved.tscn":
+            for Index in range(1, 4):
+                var Marker := Root.get_node_or_null("Scene/Marker" + str(Index))
+                Check(Marker != null and Marker.get_child_count() == 1 and Marker.get_child(0) is MeshInstance3D and Marker.get_child(0).name == "Visual", "Saved marker " + str(Index) + " reopens with exactly one native visual")
+            var FloorFound := false
+            for Mesh in Root.find_children("*", "MeshInstance3D", true, false):
+                var Material := Mesh.material_override as StandardMaterial3D
+                if Material != null and Material.albedo_texture != null:
+                    FloorFound = Material.albedo_texture.resource_path == "res://Pattern.tres"
+            Check(FloorFound, "Saved scene preserves its external native texture")
+    # Godot load warnings can live only in an editor dialog. Opening the scene
+    # and exiting successfully alone would miss the original duplicate children.
+    var LoadWarnings := false
+    for Dialog in get_tree().root.find_children("*", "AcceptDialog", true, false):
+        if Dialog.visible and Dialog.title == "Load Errors": LoadWarnings = true
+    Check(not LoadWarnings, "Saved scenes reopen without native load-warning dialogs")
+    var File := FileAccess.open("res://reopen-results.json", FileAccess.WRITE)
+    File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks}))
+    File.close()
+    print("[Bindings:EditorReopen] ", "PASS" if Passed else "FAIL")
     get_tree().quit(0 if Passed else 1)

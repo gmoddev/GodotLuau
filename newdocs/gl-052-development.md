@@ -483,3 +483,34 @@ acceptance. GL-052 stays open and unmerged; GL-050 stays separately unresolved.
 Main remains `e43e981d423cea99edff9eb9d186a0b9a4758b73`. Releases and updater
 distribution remain disabled. Native remains the default controller; Scripted
 remains explicitly opt-in. No dependency pin or admitted host changes.
+
+## Saved-snapshot correction — continued 2026-11-12 UTC
+
+Inspect the actual native Load Errors dialog in a disposable headless editor.
+Its text identifies three `Scene/Marker*/Visual` name clashes, one per
+instantiated Marker. `SavePreview` duplicates the complete hierarchy and assigns
+the saved root as every descendant's owner, while leaving each Marker root's
+scene-file path intact. The saved `.tscn` therefore contains both a Marker scene
+instance and its explicitly serialized Visual child. Godot loads a duplicate
+Visual and emits load warnings; repeated warnings trigger the dialog-parent
+errors. This is a confirmed snapshot serialization defect, not merely an
+interactive-desktop problem. Retain `gl052-followup-20261112/dialog-diagnosis`.
+
+Clear only the copied snapshot nodes' scene-file paths before packing. Keep the
+preview/source scene and native resource references unchanged. Extend the existing
+editor workflow with a second native editor process: open both saved scenes,
+require one Visual per Marker and the external texture, and reject load-warning
+dialogs as well as stderr errors. Qualification of this bounded fix is pending;
+prior runtime evidence remains historical and is not relabeled.
+
+The extended observer against the retained current pre-fix Debug adapter passes
+all 37 original checks, then fails all three single-Visual assertions and the
+no-load-warning assertion in the fresh editor process. The two native dialog
+errors reproduce as well. `reopen-before-runtime` retains this controlled red
+result. A preceding invocation used a nonexistent artifact path and stopped
+before launching Godot; it supplies no runtime evidence.
+
+DockerPC's worker lease remains held by another campaign (generation 110), so no
+worker build is started or lease taken. Use hosted source builds and the existing
+bounded MainPC editor fallback. No dependency or admitted engine changes are
+needed for the snapshot fix.
