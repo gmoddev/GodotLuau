@@ -4,10 +4,12 @@
 #include "luau_value_bindings.h"
 #include "luau_variant_bindings.h"
 #include "gl_native_registry.gen.h"
+#include "gl_native_values.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/font.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/scene_state.hpp>
+#include <godot_cpp/classes/shader.hpp>
 #include <godot_cpp/classes/array_mesh.hpp>
 #include <godot_cpp/classes/audio_stream.hpp>
 #include <godot_cpp/classes/audio_stream_player.hpp>
@@ -119,9 +121,12 @@ Object* TargetAt(lua_State* Thread, SceneScope* Scope, int Index, bool Write) {
     if (ScopeOf(Target)!=Scope) luaL_error(Thread,"[Scene:Authority] Target must belong to this scope");
     return Target;
 }
+bool RegistryIsA(const char* Name, const char* Base);
 const Property* FindProperty(Object* Target, const char* Key) {
-    for (const auto& Item:Properties) if (!strcmp(Item.Name,Key) && Target->is_class(Item.Class)) return &Item;
-    return nullptr;
+    const Property* Best=nullptr;
+    for (const auto& Item:Properties) if (!strcmp(Item.Name,Key) && Target->is_class(Item.Class) &&
+        (!Best || RegistryIsA(Item.Class,Best->Class))) Best=&Item;
+    return Best;
 }
 bool Bounded(double Value, double Min, double Max) { return std::isfinite(Value) && Value>=Min && Value<=Max; }
 Variant ReadValue(lua_State* Thread, SceneScope* Scope, const Property& Item, int Index) {
@@ -159,11 +164,34 @@ Variant ReadValue(lua_State* Thread, SceneScope* Scope, const Property& Item, in
             if (auto Handle=HandleAt(Thread,Index)) if (*Handle && (*Handle)->Scope==uint64_t(Scope->get_instance_id()) && (*Handle)->Value.is_valid() && (*Handle)->Value->is_class(Item.ResourceClass))
                 return (*Handle)->Value;
             break;
+        case NodeValue: {
+            if (lua_isnil(Thread,Index) && Item.Default && !strcmp(Item.Default,"null")) return Variant();
+            Node* Value=NodeAt(Thread,Index);
+            if (ScopeOf(Value)==Scope && Value->is_class(Item.ResourceClass)) return Value;
+        } break;
+        default: {
+            Variant Value;
+            if (GLReadNativeValue(Thread,Item,Index,Value)) return Value;
+        } break;
     }
     luaL_error(Thread,"[Scene:Type] Invalid %s.%s (kind %d; bounds %g..%g)",Item.Class,Item.Name,int(Item.Type),Item.Min,Item.Max);
     return Variant();
 }
 struct Assignment { const Property* Item; Variant Value; };
+void ValidateEffects(lua_State* Thread,Object* Target,const std::vector<Assignment>& Batch) {
+    if (!Target->is_class("MultiMesh")) return;
+    for(const auto& Entry:Batch) {
+        const char* Key=Entry.Item->Native;
+        if ((!strcmp(Key,"transform_format") || !strcmp(Key,"use_colors")) && int64_t(Target->get("instance_count"))>0 && Target->get(Key)!=Entry.Value)
+            luaL_error(Thread,"[Scene:Arguments] Reset InstanceCount to zero before changing MultiMesh allocation format");
+    }
+}
+void PreviewProperty(lua_State* Thread,const Property& Item,const Variant& Value) {
+    if (GLGetOwner(Thread)->Domain->GetKind()!=GLDomainKind::EditorPreview) return;
+    if (strcmp(Item.Native,"autoplay") && strcmp(Item.Native,"autostart")) return;
+    bool Active=Value.get_type()==Variant::BOOL?bool(Value):!String(Value).is_empty();
+    if (Active) luaL_error(Thread,"[Authoring:Preview] Temporal autoplay is runtime-only");
+}
 std::vector<Assignment> Validate(lua_State* Thread, SceneScope* Scope, Object* Target, int Index) {
     luaL_checktype(Thread,Index,LUA_TTABLE);
     std::vector<Assignment> Batch;
@@ -172,9 +200,12 @@ std::vector<Assignment> Validate(lua_State* Thread, SceneScope* Scope, Object* T
         if (Batch.size()>=32 || lua_type(Thread,-2)!=LUA_TSTRING) luaL_error(Thread,"[Scene:Type] At most 32 named properties required");
         const char* Key=CheckedString(Thread,-2);
         const Property* Item=FindProperty(Target,Key);
-        if (!Item) luaL_error(Thread,"[Scene:Property] Unsupported property %s",Key);
-        Batch.push_back({Item,ReadValue(Thread,Scope,*Item,-1)}); lua_pop(Thread,1);
+        if (!Item || Item->ReadOnly) luaL_error(Thread,"[Scene:Property] Unsupported or read-only property %s",Key);
+        Variant Value=ReadValue(Thread,Scope,*Item,-1);PreviewProperty(Thread,*Item,Value);
+        Batch.push_back({Item,Value}); lua_pop(Thread,1);
     }
+    ValidateEffects(Thread,Target,Batch);
+    if(Target->is_class("MultiMesh"))std::stable_sort(Batch.begin(),Batch.end(),[](const Assignment& A,const Assignment& B){return strcmp(A.Item->Native,"instance_count") && !strcmp(B.Item->Native,"instance_count");});
     return Batch;
 }
 void Apply(Object* Target, const std::vector<Assignment>& Batch) {
@@ -220,6 +251,8 @@ Ref<Resource> CreateResource(const char* Name) {
     if (!Target) { if (Value && !Object::cast_to<RefCounted>(Value)) memdelete(Value); return Ref<Resource>(); }
     return Ref<Resource>(Target);
 }
+bool ValidNative(const Property& Item,const Variant& Value);
+void PushValue(lua_State* Thread,SceneScope* Scope,const Variant& Value,Kind Type);
 void PushProperty(lua_State* Thread, SceneScope* Scope, Object* Target, const char* Key) {
     const Property* Item=FindProperty(Target,Key);
     if (!Item) luaL_error(Thread,"[Scene:Property] Unsupported property %s",Key);
@@ -229,6 +262,11 @@ void PushProperty(lua_State* Thread, SceneScope* Scope, Object* Target, const ch
     else if (!strcmp(Item->Native,"@separation")) Value=Object::cast_to<Control>(Target)->get_theme_constant("separation");
     else if (!strcmp(Item->Native,"@full_rect")) luaL_error(Thread,"[Scene:Property] FullRect is a write-only preset");
     else Value=Target->get(Item->Native);
+    if (Item->Type>Void) {
+        if (!ValidNative(*Item,Value)) luaL_error(Thread,"[Scene:Type] Unsupported native property result");
+        PushValue(Thread,Scope,Value,Item->Type);
+        return;
+    }
     if (Item->Type==Text) { String Text=Value; lua_pushstring(Thread,Text.utf8().get_data()); return; }
     if (Item->Type==ResourceValue) { PushResource(Thread,Scope,Ref<Resource>(Value),true); return; }
     if (Value.get_type()==Variant::VECTOR2) {
@@ -270,8 +308,10 @@ int Get(lua_State* Thread) {
     const char* Key=CheckedString(Thread,3); PushProperty(Thread,Scope,Target,Key); return 1;
 }
 const GLNative::Method* FindMethod(Object* Target, const char* Name) {
-    for (const auto& Item:GLNative::Methods) if (!strcmp(Item.Name,Name) && Target->is_class(Item.Class)) return &Item;
-    return nullptr;
+    const GLNative::Method* Best=nullptr;
+    for (const auto& Item:GLNative::Methods) if (!strcmp(Item.Name,Name) && Target->is_class(Item.Class) &&
+        (!Best || RegistryIsA(Item.Class,Best->Class))) Best=&Item;
+    return Best;
 }
 const GLNative::Signal* FindSignal(Node* Target, const char* Name) {
     for (const auto& Item:GLNative::Signals) if (!strcmp(Item.Name,Name) && Target->is_class(Item.Class)) return &Item;
@@ -307,11 +347,28 @@ bool ValidNative(const Property& Item, const Variant& Value) {
             Ref<Resource> ResourceValue=Value;
             return ResourceValue.is_null() || ResourceValue->is_class(Item.ResourceClass);
         }
+        case NodeValue: {
+            if (Value.get_type()==Variant::NIL) return true;
+            if (Value.get_type()!=Variant::OBJECT) return false;
+            Node* NodeValue=Object::cast_to<Node>(static_cast<Object*>(Value));
+            return !NodeValue || (!NodeValue->is_queued_for_deletion() && NodeValue->is_class(Item.ResourceClass));
+        }
+        default: return GLValidNativeValue(Item,Value);
     }
     return false;
 }
 void PushValue(lua_State* Thread, SceneScope* Scope, const Variant& Value, Kind Type) {
     if (Type==ResourceValue) { PushResource(Thread,Scope,Ref<Resource>(Value),true); return; }
+    if (Type==NodeValue) {
+        Node* Target=Value.get_type()==Variant::OBJECT?Object::cast_to<Node>(static_cast<Object*>(Value)):nullptr;
+        if (Target && !Target->is_queued_for_deletion() && ScopeOf(Target)==Scope) PushNode(Thread,Target);
+        else lua_pushnil(Thread);
+        return;
+    }
+    if (Type>Void) {
+        if (!GLPushNativeValue(Thread,Value)) luaL_error(Thread,"[Scene:Type] Unsupported native value result");
+        return;
+    }
     if (Type==Text) { String Text=Value; lua_pushstring(Thread,Text.utf8().get_data()); return; }
     if (Type==Vector2Value) {
         Vector2 Point=Value; lua_newtable(Thread); lua_pushnumber(Thread,Point.x); lua_setfield(Thread,-2,"X"); lua_pushnumber(Thread,Point.y); lua_setfield(Thread,-2,"Y"); return;
@@ -324,12 +381,13 @@ int Call(lua_State* Thread) {
     const auto* Item=FindMethod(Target,Name);
     if (!Item || !Target->has_method(Item->Native)) luaL_error(Thread,"[Scene:Method] Method %s is not admitted on this target",Name);
     if (GLGetOwner(Thread)->Domain->GetKind()==GLDomainKind::EditorPreview &&
-        Target->is_class("AudioStreamPlayer") && !strcmp(Item->Native,"play"))
-        luaL_error(Thread,"[Authoring:Preview] Audio playback is runtime-only");
+        ((!strcmp(Item->Native,"play") && (Target->is_class("AudioStreamPlayer") || Target->is_class("AudioStreamPlayer2D") || Target->is_class("AudioStreamPlayer3D") || Target->is_class("AnimatedSprite2D"))) ||
+         (!strcmp(Item->Native,"start") && Target->is_class("Timer")) || (!strcmp(Item->Native,"play_backwards") && Target->is_class("AnimatedSprite2D"))))
+        luaL_error(Thread,"[Authoring:Preview] Temporal playback is runtime-only");
     if (Item->Mutates) TargetAt(Thread,Scope,2,true);
     int Count=lua_gettop(Thread)-3;
     if (Count<Item->Required || Count>Item->Arguments) luaL_error(Thread,"[Scene:Arguments] %s requires %d..%d arguments",Name,Item->Required,Item->Arguments);
-    std::array<Variant,4> Values; std::array<const Variant*,4> Pointers;
+    std::array<Variant,8> Values; std::array<const Variant*,8> Pointers;
     for (int Index=0;Index<Item->Arguments;++Index) {
         const auto& Argument=GLNative::Arguments[Item->FirstArgument+Index];
         if (Index<Count) Values[Index]=ReadValue(Thread,Scope,Argument,4+Index);
@@ -337,9 +395,83 @@ int Call(lua_State* Thread) {
             if (!Argument.Default) luaL_error(Thread,"[Scene:Arguments] Missing required %s",Argument.Name);
             if (Argument.Type==Boolean) Values[Index]=!strcmp(Argument.Default,"true");
             else if (Argument.Type==Integer) Values[Index]=String(Argument.Default).to_int();
+            else if (Argument.Type==Text) Values[Index]=String::utf8(Argument.Default);
+            else if (Argument.Type==ResourceValue || Argument.Type==NodeValue) Values[Index]=Variant();
+            else if (Argument.Type==Vector2Value) {
+                String Default=Argument.Default;auto Parts=Default.substr(8,Default.length()-9).split(",");
+                Values[Index]=Vector2(Parts[0].to_float(),Parts[1].to_float());
+            }
             else Values[Index]=String(Argument.Default).to_float();
         }
         Pointers[Index]=&Values[Index];
+    }
+    if (Target->is_class("AnimatedSprite2D") && (!strcmp(Item->Native,"play") || !strcmp(Item->Native,"play_backwards"))) {
+        Ref<Resource> Frames=Target->get("sprite_frames");String Animation=String(Values[0]);
+        if(Animation.is_empty())Animation=Target->get("animation");
+        if(Frames.is_null() || !bool(Frames->call("has_animation",Animation))) luaL_error(Thread,"[Scene:Arguments] Animation does not exist on this sprite");
+    }
+    if (Target->is_class("MultiMesh")) {
+        const bool Transform3=!strcmp(Item->Native,"set_instance_transform") || !strcmp(Item->Native,"get_instance_transform");
+        const bool Transform2=!strcmp(Item->Native,"set_instance_transform_2d") || !strcmp(Item->Native,"get_instance_transform_2d");
+        if ((Transform3 && int64_t(Target->get("transform_format"))!=1) || (Transform2 && int64_t(Target->get("transform_format"))!=0))
+            luaL_error(Thread,"[Scene:Arguments] Instance transform must match the MultiMesh format");
+        if ((!strcmp(Item->Native,"set_instance_color") || !strcmp(Item->Native,"get_instance_color")) && !bool(Target->get("use_colors")))
+            luaL_error(Thread,"[Scene:Arguments] MultiMesh colors must be enabled before allocation");
+    }
+    bool ShaderWrite=Target->is_class("ShaderMaterial") && !strcmp(Item->Native,"set_shader_parameter");
+    std::string ShaderName;
+    if (ShaderWrite || (Target->is_class("ShaderMaterial") && !strcmp(Item->Native,"get_shader_parameter"))) {
+        Ref<Shader> Program=Target->get("shader");
+        if(Program.is_null())luaL_error(Thread,"[Scene:Arguments] ShaderMaterial has no project shader");
+        Array Uniforms=Program->get_shader_uniform_list();String Parameter=Values[0];bool Found=false;
+        if(Uniforms.size()>256)luaL_error(Thread,"[Scene:Limit] Shader uniform budget exceeded");
+        for(int Index=0;Index<Uniforms.size();++Index) {
+            Dictionary Uniform=Uniforms[Index];if(String(Uniform.get("name",String()))!=Parameter)continue;
+            Found=true;auto Type=Variant::Type(int(Uniform.get("type",0)));
+            if(Type==Variant::OBJECT || Type==Variant::ARRAY || Type>=Variant::PACKED_BYTE_ARRAY)luaL_error(Thread,"[Scene:Type] This shader parameter type is not admitted");
+            if(ShaderWrite && Values[1].get_type()!=Type) {
+                if(Type==Variant::INT && Values[1].get_type()==Variant::FLOAT && std::floor(double(Values[1]))==double(Values[1])) Values[1]=int64_t(Values[1]);
+                else {
+                    String NativeName=Variant::get_type_name(Type);Kind Conversion=GLNativeValueKind(NativeName.utf8().get_data());
+                    Property Expected{"ShaderMaterial","value","value",Conversion,-100000,100000};
+                    if(Conversion==Void || !GLReadNativeValue(Thread,Expected,5,Values[1]) || Values[1].get_type()!=Type)
+                        luaL_error(Thread,"[Scene:Type] Shader parameter value does not match its declared type");
+                }
+            }
+            break;
+        }
+        if(!Found)luaL_error(Thread,"[Scene:Arguments] Shader parameter is not declared by this project shader");
+        if(ShaderWrite) {
+            ShaderName=Parameter.utf8().get_data();
+            for(auto Entry=Scope->ShaderParameters.begin();Entry!=Scope->ShaderParameters.end();) {
+                if(!ObjectDB::get_instance(Entry->first))Entry=Scope->ShaderParameters.erase(Entry);else ++Entry;
+            }
+            auto Existing=Scope->ShaderParameters.find(Target->get_instance_id());
+            if((Existing==Scope->ShaderParameters.end() && Scope->ShaderParameters.size()>=MaxResources) ||
+                (Existing!=Scope->ShaderParameters.end() && Existing->second.size()>=256 && !Existing->second.count(ShaderName)))
+                luaL_error(Thread,"[Scene:Limit] Shader parameter lifetime budget exceeded");
+        }
+    }
+    if (Item->KeyQuery) {
+        const Variant* Argument=&Values[Item->KeyArgument];Variant Receiver=Target,Exists;GDExtensionCallError Error{};
+        Receiver.callp(Item->KeyQuery,&Argument,1,Exists,Error);
+        bool Found=Exists.get_type()==Variant::BOOL?bool(Exists):(Exists.get_type()==Variant::INT && int64_t(Exists)>=0);
+        if (Error.error!=GDEXTENSION_CALL_OK || (Exists.get_type()!=Variant::BOOL && Exists.get_type()!=Variant::INT) || Found==Item->KeyAbsent)
+            luaL_error(Thread,"[Scene:Arguments] %s requires an %s key",Name,Item->KeyAbsent?"unused":"existing");
+    }
+    if (Item->CountQuery) {
+        const Variant* Argument=Item->CountArgument>=0?&Values[Item->CountArgument]:nullptr;
+        Variant Receiver=Target,CountValue;GDExtensionCallError Error{};
+        Receiver.callp(Item->CountQuery,&Argument,Argument?1:0,CountValue,Error);
+        if (Error.error!=GDEXTENSION_CALL_OK || (CountValue.get_type()!=Variant::INT && CountValue.get_type()!=Variant::ARRAY && CountValue.get_type()!=Variant::PACKED_STRING_ARRAY))
+            luaL_error(Thread,"[Scene:Arguments] %s could not inspect its native collection",Name);
+        int64_t Total=CountValue.get_type()==Variant::INT?int64_t(CountValue):(CountValue.get_type()==Variant::ARRAY?Array(CountValue).size():PackedStringArray(CountValue).size());
+        if (Total<0 || (Item->CountLimit>=0 && Total>=Item->CountLimit)) luaL_error(Thread,"[Scene:Limit] %s native collection capacity reached",Name);
+        if (Item->IndexArgument>=0) {
+            int64_t Index=Values[Item->IndexArgument];
+            if (!((Item->AllowNegativeOne && Index==-1) || (Index>=0 && (Item->AllowEnd?Index<=Total:Index<Total))))
+                luaL_error(Thread,"[Scene:Arguments] %s index is outside the live native collection",Name);
+        }
     }
     uint64_t ScopeId=Scope->get_instance_id();
     Ref<Resource> KeepAlive=Object::cast_to<Resource>(Target);
@@ -348,6 +480,7 @@ int Call(lua_State* Thread) {
     if (Error.error!=GDEXTENSION_CALL_OK) luaL_error(Thread,"[Scene:Invocation] %s rejected (code %d, argument %d)",Name,int(Error.error),Error.argument);
     Scope=Resolve<SceneScope>(ScopeId);
     if (!Scope || !Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Lifetime] Owner retired during %s",Name);
+    if(ShaderWrite)Scope->ShaderParameters[Target->get_instance_id()].insert(ShaderName);
     if (Item->Return==Void) return 0;
     Property Expected{"",Name,Item->Native,Item->Return,-1e12,1e12,Item->ReturnClass};
     if (Item->Return==Text) { Expected.Min=0; Expected.Max=8192; }
@@ -496,8 +629,9 @@ void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Sc
             const Property* Item=NativeProperty(Class->Name,Name);
             Variant Value=State->get_node_property_value(Index,PropertyIndex);
             if (Name=="transform" && SerializedTransform(Class->Name,Value)) continue;
-            if (!Item || !ValidNative(*Item,Value) || !ResourceGraph(Value,Resources,Values))
+            if (!Item || Item->ReadOnly || !ValidNative(*Item,Value) || !ResourceGraph(Value,Resources,Values))
                 luaL_error(Thread,"[Scene:Composition] Property %s.%s is not admitted",Class->Name,Name.utf8().get_data());
+            PreviewProperty(Thread,*Item,Value);
         }
     }
 }
@@ -702,6 +836,8 @@ bool RegistryIsA(const char* Name, const char* Base) {
     return false;
 }
 const char* KindName(Kind Type) {
+    if (Type==NodeValue) return "Node";
+    if (const char* Name=GLNativeValueName(Type)) return Name;
     static const char* Names[]={"number","integer","boolean","string","Vector3","Vector2","Color3","Resource","void"};
     return Names[int(Type)];
 }
@@ -711,6 +847,7 @@ void PushShape(lua_State* Thread, const Property& Item) {
     lua_pushstring(Thread,Item.Name); lua_setfield(Thread,-2,"Name");
     lua_pushnumber(Thread,Item.Min); lua_setfield(Thread,-2,"Minimum");
     lua_pushnumber(Thread,Item.Max); lua_setfield(Thread,-2,"Maximum");
+    lua_pushboolean(Thread,Item.ReadOnly);lua_setfield(Thread,-2,"ReadOnly");
     if (Item.ResourceClass) { lua_pushstring(Thread,Item.ResourceClass); lua_setfield(Thread,-2,"ResourceClass"); }
 }
 int GetClasses(lua_State* Thread) {
@@ -793,6 +930,7 @@ void SceneScope::Retire(bool Delete) {
         while (!Subscriptions.empty()) Disconnect(Subscriptions.back().Reference);
         for (auto& Weak:Resources) if (auto Slot=Weak.lock()) Slot->Value.unref();
         Resources.clear();
+        ShaderParameters.clear();
     }
     if (Delete && !is_queued_for_deletion()) queue_free();
 }
@@ -820,6 +958,14 @@ void GLRegisterScene(lua_State* Thread) {
     lua_pushcfunction(Thread,Root,"new"); lua_setfield(Thread,-2,"new");
     lua_pushcfunction(Thread,GetClasses,"Classes"); lua_setfield(Thread,-2,"Classes");
     lua_pushcfunction(Thread,Describe,"Describe"); lua_setfield(Thread,-2,"Describe");
+    lua_pushcfunction(Thread,[](lua_State* State)->int {
+        const char* Name=CheckedString(State,1);
+        Kind Type=GLNativeValueKind(Name);Variant Value;
+        Property Item{"Value",Name,Name,Type,-1e12,1e12};
+        if (Type==Void || Type==VariantValue || !GLReadNativeValue(State,Item,2,Value)) luaL_error(State,"[Scene:Value] Invalid bounded native value %s",Name);
+        if (!GLPushNativeValue(State,Value)) luaL_error(State,"[Scene:Value] Unsupported native value %s",Name);
+        return 1;
+    },"NativeValue");lua_setfield(Thread,-2,"Value");
     lua_pushstring(Thread,GLNative::PolicySHA256); lua_setfield(Thread,-2,"PolicySHA256");
     lua_pushstring(Thread,GLNative::ApiSHA256); lua_setfield(Thread,-2,"ApiSHA256");
     PushEnums(Thread); lua_setfield(Thread,-2,"Enums");
@@ -867,6 +1013,6 @@ bool GLSceneWrite(lua_State* Thread, Node* Target, const char* Key) {
     Key=CheckedString(Thread,2);
     if (!Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Authority] Scene write requires its live execution owner");
     const Property* Item=FindProperty(Target,Key);
-    if (!Item) luaL_error(Thread,"[Scene:Property] Unsupported property %s",Key);
-    Variant Value=ReadValue(Thread,Scope,*Item,3); Apply(Target,{{Item,Value}}); return true;
+    if (!Item || Item->ReadOnly) luaL_error(Thread,"[Scene:Property] Unsupported or read-only property %s",Key);
+    Variant Value=ReadValue(Thread,Scope,*Item,3);PreviewProperty(Thread,*Item,Value); ValidateEffects(Thread,Target,{{Item,Value}}); Apply(Target,{{Item,Value}}); return true;
 }

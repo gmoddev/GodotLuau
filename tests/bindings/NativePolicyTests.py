@@ -33,7 +33,7 @@ class NativePolicyTests(unittest.TestCase):
         self.assertEqual(Classes['Node3D']['Status'], 'Partial')
         self.assertEqual(Classes['OS']['Status'], 'Restricted')
         self.assertEqual(Classes['Tween']['Status'], 'Blocked')
-        self.assertIn('get_tree', Classes['Node']['Members']['methods']['Blocked'])
+        self.assertIn('get_tree', Classes['Node']['Members']['methods']['Restricted'])
         self.assertEqual(Coverage['Summary']['SelectedMethods'], len(Data['Methods']))
 
     def Rejected(self, Change):
@@ -68,6 +68,24 @@ class NativePolicyTests(unittest.TestCase):
         self.Rejected(lambda P:P['Properties'][0].update(Max=-1))
         self.Rejected(lambda P:P['Properties'][0].update(Max=float('inf')))
         self.Rejected(lambda P:P['Classes'].append(copy.deepcopy(P['Classes'][0])))
+
+    def test_explicit_authorization_required(self):
+        self.Rejected(lambda P:P['Methods'][0].pop('Authority'))
+        self.Rejected(lambda P:P['Classes'][0].update(Authority='GlobalEngine'))
+
+    def test_native_window_and_resource_signal_denied(self):
+        self.Rejected(lambda P:P['Classes'].append({'Name':'Window','Kind':'Node','Construct':True,'Authority':'OwnedScene'}))
+        self.Rejected(lambda P:P['Signals'].append({'Class':'Resource','Name':'Changed','Native':'changed','Authority':'OwnedScene'}))
+
+    def test_defaults_observations_and_collection_rules(self):
+        Data=Generator.Build(Policy,Api)
+        Play=next(M for M in Data['Methods'] if M['Class']=='AnimatedSprite2D' and M['Name']=='Play')
+        self.assertEqual(Data['Arguments'][Play['FirstArgument']]['Default'],'')
+        List=next(M for M in Data['Methods'] if M['Class']=='ItemList' and M['Name']=='AddItem')
+        self.assertEqual(Data['Arguments'][List['FirstArgument']+1]['Default'],'null')
+        self.assertEqual(List['CountLimit'],1024)
+        self.assertTrue(next(P for P in Data['Properties'] if P['Class']=='Timer' and P['Name']=='TimeLeft')['ReadOnly'])
+        self.Rejected(lambda P:P['Methods'].append({'Class':'ItemList','Name':'Bad','Native':'select','Mutates':True,'Authority':'OwnedScene','Validation':{'Index':{'Argument':'idx','Query':'get_tree'}}}))
 
 
 if __name__=='__main__':

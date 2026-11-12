@@ -61,6 +61,25 @@ local C=S:Connect(B,"Toggled",function(Value:boolean) B.Text=tostring(Value) end
 C:Disconnect()
 )",true},
         {"forbidden constructor",R"(local S=Scene.new(Parent) local O=S:New("OS",{}))",false},
+        {"2D collections and optional resource",R"(local S=Scene.new(Parent)
+local L=S:New("ItemList",{FixedIconSize={X=16,Y=16}})
+local I:number=S:Call(L,"AddItem","First")
+local Selected:{number}=S:Call(L,"GetSelectedItems")
+local T=S:New("Timer",{WaitTime=0.1})
+local Remaining:number=T.TimeLeft
+S:Call(T,"Start")
+local Body=S:New("RigidBody2D",{Mass=2})
+S:Call(Body,"ApplyImpulse",Vector2.new(1,0))
+)",true},
+        {"tagged compound values and shader",R"(local S=Scene.new(Parent)
+local C:NativeColor4=Scene.Value("Color",{R=1,G=0.5,B=0.25,A=0.5})
+local M=S:New("ShaderMaterial",{Shader=S:Load("Shader","res://Tint.gdshader")})
+S:Call(M,"SetShaderParameter","Tint",C)
+local V:NativeVariant=S:Call(M,"GetShaderParameter","Tint")
+local Bytes:{number}=Scene.Value("PackedByteArray",{0,255})
+)",true},
+        {"read-only constructor property",R"(local S=Scene.new(Parent) S:New("Timer",{TimeLeft=1}))",false},
+        {"wrong new collection type",R"(local S=Scene.new(Parent) S:New("ItemList",{FixedIconSize="bad"}))",false},
         {"wrong typed property",R"(local S=Scene.new(Parent) local B=S:New("Button",{Text=42}))",false},
         {"unknown direct property",R"(local S=Scene.new(Parent) local B=S:New("Button",{}) B.Script="bad")",false},
         {"forbidden method",R"(local S=Scene.new(Parent) local B=S:New("Button",{}) S:Call(B,"set_script",nil))",false},

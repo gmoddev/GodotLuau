@@ -1,5 +1,5 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: 8322ba0504ed0b2f4d45a5d89b87ef20ba65e154bbb79b7bf898dfee5607585f
+-- Policy SHA256: ba1a9bc462d8d1b92a0811838aad0433b4c281e1de068fbd9932ae05cc9396df
 export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number
@@ -16,6 +16,20 @@ declare Vector3: { new: (number, number, number) -> NativeVector3 }
 declare Vector2: { new: (number, number) -> NativeVector2 }
 declare Color3: { new: (number, number, number) -> NativeColor3 }
 export type NativeConnection = { Disconnect: (self: NativeConnection) -> (), Connected: boolean }
+export type NativeVector2i = {X: number, Y: number}
+export type NativeVector3i = {X: number, Y: number, Z: number}
+export type NativeVector4 = {X: number, Y: number, Z: number, W: number}
+export type NativeVector4i = NativeVector4
+export type NativeQuaternion = NativeVector4
+export type NativeColor4 = {R: number, G: number, B: number, A: number}
+export type NativeRect2 = {Position: NativeVector2, Size: NativeVector2}
+export type NativeRect2i = {Position: NativeVector2i, Size: NativeVector2i}
+export type NativeAABB = {Position: NativeVector3, Size: NativeVector3}
+export type NativePlane = {Normal: NativeVector3, D: number}
+export type NativeBasis = {X: NativeVector3, Y: NativeVector3, Z: NativeVector3}
+export type NativeTransform2D = {X: NativeVector2, Y: NativeVector2, Origin: NativeVector2}
+export type NativeTransform3D = {Basis: NativeBasis, Origin: NativeVector3}
+export type NativeVariant = nil | boolean | number | string | NativeVector3 | NativeColor3 | NativeVector2 | NativeVector4 | NativeColor4 | NativeRect2 | NativeAABB | NativePlane | NativeBasis | NativeTransform2D | NativeTransform3D | {NativeVariant} | {[string]: NativeVariant}
 declare class NativeObject
 end
 declare class NativeNode extends NativeObject
@@ -38,6 +52,8 @@ end
 declare class NativeCanvasItem extends NativeNode
     Visible: boolean
     Modulate: NativeColor3
+    ModulateRGBA: NativeColor4
+    SelfModulateRGBA: NativeColor4
 end
 declare class NativeCanvasLayer extends NativeNode
     Layer: number
@@ -52,12 +68,27 @@ declare class NativeResource extends NativeRefCounted
 end
 declare class MutableNativeResource extends NativeResource
 end
+declare class NativeTimer extends NativeNode
+    WaitTime: number
+    OneShot: boolean
+    Autostart: boolean
+    Paused: boolean
+    ProcessCallback: number
+    TimeLeft: number
+end
 declare class NativeWorldEnvironment extends NativeNode
     Environment: NativeEnvironment?
 end
 declare class NativeAudioStream extends NativeResource
 end
 declare class MutableNativeAudioStream extends NativeAudioStream
+end
+declare class NativeAudioStreamPlayer3D extends NativeNode3D
+    Stream: NativeAudioStream?
+    VolumeDb: number
+    PitchScale: number
+    Autoplay: boolean
+    StreamPaused: boolean
 end
 declare class NativeCamera3D extends NativeNode3D
     Fov: number
@@ -92,6 +123,8 @@ declare class NativeControl extends NativeCanvasItem
     FocusMode: number
     LayoutMode: number
     ClipContents: boolean
+    Theme: NativeTheme?
+    TooltipText: string
 end
 declare class NativeEnvironment extends NativeResource
 end
@@ -101,6 +134,10 @@ declare class NativeFont extends NativeResource
 end
 declare class MutableNativeFont extends NativeFont
 end
+declare class NativeGradient extends NativeResource
+end
+declare class MutableNativeGradient extends NativeGradient
+end
 declare class NativeMaterial extends NativeResource
 end
 declare class MutableNativeMaterial extends NativeMaterial
@@ -109,28 +146,78 @@ declare class NativeMesh extends NativeResource
 end
 declare class MutableNativeMesh extends NativeMesh
 end
+declare class NativeMultiMesh extends NativeResource
+end
+declare class MutableNativeMultiMesh extends NativeMultiMesh
+end
 declare class NativeNode2D extends NativeCanvasItem
     Position: NativeVector2
     RotationDegrees: number
     Scale: NativeVector2
+    GlobalPosition: NativeVector2
+    GlobalRotation: number
+    ZIndex: number
+    YSortEnabled: boolean
 end
 declare class NativePackedScene extends NativeResource
 end
 declare class MutableNativePackedScene extends NativePackedScene
 end
+declare class NativePhysicsMaterial extends NativeResource
+end
+declare class MutableNativePhysicsMaterial extends NativePhysicsMaterial
+end
+declare class NativeShader extends NativeResource
+end
+declare class MutableNativeShader extends NativeShader
+end
+declare class NativeShape2D extends NativeResource
+end
+declare class MutableNativeShape2D extends NativeShape2D
+end
 declare class NativeShape3D extends NativeResource
 end
 declare class MutableNativeShape3D extends NativeShape3D
+end
+declare class NativeSpriteFrames extends NativeResource
+end
+declare class MutableNativeSpriteFrames extends NativeSpriteFrames
+end
+declare class NativeStyleBox extends NativeResource
+end
+declare class MutableNativeStyleBox extends NativeStyleBox
 end
 declare class NativeTexture extends NativeResource
 end
 declare class MutableNativeTexture extends NativeTexture
 end
+declare class NativeTheme extends NativeResource
+end
+declare class MutableNativeTheme extends NativeTheme
+end
 declare class NativeVisualInstance3D extends NativeNode3D
+end
+declare class NativeAnimatedSprite2D extends NativeNode2D
+    SpriteFrames: NativeSpriteFrames?
+    Animation: string
+    SpeedScale: number
+    Centered: boolean
+    Offset: NativeVector2
+    FlipH: boolean
+    FlipV: boolean
+    Frame: number
+    FrameProgress: number
 end
 declare class NativeArrayMesh extends NativeMesh
 end
 declare class MutableNativeArrayMesh extends NativeArrayMesh
+end
+declare class NativeAudioStreamPlayer2D extends NativeNode2D
+    Stream: NativeAudioStream?
+    VolumeDb: number
+    PitchScale: number
+    Autoplay: boolean
+    StreamPaused: boolean
 end
 declare class NativeBaseButton extends NativeControl
     Disabled: boolean
@@ -145,9 +232,34 @@ declare class NativeBoxShape3D extends NativeShape3D
 end
 declare class MutableNativeBoxShape3D extends NativeBoxShape3D
 end
+declare class NativeCamera2D extends NativeNode2D
+    Enabled: boolean
+    Zoom: NativeVector2
+    Offset: NativeVector2
+    PositionSmoothingEnabled: boolean
+    PositionSmoothingSpeed: number
+end
+declare class NativeCapsuleShape2D extends NativeShape2D
+end
+declare class MutableNativeCapsuleShape2D extends NativeCapsuleShape2D
+end
 declare class NativeCapsuleShape3D extends NativeShape3D
 end
 declare class MutableNativeCapsuleShape3D extends NativeCapsuleShape3D
+end
+declare class NativeCircleShape2D extends NativeShape2D
+end
+declare class MutableNativeCircleShape2D extends NativeCircleShape2D
+end
+declare class NativeCollisionObject2D extends NativeNode2D
+    CollisionLayer: number
+    CollisionMask: number
+    InputPickable: boolean
+end
+declare class NativeCollisionShape2D extends NativeNode2D
+    Shape: NativeShape2D?
+    Disabled: boolean
+    OneWayCollision: boolean
 end
 declare class NativeColorRect extends NativeControl
     Color: NativeColor3
@@ -161,6 +273,15 @@ end
 declare class NativeGeometryInstance3D extends NativeVisualInstance3D
     Material: NativeMaterial?
 end
+declare class NativeItemList extends NativeControl
+    SelectMode: number
+    AllowReselect: boolean
+    FixedColumnWidth: number
+    MaxColumns: number
+    IconMode: number
+    FixedIconSize: NativeVector2i
+    ItemCount: number
+end
 declare class NativeLabel extends NativeControl
     Text: string
 end
@@ -172,6 +293,11 @@ end
 declare class NativeLineEdit extends NativeControl
     Text: string
     PlaceholderText: string
+end
+declare class NativeMultiMeshInstance2D extends NativeNode2D
+    Multimesh: NativeMultiMesh?
+end
+declare class NativePanel extends NativeControl
 end
 declare class NativePhysicsBody3D extends NativeCollisionObject3D
 end
@@ -185,12 +311,60 @@ declare class NativeRange extends NativeControl
     Value: number
     Step: number
 end
+declare class NativeRectangleShape2D extends NativeShape2D
+end
+declare class MutableNativeRectangleShape2D extends NativeRectangleShape2D
+end
+declare class NativeRichTextLabel extends NativeControl
+    Text: string
+    BbcodeEnabled: boolean
+    FitContent: boolean
+    ScrollActive: boolean
+end
+declare class NativeSegmentShape2D extends NativeShape2D
+end
+declare class MutableNativeSegmentShape2D extends NativeSegmentShape2D
+end
+declare class NativeSeparator extends NativeControl
+end
+declare class NativeShaderMaterial extends NativeMaterial
+end
+declare class MutableNativeShaderMaterial extends NativeShaderMaterial
+end
 declare class NativeSphereShape3D extends NativeShape3D
 end
 declare class MutableNativeSphereShape3D extends NativeSphereShape3D
 end
 declare class NativeSprite2D extends NativeNode2D
     Texture: NativeTexture2D?
+    Centered: boolean
+    Offset: NativeVector2
+    FlipH: boolean
+    FlipV: boolean
+    Hframes: number
+    Vframes: number
+    FrameCoords: NativeVector2i
+    RegionEnabled: boolean
+    RegionRect: NativeRect2
+    RegionFilterClipEnabled: boolean
+end
+declare class NativeStyleBoxEmpty extends NativeStyleBox
+end
+declare class MutableNativeStyleBoxEmpty extends NativeStyleBoxEmpty
+end
+declare class NativeStyleBoxFlat extends NativeStyleBox
+end
+declare class MutableNativeStyleBoxFlat extends NativeStyleBoxFlat
+end
+declare class NativeStyleBoxLine extends NativeStyleBox
+end
+declare class MutableNativeStyleBoxLine extends NativeStyleBoxLine
+end
+declare class NativeTextEdit extends NativeControl
+    Text: string
+    Editable: boolean
+    PlaceholderText: string
+    WrapMode: number
 end
 declare class NativeTexture2D extends NativeTexture
 end
@@ -199,6 +373,16 @@ end
 declare class NativeTextureRect extends NativeControl
     Texture: NativeTexture2D?
     ExpandMode: number
+    StretchMode: number
+end
+declare class NativeArea2D extends NativeCollisionObject2D
+    Monitoring: boolean
+    Monitorable: boolean
+    Gravity: number
+    GravityDirection: NativeVector2
+end
+declare class NativeAspectRatioContainer extends NativeContainer
+    Ratio: number
     StretchMode: number
 end
 declare class NativeBoxContainer extends NativeContainer
@@ -224,8 +408,18 @@ declare class MutableNativeCylinderMesh extends NativeCylinderMesh
 end
 declare class NativeDirectionalLight3D extends NativeLight3D
 end
+declare class NativeGradientTexture1D extends NativeTexture2D
+end
+declare class MutableNativeGradientTexture1D extends NativeGradientTexture1D
+end
+declare class NativeGradientTexture2D extends NativeTexture2D
+end
+declare class MutableNativeGradientTexture2D extends NativeGradientTexture2D
+end
 declare class NativeGridContainer extends NativeContainer
     Columns: number
+end
+declare class NativeHSeparator extends NativeSeparator
 end
 declare class NativeLabel3D extends NativeGeometryInstance3D
     Text: string
@@ -238,10 +432,15 @@ end
 declare class NativeMeshInstance3D extends NativeGeometryInstance3D
     Mesh: NativeMesh?
 end
+declare class NativeMultiMeshInstance3D extends NativeGeometryInstance3D
+    Multimesh: NativeMultiMesh?
+end
 declare class NativeOmniLight3D extends NativeLight3D
     Range: number
 end
 declare class NativePanelContainer extends NativeContainer
+end
+declare class NativePhysicsBody2D extends NativeCollisionObject2D
 end
 declare class NativePlaneMesh extends NativePrimitiveMesh
 end
@@ -262,6 +461,8 @@ declare class NativeSphereMesh extends NativePrimitiveMesh
 end
 declare class MutableNativeSphereMesh extends NativeSphereMesh
 end
+declare class NativeSplitContainer extends NativeContainer
+end
 declare class NativeSpotLight3D extends NativeLight3D
     Range: number
 end
@@ -274,6 +475,21 @@ declare class MutableNativeStandardMaterial3D extends NativeStandardMaterial3D
 end
 declare class NativeStaticBody3D extends NativePhysicsBody3D
 end
+declare class NativeTabContainer extends NativeContainer
+    CurrentTab: number
+    TabsVisible: boolean
+end
+declare class NativeTextureProgressBar extends NativeRange
+    TextureUnder: NativeTexture2D?
+    TextureOver: NativeTexture2D?
+    TextureProgress: NativeTexture2D?
+    FillMode: number
+    TintUnder: NativeColor4
+    TintOver: NativeColor4
+    TintProgress: NativeColor4
+end
+declare class NativeVSeparator extends NativeSeparator
+end
 declare class NativeCheckBox extends NativeButton
 end
 declare class NativeCheckButton extends NativeButton
@@ -282,9 +498,25 @@ declare class NativeHBoxContainer extends NativeBoxContainer
 end
 declare class NativeHSlider extends NativeSlider
 end
+declare class NativeHSplitContainer extends NativeSplitContainer
+end
 declare class NativeQuadMesh extends NativePlaneMesh
 end
 declare class MutableNativeQuadMesh extends NativeQuadMesh
+end
+declare class NativeRigidBody2D extends NativePhysicsBody2D
+    Mass: number
+    PhysicsMaterialOverride: NativePhysicsMaterial?
+    GravityScale: number
+    LinearVelocity: NativeVector2
+    AngularVelocity: number
+    LinearDamp: number
+    AngularDamp: number
+    LockRotation: boolean
+    Freeze: boolean
+    ContactMonitor: boolean
+    MaxContactsReported: number
+    Sleeping: boolean
 end
 declare class NativeSoftBody3D extends NativeMeshInstance3D
     Mesh: NativeArrayMesh?
@@ -296,11 +528,91 @@ end
 declare class NativeSprite3D extends NativeSpriteBase3D
     Texture: NativeTexture2D?
 end
+declare class NativeStaticBody2D extends NativePhysicsBody2D
+    PhysicsMaterialOverride: NativePhysicsMaterial?
+    ConstantLinearVelocity: NativeVector2
+    ConstantAngularVelocity: number
+end
 declare class NativeVBoxContainer extends NativeBoxContainer
 end
 declare class NativeVSlider extends NativeSlider
 end
+declare class NativeVSplitContainer extends NativeSplitContainer
+end
+export type NativeAnimatedSprite2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    SpriteFrames: (NativeSpriteFrames?)?,
+    Animation: (string)?,
+    SpeedScale: (number)?,
+    Centered: (boolean)?,
+    Offset: (NativeVector2)?,
+    FlipH: (boolean)?,
+    FlipV: (boolean)?,
+}
+export type NativeArea2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    CollisionLayer: (number)?,
+    CollisionMask: (number)?,
+    InputPickable: (boolean)?,
+    Monitoring: (boolean)?,
+    Monitorable: (boolean)?,
+    Gravity: (number)?,
+    GravityDirection: (NativeVector2)?,
+}
 export type NativeArrayMeshProperties = {
+}
+export type NativeAspectRatioContainerProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+    Ratio: (number)?,
+    StretchMode: (number)?,
 }
 export type NativeAudioStreamProperties = {
 }
@@ -309,6 +621,37 @@ export type NativeAudioStreamPlayerProperties = {
     Stream: (NativeAudioStream?)?,
     VolumeDb: (number)?,
     PitchScale: (number)?,
+}
+export type NativeAudioStreamPlayer2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Stream: (NativeAudioStream?)?,
+    VolumeDb: (number)?,
+    PitchScale: (number)?,
+    Autoplay: (boolean)?,
+    StreamPaused: (boolean)?,
+}
+export type NativeAudioStreamPlayer3DProperties = {
+    Name: (string)?,
+    Position: (NativeVector3)?,
+    RotationDegrees: (NativeVector3)?,
+    Scale: (NativeVector3)?,
+    Visible: (boolean)?,
+    Stream: (NativeAudioStream?)?,
+    VolumeDb: (number)?,
+    PitchScale: (number)?,
+    Autoplay: (boolean)?,
+    StreamPaused: (boolean)?,
 }
 export type NativeBaseButtonProperties = {
     Name: (string)?,
@@ -337,6 +680,10 @@ export type NativeBaseButtonProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeBaseMaterial3DProperties = {
     AlbedoTexture: (NativeTexture2D?)?,
@@ -368,6 +715,10 @@ export type NativeBoxContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeBoxMeshProperties = {
     Size: (NativeVector3)?,
@@ -404,6 +755,29 @@ export type NativeButtonProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeCamera2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Enabled: (boolean)?,
+    Zoom: (NativeVector2)?,
+    Offset: (NativeVector2)?,
+    PositionSmoothingEnabled: (boolean)?,
+    PositionSmoothingSpeed: (number)?,
 }
 export type NativeCamera3DProperties = {
     Name: (string)?,
@@ -419,6 +793,8 @@ export type NativeCanvasItemProperties = {
     Name: (string)?,
     Visible: (boolean)?,
     Modulate: (NativeColor3)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
 }
 export type NativeCanvasLayerProperties = {
     Name: (string)?,
@@ -429,6 +805,10 @@ export type NativeCapsuleMeshProperties = {
     Height: (number)?,
     RadialSegments: (number)?,
     Rings: (number)?,
+}
+export type NativeCapsuleShape2DProperties = {
+    Radius: (number)?,
+    Height: (number)?,
 }
 export type NativeCapsuleShape3DProperties = {
     Radius: (number)?,
@@ -458,6 +838,10 @@ export type NativeCenterContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeCheckBoxProperties = {
     Name: (string)?,
@@ -488,6 +872,10 @@ export type NativeCheckBoxProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeCheckButtonProperties = {
     Name: (string)?,
@@ -518,6 +906,30 @@ export type NativeCheckButtonProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeCircleShape2DProperties = {
+    Radius: (number)?,
+}
+export type NativeCollisionObject2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    CollisionLayer: (number)?,
+    CollisionMask: (number)?,
+    InputPickable: (boolean)?,
 }
 export type NativeCollisionObject3DProperties = {
     Name: (string)?,
@@ -527,6 +939,23 @@ export type NativeCollisionObject3DProperties = {
     Visible: (boolean)?,
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
+}
+export type NativeCollisionShape2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Shape: (NativeShape2D?)?,
+    Disabled: (boolean)?,
+    OneWayCollision: (boolean)?,
 }
 export type NativeCollisionShape3DProperties = {
     Name: (string)?,
@@ -562,6 +991,10 @@ export type NativeColorRectProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeContainerProperties = {
     Name: (string)?,
@@ -587,6 +1020,10 @@ export type NativeContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeControlProperties = {
     Name: (string)?,
@@ -612,6 +1049,10 @@ export type NativeControlProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeCylinderMeshProperties = {
     TopRadius: (number)?,
@@ -651,6 +1092,20 @@ export type NativeGeometryInstance3DProperties = {
     Visible: (boolean)?,
     Material: (NativeMaterial?)?,
 }
+export type NativeGradientProperties = {
+}
+export type NativeGradientTexture1DProperties = {
+    Gradient: (NativeGradient?)?,
+    Width: (number)?,
+}
+export type NativeGradientTexture2DProperties = {
+    Gradient: (NativeGradient?)?,
+    Width: (number)?,
+    Height: (number)?,
+    Fill: (number)?,
+    FillFrom: (NativeVector2)?,
+    FillTo: (NativeVector2)?,
+}
 export type NativeGridContainerProperties = {
     Name: (string)?,
     Visible: (boolean)?,
@@ -676,6 +1131,10 @@ export type NativeGridContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeHBoxContainerProperties = {
     Name: (string)?,
@@ -702,6 +1161,39 @@ export type NativeHBoxContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeHSeparatorProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeHSliderProperties = {
     Name: (string)?,
@@ -731,6 +1223,74 @@ export type NativeHSliderProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeHSplitContainerProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeItemListProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+    SelectMode: (number)?,
+    AllowReselect: (boolean)?,
+    FixedColumnWidth: (number)?,
+    MaxColumns: (number)?,
+    IconMode: (number)?,
+    FixedIconSize: (NativeVector2i)?,
 }
 export type NativeLabelProperties = {
     Name: (string)?,
@@ -757,6 +1317,10 @@ export type NativeLabelProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeLabel3DProperties = {
     Name: (string)?,
@@ -806,6 +1370,10 @@ export type NativeLineEditProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeMarginContainerProperties = {
     Name: (string)?,
@@ -831,6 +1399,10 @@ export type NativeMarginContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeMaterialProperties = {
 }
@@ -845,6 +1417,38 @@ export type NativeMeshInstance3DProperties = {
     Mesh: (NativeMesh?)?,
     Material: (NativeMaterial?)?,
 }
+export type NativeMultiMeshProperties = {
+    TransformFormat: (number)?,
+    UseColors: (boolean)?,
+    InstanceCount: (number)?,
+    VisibleInstanceCount: (number)?,
+    Mesh: (NativeMesh?)?,
+    CustomAabb: (NativeAABB)?,
+}
+export type NativeMultiMeshInstance2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Multimesh: (NativeMultiMesh?)?,
+}
+export type NativeMultiMeshInstance3DProperties = {
+    Name: (string)?,
+    Position: (NativeVector3)?,
+    RotationDegrees: (NativeVector3)?,
+    Scale: (NativeVector3)?,
+    Visible: (boolean)?,
+    Material: (NativeMaterial?)?,
+    Multimesh: (NativeMultiMesh?)?,
+}
 export type NativeNodeProperties = {
     Name: (string)?,
 }
@@ -855,6 +1459,12 @@ export type NativeNode2DProperties = {
     Scale: (NativeVector2)?,
     Visible: (boolean)?,
     Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
 }
 export type NativeNode3DProperties = {
     Name: (string)?,
@@ -877,6 +1487,35 @@ export type NativeOmniLight3DProperties = {
     Range: (number)?,
 }
 export type NativePackedSceneProperties = {
+}
+export type NativePanelProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativePanelContainerProperties = {
     Name: (string)?,
@@ -902,6 +1541,27 @@ export type NativePanelContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativePhysicsBody2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    CollisionLayer: (number)?,
+    CollisionMask: (number)?,
+    InputPickable: (boolean)?,
 }
 export type NativePhysicsBody3DProperties = {
     Name: (string)?,
@@ -911,6 +1571,12 @@ export type NativePhysicsBody3DProperties = {
     Visible: (boolean)?,
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
+}
+export type NativePhysicsMaterialProperties = {
+    Friction: (number)?,
+    Rough: (boolean)?,
+    Bounce: (number)?,
+    Absorbent: (boolean)?,
 }
 export type NativePlaneMeshProperties = {
     Size: (NativeVector2)?,
@@ -945,6 +1611,10 @@ export type NativeProgressBarProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeQuadMeshProperties = {
     Size: (NativeVector2)?,
@@ -977,10 +1647,79 @@ export type NativeRangeProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeRectangleShape2DProperties = {
+    Size: (NativeVector2)?,
 }
 export type NativeRefCountedProperties = {
 }
 export type NativeResourceProperties = {
+}
+export type NativeRichTextLabelProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+    Text: (string)?,
+    BbcodeEnabled: (boolean)?,
+    FitContent: (boolean)?,
+    ScrollActive: (boolean)?,
+}
+export type NativeRigidBody2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    CollisionLayer: (number)?,
+    CollisionMask: (number)?,
+    InputPickable: (boolean)?,
+    Mass: (number)?,
+    PhysicsMaterialOverride: (NativePhysicsMaterial?)?,
+    GravityScale: (number)?,
+    LinearVelocity: (NativeVector2)?,
+    AngularVelocity: (number)?,
+    LinearDamp: (number)?,
+    AngularDamp: (number)?,
+    LockRotation: (boolean)?,
+    Freeze: (boolean)?,
+    ContactMonitor: (boolean)?,
+    MaxContactsReported: (number)?,
+    Sleeping: (boolean)?,
 }
 export type NativeRigidBody3DProperties = {
     Name: (string)?,
@@ -1018,6 +1757,50 @@ export type NativeScrollContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeSegmentShape2DProperties = {
+    A: (NativeVector2)?,
+    B: (NativeVector2)?,
+}
+export type NativeSeparatorProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeShaderProperties = {
+}
+export type NativeShaderMaterialProperties = {
+    Shader: (NativeShader?)?,
+}
+export type NativeShape2DProperties = {
 }
 export type NativeShape3DProperties = {
 }
@@ -1049,6 +1832,10 @@ export type NativeSliderProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeSoftBody3DProperties = {
     Name: (string)?,
@@ -1056,7 +1843,7 @@ export type NativeSoftBody3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Mesh: (NativeMesh?)?,
+    Mesh: (NativeArrayMesh?)?,
     Material: (NativeMaterial?)?,
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
@@ -1071,6 +1858,35 @@ export type NativeSphereMeshProperties = {
 }
 export type NativeSphereShape3DProperties = {
     Radius: (number)?,
+}
+export type NativeSplitContainerProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeSpotLight3DProperties = {
     Name: (string)?,
@@ -1091,6 +1907,21 @@ export type NativeSprite2DProperties = {
     Scale: (NativeVector2)?,
     Visible: (boolean)?,
     Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Centered: (boolean)?,
+    Offset: (NativeVector2)?,
+    FlipH: (boolean)?,
+    FlipV: (boolean)?,
+    Hframes: (number)?,
+    Vframes: (number)?,
+    RegionEnabled: (boolean)?,
+    RegionRect: (NativeRect2)?,
+    RegionFilterClipEnabled: (boolean)?,
 }
 export type NativeSprite3DProperties = {
     Name: (string)?,
@@ -1111,6 +1942,8 @@ export type NativeSpriteBase3DProperties = {
     Material: (NativeMaterial?)?,
     PixelSize: (number)?,
 }
+export type NativeSpriteFramesProperties = {
+}
 export type NativeStandardMaterial3DProperties = {
     Color: (NativeColor3)?,
     Roughness: (number)?,
@@ -1119,6 +1952,26 @@ export type NativeStandardMaterial3DProperties = {
     AlbedoTexture: (NativeTexture2D?)?,
     Metallic: (number)?,
     Transparency: (number)?,
+}
+export type NativeStaticBody2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    CollisionLayer: (number)?,
+    CollisionMask: (number)?,
+    InputPickable: (boolean)?,
+    PhysicsMaterialOverride: (NativePhysicsMaterial?)?,
+    ConstantLinearVelocity: (NativeVector2)?,
+    ConstantAngularVelocity: (number)?,
 }
 export type NativeStaticBody3DProperties = {
     Name: (string)?,
@@ -1129,9 +1982,149 @@ export type NativeStaticBody3DProperties = {
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
 }
+export type NativeStyleBoxProperties = {
+    ContentMarginLeft: (number)?,
+    ContentMarginTop: (number)?,
+    ContentMarginRight: (number)?,
+    ContentMarginBottom: (number)?,
+}
+export type NativeStyleBoxEmptyProperties = {
+    ContentMarginLeft: (number)?,
+    ContentMarginTop: (number)?,
+    ContentMarginRight: (number)?,
+    ContentMarginBottom: (number)?,
+}
+export type NativeStyleBoxFlatProperties = {
+    BgColor: (NativeColor4)?,
+    BorderColor: (NativeColor4)?,
+    BorderWidthLeft: (number)?,
+    BorderWidthTop: (number)?,
+    BorderWidthRight: (number)?,
+    BorderWidthBottom: (number)?,
+    CornerRadiusTopLeft: (number)?,
+    CornerRadiusTopRight: (number)?,
+    CornerRadiusBottomLeft: (number)?,
+    CornerRadiusBottomRight: (number)?,
+    ContentMarginLeft: (number)?,
+    ContentMarginTop: (number)?,
+    ContentMarginRight: (number)?,
+    ContentMarginBottom: (number)?,
+}
+export type NativeStyleBoxLineProperties = {
+    Color: (NativeColor4)?,
+    Thickness: (number)?,
+    Vertical: (boolean)?,
+    ContentMarginLeft: (number)?,
+    ContentMarginTop: (number)?,
+    ContentMarginRight: (number)?,
+    ContentMarginBottom: (number)?,
+}
+export type NativeTabContainerProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+    TabsVisible: (boolean)?,
+}
+export type NativeTextEditProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+    Text: (string)?,
+    Editable: (boolean)?,
+    PlaceholderText: (string)?,
+    WrapMode: (number)?,
+}
 export type NativeTextureProperties = {
 }
 export type NativeTexture2DProperties = {
+}
+export type NativeTextureProgressBarProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    MinValue: (number)?,
+    MaxValue: (number)?,
+    Value: (number)?,
+    Step: (number)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+    TextureUnder: (NativeTexture2D?)?,
+    TextureOver: (NativeTexture2D?)?,
+    TextureProgress: (NativeTexture2D?)?,
+    FillMode: (number)?,
+    TintUnder: (NativeColor4)?,
+    TintOver: (NativeColor4)?,
+    TintProgress: (NativeColor4)?,
 }
 export type NativeTextureRectProperties = {
     Name: (string)?,
@@ -1160,6 +2153,20 @@ export type NativeTextureRectProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeThemeProperties = {
+}
+export type NativeTimerProperties = {
+    Name: (string)?,
+    WaitTime: (number)?,
+    OneShot: (boolean)?,
+    Autostart: (boolean)?,
+    Paused: (boolean)?,
+    ProcessCallback: (number)?,
 }
 export type NativeVBoxContainerProperties = {
     Name: (string)?,
@@ -1186,6 +2193,39 @@ export type NativeVBoxContainerProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeVSeparatorProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeVSliderProperties = {
     Name: (string)?,
@@ -1215,6 +2255,39 @@ export type NativeVSliderProperties = {
     FocusMode: (number)?,
     LayoutMode: (number)?,
     ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
+}
+export type NativeVSplitContainerProperties = {
+    Name: (string)?,
+    Visible: (boolean)?,
+    Position: (NativeVector2)?,
+    Size: (NativeVector2)?,
+    MinSize: (NativeVector2)?,
+    MouseFilter: (number)?,
+    Modulate: (NativeColor3)?,
+    FontSize: (number)?,
+    FullRect: (boolean)?,
+    Font: (NativeFont?)?,
+    OffsetLeft: (number)?,
+    OffsetRight: (number)?,
+    OffsetTop: (number)?,
+    OffsetBottom: (number)?,
+    AnchorLeft: (number)?,
+    AnchorRight: (number)?,
+    AnchorTop: (number)?,
+    AnchorBottom: (number)?,
+    GrowHorizontal: (number)?,
+    GrowVertical: (number)?,
+    FocusMode: (number)?,
+    LayoutMode: (number)?,
+    ClipContents: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Theme: (NativeTheme?)?,
+    TooltipText: (string)?,
 }
 export type NativeVisualInstance3DProperties = {
     Name: (string)?,
@@ -1228,17 +2301,26 @@ export type NativeWorldEnvironmentProperties = {
     Environment: (NativeEnvironment?)?,
 }
 declare class NativeSceneScope extends NativeNode3D
-    New: ((self: NativeSceneScope, Class: "AudioStreamPlayer", Properties: NativeAudioStreamPlayerProperties, Parent: NativeNode?) -> NativeAudioStreamPlayer) &
+    New: ((self: NativeSceneScope, Class: "AnimatedSprite2D", Properties: NativeAnimatedSprite2DProperties, Parent: NativeNode?) -> NativeAnimatedSprite2D) &
+        ((self: NativeSceneScope, Class: "Area2D", Properties: NativeArea2DProperties, Parent: NativeNode?) -> NativeArea2D) &
+        ((self: NativeSceneScope, Class: "AspectRatioContainer", Properties: NativeAspectRatioContainerProperties, Parent: NativeNode?) -> NativeAspectRatioContainer) &
+        ((self: NativeSceneScope, Class: "AudioStreamPlayer", Properties: NativeAudioStreamPlayerProperties, Parent: NativeNode?) -> NativeAudioStreamPlayer) &
+        ((self: NativeSceneScope, Class: "AudioStreamPlayer2D", Properties: NativeAudioStreamPlayer2DProperties, Parent: NativeNode?) -> NativeAudioStreamPlayer2D) &
+        ((self: NativeSceneScope, Class: "AudioStreamPlayer3D", Properties: NativeAudioStreamPlayer3DProperties, Parent: NativeNode?) -> NativeAudioStreamPlayer3D) &
         ((self: NativeSceneScope, Class: "BoxMesh", Properties: NativeBoxMeshProperties, Parent: NativeNode?) -> MutableNativeBoxMesh) &
         ((self: NativeSceneScope, Class: "BoxShape3D", Properties: NativeBoxShape3DProperties, Parent: NativeNode?) -> MutableNativeBoxShape3D) &
         ((self: NativeSceneScope, Class: "Button", Properties: NativeButtonProperties, Parent: NativeNode?) -> NativeButton) &
+        ((self: NativeSceneScope, Class: "Camera2D", Properties: NativeCamera2DProperties, Parent: NativeNode?) -> NativeCamera2D) &
         ((self: NativeSceneScope, Class: "Camera3D", Properties: NativeCamera3DProperties, Parent: NativeNode?) -> NativeCamera3D) &
         ((self: NativeSceneScope, Class: "CanvasLayer", Properties: NativeCanvasLayerProperties, Parent: NativeNode?) -> NativeCanvasLayer) &
         ((self: NativeSceneScope, Class: "CapsuleMesh", Properties: NativeCapsuleMeshProperties, Parent: NativeNode?) -> MutableNativeCapsuleMesh) &
+        ((self: NativeSceneScope, Class: "CapsuleShape2D", Properties: NativeCapsuleShape2DProperties, Parent: NativeNode?) -> MutableNativeCapsuleShape2D) &
         ((self: NativeSceneScope, Class: "CapsuleShape3D", Properties: NativeCapsuleShape3DProperties, Parent: NativeNode?) -> MutableNativeCapsuleShape3D) &
         ((self: NativeSceneScope, Class: "CenterContainer", Properties: NativeCenterContainerProperties, Parent: NativeNode?) -> NativeCenterContainer) &
         ((self: NativeSceneScope, Class: "CheckBox", Properties: NativeCheckBoxProperties, Parent: NativeNode?) -> NativeCheckBox) &
         ((self: NativeSceneScope, Class: "CheckButton", Properties: NativeCheckButtonProperties, Parent: NativeNode?) -> NativeCheckButton) &
+        ((self: NativeSceneScope, Class: "CircleShape2D", Properties: NativeCircleShape2DProperties, Parent: NativeNode?) -> MutableNativeCircleShape2D) &
+        ((self: NativeSceneScope, Class: "CollisionShape2D", Properties: NativeCollisionShape2DProperties, Parent: NativeNode?) -> NativeCollisionShape2D) &
         ((self: NativeSceneScope, Class: "CollisionShape3D", Properties: NativeCollisionShape3DProperties, Parent: NativeNode?) -> NativeCollisionShape3D) &
         ((self: NativeSceneScope, Class: "ColorRect", Properties: NativeColorRectProperties, Parent: NativeNode?) -> NativeColorRect) &
         ((self: NativeSceneScope, Class: "Control", Properties: NativeControlProperties, Parent: NativeNode?) -> NativeControl) &
@@ -1246,47 +2328,83 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "CylinderShape3D", Properties: NativeCylinderShape3DProperties, Parent: NativeNode?) -> MutableNativeCylinderShape3D) &
         ((self: NativeSceneScope, Class: "DirectionalLight3D", Properties: NativeDirectionalLight3DProperties, Parent: NativeNode?) -> NativeDirectionalLight3D) &
         ((self: NativeSceneScope, Class: "Environment", Properties: NativeEnvironmentProperties, Parent: NativeNode?) -> MutableNativeEnvironment) &
+        ((self: NativeSceneScope, Class: "Gradient", Properties: NativeGradientProperties, Parent: NativeNode?) -> MutableNativeGradient) &
+        ((self: NativeSceneScope, Class: "GradientTexture1D", Properties: NativeGradientTexture1DProperties, Parent: NativeNode?) -> MutableNativeGradientTexture1D) &
+        ((self: NativeSceneScope, Class: "GradientTexture2D", Properties: NativeGradientTexture2DProperties, Parent: NativeNode?) -> MutableNativeGradientTexture2D) &
         ((self: NativeSceneScope, Class: "GridContainer", Properties: NativeGridContainerProperties, Parent: NativeNode?) -> NativeGridContainer) &
         ((self: NativeSceneScope, Class: "HBoxContainer", Properties: NativeHBoxContainerProperties, Parent: NativeNode?) -> NativeHBoxContainer) &
+        ((self: NativeSceneScope, Class: "HSeparator", Properties: NativeHSeparatorProperties, Parent: NativeNode?) -> NativeHSeparator) &
         ((self: NativeSceneScope, Class: "HSlider", Properties: NativeHSliderProperties, Parent: NativeNode?) -> NativeHSlider) &
+        ((self: NativeSceneScope, Class: "HSplitContainer", Properties: NativeHSplitContainerProperties, Parent: NativeNode?) -> NativeHSplitContainer) &
+        ((self: NativeSceneScope, Class: "ItemList", Properties: NativeItemListProperties, Parent: NativeNode?) -> NativeItemList) &
         ((self: NativeSceneScope, Class: "Label", Properties: NativeLabelProperties, Parent: NativeNode?) -> NativeLabel) &
         ((self: NativeSceneScope, Class: "Label3D", Properties: NativeLabel3DProperties, Parent: NativeNode?) -> NativeLabel3D) &
         ((self: NativeSceneScope, Class: "LineEdit", Properties: NativeLineEditProperties, Parent: NativeNode?) -> NativeLineEdit) &
         ((self: NativeSceneScope, Class: "MarginContainer", Properties: NativeMarginContainerProperties, Parent: NativeNode?) -> NativeMarginContainer) &
         ((self: NativeSceneScope, Class: "MeshInstance3D", Properties: NativeMeshInstance3DProperties, Parent: NativeNode?) -> NativeMeshInstance3D) &
+        ((self: NativeSceneScope, Class: "MultiMesh", Properties: NativeMultiMeshProperties, Parent: NativeNode?) -> MutableNativeMultiMesh) &
+        ((self: NativeSceneScope, Class: "MultiMeshInstance2D", Properties: NativeMultiMeshInstance2DProperties, Parent: NativeNode?) -> NativeMultiMeshInstance2D) &
+        ((self: NativeSceneScope, Class: "MultiMeshInstance3D", Properties: NativeMultiMeshInstance3DProperties, Parent: NativeNode?) -> NativeMultiMeshInstance3D) &
         ((self: NativeSceneScope, Class: "Node", Properties: NativeNodeProperties, Parent: NativeNode?) -> NativeNode) &
         ((self: NativeSceneScope, Class: "Node2D", Properties: NativeNode2DProperties, Parent: NativeNode?) -> NativeNode2D) &
         ((self: NativeSceneScope, Class: "Node3D", Properties: NativeNode3DProperties, Parent: NativeNode?) -> NativeNode3D) &
         ((self: NativeSceneScope, Class: "OmniLight3D", Properties: NativeOmniLight3DProperties, Parent: NativeNode?) -> NativeOmniLight3D) &
+        ((self: NativeSceneScope, Class: "Panel", Properties: NativePanelProperties, Parent: NativeNode?) -> NativePanel) &
         ((self: NativeSceneScope, Class: "PanelContainer", Properties: NativePanelContainerProperties, Parent: NativeNode?) -> NativePanelContainer) &
+        ((self: NativeSceneScope, Class: "PhysicsMaterial", Properties: NativePhysicsMaterialProperties, Parent: NativeNode?) -> MutableNativePhysicsMaterial) &
         ((self: NativeSceneScope, Class: "PlaneMesh", Properties: NativePlaneMeshProperties, Parent: NativeNode?) -> MutableNativePlaneMesh) &
         ((self: NativeSceneScope, Class: "ProgressBar", Properties: NativeProgressBarProperties, Parent: NativeNode?) -> NativeProgressBar) &
         ((self: NativeSceneScope, Class: "QuadMesh", Properties: NativeQuadMeshProperties, Parent: NativeNode?) -> MutableNativeQuadMesh) &
+        ((self: NativeSceneScope, Class: "RectangleShape2D", Properties: NativeRectangleShape2DProperties, Parent: NativeNode?) -> MutableNativeRectangleShape2D) &
+        ((self: NativeSceneScope, Class: "RichTextLabel", Properties: NativeRichTextLabelProperties, Parent: NativeNode?) -> NativeRichTextLabel) &
+        ((self: NativeSceneScope, Class: "RigidBody2D", Properties: NativeRigidBody2DProperties, Parent: NativeNode?) -> NativeRigidBody2D) &
         ((self: NativeSceneScope, Class: "RigidBody3D", Properties: NativeRigidBody3DProperties, Parent: NativeNode?) -> NativeRigidBody3D) &
         ((self: NativeSceneScope, Class: "ScrollContainer", Properties: NativeScrollContainerProperties, Parent: NativeNode?) -> NativeScrollContainer) &
+        ((self: NativeSceneScope, Class: "SegmentShape2D", Properties: NativeSegmentShape2DProperties, Parent: NativeNode?) -> MutableNativeSegmentShape2D) &
+        ((self: NativeSceneScope, Class: "ShaderMaterial", Properties: NativeShaderMaterialProperties, Parent: NativeNode?) -> MutableNativeShaderMaterial) &
         ((self: NativeSceneScope, Class: "SoftBody3D", Properties: NativeSoftBody3DProperties, Parent: NativeNode?) -> NativeSoftBody3D) &
         ((self: NativeSceneScope, Class: "SphereMesh", Properties: NativeSphereMeshProperties, Parent: NativeNode?) -> MutableNativeSphereMesh) &
         ((self: NativeSceneScope, Class: "SphereShape3D", Properties: NativeSphereShape3DProperties, Parent: NativeNode?) -> MutableNativeSphereShape3D) &
         ((self: NativeSceneScope, Class: "SpotLight3D", Properties: NativeSpotLight3DProperties, Parent: NativeNode?) -> NativeSpotLight3D) &
         ((self: NativeSceneScope, Class: "Sprite2D", Properties: NativeSprite2DProperties, Parent: NativeNode?) -> NativeSprite2D) &
         ((self: NativeSceneScope, Class: "Sprite3D", Properties: NativeSprite3DProperties, Parent: NativeNode?) -> NativeSprite3D) &
+        ((self: NativeSceneScope, Class: "SpriteFrames", Properties: NativeSpriteFramesProperties, Parent: NativeNode?) -> MutableNativeSpriteFrames) &
         ((self: NativeSceneScope, Class: "StandardMaterial3D", Properties: NativeStandardMaterial3DProperties, Parent: NativeNode?) -> MutableNativeStandardMaterial3D) &
+        ((self: NativeSceneScope, Class: "StaticBody2D", Properties: NativeStaticBody2DProperties, Parent: NativeNode?) -> NativeStaticBody2D) &
         ((self: NativeSceneScope, Class: "StaticBody3D", Properties: NativeStaticBody3DProperties, Parent: NativeNode?) -> NativeStaticBody3D) &
+        ((self: NativeSceneScope, Class: "StyleBoxEmpty", Properties: NativeStyleBoxEmptyProperties, Parent: NativeNode?) -> MutableNativeStyleBoxEmpty) &
+        ((self: NativeSceneScope, Class: "StyleBoxFlat", Properties: NativeStyleBoxFlatProperties, Parent: NativeNode?) -> MutableNativeStyleBoxFlat) &
+        ((self: NativeSceneScope, Class: "StyleBoxLine", Properties: NativeStyleBoxLineProperties, Parent: NativeNode?) -> MutableNativeStyleBoxLine) &
+        ((self: NativeSceneScope, Class: "TabContainer", Properties: NativeTabContainerProperties, Parent: NativeNode?) -> NativeTabContainer) &
+        ((self: NativeSceneScope, Class: "TextEdit", Properties: NativeTextEditProperties, Parent: NativeNode?) -> NativeTextEdit) &
+        ((self: NativeSceneScope, Class: "TextureProgressBar", Properties: NativeTextureProgressBarProperties, Parent: NativeNode?) -> NativeTextureProgressBar) &
         ((self: NativeSceneScope, Class: "TextureRect", Properties: NativeTextureRectProperties, Parent: NativeNode?) -> NativeTextureRect) &
+        ((self: NativeSceneScope, Class: "Timer", Properties: NativeTimerProperties, Parent: NativeNode?) -> NativeTimer) &
         ((self: NativeSceneScope, Class: "VBoxContainer", Properties: NativeVBoxContainerProperties, Parent: NativeNode?) -> NativeVBoxContainer) &
+        ((self: NativeSceneScope, Class: "VSeparator", Properties: NativeVSeparatorProperties, Parent: NativeNode?) -> NativeVSeparator) &
         ((self: NativeSceneScope, Class: "VSlider", Properties: NativeVSliderProperties, Parent: NativeNode?) -> NativeVSlider) &
+        ((self: NativeSceneScope, Class: "VSplitContainer", Properties: NativeVSplitContainerProperties, Parent: NativeNode?) -> NativeVSplitContainer) &
         ((self: NativeSceneScope, Class: "WorldEnvironment", Properties: NativeWorldEnvironmentProperties, Parent: NativeNode?) -> NativeWorldEnvironment)
-    Configure: ((self: NativeSceneScope, Target: NativeAudioStreamPlayer, Properties: NativeAudioStreamPlayerProperties) -> ()) &
+    Configure: ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Properties: NativeAnimatedSprite2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeArea2D, Properties: NativeArea2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAspectRatioContainer, Properties: NativeAspectRatioContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer, Properties: NativeAudioStreamPlayerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Properties: NativeAudioStreamPlayer2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Properties: NativeAudioStreamPlayer3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeBoxMesh, Properties: NativeBoxMeshProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeBoxShape3D, Properties: NativeBoxShape3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeButton, Properties: NativeButtonProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeCamera2D, Properties: NativeCamera2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCamera3D, Properties: NativeCamera3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCanvasLayer, Properties: NativeCanvasLayerProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeCapsuleMesh, Properties: NativeCapsuleMeshProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeCapsuleShape2D, Properties: NativeCapsuleShape2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeCapsuleShape3D, Properties: NativeCapsuleShape3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCenterContainer, Properties: NativeCenterContainerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCheckBox, Properties: NativeCheckBoxProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCheckButton, Properties: NativeCheckButtonProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeCircleShape2D, Properties: NativeCircleShape2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeCollisionShape2D, Properties: NativeCollisionShape2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCollisionShape3D, Properties: NativeCollisionShape3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeColorRect, Properties: NativeColorRectProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeControl, Properties: NativeControlProperties) -> ()) &
@@ -1294,35 +2412,62 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: MutableNativeCylinderShape3D, Properties: NativeCylinderShape3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeDirectionalLight3D, Properties: NativeDirectionalLight3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeEnvironment, Properties: NativeEnvironmentProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeGradient, Properties: NativeGradientProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeGradientTexture1D, Properties: NativeGradientTexture1DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeGradientTexture2D, Properties: NativeGradientTexture2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeGridContainer, Properties: NativeGridContainerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeHBoxContainer, Properties: NativeHBoxContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeHSeparator, Properties: NativeHSeparatorProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeHSlider, Properties: NativeHSliderProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeHSplitContainer, Properties: NativeHSplitContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Properties: NativeItemListProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeLabel, Properties: NativeLabelProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeLabel3D, Properties: NativeLabel3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeLineEdit, Properties: NativeLineEditProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeMarginContainer, Properties: NativeMarginContainerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeMeshInstance3D, Properties: NativeMeshInstance3DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeMultiMesh, Properties: NativeMultiMeshProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeMultiMeshInstance2D, Properties: NativeMultiMeshInstance2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeMultiMeshInstance3D, Properties: NativeMultiMeshInstance3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeNode, Properties: NativeNodeProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeNode2D, Properties: NativeNode2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeNode3D, Properties: NativeNode3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeOmniLight3D, Properties: NativeOmniLight3DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativePanel, Properties: NativePanelProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativePanelContainer, Properties: NativePanelContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativePhysicsMaterial, Properties: NativePhysicsMaterialProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativePlaneMesh, Properties: NativePlaneMeshProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeProgressBar, Properties: NativeProgressBarProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeQuadMesh, Properties: NativeQuadMeshProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeRectangleShape2D, Properties: NativeRectangleShape2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Properties: NativeRichTextLabelProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Properties: NativeRigidBody2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeRigidBody3D, Properties: NativeRigidBody3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeScrollContainer, Properties: NativeScrollContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeSegmentShape2D, Properties: NativeSegmentShape2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeShaderMaterial, Properties: NativeShaderMaterialProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeSoftBody3D, Properties: NativeSoftBody3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeSphereMesh, Properties: NativeSphereMeshProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeSphereShape3D, Properties: NativeSphereShape3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeSpotLight3D, Properties: NativeSpotLight3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeSprite2D, Properties: NativeSprite2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeSprite3D, Properties: NativeSprite3DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeSpriteFrames, Properties: NativeSpriteFramesProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeStandardMaterial3D, Properties: NativeStandardMaterial3DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeStaticBody2D, Properties: NativeStaticBody2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeStaticBody3D, Properties: NativeStaticBody3DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeStyleBoxEmpty, Properties: NativeStyleBoxEmptyProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeStyleBoxFlat, Properties: NativeStyleBoxFlatProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeStyleBoxLine, Properties: NativeStyleBoxLineProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTabContainer, Properties: NativeTabContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Properties: NativeTextEditProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Properties: NativeTextureProgressBarProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeTextureRect, Properties: NativeTextureRectProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTimer, Properties: NativeTimerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeVBoxContainer, Properties: NativeVBoxContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeVSeparator, Properties: NativeVSeparatorProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeVSlider, Properties: NativeVSliderProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeVSplitContainer, Properties: NativeVSplitContainerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeWorldEnvironment, Properties: NativeWorldEnvironmentProperties) -> ())
     Get: ((self: NativeSceneScope, Target: NativeNode, Property: "Name") -> string) &
         ((self: NativeSceneScope, Target: NativeNode3D, Property: "Position") -> NativeVector3) &
@@ -1440,7 +2585,150 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeControl, Property: "GrowVertical") -> number) &
         ((self: NativeSceneScope, Target: NativeControl, Property: "FocusMode") -> number) &
         ((self: NativeSceneScope, Target: NativeControl, Property: "LayoutMode") -> number) &
-        ((self: NativeSceneScope, Target: NativeControl, Property: "ClipContents") -> boolean)
+        ((self: NativeSceneScope, Target: NativeControl, Property: "ClipContents") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNode2D, Property: "GlobalPosition") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeNode2D, Property: "GlobalRotation") -> number) &
+        ((self: NativeSceneScope, Target: NativeNode2D, Property: "ZIndex") -> number) &
+        ((self: NativeSceneScope, Target: NativeNode2D, Property: "YSortEnabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCanvasItem, Property: "ModulateRGBA") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeCanvasItem, Property: "SelfModulateRGBA") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "Theme") -> NativeTheme?) &
+        ((self: NativeSceneScope, Target: NativeControl, Property: "TooltipText") -> string) &
+        ((self: NativeSceneScope, Target: NativeTimer, Property: "WaitTime") -> number) &
+        ((self: NativeSceneScope, Target: NativeTimer, Property: "OneShot") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTimer, Property: "Autostart") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTimer, Property: "Paused") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTimer, Property: "ProcessCallback") -> number) &
+        ((self: NativeSceneScope, Target: NativeTimer, Property: "TimeLeft") -> number) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "Centered") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "Offset") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "FlipH") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "FlipV") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "Hframes") -> number) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "Vframes") -> number) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "FrameCoords") -> NativeVector2i) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "RegionEnabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "RegionRect") -> NativeRect2) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Property: "RegionFilterClipEnabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCollisionObject2D, Property: "CollisionLayer") -> number) &
+        ((self: NativeSceneScope, Target: NativeCollisionObject2D, Property: "CollisionMask") -> number) &
+        ((self: NativeSceneScope, Target: NativeCollisionObject2D, Property: "InputPickable") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeStaticBody2D, Property: "PhysicsMaterialOverride") -> NativePhysicsMaterial?) &
+        ((self: NativeSceneScope, Target: NativeStaticBody2D, Property: "ConstantLinearVelocity") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeStaticBody2D, Property: "ConstantAngularVelocity") -> number) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "Mass") -> number) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "PhysicsMaterialOverride") -> NativePhysicsMaterial?) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "GravityScale") -> number) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "LinearVelocity") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "AngularVelocity") -> number) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "LinearDamp") -> number) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "AngularDamp") -> number) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "LockRotation") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "Freeze") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "ContactMonitor") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "MaxContactsReported") -> number) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Property: "Sleeping") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeArea2D, Property: "Monitoring") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeArea2D, Property: "Monitorable") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeArea2D, Property: "Gravity") -> number) &
+        ((self: NativeSceneScope, Target: NativeArea2D, Property: "GravityDirection") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeCollisionShape2D, Property: "Shape") -> NativeShape2D?) &
+        ((self: NativeSceneScope, Target: NativeCollisionShape2D, Property: "Disabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCollisionShape2D, Property: "OneWayCollision") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCamera2D, Property: "Enabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCamera2D, Property: "Zoom") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeCamera2D, Property: "Offset") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeCamera2D, Property: "PositionSmoothingEnabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCamera2D, Property: "PositionSmoothingSpeed") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "SpriteFrames") -> NativeSpriteFrames?) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "Animation") -> string) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "SpeedScale") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "Centered") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "Offset") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "FlipH") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "FlipV") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "Frame") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Property: "FrameProgress") -> number) &
+        ((self: NativeSceneScope, Target: NativeRectangleShape2D, Property: "Size") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeCircleShape2D, Property: "Radius") -> number) &
+        ((self: NativeSceneScope, Target: NativeCapsuleShape2D, Property: "Radius") -> number) &
+        ((self: NativeSceneScope, Target: NativeCapsuleShape2D, Property: "Height") -> number) &
+        ((self: NativeSceneScope, Target: NativeSegmentShape2D, Property: "A") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeSegmentShape2D, Property: "B") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativePhysicsMaterial, Property: "Friction") -> number) &
+        ((self: NativeSceneScope, Target: NativePhysicsMaterial, Property: "Rough") -> boolean) &
+        ((self: NativeSceneScope, Target: NativePhysicsMaterial, Property: "Bounce") -> number) &
+        ((self: NativeSceneScope, Target: NativePhysicsMaterial, Property: "Absorbent") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Property: "Text") -> string) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Property: "BbcodeEnabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Property: "FitContent") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Property: "ScrollActive") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Property: "Text") -> string) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Property: "Editable") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Property: "PlaceholderText") -> string) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Property: "WrapMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeItemList, Property: "SelectMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeItemList, Property: "AllowReselect") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeItemList, Property: "FixedColumnWidth") -> number) &
+        ((self: NativeSceneScope, Target: NativeItemList, Property: "MaxColumns") -> number) &
+        ((self: NativeSceneScope, Target: NativeItemList, Property: "IconMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeItemList, Property: "FixedIconSize") -> NativeVector2i) &
+        ((self: NativeSceneScope, Target: NativeItemList, Property: "ItemCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeTabContainer, Property: "CurrentTab") -> number) &
+        ((self: NativeSceneScope, Target: NativeTabContainer, Property: "TabsVisible") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAspectRatioContainer, Property: "Ratio") -> number) &
+        ((self: NativeSceneScope, Target: NativeAspectRatioContainer, Property: "StretchMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Property: "TextureUnder") -> NativeTexture2D?) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Property: "TextureOver") -> NativeTexture2D?) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Property: "TextureProgress") -> NativeTexture2D?) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Property: "FillMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Property: "TintUnder") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Property: "TintOver") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeTextureProgressBar, Property: "TintProgress") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture1D, Property: "Gradient") -> NativeGradient?) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture1D, Property: "Width") -> number) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture2D, Property: "Gradient") -> NativeGradient?) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture2D, Property: "Width") -> number) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture2D, Property: "Height") -> number) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture2D, Property: "Fill") -> number) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture2D, Property: "FillFrom") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeGradientTexture2D, Property: "FillTo") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeShaderMaterial, Property: "Shader") -> NativeShader?) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Property: "TransformFormat") -> number) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Property: "UseColors") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Property: "InstanceCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Property: "VisibleInstanceCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Property: "Mesh") -> NativeMesh?) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Property: "CustomAabb") -> NativeAABB) &
+        ((self: NativeSceneScope, Target: NativeMultiMeshInstance2D, Property: "Multimesh") -> NativeMultiMesh?) &
+        ((self: NativeSceneScope, Target: NativeMultiMeshInstance3D, Property: "Multimesh") -> NativeMultiMesh?) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "BgColor") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "BorderColor") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "BorderWidthLeft") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "BorderWidthTop") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "BorderWidthRight") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "BorderWidthBottom") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "CornerRadiusTopLeft") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "CornerRadiusTopRight") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "CornerRadiusBottomLeft") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxFlat, Property: "CornerRadiusBottomRight") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxLine, Property: "Color") -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxLine, Property: "Thickness") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBoxLine, Property: "Vertical") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeStyleBox, Property: "ContentMarginLeft") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBox, Property: "ContentMarginTop") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBox, Property: "ContentMarginRight") -> number) &
+        ((self: NativeSceneScope, Target: NativeStyleBox, Property: "ContentMarginBottom") -> number) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Property: "Stream") -> NativeAudioStream?) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Property: "VolumeDb") -> number) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Property: "PitchScale") -> number) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Property: "Autoplay") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Property: "StreamPaused") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "Stream") -> NativeAudioStream?) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "VolumeDb") -> number) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "PitchScale") -> number) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "Autoplay") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "StreamPaused") -> boolean)
     Call: ((self: NativeSceneScope, Target: NativeNode3D, Method: "GetGlobalPosition") -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeControl, Method: "GetGlobalPosition") -> NativeVector2) &
         ((self: NativeSceneScope, Target: NativeNode3D, Method: "ToLocal", global_point: NativeVector3) -> NativeVector3) &
@@ -1467,7 +2755,81 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeTexture2D, Method: "GetHeight") -> number) &
         ((self: NativeSceneScope, Target: NativeMesh, Method: "GetSurfaceCount") -> number) &
         ((self: NativeSceneScope, Target: NativeNode, Method: "GetChildCount", include_internal: boolean?) -> number) &
-        ((self: NativeSceneScope, Target: (MutableNativeStandardMaterial3D), Method: "SetRoughness", roughness: number) -> ())
+        ((self: NativeSceneScope, Target: (MutableNativeStandardMaterial3D), Method: "SetRoughness", roughness: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Method: "Play", from_position: number?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Method: "Stop") -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer2D, Method: "IsPlaying") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Method: "Play", from_position: number?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Method: "Stop") -> ()) &
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Method: "IsPlaying") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTimer, Method: "Start", time_sec: number?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTimer, Method: "Stop") -> ()) &
+        ((self: NativeSceneScope, Target: NativeTimer, Method: "IsStopped") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNode2D, Method: "ToLocal", global_point: NativeVector2) -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeNode2D, Method: "ToGlobal", local_point: NativeVector2) -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeSprite2D, Method: "GetRect") -> NativeRect2) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Method: "ApplyCentralImpulse", impulse: NativeVector2?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Method: "ApplyImpulse", impulse: NativeVector2, position: NativeVector2?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Method: "ApplyCentralForce", force: NativeVector2) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Method: "ApplyForce", force: NativeVector2, position: NativeVector2?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Method: "ApplyTorque", torque: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Method: "ApplyTorqueImpulse", torque: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRigidBody2D, Method: "GetContactCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeArea2D, Method: "HasOverlappingBodies") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeArea2D, Method: "HasOverlappingAreas") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Method: "IsPlaying") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Method: "GetPlayingSpeed") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Method: "Play", name: string?, custom_speed: number?, from_end: boolean?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Method: "PlayBackwards", name: string?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Method: "Pause") -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Method: "Stop") -> ()) &
+        ((self: NativeSceneScope, Target: NativeSpriteFrames, Method: "HasAnimation", anim: string) -> boolean) &
+        ((self: NativeSceneScope, Target: NativeSpriteFrames, Method: "GetAnimationNames") -> {string}) &
+        ((self: NativeSceneScope, Target: (MutableNativeSpriteFrames), Method: "AddAnimation", anim: string) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeSpriteFrames), Method: "SetAnimationSpeed", anim: string, fps: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSpriteFrames, Method: "GetAnimationSpeed", anim: string) -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeSpriteFrames), Method: "SetAnimationLoop", anim: string, loop: boolean) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSpriteFrames, Method: "GetAnimationLoop", anim: string) -> boolean) &
+        ((self: NativeSceneScope, Target: NativeSpriteFrames, Method: "GetFrameCount", anim: string) -> number) &
+        ((self: NativeSceneScope, Target: NativeSpriteFrames, Method: "GetFrameTexture", anim: string, idx: number) -> NativeTexture2D?) &
+        ((self: NativeSceneScope, Target: (MutableNativeSpriteFrames), Method: "RemoveFrame", anim: string, idx: number) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeSpriteFrames), Method: "AddFrame", anim: string, texture: NativeTexture2D?, duration: number?, at_position: number?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "AddItem", text: string, icon: NativeTexture2D??, selectable: boolean?) -> number) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "GetItemCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "GetItemText", idx: number) -> string) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "SetItemText", idx: number, text: string) -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "GetItemIcon", idx: number) -> NativeTexture2D?) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "SetItemIcon", idx: number, icon: NativeTexture2D?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "IsSelected", idx: number) -> boolean) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "Select", idx: number, single: boolean?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "Deselect", idx: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "DeselectAll") -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "RemoveItem", idx: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "Clear") -> ()) &
+        ((self: NativeSceneScope, Target: NativeItemList, Method: "GetSelectedItems") -> {number}) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Method: "GetLineCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Method: "GetSelectedText", caret_index: number?) -> string) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Method: "HasSelection", caret_index: number?) -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTextEdit, Method: "Deselect", caret_index: number?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Method: "Clear") -> ()) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Method: "GetTotalCharacterCount") -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeMultiMesh), Method: "SetInstanceTransform", instance: number, transform: NativeTransform3D) -> ()) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Method: "GetInstanceTransform", instance: number) -> NativeTransform3D) &
+        ((self: NativeSceneScope, Target: (MutableNativeMultiMesh), Method: "SetInstanceTransform2d", instance: number, transform: NativeTransform2D) -> ()) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Method: "GetInstanceTransform2d", instance: number) -> NativeTransform2D) &
+        ((self: NativeSceneScope, Target: (MutableNativeMultiMesh), Method: "SetInstanceColor", instance: number, color: NativeColor4) -> ()) &
+        ((self: NativeSceneScope, Target: NativeMultiMesh, Method: "GetInstanceColor", instance: number) -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeMesh, Method: "GetAabb") -> NativeAABB) &
+        ((self: NativeSceneScope, Target: (MutableNativeShaderMaterial), Method: "SetShaderParameter", param: string, value: NativeVariant) -> ()) &
+        ((self: NativeSceneScope, Target: NativeShaderMaterial, Method: "GetShaderParameter", param: string) -> NativeVariant) &
+        ((self: NativeSceneScope, Target: NativeGradient, Method: "GetPointCount") -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "Sample", offset: number) -> NativeColor4) &
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "GetColor", point: number) -> NativeColor4) &
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "SetColor", point: number, color: NativeColor4) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "GetOffset", point: number) -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "SetOffset", point: number, offset: number) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "AddPoint", offset: number, color: NativeColor4) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "RemovePoint", point: number) -> ())
     Connect: ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Pressed", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Toggled", Callback: (boolean) -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "ButtonDown", Callback: () -> ()) -> NativeConnection) &
@@ -1479,12 +2841,36 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Source: NativeControl, Signal: "FocusEntered", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeControl, Signal: "FocusExited", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeCanvasItem, Signal: "VisibilityChanged", Callback: () -> ()) -> NativeConnection) &
-        ((self: NativeSceneScope, Source: NativeRange, Signal: "ValueChanged", Callback: (number) -> ()) -> NativeConnection)
+        ((self: NativeSceneScope, Source: NativeRange, Signal: "ValueChanged", Callback: (number) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeAudioStreamPlayer2D, Signal: "Finished", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeAudioStreamPlayer3D, Signal: "Finished", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeTimer, Signal: "Timeout", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeRigidBody2D, Signal: "BodyEntered", Callback: (NativeNode?) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeRigidBody2D, Signal: "BodyExited", Callback: (NativeNode?) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeArea2D, Signal: "BodyEntered", Callback: (NativeNode2D?) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeArea2D, Signal: "BodyExited", Callback: (NativeNode2D?) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeAnimatedSprite2D, Signal: "AnimationFinished", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeAnimatedSprite2D, Signal: "AnimationLooped", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeAnimatedSprite2D, Signal: "FrameChanged", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeAnimatedSprite2D, Signal: "AnimationChanged", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeItemList, Signal: "ItemSelected", Callback: (number) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeItemList, Signal: "MultiSelected", Callback: (number, boolean) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeItemList, Signal: "EmptyClicked", Callback: (NativeVector2, number) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeItemList, Signal: "ItemActivated", Callback: (number) -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeTextEdit, Signal: "TextChanged", Callback: () -> ()) -> NativeConnection)
     Load: ((self: NativeSceneScope, Type: "Texture2D", Path: string) -> NativeTexture2D) &
         ((self: NativeSceneScope, Type: "AudioStream", Path: string) -> NativeAudioStream) &
         ((self: NativeSceneScope, Type: "Mesh", Path: string) -> NativeMesh) &
         ((self: NativeSceneScope, Type: "Font", Path: string) -> NativeFont) &
-        ((self: NativeSceneScope, Type: "PackedScene", Path: string) -> NativePackedScene)
+        ((self: NativeSceneScope, Type: "PackedScene", Path: string) -> NativePackedScene) &
+        ((self: NativeSceneScope, Type: "SpriteFrames", Path: string) -> NativeSpriteFrames) &
+        ((self: NativeSceneScope, Type: "Shader", Path: string) -> NativeShader) &
+        ((self: NativeSceneScope, Type: "Material", Path: string) -> NativeMaterial) &
+        ((self: NativeSceneScope, Type: "Theme", Path: string) -> NativeTheme) &
+        ((self: NativeSceneScope, Type: "StyleBox", Path: string) -> NativeStyleBox) &
+        ((self: NativeSceneScope, Type: "Shape2D", Path: string) -> NativeShape2D) &
+        ((self: NativeSceneScope, Type: "Shape3D", Path: string) -> NativeShape3D) &
+        ((self: NativeSceneScope, Type: "Gradient", Path: string) -> NativeGradient)
     Instantiate: (self: NativeSceneScope, Scene: NativePackedScene, Parent: NativeNode?) -> NativeNode
     Clone: (self: NativeSceneScope, Source: NativeNode, Parent: NativeNode?) -> NativeNode
     Reparent: (self: NativeSceneScope, Target: NativeNode, Parent: NativeNode, KeepGlobal: boolean?) -> ()
@@ -1495,5 +2881,5 @@ declare class NativeSceneScope extends NativeNode3D
     Stop: (self: NativeSceneScope, Player: NativeAudioStreamPlayer) -> ()
     Impulse: (self: NativeSceneScope, Body: NativeRigidBody3D, Impulse: NativeVector3) -> ()
 end
-declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string},
-    PolicySHA256: string, ApiSHA256: string, Describe: (Class: string) -> { [string]: any }?, Enums: {Control: {MouseFilter: {MOUSE_FILTER_STOP: number, MOUSE_FILTER_PASS: number, MOUSE_FILTER_IGNORE: number}}, TextureRect: {ExpandMode: {EXPAND_KEEP_SIZE: number, EXPAND_IGNORE_SIZE: number, EXPAND_FIT_WIDTH: number, EXPAND_FIT_WIDTH_PROPORTIONAL: number, EXPAND_FIT_HEIGHT: number, EXPAND_FIT_HEIGHT_PROPORTIONAL: number}, StretchMode: {STRETCH_SCALE: number, STRETCH_TILE: number, STRETCH_KEEP: number, STRETCH_KEEP_CENTERED: number, STRETCH_KEEP_ASPECT: number, STRETCH_KEEP_ASPECT_CENTERED: number, STRETCH_KEEP_ASPECT_COVERED: number}}, BaseMaterial3D: {Transparency: {TRANSPARENCY_DISABLED: number, TRANSPARENCY_ALPHA: number, TRANSPARENCY_ALPHA_SCISSOR: number, TRANSPARENCY_ALPHA_HASH: number, TRANSPARENCY_ALPHA_DEPTH_PRE_PASS: number, TRANSPARENCY_MAX: number}}} }
+declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string}, Value: ((Type: "Vector3", Value: NativeVector3) -> NativeVector3) & ((Type: "Vector2", Value: NativeVector2) -> NativeVector2) & ((Type: "Vector2i", Value: NativeVector2i) -> NativeVector2i) & ((Type: "Vector3i", Value: NativeVector3i) -> NativeVector3i) & ((Type: "Vector4", Value: NativeVector4) -> NativeVector4) & ((Type: "Vector4i", Value: NativeVector4i) -> NativeVector4i) & ((Type: "Rect2", Value: NativeRect2) -> NativeRect2) & ((Type: "Rect2i", Value: NativeRect2i) -> NativeRect2i) & ((Type: "Quaternion", Value: NativeQuaternion) -> NativeQuaternion) & ((Type: "Basis", Value: NativeBasis) -> NativeBasis) & ((Type: "Transform2D", Value: NativeTransform2D) -> NativeTransform2D) & ((Type: "Transform3D", Value: NativeTransform3D) -> NativeTransform3D) & ((Type: "Plane", Value: NativePlane) -> NativePlane) & ((Type: "AABB", Value: NativeAABB) -> NativeAABB) & ((Type: "Array", Value: {NativeVariant}) -> {NativeVariant}) & ((Type: "Dictionary", Value: {[string]: NativeVariant}) -> {[string]: NativeVariant}) & ((Type: "PackedByteArray", Value: {number}) -> {number}) & ((Type: "PackedInt32Array", Value: {number}) -> {number}) & ((Type: "PackedInt64Array", Value: {number}) -> {number}) & ((Type: "PackedFloat32Array", Value: {number}) -> {number}) & ((Type: "PackedFloat64Array", Value: {number}) -> {number}) & ((Type: "PackedStringArray", Value: {string}) -> {string}) & ((Type: "PackedVector2Array", Value: {NativeVector2}) -> {NativeVector2}) & ((Type: "PackedVector3Array", Value: {NativeVector3}) -> {NativeVector3}) & ((Type: "PackedColorArray", Value: {NativeColor4}) -> {NativeColor4}) & ((Type: "PackedVector4Array", Value: {NativeVector4}) -> {NativeVector4}) & ((Type: "Color", Value: NativeColor4) -> NativeColor4),
+    PolicySHA256: string, ApiSHA256: string, Describe: (Class: string) -> { [string]: any }?, Enums: {Control: {MouseFilter: {MOUSE_FILTER_STOP: number, MOUSE_FILTER_PASS: number, MOUSE_FILTER_IGNORE: number}}, TextureRect: {ExpandMode: {EXPAND_KEEP_SIZE: number, EXPAND_IGNORE_SIZE: number, EXPAND_FIT_WIDTH: number, EXPAND_FIT_WIDTH_PROPORTIONAL: number, EXPAND_FIT_HEIGHT: number, EXPAND_FIT_HEIGHT_PROPORTIONAL: number}, StretchMode: {STRETCH_SCALE: number, STRETCH_TILE: number, STRETCH_KEEP: number, STRETCH_KEEP_CENTERED: number, STRETCH_KEEP_ASPECT: number, STRETCH_KEEP_ASPECT_CENTERED: number, STRETCH_KEEP_ASPECT_COVERED: number}}, BaseMaterial3D: {Transparency: {TRANSPARENCY_DISABLED: number, TRANSPARENCY_ALPHA: number, TRANSPARENCY_ALPHA_SCISSOR: number, TRANSPARENCY_ALPHA_HASH: number, TRANSPARENCY_ALPHA_DEPTH_PRE_PASS: number, TRANSPARENCY_MAX: number}}, Timer: {TimerProcessCallback: {TIMER_PROCESS_PHYSICS: number, TIMER_PROCESS_IDLE: number}}, RigidBody2D: {FreezeMode: {FREEZE_MODE_STATIC: number, FREEZE_MODE_KINEMATIC: number}}, Camera2D: {AnchorMode: {ANCHOR_MODE_FIXED_TOP_LEFT: number, ANCHOR_MODE_DRAG_CENTER: number}}, ItemList: {SelectMode: {SELECT_SINGLE: number, SELECT_MULTI: number}, IconMode: {ICON_MODE_TOP: number, ICON_MODE_LEFT: number}}, TextureProgressBar: {FillMode: {FILL_LEFT_TO_RIGHT: number, FILL_RIGHT_TO_LEFT: number, FILL_TOP_TO_BOTTOM: number, FILL_BOTTOM_TO_TOP: number, FILL_CLOCKWISE: number, FILL_COUNTER_CLOCKWISE: number, FILL_BILINEAR_LEFT_AND_RIGHT: number, FILL_BILINEAR_TOP_AND_BOTTOM: number, FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE: number}}, MultiMesh: {TransformFormat: {TRANSFORM_2D: number, TRANSFORM_3D: number}}} }

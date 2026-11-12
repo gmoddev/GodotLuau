@@ -1,5 +1,11 @@
 # Current architecture
 
+The unmerged [GL-053 native expansion](gl-053-native-development.md) extends the
+existing policy dispatcher with bounded pure values/collections, observation
+properties, scoped Node payloads, checked defaults and useful 2D/UI/resource
+families. Its [API contract](gl-053-native-api.md) separates implementation from
+pending runtime qualification; it does not establish broad Godot API parity.
+
 The [integrated GL-052 change](gl-052-main-integration.md) provides native editor
 actions that create a plain scene and
 LocalScript-associated `.luau` entrypoint. The existing runtime domains remain

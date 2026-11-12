@@ -6,6 +6,9 @@
 #include <godot_cpp/variant/callable.hpp>
 #include <memory>
 #include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <string>
 struct lua_State;
 
 struct GLSceneResource {
@@ -30,6 +33,8 @@ public:
     std::vector<uint64_t> Nodes;
     std::vector<std::weak_ptr<GLSceneResource>> Resources;
     std::vector<Subscription> Subscriptions;
+    // Bounded effect bookkeeping; ObjectDB remains the only identity authority.
+    std::unordered_map<uint64_t,std::unordered_set<std::string>> ShaderParameters;
     SceneScope();
     ~SceneScope();
     bool CanUse(lua_State* Thread) const;

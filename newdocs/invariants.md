@@ -268,6 +268,13 @@ remain, while the saved snapshot and original preview have separate identities.
 
 ## Non-disruptive failure handling
 
+The unmerged [native expansion](gl-053-native-api.md) keeps pure value conversion
+separate from object/resource admission. Bounded collections cannot transport
+native capabilities. Observation properties reject writes; owned node payloads
+cannot confer foreign scope authority. Temporal playback/autostart stays outside
+EditorPreview. Metadata-based collection checks precede native mutation, and
+shader/MultiMesh effects retain their explicit bounded resource contract.
+
 Expected failures return structured results or bounded diagnostic output with a
 `[System:SubSystem]` prefix. Automated verification runs headlessly with captured
 logs and time limits. Configure Windows child-process error UI suppression for

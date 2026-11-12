@@ -68,3 +68,26 @@ ten policy/inventory tests pass. Original runtime descriptors, declarations and
 catalog remain unchanged. Preserve the before counts and exact coverage hash in
 the [baseline receipt](evidence/gl053-native/baseline.json). This qualifies the
 inventory/generation change only; proceed to production implementation.
+
+## Phase B implementation in progress
+
+The reviewed policy now has 84 constructible classes, 261 property entries,
+101 methods and 28 signals. New families cover native 2D bodies/areas/shapes,
+timers, sprite animation, UI lists/text/layout, gradient resources, ShaderMaterial
+and MultiMesh. A shared bounded pure-value converter handles compound math,
+collections and packed arrays. Existing Vector3/Color3 public forms are preserved.
+See the [public contract](gl-053-native-api.md) for exact limits and restrictions.
+
+The generalized dispatcher now supports approved optional string/null/Vector2
+defaults, scoped Node payloads, observation properties, metadata-checked live
+collection validation and most-derived descriptor resolution. MultiMesh allocation
+and shader uniforms have effect-specific preflight. Preview cannot start temporal
+playback or bypass that restriction through autoplay/autostart properties.
+
+Thirteen generator/policy tests and generated drift checks pass locally. New
+production native integration cases cover value roundtrips and rejection,
+collections/defaults, 2D overlaps, animation/timer completion, shader parameters,
+MultiMesh, foreign-owner calls and cancellation at owner retirement. Added Luau
+typechecker cases exercise new APIs and rejection. These runtime/type cases are
+not yet qualified; hosted C++ build and Windows/Linux execution are the next gate.
+No main, release, updater, dependency or admitted-host change is included.

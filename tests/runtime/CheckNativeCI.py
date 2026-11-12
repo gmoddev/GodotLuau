@@ -45,6 +45,8 @@ def Main():
         if [Result['Label'] for Result in Results] != Labels or any(Result['Exit'] != 0 for Result in Results):
             raise ValueError('Missing or failed native fixture results: ' + Name)
         Groups[Name] = Results
+    if '[Runtime:NativeExpansion] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native API expansion cases did not complete')
     Controllers = json.loads((Args.output/'controller/controller-evidence.json').read_text())
     if Controllers.get('Actors') != 7 or Controllers.get('Transport') != 'ENet' or len(Controllers.get('Evidence', [])) != 7:
         raise ValueError('Player.Character controller actors incomplete')

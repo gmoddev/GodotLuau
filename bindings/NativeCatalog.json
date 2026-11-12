@@ -1,10 +1,28 @@
 {
   "Classes": [
     {
+      "Name": "AnimatedSprite2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "Area2D",
+      "Base": "CollisionObject2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "ArrayMesh",
       "Base": "Mesh",
       "Construct": false,
       "Resource": true
+    },
+    {
+      "Name": "AspectRatioContainer",
+      "Base": "Container",
+      "Construct": true,
+      "Resource": false
     },
     {
       "Name": "AudioStream",
@@ -15,6 +33,18 @@
     {
       "Name": "AudioStreamPlayer",
       "Base": "Node",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "AudioStreamPlayer2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "AudioStreamPlayer3D",
+      "Base": "Node3D",
       "Construct": true,
       "Resource": false
     },
@@ -55,6 +85,12 @@
       "Resource": false
     },
     {
+      "Name": "Camera2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "Camera3D",
       "Base": "Node3D",
       "Construct": true,
@@ -75,6 +111,12 @@
     {
       "Name": "CapsuleMesh",
       "Base": "PrimitiveMesh",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "CapsuleShape2D",
+      "Base": "Shape2D",
       "Construct": true,
       "Resource": true
     },
@@ -103,9 +145,27 @@
       "Resource": false
     },
     {
+      "Name": "CircleShape2D",
+      "Base": "Shape2D",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "CollisionObject2D",
+      "Base": "Node2D",
+      "Construct": false,
+      "Resource": false
+    },
+    {
       "Name": "CollisionObject3D",
       "Base": "Node3D",
       "Construct": false,
+      "Resource": false
+    },
+    {
+      "Name": "CollisionShape2D",
+      "Base": "Node2D",
+      "Construct": true,
       "Resource": false
     },
     {
@@ -169,6 +229,24 @@
       "Resource": false
     },
     {
+      "Name": "Gradient",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "GradientTexture1D",
+      "Base": "Texture2D",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "GradientTexture2D",
+      "Base": "Texture2D",
+      "Construct": true,
+      "Resource": true
+    },
+    {
       "Name": "GridContainer",
       "Base": "Container",
       "Construct": true,
@@ -181,8 +259,26 @@
       "Resource": false
     },
     {
+      "Name": "HSeparator",
+      "Base": "Separator",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "HSlider",
       "Base": "Slider",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "HSplitContainer",
+      "Base": "SplitContainer",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "ItemList",
+      "Base": "Control",
       "Construct": true,
       "Resource": false
     },
@@ -235,6 +331,24 @@
       "Resource": false
     },
     {
+      "Name": "MultiMesh",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "MultiMeshInstance2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "MultiMeshInstance3D",
+      "Base": "GeometryInstance3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "Node",
       "Base": "Object",
       "Construct": true,
@@ -271,9 +385,21 @@
       "Resource": true
     },
     {
+      "Name": "Panel",
+      "Base": "Control",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "PanelContainer",
       "Base": "Container",
       "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "PhysicsBody2D",
+      "Base": "CollisionObject2D",
+      "Construct": false,
       "Resource": false
     },
     {
@@ -281,6 +407,12 @@
       "Base": "CollisionObject3D",
       "Construct": false,
       "Resource": false
+    },
+    {
+      "Name": "PhysicsMaterial",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
     },
     {
       "Name": "PlaneMesh",
@@ -313,6 +445,12 @@
       "Resource": false
     },
     {
+      "Name": "RectangleShape2D",
+      "Base": "Shape2D",
+      "Construct": true,
+      "Resource": true
+    },
+    {
       "Name": "RefCounted",
       "Base": "Object",
       "Construct": false,
@@ -325,6 +463,18 @@
       "Resource": true
     },
     {
+      "Name": "RichTextLabel",
+      "Base": "Control",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "RigidBody2D",
+      "Base": "PhysicsBody2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "RigidBody3D",
       "Base": "PhysicsBody3D",
       "Construct": true,
@@ -335,6 +485,36 @@
       "Base": "Container",
       "Construct": true,
       "Resource": false
+    },
+    {
+      "Name": "SegmentShape2D",
+      "Base": "Shape2D",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "Separator",
+      "Base": "Control",
+      "Construct": false,
+      "Resource": false
+    },
+    {
+      "Name": "Shader",
+      "Base": "Resource",
+      "Construct": false,
+      "Resource": true
+    },
+    {
+      "Name": "ShaderMaterial",
+      "Base": "Material",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "Shape2D",
+      "Base": "Resource",
+      "Construct": false,
+      "Resource": true
     },
     {
       "Name": "Shape3D",
@@ -367,6 +547,12 @@
       "Resource": true
     },
     {
+      "Name": "SplitContainer",
+      "Base": "Container",
+      "Construct": false,
+      "Resource": false
+    },
+    {
       "Name": "SpotLight3D",
       "Base": "Light3D",
       "Construct": true,
@@ -391,14 +577,62 @@
       "Resource": false
     },
     {
+      "Name": "SpriteFrames",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
+    },
+    {
       "Name": "StandardMaterial3D",
       "Base": "BaseMaterial3D",
       "Construct": true,
       "Resource": true
     },
     {
+      "Name": "StaticBody2D",
+      "Base": "PhysicsBody2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "StaticBody3D",
       "Base": "PhysicsBody3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "StyleBox",
+      "Base": "Resource",
+      "Construct": false,
+      "Resource": true
+    },
+    {
+      "Name": "StyleBoxEmpty",
+      "Base": "StyleBox",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "StyleBoxFlat",
+      "Base": "StyleBox",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "StyleBoxLine",
+      "Base": "StyleBox",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "TabContainer",
+      "Base": "Container",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "TextEdit",
+      "Base": "Control",
       "Construct": true,
       "Resource": false
     },
@@ -415,8 +649,26 @@
       "Resource": true
     },
     {
+      "Name": "TextureProgressBar",
+      "Base": "Range",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "TextureRect",
       "Base": "Control",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "Theme",
+      "Base": "Resource",
+      "Construct": false,
+      "Resource": true
+    },
+    {
+      "Name": "Timer",
+      "Base": "Node",
       "Construct": true,
       "Resource": false
     },
@@ -427,8 +679,20 @@
       "Resource": false
     },
     {
+      "Name": "VSeparator",
+      "Base": "Separator",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "VSlider",
       "Base": "Slider",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "VSplitContainer",
+      "Base": "SplitContainer",
       "Construct": true,
       "Resource": false
     },
@@ -452,7 +716,8 @@
       "Native": "name",
       "Kind": "Text",
       "Min": 1,
-      "Max": 128
+      "Max": 128,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Node3D",
@@ -460,7 +725,8 @@
       "Native": "position",
       "Kind": "Vector",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Node3D",
@@ -468,7 +734,8 @@
       "Native": "rotation_degrees",
       "Kind": "Vector",
       "Min": -360000,
-      "Max": 360000
+      "Max": 360000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Node3D",
@@ -476,13 +743,15 @@
       "Native": "scale",
       "Kind": "Vector",
       "Min": 0.001,
-      "Max": 100
+      "Max": 100,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Node3D",
       "Name": "Visible",
       "Native": "visible",
-      "Kind": "Boolean"
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "MeshInstance3D",
@@ -491,7 +760,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Mesh"
+      "ResourceClass": "Mesh",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "GeometryInstance3D",
@@ -500,7 +770,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Material"
+      "ResourceClass": "Material",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CollisionObject3D",
@@ -508,7 +779,8 @@
       "Native": "collision_layer",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 4294967295
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CollisionObject3D",
@@ -516,7 +788,8 @@
       "Native": "collision_mask",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 4294967295
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "RigidBody3D",
@@ -524,7 +797,8 @@
       "Native": "mass",
       "Kind": "Number",
       "Min": 0.01,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "RigidBody3D",
@@ -532,13 +806,15 @@
       "Native": "gravity_scale",
       "Kind": "Number",
       "Min": 0,
-      "Max": 100
+      "Max": 100,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "RigidBody3D",
       "Name": "Freeze",
       "Native": "freeze",
-      "Kind": "Boolean"
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CollisionShape3D",
@@ -547,19 +823,22 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Shape3D"
+      "ResourceClass": "Shape3D",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CollisionShape3D",
       "Name": "Disabled",
       "Native": "disabled",
-      "Kind": "Boolean"
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Light3D",
       "Name": "Color",
       "Native": "light_color",
-      "Kind": "Colour"
+      "Kind": "Colour",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Light3D",
@@ -567,13 +846,15 @@
       "Native": "light_energy",
       "Kind": "Number",
       "Min": 0,
-      "Max": 64
+      "Max": 64,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Light3D",
       "Name": "ShadowEnabled",
       "Native": "shadow_enabled",
-      "Kind": "Boolean"
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "OmniLight3D",
@@ -581,7 +862,8 @@
       "Native": "omni_range",
       "Kind": "Number",
       "Min": 0.01,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SpotLight3D",
@@ -589,7 +871,8 @@
       "Native": "spot_range",
       "Kind": "Number",
       "Min": 0.01,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Camera3D",
@@ -597,7 +880,8 @@
       "Native": "fov",
       "Kind": "Number",
       "Min": 1,
-      "Max": 179
+      "Max": 179,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Camera3D",
@@ -605,7 +889,8 @@
       "Native": "near",
       "Kind": "Number",
       "Min": 0.01,
-      "Max": 100
+      "Max": 100,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Camera3D",
@@ -613,7 +898,8 @@
       "Native": "far",
       "Kind": "Number",
       "Min": 100,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "WorldEnvironment",
@@ -622,7 +908,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Environment"
+      "ResourceClass": "Environment",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Label3D",
@@ -630,7 +917,8 @@
       "Native": "text",
       "Kind": "Text",
       "Min": 0,
-      "Max": 8192
+      "Max": 8192,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Label3D",
@@ -638,7 +926,8 @@
       "Native": "billboard",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 3
+      "Max": 3,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Label3D",
@@ -646,7 +935,8 @@
       "Native": "font_size",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 256
+      "Max": 256,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CanvasLayer",
@@ -654,13 +944,15 @@
       "Native": "layer",
       "Kind": "Integer",
       "Min": -128,
-      "Max": 128
+      "Max": 128,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
       "Name": "Visible",
       "Native": "visible",
-      "Kind": "Boolean"
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -668,7 +960,8 @@
       "Native": "position",
       "Kind": "Vector2Value",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -676,7 +969,8 @@
       "Native": "size",
       "Kind": "Vector2Value",
       "Min": 0,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -684,7 +978,8 @@
       "Native": "custom_minimum_size",
       "Kind": "Vector2Value",
       "Min": 0,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -692,13 +987,15 @@
       "Native": "mouse_filter",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 2
+      "Max": 2,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
       "Name": "Modulate",
       "Native": "modulate",
-      "Kind": "Colour"
+      "Kind": "Colour",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -706,13 +1003,15 @@
       "Native": "@font_size",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 256
+      "Max": 256,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
       "Name": "FullRect",
       "Native": "@full_rect",
-      "Kind": "Boolean"
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BoxContainer",
@@ -720,13 +1019,15 @@
       "Native": "@separation",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 1024
+      "Max": 1024,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "ColorRect",
       "Name": "Color",
       "Native": "color",
-      "Kind": "Colour"
+      "Kind": "Colour",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Label",
@@ -734,7 +1035,8 @@
       "Native": "text",
       "Kind": "Text",
       "Min": 0,
-      "Max": 8192
+      "Max": 8192,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Button",
@@ -742,7 +1044,8 @@
       "Native": "text",
       "Kind": "Text",
       "Min": 0,
-      "Max": 8192
+      "Max": 8192,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "LineEdit",
@@ -750,7 +1053,8 @@
       "Native": "text",
       "Kind": "Text",
       "Min": 0,
-      "Max": 8192
+      "Max": 8192,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "LineEdit",
@@ -758,7 +1062,8 @@
       "Native": "placeholder_text",
       "Kind": "Text",
       "Min": 0,
-      "Max": 1024
+      "Max": 1024,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "AudioStreamPlayer",
@@ -767,7 +1072,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "AudioStream"
+      "ResourceClass": "AudioStream",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "AudioStreamPlayer",
@@ -775,7 +1081,8 @@
       "Native": "volume_db",
       "Kind": "Number",
       "Min": -80,
-      "Max": 6
+      "Max": 6,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "AudioStreamPlayer",
@@ -783,7 +1090,8 @@
       "Native": "pitch_scale",
       "Kind": "Number",
       "Min": 0.1,
-      "Max": 4
+      "Max": 4,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SoftBody3D",
@@ -792,7 +1100,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "ArrayMesh"
+      "ResourceClass": "ArrayMesh",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SoftBody3D",
@@ -800,7 +1109,8 @@
       "Native": "collision_layer",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 4294967295
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SoftBody3D",
@@ -808,7 +1118,8 @@
       "Native": "collision_mask",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 4294967295
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SoftBody3D",
@@ -816,7 +1127,8 @@
       "Native": "simulation_precision",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 20
+      "Max": 20,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SoftBody3D",
@@ -824,7 +1136,8 @@
       "Native": "total_mass",
       "Kind": "Number",
       "Min": 0.01,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BoxMesh",
@@ -832,7 +1145,8 @@
       "Native": "size",
       "Kind": "Vector",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SphereMesh",
@@ -840,7 +1154,8 @@
       "Native": "radius",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SphereMesh",
@@ -848,7 +1163,8 @@
       "Native": "height",
       "Kind": "Number",
       "Min": 0.002,
-      "Max": 20000
+      "Max": 20000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SphereMesh",
@@ -856,7 +1172,8 @@
       "Native": "radial_segments",
       "Kind": "Integer",
       "Min": 4,
-      "Max": 64
+      "Max": 64,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SphereMesh",
@@ -864,7 +1181,8 @@
       "Native": "rings",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 32
+      "Max": 32,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BoxShape3D",
@@ -872,7 +1190,8 @@
       "Native": "size",
       "Kind": "Vector",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SphereShape3D",
@@ -880,13 +1199,15 @@
       "Native": "radius",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "StandardMaterial3D",
       "Name": "Color",
       "Native": "albedo_color",
-      "Kind": "Colour"
+      "Kind": "Colour",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "StandardMaterial3D",
@@ -894,19 +1215,22 @@
       "Native": "roughness",
       "Kind": "Number",
       "Min": 0,
-      "Max": 1
+      "Max": 1,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "StandardMaterial3D",
       "Name": "EmissionEnabled",
       "Native": "emission_enabled",
-      "Kind": "Boolean"
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "StandardMaterial3D",
       "Name": "Emission",
       "Native": "emission",
-      "Kind": "Colour"
+      "Kind": "Colour",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Environment",
@@ -914,13 +1238,15 @@
       "Native": "background_mode",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 1
+      "Max": 1,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Environment",
       "Name": "BackgroundColor",
       "Native": "background_color",
-      "Kind": "Colour"
+      "Kind": "Colour",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Environment",
@@ -928,13 +1254,15 @@
       "Native": "ambient_light_source",
       "Kind": "Integer",
       "Min": 2,
-      "Max": 2
+      "Max": 2,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Environment",
       "Name": "AmbientLightColor",
       "Native": "ambient_light_color",
-      "Kind": "Colour"
+      "Kind": "Colour",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Environment",
@@ -942,7 +1270,8 @@
       "Native": "ambient_light_energy",
       "Kind": "Number",
       "Min": 0,
-      "Max": 16
+      "Max": 16,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "TextureRect",
@@ -951,7 +1280,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Texture2D"
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Sprite3D",
@@ -960,7 +1290,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Texture2D"
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Sprite2D",
@@ -969,7 +1300,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Texture2D"
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "TextureRect",
@@ -977,7 +1309,8 @@
       "Native": "expand_mode",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 5
+      "Max": 5,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "TextureRect",
@@ -985,7 +1318,8 @@
       "Native": "stretch_mode",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 6
+      "Max": 6,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "SpriteBase3D",
@@ -993,7 +1327,8 @@
       "Native": "pixel_size",
       "Kind": "Number",
       "Min": 0.0001,
-      "Max": 1000
+      "Max": 1000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Node2D",
@@ -1001,7 +1336,8 @@
       "Native": "position",
       "Kind": "Vector2Value",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Node2D",
@@ -1009,7 +1345,8 @@
       "Native": "rotation_degrees",
       "Kind": "Number",
       "Min": -360000,
-      "Max": 360000
+      "Max": 360000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Node2D",
@@ -1017,7 +1354,8 @@
       "Native": "scale",
       "Kind": "Vector2Value",
       "Min": 0.001,
-      "Max": 100
+      "Max": 100,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CanvasItem",
@@ -1025,7 +1363,8 @@
       "Native": "visible",
       "Kind": "Boolean",
       "Min": 0,
-      "Max": 0
+      "Max": 0,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CanvasItem",
@@ -1033,7 +1372,8 @@
       "Native": "modulate",
       "Kind": "Colour",
       "Min": 0,
-      "Max": 0
+      "Max": 0,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BaseMaterial3D",
@@ -1042,7 +1382,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Texture2D"
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BaseMaterial3D",
@@ -1050,7 +1391,8 @@
       "Native": "metallic",
       "Kind": "Number",
       "Min": 0,
-      "Max": 1
+      "Max": 1,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BaseMaterial3D",
@@ -1058,7 +1400,8 @@
       "Native": "transparency",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 4
+      "Max": 4,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1067,7 +1410,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Font"
+      "ResourceClass": "Font",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Label3D",
@@ -1076,7 +1420,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Font"
+      "ResourceClass": "Font",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Button",
@@ -1085,7 +1430,8 @@
       "Kind": "ResourceValue",
       "Min": 0,
       "Max": 0,
-      "ResourceClass": "Texture2D"
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
     },
     {
       "Class": "PlaneMesh",
@@ -1093,7 +1439,8 @@
       "Native": "size",
       "Kind": "Vector2Value",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "QuadMesh",
@@ -1101,7 +1448,8 @@
       "Native": "size",
       "Kind": "Vector2Value",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CapsuleMesh",
@@ -1109,7 +1457,8 @@
       "Native": "radius",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CapsuleMesh",
@@ -1117,7 +1466,8 @@
       "Native": "height",
       "Kind": "Number",
       "Min": 0.002,
-      "Max": 20000
+      "Max": 20000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CapsuleShape3D",
@@ -1125,7 +1475,8 @@
       "Native": "radius",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CapsuleShape3D",
@@ -1133,7 +1484,8 @@
       "Native": "height",
       "Kind": "Number",
       "Min": 0.002,
-      "Max": 20000
+      "Max": 20000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CylinderShape3D",
@@ -1141,7 +1493,8 @@
       "Native": "radius",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CylinderShape3D",
@@ -1149,7 +1502,8 @@
       "Native": "height",
       "Kind": "Number",
       "Min": 0.002,
-      "Max": 20000
+      "Max": 20000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CylinderMesh",
@@ -1157,7 +1511,8 @@
       "Native": "top_radius",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CylinderMesh",
@@ -1165,7 +1520,8 @@
       "Native": "bottom_radius",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CylinderMesh",
@@ -1173,7 +1529,8 @@
       "Native": "height",
       "Kind": "Number",
       "Min": 0.002,
-      "Max": 20000
+      "Max": 20000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CapsuleMesh",
@@ -1181,7 +1538,8 @@
       "Native": "radial_segments",
       "Kind": "Integer",
       "Min": 4,
-      "Max": 64
+      "Max": 64,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CapsuleMesh",
@@ -1189,7 +1547,8 @@
       "Native": "rings",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 32
+      "Max": 32,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CylinderMesh",
@@ -1197,7 +1556,8 @@
       "Native": "radial_segments",
       "Kind": "Integer",
       "Min": 4,
-      "Max": 64
+      "Max": 64,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "CylinderMesh",
@@ -1205,7 +1565,8 @@
       "Native": "rings",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 32
+      "Max": 32,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BaseButton",
@@ -1213,7 +1574,8 @@
       "Native": "disabled",
       "Kind": "Boolean",
       "Min": 0,
-      "Max": 0
+      "Max": 0,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BaseButton",
@@ -1221,7 +1583,8 @@
       "Native": "toggle_mode",
       "Kind": "Boolean",
       "Min": 0,
-      "Max": 0
+      "Max": 0,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "BaseButton",
@@ -1229,7 +1592,8 @@
       "Native": "button_pressed",
       "Kind": "Boolean",
       "Min": 0,
-      "Max": 0
+      "Max": 0,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "GridContainer",
@@ -1237,7 +1601,8 @@
       "Native": "columns",
       "Kind": "Integer",
       "Min": 1,
-      "Max": 32
+      "Max": 32,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Range",
@@ -1245,7 +1610,8 @@
       "Native": "min_value",
       "Kind": "Number",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Range",
@@ -1253,7 +1619,8 @@
       "Native": "max_value",
       "Kind": "Number",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Range",
@@ -1261,7 +1628,8 @@
       "Native": "value",
       "Kind": "Number",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Range",
@@ -1269,7 +1637,8 @@
       "Native": "step",
       "Kind": "Number",
       "Min": 0.001,
-      "Max": 10000
+      "Max": 10000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1277,7 +1646,8 @@
       "Native": "offset_left",
       "Kind": "Integer",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1285,7 +1655,8 @@
       "Native": "offset_right",
       "Kind": "Integer",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1293,7 +1664,8 @@
       "Native": "offset_top",
       "Kind": "Integer",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1301,7 +1673,8 @@
       "Native": "offset_bottom",
       "Kind": "Integer",
       "Min": -100000,
-      "Max": 100000
+      "Max": 100000,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1309,7 +1682,8 @@
       "Native": "anchor_left",
       "Kind": "Number",
       "Min": 0,
-      "Max": 1
+      "Max": 1,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1317,7 +1691,8 @@
       "Native": "anchor_right",
       "Kind": "Number",
       "Min": 0,
-      "Max": 1
+      "Max": 1,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1325,7 +1700,8 @@
       "Native": "anchor_top",
       "Kind": "Number",
       "Min": 0,
-      "Max": 1
+      "Max": 1,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1333,7 +1709,8 @@
       "Native": "anchor_bottom",
       "Kind": "Number",
       "Min": 0,
-      "Max": 1
+      "Max": 1,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1341,7 +1718,8 @@
       "Native": "grow_horizontal",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 2
+      "Max": 2,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1349,7 +1727,8 @@
       "Native": "grow_vertical",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 2
+      "Max": 2,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1357,7 +1736,8 @@
       "Native": "focus_mode",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 2
+      "Max": 2,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1365,7 +1745,8 @@
       "Native": "layout_mode",
       "Kind": "Integer",
       "Min": 0,
-      "Max": 3
+      "Max": 3,
+      "Authority": "OwnedScene"
     },
     {
       "Class": "Control",
@@ -1373,7 +1754,1317 @@
       "Native": "clip_contents",
       "Kind": "Boolean",
       "Min": 0,
-      "Max": 0
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Node2D",
+      "Name": "GlobalPosition",
+      "Native": "global_position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Node2D",
+      "Name": "GlobalRotation",
+      "Native": "global_rotation",
+      "Kind": "Number",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Node2D",
+      "Name": "ZIndex",
+      "Native": "z_index",
+      "Kind": "Integer",
+      "Min": -100,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Node2D",
+      "Name": "YSortEnabled",
+      "Native": "y_sort_enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "ModulateRGBA",
+      "Native": "modulate",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CanvasItem",
+      "Name": "SelfModulateRGBA",
+      "Native": "self_modulate",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Control",
+      "Name": "Theme",
+      "Native": "theme",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Theme"
+    },
+    {
+      "Class": "Control",
+      "Name": "TooltipText",
+      "Native": "tooltip_text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 1024,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Timer",
+      "Name": "WaitTime",
+      "Native": "wait_time",
+      "Kind": "Number",
+      "Min": 0.001,
+      "Max": 600,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Timer",
+      "Name": "OneShot",
+      "Native": "one_shot",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Timer",
+      "Name": "Autostart",
+      "Native": "autostart",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Timer",
+      "Name": "Paused",
+      "Native": "paused",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Timer",
+      "Name": "ProcessCallback",
+      "Native": "process_callback",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Timer",
+      "Name": "TimeLeft",
+      "Native": "time_left",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "Centered",
+      "Native": "centered",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "Offset",
+      "Native": "offset",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "FlipH",
+      "Native": "flip_h",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "FlipV",
+      "Native": "flip_v",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "Hframes",
+      "Native": "hframes",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "Vframes",
+      "Native": "vframes",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "FrameCoords",
+      "Native": "frame_coords",
+      "Kind": "Vector2Integer",
+      "Min": 0,
+      "Max": 63,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "RegionEnabled",
+      "Native": "region_enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "RegionRect",
+      "Native": "region_rect",
+      "Kind": "Rectangle",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "RegionFilterClipEnabled",
+      "Native": "region_filter_clip_enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CollisionObject2D",
+      "Name": "CollisionLayer",
+      "Native": "collision_layer",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CollisionObject2D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CollisionObject2D",
+      "Name": "InputPickable",
+      "Native": "input_pickable",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StaticBody2D",
+      "Name": "PhysicsMaterialOverride",
+      "Native": "physics_material_override",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "PhysicsMaterial"
+    },
+    {
+      "Class": "StaticBody2D",
+      "Name": "ConstantLinearVelocity",
+      "Native": "constant_linear_velocity",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StaticBody2D",
+      "Name": "ConstantAngularVelocity",
+      "Native": "constant_angular_velocity",
+      "Kind": "Number",
+      "Min": -100,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "Mass",
+      "Native": "mass",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "PhysicsMaterialOverride",
+      "Native": "physics_material_override",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "PhysicsMaterial"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "GravityScale",
+      "Native": "gravity_scale",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "LinearVelocity",
+      "Native": "linear_velocity",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "AngularVelocity",
+      "Native": "angular_velocity",
+      "Kind": "Number",
+      "Min": -100,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "LinearDamp",
+      "Native": "linear_damp",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "AngularDamp",
+      "Native": "angular_damp",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "LockRotation",
+      "Native": "lock_rotation",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "Freeze",
+      "Native": "freeze",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "ContactMonitor",
+      "Native": "contact_monitor",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "MaxContactsReported",
+      "Native": "max_contacts_reported",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "Sleeping",
+      "Native": "sleeping",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "Monitoring",
+      "Native": "monitoring",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "Monitorable",
+      "Native": "monitorable",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "Gravity",
+      "Native": "gravity",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "GravityDirection",
+      "Native": "gravity_direction",
+      "Kind": "Vector2Value",
+      "Min": -1,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CollisionShape2D",
+      "Name": "Shape",
+      "Native": "shape",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Shape2D"
+    },
+    {
+      "Class": "CollisionShape2D",
+      "Name": "Disabled",
+      "Native": "disabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CollisionShape2D",
+      "Name": "OneWayCollision",
+      "Native": "one_way_collision",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Camera2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Camera2D",
+      "Name": "Zoom",
+      "Native": "zoom",
+      "Kind": "Vector2Value",
+      "Min": 0.01,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Camera2D",
+      "Name": "Offset",
+      "Native": "offset",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Camera2D",
+      "Name": "PositionSmoothingEnabled",
+      "Native": "position_smoothing_enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Camera2D",
+      "Name": "PositionSmoothingSpeed",
+      "Native": "position_smoothing_speed",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "SpriteFrames",
+      "Native": "sprite_frames",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "SpriteFrames"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "Animation",
+      "Native": "animation",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "SpeedScale",
+      "Native": "speed_scale",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 16,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "Centered",
+      "Native": "centered",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "Offset",
+      "Native": "offset",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "FlipH",
+      "Native": "flip_h",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "FlipV",
+      "Native": "flip_v",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "Frame",
+      "Native": "frame",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 255,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "FrameProgress",
+      "Native": "frame_progress",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "RectangleShape2D",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector2Value",
+      "Min": 0.01,
+      "Max": 2048,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CircleShape2D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1024,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CapsuleShape2D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1024,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CapsuleShape2D",
+      "Name": "Height",
+      "Native": "height",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 2048,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "SegmentShape2D",
+      "Name": "A",
+      "Native": "a",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "SegmentShape2D",
+      "Name": "B",
+      "Native": "b",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PhysicsMaterial",
+      "Name": "Friction",
+      "Native": "friction",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PhysicsMaterial",
+      "Name": "Rough",
+      "Native": "rough",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PhysicsMaterial",
+      "Name": "Bounce",
+      "Native": "bounce",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PhysicsMaterial",
+      "Name": "Absorbent",
+      "Native": "absorbent",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RichTextLabel",
+      "Name": "Text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RichTextLabel",
+      "Name": "BbcodeEnabled",
+      "Native": "bbcode_enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RichTextLabel",
+      "Name": "FitContent",
+      "Native": "fit_content",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RichTextLabel",
+      "Name": "ScrollActive",
+      "Native": "scroll_active",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "Text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "Editable",
+      "Native": "editable",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "PlaceholderText",
+      "Native": "placeholder_text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 1024,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "WrapMode",
+      "Native": "wrap_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ItemList",
+      "Name": "SelectMode",
+      "Native": "select_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ItemList",
+      "Name": "AllowReselect",
+      "Native": "allow_reselect",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ItemList",
+      "Name": "FixedColumnWidth",
+      "Native": "fixed_column_width",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 2048,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ItemList",
+      "Name": "MaxColumns",
+      "Native": "max_columns",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ItemList",
+      "Name": "IconMode",
+      "Native": "icon_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ItemList",
+      "Name": "FixedIconSize",
+      "Native": "fixed_icon_size",
+      "Kind": "Vector2Integer",
+      "Min": 0,
+      "Max": 256,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ItemList",
+      "Name": "ItemCount",
+      "Native": "item_count",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1024,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "TabContainer",
+      "Name": "CurrentTab",
+      "Native": "current_tab",
+      "Kind": "Integer",
+      "Min": -1,
+      "Max": 255,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "TabContainer",
+      "Name": "TabsVisible",
+      "Native": "tabs_visible",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AspectRatioContainer",
+      "Name": "Ratio",
+      "Native": "ratio",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AspectRatioContainer",
+      "Name": "StretchMode",
+      "Native": "stretch_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 3,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Name": "TextureUnder",
+      "Native": "texture_under",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Name": "TextureOver",
+      "Native": "texture_over",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Name": "TextureProgress",
+      "Native": "texture_progress",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Name": "FillMode",
+      "Native": "fill_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 8,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Name": "TintUnder",
+      "Native": "tint_under",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Name": "TintOver",
+      "Native": "tint_over",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Name": "TintProgress",
+      "Native": "tint_progress",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "GradientTexture1D",
+      "Name": "Gradient",
+      "Native": "gradient",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Gradient"
+    },
+    {
+      "Class": "GradientTexture1D",
+      "Name": "Width",
+      "Native": "width",
+      "Kind": "Integer",
+      "Min": 2,
+      "Max": 256,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "GradientTexture2D",
+      "Name": "Gradient",
+      "Native": "gradient",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Gradient"
+    },
+    {
+      "Class": "GradientTexture2D",
+      "Name": "Width",
+      "Native": "width",
+      "Kind": "Integer",
+      "Min": 2,
+      "Max": 256,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "GradientTexture2D",
+      "Name": "Height",
+      "Native": "height",
+      "Kind": "Integer",
+      "Min": 2,
+      "Max": 256,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "GradientTexture2D",
+      "Name": "Fill",
+      "Native": "fill",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "GradientTexture2D",
+      "Name": "FillFrom",
+      "Native": "fill_from",
+      "Kind": "Vector2Value",
+      "Min": -1,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "GradientTexture2D",
+      "Name": "FillTo",
+      "Native": "fill_to",
+      "Kind": "Vector2Value",
+      "Min": -1,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShaderMaterial",
+      "Name": "Shader",
+      "Native": "shader",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Shader"
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "TransformFormat",
+      "Native": "transform_format",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "UseColors",
+      "Native": "use_colors",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "InstanceCount",
+      "Native": "instance_count",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 256,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "VisibleInstanceCount",
+      "Native": "visible_instance_count",
+      "Kind": "Integer",
+      "Min": -1,
+      "Max": 256,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "Mesh",
+      "Native": "mesh",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "Mesh"
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "CustomAabb",
+      "Native": "custom_aabb",
+      "Kind": "BoundsValue",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "MultiMeshInstance2D",
+      "Name": "Multimesh",
+      "Native": "multimesh",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "MultiMesh"
+    },
+    {
+      "Class": "MultiMeshInstance3D",
+      "Name": "Multimesh",
+      "Native": "multimesh",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "MultiMesh"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "BgColor",
+      "Native": "bg_color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "BorderColor",
+      "Native": "border_color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "BorderWidthLeft",
+      "Native": "border_width_left",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "BorderWidthTop",
+      "Native": "border_width_top",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "BorderWidthRight",
+      "Native": "border_width_right",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "BorderWidthBottom",
+      "Native": "border_width_bottom",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "CornerRadiusTopLeft",
+      "Native": "corner_radius_top_left",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "CornerRadiusTopRight",
+      "Native": "corner_radius_top_right",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "CornerRadiusBottomLeft",
+      "Native": "corner_radius_bottom_left",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxFlat",
+      "Name": "CornerRadiusBottomRight",
+      "Native": "corner_radius_bottom_right",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxLine",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxLine",
+      "Name": "Thickness",
+      "Native": "thickness",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBoxLine",
+      "Name": "Vertical",
+      "Native": "vertical",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBox",
+      "Name": "ContentMarginLeft",
+      "Native": "content_margin_left",
+      "Kind": "Number",
+      "Min": -1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBox",
+      "Name": "ContentMarginTop",
+      "Native": "content_margin_top",
+      "Kind": "Number",
+      "Min": -1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBox",
+      "Name": "ContentMarginRight",
+      "Native": "content_margin_right",
+      "Kind": "Number",
+      "Min": -1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "StyleBox",
+      "Name": "ContentMarginBottom",
+      "Native": "content_margin_bottom",
+      "Kind": "Number",
+      "Min": -1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "Stream",
+      "Native": "stream",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "AudioStream"
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "VolumeDb",
+      "Native": "volume_db",
+      "Kind": "Number",
+      "Min": -80,
+      "Max": 24,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "PitchScale",
+      "Native": "pitch_scale",
+      "Kind": "Number",
+      "Min": 0.1,
+      "Max": 4,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "Autoplay",
+      "Native": "autoplay",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "StreamPaused",
+      "Native": "stream_paused",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "Stream",
+      "Native": "stream",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "AudioStream"
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "VolumeDb",
+      "Native": "volume_db",
+      "Kind": "Number",
+      "Min": -80,
+      "Max": 24,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "PitchScale",
+      "Native": "pitch_scale",
+      "Kind": "Number",
+      "Min": 0.1,
+      "Max": 4,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "Autoplay",
+      "Native": "autoplay",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "StreamPaused",
+      "Native": "stream_paused",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
     }
   ],
   "Methods": [
@@ -1383,6 +3074,16 @@
       "Native": "get_global_position",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 0,
@@ -1406,6 +3107,16 @@
       "Native": "get_global_position",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 0,
@@ -1434,6 +3145,16 @@
           100000
         ]
       },
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 1,
       "FirstArgument": 0,
@@ -1468,6 +3189,16 @@
           100000
         ]
       },
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 1,
       "FirstArgument": 1,
@@ -1497,6 +3228,16 @@
       "Native": "show",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 2,
@@ -1517,6 +3258,16 @@
       "Native": "hide",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 2,
@@ -1537,6 +3288,16 @@
       "Native": "is_visible",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 2,
@@ -1560,6 +3321,16 @@
       "Native": "grab_focus",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 2,
@@ -1580,6 +3351,16 @@
       "Native": "release_focus",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 2,
@@ -1600,6 +3381,16 @@
       "Native": "has_focus",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 2,
@@ -1623,6 +3414,16 @@
       "Native": "get_combined_minimum_size",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 2,
@@ -1646,6 +3447,16 @@
       "Native": "set_pressed_no_signal",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 1,
       "FirstArgument": 2,
@@ -1672,6 +3483,16 @@
       "Native": "is_pressed",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 3,
@@ -1695,6 +3516,16 @@
       "Native": "clear",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 3,
@@ -1715,6 +3546,16 @@
       "Native": "select_all",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 3,
@@ -1735,6 +3576,16 @@
       "Native": "deselect",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 3,
@@ -1760,6 +3611,16 @@
           100000
         ]
       },
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 1,
       "FirstArgument": 3,
@@ -1792,6 +3653,16 @@
           3600
         ]
       },
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 0,
       "FirstArgument": 4,
@@ -1820,6 +3691,16 @@
       "Native": "stop",
       "Mutates": true,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 5,
@@ -1840,6 +3721,16 @@
       "Native": "is_playing",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 5,
@@ -1863,6 +3754,16 @@
       "Native": "get_playback_position",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 5,
@@ -1892,6 +3793,16 @@
           3600
         ]
       },
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 1,
       "FirstArgument": 5,
@@ -1919,6 +3830,16 @@
       "Native": "get_width",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 6,
@@ -1943,6 +3864,16 @@
       "Native": "get_height",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 6,
@@ -1967,6 +3898,16 @@
       "Native": "get_surface_count",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 0,
       "Required": 0,
       "FirstArgument": 6,
@@ -1991,6 +3932,16 @@
       "Native": "get_child_count",
       "Mutates": false,
       "Bounds": {},
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 0,
       "FirstArgument": 6,
@@ -2027,6 +3978,16 @@
           1
         ]
       },
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
       "Arguments": 1,
       "Required": 1,
       "FirstArgument": 7,
@@ -2047,6 +4008,3097 @@
           }
         ]
       }
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "Play",
+      "Native": "play",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "from_position": [
+          0,
+          600
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 8,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "play",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1958160172,
+        "arguments": [
+          {
+            "name": "from_position",
+            "type": "float",
+            "meta": "float",
+            "default_value": "0.0"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "Stop",
+      "Native": "stop",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 9,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "stop",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "IsPlaying",
+      "Native": "is_playing",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 9,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_playing",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "Play",
+      "Native": "play",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "from_position": [
+          0,
+          600
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 9,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "play",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1958160172,
+        "arguments": [
+          {
+            "name": "from_position",
+            "type": "float",
+            "meta": "float",
+            "default_value": "0.0"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "Stop",
+      "Native": "stop",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 10,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "stop",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "IsPlaying",
+      "Native": "is_playing",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 10,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_playing",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "Timer",
+      "Name": "Start",
+      "Native": "start",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "time_sec": [
+          -1,
+          600
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 10,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "start",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1392008558,
+        "arguments": [
+          {
+            "name": "time_sec",
+            "type": "float",
+            "meta": "double",
+            "default_value": "-1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Timer",
+      "Name": "Stop",
+      "Native": "stop",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 11,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "stop",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "Timer",
+      "Name": "IsStopped",
+      "Native": "is_stopped",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 11,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_stopped",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "Node2D",
+      "Name": "ToLocal",
+      "Native": "to_local",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 11,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "to_local",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2656412154,
+        "return_value": {
+          "type": "Vector2"
+        },
+        "arguments": [
+          {
+            "name": "global_point",
+            "type": "Vector2"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Node2D",
+      "Name": "ToGlobal",
+      "Native": "to_global",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 12,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "to_global",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2656412154,
+        "return_value": {
+          "type": "Vector2"
+        },
+        "arguments": [
+          {
+            "name": "local_point",
+            "type": "Vector2"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Sprite2D",
+      "Name": "GetRect",
+      "Native": "get_rect",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 13,
+      "Return": "Rectangle",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_rect",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1639390495,
+        "return_value": {
+          "type": "Rect2"
+        }
+      }
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "ApplyCentralImpulse",
+      "Native": "apply_central_impulse",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 13,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "apply_central_impulse",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3862383994,
+        "arguments": [
+          {
+            "name": "impulse",
+            "type": "Vector2",
+            "default_value": "Vector2(0, 0)"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "ApplyImpulse",
+      "Native": "apply_impulse",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 1,
+      "FirstArgument": 14,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "apply_impulse",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 4288681949,
+        "hash_compatibility": [
+          496058220
+        ],
+        "arguments": [
+          {
+            "name": "impulse",
+            "type": "Vector2"
+          },
+          {
+            "name": "position",
+            "type": "Vector2",
+            "default_value": "Vector2(0, 0)"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "ApplyCentralForce",
+      "Native": "apply_central_force",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 16,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "apply_central_force",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 743155724,
+        "arguments": [
+          {
+            "name": "force",
+            "type": "Vector2"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "ApplyForce",
+      "Native": "apply_force",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 1,
+      "FirstArgument": 17,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "apply_force",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 4288681949,
+        "hash_compatibility": [
+          496058220
+        ],
+        "arguments": [
+          {
+            "name": "force",
+            "type": "Vector2"
+          },
+          {
+            "name": "position",
+            "type": "Vector2",
+            "default_value": "Vector2(0, 0)"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "ApplyTorque",
+      "Native": "apply_torque",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 19,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "apply_torque",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 373806689,
+        "arguments": [
+          {
+            "name": "torque",
+            "type": "float",
+            "meta": "float"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "ApplyTorqueImpulse",
+      "Native": "apply_torque_impulse",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 20,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "apply_torque_impulse",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 373806689,
+        "arguments": [
+          {
+            "name": "torque",
+            "type": "float",
+            "meta": "float"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "GetContactCount",
+      "Native": "get_contact_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 21,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_contact_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "Area2D",
+      "Name": "HasOverlappingBodies",
+      "Native": "has_overlapping_bodies",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 21,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "has_overlapping_bodies",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "Area2D",
+      "Name": "HasOverlappingAreas",
+      "Native": "has_overlapping_areas",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 21,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "has_overlapping_areas",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "IsPlaying",
+      "Native": "is_playing",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 21,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_playing",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "GetPlayingSpeed",
+      "Native": "get_playing_speed",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 21,
+      "Return": "Number",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_playing_speed",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1740695150,
+        "return_value": {
+          "type": "float",
+          "meta": "float"
+        }
+      }
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "Play",
+      "Native": "play",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 3,
+      "Required": 0,
+      "FirstArgument": 21,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "play",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2372066587,
+        "arguments": [
+          {
+            "name": "name",
+            "type": "StringName",
+            "default_value": "&\"\""
+          },
+          {
+            "name": "custom_speed",
+            "type": "float",
+            "meta": "float",
+            "default_value": "1.0"
+          },
+          {
+            "name": "from_end",
+            "type": "bool",
+            "default_value": "false"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "PlayBackwards",
+      "Native": "play_backwards",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 24,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "play_backwards",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1421762485,
+        "arguments": [
+          {
+            "name": "name",
+            "type": "StringName",
+            "default_value": "&\"\""
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "Pause",
+      "Native": "pause",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 25,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "pause",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "Stop",
+      "Native": "stop",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 25,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "stop",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "HasAnimation",
+      "Native": "has_animation",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 25,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "has_animation",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2619796661,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "GetAnimationNames",
+      "Native": "get_animation_names",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 26,
+      "Return": "StringsValue",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_animation_names",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1139954409,
+        "return_value": {
+          "type": "PackedStringArray"
+        }
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "AddAnimation",
+      "Native": "add_animation",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation",
+          "Absent": true
+        },
+        "Capacity": {
+          "Query": "get_animation_names",
+          "Maximum": 16
+        }
+      },
+      "CountQuery": "get_animation_names",
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": true,
+      "CountArgument": -1,
+      "CountLimit": 16,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 26,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_animation",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3304788590,
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "SetAnimationSpeed",
+      "Native": "set_animation_speed",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ],
+        "fps": [
+          0.1,
+          120
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        }
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 27,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_animation_speed",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 4135858297,
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          },
+          {
+            "name": "fps",
+            "type": "float",
+            "meta": "double"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "GetAnimationSpeed",
+      "Native": "get_animation_speed",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        }
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 29,
+      "Return": "Number",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_animation_speed",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2349060816,
+        "return_value": {
+          "type": "float",
+          "meta": "double"
+        },
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "SetAnimationLoop",
+      "Native": "set_animation_loop",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        }
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 30,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_animation_loop",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2524380260,
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          },
+          {
+            "name": "loop",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "GetAnimationLoop",
+      "Native": "get_animation_loop",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        }
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 32,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_animation_loop",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2619796661,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "GetFrameCount",
+      "Native": "get_frame_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        }
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 33,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_frame_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2458036349,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "GetFrameTexture",
+      "Native": "get_frame_texture",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        },
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_frame_count"
+        }
+      },
+      "CountQuery": "get_frame_count",
+      "IndexArgument": 1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": 0,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 34,
+      "Return": "ResourceValue",
+      "ReturnClass": "Texture2D",
+      "Signature": {
+        "name": "get_frame_texture",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2900517879,
+        "return_value": {
+          "type": "Texture2D"
+        },
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          },
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "RemoveFrame",
+      "Native": "remove_frame",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        },
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_frame_count"
+        }
+      },
+      "CountQuery": "get_frame_count",
+      "IndexArgument": 1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": 0,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 36,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "remove_frame",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2415702435,
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          },
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "SpriteFrames",
+      "Name": "AddFrame",
+      "Native": "add_frame",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "anim": [
+          1,
+          128
+        ],
+        "duration": [
+          0.01,
+          60
+        ],
+        "at_position": [
+          -1,
+          64
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "anim",
+          "Query": "has_animation"
+        },
+        "Index": {
+          "Argument": "at_position",
+          "Query": "get_frame_count",
+          "AllowEnd": true,
+          "AllowNegativeOne": true
+        },
+        "Capacity": {
+          "Query": "get_frame_count",
+          "Argument": "anim",
+          "Maximum": 64
+        }
+      },
+      "CountQuery": "get_frame_count",
+      "IndexArgument": 3,
+      "AllowEnd": true,
+      "AllowNegativeOne": true,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": 0,
+      "CountLimit": 64,
+      "Arguments": 4,
+      "Required": 2,
+      "FirstArgument": 38,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_frame",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1351332740,
+        "hash_compatibility": [
+          407562921
+        ],
+        "arguments": [
+          {
+            "name": "anim",
+            "type": "StringName"
+          },
+          {
+            "name": "texture",
+            "type": "Texture2D"
+          },
+          {
+            "name": "duration",
+            "type": "float",
+            "meta": "float",
+            "default_value": "1.0"
+          },
+          {
+            "name": "at_position",
+            "type": "int",
+            "meta": "int32",
+            "default_value": "-1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "AddItem",
+      "Native": "add_item",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Capacity": {
+          "Query": "get_item_count",
+          "Maximum": 1024
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": 1024,
+      "Arguments": 3,
+      "Required": 1,
+      "FirstArgument": 42,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_item",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 359861678,
+        "hash_compatibility": [
+          4086250691
+        ],
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "text",
+            "type": "String"
+          },
+          {
+            "name": "icon",
+            "type": "Texture2D",
+            "default_value": "null"
+          },
+          {
+            "name": "selectable",
+            "type": "bool",
+            "default_value": "true"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "GetItemCount",
+      "Native": "get_item_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 45,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_item_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "GetItemText",
+      "Native": "get_item_text",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 45,
+      "Return": "Text",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_item_text",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 844755477,
+        "return_value": {
+          "type": "String"
+        },
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "SetItemText",
+      "Native": "set_item_text",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 46,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_item_text",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 501894301,
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "text",
+            "type": "String"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "GetItemIcon",
+      "Native": "get_item_icon",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 48,
+      "Return": "ResourceValue",
+      "ReturnClass": "Texture2D",
+      "Signature": {
+        "name": "get_item_icon",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3536238170,
+        "return_value": {
+          "type": "Texture2D"
+        },
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "SetItemIcon",
+      "Native": "set_item_icon",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 49,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_item_icon",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 666127730,
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "icon",
+            "type": "Texture2D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "IsSelected",
+      "Native": "is_selected",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 51,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_selected",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1116898809,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "Select",
+      "Native": "select",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 1,
+      "FirstArgument": 52,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "select",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 972357352,
+        "hash_compatibility": [
+          4023243586
+        ],
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "single",
+            "type": "bool",
+            "default_value": "true"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "Deselect",
+      "Native": "deselect",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 54,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "deselect",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1286410249,
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "DeselectAll",
+      "Native": "deselect_all",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 55,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "deselect_all",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "RemoveItem",
+      "Native": "remove_item",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "idx",
+          "Query": "get_item_count"
+        }
+      },
+      "CountQuery": "get_item_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 55,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "remove_item",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1286410249,
+        "arguments": [
+          {
+            "name": "idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "Clear",
+      "Native": "clear",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 56,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "clear",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "ItemList",
+      "Name": "GetSelectedItems",
+      "Native": "get_selected_items",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 56,
+      "Return": "IntegersValue",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_selected_items",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 969006518,
+        "return_value": {
+          "type": "PackedInt32Array"
+        }
+      }
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "GetLineCount",
+      "Native": "get_line_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 56,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_line_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "GetSelectedText",
+      "Native": "get_selected_text",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 56,
+      "Return": "Text",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_selected_text",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2309358862,
+        "return_value": {
+          "type": "String"
+        },
+        "arguments": [
+          {
+            "name": "caret_index",
+            "type": "int",
+            "meta": "int32",
+            "default_value": "-1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "HasSelection",
+      "Native": "has_selection",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 57,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "has_selection",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2824505868,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "caret_index",
+            "type": "int",
+            "meta": "int32",
+            "default_value": "-1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "Deselect",
+      "Native": "deselect",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 58,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "deselect",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1025054187,
+        "arguments": [
+          {
+            "name": "caret_index",
+            "type": "int",
+            "meta": "int32",
+            "default_value": "-1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RichTextLabel",
+      "Name": "Clear",
+      "Native": "clear",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 59,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "clear",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "RichTextLabel",
+      "Name": "GetTotalCharacterCount",
+      "Native": "get_total_character_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 59,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_total_character_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "SetInstanceTransform",
+      "Native": "set_instance_transform",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "instance": [
+          0,
+          255
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "instance",
+          "Query": "get_instance_count"
+        }
+      },
+      "CountQuery": "get_instance_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 59,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_instance_transform",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3616898986,
+        "arguments": [
+          {
+            "name": "instance",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "transform",
+            "type": "Transform3D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "GetInstanceTransform",
+      "Native": "get_instance_transform",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "instance": [
+          0,
+          255
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "instance",
+          "Query": "get_instance_count"
+        }
+      },
+      "CountQuery": "get_instance_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 61,
+      "Return": "Transform3Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_instance_transform",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1965739696,
+        "return_value": {
+          "type": "Transform3D"
+        },
+        "arguments": [
+          {
+            "name": "instance",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "SetInstanceTransform2d",
+      "Native": "set_instance_transform_2d",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "instance": [
+          0,
+          255
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "instance",
+          "Query": "get_instance_count"
+        }
+      },
+      "CountQuery": "get_instance_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 62,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_instance_transform_2d",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 30160968,
+        "arguments": [
+          {
+            "name": "instance",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "transform",
+            "type": "Transform2D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "GetInstanceTransform2d",
+      "Native": "get_instance_transform_2d",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "instance": [
+          0,
+          255
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "instance",
+          "Query": "get_instance_count"
+        }
+      },
+      "CountQuery": "get_instance_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 64,
+      "Return": "Transform2Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_instance_transform_2d",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3836996910,
+        "return_value": {
+          "type": "Transform2D"
+        },
+        "arguments": [
+          {
+            "name": "instance",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "SetInstanceColor",
+      "Native": "set_instance_color",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "instance": [
+          0,
+          255
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "instance",
+          "Query": "get_instance_count"
+        }
+      },
+      "ArgumentKinds": {
+        "color": "Colour4"
+      },
+      "CountQuery": "get_instance_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 65,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_instance_color",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2878471219,
+        "arguments": [
+          {
+            "name": "instance",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "color",
+            "type": "Color"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "MultiMesh",
+      "Name": "GetInstanceColor",
+      "Native": "get_instance_color",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "instance": [
+          0,
+          255
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "instance",
+          "Query": "get_instance_count"
+        }
+      },
+      "ReturnKind": "Colour4",
+      "CountQuery": "get_instance_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 67,
+      "Return": "Colour4",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_instance_color",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3457211756,
+        "return_value": {
+          "type": "Color"
+        },
+        "arguments": [
+          {
+            "name": "instance",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Mesh",
+      "Name": "GetAabb",
+      "Native": "get_aabb",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 68,
+      "Return": "BoundsValue",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_aabb",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1068685055,
+        "return_value": {
+          "type": "AABB"
+        }
+      }
+    },
+    {
+      "Class": "ShaderMaterial",
+      "Name": "SetShaderParameter",
+      "Native": "set_shader_parameter",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "param": [
+          1,
+          128
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 68,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_shader_parameter",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3776071444,
+        "arguments": [
+          {
+            "name": "param",
+            "type": "StringName"
+          },
+          {
+            "name": "value",
+            "type": "Variant"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShaderMaterial",
+      "Name": "GetShaderParameter",
+      "Native": "get_shader_parameter",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "param": [
+          1,
+          128
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 70,
+      "Return": "VariantValue",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_shader_parameter",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2760726917,
+        "return_value": {
+          "type": "Variant"
+        },
+        "arguments": [
+          {
+            "name": "param",
+            "type": "StringName"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "GetPointCount",
+      "Native": "get_point_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 71,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_point_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "Sample",
+      "Native": "sample",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "offset": [
+          0,
+          1
+        ]
+      },
+      "ReturnKind": "Colour4",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 71,
+      "Return": "Colour4",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "sample",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1250405064,
+        "return_value": {
+          "type": "Color"
+        },
+        "arguments": [
+          {
+            "name": "offset",
+            "type": "float",
+            "meta": "float"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "GetColor",
+      "Native": "get_color",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "point",
+          "Query": "get_point_count"
+        }
+      },
+      "ReturnKind": "Colour4",
+      "CountQuery": "get_point_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 72,
+      "Return": "Colour4",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_color",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2624840992,
+        "return_value": {
+          "type": "Color"
+        },
+        "arguments": [
+          {
+            "name": "point",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "SetColor",
+      "Native": "set_color",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "point",
+          "Query": "get_point_count"
+        }
+      },
+      "ArgumentKinds": {
+        "color": "Colour4"
+      },
+      "CountQuery": "get_point_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 73,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_color",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2878471219,
+        "arguments": [
+          {
+            "name": "point",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "color",
+            "type": "Color"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "GetOffset",
+      "Native": "get_offset",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "point",
+          "Query": "get_point_count"
+        }
+      },
+      "CountQuery": "get_point_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 75,
+      "Return": "Number",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_offset",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 4025615559,
+        "return_value": {
+          "type": "float",
+          "meta": "float"
+        },
+        "arguments": [
+          {
+            "name": "point",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "SetOffset",
+      "Native": "set_offset",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "offset": [
+          0,
+          1
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "point",
+          "Query": "get_point_count"
+        }
+      },
+      "CountQuery": "get_point_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 76,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_offset",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1602489585,
+        "arguments": [
+          {
+            "name": "point",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "offset",
+            "type": "float",
+            "meta": "float"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "AddPoint",
+      "Native": "add_point",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "offset": [
+          0,
+          1
+        ]
+      },
+      "Validation": {
+        "Capacity": {
+          "Query": "get_point_count",
+          "Maximum": 256
+        }
+      },
+      "ArgumentKinds": {
+        "color": "Colour4"
+      },
+      "CountQuery": "get_point_count",
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": 256,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 78,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_point",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3629403827,
+        "arguments": [
+          {
+            "name": "offset",
+            "type": "float",
+            "meta": "float"
+          },
+          {
+            "name": "color",
+            "type": "Color"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Gradient",
+      "Name": "RemovePoint",
+      "Native": "remove_point",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "point",
+          "Query": "get_point_count"
+        }
+      },
+      "CountQuery": "get_point_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 80,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "remove_point",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1286410249,
+        "arguments": [
+          {
+            "name": "point",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
     }
   ],
   "Signals": [
@@ -2054,85 +7106,225 @@
       "Class": "BaseButton",
       "Name": "Pressed",
       "Native": "pressed",
-      "FirstArgument": 8,
+      "Authority": "OwnedScene",
+      "FirstArgument": 81,
       "Arguments": 0
     },
     {
       "Class": "BaseButton",
       "Name": "Toggled",
       "Native": "toggled",
-      "FirstArgument": 8,
+      "Authority": "OwnedScene",
+      "FirstArgument": 81,
       "Arguments": 1
     },
     {
       "Class": "BaseButton",
       "Name": "ButtonDown",
       "Native": "button_down",
-      "FirstArgument": 9,
+      "Authority": "OwnedScene",
+      "FirstArgument": 82,
       "Arguments": 0
     },
     {
       "Class": "BaseButton",
       "Name": "ButtonUp",
       "Native": "button_up",
-      "FirstArgument": 9,
+      "Authority": "OwnedScene",
+      "FirstArgument": 82,
       "Arguments": 0
     },
     {
       "Class": "LineEdit",
       "Name": "TextSubmitted",
       "Native": "text_submitted",
-      "FirstArgument": 9,
+      "Authority": "OwnedScene",
+      "FirstArgument": 82,
       "Arguments": 1
     },
     {
       "Class": "LineEdit",
       "Name": "TextChanged",
       "Native": "text_changed",
-      "FirstArgument": 10,
+      "Authority": "OwnedScene",
+      "FirstArgument": 83,
       "Arguments": 1
     },
     {
       "Class": "AudioStreamPlayer",
       "Name": "Finished",
       "Native": "finished",
-      "FirstArgument": 11,
+      "Authority": "OwnedScene",
+      "FirstArgument": 84,
       "Arguments": 0
     },
     {
       "Class": "Control",
       "Name": "Resized",
       "Native": "resized",
-      "FirstArgument": 11,
+      "Authority": "OwnedScene",
+      "FirstArgument": 84,
       "Arguments": 0
     },
     {
       "Class": "Control",
       "Name": "FocusEntered",
       "Native": "focus_entered",
-      "FirstArgument": 11,
+      "Authority": "OwnedScene",
+      "FirstArgument": 84,
       "Arguments": 0
     },
     {
       "Class": "Control",
       "Name": "FocusExited",
       "Native": "focus_exited",
-      "FirstArgument": 11,
+      "Authority": "OwnedScene",
+      "FirstArgument": 84,
       "Arguments": 0
     },
     {
       "Class": "CanvasItem",
       "Name": "VisibilityChanged",
       "Native": "visibility_changed",
-      "FirstArgument": 11,
+      "Authority": "OwnedScene",
+      "FirstArgument": 84,
       "Arguments": 0
     },
     {
       "Class": "Range",
       "Name": "ValueChanged",
       "Native": "value_changed",
-      "FirstArgument": 11,
+      "Authority": "OwnedScene",
+      "FirstArgument": 84,
       "Arguments": 1
+    },
+    {
+      "Class": "AudioStreamPlayer2D",
+      "Name": "Finished",
+      "Native": "finished",
+      "Authority": "OwnedScene",
+      "FirstArgument": 85,
+      "Arguments": 0
+    },
+    {
+      "Class": "AudioStreamPlayer3D",
+      "Name": "Finished",
+      "Native": "finished",
+      "Authority": "OwnedScene",
+      "FirstArgument": 85,
+      "Arguments": 0
+    },
+    {
+      "Class": "Timer",
+      "Name": "Timeout",
+      "Native": "timeout",
+      "Authority": "OwnedScene",
+      "FirstArgument": 85,
+      "Arguments": 0
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "BodyEntered",
+      "Native": "body_entered",
+      "Authority": "OwnedScene",
+      "FirstArgument": 85,
+      "Arguments": 1
+    },
+    {
+      "Class": "RigidBody2D",
+      "Name": "BodyExited",
+      "Native": "body_exited",
+      "Authority": "OwnedScene",
+      "FirstArgument": 86,
+      "Arguments": 1
+    },
+    {
+      "Class": "Area2D",
+      "Name": "BodyEntered",
+      "Native": "body_entered",
+      "Authority": "OwnedScene",
+      "FirstArgument": 87,
+      "Arguments": 1
+    },
+    {
+      "Class": "Area2D",
+      "Name": "BodyExited",
+      "Native": "body_exited",
+      "Authority": "OwnedScene",
+      "FirstArgument": 88,
+      "Arguments": 1
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "AnimationFinished",
+      "Native": "animation_finished",
+      "Authority": "OwnedScene",
+      "FirstArgument": 89,
+      "Arguments": 0
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "AnimationLooped",
+      "Native": "animation_looped",
+      "Authority": "OwnedScene",
+      "FirstArgument": 89,
+      "Arguments": 0
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "FrameChanged",
+      "Native": "frame_changed",
+      "Authority": "OwnedScene",
+      "FirstArgument": 89,
+      "Arguments": 0
+    },
+    {
+      "Class": "AnimatedSprite2D",
+      "Name": "AnimationChanged",
+      "Native": "animation_changed",
+      "Authority": "OwnedScene",
+      "FirstArgument": 89,
+      "Arguments": 0
+    },
+    {
+      "Class": "ItemList",
+      "Name": "ItemSelected",
+      "Native": "item_selected",
+      "Authority": "OwnedScene",
+      "FirstArgument": 89,
+      "Arguments": 1
+    },
+    {
+      "Class": "ItemList",
+      "Name": "MultiSelected",
+      "Native": "multi_selected",
+      "Authority": "OwnedScene",
+      "FirstArgument": 90,
+      "Arguments": 2
+    },
+    {
+      "Class": "ItemList",
+      "Name": "EmptyClicked",
+      "Native": "empty_clicked",
+      "Authority": "OwnedScene",
+      "FirstArgument": 92,
+      "Arguments": 2
+    },
+    {
+      "Class": "ItemList",
+      "Name": "ItemActivated",
+      "Native": "item_activated",
+      "Authority": "OwnedScene",
+      "FirstArgument": 94,
+      "Arguments": 1
+    },
+    {
+      "Class": "TextEdit",
+      "Name": "TextChanged",
+      "Native": "text_changed",
+      "Authority": "OwnedScene",
+      "FirstArgument": 95,
+      "Arguments": 0
     }
   ],
   "Constants": [
@@ -2267,6 +7459,132 @@
       "Enum": "Transparency",
       "Name": "TRANSPARENCY_MAX",
       "Value": 5
+    },
+    {
+      "Class": "Timer",
+      "Enum": "TimerProcessCallback",
+      "Name": "TIMER_PROCESS_PHYSICS",
+      "Value": 0
+    },
+    {
+      "Class": "Timer",
+      "Enum": "TimerProcessCallback",
+      "Name": "TIMER_PROCESS_IDLE",
+      "Value": 1
+    },
+    {
+      "Class": "RigidBody2D",
+      "Enum": "FreezeMode",
+      "Name": "FREEZE_MODE_STATIC",
+      "Value": 0
+    },
+    {
+      "Class": "RigidBody2D",
+      "Enum": "FreezeMode",
+      "Name": "FREEZE_MODE_KINEMATIC",
+      "Value": 1
+    },
+    {
+      "Class": "Camera2D",
+      "Enum": "AnchorMode",
+      "Name": "ANCHOR_MODE_FIXED_TOP_LEFT",
+      "Value": 0
+    },
+    {
+      "Class": "Camera2D",
+      "Enum": "AnchorMode",
+      "Name": "ANCHOR_MODE_DRAG_CENTER",
+      "Value": 1
+    },
+    {
+      "Class": "ItemList",
+      "Enum": "SelectMode",
+      "Name": "SELECT_SINGLE",
+      "Value": 0
+    },
+    {
+      "Class": "ItemList",
+      "Enum": "SelectMode",
+      "Name": "SELECT_MULTI",
+      "Value": 1
+    },
+    {
+      "Class": "ItemList",
+      "Enum": "IconMode",
+      "Name": "ICON_MODE_TOP",
+      "Value": 0
+    },
+    {
+      "Class": "ItemList",
+      "Enum": "IconMode",
+      "Name": "ICON_MODE_LEFT",
+      "Value": 1
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_LEFT_TO_RIGHT",
+      "Value": 0
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_RIGHT_TO_LEFT",
+      "Value": 1
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_TOP_TO_BOTTOM",
+      "Value": 2
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_BOTTOM_TO_TOP",
+      "Value": 3
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_CLOCKWISE",
+      "Value": 4
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_COUNTER_CLOCKWISE",
+      "Value": 5
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_BILINEAR_LEFT_AND_RIGHT",
+      "Value": 6
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_BILINEAR_TOP_AND_BOTTOM",
+      "Value": 7
+    },
+    {
+      "Class": "TextureProgressBar",
+      "Enum": "FillMode",
+      "Name": "FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE",
+      "Value": 8
+    },
+    {
+      "Class": "MultiMesh",
+      "Enum": "TransformFormat",
+      "Name": "TRANSFORM_2D",
+      "Value": 0
+    },
+    {
+      "Class": "MultiMesh",
+      "Enum": "TransformFormat",
+      "Name": "TRANSFORM_3D",
+      "Value": 1
     }
   ],
   "Arguments": [
@@ -2337,6 +7655,611 @@
       "Max": 1
     },
     {
+      "Class": "AudioStreamPlayer2D.Play",
+      "Name": "from_position",
+      "Native": "from_position",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600,
+      "Default": "0.0"
+    },
+    {
+      "Class": "AudioStreamPlayer3D.Play",
+      "Name": "from_position",
+      "Native": "from_position",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600,
+      "Default": "0.0"
+    },
+    {
+      "Class": "Timer.Start",
+      "Name": "time_sec",
+      "Native": "time_sec",
+      "Kind": "Number",
+      "Min": -1,
+      "Max": 600,
+      "Default": "-1"
+    },
+    {
+      "Class": "Node2D.ToLocal",
+      "Name": "global_point",
+      "Native": "global_point",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Node2D.ToGlobal",
+      "Name": "local_point",
+      "Native": "local_point",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "RigidBody2D.ApplyCentralImpulse",
+      "Name": "impulse",
+      "Native": "impulse",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "Vector2(0, 0)"
+    },
+    {
+      "Class": "RigidBody2D.ApplyImpulse",
+      "Name": "impulse",
+      "Native": "impulse",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "RigidBody2D.ApplyImpulse",
+      "Name": "position",
+      "Native": "position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "Vector2(0, 0)"
+    },
+    {
+      "Class": "RigidBody2D.ApplyCentralForce",
+      "Name": "force",
+      "Native": "force",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "RigidBody2D.ApplyForce",
+      "Name": "force",
+      "Native": "force",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "RigidBody2D.ApplyForce",
+      "Name": "position",
+      "Native": "position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "Vector2(0, 0)"
+    },
+    {
+      "Class": "RigidBody2D.ApplyTorque",
+      "Name": "torque",
+      "Native": "torque",
+      "Kind": "Number",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "RigidBody2D.ApplyTorqueImpulse",
+      "Name": "torque",
+      "Native": "torque",
+      "Kind": "Number",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "AnimatedSprite2D.Play",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192,
+      "Default": ""
+    },
+    {
+      "Class": "AnimatedSprite2D.Play",
+      "Name": "custom_speed",
+      "Native": "custom_speed",
+      "Kind": "Number",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "1.0"
+    },
+    {
+      "Class": "AnimatedSprite2D.Play",
+      "Name": "from_end",
+      "Native": "from_end",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "false"
+    },
+    {
+      "Class": "AnimatedSprite2D.PlayBackwards",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192,
+      "Default": ""
+    },
+    {
+      "Class": "SpriteFrames.HasAnimation",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
+    },
+    {
+      "Class": "SpriteFrames.AddAnimation",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.SetAnimationSpeed",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.SetAnimationSpeed",
+      "Name": "fps",
+      "Native": "fps",
+      "Kind": "Number",
+      "Min": 0.1,
+      "Max": 120
+    },
+    {
+      "Class": "SpriteFrames.GetAnimationSpeed",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.SetAnimationLoop",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.SetAnimationLoop",
+      "Name": "loop",
+      "Native": "loop",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "SpriteFrames.GetAnimationLoop",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.GetFrameCount",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.GetFrameTexture",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.GetFrameTexture",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "SpriteFrames.RemoveFrame",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.RemoveFrame",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "SpriteFrames.AddFrame",
+      "Name": "anim",
+      "Native": "anim",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "SpriteFrames.AddFrame",
+      "Name": "texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "SpriteFrames.AddFrame",
+      "Name": "duration",
+      "Native": "duration",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 60,
+      "Default": "1.0"
+    },
+    {
+      "Class": "SpriteFrames.AddFrame",
+      "Name": "at_position",
+      "Native": "at_position",
+      "Kind": "Integer",
+      "Min": -1,
+      "Max": 64,
+      "Default": "-1"
+    },
+    {
+      "Class": "ItemList.AddItem",
+      "Name": "text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
+    },
+    {
+      "Class": "ItemList.AddItem",
+      "Name": "icon",
+      "Native": "icon",
+      "Kind": "ResourceValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Texture2D",
+      "Default": "null"
+    },
+    {
+      "Class": "ItemList.AddItem",
+      "Name": "selectable",
+      "Native": "selectable",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "true"
+    },
+    {
+      "Class": "ItemList.GetItemText",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.SetItemText",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.SetItemText",
+      "Name": "text",
+      "Native": "text",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
+    },
+    {
+      "Class": "ItemList.GetItemIcon",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.SetItemIcon",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.SetItemIcon",
+      "Name": "icon",
+      "Native": "icon",
+      "Kind": "ResourceValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Texture2D"
+    },
+    {
+      "Class": "ItemList.IsSelected",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.Select",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.Select",
+      "Name": "single",
+      "Native": "single",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "true"
+    },
+    {
+      "Class": "ItemList.Deselect",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.RemoveItem",
+      "Name": "idx",
+      "Native": "idx",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "TextEdit.GetSelectedText",
+      "Name": "caret_index",
+      "Native": "caret_index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "-1"
+    },
+    {
+      "Class": "TextEdit.HasSelection",
+      "Name": "caret_index",
+      "Native": "caret_index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "-1"
+    },
+    {
+      "Class": "TextEdit.Deselect",
+      "Name": "caret_index",
+      "Native": "caret_index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "-1"
+    },
+    {
+      "Class": "MultiMesh.SetInstanceTransform",
+      "Name": "instance",
+      "Native": "instance",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 255
+    },
+    {
+      "Class": "MultiMesh.SetInstanceTransform",
+      "Name": "transform",
+      "Native": "transform",
+      "Kind": "Transform3Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "MultiMesh.GetInstanceTransform",
+      "Name": "instance",
+      "Native": "instance",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 255
+    },
+    {
+      "Class": "MultiMesh.SetInstanceTransform2d",
+      "Name": "instance",
+      "Native": "instance",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 255
+    },
+    {
+      "Class": "MultiMesh.SetInstanceTransform2d",
+      "Name": "transform",
+      "Native": "transform",
+      "Kind": "Transform2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "MultiMesh.GetInstanceTransform2d",
+      "Name": "instance",
+      "Native": "instance",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 255
+    },
+    {
+      "Class": "MultiMesh.SetInstanceColor",
+      "Name": "instance",
+      "Native": "instance",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 255
+    },
+    {
+      "Class": "MultiMesh.SetInstanceColor",
+      "Name": "color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "MultiMesh.GetInstanceColor",
+      "Name": "instance",
+      "Native": "instance",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 255
+    },
+    {
+      "Class": "ShaderMaterial.SetShaderParameter",
+      "Name": "param",
+      "Native": "param",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "ShaderMaterial.SetShaderParameter",
+      "Name": "value",
+      "Native": "value",
+      "Kind": "VariantValue",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ShaderMaterial.GetShaderParameter",
+      "Name": "param",
+      "Native": "param",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "Gradient.Sample",
+      "Name": "offset",
+      "Native": "offset",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Gradient.GetColor",
+      "Name": "point",
+      "Native": "point",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Gradient.SetColor",
+      "Name": "point",
+      "Native": "point",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Gradient.SetColor",
+      "Name": "color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Gradient.GetOffset",
+      "Name": "point",
+      "Native": "point",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Gradient.SetOffset",
+      "Name": "point",
+      "Native": "point",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Gradient.SetOffset",
+      "Name": "offset",
+      "Native": "offset",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Gradient.AddPoint",
+      "Name": "offset",
+      "Native": "offset",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Gradient.AddPoint",
+      "Name": "color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Gradient.RemovePoint",
+      "Name": "point",
+      "Native": "point",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
       "Class": "BaseButton.Toggled",
       "Name": "toggled_on",
       "Native": "toggled_on",
@@ -2367,6 +8290,90 @@
       "Kind": "Number",
       "Min": -100000,
       "Max": 100000
+    },
+    {
+      "Class": "RigidBody2D.BodyEntered",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node"
+    },
+    {
+      "Class": "RigidBody2D.BodyExited",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node"
+    },
+    {
+      "Class": "Area2D.BodyEntered",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node2D"
+    },
+    {
+      "Class": "Area2D.BodyExited",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node2D"
+    },
+    {
+      "Class": "ItemList.ItemSelected",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.MultiSelected",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.MultiSelected",
+      "Name": "selected",
+      "Native": "selected",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.EmptyClicked",
+      "Name": "at_position",
+      "Native": "at_position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.EmptyClicked",
+      "Name": "mouse_button_index",
+      "Native": "mouse_button_index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ItemList.ItemActivated",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
     }
   ],
   "LoadTypes": [
@@ -2374,10 +8381,18 @@
     "AudioStream",
     "Mesh",
     "Font",
-    "PackedScene"
+    "PackedScene",
+    "SpriteFrames",
+    "Shader",
+    "Material",
+    "Theme",
+    "StyleBox",
+    "Shape2D",
+    "Shape3D",
+    "Gradient"
   ],
   "Schema": 1,
-  "PolicySHA256": "8322ba0504ed0b2f4d45a5d89b87ef20ba65e154bbb79b7bf898dfee5607585f",
+  "PolicySHA256": "ba1a9bc462d8d1b92a0811838aad0433b4c281e1de068fbd9932ae05cc9396df",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
   "ScopeOperations": [
     {

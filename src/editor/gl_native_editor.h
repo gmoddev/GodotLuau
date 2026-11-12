@@ -33,8 +33,9 @@ inline std::string Text(const Luau::AstExpr* Expression) {
     return {};
 }
 inline const GLNative::Property* Property(const std::string& Name, const std::string& Key) {
-    for (const auto& Item:GLNative::Properties) if (Key==Item.Name && IsA(Name,Item.Class)) return &Item;
-    return nullptr;
+    const GLNative::Property* Best=nullptr;
+    for (const auto& Item:GLNative::Properties) if (Key==Item.Name && IsA(Name,Item.Class) && (!Best || IsA(Item.Class,Best->Class))) Best=&Item;
+    return Best;
 }
 inline const GLNative::Method* Method(const std::string& Name, const std::string& Key) {
     for (const auto& Item:GLNative::Methods) if (Key==Item.Name && IsA(Name,Item.Class)) return &Item;
@@ -126,8 +127,8 @@ class Visitor : public Luau::AstVisitor {
                 Number->value<Item.Min || Number->value>Item.Max || (Item.Type==GLNative::Integer && std::floor(Number->value)!=Number->value);
         } else if (Value->is<Luau::AstExprConstantBool>()) Wrong=Item.Type!=GLNative::Boolean;
         else if (auto String=Value->as<Luau::AstExprConstantString>()) Wrong=Item.Type!=GLNative::Text || String->value.size<Item.Min || String->value.size>Item.Max;
-        else if (Value->is<Luau::AstExprConstantNil>()) Wrong=Item.Type!=GLNative::ResourceValue;
-        else if (Value->is<Luau::AstExprTable>()) Wrong=Item.Type!=GLNative::Vector2Value;
+        else if (Value->is<Luau::AstExprConstantNil>()) Wrong=Item.Type!=GLNative::ResourceValue && Item.Type!=GLNative::NodeValue && Item.Type!=GLNative::VariantValue;
+        else if (Value->is<Luau::AstExprTable>()) Wrong=Item.Type!=GLNative::Vector2Value && Item.Type<=GLNative::Void;
         if (Wrong) Error(Value->location,"E_NATIVE_TYPE",std::string("Invalid literal for ")+Item.Class+"."+Item.Name+"; check the native type and bounds");
     }
     void CheckProperties(const Handle& Target, const Luau::AstExpr* Expression) {
@@ -138,6 +139,7 @@ class Visitor : public Luau::AstVisitor {
             if (!Entry.key || !Entry.key->is<Luau::AstExprConstantString>()) continue;
             auto Name=Text(Entry.key); auto Item=Property(Target.Class,Name);
             if (!Item) Error(Entry.key->location,"E_NATIVE_PROPERTY","Unapproved property "+Target.Class+"."+Name);
+            else if (Item->ReadOnly) Error(Entry.key->location,"E_NATIVE_READONLY","Observation property cannot be configured: "+Name);
             else CheckValue(*Item,Entry.value);
         }
     }
@@ -174,6 +176,7 @@ public:
                 auto Item=Property(Type.Class,Field->index.value);
                 if (Type.Resource) Error(Field->indexLocation,"E_NATIVE_RESOURCE","Use Scope:Get/Configure for opaque resource handles");
                 else if (!Item) Error(Field->indexLocation,"E_NATIVE_PROPERTY","Unapproved native property "+std::string(Field->index.value));
+                else if (Item->ReadOnly) Error(Field->indexLocation,"E_NATIVE_READONLY","Observation property cannot be assigned");
                 else if (Index<Statement->values.size) CheckValue(*Item,Statement->values.data[Index]);
             }
         }
@@ -185,7 +188,7 @@ public:
         if (Cursor(Name,Filter) && !Type.Class.empty()) { Handled=true; Members(Type,Filter); }
         else if (Cursor(Name,Filter)) {
             if (auto Global=Expression->expr->as<Luau::AstExprGlobal>()) if (std::string(Global->name.value)=="Scene")
-                { Handled=true; for (const char* Item:{"new","Classes","Describe","Enums","PolicySHA256","ApiSHA256"}) Suggest(Item,Filter,1,"Approved native Scene API"); }
+                { Handled=true; for (const char* Item:{"new","Classes","Describe","Value","Enums","PolicySHA256","ApiSHA256"}) Suggest(Item,Filter,1,"Approved native Scene API"); }
         }
         else if (Type.Resource) Error(Expression->indexLocation,"E_NATIVE_RESOURCE","Use Scope:Get/Configure/Call for opaque resource handles");
         return Continue();

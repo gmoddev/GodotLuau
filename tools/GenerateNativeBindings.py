@@ -13,16 +13,31 @@ import sys
 
 Root = Path(__file__).resolve().parents[1]
 Kinds = {'float': 'Number', 'int': 'Integer', 'bool': 'Boolean', 'String': 'Text',
-         'StringName': 'Text', 'Vector3': 'Vector', 'Vector2': 'Vector2Value', 'Color': 'Colour'}
+         'StringName': 'Text', 'Vector3': 'Vector', 'Vector2': 'Vector2Value', 'Color': 'Colour',
+         'Vector2i':'Vector2Integer','Vector3i':'Vector3Integer','Vector4':'Vector4Value','Vector4i':'Vector4Integer',
+         'Rect2':'Rectangle','Rect2i':'RectangleInteger','Quaternion':'Rotation','Basis':'BasisValue',
+         'Transform2D':'Transform2Value','Transform3D':'Transform3Value','Plane':'PlaneValue','AABB':'BoundsValue',
+         'Variant':'VariantValue','Array':'ArrayValue','Dictionary':'DictionaryValue',
+         'PackedByteArray':'BytesValue','PackedInt32Array':'IntegersValue','PackedInt64Array':'LongsValue',
+         'PackedFloat32Array':'FloatsValue','PackedFloat64Array':'DoublesValue','PackedStringArray':'StringsValue',
+         'PackedVector2Array':'Vectors2Value','PackedVector3Array':'Vectors3Value','PackedColorArray':'ColoursValue','PackedVector4Array':'Vectors4Value'}
 Types = {'Number': 'number', 'Integer': 'number', 'Boolean': 'boolean', 'Text': 'string',
-         'Vector': 'NativeVector3', 'Vector2Value': 'NativeVector2', 'Colour': 'NativeColor3', 'Void': '()'}
+         'Vector': 'NativeVector3', 'Vector2Value': 'NativeVector2', 'Colour': 'NativeColor3', 'Void': '()',
+         'Vector2Integer':'NativeVector2i','Vector3Integer':'NativeVector3i','Vector4Value':'NativeVector4','Vector4Integer':'NativeVector4i',
+         'Rectangle':'NativeRect2','RectangleInteger':'NativeRect2i','Rotation':'NativeQuaternion','BasisValue':'NativeBasis',
+         'Transform2Value':'NativeTransform2D','Transform3Value':'NativeTransform3D','PlaneValue':'NativePlane','BoundsValue':'NativeAABB',
+         'Colour4':'NativeColor4','VariantValue':'NativeVariant','ArrayValue':'{NativeVariant}','DictionaryValue':'{[string]: NativeVariant}',
+         'BytesValue':'{number}','IntegersValue':'{number}','LongsValue':'{number}','FloatsValue':'{number}','DoublesValue':'{number}',
+         'StringsValue':'{string}','Vectors2Value':'{NativeVector2}','Vectors3Value':'{NativeVector3}','ColoursValue':'{NativeColor4}','Vectors4Value':'{NativeVector4}'}
 Adapters = {'@font_size': ('Integer', 'Control'), '@separation': ('Integer', 'BoxContainer'),
             '@full_rect': ('Boolean', 'Control'), '@font': ('ResourceValue', 'Control')}
 ForbiddenProperties = {'script', 'owner', 'resource_path', 'resource_scene_unique_id',
                        'process_thread_group', 'process_thread_messages', 'multiplayer'}
 ForbiddenMethods = {'call', 'callv', 'call_deferred', 'set', 'get', 'set_deferred', 'set_script',
                     'free', 'queue_free', 'duplicate', 'reparent', 'add_child', 'remove_child',
-                    'replace_by', 'set_owner', 'connect', 'emit_signal', 'set_meta', 'set_path'}
+                    'replace_by', 'set_owner', 'connect', 'emit_signal', 'set_meta', 'set_path',
+                    'get_tree','get_viewport','get_window','get_multiplayer','set_indexed','get_indexed',
+                    'take_over_path','set_deferred_thread_group','call_deferred_thread_group','call_thread_safe'}
 ScopeOperations = [
     ('New', 'approved class, properties, parent? -> native handle'),
     ('Configure', 'target, properties -> ()'), ('Get', 'target, property -> typed value'),
@@ -45,6 +60,9 @@ def Require(Value, Message):
 
 def Build(Policy, Api):
     Classes = {C['name']: C for C in Api['classes']}
+    for Group in ('Classes','Properties','Methods','Signals'):
+        for Entry in Policy[Group]:
+            Require(Entry.get('Authority')=='OwnedScene', 'Explicit OwnedScene authorization required: '+Entry.get('Class',Entry.get('Name',''))+'.'+Entry.get('Name',''))
 
     def Ancestors(Name):
         Seen = set()
@@ -73,18 +91,32 @@ def Build(Policy, Api):
             return 'Integer'
         if Type in Classes and Inherits(Type, 'Resource'):
             return 'ResourceValue'
+        if Type in Classes and Inherits(Type, 'Node'):
+            return 'NodeValue'
         raise ValueError('Unsupported native Variant signature: ' + Type)
 
-    def Value(Name, Type, Bounds=None, Default=None):
+    def Value(Name, Type, Bounds=None, Default=None, Override=None):
         K = Kind(Type)
+        if Override:
+            Require((K,Override)==('Colour','Colour4'), 'Unreviewed argument conversion override: '+Name)
+            K=Override
         Low, High = Bounds if Bounds else ([0, 8192] if K == 'Text' else [-100000, 100000])
         Require(math.isfinite(Low) and math.isfinite(High) and Low<=High, 'Invalid argument bounds: ' + Name)
         if Default is not None:
-            Require(K in ['Number','Integer','Boolean'] and re.fullmatch(r'-?[0-9]+(?:\.[0-9]+)?|true|false',Default), 'Unsupported native default: ' + Name)
+            if K=='Text':
+                Default=json.loads(Default[1:] if Default.startswith('&') else Default)
+                Require(isinstance(Default,str) and Low<=len(Default.encode())<=High and '\0' not in Default, 'Invalid text default: '+Name)
+            elif K in ('ResourceValue','NodeValue'):
+                Require(Default=='null', 'Unsupported object default: '+Name)
+            elif K=='Vector2Value':
+                Match=re.fullmatch(r'Vector2\(\s*(-?[0-9.]+)\s*,\s*(-?[0-9.]+)\s*\)',Default)
+                Require(Match and all(Low<=float(N)<=High for N in Match.groups()),'Unsupported Vector2 default: '+Name)
+            else:
+                Require(K in ['Number','Integer','Boolean'] and re.fullmatch(r'-?[0-9]+(?:\.[0-9]+)?|true|false',Default), 'Unsupported native default: ' + Name)
             if K in ['Number','Integer']:
                 Require(Low<=float(Default)<=High, 'Default outside policy bounds: ' + Name)
         return {'Class': '', 'Name': Name, 'Native': Name, 'Kind': K, 'Min': Low, 'Max': High,
-                **({'ResourceClass': Type} if K == 'ResourceValue' else {}), **({'Default':Default} if Default is not None else {})}
+                **({'ResourceClass': Type} if K in ('ResourceValue','NodeValue') else {}), **({'Default':Default} if Default is not None else {})}
 
     Construct = {}
     Selected = set(Policy['LoadTypes'])
@@ -92,6 +124,7 @@ def Build(Policy, Api):
         N = C['Name']
         Require(N not in Construct, 'Duplicate class policy: ' + N)
         Require(C['Kind'] in ['Node', 'Resource'] and Inherits(N, C['Kind']), 'Invalid class kind: ' + N)
+        Require(not any(Inherits(N, Base) for Base in ('Window','Viewport','Script')), 'Privileged native class denied: '+N)
         Require(not C['Construct'] or Classes[N]['is_instantiable'], 'Class is not constructible: ' + N)
         Construct[N] = C
         Selected.add(N)
@@ -107,8 +140,8 @@ def Build(Policy, Api):
             Require(Native in Adapters and (P['Kind'], C) == Adapters[Native], 'Unreviewed property adapter: ' + Native)
         else:
             M = Member(C, 'properties', Native)
-            Require(Kind(M['type']) == P['Kind'], f'Property type mismatch: {C}.{N}')
-            Require(M.get('getter') and M.get('setter'), f'Property must support checked read/write: {C}.{N}')
+            Require(Kind(M['type']) == P['Kind'] or (Kind(M['type']),P['Kind'])==('Colour','Colour4'), f'Property type mismatch: {C}.{N}')
+            Require(M.get('getter') and (M.get('setter') or P.get('ReadOnly')), f'Property must support checked read/write or observation: {C}.{N}')
             if P['Kind'] == 'ResourceValue':
                 Require(all(Inherits(T, P['ResourceClass']) or Inherits(P['ResourceClass'], T) for T in M['type'].split(',')), f'Resource type mismatch: {C}.{N}')
         Require(all(math.isfinite(P.get(K,0)) for K in ['Min','Max']) and P.get('Min', 0) <= P.get('Max', 0), f'Invalid bounds: {C}.{N}')
@@ -122,19 +155,51 @@ def Build(Policy, Api):
         M = Member(C, 'methods', Native)
         Require(not any(M.get(K) for K in ['is_vararg', 'is_static', 'is_virtual']), f'Unsupported call mode: {C}.{N}')
         Args = M.get('arguments', [])
-        Require(len(Args) <= 4, f'Method argument bound: {C}.{N}')
+        Require(len(Args) <= 8, f'Method argument bound: {C}.{N}')
         First = len(Arguments)
         Required = 0
         for A in Args:
-            Arguments.append(Value(A['name'], A['type'], P.get('Bounds', {}).get(A['name']), A.get('default_value')))
+            Arguments.append(Value(A['name'], A['type'], P.get('Bounds', {}).get(A['name']), A.get('default_value'), P.get('ArgumentKinds',{}).get(A['name'])))
             Arguments[-1]['Class']=C+'.'+N
+            if Arguments[-1].get('ResourceClass'): Selected.add(A['type'])
             Required += 'default_value' not in A
         Return = M.get('return_value', {}).get('type')
-        Methods.append({**P, 'Arguments': len(Args), 'Required': Required, 'FirstArgument': First,
-                        'Return': Kind(Return) if Return else 'Void', 'ReturnClass': Return if Return in Classes else None,
+        ReturnKind=Kind(Return) if Return else 'Void'
+        if P.get('ReturnKind'):
+            Require((ReturnKind,P['ReturnKind'])==('Colour','Colour4'),'Unreviewed return conversion override')
+            ReturnKind=P['ReturnKind']
+        if Return in Classes: Selected.add(Return)
+        Validation=P.get('Validation',{})
+        Rule={'CountQuery':None,'IndexArgument':-1,'AllowEnd':False,'AllowNegativeOne':False,'KeyQuery':None,'KeyArgument':-1,'KeyAbsent':False,'CountArgument':-1,'CountLimit':-1}
+        for Role in ('Key','Index'):
+            if Role not in Validation: continue
+            V=Validation[Role]
+            Index=next((I for I,A in enumerate(Args) if A['name']==V['Argument']),-1)
+            Require(Index>=0,'Unknown validation argument: '+C+'.'+N)
+            Query=V['Query']
+            Q=Member(C,'methods',Query)
+            Require(Q.get('is_const') and not Q.get('is_vararg') and not Q.get('is_static') and not Q.get('is_virtual'),'Validation query must be native observation')
+            Require(Q.get('return_value',{}).get('type') in (('bool','int') if Role=='Key' else ('int',)),'Validation query return type mismatch')
+            QA=Q.get('arguments',[])
+            if Role=='Key':
+                Require(len(QA)==1 and QA[0]['type']==Args[Index]['type'],'Key query signature mismatch')
+                Rule.update(KeyQuery=Query,KeyArgument=Index,KeyAbsent=V.get('Absent',False))
+            else:
+                Require(Args[Index]['type']=='int' and (not QA or (len(QA)==1 and Rule['KeyArgument']>=0 and QA[0]['type']==Args[Rule['KeyArgument']]['type'])),'Index query signature mismatch')
+                Rule.update(CountQuery=Query,IndexArgument=Index,AllowEnd=V.get('AllowEnd',False),AllowNegativeOne=V.get('AllowNegativeOne',False),CountArgument=Rule['KeyArgument'] if QA else -1)
+        if 'Capacity' in Validation:
+            V=Validation['Capacity'];Q=Member(C,'methods',V['Query']);QA=Q.get('arguments',[])
+            CountArgument=next((I for I,A in enumerate(Args) if A['name']==V.get('Argument')),-1)
+            Require(Q.get('is_const') and not Q.get('is_static') and not Q.get('is_virtual') and not Q.get('is_vararg') and Q.get('return_value',{}).get('type') in ('int','PackedStringArray','Array'),'Invalid capacity observation')
+            Require(not QA or (len(QA)==1 and CountArgument>=0 and QA[0]['type']==Args[CountArgument]['type']),'Capacity query signature mismatch')
+            Require(0<V['Maximum']<=1024 and Rule['CountQuery'] in (None,V['Query']),'Invalid bounded capacity rule')
+            Rule.update(CountQuery=V['Query'],CountLimit=V['Maximum'],CountArgument=CountArgument if QA else -1)
+        Methods.append({**P, **Rule, 'Arguments': len(Args), 'Required': Required, 'FirstArgument': First,
+                        'Return': ReturnKind, 'ReturnClass': Return if Return in Classes else None,
                         'Signature': M})
         Selected.add(C)
     for P in Policy['Signals']:
+        Require(Inherits(P['Class'],'Node'),'Resource handles cannot become Node signal sources')
         M = Member(P['Class'], 'signals', P['Native'])
         Args = M.get('arguments', [])
         Require(len(Args) <= 4, 'Signal argument bound')
@@ -142,6 +207,7 @@ def Build(Policy, Api):
         for A in Args:
             Arguments.append(Value(A['name'], A['type']))
             Arguments[-1]['Class']=P['Class']+'.'+P['Name']
+            if Arguments[-1].get('ResourceClass'): Selected.add(A['type'])
         Signals.append({**P, 'FirstArgument': First, 'Arguments': len(Args)})
         Selected.add(P['Class'])
     for P in Policy['Enums']:
@@ -164,10 +230,12 @@ def Quote(Value):
 
 def PropertyLine(P):
     return '{' + ','.join([Quote(P['Class']), Quote(P['Name']), Quote(P['Native']), P['Kind'],
-                          str(P.get('Min', 0)), str(P.get('Max', 0)), Quote(P.get('ResourceClass')), Quote(P.get('Default'))]) + '}'
+                          str(P.get('Min', 0)), str(P.get('Max', 0)), Quote(P.get('ResourceClass')), Quote(P.get('Default')),str(bool(P.get('ReadOnly'))).lower()]) + '}'
 
 
 def Type(P, Mutable=False):
+    if P['Kind'] == 'NodeValue':
+        return 'Native'+P['ResourceClass']+'?'
     if P['Kind'] == 'ResourceValue':
         return ('MutableNative' if Mutable else 'Native') + P['ResourceClass'] + '?'
     return Types[P['Kind']]
@@ -268,7 +336,7 @@ def Generate(Policy, Api):
     Tables = [('Class', 'Classes', ['{' + ','.join([Quote(C['Name']), Quote(C['Base']), str(C['Construct']).lower(), str(C['Resource']).lower()]) + '}' for C in D['Classes']]),
               ('Property', 'Properties', [PropertyLine(P) for P in D['Properties']]),
               ('Property', 'Arguments', [PropertyLine(P) for P in D['Arguments']]),
-              ('Method', 'Methods', ['{' + ','.join([Quote(M['Class']), Quote(M['Name']), Quote(M['Native']), str(M['Mutates']).lower(), str(M['FirstArgument']), str(M['Arguments']), str(M['Required']), M['Return'], Quote(M['ReturnClass'])]) + '}' for M in D['Methods']]),
+              ('Method', 'Methods', ['{' + ','.join([Quote(M['Class']), Quote(M['Name']), Quote(M['Native']), str(M['Mutates']).lower(), str(M['FirstArgument']), str(M['Arguments']), str(M['Required']), M['Return'], Quote(M['ReturnClass']),Quote(M['CountQuery']),str(M['IndexArgument']),str(M['AllowEnd']).lower(),str(M['AllowNegativeOne']).lower(),Quote(M['KeyQuery']),str(M['KeyArgument']),str(M['KeyAbsent']).lower(),str(M['CountArgument']),str(M['CountLimit'])]) + '}' for M in D['Methods']]),
               ('Signal', 'Signals', ['{' + ','.join([Quote(S['Class']), Quote(S['Name']), Quote(S['Native']), str(S['FirstArgument']), str(S['Arguments'])]) + '}' for S in D['Signals']]),
               ('Constant', 'Constants', ['{' + ','.join([Quote(C['Class']), Quote(C['Enum']), Quote(C['Name']), str(C['Value'])]) + '}' for C in D['Constants']]),
               ('Operation', 'ScopeOperations', ['{' + Quote(N) + ',' + Quote(S) + '}' for N, S in ScopeOperations])]
@@ -292,7 +360,8 @@ def Generate(Policy, Api):
         Values = {}
         for P in D['Properties']:
             if Inherits(Name, P['Class']):
-                Values.setdefault(P['Name'], P)
+                Previous=Values.get(P['Name'])
+                if not Previous or Inherits(P['Class'],Previous['Class']): Values[P['Name']]=P
         return list(Values.values())
 
     T = ['-- Generated approved native definitions. Load as a definitions file, never require it.',
@@ -304,6 +373,19 @@ def Generate(Policy, Api):
          'declare Vector2: { new: (number, number) -> NativeVector2 }',
          'declare Color3: { new: (number, number, number) -> NativeColor3 }',
          'export type NativeConnection = { Disconnect: (self: NativeConnection) -> (), Connected: boolean }']
+    T += ['export type NativeVector2i = {X: number, Y: number}',
+          'export type NativeVector3i = {X: number, Y: number, Z: number}',
+          'export type NativeVector4 = {X: number, Y: number, Z: number, W: number}',
+          'export type NativeVector4i = NativeVector4', 'export type NativeQuaternion = NativeVector4',
+          'export type NativeColor4 = {R: number, G: number, B: number, A: number}',
+          'export type NativeRect2 = {Position: NativeVector2, Size: NativeVector2}',
+          'export type NativeRect2i = {Position: NativeVector2i, Size: NativeVector2i}',
+          'export type NativeAABB = {Position: NativeVector3, Size: NativeVector3}',
+          'export type NativePlane = {Normal: NativeVector3, D: number}',
+          'export type NativeBasis = {X: NativeVector3, Y: NativeVector3, Z: NativeVector3}',
+          'export type NativeTransform2D = {X: NativeVector2, Y: NativeVector2, Origin: NativeVector2}',
+          'export type NativeTransform3D = {Basis: NativeBasis, Origin: NativeVector3}',
+          'export type NativeVariant = nil | boolean | number | string | NativeVector3 | NativeColor3 | NativeVector2 | NativeVector4 | NativeColor4 | NativeRect2 | NativeAABB | NativePlane | NativeBasis | NativeTransform2D | NativeTransform3D | {NativeVariant} | {[string]: NativeVariant}']
     # Base classes precede their derived declarations.
     Ordered = sorted(D['Classes'], key=lambda C: (sum(Inherits(C['Name'], N) for N in ByName), C['Name']))
     for C in Ordered:
@@ -324,7 +406,7 @@ def Generate(Policy, Api):
             T += ['declare class MutableNative' + N + ' extends Native' + N, 'end']
     for C in D['Classes']:
         T += ['export type Native' + C['Name'] + 'Properties = {']
-        T += ['    ' + P['Name'] + ': (' + Type(P) + ')?,' for P in Effective(C['Name'])]
+        T += ['    ' + P['Name'] + ': (' + Type(P) + ')?,' for P in Effective(C['Name']) if not P.get('ReadOnly')]
         T += ['}']
     T += ['declare class NativeSceneScope extends NativeNode3D']
     New, Configure, Get, Call, Connect, Load = [], [], [], [], [], []
@@ -368,7 +450,10 @@ def Generate(Policy, Api):
     for C in D['Constants']:
         Enums.setdefault(C['Class'], {}).setdefault(C['Enum'], {})[C['Name']] = C['Value']
     EnumType = '{' + ', '.join(C + ': {' + ', '.join(E + ': {' + ', '.join(N + ': number' for N in V) + '}' for E, V in Es.items()) + '}' for C, Es in Enums.items()) + '}'
-    T += ['declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string},',
+    ValueNames={Native:Types[K] for Native,K in Kinds.items() if K not in ('Number','Integer','Boolean','Text','Colour','VariantValue')}
+    ValueNames['Color']='NativeColor4'
+    ValueType=' & '.join('((Type: "'+Name+'", Value: '+Type+') -> '+Type+')' for Name,Type in ValueNames.items())
+    T += ['declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string}, Value: '+ValueType+',',
           '    PolicySHA256: string, ApiSHA256: string, Describe: (Class: string) -> { [string]: any }?, Enums: ' + EnumType + ' }']
     D['Schema'] = 1
     D['PolicySHA256'] = PolicyHash
