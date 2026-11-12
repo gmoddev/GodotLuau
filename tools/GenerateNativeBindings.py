@@ -173,6 +173,91 @@ def Type(P, Mutable=False):
     return Types[P['Kind']]
 
 
+def Coverage(Policy, Api, Catalog):
+    """Inventory metadata, never grant execution from discovery.
+
+    Members are declared on their metadata class; Catalog retains the exact
+    approved receiver/alias/bounds. Inherited availability follows Base.
+    """
+    Classes = {C['name']: C for C in Api['classes']}
+    Admitted = {C['Name']: C for C in Catalog['Classes']}
+    Singletons = {C['name'] for C in Api['singletons']}
+    Restricted = Singletons | {'SceneTree', 'Window', 'Viewport', 'SubViewport',
+        'FileAccess', 'DirAccess', 'Script', 'GDScript', 'CSharpScript',
+        'Thread', 'Mutex', 'Semaphore', 'TCPServer', 'PacketPeer', 'StreamPeer'}
+    def Inherits(Name, Base):
+        while Name in Classes:
+            if Name == Base: return True
+            Name = Classes[Name].get('inherits')
+        return False
+
+    def Convertible(Name):
+        return not Name or Name in Kinds or Name.startswith(('enum::', 'bitfield::')) or all(Inherits(T, 'Resource') for T in Name.split(','))
+
+    Selections = {K: {} for K in ('methods', 'properties', 'signals', 'enums')}
+    for Key, Entries in [('methods', Policy['Methods']), ('properties', Policy['Properties']),
+                         ('signals', Policy['Signals']), ('enums', Policy['Enums'])]:
+        for Entry in Entries:
+            Native = Entry.get('Native', Entry['Name'])
+            Name = Entry['Class']
+            while Name:
+                if any(M['name'] == Native for M in Classes[Name].get(Key, [])):
+                    Selections[Key].setdefault((Name, Native), []).append(Entry['Class'])
+                    break
+                Name = Classes[Name].get('inherits')
+    Records = []
+    for Name, C in sorted(Classes.items()):
+        Selected = Admitted.get(Name)
+        Denied = any(Inherits(Name, Base) for Base in Restricted)
+        State = 'Partial' if Selected else ('Restricted' if Denied else 'Unsupported')
+        if not Selected and not Denied and not Inherits(Name, 'Node') and not Inherits(Name, 'Resource'):
+            State = 'Blocked'
+        Members = {}
+        for Key in ('methods', 'properties', 'signals', 'enums', 'constants'):
+            Groups = {S: [] for S in ('Supported', 'Partial', 'Restricted', 'Unsupported', 'Blocked')}
+            for Member in C.get(Key, []):
+                Native = Member['name']
+                Receivers = Selections.get(Key, {}).get((Name, Native), [])
+                Status = 'Unsupported'
+                if Receivers: Status = 'Supported' if Name in Receivers else 'Partial'
+                elif State == 'Restricted' or (Key == 'methods' and Native in ForbiddenMethods) or (Key == 'properties' and Native in ForbiddenProperties):
+                    Status = 'Restricted'
+                elif Key == 'methods' and (Member.get('is_static') or Member.get('is_virtual') or Member.get('is_vararg') or not Convertible(Member.get('return_value', {}).get('type')) or any(not Convertible(A['type']) for A in Member.get('arguments', []))):
+                    Status = 'Blocked'
+                elif Key == 'properties' and (not Member.get('getter') or not Member.get('setter') or not Convertible(Member['type'])):
+                    Status = 'Blocked'
+                Groups[Status].append(Native)
+            Members[Key] = {K: V for K, V in Groups.items() if V}
+        Records.append({'Name': Name, 'Base': C.get('inherits', ''), 'Status': State,
+            'Constructible': bool(Selected and Selected['Construct']),
+            'ConstructionStatus': 'Supported' if Selected and Selected['Construct'] else 'Not admitted',
+            'Loadable': Name in Policy['LoadTypes'], 'GeneratedHandle': bool(Selected),
+            'Permission': 'Exact live SceneScope owner' if Selected else 'Not admitted',
+            'Editor': 'Policy analysis and restricted explicit preview' if Selected else 'Metadata only',
+            'Members': Members})
+    Values = []
+    for Value in Api['builtin_classes']:
+        Name = Value['name']
+        Status = 'Supported' if Name in Kinds else 'Unsupported'
+        if Name in ('RID', 'Callable', 'Signal'): Status = 'Restricted'
+        if Name in ('StringName', 'Color'): Status = 'Partial'
+        Values.append({'Name': Name, 'Status': Status, 'Representation': Types.get(Kinds.get(Name), 'No approved general conversion')})
+    return {'Schema': 1, 'Scope': 'Approved Scene API against pinned metadata; legacy Roblox facades are separate',
+        'Metadata': Api['header'], 'ApiSHA256': Policy['ApiSHA256'],
+        'PolicySHA256': Catalog['PolicySHA256'],
+        'Interpretation': 'Declared members; inheritance follows Base. Catalog specifies exact receivers, aliases, bounds and runtime permissions. Metadata existence is not host availability or qualification.',
+        'Runtime': {'Domains': ['Server', 'Client', 'EditorPreview'],
+            'Authority': 'Owned scene nodes and scoped resource handles; no global engine/OS capability',
+            'AdditionalPreviewRestrictions': ['Audio playback', 'Gameplay bootstrap', 'Network, persistence, HTTP and filesystem services'],
+            'HostAvailability': 'Checked by ClassDB at runtime, not inferred from metadata'},
+        'Summary': {'MetadataClasses': len(Classes), 'ConstructibleClasses': sum(C['Constructible'] for C in Records),
+            'SelectedProperties': len(Catalog['Properties']), 'SelectedMethods': len(Catalog['Methods']),
+            'SelectedSignals': len(Catalog['Signals']), 'SelectedConstants': len(Catalog['Constants']),
+            'DeclaredMembers': {K: sum(len(C.get(K, [])) for C in Classes.values()) for K in ('methods','properties','signals','enums','constants')}},
+        'Variants': Values, 'Singletons': sorted(Singletons),
+        'GlobalEnums': [E['name'] for E in Api['global_enums']], 'Classes': Records}
+
+
 def Generate(Policy, Api):
     D = Build(Policy, Api)
     PolicyHash = hashlib.sha256(json.dumps(Policy, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
@@ -291,7 +376,8 @@ def Generate(Policy, Api):
     D['ScopeOperations'] = [{'Name':N,'Signature':S} for N,S in ScopeOperations]
     return {'src/core/gl_native_registry.gen.h': '\n'.join(H) + '\n',
             'GodotLuau/Types/Native.d.luau': '\n'.join(T) + '\n',
-            'bindings/NativeCatalog.json': json.dumps(D, indent=2) + '\n'}
+            'bindings/NativeCatalog.json': json.dumps(D, indent=2) + '\n',
+            'bindings/NativeCoverage.json': json.dumps(Coverage(Policy, Api, D), indent=2) + '\n'}
 
 
 def Main():

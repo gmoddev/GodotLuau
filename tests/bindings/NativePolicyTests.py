@@ -23,6 +23,19 @@ class NativePolicyTests(unittest.TestCase):
         self.assertEqual(Data['Arguments'][Toggle['FirstArgument']]['Kind'],'Boolean')
         self.assertFalse(next(C for C in Data['Classes'] if C['Name']=='Object')['Construct'])
 
+    def test_coverage_distinguishes_construction_from_api_parity(self):
+        Data = Generator.Build(Policy, Api)
+        Data['PolicySHA256'] = 'test'
+        Coverage = Generator.Coverage(Policy, Api, Data)
+        Classes = {C['Name']: C for C in Coverage['Classes']}
+        self.assertEqual(Coverage['Summary']['MetadataClasses'], len(Api['classes']))
+        self.assertTrue(Classes['Node3D']['Constructible'])
+        self.assertEqual(Classes['Node3D']['Status'], 'Partial')
+        self.assertEqual(Classes['OS']['Status'], 'Restricted')
+        self.assertEqual(Classes['Tween']['Status'], 'Blocked')
+        self.assertIn('get_tree', Classes['Node']['Members']['methods']['Blocked'])
+        self.assertEqual(Coverage['Summary']['SelectedMethods'], len(Data['Methods']))
+
     def Rejected(self, Change):
         Candidate = copy.deepcopy(Policy)
         Change(Candidate)

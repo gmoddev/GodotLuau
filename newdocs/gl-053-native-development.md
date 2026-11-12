@@ -1,0 +1,70 @@
+# GL-053 native API expansion campaign
+
+Baseline: `16e8597cb342a1bbc888f190680c678ecf9ba055`, fetched and verified on
+2026-11-12. Branch: `feature/gl-053-native-api-expansion`. No main merge or
+release/updater distribution is authorized.
+
+The owner uses GL-053 for this comprehensive campaign. The issue ledger already
+uses GL-053 for the resolved default damage example. Preserve that stable issue
+and all its evidence. This campaign uses a distinct native-API slug; new defects
+receive new issue IDs instead of repurposing the resolved finding. GL-050 stays
+separate and unresolved.
+
+## Acceptance and sequence
+
+Expand ordinary Luau-first development through the existing policy/runtime/type/
+editor architecture. Preserve exact live scope ownership, immutable loaded
+resources, domain/capability boundaries, native graph/physics authority, lifetime
+retirement, Native default and Scripted opt-in. Do not introduce arbitrary
+reflection, global engine/OS authority, a second graph, VM or scheduler.
+
+1. Inventory actual pinned metadata and current policy, with reproducible status
+   classifications and before/after evidence.
+2. Expand shared conversions, approved defaults and observation properties, then
+   useful 2D/UI/resource families through that machinery.
+3. Add gameplay/rendering/animation functionality with effect-specific ownership
+   checks where plain reflection would be unsafe.
+4. Improve reusable scene/assets and editor completion/navigation/iteration.
+5. Exercise representative Luau-only 2D, 3D and UI projects, native editor restart,
+   export and independent startup. Keep Relay Siege as a separate regression.
+6. Qualify coherent phases on Windows/Linux and supported sanitizer/graphical
+   profiles. Reuse existing evidence only within unchanged inputs.
+
+This is an implementation campaign. Inventory counts do not establish runtime
+qualification or broad parity. Continue beyond the first API expansion phase.
+Keep unsupported, intentionally restricted, blocked and deferred work explicit.
+
+## Baseline audit
+
+GL-049/051/052 already provide owned native nodes/resources, inheritance-aware
+descriptors, methods/defaults, constants, generated declarations, project modules,
+restricted editor preview, independent snapshots and native diagnostics.
+The current policy has 48 constructible classes, 118 properties, 27 methods and
+12 signals. The pinned metadata is Godot 4.3: 920 classes, 14,379 declared methods,
+3,676 properties, 447 signals, 647 enums and 155 class constants. Existing admitted
+runtime/editor hosts are 4.7.1; newer-only APIs are not inferred from that version.
+
+Concrete expansion barriers: nine scalar/value/resource kinds, only numeric/bool
+optional defaults, a four-argument call ceiling, and getter/setter-only property
+descriptors. These constrain common 2D, UI, animation and resource APIs. Preserve
+the existing generalized dispatcher rather than adding repetitive wrappers.
+
+Extend the existing generator to emit NativeCoverage.json from the same policy,
+catalog and pinned metadata. It lists declared member classifications, inheritance,
+construction/loading, generated handles, authority/editor scope and Variant forms.
+It is an inventory, not permission or runtime availability proof. Full declared
+metadata is visible; only reviewed policy entries execute. Legacy Roblox facades
+remain a separate surface.
+
+DockerPC's host-local worker slot is actively held by StudioCreatorFoundation3,
+generation 111. Do not acquire, bypass or interrupt it. Use existing hosted CI
+for sustained builds while continuing independent local source/generation work.
+Local submodule checkout uses the unchanged pins solely for metadata and analysis.
+No local sustained build or LinuxBox workload is started.
+
+Phase A emits the complete declared metadata inventory (1,163,950 bytes), with
+constructibility separated from whole-class parity. Generator drift checking and
+ten policy/inventory tests pass. Original runtime descriptors, declarations and
+catalog remain unchanged. Preserve the before counts and exact coverage hash in
+the [baseline receipt](evidence/gl053-native/baseline.json). This qualifies the
+inventory/generation change only; proceed to production implementation.
