@@ -397,8 +397,19 @@ def Generate(Policy, Api):
           'export type NativeTransform2D = {X: NativeVector2, Y: NativeVector2, Origin: NativeVector2}',
           'export type NativeTransform3D = {Basis: NativeBasis, Origin: NativeVector3}',
           'export type NativeVariant = nil | boolean | number | string | NativeVector3 | NativeColor3 | NativeVector2 | NativeVector4 | NativeColor4 | NativeRect2 | NativeAABB | NativePlane | NativeBasis | NativeTransform2D | NativeTransform3D | {NativeVariant} | {[string]: NativeVariant}']
-    # Base classes precede their derived declarations.
-    Ordered = sorted(D['Classes'], key=lambda C: (sum(Inherits(C['Name'], N) for N in ByName), C['Name']))
+    # Bases and direct property classes must exist before a Luau class uses
+    # them; inheritance depth alone can leave a forward resource placeholder.
+    Ordered=[];Emitted=set();Visiting=set()
+    def EmitClass(Name):
+        if Name in Emitted:return
+        Require(Name not in Visiting,'Cyclic native declaration dependency: '+Name)
+        Visiting.add(Name);C=ByName[Name]
+        if C['Base'] in ByName:EmitClass(C['Base'])
+        if not C['Resource']:
+            for P in D['Properties']:
+                if P['Class']==Name and P.get('ResourceClass') and P['ResourceClass']!=Name:EmitClass(P['ResourceClass'])
+        Visiting.remove(Name);Emitted.add(Name);Ordered.append(C)
+    for C in D['Classes']:EmitClass(C['Name'])
     for C in Ordered:
         N, Base = C['Name'], C['Base']
         T.append('declare class Native' + N + (' extends Native' + Base if Base else ''))

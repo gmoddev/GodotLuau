@@ -3,6 +3,11 @@ extends "res://Integration.gd"
 ## This verifies renderer-backed native state; it does not establish visual quality.
 
 func Run() -> void:
+    var LoadResult := GDExtensionManager.load_extension("res://godot_luau.gdextension")
+    Check(LoadResult==GDExtensionManager.LOAD_STATUS_OK or LoadResult==GDExtensionManager.LOAD_STATUS_ALREADY_LOADED,"Rendered extension loads before native actors")
+    if Failed:
+        quit(1)
+        return
     if DisplayServer.get_name()=="headless":
         print("[Runtime:RenderedExpansion] FAIL Renderer is required")
         quit(1)

@@ -82,6 +82,8 @@ C:Disconnect()
 )",true},
         {"forbidden constructor",R"(local S=Scene.new(Parent) local O=S:New("OS",{}))",false},
         {"2D collections and optional resource",R"(local S=Scene.new(Parent)
+local Frames=S:New("SpriteFrames",{})
+local Sprite=S:New("AnimatedSprite2D",{SpriteFrames=Frames})
 local L=S:New("ItemList",{FixedIconSize={X=16,Y=16}})
 local I:number=S:Call(L,"AddItem","First")
 local Selected:{number}=S:Call(L,"GetSelectedItems")

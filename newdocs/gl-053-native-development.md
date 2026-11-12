@@ -262,3 +262,30 @@ Bootstrap-to-ready timings/object counts are measurements, not claimed speedups.
 Extend existing candidate harness hashes to include the newly consumed sources.
 The actual pinned Luau frontend now resolves project imports in its production
 factory probe, instead of treating imported helpers as unknown/dynamic types.
+
+## Rendered control and declaration follow-up
+
+The Windows renderer-required expansion fixture passes all transform/color,
+declared shader, conversion, native 2D overlap/impulse and owner-retirement checks
+with `cb35958`'s retained Debug adapter on the verified official 4.7.1 editor host,
+OpenGL/AMD RX 7900 XT, exiting zero. Logs are under
+`gl053-native-20261112/rendered-cb-control-3/official-expansion.*.log`.
+This is selected API component evidence, not current whole-campaign or visual
+acceptance. The fixture first needed the existing explicit extension-load step
+and the same two-physics-frame initialization barrier used by GL-049's impulse
+test. Failed attempts remain in rendered-cb-control and rendered-cb-control-2.
+
+The Debug adapter paired with the Release renderer template passes the assertions
+but exits with 0xC0000374. Minimal module-load-only and scope controls reproduce
+that status with both the campaign adapter and the retained GL-052 `60913fb`
+adapter. The native renderer-only control exits zero. The official editor host
+module-only and full expansion controls both exit zero. This is a retained
+mixed-profile limitation, not evidence that this campaign introduced a heap bug;
+do not extend the GL-018 claim or qualify production Release from that pairing.
+
+Factory type run 43224970473 catches a genuine declaration-order defect: ordering
+classes only by inheritance depth leaves NativeSpriteFrames as a forward
+placeholder when AnimatedSprite2D declares its property. Emit class bases and
+direct resource-property dependencies first. Add the owned SpriteFrames assignment
+to the representative type case, and rerun the same factory checks without casts
+or weakened types. The 3D factory and all previous type cases passed that attempt.

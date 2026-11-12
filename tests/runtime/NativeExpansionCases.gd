@@ -116,8 +116,6 @@ end
 local Shape=S:New('RectangleShape2D',{Size={X=8,Y=8}})
 local Body=S:New('RigidBody2D',{Name='Body',GravityScale=0,Position={X=200,Y=200}})
 S:New('CollisionShape2D',{Shape=Shape},Body)
-S:Call(Body,'ApplyImpulse',{X=0.1,Y=0}) -- pinned Vector2 default position
-assert(Body.LinearVelocity.X>0)
 local Area=S:New('Area2D',{Name='Area',Position={X=200,Y=200}})
 S:New('CollisionShape2D',{Shape=Shape},Area)
 S:Connect(Area,'BodyEntered',function(Node)
@@ -131,6 +129,9 @@ S:Connect(List,'ItemActivated',function(Index)
 end)
 shared.Expansion={Scope=S,Body=Body,Area=Area,Material=Material,Call=S.Call,Configure=S.Configure}
 game:SetAttribute('ExpansionReady',true)
+while not game:GetAttribute('ExpansionImpulseReady') do task.wait() end
+S:Call(Body,'ApplyImpulse',{X=0.1,Y=0}) -- pinned Vector2 default position
+game:SetAttribute('ExpansionImpulseApplied',true)
 """.replace("__GL053_RENDERED__","true" if Rendered else "false"), Game)
     if not await Runner.Until("ExpansionReady"):
         return
@@ -140,6 +141,13 @@ game:SetAttribute('ExpansionReady',true)
     var Scope := Game.get_node("ExpansionScope")
     var Area := Scope.get_node("Area") as Area2D
     var Body := Scope.get_node("Body") as RigidBody2D
+    await Runner.physics_frame
+    await Runner.physics_frame
+    Game.set_meta("ExpansionImpulseReady",true)
+    await Runner.Until("ExpansionImpulseApplied")
+    await Runner.physics_frame
+    await Runner.physics_frame
+    Runner.Check(Body.linear_velocity.x>0,"Expansion impulse reaches the initialized native 2D simulation")
     Runner.Check(Area.overlaps_body(Body), "Expansion uses actual native 2D overlap state")
     var Foreign := StaticBody2D.new()
     Game.add_child(Foreign)
