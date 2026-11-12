@@ -7,10 +7,11 @@ the [API contract](gl-053-native-api.md) describes implemented bounds, not parit
 
 ## Source and scope
 
-Current native build fingerprint: `ce6e7638ae6386d6d4eef5d6df66962eb303e8f155d3c1616b0027bb9a5699c5`,
-123 LF-normalized files. `e2735ec54012feb7c62032d50c87e325c6cf9dc4` introduces
-the latest native implementation. Later fixture/docs corrections do not change
-that fingerprint; their workflow identities still remain separate.
+Current native build fingerprint: `685cbd6a9978bea0516265967c5ffc4da22f67fda438d39f5735aeed76481149`,
+123 LF-normalized files. The descriptor/effect follow-up changes the preceding
+`e2735ec54012feb7c62032d50c87e325c6cf9dc4` fingerprint
+`ce6e7638ae6386d6d4eef5d6df66962eb303e8f155d3c1616b0027bb9a5699c5`.
+Preceding component evidence is retained with its actual identity.
 
 | Approved Scene surface | Integrated baseline | Current implementation |
 | --- | ---: | ---: |
@@ -27,18 +28,20 @@ restricted entries. Editor/runtime hosts remain 4.7.1 with unchanged pins.
 
 ## Established results
 
-- Core run [43230722372](https://github.com/gmoddev/GodotLuau/actions/runs/43230722372)
-  passes Windows/Linux at the current native implementation: 71 ordinary and 16
+- Core run [43233643640](https://github.com/gmoddev/GodotLuau/actions/runs/43233643640)
+  passes Windows/Linux at the preceding native implementation: 71 ordinary and 16
   isolated cases, including transitive module invalidation.
-- Definitions run [43229476368](https://github.com/gmoddev/GodotLuau/actions/runs/43229476368)
+- Definitions run [43233643869](https://github.com/gmoddev/GodotLuau/actions/runs/43233643869)
   passes the unchanged current generated declarations on both platforms, actual
   approved calls, Relay Siege and the shipped 2D/3D factory type probes.
 - Earlier native execution passes expansion headless checks, ten project-module
   revisions, nested/inherited scene binding cases and native animation. This is
   component evidence; the overall native run failed and is not qualified.
-- Selected rendered expansion checks pass with the earlier `cb35958` Debug
-  adapter on the verified official editor, normal exit. Current final rendering,
-  gameplay and editor acceptance remain pending.
+- The `e2735ec` Debug adapter passes actual native pathfinding, rendered expansion
+  and all shipped 2D/UI/3D gameplay logic on the verified official Windows host,
+  exiting normally. Headless native editor creation/preview/save/reopen passes.
+  Retained logs: `gl053-native-20261112/e273-components-2` and `e273-editor`.
+  These precede the descriptor/effect optimization and do not qualify that change.
 
 ## Required remaining evidence
 

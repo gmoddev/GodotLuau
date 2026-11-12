@@ -215,12 +215,18 @@ Variant ReadValue(lua_State* Thread, SceneScope* Scope, const Property& Item, in
 }
 struct Assignment { const Property* Item; Variant Value; };
 void ValidateEffects(lua_State* Thread,Object* Target,const std::vector<Assignment>& Batch) {
-    if(Target->is_class("CharacterBody2D") || Target->is_class("CharacterBody3D"))for(const auto& Entry:Batch)
-        if(!strcmp(Entry.Item->Native,"up_direction")) {
+    bool MultiMeshEffect=false;
+    for(const auto& Entry:Batch) {
+        // Descriptors have already been resolved against the live target class.
+        // Unrelated writes need no engine reflection or allocation-state reads.
+        if(!strcmp(Entry.Item->Native,"up_direction") &&
+           (!strcmp(Entry.Item->Class,"CharacterBody2D") || !strcmp(Entry.Item->Class,"CharacterBody3D"))) {
             double Length=Entry.Value.get_type()==Variant::VECTOR2?Vector2(Entry.Value).length_squared():Vector3(Entry.Value).length_squared();
             if(Length<0.000001)luaL_error(Thread,"[Scene:Arguments] UpDirection must be nonzero");
         }
-    if (!Target->is_class("MultiMesh")) return;
+        if(!strcmp(Entry.Item->Class,"MultiMesh"))MultiMeshEffect=true;
+    }
+    if (!MultiMeshEffect) return;
     int64_t Count=Target->get("instance_count"),Visible=Target->get("visible_instance_count");
     for(const auto& Entry:Batch) {
         const char* Key=Entry.Item->Native;
@@ -305,8 +311,8 @@ Ref<Resource> CreateResource(const char* Name) {
 }
 bool ValidNative(const Property& Item,const Variant& Value);
 void PushValue(lua_State* Thread,SceneScope* Scope,const Variant& Value,Kind Type);
-void PushProperty(lua_State* Thread, SceneScope* Scope, Object* Target, const char* Key) {
-    const Property* Item=FindProperty(Target,Key);
+void PushProperty(lua_State* Thread, SceneScope* Scope, Object* Target, const char* Key, const Property* Selected=nullptr) {
+    const Property* Item=Selected?Selected:FindProperty(Target,Key);
     if (!Item) luaL_error(Thread,"[Scene:Property] Unsupported property %s",Key);
     Variant Value;
     if (!strcmp(Item->Native,"@font")) Value=Object::cast_to<Control>(Target)->get_theme_font("font");
@@ -1197,7 +1203,7 @@ bool GLSceneIndex(lua_State* Thread, Node* Target, const char* Key) {
         Node* Child=Target->get_child(Index);
         if (Child->get_name()==StringName(Key)) { PushNode(Thread,Child); return true; }
     }
-    PushProperty(Thread,Scope,Target,Key); return true;
+    PushProperty(Thread,Scope,Target,Key,Item); return true;
 }
 bool GLSceneWrite(lua_State* Thread, Node* Target, const char* Key) {
     auto Scope=ScopeOf(Target); if (!Scope) return false;

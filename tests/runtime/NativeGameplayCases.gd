@@ -31,12 +31,17 @@ assert(not pcall(function() S:Call(Skeleton,'AddBone','Root') end))
 assert(not pcall(function() S:Call(Skeleton,'SetBoneParent',0,1) end))
 assert(not pcall(function() S:Call(Skeleton,'SetBonePoseRotation',1,{X=0,Y=0,Z=0,W=0}) end))
 assert(not pcall(function() S:Call(Skeleton,'GetBonePose',2) end))
-assert(not pcall(function() S:Call(Body,'MoveAndSlide') end))
 assert(not pcall(function() S:Configure(Body,{UpDirection=Vector3.new(0,0,0)}) end))
 local Region=S:New('NavigationRegion3D',{Position=Vector3.new(300,0,300),NavigationMesh=S:Load('NavigationMesh','res://GameplayNavigation.tres')})
 local Navigator=S:New('Node3D',{Position=Vector3.new(298,0,298)})
 local Agent=S:New('NavigationAgent3D',{TargetPosition=Vector3.new(302,0,302),PathDesiredDistance=0.1,TargetDesiredDistance=0.1},Navigator)
-assert(not pcall(function() S:Call(Agent,'GetNextPathPosition') end))
+local ProcessConnection
+ProcessConnection=game:GetService('RunService').Heartbeat:Connect(function()
+ ProcessConnection:Disconnect()
+ assert(not pcall(function() S:Call(Body,'MoveAndSlide') end))
+ assert(not pcall(function() S:Call(Agent,'GetNextPathPosition') end))
+ game:SetAttribute('GameplayPhaseRejected',true)
+end)
 local Frames=0
 local Connection
 Connection=game:GetService('RunService').Stepped:Connect(function(Dt)
@@ -79,6 +84,7 @@ game:SetAttribute('GameplayReady',true)
     if not await Runner.Until("GameplayReady"):
         return
     await Runner.Until("GameplayRays",240)
+    await Runner.Until("GameplayPhaseRejected",240)
     await Runner.Until("GameplayMovement",240)
     await Runner.Until("GameplayNavigation" if NavigationAvailable else "GameplayNavigationUnavailable",240)
     await Runner.Until("GameplayBones",240)

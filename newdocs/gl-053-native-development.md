@@ -362,3 +362,20 @@ follows the camera, plays animation, advances the guide by 5.17 units and replac
 the round, exiting zero. Preserve failed/successful development logs under
 `gl053-native-20261112/development-3d-cb-*`. This is earlier-adapter component
 evidence; the final current adapter and standalone product still require checks.
+
+Fresh `e2735ec` adapter checks pass actual native navigation, rendered expansion
+and all shipped 2D/UI/3D acceptance logic on the verified official Windows host.
+The physics-rejection fixture first assumed script initialization occurred outside
+a physics frame; a deferred initial script can legitimately start during that
+phase. Check rejection in an actual RunService.Heartbeat process callback instead.
+Preserve the first failed attempt and the passing rerun under e273-components*.
+
+The same repeated performance fixture shows metadata indexing alone does not
+resolve the dispatch regression: median 77.203 ms for 10,000 read/write pairs.
+Construction is 0.724 ms/64 nodes and new conversion 11.029 ms/2,000 roundtrips.
+Do not claim an improvement. Avoid three unrelated engine class queries on every
+property write by selecting effect checks from the already class-validated
+descriptor, and reuse the resolved descriptor on reads instead of looking it up
+again. UpDirection and MultiMesh checks, live owner/domain resolution and result
+validation remain intact. Remeasure after a fresh adapter; current results do not
+qualify this subsequent native change.
