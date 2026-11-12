@@ -82,6 +82,11 @@ func Run() -> void:
                 Source.source_code = Original
                 Plugin.call("StopPreview")
                 await get_tree().process_frame
+                var GameSource: Script = load("res://OrbRun.luau")
+                var GamePreview: Dictionary = Plugin.call("PreviewScript", GameSource)
+                Check(GamePreview.get("Passed", false) and GamePreview.get("Nodes", 0) > 15, "Actual Luau-only game composes in the restricted editor context")
+                Check(Plugin.call("SavePreview", "res://OrbSaved.tscn") == OK, "Actual game preview saves as native scene data")
+                Plugin.call("StopPreview")
                 EditorInterface.set_main_screen_editor("Script")
                 EditorInterface.edit_script(Source, -1, 0, true)
                 for Index in range(10): await get_tree().process_frame

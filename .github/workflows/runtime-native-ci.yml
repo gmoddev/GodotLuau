@@ -165,6 +165,13 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/luau-workflow" --workflow --timeout 70
 
+      - name: Actual new Luau-only game input physics and lifetime
+        timeout-minutes: 2
+        run: |
+          python tests/runtime/RunLuauOnly.py \
+            --godot "$GODOT_RUNTIME" --extension "build/native/${{ matrix.Library }}" \
+            --source "$RUNNER_TEMP/native-ci/source.json" --output "$RUNNER_TEMP/native-ci/luau-game"
+
       - name: GL-006 and GL-008 existing network regressions
         timeout-minutes: 4
         run: |

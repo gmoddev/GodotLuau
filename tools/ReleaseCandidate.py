@@ -152,6 +152,8 @@ def Build(Args):
     Require(Identity(Args.revision) == Before, 'Source inputs changed during the production build')
     Commands.append(Execute([sys.executable, Source/'tests/editor/RunNativeAuthoring.py', '--godot', Engine,
         '--extension', Products/LibraryName, '--output', Output/'native/editor', '--timeout', '60'], Output/'editor-check.log', 90))
+    Commands.append(Execute([sys.executable, Source/'tests/editor/RunNativeAuthoring.py', '--godot', Engine,
+        '--extension', Products/LibraryName, '--output', Output/'native/luau-workflow', '--workflow', '--timeout', '70'], Output/'luau-workflow.log', 100))
     BuildDirectory = Output/'build'
     Generator = 'Visual Studio 17 2022' if Selected == 'Windows' else 'Ninja'
     Commands.append(Execute(['cmake', '-S', Source/'tests/runtime', '-B', BuildDirectory, '-G', Generator, '-DCMAKE_BUILD_TYPE='+Args.configuration, '-DGL_BUILD_GODOT_ADAPTER=ON', '-DGL_BUILD_CORE_TESTS=ON'], Output/'configure.log', 300))
@@ -162,6 +164,9 @@ def Build(Args):
     for Name in [AdapterName, WorkerName, 'DatastoreBackendProbe'+('.exe' if Selected == 'Windows' else '')]: shutil.copy2(AdapterDirectory/Name, Adapter/Name)
     Commands.append(Execute([sys.executable, Source/'tests/runtime/RunCoreQualification.py', '--build', BuildDirectory, '--config', Args.configuration, '--output', Output/'core'], Output/'core-check.log', 150))
     Native(Host['Executable'], Adapter/AdapterName, Output/'native', Args.revision, Output/'host/remote-host.json', Engine)
+    Save(Output/'source.json', Before)
+    Commands.append(Execute([sys.executable, Source/'tests/runtime/RunLuauOnly.py', '--godot', Host['Executable'],
+        '--extension', Adapter/AdapterName, '--source', Output/'source.json', '--output', Output/'native/luau-game'], Output/'luau-game.log', 70))
     Require(Identity(Args.revision) == Before, 'Source inputs changed during build/qualification')
     Summary = Load(Output/'native/summary.json')
     Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 141 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')

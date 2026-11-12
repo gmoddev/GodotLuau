@@ -38,14 +38,14 @@ public:
         PackedStringArray a; a.append("lua"); a.append("luau"); return a;
     }
     Object* _create_script() const override { return memnew(LuauScript); }
-    bool    _can_inherit_from_file() const override { return true; }
+    bool    _can_inherit_from_file() const override { return false; }
 
     PackedStringArray _get_reserved_words() const override {
         PackedStringArray w;
         static const char* words[] = {
             "and","break","do","else","elseif","end","false","for","function",
             "if","in","local","nil","not","or","repeat","return","then","true",
-            "until","while","continue","self",nullptr
+            "until","while","continue","self","type","export",nullptr
         };
         for (int i = 0; words[i]; i++) w.append(words[i]);
         return w;
@@ -74,6 +74,11 @@ public:
     Dictionary _lookup_code(const String& code, const String& symbol, const String& path, Object* owner) const override {
         return GLNavigateNativeCode(code,symbol,path);
     }
+    int32_t _find_function(const String& Name,const String& Code) const override {
+        Dictionary Result=GLNavigateNativeCode(Code,Name,String());
+        return int(Result["result"])==OK && int(Result["type"])==LOOKUP_RESULT_SCRIPT_LOCATION?int(Result["location"]):-1;
+    }
+    String _auto_indent_code(const String& Code,int32_t,int32_t) const override { return Code; }
 
     void _frame()            override {}
     void _thread_enter()     override {}

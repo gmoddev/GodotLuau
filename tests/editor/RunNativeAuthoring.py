@@ -26,6 +26,11 @@ def Main():
     Output = Args.output.resolve()
     Output.mkdir(parents=True, exist_ok=False)
     Prepare(Output, Args.extension.resolve())
+    if Args.workflow and not Args.baseline:
+        Example=Path(__file__).resolve().parents[2]/"examples/luau-only"
+        for Name in ("World.luau","Marker.tscn","Pattern.tres"):
+            shutil.copy2(Example/Name,Output/Name)
+        shutil.copy2(Example/"Main.luau",Output/"OrbRun.luau")
     (Output / ".godot/extension_list.cfg").write_text('res://godot_luau.gdextension\n')
     Plugin = Output / "addons/NativeEditor"
     Plugin.mkdir(parents=True)

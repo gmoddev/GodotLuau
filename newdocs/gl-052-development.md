@@ -152,3 +152,32 @@ material name AlbedoTexture; no camera or material authority expansion is needed
 Preview adds the generated API's X/Y Vector2 constructor shape and bounded print,
 and closes its domain while plugin state remains alive. Game, graphical editor,
 export and latest native qualification are still pending.
+
+## Actual new-game runtime and production-profile gates
+
+Native `43123668484` at `9afbafd` retains the known default-camera failure on
+both platforms; real ScriptEditor declaration navigation already passes there.
+At `b357239`, core `43125078056` passes on both platforms and Linux native
+`43125078160` passes the corrected clean-project authoring workflow before
+finishing the retained runtime suites. Windows is still building at this entry.
+
+Use its retained Windows Debug adapter for bounded local diagnosis, not as a
+production package or Release result. The first game attempt omitted the normal
+editor-created extension cache and never loaded the extension. The second
+loads it and exposes an example error: opaque native resource handles require
+`Scope:Configure(Ground, {AlbedoTexture = ...})`, not userdata field assignment.
+Correct the example without expanding authority. Preserve both failed logs.
+The third run (`game-9af-headless-3`) passes all ten actual-game checks: native
+floor collision, keyboard movement, jump impulse, UI signal scene replacement,
+disable/re-enable teardown and runtime module revision invalidation. It uses
+the real Luau entrypoint/factory; external GDScript is only the observer. It is
+headless and does not establish graphical or export qualification.
+
+Extend the same observer to exercise collection, round completion and transition.
+Stage projects only into fresh paths, with explicit candidate or test-adapter
+identity. Add the authoring workflow to existing SCons production profile checks
+and the game to existing adapter checks; no second qualification framework.
+The language adapter now truthfully rejects unsupported file inheritance,
+recognizes Luau type/export keywords and supplies native function navigation
+and a deliberate no-op indentation hook. A pinned-header syntax probe passes.
+Interactive editor, debugger transport, rendered game and export remain pending.
