@@ -2,7 +2,7 @@
 
 GL-052 is an unmerged implementation campaign. See the
 [qualification record](gl-052-qualification.md) for qualified inputs and remaining
-interactive/editor-reopen gaps, and the [journal](gl-052-development.md) for failures.
+interactive input gap, and the [journal](gl-052-development.md) for failures.
 There is no published fork release or updater channel. Use an explicitly verified
 non-publishing candidate; test adapters include qualification hooks and are not
 distribution products.
@@ -60,6 +60,9 @@ restart. [ADR-016](adr-016-luau-editor-authoring.md) defines this boundary.
 PackedScene serializer. It preserves authored native nodes, resource references
 and transforms, replacing transient SceneScope roots with plain native roots.
 It does not serialize live callbacks, capabilities or execution generations.
+Instantiated PackedScene nodes become independently owned snapshot content; their
+instance paths are cleared so expanded children are not loaded twice. Native
+resource references remain; changes to the original scene do not rebuild a snapshot.
 Open that scene for ordinary native editing and saving. Keep the source scene
 for procedural reconstruction; rebuilding it does not overwrite saved user edits.
 Saving a preview is not a live synchronization or merge system.
@@ -134,9 +137,9 @@ must match the intended profile; `.lua` and `.luau` sources are included. Keep
 the extension libraries and companion beside the exported application as emitted
 by Godot. Launch from an independent directory without source-tree paths.
 Windows accepted-candidate export and independent startup pass in
-[run 43149583568](https://github.com/gmoddev/GodotLuau/actions/runs/43149583568).
+[run 43164852674](https://github.com/gmoddev/GodotLuau/actions/runs/43164852674).
 The [qualification record](gl-052-qualification.md) separately records actual
-Windows rendering and outstanding interactive/editor-reopen gaps. A staging
+Windows rendering, passing fresh-process reopen checks and the remaining input gap. A staging
 preset or successful headless game run alone does not qualify those workflows.
 
 GL-050 remains unresolved and separate. Existing headless evidence does not

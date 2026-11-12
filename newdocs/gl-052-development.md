@@ -549,3 +549,51 @@ This closes the earlier blanket claim that all UI access is unavailable; it does
 not yet qualify editing, complete play/debug/export interaction or the pending
 snapshot correction's graphical path. Source input interrupted by user activity
 is not counted as an edit or save.
+
+## Qualified combined source — 60913fb
+
+Current native fingerprint is
+`9a59cfbcce5626fe954d232f5f8be71d4452ddf85cea0263eb627973886f49bc`
+(121 LF-normalized files). Core `43154348664`, native `43154348629`, full-native
+sanitizers `43154353439` and production candidate `43154350153` all pass at
+`60913fbf1ab849a7e354ba7397f8fbc5845cad55`. Candidate acceptance covers all four
+source-built profiles and both strict packages, with Windows/Linux Debug/Release
+extracted companion startup all exit 0. No current package repair is needed.
+
+Download the existing native/sanitizer receipts and inspect the changed-boundary
+evidence. Both native platforms retain 141 existing actors, 19 inherited editor
+checks, 37 authoring checks, seven new fresh-process reopen checks and 13 game
+checks. Both native and sanitizer Integration logs report DefaultScripts PASS.
+Sanitizers retain 26 Windows/27 Linux stages and zero unexpected reports; this
+does not establish executed editor/rendering sanitizer coverage or Windows LSan.
+The independent default-damage candidate review finds no concrete remaining
+bypass or regression. GL-053 closes for the default-template scope only.
+
+Current game package/export `43164852674` passes extracted Relay Siege startup
+and actual Orb Run native export/independent startup. Downloaded export results
+confirm source 60913fb and byte-identical emitted Release library/companion.
+Run the existing bounded graphical game fixture against the current Debug adapter
+under the official editor: `game-609-rendered` passes all 14 checks, clean exit and
+no diagnostics. Inspect its captured orb, markers, floor and UI. This remains an
+offscreen rendered observation, separate from production standalone export.
+
+Current hosted twenty-preview measurements are 129.344 ms on Windows and
+129.743 ms on Linux, including editor frames. Static readings are
+396,988,836→397,141,024 and 406,850,580→407,003,848 bytes respectively. Do not
+infer isolated API latency, absence of leaks or a speed improvement. Prior
+rendered Relay Siege regressions are reused within unchanged gameplay/controller/
+network paths; no repeated multiplayer workload is needed for the editor-only
+snapshot change and removal of an unused default template endpoint.
+
+Upgrade the UI-created disposable project to the accepted current products,
+verifying Main.tscn, Main.luau and project.godot remain byte-identical. A fresh
+bounded native editor renders in capture, but activation fails twice with
+`failed to activate captured window`. Stop input attempts after the supported
+refresh/retry, and request desktop availability while continuing independent
+checks. No complete interactive edit/play/debug/save/reopen/export pass is
+claimed. Owned editor sessions have finite timeouts and process-tree cleanup.
+
+The [current receipt](evidence/gl052-qualification.json) identifies this cohort;
+the preceding [e393 receipt](evidence/gl052-e393-qualification.json) is preserved
+unchanged. Main is unmerged, release/updater publication remains disabled,
+Native stays default, Scripted stays opt-in, and GL-050 remains unresolved.

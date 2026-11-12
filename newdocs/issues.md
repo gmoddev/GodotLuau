@@ -31,10 +31,11 @@ partially qualified and unmerged. GL-050 remains separately unresolved.
 The [qualification record](gl-052-qualification.md) preserves actual editor/game
 passes, completed Windows/Linux core/native/types/sanitizers, accepted production
 packages and Windows export/rendered multiplayer. Interactive desktop access
-remains unavailable. Fresh-process reopening exposes duplicated PackedScene
-children in saved previews; load warnings trigger Godot dialog errors. The
-bounded snapshot-path correction has a controlled failing pre-fix regression;
-clean post-fix editor-reopen qualification remains outstanding.
+is intermittent: actual project/Luau source creation is observed, while current
+activation fails. The snapshot-path correction now passes seven fresh-process
+reopen checks on Windows/Linux at `60913fb`; the old duplicate-child/load-dialog
+failure is preserved. [GL-053](gl-053-default-damage.md) removes and qualifies the
+unsafe default damage endpoint without changing native health authority.
 
 The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
 qualified game and its original evidence. GL-043 is now separately qualified and
@@ -112,8 +113,8 @@ four successful workflows and independently checked artifacts.
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
-| GL-052 | P2 | Implemented; partially qualified and unmerged; interactive/reopen gaps remain | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
-| GL-053 | P2 | Unsafe default damage example confirmed; fix under qualification | Generic GameManager publishes client-selected damage requests without a game-specific combat authority policy; original damage sink is commented out |
+| GL-052 | P2 | Implemented and partially qualified; snapshot fix qualified; full interactive journey incomplete; unmerged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
+| [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 
 ## GL-051: First-class native Luau integration
 

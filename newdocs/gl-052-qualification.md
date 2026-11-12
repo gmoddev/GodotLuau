@@ -1,16 +1,11 @@
 # GL-052 qualification record
 
-Follow-up in progress: `33d448b` corrects duplicated saved-scene instance children;
-Linux's fresh-process native-editor regression passes. The owner-requested
-[GL-053 default damage correction](gl-053-default-damage.md) changes the embedded
-template too, so final combined-source qualification is pending. Native UI project
-and Luau scene/source creation are now observed with `--single-window`; the full
-interactive journey remains incomplete. The accepted identities below describe
-the preceding checkpoint, not builds of these newer changes.
-
 Disposition: implemented and qualified within the scopes below; **partially
-qualified overall and unmerged**. Interactive editor acceptance remains blocked,
-and the fresh-process scene-switch observation is not a clean pass. Main remains
+qualified overall and unmerged**. The snapshot duplication defect is fixed and
+fresh-process editor regressions pass on Windows/Linux. The owner-requested
+[GL-053 default damage correction](gl-053-default-damage.md) is also qualified.
+The full interactive journey remains incomplete because current Windows
+activation fails. Main remains
 `e43e981d423cea99edff9eb9d186a0b9a4758b73`. Releases and updater distribution are
 disabled. [ADR-016](adr-016-luau-editor-authoring.md), the
 [development journal](gl-052-development.md) and
@@ -21,17 +16,20 @@ package and workflow identities.
 
 ## Source identities
 
-Current native cohort: `1197f3d91a4a9f1f841e8eb5e48e2cbb1b4d4e21`.
-Native fingerprint: `1d66c498a57007337b68502c99133abc4cac0531b16a8fed2bd72ee80db9e31a`,
+Current qualified source: `60913fbf1ab849a7e354ba7397f8fbc5845cad55`, tree
+`0527d7cbc67b26862cfc2609e4f097bf777de2d5`.
+Native fingerprint: `9a59cfbcce5626fe954d232f5f8be71d4452ddf85cea0263eb627973886f49bc`,
 121 files with compiler-equivalent LF normalization. Dependency pins and admitted
 engine/renderer patches are unchanged.
 
-Final production/observer source is `e393c0d310f096263fb8c0ec2c8e3fe13d80584a`,
-tree `d78becf205bdbd948ba320b750765876c3de806a`, with that same native fingerprint.
-The accepted package repair uses tooling revision
+The preceding checkpoint's source is `e393c0d310f096263fb8c0ec2c8e3fe13d80584a`,
+tree `d78becf205bdbd948ba320b750765876c3de806a`, native fingerprint
+`1d66c498a57007337b68502c99133abc4cac0531b16a8fed2bd72ee80db9e31a`.
+Its accepted package repair uses tooling revision
 `6852ae5b197e4565892c832a4d02824b59b7e199`. It reuses immutable source-built
 products and records the tooling identity separately; later documentation does
-not relabel those products as builds of a newer commit.
+not relabel those products as builds of a newer commit. Its unchanged historical
+[receipt](evidence/gl052-e393-qualification.json) is retained separately.
 
 The earlier `b35723969ca951ad5a684dd51e02a471c7cc0a91` cohort has fingerprint
 `a6acfecee325d0989f15a967acfe40aa828a7c68eabd3b00cc714923899107b6`
@@ -66,7 +64,13 @@ These intermediate observations are not relabeled as qualification of newer code
 | [Accepted candidate repair `43149322873`](https://github.com/gmoddev/GodotLuau/actions/runs/43149322873) | Policy, Windows/Linux packages and final acceptance pass; original four qualified profiles are reused without rebuilding or weakening strict evidence checks |
 | [Final game package/export `43149583568`](https://github.com/gmoddev/GodotLuau/actions/runs/43149583568) | Existing Relay Siege extracted-package startup and actual Orb Run native export/independent startup pass; emitted DLL and companion match the accepted candidate |
 | Accepted-candidate Windows rendered multiplayer | `relay-candidate-listen` and `relay-candidate-dedicated` pass: four rendered players including late join, all actor exits 0 and no failed checks; dedicated server is headless |
-| Fresh-process saved-scene reopen | Native EditorInterface opens both Generated and OrbSaved with their native content, but scene switching emits two Godot dialog errors; partial observation only, not a clean editor/reopen pass |
+| Pre-fix fresh-process saved-scene reopen | Native EditorInterface opens both Generated and OrbSaved with their native content, but scene switching emits two Godot dialog errors; retained failure, superseded by current passing checks |
+| [Current core `43154348664`](https://github.com/gmoddev/GodotLuau/actions/runs/43154348664), `60913fb` | Windows/Linux pass |
+| [Current native `43154348629`](https://github.com/gmoddev/GodotLuau/actions/runs/43154348629), `60913fb` | Windows/Linux pass: 141 actors, 19 inherited editor, 37 authoring, seven fresh-process reopen and 13 game checks per platform; GL-053 passes inside Integration |
+| [Current sanitizers `43154353439`](https://github.com/gmoddev/GodotLuau/actions/runs/43154353439), `60913fb` | Windows/Linux pass, 26/27 stages, zero unexpected reports; GL-053 passes within both native Integration actors |
+| [Current candidate `43154350153`](https://github.com/gmoddev/GodotLuau/actions/runs/43154350153), `60913fb` | All four profiles, both strict packages and acceptance pass; extracted Debug/Release companion startup exits 0 on Windows/Linux |
+| [Current package/export `43164852674`](https://github.com/gmoddev/GodotLuau/actions/runs/43164852674), `60913fb` | Current Relay Siege extracted startup and actual Orb Run export/independent startup pass, with exact emitted DLL/worker bytes |
+| Current rendered Orb Run | `game-609-rendered`: 14 checks, inspected native scene/UI capture and clean exit; current Debug adapter under official editor, separate from production export |
 
 Superseded candidate/sanitizer/native cohorts are canceled when concrete source
 fixes invalidate their inputs. Their failures/logs remain in the journal and
@@ -83,46 +87,56 @@ navigation. The 37 expanded checks pass on Windows/Linux, including real
 EditorInterface play/stop, native debugger capture and rerun, correct source-line
 navigation, serialized-transform composition and the registered lexer highlighter.
 The 19 inherited editor checks and 141 inherited runtime actors also pass.
+Seven fresh-process checks now open both saved scenes through EditorInterface,
+require exactly one Visual per Marker, preserve the external texture and reject
+load-warning dialogs. Snapshot copies clear their instance paths before packing
+expanded descendants; original preview/source content is preserved.
 
 Orb Run is a new native 3D game with no developer GDScript or Relay Siege
 bootstrap. The retained rendered frame shows native geometry, markers and UI.
 Headless/rendered observers remain external qualification code. Candidate staging
 omits the unnecessary disabled updater addon. Production export is a separate
 gate: Godot exports, emits byte-identical library/companion products and launches
-the game independently in final run `43149583568`. Its `OrbRun-Windows-Export`
+the game independently in current run `43164852674`. Its `OrbRun-Windows-Export`
 artifact contains `results.json`, all four successful commands and their log
 hashes. This is headless editor/export/startup evidence, not interactive export
 or rendered standalone qualification.
 
-Twenty current preview rebuilds take 140.658 ms including editor/frame processing.
-OS static allocation readings change from 409,685,266 to 409,835,838 bytes.
-Current Release Relay Siege solo records 59.511 seconds, 1,702 frames, 33.483 ms
+Twenty current hosted preview rebuilds take 129.344 ms on Windows and 129.743 ms
+on Linux, including editor/frame processing. Static readings change from
+396,988,836 to 397,141,024 bytes on Windows and 406,850,580 to 407,003,848 on Linux.
+The retained preceding Release Relay Siege solo records 59.511 seconds, 1,702 frames, 33.483 ms
 mean, 147.803 ms peak and 175 native objects at the existing 30 FPS cap. These
 bounded observations are not isolated API latency, leak-free proof or a speed
 improvement. Intermediate measurements remain in the development journal.
 
 Accepted Windows archive SHA256:
-`bcec75e31caee58037ea893a0ef2b2d956b68ba437999c18975a9b7dd2266a46`.
+`7a32df524ad403270176a87ef0fc76f53cfcc32248a2c0b995ddaacf08e99161`.
 Accepted Linux archive SHA256:
-`7b44e351c62f60a444c0bfece51eff5bd163d691b1b8d3096f20d751c6a7ebb5`.
+`8b0e83d3fb5f1afa4c6b28244653757266435339bc10b0ee89061835b811233e`.
 Exported Windows Release DLL SHA256:
-`207a24e7a3c25742159723c60b4292c2ad950276c8f9c9e113cc1237defc759e`;
+`7f674f7410c9adaa601e91b1effaf122c6d0a60373b1f8332db7ccd30da81249`;
 companion SHA256:
-`0517138956ff84d241066ad421fcc14ac97e465515dbc6ea61b527034a592569`.
+`0fae6ef38308a68caaa77b28eb49305ab5b8970880a1a9e76b848d42050882de`.
 
 ## Retained limitations and failures
 
-- Interactive native-editor creation/edit/inspect/save/reopen/export is blocked
-  by black desktop captures and `GetCursorPos: Access is denied`; no UI interaction
-  or full interactive qualification is claimed. Actual headless editor execution
-  and offscreen game rendering are separate evidence.
+- Initial black captures and `GetCursorPos: Access is denied` block UI access.
+  Later `--single-window` work observes actual project creation, native Luau
+  scene/source creation and source opening/highlighting. With current accepted
+  products installed, editor captures render but activation fails twice with
+  `failed to activate captured window`. The complete editing/inspection/play/
+  debug/save/reopen/export UI journey remains unqualified. Actual headless editor
+  execution and offscreen rendering are separate evidence.
 - In a fresh isolated project, positional and `--scene` editor invocations restore
   Generated rather than prove OrbSaved opened. A subsequent external @tool
   observer uses native `EditorInterface.open_scene_from_path`: both roots open,
   but switching to OrbSaved reports `Attempting to parent and popup a dialog that
   already has a parent` twice. Retain `snapshot-reopen` logs; do not label this a
-  clean pass or infer its cause. The observer's first parse/type error and bounded
-  timeout are also retained. No application GDScript is added by this observer.
+  clean historical pass. Investigation identifies duplicate expanded PackedScene
+  children. Fix `33d448b`, qualified at `60913fb`, supersedes that gap with seven
+  passing fresh-process checks per platform. Initial observer errors are retained.
+  No application GDScript is added by the external observers.
 - Fast clean stock-editor `--editor --import` exits with an access violation for
   both retained GL-051 and older GL-052 products. Root cause is not established.
   Normal bounded editor startup exits cleanly. The fast import profile remains
@@ -146,12 +160,14 @@ companion SHA256:
 
 Windows/Linux core, native, type, sanitizer, all four production profiles, both
 packages and Windows standalone export are verified within their recorded scopes.
-Current Windows Relay Siege solo, persistence/restart, menu failure/retry and
-listen/dedicated multiplayer regressions pass. Native remains the default and
+Retained Windows Relay Siege solo, persistence/restart, menu failure/retry and
+listen/dedicated multiplayer regressions pass within unchanged gameplay,
+controller and networking paths. Fresh current extracted startup passes
+separately. Native remains the default and
 Scripted remains opt-in; no controller/network/persistence redesign is included.
 The implemented headless and Windows rendered paths are ready for review, but
-full interactive acceptance and clean editor scene-switch/reopen qualification
-remain outstanding. Main is not a delivery target for this campaign.
+full interactive acceptance remains outstanding. The snapshot defect and GL-053
+are fixed and qualified within their stated scopes. Main is not a delivery target.
 
 ## Retained fixture correction
 
@@ -167,8 +183,8 @@ The subsequent `43135983475` cross-platform native run and all four production
 profiles pass with that correction. Full-native sanitizers are reused because
 their native sources and runtime fixture inputs are unchanged.
 
-The current Windows adapter SHA256 is
+The preceding Windows adapter SHA256 is
 `9291b03534b053b167c2d57650423e700b9f5eb0832dfc69c8dcf082a2d0f305`.
-Twenty current preview iterations record 140.658 ms including editor frames,
+Twenty preceding preview iterations record 140.658 ms including editor frames,
 with OS static readings 409,685,266 and 409,835,838 bytes. These observations use
 the same bounded interpretation as the intermediate measurement above.

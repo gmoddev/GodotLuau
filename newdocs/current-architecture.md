@@ -10,8 +10,11 @@ content rather than serializing VM scopes. Project-local module resources use
 the existing require evaluator and per-domain cache. The
 [qualification record](gl-052-qualification.md) records passing cross-platform
 native/production checks, Windows game rendering and native export. Interactive
-desktop acceptance and clean editor scene-switch/reopen qualification remain
-outstanding; the [journal](gl-052-development.md) retains failed attempts.
+desktop acceptance remains incomplete. Snapshot serialization clears copied
+PackedScene instance paths before packing expanded native children; fresh-process
+reopen checks pass on both platforms. The [journal](gl-052-development.md) retains
+failed attempts. [GL-053](gl-053-default-damage.md) removes the unconfigured
+default GameManager damage endpoint; native health/network authority is unchanged.
 
 The [integrated GL-051 change](gl-051-main-integration.md), under
 [ADR-015](adr-015-policy-driven-native-bindings.md),

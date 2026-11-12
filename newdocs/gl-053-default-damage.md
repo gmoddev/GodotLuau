@@ -1,7 +1,7 @@
 # GL-053: Safe default GameManager combat boundary
 
-Status: correction implemented and independently reviewed on the unmerged GL-052
-branch; final source-built qualification is pending. Release publication
+Status: **resolved for the default templates**, fixed and independently qualified
+at `60913fbf1ab849a7e354ba7397f8fbc5845cad55` on the unmerged GL-052 branch. Release publication
 and updater distribution remain disabled.
 
 ## Verified baseline and scope
@@ -60,10 +60,29 @@ Commands: the repository's existing `Prepare`, `Start` and `Check` helpers launc
 official Godot 4.7.1 headlessly with `Integration.gd`, a 40-second deadline, isolated
 profiles, suppressed Windows crash UI and owned-process cleanup. The campaign
 retains `gl052-followup-20261112/default-before` and `default-after-source`.
-Final hosted source/product identities and outcomes will be appended.
+Final hosted evidence at that exact source:
+
+- [Native Windows/Linux](https://github.com/gmoddev/GodotLuau/actions/runs/43154348629)
+  pass all existing actors, including the new DefaultScripts case in Integration.
+- [Full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/43154353439)
+  pass Windows/Linux, including that case, with zero unexpected reports.
+- [Core](https://github.com/gmoddev/GodotLuau/actions/runs/43154348664) passes both
+  platforms. [Production candidate](https://github.com/gmoddev/GodotLuau/actions/runs/43154350153)
+  passes all four source builds, both extracted packages and final acceptance.
+  The embedded header is compiled into those source-identified products.
+- [Current package/export](https://github.com/gmoddev/GodotLuau/actions/runs/43164852674)
+  passes independently. Current Windows rendered Orb Run also passes 14 checks.
+
+Downloaded Windows/Linux native and sanitizer Integration logs each contain
+`[Runtime:DefaultScripts] PASS`. The preparer requires exact disk/fallback text
+equality; the runtime test executes that actual source through native domains.
+The historical call no longer succeeds because the default endpoint does not
+exist. Legitimate Server damage succeeds and direct Client writes leave health
+unchanged. This closes the unsafe template path, not combat correctness in
+customized games. [GL-052's receipt](evidence/gl052-qualification.json) retains
+exact native/product hashes and independent remaining editor limits.
 
 The independent read-only candidate review finds no concrete surviving bypass or
 regression. It verifies Python parsing, disk/fallback parity, endpoint absence and
 the diff; it does not claim a Godot run. The parent separately runs the focused
-native control and rejection cases above. Final hosted qualification is required
-before recording the issue resolved.
+native control and rejection cases above; final hosted qualification now passes.
