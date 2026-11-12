@@ -2,7 +2,7 @@
   "Schema": 1,
   "Campaign": "GL-052 main integration",
   "Date": "2026-11-12",
-  "Disposition": "SOURCE_INTEGRATED_FRESH_MAIN_CI_PENDING",
+  "Disposition": "INTEGRATED_AND_VERIFIED_WITH_RETAINED_LIMITATIONS",
   "Base": "e43e981d423cea99edff9eb9d186a0b9a4758b73",
   "QualifiedBranch": "feature/gl-052-luau-authoring-workflow",
   "QualifiedHead": "9e285920c58479d52f2cf2ba3a09da6816720da1",
@@ -64,10 +64,108 @@
   },
   "Reuse": "Exact qualified native/fixture/build inputs; retain earlier product and graphical identities, including the documented print-only sanitizer/UI reuse boundary",
   "FreshMainCI": {
-    "Result": "PENDING",
-    "Core": "Awaiting push",
-    "Native": "Awaiting push",
-    "Definitions": "Existing workflow to dispatch on the same main revision"
+    "Result": "PASS",
+    "Revision": "15af022a54924dc2c113d97d0a7a1293b1c1f1f4",
+    "Core": {
+      "Run": 43200155305,
+      "Result": "PASS_WINDOWS_LINUX",
+      "CoreCasesPerPlatform": 85,
+      "Artifacts": {
+        "Windows": {
+          "InputAssertions": 29,
+          "SHA256": {
+            "discovery.json": "c7506b65a1ad56c0510ded92ff0f81b4c9e6c3adc71746bc21555f110195e6a7",
+            "core-results.xml": "69ff605fbc513892764faa5069efbd2f839f99a2d488ba576c0359b8a8dc78f3",
+            "input-graph.log": "21305e8e2c261fb3f49a39384a118e7f80fbf8060fdd625275c308bf276a13b1"
+          }
+        },
+        "Linux": {
+          "InputAssertions": 29,
+          "SHA256": {
+            "discovery.json": "d7dc10a914f0f2e07dfc0f832cbcfbaa3717a92c06e6114cb3ad7b149d3405c4",
+            "core-results.xml": "468201d61c8c080e3b7f67dffd2f44eceb7d528238c9a6a9f77cba25755e1bc4",
+            "input-graph.log": "7bc2077ccc8cecd3153ad74a95e3eb1260355c56a902eaa5be6cb7be0b92e813"
+          }
+        }
+      }
+    },
+    "Native": {
+      "Run": 43200155340,
+      "Result": "PASS_WINDOWS_LINUX",
+      "Platforms": {
+        "Linux": {
+          "Revision": "15af022a54924dc2c113d97d0a7a1293b1c1f1f4",
+          "Result": "PASS",
+          "NativeSource": {
+            "SHA256": "140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1",
+            "Files": 121,
+            "Newlines": "LF normalized"
+          },
+          "Actors": 141,
+          "NonzeroActorExits": 0,
+          "EditorChecks": 19,
+          "AuthoringChecks": 37,
+          "FreshProcessReopenChecks": 7,
+          "GameChecks": 13,
+          "DefaultScripts": "PASS",
+          "ExtensionSHA256": "0103e30de648add18cb3d7e80c2e30c9e8fb1f28307ee05998d63fffb072149e",
+          "DataStoreWorkerSHA256": "83e40a2c289917894dbae82bd056ba90c2c729426191770f77fd7814de9dc980",
+          "SHA256": {
+            "summary.json": "a0cb1d8cbcfdad53f2d0b4b5154e54f51f0b0ddff342bb68ea7222347ced1294",
+            "native-editor/results.json": "ac5a452d3a111e904c0e5b1085a5d68061b719d2c1c0f31388bfc222f2c48f93",
+            "luau-workflow/results.json": "b39faea346e3394a6b34deb22c3fda521ae2f02565f37a5670e0dea876363529",
+            "luau-game/results.json": "708b32213f5eec93ec4d666da26d8428491ed9e0aa2ad49ffd840a89643a4fda"
+          }
+        },
+        "Windows": {
+          "Revision": "15af022a54924dc2c113d97d0a7a1293b1c1f1f4",
+          "Result": "PASS",
+          "NativeSource": {
+            "SHA256": "140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1",
+            "Files": 121,
+            "Newlines": "LF normalized"
+          },
+          "Actors": 141,
+          "NonzeroActorExits": 0,
+          "EditorChecks": 19,
+          "AuthoringChecks": 37,
+          "FreshProcessReopenChecks": 7,
+          "GameChecks": 13,
+          "DefaultScripts": "PASS",
+          "ExtensionSHA256": "2a0f37acbd185b41947f970f73ab76edcdf7a1558e45ff2624c7b467a01bfe53",
+          "DataStoreWorkerSHA256": "b3381aa09f253c9c0f6c9fcb55c799125df7c9f8b0197ceb49c3b6d2b0ae888e",
+          "SHA256": {
+            "summary.json": "cb27ec9366651a9ab7c36c7401292ab6dc287be44efa5451a77bb320a4c04bca",
+            "native-editor/results.json": "673347c3d49df88403735db828f39acbbc325c5c1b37b6a10bfdbfd91f5461d4",
+            "luau-workflow/results.json": "0c6c9967f64a78439b1164b9c0cef8853fdc02f301fa39d42bd1e449a907bf73",
+            "luau-game/results.json": "09facdb32ff443ae26f4d468856e00617b9115f21228b260f75fb08f15e9e7be"
+          }
+        }
+      }
+    },
+    "Definitions": {
+      "Run": 43200179204,
+      "Result": "PASS_WINDOWS_LINUX",
+      "RepresentativePrograms": 11,
+      "RelayFactory": "PASS",
+      "Artifacts": {
+        "Windows": {
+          "SHA256": {
+            "native-types.log": "15781ae0547b8b2d1444581cfb961f26f6d9f46d47c87e06c63773699e809969",
+            "Native.d.luau": "44223a6eaabf531f6dd3f112fd0431663c68bb35a2422f1d2c9cfaeff84fc8eb",
+            "NativeCatalog.json": "8467d426675d7722fd3801b725107b81997172d62887de5f15b3a560b7d40a16"
+          }
+        },
+        "Linux": {
+          "SHA256": {
+            "native-types.log": "394a0fde551dc3c7a0b1063c7540918944c0211ee79522d224cf9de541a29ad9",
+            "Native.d.luau": "4da829ee0f703a3c9604daa7435a6edb19805875479e4d961a4555c64977e139",
+            "NativeCatalog.json": "d3f33ca513352ee21a8b8ac4526ab884e75fa5a5142418e67dc69990d50018d7"
+          }
+        }
+      }
+    },
+    "Retries": 0
   },
   "Corrections": [],
   "SourceBranchUnchanged": true,
@@ -75,5 +173,7 @@
   "ScriptedOptIn": true,
   "GL050": "Unchanged and unresolved",
   "ReleasesEnabled": false,
-  "UpdaterDistributionEnabled": false
+  "UpdaterDistributionEnabled": false,
+  "LocalEvidenceRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl052-main-20261112",
+  "ClosingChanges": "Documentation only after tested main 15af022; native, fixture, build, dependency and distribution inputs unchanged"
 }

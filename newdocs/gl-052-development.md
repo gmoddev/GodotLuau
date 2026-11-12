@@ -704,3 +704,34 @@ its established scope; do not rebuild unchanged packages or repeat the UI journe
 The [integration record](gl-052-main-integration.md) and separate receipt track
 fresh main core/native CI and generated-binding checks. Update integration docs,
 push main normally, then record their final outcomes. Releases/updater stay disabled.
+
+Push the normal merge and initial notes as main 15af022a54924dc2c113d97d0a7a1293b1c1f1f4;
+verify remote main matches and the source branch remains 9e28592. Fresh core
+43200155305 and native 43200155340 start automatically. Dispatch the existing
+definitions workflow 43200179204 on the same main revision. These checks are
+pending at this checkpoint. No new sanitizer/candidate/gameplay replay is needed
+for a tree-identical merge and documentation-only changes.
+
+Fresh core 43200155305 now passes both platforms. Downloaded CTest/JUnit evidence
+reports 85 cases passed and zero failures per platform; input evaluator assertions
+also pass. Fresh definitions 43200179204 passes generated drift/policy checks,
+eleven representative programs and actual RelayFactory on Windows/Linux. Retained
+declaration/catalog artifacts match integrated source after LF normalization.
+Native CI continues building its existing admitted headless hosts. No corrective
+patch or retry is indicated; keep waiting for actual results.
+
+Fresh native 43200155340 now passes both platforms at tested main 15af022. Both
+downloaded summaries match native fingerprint 140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1
+and report 141 actors with zero nonzero exits, 19 inherited editor checks, 37
+authoring checks, seven fresh-process reopen checks and 13 game checks each.
+Both Integration logs include DefaultScripts PASS. Retain results and exact
+summary/editor/game artifact hashes in the separate main integration receipt.
+All fresh main core/native/definitions checks are green; no corrective runtime
+change, assertion/deadline change or retry was required.
+
+Close the integration record and issue status within the existing ADR-016/API/
+platform limits. Closing changes are documentation only; original JSON receipts,
+ADR-016, native/fixture/build/dependency inputs and distribution policy remain
+unchanged. Preserve all 25 source commits and retained source branch 9e28592.
+Releases/updater remain disabled, Native remains default, Scripted remains opt-in,
+and GL-050 stays separate. Verify the final remote main SHA and clean worktree.

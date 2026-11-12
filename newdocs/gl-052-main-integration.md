@@ -58,13 +58,34 @@ built main archives. No new package, release or updater channel is introduced.
 
 ## Fresh integrated CI
 
-Status: **source integrated; fresh main CI pending** at this checkpoint.
+Status: **INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS**, testing main
+revision `15af022a54924dc2c113d97d0a7a1293b1c1f1f4` after the normal merge and
+initial integration notes.
 
-Push the normal merge and integration notes to main, verify the remote revision,
-and require fresh Windows/Linux core/native CI. Run the existing generated-binding
-workflow on the same revision. Record final results and relevant artifacts here;
-retry only for an actual diagnosed failure. Documentation-only closing commits
-do not require repeating those unchanged runtime inputs.
+The normal merge and initial notes are pushed to main at
+`15af022a54924dc2c113d97d0a7a1293b1c1f1f4`, verified against the remote ref.
+All three fresh workflows identify that exact revision:
+
+- [Core 43200155305](https://github.com/gmoddev/GodotLuau/actions/runs/43200155305)
+  passes Windows/Linux: 85 production core cases and 29 input evaluator assertions
+  per platform. Retained discovery/JUnit and input artifacts record zero failures.
+- [Definitions 43200179204](https://github.com/gmoddev/GodotLuau/actions/runs/43200179204)
+  passes Windows/Linux generated drift/policy checks, eleven representative
+  programs and actual RelayFactory. Downloaded declarations/catalogs match main
+  after LF normalization.
+- [Native 43200155340](https://github.com/gmoddev/GodotLuau/actions/runs/43200155340)
+  passes Windows/Linux. Each platform reports all 141 runtime actors with zero
+  nonzero exits, 19 inherited editor checks, 37 authoring checks, seven fresh-process
+  reopen checks and 13 game checks. Both Integration logs report DefaultScripts
+  PASS. Downloaded summaries identify tested main and the unchanged native
+  fingerprint; editor/game result hashes and new adapter/companion identities
+  are recorded in the integration receipt.
+
+Documentation-only closing commits do not require repeating those unchanged
+runtime inputs. No runtime correction, CI retry, assertion/deadline change or
+new qualification layer was needed. The optional benchmark-host export was
+correctly skipped because it was not requested. Original source evidence and
+ADR-016 retain their recorded hashes; the source branch stays at 9e28592.
 
 ## Preserved contracts and limitations
 

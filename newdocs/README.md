@@ -46,7 +46,8 @@ limitations. The Windows interactive journey is complete, including native UI
 export and rendered standalone launch. The final default-script `print` follow-up
 passes core/native CI, all four production profiles, both packages and actual
 game export/startup. GL-052 is qualified within its documented scope; the
-[integration record](gl-052-main-integration.md) tracks fresh main CI separately.
+[integration record](gl-052-main-integration.md) verifies fresh Windows/Linux main
+core/native/definitions CI separately from retained branch evidence.
 The snapshot duplication fix passes fresh-process editor checks on both platforms.
 [GL-053](gl-053-default-damage.md) removes the unsafe default damage example and
 is resolved within the default-template scope, with migration guidance preserved.

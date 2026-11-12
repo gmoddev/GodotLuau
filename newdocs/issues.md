@@ -28,8 +28,10 @@ the baseline; preserve IDs when a refactor moves the implementation.
 GL-052's [implementation journal](gl-052-development.md) tracks the new-project
 Luau-only authoring, preview, native persistence and export campaign. It is
 qualified within its documented scope and [integrated normally](gl-052-main-integration.md),
-preserving all 25 commits. Fresh main CI is pending at this checkpoint. Windows interactive acceptance
-is complete. The final default-script `print` follow-up passes core/native CI,
+preserving all 25 commits. Fresh Windows/Linux main core/native/definitions CI
+passes at 15af022; the integration receipt preserves source and artifact identities.
+Windows interactive acceptance is complete. The final default-script `print`
+follow-up passes core/native CI,
 all four production profiles, both packages and actual game export/startup.
 GL-050 remains separately unresolved.
 The [qualification record](gl-052-qualification.md) preserves actual editor/game
@@ -119,7 +121,7 @@ four successful workflows and independently checked artifacts.
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
-| GL-052 | P2 | Integrated within qualified ADR-016 scope; fresh main CI pending | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
+| GL-052 | P2 | Integrated and verified within documented ADR-016 scope; retained limits unchanged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 
 ## GL-051: First-class native Luau integration
