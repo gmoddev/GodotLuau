@@ -344,3 +344,21 @@ the bound native path check remains pending the fresh adapter run. Check the
 modified GDScript fixtures with the verified official parser before dispatching
 further expensive runs; correct the same explicit String issue in the editor's
 new template-path loop as well.
+
+The renderer-required acceptance entrypoint reuses the shipped project fixture
+and sources. It drives the 3D player's existing input actions through real
+viewport key events, requires all three pickups, a following camera, an actually
+moving navigation guide, ongoing native animation and a fresh round hierarchy.
+It runs on the full-featured official renderer host; the headless 3D fixture
+continues to describe its narrower construction scope. Neither substitutes for
+interactive visual observations or production exported startup.
+
+The 3D-only development run on retained `cb35958`/official OpenGL host finds a
+sample configuration defect: the navigation path is valid, but the guide's
+0.8-high body origin cannot reach its first surface waypoint with a 0.25 path
+tolerance. Set both path/target tolerances to 1, accounting for that vertical
+separation. The unchanged real-input gameplay check then collects all markers,
+follows the camera, plays animation, advances the guide by 5.17 units and replaces
+the round, exiting zero. Preserve failed/successful development logs under
+`gl053-native-20261112/development-3d-cb-*`. This is earlier-adapter component
+evidence; the final current adapter and standalone product still require checks.

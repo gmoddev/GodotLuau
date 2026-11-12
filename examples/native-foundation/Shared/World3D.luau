@@ -14,7 +14,8 @@ return function(Scope: NativeSceneScope, Round: number)
     local Guide = Scope:New("CharacterBody3D",{Name="Guide",Position=Vector3.new(-3,0.8,-3)})
     Scope:New("CollisionShape3D",{Shape=Scope:New("BoxShape3D",{Size=Vector3.new(0.7,1.6,0.7)})},Guide)
     Scope:New("MeshInstance3D",{Mesh=Scope:New("BoxMesh",{Size=Vector3.new(0.7,1.6,0.7)}),Material=Scope:New("StandardMaterial3D",{Color=Color3.new(0.2,0.9,0.6)})},Guide)
-    local Agent = Scope:New("NavigationAgent3D",{TargetPosition=Vector3.new(3,0,-3),PathDesiredDistance=0.25,TargetDesiredDistance=0.5},Guide)
+    -- The body origin is 0.8 above the navigation surface; tolerances include that height.
+    local Agent = Scope:New("NavigationAgent3D",{TargetPosition=Vector3.new(3,0,-3),PathDesiredDistance=1,TargetDesiredDistance=1},Guide)
     local Multi = Scope:New("MultiMesh",{TransformFormat=1,InstanceCount=16,Mesh=Scope:New("BoxMesh",{Size=Vector3.new(0.15,0.6,0.15)})})
     local Basis = {X=Vector3.new(1,0,0),Y=Vector3.new(0,1,0),Z=Vector3.new(0,0,1)}
     for Index=0,15 do

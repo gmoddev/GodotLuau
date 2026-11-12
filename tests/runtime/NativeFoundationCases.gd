@@ -1,14 +1,20 @@
 extends RefCounted
 ## Execute the shipped projects; input injection is local to this fixture viewport.
 
-func Run(Runner,Game: Node) -> void:
+func Key(Runner,Code: int,Pressed: bool) -> void:
+    var Event := InputEventKey.new()
+    Event.keycode=Code
+    Event.pressed=Pressed
+    Runner.root.push_input(Event,true)
+
+func Run(Runner,Game: Node,Rendered := false) -> void:
     var Records: Array[Dictionary] = []
     for Profile in ["TwoD","UI","ThreeD"]:
         var Started := Time.get_ticks_usec()
         var Objects := Performance.get_monitor(Performance.OBJECT_COUNT)
         var Source := FileAccess.get_file_as_string("res://"+Profile+".luau")
         var Marker: String = "Foundation"+Profile+"Ready"
-        var Owner = Runner.CreateScript("ServerScript" if Profile=="ThreeD" else "LocalScript","Foundation"+Profile,"local function Build()\n"+Source+"\nend\nBuild()\ngame:SetAttribute('"+Marker+"',true)",Game)
+        var Owner = Runner.CreateScript("ServerScript" if Profile=="ThreeD" and not Rendered else "LocalScript","Foundation"+Profile,"local function Build()\n"+Source+"\nend\nBuild()\ngame:SetAttribute('"+Marker+"',true)",Game)
         if not await Runner.Until(Marker):
             return
         var Scope: Node = Game.find_children("*","SceneScope",false,false).back()
@@ -47,8 +53,37 @@ func Run(Runner,Game: Node) -> void:
         else:
             var Guide := Scope.get_node("Guide") as CharacterBody3D
             Runner.Check(Guide.get_child_count()>0 and Scope.get_node("Player/Visual") is MeshInstance3D,"Shipped 3D factory constructs actual bodies visuals camera animation and navigation")
+            if Rendered:
+                var Body := Scope.get_node("Player") as CharacterBody3D
+                var Camera := Body.find_children("*","Camera3D",false,false)[0] as Camera3D
+                var CameraOffset := Camera.global_position-Body.global_position
+                var GuideStart := Guide.position
+                var GuideDistance := 0.0
+                for Target in [Vector3(3,0,1),Vector3(-3,0,1),Vector3(0,0,-2)]:
+                    for Frame in range(240):
+                        var Difference: Vector3 = Target-Body.position
+                        GuideDistance=maxf(GuideDistance,Guide.position.distance_to(GuideStart))
+                        Key(Runner,KEY_D,Difference.x>0.15)
+                        Key(Runner,KEY_A,Difference.x< -0.15)
+                        Key(Runner,KEY_S,Difference.z>0.15)
+                        Key(Runner,KEY_W,Difference.z< -0.15)
+                        if Vector2(Difference.x,Difference.z).length()<0.25:
+                            break
+                        await Runner.physics_frame
+                    for Code in [KEY_D,KEY_A,KEY_S,KEY_W]:
+                        Key(Runner,Code,false)
+                Runner.Check((Scope.get_node("HUD/Box/Status") as Label).text.contains("3 / 3"),"Shipped rendered 3D gameplay collects all markers through real input and physics")
+                Runner.Check(Camera.is_current() and (Camera.global_position-Body.global_position).is_equal_approx(CameraOffset),"Shipped 3D camera follows the actual moving physics body")
+                Runner.Check(GuideDistance>0.5,"Shipped navigation guide follows a real native path on the full-featured host")
+                Runner.Check((Body.find_children("*","AnimationPlayer",false,false)[0] as AnimationPlayer).is_playing(),"Shipped 3D native animation remains playing during gameplay")
+                (Scope.get_node("HUD/Box/Next") as Button).pressed.emit()
+                await Runner.process_frame
+                await Runner.process_frame
+                Runner.Check(not is_instance_valid(Scope),"Shipped 3D next round retires its old native graph")
+                Scope=Game.find_children("*","SceneScope",false,false).back()
+                Runner.Check(Scope.get_node("Token1") is MeshInstance3D,"Shipped 3D next round constructs fresh marker state")
         Owner.queue_free()
         await Runner.process_frame
         await Runner.process_frame
         Runner.Check(not is_instance_valid(Scope),"Shipped "+Profile+" project owner retires native content")
-    print("[Foundation:Acceptance] PASS ",JSON.stringify({"Graphical":false,"Records":Records,"ThreeD":"construction only; renderer gameplay requires rendered qualification"}))
+    print("[Foundation:Acceptance] PASS ",JSON.stringify({"Graphical":Rendered,"Records":Records,"ThreeD":"real input physics navigation and round transition" if Rendered else "construction only; renderer gameplay requires rendered qualification"}))

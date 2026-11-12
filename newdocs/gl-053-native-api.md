@@ -53,8 +53,10 @@ numbers, with descriptor bounds applied as well. Arbitrary full-width int64
 fidelity is not promised. Conversions reject nonfinite numbers, cycles, holes,
 mixed array/map keys, functions, foreign userdata and unsupported native values.
 Bounds: depth 8, 4,096 visited cells, 1,024 collection elements, 8,192 UTF-8 bytes
-per string; dictionary input keys are at most 128 bytes. Returned tables are
-recursively immutable. No Object/Resource authority travels inside pure Variant.
+per string; dictionary input keys are at most 128 bytes. The new pure-value
+converter returns recursively immutable tables. Existing Vector2 properties
+retain their ordinary copied X/Y table representation. No Object/Resource
+authority travels inside pure Variant.
 
 ```luau
 local S = Scene.new(script.Parent)
@@ -114,6 +116,10 @@ map's first synchronization. Retry on Scene:Phase while the map initializes.
 Paths use the shared bounded PackedVector3Array conversion. Avoidance/server RID
 mutation, dynamic baking and path metadata containing native capabilities are
 not exposed. Native navigation/physics remains world-owned by Godot.
+The host must include Godot's navigation module. Existing admitted GL-018/029
+headless profiles omit it and reject path operations as unsynchronized; they do
+not gain navigation through a Luau binding. Actual path qualification uses the
+verified official full-featured host separately from those sanitizer profiles.
 
 Skeleton3D supports up to 128 uniquely named bones, topologically ordered parent
 assignment and bounded position/unit-quaternion/positive-scale poses and rest
@@ -133,6 +139,16 @@ shadowing suppresses global enum/value inference. Runtime checks remain the
 authority; these bounded syntax diagnostics are not a complete Luau typechecker.
 Generated declarations continue to be checked by the actual pinned Luau frontend.
 Editor previews receive their own World2D as well as their existing World3D.
+
+Debugging still uses bounded runtime errors/tracebacks with source and domain
+identity, native call errors, explicit preview error recovery and the existing
+timing/resource observations. Godot editor breakpoints, stepping and suspended
+local inspection are not implemented. The language extension currently returns
+an empty `_debug_get_current_stack_info`; it has no bridge that safely suspends
+and resumes the shared-domain scheduler for a debugger. That is a separate
+runtime/debugger integration task, not a claimed engine prohibition or a feature
+provided by completion/navigation. The bounded existing diagnostics remain the
+supported debugging path.
 
 ## Native value-track animation
 

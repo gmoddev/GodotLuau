@@ -28,6 +28,11 @@ play its main scene, or explicitly preview its Luau source in the authoring pane
 Collect three markers; Restart becomes Next round when complete. Restart creates
 fresh native identities and removes the old scope. 3D's green guide uses native
 navigation, and the player visual uses a sealed native animation library.
+The navigation guide requires a host with Godot's navigation module, such as
+the verified official editor. The existing admitted headless/renderer templates
+omit that module; the guide remains stationary there while player gameplay
+continues. Those host profiles are unchanged by this campaign.
+
 The UI uses Tab/Shift+Tab and native arrow navigation. Apply changes only the
 displayed local session settings; it grants no networking or persistence authority.
 
