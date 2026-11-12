@@ -8,7 +8,7 @@ enum Kind { Number, Integer, Boolean, Text, Vector, Vector2Value, Colour, Resour
     Rectangle, RectangleInteger, Rotation, BasisValue, Transform2Value, Transform3Value,
     PlaneValue, BoundsValue, Colour4, VariantValue, ArrayValue, DictionaryValue,
     BytesValue, IntegersValue, LongsValue, FloatsValue, DoublesValue, StringsValue,
-    Vectors2Value, Vectors3Value, ColoursValue, Vectors4Value };
+    Vectors2Value, Vectors3Value, ColoursValue, Vectors4Value, PathValue };
 struct Property {
     const char* Class;
     const char* Name;

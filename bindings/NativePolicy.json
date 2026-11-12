@@ -541,6 +541,24 @@
       "Kind": "Node",
       "Construct": true,
       "Authority": "OwnedScene"
+    },
+    {
+      "Name": "AnimationPlayer",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "AnimationLibrary",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "Animation",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
     }
   ],
   "Properties": [
@@ -3260,6 +3278,53 @@
       "Min": 0.01,
       "Max": 1000,
       "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Animation",
+      "Name": "Length",
+      "Native": "length",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 600,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Animation",
+      "Name": "LoopMode",
+      "Native": "loop_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 2,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "SpeedScale",
+      "Native": "speed_scale",
+      "Kind": "Number",
+      "Min": -16,
+      "Max": 16,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "CurrentAnimationPosition",
+      "Native": "current_animation_position",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "CurrentAnimationLength",
+      "Native": "current_animation_length",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
     }
   ],
   "Methods": [
@@ -4936,6 +5001,291 @@
           "Query": "get_bone_count"
         }
       }
+    },
+    {
+      "Class": "Animation",
+      "Name": "AddTrack",
+      "Native": "add_track",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "type": [
+          0,
+          0
+        ],
+        "at_position": [
+          -1,
+          32
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "at_position",
+          "Query": "get_track_count",
+          "AllowEnd": true,
+          "AllowNegativeOne": true
+        },
+        "Capacity": {
+          "Query": "get_track_count",
+          "Maximum": 32
+        }
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "GetTrackCount",
+      "Native": "get_track_count",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Animation",
+      "Name": "RemoveTrack",
+      "Native": "remove_track",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackSetPath",
+      "Native": "track_set_path",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackGetPath",
+      "Native": "track_get_path",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackGetKeyCount",
+      "Native": "track_get_key_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackSetInterpolationType",
+      "Native": "track_set_interpolation_type",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ],
+        "interpolation": [
+          0,
+          1
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackInsertKey",
+      "Native": "track_insert_key",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ],
+        "time": [
+          0,
+          600
+        ],
+        "transition": [
+          1,
+          1
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      }
+    },
+    {
+      "Class": "AnimationLibrary",
+      "Name": "AddAnimation",
+      "Native": "add_animation",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          1,
+          64
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "name",
+          "Query": "has_animation",
+          "Absent": true
+        },
+        "Capacity": {
+          "Query": "get_animation_list",
+          "Maximum": 16
+        }
+      }
+    },
+    {
+      "Class": "AnimationLibrary",
+      "Name": "GetAnimationList",
+      "Native": "get_animation_list",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationLibrary",
+      "Name": "GetAnimation",
+      "Native": "get_animation",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          1,
+          64
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "name",
+          "Query": "has_animation"
+        }
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "AddAnimationLibrary",
+      "Native": "add_animation_library",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          0,
+          64
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "name",
+          "Query": "has_animation_library",
+          "Absent": true
+        },
+        "Capacity": {
+          "Query": "get_animation_library_list",
+          "Maximum": 16
+        }
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "GetAnimationList",
+      "Native": "get_animation_list",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "Play",
+      "Native": "play",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          0,
+          129
+        ],
+        "custom_blend": [
+          -1,
+          10
+        ],
+        "custom_speed": [
+          -16,
+          16
+        ]
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "Stop",
+      "Native": "stop",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "Pause",
+      "Native": "pause",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "IsPlaying",
+      "Native": "is_playing",
+      "Mutates": false,
+      "Authority": "OwnedScene"
     }
   ],
   "Signals": [
@@ -5130,6 +5480,12 @@
       "Name": "PoseUpdated",
       "Native": "pose_updated",
       "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "AnimationFinished",
+      "Native": "animation_finished",
+      "Authority": "OwnedScene"
     }
   ],
   "Enums": [
@@ -5176,6 +5532,25 @@
     {
       "Class": "MultiMesh",
       "Name": "TransformFormat"
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackType",
+      "Values": [
+        "TYPE_VALUE"
+      ]
+    },
+    {
+      "Class": "Animation",
+      "Name": "InterpolationType",
+      "Values": [
+        "INTERPOLATION_NEAREST",
+        "INTERPOLATION_LINEAR"
+      ]
+    },
+    {
+      "Class": "Animation",
+      "Name": "LoopMode"
     }
   ],
   "LoadTypes": [
@@ -5192,6 +5567,8 @@
     "Shape2D",
     "Shape3D",
     "Gradient",
-    "NavigationMesh"
+    "NavigationMesh",
+    "Animation",
+    "AnimationLibrary"
   ]
 }

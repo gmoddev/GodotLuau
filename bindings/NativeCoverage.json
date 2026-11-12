@@ -10,7 +10,7 @@
     "version_full_name": "Godot Engine v4.3.stable.official"
   },
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
-  "PolicySHA256": "a9c53f061deb9fb9dda9452dfd73bd399c67f7df5f68c65fc837d0a08cf01f42",
+  "PolicySHA256": "bbb534b2a5298e317c7fea59d05465b2b447356befb10d2ad32b35fd6940a298",
   "Interpretation": "Declared members; inheritance follows Base. Catalog specifies exact receivers, aliases, bounds and runtime permissions. Metadata existence is not host availability or qualification.",
   "Runtime": {
     "Domains": [
@@ -28,11 +28,11 @@
   },
   "Summary": {
     "MetadataClasses": 920,
-    "ConstructibleClasses": 90,
-    "SelectedProperties": 301,
-    "SelectedMethods": 150,
-    "SelectedSignals": 32,
-    "SelectedConstants": 43,
+    "ConstructibleClasses": 93,
+    "SelectedProperties": 306,
+    "SelectedMethods": 167,
+    "SelectedSignals": 33,
+    "SelectedConstants": 49,
     "DeclaredMembers": {
       "methods": 14379,
       "properties": 3676,
@@ -154,8 +154,8 @@
     },
     {
       "Name": "NodePath",
-      "Status": "Unsupported",
-      "Representation": "No approved general conversion"
+      "Status": "Supported",
+      "Representation": "string"
     },
     {
       "Name": "RID",
@@ -784,20 +784,28 @@
     {
       "Name": "Animation",
       "Base": "Resource",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
-      "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
+      "Loadable": true,
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Supported": [
             "add_track",
             "remove_track",
             "get_track_count",
+            "track_get_path",
+            "track_set_path",
+            "track_insert_key",
+            "track_get_key_count",
+            "track_set_interpolation_type"
+          ],
+          "Unsupported": [
             "track_get_type",
+            "find_track",
             "track_move_up",
             "track_move_down",
             "track_move_to",
@@ -814,18 +822,15 @@
             "rotation_track_interpolate",
             "scale_track_interpolate",
             "blend_shape_track_interpolate",
-            "track_insert_key",
             "track_remove_key",
             "track_remove_key_at_time",
             "track_set_key_value",
             "track_set_key_transition",
             "track_set_key_time",
             "track_get_key_transition",
-            "track_get_key_count",
             "track_get_key_value",
             "track_get_key_time",
             "track_find_key",
-            "track_set_interpolation_type",
             "track_get_interpolation_type",
             "track_set_interpolation_loop_wrap",
             "track_get_interpolation_loop_wrap",
@@ -865,17 +870,14 @@
             "copy_track",
             "compress",
             "is_capture_included"
-          ],
-          "Blocked": [
-            "track_get_path",
-            "track_set_path",
-            "find_track"
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "length",
-            "loop_mode",
+            "loop_mode"
+          ],
+          "Unsupported": [
             "step"
           ],
           "Blocked": [
@@ -884,11 +886,13 @@
         },
         "signals": {},
         "enums": {
-          "Unsupported": [
+          "Supported": [
             "TrackType",
             "InterpolationType",
+            "LoopMode"
+          ],
+          "Unsupported": [
             "UpdateMode",
-            "LoopMode",
             "LoopedFlag",
             "FindMode"
           ]
@@ -899,24 +903,24 @@
     {
       "Name": "AnimationLibrary",
       "Base": "Resource",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
-      "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
+      "Loadable": true,
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Supported": [
             "add_animation",
+            "get_animation",
+            "get_animation_list"
+          ],
+          "Unsupported": [
             "remove_animation",
             "rename_animation",
-            "has_animation",
-            "get_animation"
-          ],
-          "Blocked": [
-            "get_animation_list"
+            "has_animation"
           ]
         },
         "properties": {},
@@ -935,28 +939,32 @@
     {
       "Name": "AnimationMixer",
       "Base": "Node",
-      "Status": "Unsupported",
+      "Status": "Partial",
       "Constructible": false,
       "ConstructionStatus": "Not admitted",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Partial": [
             "add_animation_library",
+            "get_animation_list"
+          ],
+          "Unsupported": [
             "remove_animation_library",
             "rename_animation_library",
             "has_animation_library",
             "get_animation_library",
             "has_animation",
             "get_animation",
-            "get_animation_list",
             "set_active",
             "is_active",
             "set_deterministic",
             "is_deterministic",
+            "set_root_node",
+            "get_root_node",
             "set_callback_mode_process",
             "get_callback_mode_process",
             "set_callback_mode_method",
@@ -965,6 +973,8 @@
             "get_callback_mode_discrete",
             "set_audio_max_polyphony",
             "get_audio_max_polyphony",
+            "set_root_motion_track",
+            "get_root_motion_track",
             "get_root_motion_position",
             "get_root_motion_rotation",
             "get_root_motion_scale",
@@ -981,11 +991,7 @@
           ],
           "Blocked": [
             "_post_process_key_value",
-            "get_animation_library_list",
-            "set_root_node",
-            "get_root_node",
-            "set_root_motion_track",
-            "get_root_motion_track"
+            "get_animation_library_list"
           ]
         },
         "properties": {
@@ -993,21 +999,21 @@
             "active",
             "deterministic",
             "reset_on_save",
+            "root_node",
+            "root_motion_track",
             "audio_max_polyphony",
             "callback_mode_process",
             "callback_mode_method",
             "callback_mode_discrete"
-          ],
-          "Blocked": [
-            "root_node",
-            "root_motion_track"
           ]
         },
         "signals": {
+          "Partial": [
+            "animation_finished"
+          ],
           "Unsupported": [
             "animation_list_changed",
             "animation_libraries_updated",
-            "animation_finished",
             "animation_started",
             "caches_cleared",
             "mixer_applied",
@@ -1043,6 +1049,8 @@
             "get_input_name",
             "get_input_count",
             "find_input",
+            "set_filter_path",
+            "is_path_filtered",
             "set_filter_enabled",
             "is_filter_enabled",
             "blend_animation",
@@ -1059,9 +1067,7 @@
             "_is_parameter_read_only",
             "_process",
             "_get_caption",
-            "_has_filter",
-            "set_filter_path",
-            "is_path_filtered"
+            "_has_filter"
           ]
         },
         "properties": {
@@ -1724,15 +1730,21 @@
     {
       "Name": "AnimationPlayer",
       "Base": "AnimationMixer",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "play",
+            "pause",
+            "stop",
+            "is_playing"
+          ],
           "Unsupported": [
             "animation_set_next",
             "animation_get_next",
@@ -1748,12 +1760,8 @@
             "get_auto_capture_transition_type",
             "set_auto_capture_ease_type",
             "get_auto_capture_ease_type",
-            "play",
             "play_backwards",
             "play_with_capture",
-            "pause",
-            "stop",
-            "is_playing",
             "set_current_animation",
             "get_current_animation",
             "set_assigned_animation",
@@ -1774,14 +1782,17 @@
             "set_process_callback",
             "get_process_callback",
             "set_method_call_mode",
-            "get_method_call_mode"
-          ],
-          "Blocked": [
+            "get_method_call_mode",
             "set_root",
             "get_root"
           ]
         },
         "properties": {
+          "Supported": [
+            "current_animation_length",
+            "current_animation_position",
+            "speed_scale"
+          ],
           "Unsupported": [
             "current_animation",
             "assigned_animation",
@@ -1791,12 +1802,7 @@
             "playback_auto_capture_transition_type",
             "playback_auto_capture_ease_type",
             "playback_default_blend_time",
-            "speed_scale",
             "movie_quit_on_finish"
-          ],
-          "Blocked": [
-            "current_animation_length",
-            "current_animation_position"
           ]
         },
         "signals": {
@@ -1847,21 +1853,17 @@
           "Unsupported": [
             "set_tree_root",
             "get_tree_root",
-            "set_process_callback",
-            "get_process_callback"
-          ],
-          "Blocked": [
             "set_advance_expression_base_node",
             "get_advance_expression_base_node",
             "set_animation_player",
-            "get_animation_player"
+            "get_animation_player",
+            "set_process_callback",
+            "get_process_callback"
           ]
         },
         "properties": {
           "Unsupported": [
-            "tree_root"
-          ],
-          "Blocked": [
+            "tree_root",
             "advance_expression_base_node",
             "anim_player"
           ]
@@ -2016,6 +2018,8 @@
             "get_wind_force_magnitude",
             "set_wind_attenuation_factor",
             "get_wind_attenuation_factor",
+            "set_wind_source_path",
+            "get_wind_source_path",
             "set_monitorable",
             "is_monitorable",
             "set_monitoring",
@@ -2036,8 +2040,6 @@
             "get_reverb_uniformity"
           ],
           "Blocked": [
-            "set_wind_source_path",
-            "get_wind_source_path",
             "get_overlapping_bodies",
             "get_overlapping_areas",
             "overlaps_body",
@@ -2061,15 +2063,13 @@
             "angular_damp",
             "wind_force_magnitude",
             "wind_attenuation_factor",
+            "wind_source_path",
             "audio_bus_override",
             "audio_bus_name",
             "reverb_bus_enabled",
             "reverb_bus_name",
             "reverb_bus_amount",
             "reverb_bus_uniformity"
-          ],
-          "Blocked": [
-            "wind_source_path"
           ]
         },
         "signals": {
@@ -4805,9 +4805,7 @@
             "set_override_pose",
             "get_override_pose",
             "set_use_external_skeleton",
-            "get_use_external_skeleton"
-          ],
-          "Blocked": [
+            "get_use_external_skeleton",
             "set_external_skeleton",
             "get_external_skeleton"
           ]
@@ -5591,6 +5589,8 @@
             "get_spin_degrees",
             "set_spin_sides",
             "get_spin_sides",
+            "set_path_node",
+            "get_path_node",
             "set_path_interval_type",
             "get_path_interval_type",
             "set_path_interval",
@@ -5611,10 +5611,6 @@
             "get_material",
             "set_smooth_faces",
             "get_smooth_faces"
-          ],
-          "Blocked": [
-            "set_path_node",
-            "get_path_node"
           ]
         },
         "properties": {
@@ -5624,6 +5620,7 @@
             "depth",
             "spin_degrees",
             "spin_sides",
+            "path_node",
             "path_interval_type",
             "path_interval",
             "path_simplify_angle",
@@ -5634,9 +5631,6 @@
             "path_joined",
             "smooth_faces",
             "material"
-          ],
-          "Blocked": [
-            "path_node"
           ]
         },
         "signals": {},
@@ -8371,6 +8365,12 @@
             "set_default_cursor_shape",
             "get_default_cursor_shape",
             "get_cursor_shape",
+            "set_focus_neighbor",
+            "get_focus_neighbor",
+            "set_focus_next",
+            "get_focus_next",
+            "set_focus_previous",
+            "get_focus_previous",
             "set_mouse_filter",
             "get_mouse_filter",
             "set_force_pass_scroll_events",
@@ -8403,12 +8403,6 @@
             "find_next_valid_focus",
             "find_valid_focus_neighbor",
             "get_parent_control",
-            "set_focus_neighbor",
-            "get_focus_neighbor",
-            "set_focus_next",
-            "get_focus_next",
-            "set_focus_previous",
-            "get_focus_previous",
             "force_drag",
             "set_drag_forwarding",
             "set_drag_preview",
@@ -8451,17 +8445,17 @@
             "size_flags_stretch_ratio",
             "localize_numeral_system",
             "auto_translate",
-            "mouse_force_pass_scroll_events",
-            "mouse_default_cursor_shape",
-            "theme_type_variation"
-          ],
-          "Blocked": [
             "focus_neighbor_left",
             "focus_neighbor_top",
             "focus_neighbor_right",
             "focus_neighbor_bottom",
             "focus_next",
             "focus_previous",
+            "mouse_force_pass_scroll_events",
+            "mouse_default_cursor_shape",
+            "theme_type_variation"
+          ],
+          "Blocked": [
             "shortcut_context"
           ]
         },
@@ -13530,6 +13524,8 @@
             "get_texture",
             "capture_rect",
             "restart",
+            "set_sub_emitter",
+            "get_sub_emitter",
             "emit_particle",
             "set_trail_enabled",
             "set_trail_lifetime",
@@ -13543,8 +13539,6 @@
             "get_amount_ratio"
           ],
           "Blocked": [
-            "set_sub_emitter",
-            "get_sub_emitter",
             "convert_from_particles"
           ]
         },
@@ -13553,6 +13547,7 @@
             "emitting",
             "amount",
             "amount_ratio",
+            "sub_emitter",
             "process_material",
             "texture",
             "lifetime",
@@ -13573,9 +13568,6 @@
             "trail_lifetime",
             "trail_sections",
             "trail_section_subdivisions"
-          ],
-          "Blocked": [
-            "sub_emitter"
           ]
         },
         "signals": {
@@ -13647,6 +13639,8 @@
             "get_skin",
             "restart",
             "capture_aabb",
+            "set_sub_emitter",
+            "get_sub_emitter",
             "emit_particle",
             "set_trail_enabled",
             "set_trail_lifetime",
@@ -13658,8 +13652,6 @@
             "get_amount_ratio"
           ],
           "Blocked": [
-            "set_sub_emitter",
-            "get_sub_emitter",
             "convert_from_particles"
           ]
         },
@@ -13668,6 +13660,7 @@
             "emitting",
             "amount",
             "amount_ratio",
+            "sub_emitter",
             "lifetime",
             "interp_to_end",
             "one_shot",
@@ -13692,9 +13685,6 @@
             "draw_pass_3",
             "draw_pass_4",
             "draw_skin"
-          ],
-          "Blocked": [
-            "sub_emitter"
           ]
         },
         "signals": {
@@ -15536,6 +15526,8 @@
             "get_mesh",
             "set_skin",
             "get_skin",
+            "set_skeleton_path",
+            "get_skeleton_path",
             "set_layer_mask",
             "get_layer_mask",
             "set_cast_shadows_setting",
@@ -15550,16 +15542,13 @@
             "get_visibility_range_begin",
             "set_visibility_range_fade_mode",
             "get_visibility_range_fade_mode"
-          ],
-          "Blocked": [
-            "set_skeleton_path",
-            "get_skeleton_path"
           ]
         },
         "properties": {
           "Unsupported": [
             "mesh",
             "skin",
+            "skeleton_path",
             "layer_mask",
             "cast_shadow",
             "visibility_range_begin",
@@ -15567,9 +15556,6 @@
             "visibility_range_end",
             "visibility_range_end_margin",
             "visibility_range_fade_mode"
-          ],
-          "Blocked": [
-            "skeleton_path"
           ]
         },
         "signals": {},
@@ -16687,27 +16673,25 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_node_a",
+            "get_node_a",
+            "set_node_b",
+            "get_node_b",
             "set_bias",
             "get_bias",
             "set_exclude_nodes_from_collision",
             "get_exclude_nodes_from_collision"
           ],
           "Blocked": [
-            "set_node_a",
-            "get_node_a",
-            "set_node_b",
-            "get_node_b",
             "get_rid"
           ]
         },
         "properties": {
           "Unsupported": [
+            "node_a",
+            "node_b",
             "bias",
             "disable_collision"
-          ],
-          "Blocked": [
-            "node_a",
-            "node_b"
           ]
         },
         "signals": {},
@@ -16728,27 +16712,25 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_node_a",
+            "get_node_a",
+            "set_node_b",
+            "get_node_b",
             "set_solver_priority",
             "get_solver_priority",
             "set_exclude_nodes_from_collision",
             "get_exclude_nodes_from_collision"
           ],
           "Blocked": [
-            "set_node_a",
-            "get_node_a",
-            "set_node_b",
-            "get_node_b",
             "get_rid"
           ]
         },
         "properties": {
           "Unsupported": [
+            "node_a",
+            "node_b",
             "solver_priority",
             "exclude_nodes_from_collision"
-          ],
-          "Blocked": [
-            "node_a",
-            "node_b"
           ]
         },
         "signals": {},
@@ -17393,16 +17375,16 @@
           "Unsupported": [
             "set_uses_spherical_harmonics",
             "is_using_spherical_harmonics",
+            "add_user",
             "get_user_count",
+            "get_user_path",
             "clear_users",
             "set_light_texture",
             "get_light_texture"
           ],
           "Blocked": [
             "set_lightmap_textures",
-            "get_lightmap_textures",
-            "add_user",
-            "get_user_path"
+            "get_lightmap_textures"
           ]
         },
         "properties": {
@@ -18270,6 +18252,8 @@
           "Unsupported": [
             "set_mesh",
             "get_mesh",
+            "set_skeleton_path",
+            "get_skeleton_path",
             "set_skin",
             "get_skin",
             "get_surface_override_material_count",
@@ -18286,8 +18270,6 @@
             "bake_mesh_from_current_blend_shape_mix"
           ],
           "Blocked": [
-            "set_skeleton_path",
-            "get_skeleton_path",
             "get_skin_reference",
             "create_multiple_convex_collisions"
           ]
@@ -18297,9 +18279,7 @@
             "mesh"
           ],
           "Unsupported": [
-            "skin"
-          ],
-          "Blocked": [
+            "skin",
             "skeleton"
           ]
         },
@@ -18888,23 +18868,23 @@
             "get_spawnable_scene_count",
             "get_spawnable_scene",
             "clear_spawnable_scenes",
+            "get_spawn_path",
+            "set_spawn_path",
             "get_spawn_limit",
             "set_spawn_limit"
           ],
           "Blocked": [
             "spawn",
-            "get_spawn_path",
-            "set_spawn_path",
             "get_spawn_function",
             "set_spawn_function"
           ]
         },
         "properties": {
           "Unsupported": [
+            "spawn_path",
             "spawn_limit"
           ],
           "Blocked": [
-            "spawn_path",
             "spawn_function"
           ]
         },
@@ -18931,6 +18911,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_root_path",
+            "get_root_path",
             "set_replication_interval",
             "get_replication_interval",
             "set_delta_interval",
@@ -18946,22 +18928,18 @@
             "get_visibility_for"
           ],
           "Blocked": [
-            "set_root_path",
-            "get_root_path",
             "add_visibility_filter",
             "remove_visibility_filter"
           ]
         },
         "properties": {
           "Unsupported": [
+            "root_path",
             "replication_interval",
             "delta_interval",
             "replication_config",
             "visibility_update_mode",
             "public_visibility"
-          ],
-          "Blocked": [
-            "root_path"
           ]
         },
         "signals": {
@@ -20639,8 +20617,12 @@
           "Unsupported": [
             "set_name",
             "get_name",
+            "has_node",
+            "has_node_and_resource",
+            "get_node_and_resource",
             "is_inside_tree",
             "is_part_of_edited_scene",
+            "get_path",
             "add_to_group",
             "remove_from_group",
             "is_in_group",
@@ -20727,18 +20709,14 @@
             "add_sibling",
             "get_children",
             "get_child",
-            "has_node",
             "get_node",
             "get_node_or_null",
             "get_parent",
             "find_child",
             "find_children",
             "find_parent",
-            "has_node_and_resource",
-            "get_node_and_resource",
             "is_ancestor_of",
             "is_greater_than",
-            "get_path",
             "get_path_to",
             "move_child",
             "get_groups",
@@ -20974,6 +20952,8 @@
             "is_scale_disabled",
             "get_world_3d",
             "force_update_transform",
+            "set_visibility_parent",
+            "get_visibility_parent",
             "update_gizmos",
             "clear_gizmos",
             "clear_subgizmo_selection",
@@ -21004,8 +20984,6 @@
           ],
           "Blocked": [
             "get_parent_node_3d",
-            "set_visibility_parent",
-            "get_visibility_parent",
             "add_gizmo",
             "get_gizmos",
             "set_subgizmo_selection"
@@ -21030,9 +21008,7 @@
             "global_position",
             "global_basis",
             "global_rotation",
-            "global_rotation_degrees"
-          ],
-          "Blocked": [
+            "global_rotation_degrees",
             "visibility_parent"
           ]
         },
@@ -22004,27 +21980,23 @@
           "Unsupported": [
             "set_hand",
             "get_hand",
+            "set_hand_skeleton",
+            "get_hand_skeleton",
             "set_motion_range",
             "get_motion_range",
             "set_skeleton_rig",
             "get_skeleton_rig",
             "set_bone_update",
             "get_bone_update"
-          ],
-          "Blocked": [
-            "set_hand_skeleton",
-            "get_hand_skeleton"
           ]
         },
         "properties": {
           "Unsupported": [
             "hand",
             "motion_range",
+            "hand_skeleton",
             "skeleton_rig",
             "bone_update"
-          ],
-          "Blocked": [
-            "hand_skeleton"
           ]
         },
         "signals": {},
@@ -23197,26 +23169,24 @@
             "set_simulate_physics",
             "get_simulate_physics",
             "is_simulating_physics",
+            "set_bone2d_nodepath",
+            "get_bone2d_nodepath",
             "set_bone2d_index",
             "get_bone2d_index",
             "set_follow_bone_when_simulating",
             "get_follow_bone_when_simulating"
           ],
           "Blocked": [
-            "get_joint",
-            "set_bone2d_nodepath",
-            "get_bone2d_nodepath"
+            "get_joint"
           ]
         },
         "properties": {
           "Unsupported": [
+            "bone2d_nodepath",
             "bone2d_index",
             "auto_configure_joint",
             "simulate_physics",
             "follow_bone_when_simulating"
-          ],
-          "Blocked": [
-            "bone2d_nodepath"
           ]
         },
         "signals": {},
@@ -25593,20 +25563,18 @@
             "get_invert_border",
             "set_offset",
             "get_offset",
+            "add_bone",
             "get_bone_count",
+            "get_bone_path",
             "get_bone_weights",
             "erase_bone",
             "clear_bones",
+            "set_bone_path",
             "set_bone_weights",
+            "set_skeleton",
+            "get_skeleton",
             "set_internal_vertex_count",
             "get_internal_vertex_count"
-          ],
-          "Blocked": [
-            "add_bone",
-            "get_bone_path",
-            "set_bone_path",
-            "set_skeleton",
-            "get_skeleton"
           ]
         },
         "properties": {
@@ -25618,6 +25586,7 @@
             "texture_offset",
             "texture_scale",
             "texture_rotation",
+            "skeleton",
             "invert_enabled",
             "invert_border",
             "polygon",
@@ -25626,9 +25595,6 @@
             "polygons",
             "bones",
             "internal_vertex_count"
-          ],
-          "Blocked": [
-            "skeleton"
           ]
         },
         "signals": {},
@@ -27423,6 +27389,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_remote_node",
+            "get_remote_node",
             "force_update_cache",
             "set_use_global_coordinates",
             "get_use_global_coordinates",
@@ -27432,21 +27400,15 @@
             "get_update_rotation",
             "set_update_scale",
             "get_update_scale"
-          ],
-          "Blocked": [
-            "set_remote_node",
-            "get_remote_node"
           ]
         },
         "properties": {
           "Unsupported": [
+            "remote_path",
             "use_global_coordinates",
             "update_position",
             "update_rotation",
             "update_scale"
-          ],
-          "Blocked": [
-            "remote_path"
           ]
         },
         "signals": {},
@@ -27467,6 +27429,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_remote_node",
+            "get_remote_node",
             "force_update_cache",
             "set_use_global_coordinates",
             "get_use_global_coordinates",
@@ -27476,21 +27440,15 @@
             "get_update_rotation",
             "set_update_scale",
             "get_update_scale"
-          ],
-          "Blocked": [
-            "set_remote_node",
-            "get_remote_node"
           ]
         },
         "properties": {
           "Unsupported": [
+            "remote_path",
             "use_global_coordinates",
             "update_position",
             "update_rotation",
             "update_scale"
-          ],
-          "Blocked": [
-            "remote_path"
           ]
         },
         "signals": {},
@@ -29646,6 +29604,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_animation_path",
+            "get_animation_path",
             "set_color",
             "get_color",
             "set_cell_size",
@@ -29654,21 +29614,15 @@
             "get_radius",
             "set_zero_y",
             "get_zero_y"
-          ],
-          "Blocked": [
-            "set_animation_path",
-            "get_animation_path"
           ]
         },
         "properties": {
           "Unsupported": [
+            "animation_path",
             "color",
             "cell_size",
             "radius",
             "zero_y"
-          ],
-          "Blocked": [
-            "animation_path"
           ]
         },
         "signals": {},
@@ -29689,6 +29643,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_root_path",
+            "get_root_path",
             "clear",
             "disconnect_peer",
             "get_authenticating_peers",
@@ -29709,14 +29665,13 @@
             "set_max_delta_packet_size"
           ],
           "Blocked": [
-            "set_root_path",
-            "get_root_path",
             "set_auth_callback",
             "get_auth_callback"
           ]
         },
         "properties": {
           "Unsupported": [
+            "root_path",
             "auth_timeout",
             "allow_object_decoding",
             "refuse_new_connections",
@@ -29725,7 +29680,6 @@
             "max_delta_packet_size"
           ],
           "Blocked": [
-            "root_path",
             "auth_callback"
           ]
         },
@@ -29752,8 +29706,7 @@
       "Editor": "Metadata only",
       "Members": {
         "methods": {
-          "Blocked": [
-            "get_properties",
+          "Unsupported": [
             "add_property",
             "has_property",
             "remove_property",
@@ -29766,6 +29719,9 @@
             "property_set_sync",
             "property_get_watch",
             "property_set_watch"
+          ],
+          "Blocked": [
+            "get_properties"
           ]
         },
         "properties": {},
@@ -29794,6 +29750,8 @@
             "get_node_count",
             "get_node_type",
             "get_node_name",
+            "get_node_path",
+            "get_node_owner_path",
             "is_node_instance_placeholder",
             "get_node_instance_placeholder",
             "get_node_instance",
@@ -29803,17 +29761,13 @@
             "get_node_property_name",
             "get_node_property_value",
             "get_connection_count",
+            "get_connection_source",
             "get_connection_signal",
+            "get_connection_target",
             "get_connection_method",
             "get_connection_flags",
             "get_connection_binds",
             "get_connection_unbinds"
-          ],
-          "Blocked": [
-            "get_node_path",
-            "get_node_owner_path",
-            "get_connection_source",
-            "get_connection_target"
           ]
         },
         "properties": {},
@@ -30996,6 +30950,8 @@
             "get_tip_bone",
             "set_target_transform",
             "get_target_transform",
+            "set_target_node",
+            "get_target_node",
             "set_override_tip_basis",
             "is_override_tip_basis",
             "set_use_magnet",
@@ -31013,8 +30969,6 @@
             "get_interpolation"
           ],
           "Blocked": [
-            "set_target_node",
-            "get_target_node",
             "get_parent_skeleton"
           ]
         },
@@ -31026,12 +30980,10 @@
             "override_tip_basis",
             "use_magnet",
             "magnet",
+            "target_node",
             "min_distance",
             "max_iterations",
             "interpolation"
-          ],
-          "Blocked": [
-            "target_node"
           ]
         },
         "signals": {},
@@ -31093,8 +31045,14 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_target_node",
+            "get_target_node",
+            "set_tip_node",
+            "get_tip_node",
             "set_ccdik_data_chain_length",
             "get_ccdik_data_chain_length",
+            "set_ccdik_joint_bone2d_node",
+            "get_ccdik_joint_bone2d_node",
             "set_ccdik_joint_bone_index",
             "get_ccdik_joint_bone_index",
             "set_ccdik_joint_rotate_from_joint",
@@ -31107,23 +31065,13 @@
             "get_ccdik_joint_constraint_angle_max",
             "set_ccdik_joint_constraint_angle_invert",
             "get_ccdik_joint_constraint_angle_invert"
-          ],
-          "Blocked": [
-            "set_target_node",
-            "get_target_node",
-            "set_tip_node",
-            "get_tip_node",
-            "set_ccdik_joint_bone2d_node",
-            "get_ccdik_joint_bone2d_node"
           ]
         },
         "properties": {
           "Unsupported": [
-            "ccdik_data_chain_length"
-          ],
-          "Blocked": [
             "target_nodepath",
-            "tip_nodepath"
+            "tip_nodepath",
+            "ccdik_data_chain_length"
           ]
         },
         "signals": {},
@@ -31144,28 +31092,24 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_target_node",
+            "get_target_node",
             "set_fabrik_data_chain_length",
             "get_fabrik_data_chain_length",
+            "set_fabrik_joint_bone2d_node",
+            "get_fabrik_joint_bone2d_node",
             "set_fabrik_joint_bone_index",
             "get_fabrik_joint_bone_index",
             "set_fabrik_joint_magnet_position",
             "get_fabrik_joint_magnet_position",
             "set_fabrik_joint_use_target_rotation",
             "get_fabrik_joint_use_target_rotation"
-          ],
-          "Blocked": [
-            "set_target_node",
-            "get_target_node",
-            "set_fabrik_joint_bone2d_node",
-            "get_fabrik_joint_bone2d_node"
           ]
         },
         "properties": {
           "Unsupported": [
+            "target_nodepath",
             "fabrik_data_chain_length"
-          ],
-          "Blocked": [
-            "target_nodepath"
           ]
         },
         "signals": {},
@@ -31186,6 +31130,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_target_node",
+            "get_target_node",
             "set_jiggle_data_chain_length",
             "get_jiggle_data_chain_length",
             "set_stiffness",
@@ -31202,6 +31148,8 @@
             "get_use_colliders",
             "set_collision_mask",
             "get_collision_mask",
+            "set_jiggle_joint_bone2d_node",
+            "get_jiggle_joint_bone2d_node",
             "set_jiggle_joint_bone_index",
             "get_jiggle_joint_bone_index",
             "set_jiggle_joint_override",
@@ -31216,25 +31164,17 @@
             "get_jiggle_joint_use_gravity",
             "set_jiggle_joint_gravity",
             "get_jiggle_joint_gravity"
-          ],
-          "Blocked": [
-            "set_target_node",
-            "get_target_node",
-            "set_jiggle_joint_bone2d_node",
-            "get_jiggle_joint_bone2d_node"
           ]
         },
         "properties": {
           "Unsupported": [
+            "target_nodepath",
             "jiggle_data_chain_length",
             "stiffness",
             "mass",
             "damping",
             "use_gravity",
             "gravity"
-          ],
-          "Blocked": [
-            "target_nodepath"
           ]
         },
         "signals": {},
@@ -31255,8 +31195,12 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_bone2d_node",
+            "get_bone2d_node",
             "set_bone_index",
             "get_bone_index",
+            "set_target_node",
+            "get_target_node",
             "set_additional_rotation",
             "get_additional_rotation",
             "set_enable_constraint",
@@ -31267,19 +31211,11 @@
             "get_constraint_angle_max",
             "set_constraint_angle_invert",
             "get_constraint_angle_invert"
-          ],
-          "Blocked": [
-            "set_bone2d_node",
-            "get_bone2d_node",
-            "set_target_node",
-            "get_target_node"
           ]
         },
         "properties": {
           "Unsupported": [
-            "bone_index"
-          ],
-          "Blocked": [
+            "bone_index",
             "bone2d_node",
             "target_nodepath"
           ]
@@ -31304,11 +31240,11 @@
           "Unsupported": [
             "set_physical_bone_chain_length",
             "get_physical_bone_chain_length",
+            "set_physical_bone_node",
+            "get_physical_bone_node",
             "fetch_physical_bones"
           ],
           "Blocked": [
-            "set_physical_bone_node",
-            "get_physical_bone_node",
             "start_simulation",
             "stop_simulation"
           ]
@@ -31359,34 +31295,30 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_target_node",
+            "get_target_node",
             "set_target_minimum_distance",
             "get_target_minimum_distance",
             "set_target_maximum_distance",
             "get_target_maximum_distance",
             "set_flip_bend_direction",
             "get_flip_bend_direction",
-            "set_joint_one_bone_idx",
-            "get_joint_one_bone_idx",
-            "set_joint_two_bone_idx",
-            "get_joint_two_bone_idx"
-          ],
-          "Blocked": [
-            "set_target_node",
-            "get_target_node",
             "set_joint_one_bone2d_node",
             "get_joint_one_bone2d_node",
+            "set_joint_one_bone_idx",
+            "get_joint_one_bone_idx",
             "set_joint_two_bone2d_node",
-            "get_joint_two_bone2d_node"
+            "get_joint_two_bone2d_node",
+            "set_joint_two_bone_idx",
+            "get_joint_two_bone_idx"
           ]
         },
         "properties": {
           "Unsupported": [
+            "target_nodepath",
             "target_minimum_distance",
             "target_maximum_distance",
             "flip_bend_direction"
-          ],
-          "Blocked": [
-            "target_nodepath"
           ]
         },
         "signals": {},
@@ -31743,6 +31675,8 @@
             "get_collision_mask_value",
             "set_collision_layer_value",
             "get_collision_layer_value",
+            "set_parent_collision_ignore",
+            "get_parent_collision_ignore",
             "set_disable_mode",
             "get_disable_mode",
             "set_simulation_precision",
@@ -31758,18 +31692,16 @@
             "set_drag_coefficient",
             "get_drag_coefficient",
             "get_point_transform",
+            "set_point_pinned",
             "is_point_pinned",
             "set_ray_pickable",
             "is_ray_pickable"
           ],
           "Blocked": [
             "get_physics_rid",
-            "set_parent_collision_ignore",
-            "get_parent_collision_ignore",
             "get_collision_exceptions",
             "add_collision_exception_with",
-            "remove_collision_exception_with",
-            "set_point_pinned"
+            "remove_collision_exception_with"
           ]
         },
         "properties": {
@@ -31780,15 +31712,13 @@
             "total_mass"
           ],
           "Unsupported": [
+            "parent_collision_ignore",
             "linear_stiffness",
             "pressure_coefficient",
             "damping_coefficient",
             "drag_coefficient",
             "ray_pickable",
             "disable_mode"
-          ],
-          "Blocked": [
-            "parent_collision_ignore"
           ]
         },
         "signals": {},
@@ -32415,21 +32345,17 @@
             "get_icon",
             "set_visible",
             "is_visible",
-            "get_rect"
-          ],
-          "Blocked": [
             "set_menu",
-            "get_menu"
+            "get_menu",
+            "get_rect"
           ]
         },
         "properties": {
           "Unsupported": [
             "tooltip",
             "icon",
+            "menu",
             "visible"
-          ],
-          "Blocked": [
-            "menu"
           ]
         },
         "signals": {
@@ -37256,13 +37182,13 @@
       "Editor": "Metadata only",
       "Members": {
         "methods": {
-          "Blocked": [
+          "Unsupported": [
             "set_viewport_path_in_scene",
             "get_viewport_path_in_scene"
           ]
         },
         "properties": {
-          "Blocked": [
+          "Unsupported": [
             "viewport_path"
           ]
         },
@@ -37285,18 +37211,14 @@
         "methods": {
           "Unsupported": [
             "set_enable_mode",
-            "get_enable_mode"
-          ],
-          "Blocked": [
+            "get_enable_mode",
             "set_enable_node_path",
             "get_enable_node_path"
           ]
         },
         "properties": {
           "Unsupported": [
-            "enable_mode"
-          ],
-          "Blocked": [
+            "enable_mode",
             "enable_node_path"
           ]
         },
@@ -37323,18 +37245,14 @@
         "methods": {
           "Unsupported": [
             "set_enable_mode",
-            "get_enable_mode"
-          ],
-          "Blocked": [
+            "get_enable_mode",
             "set_enable_node_path",
             "get_enable_node_path"
           ]
         },
         "properties": {
           "Unsupported": [
-            "enable_mode"
-          ],
-          "Blocked": [
+            "enable_mode",
             "enable_node_path"
           ]
         },
@@ -41603,18 +41521,14 @@
         "methods": {
           "Unsupported": [
             "set_face_tracker",
-            "get_face_tracker"
-          ],
-          "Blocked": [
+            "get_face_tracker",
             "set_target",
             "get_target"
           ]
         },
         "properties": {
           "Unsupported": [
-            "face_tracker"
-          ],
-          "Blocked": [
+            "face_tracker",
             "target"
           ]
         },

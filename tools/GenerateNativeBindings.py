@@ -17,7 +17,7 @@ Kinds = {'float': 'Number', 'int': 'Integer', 'bool': 'Boolean', 'String': 'Text
          'Vector2i':'Vector2Integer','Vector3i':'Vector3Integer','Vector4':'Vector4Value','Vector4i':'Vector4Integer',
          'Rect2':'Rectangle','Rect2i':'RectangleInteger','Quaternion':'Rotation','Basis':'BasisValue',
          'Transform2D':'Transform2Value','Transform3D':'Transform3Value','Plane':'PlaneValue','AABB':'BoundsValue',
-         'Variant':'VariantValue','Array':'ArrayValue','Dictionary':'DictionaryValue',
+         'Variant':'VariantValue','Array':'ArrayValue','Dictionary':'DictionaryValue','NodePath':'PathValue',
          'PackedByteArray':'BytesValue','PackedInt32Array':'IntegersValue','PackedInt64Array':'LongsValue',
          'PackedFloat32Array':'FloatsValue','PackedFloat64Array':'DoublesValue','PackedStringArray':'StringsValue',
          'PackedVector2Array':'Vectors2Value','PackedVector3Array':'Vectors3Value','PackedColorArray':'ColoursValue','PackedVector4Array':'Vectors4Value'}
@@ -26,7 +26,7 @@ Types = {'Number': 'number', 'Integer': 'number', 'Boolean': 'boolean', 'Text': 
          'Vector2Integer':'NativeVector2i','Vector3Integer':'NativeVector3i','Vector4Value':'NativeVector4','Vector4Integer':'NativeVector4i',
          'Rectangle':'NativeRect2','RectangleInteger':'NativeRect2i','Rotation':'NativeQuaternion','BasisValue':'NativeBasis',
          'Transform2Value':'NativeTransform2D','Transform3Value':'NativeTransform3D','PlaneValue':'NativePlane','BoundsValue':'NativeAABB',
-         'Colour4':'NativeColor4','VariantValue':'NativeVariant','ArrayValue':'{NativeVariant}','DictionaryValue':'{[string]: NativeVariant}',
+         'Colour4':'NativeColor4','VariantValue':'NativeVariant','ArrayValue':'{NativeVariant}','DictionaryValue':'{[string]: NativeVariant}','PathValue':'string',
          'BytesValue':'{number}','IntegersValue':'{number}','LongsValue':'{number}','FloatsValue':'{number}','DoublesValue':'{number}',
          'StringsValue':'{string}','Vectors2Value':'{NativeVector2}','Vectors3Value':'{NativeVector3}','ColoursValue':'{NativeColor4}','Vectors4Value':'{NativeVector4}'}
 Adapters = {'@font_size': ('Integer', 'Control'), '@separation': ('Integer', 'BoxContainer'),
@@ -83,6 +83,9 @@ def Build(Policy, Api):
         raise ValueError(f'Unknown {Key}: {Name}.{Native}')
 
     def Kind(Type):
+        if Type and Type.startswith('typedarray::'):
+            Require(Type[12:] in Kinds and Kinds[Type[12:]] not in ('VariantValue','ArrayValue','DictionaryValue'),'Unsupported native typed-array element: '+Type)
+            return 'ArrayValue'
         if ',' in Type and all(T in Classes and Inherits(T, 'Resource') for T in Type.split(',')):
             return 'ResourceValue'
         if Type in Kinds:
@@ -96,6 +99,7 @@ def Build(Policy, Api):
         raise ValueError('Unsupported native Variant signature: ' + Type)
 
     def Value(Name, Type, Bounds=None, Default=None, Override=None):
+        Require(not Type.startswith('typedarray::'),'Native typed-array arguments require element admission: '+Name)
         K = Kind(Type)
         if Override:
             Require((K,Override)==('Colour','Colour4'), 'Unreviewed argument conversion override: '+Name)
@@ -195,7 +199,7 @@ def Build(Policy, Api):
         if 'Capacity' in Validation:
             V=Validation['Capacity'];Q=Member(C,'methods',V['Query']);QA=Q.get('arguments',[])
             CountArgument=next((I for I,A in enumerate(Args) if A['name']==V.get('Argument')),-1)
-            Require(Q.get('is_const') and not Q.get('is_static') and not Q.get('is_virtual') and not Q.get('is_vararg') and Q.get('return_value',{}).get('type') in ('int','PackedStringArray','Array'),'Invalid capacity observation')
+            Require(Q.get('is_const') and not Q.get('is_static') and not Q.get('is_virtual') and not Q.get('is_vararg') and Q.get('return_value',{}).get('type') in ('int','PackedStringArray','Array','typedarray::StringName'),'Invalid capacity observation')
             Require(not QA or (len(QA)==1 and CountArgument>=0 and QA[0]['type']==Args[CountArgument]['type']),'Capacity query signature mismatch')
             Require(0<V['Maximum']<=1024 and Rule['CountQuery'] in (None,V['Query']),'Invalid bounded capacity rule')
             Rule.update(CountQuery=V['Query'],CountLimit=V['Maximum'],CountArgument=CountArgument if QA else -1)
@@ -217,7 +221,9 @@ def Build(Policy, Api):
         Selected.add(P['Class'])
     for P in Policy['Enums']:
         E = Member(P['Class'], 'enums', P['Name'])
+        Require(not P.get('Values') or set(P['Values'])<=set(V['name'] for V in E['values']),'Unknown selected enum constant')
         for V in E['values']:
+            if P.get('Values') and V['name'] not in P['Values']:continue
             Constants.append({'Class': P['Class'], 'Enum': P['Name'], 'Name': V['name'], 'Value': V['value']})
         Selected.add(P['Class'])
     All = set()
@@ -436,6 +442,8 @@ def Generate(Policy, Api):
         else:
             C='Native'+M['Class']
         Return = Type({'Kind': M['Return'], 'ResourceClass': M['ReturnClass']})
+        NativeReturn=M['Signature'].get('return_value',{}).get('type','')
+        if NativeReturn.startswith('typedarray::'):Return='{'+Types[Kinds[NativeReturn[12:]]]+'}'
         Call.append(f'(self: NativeSceneScope, Target: {C}, Method: "{M["Name"]}"{Tail}) -> {Return}')
     for S in D['Signals']:
         Args = D['Arguments'][S['FirstArgument']:S['FirstArgument'] + S['Arguments']]

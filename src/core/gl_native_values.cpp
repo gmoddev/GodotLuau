@@ -28,7 +28,8 @@ const ValueType ValueTypes[]={
     {DoublesValue,"PackedFloat64Array",Variant::PACKED_FLOAT64_ARRAY},{StringsValue,"PackedStringArray",Variant::PACKED_STRING_ARRAY},
     {Vectors2Value,"PackedVector2Array",Variant::PACKED_VECTOR2_ARRAY},{Vectors3Value,"PackedVector3Array",Variant::PACKED_VECTOR3_ARRAY},
     {ColoursValue,"PackedColorArray",Variant::PACKED_COLOR_ARRAY},{Vectors4Value,"PackedVector4Array",Variant::PACKED_VECTOR4_ARRAY},
-    {Vector2Value,"Vector2",Variant::VECTOR2},{GLNative::Vector,"Vector3",Variant::VECTOR3}
+    {Vector2Value,"Vector2",Variant::VECTOR2},{GLNative::Vector,"Vector3",Variant::VECTOR3},
+    {PathValue,"NodePath",Variant::NODE_PATH}
 };
 Array Elements(const Variant& Value) {
     switch(Value.get_type()) {
@@ -94,6 +95,10 @@ bool Read(lua_State* Thread,const Property& Item,int Index,Variant& Result,int D
     }
     if (Item.Type==GLNative::Vector) {
         if (auto V=check_vector3(Thread,Index)) {Result=Vector3(V->x,V->y,V->z);return GLValidNativeValue(Item,Result);}
+    }
+    if(Item.Type==PathValue) {
+        String Text;if(!TextAt(Thread,Index,Text,1024))return false;
+        Result=NodePath(Text);return true;
     }
     if (!lua_istable(Thread,Index)) return false;
     if (Item.Type==Vector2Value || Item.Type==Vector2Integer || Item.Type==Vector3Integer || Item.Type==Vector4Value || Item.Type==Vector4Integer || Item.Type==Rotation || Item.Type==Colour4) {
@@ -216,6 +221,7 @@ bool Valid(const Property& Item,const Variant& Value,int Depth,int& Cells) {
         case Variant::NIL: case Variant::BOOL:return true;
         case Variant::INT:case Variant::FLOAT:return Number(double(Value));
         case Variant::STRING:case Variant::STRING_NAME:{String S=Value;auto B=S.utf8();return B.length()<=MaxText && !std::memchr(B.get_data(),0,B.length());}
+        case Variant::NODE_PATH:{NodePath P=Value;String S=P;auto B=S.utf8();return B.length()<=1024 && !std::memchr(B.get_data(),0,B.length());}
         case Variant::VECTOR2:{Vector2 V=Value;return Number(V.x)&&Number(V.y);}
         case Variant::VECTOR2I:{Vector2i V=Value;return Number(V.x)&&Number(V.y);}
         case Variant::VECTOR3:{Vector3 V=Value;return Number(V.x)&&Number(V.y)&&Number(V.z);}
@@ -243,6 +249,7 @@ void Push(lua_State* Thread,const Variant& Value) {
     switch(Value.get_type()) {
         case Variant::VECTOR3:{Vector3 V=Value;push_vector3(Thread,V.x,V.y,V.z);return;}
         case Variant::STRING:case Variant::STRING_NAME:{String Text=Value;lua_pushstring(Thread,Text.utf8().get_data());return;}
+        case Variant::NODE_PATH:{NodePath Path=Value;String Text=Path;lua_pushstring(Thread,Text.utf8().get_data());return;}
         case Variant::NIL:case Variant::BOOL:case Variant::INT:case Variant::FLOAT:gl_variant_to_luau(Thread,Value);return;
         default:break;
     }

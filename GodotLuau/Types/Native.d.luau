@@ -1,5 +1,5 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: a9c53f061deb9fb9dda9452dfd73bd399c67f7df5f68c65fc837d0a08cf01f42
+-- Policy SHA256: bbb534b2a5298e317c7fea59d05465b2b447356befb10d2ad32b35fd6940a298
 export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number
@@ -44,6 +44,8 @@ declare class NativeNode extends NativeObject
 end
 declare class NativeRefCounted extends NativeObject
 end
+declare class NativeAnimationMixer extends NativeNode
+end
 declare class NativeAudioStreamPlayer extends NativeNode
     Stream: NativeAudioStream?
     VolumeDb: number
@@ -85,6 +87,19 @@ declare class NativeTimer extends NativeNode
 end
 declare class NativeWorldEnvironment extends NativeNode
     Environment: NativeEnvironment?
+end
+declare class NativeAnimation extends NativeResource
+end
+declare class MutableNativeAnimation extends NativeAnimation
+end
+declare class NativeAnimationLibrary extends NativeResource
+end
+declare class MutableNativeAnimationLibrary extends NativeAnimationLibrary
+end
+declare class NativeAnimationPlayer extends NativeAnimationMixer
+    SpeedScale: number
+    CurrentAnimationPosition: number
+    CurrentAnimationLength: number
 end
 declare class NativeAudioStream extends NativeResource
 end
@@ -619,6 +634,21 @@ export type NativeAnimatedSprite2DProperties = {
     FlipV: (boolean)?,
     Frame: nil,
     FrameProgress: nil,
+}
+export type NativeAnimationProperties = {
+    Length: (number)?,
+    LoopMode: (number)?,
+}
+export type NativeAnimationLibraryProperties = {
+}
+export type NativeAnimationMixerProperties = {
+    Name: (string)?,
+}
+export type NativeAnimationPlayerProperties = {
+    Name: (string)?,
+    SpeedScale: (number)?,
+    CurrentAnimationPosition: nil,
+    CurrentAnimationLength: nil,
 }
 export type NativeArea2DProperties = {
     Name: (string)?,
@@ -2472,6 +2502,9 @@ export type NativeWorldEnvironmentProperties = {
 }
 declare class NativeSceneScope extends NativeNode3D
     New: ((self: NativeSceneScope, Class: "AnimatedSprite2D", Properties: NativeAnimatedSprite2DProperties, Parent: NativeNode?) -> NativeAnimatedSprite2D) &
+        ((self: NativeSceneScope, Class: "Animation", Properties: NativeAnimationProperties, Parent: NativeNode?) -> MutableNativeAnimation) &
+        ((self: NativeSceneScope, Class: "AnimationLibrary", Properties: NativeAnimationLibraryProperties, Parent: NativeNode?) -> MutableNativeAnimationLibrary) &
+        ((self: NativeSceneScope, Class: "AnimationPlayer", Properties: NativeAnimationPlayerProperties, Parent: NativeNode?) -> NativeAnimationPlayer) &
         ((self: NativeSceneScope, Class: "Area2D", Properties: NativeArea2DProperties, Parent: NativeNode?) -> NativeArea2D) &
         ((self: NativeSceneScope, Class: "AspectRatioContainer", Properties: NativeAspectRatioContainerProperties, Parent: NativeNode?) -> NativeAspectRatioContainer) &
         ((self: NativeSceneScope, Class: "AudioStreamPlayer", Properties: NativeAudioStreamPlayerProperties, Parent: NativeNode?) -> NativeAudioStreamPlayer) &
@@ -2562,6 +2595,9 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "VSplitContainer", Properties: NativeVSplitContainerProperties, Parent: NativeNode?) -> NativeVSplitContainer) &
         ((self: NativeSceneScope, Class: "WorldEnvironment", Properties: NativeWorldEnvironmentProperties, Parent: NativeNode?) -> NativeWorldEnvironment)
     Configure: ((self: NativeSceneScope, Target: NativeAnimatedSprite2D, Properties: NativeAnimatedSprite2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeAnimation, Properties: NativeAnimationProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeAnimationLibrary, Properties: NativeAnimationLibraryProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Properties: NativeAnimationPlayerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeArea2D, Properties: NativeArea2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeAspectRatioContainer, Properties: NativeAspectRatioContainerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeAudioStreamPlayer, Properties: NativeAudioStreamPlayerProperties) -> ()) &
@@ -2950,7 +2986,12 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "NavigationLayers") -> number) &
         ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "PathDesiredDistance") -> number) &
         ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "TargetDesiredDistance") -> number) &
-        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "PathMaxDistance") -> number)
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "PathMaxDistance") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimation, Property: "Length") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimation, Property: "LoopMode") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Property: "SpeedScale") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Property: "CurrentAnimationPosition") -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Property: "CurrentAnimationLength") -> number)
     Call: ((self: NativeSceneScope, Target: NativeNode3D, Method: "GetGlobalPosition") -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeControl, Method: "GetGlobalPosition") -> NativeVector2) &
         ((self: NativeSceneScope, Target: NativeNode3D, Method: "ToLocal", global_point: NativeVector3) -> NativeVector3) &
@@ -3100,7 +3141,24 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBonePosePosition", bone_idx: number, position: NativeVector3) -> ()) &
         ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBonePoseRotation", bone_idx: number, rotation: NativeQuaternion) -> ()) &
         ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBonePoseScale", bone_idx: number, scale: NativeVector3) -> ()) &
-        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "ResetBonePose", bone_idx: number) -> ())
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "ResetBonePose", bone_idx: number) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeAnimation), Method: "AddTrack", type: number, at_position: number?) -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimation, Method: "GetTrackCount") -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeAnimation), Method: "RemoveTrack", track_idx: number) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeAnimation), Method: "TrackSetPath", track_idx: number, path: string) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimation, Method: "TrackGetPath", track_idx: number) -> string) &
+        ((self: NativeSceneScope, Target: NativeAnimation, Method: "TrackGetKeyCount", track_idx: number) -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeAnimation), Method: "TrackSetInterpolationType", track_idx: number, interpolation: number) -> ()) &
+        ((self: NativeSceneScope, Target: (MutableNativeAnimation), Method: "TrackInsertKey", track_idx: number, time: number, key: NativeVariant, transition: number?) -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeAnimationLibrary), Method: "AddAnimation", name: string, animation: NativeAnimation?) -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimationLibrary, Method: "GetAnimationList") -> {string}) &
+        ((self: NativeSceneScope, Target: NativeAnimationLibrary, Method: "GetAnimation", name: string) -> NativeAnimation?) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Method: "AddAnimationLibrary", name: string, library: NativeAnimationLibrary?) -> number) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Method: "GetAnimationList") -> {string}) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Method: "Play", name: string?, custom_blend: number?, custom_speed: number?, from_end: boolean?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Method: "Stop", keep_state: boolean?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Method: "Pause") -> ()) &
+        ((self: NativeSceneScope, Target: NativeAnimationPlayer, Method: "IsPlaying") -> boolean)
     Connect: ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Pressed", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Toggled", Callback: (boolean) -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "ButtonDown", Callback: () -> ()) -> NativeConnection) &
@@ -3132,7 +3190,8 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Source: NativeNavigationAgent3D, Signal: "PathChanged", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeNavigationAgent3D, Signal: "TargetReached", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeNavigationAgent3D, Signal: "NavigationFinished", Callback: () -> ()) -> NativeConnection) &
-        ((self: NativeSceneScope, Source: NativeSkeleton3D, Signal: "PoseUpdated", Callback: () -> ()) -> NativeConnection)
+        ((self: NativeSceneScope, Source: NativeSkeleton3D, Signal: "PoseUpdated", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeAnimationPlayer, Signal: "AnimationFinished", Callback: (string) -> ()) -> NativeConnection)
     Load: ((self: NativeSceneScope, Type: "Texture2D", Path: string) -> NativeTexture2D) &
         ((self: NativeSceneScope, Type: "AudioStream", Path: string) -> NativeAudioStream) &
         ((self: NativeSceneScope, Type: "Mesh", Path: string) -> NativeMesh) &
@@ -3146,7 +3205,9 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Type: "Shape2D", Path: string) -> NativeShape2D) &
         ((self: NativeSceneScope, Type: "Shape3D", Path: string) -> NativeShape3D) &
         ((self: NativeSceneScope, Type: "Gradient", Path: string) -> NativeGradient) &
-        ((self: NativeSceneScope, Type: "NavigationMesh", Path: string) -> NativeNavigationMesh)
+        ((self: NativeSceneScope, Type: "NavigationMesh", Path: string) -> NativeNavigationMesh) &
+        ((self: NativeSceneScope, Type: "Animation", Path: string) -> NativeAnimation) &
+        ((self: NativeSceneScope, Type: "AnimationLibrary", Path: string) -> NativeAnimationLibrary)
     Instantiate: (self: NativeSceneScope, Scene: NativePackedScene, Parent: NativeNode?) -> NativeNode
     Clone: (self: NativeSceneScope, Source: NativeNode, Parent: NativeNode?) -> NativeNode
     Reparent: (self: NativeSceneScope, Target: NativeNode, Parent: NativeNode, KeepGlobal: boolean?) -> ()
@@ -3157,5 +3218,5 @@ declare class NativeSceneScope extends NativeNode3D
     Stop: (self: NativeSceneScope, Player: NativeAudioStreamPlayer) -> ()
     Impulse: (self: NativeSceneScope, Body: NativeRigidBody3D, Impulse: NativeVector3) -> ()
 end
-declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string}, Value: ((Type: "Vector3", Value: NativeVector3) -> NativeVector3) & ((Type: "Vector2", Value: NativeVector2) -> NativeVector2) & ((Type: "Vector2i", Value: NativeVector2i) -> NativeVector2i) & ((Type: "Vector3i", Value: NativeVector3i) -> NativeVector3i) & ((Type: "Vector4", Value: NativeVector4) -> NativeVector4) & ((Type: "Vector4i", Value: NativeVector4i) -> NativeVector4i) & ((Type: "Rect2", Value: NativeRect2) -> NativeRect2) & ((Type: "Rect2i", Value: NativeRect2i) -> NativeRect2i) & ((Type: "Quaternion", Value: NativeQuaternion) -> NativeQuaternion) & ((Type: "Basis", Value: NativeBasis) -> NativeBasis) & ((Type: "Transform2D", Value: NativeTransform2D) -> NativeTransform2D) & ((Type: "Transform3D", Value: NativeTransform3D) -> NativeTransform3D) & ((Type: "Plane", Value: NativePlane) -> NativePlane) & ((Type: "AABB", Value: NativeAABB) -> NativeAABB) & ((Type: "Array", Value: {NativeVariant}) -> {NativeVariant}) & ((Type: "Dictionary", Value: {[string]: NativeVariant}) -> {[string]: NativeVariant}) & ((Type: "PackedByteArray", Value: {number}) -> {number}) & ((Type: "PackedInt32Array", Value: {number}) -> {number}) & ((Type: "PackedInt64Array", Value: {number}) -> {number}) & ((Type: "PackedFloat32Array", Value: {number}) -> {number}) & ((Type: "PackedFloat64Array", Value: {number}) -> {number}) & ((Type: "PackedStringArray", Value: {string}) -> {string}) & ((Type: "PackedVector2Array", Value: {NativeVector2}) -> {NativeVector2}) & ((Type: "PackedVector3Array", Value: {NativeVector3}) -> {NativeVector3}) & ((Type: "PackedColorArray", Value: {NativeColor4}) -> {NativeColor4}) & ((Type: "PackedVector4Array", Value: {NativeVector4}) -> {NativeVector4}) & ((Type: "Color", Value: NativeColor4) -> NativeColor4),
-    PolicySHA256: string, ApiSHA256: string, Describe: (Class: string) -> { [string]: any }?, Enums: {Control: {MouseFilter: {MOUSE_FILTER_STOP: number, MOUSE_FILTER_PASS: number, MOUSE_FILTER_IGNORE: number}}, TextureRect: {ExpandMode: {EXPAND_KEEP_SIZE: number, EXPAND_IGNORE_SIZE: number, EXPAND_FIT_WIDTH: number, EXPAND_FIT_WIDTH_PROPORTIONAL: number, EXPAND_FIT_HEIGHT: number, EXPAND_FIT_HEIGHT_PROPORTIONAL: number}, StretchMode: {STRETCH_SCALE: number, STRETCH_TILE: number, STRETCH_KEEP: number, STRETCH_KEEP_CENTERED: number, STRETCH_KEEP_ASPECT: number, STRETCH_KEEP_ASPECT_CENTERED: number, STRETCH_KEEP_ASPECT_COVERED: number}}, BaseMaterial3D: {Transparency: {TRANSPARENCY_DISABLED: number, TRANSPARENCY_ALPHA: number, TRANSPARENCY_ALPHA_SCISSOR: number, TRANSPARENCY_ALPHA_HASH: number, TRANSPARENCY_ALPHA_DEPTH_PRE_PASS: number, TRANSPARENCY_MAX: number}}, Timer: {TimerProcessCallback: {TIMER_PROCESS_PHYSICS: number, TIMER_PROCESS_IDLE: number}}, RigidBody2D: {FreezeMode: {FREEZE_MODE_STATIC: number, FREEZE_MODE_KINEMATIC: number}}, Camera2D: {AnchorMode: {ANCHOR_MODE_FIXED_TOP_LEFT: number, ANCHOR_MODE_DRAG_CENTER: number}}, ItemList: {SelectMode: {SELECT_SINGLE: number, SELECT_MULTI: number}, IconMode: {ICON_MODE_TOP: number, ICON_MODE_LEFT: number}}, TextureProgressBar: {FillMode: {FILL_LEFT_TO_RIGHT: number, FILL_RIGHT_TO_LEFT: number, FILL_TOP_TO_BOTTOM: number, FILL_BOTTOM_TO_TOP: number, FILL_CLOCKWISE: number, FILL_COUNTER_CLOCKWISE: number, FILL_BILINEAR_LEFT_AND_RIGHT: number, FILL_BILINEAR_TOP_AND_BOTTOM: number, FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE: number}}, MultiMesh: {TransformFormat: {TRANSFORM_2D: number, TRANSFORM_3D: number}}} }
+declare Scene: { new: (Parent: NativeNode) -> NativeSceneScope, Classes: () -> {string}, Value: ((Type: "Vector3", Value: NativeVector3) -> NativeVector3) & ((Type: "Vector2", Value: NativeVector2) -> NativeVector2) & ((Type: "Vector2i", Value: NativeVector2i) -> NativeVector2i) & ((Type: "Vector3i", Value: NativeVector3i) -> NativeVector3i) & ((Type: "Vector4", Value: NativeVector4) -> NativeVector4) & ((Type: "Vector4i", Value: NativeVector4i) -> NativeVector4i) & ((Type: "Rect2", Value: NativeRect2) -> NativeRect2) & ((Type: "Rect2i", Value: NativeRect2i) -> NativeRect2i) & ((Type: "Quaternion", Value: NativeQuaternion) -> NativeQuaternion) & ((Type: "Basis", Value: NativeBasis) -> NativeBasis) & ((Type: "Transform2D", Value: NativeTransform2D) -> NativeTransform2D) & ((Type: "Transform3D", Value: NativeTransform3D) -> NativeTransform3D) & ((Type: "Plane", Value: NativePlane) -> NativePlane) & ((Type: "AABB", Value: NativeAABB) -> NativeAABB) & ((Type: "Array", Value: {NativeVariant}) -> {NativeVariant}) & ((Type: "Dictionary", Value: {[string]: NativeVariant}) -> {[string]: NativeVariant}) & ((Type: "NodePath", Value: string) -> string) & ((Type: "PackedByteArray", Value: {number}) -> {number}) & ((Type: "PackedInt32Array", Value: {number}) -> {number}) & ((Type: "PackedInt64Array", Value: {number}) -> {number}) & ((Type: "PackedFloat32Array", Value: {number}) -> {number}) & ((Type: "PackedFloat64Array", Value: {number}) -> {number}) & ((Type: "PackedStringArray", Value: {string}) -> {string}) & ((Type: "PackedVector2Array", Value: {NativeVector2}) -> {NativeVector2}) & ((Type: "PackedVector3Array", Value: {NativeVector3}) -> {NativeVector3}) & ((Type: "PackedColorArray", Value: {NativeColor4}) -> {NativeColor4}) & ((Type: "PackedVector4Array", Value: {NativeVector4}) -> {NativeVector4}) & ((Type: "Color", Value: NativeColor4) -> NativeColor4),
+    PolicySHA256: string, ApiSHA256: string, Describe: (Class: string) -> { [string]: any }?, Enums: {Control: {MouseFilter: {MOUSE_FILTER_STOP: number, MOUSE_FILTER_PASS: number, MOUSE_FILTER_IGNORE: number}}, TextureRect: {ExpandMode: {EXPAND_KEEP_SIZE: number, EXPAND_IGNORE_SIZE: number, EXPAND_FIT_WIDTH: number, EXPAND_FIT_WIDTH_PROPORTIONAL: number, EXPAND_FIT_HEIGHT: number, EXPAND_FIT_HEIGHT_PROPORTIONAL: number}, StretchMode: {STRETCH_SCALE: number, STRETCH_TILE: number, STRETCH_KEEP: number, STRETCH_KEEP_CENTERED: number, STRETCH_KEEP_ASPECT: number, STRETCH_KEEP_ASPECT_CENTERED: number, STRETCH_KEEP_ASPECT_COVERED: number}}, BaseMaterial3D: {Transparency: {TRANSPARENCY_DISABLED: number, TRANSPARENCY_ALPHA: number, TRANSPARENCY_ALPHA_SCISSOR: number, TRANSPARENCY_ALPHA_HASH: number, TRANSPARENCY_ALPHA_DEPTH_PRE_PASS: number, TRANSPARENCY_MAX: number}}, Timer: {TimerProcessCallback: {TIMER_PROCESS_PHYSICS: number, TIMER_PROCESS_IDLE: number}}, RigidBody2D: {FreezeMode: {FREEZE_MODE_STATIC: number, FREEZE_MODE_KINEMATIC: number}}, Camera2D: {AnchorMode: {ANCHOR_MODE_FIXED_TOP_LEFT: number, ANCHOR_MODE_DRAG_CENTER: number}}, ItemList: {SelectMode: {SELECT_SINGLE: number, SELECT_MULTI: number}, IconMode: {ICON_MODE_TOP: number, ICON_MODE_LEFT: number}}, TextureProgressBar: {FillMode: {FILL_LEFT_TO_RIGHT: number, FILL_RIGHT_TO_LEFT: number, FILL_TOP_TO_BOTTOM: number, FILL_BOTTOM_TO_TOP: number, FILL_CLOCKWISE: number, FILL_COUNTER_CLOCKWISE: number, FILL_BILINEAR_LEFT_AND_RIGHT: number, FILL_BILINEAR_TOP_AND_BOTTOM: number, FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE: number}}, MultiMesh: {TransformFormat: {TRANSFORM_2D: number, TRANSFORM_3D: number}}, Animation: {TrackType: {TYPE_VALUE: number}, InterpolationType: {INTERPOLATION_NEAREST: number, INTERPOLATION_LINEAR: number}, LoopMode: {LOOP_NONE: number, LOOP_LINEAR: number, LOOP_PINGPONG: number}}} }

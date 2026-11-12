@@ -79,6 +79,18 @@ local V:NativeVariant=S:Call(M,"GetShaderParameter","Tint")
 local Bytes:{number}=Scene.Value("PackedByteArray",{0,255})
 )",true},
         {"read-only constructor property",R"(local S=Scene.new(Parent) S:New("Timer",{TimeLeft=1}))",false},
+        {"native animation construction",R"(local S=Scene.new(Parent)
+local A=S:New("Animation",{Length=1})
+local I:number=S:Call(A,"AddTrack",Scene.Enums.Animation.TrackType.TYPE_VALUE)
+S:Call(A,"TrackSetPath",I,"Visual:position")
+S:Call(A,"TrackInsertKey",I,0,Vector3.new(0,0,0))
+local L=S:New("AnimationLibrary",{})
+local Status:number=S:Call(L,"AddAnimation","move",A)
+local Names:{string}=S:Call(L,"GetAnimationList")
+local P=S:New("AnimationPlayer",{})
+S:Call(P,"AddAnimationLibrary","",L)
+S:Call(P,"Play","move")
+)",true},
         {"scoped physics and bone poses",R"(local S=Scene.new(Parent)
 local Ray=S:New("RayCast3D",{TargetPosition=Vector3.new(0,-5,0)})
 local Hit:NativeCollisionObject3D?=S:Call(Ray,"GetCollider")

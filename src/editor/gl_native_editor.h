@@ -162,7 +162,7 @@ class Visitor : public Luau::AstVisitor {
             Wrong=(Item.Type!=GLNative::Number && Item.Type!=GLNative::Integer && Item.Type!=GLNative::VariantValue) || !std::isfinite(Number->value) ||
                 Number->value<Item.Min || Number->value>Item.Max || (Item.Type==GLNative::Integer && std::floor(Number->value)!=Number->value);
         } else if (Value->is<Luau::AstExprConstantBool>()) Wrong=Item.Type!=GLNative::Boolean && Item.Type!=GLNative::VariantValue;
-        else if (auto String=Value->as<Luau::AstExprConstantString>()) Wrong=(Item.Type!=GLNative::Text && Item.Type!=GLNative::VariantValue) || (Item.Type==GLNative::Text && (String->value.size<Item.Min || String->value.size>Item.Max));
+        else if (auto String=Value->as<Luau::AstExprConstantString>()) Wrong=(Item.Type!=GLNative::Text && Item.Type!=GLNative::VariantValue && Item.Type!=GLNative::PathValue) || (Item.Type==GLNative::Text && (String->value.size<Item.Min || String->value.size>Item.Max));
         else if (Value->is<Luau::AstExprConstantNil>()) Wrong=Item.Type!=GLNative::ResourceValue && Item.Type!=GLNative::NodeValue && Item.Type!=GLNative::VariantValue;
         else if (Value->is<Luau::AstExprTable>()) Wrong=Item.Type!=GLNative::Vector2Value && Item.Type<=GLNative::Void;
         if (Wrong) Error(Value->location,"E_NATIVE_TYPE",std::string("Invalid literal for ")+Item.Class+"."+Item.Name+"; check the native type and bounds");
@@ -248,7 +248,7 @@ public:
             std::string Filter;
             if(Cursor(Text(Expression->args.data[0]),Filter)) {
                 Handled=true;
-                for(int Type=GLNative::Vector2Value;Type<=GLNative::Vectors4Value;++Type)
+                for(int Type=GLNative::Vector2Value;Type<=GLNative::PathValue;++Type)
                     if(Type!=GLNative::VariantValue)if(auto Name=GLNativeValueName(GLNative::Kind(Type)))Suggest(Name,Filter,0,"Bounded pure native value; no object authority");
             }
         }

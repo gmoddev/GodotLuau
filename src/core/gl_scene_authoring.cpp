@@ -10,6 +10,9 @@
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/scene_state.hpp>
 #include <godot_cpp/classes/shader.hpp>
+#include <godot_cpp/classes/animation.hpp>
+#include <godot_cpp/classes/animation_library.hpp>
+#include <godot_cpp/classes/animation_player.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/navigation_agent3d.hpp>
 #include <godot_cpp/classes/navigation_server3d.hpp>
@@ -118,6 +121,8 @@ Object* TargetAt(lua_State* Thread, SceneScope* Scope, int Index, bool Write) {
     if (auto Handle=HandleAt(Thread,Index)) {
         if (!*Handle || (*Handle)->Scope!=uint64_t(Scope->get_instance_id()) || (*Handle)->Value.is_null() || (Write && (*Handle)->ReadOnly))
             luaL_error(Thread,"[Scene:Authority] Resource is retired, foreign or immutable");
+        if(Write && Scope->SealedAnimations.count((*Handle)->Value->get_instance_id()))
+            luaL_error(Thread,"[Scene:Authority] Attached animation resources are sealed; construct a new clip/library");
         return (*Handle)->Value.ptr();
     }
     Node* Target=NodeAt(Thread,Index);
@@ -383,13 +388,68 @@ void PushValue(lua_State* Thread, SceneScope* Scope, const Variant& Value, Kind 
     }
     if (!gl_variant_to_luau(Thread,Value)) luaL_error(Thread,"[Scene:Type] Unsupported native result");
 }
+bool AnimationName(const String& Name,bool Empty=false) {
+    if(Name.is_empty())return Empty;
+    if(Name.length()>64)return false;
+    for(int Index=0;Index<Name.length();++Index) {
+        char32_t C=Name[Index];if(!((C>='a'&&C<='z')||(C>='A'&&C<='Z')||(C>='0'&&C<='9')||C=='_'))return false;
+    }
+    return true;
+}
+void CheckClip(lua_State* Thread,SceneScope* Scope,AnimationPlayer* Player,const Ref<Animation>& Clip) {
+    if(Clip.is_null() || Clip->get_track_count()>32 || !Bounded(Clip->get_length(),0.01,600))
+        luaL_error(Thread,"[Scene:Animation] Clip exceeds the admitted bounds");
+    if(Player->get_root_node()!=NodePath(".."))luaL_error(Thread,"[Scene:Animation] Animation root must remain the owned parent");
+    Node* Root=Player->get_parent();
+    if(!Root || ScopeOf(Root)!=Scope)luaL_error(Thread,"[Scene:Authority] Animation root must belong to the live scope");
+    for(int Track=0;Track<Clip->get_track_count();++Track) {
+        NodePath Path=Clip->track_get_path(Track);
+        if(Clip->track_get_type(Track)!=Animation::TYPE_VALUE || Path.is_absolute() || Path.get_subname_count()!=1 || Path.get_name_count()>32 || Clip->track_get_interpolation_type(Track)>Animation::INTERPOLATION_LINEAR || Clip->value_track_get_update_mode(Track)>Animation::UPDATE_DISCRETE)
+            luaL_error(Thread,"[Scene:Animation] Only bounded relative linear/nearest value tracks are admitted");
+        Node* Target=Root;
+        for(int Index=0;Index<Path.get_name_count();++Index) {
+            String Name=Path.get_name(Index);
+            if(Name==".." || Name.begins_with("%") || Name.contains("/"))luaL_error(Thread,"[Scene:Animation] Track cannot escape its owned parent");
+            if(Name!=".")Target=Target?Target->get_node_or_null(NodePath(Name)):nullptr;
+        }
+        if(!Target || Target->is_queued_for_deletion() || ScopeOf(Target)!=Scope)luaL_error(Thread,"[Scene:Animation] Track target is missing or foreign");
+        String Native=Path.get_subname(0);const Property* Descriptor=nullptr;
+        for(const auto& P:Properties)if(Native==P.Native && Target->is_class(P.Class) && (!Descriptor || RegistryIsA(P.Class,Descriptor->Class)))Descriptor=&P;
+        if(!Descriptor || Descriptor->ReadOnly || (Descriptor->Type!=Number && Descriptor->Type!=GLNative::Vector && Descriptor->Type!=Vector2Value && Descriptor->Type!=Colour && Descriptor->Type!=Colour4))
+            luaL_error(Thread,"[Scene:Animation] Track property is not an approved continuous native value");
+        int Keys=Clip->track_get_key_count(Track);
+        if(Keys>256)luaL_error(Thread,"[Scene:Limit] Animation track key budget exceeded");
+        for(int Key=0;Key<Keys;++Key) {
+            Variant Value=Clip->track_get_key_value(Track,Key);
+            if(!ValidNative(*Descriptor,Value) || !Bounded(Clip->track_get_key_time(Track,Key),0,Clip->get_length()) || Clip->track_get_key_transition(Track,Key)!=1)
+                luaL_error(Thread,"[Scene:Animation] Track key violates its target property, time or interpolation bounds");
+            ValidateEffects(Thread,Target,{{Descriptor,Value}});
+        }
+    }
+}
+std::vector<uint64_t> CheckAnimationLibrary(lua_State* Thread,SceneScope* Scope,AnimationPlayer* Player,const Ref<AnimationLibrary>& Library) {
+    if(Library.is_null())luaL_error(Thread,"[Scene:Animation] Library is required");
+    auto Names=Library->get_animation_list();
+    if(Names.size()>16)luaL_error(Thread,"[Scene:Limit] Animation library clip budget exceeded");
+    std::vector<uint64_t> Ids{uint64_t(Library->get_instance_id())};
+    for(int Index=0;Index<Names.size();++Index) {
+        if(!AnimationName(Names[Index]))luaL_error(Thread,"[Scene:Animation] Clip names require bounded alphanumeric identifiers");
+        Ref<Animation> Clip=Library->get_animation(Names[Index]);CheckClip(Thread,Scope,Player,Clip);Ids.push_back(Clip->get_instance_id());
+    }
+    for(auto Entry=Scope->SealedAnimations.begin();Entry!=Scope->SealedAnimations.end();) {
+        if(!ObjectDB::get_instance(*Entry))Entry=Scope->SealedAnimations.erase(Entry);else ++Entry;
+    }
+    size_t Missing=0;for(uint64_t Id:Ids)if(!Scope->SealedAnimations.count(Id))++Missing;
+    if(Missing>MaxResources-Scope->SealedAnimations.size())luaL_error(Thread,"[Scene:Limit] Attached animation resource budget exceeded");
+    return Ids;
+}
 int Call(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); Object* Target=TargetAt(Thread,Scope,2,false);
     const char* Name=CheckedString(Thread,3);
     const auto* Item=FindMethod(Target,Name);
     if (!Item || !Target->has_method(Item->Native)) luaL_error(Thread,"[Scene:Method] Method %s is not admitted on this target",Name);
     if (GLGetOwner(Thread)->Domain->GetKind()==GLDomainKind::EditorPreview &&
-        ((!strcmp(Item->Native,"play") && (Target->is_class("AudioStreamPlayer") || Target->is_class("AudioStreamPlayer2D") || Target->is_class("AudioStreamPlayer3D") || Target->is_class("AnimatedSprite2D"))) ||
+        ((!strcmp(Item->Native,"play") && (Target->is_class("AudioStreamPlayer") || Target->is_class("AudioStreamPlayer2D") || Target->is_class("AudioStreamPlayer3D") || Target->is_class("AnimatedSprite2D") || Target->is_class("AnimationPlayer"))) ||
          (!strcmp(Item->Native,"start") && Target->is_class("Timer")) || (!strcmp(Item->Native,"play_backwards") && Target->is_class("AnimatedSprite2D"))))
         luaL_error(Thread,"[Authoring:Preview] Temporal playback is runtime-only");
     if (Item->Mutates) TargetAt(Thread,Scope,2,true);
@@ -421,6 +481,20 @@ int Call(lua_State* Thread) {
             else Values[Index]=String(Argument.Default).to_float();
         }
         Pointers[Index]=&Values[Index];
+    }
+    std::vector<uint64_t> AnimationSeal;
+    if(Target->is_class("AnimationLibrary") && !strcmp(Item->Native,"add_animation") && !AnimationName(String(Values[0])))
+        luaL_error(Thread,"[Scene:Animation] Clip names require bounded alphanumeric identifiers");
+    if(auto Player=Object::cast_to<AnimationPlayer>(Target)) {
+        if(!strcmp(Item->Native,"add_animation_library")) {
+            if(!AnimationName(String(Values[0]),true))luaL_error(Thread,"[Scene:Animation] Library names require bounded alphanumeric identifiers");
+            Ref<AnimationLibrary> Library=Values[1];AnimationSeal=CheckAnimationLibrary(Thread,Scope,Player,Library);
+        }
+        if(!strcmp(Item->Native,"play")) {
+            String Name=Values[0];if(Name.is_empty())Name=Player->get_assigned_animation();
+            if(!Player->has_animation(Name))luaL_error(Thread,"[Scene:Animation] Animation does not exist on this player");
+            CheckClip(Thread,Scope,Player,Player->get_animation(Name));
+        }
     }
     if(Target->is_class("Skeleton3D")) {
         if(!strcmp(Item->Native,"add_bone")) {
@@ -501,6 +575,10 @@ int Call(lua_State* Thread) {
                 luaL_error(Thread,"[Scene:Arguments] %s index is outside the live native collection",Name);
         }
     }
+    if(auto Clip=Object::cast_to<Animation>(Target))if(!strcmp(Item->Native,"track_insert_key")) {
+        if(Clip->track_get_key_count(int64_t(Values[0]))>=256)luaL_error(Thread,"[Scene:Limit] Animation track key budget exceeded");
+        if(double(Values[1])>Clip->get_length())luaL_error(Thread,"[Scene:Animation] Key time exceeds clip length");
+    }
     uint64_t ScopeId=Scope->get_instance_id();
     Ref<Resource> KeepAlive=Object::cast_to<Resource>(Target);
     Variant Receiver=Target, Result; GDExtensionCallError Error{};
@@ -509,6 +587,10 @@ int Call(lua_State* Thread) {
     Scope=Resolve<SceneScope>(ScopeId);
     if (!Scope || !Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Lifetime] Owner retired during %s",Name);
     if(ShaderWrite)Scope->ShaderParameters[Target->get_instance_id()].insert(ShaderName);
+    if(!AnimationSeal.empty()) {
+        if(int64_t(Result)!=OK)luaL_error(Thread,"[Scene:Animation] Native library attachment failed");
+        Scope->SealedAnimations.insert(AnimationSeal.begin(),AnimationSeal.end());
+    }
     if (Item->Return==Void) return 0;
     Property Expected{"",Name,Item->Native,Item->Return,-1e12,1e12,Item->ReturnClass};
     if (Item->Return==Text) { Expected.Min=0; Expected.Max=8192; }
@@ -959,6 +1041,7 @@ void SceneScope::Retire(bool Delete) {
         for (auto& Weak:Resources) if (auto Slot=Weak.lock()) Slot->Value.unref();
         Resources.clear();
         ShaderParameters.clear();
+        SealedAnimations.clear();
     }
     if (Delete && !is_queued_for_deletion()) queue_free();
 }
@@ -986,14 +1069,14 @@ void GLRegisterScene(lua_State* Thread) {
     lua_pushcfunction(Thread,Root,"new"); lua_setfield(Thread,-2,"new");
     lua_pushcfunction(Thread,GetClasses,"Classes"); lua_setfield(Thread,-2,"Classes");
     lua_pushcfunction(Thread,Describe,"Describe"); lua_setfield(Thread,-2,"Describe");
-    lua_pushcfunction(Thread,[](lua_State* State)->int {
+    lua_pushcfunction(Thread,([](lua_State* State)->int {
         const char* Name=CheckedString(State,1);
         Kind Type=GLNativeValueKind(Name);Variant Value;
         Property Item{"Value",Name,Name,Type,-1e12,1e12};
         if (Type==Void || Type==VariantValue || !GLReadNativeValue(State,Item,2,Value)) luaL_error(State,"[Scene:Value] Invalid bounded native value %s",Name);
         if (!GLPushNativeValue(State,Value)) luaL_error(State,"[Scene:Value] Unsupported native value %s",Name);
         return 1;
-    },"NativeValue");lua_setfield(Thread,-2,"Value");
+    }),"NativeValue");lua_setfield(Thread,-2,"Value");
     lua_pushstring(Thread,GLNative::PolicySHA256); lua_setfield(Thread,-2,"PolicySHA256");
     lua_pushstring(Thread,GLNative::ApiSHA256); lua_setfield(Thread,-2,"ApiSHA256");
     PushEnums(Thread); lua_setfield(Thread,-2,"Enums");

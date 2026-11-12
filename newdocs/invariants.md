@@ -274,6 +274,10 @@ native capabilities. Observation properties reject writes; owned node payloads
 cannot confer foreign scope authority. Temporal playback/autostart stays outside
 EditorPreview. Metadata-based collection checks precede native mutation, and
 shader/MultiMesh effects retain their explicit bounded resource contract.
+Native AnimationPlayer admission follows
+[ADR-017](adr-017-owned-native-animation.md): validate every owned value-track
+target/key and seal attached clip/library aliases before autonomous playback.
+Method/audio tracks and escaping paths cannot acquire native effects indirectly.
 
 Expected failures return structured results or bounded diagnostic output with a
 `[System:SubSystem]` prefix. Automated verification runs headlessly with captured

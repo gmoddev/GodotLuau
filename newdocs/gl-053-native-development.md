@@ -149,3 +149,27 @@ the launcher because it still requires the former exact 69-case marker. Correct
 the existing launcher, report, sanitizer/candidate receipts and receipt tests to
 require 71 ordinary plus the unchanged 16 isolated limit cases (87 total). This
 raises the acceptance count; no assertions, watchdogs or cases are removed.
+
+At `4b1cd19`, fresh Windows/Linux core run
+[43218255774](https://github.com/gmoddev/GodotLuau/actions/runs/43218255774)
+passes all 87 cases, and type run
+[43218255569](https://github.com/gmoddev/GodotLuau/actions/runs/43218255569)
+passes the generated definitions, representative calls and RelayFactory.
+Original native run 43215953985 fails compilation: commas in the new Scene.Value
+lambda's aggregate initializer split the lua_pushcfunction macro arguments.
+Parenthesize the lambda expression. Stop superseded native runs 43216999492 and
+43218255451, which contain the identical known-broken macro, rather than finishing
+redundant builds. Preserve those failed/cancelled attempts; no runtime pass is
+claimed from them.
+
+## Native animation implementation in progress
+
+Add bounded native Animation/AnimationLibrary/AnimationPlayer value-track
+construction under [ADR-017](adr-017-owned-native-animation.md). Whole-library
+preflight checks owned relative targets, actual property descriptors and every
+key before attachment. Sealing prevents later mutable aliases from changing an
+autonomous player's admitted effects. NodePath pure values and typed-array
+observations support this workflow without exposing native Object/RID/Callable
+collections. New real 2D/3D playback fixtures check final native transforms,
+unsafe path/type/time rejection, sealed aliases and yielded completion retirement.
+The runtime correction and new animation work await fresh hosted qualification.

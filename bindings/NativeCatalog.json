@@ -7,6 +7,30 @@
       "Resource": false
     },
     {
+      "Name": "Animation",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "AnimationLibrary",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "AnimationMixer",
+      "Base": "Node",
+      "Construct": false,
+      "Resource": false
+    },
+    {
+      "Name": "AnimationPlayer",
+      "Base": "AnimationMixer",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "Area2D",
       "Base": "CollisionObject2D",
       "Construct": true,
@@ -3474,6 +3498,53 @@
       "Min": 0.01,
       "Max": 1000,
       "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Animation",
+      "Name": "Length",
+      "Native": "length",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 600,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Animation",
+      "Name": "LoopMode",
+      "Native": "loop_mode",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 2,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "SpeedScale",
+      "Native": "speed_scale",
+      "Kind": "Number",
+      "Min": -16,
+      "Max": 16,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "CurrentAnimationPosition",
+      "Native": "current_animation_position",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "CurrentAnimationLength",
+      "Native": "current_animation_length",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600,
+      "Authority": "OwnedScene",
+      "ReadOnly": true
     }
   ],
   "Methods": [
@@ -9393,6 +9464,845 @@
           }
         ]
       }
+    },
+    {
+      "Class": "Animation",
+      "Name": "AddTrack",
+      "Native": "add_track",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "type": [
+          0,
+          0
+        ],
+        "at_position": [
+          -1,
+          32
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "at_position",
+          "Query": "get_track_count",
+          "AllowEnd": true,
+          "AllowNegativeOne": true
+        },
+        "Capacity": {
+          "Query": "get_track_count",
+          "Maximum": 32
+        }
+      },
+      "CountQuery": "get_track_count",
+      "IndexArgument": 1,
+      "AllowEnd": true,
+      "AllowNegativeOne": true,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": 32,
+      "Arguments": 2,
+      "Required": 1,
+      "FirstArgument": 104,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_track",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3843682357,
+        "hash_compatibility": [
+          2393815928
+        ],
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "type",
+            "type": "enum::Animation.TrackType"
+          },
+          {
+            "name": "at_position",
+            "type": "int",
+            "meta": "int32",
+            "default_value": "-1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "GetTrackCount",
+      "Native": "get_track_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 106,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_track_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "RemoveTrack",
+      "Native": "remove_track",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      },
+      "CountQuery": "get_track_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 106,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "remove_track",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1286410249,
+        "arguments": [
+          {
+            "name": "track_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackSetPath",
+      "Native": "track_set_path",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      },
+      "CountQuery": "get_track_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 107,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "track_set_path",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2761262315,
+        "arguments": [
+          {
+            "name": "track_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "path",
+            "type": "NodePath"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackGetPath",
+      "Native": "track_get_path",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      },
+      "CountQuery": "get_track_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 109,
+      "Return": "PathValue",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "track_get_path",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 408788394,
+        "return_value": {
+          "type": "NodePath"
+        },
+        "arguments": [
+          {
+            "name": "track_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackGetKeyCount",
+      "Native": "track_get_key_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      },
+      "CountQuery": "get_track_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 110,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "track_get_key_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 923996154,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "track_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackSetInterpolationType",
+      "Native": "track_set_interpolation_type",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ],
+        "interpolation": [
+          0,
+          1
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      },
+      "CountQuery": "get_track_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 111,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "track_set_interpolation_type",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 4112932513,
+        "arguments": [
+          {
+            "name": "track_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "interpolation",
+            "type": "enum::Animation.InterpolationType"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Animation",
+      "Name": "TrackInsertKey",
+      "Native": "track_insert_key",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "track_idx": [
+          0,
+          31
+        ],
+        "time": [
+          0,
+          600
+        ],
+        "transition": [
+          1,
+          1
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "track_idx",
+          "Query": "get_track_count"
+        }
+      },
+      "CountQuery": "get_track_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 4,
+      "Required": 3,
+      "FirstArgument": 113,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "track_insert_key",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 808952278,
+        "hash_compatibility": [
+          1985425300
+        ],
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "track_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "time",
+            "type": "float",
+            "meta": "double"
+          },
+          {
+            "name": "key",
+            "type": "Variant"
+          },
+          {
+            "name": "transition",
+            "type": "float",
+            "meta": "float",
+            "default_value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimationLibrary",
+      "Name": "AddAnimation",
+      "Native": "add_animation",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          1,
+          64
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "name",
+          "Query": "has_animation",
+          "Absent": true
+        },
+        "Capacity": {
+          "Query": "get_animation_list",
+          "Maximum": 16
+        }
+      },
+      "CountQuery": "get_animation_list",
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": true,
+      "CountArgument": -1,
+      "CountLimit": 16,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 117,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_animation",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1811855551,
+        "return_value": {
+          "type": "enum::Error"
+        },
+        "arguments": [
+          {
+            "name": "name",
+            "type": "StringName"
+          },
+          {
+            "name": "animation",
+            "type": "Animation"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimationLibrary",
+      "Name": "GetAnimationList",
+      "Native": "get_animation_list",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 119,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_animation_list",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::StringName"
+        }
+      }
+    },
+    {
+      "Class": "AnimationLibrary",
+      "Name": "GetAnimation",
+      "Native": "get_animation",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          1,
+          64
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "name",
+          "Query": "has_animation"
+        }
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation",
+      "KeyArgument": 0,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 119,
+      "Return": "ResourceValue",
+      "ReturnClass": "Animation",
+      "Signature": {
+        "name": "get_animation",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2933122410,
+        "return_value": {
+          "type": "Animation"
+        },
+        "arguments": [
+          {
+            "name": "name",
+            "type": "StringName"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "AddAnimationLibrary",
+      "Native": "add_animation_library",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          0,
+          64
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "name",
+          "Query": "has_animation_library",
+          "Absent": true
+        },
+        "Capacity": {
+          "Query": "get_animation_library_list",
+          "Maximum": 16
+        }
+      },
+      "CountQuery": "get_animation_library_list",
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "has_animation_library",
+      "KeyArgument": 0,
+      "KeyAbsent": true,
+      "CountArgument": -1,
+      "CountLimit": 16,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 120,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_animation_library",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 618909818,
+        "return_value": {
+          "type": "enum::Error"
+        },
+        "arguments": [
+          {
+            "name": "name",
+            "type": "StringName"
+          },
+          {
+            "name": "library",
+            "type": "AnimationLibrary"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "GetAnimationList",
+      "Native": "get_animation_list",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 122,
+      "Return": "StringsValue",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_animation_list",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1139954409,
+        "return_value": {
+          "type": "PackedStringArray"
+        }
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "Play",
+      "Native": "play",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          0,
+          129
+        ],
+        "custom_blend": [
+          -1,
+          10
+        ],
+        "custom_speed": [
+          -16,
+          16
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 4,
+      "Required": 0,
+      "FirstArgument": 122,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "play",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3697947785,
+        "hash_compatibility": [
+          3118260607
+        ],
+        "arguments": [
+          {
+            "name": "name",
+            "type": "StringName",
+            "default_value": "&\"\""
+          },
+          {
+            "name": "custom_blend",
+            "type": "float",
+            "meta": "double",
+            "default_value": "-1"
+          },
+          {
+            "name": "custom_speed",
+            "type": "float",
+            "meta": "float",
+            "default_value": "1.0"
+          },
+          {
+            "name": "from_end",
+            "type": "bool",
+            "default_value": "false"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "Stop",
+      "Native": "stop",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 0,
+      "FirstArgument": 126,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "stop",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 107499316,
+        "arguments": [
+          {
+            "name": "keep_state",
+            "type": "bool",
+            "default_value": "false"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "Pause",
+      "Native": "pause",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 127,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "pause",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "IsPlaying",
+      "Native": "is_playing",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 127,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_playing",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
     }
   ],
   "Signals": [
@@ -9401,7 +10311,7 @@
       "Name": "Pressed",
       "Native": "pressed",
       "Authority": "OwnedScene",
-      "FirstArgument": 104,
+      "FirstArgument": 127,
       "Arguments": 0
     },
     {
@@ -9409,7 +10319,7 @@
       "Name": "Toggled",
       "Native": "toggled",
       "Authority": "OwnedScene",
-      "FirstArgument": 104,
+      "FirstArgument": 127,
       "Arguments": 1
     },
     {
@@ -9417,7 +10327,7 @@
       "Name": "ButtonDown",
       "Native": "button_down",
       "Authority": "OwnedScene",
-      "FirstArgument": 105,
+      "FirstArgument": 128,
       "Arguments": 0
     },
     {
@@ -9425,7 +10335,7 @@
       "Name": "ButtonUp",
       "Native": "button_up",
       "Authority": "OwnedScene",
-      "FirstArgument": 105,
+      "FirstArgument": 128,
       "Arguments": 0
     },
     {
@@ -9433,7 +10343,7 @@
       "Name": "TextSubmitted",
       "Native": "text_submitted",
       "Authority": "OwnedScene",
-      "FirstArgument": 105,
+      "FirstArgument": 128,
       "Arguments": 1
     },
     {
@@ -9441,7 +10351,7 @@
       "Name": "TextChanged",
       "Native": "text_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 106,
+      "FirstArgument": 129,
       "Arguments": 1
     },
     {
@@ -9449,7 +10359,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 107,
+      "FirstArgument": 130,
       "Arguments": 0
     },
     {
@@ -9457,7 +10367,7 @@
       "Name": "Resized",
       "Native": "resized",
       "Authority": "OwnedScene",
-      "FirstArgument": 107,
+      "FirstArgument": 130,
       "Arguments": 0
     },
     {
@@ -9465,7 +10375,7 @@
       "Name": "FocusEntered",
       "Native": "focus_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 107,
+      "FirstArgument": 130,
       "Arguments": 0
     },
     {
@@ -9473,7 +10383,7 @@
       "Name": "FocusExited",
       "Native": "focus_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 107,
+      "FirstArgument": 130,
       "Arguments": 0
     },
     {
@@ -9481,7 +10391,7 @@
       "Name": "VisibilityChanged",
       "Native": "visibility_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 107,
+      "FirstArgument": 130,
       "Arguments": 0
     },
     {
@@ -9489,7 +10399,7 @@
       "Name": "ValueChanged",
       "Native": "value_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 107,
+      "FirstArgument": 130,
       "Arguments": 1
     },
     {
@@ -9497,7 +10407,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 108,
+      "FirstArgument": 131,
       "Arguments": 0
     },
     {
@@ -9505,7 +10415,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 108,
+      "FirstArgument": 131,
       "Arguments": 0
     },
     {
@@ -9513,7 +10423,7 @@
       "Name": "Timeout",
       "Native": "timeout",
       "Authority": "OwnedScene",
-      "FirstArgument": 108,
+      "FirstArgument": 131,
       "Arguments": 0
     },
     {
@@ -9521,7 +10431,7 @@
       "Name": "BodyEntered",
       "Native": "body_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 108,
+      "FirstArgument": 131,
       "Arguments": 1
     },
     {
@@ -9529,7 +10439,7 @@
       "Name": "BodyExited",
       "Native": "body_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 109,
+      "FirstArgument": 132,
       "Arguments": 1
     },
     {
@@ -9537,7 +10447,7 @@
       "Name": "BodyEntered",
       "Native": "body_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 110,
+      "FirstArgument": 133,
       "Arguments": 1
     },
     {
@@ -9545,7 +10455,7 @@
       "Name": "BodyExited",
       "Native": "body_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 111,
+      "FirstArgument": 134,
       "Arguments": 1
     },
     {
@@ -9553,7 +10463,7 @@
       "Name": "AnimationFinished",
       "Native": "animation_finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 112,
+      "FirstArgument": 135,
       "Arguments": 0
     },
     {
@@ -9561,7 +10471,7 @@
       "Name": "AnimationLooped",
       "Native": "animation_looped",
       "Authority": "OwnedScene",
-      "FirstArgument": 112,
+      "FirstArgument": 135,
       "Arguments": 0
     },
     {
@@ -9569,7 +10479,7 @@
       "Name": "FrameChanged",
       "Native": "frame_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 112,
+      "FirstArgument": 135,
       "Arguments": 0
     },
     {
@@ -9577,7 +10487,7 @@
       "Name": "AnimationChanged",
       "Native": "animation_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 112,
+      "FirstArgument": 135,
       "Arguments": 0
     },
     {
@@ -9585,7 +10495,7 @@
       "Name": "ItemSelected",
       "Native": "item_selected",
       "Authority": "OwnedScene",
-      "FirstArgument": 112,
+      "FirstArgument": 135,
       "Arguments": 1
     },
     {
@@ -9593,7 +10503,7 @@
       "Name": "MultiSelected",
       "Native": "multi_selected",
       "Authority": "OwnedScene",
-      "FirstArgument": 113,
+      "FirstArgument": 136,
       "Arguments": 2
     },
     {
@@ -9601,7 +10511,7 @@
       "Name": "EmptyClicked",
       "Native": "empty_clicked",
       "Authority": "OwnedScene",
-      "FirstArgument": 115,
+      "FirstArgument": 138,
       "Arguments": 2
     },
     {
@@ -9609,7 +10519,7 @@
       "Name": "ItemActivated",
       "Native": "item_activated",
       "Authority": "OwnedScene",
-      "FirstArgument": 117,
+      "FirstArgument": 140,
       "Arguments": 1
     },
     {
@@ -9617,7 +10527,7 @@
       "Name": "TextChanged",
       "Native": "text_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 118,
+      "FirstArgument": 141,
       "Arguments": 0
     },
     {
@@ -9625,7 +10535,7 @@
       "Name": "PathChanged",
       "Native": "path_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 118,
+      "FirstArgument": 141,
       "Arguments": 0
     },
     {
@@ -9633,7 +10543,7 @@
       "Name": "TargetReached",
       "Native": "target_reached",
       "Authority": "OwnedScene",
-      "FirstArgument": 118,
+      "FirstArgument": 141,
       "Arguments": 0
     },
     {
@@ -9641,7 +10551,7 @@
       "Name": "NavigationFinished",
       "Native": "navigation_finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 118,
+      "FirstArgument": 141,
       "Arguments": 0
     },
     {
@@ -9649,8 +10559,16 @@
       "Name": "PoseUpdated",
       "Native": "pose_updated",
       "Authority": "OwnedScene",
-      "FirstArgument": 118,
+      "FirstArgument": 141,
       "Arguments": 0
+    },
+    {
+      "Class": "AnimationPlayer",
+      "Name": "AnimationFinished",
+      "Native": "animation_finished",
+      "Authority": "OwnedScene",
+      "FirstArgument": 141,
+      "Arguments": 1
     }
   ],
   "Constants": [
@@ -9911,6 +10829,42 @@
       "Enum": "TransformFormat",
       "Name": "TRANSFORM_3D",
       "Value": 1
+    },
+    {
+      "Class": "Animation",
+      "Enum": "TrackType",
+      "Name": "TYPE_VALUE",
+      "Value": 0
+    },
+    {
+      "Class": "Animation",
+      "Enum": "InterpolationType",
+      "Name": "INTERPOLATION_NEAREST",
+      "Value": 0
+    },
+    {
+      "Class": "Animation",
+      "Enum": "InterpolationType",
+      "Name": "INTERPOLATION_LINEAR",
+      "Value": 1
+    },
+    {
+      "Class": "Animation",
+      "Enum": "LoopMode",
+      "Name": "LOOP_NONE",
+      "Value": 0
+    },
+    {
+      "Class": "Animation",
+      "Enum": "LoopMode",
+      "Name": "LOOP_LINEAR",
+      "Value": 1
+    },
+    {
+      "Class": "Animation",
+      "Enum": "LoopMode",
+      "Name": "LOOP_PINGPONG",
+      "Value": 2
     }
   ],
   "Arguments": [
@@ -10772,6 +11726,199 @@
       "Max": 127
     },
     {
+      "Class": "Animation.AddTrack",
+      "Name": "type",
+      "Native": "type",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 0
+    },
+    {
+      "Class": "Animation.AddTrack",
+      "Name": "at_position",
+      "Native": "at_position",
+      "Kind": "Integer",
+      "Min": -1,
+      "Max": 32,
+      "Default": "-1"
+    },
+    {
+      "Class": "Animation.RemoveTrack",
+      "Name": "track_idx",
+      "Native": "track_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 31
+    },
+    {
+      "Class": "Animation.TrackSetPath",
+      "Name": "track_idx",
+      "Native": "track_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 31
+    },
+    {
+      "Class": "Animation.TrackSetPath",
+      "Name": "path",
+      "Native": "path",
+      "Kind": "PathValue",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Animation.TrackGetPath",
+      "Name": "track_idx",
+      "Native": "track_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 31
+    },
+    {
+      "Class": "Animation.TrackGetKeyCount",
+      "Name": "track_idx",
+      "Native": "track_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 31
+    },
+    {
+      "Class": "Animation.TrackSetInterpolationType",
+      "Name": "track_idx",
+      "Native": "track_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 31
+    },
+    {
+      "Class": "Animation.TrackSetInterpolationType",
+      "Name": "interpolation",
+      "Native": "interpolation",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 1
+    },
+    {
+      "Class": "Animation.TrackInsertKey",
+      "Name": "track_idx",
+      "Native": "track_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 31
+    },
+    {
+      "Class": "Animation.TrackInsertKey",
+      "Name": "time",
+      "Native": "time",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 600
+    },
+    {
+      "Class": "Animation.TrackInsertKey",
+      "Name": "key",
+      "Native": "key",
+      "Kind": "VariantValue",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Animation.TrackInsertKey",
+      "Name": "transition",
+      "Native": "transition",
+      "Kind": "Number",
+      "Min": 1,
+      "Max": 1,
+      "Default": "1"
+    },
+    {
+      "Class": "AnimationLibrary.AddAnimation",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 64
+    },
+    {
+      "Class": "AnimationLibrary.AddAnimation",
+      "Name": "animation",
+      "Native": "animation",
+      "Kind": "ResourceValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Animation"
+    },
+    {
+      "Class": "AnimationLibrary.GetAnimation",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 64
+    },
+    {
+      "Class": "AnimationPlayer.AddAnimationLibrary",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 64
+    },
+    {
+      "Class": "AnimationPlayer.AddAnimationLibrary",
+      "Name": "library",
+      "Native": "library",
+      "Kind": "ResourceValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "AnimationLibrary"
+    },
+    {
+      "Class": "AnimationPlayer.Play",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 129,
+      "Default": ""
+    },
+    {
+      "Class": "AnimationPlayer.Play",
+      "Name": "custom_blend",
+      "Native": "custom_blend",
+      "Kind": "Number",
+      "Min": -1,
+      "Max": 10,
+      "Default": "-1"
+    },
+    {
+      "Class": "AnimationPlayer.Play",
+      "Name": "custom_speed",
+      "Native": "custom_speed",
+      "Kind": "Number",
+      "Min": -16,
+      "Max": 16,
+      "Default": "1.0"
+    },
+    {
+      "Class": "AnimationPlayer.Play",
+      "Name": "from_end",
+      "Native": "from_end",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "false"
+    },
+    {
+      "Class": "AnimationPlayer.Stop",
+      "Name": "keep_state",
+      "Native": "keep_state",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000,
+      "Default": "false"
+    },
+    {
       "Class": "BaseButton.Toggled",
       "Name": "toggled_on",
       "Native": "toggled_on",
@@ -10886,6 +12033,14 @@
       "Kind": "Integer",
       "Min": -100000,
       "Max": 100000
+    },
+    {
+      "Class": "AnimationPlayer.AnimationFinished",
+      "Name": "anim_name",
+      "Native": "anim_name",
+      "Kind": "Text",
+      "Min": 0,
+      "Max": 8192
     }
   ],
   "LoadTypes": [
@@ -10902,10 +12057,12 @@
     "Shape2D",
     "Shape3D",
     "Gradient",
-    "NavigationMesh"
+    "NavigationMesh",
+    "Animation",
+    "AnimationLibrary"
   ],
   "Schema": 1,
-  "PolicySHA256": "a9c53f061deb9fb9dda9452dfd73bd399c67f7df5f68c65fc837d0a08cf01f42",
+  "PolicySHA256": "bbb534b2a5298e317c7fea59d05465b2b447356befb10d2ad32b35fd6940a298",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
   "ScopeOperations": [
     {

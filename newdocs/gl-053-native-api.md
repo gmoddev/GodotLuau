@@ -91,7 +91,7 @@ and getter-derived resources remain immutable.
 2D bodies, areas and collision shapes use Godot's native physics and existing
 main-thread dispatch. This phase does not grant physics-server/RID access or
 promise deterministic simulation. Direct space queries and character movement
-phase synchronization require their own later implementation and qualification.
+phase synchronization are described in the later gameplay section below.
 
 ## Gameplay expansion (qualification pending)
 
@@ -131,3 +131,34 @@ shadowing suppresses global enum/value inference. Runtime checks remain the
 authority; these bounded syntax diagnostics are not a complete Luau typechecker.
 Generated declarations continue to be checked by the actual pinned Luau frontend.
 Editor previews receive their own World2D as well as their existing World3D.
+
+## Native value-track animation
+
+[ADR-017](adr-017-owned-native-animation.md) admits ordinary AnimationPlayer,
+AnimationLibrary and Animation construction through the same Scene API. Create
+the owned target hierarchy, add TYPE_VALUE tracks, set relative native property
+paths and insert bounded typed keys, then attach a library and play its clip.
+Attached clips/libraries are sealed against mutation through every alias.
+
+```luau
+local Stage = S:New("Node3D", {})
+S:New("MeshInstance3D", {Name="Visual", Mesh=S:New("BoxMesh", {})}, Stage)
+local Player = S:New("AnimationPlayer", {}, Stage)
+local Clip = S:New("Animation", {Length=1})
+local Track = S:Call(Clip, "AddTrack", Scene.Enums.Animation.TrackType.TYPE_VALUE)
+S:Call(Clip, "TrackSetPath", Track, "Visual:position")
+S:Call(Clip, "TrackInsertKey", Track, 0, Vector3.new(0,0,0))
+S:Call(Clip, "TrackInsertKey", Track, 1, Vector3.new(2,0,0))
+local Library = S:New("AnimationLibrary", {})
+S:Call(Library, "AddAnimation", "move", Clip)
+S:Call(Player, "AddAnimationLibrary", "", Library)
+S:Call(Player, "Play", "move")
+```
+
+NodePath values use bounded strings; a path confers no node/filesystem authority.
+Simple typed native array observations retain their element type in generated
+signatures and immutable sequence outputs. Typed-array inputs and native object
+collections remain restricted. AnimationPlayer's bounded relative value-track
+path does not admit AnimationTree, arbitrary rig tracks, method/audio tracks,
+root motion, native Tween/Callable handles or automatic playback during preview.
+Runtime qualification is pending; this section documents the implemented contract.

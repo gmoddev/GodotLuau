@@ -64,6 +64,14 @@ class NativePolicyTests(unittest.TestCase):
         self.Rejected(lambda P:P['Methods'].append({'Class':'Node','Name':'Parent','Native':'get_parent','Mutates':False,'Authority':'OwnedScene','ReturnNodeClass':'Window'}))
         self.Rejected(lambda P:P['Methods'].append({'Class':'RayCast3D','Name':'RawCollider','Native':'get_collider','Mutates':False,'Authority':'OwnedScene'}))
 
+    def test_animation_policy_admits_only_bounded_value_construction(self):
+        Data=Generator.Build(Policy,Api)
+        Track=next(M for M in Data['Methods'] if M['Class']=='Animation' and M['Name']=='AddTrack')
+        self.assertEqual((Data['Arguments'][Track['FirstArgument']]['Min'],Data['Arguments'][Track['FirstArgument']]['Max']),(0,0))
+        self.assertEqual(Track['CountLimit'],32)
+        self.assertEqual([C['Name'] for C in Data['Constants'] if C['Class']=='Animation' and C['Enum']=='TrackType'],['TYPE_VALUE'])
+        self.Rejected(lambda P:P['Enums'].append({'Class':'Animation','Name':'TrackType','Values':['invented']}))
+
     def test_unknown_property_and_signal_denied(self):
         self.Rejected(lambda P:P['Properties'][0].update(Native='wrong_property'))
         self.Rejected(lambda P:P['Signals'][0].update(Native='wrong_signal'))

@@ -35,6 +35,7 @@ public:
     std::vector<Subscription> Subscriptions;
     // Bounded effect bookkeeping; ObjectDB remains the only identity authority.
     std::unordered_map<uint64_t,std::unordered_set<std::string>> ShaderParameters;
+    std::unordered_set<uint64_t> SealedAnimations;
     SceneScope();
     ~SceneScope();
     bool CanUse(lua_State* Thread) const;

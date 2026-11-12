@@ -51,6 +51,8 @@ def Main():
         raise ValueError('Project dependency reload cases did not complete')
     if '[Runtime:NativeGameplay] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
         raise ValueError('Native gameplay expansion cases did not complete')
+    if '[Runtime:NativeAnimation] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native animation expansion cases did not complete')
     Controllers = json.loads((Args.output/'controller/controller-evidence.json').read_text())
     if Controllers.get('Actors') != 7 or Controllers.get('Transport') != 'ENet' or len(Controllers.get('Evidence', [])) != 7:
         raise ValueError('Player.Character controller actors incomplete')
