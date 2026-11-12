@@ -12,7 +12,7 @@ String ImportPath(const Luau::AstExpr* Value) {
     if(!Name || std::string(Name->name.value)!="require" || Call->args.size!=1)return {};
     return String::utf8(GLNativeEditor::Text(Call->args.data[0]).c_str());
 }
-bool ModulePath(const String& Path) {
+bool ModulePath(String& Path) {
     return GLProjectResourcePath(Path) && (Path.get_extension()=="luau" || Path.get_extension()=="lua");
 }
 struct Navigation : Luau::AstVisitor {

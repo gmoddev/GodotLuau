@@ -289,3 +289,10 @@ placeholder when AnimatedSprite2D declares its property. Emit class bases and
 direct resource-property dependencies first. Add the owned SpriteFrames assignment
 to the representative type case, and rerun the same factory checks without casts
 or weakened types. The 3D factory and all previous type cases passed that attempt.
+
+Native compilation of the later navigation revision catches a const-reference
+mismatch: GLProjectResourcePath intentionally normalizes its String argument.
+ModulePath must accept the mutable local Imported path, then use that validated
+canonical path for the bounded file read. Correct the signature, without changing
+path authority. Stop superseded native runs containing this identical compile
+failure; new core/type jobs continue independently.
