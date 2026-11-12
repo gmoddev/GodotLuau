@@ -152,6 +152,8 @@ def Build(Args):
     Require(Identity(Args.revision) == Before, 'Source inputs changed during the production build')
     Commands.append(Execute([sys.executable, Source/'tests/editor/RunNativeAuthoring.py', '--godot', Engine,
         '--extension', Products/LibraryName, '--output', Output/'native/editor', '--timeout', '60'], Output/'editor-check.log', 90))
+    Commands.append(Execute([sys.executable, Source/'tests/editor/RunNativeAuthoring.py', '--godot', Engine,
+        '--extension', Products/LibraryName, '--output', Output/'native/luau-workflow', '--workflow', '--timeout', '70'], Output/'luau-workflow.log', 100))
     BuildDirectory = Output/'build'
     Generator = 'Visual Studio 17 2022' if Selected == 'Windows' else 'Ninja'
     Commands.append(Execute(['cmake', '-S', Source/'tests/runtime', '-B', BuildDirectory, '-G', Generator, '-DCMAKE_BUILD_TYPE='+Args.configuration, '-DGL_BUILD_GODOT_ADAPTER=ON', '-DGL_BUILD_CORE_TESTS=ON'], Output/'configure.log', 300))
@@ -162,12 +164,15 @@ def Build(Args):
     for Name in [AdapterName, WorkerName, 'DatastoreBackendProbe'+('.exe' if Selected == 'Windows' else '')]: shutil.copy2(AdapterDirectory/Name, Adapter/Name)
     Commands.append(Execute([sys.executable, Source/'tests/runtime/RunCoreQualification.py', '--build', BuildDirectory, '--config', Args.configuration, '--output', Output/'core'], Output/'core-check.log', 150))
     Native(Host['Executable'], Adapter/AdapterName, Output/'native', Args.revision, Output/'host/remote-host.json', Engine)
+    Save(Output/'source.json', Before)
+    Commands.append(Execute([sys.executable, Source/'tests/runtime/RunLuauOnly.py', '--godot', Host['Executable'],
+        '--extension', Adapter/AdapterName, '--source', Output/'source.json', '--output', Output/'luau-game'], Output/'luau-game.log', 70))
     Require(Identity(Args.revision) == Before, 'Source inputs changed during build/qualification')
     Summary = Load(Output/'native/summary.json')
     Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 141 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')
     Payload = Output/'evidence.zip'
     with zipfile.ZipFile(Payload, 'w', zipfile.ZIP_DEFLATED) as Archive:
-        for Directory in [Output/'core', Output/'native', Output/'godot', Output/'host']:
+        for Directory in [Output/'core', Output/'native', Output/'godot', Output/'host', Output/'luau-game']:
             for File in sorted(Directory.rglob('*')):
                 if File.is_file() and File.suffix in ['.json', '.log', '.xml', '.txt']: Archive.write(File, File.relative_to(Output).as_posix())
         for File in sorted(Output.glob('*.log')): Archive.write(File, File.name)
@@ -226,6 +231,7 @@ def ProfilesAt(Inputs, Expected, Output):
         # recorded log paths; the strict checker itself is unchanged.
         Summary['LogHashes'] = {Name.replace('\\', '/'): Digest for Name, Digest in Summary['LogHashes'].items()}
         for Name, Digest in Summary['LogHashes'].items(): Require(SafePath(Name) and Hash(Evidence/'native'/Name) == Digest, 'Native log hash mismatch')
+        SeparateSupplementalEvidence(Evidence, Summary)
         Distribution = Load(Source/'tests/runtime/GodotDistribution.json')
         EngineEvidence = Load(Evidence/'godot/provenance.json')
         Require(Record['Godot'] == EngineEvidence == Summary['Godot'] and EngineEvidence['Asset'] == Distribution[Selected] and EngineEvidence['SourceRevision'] == Distribution['SourceRevision'] and EngineEvidence['ArchiveSHA256'] == Distribution[Selected]['SHA256'] and EngineEvidence['Version'] == Distribution['ExpectedVersionOutput'], 'Native Godot dependency identity mismatch')
@@ -237,6 +243,20 @@ def ProfilesAt(Inputs, Expected, Output):
         Require(Rechecked == Summary, 'Strict native verification changed the recorded evidence')
         Records[Selected+'-'+Configuration] = Record
     return Records
+
+
+def SeparateSupplementalEvidence(Evidence, Summary):
+    """Repair the GL-052 late supplementary-log layout in an extracted copy only.
+
+    Original archives/profile receipts and every recorded native log stay intact.
+    Future builds already store this separate workload outside the native root.
+    """
+    Late = Evidence/'native/luau-game'
+    if not Late.exists(): return
+    Require(not any(Name.replace('\\', '/').startswith('luau-game/') for Name in Summary['LogHashes']), 'Cannot relocate recorded native evidence')
+    Target = Evidence/'luau-game'
+    Require(not Target.exists() and Late.resolve().is_relative_to(Evidence.resolve()) and Target.resolve().parent == Evidence.resolve(), 'Invalid supplementary evidence destination')
+    Late.rename(Target)
 
 
 def CheckSanitizer(Directory, Expected):

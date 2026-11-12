@@ -1,9 +1,11 @@
 #include "gl_native_editor_plugin.h"
 #include <godot_cpp/classes/code_edit.hpp>
+#include "gl_luau_highlighter.h"
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/script_editor.hpp>
 #include <godot_cpp/classes/script_editor_base.hpp>
 #include <godot_cpp/variant/callable.hpp>
+#include "luau_script.h"
 
 using namespace godot;
 
@@ -17,18 +19,45 @@ ScriptEditor* GetEditor() {
 void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OnScriptChanged", "Script"), &GLNativeEditorPlugin::OnScriptChanged);
     ClassDB::bind_method(D_METHOD("ConfigureEditor"), &GLNativeEditorPlugin::ConfigureEditor);
+    ClassDB::bind_method(D_METHOD("CreateLuauScene", "Path"), &GLNativeEditorPlugin::CreateLuauScene);
+    ClassDB::bind_method(D_METHOD("PreviewScript", "Source"), &GLNativeEditorPlugin::PreviewScript);
+    ClassDB::bind_method(D_METHOD("StopPreview"), &GLNativeEditorPlugin::StopPreview);
+    ClassDB::bind_method(D_METHOD("ResetPreviewContext"), &GLNativeEditorPlugin::ResetPreviewContext);
+    ClassDB::bind_method(D_METHOD("OnPreviewSourceChanged"), &GLNativeEditorPlugin::OnPreviewSourceChanged);
+    ClassDB::bind_method(D_METHOD("SavePreview", "Path"), &GLNativeEditorPlugin::SavePreview);
+    ClassDB::bind_method(D_METHOD("PreviewSelected"), &GLNativeEditorPlugin::PreviewSelected);
+    ClassDB::bind_method(D_METHOD("NewSceneDialog"), &GLNativeEditorPlugin::NewSceneDialog);
+    ClassDB::bind_method(D_METHOD("SavePreviewDialog"), &GLNativeEditorPlugin::SavePreviewDialog);
+    ClassDB::bind_method(D_METHOD("OnAuthoringPath", "Path"), &GLNativeEditorPlugin::OnAuthoringPath);
+    ClassDB::bind_method(D_METHOD("InspectPreviewNode"), &GLNativeEditorPlugin::InspectPreviewNode);
+    ClassDB::bind_method(D_METHOD("OpenRuntimeError"), &GLNativeEditorPlugin::OpenRuntimeError);
+    ClassDB::bind_method(D_METHOD("GetRuntimeDiagnostics"), &GLNativeEditorPlugin::GetRuntimeDiagnostics);
 }
 
 void GLNativeEditorPlugin::_enter_tree() {
-    if (auto Editor = GetEditor()) Editor->connect("editor_script_changed", Callable(this, "OnScriptChanged"));
+    SetupAuthoring();
+    Ref<GLLuauHighlighter> Highlight;Highlight.instantiate();Highlighter=Highlight;
+    if (auto Editor = GetEditor()) {
+        Editor->register_syntax_highlighter(Highlighter);
+        Editor->connect("editor_script_changed", Callable(this, "OnScriptChanged"));
+    }
     OnScriptChanged(Ref<Script>());
 }
 
 void GLNativeEditorPlugin::_exit_tree() {
+    StopPreview();
+    if (Debugger.is_valid()) { remove_debugger_plugin(Debugger);Debugger.unref(); }
+    if (auto Panel=Object::cast_to<Control>(ObjectDB::get_instance(PreviewPanel))) {
+        remove_control_from_bottom_panel(Panel);
+        Panel->queue_free();
+    }
+    PreviewPanel=0;
     if (auto Editor = GetEditor()) {
+        if (Highlighter.is_valid()) Editor->unregister_syntax_highlighter(Highlighter);
         Callable Handler(this, "OnScriptChanged");
         if (Editor->is_connected("editor_script_changed", Handler)) Editor->disconnect("editor_script_changed", Handler);
     }
+    Highlighter.unref();
 }
 
 void GLNativeEditorPlugin::OnScriptChanged(const Ref<Script>&) {

@@ -20,17 +20,31 @@ def Main():
     Parser.add_argument("--extension", type=Path, required=True)
     Parser.add_argument("--output", type=Path, required=True)
     Parser.add_argument("--timeout", type=float, default=60)
+    Parser.add_argument("--workflow", action="store_true", help="Exercise the clean-project GL-052 production workflow")
+    Parser.add_argument("--baseline", action="store_true", help="Record missing workflow capabilities in the qualified GL-051 product")
     Args = Parser.parse_args()
     Output = Args.output.resolve()
     Output.mkdir(parents=True, exist_ok=False)
     Prepare(Output, Args.extension.resolve())
+    if Args.workflow and not Args.baseline:
+        Example=Path(__file__).resolve().parents[2]/"examples/luau-only"
+        for Name in ("World.luau","Marker.tscn","Pattern.tres"):
+            shutil.copy2(Example/Name,Output/Name)
+        shutil.copy2(Example/"Main.luau",Output/"OrbRun.luau")
     (Output / ".godot/extension_list.cfg").write_text('res://godot_luau.gdextension\n')
     Plugin = Output / "addons/NativeEditor"
     Plugin.mkdir(parents=True)
-    shutil.copyfile(Path(__file__).with_name("NativeAuthoring.gd"), Plugin / "plugin.gd")
+    shutil.copyfile(Path(__file__).with_name("LuauWorkflow.gd" if Args.workflow else "NativeAuthoring.gd"), Plugin / "plugin.gd")
     (Plugin / "plugin.cfg").write_text('[plugin]\nname="NativeEditorFixture"\ndescription="Bounded GL-051 editor integration"\nauthor="GodotLuau"\nversion="1"\nscript="plugin.gd"\n')
     with (Output / "project.godot").open("a") as File:
         File.write('[editor_plugins]\nenabled=PackedStringArray("res://addons/NativeEditor/plugin.cfg")\n')
+        if Args.workflow and not Args.baseline:
+            # EditorRun caches this setting during startup. Setting it only
+            # immediately before first Play can launch an unintended GUI child.
+            File.write('[editor]\nrun/main_run_args="--headless --disable-crash-handler --max-fps 30"\n')
+        if Args.baseline:
+            assert Args.workflow, "Baseline observation belongs to the GL-052 workflow"
+            File.write('[godot_luau]\nqualification_baseline=true\n')
     (Output / "NativeEditor.lua").write_text('local Scope = Scene.new(script.Parent)\nlocal Button = Scope:New("Button", {Text="Native editor"})\nerror("[Bindings:Editor] Editor source must never execute")\n')
     Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING="1")
     for Name in ["APPDATA", "LOCALAPPDATA", "XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_CACHE_HOME"]:
@@ -46,6 +60,16 @@ def Main():
     Detail = json.loads((Output / "editor-results.json").read_text())
     assert Detail["Passed"], Detail
     Result.update(Detail, Command=Command, ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest())
+    if Args.workflow and not Args.baseline:
+        ReopenCommand = Command + ["--", "--gl052-reopen"]
+        with (Output / "reopen.stdout.log").open("w") as Stdout, (Output / "reopen.stderr.log").open("w") as Stderr:
+            Process = StartProcess(ReopenCommand, Stdout, Stderr, Environment)
+        Reopen = Check(Process, time.monotonic() + Args.timeout, Output, "reopen", "[Bindings:EditorReopen] PASS")
+        assert "ERROR:" not in (Output / "reopen.stderr.log").read_text(errors="replace"), "Unhandled native scene reopen error"
+        ReopenDetail = json.loads((Output / "reopen-results.json").read_text())
+        assert ReopenDetail["Passed"], ReopenDetail
+        Reopen.update(ReopenDetail, Command=ReopenCommand)
+        Result["Reopen"] = Reopen
     (Output / "results.json").write_text(json.dumps(Result, indent=2))
     print("[Bindings:EditorQualification] PASS", Output)
 

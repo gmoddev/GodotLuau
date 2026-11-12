@@ -157,6 +157,21 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/native-editor" --timeout 60
 
+      - name: Actual native Luau clean-project authoring and preview workflow
+        timeout-minutes: 2
+        run: |
+          python tests/editor/RunNativeAuthoring.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/luau-workflow" --workflow --timeout 70
+
+      - name: Actual new Luau-only game input physics and lifetime
+        timeout-minutes: 2
+        run: |
+          python tests/runtime/RunLuauOnly.py \
+            --godot "$GODOT_RUNTIME" --extension "build/native/${{ matrix.Library }}" \
+            --source "$RUNNER_TEMP/native-ci/source.json" --output "$RUNNER_TEMP/native-ci/luau-game"
+
       - name: GL-006 and GL-008 existing network regressions
         timeout-minutes: 4
         run: |
@@ -310,3 +325,17 @@ jobs:
             ${{ runner.temp }}/native-ci/hostqualification/**/*.json
             build/native/*.log
             build/native/CMakeFiles/CMakeConfigureLog.yaml
+
+      - name: Retain adapter for bounded interactive editor qualification
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: authoring-adapter-${{ matrix.Platform }}-Debug
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            build/native/${{ matrix.Library }}
+            build/native/**/godot_luau_store_worker*
+            ${{ runner.temp }}/native-ci/source.json
+            ${{ runner.temp }}/native-ci/revision.log
+            ${{ runner.temp }}/native-ci/dependencies.log

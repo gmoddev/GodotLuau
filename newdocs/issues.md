@@ -25,6 +25,23 @@ the baseline; preserve IDs when a refactor moves the implementation.
 
 ## Index
 
+GL-052's [implementation journal](gl-052-development.md) tracks the new-project
+Luau-only authoring, preview, native persistence and export campaign. It is
+qualified within its documented scope and unmerged. Windows interactive acceptance
+is complete. The final default-script `print` follow-up passes core/native CI,
+all four production profiles, both packages and actual game export/startup.
+GL-050 remains separately unresolved.
+The [qualification record](gl-052-qualification.md) preserves actual editor/game
+passes, completed Windows/Linux core/native/types/sanitizers, accepted production
+packages and Windows export/rendered multiplayer. The
+[interactive receipt](evidence/gl052-interactive-qualification.json) records the
+completed native edit/preview/Inspector/error-recovery/save/restart/export and
+rendered standalone journey; earlier desktop failures remain historical evidence.
+The snapshot-path correction now passes seven fresh-process
+reopen checks on Windows/Linux at `60913fb`; the old duplicate-child/load-dialog
+failure is preserved. [GL-053](gl-053-default-damage.md) removes and qualifies the
+unsafe default damage endpoint without changing native health authority.
+
 The [Relay Siege main integration](e2e-game-main-integration.md) preserves the
 qualified game and its original evidence. GL-043 is now separately qualified and
 [integrated](gl-043-main-integration.md). GL-044/045 have focused corrections on
@@ -101,6 +118,8 @@ four successful workflows and independently checked artifacts.
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
+| GL-052 | P2 | Qualified within documented ADR-016 scope; Windows interactive acceptance complete; unmerged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
+| [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 
 ## GL-051: First-class native Luau integration
 

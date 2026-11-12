@@ -11,7 +11,7 @@ if not State then
     return
 end
 
-dprint("[Character:Animation] Sistema de animacion listo")
+print("[Character:Animation] Sistema de animacion listo")
 
 -- ══ TU CÓDIGO DE ANIMACIÓN AQUÍ /// YOUR ANIMATION CODE HERE ══
 -- Descomenta para reaccionar a eventos del Character: /// Uncomment to react to Character events:

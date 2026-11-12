@@ -12,7 +12,7 @@ MobileModule.JumpPower = 20
 MobileModule.TouchMode = "Joystick"
 
 function MobileModule:Initialize()
-    dprint("[MobileModule] Modo Movil activo: " .. self.TouchMode)
+    print("[MobileModule] Modo Movil activo: " .. self.TouchMode)
     -- Aquí puedes crear tu joystick con ScreenGui/ImageButton. /// Build your joystick here with ScreenGui/ImageButton.
 end
 

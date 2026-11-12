@@ -8,6 +8,10 @@ windows.release.x86_64 = "res://GodotLuau/bin/godot_luau.windows.template_releas
 linux.debug.x86_64 = "res://GodotLuau/bin/godot_luau.linux.template_debug.x86_64.so"
 linux.release.x86_64 = "res://GodotLuau/bin/godot_luau.linux.template_release.x86_64.so"
 
+[dependencies]
+windows.x86_64 = {"res://GodotLuau/bin/godot_luau_store_worker.exe": ""}
+linux.x86_64 = {"res://GodotLuau/bin/godot_luau_store_worker": ""}
+
 [icons]
 RobloxTemplate = "res://GodotLuau/icons/RobloxDataModel.svg"
 RobloxGame3D = "res://GodotLuau/icons/RobloxGame3D.svg"

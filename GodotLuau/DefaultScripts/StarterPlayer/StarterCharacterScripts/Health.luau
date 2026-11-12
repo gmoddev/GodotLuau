@@ -12,7 +12,7 @@ if not State then
     return
 end
 
-dprint("[Character:Health] Regeneracion activa: " .. script.Parent.Name)
+print("[Character:Health] Regeneracion activa: " .. script.Parent.Name)
 
 -- La regeneración empieza REGEN_DELAY s tras el ÚLTIMO daño (recibir daño reinicia el contador).
 -- /// Regen starts REGEN_DELAY s after the LAST hit (taking damage resets the timer).
@@ -30,7 +30,7 @@ State.HealthChanged:Connect(function(newHP)
 end)
 
 State.Died:Connect(function()
-    dprint("[Character:Health] " .. script.Parent.Name .. " ha muerto.")
+    print("[Character:Health] " .. script.Parent.Name .. " ha muerto.")
 end)
 
 -- Cada frame: si pasó el retardo y falta vida, sube un poco hacia MaxHealth.

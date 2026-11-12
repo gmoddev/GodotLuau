@@ -11,7 +11,7 @@ ConsoleModule.JumpPower = 20
 ConsoleModule.Deadzone  = 0.2  -- ignora movimientos menores /// ignore smaller movements
 
 function ConsoleModule:Initialize()
-    dprint("[ConsoleModule] Modo Consola activo — Joystick izquierdo para mover")
+    print("[ConsoleModule] Modo Consola activo — Joystick izquierdo para mover")
 end
 
 function ConsoleModule:GetCurrentSpeed()

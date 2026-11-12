@@ -489,6 +489,11 @@ bool GLExecutionDomain::Execute(GLExecutionOwner* Owner, const std::string& Sour
     lua_unref(State, Root);
     return Status == LUA_OK || Status == LUA_YIELD;
 }
+size_t GLExecutionDomain::GetPendingTaskCount() const {
+    size_t Count=0;
+    for (const auto& Entry:Threads) if (!Entry.second->Cancelled) ++Count;
+    return Count;
+}
 bool GLExecutionDomain::Bootstrap(const std::string& Source, const std::string& ChunkName) {
     return Execute(BootstrapOwner, Source, ChunkName);
 }

@@ -73,6 +73,18 @@ class CandidateTests(unittest.TestCase):
 
     def test_complete_profile(self): Candidate.CheckProfile(self.Record(), self.Expected, 'Linux', 'Release')
 
+    def test_late_supplementary_logs_preserve_recorded_evidence(self):
+        Native=self.Root/'native';Native.mkdir()
+        (Native/'required.log').write_bytes(b'original native evidence')
+        Late=Native/'luau-game';Late.mkdir();(Late/'game.stdout.log').write_bytes(b'additional game evidence')
+        Summary={'LogHashes':{'required.log':Candidate.Hash(Native/'required.log')}}
+        Candidate.SeparateSupplementalEvidence(self.Root,Summary)
+        self.assertEqual(Candidate.Hash(Native/'required.log'),Summary['LogHashes']['required.log'])
+        self.assertEqual((self.Root/'luau-game/game.stdout.log').read_bytes(),b'additional game evidence')
+        Late.mkdir();(Late/'recorded.log').write_bytes(b'recorded')
+        with self.assertRaisesRegex(ValueError,'recorded native evidence'):
+            Candidate.SeparateSupplementalEvidence(self.Root,{'LogHashes':{'luau-game/recorded.log':Candidate.Hash(Late/'recorded.log')}})
+
     def test_stock_wrong_patch_and_profile_hosts_rejected(self):
         for Field in ['RemoteAdmission', 'EngineRevision', 'QualificationPatchSourceSHA256LF', 'Configuration']:
             Record = self.Record(); Record['RemoteHost'][Field] = 'wrong'

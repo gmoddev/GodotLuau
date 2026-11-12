@@ -1,0 +1,76 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-052 interactive editor acceptance",
+  "Result": "PASS_WINDOWS_SUPPORTED_WORKFLOW",
+  "Date": "2026-11-12",
+  "ProductSource": "60913fbf1ab849a7e354ba7397f8fbc5845cad55",
+  "NativeSourceSHA256": "9a59cfbcce5626fe954d232f5f8be71d4452ddf85cea0263eb627973886f49bc",
+  "Editor": "Existing official Godot 4.7.1 a13da4feb; --single-window --rendering-driver opengl3 --max-fps 30",
+  "StandaloneHost": "Existing admitted renderer-enabled Windows Release template; unchanged GL-018/GL-029 patches",
+  "DesktopGPU": "AMD Radeon RX 7900 XT, OpenGL Compatibility",
+  "InputSHA256": {
+    "OfficialEditor": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+    "CandidateWindowsDebugDLL": "2e01e032120af9649c40f6664acbd0f34070c74f00d73e40cfdf6860bf5881a5",
+    "AdmittedWindowsReleaseTemplate": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc"
+  },
+  "EvidenceRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl052-interactive-20261112",
+  "Project": "C:/Users/aiden/.codex/artifacts/godotluau/gl052-followup-20261112/interactive-project",
+  "CreationReuse": "Previously observed native Project Manager creation and New Luau Scene under e393c0d; creation implementation unchanged. Current qualified 60913fb products installed before this session without replacing authored files.",
+  "Facts": [
+    "Native ScriptEditor edits and saves Main.luau, with Luau highlighting and the Ready print",
+    "Explicit Preview Luau renders the blue cube in the restricted private preview",
+    "Selecting the preview mesh opens the native MeshInstance3D Inspector",
+    "Save Preview As creates InteractiveSnapshot.tscn; Clear Preview retires the private hierarchy",
+    "Native resource chooser reopens the independent saved scene with plain native nodes",
+    "Native Scene tree rename Cube to EditedCube and Ctrl+S persist ordinary editor changes",
+    "F5 renders the Main scene; F8 stops it and Output shows Ready",
+    "Deliberate saved error at Main.luau:8 reaches Output and the Luau Authoring panel with source and stack",
+    "Explicit Open Runtime Error moves the source caret to 8:1",
+    "An observed unsaved incomplete statement produces a parse diagnostic at 9:1; restoring valid source clears it",
+    "ScriptEditor restores and saves valid source; rerun renders Ready and stops with no new errors",
+    "Normal editor shutdown and fresh process restore the saved EditedCube, native mesh and Inspector without load dialogs",
+    "Native Project > Export > Export Project emits a Release application with Export With Debug unchecked",
+    "Copy only emitted files to an independent folder, close the editor and launch without --path or source-tree arguments",
+    "Standalone renders the Luau-created cube, logs Ready, and exits normally with code 0 and empty stderr"
+  ],
+  "ExitCodes": {"FirstEditorWrapper": 0, "FirstEditorChild": "Not separately retained; requested normal shutdown", "FreshEditorSession": 0, "Standalone": 0},
+  "ProjectFileSHA256": {
+    "Main.luau": "8145e1069711d959d23f179f0d31ef794e13d21fa426aec087948f10e7dee39a",
+    "Main.tscn": "c00682c22237e0243a4e4bca61439d4198b1489f815c78c437482c5563ff9172",
+    "InteractiveSnapshot.tscn": "486563a077a311fae99319e74ca143af6a59662143644ce6bda43352fd43ff82",
+    "project.godot": "835ca1ad8c8e4344ab89e3844e7ab5c1c087ec9ab8fc94e1cafd0fa1279329f9"
+  },
+  "ExportedFileSHA256": {
+    "InteractiveJourney.exe": "56b5c05806254c6ec519eac98a1d01886205a03a872fca5d70f32ae9333ea3de",
+    "godot_luau.windows.template_release.x86_64.dll": "7f674f7410c9adaa601e91b1effaf122c6d0a60373b1f8332db7ccd30da81249",
+    "godot_luau_store_worker.exe": "0fae6ef38308a68caaa77b28eb49305ab5b8970880a1a9e76b848d42050882de"
+  },
+  "EvidenceSHA256": {
+    "source-edited.png": "02a5cbe81b306527158b0d2231d718c89ae1d96e967d92eb492ceb54a12d3cd8",
+    "preview-built.png": "17676f47f407515ea27c0107018d163a3ace8fc00346fbbc205851bf596c55dd",
+    "native-inspector.png": "77b8873215c8e035482ba9e82dfcffa6c6f6fb2164860416701a73bc142644dd",
+    "snapshot-saved.png": "8b3574c05511cf6f0312396c100a0024fe6d2cbd0010a7f37e096368e1498ca7",
+    "snapshot-reopened.png": "42490c4f0929552d61362ec95568084390ca5671af624a11be6c80f5c9b105ba",
+    "native-scene-edited.png": "b1505ae002b08ac6aecb398a52ad5c4ab10d937e81447cc8dfb9a185a232cfd0",
+    "runtime-error-navigation.png": "0cb1ccf17b4facb33429ab92592338934798ccbb22afe7d97bf53918d7170c46",
+    "source-recovered.png": "7bdfe3a770a1e27541d820f1510ab4c5cf98b777809d939ab04d7d02baef6ee2",
+    "recovered-play.png": "3c530f318395056108b4449072c5dd7f71e0379c8242be614e3e548170c0ecf2",
+    "recovered-stop.png": "8a9cbd08b7446e178e36a0900dfc96af585270f44f978c1dc06c656a179f1501",
+    "restart/snapshot-restored.png": "6cedf24ed4f177bc13b79a9743ef6973faa2df69e84df4ab26c3fc1458ea2109",
+    "restart/export-release-dialog.png": "2458435cca57f09b5f1265df8317dea27bf92938f22c0202b023990fda3d148f",
+    "restart/export-complete.png": "20634ad3dfa75fac3f682e593914eaca541508145984823558e40e1ec949c883",
+    "standalone-rendered.png": "052e97beae8489e5961463fccf591a06f424f73c91418d75513082fc03255c6c",
+    "editor.stdout.log": "2869a3f3032de416a50070707028c38711a7a90eb9dead6cf0d90e67f70f34ea",
+    "restart/stdout.log": "ddb5f9c3a5b5dd4a1e5e05717598de9e50c3dfacfd7803bc04de50c9eb79fca6",
+    "standalone.stdout.log": "599f86d920c10ebdefc1a3bb53284a26f6615307e042941f5f11a8034c5724a9"
+  },
+  "RetainedLimitations": [
+    "Earlier black captures, activation failures and concurrent-input interruptions are retained; they are superseded for this completed supported Windows journey",
+    "The export dialog warns about absent default templates but accepts the explicit existing custom template; no templates were installed",
+    "This UI-created acceptance project is a small cube scene; Orb Run gameplay and Relay Siege multiplayer have their separately recorded production qualification",
+    "No Linux graphical, physical-device, breakpoint/step, embedded full type-checker or editor/rendering sanitizer claim",
+    "Products are from 60913fb; the later default-template print-only change has separate CI identities"
+  ],
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false
+}

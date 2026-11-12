@@ -1,0 +1,83 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-052 and owner-requested GL-053",
+  "Disposition": "QUALIFIED_WITH_DOCUMENTED_LIMITATIONS_UNMERGED",
+  "RecordedUTC": "2026-11-12",
+  "Branch": "feature/gl-052-luau-authoring-workflow",
+  "MainUnchanged": "e43e981d423cea99edff9eb9d186a0b9a4758b73",
+  "Source": {
+    "Revision": "60913fbf1ab849a7e354ba7397f8fbc5845cad55",
+    "Tree": "0527d7cbc67b26862cfc2609e4f097bf777de2d5",
+    "SnapshotFix": "33d448bdbd1277cef60d1f26cc1a4c51bf6f46d1",
+    "DefaultTemplateFix": "60913fbf1ab849a7e354ba7397f8fbc5845cad55",
+    "NativeSource": {"SHA256": "9a59cfbcce5626fe954d232f5f8be71d4452ddf85cea0263eb627973886f49bc", "Files": 121, "Newlines": "LF normalized"},
+    "Dependencies": {"godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4", "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"}
+  },
+  "LatestPrintFollowup": {
+    "Revision": "71e997b31b3cea65080757e4f305fcf40c06c869",
+    "Tree": "01deb8ad450f051451d07ecb1ce34c3280851c5d",
+    "NativeSource": {"SHA256": "140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1", "Files": 121, "Newlines": "LF normalized"},
+    "Change": "17 dprint calls in nine shipped default scripts become ordinary print; matching embedded literals regenerated; native output implementation unchanged",
+    "CoreRun": 43188368995,
+    "CoreResult": "PASS_WINDOWS_LINUX",
+    "NativeRun": 43188368944,
+    "NativeResult": "PASS_WINDOWS_LINUX_INCLUDING_DEFAULTS_AND_AUTHORING",
+    "PerPlatform": {"ExistingActors": 141, "ExistingEditorChecks": 19, "ExpandedEditorChecks": 37, "FreshProcessReopenChecks": 7, "NewGameChecks": 13, "DefaultDamageRegression": "PASS inside Integration"},
+    "CandidateRun": 43188370124,
+    "CandidateResult": "ACCEPTED_NONPUBLISHING_CANDIDATE_ALL_FOUR_PROFILES_AND_BOTH_PACKAGES",
+    "AcceptedPackages": {
+      "GodotLuau-Windows.zip": "2efbea563eb1637dfb765eeebb883c5ecd26986927f77e9b37dc2cd1773a9224",
+      "GodotLuau-Linux.zip": "697ae77dd85a520d9e0d6d9279cf9c3c81ec314999beb1c7f2d82967d87b5cc5"
+    },
+    "WindowsReleaseProducts": {
+      "godot_luau.windows.template_release.x86_64.dll": "b3cb8ba5f8946010faeefceecb8c0afe0d1aa2cc63c0dd288246112d910ef64f",
+      "godot_luau_store_worker.exe": "1e445d03b8001c626ef98abeb754761a6a28626865928d593a9c81e617681bcc"
+    },
+    "GamePackageRun": 43196708702,
+    "GamePackageResult": "PASS_RELAY_SIEGE_EXTRACTED_STARTUP_AND_ORB_RUN_EXPORT_INDEPENDENT_STARTUP",
+    "GamePackageToolingRevision": "6b4212a70fdfbc95cccef4fe814520ae3f119e2c",
+    "GamePackageArtifact": "OrbRun-Windows-Export",
+    "GamePackageInteractive": false,
+    "GamePackageGraphical": false,
+    "Reuse": "60913fb sanitizer, graphical and interactive evidence reused for unchanged runtime/authoring/ownership/authority implementation; no relabeling of earlier products"
+  },
+  "InteractiveReceipt": "gl052-interactive-qualification.json",
+  "HostedRuns": [
+    {"Run": 43154348664, "Check": "Windows/Linux core", "Result": "PASS"},
+    {"Run": 43154348629, "Check": "Windows/Linux native and headless editor", "Result": "PASS", "PerPlatform": {"ExistingActors": 141, "ExistingEditorChecks": 19, "ExpandedEditorChecks": 37, "FreshProcessReopenChecks": 7, "NewGameChecks": 13, "DefaultDamageRegression": "PASS inside Integration"}},
+    {"Run": 43154353439, "Check": "Windows/Linux full-native sanitizers", "Result": "PASS", "UnexpectedReports": 0, "WindowsStages": 26, "LinuxStages": 27, "DefaultDamageRegression": "PASS on both platforms", "Scope": "Headless matching-host runtime; no editor/rendering sanitizer execution claim"},
+    {"Run": 43154350153, "Check": "Four production profiles, both packages and final acceptance", "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE", "ExtractedCompanionStartup": "Windows/Linux Debug/Release exit 0"},
+    {"Run": 43164852674, "Check": "Relay Siege extracted startup and Orb Run native export/independent startup", "Result": "PASS", "OrbRunArtifact": "OrbRun-Windows-Export", "Interactive": false, "Graphical": false},
+    {"Run": 43128057457, "Check": "Generated types", "Result": "PASS_REUSED", "Source": "44ae713", "Reuse": "Policy/declarations unchanged; current GenerateNativeBindings --check also passes"}
+  ],
+  "AcceptedPackages": {
+    "GodotLuau-Windows.zip": "7a32df524ad403270176a87ef0fc76f53cfcc32248a2c0b995ddaacf08e99161",
+    "GodotLuau-Linux.zip": "8b0e83d3fb5f1afa4c6b28244653757266435339bc10b0ee89061835b811233e"
+  },
+  "ExportedWindowsReleaseProducts": {
+    "godot_luau.windows.template_release.x86_64.dll": "7f674f7410c9adaa601e91b1effaf122c6d0a60373b1f8332db7ccd30da81249",
+    "godot_luau_store_worker.exe": "0fae6ef38308a68caaa77b28eb49305ab5b8970880a1a9e76b848d42050882de"
+  },
+  "LocalEvidenceRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl052-followup-20261112",
+  "FocusedEvidence": [
+    {"Directory": "reopen-before-runtime", "Result": "EXPECTED_PRE_FIX_FAIL", "Facts": "Three duplicated Visuals and load-warning/dialog errors"},
+    {"Directory": "default-before", "Result": "EXPECTED_PRE_FIX_FAIL", "Facts": "Default endpoint exposed; historical string call accepted; no health exploit claim"},
+    {"Directory": "default-after-source", "Result": "PASS", "Facts": "Native Integration: endpoint absent; string/object/table attempts rejected; trusted Server damage and denied Client writes"},
+    {"Directory": "game-609-rendered", "Result": "PASS", "Checks": 14, "Exit": 0, "Graphical": true, "Interactive": false, "Profile": "Official editor/current Debug CMake adapter", "AdapterSHA256": "b4b590b86c3e84e2045ff9dabbdbfd23b02fcbab2aaa555f418d328d03de44b7"},
+    {"Directory": "interactive-single-window", "Result": "PARTIAL", "Facts": "Actual UI project creation, native Luau scene/source creation and source opening/highlighting; unchanged creation paths using prior e393c0d products"},
+    {"Directory": "interactive-current-609", "Result": "INPUT_BLOCKED", "Facts": "Current products installed preserving authored project files; editor captures render; activation fails twice with failed to activate captured window"}
+  ],
+  "Measurements": {
+    "Windows": {"TwentyPreviewMillisecondsIncludingEditorFrames": 129.344, "StaticMemoryBeforeBytes": 396988836, "StaticMemoryAfterBytes": 397141024},
+    "Linux": {"TwentyPreviewMillisecondsIncludingEditorFrames": 129.743, "StaticMemoryBeforeBytes": 406850580, "StaticMemoryAfterBytes": 407003848},
+    "Interpretation": "Hosted bounded observations; no isolated latency, leak-free or speedup claim"
+  },
+  "PriorCheckpoint": "gl052-e393-qualification.json",
+  "RetainedReuse": "Prior rendered Relay Siege solo/restart/menu/listen/dedicated evidence within unchanged gameplay/controller/network paths; fresh current extracted startup passes separately",
+  "GL053": {"Result": "RESOLVED_FOR_DEFAULT_TEMPLATES", "IndependentInvestigation": true, "IndependentReview": "No concrete bypass or regression", "Migration": "Customized existing handlers require review; no runtime deletion or new automatic migration"},
+  "Remaining": ["Historical fast-import AV and Debug-extension/Release-host heap corruption remain unqualified profiles", "No arbitrary ScriptInstance/file inheritance, breakpoint/step debugging, full embedded type checker, complete navigation, theme-aware palette or automatic editor-to-child hot reload", "No Linux graphical/physical-device/Windows LSan/editor-rendering sanitizer execution claim", "GL-050 stays separate and unresolved"],
+  "NativeDefault": true,
+  "ScriptedOptIn": true,
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false
+}

@@ -1,0 +1,687 @@
+# GL-052 development and qualification
+
+Baseline: freshly fetched main `e43e981d423cea99edff9eb9d186a0b9a4758b73`.
+Branch: `feature/gl-052-luau-authoring-workflow`. Main is not a delivery target
+without separate authorization. Releases and updater distribution stay disabled.
+
+## Acceptance journey
+
+Start with an empty project and the qualified extension, without Relay Siege or
+its bootstrap. Use the native editor to create a Luau scene/entrypoint, edit a
+`.luau` resource, preview native geometry, inspect it, explicitly save a fresh
+native PackedScene, run/stop/edit/reload, recover from a deliberate error, reopen
+the saved project and export/launch independently. Developer application sources
+must contain no GDScript. Qualification observer scripts may use GDScript, and
+must not substitute their behavior for production authoring or gameplay.
+
+Fresh changed-boundary coverage must include preview denial of runtime services,
+bounded execution, cancellation, repeated rebuilds, resource/owner retirement,
+non-overwriting save, reload and error recovery. Actual editor automation and
+graphical interaction are separate evidence classes. A successful game launch
+alone cannot close this campaign.
+
+## Source baseline
+
+GL-051's registry, SceneScope ownership, native editor completion/diagnostics,
+generated definitions and qualification are reused. Source inspection finds:
+
+- LuauLanguage/LuauLoader/LuauSaver advertise `.lua` only.
+- LuauScript advertises `_can_instantiate=true` but `_instance_create` returns
+  null. Attaching it to an arbitrary native node is not an executable workflow.
+- LocalScript/ServerScript already associate a LuauScript resource with a real
+  native node and use the shared domain host, owner cancellation and source
+  changed notifications. They need no developer GDScript bootstrap.
+- Editor script execution is deliberately disabled. No preview/save authority
+  exists. Enabling gameplay bootstrap in the editor would expose inappropriate
+  services and is not an acceptable implementation.
+- Runtime chunks use node names, limiting source-path diagnostics. Module
+  resolution currently requires ModuleScript node handles.
+
+These are source-verified baseline facts, not graphical qualification or crash
+reproductions. Controlled editor baseline and implementation results follow.
+
+## Implementation order
+
+1. Establish the executable clean-project fixture and retain missing capabilities.
+2. Support `.luau` alongside `.lua`, native scene/entrypoint creation, source-path
+   diagnostics and project-local module imports using existing domain ownership.
+3. Implement explicit editor preview and save under ADR-016, without gameplay
+   bootstrap, services, network, persistence or arbitrary editor-object access.
+4. Exercise the workflow in a new small Luau-only native game; qualify actual
+   editor use, failure/reload recovery, native serialization and export.
+5. Run relevant Windows/Linux runtime, type, sanitizer and existing-game checks;
+   distinguish actual graphical/export results from remaining gaps.
+
+GL-050 stays separate. No dependency or admitted-host change is selected.
+
+## First implementation cohort
+
+The unchanged qualified GL-051 Windows product (candidate `43063482878`) runs the
+new baseline observer in an actual headless Godot 4.7.1 editor. All three baseline
+observations pass: `.lua` only, no native create-scene action and no preview action.
+Logs/results are retained under `gl052-20261111/baseline-editor` in the normal
+local artifact root. This is baseline evidence, not GL-052 feature qualification.
+
+Implementation now recognizes `.luau` and `.lua`, declines unsupported arbitrary
+Object attachment, and uses source resource paths for executable chunk names.
+The existing native editor plugin gains a Luau Authoring panel, explicit scene
+and entrypoint creation, isolated preview, hierarchy/Inspector selection and
+non-overwriting PackedScene Save As. Runtime entrypoints reuse native LocalScript
+and existing shared Client-domain ownership; application code needs no GDScript.
+
+Preview uses only value types and the approved Scene bindings, with no gameplay
+bootstrap or service globals. It has 100 ms/500000-safepoint execution, 64 MiB VM
+memory and bounded task/owner/reference admissions; construction/callback yields
+reject. Rebuild retires the old generation before root deletion. The private
+preview physics space is inactive and audio playback is denied. Save duplicates
+authored native content and transforms into plain nodes, without live SceneScope
+capabilities. New files never replace existing targets. Native lifetime and
+trusted-resource-loading limits still apply; save is an explicit editor action,
+not a script-visible filesystem capability.
+
+The two new/changed editor translation units pass lightweight syntax-only probes
+against pinned headers (about 2–3 seconds each). These are not runtime passes.
+The existing actual-editor runner now hosts the clean-project observer, including
+fresh creation, preview, independent native reload, overwrite rejection,
+service denial, errors, repeated rebuild, timeout/yield cancellation and stale
+generation checks. It is part of native CI; its first production execution is
+pending. Arbitrary ScriptInstance attachment, project module paths, full debugger,
+new acceptance gameplay, graphical interaction and export remain unfinished.
+
+DockerPC's heavy lease is held by unrelated `StudioCreatorFoundation3` at the
+initial admission check. No worker load is started or lease bypassed; sustained
+compilation uses the existing hosted CI. No full native build runs locally.
+
+## Project modules, recovery and diagnostics
+
+The first cohort is `a1b14d7`; hosted core `43121590203` passes Windows/Linux.
+Native `43121590194` is still building. No runtime or graphical preview pass is
+inferred from the successful syntax probes.
+
+The next source cohort adds `require("res://Module.luau")` / `.lua` through the
+existing domain evaluator/cache. A per-domain native cache retains at most 64
+project script resources, each limited to 1 MiB on admission. Existing
+ModuleScript-node require retains its resolver/lifetime contract. String modules
+have a resource identity rather than a native node; factories receive the caller's
+scope explicitly and do not acquire an editor/gameplay node through `script`.
+Explicit resource reload updates the source revision and normal runtime owners
+use their existing changed/cancellation behavior. Preview rebuild invalidates its
+module initializers/results as well as retiring the selected script generation,
+so a yielding module cannot survive a failed preview and poison later rebuilds.
+
+The native panel now offers explicit Reset Context, without automatically
+restarting exhausted VMs or touching game domains. Editing the active source
+clears the old preview rather than permitting an unnoticed stale save.
+
+Source review against the admitted engine's
+[ScriptLanguage adapter](https://github.com/godotengine/godot/blob/a13da4feb8d8aefc283c3763d33a2f170a18d541/core/object/script_language_extension.h)
+verifies an inherited lookup contract error: arguments were reversed and result
+was a documentation string rather than an integer Error. Correct that interface
+and provide bounded top-level function, explicit project-module path and approved
+native-class navigation. The observer requests declaration navigation through
+the actual ScriptEditor CodeEdit signal; a helper result alone is not UI proof.
+
+Runtime errors now also use Godot's supported EngineDebugger message capture to
+the native authoring panel, with bounded source/message/trace and explicit Open
+Runtime Error navigation. This does not implement breakpoints/stepping. Actual
+editor-run message capture remains pending qualification. Adapter artifacts are
+retained for bounded interactive investigation; they include test hooks and are
+not production distribution or accepted export candidates.
+
+The diagnostics cohort `481afaf` contains a C++ Ref assignment ambiguity caught
+by the local syntax probe. Its superseded native run `43123601596` is canceled;
+`9afbafd` makes the retained Ref construction explicit and passes the corrected
+probe. Core `43123668530` passes at that corrected revision; native
+`43123668484` remains pending. The earlier successful core runs are retained.
+
+First native cohort `43121590194` compiles and passes GL-051's actual editor
+checks on Linux, then fails the new workflow. Its log identifies the new default
+template's unsupported Camera3D.Current assignment, followed by missing-save
+cascades. Remove that assignment instead of widening camera takeover authority;
+the new standalone scene/private viewport uses native camera selection. Preserve
+the failed log and keep all original preview/save assertions. The observer only
+loads a saved scene when it exists, preventing secondary loader noise from
+obscuring the original failure.
+
+The new `examples/luau-only` Orb Run sources contain only native scenes/resources
+and Luau application/composition logic. They use a native RigidBody orb, qualified
+semantic input, reusable PackedScene markers, a project module factory, UI,
+gradient texture, procedural audio, owned scene replacement and shutdown. They
+reuse no Relay Siege bootstrap. Source inspection catches the correct existing
+material name AlbedoTexture; no camera or material authority expansion is needed.
+Preview adds the generated API's X/Y Vector2 constructor shape and bounded print,
+and closes its domain while plugin state remains alive. Game, graphical editor,
+export and latest native qualification are still pending.
+
+## Actual new-game runtime and production-profile gates
+
+Native `43123668484` at `9afbafd` retains the known default-camera failure on
+both platforms; real ScriptEditor declaration navigation already passes there.
+At `b357239`, core `43125078056` passes on both platforms and Linux native
+`43125078160` passes the corrected clean-project authoring workflow before
+finishing the retained runtime suites. Windows is still building at this entry.
+
+Use its retained Windows Debug adapter for bounded local diagnosis, not as a
+production package or Release result. The first game attempt omitted the normal
+editor-created extension cache and never loaded the extension. The second
+loads it and exposes an example error: opaque native resource handles require
+`Scope:Configure(Ground, {AlbedoTexture = ...})`, not userdata field assignment.
+Correct the example without expanding authority. Preserve both failed logs.
+The third run (`game-9af-headless-3`) passes all ten actual-game checks: native
+floor collision, keyboard movement, jump impulse, UI signal scene replacement,
+disable/re-enable teardown and runtime module revision invalidation. It uses
+the real Luau entrypoint/factory; external GDScript is only the observer. It is
+headless and does not establish graphical or export qualification.
+
+Extend the same observer to exercise collection, round completion and transition.
+Stage projects only into fresh paths, with explicit candidate or test-adapter
+identity. Add the authoring workflow to existing SCons production profile checks
+and the game to existing adapter checks; no second qualification framework.
+The language adapter now truthfully rejects unsupported file inheritance,
+recognizes Luau type/export keywords and supplies native function navigation
+and a deliberate no-op indentation hook. A pinned-header syntax probe passes.
+Interactive editor, debugger transport, rendered game and export remain pending.
+
+Generated types `43128057457` and core `43127995082` pass both platforms at
+`44ae713`. Candidate `43128050676` and full-native sanitizers `43128053718`
+are started through their existing non-publishing workflows, unchanged gates.
+The focused game rerun `game-9af-headless-4` also passes collection, round
+completion and scene transition. No performance improvement is inferred.
+
+The actual Windows project manager starts with the existing official editor and
+isolated profile. Computer Use returns a black capture and activation fails with
+`GetCursorPos: Access is denied (0x80070005)`. Fresh window selection still gives
+an unusable capture. No UI inputs are attempted through that failure; the owned
+project-manager process is stopped. Interactive qualification is blocked by the
+desktop environment, separately from actual headless-editor integration.
+
+The first independent export probe uses the older `9afbafd` Debug test adapter.
+Its clean editor import exits `3221225477` after loading editor layout, before
+export. Keep `export-9af` commands/stdout/stderr. This is an actual failed import,
+not an accepted production export or a claim against a newer untested binary.
+Investigate with the pending current Windows product before changing code.
+
+A delayed editor reopen (`--quit-after 120`) succeeds with that same test
+adapter. Export then succeeds, but independent startup reproduces a concrete
+resource-loading defect: `Scope:Load` rejects `res://Pattern.tres`, because Godot
+exports it as `.res` behind a `.remap` and the source file is absent. Inspection
+of the actual packed sidecars confirms the same conversion for Marker.tscn.
+Add one-hop export remap handling to the existing load boundary: metadata at most
+16 KiB, string target, both paths checked by the existing project confinement,
+encoded target at most 16 MiB, then normal ResourceLoader/type validation. No
+raw path, new resource class, dependency or authority is exposed. Imported
+texture feature variants are not newly promised by this focused correction.
+The existing native authoring actor gains successful binary remap composition,
+outside-root rejection and metadata/target bounds. Preserve the failed exported
+startup; a successful pack operation alone is not acceptance.
+
+Both platforms pass complete native `43125078160` at `b357239`. Its Windows
+adapter runs the expanded actual editor observer locally. Actual game preview
+and native save pass. Real EditorInterface play/stop transports the deliberate
+Luau failure to the native debugger with `res://Failure.luau:2`, and rerun executes
+the recovery marker. Two assertions expose real remaining issues: composition
+rejects Godot's serialized DirectionalLight3D.transform, and explicit error
+navigation selects row 0 instead of row 1. Preserve `workflow-b357-expanded`.
+
+Admit only the native serialized equivalent of already permitted bounded
+position/rotation/positive-scale properties, rejecting shear, reflection,
+degeneracy and out-of-range translation/scale. Clear the preview world's implicit
+camera-current flag on the off-tree saved copy, preserving takeover rejection.
+Pass the debugger's 1-based line to EditorInterface rather than subtracting it.
+Add native CodeHighlighter configuration to the existing Luau-only editor hook;
+keywords, common types, numbers, strings and basic comment regions are colored.
+No complete lexer/type-checker or theme-aware custom highlighter is claimed.
+The actual CodeEdit observer checks its installed native highlighter.
+
+The old exported adapter directory contains only the application and extension;
+Godot does not infer the companion EXE. Add platform-specific dependency metadata
+using the [supported export mechanism](https://docs.godotengine.org/en/stable/engine_details/engine_api/gdextension/gdextension_file.html)
+so it is emitted beside the application/library. Preserve normal fork archive
+packaging. Production profile/candidate cohorts at `44ae713` and `eedd4fe` are
+canceled as superseded before accepting any of their artifacts. Final current
+native/production/sanitizer checks remain required after these concrete fixes.
+
+Fast clean `--editor --import` exits with an access violation for both the
+retained GL-051 product and older GL-052 adapter in isolated empty projects.
+Root cause is not established; this is a retained stock-editor/import exit
+limitation, not a newly attributed GL-052 defect. Normal bounded editor reopen
+succeeds. Do not claim the fast-import profile is qualified or change admitted
+engine patches/dependencies to hide it.
+
+## Rendered new game and remaining shutdown investigation
+
+`game-b357-official-rendered` passes all fourteen production-game observations
+and clean process exit under the existing official editor, using the retained
+`b357239` Debug adapter. The offscreen/no-focus profile reuses Relay Siege's
+established mechanism. The captured 960x640 frame shows the native floor, orb,
+three markers and readable UI; it is visually inspected. This is actual Windows
+rendering, not interactive editor manipulation or a production Release result.
+
+The same adapter under the admitted Release renderer runs every observation but
+exits `3221226356` during shutdown, both rendered and headless. Keep both attempts
+as failures. Do not attribute this to graphics or accept a printed PASS marker
+over a bad exit. Matching production profiles and a new-game invocation within
+the existing full-native sanitizer runner will investigate this concrete failure;
+no additional qualifier or weakened cleanup/assertion is introduced.
+
+DockerPC remains held by StudioCreatorFoundation3 at 00:57 UTC; no worker job or
+lease bypass is attempted. The accepted native source is still pending at
+`4dba726`: candidate `43130538511`, sanitizers `43130541887` and ordinary hosted
+native/core CI. The fixture/export follow-up keeps that native code unchanged.
+
+The existing game-package workflow now additionally stages the real Luau-only
+game from a verified matching candidate, opens the editor, exports through
+Godot, verifies emitted library/companion bytes and launches independently from
+the standalone directory. It retains separate logs/results and checks no
+application GDScript. New-game staging omits the disabled updater addon, which
+is not needed by the application; it never alters the verified fork archive.
+
+Shutdown isolation narrows the failed mixed profile: four tiny scenes (print
+only, string module, owned node and module factory) all exit `3221226356` under
+the admitted Release host with the older Debug adapter, while all four exit 0
+under the official editor. The retained GL-051 production Debug library also
+fails the same print-only Release-host case. This does not identify a new module
+or graphics defect. Keep the nine case logs in `shutdown-isolation`; qualify
+matching production profiles and preserve this unsupported mixed-profile limit.
+No runtime behavior is changed merely to hide shutdown behind fixture teardown.
+
+The successful actual editor preview loop at `b357239` records 142.94 ms for
+twenty rebuilds including observer/editor frame processing (about 7.15 ms per
+iteration). OS static allocation readings are 409,673,062 before and 409,823,634
+bytes after. These bounded observations are not isolated API costs, a leak-free
+proof or a performance improvement claim. Final current-product measurements
+remain separate.
+
+Native `43130537900` Linux fails at GL-051's existing real-editor completion
+after the direct CodeHighlighter assignment. Keep the failed output: compilation
+and the first source checks pass, then the process stops at completion request.
+The [supported editor contract](https://docs.godotengine.org/en/stable/classes/class_editorsyntaxhighlighter.html)
+requires EditorSyntaxHighlighter subclasses. Remove the direct assignment and
+register a native per-script Luau subclass through ScriptEditor instead.
+It uses the pinned Luau lexer, with a 1 MiB source, 8,192 line and 65,536 token
+budget; UTF-8 byte locations are converted to Godot character columns. The admitted
+editor's `_create` virtual uses the existing ptrcall encoding support without
+changing the pinned 4.3 binding dependency. New syntax-only probes pass for its
+implementation, plugin and registration. Runtime editor qualification is pending;
+all original completion assertions remain required.
+
+At `1197f3d`, Linux's original 19 editor checks pass with the registered
+highlighter. The expanded observer passes snapshot composition, Unicode and
+multiline colors and source navigation. Its first actual Play fails because
+the fixture changes `editor/run/main_run_args` after EditorRun's startup cache:
+the child attempts X11/Wayland on the headless runner. The second Play starts
+headlessly and recovers. Set that test setting in project.godot before launching
+the editor instead. Preserve `native-1197-Linux` logs and keep every debugger
+assertion. This is a fixture launch correction; the 121-file native fingerprint
+is unchanged. Existing current sanitizer execution is unaffected and is reused.
+
+The retained current Windows adapter runs the corrected headless fixture locally.
+All native assertions pass, but the Python wrapper's inherited-stdout readiness
+assertion fails: Windows sends child output through Godot's Output control rather
+than guaranteeing parent stdout handles. Replace the two-second recovery delay
+and that stdout assumption with a bounded wait for the actual runtime's
+`[Luau] [Authoring:RunRecovery] Ready` line in the editor Output RichTextLabel.
+Keep the live-playing requirement and clean stop/exit checks. This observes real
+game execution through the supported native editor, not a mocked readiness flag.
+`workflow-1197-output-ready` then passes completely with no stderr errors.
+The native source fingerprint is unchanged; final cross-platform/profile evidence
+must use this corrected observer. Preserve the prior wrapper failure.
+
+`workflow-1197-output-ready` passes 37 current actual-editor assertions;
+`game-1197-official-rendered` passes 14 rendered game checks and clean exit with
+the same native fingerprint. Linux full-native sanitizer `43132639596` passes
+all controls, core, 141 existing native actors and the actual new game with zero
+unexpected reports. Windows remains running. Reuse that source-identical cohort.
+
+Final observer cohort `e393c0d` starts candidate `43135980287` and native
+`43135983475`. Candidate Linux Release fails before compilation with connection
+timeouts to mirrors.edge.kernel.org while installing the existing compiler.
+Retain `candidate-e393-linux-release-first.log`; the secondary missing-artifact
+failure follows from the missing build. A targeted job rerun is unavailable while
+the workflow remains active. Retry only that failed environment work after the
+other profiles finish; do not modify source, dependency pins or acceptance gates.
+
+Full-native `43132639596` is now successful on both platforms at the unchanged
+121-file source. Retained Windows/Linux summaries report PASS and zero unexpected
+reports; the actual Luau-only game, strict 141-actor native gate and complete core
+gate pass. Windows has 26 runner stages and Linux 27 (including the supported leak
+control). Editor/rendering execution and Windows LSan are not inferred from this
+headless sanitizer cohort. No sanitizer rerun is required for later observer/docs
+changes outside its native and runtime inputs.
+
+Final native `43135983475` Linux is successful: retained evidence contains 141
+existing actors, 19 existing editor assertions, 37 expanded authoring assertions
+and 13 real new-game assertions. Candidate `43135980287` Linux Debug also passes
+its complete production profile, including SCons editor execution. Windows work
+and the failed Linux Release environment retry are still pending; no candidate
+or standalone export acceptance is inferred from that partial result.
+
+Final native `43135983475` now passes Windows and Linux completely. The current
+authoring path and all inherited actors pass together with the corrected observer.
+Candidate Windows Debug also passes; Windows Release is still running its source
+build/complete qualification step. The Linux Release retry remains blocked on
+the active workflow ending. Keep these partial production outcomes distinct from
+candidate acceptance and standalone export, which remain pending.
+
+## Current Release gameplay regression
+
+Windows Release production profile is successful. Its qualified SCons library
+SHA256 is `207a24e7a3c25742159723c60b4292c2ad950276c8f9c9e113cc1237defc759e`;
+companion SHA256 is `0517138956ff84d241066ad421fcc14ac97e465515dbc6ea61b527034a592569`.
+Stage those exact profile products with current unchanged Relay Siege sources,
+the retained verified R6 assets and admitted renderer. The baseline archive
+identity stays explicitly separate from the current runtime profile; this is a
+focused runtime stage, not a fabricated accepted candidate archive.
+
+Fresh rendered solo passes 27 checks with zero failures and exit 0, including
+victory, acknowledged persistence, another round, death/respawn and cleanup.
+Fresh-process recovery passes seven checks; menu/retry/teardown passes five.
+The victory capture is visually inspected. Solo records 59.511 seconds, 1702
+frames, 33.483 ms mean, 147.803 ms peak and 175 native objects. This remains a
+30 FPS capped workload and does not establish a performance improvement.
+
+Candidate attempt 1 finishes with all three built profiles successful and only
+the pre-compilation Linux Release mirror failure. Rerun failed/dependent work
+only. Attempt 2 clears the compiler provisioning step and builds Linux Release's
+existing admitted host. Original successful profiles and failed attempt logs
+remain preserved; package acceptance and exported startup are still pending.
+
+## Focused production export
+
+While Linux Release builds, stage the exact successful Windows Release profile
+products with the new app sources and current extension descriptor. The isolated
+editor qualification copy maps its debug feature to that supplied Release library,
+as the existing production editor checks do. This is explicitly a profile stage,
+not an accepted whole-candidate archive. Use the unchanged admitted Release
+renderer as the custom export template; no dependency/host change is made.
+
+`export-profile-release` passes normal bounded editor open, Godot export and
+independent standalone startup, all exit 0 with no runtime/script/editor errors.
+The app prints its real Luau entrypoint readiness marker. Export emits the exact
+qualified DLL and companion hashes stated above. No `.gd` file is present in the
+application project. The original binary-remap startup defect is fixed in actual
+production export; native scenes/texture and string modules load from the pack.
+Retain commands, logs, product/profile identity and `qualification.json`.
+This is headless export/startup evidence, not interactive export or a rendered
+standalone claim. Final candidate-based package/export remains a separate gate.
+
+A single bounded desktop recheck with a fresh isolated project-manager process
+still returns a black capture and activation error `GetCursorPos: Access is
+denied (0x80070005)`. Stop the owned process; do not send guessed UI inputs or
+substitute headless evidence for interactive qualification. The environment gap
+remains current after the production-profile work.
+
+## Package evidence layout repair
+
+Candidate `43135980287` attempt 2 passes all four production profiles, then both
+package jobs reject strict native-summary equality. The new game was invoked
+after Native's summary and wrote three supplementary logs beneath `native/`.
+The package checker correctly sees new logs when rerunning the same strict gate.
+No product or actor assertion failed. Preserve the original run and artifacts.
+
+Store future game evidence in a separate top-level workload directory. For the
+already qualified profiles, move only the unrecorded `native/luau-game` directory
+in the package job's extracted copy to that separate location. Reject relocation
+if any recorded native log belongs to it. Never change original archives,
+profile receipts, recorded log bytes or strict-checker assertions. The focused
+recheck preserves all 418 Windows Release native log entries and reproduces the
+exact original native summary; all 141 process results pass. The 17 candidate
+rejection/retention tests pass with the new layout regression.
+
+A bounded read-only repackage workflow reuses the original four source products
+and sanitizer artifacts. It requires their actual successful original CI jobs,
+an immutable original source checkout, unchanged native inputs/policy and a
+repair diff limited to package tooling/tests/docs. Existing package, provenance,
+core/native/sanitizer and extracted-companion checks all still run. The repair
+tool revision is recorded separately; it does not relabel the source or rebuild
+identical native inputs. Release and updater publication remain disabled.
+
+## Final retained checkpoint — 2026-11-12 UTC
+
+Repackage run [43149322873](https://github.com/gmoddev/GodotLuau/actions/runs/43149322873)
+passes Policy, Windows package, Linux package and Acceptance. Source remains
+`e393c0d310f096263fb8c0ec2c8e3fe13d80584a`; repair tooling is `6852ae5`.
+All four original production profiles and original sanitizer artifacts are reused.
+The failed original package run stays failed. No assertion or acceptance gate is
+removed, no original profile archive is modified and no native build is repeated.
+The accepted Windows ZIP is checked with the existing package checker locally.
+
+Game package run [43149583568](https://github.com/gmoddev/GodotLuau/actions/runs/43149583568)
+passes existing extracted Relay Siege startup and actual native Orb Run export
+and independent launch. Downloaded `OrbRun-Windows-Export/results.json` records
+four exit-zero commands, accepted source identity and exact exported DLL/worker
+hashes. It explicitly records Interactive=false and Graphical=false. The new
+application contains no `.gd`; external qualification observers remain separate.
+
+Run the existing `tests/runtime/RunRelaySiegeMultiplayer.py` against the accepted
+Windows candidate, existing admitted Release renderer and verified cached R6
+assets. `relay-candidate-listen/session.json` records four rendered players:
+leader 28 checks, two observers and late join nine each, all exit 0 with zero
+failures. `relay-candidate-dedicated/session.json` records the same rendered
+client checks plus two headless server checks, also all exit 0. These exercise
+real ENet roster, authority, gameplay victory, persistence and late-join state;
+they do not establish Linux graphical or physical-device coverage. The existing
+runner retires its owned process trees. Prior solo/recovery/menu passes remain
+valid because the exact Release products and gameplay inputs are unchanged.
+
+A final bounded saved-snapshot reopen uses a fresh project containing Generated,
+OrbSaved, Pattern and Marker from the successful native save fixture. The first
+positional CLI invocation and explicit `--scene` attempt restore Generated; an
+exit-zero process is not proof that OrbSaved opened. A separate external @tool
+observer calls native `EditorInterface.open_scene_from_path` after scanning.
+Its initial inferred-bool parse error times out safely and is corrected only in
+that disposable observer. Both saved roots then open with child content, but
+the second open emits two `Attempting to parent and popup a dialog that already
+has a parent` errors. Preserve `snapshot-reopen/native-open*.log` and the per-root
+observations. This is **not** a clean editor-reopen pass; root cause is not
+established, and no speculative native refactor is included.
+
+The [qualification record](gl-052-qualification.md) and compact
+[receipt](evidence/gl052-qualification.json) now distinguish completed CI,
+production/export and Windows rendering from incomplete interactive/reopen
+acceptance. GL-052 stays open and unmerged; GL-050 stays separately unresolved.
+Main remains `e43e981d423cea99edff9eb9d186a0b9a4758b73`. Releases and updater
+distribution remain disabled. Native remains the default controller; Scripted
+remains explicitly opt-in. No dependency pin or admitted host changes.
+
+## Saved-snapshot correction — continued 2026-11-12 UTC
+
+Inspect the actual native Load Errors dialog in a disposable headless editor.
+Its text identifies three `Scene/Marker*/Visual` name clashes, one per
+instantiated Marker. `SavePreview` duplicates the complete hierarchy and assigns
+the saved root as every descendant's owner, while leaving each Marker root's
+scene-file path intact. The saved `.tscn` therefore contains both a Marker scene
+instance and its explicitly serialized Visual child. Godot loads a duplicate
+Visual and emits load warnings; repeated warnings trigger the dialog-parent
+errors. This is a confirmed snapshot serialization defect, not merely an
+interactive-desktop problem. Retain `gl052-followup-20261112/dialog-diagnosis`.
+
+Clear only the copied snapshot nodes' scene-file paths before packing. Keep the
+preview/source scene and native resource references unchanged. Extend the existing
+editor workflow with a second native editor process: open both saved scenes,
+require one Visual per Marker and the external texture, and reject load-warning
+dialogs as well as stderr errors. Qualification of this bounded fix is pending;
+prior runtime evidence remains historical and is not relabeled.
+
+The extended observer against the retained current pre-fix Debug adapter passes
+all 37 original checks, then fails all three single-Visual assertions and the
+no-load-warning assertion in the fresh editor process. The two native dialog
+errors reproduce as well. `reopen-before-runtime` retains this controlled red
+result. A preceding invocation used a nonexistent artifact path and stopped
+before launching Godot; it supplies no runtime evidence.
+
+DockerPC's worker lease remains held by another campaign (generation 110), so no
+worker build is started or lease taken. Use hosted source builds and the existing
+bounded MainPC editor fallback. No dependency or admitted engine changes are
+needed for the snapshot fix.
+
+## Default damage example — owner-requested GL-053 follow-up
+
+The owner additionally requests correction of the default scripts' damage remote.
+Trace the actual source before changing it: the GameManager endpoint accepts a
+client-selected string target and clamped numeric amount, but only logs today;
+its damage call is commented out. Object targets are rejected, and normal native
+payload admission already rejects nonfinite numbers. Do not call this a reproduced
+health exploit. An independent read-only boundary investigation agrees.
+
+No shipped caller depends on this endpoint, and no game-specific combat policy
+exists in the skeleton. Remove the exposed example and its unsafe commented
+recipe rather than inventing combat authorization. Regenerate only the matching
+embedded template; document existing customized-script migration. Native network
+and Character authority are unchanged. [GL-053](gl-053-default-damage.md) records
+the patch contract, controlled pre-fix failure and passing actual-source Integration
+run. Final compiled product verification and the independent review remain pending.
+
+Cancel the now-superseded `33d448b` production candidate `43151748683` because
+the final embedded template changes its native inputs. Retain its completed
+results as intermediate evidence. The `33d448b` native run `43151747225` continues
+to establish the separate snapshot fix; Linux's actual editor workflow, including
+the fresh-process reopen checks, is successful. Final qualification must identify
+the combined source explicitly, rather than reuse an older product's identity.
+
+Desktop access now permits bounded native UI work. With the official editor's
+documented `--single-window` option, create an isolated Compatibility project via
+Project Manager, install the already accepted e393c0d extension without overwriting
+project files, and use the real Luau Authoring panel to create Main.tscn/Main.luau.
+Open the source in ScriptEditor and observe native highlighting/association.
+Retain `interactive-single-window/created-project.png` and the isolated project.
+This closes the earlier blanket claim that all UI access is unavailable; it does
+not yet qualify editing, complete play/debug/export interaction or the pending
+snapshot correction's graphical path. Source input interrupted by user activity
+is not counted as an edit or save.
+
+## Qualified combined source — 60913fb
+
+Current native fingerprint is
+`9a59cfbcce5626fe954d232f5f8be71d4452ddf85cea0263eb627973886f49bc`
+(121 LF-normalized files). Core `43154348664`, native `43154348629`, full-native
+sanitizers `43154353439` and production candidate `43154350153` all pass at
+`60913fbf1ab849a7e354ba7397f8fbc5845cad55`. Candidate acceptance covers all four
+source-built profiles and both strict packages, with Windows/Linux Debug/Release
+extracted companion startup all exit 0. No current package repair is needed.
+
+Download the existing native/sanitizer receipts and inspect the changed-boundary
+evidence. Both native platforms retain 141 existing actors, 19 inherited editor
+checks, 37 authoring checks, seven new fresh-process reopen checks and 13 game
+checks. Both native and sanitizer Integration logs report DefaultScripts PASS.
+Sanitizers retain 26 Windows/27 Linux stages and zero unexpected reports; this
+does not establish executed editor/rendering sanitizer coverage or Windows LSan.
+The independent default-damage candidate review finds no concrete remaining
+bypass or regression. GL-053 closes for the default-template scope only.
+
+Current game package/export `43164852674` passes extracted Relay Siege startup
+and actual Orb Run native export/independent startup. Downloaded export results
+confirm source 60913fb and byte-identical emitted Release library/companion.
+Run the existing bounded graphical game fixture against the current Debug adapter
+under the official editor: `game-609-rendered` passes all 14 checks, clean exit and
+no diagnostics. Inspect its captured orb, markers, floor and UI. This remains an
+offscreen rendered observation, separate from production standalone export.
+
+Current hosted twenty-preview measurements are 129.344 ms on Windows and
+129.743 ms on Linux, including editor frames. Static readings are
+396,988,836→397,141,024 and 406,850,580→407,003,848 bytes respectively. Do not
+infer isolated API latency, absence of leaks or a speed improvement. Prior
+rendered Relay Siege regressions are reused within unchanged gameplay/controller/
+network paths; no repeated multiplayer workload is needed for the editor-only
+snapshot change and removal of an unused default template endpoint.
+
+Upgrade the UI-created disposable project to the accepted current products,
+verifying Main.tscn, Main.luau and project.godot remain byte-identical. A fresh
+bounded native editor renders in capture, but activation fails twice with
+`failed to activate captured window`. Stop input attempts after the supported
+refresh/retry, and request desktop availability while continuing independent
+checks. No complete interactive edit/play/debug/save/reopen/export pass is
+claimed. Owned editor sessions have finite timeouts and process-tree cleanup.
+
+The [current receipt](evidence/gl052-qualification.json) identifies this cohort;
+the preceding [e393 receipt](evidence/gl052-e393-qualification.json) is preserved
+unchanged. Main is unmerged, release/updater publication remains disabled,
+Native stays default, Scripted stays opt-in, and GL-050 remains unresolved.
+
+## Interactive completion resumed
+
+Resume from clean branch tip 5a8a62b and verify remote main remains e43e981.
+Reuse the qualified 60913fb products and the UI-created isolated project. A new
+bounded editor session under the official editor with `--single-window` now
+permits activation, file filtering and source opening; concurrent desktop input
+requires refreshed observations before editing. Remaining acceptance is actual
+editing, preview/Inspector, explicit snapshot save/reopen, play/error/recovery,
+export and independent rendered launch through the supported native UI.
+
+The owner additionally requests ordinary `print` instead of `dprint`. Replace
+the 17 informational calls in the nine shipped default `.luau` sources and
+regenerate their embedded header. This changes informational log visibility;
+warning behavior, native output implementation and customized project content
+are outside this bounded change. Qualification is pending for the new source.
+
+The resumed native UI session now completes actual ScriptEditor edit/save,
+preview rendering, MeshInstance3D Inspector inspection, explicit Save Preview As
+to InteractiveSnapshot.tscn, Clear Preview, and native resource-chooser reopening.
+The independent scene contains plain native nodes. Rename Cube to EditedCube in
+the native Scene tree and save; no live preview scope is serialized. F5/F8 runs
+and stops the generated Main scene, with the blue cube rendered and the edited
+`[Authoring:Interactive] Ready` print visible in Output.
+
+Append a deliberate runtime error at Main.luau:8 through ScriptEditor. Actual
+Output and Luau Authoring retain its source/stack, and Open Runtime Error moves
+the caret to 8:1. A subsequently observed unsaved incomplete `find` statement
+also produces a native parse diagnostic at 9:1; it is not part of saved source.
+Restore the valid seven-line source through ScriptEditor, save, and rerun: the
+cube renders, Ready appears, and the child stops normally with no new errors.
+Retain screenshots/logs in `gl052-interactive-20261112`. Fresh editor restart and
+interactive export/standalone launch remain to finish; these UI observations use
+the already qualified 60913fb Debug products, not future print-template products.
+
+Finish that remaining interactive path: request normal editor shutdown (the
+wrapper exits 0; this first child exit is not separately retained),
+restart the same isolated project in a fresh process, and observe EditedCube,
+its native mesh/Inspector and blue geometry restored without load dialogs. Use
+Project → Export → Export Project with an explicit existing admitted Release
+template and Export With Debug unchecked. The dialog warns about absent default
+templates but accepts this custom template. It emits the exact qualified Release
+DLL and companion. Close the editor (exit 0), copy only emitted files outside the
+source project and launch the executable without a source path. Observe the blue
+cube and Ready output, then close normally (exit 0, empty stderr).
+
+The [interactive receipt](evidence/gl052-interactive-qualification.json) preserves
+source/product identities, screenshot/log hashes and the actual UI facts. This
+completes supported Windows interactive acceptance; earlier desktop failures
+remain historical evidence. Orb Run gameplay and Relay Siege multiplayer retain
+their separate qualification. The print-only follow-up is 71e997b; its core CI
+passes and native/candidate CI are still running at this checkpoint. No additional
+sanitizer run is needed for informational template call changes: the native output,
+ownership, authoring and authority implementations/fixtures are unchanged.
+
+Latest core `43188368995` and native `43188368944` now pass on both platforms at
+71e997b (fingerprint `140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1`).
+Retained native receipts identify 141 actors with zero nonzero exits, 19 native
+editor checks, 37 authoring checks and 13 game checks per platform. The actual
+Integration output includes ordinary `[Luau] [Server] GameManager iniciado!`
+and `[Runtime:DefaultScripts] PASS`. Production candidate `43188370124` continues;
+Linux Release is the first completed profile and passes. Keep source identities
+separate from the 60913fb interactive products and preserve all earlier evidence.
+
+Candidate `43188370124` now passes every gate: all four production profiles,
+both strict packages/extracted startup and final acceptance. Downloaded packages
+pass the established package checker and match current native fingerprint/source
+71e997b. Windows ZIP SHA256 is
+`2efbea563eb1637dfb765eeebb883c5ecd26986927f77e9b37dc2cd1773a9224`;
+Linux is `697ae77dd85a520d9e0d6d9279cf9c3c81ec314999beb1c7f2d82967d87b5cc5`.
+Dispatch the existing non-publishing game/export workflow `43196708702` against
+this accepted candidate. No new fixtures, checks, sanitizer rerun, host change or
+publication path is introduced. Final documentation will record its outcome.
+
+Final game/export workflow `43196708702` passes at tooling revision 6b4212a with
+accepted source 71e997b. Downloaded OrbRun-Windows-Export records successful stage,
+normal headless editor open, native Release export and independent startup (all
+exit 0). Emitted DLL/companion hashes match the current accepted candidate.
+Relay Siege extracted startup also passes. This is fresh package/export evidence;
+the actual Windows interactive/rendered acceptance above remains tied to 60913fb
+products within unchanged authoring/runtime paths.
+
+GL-052 is now qualified within the documented ADR-016/API/platform scope and
+remains unmerged. Retain unsupported fast-import/mismatched-profile failures,
+unimplemented debugger/type-checker features and Linux graphical/device/sanitizer
+limits. GL-050 stays separate. No further runtime changes are justified. Check
+final links/receipts/diff and remote branch identity, then commit/push documentation.
+Keep releases/updater distribution disabled and main unchanged.

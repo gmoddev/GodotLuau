@@ -27,7 +27,7 @@ local stamina       = 100
 function PCModule:Initialize()
     current_speed = self.WalkSpeed
     stamina       = self.StaminaMax
-    dprint("[PCModule] Modo PC activo: W/A/S/D para mover, Shift para correr")
+    print("[PCModule] Modo PC activo: W/A/S/D para mover, Shift para correr")
 end
 
 -- Cada frame (lo llama ControlModule): estamina + acelerar hacia la velocidad objetivo.

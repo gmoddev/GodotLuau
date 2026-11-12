@@ -33,7 +33,7 @@ function ControlModule:Initialize()
     self.WalkSpeed = active.WalkSpeed
     self.JumpPower = active.JumpPower
     if active.Initialize then active:Initialize() end
-    dprint("[ControlModule] Plataforma: " .. (p == "" and "Auto(PC)" or p))
+    print("[ControlModule] Plataforma: " .. (p == "" and "Auto(PC)" or p))
 end
 
 -- Lo llama PlayerModule cada frame (sprint suave, estamina…). /// Called by PlayerModule each frame (smooth sprint, stamina…).

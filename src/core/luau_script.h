@@ -243,7 +243,9 @@ public:
     bool _is_tool() const override { return false; }
     bool _is_valid() const override { return true; }
     bool _has_source_code() const override { return true; }
-    bool _can_instantiate() const override { return true; }
+    // Executable association is codigo_luau on a native script node. There is
+    // no ScriptInstance adapter for attaching this resource to arbitrary Objects.
+    bool _can_instantiate() const override { return false; }
     bool _has_static_method(const StringName &p_method) const override { return false; }
     void _update_exports() override {}
     Ref<Script> _get_base_script() const override { return Ref<Script>(); }
@@ -251,7 +253,7 @@ public:
     StringName _get_instance_base_type() const override { return StringName("Object"); }
     ScriptLanguage *_get_language() const override;
     void *_instance_create(Object *p_for_object) const override { return nullptr; }
-    Error _reload(bool p_keep_state) override { return OK; }
+    Error _reload(bool p_keep_state) override;
 };
 
 // ════════════════════════════════════════════════════════════════════
@@ -607,7 +609,8 @@ public:
         L_main = RunOwner->Anchor;
         RunGuard = Domain->CreateGuard(RunOwner);
         if (RunGuard == LUA_NOREF) return;
-        String ChunkName = String("=") + gl_instance_fullname(this);
+        String ChunkName = codigo_luau->get_path().begins_with("res://")
+            ? String("@") + codigo_luau->get_path() : String("=") + gl_instance_fullname(this);
         Domain->Execute(RunOwner, codigo_luau->_get_source_code().utf8().get_data(), ChunkName.utf8().get_data());
     }
 

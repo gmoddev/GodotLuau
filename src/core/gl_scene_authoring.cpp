@@ -20,6 +20,7 @@
 #include <godot_cpp/classes/collision_shape3d.hpp>
 #include <godot_cpp/classes/color_rect.hpp>
 #include <godot_cpp/classes/control.hpp>
+#include <godot_cpp/classes/config_file.hpp>
 #include <godot_cpp/classes/directional_light3d.hpp>
 #include <godot_cpp/classes/environment.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
@@ -322,6 +323,9 @@ int Call(lua_State* Thread) {
     const char* Name=CheckedString(Thread,3);
     const auto* Item=FindMethod(Target,Name);
     if (!Item || !Target->has_method(Item->Native)) luaL_error(Thread,"[Scene:Method] Method %s is not admitted on this target",Name);
+    if (GLGetOwner(Thread)->Domain->GetKind()==GLDomainKind::EditorPreview &&
+        Target->is_class("AudioStreamPlayer") && !strcmp(Item->Native,"play"))
+        luaL_error(Thread,"[Authoring:Preview] Audio playback is runtime-only");
     if (Item->Mutates) TargetAt(Thread,Scope,2,true);
     int Count=lua_gettop(Thread)-3;
     if (Count<Item->Required || Count>Item->Arguments) luaL_error(Thread,"[Scene:Arguments] %s requires %d..%d arguments",Name,Item->Required,Item->Arguments);
@@ -386,6 +390,22 @@ int Load(lua_State* Thread) {
     String Path=CheckedString(Thread,3,4096);
     if (!GLProjectResourcePath(Path)) luaL_error(Thread,"[Scene:Resource] Project resource path denied");
     Ref<FileAccess> File=FileAccess::open(Path,FileAccess::READ);
+    if (File.is_null()) {
+        // Godot exports text scenes/resources as binary files behind a .remap.
+        // Bound and confine both the sidecar and its encoded target before the
+        // normal ResourceLoader resolves the original logical project path.
+        String RemapPath=Path+".remap";
+        if (!GLProjectResourcePath(RemapPath)) luaL_error(Thread,"[Scene:Resource] Export remap path denied");
+        Ref<FileAccess> RemapFile=FileAccess::open(RemapPath,FileAccess::READ);
+        if (RemapFile.is_null() || RemapFile->get_length()>16*1024) luaL_error(Thread,"[Scene:Resource] Missing or oversized export remap");
+        Ref<ConfigFile> Remap;Remap.instantiate();
+        if (Remap->parse(RemapFile->get_as_text())!=OK) luaL_error(Thread,"[Scene:Resource] Invalid export remap");
+        Variant Target=Remap->get_value("remap","path",Variant());
+        if (Target.get_type()!=Variant::STRING) luaL_error(Thread,"[Scene:Resource] Invalid export target");
+        String EncodedPath=Target;
+        if (!GLProjectResourcePath(EncodedPath)) luaL_error(Thread,"[Scene:Resource] Export target path denied");
+        File=FileAccess::open(EncodedPath,FileAccess::READ);
+    }
     if (File.is_null() || File->get_length()>16*1024*1024) luaL_error(Thread,"[Scene:Resource] Resource unavailable or encoded input exceeds 16 MiB");
     File.unref();
     Ref<Resource> Value=ResourceLoader::get_singleton()->load(Path,Type);
@@ -439,6 +459,20 @@ bool ResourceGraph(const Variant& Value, std::unordered_set<uint64_t>& Seen, int
     }
     return true;
 }
+bool SerializedTransform(const char* Class, const Variant& Value) {
+    auto Position=NativeProperty(Class,"position");
+    auto Scale=NativeProperty(Class,"scale");
+    if (!Position || !Scale || Value.get_type()!=Variant::TRANSFORM3D) return false;
+    Transform3D Transform=Value;
+    if (!Transform.is_finite() || Transform.basis.determinant()<=0 ||
+        !ValidNative(*Position,Transform.origin) || !ValidNative(*Scale,Transform.basis.get_scale())) return false;
+    // Admit only native serialization of the already supported positive-scale
+    // rotation/position properties. Sheared or degenerate bases remain denied.
+    Vector3 X=Transform.basis.get_column(0).normalized();
+    Vector3 Y=Transform.basis.get_column(1).normalized();
+    Vector3 Z=Transform.basis.get_column(2).normalized();
+    return std::abs(X.dot(Y))<0.0001 && std::abs(X.dot(Z))<0.0001 && std::abs(Y.dot(Z))<0.0001;
+}
 void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Scene, int Depth) {
     Ref<SceneState> State=Scene->get_state();
     if (State.is_null() || !Scene->can_instantiate() || State->get_connection_count()!=0)
@@ -461,6 +495,7 @@ void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Sc
             String Name=State->get_node_property_name(Index,PropertyIndex);
             const Property* Item=NativeProperty(Class->Name,Name);
             Variant Value=State->get_node_property_value(Index,PropertyIndex);
+            if (Name=="transform" && SerializedTransform(Class->Name,Value)) continue;
             if (!Item || !ValidNative(*Item,Value) || !ResourceGraph(Value,Resources,Values))
                 luaL_error(Thread,"[Scene:Composition] Property %s.%s is not admitted",Class->Name,Name.utf8().get_data());
         }
@@ -539,6 +574,8 @@ int Reparent(lua_State* Thread) {
     return 0;
 }
 int Play(lua_State* Thread) {
+    if (auto Owner=GLGetOwner(Thread)) if (Owner->Domain->GetKind()==GLDomainKind::EditorPreview)
+        luaL_error(Thread,"[Authoring:Preview] Audio playback is runtime-only");
     auto Scope=ScopeAt(Thread); auto Audio=Object::cast_to<AudioStreamPlayer>(TargetAt(Thread,Scope,2,true));
     if (!Audio || Audio->get_stream().is_null()) luaL_error(Thread,"[Scene:Type] Play requires an audio player with a stream");
     Audio->play(); return 0;
@@ -641,7 +678,9 @@ int Root(lua_State* Thread) {
     Node* Script=Owner?Resolve<Node>(Owner->NativeId):nullptr;
     if (!Owner || !Owner->Alive || !Script || Script->get_parent()!=Parent)
         luaL_error(Thread,"[Scene:Authority] Scene.new requires the executing script's parent");
-    for (Node* Item=Parent;Item;Item=Item->get_parent()) {
+    // Preview's private native driver/root are supplied only by the editor host.
+    // Its viewport ancestry is intentionally not a gameplay bootstrap container.
+    for (Node* Item=Owner->Domain->GetKind()==GLDomainKind::EditorPreview?nullptr:Parent;Item;Item=Item->get_parent()) {
         String Type=Item->get_class();
         if (Type!="Node" && Type!="Node3D" && Type!="RobloxWorkspace" && Type!="Folder" && Type!="Window")
             luaL_error(Thread,"[Scene:Authority] Scene parent must be a plain bootstrap container");

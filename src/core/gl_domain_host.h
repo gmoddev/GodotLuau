@@ -4,6 +4,7 @@
 #include "gl_execution_domain.h"
 #include "gl_http.h"
 #include "gl_datastore.h"
+#include "gl_project_modules.h"
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/string.hpp>
@@ -34,6 +35,7 @@ class GLDomainHost : public godot::Node {
     };
     std::array<std::unique_ptr<GLExecutionDomain>, 2> Domains;
     std::array<bool, 2> Initialized = {false, false};
+    std::array<GLProjectModules,2> ProjectModules;
     std::unique_ptr<GLHttpManager> Http;
     std::unique_ptr<GLDataStoreManager> DataStore;
     std::vector<GLChildWait> ChildWaits;

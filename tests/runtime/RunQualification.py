@@ -44,6 +44,12 @@ def Prepare(Output, Extension):
     (Output / "project.godot").write_text('config_version=5\n[application]\nconfig/name="GodotLuauQualification"\nconfig/use_custom_user_dir=true\nconfig/custom_user_dir_name="GodotLuauRuntimeQualification"\n[threading]\nworker_pool/max_threads=2\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n')
     Platform = "windows" if os.name == "nt" else "linux"
     (Output / "godot_luau.gdextension").write_text('[configuration]\nentry_symbol="luau_extension_init"\ncompatibility_minimum="4.3"\n[libraries]\n' + "\n".join(f'{Platform}.{Config}.x86_64="res://godot_luau{Suffix}"' for Config in ("debug", "release")))
+    Repository = Path(__file__).resolve().parents[2]
+    DefaultSource = (Repository / "GodotLuau/DefaultScripts/ServerScriptService/GameManager.luau").read_text(encoding="utf-8")
+    Embedded = re.search(r'static const char\* LUAU_TEMPLATE_GAME_MANAGER = R"([A-Za-z_]+)\((.*?)\)\1";',
+                         (Repository / "src/core/luau_templates_gen.h").read_text(encoding="utf-8"), re.S)
+    assert Embedded and Embedded.group(2) == "\n" + DefaultSource, "Default GameManager disk/embedded sources differ"
+    (Output / "DefaultGameManager.luau").write_text(DefaultSource, encoding="utf-8")
     for Script in Path(__file__).parent.glob("*.gd"):
         shutil.copyfile(Script, Output / Script.name)
     Controller = Path(__file__).resolve().parents[2] / 'examples/input-controller/Controller.luau'

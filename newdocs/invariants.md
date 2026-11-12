@@ -71,6 +71,16 @@ Retained old commands cannot control a replacement lease or Character life.
 
 ## Execution domains and capabilities
 
+GL-052 editor authoring follows [ADR-016](adr-016-luau-editor-authoring.md).
+Explicit EditorPreview execution must not initialize gameplay services or expose
+editor objects/filesystem writes to Luau. Old preview owners, module initializers,
+callbacks and resource handles retire before replacement. Preview is transient;
+only an explicit native editor save may create an independent native PackedScene,
+without overwriting existing targets or serializing live execution capabilities.
+Packing expanded snapshot descendants must not retain PackedScene instance paths
+that would create those descendants again on reopen. Native resource references
+remain, while the saved snapshot and original preview have separate identities.
+
 - Client/server context describes execution, not a privilege grant. Check native
   operations at the boundary rather than relying on a higher-level wrapper or
   the name/visibility of a global. Integrated GL-003 implements the bounded native

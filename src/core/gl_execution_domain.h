@@ -22,7 +22,7 @@ struct GLDomainLimits {
     size_t Owners = 16384;
 };
 
-enum class GLDomainKind { Server, Client };
+enum class GLDomainKind { Server, Client, EditorPreview };
 class GLExecutionDomain;
 
 struct GLExecutionOwner {
@@ -108,6 +108,7 @@ public:
     void AddCloseCallback(lua_State* Thread, int Reference);
     void Shutdown();
     size_t GetTaskCount() const { return Threads.size(); }
+    size_t GetPendingTaskCount() const;
     size_t GetOwnerCount() const;
     size_t GetReferenceCount() const;
     const GLMemoryAccount& GetMemoryAccount() const { return Memory; }
