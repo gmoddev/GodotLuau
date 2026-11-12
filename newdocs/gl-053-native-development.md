@@ -325,3 +325,19 @@ query strings are not cached. This is not a second object registry or new
 capability. Reuse the same measurement after a fresh compiled adapter; no speedup
 is claimed before that result. Existing native lifecycle/authority fixtures remain
 the regression gate.
+
+## Fresh native execution: host capability and fixture corrections
+
+Run 43227602615's Linux adapter compiles and passes native expansion, reload,
+animation and the existing bindings. The Integration actor times out after a
+new fixture parse error: a loop's Variant profile does not support inferred
+String concatenation. Give both template/foundation markers explicit String
+types. The same run records a navigation-path timeout. The admitted GL-018/029
+headless host explicitly disables modules by default and does not enable the
+navigation module; its dummy server never synchronizes. Keep that admitted
+profile unchanged. The unsupported-host case must reject navigation without
+mutation; run the same native physics/navigation cases separately on the
+already provisioned verified official host, where actual pathfinding is required.
+This does not extend full-native sanitizer claims to a non-instrumented host.
+The official 4.7.1 direct native control produces the expected two-point path;
+the bound native path check remains pending the fresh adapter run.

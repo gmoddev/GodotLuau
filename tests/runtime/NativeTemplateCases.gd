@@ -3,7 +3,7 @@ extends RefCounted
 func Run(Runner,Game: Node) -> void:
     for Profile in ["Empty","ThreeD","TwoD","UI"]:
         var Source := FileAccess.get_file_as_string("res://Template"+Profile+".luau")
-        var Marker := "Template"+Profile+"Ready"
+        var Marker: String = "Template"+Profile+"Ready"
         var Owner = Runner.CreateScript("LocalScript","Template"+Profile,"local function Build()\n"+Source+"\nend\nBuild()\ngame:SetAttribute('"+Marker+"',true)",Game)
         if not await Runner.Until(Marker):
             return

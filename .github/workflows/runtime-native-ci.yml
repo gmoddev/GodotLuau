@@ -159,6 +159,14 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --output "$RUNNER_TEMP/native-ci/native-editor" --timeout 60
 
+      - name: Native physics and navigation on verified official host
+        timeout-minutes: 2
+        run: |
+          python tests/runtime/RunQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/native-gameplay" --native-gameplay --timeout 30
+
       - name: Actual native Luau clean-project authoring and preview workflow
         timeout-minutes: 2
         run: |

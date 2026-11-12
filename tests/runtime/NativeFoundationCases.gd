@@ -7,7 +7,7 @@ func Run(Runner,Game: Node) -> void:
         var Started := Time.get_ticks_usec()
         var Objects := Performance.get_monitor(Performance.OBJECT_COUNT)
         var Source := FileAccess.get_file_as_string("res://"+Profile+".luau")
-        var Marker := "Foundation"+Profile+"Ready"
+        var Marker: String = "Foundation"+Profile+"Ready"
         var Owner = Runner.CreateScript("ServerScript" if Profile=="ThreeD" else "LocalScript","Foundation"+Profile,"local function Build()\n"+Source+"\nend\nBuild()\ngame:SetAttribute('"+Marker+"',true)",Game)
         if not await Runner.Until(Marker):
             return

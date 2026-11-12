@@ -685,6 +685,7 @@ def Main():
     Parser.add_argument("--remote", action="store_true")
     Parser.add_argument("--characters", action="store_true")
     Parser.add_argument("--input", action="store_true")
+    Parser.add_argument("--native-gameplay", action="store_true", help="Native physics and navigation on the verified full-featured official host")
     Parser.add_argument("--player-controller", action="store_true")
     Parser.add_argument("--controller-modes", nargs="+", choices=('Local','Listen','Dedicated'), default=['Local','Listen','Dedicated'])
     Parser.add_argument("--manual-characters", action="store_true")
@@ -726,6 +727,9 @@ def Main():
     if Args.load_only:
         Process = Start(Args.godot, Args.output, "SanitizerLoadProbe.gd", "load", [], Environment)
         Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "load", "[Runtime:LoadProbe] PASS")]
+    elif Args.native_gameplay:
+        Process = Start(Args.godot, Args.output, "NativeGameplay.gd", "native-gameplay", [], Environment)
+        Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "native-gameplay", "[Runtime:NativeGameplay] PASS navigation=path")]
     elif Args.security:
         Results = SecurityFixtures(Args, Args.output, Environment)
     elif Args.animation:

@@ -1,7 +1,8 @@
 extends RefCounted
 ## Actual native physics/navigation/bone dispatch, never mocked engine state.
 
-func Run(Runner, Game: Node) -> void:
+func Run(Runner, Game: Node, NavigationAvailable := false) -> void:
+    Game.set_meta("GameplayNavigationAvailable",NavigationAvailable)
     var Mesh := NavigationMesh.new()
     Mesh.set_vertices(PackedVector3Array([Vector3(-5,0,-5),Vector3(-5,0,5),Vector3(5,0,5),Vector3(5,0,-5)]))
     Mesh.add_polygon(PackedInt32Array([0,1,2,3]))
@@ -64,6 +65,10 @@ Connection=game:GetService('RunService').Stepped:Connect(function(Dt)
   if #Path>=2 and Next.X>=295 and Next.X<=305 and Next.Z>=295 and Next.Z<=305 then game:SetAttribute('GameplayNavigation',true) end
  end
  if Frames>=90 then
+  if not game:GetAttribute('GameplayNavigationAvailable') then
+   assert(not Ready and tostring(Next):find('Navigation map has not synchronized',1,true))
+   game:SetAttribute('GameplayNavigationUnavailable',true)
+  end
   assert(math.abs(S:Call(Skeleton,'GetBonePoseRotation',1).Y)>0.01)
   game:SetAttribute('GameplayBones',true)
   Connection:Disconnect()
@@ -75,7 +80,7 @@ game:SetAttribute('GameplayReady',true)
         return
     await Runner.Until("GameplayRays",240)
     await Runner.Until("GameplayMovement",240)
-    await Runner.Until("GameplayNavigation",240)
+    await Runner.Until("GameplayNavigation" if NavigationAvailable else "GameplayNavigationUnavailable",240)
     await Runner.Until("GameplayBones",240)
     var Scope := Game.get_node("NativeGameplayScope")
     var Walker := Scope.get_node("Walker") as CharacterBody3D
@@ -87,4 +92,4 @@ game:SetAttribute('GameplayReady',true)
     await Runner.process_frame
     await Runner.process_frame
     Runner.Check(not is_instance_valid(Scope),"Gameplay owner destruction retires physics navigation and skeleton nodes")
-    print("[Runtime:NativeGameplay] PASS")
+    print("[Runtime:NativeGameplay] PASS navigation=", "path" if NavigationAvailable else "unavailable host rejection")
