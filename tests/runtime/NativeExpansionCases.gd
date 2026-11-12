@@ -1,12 +1,13 @@
 extends RefCounted
 ## Production Scene dispatch, native physics and owner retirement; no replacement API.
 
-func Run(Runner, Game: Node) -> void:
+func Run(Runner, Game: Node, Rendered := false) -> void:
     var File := FileAccess.open("res://Expansion.gdshader", FileAccess.WRITE)
     File.store_string("shader_type canvas_item;\nuniform vec4 Tint : source_color = vec4(1.0);\nuniform float Amount = 0.5;\nvoid fragment() { COLOR = Tint * Amount; }\n")
     File.close()
     var Owner = Runner.CreateScript("ServerScript", "ExpansionOwner", """
 local S=Scene.new(script.Parent)
+local Rendered=__GL053_RENDERED__
 S.Name='ExpansionScope'
 local V=Scene.Value
 local X,Y,Z=Vector3.new(1,0,0),Vector3.new(0,1,0),Vector3.new(0,0,1)
@@ -94,20 +95,24 @@ local Multi=S:New('MultiMesh',{TransformFormat=1,UseColors=true,InstanceCount=2,
 local Transform={Basis=Basis,Origin=Vector3.new(2,3,4)}
 S:Call(Multi,'SetInstanceTransform',1,Transform)
 S:Call(Multi,'SetInstanceColor',1,{R=1,G=0.5,B=0.25,A=0.5})
-assert(S:Call(Multi,'GetInstanceTransform',1).Origin.Y==3)
-assert(math.abs(S:Call(Multi,'GetInstanceColor',1).A-0.5)<0.01)
+if Rendered then
+ assert(S:Call(Multi,'GetInstanceTransform',1).Origin.Y==3)
+ assert(math.abs(S:Call(Multi,'GetInstanceColor',1).A-0.5)<0.01)
+end
 assert(not pcall(function() S:Call(Multi,'SetInstanceTransform',2,Transform) end))
 assert(not pcall(function() S:Call(Multi,'GetInstanceTransform2d',0) end))
 assert(not pcall(function() S:Configure(Multi,{TransformFormat=0}) end))
 local Shader=S:Load('Shader','res://Expansion.gdshader')
 local Material=S:New('ShaderMaterial',{Shader=Shader})
-S:Call(Material,'SetShaderParameter','Tint',V('Color',{R=0.2,G=0.4,B=0.6,A=0.25}))
-S:Call(Material,'SetShaderParameter','Amount',0.75)
-assert(math.abs(S:Call(Material,'GetShaderParameter','Tint').A-0.25)<0.001)
-assert(S:Call(Material,'GetShaderParameter','Amount')==0.75)
-assert(not pcall(function() S:Call(Material,'SetShaderParameter','Unknown',1) end))
-assert(not pcall(function() S:Call(Material,'SetShaderParameter','Amount','bad') end))
-assert(S:Call(Material,'GetShaderParameter','Amount')==0.75)
+if Rendered then
+ S:Call(Material,'SetShaderParameter','Tint',V('Color',{R=0.2,G=0.4,B=0.6,A=0.25}))
+ S:Call(Material,'SetShaderParameter','Amount',0.75)
+ assert(math.abs(S:Call(Material,'GetShaderParameter','Tint').A-0.25)<0.001)
+ assert(S:Call(Material,'GetShaderParameter','Amount')==0.75)
+ assert(not pcall(function() S:Call(Material,'SetShaderParameter','Unknown',1) end))
+ assert(not pcall(function() S:Call(Material,'SetShaderParameter','Amount','bad') end))
+ assert(S:Call(Material,'GetShaderParameter','Amount')==0.75)
+end
 local Shape=S:New('RectangleShape2D',{Size={X=8,Y=8}})
 local Body=S:New('RigidBody2D',{Name='Body',GravityScale=0,Position={X=200,Y=200}})
 S:New('CollisionShape2D',{Shape=Shape},Body)
@@ -126,7 +131,7 @@ S:Connect(List,'ItemActivated',function(Index)
 end)
 shared.Expansion={Scope=S,Body=Body,Area=Area,Material=Material,Call=S.Call,Configure=S.Configure}
 game:SetAttribute('ExpansionReady',true)
-""", Game)
+""".replace("__GL053_RENDERED__","true" if Rendered else "false"), Game)
     if not await Runner.Until("ExpansionReady"):
         return
     await Runner.Until("ExpansionTimer")
@@ -155,4 +160,4 @@ game:SetAttribute('ExpansionGuestRejected',true)
     await Runner.process_frame
     await Runner.create_timer(0.25).timeout
     Runner.Check(not is_instance_valid(Scope) and not Game.has_meta("ExpansionStaleCallback"), "Expansion owner retirement removes nodes and yielded native callbacks")
-    print("[Runtime:NativeExpansion] PASS")
+    print("[Runtime:NativeExpansion] PASS ","renderer" if Rendered else "headless; renderer checks require the rendered fixture")

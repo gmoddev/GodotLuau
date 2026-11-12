@@ -68,7 +68,7 @@ game:GetService("RunService").Stepped:Connect(function(Delta)
     local Vertical = math.min(Velocity.Y + 600 * math.min(Delta,0.05), 600)
     if JumpRequested and Scope:Call(Body,"IsOnFloor") then Vertical = -280 end
     JumpRequested = false
-    Body.Velocity = Vector2.new(Move:GetValue().X * 180, Vertical)
+    Body.Velocity = Vector2.new(Move:GetPhysicsValue().X * 180, Vertical)
     Scope:Call(Body,"MoveAndSlide")
     if Body.Position.Y > 900 then Body.Position = Vector2.new(160,160) end
 end)

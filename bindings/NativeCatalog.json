@@ -159,7 +159,7 @@
     {
       "Name": "CharacterBody2D",
       "Base": "PhysicsBody2D",
-      "Construct": false,
+      "Construct": true,
       "Resource": false
     },
     {
@@ -12062,7 +12062,7 @@
     "AnimationLibrary"
   ],
   "Schema": 1,
-  "PolicySHA256": "bbb534b2a5298e317c7fea59d05465b2b447356befb10d2ad32b35fd6940a298",
+  "PolicySHA256": "73e7ebf557e89a25b8b48fd81d07e7b15ff0774f86ee4bba6b2c85ed67620cd6",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
   "ScopeOperations": [
     {

@@ -219,3 +219,27 @@ batch first. New native fixture cases execute all four actual template sources,
 2D physics and live UI signals, then retire owners. Existing editor workflow
 coverage adds profile creation/static preview and rejection before file writes.
 These changes await hosted runtime/editor execution and graphical qualification.
+
+## First native runtime results and corrections
+
+Linux `cb35958` compiles the complete extension and reaches actual execution in
+run 43219735745. Value/collection cases run through the MultiMesh observation;
+native animation and ten project reload revisions pass. The new physics fixture
+reveals CharacterBody2D was selected through member metadata but omitted from
+constructible class policy. Admit that intended owned class and add it to the
+generated type probe. This is a campaign implementation omission, now corrected;
+the total becomes 94 constructible classes.
+
+The failing MultiMesh roundtrip is a renderer-profile limitation. A direct
+unmodified official Godot 4.7.1 headless control, without GodotLuau, writes origin
+(2,3,4)/RGBA then reads (0,0,0)/(0,0,0,1). Retain the control logs under
+`gl053-native-20261112/scene-probe/renderer-control.*.log`. Do not emulate GPU state
+in another object graph. Keep the exact transform/color and shader assertions
+in a renderer-required execution of the same fixture, via
+RenderedNativeExpansion.gd and the existing Integration runner. Headless tests
+retain conversion, bounds, ownership and lifecycle checks; they do not qualify
+renderer-backed state. The rendered run remains required and pending.
+
+The fontconfig diagnostic is already present in the retained successful main
+Linux integration log, before this campaign. It is the existing admitted host's
+system-font limitation, not a new product regression. Preserve it visibly.

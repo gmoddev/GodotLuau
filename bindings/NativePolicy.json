@@ -525,6 +525,12 @@
       "Authority": "OwnedScene"
     },
     {
+      "Name": "CharacterBody2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
       "Name": "NavigationAgent3D",
       "Kind": "Node",
       "Construct": true,

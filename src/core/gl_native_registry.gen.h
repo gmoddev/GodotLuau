@@ -2,7 +2,7 @@
 #pragma once
 #include "gl_native_registry.h"
 namespace GLNative {
-inline constexpr const char* PolicySHA256 = "bbb534b2a5298e317c7fea59d05465b2b447356befb10d2ad32b35fd6940a298";
+inline constexpr const char* PolicySHA256 = "73e7ebf557e89a25b8b48fd81d07e7b15ff0774f86ee4bba6b2c85ed67620cd6";
 inline constexpr const char* ApiSHA256 = "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f";
 inline constexpr Class Classes[] = {
     {"AnimatedSprite2D","Node2D",true,false},
@@ -31,7 +31,7 @@ inline constexpr Class Classes[] = {
     {"CapsuleShape2D","Shape2D",true,true},
     {"CapsuleShape3D","Shape3D",true,true},
     {"CenterContainer","Container",true,false},
-    {"CharacterBody2D","PhysicsBody2D",false,false},
+    {"CharacterBody2D","PhysicsBody2D",true,false},
     {"CharacterBody3D","PhysicsBody3D",true,false},
     {"CheckBox","Button",true,false},
     {"CheckButton","Button",true,false},

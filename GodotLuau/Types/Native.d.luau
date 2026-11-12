@@ -1,5 +1,5 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: bbb534b2a5298e317c7fea59d05465b2b447356befb10d2ad32b35fd6940a298
+-- Policy SHA256: 73e7ebf557e89a25b8b48fd81d07e7b15ff0774f86ee4bba6b2c85ed67620cd6
 export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number
@@ -2520,6 +2520,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "CapsuleShape2D", Properties: NativeCapsuleShape2DProperties, Parent: NativeNode?) -> MutableNativeCapsuleShape2D) &
         ((self: NativeSceneScope, Class: "CapsuleShape3D", Properties: NativeCapsuleShape3DProperties, Parent: NativeNode?) -> MutableNativeCapsuleShape3D) &
         ((self: NativeSceneScope, Class: "CenterContainer", Properties: NativeCenterContainerProperties, Parent: NativeNode?) -> NativeCenterContainer) &
+        ((self: NativeSceneScope, Class: "CharacterBody2D", Properties: NativeCharacterBody2DProperties, Parent: NativeNode?) -> NativeCharacterBody2D) &
         ((self: NativeSceneScope, Class: "CharacterBody3D", Properties: NativeCharacterBody3DProperties, Parent: NativeNode?) -> NativeCharacterBody3D) &
         ((self: NativeSceneScope, Class: "CheckBox", Properties: NativeCheckBoxProperties, Parent: NativeNode?) -> NativeCheckBox) &
         ((self: NativeSceneScope, Class: "CheckButton", Properties: NativeCheckButtonProperties, Parent: NativeNode?) -> NativeCheckButton) &
@@ -2613,6 +2614,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: MutableNativeCapsuleShape2D, Properties: NativeCapsuleShape2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeCapsuleShape3D, Properties: NativeCapsuleShape3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCenterContainer, Properties: NativeCenterContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Properties: NativeCharacterBody2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCharacterBody3D, Properties: NativeCharacterBody3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCheckBox, Properties: NativeCheckBoxProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCheckButton, Properties: NativeCheckButtonProperties) -> ()) &
