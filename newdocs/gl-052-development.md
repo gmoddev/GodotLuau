@@ -435,3 +435,51 @@ repair diff limited to package tooling/tests/docs. Existing package, provenance,
 core/native/sanitizer and extracted-companion checks all still run. The repair
 tool revision is recorded separately; it does not relabel the source or rebuild
 identical native inputs. Release and updater publication remain disabled.
+
+## Final retained checkpoint — 2026-11-12 UTC
+
+Repackage run [43149322873](https://github.com/gmoddev/GodotLuau/actions/runs/43149322873)
+passes Policy, Windows package, Linux package and Acceptance. Source remains
+`e393c0d310f096263fb8c0ec2c8e3fe13d80584a`; repair tooling is `6852ae5`.
+All four original production profiles and original sanitizer artifacts are reused.
+The failed original package run stays failed. No assertion or acceptance gate is
+removed, no original profile archive is modified and no native build is repeated.
+The accepted Windows ZIP is checked with the existing package checker locally.
+
+Game package run [43149583568](https://github.com/gmoddev/GodotLuau/actions/runs/43149583568)
+passes existing extracted Relay Siege startup and actual native Orb Run export
+and independent launch. Downloaded `OrbRun-Windows-Export/results.json` records
+four exit-zero commands, accepted source identity and exact exported DLL/worker
+hashes. It explicitly records Interactive=false and Graphical=false. The new
+application contains no `.gd`; external qualification observers remain separate.
+
+Run the existing `tests/runtime/RunRelaySiegeMultiplayer.py` against the accepted
+Windows candidate, existing admitted Release renderer and verified cached R6
+assets. `relay-candidate-listen/session.json` records four rendered players:
+leader 28 checks, two observers and late join nine each, all exit 0 with zero
+failures. `relay-candidate-dedicated/session.json` records the same rendered
+client checks plus two headless server checks, also all exit 0. These exercise
+real ENet roster, authority, gameplay victory, persistence and late-join state;
+they do not establish Linux graphical or physical-device coverage. The existing
+runner retires its owned process trees. Prior solo/recovery/menu passes remain
+valid because the exact Release products and gameplay inputs are unchanged.
+
+A final bounded saved-snapshot reopen uses a fresh project containing Generated,
+OrbSaved, Pattern and Marker from the successful native save fixture. The first
+positional CLI invocation and explicit `--scene` attempt restore Generated; an
+exit-zero process is not proof that OrbSaved opened. A separate external @tool
+observer calls native `EditorInterface.open_scene_from_path` after scanning.
+Its initial inferred-bool parse error times out safely and is corrected only in
+that disposable observer. Both saved roots then open with child content, but
+the second open emits two `Attempting to parent and popup a dialog that already
+has a parent` errors. Preserve `snapshot-reopen/native-open*.log` and the per-root
+observations. This is **not** a clean editor-reopen pass; root cause is not
+established, and no speculative native refactor is included.
+
+The [qualification record](gl-052-qualification.md) and compact
+[receipt](evidence/gl052-qualification.json) now distinguish completed CI,
+production/export and Windows rendering from incomplete interactive/reopen
+acceptance. GL-052 stays open and unmerged; GL-050 stays separately unresolved.
+Main remains `e43e981d423cea99edff9eb9d186a0b9a4758b73`. Releases and updater
+distribution remain disabled. Native remains the default controller; Scripted
+remains explicitly opt-in. No dependency pin or admitted host changes.

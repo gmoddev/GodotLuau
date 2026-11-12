@@ -1,7 +1,8 @@
 # Luau-first native authoring workflow
 
 GL-052 is an unmerged implementation campaign. See the
-[journal](gl-052-development.md) for qualified inputs, failures and pending gates.
+[qualification record](gl-052-qualification.md) for qualified inputs and remaining
+interactive/editor-reopen gaps, and the [journal](gl-052-development.md) for failures.
 There is no published fork release or updater channel. Use an explicitly verified
 non-publishing candidate; test adapters include qualification hooks and are not
 distribution products.
@@ -132,8 +133,11 @@ Use Godot's normal **Project → Export** workflow. The explicit custom template
 must match the intended profile; `.lua` and `.luau` sources are included. Keep
 the extension libraries and companion beside the exported application as emitted
 by Godot. Launch from an independent directory without source-tree paths.
-Export and graphical results must be read from the journal; a staging preset or
-successful headless game run alone does not qualify either workflow.
+Windows accepted-candidate export and independent startup pass in
+[run 43149583568](https://github.com/gmoddev/GodotLuau/actions/runs/43149583568).
+The [qualification record](gl-052-qualification.md) separately records actual
+Windows rendering and outstanding interactive/editor-reopen gaps. A staging
+preset or successful headless game run alone does not qualify those workflows.
 
 GL-050 remains unresolved and separate. Existing headless evidence does not
 establish physical gamepad, Linux rendering or unavailable interactive UI behavior.

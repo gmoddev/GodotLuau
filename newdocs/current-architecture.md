@@ -8,8 +8,10 @@ explicit evaluation, private native hierarchy/world, no gameplay bootstrap and
 no runtime service capabilities. Save As produces independent native PackedScene
 content rather than serializing VM scopes. Project-local module resources use
 the existing require evaluator and per-domain cache. The
-[journal](gl-052-development.md) separates implemented paths from pending native,
-interactive, game and export qualification.
+[qualification record](gl-052-qualification.md) records passing cross-platform
+native/production checks, Windows game rendering and native export. Interactive
+desktop acceptance and clean editor scene-switch/reopen qualification remain
+outstanding; the [journal](gl-052-development.md) retains failed attempts.
 
 The [integrated GL-051 change](gl-051-main-integration.md), under
 [ADR-015](adr-015-policy-driven-native-bindings.md),

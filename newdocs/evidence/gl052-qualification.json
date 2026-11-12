@@ -1,0 +1,70 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-052",
+  "Disposition": "PARTIALLY_QUALIFIED_UNMERGED",
+  "RecordedUTC": "2026-11-12",
+  "Branch": "feature/gl-052-luau-authoring-workflow",
+  "MainUnchanged": "e43e981d423cea99edff9eb9d186a0b9a4758b73",
+  "Source": {
+    "Revision": "e393c0d310f096263fb8c0ec2c8e3fe13d80584a",
+    "Tree": "d78becf205bdbd948ba320b750765876c3de806a",
+    "LastNativeChange": "1197f3d91a4a9f1f841e8eb5e48e2cbb1b4d4e21",
+    "NativeSource": {
+      "SHA256": "1d66c498a57007337b68502c99133abc4cac0531b16a8fed2bd72ee80db9e31a",
+      "Files": 121,
+      "Newlines": "LF normalized"
+    },
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    },
+    "PackageRepairToolRevision": "6852ae5b197e4565892c832a4d02824b59b7e199"
+  },
+  "HostedRuns": [
+    {"Run": 43132629894, "Check": "Windows/Linux core", "Result": "PASS", "Source": "1197f3d"},
+    {"Run": 43128057457, "Check": "Windows/Linux generated types", "Result": "PASS", "Source": "44ae713", "Reuse": "Policy and generated declarations unchanged"},
+    {"Run": 43135983475, "Check": "Windows/Linux native and actual headless editor", "Result": "PASS", "Source": "e393c0d", "PerPlatform": {"ExistingActors": 141, "ExistingEditorChecks": 19, "ExpandedEditorChecks": 37, "NewGameChecks": 13}},
+    {"Run": 43132639596, "Check": "Windows/Linux full-native sanitizers", "Result": "PASS", "Source": "1197f3d", "UnexpectedReports": 0, "WindowsStages": 26, "LinuxStages": 27, "Reuse": "Native and executed runtime inputs unchanged; no editor/rendering sanitizer claim"},
+    {"Run": 43135980287, "Check": "Four source-built production profiles", "Result": "PROFILES_PASS_PACKAGES_FAIL", "Source": "e393c0d", "Attempt": 2, "Failure": "Supplementary logs written below native after its strict evidence summary"},
+    {"Run": 43149322873, "Check": "Reused products, strict packages and final acceptance", "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE", "ToolSource": "6852ae5"},
+    {"Run": 43149583568, "Check": "Relay Siege extracted startup and Orb Run native export/independent startup", "Result": "PASS", "ToolSource": "6852ae5", "OrbRunArtifact": "OrbRun-Windows-Export", "Interactive": false, "Graphical": false}
+  ],
+  "AcceptedPackages": {
+    "GodotLuau-Windows.zip": "bcec75e31caee58037ea893a0ef2b2d956b68ba437999c18975a9b7dd2266a46",
+    "GodotLuau-Linux.zip": "7b44e351c62f60a444c0bfece51eff5bd163d691b1b8d3096f20d751c6a7ebb5"
+  },
+  "ExportedWindowsReleaseProducts": {
+    "godot_luau.windows.template_release.x86_64.dll": "207a24e7a3c25742159723c60b4292c2ad950276c8f9c9e113cc1237defc759e",
+    "godot_luau_store_worker.exe": "0517138956ff84d241066ad421fcc14ac97e465515dbc6ea61b527034a592569"
+  },
+  "LocalEvidenceRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl052-20261111",
+  "FocusedEvidence": [
+    {"Directory": "workflow-1197-output-ready", "Result": "PASS", "Checks": 37, "Exit": 0, "Interactive": false},
+    {"Directory": "game-1197-official-rendered", "Result": "PASS", "Checks": 14, "Exit": 0, "Graphical": true, "Interactive": false, "Profile": "Official editor and Debug adapter"},
+    {"Directory": "relay-release-solo", "Result": "PASS", "Checks": 27, "Exit": 0, "Graphical": true},
+    {"Directory": "relay-release-recovery", "Result": "PASS", "Checks": 7, "Exit": 0},
+    {"Directory": "relay-release-menu", "Result": "PASS", "Checks": 5, "Exit": 0},
+    {"Directory": "relay-candidate-listen", "Result": "PASS", "RenderedPlayers": 4, "LateJoin": true, "ActorChecks": [28, 9, 9, 9], "AllExits": 0, "FailedChecks": 0},
+    {"Directory": "relay-candidate-dedicated", "Result": "PASS", "HeadlessServers": 1, "RenderedPlayers": 4, "LateJoin": true, "ActorChecks": [2, 28, 9, 9, 9], "AllExits": 0, "FailedChecks": 0},
+    {"Directory": "snapshot-reopen", "Result": "PARTIAL_NOT_CLEAN_PASS", "OpenedScenes": ["Generated.tscn", "OrbSaved.tscn"], "Errors": "Two Godot dialog-parent errors on second native editor scene open; cause not established", "Interactive": false, "Graphical": false}
+  ],
+  "Measurements": {
+    "TwentyPreviewMillisecondsIncludingEditorFrames": 140.658,
+    "StaticMemoryBeforeBytes": 409685266,
+    "StaticMemoryAfterBytes": 409835838,
+    "RelaySolo": {"Seconds": 59.511, "Frames": 1702, "MeanFrameMS": 33.483, "PeakFrameMS": 147.803, "NativeObjects": 175, "FPSCap": 30},
+    "Interpretation": "Bounded observations; no isolated latency, leak-free or speedup claim"
+  },
+  "Remaining": [
+    "Interactive native editor workflow blocked by black captures and GetCursorPos access denied",
+    "Fresh-process native scene switching emits Godot dialog errors; clean reopen acceptance incomplete",
+    "Stock fast editor --import exit AV and Debug-extension/Release-host heap corruption retained as unsupported profiles",
+    "No arbitrary ScriptInstance attachment, file inheritance, breakpoint/step debugging, full embedded type checker, complete navigation, theme-aware palette or automatic editor-to-child hot reload",
+    "No Linux graphical, physical-device, Windows LSan or editor/rendering sanitizer execution claim",
+    "GL-050 remains separate and unresolved"
+  ],
+  "NativeDefault": true,
+  "ScriptedOptIn": true,
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false
+}
