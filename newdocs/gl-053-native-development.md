@@ -379,3 +379,39 @@ descriptor, and reuse the resolved descriptor on reads instead of looking it up
 again. UpDirection and MultiMesh checks, live owner/domain resolution and result
 validation remain intact. Remeasure after a fresh adapter; current results do not
 qualify this subsequent native change.
+
+## Editor and visual observations before the effect optimization
+
+The retained `e2735ec` Windows adapter passes the full existing native editor
+workflow, including new profiles, preview/save and fresh-process reopen, in
+`gl053-native-20261112/e273-editor`. The independently staged shipped 2D, 3D and
+UI scenes also render on the verified official OpenGL host. Inspect viewport
+captures at 960x640 and 1280x800 under `capture-e273-*-resize`: sprites/markers,
+3D camera/materials/instancing and themed controls are visible; the UI retains
+its margins and usable layout. Native Tab focus moves from text entry to slider,
+and Right changes the slider. The external game observer reuses the established
+Relay Siege frame-post-draw/readback pattern; it does not control the desktop or
+change production project sources. Retain its commands, sources and image hashes.
+
+The actual interactive editor attempt at `interactive-e273` cannot proceed.
+The Computer Use capture is black; activation fails twice with
+`GetCursorPos failed: Access is denied. (0x80070005)`. Stop that verified task-owned
+editor process after the failed access attempts; its termination is intentional,
+not a claimed normal-exit runtime pass. No unsaved user content was involved.
+This is an environment/UI access gap. Headless editor and rendered game evidence
+do not establish interactive editor completion.
+
+Current core run 43234499930 passes both platforms. Non-publishing candidate
+43234541985 and full-native sanitizer 43234536332 target immutable `3a5adb6`;
+native run 43234500028 is in progress. DockerPC's worker slot remains actively
+held by the unrelated campaign at 14:14 UTC, so sustained builds stay in hosted
+CI. No host lease is bypassed, admitted profile changed, or local build started.
+
+Source inspection finds a concrete identity mismatch in this campaign's evidence
+extension: ReleaseCandidate.Identity hashes the newly consumed example/template
+files, but CheckNativeCI still emits the older file set. That would fail the
+unchanged strict profile comparison after otherwise successful runtime checks.
+Add the identical paths/LF hashes to the native receipt, preserving the comparison
+and all execution gates. This is a receipt correction, not permission to relabel
+old evidence or weaken source identity. Keep the superseded candidate attempt;
+the corrected candidate cohort must carry its own immutable revision.

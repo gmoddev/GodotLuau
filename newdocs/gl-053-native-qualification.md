@@ -28,8 +28,8 @@ restricted entries. Editor/runtime hosts remain 4.7.1 with unchanged pins.
 
 ## Established results
 
-- Core run [43233643640](https://github.com/gmoddev/GodotLuau/actions/runs/43233643640)
-  passes Windows/Linux at the preceding native implementation: 71 ordinary and 16
+- Core run [43234499930](https://github.com/gmoddev/GodotLuau/actions/runs/43234499930)
+  passes Windows/Linux at the current native implementation: 71 ordinary and 16
   isolated cases, including transitive module invalidation.
 - Definitions run [43233643869](https://github.com/gmoddev/GodotLuau/actions/runs/43233643869)
   passes the unchanged current generated declarations on both platforms, actual
@@ -42,6 +42,9 @@ restricted entries. Editor/runtime hosts remain 4.7.1 with unchanged pins.
   exiting normally. Headless native editor creation/preview/save/reopen passes.
   Retained logs: `gl053-native-20261112/e273-components-2` and `e273-editor`.
   These precede the descriptor/effect optimization and do not qualify that change.
+- Rendered viewport captures of the actual shipped scenes pass visual inspection
+  at 960x640 and 1280x800 with `e2735ec`; native UI keyboard focus/slider changes
+  pass. This is automated rendered game evidence, not interactive editor evidence.
 
 ## Required remaining evidence
 
@@ -51,6 +54,15 @@ Also pending: final rendered expansion and native acceptance play, interactive
 editor/restart/export, production standalone startup, Relay Siege regressions,
 and the repeated dispatch/conversion measurements after metadata indexing.
 Reuse existing runners and unchanged evidence within their documented scope.
+Native [43234500028](https://github.com/gmoddev/GodotLuau/actions/runs/43234500028),
+sanitizer [43234536332](https://github.com/gmoddev/GodotLuau/actions/runs/43234536332)
+and candidate [43234541985](https://github.com/gmoddev/GodotLuau/actions/runs/43234541985)
+are the current in-flight `3a5adb6` cohort.
+
+Interactive editor access is currently blocked: black capture and repeated
+`GetCursorPos: Access is denied (0x80070005)`. The task-owned editor was stopped;
+no interactive pass or normal-exit claim is made from that attempt. Continue
+independent qualification; retain this gap if desktop access remains unavailable.
 
 ## Profile limits and deferred surface
 
