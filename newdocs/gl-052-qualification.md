@@ -41,7 +41,8 @@ These intermediate observations are not relabeled as qualification of newer code
 | Focused current Windows editor | `workflow-1197-output-ready`: all 37 expanded checks and clean exit pass |
 | Focused current Windows renderer | `game-1197-official-rendered`: 14 checks and clean exit pass under official editor/Debug adapter |
 | Native `43135983475`, `e393c0d` | Windows/Linux pass: 141 existing actors, 19 existing editor checks, 37 expanded editor checks and 13 game checks per platform |
-| Candidate `43135980287`, `e393c0d` | Windows/Linux Debug production profiles pass; Windows Release pending; Linux Release mirror timeout occurs before compilation and needs targeted retry after remaining profiles finish |
+| Candidate `43135980287`, `e393c0d` | Windows Debug/Release and Linux Debug production profiles pass; targeted attempt 2 clears Linux Release's pre-compilation mirror failure and continues its build |
+| Current Release rendered Relay Siege | Solo 27, fresh-process recovery seven and menu/retry/teardown five checks pass with clean exits; exact successful Windows Release profile products, separately identified from candidate acceptance |
 
 Superseded candidate/sanitizer/native cohorts are canceled when concrete source
 fixes invalidate their inputs. Their failures/logs remain in the journal and

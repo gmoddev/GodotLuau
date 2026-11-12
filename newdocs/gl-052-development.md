@@ -362,3 +362,26 @@ Candidate Windows Debug also passes; Windows Release is still running its source
 build/complete qualification step. The Linux Release retry remains blocked on
 the active workflow ending. Keep these partial production outcomes distinct from
 candidate acceptance and standalone export, which remain pending.
+
+## Current Release gameplay regression
+
+Windows Release production profile is successful. Its qualified SCons library
+SHA256 is `207a24e7a3c25742159723c60b4292c2ad950276c8f9c9e113cc1237defc759e`;
+companion SHA256 is `0517138956ff84d241066ad421fcc14ac97e465515dbc6ea61b527034a592569`.
+Stage those exact profile products with current unchanged Relay Siege sources,
+the retained verified R6 assets and admitted renderer. The baseline archive
+identity stays explicitly separate from the current runtime profile; this is a
+focused runtime stage, not a fabricated accepted candidate archive.
+
+Fresh rendered solo passes 27 checks with zero failures and exit 0, including
+victory, acknowledged persistence, another round, death/respawn and cleanup.
+Fresh-process recovery passes seven checks; menu/retry/teardown passes five.
+The victory capture is visually inspected. Solo records 59.511 seconds, 1702
+frames, 33.483 ms mean, 147.803 ms peak and 175 native objects. This remains a
+30 FPS capped workload and does not establish a performance improvement.
+
+Candidate attempt 1 finishes with all three built profiles successful and only
+the pre-compilation Linux Release mirror failure. Rerun failed/dependent work
+only. Attempt 2 clears the compiler provisioning step and builds Linux Release's
+existing admitted host. Original successful profiles and failed attempt logs
+remain preserved; package acceptance and exported startup are still pending.
