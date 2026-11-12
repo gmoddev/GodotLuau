@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <chrono>
 
@@ -152,6 +153,7 @@ private:
         uint64_t WaitingOn = 0;
         int Result = LUA_NOREF;
         std::string Error;
+        std::unordered_set<uint64_t> Dependencies;
     };
     struct GLCloseCallback { GLExecutionOwner* Owner; int Reference; };
 

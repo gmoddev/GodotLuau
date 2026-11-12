@@ -102,3 +102,26 @@ extra fields when an observation field is merely omitted. Emit explicit nil
 fields for those constructor/Configure entries so numeric writes cannot be
 accepted as harmless extra data. Preserve this failed attempt; rerun the type
 workflow for the corrected declarations. This changes declarations only.
+
+## Selective dependency reload implementation
+
+GL-054 records a source-verified stale-parent-cache discrepancy. Add import edges
+to existing module records, including ready-cache imports, without a new module
+system or scheduler. Up to 256 distinct dependencies per module are admitted.
+Build reverse edges only during invalidation; ordinary cached require remains
+constant-time without source rereads. Source changes invalidate the resource
+identity before emitting changed. Invalidation detaches the whole dependent
+closure before cancellation hooks can re-enter, then releases results and retires
+owners/tasks/subscriptions. Existing pending waiters receive invalidation errors.
+Other domain caches and unrelated modules remain separate.
+
+Existing consumer variables remain ordinary Luau snapshots; there is no automatic
+state migration or rollback to stale executable generations after compile failure.
+Call require again to obtain a fresh module, or rebuild the entrypoint. Modules
+required while executing returned functions belong to the current execution owner;
+dependency edges describe module-owned imports, not arbitrary closure provenance.
+Editor preview continues explicit whole-preview rebuild/retirement under ADR-016.
+
+Two core regressions and a production native fixture exercise a three-module
+chain, ten resource revisions, unchanged unrelated caches, pending initialization
+and cancellation of callbacks from old parent generations. Qualification pending.

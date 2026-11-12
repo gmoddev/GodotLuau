@@ -237,6 +237,7 @@ public:
         if (source_code != p_code) {
             source_code = p_code;
             ++SourceRevision; // visible before any changed-signal subscriber can require
+            if (auto Host=GLGetDomainHost()) Host->InvalidateModule(static_cast<uint64_t>(get_instance_id()));
             emit_changed();
         }
     }

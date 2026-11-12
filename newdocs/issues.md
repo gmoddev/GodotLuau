@@ -123,6 +123,24 @@ four successful workflows and independently checked artifacts.
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 | GL-052 | P2 | Integrated and verified within documented ADR-016 scope; retained limits unchanged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
+| GL-054 | P2 | Source-verified discrepancy; fix awaiting runtime qualification on native-expansion branch | Changed project module leaves cached transitive importers and their callbacks alive |
+
+## GL-054: Transitive project module reload
+
+At main `16e8597`, GLExecutionDomain tracks a loading module's WaitingOn edge
+for cycle detection but retains no dependency edges after initialization.
+InvalidateModule retires one identity only; LuauScript source changes emit a
+signal without invalidating a project-resource identity. A ready parent cache
+can therefore retain the child's old returned value. This is a source-verified
+iteration discrepancy, not a reproduced crash or authority exploit.
+
+The unmerged native-expansion campaign records module import edges, propagates
+invalidation across the dependent closure and invalidates changed project resource
+identities before changed subscribers run. Existing owner cancellation retires
+callbacks; unrelated caches remain intact. New core tests and the actual native
+ProjectReloadCases cover transitive cache replacement, pending initialization,
+callback retirement and preserved unrelated modules. Qualification is pending;
+see the [campaign journal](gl-053-native-development.md).
 
 ## GL-051: First-class native Luau integration
 

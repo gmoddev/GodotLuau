@@ -881,7 +881,15 @@ int GLExecutionDomain::BeginRequire(lua_State* Thread) {
     }
     if (Found != Modules.end() && !MatchingSource) {
         InvalidateModule(Source.Identity);
+        if (!Caller->Alive) luaL_error(Thread,"[Runtime:Require] Caller module was invalidated by a changed dependency");
         Found = Modules.end();
+    }
+    auto Importer=ModuleTickets.find(Caller->ModuleToken);
+    if (Importer!=ModuleTickets.end()) {
+        auto& Dependencies=Importer->second->Dependencies;
+        if(Dependencies.size()>=256 && !Dependencies.count(Source.Identity))
+            luaL_error(Thread,"[Runtime:Require] Module dependency limit exceeded");
+        Dependencies.insert(Source.Identity);
     }
     if (Found != Modules.end() && Found->second->Status == GLModuleStatus::Ready)
         return PushModuleResult(Thread, Found->second);
@@ -950,18 +958,30 @@ int GLExecutionDomain::PollRequire(lua_State* Thread) {
     return PushModuleResult(Thread, Found->second);
 }
 void GLExecutionDomain::InvalidateModule(uint64_t Identity) {
-    auto Found = Modules.find(Identity);
-    if (Found == Modules.end()) return;
-    auto Module = Found->second;
-    Module->Status = GLModuleStatus::Invalidated;
-    Module->Error = "Module was destroyed or reloaded during initialization";
-    Module->WaitingOn = 0;
-    if (Module->Result != LUA_NOREF) { lua_unref(State, Module->Result); Module->Result = LUA_NOREF; }
-    CancelOwner(Module->Owner);
-    Module->Owner = nullptr;
-    Module->Initializer = nullptr;
-    Module->Source.clear();
-    Modules.erase(Found);
+    // Build reverse edges only on edits/destruction; ready cache hits stay O(1).
+    std::unordered_map<uint64_t,std::vector<uint64_t>> Dependents;
+    for(const auto& Entry:Modules) for(uint64_t Child:Entry.second->Dependencies)
+        Dependents[Child].push_back(Entry.first);
+    std::vector<uint64_t> Pending{Identity};std::unordered_set<uint64_t> Selected{Identity};
+    for(size_t Index=0;Index<Pending.size();++Index) {
+        auto Found=Dependents.find(Pending[Index]);if(Found==Dependents.end())continue;
+        for(uint64_t Parent:Found->second)if(Selected.insert(Parent).second)Pending.push_back(Parent);
+    }
+    std::vector<std::shared_ptr<GLModule>> Retiring;
+    for(uint64_t Id:Pending) {
+        auto Found=Modules.find(Id);if(Found==Modules.end())continue;
+        auto Module=Found->second;
+        Module->Status=GLModuleStatus::Invalidated;
+        Module->Error="Module or dependency was destroyed or reloaded";
+        Module->WaitingOn=0;
+        Retiring.push_back(Module);Modules.erase(Found);
+    }
+    // Detach the entire closure before native cancellation hooks can re-enter.
+    for(const auto& Module:Retiring) {
+        if(Module->Result!=LUA_NOREF){lua_unref(State,Module->Result);Module->Result=LUA_NOREF;}
+        CancelOwner(Module->Owner);Module->Owner=nullptr;Module->Initializer=nullptr;
+        Module->Source.clear();Module->Dependencies.clear();
+    }
 }
 int GLExecutionDomain::Schedule(lua_State* Thread, int FunctionIndex, double Delay, bool Immediate, GLExecutionOwner* ExplicitOwner) {
     GLExecutionOwner* Owner = ExplicitOwner ? ExplicitOwner : GLGetOwner(Thread);
