@@ -459,6 +459,20 @@ bool ResourceGraph(const Variant& Value, std::unordered_set<uint64_t>& Seen, int
     }
     return true;
 }
+bool SerializedTransform(const char* Class, const Variant& Value) {
+    auto Position=NativeProperty(Class,"position");
+    auto Scale=NativeProperty(Class,"scale");
+    if (!Position || !Scale || Value.get_type()!=Variant::TRANSFORM3D) return false;
+    Transform3D Transform=Value;
+    if (!Transform.is_finite() || Transform.basis.determinant()<=0 ||
+        !ValidNative(*Position,Transform.origin) || !ValidNative(*Scale,Transform.basis.get_scale())) return false;
+    // Admit only native serialization of the already supported positive-scale
+    // rotation/position properties. Sheared or degenerate bases remain denied.
+    Vector3 X=Transform.basis.get_column(0).normalized();
+    Vector3 Y=Transform.basis.get_column(1).normalized();
+    Vector3 Z=Transform.basis.get_column(2).normalized();
+    return std::abs(X.dot(Y))<0.0001 && std::abs(X.dot(Z))<0.0001 && std::abs(Y.dot(Z))<0.0001;
+}
 void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Scene, int Depth) {
     Ref<SceneState> State=Scene->get_state();
     if (State.is_null() || !Scene->can_instantiate() || State->get_connection_count()!=0)
@@ -481,6 +495,7 @@ void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Sc
             String Name=State->get_node_property_name(Index,PropertyIndex);
             const Property* Item=NativeProperty(Class->Name,Name);
             Variant Value=State->get_node_property_value(Index,PropertyIndex);
+            if (Name=="transform" && SerializedTransform(Class->Name,Value)) continue;
             if (!Item || !ValidNative(*Item,Value) || !ResourceGraph(Value,Resources,Values))
                 luaL_error(Thread,"[Scene:Composition] Property %s.%s is not admitted",Class->Name,Name.utf8().get_data());
         }

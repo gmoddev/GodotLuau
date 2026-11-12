@@ -103,6 +103,8 @@ func Run() -> void:
                 var Code := EditorInterface.get_script_editor().get_current_editor().get_base_editor() as CodeEdit
                 Check(Code != null, "Created .luau opens in the actual native ScriptEditor")
                 if Code:
+                    var Highlight := Code.get_syntax_highlighter() as CodeHighlighter
+                    Check(Highlight != null and Highlight.has_keyword_color("local") and Highlight.has_keyword_color("type") and Highlight.has_color_region("--[["), "Actual Luau CodeEdit has native keyword, type and comment highlighting")
                     Code.text = 'local function Build()\n return 1\nend\n\nBuild()\n'
                     Code.set_caret_line(4)
                     Code.set_caret_column(3)

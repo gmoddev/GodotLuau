@@ -58,9 +58,12 @@ def Main():
         Target = Native/Args.adapter.name
         shutil.copy2(Args.adapter,Target)
         Platform = 'windows' if Target.suffix=='.dll' else 'linux'
+        WorkerName='godot_luau_store_worker'+('.exe' if Platform=='windows' else '')
+        shutil.copy2(Args.adapter.with_name(WorkerName),Native/WorkerName)
         # Same explicit Debug adapter for both host features; no Release claim.
         (Output/'godot_luau.gdextension').write_text('[configuration]\nentry_symbol="luau_extension_init"\ncompatibility_minimum="4.3"\n\n[libraries]\n'+
-            '\n'.join(Platform+'.'+Mode+'.x86_64="res://bin/'+Target.name+'"' for Mode in ('debug','release'))+'\n')
+            '\n'.join(Platform+'.'+Mode+'.x86_64="res://bin/'+Target.name+'"' for Mode in ('debug','release'))+
+            '\n[dependencies]\n'+Platform+'.x86_64={"res://bin/'+WorkerName+'":""}\n')
         Types = Output/'GodotLuau/Types';Types.mkdir(parents=True)
         for File in (Repository/'GodotLuau/Types').iterdir():
             if File.is_file(): shutil.copy2(File,Types/File.name)

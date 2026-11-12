@@ -44,7 +44,7 @@ size = Vector3(1,2,3)
 [sub_resource type="BoxMesh" id="Box_native"]
 size = Vector3(2,3,4)
 [node name="Reusable" type="Node3D"]
-position = Vector3(1,0,0)
+transform = Transform3D(0,0,-2,0,2,0,2,0,0,1,0,0)
 [node name="Visual" type="MeshInstance3D" parent="."]
 mesh = SubResource("Box_native")
 """)
@@ -72,6 +72,14 @@ script = ExtResource("1")
     Write("res://BindingNetwork.tscn", """[gd_scene format=3]
 [node name="Network" type="NetworkService"]
 """)
+    for Item in [
+        ["Shear", "1,0,0,0.5,1,0,0,0,1,0,0,0"],
+        ["Mirror", "-1,0,0,0,1,0,0,0,1,0,0,0"],
+        ["LargePosition", "1,0,0,0,1,0,0,0,1,100001,0,0"],
+        ["ZeroScale", "0,0,0,0,1,0,0,0,1,0,0,0"],
+    ]:
+        Write("res://Binding" + Item[0] + ".tscn", '[gd_scene format=3]\n[node name="Invalid" type="Node3D"]\ntransform=Transform3D(' + Item[1] + ')\n')
+    Write("res://BindingCameraTakeover.tscn", '[gd_scene format=3]\n[node name="Camera" type="Camera3D"]\ncurrent=true\n')
     var Owner = Runner.CreateScript("ServerScript", "BindingOwner", """
 local S=Scene.new(script.Parent)
 S.Name='BindingScope'
@@ -162,6 +170,11 @@ local Bad={
  function() S:Instantiate(S:Load('PackedScene','res://BindingNested.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingGrouped.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingNetwork.tscn')) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingShear.tscn')) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingMirror.tscn')) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingLargePosition.tscn')) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingZeroScale.tscn')) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingCameraTakeover.tscn')) end,
 }
 for Index,F in ipairs(Bad) do assert(not pcall(F),'Binding rejection '..tostring(Index)) end
 assert(#S:GetDescendants()==Before and not game:GetAttribute('BindingUnsafeInit'))
@@ -186,6 +199,7 @@ game:SetAttribute('BindingReady',true)
     var First := Scope.get_node("A/First/Visual") as MeshInstance3D
     var Copy := Scope.get_node("B/Copy/Visual") as MeshInstance3D
     Runner.Check(First.mesh==Copy.mesh and First.mesh is BoxMesh, "Binding native PackedScene and clone preserve reusable resources")
+    Runner.Check(First.get_parent().scale.is_equal_approx(Vector3(2,2,2)) and First.get_parent().position.is_equal_approx(Vector3(1,0,0)), "Binding native serialization preserves bounded rotation scale and position")
     var ButtonNode := Scope.get_node("SourceButton") as Button
     var CopyButton := Scope.get_node("CopyButton") as Button
     ButtonNode.pressed.emit()

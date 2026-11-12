@@ -35,6 +35,13 @@ targets rather than overwriting user edits. It grants no script-visible write
 operation and is not gameplay DataStore persistence. Normal Godot editing and
 scene saving apply after opening that independent saved scene.
 
+Godot stores Node3D position/rotation/scale as a native Transform3D in saved
+scenes. Composition admits this serialization only for classes already allowed
+those properties, with their existing position/positive-scale bounds, finite
+values and a non-sheared right-handed basis. It does not expose a raw transform
+setter or broaden node classes. Snapshot save clears the preview viewport's
+implicit camera-current flag; explicit camera takeover remains denied.
+
 The clean-project fixture and actual editor qualification must exercise these
 production paths. Full breakpoint debugging, unrestricted reflection, resource
 sandboxing and automatic migration are not implied by this decision. Releases

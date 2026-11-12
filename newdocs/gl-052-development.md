@@ -214,3 +214,36 @@ texture feature variants are not newly promised by this focused correction.
 The existing native authoring actor gains successful binary remap composition,
 outside-root rejection and metadata/target bounds. Preserve the failed exported
 startup; a successful pack operation alone is not acceptance.
+
+Both platforms pass complete native `43125078160` at `b357239`. Its Windows
+adapter runs the expanded actual editor observer locally. Actual game preview
+and native save pass. Real EditorInterface play/stop transports the deliberate
+Luau failure to the native debugger with `res://Failure.luau:2`, and rerun executes
+the recovery marker. Two assertions expose real remaining issues: composition
+rejects Godot's serialized DirectionalLight3D.transform, and explicit error
+navigation selects row 0 instead of row 1. Preserve `workflow-b357-expanded`.
+
+Admit only the native serialized equivalent of already permitted bounded
+position/rotation/positive-scale properties, rejecting shear, reflection,
+degeneracy and out-of-range translation/scale. Clear the preview world's implicit
+camera-current flag on the off-tree saved copy, preserving takeover rejection.
+Pass the debugger's 1-based line to EditorInterface rather than subtracting it.
+Add native CodeHighlighter configuration to the existing Luau-only editor hook;
+keywords, common types, numbers, strings and basic comment regions are colored.
+No complete lexer/type-checker or theme-aware custom highlighter is claimed.
+The actual CodeEdit observer checks its installed native highlighter.
+
+The old exported adapter directory contains only the application and extension;
+Godot does not infer the companion EXE. Add platform-specific dependency metadata
+using the [supported export mechanism](https://docs.godotengine.org/en/stable/engine_details/engine_api/gdextension/gdextension_file.html)
+so it is emitted beside the application/library. Preserve normal fork archive
+packaging. Production profile/candidate cohorts at `44ae713` and `eedd4fe` are
+canceled as superseded before accepting any of their artifacts. Final current
+native/production/sanitizer checks remain required after these concrete fixes.
+
+Fast clean `--editor --import` exits with an access violation for both the
+retained GL-051 product and older GL-052 adapter in isolated empty projects.
+Root cause is not established; this is a retained stock-editor/import exit
+limitation, not a newly attributed GL-052 defect. Normal bounded editor reopen
+succeeds. Do not claim the fast-import profile is qualified or change admitted
+engine patches/dependencies to hide it.

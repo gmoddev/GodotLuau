@@ -7,6 +7,7 @@
 #include "gl_project_modules.h"
 #include "gl_authoring_debugger.h"
 #include <godot_cpp/classes/button.hpp>
+#include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/editor_file_dialog.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/script_editor.hpp>
@@ -254,7 +255,13 @@ Error GLNativeEditorPlugin::SavePreview(const String& Path) {
         Saved->add_child(Branch); Branch->set_owner(Saved);
         for (int ChildIndex=0;ChildIndex<Scope->get_child_count();++ChildIndex) {
             auto Copy=Scope->get_child(ChildIndex)->duplicate(0); Branch->add_child(Copy);
-            std::function<void(Node*)> Own=[&](Node* Value) { Value->set_owner(Saved); for (int N=0;N<Value->get_child_count();++N) Own(Value->get_child(N)); };
+            std::function<void(Node*)> Own=[&](Node* Value) {
+                Value->set_owner(Saved);
+                // The private preview viewport selects its camera implicitly.
+                // That viewport-local state is not an authored takeover grant.
+                if (auto Camera=Object::cast_to<Camera3D>(Value)) Camera->set_current(false);
+                for (int N=0;N<Value->get_child_count();++N) Own(Value->get_child(N));
+            };
             Own(Copy);
         }
     }

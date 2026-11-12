@@ -1,5 +1,6 @@
 #include "gl_native_editor_plugin.h"
 #include <godot_cpp/classes/code_edit.hpp>
+#include <godot_cpp/classes/code_highlighter.hpp>
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/script_editor.hpp>
 #include <godot_cpp/classes/script_editor_base.hpp>
@@ -71,6 +72,21 @@ void GLNativeEditorPlugin::ConfigureEditor() {
     auto Tab = Editor->get_current_editor();
     auto Code = Tab ? Object::cast_to<CodeEdit>(Tab->get_base_editor()) : nullptr;
     if (!Code) return;
+    if (!Code->has_meta("_godotluau_highlight")) {
+        Ref<CodeHighlighter> Highlight;Highlight.instantiate();
+        for (const char* Word:{"and","break","do","else","elseif","end","false","for","function","if","in","local","nil","not","or","repeat","return","then","true","until","while","continue","type","export"})
+            Highlight->add_keyword_color(Word,Color(0.95,0.45,0.55));
+        for (const char* Word:{"Scene","Vector2","Vector3","Color3","CFrame","game","script","self"})
+            Highlight->add_keyword_color(Word,Color(0.45,0.8,0.9));
+        Highlight->set_number_color(Color(0.65,0.9,0.7));
+        Highlight->set_function_color(Color(0.6,0.8,1));
+        Highlight->set_symbol_color(Color(0.75,0.75,0.85));
+        for (const char* Start:{"--[[","--[=["}) Highlight->add_color_region(Start,String(Start)=="--[["?"]]":"]=]",Color(0.55,0.6,0.65));
+        Highlight->add_color_region("--","",Color(0.55,0.6,0.65),true);
+        for (const char* Quote:{"\"","'","`"}) Highlight->add_color_region(Quote,Quote,Color(0.9,0.8,0.55));
+        Code->set_syntax_highlighter(Highlight);
+        Code->set_meta("_godotluau_highlight",true);
+    }
     auto Prefixes = Code->get_code_completion_prefixes();
     if (!Prefixes.has(":")) {
         Prefixes.push_back(":");

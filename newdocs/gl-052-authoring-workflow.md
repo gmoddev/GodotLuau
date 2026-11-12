@@ -9,9 +9,10 @@ distribution products.
 ## Start with a new native project
 
 Create a project in Godot 4.7.1 with the Compatibility renderer. Extract the
-verified candidate's `GodotLuau` directory into the project, retaining its
-`.gdextension`, both platform libraries as supplied, persistence companion and
-generated `Types` directory. Open/reopen the project so Godot scans the extension.
+verified candidate into the project root, retaining its root `.gdextension`,
+`GodotLuau` directory, platform libraries as supplied, persistence companion and
+generated `Types` directory. Leave its updater plugin disabled. Open/reopen the
+project so Godot scans the extension.
 The native Luau Authoring panel registers automatically; no GDScript addon,
 autoload or developer bootstrap script is needed. Do not substitute an arbitrary
 Godot executable for the admitted runtime when qualifying multiplayer.

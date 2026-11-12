@@ -28,5 +28,5 @@ void GLNativeEditorPlugin::OpenRuntimeError() {
     if (Source.is_null()) return;
     String Message=LastRuntimeError[1];int Offset=Message.find(Path+":");int Line=1;
     if (Offset>=0) Line=Message.substr(Offset+Path.length()+1).to_int();
-    EditorInterface::get_singleton()->edit_script(Source,(std::max)(0,Line-1),0,true);
+    EditorInterface::get_singleton()->edit_script(Source,(std::max)(1,Line),0,true);
 }
