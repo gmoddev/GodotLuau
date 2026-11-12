@@ -283,12 +283,14 @@ module-only and full expansion controls both exit zero. This is a retained
 mixed-profile limitation, not evidence that this campaign introduced a heap bug;
 do not extend the GL-018 claim or qualify production Release from that pairing.
 
-Factory type run 43224970473 catches a genuine declaration-order defect: ordering
-classes only by inheritance depth leaves NativeSpriteFrames as a forward
-placeholder when AnimatedSprite2D declares its property. Emit class bases and
-direct resource-property dependencies first. Add the owned SpriteFrames assignment
-to the representative type case, and rerun the same factory checks without casts
-or weakened types. The 3D factory and all previous type cases passed that attempt.
+Factory type run 43224970473 catches an owned SpriteFrames constructor-property
+compatibility failure. An initial declaration-order hypothesis led to the f2bb5e7
+trial. Run 43227301184 disproves that hypothesis: reordering does not resolve the
+assignment. Revert that unnecessary ordering change. Property input types should
+explicitly admit their approved owned resource classes alongside the immutable
+base handle; getter types and mutating-call receiver restrictions remain unchanged.
+Add owned/base and constructor assignment cases and rerun without casts. The 3D
+factory and all previous type cases passed the initial attempt.
 
 Native compilation of the later navigation revision catches a const-reference
 mismatch: GLProjectResourcePath intentionally normalizes its String argument.

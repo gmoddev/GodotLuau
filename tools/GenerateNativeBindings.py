@@ -397,19 +397,8 @@ def Generate(Policy, Api):
           'export type NativeTransform2D = {X: NativeVector2, Y: NativeVector2, Origin: NativeVector2}',
           'export type NativeTransform3D = {Basis: NativeBasis, Origin: NativeVector3}',
           'export type NativeVariant = nil | boolean | number | string | NativeVector3 | NativeColor3 | NativeVector2 | NativeVector4 | NativeColor4 | NativeRect2 | NativeAABB | NativePlane | NativeBasis | NativeTransform2D | NativeTransform3D | {NativeVariant} | {[string]: NativeVariant}']
-    # Bases and direct property classes must exist before a Luau class uses
-    # them; inheritance depth alone can leave a forward resource placeholder.
-    Ordered=[];Emitted=set();Visiting=set()
-    def EmitClass(Name):
-        if Name in Emitted:return
-        Require(Name not in Visiting,'Cyclic native declaration dependency: '+Name)
-        Visiting.add(Name);C=ByName[Name]
-        if C['Base'] in ByName:EmitClass(C['Base'])
-        if not C['Resource']:
-            for P in D['Properties']:
-                if P['Class']==Name and P.get('ResourceClass') and P['ResourceClass']!=Name:EmitClass(P['ResourceClass'])
-        Visiting.remove(Name);Emitted.add(Name);Ordered.append(C)
-    for C in D['Classes']:EmitClass(C['Name'])
+    # Base classes precede their derived declarations.
+    Ordered = sorted(D['Classes'], key=lambda C: (sum(Inherits(C['Name'], N) for N in ByName), C['Name']))
     for C in Ordered:
         N, Base = C['Name'], C['Base']
         T.append('declare class Native' + N + (' extends Native' + Base if Base else ''))
@@ -430,7 +419,12 @@ def Generate(Policy, Api):
         T += ['export type Native' + C['Name'] + 'Properties = {']
         # Explicit nil prevents Luau width subtyping from accepting a known
         # observation property as an otherwise harmless extra constructor field.
-        T += ['    ' + P['Name'] + (': nil,' if P.get('ReadOnly') else ': (' + Type(P) + ')?,' ) for P in Effective(C['Name'])]
+        for P in Effective(C['Name']):
+            Input=Type(P)
+            if P['Kind']=='ResourceValue':
+                Owned=['MutableNative'+R['Name'] for R in D['Classes'] if R['Construct'] and R['Resource'] and Inherits(R['Name'],P['ResourceClass'])]
+                if Owned:Input=Input+' | '+' | '.join(Owned)
+            T.append('    '+P['Name']+(': nil,' if P.get('ReadOnly') else ': ('+Input+')?,'))
         T += ['}']
     T += ['declare class NativeSceneScope extends NativeNode3D']
     New, Configure, Get, Call, Connect, Load = [], [], [], [], [], []

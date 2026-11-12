@@ -42,41 +42,51 @@ declare class NativeNode extends NativeObject
     GetChildren: (self: NativeNode) -> {NativeNode}
     GetDescendants: (self: NativeNode) -> {NativeNode}
 end
+declare class NativeRefCounted extends NativeObject
+end
+declare class NativeAnimationMixer extends NativeNode
+end
+declare class NativeAudioStreamPlayer extends NativeNode
+    Stream: NativeAudioStream?
+    VolumeDb: number
+    PitchScale: number
+end
 declare class NativeCanvasItem extends NativeNode
     Visible: boolean
     Modulate: NativeColor3
     ModulateRGBA: NativeColor4
     SelfModulateRGBA: NativeColor4
 end
-declare class NativeNode2D extends NativeCanvasItem
-    Position: NativeVector2
-    RotationDegrees: number
-    Scale: NativeVector2
-    GlobalPosition: NativeVector2
-    GlobalRotation: number
-    ZIndex: number
-    YSortEnabled: boolean
+declare class NativeCanvasLayer extends NativeNode
+    Layer: number
 end
-declare class NativeRefCounted extends NativeObject
+declare class NativeNavigationAgent3D extends NativeNode
+    TargetPosition: NativeVector3
+    NavigationLayers: number
+    PathDesiredDistance: number
+    TargetDesiredDistance: number
+    PathMaxDistance: number
+end
+declare class NativeNode3D extends NativeNode
+    Position: NativeVector3
+    RotationDegrees: NativeVector3
+    Scale: NativeVector3
+    Visible: boolean
 end
 declare class NativeResource extends NativeRefCounted
 end
 declare class MutableNativeResource extends NativeResource
 end
-declare class NativeSpriteFrames extends NativeResource
+declare class NativeTimer extends NativeNode
+    WaitTime: number
+    OneShot: boolean
+    Autostart: boolean
+    Paused: boolean
+    ProcessCallback: number
+    TimeLeft: number
 end
-declare class MutableNativeSpriteFrames extends NativeSpriteFrames
-end
-declare class NativeAnimatedSprite2D extends NativeNode2D
-    SpriteFrames: NativeSpriteFrames?
-    Animation: string
-    SpeedScale: number
-    Centered: boolean
-    Offset: NativeVector2
-    FlipH: boolean
-    FlipV: boolean
-    Frame: number
-    FrameProgress: number
+declare class NativeWorldEnvironment extends NativeNode
+    Environment: NativeEnvironment?
 end
 declare class NativeAnimation extends NativeResource
 end
@@ -86,39 +96,34 @@ declare class NativeAnimationLibrary extends NativeResource
 end
 declare class MutableNativeAnimationLibrary extends NativeAnimationLibrary
 end
-declare class NativeAnimationMixer extends NativeNode
-end
 declare class NativeAnimationPlayer extends NativeAnimationMixer
     SpeedScale: number
     CurrentAnimationPosition: number
     CurrentAnimationLength: number
 end
-declare class NativeCollisionObject2D extends NativeNode2D
+declare class NativeAudioStream extends NativeResource
+end
+declare class MutableNativeAudioStream extends NativeAudioStream
+end
+declare class NativeAudioStreamPlayer3D extends NativeNode3D
+    Stream: NativeAudioStream?
+    VolumeDb: number
+    PitchScale: number
+    Autoplay: boolean
+    StreamPaused: boolean
+end
+declare class NativeCamera3D extends NativeNode3D
+    Fov: number
+    Near: number
+    Far: number
+end
+declare class NativeCollisionObject3D extends NativeNode3D
     CollisionLayer: number
     CollisionMask: number
-    InputPickable: boolean
 end
-declare class NativeArea2D extends NativeCollisionObject2D
-    Monitoring: boolean
-    Monitorable: boolean
-    Gravity: number
-    GravityDirection: NativeVector2
-end
-declare class NativeMesh extends NativeResource
-end
-declare class MutableNativeMesh extends NativeMesh
-end
-declare class NativeArrayMesh extends NativeMesh
-end
-declare class MutableNativeArrayMesh extends NativeArrayMesh
-end
-declare class NativeFont extends NativeResource
-end
-declare class MutableNativeFont extends NativeFont
-end
-declare class NativeTheme extends NativeResource
-end
-declare class MutableNativeTheme extends NativeTheme
+declare class NativeCollisionShape3D extends NativeNode3D
+    Shape: NativeShape3D?
+    Disabled: boolean
 end
 declare class NativeControl extends NativeCanvasItem
     Position: NativeVector2
@@ -143,35 +148,113 @@ declare class NativeControl extends NativeCanvasItem
     Theme: NativeTheme?
     TooltipText: string
 end
-declare class NativeContainer extends NativeControl
+declare class NativeEnvironment extends NativeResource
 end
-declare class NativeAspectRatioContainer extends NativeContainer
-    Ratio: number
-    StretchMode: number
+declare class MutableNativeEnvironment extends NativeEnvironment
 end
-declare class NativeAudioStream extends NativeResource
+declare class NativeFont extends NativeResource
 end
-declare class MutableNativeAudioStream extends NativeAudioStream
+declare class MutableNativeFont extends NativeFont
 end
-declare class NativeAudioStreamPlayer extends NativeNode
-    Stream: NativeAudioStream?
-    VolumeDb: number
-    PitchScale: number
+declare class NativeGradient extends NativeResource
+end
+declare class MutableNativeGradient extends NativeGradient
+end
+declare class NativeMaterial extends NativeResource
+end
+declare class MutableNativeMaterial extends NativeMaterial
+end
+declare class NativeMesh extends NativeResource
+end
+declare class MutableNativeMesh extends NativeMesh
+end
+declare class NativeMultiMesh extends NativeResource
+end
+declare class MutableNativeMultiMesh extends NativeMultiMesh
+end
+declare class NativeNavigationMesh extends NativeResource
+end
+declare class MutableNativeNavigationMesh extends NativeNavigationMesh
+end
+declare class NativeNavigationRegion3D extends NativeNode3D
+    NavigationMesh: NativeNavigationMesh?
+    Enabled: boolean
+    NavigationLayers: number
+end
+declare class NativeNode2D extends NativeCanvasItem
+    Position: NativeVector2
+    RotationDegrees: number
+    Scale: NativeVector2
+    GlobalPosition: NativeVector2
+    GlobalRotation: number
+    ZIndex: number
+    YSortEnabled: boolean
+end
+declare class NativePackedScene extends NativeResource
+end
+declare class MutableNativePackedScene extends NativePackedScene
+end
+declare class NativePhysicsMaterial extends NativeResource
+end
+declare class MutableNativePhysicsMaterial extends NativePhysicsMaterial
+end
+declare class NativeRayCast3D extends NativeNode3D
+    Enabled: boolean
+    ExcludeParent: boolean
+    HitFromInside: boolean
+    CollideWithAreas: boolean
+    CollideWithBodies: boolean
+    CollisionMask: number
+    TargetPosition: NativeVector3
+end
+declare class NativeShader extends NativeResource
+end
+declare class MutableNativeShader extends NativeShader
+end
+declare class NativeShape2D extends NativeResource
+end
+declare class MutableNativeShape2D extends NativeShape2D
+end
+declare class NativeShape3D extends NativeResource
+end
+declare class MutableNativeShape3D extends NativeShape3D
+end
+declare class NativeSkeleton3D extends NativeNode3D
+end
+declare class NativeSpriteFrames extends NativeResource
+end
+declare class MutableNativeSpriteFrames extends NativeSpriteFrames
+end
+declare class NativeStyleBox extends NativeResource
+end
+declare class MutableNativeStyleBox extends NativeStyleBox
+end
+declare class NativeTexture extends NativeResource
+end
+declare class MutableNativeTexture extends NativeTexture
+end
+declare class NativeTheme extends NativeResource
+end
+declare class MutableNativeTheme extends NativeTheme
+end
+declare class NativeVisualInstance3D extends NativeNode3D
+end
+declare class NativeAnimatedSprite2D extends NativeNode2D
+    SpriteFrames: NativeSpriteFrames?
+    Animation: string
+    SpeedScale: number
+    Centered: boolean
+    Offset: NativeVector2
+    FlipH: boolean
+    FlipV: boolean
+    Frame: number
+    FrameProgress: number
+end
+declare class NativeArrayMesh extends NativeMesh
+end
+declare class MutableNativeArrayMesh extends NativeArrayMesh
 end
 declare class NativeAudioStreamPlayer2D extends NativeNode2D
-    Stream: NativeAudioStream?
-    VolumeDb: number
-    PitchScale: number
-    Autoplay: boolean
-    StreamPaused: boolean
-end
-declare class NativeNode3D extends NativeNode
-    Position: NativeVector3
-    RotationDegrees: NativeVector3
-    Scale: NativeVector3
-    Visible: boolean
-end
-declare class NativeAudioStreamPlayer3D extends NativeNode3D
     Stream: NativeAudioStream?
     VolumeDb: number
     PitchScale: number
@@ -183,44 +266,13 @@ declare class NativeBaseButton extends NativeControl
     ToggleMode: boolean
     ButtonPressed: boolean
 end
-declare class NativeMaterial extends NativeResource
-end
-declare class MutableNativeMaterial extends NativeMaterial
-end
 declare class NativeBaseMaterial3D extends NativeMaterial
 end
 declare class MutableNativeBaseMaterial3D extends NativeBaseMaterial3D
 end
-declare class NativeBoxContainer extends NativeContainer
-    Separation: number
-end
-declare class NativePrimitiveMesh extends NativeMesh
-end
-declare class MutableNativePrimitiveMesh extends NativePrimitiveMesh
-end
-declare class NativeBoxMesh extends NativePrimitiveMesh
-end
-declare class MutableNativeBoxMesh extends NativeBoxMesh
-end
-declare class NativeShape3D extends NativeResource
-end
-declare class MutableNativeShape3D extends NativeShape3D
-end
 declare class NativeBoxShape3D extends NativeShape3D
 end
 declare class MutableNativeBoxShape3D extends NativeBoxShape3D
-end
-declare class NativeTexture extends NativeResource
-end
-declare class MutableNativeTexture extends NativeTexture
-end
-declare class NativeTexture2D extends NativeTexture
-end
-declare class MutableNativeTexture2D extends NativeTexture2D
-end
-declare class NativeButton extends NativeBaseButton
-    Text: string
-    Icon: NativeTexture2D?
 end
 declare class NativeCamera2D extends NativeNode2D
     Enabled: boolean
@@ -228,22 +280,6 @@ declare class NativeCamera2D extends NativeNode2D
     Offset: NativeVector2
     PositionSmoothingEnabled: boolean
     PositionSmoothingSpeed: number
-end
-declare class NativeCamera3D extends NativeNode3D
-    Fov: number
-    Near: number
-    Far: number
-end
-declare class NativeCanvasLayer extends NativeNode
-    Layer: number
-end
-declare class NativeCapsuleMesh extends NativePrimitiveMesh
-end
-declare class MutableNativeCapsuleMesh extends NativeCapsuleMesh
-end
-declare class NativeShape2D extends NativeResource
-end
-declare class MutableNativeShape2D extends NativeShape2D
 end
 declare class NativeCapsuleShape2D extends NativeShape2D
 end
@@ -253,116 +289,31 @@ declare class NativeCapsuleShape3D extends NativeShape3D
 end
 declare class MutableNativeCapsuleShape3D extends NativeCapsuleShape3D
 end
-declare class NativeCenterContainer extends NativeContainer
-end
-declare class NativePhysicsBody2D extends NativeCollisionObject2D
-end
-declare class NativeCharacterBody2D extends NativePhysicsBody2D
-    Velocity: NativeVector2
-    UpDirection: NativeVector2
-    MaxSlides: number
-    FloorMaxAngle: number
-    FloorSnapLength: number
-    SafeMargin: number
-    FloorStopOnSlope: boolean
-    FloorConstantSpeed: boolean
-    SlideOnCeiling: boolean
-end
-declare class NativeCollisionObject3D extends NativeNode3D
-    CollisionLayer: number
-    CollisionMask: number
-end
-declare class NativePhysicsBody3D extends NativeCollisionObject3D
-end
-declare class NativeCharacterBody3D extends NativePhysicsBody3D
-    Velocity: NativeVector3
-    UpDirection: NativeVector3
-    MaxSlides: number
-    FloorMaxAngle: number
-    FloorSnapLength: number
-    SafeMargin: number
-    FloorStopOnSlope: boolean
-    FloorConstantSpeed: boolean
-    SlideOnCeiling: boolean
-end
-declare class NativeCheckBox extends NativeButton
-end
-declare class NativeCheckButton extends NativeButton
-end
 declare class NativeCircleShape2D extends NativeShape2D
 end
 declare class MutableNativeCircleShape2D extends NativeCircleShape2D
+end
+declare class NativeCollisionObject2D extends NativeNode2D
+    CollisionLayer: number
+    CollisionMask: number
+    InputPickable: boolean
 end
 declare class NativeCollisionShape2D extends NativeNode2D
     Shape: NativeShape2D?
     Disabled: boolean
     OneWayCollision: boolean
 end
-declare class NativeCollisionShape3D extends NativeNode3D
-    Shape: NativeShape3D?
-    Disabled: boolean
-end
 declare class NativeColorRect extends NativeControl
     Color: NativeColor3
 end
-declare class NativeCylinderMesh extends NativePrimitiveMesh
-end
-declare class MutableNativeCylinderMesh extends NativeCylinderMesh
+declare class NativeContainer extends NativeControl
 end
 declare class NativeCylinderShape3D extends NativeShape3D
 end
 declare class MutableNativeCylinderShape3D extends NativeCylinderShape3D
 end
-declare class NativeVisualInstance3D extends NativeNode3D
-end
-declare class NativeLight3D extends NativeVisualInstance3D
-    Color: NativeColor3
-    Energy: number
-    ShadowEnabled: boolean
-end
-declare class NativeDirectionalLight3D extends NativeLight3D
-end
-declare class NativeEnvironment extends NativeResource
-end
-declare class MutableNativeEnvironment extends NativeEnvironment
-end
 declare class NativeGeometryInstance3D extends NativeVisualInstance3D
     Material: NativeMaterial?
-end
-declare class NativeGradient extends NativeResource
-end
-declare class MutableNativeGradient extends NativeGradient
-end
-declare class NativeGradientTexture1D extends NativeTexture2D
-end
-declare class MutableNativeGradientTexture1D extends NativeGradientTexture1D
-end
-declare class NativeGradientTexture2D extends NativeTexture2D
-end
-declare class MutableNativeGradientTexture2D extends NativeGradientTexture2D
-end
-declare class NativeGridContainer extends NativeContainer
-    Columns: number
-end
-declare class NativeHBoxContainer extends NativeBoxContainer
-end
-declare class NativeSeparator extends NativeControl
-end
-declare class NativeHSeparator extends NativeSeparator
-end
-declare class NativeRange extends NativeControl
-    MinValue: number
-    MaxValue: number
-    Value: number
-    Step: number
-end
-declare class NativeSlider extends NativeRange
-end
-declare class NativeHSlider extends NativeSlider
-end
-declare class NativeSplitContainer extends NativeContainer
-end
-declare class NativeHSplitContainer extends NativeSplitContainer
 end
 declare class NativeItemList extends NativeControl
     SelectMode: number
@@ -376,71 +327,31 @@ end
 declare class NativeLabel extends NativeControl
     Text: string
 end
-declare class NativeLabel3D extends NativeGeometryInstance3D
-    Text: string
-    Billboard: number
-    FontSize: number
-    Font: NativeFont?
+declare class NativeLight3D extends NativeVisualInstance3D
+    Color: NativeColor3
+    Energy: number
+    ShadowEnabled: boolean
 end
 declare class NativeLineEdit extends NativeControl
     Text: string
     PlaceholderText: string
 end
-declare class NativeMarginContainer extends NativeContainer
-end
-declare class NativeMeshInstance3D extends NativeGeometryInstance3D
-    Mesh: NativeMesh?
-end
-declare class NativeMultiMesh extends NativeResource
-end
-declare class MutableNativeMultiMesh extends NativeMultiMesh
-end
 declare class NativeMultiMeshInstance2D extends NativeNode2D
     Multimesh: NativeMultiMesh?
 end
-declare class NativeMultiMeshInstance3D extends NativeGeometryInstance3D
-    Multimesh: NativeMultiMesh?
-end
-declare class NativeNavigationAgent3D extends NativeNode
-    TargetPosition: NativeVector3
-    NavigationLayers: number
-    PathDesiredDistance: number
-    TargetDesiredDistance: number
-    PathMaxDistance: number
-end
-declare class NativeNavigationMesh extends NativeResource
-end
-declare class MutableNativeNavigationMesh extends NativeNavigationMesh
-end
-declare class NativeNavigationRegion3D extends NativeNode3D
-    NavigationMesh: NativeNavigationMesh?
-    Enabled: boolean
-    NavigationLayers: number
-end
-declare class NativeOmniLight3D extends NativeLight3D
-    Range: number
-end
-declare class NativePackedScene extends NativeResource
-end
-declare class MutableNativePackedScene extends NativePackedScene
-end
 declare class NativePanel extends NativeControl
 end
-declare class NativePanelContainer extends NativeContainer
+declare class NativePhysicsBody3D extends NativeCollisionObject3D
 end
-declare class NativePhysicsMaterial extends NativeResource
+declare class NativePrimitiveMesh extends NativeMesh
 end
-declare class MutableNativePhysicsMaterial extends NativePhysicsMaterial
+declare class MutableNativePrimitiveMesh extends NativePrimitiveMesh
 end
-declare class NativePlaneMesh extends NativePrimitiveMesh
-end
-declare class MutableNativePlaneMesh extends NativePlaneMesh
-end
-declare class NativeProgressBar extends NativeRange
-end
-declare class NativeQuadMesh extends NativePlaneMesh
-end
-declare class MutableNativeQuadMesh extends NativeQuadMesh
+declare class NativeRange extends NativeControl
+    MinValue: number
+    MaxValue: number
+    Value: number
+    Step: number
 end
 declare class NativeRayCast2D extends NativeNode2D
     Enabled: boolean
@@ -451,15 +362,6 @@ declare class NativeRayCast2D extends NativeNode2D
     CollisionMask: number
     TargetPosition: NativeVector2
 end
-declare class NativeRayCast3D extends NativeNode3D
-    Enabled: boolean
-    ExcludeParent: boolean
-    HitFromInside: boolean
-    CollideWithAreas: boolean
-    CollideWithBodies: boolean
-    CollisionMask: number
-    TargetPosition: NativeVector3
-end
 declare class NativeRectangleShape2D extends NativeShape2D
 end
 declare class MutableNativeRectangleShape2D extends NativeRectangleShape2D
@@ -469,6 +371,211 @@ declare class NativeRichTextLabel extends NativeControl
     BbcodeEnabled: boolean
     FitContent: boolean
     ScrollActive: boolean
+end
+declare class NativeSegmentShape2D extends NativeShape2D
+end
+declare class MutableNativeSegmentShape2D extends NativeSegmentShape2D
+end
+declare class NativeSeparator extends NativeControl
+end
+declare class NativeShaderMaterial extends NativeMaterial
+end
+declare class MutableNativeShaderMaterial extends NativeShaderMaterial
+end
+declare class NativeSphereShape3D extends NativeShape3D
+end
+declare class MutableNativeSphereShape3D extends NativeSphereShape3D
+end
+declare class NativeSprite2D extends NativeNode2D
+    Texture: NativeTexture2D?
+    Centered: boolean
+    Offset: NativeVector2
+    FlipH: boolean
+    FlipV: boolean
+    Hframes: number
+    Vframes: number
+    FrameCoords: NativeVector2i
+    RegionEnabled: boolean
+    RegionRect: NativeRect2
+    RegionFilterClipEnabled: boolean
+end
+declare class NativeStyleBoxEmpty extends NativeStyleBox
+end
+declare class MutableNativeStyleBoxEmpty extends NativeStyleBoxEmpty
+end
+declare class NativeStyleBoxFlat extends NativeStyleBox
+end
+declare class MutableNativeStyleBoxFlat extends NativeStyleBoxFlat
+end
+declare class NativeStyleBoxLine extends NativeStyleBox
+end
+declare class MutableNativeStyleBoxLine extends NativeStyleBoxLine
+end
+declare class NativeTextEdit extends NativeControl
+    Text: string
+    Editable: boolean
+    PlaceholderText: string
+    WrapMode: number
+end
+declare class NativeTexture2D extends NativeTexture
+end
+declare class MutableNativeTexture2D extends NativeTexture2D
+end
+declare class NativeTextureRect extends NativeControl
+    Texture: NativeTexture2D?
+    ExpandMode: number
+    StretchMode: number
+end
+declare class NativeArea2D extends NativeCollisionObject2D
+    Monitoring: boolean
+    Monitorable: boolean
+    Gravity: number
+    GravityDirection: NativeVector2
+end
+declare class NativeAspectRatioContainer extends NativeContainer
+    Ratio: number
+    StretchMode: number
+end
+declare class NativeBoxContainer extends NativeContainer
+    Separation: number
+end
+declare class NativeBoxMesh extends NativePrimitiveMesh
+end
+declare class MutableNativeBoxMesh extends NativeBoxMesh
+end
+declare class NativeButton extends NativeBaseButton
+    Text: string
+    Icon: NativeTexture2D?
+end
+declare class NativeCapsuleMesh extends NativePrimitiveMesh
+end
+declare class MutableNativeCapsuleMesh extends NativeCapsuleMesh
+end
+declare class NativeCenterContainer extends NativeContainer
+end
+declare class NativeCharacterBody3D extends NativePhysicsBody3D
+    Velocity: NativeVector3
+    UpDirection: NativeVector3
+    MaxSlides: number
+    FloorMaxAngle: number
+    FloorSnapLength: number
+    SafeMargin: number
+    FloorStopOnSlope: boolean
+    FloorConstantSpeed: boolean
+    SlideOnCeiling: boolean
+end
+declare class NativeCylinderMesh extends NativePrimitiveMesh
+end
+declare class MutableNativeCylinderMesh extends NativeCylinderMesh
+end
+declare class NativeDirectionalLight3D extends NativeLight3D
+end
+declare class NativeGradientTexture1D extends NativeTexture2D
+end
+declare class MutableNativeGradientTexture1D extends NativeGradientTexture1D
+end
+declare class NativeGradientTexture2D extends NativeTexture2D
+end
+declare class MutableNativeGradientTexture2D extends NativeGradientTexture2D
+end
+declare class NativeGridContainer extends NativeContainer
+    Columns: number
+end
+declare class NativeHSeparator extends NativeSeparator
+end
+declare class NativeLabel3D extends NativeGeometryInstance3D
+    Text: string
+    Billboard: number
+    FontSize: number
+    Font: NativeFont?
+end
+declare class NativeMarginContainer extends NativeContainer
+end
+declare class NativeMeshInstance3D extends NativeGeometryInstance3D
+    Mesh: NativeMesh?
+end
+declare class NativeMultiMeshInstance3D extends NativeGeometryInstance3D
+    Multimesh: NativeMultiMesh?
+end
+declare class NativeOmniLight3D extends NativeLight3D
+    Range: number
+end
+declare class NativePanelContainer extends NativeContainer
+end
+declare class NativePhysicsBody2D extends NativeCollisionObject2D
+end
+declare class NativePlaneMesh extends NativePrimitiveMesh
+end
+declare class MutableNativePlaneMesh extends NativePlaneMesh
+end
+declare class NativeProgressBar extends NativeRange
+end
+declare class NativeRigidBody3D extends NativePhysicsBody3D
+    Mass: number
+    GravityScale: number
+    Freeze: boolean
+end
+declare class NativeScrollContainer extends NativeContainer
+end
+declare class NativeSlider extends NativeRange
+end
+declare class NativeSphereMesh extends NativePrimitiveMesh
+end
+declare class MutableNativeSphereMesh extends NativeSphereMesh
+end
+declare class NativeSplitContainer extends NativeContainer
+end
+declare class NativeSpotLight3D extends NativeLight3D
+    Range: number
+end
+declare class NativeSpriteBase3D extends NativeGeometryInstance3D
+    PixelSize: number
+end
+declare class NativeStandardMaterial3D extends NativeBaseMaterial3D
+end
+declare class MutableNativeStandardMaterial3D extends NativeStandardMaterial3D
+end
+declare class NativeStaticBody3D extends NativePhysicsBody3D
+end
+declare class NativeTabContainer extends NativeContainer
+    CurrentTab: number
+    TabsVisible: boolean
+end
+declare class NativeTextureProgressBar extends NativeRange
+    TextureUnder: NativeTexture2D?
+    TextureOver: NativeTexture2D?
+    TextureProgress: NativeTexture2D?
+    FillMode: number
+    TintUnder: NativeColor4
+    TintOver: NativeColor4
+    TintProgress: NativeColor4
+end
+declare class NativeVSeparator extends NativeSeparator
+end
+declare class NativeCharacterBody2D extends NativePhysicsBody2D
+    Velocity: NativeVector2
+    UpDirection: NativeVector2
+    MaxSlides: number
+    FloorMaxAngle: number
+    FloorSnapLength: number
+    SafeMargin: number
+    FloorStopOnSlope: boolean
+    FloorConstantSpeed: boolean
+    SlideOnCeiling: boolean
+end
+declare class NativeCheckBox extends NativeButton
+end
+declare class NativeCheckButton extends NativeButton
+end
+declare class NativeHBoxContainer extends NativeBoxContainer
+end
+declare class NativeHSlider extends NativeSlider
+end
+declare class NativeHSplitContainer extends NativeSplitContainer
+end
+declare class NativeQuadMesh extends NativePlaneMesh
+end
+declare class MutableNativeQuadMesh extends NativeQuadMesh
 end
 declare class NativeRigidBody2D extends NativePhysicsBody2D
     Mass: number
@@ -484,27 +591,6 @@ declare class NativeRigidBody2D extends NativePhysicsBody2D
     MaxContactsReported: number
     Sleeping: boolean
 end
-declare class NativeRigidBody3D extends NativePhysicsBody3D
-    Mass: number
-    GravityScale: number
-    Freeze: boolean
-end
-declare class NativeScrollContainer extends NativeContainer
-end
-declare class NativeSegmentShape2D extends NativeShape2D
-end
-declare class MutableNativeSegmentShape2D extends NativeSegmentShape2D
-end
-declare class NativeShader extends NativeResource
-end
-declare class MutableNativeShader extends NativeShader
-end
-declare class NativeShaderMaterial extends NativeMaterial
-end
-declare class MutableNativeShaderMaterial extends NativeShaderMaterial
-end
-declare class NativeSkeleton3D extends NativeNode3D
-end
 declare class NativeSoftBody3D extends NativeMeshInstance3D
     Mesh: NativeArrayMesh?
     CollisionLayer: number
@@ -512,105 +598,19 @@ declare class NativeSoftBody3D extends NativeMeshInstance3D
     SimulationPrecision: number
     TotalMass: number
 end
-declare class NativeSphereMesh extends NativePrimitiveMesh
-end
-declare class MutableNativeSphereMesh extends NativeSphereMesh
-end
-declare class NativeSphereShape3D extends NativeShape3D
-end
-declare class MutableNativeSphereShape3D extends NativeSphereShape3D
-end
-declare class NativeSpotLight3D extends NativeLight3D
-    Range: number
-end
-declare class NativeSprite2D extends NativeNode2D
-    Texture: NativeTexture2D?
-    Centered: boolean
-    Offset: NativeVector2
-    FlipH: boolean
-    FlipV: boolean
-    Hframes: number
-    Vframes: number
-    FrameCoords: NativeVector2i
-    RegionEnabled: boolean
-    RegionRect: NativeRect2
-    RegionFilterClipEnabled: boolean
-end
-declare class NativeSpriteBase3D extends NativeGeometryInstance3D
-    PixelSize: number
-end
 declare class NativeSprite3D extends NativeSpriteBase3D
     Texture: NativeTexture2D?
-end
-declare class NativeStandardMaterial3D extends NativeBaseMaterial3D
-end
-declare class MutableNativeStandardMaterial3D extends NativeStandardMaterial3D
 end
 declare class NativeStaticBody2D extends NativePhysicsBody2D
     PhysicsMaterialOverride: NativePhysicsMaterial?
     ConstantLinearVelocity: NativeVector2
     ConstantAngularVelocity: number
 end
-declare class NativeStaticBody3D extends NativePhysicsBody3D
-end
-declare class NativeStyleBox extends NativeResource
-end
-declare class MutableNativeStyleBox extends NativeStyleBox
-end
-declare class NativeStyleBoxEmpty extends NativeStyleBox
-end
-declare class MutableNativeStyleBoxEmpty extends NativeStyleBoxEmpty
-end
-declare class NativeStyleBoxFlat extends NativeStyleBox
-end
-declare class MutableNativeStyleBoxFlat extends NativeStyleBoxFlat
-end
-declare class NativeStyleBoxLine extends NativeStyleBox
-end
-declare class MutableNativeStyleBoxLine extends NativeStyleBoxLine
-end
-declare class NativeTabContainer extends NativeContainer
-    CurrentTab: number
-    TabsVisible: boolean
-end
-declare class NativeTextEdit extends NativeControl
-    Text: string
-    Editable: boolean
-    PlaceholderText: string
-    WrapMode: number
-end
-declare class NativeTextureProgressBar extends NativeRange
-    TextureUnder: NativeTexture2D?
-    TextureOver: NativeTexture2D?
-    TextureProgress: NativeTexture2D?
-    FillMode: number
-    TintUnder: NativeColor4
-    TintOver: NativeColor4
-    TintProgress: NativeColor4
-end
-declare class NativeTextureRect extends NativeControl
-    Texture: NativeTexture2D?
-    ExpandMode: number
-    StretchMode: number
-end
-declare class NativeTimer extends NativeNode
-    WaitTime: number
-    OneShot: boolean
-    Autostart: boolean
-    Paused: boolean
-    ProcessCallback: number
-    TimeLeft: number
-end
 declare class NativeVBoxContainer extends NativeBoxContainer
-end
-declare class NativeVSeparator extends NativeSeparator
 end
 declare class NativeVSlider extends NativeSlider
 end
 declare class NativeVSplitContainer extends NativeSplitContainer
-end
-declare class NativeWorldEnvironment extends NativeNode
-    Environment: NativeEnvironment?
 end
 export type NativeAnimatedSprite2DProperties = {
     Name: (string)?,
@@ -625,7 +625,7 @@ export type NativeAnimatedSprite2DProperties = {
     YSortEnabled: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    SpriteFrames: (NativeSpriteFrames?)?,
+    SpriteFrames: (NativeSpriteFrames? | MutableNativeSpriteFrames)?,
     Animation: (string)?,
     SpeedScale: (number)?,
     Centered: (boolean)?,
@@ -776,7 +776,7 @@ export type NativeBaseButtonProperties = {
     TooltipText: (string)?,
 }
 export type NativeBaseMaterial3DProperties = {
-    AlbedoTexture: (NativeTexture2D?)?,
+    AlbedoTexture: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     Metallic: (number)?,
     Transparency: (number)?,
 }
@@ -828,7 +828,7 @@ export type NativeButtonProperties = {
     FullRect: (boolean)?,
     Text: (string)?,
     Font: (NativeFont?)?,
-    Icon: (NativeTexture2D?)?,
+    Icon: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     Disabled: (boolean)?,
     ToggleMode: (boolean)?,
     ButtonPressed: (boolean)?,
@@ -989,7 +989,7 @@ export type NativeCheckBoxProperties = {
     FullRect: (boolean)?,
     Text: (string)?,
     Font: (NativeFont?)?,
-    Icon: (NativeTexture2D?)?,
+    Icon: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     Disabled: (boolean)?,
     ToggleMode: (boolean)?,
     ButtonPressed: (boolean)?,
@@ -1023,7 +1023,7 @@ export type NativeCheckButtonProperties = {
     FullRect: (boolean)?,
     Text: (string)?,
     Font: (NativeFont?)?,
-    Icon: (NativeTexture2D?)?,
+    Icon: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     Disabled: (boolean)?,
     ToggleMode: (boolean)?,
     ButtonPressed: (boolean)?,
@@ -1087,7 +1087,7 @@ export type NativeCollisionShape2DProperties = {
     YSortEnabled: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Shape: (NativeShape2D?)?,
+    Shape: (NativeShape2D? | MutableNativeCapsuleShape2D | MutableNativeCircleShape2D | MutableNativeRectangleShape2D | MutableNativeSegmentShape2D)?,
     Disabled: (boolean)?,
     OneWayCollision: (boolean)?,
 }
@@ -1097,7 +1097,7 @@ export type NativeCollisionShape3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Shape: (NativeShape3D?)?,
+    Shape: (NativeShape3D? | MutableNativeBoxShape3D | MutableNativeCapsuleShape3D | MutableNativeCylinderShape3D | MutableNativeSphereShape3D)?,
     Disabled: (boolean)?,
 }
 export type NativeColorRectProperties = {
@@ -1224,16 +1224,16 @@ export type NativeGeometryInstance3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Material: (NativeMaterial?)?,
+    Material: (NativeMaterial? | MutableNativeShaderMaterial | MutableNativeStandardMaterial3D)?,
 }
 export type NativeGradientProperties = {
 }
 export type NativeGradientTexture1DProperties = {
-    Gradient: (NativeGradient?)?,
+    Gradient: (NativeGradient? | MutableNativeGradient)?,
     Width: (number)?,
 }
 export type NativeGradientTexture2DProperties = {
-    Gradient: (NativeGradient?)?,
+    Gradient: (NativeGradient? | MutableNativeGradient)?,
     Width: (number)?,
     Height: (number)?,
     Fill: (number)?,
@@ -1463,7 +1463,7 @@ export type NativeLabel3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Material: (NativeMaterial?)?,
+    Material: (NativeMaterial? | MutableNativeShaderMaterial | MutableNativeStandardMaterial3D)?,
     Text: (string)?,
     Billboard: (number)?,
     FontSize: (number)?,
@@ -1549,15 +1549,15 @@ export type NativeMeshInstance3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Mesh: (NativeMesh?)?,
-    Material: (NativeMaterial?)?,
+    Mesh: (NativeMesh? | MutableNativeBoxMesh | MutableNativeCapsuleMesh | MutableNativeCylinderMesh | MutableNativePlaneMesh | MutableNativeQuadMesh | MutableNativeSphereMesh)?,
+    Material: (NativeMaterial? | MutableNativeShaderMaterial | MutableNativeStandardMaterial3D)?,
 }
 export type NativeMultiMeshProperties = {
     TransformFormat: (number)?,
     UseColors: (boolean)?,
     InstanceCount: (number)?,
     VisibleInstanceCount: (number)?,
-    Mesh: (NativeMesh?)?,
+    Mesh: (NativeMesh? | MutableNativeBoxMesh | MutableNativeCapsuleMesh | MutableNativeCylinderMesh | MutableNativePlaneMesh | MutableNativeQuadMesh | MutableNativeSphereMesh)?,
     CustomAabb: (NativeAABB)?,
 }
 export type NativeMultiMeshInstance2DProperties = {
@@ -1573,7 +1573,7 @@ export type NativeMultiMeshInstance2DProperties = {
     YSortEnabled: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Multimesh: (NativeMultiMesh?)?,
+    Multimesh: (NativeMultiMesh? | MutableNativeMultiMesh)?,
 }
 export type NativeMultiMeshInstance3DProperties = {
     Name: (string)?,
@@ -1581,8 +1581,8 @@ export type NativeMultiMeshInstance3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Material: (NativeMaterial?)?,
-    Multimesh: (NativeMultiMesh?)?,
+    Material: (NativeMaterial? | MutableNativeShaderMaterial | MutableNativeStandardMaterial3D)?,
+    Multimesh: (NativeMultiMesh? | MutableNativeMultiMesh)?,
 }
 export type NativeNavigationAgent3DProperties = {
     Name: (string)?,
@@ -1899,7 +1899,7 @@ export type NativeRigidBody2DProperties = {
     CollisionMask: (number)?,
     InputPickable: (boolean)?,
     Mass: (number)?,
-    PhysicsMaterialOverride: (NativePhysicsMaterial?)?,
+    PhysicsMaterialOverride: (NativePhysicsMaterial? | MutableNativePhysicsMaterial)?,
     GravityScale: (number)?,
     LinearVelocity: (NativeVector2)?,
     AngularVelocity: (number)?,
@@ -2041,7 +2041,7 @@ export type NativeSoftBody3DProperties = {
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
     Mesh: (NativeArrayMesh?)?,
-    Material: (NativeMaterial?)?,
+    Material: (NativeMaterial? | MutableNativeShaderMaterial | MutableNativeStandardMaterial3D)?,
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
     SimulationPrecision: (number)?,
@@ -2098,7 +2098,7 @@ export type NativeSpotLight3DProperties = {
 }
 export type NativeSprite2DProperties = {
     Name: (string)?,
-    Texture: (NativeTexture2D?)?,
+    Texture: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     Position: (NativeVector2)?,
     RotationDegrees: (number)?,
     Scale: (NativeVector2)?,
@@ -2127,8 +2127,8 @@ export type NativeSprite3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Material: (NativeMaterial?)?,
-    Texture: (NativeTexture2D?)?,
+    Material: (NativeMaterial? | MutableNativeShaderMaterial | MutableNativeStandardMaterial3D)?,
+    Texture: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     PixelSize: (number)?,
 }
 export type NativeSpriteBase3DProperties = {
@@ -2137,7 +2137,7 @@ export type NativeSpriteBase3DProperties = {
     RotationDegrees: (NativeVector3)?,
     Scale: (NativeVector3)?,
     Visible: (boolean)?,
-    Material: (NativeMaterial?)?,
+    Material: (NativeMaterial? | MutableNativeShaderMaterial | MutableNativeStandardMaterial3D)?,
     PixelSize: (number)?,
 }
 export type NativeSpriteFramesProperties = {
@@ -2147,7 +2147,7 @@ export type NativeStandardMaterial3DProperties = {
     Roughness: (number)?,
     EmissionEnabled: (boolean)?,
     Emission: (NativeColor3)?,
-    AlbedoTexture: (NativeTexture2D?)?,
+    AlbedoTexture: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     Metallic: (number)?,
     Transparency: (number)?,
 }
@@ -2167,7 +2167,7 @@ export type NativeStaticBody2DProperties = {
     CollisionLayer: (number)?,
     CollisionMask: (number)?,
     InputPickable: (boolean)?,
-    PhysicsMaterialOverride: (NativePhysicsMaterial?)?,
+    PhysicsMaterialOverride: (NativePhysicsMaterial? | MutableNativePhysicsMaterial)?,
     ConstantLinearVelocity: (NativeVector2)?,
     ConstantAngularVelocity: (number)?,
 }
@@ -2317,9 +2317,9 @@ export type NativeTextureProgressBarProperties = {
     SelfModulateRGBA: (NativeColor4)?,
     Theme: (NativeTheme?)?,
     TooltipText: (string)?,
-    TextureUnder: (NativeTexture2D?)?,
-    TextureOver: (NativeTexture2D?)?,
-    TextureProgress: (NativeTexture2D?)?,
+    TextureUnder: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
+    TextureOver: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
+    TextureProgress: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     FillMode: (number)?,
     TintUnder: (NativeColor4)?,
     TintOver: (NativeColor4)?,
@@ -2335,7 +2335,7 @@ export type NativeTextureRectProperties = {
     Modulate: (NativeColor3)?,
     FontSize: (number)?,
     FullRect: (boolean)?,
-    Texture: (NativeTexture2D?)?,
+    Texture: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D)?,
     ExpandMode: (number)?,
     StretchMode: (number)?,
     Font: (NativeFont?)?,
@@ -2498,7 +2498,7 @@ export type NativeVisualInstance3DProperties = {
 }
 export type NativeWorldEnvironmentProperties = {
     Name: (string)?,
-    Environment: (NativeEnvironment?)?,
+    Environment: (NativeEnvironment? | MutableNativeEnvironment)?,
 }
 declare class NativeSceneScope extends NativeNode3D
     New: ((self: NativeSceneScope, Class: "AnimatedSprite2D", Properties: NativeAnimatedSprite2DProperties, Parent: NativeNode?) -> NativeAnimatedSprite2D) &
