@@ -123,8 +123,8 @@ four successful workflows and independently checked artifacts.
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 | GL-052 | P2 | Integrated and verified within documented ADR-016 scope; retained limits unchanged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
-| GL-054 | P2 | Source-verified discrepancy; fix awaiting runtime qualification on native-expansion branch | Changed project module leaves cached transitive importers and their callbacks alive |
-| GL-055 | P2 | Source-verified discrepancy; fix awaiting native UI qualification | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
+| GL-054 | P2 | Resolved on unmerged native-expansion branch; core/native verification linked below | Changed project module leaves cached transitive importers and their callbacks alive |
+| GL-055 | P2 | Resolved on unmerged native-expansion branch; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
 
 ## GL-055: Native layout preset ordering
 
@@ -134,7 +134,13 @@ FullRect preset resets offsets already applied. This is source-verified ordering
 behavior, not a reproduced graphical failure. The native-expansion branch applies
 the layout preset before explicit properties, retaining validation before mutation.
 NativeTemplateCases checks actual Control anchors/margins and live UI signals.
-Qualification is pending in the [journal](gl-053-native-development.md).
+Fix [72d5dc8](https://github.com/gmoddev/GodotLuau/commit/72d5dc8d2bf399db79229a708170e00e911d31aa)
+passes Windows/Linux native run
+[43234500028](https://github.com/gmoddev/GodotLuau/actions/runs/43234500028),
+including the actual template margins/signals. Current Windows rendered UI and
+960x640/1280x800 captures retain explicit margins. See the
+[qualification record](gl-053-native-qualification.md). Resolved on this feature
+branch; main has not received the fix.
 
 ## GL-054: Transitive project module reload
 
@@ -150,8 +156,16 @@ invalidation across the dependent closure and invalidates changed project resour
 identities before changed subscribers run. Existing owner cancellation retires
 callbacks; unrelated caches remain intact. New core tests and the actual native
 ProjectReloadCases cover transitive cache replacement, pending initialization,
-callback retirement and preserved unrelated modules. Qualification is pending;
-see the [campaign journal](gl-053-native-development.md).
+callback retirement and preserved unrelated modules. Fix
+[e92084d](https://github.com/gmoddev/GodotLuau/commit/e92084db59c76d370e7bd0043cc6407226c60e2e)
+passes Windows/Linux core
+[43236560018](https://github.com/gmoddev/GodotLuau/actions/runs/43236560018)
+and complete native
+[43234500028](https://github.com/gmoddev/GodotLuau/actions/runs/43234500028).
+A separate 100-revision Windows observation also passes cancellation/selectivity;
+its natural-GC measurements are not a leak-free claim. See the
+[qualification record](gl-053-native-qualification.md). Resolved on this feature
+branch; main remains unchanged.
 
 ## GL-051: First-class native Luau integration
 
@@ -190,6 +204,12 @@ unexpected failure in one full Linux Debug profile and five filesystem replays.
 Keep this transport finding separate from the unproven close-save cause. A
 follow-up needs controlled transport interleaving coverage and preservation of
 the existing reply, deadline and helper-exit checks, without a storage refactor.
+
+The native-expansion campaign's Linux sanitizer attempt at `3a5adb6` again reports
+an indeterminate BindToClose write in the unchanged basic persistence fixture,
+with no unexpected sanitizer report. This does not establish the receive/exit
+race as its cause. Retain the failure and separate disposition in the
+[campaign journal](gl-053-native-development.md); GL-050 remains unresolved.
 
 ## GL-049: Typed native game authoring
 

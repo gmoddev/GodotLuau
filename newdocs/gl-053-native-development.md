@@ -415,3 +415,42 @@ Add the identical paths/LF hashes to the native receipt, preserving the comparis
 and all execution gates. This is a receipt correction, not permission to relabel
 old evidence or weaken source identity. Keep the superseded candidate attempt;
 the corrected candidate cohort must carry its own immutable revision.
+
+The `b9123fa` native/candidate receipt expressions match all 132 consumed file
+hashes; retain the one-off comparison in `receipt-identity.json`. Corrected
+candidate run 43236570162 preserves all strict gates. Native implementation and
+executable fixture cases are unchanged from `3a5adb6`; its full-native sanitizer
+run continues with that actual identity rather than being relabeled.
+
+The existing native preview/save methods also accept all three shipped project
+entrypoints in a separate isolated editor observation (`foundation-preview-e273`).
+Each preview has 24–27 native nodes, saves to ordinary PackedScene and reloads
+independently after preview teardown. Reported preview times are 15.744 ms (2D),
+9.348 ms (3D) and 6.779 ms (UI); VM observations are 608,360, 595,440 and 526,920
+bytes. These are bounded single observations, not baseline speedups or leak proof.
+No gameplay services run in preview and no application GDScript is introduced.
+
+## Current runtime results and retained sanitizer failure
+
+Run 43234500028 passes complete Windows/Linux native qualification (141 required
+actors plus the official-host navigation/editor checks) at `3a5adb6`. Current
+Windows component/rendered/editor checks also pass at that native fingerprint,
+including fresh current captures, shipped gameplay, preview/save/reopen and a
+100-revision reload observation. Keep exact measurements and the remaining Debug
+dispatch increase in the [qualification record](gl-053-native-qualification.md).
+
+Full-native sanitizer run 43234536332 attempt 1 passes Windows completely.
+Linux passes detection controls, reloads, new API/module cases and every group
+except DataStore; no unexpected ASan/LSan reports are emitted. The unchanged
+basic persistence actor reports an indeterminate Counter BindToClose SetAsync
+and lacks the expected close-save result. The strict final check then fails
+because that group's results are incomplete. Preserve logs in 3a-sanitizer-linux.
+Storage/companion sources and DatastoreIntegration.gd are identical to main.
+Do not attribute this to GL-050's unproven receive/exit race or change durability,
+deadlines, retries or assertions. Run the failed Linux job once on a fresh runner,
+preserving the first attempt. Windows evidence stays at its successful attempt.
+
+The independent saved-scene reopen works in a new project with no extension or
+Luau VM. Native Godot warns that the copied 3D shader UID is absent from the new
+project cache and successfully falls back to its text resource path; preserve
+that warning rather than claiming a completely silent UID-cache migration.

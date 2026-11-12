@@ -1,7 +1,8 @@
 # Native API expansion contract
 
 Unmerged GL-053 campaign extension of [ADR-015](adr-015-policy-driven-native-bindings.md).
-Qualification status lives in the [journal](gl-053-native-development.md).
+Qualification status lives in the [record](gl-053-native-qualification.md);
+the [journal](gl-053-native-development.md) retains implementation attempts.
 The generated [catalog](../bindings/NativeCatalog.json) is the exact admitted
 surface; [coverage](../bindings/NativeCoverage.json) is an inventory, never a grant.
 
@@ -97,7 +98,7 @@ main-thread dispatch. This phase does not grant physics-server/RID access or
 promise deterministic simulation. Direct space queries and character movement
 phase synchronization are described in the later gameplay section below.
 
-## Gameplay expansion (qualification pending)
+## Gameplay expansion
 
 Standalone native CharacterBody2D/3D exposes bounded velocity/configuration and
 MoveAndSlide/observed contacts. MoveAndSlide and forced RayCast2D/3D updates require
@@ -179,7 +180,8 @@ signatures and immutable sequence outputs. Typed-array inputs and native object
 collections remain restricted. AnimationPlayer's bounded relative value-track
 path does not admit AnimationTree, arbitrary rig tracks, method/audio tracks,
 root motion, native Tween/Callable handles or automatic playback during preview.
-Runtime qualification is pending; this section documents the implemented contract.
+Supported native/renderer profiles and remaining campaign gates are recorded
+separately; this section documents the implemented contract.
 
 ## Nested and inherited PackedScenes
 

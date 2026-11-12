@@ -1,7 +1,9 @@
 # ADR-017: Owned native animation effects
 
-Status: accepted for GL-053 implementation; runtime qualification pending in the
-[journal](gl-053-native-development.md). Extends ADR-015 without changing
+Status: accepted for GL-053 implementation, with Windows/Linux native and
+Windows full-native sanitizer evidence in the
+[qualification record](gl-053-native-qualification.md). Remaining campaign gates
+stay explicit. Extends ADR-015 without changing
 Character V2, GL-020 replication, VM scheduling or native object identity.
 
 Native AnimationPlayer executes tracks autonomously after the originating Luau
