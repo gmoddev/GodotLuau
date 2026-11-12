@@ -597,3 +597,19 @@ The [current receipt](evidence/gl052-qualification.json) identifies this cohort;
 the preceding [e393 receipt](evidence/gl052-e393-qualification.json) is preserved
 unchanged. Main is unmerged, release/updater publication remains disabled,
 Native stays default, Scripted stays opt-in, and GL-050 remains unresolved.
+
+## Interactive completion resumed
+
+Resume from clean branch tip 5a8a62b and verify remote main remains e43e981.
+Reuse the qualified 60913fb products and the UI-created isolated project. A new
+bounded editor session under the official editor with `--single-window` now
+permits activation, file filtering and source opening; concurrent desktop input
+requires refreshed observations before editing. Remaining acceptance is actual
+editing, preview/Inspector, explicit snapshot save/reopen, play/error/recovery,
+export and independent rendered launch through the supported native UI.
+
+The owner additionally requests ordinary `print` instead of `dprint`. Replace
+the 17 informational calls in the nine shipped default `.luau` sources and
+regenerate their embedded header. This changes informational log visibility;
+warning behavior, native output implementation and customized project content
+are outside this bounded change. Qualification is pending for the new source.

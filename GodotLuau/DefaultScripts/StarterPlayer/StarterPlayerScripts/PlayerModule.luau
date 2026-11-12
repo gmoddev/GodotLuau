@@ -45,10 +45,10 @@ if not Character:IsA("Character") then
     State.JumpPower = ControlModule.JumpPower
 end
 
-dprint("[Character:PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
+print("[Character:PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
 
 State.Died:Connect(function()
-    dprint("[Character:PlayerModule] El personaje ha muerto.")
+    print("[Character:PlayerModule] El personaje ha muerto.")
 end)
 
 -- Cada frame: el ControlModule calcula la velocidad (sprint suave) y la aplica.

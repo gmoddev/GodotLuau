@@ -3,15 +3,15 @@
 -- TODO lo que pase aqui es autoridad del servidor (anti-exploit).
 local Players    = game:GetService("Players")
 
-dprint("[Server] GameManager iniciado!")
+print("[Server] GameManager iniciado!")
 
 -- ── Jugadores: entrada y salida ───────────────────────────────────
 Players.PlayerAdded:Connect(function(player)
-    dprint("[Server] + " .. player.Name .. " entro a la partida")
+    print("[Server] + " .. player.Name .. " entro a la partida")
 end)
 
 Players.PlayerRemoving:Connect(function(player)
-    dprint("[Server] - " .. player.Name .. " salio de la partida")
+    print("[Server] - " .. player.Name .. " salio de la partida")
 end)
 
 -- Combat is game-specific; this template publishes no damage request endpoint.
@@ -24,11 +24,11 @@ local ROUND_TIME = 120  -- segundos por ronda
 
 task.spawn(function()
     while true do
-        dprint("[Server] Ronda nueva! (" .. ROUND_TIME .. "s)")
+        print("[Server] Ronda nueva! (" .. ROUND_TIME .. "s)")
         task.wait(ROUND_TIME)
-        dprint("[Server] Fin de la ronda.")
+        print("[Server] Fin de la ronda.")
         task.wait(5)  -- intermedio entre rondas
     end
 end)
 
-dprint("[Server] Juego listo!")
+print("[Server] Juego listo!")

@@ -53,3 +53,8 @@ content migration. Existing template synchronization may update untouched manage
 scripts; customized or unknown-base scripts retain their content and receive an
 update offer. Keep project-specific combat only when its server validation is
 established independently.
+
+Default scripts use ordinary `print` for their informational output. Those
+messages appear through the normal Luau output path rather than the legacy
+`dprint` debug toggle. Warning behavior and existing customized scripts are
+unchanged; no automatic content migration is added.

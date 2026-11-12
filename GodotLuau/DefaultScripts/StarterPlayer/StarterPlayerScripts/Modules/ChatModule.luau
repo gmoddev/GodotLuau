@@ -29,7 +29,7 @@ function ChatModule:Initialize()
         end)
     end
 
-    dprint("[ChatModule] Chat listo. / o Enter para abrir.")
+    print("[ChatModule] Chat listo. / o Enter para abrir.")
 end
 
 function ChatModule:_addMessage(text)
@@ -38,7 +38,7 @@ function ChatModule:_addMessage(text)
         table.remove(messages, 1)
     end
     table.insert(messages, { text = text, time = 0.0 })
-    dprint("[Chat] " .. text)
+    print("[Chat] " .. text)
 end
 
 function ChatModule:SendMessage(text)

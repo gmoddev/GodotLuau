@@ -34,7 +34,7 @@ if not State then
     return
 end
 
-dprint("[Character:Health] Regeneracion activa: " .. script.Parent.Name)
+print("[Character:Health] Regeneracion activa: " .. script.Parent.Name)
 
 -- La regeneración empieza REGEN_DELAY s tras el ÚLTIMO daño (recibir daño reinicia el contador).
 -- /// Regen starts REGEN_DELAY s after the LAST hit (taking damage resets the timer).
@@ -52,7 +52,7 @@ State.HealthChanged:Connect(function(newHP)
 end)
 
 State.Died:Connect(function()
-    dprint("[Character:Health] " .. script.Parent.Name .. " ha muerto.")
+    print("[Character:Health] " .. script.Parent.Name .. " ha muerto.")
 end)
 
 -- Cada frame: si pasó el retardo y falta vida, sube un poco hacia MaxHealth.
@@ -84,7 +84,7 @@ if not State then
     return
 end
 
-dprint("[Character:Animation] Sistema de animacion listo")
+print("[Character:Animation] Sistema de animacion listo")
 
 -- ══ TU CÓDIGO DE ANIMACIÓN AQUÍ /// YOUR ANIMATION CODE HERE ══
 -- Descomenta para reaccionar a eventos del Character: /// Uncomment to react to Character events:
@@ -155,10 +155,10 @@ if not Character:IsA("Character") then
     State.JumpPower = ControlModule.JumpPower
 end
 
-dprint("[Character:PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
+print("[Character:PlayerModule] Jugador listo! Speed=" .. ControlModule.WalkSpeed)
 
 State.Died:Connect(function()
-    dprint("[Character:PlayerModule] El personaje ha muerto.")
+    print("[Character:PlayerModule] El personaje ha muerto.")
 end)
 
 -- Cada frame: el ControlModule calcula la velocidad (sprint suave) y la aplica.
@@ -218,7 +218,7 @@ function ControlModule:Initialize()
     self.WalkSpeed = active.WalkSpeed
     self.JumpPower = active.JumpPower
     if active.Initialize then active:Initialize() end
-    dprint("[ControlModule] Plataforma: " .. (p == "" and "Auto(PC)" or p))
+    print("[ControlModule] Plataforma: " .. (p == "" and "Auto(PC)" or p))
 end
 
 -- Lo llama PlayerModule cada frame (sprint suave, estamina…). /// Called by PlayerModule each frame (smooth sprint, stamina…).
@@ -284,7 +284,7 @@ local stamina       = 100
 function PCModule:Initialize()
     current_speed = self.WalkSpeed
     stamina       = self.StaminaMax
-    dprint("[PCModule] Modo PC activo: W/A/S/D para mover, Shift para correr")
+    print("[PCModule] Modo PC activo: W/A/S/D para mover, Shift para correr")
 end
 
 -- Cada frame (lo llama ControlModule): estamina + acelerar hacia la velocidad objetivo.
@@ -346,7 +346,7 @@ MobileModule.JumpPower = 20
 MobileModule.TouchMode = "Joystick"
 
 function MobileModule:Initialize()
-    dprint("[MobileModule] Modo Movil activo: " .. self.TouchMode)
+    print("[MobileModule] Modo Movil activo: " .. self.TouchMode)
     -- Aquí puedes crear tu joystick con ScreenGui/ImageButton. /// Build your joystick here with ScreenGui/ImageButton.
 end
 
@@ -377,7 +377,7 @@ ConsoleModule.JumpPower = 20
 ConsoleModule.Deadzone  = 0.2  -- ignora movimientos menores /// ignore smaller movements
 
 function ConsoleModule:Initialize()
-    dprint("[ConsoleModule] Modo Consola activo — Joystick izquierdo para mover")
+    print("[ConsoleModule] Modo Consola activo — Joystick izquierdo para mover")
 end
 
 function ConsoleModule:GetCurrentSpeed()
@@ -425,7 +425,7 @@ function ChatModule:Initialize()
         end)
     end
 
-    dprint("[ChatModule] Chat listo. / o Enter para abrir.")
+    print("[ChatModule] Chat listo. / o Enter para abrir.")
 end
 
 function ChatModule:_addMessage(text)
@@ -434,7 +434,7 @@ function ChatModule:_addMessage(text)
         table.remove(messages, 1)
     end
     table.insert(messages, { text = text, time = 0.0 })
-    dprint("[Chat] " .. text)
+    print("[Chat] " .. text)
 end
 
 function ChatModule:SendMessage(text)
@@ -1152,15 +1152,15 @@ static const char* LUAU_TEMPLATE_GAME_MANAGER = R"LUAU(
 -- TODO lo que pase aqui es autoridad del servidor (anti-exploit).
 local Players    = game:GetService("Players")
 
-dprint("[Server] GameManager iniciado!")
+print("[Server] GameManager iniciado!")
 
 -- ── Jugadores: entrada y salida ───────────────────────────────────
 Players.PlayerAdded:Connect(function(player)
-    dprint("[Server] + " .. player.Name .. " entro a la partida")
+    print("[Server] + " .. player.Name .. " entro a la partida")
 end)
 
 Players.PlayerRemoving:Connect(function(player)
-    dprint("[Server] - " .. player.Name .. " salio de la partida")
+    print("[Server] - " .. player.Name .. " salio de la partida")
 end)
 
 -- Combat is game-specific; this template publishes no damage request endpoint.
@@ -1173,14 +1173,14 @@ local ROUND_TIME = 120  -- segundos por ronda
 
 task.spawn(function()
     while true do
-        dprint("[Server] Ronda nueva! (" .. ROUND_TIME .. "s)")
+        print("[Server] Ronda nueva! (" .. ROUND_TIME .. "s)")
         task.wait(ROUND_TIME)
-        dprint("[Server] Fin de la ronda.")
+        print("[Server] Fin de la ronda.")
         task.wait(5)  -- intermedio entre rondas
     end
 end)
 
-dprint("[Server] Juego listo!")
+print("[Server] Juego listo!")
 )LUAU";
 
 #endif // GL_LUAU_TEMPLATES_GEN_H
