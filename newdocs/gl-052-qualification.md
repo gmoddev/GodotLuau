@@ -35,9 +35,13 @@ These intermediate observations are not relabeled as qualification of newer code
 | Core `43130537822`, `4dba726` | Windows/Linux pass |
 | Native `43130537900`, `4dba726` | Linux fails completion after direct CodeHighlighter installation; superseded by registered EditorSyntaxHighlighter implementation |
 | Core `43132629894`, `1197f3d` | Windows/Linux pass |
-| Native `43132629698`, `1197f3d` | Pending at checkpoint |
-| Candidate `43132635974`, `1197f3d` | Pending; all four production profiles, original candidate gates and new authoring/game gates required |
-| Full-native sanitizers `43132639596`, `1197f3d` | Pending; includes actual new-game invocation in existing sanitizer runner |
+| Native `43132629698`, `1197f3d` | Original editor checks pass; expanded fixture fails display/stdout assumptions, retained and corrected |
+| Candidate `43132635974`, `1197f3d` | Superseded by corrected observer; not accepted |
+| Full-native sanitizers `43132639596`, `1197f3d` | Windows/Linux pass with zero unexpected reports, including actual new game, core and strict native gate; 26/27 runner stages respectively |
+| Focused current Windows editor | `workflow-1197-output-ready`: all 37 expanded checks and clean exit pass |
+| Focused current Windows renderer | `game-1197-official-rendered`: 14 checks and clean exit pass under official editor/Debug adapter |
+| Native `43135983475`, `e393c0d` | Pending, unchanged 121-file native source with corrected observer |
+| Candidate `43135980287`, `e393c0d` | Pending; Linux Release mirror timeout occurs before compilation and needs targeted retry after remaining profiles finish |
 
 Superseded candidate/sanitizer/native cohorts are canceled when concrete source
 fixes invalidate their inputs. Their failures/logs remain in the journal and
@@ -109,3 +113,9 @@ deadline. The focused Windows rerun `workflow-1197-output-ready` passes every
 expanded assertion and clean exit with the unchanged 121-file current adapter.
 Cross-platform/profile reruns are pending. Current full-native sanitizers are
 reused because their native sources and runtime fixture inputs are unchanged.
+
+The current Windows adapter SHA256 is
+`9291b03534b053b167c2d57650423e700b9f5eb0832dfc69c8dcf082a2d0f305`.
+Twenty current preview iterations record 140.658 ms including editor frames,
+with OS static readings 409,685,266 and 409,835,838 bytes. These observations use
+the same bounded interpretation as the intermediate measurement above.

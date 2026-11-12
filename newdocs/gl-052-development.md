@@ -326,3 +326,25 @@ game execution through the supported native editor, not a mocked readiness flag.
 `workflow-1197-output-ready` then passes completely with no stderr errors.
 The native source fingerprint is unchanged; final cross-platform/profile evidence
 must use this corrected observer. Preserve the prior wrapper failure.
+
+`workflow-1197-output-ready` passes 37 current actual-editor assertions;
+`game-1197-official-rendered` passes 14 rendered game checks and clean exit with
+the same native fingerprint. Linux full-native sanitizer `43132639596` passes
+all controls, core, 141 existing native actors and the actual new game with zero
+unexpected reports. Windows remains running. Reuse that source-identical cohort.
+
+Final observer cohort `e393c0d` starts candidate `43135980287` and native
+`43135983475`. Candidate Linux Release fails before compilation with connection
+timeouts to mirrors.edge.kernel.org while installing the existing compiler.
+Retain `candidate-e393-linux-release-first.log`; the secondary missing-artifact
+failure follows from the missing build. A targeted job rerun is unavailable while
+the workflow remains active. Retry only that failed environment work after the
+other profiles finish; do not modify source, dependency pins or acceptance gates.
+
+Full-native `43132639596` is now successful on both platforms at the unchanged
+121-file source. Retained Windows/Linux summaries report PASS and zero unexpected
+reports; the actual Luau-only game, strict 141-actor native gate and complete core
+gate pass. Windows has 26 runner stages and Linux 27 (including the supported leak
+control). Editor/rendering execution and Windows LSan are not inferred from this
+headless sanitizer cohort. No sanitizer rerun is required for later observer/docs
+changes outside its native and runtime inputs.
