@@ -39,6 +39,8 @@ defines the new explicit preview boundary; its journal distinguishes implementat
 from pending editor, runtime and export qualification.
 The [authoring guide](gl-052-authoring-workflow.md) describes native entrypoints,
 explicit preview/save, project modules, diagnostics and non-publishing staging.
+The [qualification record](gl-052-qualification.md) separates intermediate
+passes, current pending gates and retained environment/profile limitations.
 
 The [normally integrated GL-051 campaign](gl-051-main-integration.md) preserves
 all 22 qualified feature commits and their evidence. It implements
