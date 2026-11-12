@@ -5306,6 +5306,16 @@
       "Native": "play",
       "Mutates": true,
       "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          0,
+          128
+        ],
+        "custom_speed": [
+          -16,
+          16
+        ]
+      },
       "CountQuery": null,
       "IndexArgument": -1,
       "AllowEnd": false,
@@ -11050,7 +11060,7 @@
       "Native": "name",
       "Kind": "Text",
       "Min": 0,
-      "Max": 8192,
+      "Max": 128,
       "Default": ""
     },
     {
@@ -11058,8 +11068,8 @@
       "Name": "custom_speed",
       "Native": "custom_speed",
       "Kind": "Number",
-      "Min": -100000,
-      "Max": 100000,
+      "Min": -16,
+      "Max": 16,
       "Default": "1.0"
     },
     {
@@ -12062,7 +12072,7 @@
     "AnimationLibrary"
   ],
   "Schema": 1,
-  "PolicySHA256": "73e7ebf557e89a25b8b48fd81d07e7b15ff0774f86ee4bba6b2c85ed67620cd6",
+  "PolicySHA256": "b7718227d093f5add343d299ee1ca181f5ea6847d54f592978b6fac369de4453",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
   "ScopeOperations": [
     {

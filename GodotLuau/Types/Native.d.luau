@@ -1,5 +1,5 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: 73e7ebf557e89a25b8b48fd81d07e7b15ff0774f86ee4bba6b2c85ed67620cd6
+-- Policy SHA256: b7718227d093f5add343d299ee1ca181f5ea6847d54f592978b6fac369de4453
 export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number

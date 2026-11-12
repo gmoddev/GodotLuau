@@ -193,11 +193,15 @@ void ValidateEffects(lua_State* Thread,Object* Target,const std::vector<Assignme
             if(Length<0.000001)luaL_error(Thread,"[Scene:Arguments] UpDirection must be nonzero");
         }
     if (!Target->is_class("MultiMesh")) return;
+    int64_t Count=Target->get("instance_count"),Visible=Target->get("visible_instance_count");
     for(const auto& Entry:Batch) {
         const char* Key=Entry.Item->Native;
+        if(!strcmp(Key,"instance_count"))Count=Entry.Value;
+        if(!strcmp(Key,"visible_instance_count"))Visible=Entry.Value;
         if ((!strcmp(Key,"transform_format") || !strcmp(Key,"use_colors")) && int64_t(Target->get("instance_count"))>0 && Target->get(Key)!=Entry.Value)
             luaL_error(Thread,"[Scene:Arguments] Reset InstanceCount to zero before changing MultiMesh allocation format");
     }
+    if(Visible>Count)luaL_error(Thread,"[Scene:Arguments] VisibleInstanceCount cannot exceed InstanceCount");
 }
 void PreviewProperty(lua_State* Thread,const Property& Item,const Variant& Value) {
     if (GLGetOwner(Thread)->Domain->GetKind()!=GLDomainKind::EditorPreview) return;
@@ -219,7 +223,7 @@ std::vector<Assignment> Validate(lua_State* Thread, SceneScope* Scope, Object* T
     }
     ValidateEffects(Thread,Target,Batch);
     if(Target->is_class("MultiMesh") || Target->is_class("Control"))std::stable_sort(Batch.begin(),Batch.end(),[](const Assignment& A,const Assignment& B){
-        auto Order=[](const char* Native){return !strcmp(Native,"@full_rect")?0:!strcmp(Native,"instance_count")?2:1;};
+        auto Order=[](const char* Native){return !strcmp(Native,"@full_rect")?0:!strcmp(Native,"instance_count")?2:!strcmp(Native,"visible_instance_count")?3:1;};
         return Order(A.Item->Native)<Order(B.Item->Native);
     });
     return Batch;

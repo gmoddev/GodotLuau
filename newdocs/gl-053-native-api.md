@@ -79,6 +79,8 @@ before InstanceCount in one validated batch. Reset InstanceCount to zero in a
 separate operation before changing an allocated format. Per-instance methods
 check the live count, dimension and color allocation. Transform/AABB values stay
 bounded; raw GPU buffers and RIDs are not exposed.
+VisibleInstanceCount cannot exceed the final validated InstanceCount and is applied
+after allocation. Sprite playback custom speed is bounded to [-16,16].
 
 Shader is load-only from project assets. An owned ShaderMaterial may set declared
 scalar, vector, RGBA and matrix uniforms with exact native type checks. Unknown

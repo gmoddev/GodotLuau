@@ -2,7 +2,7 @@
 #pragma once
 #include "gl_native_registry.h"
 namespace GLNative {
-inline constexpr const char* PolicySHA256 = "73e7ebf557e89a25b8b48fd81d07e7b15ff0774f86ee4bba6b2c85ed67620cd6";
+inline constexpr const char* PolicySHA256 = "b7718227d093f5add343d299ee1ca181f5ea6847d54f592978b6fac369de4453";
 inline constexpr const char* ApiSHA256 = "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f";
 inline constexpr Class Classes[] = {
     {"AnimatedSprite2D","Node2D",true,false},
@@ -466,8 +466,8 @@ inline constexpr Property Arguments[] = {
     {"RigidBody2D.ApplyForce","position","position",Vector2Value,-100000,100000,nullptr,"Vector2(0, 0)",false},
     {"RigidBody2D.ApplyTorque","torque","torque",Number,-100000,100000,nullptr,nullptr,false},
     {"RigidBody2D.ApplyTorqueImpulse","torque","torque",Number,-100000,100000,nullptr,nullptr,false},
-    {"AnimatedSprite2D.Play","name","name",Text,0,8192,nullptr,"",false},
-    {"AnimatedSprite2D.Play","custom_speed","custom_speed",Number,-100000,100000,nullptr,"1.0",false},
+    {"AnimatedSprite2D.Play","name","name",Text,0,128,nullptr,"",false},
+    {"AnimatedSprite2D.Play","custom_speed","custom_speed",Number,-16,16,nullptr,"1.0",false},
     {"AnimatedSprite2D.Play","from_end","from_end",Boolean,-100000,100000,nullptr,"false",false},
     {"AnimatedSprite2D.PlayBackwards","name","name",Text,0,8192,nullptr,"",false},
     {"SpriteFrames.HasAnimation","anim","anim",Text,0,8192,nullptr,nullptr,false},

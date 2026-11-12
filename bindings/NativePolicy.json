@@ -3764,7 +3764,11 @@
       "Name": "Play",
       "Native": "play",
       "Mutates": true,
-      "Authority": "OwnedScene"
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [0, 128],
+        "custom_speed": [-16, 16]
+      }
     },
     {
       "Class": "AnimatedSprite2D",

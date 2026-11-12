@@ -298,3 +298,10 @@ ModulePath must accept the mutable local Imported path, then use that validated
 canonical path for the bounded file read. Correct the signature, without changing
 path authority. Stop superseded native runs containing this identical compile
 failure; new core/type jobs continue independently.
+
+Final API review adds the missing live/final-count constraint for MultiMesh
+VisibleInstanceCount and applies it after allocation in a constructor batch.
+Rejecting a larger count must preserve the prior native state. Bound sprite
+custom playback speed explicitly to [-16,16], alongside existing speed/frame
+limits. These are bounded effect checks on the newly admitted APIs, not a new
+resource policy or scheduler. Native runtime verification remains pending.
