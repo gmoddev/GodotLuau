@@ -463,3 +463,31 @@ engine package and dependency inputs remain unchanged. Keep the accepted engine
 candidate at its real `b9123fa` identity, and qualify the changed application
 inputs with the existing gameplay/render/export runners and their staging hashes.
 Do not relabel the older full-matrix fixture inputs as the new application.
+
+## Final supported-scope qualification checkpoint
+
+Candidate 43236570162 is accepted at `b9123fa`: all four production profiles,
+core ASan/LSan, retention controls, both packages and extracted companion startup
+pass. Full-native sanitizer 43234536332 passes Windows at attempt 1 and Linux at
+attempt 2, with no unexpected reports. Preserve Linux's first indeterminate
+close-save failure and GL-050's separate unresolved status.
+
+Current engine-native implementation remains fingerprint `685cbd6a...81149`.
+Native2D/Native3D/UI pass actual native export, independent startup and rendered
+Release standalone observations. The 2D-only visible-animation follow-up passes
+its fresh focused gameplay/export/render checks and type run 43249386432 on both
+platforms, using the unchanged accepted engine. Separate engine, application,
+fixture and documentation revisions in the versioned receipt.
+
+Relay Siege passes rendered solo, fresh-process persistence recovery and both
+four-player listen/dedicated scenarios with the accepted products and unchanged
+game/controller/networking sources. Existing soft-body interaction limits and
+Native-default/Scripted-opt-in contracts remain intact.
+
+The actual interactive editor attempt remains blocked by black capture and two
+GetCursorPos access-denied activation results. No interactive pass is claimed.
+All other feasible campaign qualification is complete; do not expand into host,
+debugger, persistence or qualification-framework redesign to hide that gap.
+The known Debug dispatch increase and deferred API families stay visible in the
+[qualification record](gl-053-native-qualification.md). Leave the feature branch
+unmerged and keep release/updater distribution disabled.
