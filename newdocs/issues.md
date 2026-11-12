@@ -113,6 +113,7 @@ four successful workflows and independently checked artifacts.
 | GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 | GL-052 | P2 | Implemented; partially qualified and unmerged; interactive/reopen gaps remain | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
+| GL-053 | P2 | Unsafe default damage example confirmed; fix under qualification | Generic GameManager publishes client-selected damage requests without a game-specific combat authority policy; original damage sink is commented out |
 
 ## GL-051: First-class native Luau integration
 

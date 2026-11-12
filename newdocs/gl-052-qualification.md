@@ -1,5 +1,13 @@
 # GL-052 qualification record
 
+Follow-up in progress: `33d448b` corrects duplicated saved-scene instance children;
+Linux's fresh-process native-editor regression passes. The owner-requested
+[GL-053 default damage correction](gl-053-default-damage.md) changes the embedded
+template too, so final combined-source qualification is pending. Native UI project
+and Luau scene/source creation are now observed with `--single-window`; the full
+interactive journey remains incomplete. The accepted identities below describe
+the preceding checkpoint, not builds of these newer changes.
+
 Disposition: implemented and qualified within the scopes below; **partially
 qualified overall and unmerged**. Interactive editor acceptance remains blocked,
 and the fresh-process scene-switch observation is not a clean pass. Main remains

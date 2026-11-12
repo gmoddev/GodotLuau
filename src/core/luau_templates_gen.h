@@ -1151,8 +1151,6 @@ static const char* LUAU_TEMPLATE_GAME_MANAGER = R"LUAU(
 -- El cerebro del servidor: jugadores, eventos remotos y rondas.
 -- TODO lo que pase aqui es autoridad del servidor (anti-exploit).
 local Players    = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local RS         = game:GetService("ReplicatedStorage")
 
 dprint("[Server] GameManager iniciado!")
 
@@ -1165,26 +1163,10 @@ Players.PlayerRemoving:Connect(function(player)
     dprint("[Server] - " .. player.Name .. " salio de la partida")
 end)
 
--- ── RemoteEvents compartidos en ReplicatedStorage ─────────────────
-local DamageEvent = Instance.new("RemoteEvent")
-DamageEvent.Name   = "DamageEvent"
-DamageEvent.Parent = RS
-
--- REGLA DE ORO multijugador: NUNCA confiar en lo que manda el cliente.
--- Validar siempre los datos antes de aplicarlos.
-local MAX_DAMAGE = 35
-
-DamageEvent.OnServerEvent:Connect(function(player, targetName, amount)
-    -- Validacion anti-exploit
-    if type(targetName) ~= "string" or type(amount) ~= "number" then return end
-    amount = math.clamp(amount, 0, MAX_DAMAGE)
-
-    dprint("[Server]", player.Name, "-> daño a", targetName, "(" .. amount .. ")")
-    -- Aqui aplicarias el daño al objetivo, por ejemplo:
-    -- local target = workspace:FindFirstChild(targetName)
-    -- local Character = target and target:IsA("Character") and target
-    -- if Character then Character:TakeDamage(amount) end
-end)
+-- Combat is game-specific; this template publishes no damage request endpoint.
+-- Before accepting attack intent, implement server-owned weapon state, cooldowns,
+-- hit/range checks and target eligibility. The server determines damage and target.
+-- A client-selected name/object or clamped amount does not authorize a hit.
 
 -- ── Sistema de rondas (esqueleto) ─────────────────────────────────
 local ROUND_TIME = 120  -- segundos por ronda

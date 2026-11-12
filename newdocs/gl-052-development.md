@@ -514,3 +514,38 @@ DockerPC's worker lease remains held by another campaign (generation 110), so no
 worker build is started or lease taken. Use hosted source builds and the existing
 bounded MainPC editor fallback. No dependency or admitted engine changes are
 needed for the snapshot fix.
+
+## Default damage example — owner-requested GL-053 follow-up
+
+The owner additionally requests correction of the default scripts' damage remote.
+Trace the actual source before changing it: the GameManager endpoint accepts a
+client-selected string target and clamped numeric amount, but only logs today;
+its damage call is commented out. Object targets are rejected, and normal native
+payload admission already rejects nonfinite numbers. Do not call this a reproduced
+health exploit. An independent read-only boundary investigation agrees.
+
+No shipped caller depends on this endpoint, and no game-specific combat policy
+exists in the skeleton. Remove the exposed example and its unsafe commented
+recipe rather than inventing combat authorization. Regenerate only the matching
+embedded template; document existing customized-script migration. Native network
+and Character authority are unchanged. [GL-053](gl-053-default-damage.md) records
+the patch contract, controlled pre-fix failure and passing actual-source Integration
+run. Final compiled product verification and the independent review remain pending.
+
+Cancel the now-superseded `33d448b` production candidate `43151748683` because
+the final embedded template changes its native inputs. Retain its completed
+results as intermediate evidence. The `33d448b` native run `43151747225` continues
+to establish the separate snapshot fix; Linux's actual editor workflow, including
+the fresh-process reopen checks, is successful. Final qualification must identify
+the combined source explicitly, rather than reuse an older product's identity.
+
+Desktop access now permits bounded native UI work. With the official editor's
+documented `--single-window` option, create an isolated Compatibility project via
+Project Manager, install the already accepted e393c0d extension without overwriting
+project files, and use the real Luau Authoring panel to create Main.tscn/Main.luau.
+Open the source in ScriptEditor and observe native highlighting/association.
+Retain `interactive-single-window/created-project.png` and the isolated project.
+This closes the earlier blanket claim that all UI access is unavailable; it does
+not yet qualify editing, complete play/debug/export interaction or the pending
+snapshot correction's graphical path. Source input interrupted by user activity
+is not counted as an edit or save.

@@ -38,3 +38,18 @@ them from disk at startup — edit one, hit play, no rebuild needed. Grab just
 the file you want to improve, change it, and send it over. The DLL keeps an
 embedded copy for exported games, so after editing a `.luau` run
 `python tools/generar_plantillas_luau.py` before compiling.
+
+The generic GameManager intentionally publishes no damage RemoteEvent. A game
+must establish server-owned weapon state, cooldowns, hit/range validation and
+target eligibility before exposing attack requests. The server determines damage
+and the eligible target; a client-supplied amount, name or object is not authority.
+The former DamageEvent example only logged requests (its damage call was a
+comment), but provided no such gameplay authorization and has been removed from
+both the disk template and embedded fallback.
+
+For existing projects, inspect and remove or replace old DamageEvent handlers in
+customized GameManager scripts. This change adds no runtime deletion or automatic
+content migration. Existing template synchronization may update untouched managed
+scripts; customized or unknown-base scripts retain their content and receive an
+update offer. Keep project-specific combat only when its server validation is
+established independently.
