@@ -1,0 +1,79 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-052 main integration",
+  "Date": "2026-11-12",
+  "Disposition": "SOURCE_INTEGRATED_FRESH_MAIN_CI_PENDING",
+  "Base": "e43e981d423cea99edff9eb9d186a0b9a4758b73",
+  "QualifiedBranch": "feature/gl-052-luau-authoring-workflow",
+  "QualifiedHead": "9e285920c58479d52f2cf2ba3a09da6816720da1",
+  "Merge": "8a374060f03d069705f8c8b732621e63c4254ce5",
+  "MergeParents": [
+    "e43e981d423cea99edff9eb9d186a0b9a4758b73",
+    "9e285920c58479d52f2cf2ba3a09da6816720da1"
+  ],
+  "QualifiedAndMergeTree": "f93bee9d1eb7f36627cade8fb250c94daee99480",
+  "PreservedCommits": [
+    "f2ec8f79cc3092995899f706a5e27ceed0ee74df",
+    "a1b14d7a3fc36236f30fe0268b01b726b934be67",
+    "481afaf4dfe4e3f1d2b8c1e551e272f3ab2bf095",
+    "9afbafdbef870449563d37d0380b14cf7d968a9c",
+    "b35723969ca951ad5a684dd51e02a471c7cc0a91",
+    "44ae7132d45d284499206866d7290ab0b5e6a46b",
+    "eedd4fe27d97756b1fa4a3328f020cd1c0caa4fd",
+    "4dba72687095f943ffe4980ed09f3ab639ed8b1e",
+    "29ea99ab011153ae30714c014bec7dea908be25b",
+    "1197f3d91a4a9f1f841e8eb5e48e2cbb1b4d4e21",
+    "6289e9ecc3cdd7079ec9777b18ed259232fd036f",
+    "e28a0fb74c505316fdd58e0724e3554198a9982b",
+    "e393c0d310f096263fb8c0ec2c8e3fe13d80584a",
+    "cc417558d673620718774b284d369e7b458bbea2",
+    "9a0b23cc32f9719a91241154e7df5599bcd444c3",
+    "bd73fad446e59a30bd69666bbe21a8098ba2d34f",
+    "b8dd85aef0e847994ef9f3f6b20081a4a8b1bf99",
+    "6852ae5b197e4565892c832a4d02824b59b7e199",
+    "2f3b9b5576484b708a2b2a59bf26d4bde4bbc492",
+    "33d448bdbd1277cef60d1f26cc1a4c51bf6f46d1",
+    "60913fbf1ab849a7e354ba7397f8fbc5845cad55",
+    "5a8a62b13dc2ae3c5b6e0cb281c7d58097bc8fdd",
+    "71e997b31b3cea65080757e4f305fcf40c06c869",
+    "6b4212a70fdfbc95cccef4fe814520ae3f119e2c",
+    "9e285920c58479d52f2cf2ba3a09da6816720da1"
+  ],
+  "NativeSource": {
+    "SHA256": "140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1",
+    "Files": 121,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "OriginalEvidenceGitBlobContentSHA256": {
+    "newdocs/adr-016-luau-editor-authoring.md": "645580252841b20fcf2bef7293603d26c4d86bf63b7c843d6144aea371f212f7",
+    "newdocs/evidence/gl052-e393-qualification.json": "c5ffafdbd8a9d35f10f193d03fdc7de4880f374fdb480208e16b3733aac3aa89",
+    "newdocs/evidence/gl052-qualification.json": "4e2053ecad6cc98334cddfa8d29f69bcc07bc34083504048d8b2ce82dba2fe26",
+    "newdocs/evidence/gl052-interactive-qualification.json": "ed7822cb078f2b5abffc9d5c2f5dfea954f6b1fd670a380ad6000f989684aac3"
+  },
+  "ReusedRuns": {
+    "Core": 43188368995,
+    "Native": 43188368944,
+    "Candidate": 43188370124,
+    "GamePackageExport": 43196708702,
+    "Sanitizers60913fb": 43154353439,
+    "DefinitionsUnchanged": 43128057457
+  },
+  "Reuse": "Exact qualified native/fixture/build inputs; retain earlier product and graphical identities, including the documented print-only sanitizer/UI reuse boundary",
+  "FreshMainCI": {
+    "Result": "PENDING",
+    "Core": "Awaiting push",
+    "Native": "Awaiting push",
+    "Definitions": "Existing workflow to dispatch on the same main revision"
+  },
+  "Corrections": [],
+  "SourceBranchUnchanged": true,
+  "NativeDefault": true,
+  "ScriptedOptIn": true,
+  "GL050": "Unchanged and unresolved",
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false
+}

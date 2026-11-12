@@ -1,6 +1,7 @@
 # Current architecture
 
-On the unmerged GL-052 branch, native editor actions create a plain scene and
+The [integrated GL-052 change](gl-052-main-integration.md) provides native editor
+actions that create a plain scene and
 LocalScript-associated `.luau` entrypoint. The existing runtime domains remain
 the execution authority. [ADR-016](adr-016-luau-editor-authoring.md) defines a
 separate restricted EditorPreview domain using the same scheduler/limits, with

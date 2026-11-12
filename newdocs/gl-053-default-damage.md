@@ -1,7 +1,8 @@
 # GL-053: Safe default GameManager combat boundary
 
 Status: **resolved for the default templates**, fixed and independently qualified
-at `60913fbf1ab849a7e354ba7397f8fbc5845cad55` on the unmerged GL-052 branch. Release publication
+at `60913fbf1ab849a7e354ba7397f8fbc5845cad55` on GL-052, now preserved by its
+[normal main integration](gl-052-main-integration.md). Release publication
 and updater distribution remain disabled.
 
 ## Verified baseline and scope

@@ -1,6 +1,7 @@
 # Luau-first native authoring workflow
 
-GL-052 is an unmerged implementation campaign. See the
+GL-052 is [integrated normally](gl-052-main-integration.md) within its documented
+qualification scope. See the
 [qualification record](gl-052-qualification.md) for qualified inputs and remaining
 interactive input gap, and the [journal](gl-052-development.md) for failures.
 There is no published fork release or updater channel. Use an explicitly verified

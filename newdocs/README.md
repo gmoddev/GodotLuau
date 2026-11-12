@@ -33,7 +33,8 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-The unmerged [GL-052 campaign](gl-052-development.md) targets a clean-project,
+The normally [integrated GL-052 campaign](gl-052-main-integration.md) preserves
+all 25 qualified feature commits and their evidence. It implements a clean-project,
 Luau-only authoring/editor/export workflow. [ADR-016](adr-016-luau-editor-authoring.md)
 defines the new explicit preview boundary; its journal distinguishes implementation
 and completed scoped qualification from retained unsupported profiles.
@@ -44,7 +45,8 @@ passes, accepted production packages/export and retained environment/profile
 limitations. The Windows interactive journey is complete, including native UI
 export and rendered standalone launch. The final default-script `print` follow-up
 passes core/native CI, all four production profiles, both packages and actual
-game export/startup. GL-052 is qualified within its documented scope and unmerged.
+game export/startup. GL-052 is qualified within its documented scope; the
+[integration record](gl-052-main-integration.md) tracks fresh main CI separately.
 The snapshot duplication fix passes fresh-process editor checks on both platforms.
 [GL-053](gl-053-default-damage.md) removes the unsafe default damage example and
 is resolved within the default-template scope, with migration guidance preserved.

@@ -685,3 +685,22 @@ unimplemented debugger/type-checker features and Linux graphical/device/sanitize
 limits. GL-050 stays separate. No further runtime changes are justified. Check
 final links/receipts/diff and remote branch identity, then commit/push documentation.
 Keep releases/updater distribution disabled and main unchanged.
+
+## Main integration authorized — 2026-11-12
+
+The owner now explicitly requests normal integration. The prior no-merge/main-
+unchanged statements above record the earlier campaign boundary, not a current
+prohibition. Fetch and verify main e43e981 and qualified branch 9e28592; both are
+unchanged and clean. Use an isolated integration worktree, preserving other work.
+Normal merge 8a374060f03d069705f8c8b732621e63c4254ce5 preserves all 25 feature
+commits, has the expected two parents, and exactly matches the qualified source
+tree f93bee9d1eb7f36627cade8fb250c94daee99480. No conflicts or runtime fixes.
+
+Native fingerprint remains 140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1
+(121 LF-normalized files). Original JSON qualification/interactive receipts and
+ADR-016 remain byte-identical. Dependencies, publication policy and updater guard
+are unchanged. Reuse accepted production, sanitizer and graphical evidence within
+its established scope; do not rebuild unchanged packages or repeat the UI journey.
+The [integration record](gl-052-main-integration.md) and separate receipt track
+fresh main core/native CI and generated-binding checks. Update integration docs,
+push main normally, then record their final outcomes. Releases/updater stay disabled.

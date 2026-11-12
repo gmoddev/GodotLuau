@@ -1,13 +1,15 @@
 # GL-052 qualification record
 
-Disposition: **implemented and qualified within the documented scopes; unmerged**.
+Disposition: **implemented and qualified within the documented scopes; integrated
+by normal merge**. The [main integration record](gl-052-main-integration.md)
+tracks fresh integrated CI separately from these preserved branch identities.
 Supported Windows interactive acceptance is complete.
 The snapshot duplication defect is fixed and
 fresh-process editor regressions pass on Windows/Linux. The owner-requested
 [GL-053 default damage correction](gl-053-default-damage.md) is also qualified.
 The supported Windows interactive journey now passes, including native export
-and independent rendered standalone launch. Main remains
-`e43e981d423cea99edff9eb9d186a0b9a4758b73`. Releases and updater distribution are
+and independent rendered standalone launch. Main at the branch qualification
+checkpoint was `e43e981d423cea99edff9eb9d186a0b9a4758b73`. Releases and updater distribution are
 disabled. [ADR-016](adr-016-luau-editor-authoring.md), the
 [development journal](gl-052-development.md) and
 [authoring guide](gl-052-authoring-workflow.md) define the implemented workflow
@@ -210,7 +212,8 @@ and qualified. Latest print-template core/native, candidate and package/export
 verification all pass.
 The preceding sanitizer/rendered evidence is reused because this last change
 only changes informational template calls; native output, ownership, authoring,
-authority and their fixture inputs are unchanged. Main is not a delivery target.
+authority and their fixture inputs are unchanged. The later owner-authorized
+integration supersedes the branch checkpoint's no-merge boundary.
 
 ## Retained fixture correction
 
