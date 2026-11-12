@@ -35,7 +35,7 @@ func Run() -> void:
             Check(Created.get("Passed", false), "Native action creates scene and .luau entrypoint")
             Check(not Plugin.call("CreateLuauScene", "res://Fresh.tscn").get("Passed", false), "Creation never overwrites an existing project scene")
             for Profile in ["Empty","2D","UI"]:
-                var TemplatePath := "res://Starter"+Profile+".tscn"
+                var TemplatePath: String = "res://Starter"+Profile+".tscn"
                 var Template: Dictionary = Plugin.call("CreateLuauScene",TemplatePath,Profile)
                 Check(Template.get("Passed",false) and Template.get("Template","")==Profile,"Native editor creates "+Profile+" template")
                 var TemplateSource: Script = load(TemplatePath.get_basename()+".luau")

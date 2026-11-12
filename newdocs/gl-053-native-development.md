@@ -340,4 +340,7 @@ mutation; run the same native physics/navigation cases separately on the
 already provisioned verified official host, where actual pathfinding is required.
 This does not extend full-native sanitizer claims to a non-instrumented host.
 The official 4.7.1 direct native control produces the expected two-point path;
-the bound native path check remains pending the fresh adapter run.
+the bound native path check remains pending the fresh adapter run. Check the
+modified GDScript fixtures with the verified official parser before dispatching
+further expensive runs; correct the same explicit String issue in the editor's
+new template-path loop as well.
