@@ -1,22 +1,33 @@
 # GL-052 qualification record
 
-Disposition: implemented and qualified within the scopes below; **partially
-qualified overall and unmerged**. The snapshot duplication defect is fixed and
+Disposition: implemented and qualified within the scopes below; **Windows
+interactive acceptance complete; final print-template candidate pending; unmerged**.
+The snapshot duplication defect is fixed and
 fresh-process editor regressions pass on Windows/Linux. The owner-requested
 [GL-053 default damage correction](gl-053-default-damage.md) is also qualified.
-The full interactive journey remains incomplete because current Windows
-activation fails. Main remains
+The supported Windows interactive journey now passes, including native export
+and independent rendered standalone launch. Main remains
 `e43e981d423cea99edff9eb9d186a0b9a4758b73`. Releases and updater distribution are
 disabled. [ADR-016](adr-016-luau-editor-authoring.md), the
 [development journal](gl-052-development.md) and
 [authoring guide](gl-052-authoring-workflow.md) define the implemented workflow
-and preserve failures. This checkpoint does not close GL-052. The compact
+and preserve failures. The final print-template production candidate is still
+running. The compact
 [qualification receipt](evidence/gl052-qualification.json) records exact source,
 package and workflow identities.
 
 ## Source identities
 
-Current qualified source: `60913fbf1ab849a7e354ba7397f8fbc5845cad55`, tree
+Latest implementation: `71e997b31b3cea65080757e4f305fcf40c06c869`. Its only
+runtime-input change after the preceding qualified cohort replaces 17 `dprint`
+calls in nine shipped default scripts with ordinary `print` and updates the
+matching embedded literals. Native fingerprint:
+`140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1`
+(121 LF-normalized files). Core and native CI pass; the candidate is pending.
+The legacy native debug helper remains available to existing customized scripts.
+
+The complete preceding product cohort, used for the interactive journey, is
+`60913fbf1ab849a7e354ba7397f8fbc5845cad55`, tree
 `0527d7cbc67b26862cfc2609e4f097bf777de2d5`.
 Native fingerprint: `9a59cfbcce5626fe954d232f5f8be71d4452ddf85cea0263eb627973886f49bc`,
 121 files with compiler-equivalent LF normalization. Dependency pins and admitted
@@ -65,12 +76,16 @@ These intermediate observations are not relabeled as qualification of newer code
 | [Final game package/export `43149583568`](https://github.com/gmoddev/GodotLuau/actions/runs/43149583568) | Existing Relay Siege extracted-package startup and actual Orb Run native export/independent startup pass; emitted DLL and companion match the accepted candidate |
 | Accepted-candidate Windows rendered multiplayer | `relay-candidate-listen` and `relay-candidate-dedicated` pass: four rendered players including late join, all actor exits 0 and no failed checks; dedicated server is headless |
 | Pre-fix fresh-process saved-scene reopen | Native EditorInterface opens both Generated and OrbSaved with their native content, but scene switching emits two Godot dialog errors; retained failure, superseded by current passing checks |
-| [Current core `43154348664`](https://github.com/gmoddev/GodotLuau/actions/runs/43154348664), `60913fb` | Windows/Linux pass |
-| [Current native `43154348629`](https://github.com/gmoddev/GodotLuau/actions/runs/43154348629), `60913fb` | Windows/Linux pass: 141 actors, 19 inherited editor, 37 authoring, seven fresh-process reopen and 13 game checks per platform; GL-053 passes inside Integration |
-| [Current sanitizers `43154353439`](https://github.com/gmoddev/GodotLuau/actions/runs/43154353439), `60913fb` | Windows/Linux pass, 26/27 stages, zero unexpected reports; GL-053 passes within both native Integration actors |
-| [Current candidate `43154350153`](https://github.com/gmoddev/GodotLuau/actions/runs/43154350153), `60913fb` | All four profiles, both strict packages and acceptance pass; extracted Debug/Release companion startup exits 0 on Windows/Linux |
-| [Current package/export `43164852674`](https://github.com/gmoddev/GodotLuau/actions/runs/43164852674), `60913fb` | Current Relay Siege extracted startup and actual Orb Run export/independent startup pass, with exact emitted DLL/worker bytes |
+| [Core `43154348664`](https://github.com/gmoddev/GodotLuau/actions/runs/43154348664), `60913fb` | Windows/Linux pass |
+| [Native `43154348629`](https://github.com/gmoddev/GodotLuau/actions/runs/43154348629), `60913fb` | Windows/Linux pass: 141 actors, 19 inherited editor, 37 authoring, seven fresh-process reopen and 13 game checks per platform; GL-053 passes inside Integration |
+| [Sanitizers `43154353439`](https://github.com/gmoddev/GodotLuau/actions/runs/43154353439), `60913fb` | Windows/Linux pass, 26/27 stages, zero unexpected reports; GL-053 passes within both native Integration actors |
+| [Candidate `43154350153`](https://github.com/gmoddev/GodotLuau/actions/runs/43154350153), `60913fb` | All four profiles, both strict packages and acceptance pass; extracted Debug/Release companion startup exits 0 on Windows/Linux |
+| [Package/export `43164852674`](https://github.com/gmoddev/GodotLuau/actions/runs/43164852674), `60913fb` | Relay Siege extracted startup and actual Orb Run export/independent startup pass, with exact emitted DLL/worker bytes |
 | Current rendered Orb Run | `game-609-rendered`: 14 checks, inspected native scene/UI capture and clean exit; current Debug adapter under official editor, separate from production export |
+| Windows interactive journey, `60913fb` products | Actual native edit/save, preview/Inspector, snapshot/edit/fresh-process reopen, Play/Stop, runtime source-line navigation/recovery, UI Release export and independent rendered standalone all pass; editor and standalone exits 0 |
+| [Latest core `43188368995`](https://github.com/gmoddev/GodotLuau/actions/runs/43188368995), `71e997b` | Windows/Linux pass |
+| [Latest native `43188368944`](https://github.com/gmoddev/GodotLuau/actions/runs/43188368944), `71e997b` | Windows/Linux pass; unchanged complete runtime/editor/authoring/reopen/game checks and DefaultScripts regression |
+| [Latest candidate `43188370124`](https://github.com/gmoddev/GodotLuau/actions/runs/43188370124), `71e997b` | Pending |
 
 Superseded candidate/sanitizer/native cohorts are canceled when concrete source
 fixes invalidate their inputs. Their failures/logs remain in the journal and
@@ -102,6 +117,20 @@ artifact contains `results.json`, all four successful commands and their log
 hashes. This is headless editor/export/startup evidence, not interactive export
 or rendered standalone qualification.
 
+The later [interactive receipt](evidence/gl052-interactive-qualification.json)
+closes that separate Windows UI gap. The actual UI-created disposable project is
+edited/saved in ScriptEditor, previewed and inspected, then saved independently
+as InteractiveSnapshot.tscn. Native editing renames Cube to EditedCube; a fresh
+editor process restores it without load dialogs. A deliberate runtime error at
+Main.luau:8 reaches Output and the native authoring panel; explicit navigation
+moves the caret to 8:1. Restoring valid source clears its diagnostic and reruns
+successfully. Project → Export emits a Release executable with byte-identical
+60913fb DLL/companion products. With the editor closed, only exported files are
+copied to an independent directory and launched without source paths: the cube
+renders, Ready is logged, and normal exit is 0 with empty stderr. The small UI
+project complements the separate Orb Run gameplay qualification; it is not a
+claim that every Orb Run script was typed during this session.
+
 Twenty current hosted preview rebuilds take 129.344 ms on Windows and 129.743 ms
 on Linux, including editor/frame processing. Static readings change from
 396,988,836 to 397,141,024 bytes on Windows and 406,850,580 to 407,003,848 on Linux.
@@ -125,9 +154,10 @@ companion SHA256:
   Later `--single-window` work observes actual project creation, native Luau
   scene/source creation and source opening/highlighting. With current accepted
   products installed, editor captures render but activation fails twice with
-  `failed to activate captured window`. The complete editing/inspection/play/
-  debug/save/reopen/export UI journey remains unqualified. Actual headless editor
-  execution and offscreen rendering are separate evidence.
+  `failed to activate captured window`. Preserve these interrupted attempts.
+  The later supported `--single-window` session completes the native Windows UI
+  journey; it supersedes the input gap without erasing earlier failures. Linux
+  graphical and physical-device claims remain outside this evidence.
 - In a fresh isolated project, positional and `--scene` editor invocations restore
   Generated rather than prove OrbSaved opened. A subsequent external @tool
   observer uses native `EditorInterface.open_scene_from_path`: both roots open,
@@ -140,7 +170,7 @@ companion SHA256:
 - Fast clean stock-editor `--editor --import` exits with an access violation for
   both retained GL-051 and older GL-052 products. Root cause is not established.
   Normal bounded editor startup exits cleanly. The fast import profile remains
-  unqualified; saved-scene switching has its separate limitation above.
+  unqualified; the separate saved-scene duplication defect is fixed.
 - The older Debug extension under the admitted Release host exits with heap
   corruption even for a print-only scene, including with retained GL-051.
   Matching production profiles must be used; successful in-game observations
@@ -165,9 +195,12 @@ listen/dedicated multiplayer regressions pass within unchanged gameplay,
 controller and networking paths. Fresh current extracted startup passes
 separately. Native remains the default and
 Scripted remains opt-in; no controller/network/persistence redesign is included.
-The implemented headless and Windows rendered paths are ready for review, but
-full interactive acceptance remains outstanding. The snapshot defect and GL-053
-are fixed and qualified within their stated scopes. Main is not a delivery target.
+The implemented headless, Windows rendered and Windows interactive paths are
+qualified within the recorded scopes. The snapshot defect and GL-053 are fixed
+and qualified. Latest print-template candidate verification remains pending.
+The preceding sanitizer/rendered evidence is reused because this last change
+only changes informational template calls; native output, ownership, authoring,
+authority and their fixture inputs are unchanged. Main is not a delivery target.
 
 ## Retained fixture correction
 

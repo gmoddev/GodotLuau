@@ -613,3 +613,40 @@ the 17 informational calls in the nine shipped default `.luau` sources and
 regenerate their embedded header. This changes informational log visibility;
 warning behavior, native output implementation and customized project content
 are outside this bounded change. Qualification is pending for the new source.
+
+The resumed native UI session now completes actual ScriptEditor edit/save,
+preview rendering, MeshInstance3D Inspector inspection, explicit Save Preview As
+to InteractiveSnapshot.tscn, Clear Preview, and native resource-chooser reopening.
+The independent scene contains plain native nodes. Rename Cube to EditedCube in
+the native Scene tree and save; no live preview scope is serialized. F5/F8 runs
+and stops the generated Main scene, with the blue cube rendered and the edited
+`[Authoring:Interactive] Ready` print visible in Output.
+
+Append a deliberate runtime error at Main.luau:8 through ScriptEditor. Actual
+Output and Luau Authoring retain its source/stack, and Open Runtime Error moves
+the caret to 8:1. A subsequently observed unsaved incomplete `find` statement
+also produces a native parse diagnostic at 9:1; it is not part of saved source.
+Restore the valid seven-line source through ScriptEditor, save, and rerun: the
+cube renders, Ready appears, and the child stops normally with no new errors.
+Retain screenshots/logs in `gl052-interactive-20261112`. Fresh editor restart and
+interactive export/standalone launch remain to finish; these UI observations use
+the already qualified 60913fb Debug products, not future print-template products.
+
+Finish that remaining interactive path: close the editor normally (exit 0),
+restart the same isolated project in a fresh process, and observe EditedCube,
+its native mesh/Inspector and blue geometry restored without load dialogs. Use
+Project → Export → Export Project with an explicit existing admitted Release
+template and Export With Debug unchecked. The dialog warns about absent default
+templates but accepts this custom template. It emits the exact qualified Release
+DLL and companion. Close the editor (exit 0), copy only emitted files outside the
+source project and launch the executable without a source path. Observe the blue
+cube and Ready output, then close normally (exit 0, empty stderr).
+
+The [interactive receipt](evidence/gl052-interactive-qualification.json) preserves
+source/product identities, screenshot/log hashes and the actual UI facts. This
+completes supported Windows interactive acceptance; earlier desktop failures
+remain historical evidence. Orb Run gameplay and Relay Siege multiplayer retain
+their separate qualification. The print-only follow-up is 71e997b; its core CI
+passes and native/candidate CI are still running at this checkpoint. No additional
+sanitizer run is needed for informational template call changes: the native output,
+ownership, authoring and authority implementations/fixtures are unchanged.

@@ -139,8 +139,13 @@ by Godot. Launch from an independent directory without source-tree paths.
 Windows accepted-candidate export and independent startup pass in
 [run 43164852674](https://github.com/gmoddev/GodotLuau/actions/runs/43164852674).
 The [qualification record](gl-052-qualification.md) separately records actual
-Windows rendering, passing fresh-process reopen checks and the remaining input gap. A staging
-preset or successful headless game run alone does not qualify those workflows.
+Windows rendering and passing fresh-process reopen checks. The
+[interactive receipt](evidence/gl052-interactive-qualification.json) records a
+completed native Windows creation/edit/preview/Inspector/error-recovery/save/
+restart/export/standalone journey under the official editor with `--single-window`.
+The Release export uses the existing admitted custom template, with Export With
+Debug unchecked; no default-template installation is required. A staging preset
+or successful headless game run alone does not establish those UI facts.
 
 GL-050 remains unresolved and separate. Existing headless evidence does not
-establish physical gamepad, Linux rendering or unavailable interactive UI behavior.
+establish physical gamepad or Linux rendering behavior.
