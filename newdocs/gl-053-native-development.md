@@ -204,3 +204,18 @@ manager is introduced. Add production-hook fixture cases for module exports,
 shadowed references and denied user:// navigation. Full project-wide semantic
 indexing/find-references and breakpoint stepping remain explicit limitations;
 existing bounded stack/error/domain diagnostics are retained.
+
+## Native starter templates in progress
+
+Reuse the existing canonical .luau template generator for Empty, unchanged 3D,
+2D physics/input and native UI sources. Add a selector to the existing native
+new-scene action, with the old one-argument/default-3D API preserved. No second
+scene format, package manager or updater is added. The generator's --check joins
+the existing generation gates; default-damage template contents remain unchanged.
+
+GL-055 records the UI starter's source-verified preset/offset ordering discrepancy.
+Apply presets before explicit properties and preserve validation of the entire
+batch first. New native fixture cases execute all four actual template sources,
+2D physics and live UI signals, then retire owners. Existing editor workflow
+coverage adds profile creation/static preview and rejection before file writes.
+These changes await hosted runtime/editor execution and graphical qualification.

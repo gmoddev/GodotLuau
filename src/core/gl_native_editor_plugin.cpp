@@ -19,7 +19,7 @@ ScriptEditor* GetEditor() {
 void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OnScriptChanged", "Script"), &GLNativeEditorPlugin::OnScriptChanged);
     ClassDB::bind_method(D_METHOD("ConfigureEditor"), &GLNativeEditorPlugin::ConfigureEditor);
-    ClassDB::bind_method(D_METHOD("CreateLuauScene", "Path"), &GLNativeEditorPlugin::CreateLuauScene);
+    ClassDB::bind_method(D_METHOD("CreateLuauScene", "Path","Profile"), &GLNativeEditorPlugin::CreateLuauScene,DEFVAL(String("3D")));
     ClassDB::bind_method(D_METHOD("PreviewScript", "Source"), &GLNativeEditorPlugin::PreviewScript);
     ClassDB::bind_method(D_METHOD("StopPreview"), &GLNativeEditorPlugin::StopPreview);
     ClassDB::bind_method(D_METHOD("ResetPreviewContext"), &GLNativeEditorPlugin::ResetPreviewContext);

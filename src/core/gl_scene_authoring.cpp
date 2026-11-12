@@ -218,7 +218,10 @@ std::vector<Assignment> Validate(lua_State* Thread, SceneScope* Scope, Object* T
         Batch.push_back({Item,Value}); lua_pop(Thread,1);
     }
     ValidateEffects(Thread,Target,Batch);
-    if(Target->is_class("MultiMesh"))std::stable_sort(Batch.begin(),Batch.end(),[](const Assignment& A,const Assignment& B){return strcmp(A.Item->Native,"instance_count") && !strcmp(B.Item->Native,"instance_count");});
+    if(Target->is_class("MultiMesh") || Target->is_class("Control"))std::stable_sort(Batch.begin(),Batch.end(),[](const Assignment& A,const Assignment& B){
+        auto Order=[](const char* Native){return !strcmp(Native,"@full_rect")?0:!strcmp(Native,"instance_count")?2:1;};
+        return Order(A.Item->Native)<Order(B.Item->Native);
+    });
     return Batch;
 }
 void Apply(Object* Target, const std::vector<Assignment>& Batch) {

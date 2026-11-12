@@ -28,6 +28,10 @@ SALIDA = os.path.join(RAIZ, "src", "core", "luau_templates_gen.h")
 #  gl_builtin_template() en src/core/luau_script.h.
 # ─────────────────────────────────────────────────────────────────────
 PLANTILLAS = [
+    ("NativeAuthoring/Empty.luau", "LUAU_TEMPLATE_NATIVE_EMPTY"),
+    ("NativeAuthoring/ThreeD.luau", "LUAU_TEMPLATE_NATIVE_3D"),
+    ("NativeAuthoring/TwoD.luau", "LUAU_TEMPLATE_NATIVE_2D"),
+    ("NativeAuthoring/UI.luau", "LUAU_TEMPLATE_NATIVE_UI"),
     ("StarterPlayer/StarterCharacterScripts/Health.luau",                        "LUAU_TEMPLATE_HEALTH"),
     ("StarterPlayer/StarterCharacterScripts/Animate.luau",                       "LUAU_TEMPLATE_ANIMATE"),
     ("StarterPlayer/StarterPlayerScripts/PlayerModule.luau",                     "LUAU_TEMPLATE_PLAYER_MODULE"),
@@ -131,6 +135,13 @@ def generar():
 
     partes.append("\n#endif // GL_LUAU_TEMPLATES_GEN_H\n")
     texto = "".join(partes)
+
+    if "--check" in sys.argv:
+        with open(SALIDA,"r",encoding="utf-8") as Existing:
+            if Existing.read().replace("\r\n","\n")!=texto:
+                raise SystemExit("[Authoring:Templates] Generated template drift")
+        print("[Authoring:Templates] PASS canonical and embedded templates")
+        return
 
     # Se escribe con CRLF como el resto de src/ (el compilador convierte los
     # saltos de los raw strings a \n, igual que hacia con los literales viejos).

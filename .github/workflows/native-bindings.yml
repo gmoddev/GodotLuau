@@ -1,7 +1,7 @@
 name: Approved native bindings and Luau declarations
 on:
   push:
-    paths: ['bindings/**', 'GodotLuau/Types/**', 'tools/GenerateNativeBindings.py', 'tests/bindings/**', '.github/workflows/native-bindings.yml']
+    paths: ['bindings/**', 'GodotLuau/Types/**', 'GodotLuau/DefaultScripts/**', 'tools/GenerateNativeBindings.py', 'tools/generar_plantillas_luau.py', 'src/core/luau_templates_gen.h', 'tests/bindings/**', '.github/workflows/native-bindings.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -33,6 +33,7 @@ jobs:
       - name: Check approved policy and generated output drift
         run: |
           python tools/GenerateNativeBindings.py --check
+          python tools/generar_plantillas_luau.py --check
           python tests/bindings/NativePolicyTests.py
       - name: Build pinned Luau type checker probe
         run: |

@@ -50,6 +50,8 @@ def Prepare(Output, Extension):
                          (Repository / "src/core/luau_templates_gen.h").read_text(encoding="utf-8"), re.S)
     assert Embedded and Embedded.group(2) == "\n" + DefaultSource, "Default GameManager disk/embedded sources differ"
     (Output / "DefaultGameManager.luau").write_text(DefaultSource, encoding="utf-8")
+    for Name in ('Empty','ThreeD','TwoD','UI'):
+        shutil.copy2(Repository/'GodotLuau/DefaultScripts/NativeAuthoring'/(Name+'.luau'),Output/('Template'+Name+'.luau'))
     for Script in Path(__file__).parent.glob("*.gd"):
         shutil.copyfile(Script, Output / Script.name)
     Controller = Path(__file__).resolve().parents[2] / 'examples/input-controller/Controller.luau'

@@ -72,7 +72,9 @@ jobs:
 
       - name: Require approved native policy and generated API identity
         timeout-minutes: 1
-        run: python tools/GenerateNativeBindings.py --check
+        run: |
+          python tools/GenerateNativeBindings.py --check
+          python tools/generar_plantillas_luau.py --check
 
       - name: Verify fixture process ownership and failure handling
         timeout-minutes: 2

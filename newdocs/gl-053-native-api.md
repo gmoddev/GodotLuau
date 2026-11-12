@@ -195,3 +195,22 @@ language-server index remain unsupported. Existing generated definitions are
 checked with the real pinned Luau frontend; bounded syntax inference does not
 claim to replace whole-program type analysis. Transitive runtime module reload
 behavior and retained snapshot semantics are recorded under GL-054 in the journal.
+
+## Native starter scenes
+
+The authoring panel's existing New Luau Scene action now offers 3D (the existing
+default), 2D, UI and Empty. CreateLuauScene(Path, Profile?) preserves one-argument
+callers and rejects unknown profiles before writing. Empty/2D/UI use a plain Node
+bootstrap; 3D retains Node3D. Both retain a real LocalScript .luau entrypoint and
+owned SceneScope content. Existing projects are never overwritten.
+
+Canonical sources live under GodotLuau/DefaultScripts/NativeAuthoring and are
+embedded by the existing template generator. The 2D starter uses real
+CharacterBody2D physics, keyboard/gamepad actions and jump requests. The UI starter
+uses native tabs, lists, text entry, tooltips, keyboard focus and signals. Preview
+constructs static content without entering gameplay services. FullRect layout
+presets apply before explicit offsets in validated batches.
+
+The qualified Relay Siege project remains the multiplayer starting point;
+the new-scene selector does not synthesize multiplayer authority or deployment.
+These starter templates are not substitutes for the campaign's acceptance projects.

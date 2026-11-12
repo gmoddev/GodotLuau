@@ -124,6 +124,17 @@ four successful workflows and independently checked artifacts.
 | GL-052 | P2 | Integrated and verified within documented ADR-016 scope; retained limits unchanged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 | GL-054 | P2 | Source-verified discrepancy; fix awaiting runtime qualification on native-expansion branch | Changed project module leaves cached transitive importers and their callbacks alive |
+| GL-055 | P2 | Source-verified discrepancy; fix awaiting native UI qualification | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
+
+## GL-055: Native layout preset ordering
+
+The GL-053 UI starter needs FullRect plus explicit margins in one New/Configure
+batch. At main `16e8597`, Apply follows the Lua table's iteration order: a later
+FullRect preset resets offsets already applied. This is source-verified ordering
+behavior, not a reproduced graphical failure. The native-expansion branch applies
+the layout preset before explicit properties, retaining validation before mutation.
+NativeTemplateCases checks actual Control anchors/margins and live UI signals.
+Qualification is pending in the [journal](gl-053-native-development.md).
 
 ## GL-054: Transitive project module reload
 
