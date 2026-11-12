@@ -559,6 +559,8 @@ export type NativeAnimatedSprite2DProperties = {
     Offset: (NativeVector2)?,
     FlipH: (boolean)?,
     FlipV: (boolean)?,
+    Frame: nil,
+    FrameProgress: nil,
 }
 export type NativeArea2DProperties = {
     Name: (string)?,
@@ -1291,6 +1293,7 @@ export type NativeItemListProperties = {
     MaxColumns: (number)?,
     IconMode: (number)?,
     FixedIconSize: (NativeVector2i)?,
+    ItemCount: nil,
 }
 export type NativeLabelProperties = {
     Name: (string)?,
@@ -1919,6 +1922,7 @@ export type NativeSprite2DProperties = {
     FlipV: (boolean)?,
     Hframes: (number)?,
     Vframes: (number)?,
+    FrameCoords: nil,
     RegionEnabled: (boolean)?,
     RegionRect: (NativeRect2)?,
     RegionFilterClipEnabled: (boolean)?,
@@ -2047,6 +2051,7 @@ export type NativeTabContainerProperties = {
     SelfModulateRGBA: (NativeColor4)?,
     Theme: (NativeTheme?)?,
     TooltipText: (string)?,
+    CurrentTab: nil,
     TabsVisible: (boolean)?,
 }
 export type NativeTextEditProperties = {
@@ -2167,6 +2172,7 @@ export type NativeTimerProperties = {
     Autostart: (boolean)?,
     Paused: (boolean)?,
     ProcessCallback: (number)?,
+    TimeLeft: nil,
 }
 export type NativeVBoxContainerProperties = {
     Name: (string)?,

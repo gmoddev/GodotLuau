@@ -91,3 +91,14 @@ MultiMesh, foreign-owner calls and cancellation at owner retirement. Added Luau
 typechecker cases exercise new APIs and rejection. These runtime/type cases are
 not yet qualified; hosted C++ build and Windows/Linux execution are the next gate.
 No main, release, updater, dependency or admitted-host change is included.
+
+Phase B source `ba4b400bc27e43fa17b39d7f9f79ca77a497639b` passes hosted
+Windows/Linux core run [43215953625](https://github.com/gmoddev/GodotLuau/actions/runs/43215953625).
+Native run 43215953985 is still building. Type run
+[43215953650](https://github.com/gmoddev/GodotLuau/actions/runs/43215953650)
+compiled and loaded all generated definitions on both platforms, then correctly
+failed the new read-only-constructor rejection. Luau width subtyping accepts
+extra fields when an observation field is merely omitted. Emit explicit nil
+fields for those constructor/Configure entries so numeric writes cannot be
+accepted as harmless extra data. Preserve this failed attempt; rerun the type
+workflow for the corrected declarations. This changes declarations only.

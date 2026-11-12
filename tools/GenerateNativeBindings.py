@@ -406,7 +406,9 @@ def Generate(Policy, Api):
             T += ['declare class MutableNative' + N + ' extends Native' + N, 'end']
     for C in D['Classes']:
         T += ['export type Native' + C['Name'] + 'Properties = {']
-        T += ['    ' + P['Name'] + ': (' + Type(P) + ')?,' for P in Effective(C['Name']) if not P.get('ReadOnly')]
+        # Explicit nil prevents Luau width subtyping from accepting a known
+        # observation property as an otherwise harmless extra constructor field.
+        T += ['    ' + P['Name'] + (': nil,' if P.get('ReadOnly') else ': (' + Type(P) + ')?,' ) for P in Effective(C['Name'])]
         T += ['}']
     T += ['declare class NativeSceneScope extends NativeNode3D']
     New, Configure, Get, Call, Connect, Load = [], [], [], [], [], []
