@@ -179,3 +179,19 @@ These scenes use ordinary Godot PackedScene/SceneState resources. Instantiation
 preserves native shared resources and inherited property overrides; the existing
 editor snapshot Save As still flattens content into an independent scene under
 ADR-016. It does not preserve live inherited linkage in that independent snapshot.
+
+## Module navigation and reload
+
+Godot's existing lookup hook now resolves project require aliases and exported
+function members, including local function aliases in returned tables. It uses
+the pinned Luau AST and reads at most 1 MiB from an explicit valid res:// .luau/.lua
+target. It never evaluates the module or loads arbitrary Script resources.
+Cursor-aware lexical lookup preserves shadowed local identity and returns up to
+128 source-local references. The inspectable LuauScript.NavigateNativeCode API
+uses the same hook implementation for qualification and editor tooling.
+
+Dynamic imports/exports, full project-wide semantic reference search and a live
+language-server index remain unsupported. Existing generated definitions are
+checked with the real pinned Luau frontend; bounded syntax inference does not
+claim to replace whole-program type analysis. Transitive runtime module reload
+behavior and retained snapshot semantics are recorded under GL-054 in the journal.

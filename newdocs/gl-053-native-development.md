@@ -193,3 +193,14 @@ Node2D radian rotation receives its existing degree-bound serialization adapter.
 
 Animation commit `cb35958` passes fresh Windows/Linux 87-case core run 43219735951
 and generated type run 43219735683. Native run 43219735745 is still building.
+
+## Editor navigation implementation
+
+Extend the actual lookup hook with existing Luau AST local identities and static
+project imports. Resolve require aliases and exported returned-table functions,
+preserve lexical shadowing and return bounded source-local reference locations.
+No code evaluation, second analyzer, unrestricted filesystem walk or package
+manager is introduced. Add production-hook fixture cases for module exports,
+shadowed references and denied user:// navigation. Full project-wide semantic
+indexing/find-references and breakpoint stepping remain explicit limitations;
+existing bounded stack/error/domain diagnostics are retained.

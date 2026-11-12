@@ -225,12 +225,14 @@ class LuauScript : public ScriptExtension {
 protected:
     static void _bind_methods() {
         ClassDB::bind_method(D_METHOD("InspectNativeCode","Code","Path"),&LuauScript::InspectNativeCode,DEFVAL(String()));
+        ClassDB::bind_method(D_METHOD("NavigateNativeCode","Code","Symbol","Path"),&LuauScript::NavigateNativeCode,DEFVAL(String()));
     }
     String source_code;
     uint64_t SourceRevision = 0;
 
 public:
     Dictionary InspectNativeCode(const String& Code, const String& Path) const { return GLInspectNativeCode(Code,Path); }
+    Dictionary NavigateNativeCode(const String& Code,const String& Symbol,const String& Path) const { return GLNavigateNativeCode(Code,Symbol,Path); }
     String _get_source_code() const override { return source_code; }
     uint64_t GetSourceRevision() const { return SourceRevision; }
     void _set_source_code(const String &p_code) override {
