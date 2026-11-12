@@ -130,7 +130,35 @@ Object* TargetAt(lua_State* Thread, SceneScope* Scope, int Index, bool Write) {
     return Target;
 }
 bool RegistryIsA(const char* Name, const char* Base);
+const GLNative::Class* FindClass(const char* Name);
+struct NativeMembers {
+    std::unordered_map<std::string,const Property*> Properties;
+    std::unordered_map<std::string,const GLNative::Method*> Methods;
+    std::unordered_map<std::string,const GLNative::Signal*> Signals;
+};
+const NativeMembers* GetNativeMembers(Object* Target) {
+    // Policy-sized immutable metadata only. Never retain native object pointers,
+    // handles or user-supplied query names in this index.
+    static const auto Index=[] {
+        std::unordered_map<std::string,NativeMembers> Result;
+        for(const auto& Class:GLNative::Classes) {
+            auto& Members=Result[Class.Name];const auto* Current=&Class;
+            for(int Depth=0;Current && Depth<64;++Depth,Current=FindClass(Current->Base)) {
+                for(const auto& Item:GLNative::Properties)if(!strcmp(Item.Class,Current->Name))Members.Properties.emplace(Item.Name,&Item);
+                for(const auto& Item:GLNative::Methods)if(!strcmp(Item.Class,Current->Name))Members.Methods.emplace(Item.Name,&Item);
+                for(const auto& Item:GLNative::Signals)if(!strcmp(Item.Class,Current->Name))Members.Signals.emplace(Item.Name,&Item);
+            }
+        }
+        return Result;
+    }();
+    std::string Name=Target->get_class().utf8().get_data();
+    if(Name=="SceneScope")Name="Node3D";
+    auto Found=Index.find(Name);return Found==Index.end()?nullptr:&Found->second;
+}
 const Property* FindProperty(Object* Target, const char* Key) {
+    if(auto Members=GetNativeMembers(Target)) {
+        auto Found=Members->Properties.find(Key);return Found==Members->Properties.end()?nullptr:Found->second;
+    }
     const Property* Best=nullptr;
     for (const auto& Item:Properties) if (!strcmp(Item.Name,Key) && Target->is_class(Item.Class) &&
         (!Best || RegistryIsA(Item.Class,Best->Class))) Best=&Item;
@@ -245,8 +273,12 @@ void Apply(Object* Target, const std::vector<Assignment>& Batch) {
     }
 }
 const GLNative::Class* FindClass(const char* Name) {
-    for (const auto& Item:GLNative::Classes) if (!strcmp(Item.Name,Name)) return &Item;
-    return nullptr;
+    static const auto Index=[] {
+        std::unordered_map<std::string,const GLNative::Class*> Result;
+        for(const auto& Item:GLNative::Classes)Result.emplace(Item.Name,&Item);
+        return Result;
+    }();
+    auto Found=Index.find(Name);return Found==Index.end()?nullptr:Found->second;
 }
 bool RegistryIsA(const char* Name, const char* Base);
 Node* CreateNode(const char* Name) {
@@ -328,12 +360,18 @@ int Get(lua_State* Thread) {
     const char* Key=CheckedString(Thread,3); PushProperty(Thread,Scope,Target,Key); return 1;
 }
 const GLNative::Method* FindMethod(Object* Target, const char* Name) {
+    if(auto Members=GetNativeMembers(Target)) {
+        auto Found=Members->Methods.find(Name);return Found==Members->Methods.end()?nullptr:Found->second;
+    }
     const GLNative::Method* Best=nullptr;
     for (const auto& Item:GLNative::Methods) if (!strcmp(Item.Name,Name) && Target->is_class(Item.Class) &&
         (!Best || RegistryIsA(Item.Class,Best->Class))) Best=&Item;
     return Best;
 }
 const GLNative::Signal* FindSignal(Node* Target, const char* Name) {
+    if(auto Members=GetNativeMembers(Target)) {
+        auto Found=Members->Signals.find(Name);return Found==Members->Signals.end()?nullptr:Found->second;
+    }
     for (const auto& Item:GLNative::Signals) if (!strcmp(Item.Name,Name) && Target->is_class(Item.Class)) return &Item;
     return nullptr;
 }

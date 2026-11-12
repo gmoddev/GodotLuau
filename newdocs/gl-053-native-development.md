@@ -305,3 +305,23 @@ Rejecting a larger count must preserve the prior native state. Bound sprite
 custom playback speed explicitly to [-16,16], alongside existing speed/frame
 limits. These are bounded effect checks on the newly admitted APIs, not a new
 resource policy or scheduler. Native runtime verification remains pending.
+
+## Binding measurements and bounded metadata indexing
+
+Compare retained Windows Debug adapters `60913fb` and `cb35958` on the same
+official 4.7.1 headless host, with an identical fixture and seven trials (first
+excluded as warmup). Median 10,000 Position set/read pairs: baseline 42.873 ms,
+candidate 76.257 ms. Median 64-node construction: 0.714 ms versus 0.707 ms.
+New Transform3D conversion costs 11.411 ms for 2,000 roundtrips; no baseline API
+exists for that conversion. Raw samples, binary hashes and fixture identity are
+retained in `gl053-native-20261112/binding-measurements.json`.
+
+The measured dispatch increase justifies replacing repeated policy-wide member
+scans with a policy-sized immutable class/member index. It stores descriptors
+only, resolves inherited members most-derived first, and retains the existing
+checked fallback for native resource subclasses absent from the selected class
+list. Native object pointers, owner/domain checks, ObjectDB resolution and caller
+query strings are not cached. This is not a second object registry or new
+capability. Reuse the same measurement after a fresh compiled adapter; no speedup
+is claimed before that result. Existing native lifecycle/authority fixtures remain
+the regression gate.
