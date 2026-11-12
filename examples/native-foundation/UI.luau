@@ -1,0 +1,26 @@
+local Scope=Scene.new(script.Parent)
+Scope.Name="FoundationUI"
+local Layer=Scope:New("CanvasLayer",{Name="UI"})
+local Panel=Scope:New("PanelContainer",{Name="Panel",FullRect=true,OffsetLeft=24,OffsetTop=24,OffsetRight=-24,OffsetBottom=-24,Theme=Scope:Load("Theme","res://Assets/Theme.tres")},Layer)
+local Tabs=Scope:New("TabContainer",{Name="Tabs",MinSize=Vector2.new(480,320)},Panel)
+local Settings=Scope:New("VBoxContainer",{Name="Settings",Separation=12},Tabs)
+Scope:New("Label",{Text="NATIVE APPLICATION",FontSize=26},Settings)
+local Name=Scope:New("LineEdit",{Name="NameInput",Text="Developer",PlaceholderText="Display name",TooltipText="Local presentation name"},Settings)
+local Volume=Scope:New("HSlider",{Name="Volume",MinValue=0,MaxValue=100,Step=1,Value=60,TooltipText="Native UI slider"},Settings)
+local Quality=Scope:New("ItemList",{Name="Presets",MinSize=Vector2.new(320,130),FixedIconSize={X=24,Y=24},TooltipText="Use arrow keys to choose a preset"},Settings)
+local Icon=Scope:Load("Texture2D","res://Assets/Token.tres")
+for _,Text in {"Low","Balanced","High"} do Scope:Call(Quality,"AddItem",Text,Icon) end
+Scope:Call(Quality,"Select",1)
+local Notes=Scope:New("TextEdit",{Name="Notes",MinSize=Vector2.new(320,100),PlaceholderText="Session notes",WrapMode=1},Settings)
+local Apply=Scope:New("Button",{Name="Apply",Text="Apply settings"},Settings)
+local Status=Scope:New("Label",{Name="Status",Text="Settings are local to this session."},Settings)
+local About=Scope:New("VBoxContainer",{Name="About",Separation=12},Tabs)
+Scope:New("RichTextLabel",{Text="Native tabs, lists, icons, themes, text editing and responsive layout.\nTab / Shift+Tab and arrow keys use Godot's normal focus system.\nThis example grants no persistence or network authority.",FitContent=true},About)
+if not __IS_CLIENT then return end
+Scope:Connect(Apply,"Pressed",function()
+    local Selection=Scope:Call(Quality,"GetSelectedItems")
+    local Preset=#Selection>0 and Scope:Call(Quality,"GetItemText",Selection[1]) or "Balanced"
+    Status.Text=string.format("Applied: %s • %s • volume %d • %d note bytes",Name.Text,Preset,Volume.Value,#Notes.Text)
+end)
+Scope:Call(Name,"GrabFocus")
+print("[Foundation:UI] Ready")

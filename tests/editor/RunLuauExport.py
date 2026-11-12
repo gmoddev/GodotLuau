@@ -30,6 +30,7 @@ def Main():
     Parser=argparse.ArgumentParser(description=__doc__)
     for Name in ('candidate','engine','host-manifest','editor','output'):
         Parser.add_argument('--'+Name,type=Path,required=True)
+    Parser.add_argument('--profile',choices=['OrbRun','Native2D','Native3D','UI'],default='OrbRun')
     Args=Parser.parse_args()
     if os.name!='nt': Parser.error('This explicit Windows export profile requires Windows')
     Output=Args.output.resolve();Output.mkdir(parents=True,exist_ok=False)
@@ -41,7 +42,7 @@ def Main():
     Commands=[]
     Commands.append(Execute([sys.executable,Repository/'examples/luau-only/PrepareProject.py',
         '--candidate',Args.candidate.resolve(),'--engine',Args.engine.resolve(),
-        '--host-manifest',Args.host_manifest.resolve(),'--output',Project],Output/'stage.log',60,Environment))
+        '--host-manifest',Args.host_manifest.resolve(),'--profile',Args.profile,'--output',Project],Output/'stage.log',60,Environment))
     # Normal bounded editor open completes initialization. The stock editor's
     # fast --import exit is a separately retained failing baseline profile.
     Base=[Args.editor.resolve(),'--headless','--disable-crash-handler','--single-threaded-scene','--path',Project]
@@ -56,7 +57,8 @@ def Main():
     for Name in ('open','export','startup'):
         Text=(Output/(Name+'.log')).read_text(errors='replace')
         assert 'ERROR:' not in Text and 'SCRIPT ERROR' not in Text and '[Runtime:Script]' not in Text, 'Native workflow error: '+Name
-    assert '[OrbRun:Lifecycle] Ready' in (Output/'startup.log').read_text(errors='replace'), 'Exported Luau entrypoint did not initialize'
+    Marker={'OrbRun':'[OrbRun:Lifecycle] Ready','Native2D':'[Foundation:2D] Ready','Native3D':'[Foundation:3D] Ready','UI':'[Foundation:UI] Ready'}[Args.profile]
+    assert Marker in (Output/'startup.log').read_text(errors='replace'), 'Exported Luau entrypoint did not initialize'
     assert not list(Project.rglob('*.gd')), 'Application package contains developer GDScript'
     Record={'Passed':True,'Commands':Commands,'Candidate':json.loads((Args.candidate/'candidate.json').read_text()),
             'Project':json.loads((Project/'authoring-project.json').read_text()),

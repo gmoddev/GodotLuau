@@ -52,6 +52,10 @@ def Prepare(Output, Extension):
     (Output / "DefaultGameManager.luau").write_text(DefaultSource, encoding="utf-8")
     for Name in ('Empty','ThreeD','TwoD','UI'):
         shutil.copy2(Repository/'GodotLuau/DefaultScripts/NativeAuthoring'/(Name+'.luau'),Output/('Template'+Name+'.luau'))
+    Foundation=Repository/'examples/native-foundation'
+    for File in Foundation.rglob('*'):
+        if File.is_file() and File.suffix in ('.luau','.tres','.gdshader'):
+            Target=Output/File.relative_to(Foundation);Target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(File,Target)
     for Script in Path(__file__).parent.glob("*.gd"):
         shutil.copyfile(Script, Output / Script.name)
     Controller = Path(__file__).resolve().parents[2] / 'examples/input-controller/Controller.luau'

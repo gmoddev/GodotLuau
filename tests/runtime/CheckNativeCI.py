@@ -55,6 +55,8 @@ def Main():
         raise ValueError('Native animation expansion cases did not complete')
     if '[Authoring:Templates] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
         raise ValueError('Native starter templates did not complete')
+    if '[Foundation:Acceptance] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Shipped native foundation projects did not complete')
     Controllers = json.loads((Args.output/'controller/controller-evidence.json').read_text())
     if Controllers.get('Actors') != 7 or Controllers.get('Transport') != 'ENet' or len(Controllers.get('Evidence', [])) != 7:
         raise ValueError('Player.Character controller actors incomplete')

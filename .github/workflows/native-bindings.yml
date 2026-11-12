@@ -1,7 +1,7 @@
 name: Approved native bindings and Luau declarations
 on:
   push:
-    paths: ['bindings/**', 'GodotLuau/Types/**', 'GodotLuau/DefaultScripts/**', 'tools/GenerateNativeBindings.py', 'tools/generar_plantillas_luau.py', 'src/core/luau_templates_gen.h', 'tests/bindings/**', '.github/workflows/native-bindings.yml']
+    paths: ['bindings/**', 'GodotLuau/Types/**', 'GodotLuau/DefaultScripts/**', 'examples/native-foundation/**', 'tools/GenerateNativeBindings.py', 'tools/generar_plantillas_luau.py', 'src/core/luau_templates_gen.h', 'tests/bindings/**', '.github/workflows/native-bindings.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -42,7 +42,7 @@ jobs:
       - name: Typecheck emitted definitions and representative calls
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then Probe=build/native-types/Release/NativeTypeTests.exe; else Probe=build/native-types/NativeTypeTests; fi
-          "$Probe" GodotLuau/Types/Native.d.luau examples/e2e-game/RelayFactory.luau 2>&1 | tee native-types.log
+          "$Probe" GodotLuau/Types/Native.d.luau examples/e2e-game/RelayFactory.luau examples/native-foundation/Shared/World2D.luau examples/native-foundation/Shared/World3D.luau 2>&1 | tee native-types.log
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:

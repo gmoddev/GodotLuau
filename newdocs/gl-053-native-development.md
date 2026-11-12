@@ -243,3 +243,22 @@ renderer-backed state. The rendered run remains required and pending.
 The fontconfig diagnostic is already present in the retained successful main
 Linux integration log, before this campaign. It is the existing admitted host's
 system-font limitation, not a new product regression. Preserve it visibly.
+
+## Production-representative project implementation
+
+Add [native foundation projects](../examples/native-foundation/README.md): a 2D
+pickup/platform game with real Area events, sprite animation, physics/input, audio
+and round reconstruction; a 3D game with body/camera movement, animation, navigation,
+instancing and project shaders; and a themed native UI with icons, text editing,
+lists, tabs and responsive layout. Shared factories receive caller scopes and
+cache no scene capabilities. Assets are original native resources and shader text.
+
+Reuse the existing explicit project stager and export runner with profile choices;
+OrbRun stays the default, and Relay Siege remains a separate regression. New
+headless integration runs the actual shipped 2D source through keyboard movement,
+three physical Area pickups and a round transition; it exercises live UI controls
+and 3D construction. Renderer gameplay/export remain separate pending evidence.
+Bootstrap-to-ready timings/object counts are measurements, not claimed speedups.
+Extend existing candidate harness hashes to include the newly consumed sources.
+The actual pinned Luau frontend now resolves project imports in its production
+factory probe, instead of treating imported helpers as unknown/dynamic types.

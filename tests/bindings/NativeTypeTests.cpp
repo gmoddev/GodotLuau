@@ -4,6 +4,8 @@
 #include "Luau/Error.h"
 #include "Luau/Module.h"
 #include "Luau/TypeArena.h"
+#include "Luau/Ast.h"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -11,6 +13,24 @@
 
 struct Sources : Luau::FileResolver {
     std::unordered_map<std::string,std::string> Files;
+    std::unordered_map<std::string,std::filesystem::path> ProjectRoots;
+    std::optional<Luau::ModuleInfo> resolveModule(const Luau::ModuleInfo* Context,Luau::AstExpr* Expression,const Luau::TypeCheckLimits&) override {
+        if(!Context)return std::nullopt;
+        auto Root=ProjectRoots.find(Context->name);
+        auto Text=Expression->as<Luau::AstExprConstantString>();
+        if(Root==ProjectRoots.end() || !Text)return std::nullopt;
+        std::string Path(Text->value.data,Text->value.size);
+        if(Path.size()>1024 || Path.find("res://")!=0 || Path.size()<7 || Path[6]=='/' || Path.substr(6).find(':')!=std::string::npos || Path.find("..")!=std::string::npos || Path.find('\\')!=std::string::npos || Path.find('\0')!=std::string::npos)return std::nullopt;
+        auto File=Root->second/Path.substr(6);
+        if(File.extension()!=".luau" && File.extension()!=".lua")return std::nullopt;
+        auto Name=File.generic_string();
+        if(!Files.count(Name)) {
+            std::ifstream Input(File);std::stringstream Buffer;Buffer<<Input.rdbuf();
+            if(!Input || Buffer.str().size()>1024*1024)return std::nullopt;
+            Files[Name]=Buffer.str();ProjectRoots[Name]=Root->second;
+        }
+        return Luau::ModuleInfo{Name};
+    }
     std::optional<Luau::SourceCode> readSource(const Luau::ModuleName& Name) override {
         auto Found=Files.find(Name);
         if (Found==Files.end()) return std::nullopt;
@@ -129,6 +149,9 @@ local Region=S:New("NavigationRegion3D",{NavigationMesh=S:Load("NavigationMesh",
         if (!ModuleInput || ModuleSource.str().empty()) return 2;
         std::string Name="NativeProductionModule"+std::to_string(Index);
         Resolver.Files[Name]=ModuleSource.str();
+        auto Directory=std::filesystem::absolute(Arguments[Index]).parent_path();
+        for(int Depth=0;Depth<16 && Directory!=Directory.parent_path();++Depth,Directory=Directory.parent_path())
+            if(std::filesystem::exists(Directory/"project.godot")){Resolver.ProjectRoots[Name]=Directory;break;}
         auto Result=Frontend.check(Name);
         std::cout<<"[Bindings:Types] "<<(Result.errors.empty()?"PASS ":"FAIL ")<<Arguments[Index]<<'\n';
         if (!Result.errors.empty()) {

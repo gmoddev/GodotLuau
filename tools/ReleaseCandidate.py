@@ -69,6 +69,10 @@ def Identity(Revision):
     Harness = {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.gd', '.py', '.cpp', '.pem'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']}
     Harness['PlayerController.luau'] = hashlib.sha256((Source/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     Harness['Controller.luau'] = hashlib.sha256((Source/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+    for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring'):
+        for File in sorted((Source/Folder).rglob('*')):
+            if File.is_file() and File.suffix in ('.luau','.tres','.gdshader'):
+                Harness[File.relative_to(Source).as_posix()]=hashlib.sha256(File.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
     return {'Revision': Revision, 'Tree': Git('rev-parse', Revision+'^{tree}'), 'Dependencies': Dependencies,
             'NativeSource': GetFingerprint(Source), 'HarnessHashes': Harness,
             'PolicySHA256': hashlib.sha256(Path(__file__).with_name('ReleaseCandidatePolicy.json').read_bytes().replace(b'\r\n', b'\n')).hexdigest()}
