@@ -1,7 +1,7 @@
 # GL-052 qualification record
 
-Disposition: implemented and qualified within the scopes below; **Windows
-interactive acceptance complete; final print-template candidate pending; unmerged**.
+Disposition: **implemented and qualified within the documented scopes; unmerged**.
+Supported Windows interactive acceptance is complete.
 The snapshot duplication defect is fixed and
 fresh-process editor regressions pass on Windows/Linux. The owner-requested
 [GL-053 default damage correction](gl-053-default-damage.md) is also qualified.
@@ -11,8 +11,8 @@ and independent rendered standalone launch. Main remains
 disabled. [ADR-016](adr-016-luau-editor-authoring.md), the
 [development journal](gl-052-development.md) and
 [authoring guide](gl-052-authoring-workflow.md) define the implemented workflow
-and preserve failures. The final print-template production candidate is still
-running. The compact
+and preserve failures. The final print-template core/native, production candidate
+and game/export checks pass. The compact
 [qualification receipt](evidence/gl052-qualification.json) records exact source,
 package and workflow identities.
 
@@ -23,7 +23,9 @@ runtime-input change after the preceding qualified cohort replaces 17 `dprint`
 calls in nine shipped default scripts with ordinary `print` and updates the
 matching embedded literals. Native fingerprint:
 `140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1`
-(121 LF-normalized files). Core and native CI pass; the candidate is pending.
+(121 LF-normalized files). Core/native CI, all four production profiles, both
+strict packages and game export/startup pass. Documentation-only successors keep
+these native inputs unchanged.
 The legacy native debug helper remains available to existing customized scripts.
 
 The complete preceding product cohort, used for the interactive journey, is
@@ -81,11 +83,12 @@ These intermediate observations are not relabeled as qualification of newer code
 | [Sanitizers `43154353439`](https://github.com/gmoddev/GodotLuau/actions/runs/43154353439), `60913fb` | Windows/Linux pass, 26/27 stages, zero unexpected reports; GL-053 passes within both native Integration actors |
 | [Candidate `43154350153`](https://github.com/gmoddev/GodotLuau/actions/runs/43154350153), `60913fb` | All four profiles, both strict packages and acceptance pass; extracted Debug/Release companion startup exits 0 on Windows/Linux |
 | [Package/export `43164852674`](https://github.com/gmoddev/GodotLuau/actions/runs/43164852674), `60913fb` | Relay Siege extracted startup and actual Orb Run export/independent startup pass, with exact emitted DLL/worker bytes |
-| Current rendered Orb Run | `game-609-rendered`: 14 checks, inspected native scene/UI capture and clean exit; current Debug adapter under official editor, separate from production export |
-| Windows interactive journey, `60913fb` products | Actual native edit/save, preview/Inspector, snapshot/edit/fresh-process reopen, Play/Stop, runtime source-line navigation/recovery, UI Release export and independent rendered standalone all pass; editor and standalone exits 0 |
+| Rendered Orb Run, `60913fb` adapter | `game-609-rendered`: 14 checks, inspected native scene/UI capture and clean exit; Debug adapter under official editor, separate from production export |
+| Windows interactive journey, `60913fb` products | Actual native edit/save, preview/Inspector, snapshot/edit/fresh-process reopen, Play/Stop, runtime source-line navigation/recovery, UI Release export and independent rendered standalone all pass; fresh editor and standalone exits 0 |
 | [Latest core `43188368995`](https://github.com/gmoddev/GodotLuau/actions/runs/43188368995), `71e997b` | Windows/Linux pass |
 | [Latest native `43188368944`](https://github.com/gmoddev/GodotLuau/actions/runs/43188368944), `71e997b` | Windows/Linux pass; unchanged complete runtime/editor/authoring/reopen/game checks and DefaultScripts regression |
-| [Latest candidate `43188370124`](https://github.com/gmoddev/GodotLuau/actions/runs/43188370124), `71e997b` | Pending |
+| [Latest candidate `43188370124`](https://github.com/gmoddev/GodotLuau/actions/runs/43188370124), `71e997b` | All four production profiles, both strict packages/extracted startup and final acceptance pass |
+| [Latest package/export `43196708702`](https://github.com/gmoddev/GodotLuau/actions/runs/43196708702), tooling `6b4212a` / candidate `71e997b` | Relay Siege extracted startup and actual Orb Run native export/independent startup pass; all four Orb Run commands exit 0 and emitted DLL/companion match the accepted candidate |
 
 Superseded candidate/sanitizer/native cohorts are canceled when concrete source
 fixes invalidate their inputs. Their failures/logs remain in the journal and
@@ -139,14 +142,20 @@ mean, 147.803 ms peak and 175 native objects at the existing 30 FPS cap. These
 bounded observations are not isolated API latency, leak-free proof or a speed
 improvement. Intermediate measurements remain in the development journal.
 
-Accepted Windows archive SHA256:
+60913fb accepted Windows archive SHA256:
 `7a32df524ad403270176a87ef0fc76f53cfcc32248a2c0b995ddaacf08e99161`.
-Accepted Linux archive SHA256:
+60913fb accepted Linux archive SHA256:
 `8b0e83d3fb5f1afa4c6b28244653757266435339bc10b0ee89061835b811233e`.
 Exported Windows Release DLL SHA256:
 `7f674f7410c9adaa601e91b1effaf122c6d0a60373b1f8332db7ccd30da81249`;
 companion SHA256:
 `0fae6ef38308a68caaa77b28eb49305ab5b8970880a1a9e76b848d42050882de`.
+
+The latest 71e997b Windows/Linux packages and Windows Release products have
+their separate exact hashes in `LatestPrintFollowup` in the
+[receipt](evidence/gl052-qualification.json). Those products pass fresh package/
+export verification; the preceding products above identify the graphical/UI
+observations and are not relabeled as newer builds.
 
 ## Retained limitations and failures
 
@@ -197,7 +206,8 @@ separately. Native remains the default and
 Scripted remains opt-in; no controller/network/persistence redesign is included.
 The implemented headless, Windows rendered and Windows interactive paths are
 qualified within the recorded scopes. The snapshot defect and GL-053 are fixed
-and qualified. Latest print-template candidate verification remains pending.
+and qualified. Latest print-template core/native, candidate and package/export
+verification all pass.
 The preceding sanitizer/rendered evidence is reused because this last change
 only changes informational template calls; native output, ownership, authoring,
 authority and their fixture inputs are unchanged. Main is not a delivery target.

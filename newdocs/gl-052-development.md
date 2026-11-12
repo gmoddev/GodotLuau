@@ -632,7 +632,8 @@ Retain screenshots/logs in `gl052-interactive-20261112`. Fresh editor restart an
 interactive export/standalone launch remain to finish; these UI observations use
 the already qualified 60913fb Debug products, not future print-template products.
 
-Finish that remaining interactive path: close the editor normally (exit 0),
+Finish that remaining interactive path: request normal editor shutdown (the
+wrapper exits 0; this first child exit is not separately retained),
 restart the same isolated project in a fresh process, and observe EditedCube,
 its native mesh/Inspector and blue geometry restored without load dialogs. Use
 Project → Export → Export Project with an explicit existing admitted Release
@@ -650,3 +651,37 @@ their separate qualification. The print-only follow-up is 71e997b; its core CI
 passes and native/candidate CI are still running at this checkpoint. No additional
 sanitizer run is needed for informational template call changes: the native output,
 ownership, authoring and authority implementations/fixtures are unchanged.
+
+Latest core `43188368995` and native `43188368944` now pass on both platforms at
+71e997b (fingerprint `140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1`).
+Retained native receipts identify 141 actors with zero nonzero exits, 19 native
+editor checks, 37 authoring checks and 13 game checks per platform. The actual
+Integration output includes ordinary `[Luau] [Server] GameManager iniciado!`
+and `[Runtime:DefaultScripts] PASS`. Production candidate `43188370124` continues;
+Linux Release is the first completed profile and passes. Keep source identities
+separate from the 60913fb interactive products and preserve all earlier evidence.
+
+Candidate `43188370124` now passes every gate: all four production profiles,
+both strict packages/extracted startup and final acceptance. Downloaded packages
+pass the established package checker and match current native fingerprint/source
+71e997b. Windows ZIP SHA256 is
+`2efbea563eb1637dfb765eeebb883c5ecd26986927f77e9b37dc2cd1773a9224`;
+Linux is `697ae77dd85a520d9e0d6d9279cf9c3c81ec314999beb1c7f2d82967d87b5cc5`.
+Dispatch the existing non-publishing game/export workflow `43196708702` against
+this accepted candidate. No new fixtures, checks, sanitizer rerun, host change or
+publication path is introduced. Final documentation will record its outcome.
+
+Final game/export workflow `43196708702` passes at tooling revision 6b4212a with
+accepted source 71e997b. Downloaded OrbRun-Windows-Export records successful stage,
+normal headless editor open, native Release export and independent startup (all
+exit 0). Emitted DLL/companion hashes match the current accepted candidate.
+Relay Siege extracted startup also passes. This is fresh package/export evidence;
+the actual Windows interactive/rendered acceptance above remains tied to 60913fb
+products within unchanged authoring/runtime paths.
+
+GL-052 is now qualified within the documented ADR-016/API/platform scope and
+remains unmerged. Retain unsupported fast-import/mismatched-profile failures,
+unimplemented debugger/type-checker features and Linux graphical/device/sanitizer
+limits. GL-050 stays separate. No further runtime changes are justified. Check
+final links/receipts/diff and remote branch identity, then commit/push documentation.
+Keep releases/updater distribution disabled and main unchanged.

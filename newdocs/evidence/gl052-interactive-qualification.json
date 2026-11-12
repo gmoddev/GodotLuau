@@ -8,6 +8,11 @@
   "Editor": "Existing official Godot 4.7.1 a13da4feb; --single-window --rendering-driver opengl3 --max-fps 30",
   "StandaloneHost": "Existing admitted renderer-enabled Windows Release template; unchanged GL-018/GL-029 patches",
   "DesktopGPU": "AMD Radeon RX 7900 XT, OpenGL Compatibility",
+  "InputSHA256": {
+    "OfficialEditor": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+    "CandidateWindowsDebugDLL": "2e01e032120af9649c40f6664acbd0f34070c74f00d73e40cfdf6860bf5881a5",
+    "AdmittedWindowsReleaseTemplate": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc"
+  },
   "EvidenceRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl052-interactive-20261112",
   "Project": "C:/Users/aiden/.codex/artifacts/godotluau/gl052-followup-20261112/interactive-project",
   "CreationReuse": "Previously observed native Project Manager creation and New Luau Scene under e393c0d; creation implementation unchanged. Current qualified 60913fb products installed before this session without replacing authored files.",
@@ -28,7 +33,7 @@
     "Copy only emitted files to an independent folder, close the editor and launch without --path or source-tree arguments",
     "Standalone renders the Luau-created cube, logs Ready, and exits normally with code 0 and empty stderr"
   ],
-  "ExitCodes": {"EditorSession": 0, "FreshEditorSession": 0, "Standalone": 0},
+  "ExitCodes": {"FirstEditorWrapper": 0, "FirstEditorChild": "Not separately retained; requested normal shutdown", "FreshEditorSession": 0, "Standalone": 0},
   "ProjectFileSHA256": {
     "Main.luau": "8145e1069711d959d23f179f0d31ef794e13d21fa426aec087948f10e7dee39a",
     "Main.tscn": "c00682c22237e0243a4e4bca61439d4198b1489f815c78c437482c5563ff9172",
