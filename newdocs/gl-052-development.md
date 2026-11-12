@@ -127,3 +127,28 @@ Runtime Error navigation. This does not implement breakpoints/stepping. Actual
 editor-run message capture remains pending qualification. Adapter artifacts are
 retained for bounded interactive investigation; they include test hooks and are
 not production distribution or accepted export candidates.
+
+The diagnostics cohort `481afaf` contains a C++ Ref assignment ambiguity caught
+by the local syntax probe. Its superseded native run `43123601596` is canceled;
+`9afbafd` makes the retained Ref construction explicit and passes the corrected
+probe. Core `43123668530` passes at that corrected revision; native
+`43123668484` remains pending. The earlier successful core runs are retained.
+
+First native cohort `43121590194` compiles and passes GL-051's actual editor
+checks on Linux, then fails the new workflow. Its log identifies the new default
+template's unsupported Camera3D.Current assignment, followed by missing-save
+cascades. Remove that assignment instead of widening camera takeover authority;
+the new standalone scene/private viewport uses native camera selection. Preserve
+the failed log and keep all original preview/save assertions. The observer only
+loads a saved scene when it exists, preventing secondary loader noise from
+obscuring the original failure.
+
+The new `examples/luau-only` Orb Run sources contain only native scenes/resources
+and Luau application/composition logic. They use a native RigidBody orb, qualified
+semantic input, reusable PackedScene markers, a project module factory, UI,
+gradient texture, procedural audio, owned scene replacement and shutdown. They
+reuse no Relay Siege bootstrap. Source inspection catches the correct existing
+material name AlbedoTexture; no camera or material authority expansion is needed.
+Preview adds the generated API's X/Y Vector2 constructor shape and bounded print,
+and closes its domain while plugin state remains alive. Game, graphical editor,
+export and latest native qualification are still pending.

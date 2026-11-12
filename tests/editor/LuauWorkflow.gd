@@ -38,7 +38,7 @@ func Run() -> void:
                 Check(Result.get("Passed", false) and Result.get("Nodes", 0) > 0, "Native preview constructs the authored scene")
                 Check(Plugin.call("SavePreview", "res://Generated.tscn") == OK, "Explicit native PackedScene save succeeds")
                 Check(Plugin.call("SavePreview", "res://Generated.tscn") != OK, "Save refuses to overwrite existing user content")
-                var Scene: PackedScene = load("res://Generated.tscn")
+                var Scene: PackedScene = load("res://Generated.tscn") if ResourceLoader.exists("res://Generated.tscn") else null
                 Check(Scene != null and Scene.get_state().get_node_count() > 1, "Saved native content reloads independently")
                 if Scene:
                     var NativeOnly := true

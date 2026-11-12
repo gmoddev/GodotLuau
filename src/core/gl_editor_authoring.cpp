@@ -49,12 +49,14 @@ local Scope = Scene.new(script.Parent)
 local Material = Scope:New("StandardMaterial3D", {Color = Color3.new(0.2, 0.65, 0.9)})
 Scope:New("MeshInstance3D", {Name = "Cube", Mesh = Scope:New("BoxMesh", {}), Material = Material})
 Scope:New("DirectionalLight3D", {RotationDegrees = Vector3.new(-45, -30, 0)})
-Scope:New("Camera3D", {Position = Vector3.new(0, 2, 5), RotationDegrees = Vector3.new(-20, 0, 0), Current = true})
+Scope:New("Camera3D", {Position = Vector3.new(0, 2, 5), RotationDegrees = Vector3.new(-20, 0, 0)})
 )LUA";
 }
 
 GLNativeEditorPlugin::GLNativeEditorPlugin() = default;
-GLNativeEditorPlugin::~GLNativeEditorPlugin() { StopPreview(); }
+GLNativeEditorPlugin::~GLNativeEditorPlugin() {
+    StopPreview(); PreviewDomain.reset(); PreviewModules.reset();
+}
 
 void GLNativeEditorPlugin::ShowStatus(const String& Text) {
     if (auto LabelNode=Resolve<Label>(StatusLabel)) LabelNode->set_text(Text.left(4096));
@@ -145,7 +147,7 @@ void GLNativeEditorPlugin::ResetPreviewContext() {
 }
 
 Dictionary GLNativeEditorPlugin::PreviewScript(const Ref<LuauScript>& Source) {
-    Dictionary Result; Result["Passed"]=false; StopPreview(); PreviewError=String();
+    Dictionary Result; Result["Passed"]=false; StopPreview(); PreviewError=String(); PreviewLogBytes=0;
     if (!Engine::get_singleton()->is_editor_hint() || Source.is_null() || Source->_get_source_code().utf8().length()>1024*1024) {
         Result["Error"]="Preview requires a bounded Luau source in the editor"; return Result;
     }
@@ -159,8 +161,33 @@ Dictionary GLNativeEditorPlugin::PreviewScript(const Ref<LuauScript>& Source) {
         PreviewDomain->SetModuleLoader([this](GLModuleSource& Module) { return PreviewModules->Load(Module); });
         PreviewDomain->SetInvalidationHook([](lua_State* Anchor){ GLRetireScenes(Anchor); });
         PreviewDomain->SetErrorHandler([this](lua_State*,const std::string& Error){ PreviewError=String::utf8(Error.c_str()).left(4096); });
-        PreviewDomain->InitializeHost([](lua_State* Thread) {
+        PreviewDomain->InitializeHost([this](lua_State* Thread) {
             RegisterLuauValueMetatables(Thread); RegisterLuauValueGlobals(Thread); GLRegisterScene(Thread);
+            GLPushNodeHandle(Thread,this);
+            lua_pushcclosure(Thread,[](lua_State* L)->int {
+                auto Plugin=Object::cast_to<GLNativeEditorPlugin>(GLNodeUpvalue(L,1));
+                if (!Plugin || Plugin->PreviewLogBytes>=8192) return 0;
+                String Text;
+                for (int Index=1;Index<=lua_gettop(L) && Index<=16;++Index) {
+                    if (Index>1) Text+="\t";
+                    if (lua_type(L,Index)==LUA_TSTRING || lua_type(L,Index)==LUA_TNUMBER) {
+                        size_t Bytes=0;const char* Value=lua_tolstring(L,Index,&Bytes);
+                        Text+=String::utf8(Value,int((std::min)(Bytes,size_t(1024))));
+                    } else Text+=luaL_typename(L,Index);
+                }
+                Text=Text.left(int((std::min)(size_t(2048),8192-Plugin->PreviewLogBytes)));
+                Plugin->PreviewLogBytes+=Text.utf8().length();
+                UtilityFunctions::print("[Authoring:Preview] ",Text);return 0;
+            },"PreviewPrint",1);lua_setglobal(Thread,"print");
+            // Native UI values use the same public X/Y shape as the generated
+            // Scene definitions; gameplay keeps its full existing Vector2 library.
+            lua_newtable(Thread);
+            lua_pushcfunction(Thread,[](lua_State* L)->int {
+                double X=luaL_optnumber(L,1,0);double Y=luaL_optnumber(L,2,0);
+                lua_createtable(L,0,2);lua_pushnumber(L,X);lua_setfield(L,-2,"X");
+                lua_pushnumber(L,Y);lua_setfield(L,-2,"Y");return 1;
+            },"PreviewVector2");lua_setfield(Thread,-2,"new");
+            lua_setreadonly(Thread,-1,true);lua_setglobal(Thread,"Vector2");
             luaL_newmetatable(Thread,"GodotObject");
             lua_pushcfunction(Thread,[](lua_State* L)->int {
                 Node* Value=PreviewNode(L,1); const char* Key=luaL_checkstring(L,2);

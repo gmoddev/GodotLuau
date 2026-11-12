@@ -22,6 +22,7 @@ class GLNativeEditorPlugin : public godot::EditorPlugin {
     uint64_t PreviewTree = 0, StatusLabel = 0, PathDialog = 0;
     bool SavingPreview = false;
     godot::String PreviewError;
+    size_t PreviewLogBytes = 0;
     godot::Ref<LuauScript> PreviewSource;
     godot::Ref<godot::EditorDebuggerPlugin> Debugger;
     godot::Array LastRuntimeError;
