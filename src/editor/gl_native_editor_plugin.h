@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/script.hpp>
 #include <godot_cpp/classes/editor_debugger_plugin.hpp>
+#include <godot_cpp/classes/editor_syntax_highlighter.hpp>
 #include <memory>
 class GLExecutionDomain;
 struct GLExecutionOwner;
@@ -25,6 +26,7 @@ class GLNativeEditorPlugin : public godot::EditorPlugin {
     size_t PreviewLogBytes = 0;
     godot::Ref<LuauScript> PreviewSource;
     godot::Ref<godot::EditorDebuggerPlugin> Debugger;
+    godot::Ref<godot::EditorSyntaxHighlighter> Highlighter;
     godot::Array LastRuntimeError;
     void SetupAuthoring();
     void ShowStatus(const godot::String& Text);

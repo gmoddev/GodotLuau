@@ -54,7 +54,7 @@ def Main():
         Record['OmittedAddon']='Disabled GodotLuauUpdater; not required by the application'
     else:
         if not Args.adapter_source: Parser.error('Adapter staging requires its retained source.json identity')
-        Record.update(Profile='CMake Debug adapter with test hooks; qualification only',
+        Record.update(Profile='Native test adapter with test hooks; qualification only',
                       NativeSource=json.loads(Args.adapter_source.read_text()),AdapterSHA256=Hash(Args.adapter))
         Output.mkdir(parents=True)
         Native = Output/'bin';Native.mkdir()
@@ -63,7 +63,8 @@ def Main():
         Platform = 'windows' if Target.suffix=='.dll' else 'linux'
         WorkerName='godot_luau_store_worker'+('.exe' if Platform=='windows' else '')
         shutil.copy2(Args.adapter.with_name(WorkerName),Native/WorkerName)
-        # Same explicit Debug adapter for both host features; no Release claim.
+        # Map the supplied adapter for either host feature. Its build profile
+        # comes from retained provenance, never from the host's feature name.
         (Output/'godot_luau.gdextension').write_text('[configuration]\nentry_symbol="luau_extension_init"\ncompatibility_minimum="4.3"\n\n[libraries]\n'+
             '\n'.join(Platform+'.'+Mode+'.x86_64="res://bin/'+Target.name+'"' for Mode in ('debug','release'))+
             '\n[dependencies]\n'+Platform+'.x86_64={"res://bin/'+WorkerName+'":""}\n')

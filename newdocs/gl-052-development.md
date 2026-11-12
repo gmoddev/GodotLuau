@@ -275,3 +275,32 @@ Godot, verifies emitted library/companion bytes and launches independently from
 the standalone directory. It retains separate logs/results and checks no
 application GDScript. New-game staging omits the disabled updater addon, which
 is not needed by the application; it never alters the verified fork archive.
+
+Shutdown isolation narrows the failed mixed profile: four tiny scenes (print
+only, string module, owned node and module factory) all exit `3221226356` under
+the admitted Release host with the older Debug adapter, while all four exit 0
+under the official editor. The retained GL-051 production Debug library also
+fails the same print-only Release-host case. This does not identify a new module
+or graphics defect. Keep the nine case logs in `shutdown-isolation`; qualify
+matching production profiles and preserve this unsupported mixed-profile limit.
+No runtime behavior is changed merely to hide shutdown behind fixture teardown.
+
+The successful actual editor preview loop at `b357239` records 142.94 ms for
+twenty rebuilds including observer/editor frame processing (about 7.15 ms per
+iteration). OS static allocation readings are 409,673,062 before and 409,823,634
+bytes after. These bounded observations are not isolated API costs, a leak-free
+proof or a performance improvement claim. Final current-product measurements
+remain separate.
+
+Native `43130537900` Linux fails at GL-051's existing real-editor completion
+after the direct CodeHighlighter assignment. Keep the failed output: compilation
+and the first source checks pass, then the process stops at completion request.
+The [supported editor contract](https://docs.godotengine.org/en/stable/classes/class_editorsyntaxhighlighter.html)
+requires EditorSyntaxHighlighter subclasses. Remove the direct assignment and
+register a native per-script Luau subclass through ScriptEditor instead.
+It uses the pinned Luau lexer, with a 1 MiB source, 8,192 line and 65,536 token
+budget; UTF-8 byte locations are converted to Godot character columns. The admitted
+editor's `_create` virtual uses the existing ptrcall encoding support without
+changing the pinned 4.3 binding dependency. New syntax-only probes pass for its
+implementation, plugin and registration. Runtime editor qualification is pending;
+all original completion assertions remain required.

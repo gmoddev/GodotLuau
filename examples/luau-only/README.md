@@ -21,3 +21,16 @@ resource references exercise the new workflow. Physical gamepad support is an
 API path, not a claim of physical-device qualification. The
 [GL-052 journal](../../newdocs/gl-052-development.md) records actual editor, game,
 export results and remaining gaps. This sample's existence is not qualification.
+
+Stage from an explicitly verified non-publishing candidate:
+
+```text
+python examples/luau-only/PrepareProject.py --candidate <candidate-directory> --output <fresh-project-directory>
+```
+
+Open the resulting project in Godot so the editor scans its extension. No updater
+addon or developer GDScript is needed. Optional `--engine` and `--host-manifest`
+arguments select an existing admitted Windows export template and create the
+normal export preset. Candidate staging verifies native source identity; adapter
+mode is only for qualification. Match engine/extension build profiles when
+qualifying deployment. The acceptance observer stays outside the application.
