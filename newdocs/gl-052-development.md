@@ -181,3 +181,36 @@ The language adapter now truthfully rejects unsupported file inheritance,
 recognizes Luau type/export keywords and supplies native function navigation
 and a deliberate no-op indentation hook. A pinned-header syntax probe passes.
 Interactive editor, debugger transport, rendered game and export remain pending.
+
+Generated types `43128057457` and core `43127995082` pass both platforms at
+`44ae713`. Candidate `43128050676` and full-native sanitizers `43128053718`
+are started through their existing non-publishing workflows, unchanged gates.
+The focused game rerun `game-9af-headless-4` also passes collection, round
+completion and scene transition. No performance improvement is inferred.
+
+The actual Windows project manager starts with the existing official editor and
+isolated profile. Computer Use returns a black capture and activation fails with
+`GetCursorPos: Access is denied (0x80070005)`. Fresh window selection still gives
+an unusable capture. No UI inputs are attempted through that failure; the owned
+project-manager process is stopped. Interactive qualification is blocked by the
+desktop environment, separately from actual headless-editor integration.
+
+The first independent export probe uses the older `9afbafd` Debug test adapter.
+Its clean editor import exits `3221225477` after loading editor layout, before
+export. Keep `export-9af` commands/stdout/stderr. This is an actual failed import,
+not an accepted production export or a claim against a newer untested binary.
+Investigate with the pending current Windows product before changing code.
+
+A delayed editor reopen (`--quit-after 120`) succeeds with that same test
+adapter. Export then succeeds, but independent startup reproduces a concrete
+resource-loading defect: `Scope:Load` rejects `res://Pattern.tres`, because Godot
+exports it as `.res` behind a `.remap` and the source file is absent. Inspection
+of the actual packed sidecars confirms the same conversion for Marker.tscn.
+Add one-hop export remap handling to the existing load boundary: metadata at most
+16 KiB, string target, both paths checked by the existing project confinement,
+encoded target at most 16 MiB, then normal ResourceLoader/type validation. No
+raw path, new resource class, dependency or authority is exposed. Imported
+texture feature variants are not newly promised by this focused correction.
+The existing native authoring actor gains successful binary remap composition,
+outside-root rejection and metadata/target bounds. Preserve the failed exported
+startup; a successful pack operation alone is not acceptance.

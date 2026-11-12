@@ -20,6 +20,7 @@
 #include <godot_cpp/classes/collision_shape3d.hpp>
 #include <godot_cpp/classes/color_rect.hpp>
 #include <godot_cpp/classes/control.hpp>
+#include <godot_cpp/classes/config_file.hpp>
 #include <godot_cpp/classes/directional_light3d.hpp>
 #include <godot_cpp/classes/environment.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
@@ -389,6 +390,22 @@ int Load(lua_State* Thread) {
     String Path=CheckedString(Thread,3,4096);
     if (!GLProjectResourcePath(Path)) luaL_error(Thread,"[Scene:Resource] Project resource path denied");
     Ref<FileAccess> File=FileAccess::open(Path,FileAccess::READ);
+    if (File.is_null()) {
+        // Godot exports text scenes/resources as binary files behind a .remap.
+        // Bound and confine both the sidecar and its encoded target before the
+        // normal ResourceLoader resolves the original logical project path.
+        String RemapPath=Path+".remap";
+        if (!GLProjectResourcePath(RemapPath)) luaL_error(Thread,"[Scene:Resource] Export remap path denied");
+        Ref<FileAccess> RemapFile=FileAccess::open(RemapPath,FileAccess::READ);
+        if (RemapFile.is_null() || RemapFile->get_length()>16*1024) luaL_error(Thread,"[Scene:Resource] Missing or oversized export remap");
+        Ref<ConfigFile> Remap;Remap.instantiate();
+        if (Remap->parse(RemapFile->get_as_text())!=OK) luaL_error(Thread,"[Scene:Resource] Invalid export remap");
+        Variant Target=Remap->get_value("remap","path",Variant());
+        if (Target.get_type()!=Variant::STRING) luaL_error(Thread,"[Scene:Resource] Invalid export target");
+        String EncodedPath=Target;
+        if (!GLProjectResourcePath(EncodedPath)) luaL_error(Thread,"[Scene:Resource] Export target path denied");
+        File=FileAccess::open(EncodedPath,FileAccess::READ);
+    }
     if (File.is_null() || File->get_length()>16*1024*1024) luaL_error(Thread,"[Scene:Resource] Resource unavailable or encoded input exceeds 16 MiB");
     File.unref();
     Ref<Resource> Value=ResourceLoader::get_singleton()->load(Path,Type);

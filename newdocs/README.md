@@ -37,6 +37,8 @@ The unmerged [GL-052 campaign](gl-052-development.md) targets a clean-project,
 Luau-only authoring/editor/export workflow. [ADR-016](adr-016-luau-editor-authoring.md)
 defines the new explicit preview boundary; its journal distinguishes implementation
 from pending editor, runtime and export qualification.
+The [authoring guide](gl-052-authoring-workflow.md) describes native entrypoints,
+explicit preview/save, project modules, diagnostics and non-publishing staging.
 
 The [normally integrated GL-051 campaign](gl-051-main-integration.md) preserves
 all 22 qualified feature commits and their evidence. It implements

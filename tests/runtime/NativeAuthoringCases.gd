@@ -9,6 +9,22 @@ func Run(Host: SceneTree, Game: Node) -> void:
     var Asset := BoxMesh.new()
     Asset.size = Vector3(7, 8, 9)
     Runner.Check(ResourceSaver.save(Asset, AssetPath) == OK, "Scene prepare typed project mesh")
+    Runner.Check(ResourceSaver.save(Asset, "res://NativeAuthoringExport.res") == OK, "Scene prepare Godot binary export target")
+    for Item in [
+        ["NativeAuthoringAlias.tres", "res://NativeAuthoringExport.res"],
+        ["NativeAuthoringEscape.tres", "user://outside.res"],
+        ["NativeAuthoringLarge.tres", "res://NativeAuthoringLarge.res"],
+    ]:
+        var Remap := FileAccess.open("res://" + Item[0] + ".remap", FileAccess.WRITE)
+        Remap.store_string('[remap]\npath="' + Item[1] + '"\n')
+        Remap.close()
+    var Large := FileAccess.open("res://NativeAuthoringLarge.res", FileAccess.WRITE)
+    Large.seek(16 * 1024 * 1024)
+    Large.store_8(0)
+    Large.close()
+    var LargeRemap := FileAccess.open("res://NativeAuthoringLargeMetadata.tres.remap", FileAccess.WRITE)
+    LargeRemap.store_string(";" + "x".repeat(16 * 1024))
+    LargeRemap.close()
     Runner.Check(ResourceSaver.save(Resource.new(), DeniedAssetPath) == OK, "Scene prepare unadmitted project resource")
     Asset = null
     var BaselineObjects := Performance.get_monitor(Performance.OBJECT_COUNT)
@@ -77,6 +93,8 @@ assert(Scope:Get(Root, 'Position') == Root.Position)
 assert(Display == Root:FindFirstChild('Display') and Display.ClassName == 'MeshInstance3D')
 local Loaded = Scope:Load('Mesh', 'res://NativeAuthoringMesh.tres')
 local Cached = Scope:Load('Mesh', 'res://NativeAuthoringMesh.tres')
+local Exported = Scope:Load('Mesh', 'res://NativeAuthoringAlias.tres')
+Scope:New('MeshInstance3D', {Name='LoadedExport', Mesh=Exported}, Root)
 Scope:New('MeshInstance3D', {Name='Loaded', Mesh=Loaded}, Root)
 assert(not pcall(function() Scope:Configure(Loaded, {Size=Vector3.new(1, 1, 1)}) end))
 assert(not pcall(function() Scope:Configure(Cached, {Size=Vector3.new(1, 1, 1)}) end))
@@ -113,6 +131,9 @@ local Rejections = {
     function() Scope:Load('Mesh', 'user://NativeAuthoringMesh.tres') end,
     function() Scope:Load('Mesh', 'res://../NativeAuthoringMesh.tres') end,
     function() Scope:Load('Mesh', 'C:/NativeAuthoringMesh.tres') end,
+    function() Scope:Load('Mesh', 'res://NativeAuthoringEscape.tres') end,
+    function() Scope:Load('Mesh', 'res://NativeAuthoringLarge.tres') end,
+    function() Scope:Load('Mesh', 'res://NativeAuthoringLargeMetadata.tres') end,
     function() Scope:New('BoxMesh' .. Nul .. 'Extra', {}) end,
     function() Scope:Configure(Root, {['Name' .. Nul .. 'Extra']='Changed'}) end,
     function() Scope:Get(Root, 'Name' .. Nul .. 'Extra') end,
@@ -205,6 +226,9 @@ game:SetAttribute('NAGcReleased', true)
     var LoadedMesh := (Scope.get_node("Root/Loaded") as MeshInstance3D).mesh as BoxMesh
     Runner.Check(LoadedMesh != null and LoadedMesh.size == Vector3(7, 8, 9), "Scene immutable loaded resource and cache hit")
     LoadedMesh = null
+    var ExportMesh := (Scope.get_node("Root/LoadedExport") as MeshInstance3D).mesh as BoxMesh
+    Runner.Check(ExportMesh != null and ExportMesh.size == Vector3(7, 8, 9), "Scene Godot binary remap preserves actual resource content")
+    ExportMesh = null
     Runner.Check(Scope.get_node("Batch").get_child_count() == 64, "Scene 64-object construction workload")
     Runner.Check(Cloth.mesh is ArrayMesh and Cloth.mesh.get_surface_count() == 1 and Cloth.is_point_pinned(0), "Scene bounded native soft body mesh and pin")
     var NativeAudio := Audio.stream as AudioStreamWAV

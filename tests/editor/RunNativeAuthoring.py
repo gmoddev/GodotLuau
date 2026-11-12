@@ -55,6 +55,8 @@ def Main():
     assert "ERROR:" not in (Output / "editor.stderr.log").read_text(errors="replace"), "Unhandled editor or language error"
     Detail = json.loads((Output / "editor-results.json").read_text())
     assert Detail["Passed"], Detail
+    if Args.workflow and not Args.baseline:
+        assert '[Authoring:RunRecovery] Ready' in (Output/'editor.stdout.log').read_text(errors='replace'), 'Recovery game did not execute through the actual editor'
     Result.update(Detail, Command=Command, ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest())
     (Output / "results.json").write_text(json.dumps(Result, indent=2))
     print("[Bindings:EditorQualification] PASS", Output)

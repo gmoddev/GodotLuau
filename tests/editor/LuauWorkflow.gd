@@ -3,6 +3,7 @@ extends EditorPlugin
 ## Observer only: all authoring/preview/save actions are production native methods.
 var Passed := true
 var Checks: Array[Dictionary] = []
+var Measurements: Dictionary = {}
 
 func _enter_tree() -> void:
     Run.call_deferred()
@@ -50,11 +51,16 @@ func Run() -> void:
                 Source.source_code = 'error("expected preview failure")'
                 Check(not Plugin.call("PreviewScript", Source).get("Passed", false), "Explicit preview errors propagate without editor restart")
                 Source.source_code = Original
+                var RebuildStart := Time.get_ticks_usec()
+                var MemoryStart := OS.get_static_memory_usage()
                 for Index in range(20):
                     Result = Plugin.call("PreviewScript", Source)
                     if not Result.get("Passed", false): break
                     await get_tree().process_frame
                 Check(Result.get("Passed", false), "Repeated preview rebuild recovers after failure")
+                Measurements["TwentyPreviewMilliseconds"] = (Time.get_ticks_usec() - RebuildStart) / 1000.0
+                Measurements["StaticMemoryBefore"] = MemoryStart
+                Measurements["StaticMemoryAfter"] = OS.get_static_memory_usage()
                 Source.source_code = 'while true do end'
                 Check(not Plugin.call("PreviewScript", Source).get("Passed", false), "Preview infinite loop is interrupted")
                 Source.source_code = 'task.wait(1)'
@@ -87,6 +93,10 @@ func Run() -> void:
                 Check(GamePreview.get("Passed", false) and GamePreview.get("Nodes", 0) > 15, "Actual Luau-only game composes in the restricted editor context")
                 Check(Plugin.call("SavePreview", "res://OrbSaved.tscn") == OK, "Actual game preview saves as native scene data")
                 Plugin.call("StopPreview")
+                Source.source_code = 'local Scope=Scene.new(script.Parent)\nScope:Instantiate(Scope:Load("PackedScene", "res://Generated.tscn"))'
+                Check(Plugin.call("PreviewScript", Source).get("Passed", false), "Saved native content can be composed again through the authorized scene API")
+                Plugin.call("StopPreview")
+                Source.source_code = Original
                 EditorInterface.set_main_screen_editor("Script")
                 EditorInterface.edit_script(Source, -1, 0, true)
                 for Index in range(10): await get_tree().process_frame
@@ -100,8 +110,42 @@ func Run() -> void:
                     for Index in range(3): await get_tree().process_frame
                     Check(Code.get_caret_line() == 0, "Actual ScriptEditor navigation reaches the Luau declaration")
                     Code.text = Original
+                # Use actual EditorInterface play/stop and debugger transport.
+                # These disposable resources are not open in the ScriptEditor,
+                # so its normal save-on-play cannot overwrite them with old text.
+                ProjectSettings.set_setting("editor/run/main_run_args", "--headless --disable-crash-handler --max-fps 30")
+                ProjectSettings.save()
+                Check(Plugin.call("CreateLuauScene", "res://Failure.tscn").get("Passed", false), "Native authoring creates an independent debug scene")
+                var Failure: Script = load("res://Failure.luau")
+                Failure.source_code = 'local Value=1\nerror("expected editor-run diagnostic")'
+                ResourceSaver.save(Failure)
+                EditorInterface.play_custom_scene("res://Failure.tscn")
+                var Deadline := Time.get_ticks_msec() + 12000
+                var Captured: Array = []
+                while Time.get_ticks_msec() < Deadline:
+                    Captured = Plugin.call("GetRuntimeDiagnostics")
+                    if Captured.size() == 3: break
+                    await get_tree().process_frame
+                Check(Captured.size() == 3 and str(Captured[0]) == "res://Failure.luau" and str(Captured[1]).contains("expected editor-run diagnostic") and str(Captured[1]).contains(":2:"), "Actual editor-run Luau error reaches native debugger capture with source and line")
+                EditorInterface.stop_playing_scene()
+                for Index in range(10): await get_tree().process_frame
+                if Captured.size() == 3:
+                    Plugin.call("OpenRuntimeError")
+                    for Index in range(5): await get_tree().process_frame
+                    var ErrorCode := EditorInterface.get_script_editor().get_current_editor().get_base_editor() as CodeEdit
+                    Check(ErrorCode != null and ErrorCode.get_caret_line() == 1, "Explicit native error navigation selects the failing source line")
+                Check(Plugin.call("CreateLuauScene", "res://Recovery.tscn").get("Passed", false), "A fresh scene can be authored after runtime failure")
+                var Recovery: Script = load("res://Recovery.luau")
+                Recovery.source_code = Original + '\nprint("[Authoring:RunRecovery] Ready")'
+                ResourceSaver.save(Recovery)
+                EditorInterface.play_custom_scene("res://Recovery.tscn")
+                await get_tree().create_timer(2).timeout
+                Check(EditorInterface.is_playing_scene(), "Actual editor reruns after failure without restart")
+                EditorInterface.stop_playing_scene()
+                for Index in range(10): await get_tree().process_frame
+                Check(not EditorInterface.is_playing_scene(), "Native editor stop retires the second run")
     var File := FileAccess.open("res://editor-results.json", FileAccess.WRITE)
-    File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks}))
+    File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks, "Measurements": Measurements}))
     File.close()
     print("[Bindings:EditorIntegration] ", "PASS" if Passed else "FAIL")
     get_tree().quit(0 if Passed else 1)
