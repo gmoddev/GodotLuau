@@ -1,5 +1,8 @@
 name: Repackage qualified GL-052 profiles (no publication)
 on:
+  push:
+    branches: [feature/gl-052-luau-authoring-workflow]
+    paths: ['.github/workflows/repackage-candidate.yml', 'tools/RepackageCandidate.py']
   workflow_dispatch:
     inputs:
       SourceRun:
@@ -51,7 +54,7 @@ jobs:
           python-version: '3.12'
       - name: Preserve immutable qualified source checkout
         env:
-          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision || 'e393c0d310f096263fb8c0ec2c8e3fe13d80584a' }}
         run: |
           [[ "$QUALIFIED_REVISION" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git worktree add --detach "$RUNNER_TEMP/qualified-source" "$QUALIFIED_REVISION"
@@ -62,21 +65,21 @@ jobs:
         run: ./tools/InitializeReleaseToolchain.ps1
       - uses: actions/download-artifact@v4
         with:
-          run-id: ${{ inputs.SourceRun }}
+          run-id: ${{ inputs.SourceRun || '43135980287' }}
           github-token: ${{ github.token }}
           pattern: profile-*
           path: ${{ runner.temp }}/inputs
       - uses: actions/download-artifact@v4
         with:
-          run-id: ${{ inputs.SourceRun }}
+          run-id: ${{ inputs.SourceRun || '43135980287' }}
           github-token: ${{ github.token }}
           name: sanitizer
           path: ${{ runner.temp }}/inputs/sanitizer
       - run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
       - name: Reuse exact products and require every existing package check
         env:
-          SOURCE_RUN: ${{ inputs.SourceRun }}
-          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+          SOURCE_RUN: ${{ inputs.SourceRun || '43135980287' }}
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision || 'e393c0d310f096263fb8c0ec2c8e3fe13d80584a' }}
         run: python tools/RepackageCandidate.py package --run "$SOURCE_RUN" --revision "$QUALIFIED_REVISION" --source "$RUNNER_TEMP/qualified-source" --inputs "$RUNNER_TEMP/inputs" --godot "$RUNNER_TEMP/godot" --output "$RUNNER_TEMP/candidate"
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
@@ -107,7 +110,7 @@ jobs:
           python-version: '3.12'
       - name: Preserve immutable qualified source checkout
         env:
-          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision || 'e393c0d310f096263fb8c0ec2c8e3fe13d80584a' }}
         run: |
           [[ "$QUALIFIED_REVISION" =~ ^[0-9a-f]{40}$ ]] || exit 1
           git worktree add --detach "$RUNNER_TEMP/qualified-source" "$QUALIFIED_REVISION"
@@ -118,8 +121,8 @@ jobs:
           path: ${{ runner.temp }}/inputs
       - name: Require actual original and current successful gates
         env:
-          SOURCE_RUN: ${{ inputs.SourceRun }}
-          QUALIFIED_REVISION: ${{ inputs.SourceRevision }}
+          SOURCE_RUN: ${{ inputs.SourceRun || '43135980287' }}
+          QUALIFIED_REVISION: ${{ inputs.SourceRevision || 'e393c0d310f096263fb8c0ec2c8e3fe13d80584a' }}
         run: python tools/RepackageCandidate.py accept --run "$SOURCE_RUN" --revision "$QUALIFIED_REVISION" --source "$RUNNER_TEMP/qualified-source" --inputs "$RUNNER_TEMP/inputs" --output "$RUNNER_TEMP/accepted"
       - uses: actions/upload-artifact@v4
         with:
