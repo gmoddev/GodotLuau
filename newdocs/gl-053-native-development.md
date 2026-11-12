@@ -125,3 +125,27 @@ Editor preview continues explicit whole-preview rebuild/retirement under ADR-016
 Two core regressions and a production native fixture exercise a three-module
 chain, ten resource revisions, unchanged unrelated caches, pending initialization
 and cancellation of callbacks from old parent generations. Qualification pending.
+
+## Gameplay and editor implementation in progress
+
+The policy now selects 90 constructible classes, 301 property entries, 150
+methods and 32 signals. Added native raycasts, standalone 2D/3D character bodies,
+navigation regions/agents and procedural Skeleton3D poses. Gameplay effects
+enforce runtime physics phase, synchronized navigation maps, scoped collider
+projection and bounded valid bone hierarchies/rotations. New native fixtures use
+actual Godot collisions, navigation meshes and skeleton state, not replacements.
+These are implemented but not yet runtime-qualified.
+
+Existing editor analysis now supplies enum/value completion, metadata signatures
+and call hints, immutable-observation diagnostics and returned-handle inference.
+New actual production inspection cases exercise those paths. The preview now
+allocates its own World2D; its existing own World3D remains. Full breakpoints and
+arbitrary language-server behavior are not inferred from source locations/hints.
+Further scene/asset, animation, templates and acceptance project work remains.
+
+Reload commit `e92084d` executes all 71 ordinary core cases successfully on both
+platforms, including both new dependency regressions. Run 43216999459 then fails
+the launcher because it still requires the former exact 69-case marker. Correct
+the existing launcher, report, sanitizer/candidate receipts and receipt tests to
+require 71 ordinary plus the unchanged 16 isolated limit cases (87 total). This
+raises the acceptance count; no assertions, watchdogs or cases are removed.

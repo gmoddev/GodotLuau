@@ -79,6 +79,16 @@ local V:NativeVariant=S:Call(M,"GetShaderParameter","Tint")
 local Bytes:{number}=Scene.Value("PackedByteArray",{0,255})
 )",true},
         {"read-only constructor property",R"(local S=Scene.new(Parent) S:New("Timer",{TimeLeft=1}))",false},
+        {"scoped physics and bone poses",R"(local S=Scene.new(Parent)
+local Ray=S:New("RayCast3D",{TargetPosition=Vector3.new(0,-5,0)})
+local Hit:NativeCollisionObject3D?=S:Call(Ray,"GetCollider")
+local Body=S:New("CharacterBody3D",{Velocity=Vector3.new(1,0,0)})
+local Collided:boolean=S:Call(Body,"MoveAndSlide")
+local Bones=S:New("Skeleton3D",{})
+local Index:number=S:Call(Bones,"AddBone","Root")
+S:Call(Bones,"SetBonePoseRotation",Index,{X=0,Y=0,Z=0,W=1})
+local Region=S:New("NavigationRegion3D",{NavigationMesh=S:Load("NavigationMesh","res://Map.tres")})
+)",true},
         {"wrong new collection type",R"(local S=Scene.new(Parent) S:New("ItemList",{FixedIconSize="bad"}))",false},
         {"wrong typed property",R"(local S=Scene.new(Parent) local B=S:New("Button",{Text=42}))",false},
         {"unknown direct property",R"(local S=Scene.new(Parent) local B=S:New("Button",{}) B.Script="bad")",false},

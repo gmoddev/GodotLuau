@@ -10,6 +10,9 @@
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/scene_state.hpp>
 #include <godot_cpp/classes/shader.hpp>
+#include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/navigation_agent3d.hpp>
+#include <godot_cpp/classes/navigation_server3d.hpp>
 #include <godot_cpp/classes/array_mesh.hpp>
 #include <godot_cpp/classes/audio_stream.hpp>
 #include <godot_cpp/classes/audio_stream_player.hpp>
@@ -179,6 +182,11 @@ Variant ReadValue(lua_State* Thread, SceneScope* Scope, const Property& Item, in
 }
 struct Assignment { const Property* Item; Variant Value; };
 void ValidateEffects(lua_State* Thread,Object* Target,const std::vector<Assignment>& Batch) {
+    if(Target->is_class("CharacterBody2D") || Target->is_class("CharacterBody3D"))for(const auto& Entry:Batch)
+        if(!strcmp(Entry.Item->Native,"up_direction")) {
+            double Length=Entry.Value.get_type()==Variant::VECTOR2?Vector2(Entry.Value).length_squared():Vector3(Entry.Value).length_squared();
+            if(Length<0.000001)luaL_error(Thread,"[Scene:Arguments] UpDirection must be nonzero");
+        }
     if (!Target->is_class("MultiMesh")) return;
     for(const auto& Entry:Batch) {
         const char* Key=Entry.Item->Native;
@@ -385,6 +393,15 @@ int Call(lua_State* Thread) {
          (!strcmp(Item->Native,"start") && Target->is_class("Timer")) || (!strcmp(Item->Native,"play_backwards") && Target->is_class("AnimatedSprite2D"))))
         luaL_error(Thread,"[Authoring:Preview] Temporal playback is runtime-only");
     if (Item->Mutates) TargetAt(Thread,Scope,2,true);
+    const bool Navigation=Target->is_class("NavigationAgent3D");
+    const bool PhysicsCall=!strcmp(Item->Native,"move_and_slide") || !strcmp(Item->Native,"force_raycast_update") || Navigation;
+    if(PhysicsCall && (GLGetOwner(Thread)->Domain->GetKind()==GLDomainKind::EditorPreview || !Engine::get_singleton()->is_in_physics_frame()))
+        luaL_error(Thread,"[Scene:Phase] This operation requires a runtime physics callback (RunService.Stepped)");
+    if(Navigation) {
+        auto Agent=Object::cast_to<NavigationAgent3D>(Target);
+        if(!NavigationServer3D::get_singleton()->map_get_iteration_id(Agent->get_navigation_map()))
+            luaL_error(Thread,"[Scene:Phase] Navigation map has not synchronized yet");
+    }
     int Count=lua_gettop(Thread)-3;
     if (Count<Item->Required || Count>Item->Arguments) luaL_error(Thread,"[Scene:Arguments] %s requires %d..%d arguments",Name,Item->Required,Item->Arguments);
     std::array<Variant,8> Values; std::array<const Variant*,8> Pointers;
@@ -404,6 +421,17 @@ int Call(lua_State* Thread) {
             else Values[Index]=String(Argument.Default).to_float();
         }
         Pointers[Index]=&Values[Index];
+    }
+    if(Target->is_class("Skeleton3D")) {
+        if(!strcmp(Item->Native,"add_bone")) {
+            String Bone=Values[0];if(Bone.contains(":") || Bone.contains("/"))luaL_error(Thread,"[Scene:Arguments] Bone name cannot contain path delimiters");
+        }
+        if(!strcmp(Item->Native,"set_bone_parent") && int64_t(Values[1])>=int64_t(Values[0]))
+            luaL_error(Thread,"[Scene:Arguments] Bone parent must precede its child; cycles are forbidden");
+        if(!strcmp(Item->Native,"set_bone_pose_rotation") && !Quaternion(Values[1]).is_normalized())
+            luaL_error(Thread,"[Scene:Arguments] Bone rotation must be a unit Quaternion");
+        if(!strcmp(Item->Native,"set_bone_rest") && Transform3D(Values[1]).basis.determinant()<=0.000001)
+            luaL_error(Thread,"[Scene:Arguments] Bone rest basis must be invertible and right-handed");
     }
     if (Target->is_class("AnimatedSprite2D") && (!strcmp(Item->Native,"play") || !strcmp(Item->Native,"play_backwards"))) {
         Ref<Resource> Frames=Target->get("sprite_frames");String Animation=String(Values[0]);

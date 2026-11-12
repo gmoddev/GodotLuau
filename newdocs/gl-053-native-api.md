@@ -92,3 +92,42 @@ and getter-derived resources remain immutable.
 main-thread dispatch. This phase does not grant physics-server/RID access or
 promise deterministic simulation. Direct space queries and character movement
 phase synchronization require their own later implementation and qualification.
+
+## Gameplay expansion (qualification pending)
+
+Standalone native CharacterBody2D/3D exposes bounded velocity/configuration and
+MoveAndSlide/observed contacts. MoveAndSlide and forced RayCast2D/3D updates require
+a runtime physics callback, such as existing RunService.Stepped. Calling them from
+ordinary process callbacks or preview rejects. These nodes do not replace or
+change RBXCharacter's Native/Scripted controller ownership or replication.
+
+Raycasts expose checked collision masks, hit positions/normals and same-scope
+exceptions. GetCollider projects native Object results into an optional owned
+CollisionObject node: foreign world hits remain observable spatially but return
+nil as a handle. No RID, direct-space-state or arbitrary Object is returned.
+
+NavigationRegion3D accepts immutable project NavigationMesh resources.
+NavigationAgent3D path observations run only during physics and after the native
+map's first synchronization. Retry on Scene:Phase while the map initializes.
+Paths use the shared bounded PackedVector3Array conversion. Avoidance/server RID
+mutation, dynamic baking and path metadata containing native capabilities are
+not exposed. Native navigation/physics remains world-owned by Godot.
+
+Skeleton3D supports up to 128 uniquely named bones, topologically ordered parent
+assignment and bounded position/unit-quaternion/positive-scale poses and rest
+transforms. Bone indices are validated against the live skeleton before calls.
+SetBoneParent requires parent index less than child index (-1 means no parent),
+which prevents cycles. Singular/mirrored rest bases reject. This enables
+procedural animation; imported dynamic bone-property serialization, physical-bone
+simulation and arbitrary AnimationPlayer tracks are separate unsupported paths.
+
+## Editor productivity
+
+The existing syntax/metadata analyzer now completes enum families/constants and
+pure Scene.Value type names. Method suggestions and native call hints include
+actual pinned argument names, value/resource types, defaults and return types.
+Observation writes have source-located E_NATIVE_READONLY diagnostics. Local Scene
+shadowing suppresses global enum/value inference. Runtime checks remain the
+authority; these bounded syntax diagnostics are not a complete Luau typechecker.
+Generated declarations continue to be checked by the actual pinned Luau frontend.
+Editor previews receive their own World2D as well as their existing World3D.

@@ -39,12 +39,12 @@ class CandidateTests(unittest.TestCase):
         return {'Schema': 1, 'Platform': Platform, 'Configuration': Configuration, 'Source': self.Expected,
                 'RemoteHost': Host,
                 'Toolchain': {'SCons': Candidate.Policy['SCons'], 'CompilerVersion': 'unit-fixture'}, 'Commands': [{'Exit': 0}],
-                'Gates': {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 141}},
+                'Gates': {'Core': {'Result': 'PASS', 'Cases': 87}, 'Native': {'Result': 'PASS', 'Actors': 141}},
                 'Files': {'products/'+Library: {'SHA256': Digest(Configuration.encode())}, 'products/'+Worker: {'SHA256': Digest(b'worker')}, 'evidence.zip': {}}}
 
     def Package(self, Change=None):
         Provenance = {'Source': self.Expected, 'Platform': 'Linux', 'Profiles': {Platform+'-'+Configuration: self.Record(Platform, Configuration) for Platform, Configuration in Candidate.Profiles},
-                      'Sanitizer': {'Source': self.Expected, 'Result': 'PASS', 'Cases': 85, 'ASanSymbolVerified': True}, 'Limitations': Candidate.Policy['Limitations']}
+                      'Sanitizer': {'Source': self.Expected, 'Result': 'PASS', 'Cases': 87, 'ASanSymbolVerified': True}, 'Limitations': Candidate.Policy['Limitations']}
         Files = {'GodotLuau/bin/'+Candidate.Names('Linux', Configuration)[0]: Configuration.encode() for Configuration in Candidate.Policy['Configurations']}
         Files['GodotLuau/bin/godot_luau_store_worker'] = b'worker'
         Files['GodotLuau/release-provenance.json'] = json.dumps(Provenance).encode()

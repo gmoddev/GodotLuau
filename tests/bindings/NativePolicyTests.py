@@ -43,22 +43,26 @@ class NativePolicyTests(unittest.TestCase):
             Generator.Build(Candidate, Api)
 
     def test_non_scene_constructor_denied(self):
-        self.Rejected(lambda P:P['Classes'].append({'Name':'FileAccess','Kind':'Resource','Construct':True}))
+        self.Rejected(lambda P:P['Classes'].append({'Name':'FileAccess','Kind':'Resource','Construct':True,'Authority':'OwnedScene'}))
 
     def test_unknown_class_denied(self):
-        self.Rejected(lambda P:P['Classes'].append({'Name':'NetworkService','Kind':'Node','Construct':True}))
+        self.Rejected(lambda P:P['Classes'].append({'Name':'NetworkService','Kind':'Node','Construct':True,'Authority':'OwnedScene'}))
 
     def test_structural_property_denied(self):
-        self.Rejected(lambda P:P['Properties'].append({'Class':'Node','Name':'Script','Native':'script','Kind':'ResourceValue','ResourceClass':'Script'}))
+        self.Rejected(lambda P:P['Properties'].append({'Class':'Node','Name':'Script','Native':'script','Kind':'ResourceValue','ResourceClass':'Script','Authority':'OwnedScene'}))
 
     def test_arbitrary_dispatch_denied(self):
-        self.Rejected(lambda P:P['Methods'].append({'Class':'Object','Name':'Invoke','Native':'call','Mutates':True}))
+        self.Rejected(lambda P:P['Methods'].append({'Class':'Object','Name':'Invoke','Native':'call','Mutates':True,'Authority':'OwnedScene'}))
 
     def test_structural_method_denied(self):
-        self.Rejected(lambda P:P['Methods'].append({'Class':'Node','Name':'MoveParent','Native':'reparent','Mutates':True}))
+        self.Rejected(lambda P:P['Methods'].append({'Class':'Node','Name':'MoveParent','Native':'reparent','Mutates':True,'Authority':'OwnedScene'}))
 
     def test_unsupported_variant_denied(self):
-        self.Rejected(lambda P:P['Methods'].append({'Class':'Node','Name':'Tree','Native':'get_tree','Mutates':False}))
+        self.Rejected(lambda P:P['Methods'].append({'Class':'Node','Name':'Tree','Native':'get_tree','Mutates':False,'Authority':'OwnedScene'}))
+
+    def test_object_return_requires_explicit_scoped_node_projection(self):
+        self.Rejected(lambda P:P['Methods'].append({'Class':'Node','Name':'Parent','Native':'get_parent','Mutates':False,'Authority':'OwnedScene','ReturnNodeClass':'Window'}))
+        self.Rejected(lambda P:P['Methods'].append({'Class':'RayCast3D','Name':'RawCollider','Native':'get_collider','Mutates':False,'Authority':'OwnedScene'}))
 
     def test_unknown_property_and_signal_denied(self):
         self.Rejected(lambda P:P['Properties'][0].update(Native='wrong_property'))

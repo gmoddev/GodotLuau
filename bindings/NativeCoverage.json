@@ -10,7 +10,7 @@
     "version_full_name": "Godot Engine v4.3.stable.official"
   },
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
-  "PolicySHA256": "ba1a9bc462d8d1b92a0811838aad0433b4c281e1de068fbd9932ae05cc9396df",
+  "PolicySHA256": "a9c53f061deb9fb9dda9452dfd73bd399c67f7df5f68c65fc837d0a08cf01f42",
   "Interpretation": "Declared members; inheritance follows Base. Catalog specifies exact receivers, aliases, bounds and runtime permissions. Metadata existence is not host availability or qualification.",
   "Runtime": {
     "Domains": [
@@ -28,10 +28,10 @@
   },
   "Summary": {
     "MetadataClasses": 920,
-    "ConstructibleClasses": 84,
-    "SelectedProperties": 261,
-    "SelectedMethods": 101,
-    "SelectedSignals": 28,
+    "ConstructibleClasses": 90,
+    "SelectedProperties": 301,
+    "SelectedMethods": 150,
+    "SelectedSignals": 32,
     "SelectedConstants": 43,
     "DeclaredMembers": {
       "methods": 14379,
@@ -6862,17 +6862,24 @@
     {
       "Name": "CharacterBody2D",
       "Base": "PhysicsBody2D",
-      "Status": "Unsupported",
+      "Status": "Partial",
       "Constructible": false,
       "ConstructionStatus": "Not admitted",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Supported": [
             "move_and_slide",
+            "is_on_floor",
+            "is_on_ceiling",
+            "is_on_wall",
+            "get_floor_normal",
+            "get_slide_collision_count"
+          ],
+          "Unsupported": [
             "apply_floor_snap",
             "set_velocity",
             "get_velocity",
@@ -6904,20 +6911,15 @@
             "get_motion_mode",
             "set_platform_on_leave",
             "get_platform_on_leave",
-            "is_on_floor",
             "is_on_floor_only",
-            "is_on_ceiling",
             "is_on_ceiling_only",
-            "is_on_wall",
             "is_on_wall_only",
-            "get_floor_normal",
             "get_wall_normal",
             "get_last_motion",
             "get_position_delta",
             "get_real_velocity",
             "get_floor_angle",
-            "get_platform_velocity",
-            "get_slide_collision_count"
+            "get_platform_velocity"
           ],
           "Blocked": [
             "get_slide_collision",
@@ -6925,22 +6927,24 @@
           ]
         },
         "properties": {
-          "Unsupported": [
-            "motion_mode",
+          "Supported": [
             "up_direction",
             "velocity",
             "slide_on_ceiling",
             "max_slides",
-            "wall_min_slide_angle",
             "floor_stop_on_slope",
             "floor_constant_speed",
-            "floor_block_on_wall",
             "floor_max_angle",
             "floor_snap_length",
+            "safe_margin"
+          ],
+          "Unsupported": [
+            "motion_mode",
+            "wall_min_slide_angle",
+            "floor_block_on_wall",
             "platform_on_leave",
             "platform_floor_layers",
-            "platform_wall_layers",
-            "safe_margin"
+            "platform_wall_layers"
           ]
         },
         "signals": {},
@@ -6956,17 +6960,24 @@
     {
       "Name": "CharacterBody3D",
       "Base": "PhysicsBody3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Supported": [
             "move_and_slide",
+            "is_on_floor",
+            "is_on_ceiling",
+            "is_on_wall",
+            "get_floor_normal",
+            "get_slide_collision_count"
+          ],
+          "Unsupported": [
             "apply_floor_snap",
             "set_velocity",
             "get_velocity",
@@ -6998,21 +7009,16 @@
             "get_motion_mode",
             "set_platform_on_leave",
             "get_platform_on_leave",
-            "is_on_floor",
             "is_on_floor_only",
-            "is_on_ceiling",
             "is_on_ceiling_only",
-            "is_on_wall",
             "is_on_wall_only",
-            "get_floor_normal",
             "get_wall_normal",
             "get_last_motion",
             "get_position_delta",
             "get_real_velocity",
             "get_floor_angle",
             "get_platform_velocity",
-            "get_platform_angular_velocity",
-            "get_slide_collision_count"
+            "get_platform_angular_velocity"
           ],
           "Blocked": [
             "get_slide_collision",
@@ -7020,22 +7026,24 @@
           ]
         },
         "properties": {
-          "Unsupported": [
-            "motion_mode",
+          "Supported": [
             "up_direction",
             "slide_on_ceiling",
             "velocity",
             "max_slides",
-            "wall_min_slide_angle",
             "floor_stop_on_slope",
             "floor_constant_speed",
-            "floor_block_on_wall",
             "floor_max_angle",
             "floor_snap_length",
+            "safe_margin"
+          ],
+          "Unsupported": [
+            "motion_mode",
+            "wall_min_slide_angle",
+            "floor_block_on_wall",
             "platform_on_leave",
             "platform_floor_layers",
-            "platform_wall_layers",
-            "safe_margin"
+            "platform_wall_layers"
           ]
         },
         "signals": {},
@@ -19222,15 +19230,23 @@
     {
       "Name": "NavigationAgent3D",
       "Base": "Node",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "get_next_path_position",
+            "get_current_navigation_path",
+            "is_target_reached",
+            "is_target_reachable",
+            "is_navigation_finished",
+            "get_final_position"
+          ],
           "Unsupported": [
             "set_avoidance_enabled",
             "get_avoidance_enabled",
@@ -19276,17 +19292,11 @@
             "get_simplify_path",
             "set_simplify_epsilon",
             "get_simplify_epsilon",
-            "get_next_path_position",
             "set_velocity_forced",
             "set_velocity",
             "get_velocity",
             "distance_to_target",
-            "get_current_navigation_path",
             "get_current_navigation_path_index",
-            "is_target_reached",
-            "is_target_reachable",
-            "is_navigation_finished",
-            "get_final_position",
             "set_avoidance_layers",
             "get_avoidance_layers",
             "set_avoidance_mask",
@@ -19314,13 +19324,15 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "target_position",
             "path_desired_distance",
             "target_desired_distance",
-            "path_height_offset",
             "path_max_distance",
-            "navigation_layers",
+            "navigation_layers"
+          ],
+          "Unsupported": [
+            "path_height_offset",
             "pathfinding_algorithm",
             "path_postprocessing",
             "path_metadata_flags",
@@ -19347,12 +19359,14 @@
           ]
         },
         "signals": {
-          "Unsupported": [
+          "Supported": [
             "path_changed",
             "target_reached",
+            "navigation_finished"
+          ],
+          "Unsupported": [
             "waypoint_reached",
             "link_reached",
-            "navigation_finished",
             "velocity_computed"
           ]
         },
@@ -19471,13 +19485,13 @@
     {
       "Name": "NavigationMesh",
       "Base": "Resource",
-      "Status": "Unsupported",
+      "Status": "Partial",
       "Constructible": false,
       "ConstructionStatus": "Not admitted",
-      "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "Loadable": true,
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -20156,13 +20170,13 @@
     {
       "Name": "NavigationRegion3D",
       "Base": "Node3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -20191,11 +20205,13 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "navigation_mesh",
             "enabled",
+            "navigation_layers"
+          ],
+          "Unsupported": [
             "use_edge_connections",
-            "navigation_layers",
             "enter_cost",
             "travel_cost"
           ]
@@ -27036,26 +27052,30 @@
     {
       "Name": "RayCast2D",
       "Base": "Node2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "is_colliding",
+            "force_raycast_update",
+            "get_collider",
+            "get_collision_point",
+            "get_collision_normal",
+            "add_exception",
+            "clear_exceptions"
+          ],
           "Unsupported": [
             "set_enabled",
             "is_enabled",
             "set_target_position",
             "get_target_position",
-            "is_colliding",
-            "force_raycast_update",
             "get_collider_shape",
-            "get_collision_point",
-            "get_collision_normal",
-            "clear_exceptions",
             "set_collision_mask",
             "get_collision_mask",
             "set_collision_mask_value",
@@ -27070,16 +27090,14 @@
             "is_hit_from_inside_enabled"
           ],
           "Blocked": [
-            "get_collider",
             "get_collider_rid",
             "add_exception_rid",
-            "add_exception",
             "remove_exception_rid",
             "remove_exception"
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "enabled",
             "exclude_parent",
             "target_position",
@@ -27097,27 +27115,31 @@
     {
       "Name": "RayCast3D",
       "Base": "Node3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "is_colliding",
+            "force_raycast_update",
+            "get_collider",
+            "get_collision_point",
+            "get_collision_normal",
+            "add_exception",
+            "clear_exceptions"
+          ],
           "Unsupported": [
             "set_enabled",
             "is_enabled",
             "set_target_position",
             "get_target_position",
-            "is_colliding",
-            "force_raycast_update",
             "get_collider_shape",
-            "get_collision_point",
-            "get_collision_normal",
             "get_collision_face_index",
-            "clear_exceptions",
             "set_collision_mask",
             "get_collision_mask",
             "set_collision_mask_value",
@@ -27138,24 +27160,24 @@
             "get_debug_shape_thickness"
           ],
           "Blocked": [
-            "get_collider",
             "get_collider_rid",
             "add_exception_rid",
-            "add_exception",
             "remove_exception_rid",
             "remove_exception"
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "enabled",
             "exclude_parent",
             "target_position",
             "collision_mask",
             "hit_from_inside",
-            "hit_back_faces",
             "collide_with_areas",
-            "collide_with_bodies",
+            "collide_with_bodies"
+          ],
+          "Unsupported": [
+            "hit_back_faces",
             "debug_shape_custom_color",
             "debug_shape_thickness"
           ]
@@ -30857,43 +30879,45 @@
     {
       "Name": "Skeleton3D",
       "Base": "Node3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Supported": [
             "add_bone",
             "find_bone",
             "get_bone_name",
-            "set_bone_name",
-            "get_concatenated_bone_names",
             "get_bone_parent",
             "set_bone_parent",
             "get_bone_count",
-            "get_version",
-            "unparent_bone_and_rest",
-            "get_bone_children",
-            "get_parentless_bones",
             "get_bone_rest",
             "set_bone_rest",
             "get_bone_global_rest",
-            "create_skin_from_rest_transforms",
-            "localize_rests",
-            "clear_bones",
             "get_bone_pose",
-            "set_bone_pose",
             "set_bone_pose_position",
             "set_bone_pose_rotation",
             "set_bone_pose_scale",
             "get_bone_pose_position",
             "get_bone_pose_rotation",
             "get_bone_pose_scale",
-            "reset_bone_pose",
+            "reset_bone_pose"
+          ],
+          "Unsupported": [
+            "set_bone_name",
+            "get_concatenated_bone_names",
+            "get_version",
+            "unparent_bone_and_rest",
+            "get_bone_children",
+            "get_parentless_bones",
+            "create_skin_from_rest_transforms",
+            "localize_rests",
+            "clear_bones",
+            "set_bone_pose",
             "reset_bone_poses",
             "is_bone_enabled",
             "set_bone_enabled",
@@ -30931,8 +30955,10 @@
           ]
         },
         "signals": {
+          "Supported": [
+            "pose_updated"
+          ],
           "Unsupported": [
-            "pose_updated",
             "skeleton_updated",
             "bone_enabled_changed",
             "bone_list_changed",

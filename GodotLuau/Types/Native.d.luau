@@ -1,5 +1,5 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: ba1a9bc462d8d1b92a0811838aad0433b4c281e1de068fbd9932ae05cc9396df
+-- Policy SHA256: a9c53f061deb9fb9dda9452dfd73bd399c67f7df5f68c65fc837d0a08cf01f42
 export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number
@@ -57,6 +57,13 @@ declare class NativeCanvasItem extends NativeNode
 end
 declare class NativeCanvasLayer extends NativeNode
     Layer: number
+end
+declare class NativeNavigationAgent3D extends NativeNode
+    TargetPosition: NativeVector3
+    NavigationLayers: number
+    PathDesiredDistance: number
+    TargetDesiredDistance: number
+    PathMaxDistance: number
 end
 declare class NativeNode3D extends NativeNode
     Position: NativeVector3
@@ -150,6 +157,15 @@ declare class NativeMultiMesh extends NativeResource
 end
 declare class MutableNativeMultiMesh extends NativeMultiMesh
 end
+declare class NativeNavigationMesh extends NativeResource
+end
+declare class MutableNativeNavigationMesh extends NativeNavigationMesh
+end
+declare class NativeNavigationRegion3D extends NativeNode3D
+    NavigationMesh: NativeNavigationMesh?
+    Enabled: boolean
+    NavigationLayers: number
+end
 declare class NativeNode2D extends NativeCanvasItem
     Position: NativeVector2
     RotationDegrees: number
@@ -167,6 +183,15 @@ declare class NativePhysicsMaterial extends NativeResource
 end
 declare class MutableNativePhysicsMaterial extends NativePhysicsMaterial
 end
+declare class NativeRayCast3D extends NativeNode3D
+    Enabled: boolean
+    ExcludeParent: boolean
+    HitFromInside: boolean
+    CollideWithAreas: boolean
+    CollideWithBodies: boolean
+    CollisionMask: number
+    TargetPosition: NativeVector3
+end
 declare class NativeShader extends NativeResource
 end
 declare class MutableNativeShader extends NativeShader
@@ -178,6 +203,8 @@ end
 declare class NativeShape3D extends NativeResource
 end
 declare class MutableNativeShape3D extends NativeShape3D
+end
+declare class NativeSkeleton3D extends NativeNode3D
 end
 declare class NativeSpriteFrames extends NativeResource
 end
@@ -311,6 +338,15 @@ declare class NativeRange extends NativeControl
     Value: number
     Step: number
 end
+declare class NativeRayCast2D extends NativeNode2D
+    Enabled: boolean
+    ExcludeParent: boolean
+    HitFromInside: boolean
+    CollideWithAreas: boolean
+    CollideWithBodies: boolean
+    CollisionMask: number
+    TargetPosition: NativeVector2
+end
 declare class NativeRectangleShape2D extends NativeShape2D
 end
 declare class MutableNativeRectangleShape2D extends NativeRectangleShape2D
@@ -402,6 +438,17 @@ declare class MutableNativeCapsuleMesh extends NativeCapsuleMesh
 end
 declare class NativeCenterContainer extends NativeContainer
 end
+declare class NativeCharacterBody3D extends NativePhysicsBody3D
+    Velocity: NativeVector3
+    UpDirection: NativeVector3
+    MaxSlides: number
+    FloorMaxAngle: number
+    FloorSnapLength: number
+    SafeMargin: number
+    FloorStopOnSlope: boolean
+    FloorConstantSpeed: boolean
+    SlideOnCeiling: boolean
+end
 declare class NativeCylinderMesh extends NativePrimitiveMesh
 end
 declare class MutableNativeCylinderMesh extends NativeCylinderMesh
@@ -489,6 +536,17 @@ declare class NativeTextureProgressBar extends NativeRange
     TintProgress: NativeColor4
 end
 declare class NativeVSeparator extends NativeSeparator
+end
+declare class NativeCharacterBody2D extends NativePhysicsBody2D
+    Velocity: NativeVector2
+    UpDirection: NativeVector2
+    MaxSlides: number
+    FloorMaxAngle: number
+    FloorSnapLength: number
+    SafeMargin: number
+    FloorStopOnSlope: boolean
+    FloorConstantSpeed: boolean
+    SlideOnCeiling: boolean
 end
 declare class NativeCheckBox extends NativeButton
 end
@@ -844,6 +902,50 @@ export type NativeCenterContainerProperties = {
     SelfModulateRGBA: (NativeColor4)?,
     Theme: (NativeTheme?)?,
     TooltipText: (string)?,
+}
+export type NativeCharacterBody2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    CollisionLayer: (number)?,
+    CollisionMask: (number)?,
+    InputPickable: (boolean)?,
+    Velocity: (NativeVector2)?,
+    UpDirection: (NativeVector2)?,
+    MaxSlides: (number)?,
+    FloorMaxAngle: (number)?,
+    FloorSnapLength: (number)?,
+    SafeMargin: (number)?,
+    FloorStopOnSlope: (boolean)?,
+    FloorConstantSpeed: (boolean)?,
+    SlideOnCeiling: (boolean)?,
+}
+export type NativeCharacterBody3DProperties = {
+    Name: (string)?,
+    Position: (NativeVector3)?,
+    RotationDegrees: (NativeVector3)?,
+    Scale: (NativeVector3)?,
+    Visible: (boolean)?,
+    CollisionLayer: (number)?,
+    CollisionMask: (number)?,
+    Velocity: (NativeVector3)?,
+    UpDirection: (NativeVector3)?,
+    MaxSlides: (number)?,
+    FloorMaxAngle: (number)?,
+    FloorSnapLength: (number)?,
+    SafeMargin: (number)?,
+    FloorStopOnSlope: (boolean)?,
+    FloorConstantSpeed: (boolean)?,
+    SlideOnCeiling: (boolean)?,
 }
 export type NativeCheckBoxProperties = {
     Name: (string)?,
@@ -1452,6 +1554,26 @@ export type NativeMultiMeshInstance3DProperties = {
     Material: (NativeMaterial?)?,
     Multimesh: (NativeMultiMesh?)?,
 }
+export type NativeNavigationAgent3DProperties = {
+    Name: (string)?,
+    TargetPosition: (NativeVector3)?,
+    NavigationLayers: (number)?,
+    PathDesiredDistance: (number)?,
+    TargetDesiredDistance: (number)?,
+    PathMaxDistance: (number)?,
+}
+export type NativeNavigationMeshProperties = {
+}
+export type NativeNavigationRegion3DProperties = {
+    Name: (string)?,
+    Position: (NativeVector3)?,
+    RotationDegrees: (NativeVector3)?,
+    Scale: (NativeVector3)?,
+    Visible: (boolean)?,
+    NavigationMesh: (NativeNavigationMesh?)?,
+    Enabled: (boolean)?,
+    NavigationLayers: (number)?,
+}
 export type NativeNodeProperties = {
     Name: (string)?,
 }
@@ -1655,6 +1777,41 @@ export type NativeRangeProperties = {
     Theme: (NativeTheme?)?,
     TooltipText: (string)?,
 }
+export type NativeRayCast2DProperties = {
+    Name: (string)?,
+    Position: (NativeVector2)?,
+    RotationDegrees: (number)?,
+    Scale: (NativeVector2)?,
+    Visible: (boolean)?,
+    Modulate: (NativeColor3)?,
+    GlobalPosition: (NativeVector2)?,
+    GlobalRotation: (number)?,
+    ZIndex: (number)?,
+    YSortEnabled: (boolean)?,
+    ModulateRGBA: (NativeColor4)?,
+    SelfModulateRGBA: (NativeColor4)?,
+    Enabled: (boolean)?,
+    ExcludeParent: (boolean)?,
+    HitFromInside: (boolean)?,
+    CollideWithAreas: (boolean)?,
+    CollideWithBodies: (boolean)?,
+    CollisionMask: (number)?,
+    TargetPosition: (NativeVector2)?,
+}
+export type NativeRayCast3DProperties = {
+    Name: (string)?,
+    Position: (NativeVector3)?,
+    RotationDegrees: (NativeVector3)?,
+    Scale: (NativeVector3)?,
+    Visible: (boolean)?,
+    Enabled: (boolean)?,
+    ExcludeParent: (boolean)?,
+    HitFromInside: (boolean)?,
+    CollideWithAreas: (boolean)?,
+    CollideWithBodies: (boolean)?,
+    CollisionMask: (number)?,
+    TargetPosition: (NativeVector3)?,
+}
 export type NativeRectangleShape2DProperties = {
     Size: (NativeVector2)?,
 }
@@ -1806,6 +1963,13 @@ export type NativeShaderMaterialProperties = {
 export type NativeShape2DProperties = {
 }
 export type NativeShape3DProperties = {
+}
+export type NativeSkeleton3DProperties = {
+    Name: (string)?,
+    Position: (NativeVector3)?,
+    RotationDegrees: (NativeVector3)?,
+    Scale: (NativeVector3)?,
+    Visible: (boolean)?,
 }
 export type NativeSliderProperties = {
     Name: (string)?,
@@ -2323,6 +2487,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "CapsuleShape2D", Properties: NativeCapsuleShape2DProperties, Parent: NativeNode?) -> MutableNativeCapsuleShape2D) &
         ((self: NativeSceneScope, Class: "CapsuleShape3D", Properties: NativeCapsuleShape3DProperties, Parent: NativeNode?) -> MutableNativeCapsuleShape3D) &
         ((self: NativeSceneScope, Class: "CenterContainer", Properties: NativeCenterContainerProperties, Parent: NativeNode?) -> NativeCenterContainer) &
+        ((self: NativeSceneScope, Class: "CharacterBody3D", Properties: NativeCharacterBody3DProperties, Parent: NativeNode?) -> NativeCharacterBody3D) &
         ((self: NativeSceneScope, Class: "CheckBox", Properties: NativeCheckBoxProperties, Parent: NativeNode?) -> NativeCheckBox) &
         ((self: NativeSceneScope, Class: "CheckButton", Properties: NativeCheckButtonProperties, Parent: NativeNode?) -> NativeCheckButton) &
         ((self: NativeSceneScope, Class: "CircleShape2D", Properties: NativeCircleShape2DProperties, Parent: NativeNode?) -> MutableNativeCircleShape2D) &
@@ -2351,6 +2516,8 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "MultiMesh", Properties: NativeMultiMeshProperties, Parent: NativeNode?) -> MutableNativeMultiMesh) &
         ((self: NativeSceneScope, Class: "MultiMeshInstance2D", Properties: NativeMultiMeshInstance2DProperties, Parent: NativeNode?) -> NativeMultiMeshInstance2D) &
         ((self: NativeSceneScope, Class: "MultiMeshInstance3D", Properties: NativeMultiMeshInstance3DProperties, Parent: NativeNode?) -> NativeMultiMeshInstance3D) &
+        ((self: NativeSceneScope, Class: "NavigationAgent3D", Properties: NativeNavigationAgent3DProperties, Parent: NativeNode?) -> NativeNavigationAgent3D) &
+        ((self: NativeSceneScope, Class: "NavigationRegion3D", Properties: NativeNavigationRegion3DProperties, Parent: NativeNode?) -> NativeNavigationRegion3D) &
         ((self: NativeSceneScope, Class: "Node", Properties: NativeNodeProperties, Parent: NativeNode?) -> NativeNode) &
         ((self: NativeSceneScope, Class: "Node2D", Properties: NativeNode2DProperties, Parent: NativeNode?) -> NativeNode2D) &
         ((self: NativeSceneScope, Class: "Node3D", Properties: NativeNode3DProperties, Parent: NativeNode?) -> NativeNode3D) &
@@ -2361,6 +2528,8 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "PlaneMesh", Properties: NativePlaneMeshProperties, Parent: NativeNode?) -> MutableNativePlaneMesh) &
         ((self: NativeSceneScope, Class: "ProgressBar", Properties: NativeProgressBarProperties, Parent: NativeNode?) -> NativeProgressBar) &
         ((self: NativeSceneScope, Class: "QuadMesh", Properties: NativeQuadMeshProperties, Parent: NativeNode?) -> MutableNativeQuadMesh) &
+        ((self: NativeSceneScope, Class: "RayCast2D", Properties: NativeRayCast2DProperties, Parent: NativeNode?) -> NativeRayCast2D) &
+        ((self: NativeSceneScope, Class: "RayCast3D", Properties: NativeRayCast3DProperties, Parent: NativeNode?) -> NativeRayCast3D) &
         ((self: NativeSceneScope, Class: "RectangleShape2D", Properties: NativeRectangleShape2DProperties, Parent: NativeNode?) -> MutableNativeRectangleShape2D) &
         ((self: NativeSceneScope, Class: "RichTextLabel", Properties: NativeRichTextLabelProperties, Parent: NativeNode?) -> NativeRichTextLabel) &
         ((self: NativeSceneScope, Class: "RigidBody2D", Properties: NativeRigidBody2DProperties, Parent: NativeNode?) -> NativeRigidBody2D) &
@@ -2368,6 +2537,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "ScrollContainer", Properties: NativeScrollContainerProperties, Parent: NativeNode?) -> NativeScrollContainer) &
         ((self: NativeSceneScope, Class: "SegmentShape2D", Properties: NativeSegmentShape2DProperties, Parent: NativeNode?) -> MutableNativeSegmentShape2D) &
         ((self: NativeSceneScope, Class: "ShaderMaterial", Properties: NativeShaderMaterialProperties, Parent: NativeNode?) -> MutableNativeShaderMaterial) &
+        ((self: NativeSceneScope, Class: "Skeleton3D", Properties: NativeSkeleton3DProperties, Parent: NativeNode?) -> NativeSkeleton3D) &
         ((self: NativeSceneScope, Class: "SoftBody3D", Properties: NativeSoftBody3DProperties, Parent: NativeNode?) -> NativeSoftBody3D) &
         ((self: NativeSceneScope, Class: "SphereMesh", Properties: NativeSphereMeshProperties, Parent: NativeNode?) -> MutableNativeSphereMesh) &
         ((self: NativeSceneScope, Class: "SphereShape3D", Properties: NativeSphereShape3DProperties, Parent: NativeNode?) -> MutableNativeSphereShape3D) &
@@ -2407,6 +2577,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: MutableNativeCapsuleShape2D, Properties: NativeCapsuleShape2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeCapsuleShape3D, Properties: NativeCapsuleShape3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCenterContainer, Properties: NativeCenterContainerProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Properties: NativeCharacterBody3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCheckBox, Properties: NativeCheckBoxProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeCheckButton, Properties: NativeCheckButtonProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeCircleShape2D, Properties: NativeCircleShape2DProperties) -> ()) &
@@ -2435,6 +2606,8 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: MutableNativeMultiMesh, Properties: NativeMultiMeshProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeMultiMeshInstance2D, Properties: NativeMultiMeshInstance2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeMultiMeshInstance3D, Properties: NativeMultiMeshInstance3DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Properties: NativeNavigationAgent3DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeNavigationRegion3D, Properties: NativeNavigationRegion3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeNode, Properties: NativeNodeProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeNode2D, Properties: NativeNode2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeNode3D, Properties: NativeNode3DProperties) -> ()) &
@@ -2445,6 +2618,8 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: MutableNativePlaneMesh, Properties: NativePlaneMeshProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeProgressBar, Properties: NativeProgressBarProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeQuadMesh, Properties: NativeQuadMeshProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Properties: NativeRayCast2DProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Properties: NativeRayCast3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeRectangleShape2D, Properties: NativeRectangleShape2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeRichTextLabel, Properties: NativeRichTextLabelProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeRigidBody2D, Properties: NativeRigidBody2DProperties) -> ()) &
@@ -2452,6 +2627,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeScrollContainer, Properties: NativeScrollContainerProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeSegmentShape2D, Properties: NativeSegmentShape2DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeShaderMaterial, Properties: NativeShaderMaterialProperties) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Properties: NativeSkeleton3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeSoftBody3D, Properties: NativeSoftBody3DProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeSphereMesh, Properties: NativeSphereMeshProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeSphereShape3D, Properties: NativeSphereShape3DProperties) -> ()) &
@@ -2734,7 +2910,47 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "VolumeDb") -> number) &
         ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "PitchScale") -> number) &
         ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "Autoplay") -> boolean) &
-        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "StreamPaused") -> boolean)
+        ((self: NativeSceneScope, Target: NativeAudioStreamPlayer3D, Property: "StreamPaused") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Property: "Enabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Property: "ExcludeParent") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Property: "HitFromInside") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Property: "CollideWithAreas") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Property: "CollideWithBodies") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Property: "CollisionMask") -> number) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Property: "TargetPosition") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Property: "Enabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Property: "ExcludeParent") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Property: "HitFromInside") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Property: "CollideWithAreas") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Property: "CollideWithBodies") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Property: "CollisionMask") -> number) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Property: "TargetPosition") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "Velocity") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "UpDirection") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "MaxSlides") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "FloorMaxAngle") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "FloorSnapLength") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "SafeMargin") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "FloorStopOnSlope") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "FloorConstantSpeed") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Property: "SlideOnCeiling") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "Velocity") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "UpDirection") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "MaxSlides") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "FloorMaxAngle") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "FloorSnapLength") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "SafeMargin") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "FloorStopOnSlope") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "FloorConstantSpeed") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Property: "SlideOnCeiling") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNavigationRegion3D, Property: "NavigationMesh") -> NativeNavigationMesh?) &
+        ((self: NativeSceneScope, Target: NativeNavigationRegion3D, Property: "Enabled") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNavigationRegion3D, Property: "NavigationLayers") -> number) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "TargetPosition") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "NavigationLayers") -> number) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "PathDesiredDistance") -> number) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "TargetDesiredDistance") -> number) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Property: "PathMaxDistance") -> number)
     Call: ((self: NativeSceneScope, Target: NativeNode3D, Method: "GetGlobalPosition") -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeControl, Method: "GetGlobalPosition") -> NativeVector2) &
         ((self: NativeSceneScope, Target: NativeNode3D, Method: "ToLocal", global_point: NativeVector3) -> NativeVector3) &
@@ -2835,7 +3051,56 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "GetOffset", point: number) -> number) &
         ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "SetOffset", point: number, offset: number) -> ()) &
         ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "AddPoint", offset: number, color: NativeColor4) -> ()) &
-        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "RemovePoint", point: number) -> ())
+        ((self: NativeSceneScope, Target: (MutableNativeGradient), Method: "RemovePoint", point: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Method: "IsColliding") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Method: "GetCollisionPoint") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Method: "GetCollisionNormal") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Method: "ForceRaycastUpdate") -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Method: "AddException", node: NativeCollisionObject2D?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Method: "ClearExceptions") -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast2D, Method: "GetCollider") -> NativeCollisionObject2D?) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Method: "IsColliding") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Method: "GetCollisionPoint") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Method: "GetCollisionNormal") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Method: "ForceRaycastUpdate") -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Method: "AddException", node: NativeCollisionObject3D?) -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Method: "ClearExceptions") -> ()) &
+        ((self: NativeSceneScope, Target: NativeRayCast3D, Method: "GetCollider") -> NativeCollisionObject3D?) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Method: "MoveAndSlide") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Method: "IsOnFloor") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Method: "IsOnWall") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Method: "IsOnCeiling") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Method: "GetFloorNormal") -> NativeVector2) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody2D, Method: "GetSlideCollisionCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Method: "MoveAndSlide") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Method: "IsOnFloor") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Method: "IsOnWall") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Method: "IsOnCeiling") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Method: "GetFloorNormal") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeCharacterBody3D, Method: "GetSlideCollisionCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Method: "GetNextPathPosition") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Method: "GetCurrentNavigationPath") -> {NativeVector3}) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Method: "GetFinalPosition") -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Method: "IsNavigationFinished") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Method: "IsTargetReached") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNavigationAgent3D, Method: "IsTargetReachable") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "AddBone", name: string) -> number) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "FindBone", name: string) -> number) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBoneCount") -> number) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBoneName", bone_idx: number) -> string) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBoneParent", bone_idx: number) -> number) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBoneRest", bone_idx: number) -> NativeTransform3D) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBoneGlobalRest", bone_idx: number) -> NativeTransform3D) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBonePose", bone_idx: number) -> NativeTransform3D) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBonePosePosition", bone_idx: number) -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBonePoseRotation", bone_idx: number) -> NativeQuaternion) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBonePoseScale", bone_idx: number) -> NativeVector3) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBoneParent", bone_idx: number, parent_idx: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBoneRest", bone_idx: number, rest: NativeTransform3D) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBonePosePosition", bone_idx: number, position: NativeVector3) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBonePoseRotation", bone_idx: number, rotation: NativeQuaternion) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "SetBonePoseScale", bone_idx: number, scale: NativeVector3) -> ()) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "ResetBonePose", bone_idx: number) -> ())
     Connect: ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Pressed", Callback: () -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "Toggled", Callback: (boolean) -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeBaseButton, Signal: "ButtonDown", Callback: () -> ()) -> NativeConnection) &
@@ -2863,7 +3128,11 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Source: NativeItemList, Signal: "MultiSelected", Callback: (number, boolean) -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeItemList, Signal: "EmptyClicked", Callback: (NativeVector2, number) -> ()) -> NativeConnection) &
         ((self: NativeSceneScope, Source: NativeItemList, Signal: "ItemActivated", Callback: (number) -> ()) -> NativeConnection) &
-        ((self: NativeSceneScope, Source: NativeTextEdit, Signal: "TextChanged", Callback: () -> ()) -> NativeConnection)
+        ((self: NativeSceneScope, Source: NativeTextEdit, Signal: "TextChanged", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeNavigationAgent3D, Signal: "PathChanged", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeNavigationAgent3D, Signal: "TargetReached", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeNavigationAgent3D, Signal: "NavigationFinished", Callback: () -> ()) -> NativeConnection) &
+        ((self: NativeSceneScope, Source: NativeSkeleton3D, Signal: "PoseUpdated", Callback: () -> ()) -> NativeConnection)
     Load: ((self: NativeSceneScope, Type: "Texture2D", Path: string) -> NativeTexture2D) &
         ((self: NativeSceneScope, Type: "AudioStream", Path: string) -> NativeAudioStream) &
         ((self: NativeSceneScope, Type: "Mesh", Path: string) -> NativeMesh) &
@@ -2876,7 +3145,8 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Type: "StyleBox", Path: string) -> NativeStyleBox) &
         ((self: NativeSceneScope, Type: "Shape2D", Path: string) -> NativeShape2D) &
         ((self: NativeSceneScope, Type: "Shape3D", Path: string) -> NativeShape3D) &
-        ((self: NativeSceneScope, Type: "Gradient", Path: string) -> NativeGradient)
+        ((self: NativeSceneScope, Type: "Gradient", Path: string) -> NativeGradient) &
+        ((self: NativeSceneScope, Type: "NavigationMesh", Path: string) -> NativeNavigationMesh)
     Instantiate: (self: NativeSceneScope, Scene: NativePackedScene, Parent: NativeNode?) -> NativeNode
     Clone: (self: NativeSceneScope, Source: NativeNode, Parent: NativeNode?) -> NativeNode
     Reparent: (self: NativeSceneScope, Target: NativeNode, Parent: NativeNode, KeepGlobal: boolean?) -> ()

@@ -24,6 +24,7 @@
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/physics_server3d.hpp>
 #include <godot_cpp/classes/world3d.hpp>
+#include <godot_cpp/classes/world2d.hpp>
 #include <functional>
 
 using namespace godot;
@@ -83,7 +84,9 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     auto Container=memnew(SubViewportContainer); Container->set_stretch(true);
     Container->set_custom_minimum_size(Vector2(360,200)); Content->add_child(Container);
     auto Viewport=memnew(SubViewport); PreviewViewport=Viewport->get_instance_id();
-    Viewport->set_size(Vector2i(600,320)); Viewport->set_use_own_world_3d(true); Container->add_child(Viewport);
+    Viewport->set_size(Vector2i(600,320)); Viewport->set_use_own_world_3d(true);
+    Ref<World2D> PreviewWorld2D;PreviewWorld2D.instantiate();Viewport->set_world_2d(PreviewWorld2D);
+    Container->add_child(Viewport);
     add_control_to_bottom_panel(Panel,"Luau Authoring");
     Ref<GLAuthoringDebugger> Capture;Capture.instantiate();Capture->SetReceiver(get_instance_id());
     Debugger=Capture;add_debugger_plugin(Debugger);

@@ -133,6 +133,18 @@
       "Resource": false
     },
     {
+      "Name": "CharacterBody2D",
+      "Base": "PhysicsBody2D",
+      "Construct": false,
+      "Resource": false
+    },
+    {
+      "Name": "CharacterBody3D",
+      "Base": "PhysicsBody3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "CheckBox",
       "Base": "Button",
       "Construct": true,
@@ -349,6 +361,24 @@
       "Resource": false
     },
     {
+      "Name": "NavigationAgent3D",
+      "Base": "Node",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "NavigationMesh",
+      "Base": "Resource",
+      "Construct": false,
+      "Resource": true
+    },
+    {
+      "Name": "NavigationRegion3D",
+      "Base": "Node3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "Node",
       "Base": "Object",
       "Construct": true,
@@ -445,6 +475,18 @@
       "Resource": false
     },
     {
+      "Name": "RayCast2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "RayCast3D",
+      "Base": "Node3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "RectangleShape2D",
       "Base": "Shape2D",
       "Construct": true,
@@ -521,6 +563,12 @@
       "Base": "Resource",
       "Construct": false,
       "Resource": true
+    },
+    {
+      "Name": "Skeleton3D",
+      "Base": "Node3D",
+      "Construct": true,
+      "Resource": false
     },
     {
       "Name": "Slider",
@@ -3064,6 +3112,367 @@
       "Kind": "Boolean",
       "Min": 0,
       "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "ExcludeParent",
+      "Native": "exclude_parent",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "HitFromInside",
+      "Native": "hit_from_inside",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "CollideWithAreas",
+      "Native": "collide_with_areas",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "CollideWithBodies",
+      "Native": "collide_with_bodies",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "ExcludeParent",
+      "Native": "exclude_parent",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "HitFromInside",
+      "Native": "hit_from_inside",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "CollideWithAreas",
+      "Native": "collide_with_areas",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "CollideWithBodies",
+      "Native": "collide_with_bodies",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "UpDirection",
+      "Native": "up_direction",
+      "Kind": "Vector2Value",
+      "Min": -1,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "MaxSlides",
+      "Native": "max_slides",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 16,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "FloorMaxAngle",
+      "Native": "floor_max_angle",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1.57,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "FloorSnapLength",
+      "Native": "floor_snap_length",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "SafeMargin",
+      "Native": "safe_margin",
+      "Kind": "Number",
+      "Min": 0.0001,
+      "Max": 2,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "FloorStopOnSlope",
+      "Native": "floor_stop_on_slope",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "FloorConstantSpeed",
+      "Native": "floor_constant_speed",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "SlideOnCeiling",
+      "Native": "slide_on_ceiling",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "UpDirection",
+      "Native": "up_direction",
+      "Kind": "Vector",
+      "Min": -1,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "MaxSlides",
+      "Native": "max_slides",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 16,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "FloorMaxAngle",
+      "Native": "floor_max_angle",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1.57,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "FloorSnapLength",
+      "Native": "floor_snap_length",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "SafeMargin",
+      "Native": "safe_margin",
+      "Kind": "Number",
+      "Min": 0.0001,
+      "Max": 2,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "FloorStopOnSlope",
+      "Native": "floor_stop_on_slope",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "FloorConstantSpeed",
+      "Native": "floor_constant_speed",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "SlideOnCeiling",
+      "Native": "slide_on_ceiling",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion3D",
+      "Name": "NavigationMesh",
+      "Native": "navigation_mesh",
+      "Kind": "ResourceValue",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene",
+      "ResourceClass": "NavigationMesh"
+    },
+    {
+      "Class": "NavigationRegion3D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Min": 0,
+      "Max": 0,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion3D",
+      "Name": "NavigationLayers",
+      "Native": "navigation_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "NavigationLayers",
+      "Native": "navigation_layers",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "PathDesiredDistance",
+      "Native": "path_desired_distance",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "TargetDesiredDistance",
+      "Native": "target_desired_distance",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "PathMaxDistance",
+      "Native": "path_max_distance",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
       "Authority": "OwnedScene"
     }
   ],
@@ -7099,6 +7508,1891 @@
           }
         ]
       }
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "IsColliding",
+      "Native": "is_colliding",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 81,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_colliding",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "GetCollisionPoint",
+      "Native": "get_collision_point",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 81,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_collision_point",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3341600327,
+        "return_value": {
+          "type": "Vector2"
+        }
+      }
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "GetCollisionNormal",
+      "Native": "get_collision_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 81,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_collision_normal",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3341600327,
+        "return_value": {
+          "type": "Vector2"
+        }
+      }
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "ForceRaycastUpdate",
+      "Native": "force_raycast_update",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 81,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "force_raycast_update",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "AddException",
+      "Native": "add_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 81,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_exception",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3090941106,
+        "arguments": [
+          {
+            "name": "node",
+            "type": "CollisionObject2D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "ClearExceptions",
+      "Native": "clear_exceptions",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 82,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "clear_exceptions",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "RayCast2D",
+      "Name": "GetCollider",
+      "Native": "get_collider",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "ReturnNodeClass": "CollisionObject2D",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 82,
+      "Return": "NodeValue",
+      "ReturnClass": "CollisionObject2D",
+      "Signature": {
+        "name": "get_collider",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1981248198,
+        "return_value": {
+          "type": "Object"
+        }
+      }
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "IsColliding",
+      "Native": "is_colliding",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 82,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_colliding",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "GetCollisionPoint",
+      "Native": "get_collision_point",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 82,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_collision_point",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3360562783,
+        "return_value": {
+          "type": "Vector3"
+        }
+      }
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "GetCollisionNormal",
+      "Native": "get_collision_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 82,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_collision_normal",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3360562783,
+        "return_value": {
+          "type": "Vector3"
+        }
+      }
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "ForceRaycastUpdate",
+      "Native": "force_raycast_update",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 82,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "force_raycast_update",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "AddException",
+      "Native": "add_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 82,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_exception",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1976431078,
+        "arguments": [
+          {
+            "name": "node",
+            "type": "CollisionObject3D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "ClearExceptions",
+      "Native": "clear_exceptions",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "clear_exceptions",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "RayCast3D",
+      "Name": "GetCollider",
+      "Native": "get_collider",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "ReturnNodeClass": "CollisionObject3D",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "NodeValue",
+      "ReturnClass": "CollisionObject3D",
+      "Signature": {
+        "name": "get_collider",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1981248198,
+        "return_value": {
+          "type": "Object"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "MoveAndSlide",
+      "Native": "move_and_slide",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "move_and_slide",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2240911060,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "IsOnFloor",
+      "Native": "is_on_floor",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_on_floor",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "IsOnWall",
+      "Native": "is_on_wall",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_on_wall",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "IsOnCeiling",
+      "Native": "is_on_ceiling",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_on_ceiling",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "GetFloorNormal",
+      "Native": "get_floor_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_floor_normal",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3341600327,
+        "return_value": {
+          "type": "Vector2"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody2D",
+      "Name": "GetSlideCollisionCount",
+      "Native": "get_slide_collision_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_slide_collision_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "MoveAndSlide",
+      "Native": "move_and_slide",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "move_and_slide",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2240911060,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "IsOnFloor",
+      "Native": "is_on_floor",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_on_floor",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "IsOnWall",
+      "Native": "is_on_wall",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_on_wall",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "IsOnCeiling",
+      "Native": "is_on_ceiling",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_on_ceiling",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "GetFloorNormal",
+      "Native": "get_floor_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_floor_normal",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3360562783,
+        "return_value": {
+          "type": "Vector3"
+        }
+      }
+    },
+    {
+      "Class": "CharacterBody3D",
+      "Name": "GetSlideCollisionCount",
+      "Native": "get_slide_collision_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_slide_collision_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "GetNextPathPosition",
+      "Native": "get_next_path_position",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_next_path_position",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3783033775,
+        "return_value": {
+          "type": "Vector3"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "GetCurrentNavigationPath",
+      "Native": "get_current_navigation_path",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Vectors3Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_current_navigation_path",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 497664490,
+        "return_value": {
+          "type": "PackedVector3Array"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "GetFinalPosition",
+      "Native": "get_final_position",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_final_position",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3783033775,
+        "return_value": {
+          "type": "Vector3"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "IsNavigationFinished",
+      "Native": "is_navigation_finished",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_navigation_finished",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2240911060,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "IsTargetReached",
+      "Native": "is_target_reached",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_target_reached",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "IsTargetReachable",
+      "Native": "is_target_reachable",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 83,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "is_target_reachable",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2240911060,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "AddBone",
+      "Native": "add_bone",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          1,
+          128
+        ]
+      },
+      "Validation": {
+        "Key": {
+          "Argument": "name",
+          "Query": "find_bone",
+          "Absent": true
+        },
+        "Capacity": {
+          "Query": "get_bone_count",
+          "Maximum": 128
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": "find_bone",
+      "KeyArgument": 0,
+      "KeyAbsent": true,
+      "CountArgument": -1,
+      "CountLimit": 128,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 83,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "add_bone",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1597066294,
+        "hash_compatibility": [
+          83702148
+        ],
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "name",
+            "type": "String"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "FindBone",
+      "Native": "find_bone",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "name": [
+          1,
+          128
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 84,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "find_bone",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1321353865,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "name",
+            "type": "String"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBoneCount",
+      "Native": "get_bone_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 85,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBoneName",
+      "Native": "get_bone_name",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 85,
+      "Return": "Text",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_name",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 844755477,
+        "return_value": {
+          "type": "String"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBoneParent",
+      "Native": "get_bone_parent",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 86,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_parent",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 923996154,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBoneRest",
+      "Native": "get_bone_rest",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 87,
+      "Return": "Transform3Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_rest",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1965739696,
+        "return_value": {
+          "type": "Transform3D"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBoneGlobalRest",
+      "Native": "get_bone_global_rest",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 88,
+      "Return": "Transform3Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_global_rest",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1965739696,
+        "return_value": {
+          "type": "Transform3D"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBonePose",
+      "Native": "get_bone_pose",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 89,
+      "Return": "Transform3Value",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_pose",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1965739696,
+        "return_value": {
+          "type": "Transform3D"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBonePosePosition",
+      "Native": "get_bone_pose_position",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 90,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_pose_position",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 711720468,
+        "return_value": {
+          "type": "Vector3"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBonePoseRotation",
+      "Native": "get_bone_pose_rotation",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 91,
+      "Return": "Rotation",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_pose_rotation",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 476865136,
+        "return_value": {
+          "type": "Quaternion"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "GetBonePoseScale",
+      "Native": "get_bone_pose_scale",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 92,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "get_bone_pose_scale",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 711720468,
+        "return_value": {
+          "type": "Vector3"
+        },
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "SetBoneParent",
+      "Native": "set_bone_parent",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ],
+        "parent_idx": [
+          -1,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 93,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_bone_parent",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3937882851,
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "parent_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "SetBoneRest",
+      "Native": "set_bone_rest",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 95,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_bone_rest",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3616898986,
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "rest",
+            "type": "Transform3D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "SetBonePosePosition",
+      "Native": "set_bone_pose_position",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 97,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_bone_pose_position",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1530502735,
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "position",
+            "type": "Vector3"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "SetBonePoseRotation",
+      "Native": "set_bone_pose_rotation",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 99,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_bone_pose_rotation",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2823819782,
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "rotation",
+            "type": "Quaternion"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "SetBonePoseScale",
+      "Native": "set_bone_pose_scale",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ],
+        "scale": [
+          0.001,
+          100
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 2,
+      "Required": 2,
+      "FirstArgument": 101,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "set_bone_pose_scale",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1530502735,
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "scale",
+            "type": "Vector3"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "ResetBonePose",
+      "Native": "reset_bone_pose",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "bone_idx": [
+          0,
+          127
+        ]
+      },
+      "Validation": {
+        "Index": {
+          "Argument": "bone_idx",
+          "Query": "get_bone_count"
+        }
+      },
+      "CountQuery": "get_bone_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 103,
+      "Return": "Void",
+      "ReturnClass": null,
+      "Signature": {
+        "name": "reset_bone_pose",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1286410249,
+        "arguments": [
+          {
+            "name": "bone_idx",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
     }
   ],
   "Signals": [
@@ -7107,7 +9401,7 @@
       "Name": "Pressed",
       "Native": "pressed",
       "Authority": "OwnedScene",
-      "FirstArgument": 81,
+      "FirstArgument": 104,
       "Arguments": 0
     },
     {
@@ -7115,7 +9409,7 @@
       "Name": "Toggled",
       "Native": "toggled",
       "Authority": "OwnedScene",
-      "FirstArgument": 81,
+      "FirstArgument": 104,
       "Arguments": 1
     },
     {
@@ -7123,7 +9417,7 @@
       "Name": "ButtonDown",
       "Native": "button_down",
       "Authority": "OwnedScene",
-      "FirstArgument": 82,
+      "FirstArgument": 105,
       "Arguments": 0
     },
     {
@@ -7131,7 +9425,7 @@
       "Name": "ButtonUp",
       "Native": "button_up",
       "Authority": "OwnedScene",
-      "FirstArgument": 82,
+      "FirstArgument": 105,
       "Arguments": 0
     },
     {
@@ -7139,7 +9433,7 @@
       "Name": "TextSubmitted",
       "Native": "text_submitted",
       "Authority": "OwnedScene",
-      "FirstArgument": 82,
+      "FirstArgument": 105,
       "Arguments": 1
     },
     {
@@ -7147,7 +9441,7 @@
       "Name": "TextChanged",
       "Native": "text_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 83,
+      "FirstArgument": 106,
       "Arguments": 1
     },
     {
@@ -7155,7 +9449,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 84,
+      "FirstArgument": 107,
       "Arguments": 0
     },
     {
@@ -7163,7 +9457,7 @@
       "Name": "Resized",
       "Native": "resized",
       "Authority": "OwnedScene",
-      "FirstArgument": 84,
+      "FirstArgument": 107,
       "Arguments": 0
     },
     {
@@ -7171,7 +9465,7 @@
       "Name": "FocusEntered",
       "Native": "focus_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 84,
+      "FirstArgument": 107,
       "Arguments": 0
     },
     {
@@ -7179,7 +9473,7 @@
       "Name": "FocusExited",
       "Native": "focus_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 84,
+      "FirstArgument": 107,
       "Arguments": 0
     },
     {
@@ -7187,7 +9481,7 @@
       "Name": "VisibilityChanged",
       "Native": "visibility_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 84,
+      "FirstArgument": 107,
       "Arguments": 0
     },
     {
@@ -7195,7 +9489,7 @@
       "Name": "ValueChanged",
       "Native": "value_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 84,
+      "FirstArgument": 107,
       "Arguments": 1
     },
     {
@@ -7203,7 +9497,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 85,
+      "FirstArgument": 108,
       "Arguments": 0
     },
     {
@@ -7211,7 +9505,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 85,
+      "FirstArgument": 108,
       "Arguments": 0
     },
     {
@@ -7219,7 +9513,7 @@
       "Name": "Timeout",
       "Native": "timeout",
       "Authority": "OwnedScene",
-      "FirstArgument": 85,
+      "FirstArgument": 108,
       "Arguments": 0
     },
     {
@@ -7227,7 +9521,7 @@
       "Name": "BodyEntered",
       "Native": "body_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 85,
+      "FirstArgument": 108,
       "Arguments": 1
     },
     {
@@ -7235,7 +9529,7 @@
       "Name": "BodyExited",
       "Native": "body_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 86,
+      "FirstArgument": 109,
       "Arguments": 1
     },
     {
@@ -7243,7 +9537,7 @@
       "Name": "BodyEntered",
       "Native": "body_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 87,
+      "FirstArgument": 110,
       "Arguments": 1
     },
     {
@@ -7251,7 +9545,7 @@
       "Name": "BodyExited",
       "Native": "body_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 88,
+      "FirstArgument": 111,
       "Arguments": 1
     },
     {
@@ -7259,7 +9553,7 @@
       "Name": "AnimationFinished",
       "Native": "animation_finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 89,
+      "FirstArgument": 112,
       "Arguments": 0
     },
     {
@@ -7267,7 +9561,7 @@
       "Name": "AnimationLooped",
       "Native": "animation_looped",
       "Authority": "OwnedScene",
-      "FirstArgument": 89,
+      "FirstArgument": 112,
       "Arguments": 0
     },
     {
@@ -7275,7 +9569,7 @@
       "Name": "FrameChanged",
       "Native": "frame_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 89,
+      "FirstArgument": 112,
       "Arguments": 0
     },
     {
@@ -7283,7 +9577,7 @@
       "Name": "AnimationChanged",
       "Native": "animation_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 89,
+      "FirstArgument": 112,
       "Arguments": 0
     },
     {
@@ -7291,7 +9585,7 @@
       "Name": "ItemSelected",
       "Native": "item_selected",
       "Authority": "OwnedScene",
-      "FirstArgument": 89,
+      "FirstArgument": 112,
       "Arguments": 1
     },
     {
@@ -7299,7 +9593,7 @@
       "Name": "MultiSelected",
       "Native": "multi_selected",
       "Authority": "OwnedScene",
-      "FirstArgument": 90,
+      "FirstArgument": 113,
       "Arguments": 2
     },
     {
@@ -7307,7 +9601,7 @@
       "Name": "EmptyClicked",
       "Native": "empty_clicked",
       "Authority": "OwnedScene",
-      "FirstArgument": 92,
+      "FirstArgument": 115,
       "Arguments": 2
     },
     {
@@ -7315,7 +9609,7 @@
       "Name": "ItemActivated",
       "Native": "item_activated",
       "Authority": "OwnedScene",
-      "FirstArgument": 94,
+      "FirstArgument": 117,
       "Arguments": 1
     },
     {
@@ -7323,7 +9617,39 @@
       "Name": "TextChanged",
       "Native": "text_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 95,
+      "FirstArgument": 118,
+      "Arguments": 0
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "PathChanged",
+      "Native": "path_changed",
+      "Authority": "OwnedScene",
+      "FirstArgument": 118,
+      "Arguments": 0
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "TargetReached",
+      "Native": "target_reached",
+      "Authority": "OwnedScene",
+      "FirstArgument": 118,
+      "Arguments": 0
+    },
+    {
+      "Class": "NavigationAgent3D",
+      "Name": "NavigationFinished",
+      "Native": "navigation_finished",
+      "Authority": "OwnedScene",
+      "FirstArgument": 118,
+      "Arguments": 0
+    },
+    {
+      "Class": "Skeleton3D",
+      "Name": "PoseUpdated",
+      "Native": "pose_updated",
+      "Authority": "OwnedScene",
+      "FirstArgument": 118,
       "Arguments": 0
     }
   ],
@@ -8260,6 +10586,192 @@
       "Max": 100000
     },
     {
+      "Class": "RayCast2D.AddException",
+      "Name": "node",
+      "Native": "node",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "CollisionObject2D"
+    },
+    {
+      "Class": "RayCast3D.AddException",
+      "Name": "node",
+      "Native": "node",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "CollisionObject3D"
+    },
+    {
+      "Class": "Skeleton3D.AddBone",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "Skeleton3D.FindBone",
+      "Name": "name",
+      "Native": "name",
+      "Kind": "Text",
+      "Min": 1,
+      "Max": 128
+    },
+    {
+      "Class": "Skeleton3D.GetBoneName",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.GetBoneParent",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.GetBoneRest",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.GetBoneGlobalRest",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.GetBonePose",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.GetBonePosePosition",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.GetBonePoseRotation",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.GetBonePoseScale",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.SetBoneParent",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.SetBoneParent",
+      "Name": "parent_idx",
+      "Native": "parent_idx",
+      "Kind": "Integer",
+      "Min": -1,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.SetBoneRest",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.SetBoneRest",
+      "Name": "rest",
+      "Native": "rest",
+      "Kind": "Transform3Value",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Skeleton3D.SetBonePosePosition",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.SetBonePosePosition",
+      "Name": "position",
+      "Native": "position",
+      "Kind": "Vector",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Skeleton3D.SetBonePoseRotation",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.SetBonePoseRotation",
+      "Name": "rotation",
+      "Native": "rotation",
+      "Kind": "Rotation",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Skeleton3D.SetBonePoseScale",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
+      "Class": "Skeleton3D.SetBonePoseScale",
+      "Name": "scale",
+      "Native": "scale",
+      "Kind": "Vector",
+      "Min": 0.001,
+      "Max": 100
+    },
+    {
+      "Class": "Skeleton3D.ResetBonePose",
+      "Name": "bone_idx",
+      "Native": "bone_idx",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 127
+    },
+    {
       "Class": "BaseButton.Toggled",
       "Name": "toggled_on",
       "Native": "toggled_on",
@@ -8389,10 +10901,11 @@
     "StyleBox",
     "Shape2D",
     "Shape3D",
-    "Gradient"
+    "Gradient",
+    "NavigationMesh"
   ],
   "Schema": 1,
-  "PolicySHA256": "ba1a9bc462d8d1b92a0811838aad0433b4c281e1de068fbd9932ae05cc9396df",
+  "PolicySHA256": "a9c53f061deb9fb9dda9452dfd73bd399c67f7df5f68c65fc837d0a08cf01f42",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
   "ScopeOperations": [
     {

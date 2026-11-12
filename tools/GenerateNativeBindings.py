@@ -164,7 +164,12 @@ def Build(Policy, Api):
             if Arguments[-1].get('ResourceClass'): Selected.add(A['type'])
             Required += 'default_value' not in A
         Return = M.get('return_value', {}).get('type')
-        ReturnKind=Kind(Return) if Return else 'Void'
+        ReturnNode=P.get('ReturnNodeClass')
+        if ReturnNode:
+            Require(Return=='Object' and Inherits(ReturnNode,'Node') and not any(Inherits(ReturnNode,Base) for Base in ('Window','Viewport')),'Invalid scoped Node projection: '+C+'.'+N)
+            ReturnKind='NodeValue';Selected.add(ReturnNode)
+        else:
+            ReturnKind=Kind(Return) if Return else 'Void'
         if P.get('ReturnKind'):
             Require((ReturnKind,P['ReturnKind'])==('Colour','Colour4'),'Unreviewed return conversion override')
             ReturnKind=P['ReturnKind']
@@ -195,7 +200,7 @@ def Build(Policy, Api):
             Require(0<V['Maximum']<=1024 and Rule['CountQuery'] in (None,V['Query']),'Invalid bounded capacity rule')
             Rule.update(CountQuery=V['Query'],CountLimit=V['Maximum'],CountArgument=CountArgument if QA else -1)
         Methods.append({**P, **Rule, 'Arguments': len(Args), 'Required': Required, 'FirstArgument': First,
-                        'Return': ReturnKind, 'ReturnClass': Return if Return in Classes else None,
+                        'Return': ReturnKind, 'ReturnClass': ReturnNode or (Return if Return in Classes else None),
                         'Signature': M})
         Selected.add(C)
     for P in Policy['Signals']:
