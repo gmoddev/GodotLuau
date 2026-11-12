@@ -119,8 +119,6 @@ func Run() -> void:
                 # Use actual EditorInterface play/stop and debugger transport.
                 # These disposable resources are not open in the ScriptEditor,
                 # so its normal save-on-play cannot overwrite them with old text.
-                ProjectSettings.set_setting("editor/run/main_run_args", "--headless --disable-crash-handler --max-fps 30")
-                ProjectSettings.save()
                 Check(Plugin.call("CreateLuauScene", "res://Failure.tscn").get("Passed", false), "Native authoring creates an independent debug scene")
                 var Failure: Script = load("res://Failure.luau")
                 Failure.source_code = 'local Value=1\nerror("expected editor-run diagnostic")'

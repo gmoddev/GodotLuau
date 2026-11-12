@@ -38,6 +38,10 @@ def Main():
     (Plugin / "plugin.cfg").write_text('[plugin]\nname="NativeEditorFixture"\ndescription="Bounded GL-051 editor integration"\nauthor="GodotLuau"\nversion="1"\nscript="plugin.gd"\n')
     with (Output / "project.godot").open("a") as File:
         File.write('[editor_plugins]\nenabled=PackedStringArray("res://addons/NativeEditor/plugin.cfg")\n')
+        if Args.workflow and not Args.baseline:
+            # EditorRun caches this setting during startup. Setting it only
+            # immediately before first Play can launch an unintended GUI child.
+            File.write('[editor]\nrun/main_run_args="--headless --disable-crash-handler --max-fps 30"\n')
         if Args.baseline:
             assert Args.workflow, "Baseline observation belongs to the GL-052 workflow"
             File.write('[godot_luau]\nqualification_baseline=true\n')

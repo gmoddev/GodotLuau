@@ -304,3 +304,13 @@ editor's `_create` virtual uses the existing ptrcall encoding support without
 changing the pinned 4.3 binding dependency. New syntax-only probes pass for its
 implementation, plugin and registration. Runtime editor qualification is pending;
 all original completion assertions remain required.
+
+At `1197f3d`, Linux's original 19 editor checks pass with the registered
+highlighter. The expanded observer passes snapshot composition, Unicode and
+multiline colors and source navigation. Its first actual Play fails because
+the fixture changes `editor/run/main_run_args` after EditorRun's startup cache:
+the child attempts X11/Wayland on the headless runner. The second Play starts
+headlessly and recovers. Set that test setting in project.godot before launching
+the editor instead. Preserve `native-1197-Linux` logs and keep every debugger
+assertion. This is a fixture launch correction; the 121-file native fingerprint
+is unchanged. Existing current sanitizer execution is unaffected and is reused.
