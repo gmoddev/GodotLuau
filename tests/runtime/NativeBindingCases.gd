@@ -64,10 +64,22 @@ script = ExtResource("1")
 """)
     Write("res://BindingNested.tscn", """[gd_scene load_steps=2 format=3]
 [ext_resource type="PackedScene" path="res://BindingReusable.tscn" id="1"]
-[node name="Nested" instance=ExtResource("1")]
+[node name="Nested" type="Node3D"]
+[node name="Child" parent="." instance=ExtResource("1")]
 """)
     Write("res://BindingGrouped.tscn", """[gd_scene format=3]
 [node name="Grouped" type="Node3D" groups=["native_capability"]]
+""")
+    Write("res://BindingNestedUnsafe.tscn", """[gd_scene load_steps=2 format=3]
+[ext_resource type="PackedScene" path="res://BindingScripted.tscn" id="1"]
+[node name="Outer" type="Node3D"]
+[node name="Inner" parent="." instance=ExtResource("1")]
+""")
+    Write("res://BindingInherited.tscn", """[gd_scene load_steps=2 format=3]
+[ext_resource type="PackedScene" path="res://BindingReusable.tscn" id="1"]
+[node name="Inherited" instance=ExtResource("1")]
+[node name="Visual" parent="."]
+position=Vector3(2,0,0)
 """)
     Write("res://BindingNetwork.tscn", """[gd_scene format=3]
 [node name="Network" type="NetworkService"]
@@ -124,6 +136,12 @@ First.Name='First'
 assert(First:IsA('Node3D') and First.Visual:IsA('MeshInstance3D'))
 local Copy=S:Clone(First,B)
 Copy.Name='Copy'
+local Nested=S:Instantiate(S:Load('PackedScene','res://BindingNested.tscn'),A)
+Nested.Name='Nested'
+assert(Nested.Child.Visual:IsA('MeshInstance3D'))
+local Inherited=S:Instantiate(S:Load('PackedScene','res://BindingInherited.tscn'),A)
+Inherited.Name='Inherited'
+assert(Inherited.Visual.Position.X==2)
 local SourceButton=S:New('Button',{Name='SourceButton',Text='Native'})
 S:Connect(SourceButton,'Pressed',function() game:SetAttribute('BindingCloneSignal',(game:GetAttribute('BindingCloneSignal') or 0)+1) end)
 local CopyButton=S:Clone(SourceButton)
@@ -167,7 +185,7 @@ local Bad={
  function() S:Instantiate(S:Load('PackedScene','res://BindingWide.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingScripted.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingConnected.tscn')) end,
- function() S:Instantiate(S:Load('PackedScene','res://BindingNested.tscn')) end,
+ function() S:Instantiate(S:Load('PackedScene','res://BindingNestedUnsafe.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingGrouped.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingNetwork.tscn')) end,
  function() S:Instantiate(S:Load('PackedScene','res://BindingShear.tscn')) end,
@@ -199,6 +217,7 @@ game:SetAttribute('BindingReady',true)
     var First := Scope.get_node("A/First/Visual") as MeshInstance3D
     var Copy := Scope.get_node("B/Copy/Visual") as MeshInstance3D
     Runner.Check(First.mesh==Copy.mesh and First.mesh is BoxMesh, "Binding native PackedScene and clone preserve reusable resources")
+    Runner.Check((Scope.get_node("A/Nested/Child/Visual") as MeshInstance3D).mesh==First.mesh and (Scope.get_node("A/Inherited/Visual") as MeshInstance3D).position.x==2,"Binding nested and inherited scenes preserve native resources and checked overrides")
     Runner.Check(First.get_parent().scale.is_equal_approx(Vector3(2,2,2)) and First.get_parent().position.is_equal_approx(Vector3(1,0,0)), "Binding native serialization preserves bounded rotation scale and position")
     var ButtonNode := Scope.get_node("SourceButton") as Button
     var CopyButton := Scope.get_node("CopyButton") as Button

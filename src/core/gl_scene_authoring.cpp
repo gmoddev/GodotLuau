@@ -716,34 +716,69 @@ bool SerializedTransform(const char* Class, const Variant& Value) {
     Vector3 Z=Transform.basis.get_column(2).normalized();
     return std::abs(X.dot(Y))<0.0001 && std::abs(X.dot(Z))<0.0001 && std::abs(Y.dot(Z))<0.0001;
 }
-void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Scene, int Depth) {
+bool SerializedRotation2D(const char* Class,const String& Name,const Variant& Value) {
+    if(Name!="rotation" || !RegistryIsA(Class,"Node2D") || (Value.get_type()!=Variant::FLOAT && Value.get_type()!=Variant::INT))return false;
+    const auto* Degrees=NativeProperty(Class,"rotation_degrees");
+    return Degrees && Bounded(double(Value)*180.0/3.14159265358979323846,Degrees->Min,Degrees->Max);
+}
+struct ScenePreflight {
+    std::unordered_map<std::string,const GLNative::Class*> Types;
+    std::unordered_set<uint64_t> Active,Resources;
+    int Values=0,Entries=0;
+};
+bool SceneName(const String& Name) {
+    auto Bytes=Name.utf8();
+    return Bytes.length()>0 && Bytes.length()<=128 && !std::memchr(Bytes.get_data(),0,Bytes.length()) &&
+        !Name.contains("/") && !Name.contains(":") && !Name.contains(".") && !Name.contains("@");
+}
+void CheckSceneState(lua_State* Thread,SceneScope* Scope,const Ref<PackedScene>& Scene,int Depth,const std::string& Prefix,ScenePreflight& Check,int Nesting) {
+    if(Scene.is_null() || Nesting>16 || !Check.Active.insert(Scene->get_instance_id()).second)
+        luaL_error(Thread,"[Scene:Composition] Cyclic or excessively nested PackedScene");
     Ref<SceneState> State=Scene->get_state();
     if (State.is_null() || !Scene->can_instantiate() || State->get_connection_count()!=0)
         luaL_error(Thread,"[Scene:Composition] Scene must be instantiable with no stored signal connections");
-    ReapNodes(Scope);
-    if (State->get_node_count()<=0 || size_t(State->get_node_count())>MaxNodes-Scope->Nodes.size())
+    if (State->get_node_count()<=0 || State->get_node_count()>int(MaxNodes))
         luaL_error(Thread,"[Scene:Limit] Scene node budget exceeded");
-    std::unordered_set<uint64_t> Resources; int Values=0;
     for (int Index=0;Index<State->get_node_count();++Index) {
-        String Type=State->get_node_type(Index); const auto* Class=FindClass(Type.utf8().get_data());
-        if (!Class || !Class->Construct || Class->Resource || State->get_node_instance(Index).is_valid() || !State->get_node_groups(Index).is_empty())
-            luaL_error(Thread,"[Scene:Composition] Unapproved class, nested/inherited instance or group");
-        String Name=State->get_node_name(Index); auto Bytes=Name.utf8();
-        if (Bytes.length()==0 || Bytes.length()>128 || std::memchr(Bytes.get_data(),0,Bytes.length()) || Name.contains("/") || Name.contains(":") || Name.contains(".") || Name.contains("@"))
+        if(++Check.Entries>16384 || State->is_node_instance_placeholder(Index) || !State->get_node_groups(Index).is_empty())
+            luaL_error(Thread,"[Scene:Composition] Scene metadata budget, placeholder or stored group is not admitted");
+        if(!SceneName(State->get_node_name(Index)))
             luaL_error(Thread,"[Scene:Composition] Invalid bounded scene node name");
         NodePath Path=State->get_node_path(Index);
-        int LocalDepth=String(Path)=="."?0:Path.get_name_count();
+        if(Path.is_absolute() || Path.get_subname_count())luaL_error(Thread,"[Scene:Composition] Invalid relative node path");
+        std::string Key=Prefix;
+        for(int Part=0;Part<Path.get_name_count();++Part) {
+            String Name=Path.get_name(Part);if(Name==".")continue;
+            if(!SceneName(Name))luaL_error(Thread,"[Scene:Composition] Node path cannot escape the composed hierarchy");
+            if(!Key.empty())Key+="/";Key+=Name.utf8().get_data();
+        }
+        int LocalDepth=Key.empty()?0:1+int(std::count(Key.begin(),Key.end(),'/'));
         if (Depth+1+LocalDepth>32) luaL_error(Thread,"[Scene:Limit] Scene hierarchy depth exceeded");
+        Ref<PackedScene> Instance=State->get_node_instance(Index);
+        if(Instance.is_valid())CheckSceneState(Thread,Scope,Instance,Depth,Key,Check,Nesting+1);
+        auto Existing=Check.Types.find(Key);String Type=State->get_node_type(Index);
+        const auto* Class=Type.is_empty()?(Existing==Check.Types.end()?nullptr:Existing->second):FindClass(Type.utf8().get_data());
+        if(!Class || !Class->Construct || Class->Resource || (Existing!=Check.Types.end() && Existing->second!=Class))
+            luaL_error(Thread,"[Scene:Composition] Unapproved class or unresolved inherited node");
+        Check.Types[Key]=Class;
+        if(Check.Types.size()>MaxNodes-Scope->Nodes.size())luaL_error(Thread,"[Scene:Limit] Expanded scene node budget exceeded");
         for (int PropertyIndex=0;PropertyIndex<State->get_node_property_count(Index);++PropertyIndex) {
+            if(++Check.Entries>16384)luaL_error(Thread,"[Scene:Limit] Scene metadata budget exceeded");
             String Name=State->get_node_property_name(Index,PropertyIndex);
             const Property* Item=NativeProperty(Class->Name,Name);
             Variant Value=State->get_node_property_value(Index,PropertyIndex);
             if (Name=="transform" && SerializedTransform(Class->Name,Value)) continue;
-            if (!Item || Item->ReadOnly || !ValidNative(*Item,Value) || !ResourceGraph(Value,Resources,Values))
+            if(SerializedRotation2D(Class->Name,Name,Value))continue;
+            if (!Item || Item->ReadOnly || !ValidNative(*Item,Value) || !ResourceGraph(Value,Check.Resources,Check.Values))
                 luaL_error(Thread,"[Scene:Composition] Property %s.%s is not admitted",Class->Name,Name.utf8().get_data());
             PreviewProperty(Thread,*Item,Value);
         }
     }
+    Check.Active.erase(Scene->get_instance_id());
+}
+void CheckScene(lua_State* Thread, SceneScope* Scope, const Ref<PackedScene>& Scene, int Depth) {
+    ReapNodes(Scope);ScenePreflight Check;
+    CheckSceneState(Thread,Scope,Scene,Depth,"",Check,0);
 }
 std::vector<uint64_t> CheckSubtree(lua_State* Thread, SceneScope* Scope, Node* Root, int Depth, bool Owned) {
     std::vector<std::pair<uint64_t,int>> Work{{uint64_t(Root->get_instance_id()),Depth+1}};

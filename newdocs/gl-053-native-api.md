@@ -162,3 +162,20 @@ collections remain restricted. AnimationPlayer's bounded relative value-track
 path does not admit AnimationTree, arbitrary rig tracks, method/audio tracks,
 root motion, native Tween/Callable handles or automatic playback during preview.
 Runtime qualification is pending; this section documents the implemented contract.
+
+## Nested and inherited PackedScenes
+
+Scene.Instantiate now preflights native nested instances and inherited overrides
+recursively before Godot constructs any node. An ephemeral metadata map resolves
+inherited class identities; it is discarded before instantiation and is not a
+second runtime graph. The final native tree still passes existing adoption and
+ObjectID/lifetime checks. Combined expansion remains within 2,048 scope nodes,
+32 hierarchy levels, 16 nested resource levels and 16,384 metadata entries.
+Scripted nodes, stored connections, groups, placeholders, unresolved overrides,
+capability classes and out-of-bounds properties reject across the entire chain.
+Node2D's serialized radian rotation is checked against its approved degree bounds.
+
+These scenes use ordinary Godot PackedScene/SceneState resources. Instantiation
+preserves native shared resources and inherited property overrides; the existing
+editor snapshot Save As still flattens content into an independent scene under
+ADR-016. It does not preserve live inherited linkage in that independent snapshot.

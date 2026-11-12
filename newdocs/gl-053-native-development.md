@@ -173,3 +173,23 @@ observations support this workflow without exposing native Object/RID/Callable
 collections. New real 2D/3D playback fixtures check final native transforms,
 unsafe path/type/time rejection, sealed aliases and yielded completion retirement.
 The runtime correction and new animation work await fresh hosted qualification.
+
+## Scene composition implementation in progress
+
+An official headless Godot 4.7.1 probe at
+`gl053-native-20261112/scene-probe` observes SceneState for plain, nested and
+inherited scenes: nested/inherited roots carry PackedScene references and empty
+type names; overrides name existing inherited paths. This is engine API evidence,
+not qualification of the new extension behavior.
+
+Expand preflight to resolve those native references recursively before node
+construction, with shared resource/value limits and a bounded transient path/type
+map. Validate every base and override; reject scripts, stored signals/groups,
+placeholders and escaping/unknown identities before instantiation. Preserve native
+serialization, resource sharing, independent snapshot behavior and actual subtree
+adoption. Existing binding fixtures now exercise positive nested/inherited scenes
+and recursively reject a nested scripted scene before its initializer can run.
+Node2D radian rotation receives its existing degree-bound serialization adapter.
+
+Animation commit `cb35958` passes fresh Windows/Linux 87-case core run 43219735951
+and generated type run 43219735683. Native run 43219735745 is still building.
