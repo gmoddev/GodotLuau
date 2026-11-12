@@ -40,8 +40,8 @@ These intermediate observations are not relabeled as qualification of newer code
 | Full-native sanitizers `43132639596`, `1197f3d` | Windows/Linux pass with zero unexpected reports, including actual new game, core and strict native gate; 26/27 runner stages respectively |
 | Focused current Windows editor | `workflow-1197-output-ready`: all 37 expanded checks and clean exit pass |
 | Focused current Windows renderer | `game-1197-official-rendered`: 14 checks and clean exit pass under official editor/Debug adapter |
-| Native `43135983475`, `e393c0d` | Pending, unchanged 121-file native source with corrected observer |
-| Candidate `43135980287`, `e393c0d` | Pending; Linux Release mirror timeout occurs before compilation and needs targeted retry after remaining profiles finish |
+| Native `43135983475`, `e393c0d` | Windows/Linux pass: 141 existing actors, 19 existing editor checks, 37 expanded editor checks and 13 game checks per platform |
+| Candidate `43135980287`, `e393c0d` | Windows/Linux Debug production profiles pass; Windows Release pending; Linux Release mirror timeout occurs before compilation and needs targeted retry after remaining profiles finish |
 
 Superseded candidate/sanitizer/native cohorts are canceled when concrete source
 fixes invalidate their inputs. Their failures/logs remain in the journal and

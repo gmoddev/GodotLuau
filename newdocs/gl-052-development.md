@@ -348,3 +348,17 @@ gate pass. Windows has 26 runner stages and Linux 27 (including the supported le
 control). Editor/rendering execution and Windows LSan are not inferred from this
 headless sanitizer cohort. No sanitizer rerun is required for later observer/docs
 changes outside its native and runtime inputs.
+
+Final native `43135983475` Linux is successful: retained evidence contains 141
+existing actors, 19 existing editor assertions, 37 expanded authoring assertions
+and 13 real new-game assertions. Candidate `43135980287` Linux Debug also passes
+its complete production profile, including SCons editor execution. Windows work
+and the failed Linux Release environment retry are still pending; no candidate
+or standalone export acceptance is inferred from that partial result.
+
+Final native `43135983475` now passes Windows and Linux completely. The current
+authoring path and all inherited actors pass together with the corrected observer.
+Candidate Windows Debug also passes; Windows Release is still running its source
+build/complete qualification step. The Linux Release retry remains blocked on
+the active workflow ending. Keep these partial production outcomes distinct from
+candidate acceptance and standalone export, which remain pending.
