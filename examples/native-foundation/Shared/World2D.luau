@@ -11,7 +11,7 @@ return function(Scope: NativeSceneScope, Round: number)
     local Frames = Scope:New("SpriteFrames", {})
     Scope:Call(Frames,"AddAnimation","move")
     Scope:Call(Frames,"AddFrame","move",Texture)
-    Scope:Call(Frames,"AddFrame","move",Texture)
+    Scope:Call(Frames,"AddFrame","move",Scope:Load("Texture2D","res://Assets/PlayerPulse.tres"))
     Scope:Call(Frames,"SetAnimationSpeed","move",8)
     local Sprite = Scope:New("AnimatedSprite2D", {Name="Visual", SpriteFrames=Frames}, Body)
     local Tokens = {}

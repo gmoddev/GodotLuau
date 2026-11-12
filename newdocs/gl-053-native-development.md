@@ -454,3 +454,12 @@ The independent saved-scene reopen works in a new project with no extension or
 Luau VM. Native Godot warns that the copied 3D shader UID is absent from the new
 project cache and successfully falls back to its text resource path; preserve
 that warning rather than claiming a completely silent UID-cache migration.
+
+Rendered acceptance reveals a sample-quality gap: the 2D player's two native
+sprite frames reference the same texture, so playback is not visibly different.
+Give its second frame an original native gradient texture. This changes only
+the acceptance application's source/assets; native implementation, declarations,
+engine package and dependency inputs remain unchanged. Keep the accepted engine
+candidate at its real `b9123fa` identity, and qualify the changed application
+inputs with the existing gameplay/render/export runners and their staging hashes.
+Do not relabel the older full-matrix fixture inputs as the new application.
