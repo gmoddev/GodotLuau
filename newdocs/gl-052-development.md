@@ -314,3 +314,15 @@ headlessly and recovers. Set that test setting in project.godot before launching
 the editor instead. Preserve `native-1197-Linux` logs and keep every debugger
 assertion. This is a fixture launch correction; the 121-file native fingerprint
 is unchanged. Existing current sanitizer execution is unaffected and is reused.
+
+The retained current Windows adapter runs the corrected headless fixture locally.
+All native assertions pass, but the Python wrapper's inherited-stdout readiness
+assertion fails: Windows sends child output through Godot's Output control rather
+than guaranteeing parent stdout handles. Replace the two-second recovery delay
+and that stdout assumption with a bounded wait for the actual runtime's
+`[Luau] [Authoring:RunRecovery] Ready` line in the editor Output RichTextLabel.
+Keep the live-playing requirement and clean stop/exit checks. This observes real
+game execution through the supported native editor, not a mocked readiness flag.
+`workflow-1197-output-ready` then passes completely with no stderr errors.
+The native source fingerprint is unchanged; final cross-platform/profile evidence
+must use this corrected observer. Preserve the prior wrapper failure.

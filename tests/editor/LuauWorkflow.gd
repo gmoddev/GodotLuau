@@ -143,8 +143,17 @@ func Run() -> void:
                 Recovery.source_code = Original + '\nprint("[Authoring:RunRecovery] Ready")'
                 ResourceSaver.save(Recovery)
                 EditorInterface.play_custom_scene("res://Recovery.tscn")
-                await get_tree().create_timer(2).timeout
-                Check(EditorInterface.is_playing_scene(), "Actual editor reruns after failure without restart")
+                var RecoveryObserved := false
+                Deadline = Time.get_ticks_msec() + 12000
+                while Time.get_ticks_msec() < Deadline and not RecoveryObserved:
+                    # Godot routes child output to its editor Output control;
+                    # Windows does not promise inherited parent stdout handles.
+                    for Output in get_tree().root.find_children("*", "RichTextLabel", true, false):
+                        if Output.get_parsed_text().contains("[Luau] [Authoring:RunRecovery] Ready"):
+                            RecoveryObserved = true
+                            break
+                    if not RecoveryObserved: await get_tree().process_frame
+                Check(EditorInterface.is_playing_scene() and RecoveryObserved, "Actual editor reruns and executes Luau after failure without restart")
                 EditorInterface.stop_playing_scene()
                 for Index in range(10): await get_tree().process_frame
                 Check(not EditorInterface.is_playing_scene(), "Native editor stop retires the second run")

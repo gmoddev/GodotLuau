@@ -96,3 +96,16 @@ or a speed improvement. Current-product measurements remain separate.
 Final Windows/Linux production/native/sanitizer results, standalone export and
 fresh relevant Relay Siege regression must be appended before integration
 readiness is assessed. Main is not a delivery target for this campaign.
+
+## Current fixture correction
+
+Native `43132629698` passes the original editor checks on both platforms. The
+expanded Linux workflow passes construction/save/composition/highlighting but
+fails the first child launch's display requirement; Windows's native checks pass
+but its inherited-stdout recovery assumption fails. These are retained fixture
+failures, not complete native passes. Configure headless play before editor
+startup and observe recovery in the actual editor Output control with a bounded
+deadline. The focused Windows rerun `workflow-1197-output-ready` passes every
+expanded assertion and clean exit with the unchanged 121-file current adapter.
+Cross-platform/profile reruns are pending. Current full-native sanitizers are
+reused because their native sources and runtime fixture inputs are unchanged.
