@@ -136,6 +136,24 @@ four successful workflows and independently checked artifacts.
 | [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
 | [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | A different execution owner can transform an ancestor of another owner's native SceneScope |
 | [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Resolved for attribute values on unmerged GL-054 branch; cross-platform and rendered evidence linked below | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
+| [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Reproduced qualification-fixture defect; atomic marker fix passes focused stalled-writer control, hosted cohort pending | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
+
+## GL-059: Partial qualification marker publication
+
+ReplicationIntegration.Mark originally creates the final marker before writing
+its payload; RelevanceIntegration.Wait then reads a peer ID immediately after
+existence. Candidate 43379558294's Windows Release reconnect check fails while
+the Client has already restored its view. A controlled 75 ms writer stall using
+the retained Release adapter reproduces that acknowledgment failure and logs
+NewPeer=0. The original CI attempt lacks that ID diagnostic; its exact parsed
+value is unknown.
+
+Writing/closing a sibling .pending file and renaming it to the final marker
+removes partial publication. The same stalled control passes seven existing
+listen/dedicated/root-guard actors without assertion/deadline changes. This is a
+test-fixture race, not a reproduced networking vulnerability or runtime refactor.
+See the [campaign evidence](gl-054-engine-development.md#actual-release-qualification-barrier-race)
+for the failed candidate, controls and pending hosted verification.
 
 ## GL-058: Attribute string value encoding
 

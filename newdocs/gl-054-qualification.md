@@ -97,7 +97,10 @@ exactly-once arbitrary callback execution or live debugger suspension is claimed
 ## Remaining boundaries
 
 Production candidate [43379558294](https://github.com/gmoddev/GodotLuau/actions/runs/43379558294)
-is pending completion; Linux Debug/Release profiles pass. Accepted package
+rejected Windows Release at the existing reconnect fixture; the other three
+profiles pass. GL-059's partial marker publication is reproduced and corrected
+without a network implementation change; its focused stalled-writer control
+passes all seven actors. A corrected coherent candidate cohort is required. Accepted package
 extraction, both-platform Debug/Release standalone exports and fresh Relay Siege
 solo/listen/dedicated evidence remain to be completed before campaign readiness.
 

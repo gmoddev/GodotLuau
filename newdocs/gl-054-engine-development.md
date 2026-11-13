@@ -524,3 +524,28 @@ committed data instead of claiming the prior value definitely survived unchanged
 README/quick-start wording matches. Receipt retry, return/error behavior, storage
 and acknowledgment logic are unchanged; this is a diagnostic correction, not a
 new persistence protocol or a claim of application fault-injection qualification.
+
+## Actual Release qualification barrier race
+
+Candidate 43379558294 passes Linux Debug/Release and Windows Debug but rejects
+Windows Release in the existing dedicated relevance/reconnect actor. Its Client
+restores the current native views and a new session, while the Server times out
+waiting for the acknowledged view. Preserve this failed attempt; packages were
+correctly skipped and no candidate was accepted.
+
+The fixture's Mark opens the final filename before storing its payload, while
+Wait observes only existence and the Server immediately parses the peer ID.
+A focused control uses the retained Release adapter and previously admitted
+Release renderer host, stalling that marker writer for 75 ms after open. It
+reproduces the same acknowledgment failure with a directly logged NewPeer=0.
+This establishes a real partial-marker fixture race; the original CI attempt
+did not log its parsed ID, so the precise original value is not invented.
+
+The bounded correction writes/closes a sibling .pending file then renames it to
+the marker and checks publication success. The same stalled control now passes
+all seven existing listen/dedicated/root-guard actors with valid new peer IDs.
+Network code, carrier/session semantics, timeout limits and assertions are
+unchanged. Local before/after artifacts are relevance-release-barrier-before/after;
+they reuse the actual retained Release DLL, not mocked networking. GL-059 records
+the fixture finding. The queued diagnostic-only native rerun 43385930638 was
+canceled as redundant; the corrected fixture now needs its actual cohort.
