@@ -60,3 +60,17 @@ distribute them. Use a matching qualified production candidate for standalone
 exports. Export resource filtering must include `*.luau`; releases and updater
 distribution stay disabled. Physical controller/mobile and remote multiplayer
 support are not inferred from keyboard or headless qualification.
+
+On Linux, retain the verified candidate's Unix modes while extracting. Godot's
+extension-dependency export copy treats the companion as a shared object and
+drops its executable bit. After an ordinary editor export, restore that bit on
+the unchanged companion before launching or archiving the application:
+
+```sh
+chmod 755 godot_luau_store_worker
+```
+
+RunLuauExport performs this packaging step after verifying the exported native
+file hashes, records the before/final modes and requires a successful DataStore
+read in both standalone starts. This is a packaging requirement, not a change
+to native storage authority or permission to distribute unqualified products.

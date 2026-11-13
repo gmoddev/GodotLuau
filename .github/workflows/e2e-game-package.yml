@@ -10,6 +10,10 @@ on:
         type: string
         required: true
         default: '42752234638'
+      LinuxExportOnly:
+        description: "Focused Linux export check; reuse retained Windows/game qualification"
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -21,11 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - Platform: Windows
-            Runner: windows-2022
-          - Platform: Linux
-            Runner: ubuntu-24.04
+        include: ${{ fromJSON(inputs.LinuxExportOnly && '[{"Platform":"Linux","Runner":"ubuntu-24.04"}]' || '[{"Platform":"Windows","Runner":"windows-2022"},{"Platform":"Linux","Runner":"ubuntu-24.04"}]') }}
     defaults:
       run:
         shell: bash
@@ -71,6 +71,7 @@ jobs:
             ${{ runner.temp }}/foundry-*/standalone/*
 
   Package:
+    if: ${{ !inputs.LinuxExportOnly }}
     runs-on: windows-2022
     timeout-minutes: 20
     defaults:

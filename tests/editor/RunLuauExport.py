@@ -87,8 +87,15 @@ def Main():
         assert os.access(Worker,os.X_OK), 'Staged DataStore companion is not executable'
     for File in (Library,Worker):
         assert (Standalone/File.name).is_file() and Hash(Standalone/File.name)==Hash(File), 'Export omitted or changed native product: '+File.name
+    CompanionModes=None
     if os.name!='nt':
+        # Godot exports extension dependencies as shared objects and drops their
+        # executable bit. Finalize this verified companion as a program.
+        Before=(Standalone/Worker.name).stat().st_mode & 0o777
+        Mode=Worker.stat().st_mode & 0o777
+        (Standalone/Worker.name).chmod(Mode)
         assert os.access(Standalone/Worker.name,os.X_OK), 'Exported DataStore companion is not executable'
+        CompanionModes={'Staged':Mode,'ExportedBeforeFinalization':Before,'Final':(Standalone/Worker.name).stat().st_mode & 0o777}
     for Name in ('startup','restart'):
         Commands.append(Execute([Executable,'--headless','--disable-crash-handler',
             '--max-fps','30','--quit-after','90'],Output/(Name+'.log'),20,Environment,Standalone))
@@ -100,7 +107,7 @@ def Main():
         assert all(Marker in (Output/(Name+'.log')).read_text(errors='replace') for Marker in Markers), 'Exported Luau entrypoint did not initialize: '+Name
     assert not list(Project.rglob('*.gd')), 'Application package contains developer GDScript'
     Record={'Passed':True,'Commands':Commands,'Candidate':json.loads((Args.candidate/'candidate.json').read_text()) if Args.candidate else None,
-            'QualificationOnlyAdapter':bool(Args.adapter),'Templates':TemplateRecord,'Configuration':Args.configuration,
+            'QualificationOnlyAdapter':bool(Args.adapter),'Templates':TemplateRecord,'Configuration':Args.configuration,'CompanionModes':CompanionModes,
             'Project':json.loads((Project/'authoring-project.json').read_text()),
             'StandaloneFiles':{File.name:Hash(File) for File in Standalone.iterdir() if File.is_file()},
             'Interactive':False,'Graphical':False,'Scope':'Standalone entrypoint, native library/companion packaging and clean restart; not exported interactive gameplay'}

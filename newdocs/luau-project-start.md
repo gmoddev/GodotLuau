@@ -81,6 +81,10 @@ DataStore companion together through the extension dependency declaration. Use
 matching Debug/Release products and templates. The explicit official-template
 path in RunLuauExport avoids installing templates or changing global settings;
 it is a solo profile, not an admission of a new networking/sanitizer host.
+On Linux preserve candidate Unix modes and restore executable mode 0755 on the
+exported DataStore companion; Godot's dependency copy drops that bit. The helper
+does this after verifying unchanged native bytes. See the
+[Foundry export notes](../examples/foundry-expedition/README.md).
 
 Foundry's HUD distinguishes a completed sector from durable acknowledgment.
 Reload reads committed progress; an unacknowledged commit may already have taken

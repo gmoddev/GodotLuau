@@ -590,3 +590,19 @@ The bounded fix restores the already verified member modes, matching the existin
 strict candidate extractor. Export checks now explicitly reject a nonexecutable
 staged/exported companion. No native product or storage protocol changes.
 GL-060 records this application-staging defect; corrected export evidence is pending.
+
+The next Linux attempt, 43400288713, confirms staging is executable but the
+exported companion is not. Godot's extension-dependency copy drops the program
+bit. The export helper now finalizes that one already hash-verified companion
+from the verified staged mode, records before/final modes and keeps executable
+access/read-start assertions. Normal-editor Linux instructions document chmod
+0755 before launching/archiving. This corrects application packaging without a
+native dependency, loader/backend change or weakened assertion.
+
+The existing workflow gains an opt-in LinuxExportOnly input for this focused
+correction. Its default still runs both platforms and all game checks; the focused
+run explicitly reuses the passing Windows exports, Orb Run and Relay Siege
+solo/recovery/listen/dedicated job from 43399518780. The old failure remains
+retained. The automatic CMake-adapter rerun 43400287508 was canceled because
+candidate-only mode restoration is outside that unchanged adapter profile; actual
+accepted-product export checks remain required.
