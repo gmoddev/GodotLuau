@@ -100,6 +100,11 @@ int main() {
             GLExecutionDomain Domain(GLDomainKind::Server, Limits); auto Owner=Domain.CreateOwner(6);
             auto& Debugger=Domain.EnableDebugger();
             auto& Profile=Domain.EnableProfiler();Profile.Start();
+            Profile.NativeCall("Method","Node3D","GetGlobalTransform");
+            Profile.NativeCall("Method","Node3D","GetGlobalTransform");
+            Check(Profile.GetNativeCalls().at("Method:Node3D.GetGlobalTransform")==2,"Repeated native profile key lost observations");
+            std::string Long(255,'x');Profile.NativeCall("Method",Long.c_str(),"Call");
+            Check(Profile.GetNativeCalls().size()==1 && Profile.IsTruncated(),"Oversized native profile key admitted");
             Debugger.Attach([](GLDebugger&) { std::this_thread::sleep_for(std::chrono::milliseconds(35)); return GLDebugAction::Detach; });
             Debugger.SetBreakpoint("res://Budget.luau",1,true);
             auto Started=std::chrono::steady_clock::now();

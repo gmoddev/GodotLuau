@@ -463,3 +463,32 @@ corrections; fresh candidate 43457871556 is running for those changed inputs.
 Sanitizer 43455004645 is now running its Linux production/detection suite; the
 newer 43457876059 separately covers the corrected product. Native/controller,
 storage, network, dependency and publication contracts remain unchanged.
+
+## Measured allocation correction and sanitizer fixture cache
+
+Performance run 43459001752 completes on both platforms. For 100,000 observed
+native operations the profiling mode performs 100,002 C++ allocations; the
+disabled mode performs zero and has the same 504,336-byte VM peak as main.
+Windows disabled median is 4.038 ms versus baseline 4.012 ms; Linux is 3.134 ms
+versus 2.959 ms. These short synthetic runs establish workload-specific results,
+not application-wide performance. Replace the per-call temporary string with a
+bounded stack key and transparent map lookup; allocate only for a new operation
+name. Keep the original measurements and rerun the same benchmark for this change.
+
+Linux sanitizer 43455004645 passes its detection controls, core and all 141 native
+actors. Its debugger target and peer execute all eight local stops, watches and
+profile assertions successfully, but the strict stderr gate rejects Godot's
+`Could not load global script cache` from the tools-disabled test peer. The
+isolated peer lacked the empty generated class cache that existing `Prepare`
+already supplies to targets. Supply that same empty cache to test peers; preserve
+the no-ERROR gate. No sanitizer finding or product debugger failure was reported
+in this attempt. Retain its logs and do not label the run passing.
+
+Add a bounded actual ENet server/client case: pause the server in Luau, observe
+the independent client's transport timeout, Continue, then require a fresh ENet
+connection. Short timeout values belong only to this disposable fixture. This
+documents the stop-the-process policy; it does not claim synchronized multiplayer
+pausing or preservation of a timed-out connection. The new case and allocation
+correction are pending execution. Linux Release candidate 43457871556 encounters
+an apt mirror connection timeout before compilation; retry that environmental
+failure without changing dependencies or qualification assertions.

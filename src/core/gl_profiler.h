@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include <string_view>
+#include <cstring>
 #include <limits>
 #include <new>
 
@@ -19,7 +21,7 @@ class GLProfiler {
     bool Enabled=false,Native=false,Truncated=false;
     uint64_t Epoch=0;
     std::map<uint64_t,GLScriptProfile> Scripts;
-    std::map<std::string,uint64_t> NativeCalls;
+    std::map<std::string,uint64_t,std::less<>> NativeCalls;
     GLScriptProfile* Entry(uint64_t Generation,uint64_t NativeId) {
         auto Found=Scripts.find(Generation);
         if(Found==Scripts.end()) {
@@ -44,7 +46,7 @@ public:
     bool IsTruncated()const{return Truncated;}
     uint64_t GetEpoch()const{return Epoch;}
     const std::map<uint64_t,GLScriptProfile>& GetScripts()const{return Scripts;}
-    const std::map<std::string,uint64_t>& GetNativeCalls()const{return NativeCalls;}
+    const auto& GetNativeCalls()const{return NativeCalls;}
     void Define(uint64_t Generation,uint64_t NativeId,const std::string& Source) {
         if(Enabled)if(auto Row=Entry(Generation,NativeId)) {
             try {Row->Source=Source.substr(0,1024);if(Source.size()>1024)Truncated=true;}
@@ -67,15 +69,23 @@ public:
     void NativeCall(const char* Category,const char* Class,const char* Member) {
         if(!Enabled || !Native)return;
         size_t Bytes=2;
+        size_t Lengths[3];size_t Index=0;
         for(const char* Part:{Category,Class,Member}) {
             if(!Part){Truncated=true;return;}
             size_t Length=0;while(Length<=256 && Part[Length])++Length;
             Bytes+=Length;if(Bytes>256){Truncated=true;return;}
+            Lengths[Index++]=Length;
         }
+        char Buffer[256];size_t Offset=0;Index=0;
+        for(const char* Part:{Category,Class,Member}) {
+            std::memcpy(Buffer+Offset,Part,Lengths[Index]);Offset+=Lengths[Index];
+            if(Index<2)Buffer[Offset++]=Index==0?':':'.';
+            ++Index;
+        }
+        std::string_view Key(Buffer,Offset);
         try {
-            std::string Key=std::string(Category)+":"+Class+"."+Member;
             auto Found=NativeCalls.find(Key);
-            if(Found==NativeCalls.end()) {if(NativeCalls.size()>=256){Truncated=true;return;}Found=NativeCalls.emplace(Key,0).first;}
+            if(Found==NativeCalls.end()) {if(NativeCalls.size()>=256){Truncated=true;return;}Found=NativeCalls.emplace(std::string(Key),0).first;}
             Add(Found->second);
         } catch(const std::bad_alloc&){Truncated=true;}
     }
