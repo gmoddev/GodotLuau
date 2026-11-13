@@ -259,6 +259,12 @@ def Main():
                 any(not Case['Passed'] or not all(Check['Passed'] for Check in Case['Checks']) for Case in Debugger['Cases'])):
             raise ValueError('Missing actual native debugger execution/inspection/disconnect qualification')
         Evidence['DebuggerNative'] = Debugger
+        Editor = json.loads((Args.output/'debugger-editor/results.json').read_text(encoding='utf-8'))
+        if (not Editor['Passed'] or Editor['Graphical'] or Editor['Exit'] != 0 or
+                Editor['ExtensionSHA256'] != Evidence['ExtensionSHA256'] or not Editor['Checks'] or
+                not all(Check['Passed'] for Check in Editor['Checks'])):
+            raise ValueError('Missing actual native editor debugger journey')
+        Evidence['DebuggerEditor'] = Editor
     (Args.output / 'summary.json').write_text(json.dumps(Evidence, indent=2))
     print('[Runtime:NativeCI] PASS '+str(Evidence['Processes'])+' required process results')
 

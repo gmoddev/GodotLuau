@@ -22,7 +22,9 @@ def Main():
     Parser.add_argument("--timeout", type=float, default=60)
     Parser.add_argument("--workflow", action="store_true", help="Exercise the clean-project GL-052 production workflow")
     Parser.add_argument("--baseline", action="store_true", help="Record missing workflow capabilities in the qualified GL-051 product")
+    Parser.add_argument("--debugger", action="store_true", help="Exercise the actual native Luau debugger session and CodeEdit gutter")
     Args = Parser.parse_args()
+    assert not Args.debugger or not (Args.workflow or Args.baseline), "Debugger journey is a separate editor mode"
     Output = Args.output.resolve()
     Output.mkdir(parents=True, exist_ok=False)
     Prepare(Output, Args.extension.resolve())
@@ -34,13 +36,18 @@ def Main():
     (Output / ".godot/extension_list.cfg").write_text('res://godot_luau.gdextension\n')
     Plugin = Output / "addons/NativeEditor"
     Plugin.mkdir(parents=True)
-    shutil.copyfile(Path(__file__).with_name("LuauWorkflow.gd" if Args.workflow else "NativeAuthoring.gd"), Plugin / "plugin.gd")
+    shutil.copyfile(Path(__file__).with_name("DebuggerJourney.gd" if Args.debugger else "LuauWorkflow.gd" if Args.workflow else "NativeAuthoring.gd"), Plugin / "plugin.gd")
+    if Args.debugger:
+        shutil.copy2(Path(__file__).with_name("DebuggerJourney.luau"), Output / "Journey.luau")
+        shutil.copy2(Path(__file__).with_name("DebuggerJourney.tscn"), Output / "Journey.tscn")
+        Project = Output / "project.godot"
+        Project.write_text(Project.read_text().replace('[application]\n', '[application]\nrun/main_scene="res://Journey.tscn"\n'))
     if Args.workflow and not Args.baseline:
         shutil.copy2(Path(__file__).with_name('ProjectIndex.gd'),Output/'ProjectIndex.gd')
     (Plugin / "plugin.cfg").write_text('[plugin]\nname="NativeEditorFixture"\ndescription="Bounded GL-051 editor integration"\nauthor="GodotLuau"\nversion="1"\nscript="plugin.gd"\n')
     with (Output / "project.godot").open("a") as File:
         File.write('[editor_plugins]\nenabled=PackedStringArray("res://addons/NativeEditor/plugin.cfg")\n')
-        if Args.workflow and not Args.baseline:
+        if (Args.workflow and not Args.baseline) or Args.debugger:
             # EditorRun caches this setting during startup. Setting it only
             # immediately before first Play can launch an unintended GUI child.
             File.write('[editor]\nrun/main_run_args="--headless --disable-crash-handler --max-fps 30"\n')
@@ -57,9 +64,9 @@ def Main():
     Command = [str(Args.godot.resolve()), "--headless", "--disable-crash-handler", "--single-threaded-scene", "--editor", "--path", str(Output)]
     with (Output / "editor.stdout.log").open("w") as Stdout, (Output / "editor.stderr.log").open("w") as Stderr:
         Process = StartProcess(Command, Stdout, Stderr, Environment)
-    Result = Check(Process, time.monotonic() + Args.timeout, Output, "editor", "[Bindings:EditorIntegration] PASS")
+    Result = Check(Process, time.monotonic() + Args.timeout, Output, "editor", "[Debugger:Editor] PASS native editor journey" if Args.debugger else "[Bindings:EditorIntegration] PASS")
     assert "ERROR:" not in (Output / "editor.stderr.log").read_text(errors="replace"), "Unhandled editor or language error"
-    Detail = json.loads((Output / "editor-results.json").read_text())
+    Detail = json.loads((Output / ("editor-debugger-results.json" if Args.debugger else "editor-results.json")).read_text())
     assert Detail["Passed"], Detail
     Result.update(Detail, Command=Command, ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest())
     if Args.workflow and not Args.baseline:

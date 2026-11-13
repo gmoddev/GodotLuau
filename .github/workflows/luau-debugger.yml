@@ -1,8 +1,5 @@
 name: Luau debugger focused qualification (no publication)
 on:
-  push:
-    branches: [qualification/gl-055-native-protocol]
-    paths: [tests/runtime/DebuggerPeer.gd, .github/workflows/luau-debugger.yml]
   workflow_dispatch:
     inputs:
       NativeRun:
@@ -41,8 +38,7 @@ jobs:
       - name: Fetch existing native adapter evidence
         env:
           GH_TOKEN: ${{ github.token }}
-          # This qualification-only branch preserves the immutable product.
-          DEBUGGER_NATIVE_RUN: ${{ inputs.NativeRun || '43437162267' }}
+          DEBUGGER_NATIVE_RUN: ${{ inputs.NativeRun }}
         run: |
           [[ "$DEBUGGER_NATIVE_RUN" =~ ^[0-9]+$ ]]
           gh run download "$DEBUGGER_NATIVE_RUN" --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"
@@ -68,7 +64,9 @@ jobs:
           Root=Path(os.environ['RUNNER_TEMP'])
           Adapter=next((Root/'adapter').rglob('godot_luau.'+os.environ['DEBUGGER_SUFFIX']))
           Source=next((Root/'adapter').rglob('source.json'))
-          subprocess.run([sys.executable,'tests/runtime/RunDebuggerQualification.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--source',str(Source),'--output',str(Root/'debugger')],check=True)
+          Protocol=subprocess.run([sys.executable,'tests/runtime/RunDebuggerQualification.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--source',str(Source),'--output',str(Root/'debugger')])
+          Editor=subprocess.run([sys.executable,'tests/editor/RunNativeAuthoring.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--output',str(Root/'debugger-editor'),'--debugger','--timeout','140'])
+          sys.exit(Protocol.returncode or Editor.returncode)
           PY
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
@@ -78,3 +76,5 @@ jobs:
           path: |
             ${{ runner.temp }}/debugger/**/*.json
             ${{ runner.temp }}/debugger/**/*.log
+            ${{ runner.temp }}/debugger-editor/**/*.json
+            ${{ runner.temp }}/debugger-editor/**/*.log

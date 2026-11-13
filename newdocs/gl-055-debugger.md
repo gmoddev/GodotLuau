@@ -73,6 +73,12 @@ input without creating domains or granting gameplay capabilities. The nonce
 binds messages to the current connection; it does not replace Godot's transport
 admission. No new runtime listener is created.
 
+Editor tooling can obtain bounded copied session descriptors through the native
+editor plugin's `GetDebuggerSessions()`: connection generation, runtime state,
+stop/domain identity and admitted locations. These omit session nonces and
+live object handles, and are unavailable to executing gameplay Luau. Their
+connection generation distinguishes repeated Play/Stop sessions.
+
 Only time actually spent in the native break loop is excluded from active
 wall-clock execution deadlines. Allocation, safepoint and admission bounds
 remain enforced. Attached execution uses the pinned VM's debug interpreter;

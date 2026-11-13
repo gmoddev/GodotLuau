@@ -11,8 +11,9 @@ class GLAuthoringDebugger : public godot::EditorDebuggerPlugin {
     using Location=std::pair<std::string,int>;
     struct SessionView {
         godot::String Nonce, Domain="All", PauseDomain="Server";
-        int64_t Request=0;
+        int64_t Request=0, ConnectionGeneration=0;
         uint64_t Label=0, Tree=0, WatchInput=0, WatchFrame=0, WatchResult=0;
+        godot::Dictionary LastState;
         std::map<Location,bool> Pending;
     };
     std::map<int,SessionView> Views;
@@ -32,5 +33,6 @@ public:
     void Command(int Session,const godot::String& Op);
     void SelectDomain(int Index,int Session);
     void Flush();
+    godot::Array DescribeSessions();
 };
 #endif

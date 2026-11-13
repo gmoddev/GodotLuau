@@ -156,6 +156,14 @@ jobs:
             --source "$RUNNER_TEMP/native-ci/source.json" \
             --output "$RUNNER_TEMP/native-ci/debugger"
 
+      - name: GL-055 actual native editor breakpoint watch stepping restart and detach
+        timeout-minutes: 3
+        run: |
+          python tests/editor/RunNativeAuthoring.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/debugger-editor" --debugger --timeout 140
+
       - name: Single-player listen dedicated and editor lifecycle
         timeout-minutes: 4
         env:

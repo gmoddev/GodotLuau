@@ -41,6 +41,7 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OpenRuntimeError"), &GLNativeEditorPlugin::OpenRuntimeError);
     ClassDB::bind_method(D_METHOD("OpenRuntimeFrame"), &GLNativeEditorPlugin::OpenRuntimeFrame);
     ClassDB::bind_method(D_METHOD("GetRuntimeDiagnostics"), &GLNativeEditorPlugin::GetRuntimeDiagnostics);
+    ClassDB::bind_method(D_METHOD("GetDebuggerSessions"), &GLNativeEditorPlugin::GetDebuggerSessions);
     ClassDB::bind_method(D_METHOD("IndexProject","Module","Member"), &GLNativeEditorPlugin::IndexProject);
     ClassDB::bind_method(D_METHOD("FindProjectUses"), &GLNativeEditorPlugin::FindProjectUses);
 }
@@ -105,6 +106,10 @@ void GLNativeEditorPlugin::OnBreakpointToggle(int64_t Line,int64_t Identity,cons
     auto Code=Object::cast_to<CodeEdit>(ObjectDB::get_instance(Identity));
     if(Code && Line>=0 && Line<Code->get_line_count())
         if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))Capture->RecordBreakpoint(Path,int(Line)+1,Code->is_line_breakpointed(int(Line)));
+}
+Array GLNativeEditorPlugin::GetDebuggerSessions() {
+    if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id())return Array();
+    auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr());return Capture?Capture->DescribeSessions():Array();
 }
 Dictionary GLNativeEditorPlugin::IndexProject(const String& Module,const String& Member) {
     Dictionary Buffers;
