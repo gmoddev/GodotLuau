@@ -189,7 +189,11 @@ func Run() -> void:
 func ReopenSavedScenes() -> void:
     for Path in ["res://Generated.tscn", "res://OrbSaved.tscn"]:
         EditorInterface.open_scene_from_path(Path)
-        for Index in range(5): await get_tree().process_frame
+        var Deadline=Time.get_ticks_msec()+5000
+        while Time.get_ticks_msec()<Deadline:
+            var Current=EditorInterface.get_edited_scene_root()
+            if Current!=null and Current.scene_file_path==Path: break
+            await get_tree().process_frame
         var Root := EditorInterface.get_edited_scene_root()
         Check(Root != null and Root.scene_file_path == Path and Root.get_child_count() > 0, "Fresh native editor opens saved scene " + Path)
         if Root != null and Path == "res://OrbSaved.tscn":

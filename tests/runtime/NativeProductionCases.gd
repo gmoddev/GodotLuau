@@ -45,6 +45,11 @@ S:Call(Image,'Fill',{R=0.1,G=0.5,B=0.8,A=1})
 local Texture=S:New('ImageTexture',{})
 S:Call(Texture,'SetImage',Image)
 S:Call(Texture,'Update',Image)
+local Readback=S:Call(Texture,'GetImage')
+if Readback then
+ assert(S:Call(Readback,'GetWidth')==2 and #S:Call(Readback,'GetData')==16)
+ assert(not pcall(function() S:Call(Readback,'Fill',{R=1,G=0,B=0,A=1}) end))
+end
 local Layers=S:New('Texture2DArray',{})
 assert(S:Call(Layers,'CreateFromImages',{Image,Image})==0)
 assert(S:Call(Layers,'GetLayers')==2)
@@ -117,6 +122,7 @@ Connection=game:GetService('RunService').Stepped:Connect(function()
  assert(#S:Call(Area,'GetOverlappingBodies')==1 and #S:Call(Area2,'GetOverlappingBodies')==1)
  assert(#S:Call(Area,'GetOverlappingAreas')==1 and #S:Call(Area2,'GetOverlappingAreas')==0)
  assert(not S:Call(Area2,'HasOverlappingAreas') and Entered==1)
+ assert(not S:Call(Area2,'OverlapsArea',Area2))
  if Agent then
   local OK=pcall(function() S:Call(Agent,'GetNextPathPosition') end)
   if not OK then assert(Frames<120);return end

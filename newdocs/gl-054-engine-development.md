@@ -446,3 +446,39 @@ scope/module lifetime guidance, bounded indexing/error inspection, example choic
 and export/data policies. It adds no new starter framework or runtime authority.
 The root README's stale enabled-updater claim is corrected; the updater and
 publication remain disabled in implementation and workflows.
+
+## Graphical editor and final surface observations
+
+The existing actual editor workflow was rendered offscreen on Windows with the
+current worker Debug adapter and capture-only artifact hooks. Project Uses, native
+preview/save, editor-run error stack/primitive locals, explicit source navigation,
+error recovery and rerun pass all 52 existing assertions. Inspected captures are
+retained under graphical-editor-f1a-03. This is programmatic native UI/rendered
+evidence, not physical mouse/keyboard acceptance. No foreground interaction or
+editor configuration outside the disposable project is required.
+
+Retain the initial capture-hook parse error and offscreen draw-wait timeout as
+failed qualification attempts. They do not establish product defects. A separate
+graphical reopen first failed because the fixture waited five frames after
+open_scene_from_path and observed the previous scene. The smallest correction
+waits at most five seconds for the exact requested scene, preserving all original
+assertions. A focused fresh graphical process then passes all seven reopen checks.
+The fixture now uses that deterministic condition on both profiles.
+
+Completed native run 43376170470 passes Windows/Linux at `31b37f0`, including
+141 existing actors each, editor/index/snapshot checks, full-host navigation and
+Foundry's three-sector/persistence path before its later reload/Unicode additions.
+Its same-policy invocation inventory records 582 domain/member pairs in 15 logs:
+82 constructors, 121 methods, 22 property reads, 165 writes, 12 signals and 26 value
+constructors in the union. Every one of the 19 newly selected constructors is
+observed; 56 of 58 newly selected methods are observed in those CI receipts.
+These are successful invocations, not assertion counts or claims that all selected
+properties/signals have runtime proof.
+
+The two remaining method paths now join the existing production cases:
+Area2D.OverlapsArea's empty/self result, and Texture2D.GetImage. The latter verifies
+bounded pixel readback and immutable returned-resource authority when the host
+provides an image. The existing rendered expansion runner includes those production
+cases; the focused Windows renderer run passes against `f1a996b`, including actual
+GPU-backed 2x2 image readback. Lightweight/headless hosts may return nil and do not
+qualify renderer readback. No recorder or extra framework is added to production.
