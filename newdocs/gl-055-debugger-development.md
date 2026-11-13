@@ -533,3 +533,47 @@ for redundant earlier profiles. Its passing core sanitizer/policy jobs and faile
 mirror logs remain retained. Final implementation runs are native 43461738974,
 candidate 43461782730 and full-native sanitizers 43461776259. No test or product
 input is relabeled as a newer identity.
+
+## Final worker and rendered observations
+
+Acquire DockerPC's free generation-122 lease after the unrelated task releases
+it. Reuse the clean project workspace/dependency cache at
+`C:\Sandbox\Codex\Workspaces\GodotLuauGL053Integration` /
+`C:\Sandbox\Codex\Builds\GodotLuau\gl053-integration`, checking out `f727839`
+detached while retaining its previous revision. Two-job incremental Debug build
+finishes in 60.052 seconds; pinned dependencies are reused. Final native
+fingerprint is `ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83`;
+DLL SHA256 is `e8a35affbd14fc2ff1bcefb8e2e5dedc6d60f3051a2528606c0a1795e674960f`.
+Actual five-case protocol/ENet and native headless editor journeys pass. Capture
+receipts under worker `Artifacts\GodotLuau\gl055-fd86f83`, copy them to local
+`gl055/adapter-fd86f83-worker`, verify the copied DLL hash, observe all task
+processes idle and release the lease. No background worker job remains.
+
+`graphical-fd86f83-01` passes in about eight seconds using this exact adapter.
+Inspect all four actual PNGs: Hits remains one, live Watch is labeled with its
+stop, resumed values are invalidated, stack/locals render and the saved source
+reloads at its moved breakpoint. The fixture remains offscreen/no-activation,
+with no physical input. Native request medians on DockerPC are 16.134 ms stack
+and 37.340 ms variables; the native-property Watch is 24.856 ms. These include
+transport and 60-Hz process polling, not isolated inspection CPU time.
+
+Performance 43463127788 passes both platforms at final native inputs, including
+the bounded 1,000,002-visit regression: the maximum hit target fires once. No
+pre-fix million-visit reproduction is claimed. The prior Windows sanitizer run
+43455004645 also has passing controls/core/141 native actors and no unexpected
+sanitizer report; its only failing group is the same missing-peer-cache gate.
+
+## GL-065: Godot editor breakpoint-row cleanup
+
+The rendered journey reports eight ObjectDB instances at exit. A second bounded
+verbose observation retains four leaked TreeItems and four TextParagraphs, with
+`line` metadata, and TextServer shaped-text RID output. None of those listed
+instances is a Luau owner, scope, node handle or debugger plugin. The pinned
+[Godot breakpoint removal implementation](https://github.com/godotengine/godot/blob/a13da4feb8d8aefc283c3763d33a2f170a18d541/editor/debugger/script_editor_debugger.cpp#L1767)
+detaches the breakpoint row and empty path row without freeing either. Their
+class/metadata/count are consistent with the two actual gutter removals and
+this source-verified engine cleanup defect. No independent GDScript control is
+claimed. This is an editor-only qualification limitation; the full-native game
+sanitizer checks remain separate. Do not patch the engine or hide warnings to
+claim a leak-free editor. Earlier references to four ObjectDB warnings meant
+four leaked instances in the earlier, shorter journey, not four warning events.

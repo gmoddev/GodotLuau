@@ -28,7 +28,10 @@ gameplay authority, persistence protocol or distribution channel is introduced.
 | --- | --- |
 | [Focused 43456316423](https://github.com/gmoddev/GodotLuau/actions/runs/43456316423) | Windows/Linux actual protocol and native editor PASS, including displayed stack/locals, watch, stepping, profiling, saved-source reload, restart and detach; immutable `37bba2f` native inputs |
 | Windows `graphical-37bba2f-01` | PASS rendered native editor journey; all four PNGs inspected. Offscreen programmatic controls, no physical input. Predates hit/display corrections |
+| DockerPC `gl055-fd86f83` | Final native inputs PASS all five real protocol cases, including actual ENet pause/timeout/reconnection, and native headless editor; two-job incremental Debug build |
+| Windows `graphical-fd86f83-01` | Final native inputs PASS rendered native editor; all four PNGs inspected. Hit accounting/live-display fixes, stepping and saved-source reload observed; engine-editor cleanup limitation below |
 | [Core 43460714151](https://github.com/gmoddev/GodotLuau/actions/runs/43460714151) | Windows/Linux 87 original cases and eight debugger scenarios PASS at `d1c62a7`, including allocation-key validation; predates maximum-hit saturation correction |
+| [Core 43461738984](https://github.com/gmoddev/GodotLuau/actions/runs/43461738984) | Windows/Linux 87 original cases and eight debugger scenarios PASS at final native inputs |
 | [Candidate 43450118761](https://github.com/gmoddev/GodotLuau/actions/runs/43450118761) | All four source-built Debug/Release profiles, packages and Linux core ASan/LSan PASS at `37bba2f`; retained within unchanged behavior scope |
 | [Declarations 43448955594](https://github.com/gmoddev/GodotLuau/actions/runs/43448955594) | Windows/Linux policy, generated drift and type checks PASS. Later changes do not modify these declaration/policy inputs |
 | [Sanitizers 43455004645](https://github.com/gmoddev/GodotLuau/actions/runs/43455004645) | Overall FAIL; missing test-peer class cache rejects stderr after successful local debugger assertions. Linux controls, core and 141 native actors pass; no unexpected sanitizer report. Not a full debugger sanitizer pass |
@@ -43,21 +46,21 @@ not replace those assertions or silently modify the games to pass them.
 
 ## Performance
 
-[43460768309](https://github.com/gmoddev/GodotLuau/actions/runs/43460768309)
-builds baseline main and candidate `d1c62a7` with the same pinned Luau and Release
+[43463127788](https://github.com/gmoddev/GodotLuau/actions/runs/43463127788)
+builds baseline main and candidate `f727839` (final native inputs) with the same pinned Luau and Release
 toolchain. Each mode runs one warmup and five measured 100,000-operation trials.
 Values below are median wall milliseconds; individual trials, CPU time, complete
 Execute duration, C++ new counts/bytes and VM peaks remain in its artifacts.
 
 | Mode | Windows | Linux |
 | --- | ---: | ---: |
-| Baseline disabled | 3.230 | 3.066 |
-| Candidate disabled | 3.277 | 3.030 |
-| Attached | 10.609 | 9.551 |
-| Breakpoints, 100,000 actual stops | 39.082 | 28.541 |
-| Stepping, 200,002 actual stops | 146.257 | 98.256 |
-| Stack/raw-local inspection at 100,000 stops | 88.949 | 45.770 |
-| Profiling native observations | 6.383 | 5.681 |
+| Baseline disabled | 4.034 | 2.044 |
+| Candidate disabled | 4.038 | 2.099 |
+| Attached | 13.427 | 6.086 |
+| Breakpoints, 100,000 actual stops | 54.935 | 21.177 |
+| Stepping, 200,002 actual stops | 206.191 | 72.869 |
+| Stack/raw-local inspection at 100,000 stops | 121.062 | 33.274 |
+| Profiling native observations | 7.446 | 3.952 |
 
 Disabled/attached modes allocate zero C++ objects during the measured loop.
 All modes report the same 504,336-byte VM peak for this workload. Profiling now
@@ -66,18 +69,22 @@ allocates only its two initial map records (104 Windows / 91 Linux bytes), versu
 The correction removes steady-state temporary-key allocations; timings from
 different hosted runners are not a controlled before/after speedup claim.
 
-Disabled median delta is +1.45% Windows / -1.19% Linux in this short workload.
+Disabled median delta is +0.11% Windows / +2.68% Linux in this short workload.
 Attached cost is material: the pinned VM's debug interpreter is deliberately
 active to support immediate stepping. These are production-core measurements,
 not whole-game frame performance, native Godot projection cost, GUI latency or
 complete allocator accounting. Breakpoint/step inspection includes copying and
 destroying frame descriptions; C++ counts exclude Luau's malloc allocations.
-The later counter fix changes only saturation beyond this workload's hit count.
+The same run separately requires the maximum exact-hit target to fire once across
+1,000,002 visits, exercising its corrected saturation boundary.
 
-Existing editor index receipts report cold, warm, navigation and changed-buffer
-latency. Native protocol receipts additionally retain stack/variables and watch
-round-trip observations, including process polling and Godot transport. Final
-receipts and rendered state corrections remain pending.
+Linux native run 43457869711 records index cold 13.353 ms, cached 4.983 ms,
+changed-buffer 5.119 ms and navigation 14.265 ms for its 22-file fixture, without
+truncation. DockerPC's final native protocol records stack/variables medians
+16.134/37.340 ms and native-property Watch 24.856 ms, including process polling
+and Godot transport. These are measured scopes, not hard latency guarantees or
+large-project benchmarks. Both final native/editor receipts and actual rendered
+state corrections pass; hosted final profiles remain pending.
 
 ## Supported and limited behavior
 
@@ -106,8 +113,11 @@ Limits are explicit rather than simulated compatibility:
 - Windows full-native LSan remains unavailable under GL-018's established
   limitation. Linux graphical presentation and physical input are not qualified
   by headless or offscreen programmatic editor tests.
-- The successful rendered editor run has four ObjectDB exit warnings. It is not
-  evidence of a leak-free editor process; game/native sanitizer scope is separate.
+- The final rendered editor exit reports eight UI objects (TreeItems and
+  TextParagraphs). [GL-065](gl-055-debugger-development.md#gl-065-godot-editor-breakpoint-row-cleanup)
+  retains verbose output and the pinned engine's non-freeing breakpoint-row
+  removal code. No leak-free editor claim or engine patch is made; game/native
+  sanitizer scope is separate.
 
 Native remains the default Character controller and Scripted remains opt-in.
 Main, release publication and updater distribution remain unchanged. Integration
