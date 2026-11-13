@@ -116,6 +116,18 @@ int main() {
             Check(Debugger.RequestPause(),"Pause rejected");
             Check(Client.Execute(CO,"local Value=1", "@res://Same.luau") && Stops==0,"Cross-domain pause");
             Check(Server.Execute(SO,"local Value=1", "@res://Same.luau") && Stops==1,"Pause not admitted");
+            GLExecutionDomain Deep(GLDomainKind::Server);auto DeepOwner=Deep.CreateOwner(9);int DeepStops=0;
+            auto& DeepDebugger=Deep.EnableDebugger();
+            DeepDebugger.Attach([&](GLDebugger& Debug) {
+                ++DeepStops;Check(lua_stackdepth(Debug.GetInspectionThread())>64 && Debug.GetFrames().size()==64,"Deep live stack inspection was not bounded");
+                return GLDebugAction::Continue;
+            });
+            DeepDebugger.SetBreakpoint("res://Deep.luau",3,true);
+            Check(Deep.Execute(DeepOwner,"local function Recurse(Depth)\n if Depth==0 then\n  local Value=42\n  return Value\n end\n return Recurse(Depth-1)+1\nend\nassert(Recurse(80)==122)","@res://Deep.luau") && DeepStops==1,"Deep stack control changed execution");
+            GLDomainLimits Bounded;Bounded.ResumeMilliseconds=50;Bounded.MaxSafepoints=16;
+            GLExecutionDomain Limited(GLDomainKind::Client,Bounded);auto LimitedOwner=Limited.CreateOwner(10);
+            Limited.EnableDebugger().Attach([](GLDebugger&){return GLDebugAction::Continue;});
+            Check(!Limited.Execute(LimitedOwner,"while true do end","@res://Infinite.luau") && !LimitedOwner->Alive,"Attached debug interpreter bypassed execution limits");
         });
         Run("profiling is bounded opt in and retains no execution ownership", [] {
             GLExecutionDomain Domain(GLDomainKind::Server);

@@ -7,6 +7,7 @@ var Native: Node
 var Graphical = false
 var Captures: Array = []
 var ExpectedLines: Dictionary = {}
+var ExpectedLocals: Dictionary = {1: ["Increment", 1], 2: ["Value", 40], 3: ["Current", 41], 4: ["Result", 42]}
 
 func _enter_tree() -> void:
     call_deferred("Run")
@@ -58,7 +59,6 @@ func FrameReady(Stop: int) -> bool:
             break
     if not HasStack:
         return false
-    var Locals = {1: ["Increment", 1], 2: ["Value", 40], 3: ["Current", 41], 4: ["Result", 42]}
     for Inspector in Root.find_children("*", "EditorInspector", true, false):
         if not Inspector.is_class("EditorDebuggerInspector"):
             continue
@@ -66,8 +66,8 @@ func FrameReady(Stop: int) -> bool:
         if not Object:
             continue
         var Names = Object.get_property_list().map(func(Item): return str(Item.name))
-        var Local = "Locals/" + Locals[Stop][0]
-        if Names.has(Local) and Names.has("Globals/StopId") and Object.get("Globals/StopId") == Stop and Object.get(Local) == Locals[Stop][1]:
+        var Local = "Locals/" + ExpectedLocals[Stop][0]
+        if Names.has(Local) and Names.has("Globals/StopId") and Object.get("Globals/StopId") == Stop and Object.get(Local) == ExpectedLocals[Stop][1]:
             return true
     return false
 
@@ -107,7 +107,12 @@ func Press(Op: String) -> bool:
 func Capture(Label: String) -> void:
     if not Graphical:
         return
-    await RenderingServer.frame_post_draw
+    var Panel = Tab()
+    if Panel and Panel.get_parent() is TabContainer:
+        var Tabs = Panel.get_parent() as TabContainer
+        Tabs.current_tab = 0 if Label == "stack" else Tabs.get_tab_idx_from_control(Panel)
+    await get_tree().process_frame
+    RenderingServer.force_draw()
     var Image = get_viewport().get_texture().get_image()
     if Check(Image != null and not Image.is_empty(), "Actual rendered debugger image: " + Label):
         var Path = "res://debugger-" + Label + ".png"
@@ -134,6 +139,21 @@ func Watch() -> bool:
             return Check(State.get("Ok", false) and State.get("Value") == "Node3D", "Native editor Watch resolves the owned live Godot node")
         await get_tree().process_frame
     return Check(false, "Actual Watch response arrives")
+
+func Profile(Enabled: bool) -> bool:
+    if not Press("ProfileStart" if Enabled else "ProfileStop"):
+        return false
+    var Deadline = Time.get_ticks_msec() + 5000
+    while Time.get_ticks_msec() < Deadline:
+        for State in Native.call("GetDebuggerSessions"):
+            var Snapshot: Dictionary = State.get("ProfileSnapshot", {})
+            if State.get("Active", false) and not Snapshot.is_empty() and Snapshot.get("Enabled", not Enabled) == Enabled:
+                if not Enabled:
+                    var Rows: Array = Snapshot.get("Scripts", [])
+                    return Check(Rows.any(func(Row): return Row.get("Resumes", 0) > 0), "Actual editor profiler reports resumed Luau execution")
+                return Check(true, "Actual editor profiler Start is acknowledged")
+        await get_tree().process_frame
+    return Check(false, "Actual editor profiling response arrives")
 
 func Finish(Passed: bool) -> void:
     if Finished:
@@ -196,10 +216,14 @@ func Run() -> void:
         Finish(false)
         return
     var Connection: int = State.get("ConnectionGeneration", 0)
+    if not await Profile(true):
+        Finish(false)
+        return
     if not await Watch():
         Finish(false)
         return
     await Capture("breakpoint")
+    await Capture("stack")
     if not Press("StepInto") or (await WaitStop(2)).is_empty():
         Finish(false)
         return
@@ -217,6 +241,11 @@ func Run() -> void:
     while not Session(4).is_empty() and Time.get_ticks_msec() < Continued:
         await get_tree().process_frame
     Check(Session(4).is_empty() and EditorInterface.is_playing_scene(), "Continue leaves the debugger stop and keeps the application running")
+    for Index in range(8):
+        await get_tree().process_frame
+    if not await Profile(false):
+        Finish(false)
+        return
     EditorInterface.stop_playing_scene()
     var Stopped = Time.get_ticks_msec() + 5000
     while EditorInterface.is_playing_scene() and Time.get_ticks_msec() < Stopped:
@@ -227,13 +256,42 @@ func Run() -> void:
     if not Check(not Restart.is_empty(), "A fresh native debugger connection admits the retained gutter breakpoint"):
         Finish(false)
         return
+    Code.set_line_as_breakpoint(EntryLine, false)
+    var Replacement = "-- Saved during a native stop\n" + Source.source_code
+    Source.source_code = Replacement
+    Code.text = Replacement
+    if not Check(ResourceSaver.save(Source, "res://Journey.luau") == OK, "Save the actual stopped Luau source through its native resource saver"):
+        Finish(false)
+        return
+    EntryLine += 1
+    Code.set_line_as_breakpoint(EntryLine, true)
+    ExpectedLines[2] = EntryLine + 1
+    ExpectedLocals[2] = ["Increment", 1]
+    var Synced = false
+    var SyncDeadline = Time.get_ticks_msec() + 5000
+    while not Synced and Time.get_ticks_msec() < SyncDeadline:
+        for Breakpoint in Session(1, Connection + 1).get("Breakpoints", []):
+            if Breakpoint.get("Source") == "res://Journey.luau" and Breakpoint.get("Line") == EntryLine + 1 and Breakpoint.get("Enabled", false):
+                Synced = true
+        await get_tree().process_frame
+    if not Check(Synced, "Native breakpoint update arrives before saved-source reload"):
+        Finish(false)
+        return
+    if not Press("Reload"):
+        Finish(false)
+        return
+    var Reloaded = await WaitStop(2, Connection + 1)
+    if not Check(not Reloaded.is_empty() and Reloaded.get("Generation", 0) > Restart.get("Generation", 0), "Actual native Reload retires the old owner and admits the saved source at its moved breakpoint"):
+        Finish(false)
+        return
+    await Capture("reload")
     if not Press("Detach"):
         Finish(false)
         return
     var Detached = Time.get_ticks_msec() + 5000
-    while not Session(1, Connection + 1).is_empty() and Time.get_ticks_msec() < Detached:
+    while not Session(2, Connection + 1).is_empty() and Time.get_ticks_msec() < Detached:
         await get_tree().process_frame
-    Check(Session(1, Connection + 1).is_empty() and EditorInterface.is_playing_scene(), "Detach resumes the stopped application without terminating it")
+    Check(Session(2, Connection + 1).is_empty() and EditorInterface.is_playing_scene(), "Detach resumes the stopped application without terminating it")
     EditorInterface.stop_playing_scene()
     Code.set_line_as_breakpoint(EntryLine, false)
     Check(not Code.is_line_breakpointed(EntryLine), "Native editor breakpoint removal")

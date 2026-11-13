@@ -407,3 +407,16 @@ not alter native source. Sanitizer 43450756992 is canceled early because it uses
 the known incorrect expected counter; rerun with the corrected fixture. Candidate
 43450118761 remains relevant because its unchanged core/native/package inputs do
 not exercise that peer-only assertion. Main remains untouched.
+
+## Expanded acceptance observations
+
+Extend the actual editor journey to press native profiling Start/Stop, require
+recorded resumed execution, save a changed stopped Luau resource, move its gutter
+breakpoint, wait for the actual update, press native Reload and inspect the new
+owner at its moved line. Graphical capture uses an explicit native draw and selects
+the actual Luau/stack tabs, without physical input. This is fixture-only work;
+the implemented product is unchanged. Extend the existing core isolation scenario
+for a real 80-level call stack capped at 64 inspected frames and an attached
+infinite loop terminated by the unchanged deterministic safepoint budget.
+These added observations remain pending execution. Keep the already-passing
+eight-scenario summary and 87 original assertions.
