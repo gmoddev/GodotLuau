@@ -192,7 +192,9 @@ void GLDebugger::Hook(lua_State* Thread, bool IsBreakpoint) {
                 auto Found = Loaded.Mappings.find(Entry.Line);
                 if (Found != Loaded.Mappings.end() && Found->second == Frame.Line) Matches = true;
             }
-            if (Matches) { if (Entry.Hits < 1000000) ++Entry.Hits; Admitted |= !Entry.BreakOnHit || Entry.Hits == Entry.BreakOnHit; }
+            // Retain one observation beyond the largest exact-hit target so
+            // saturation cannot repeatedly fire that target on later visits.
+            if (Matches) { if (Entry.Hits < 1000001) ++Entry.Hits; Admitted |= !Entry.BreakOnHit || Entry.Hits == Entry.BreakOnHit; }
         }
         if (Admitted) Suspend(Thread, "Breakpoint");
         return;

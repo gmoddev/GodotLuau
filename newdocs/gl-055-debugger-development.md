@@ -510,3 +510,11 @@ identical implementation. Both real protocol and editor journeys still run;
 the strict native fingerprint check remains. This covers interactive development
 debugging using a Release-built extension under the verified editor host, not
 enabling debugging in an exported release-template host.
+
+Final bounded-counter review finds a source-verified edge: the observation
+counter saturated at the maximum admitted exact-hit target (1,000,000), making
+that target match again on every subsequent visit. Saturate one observation
+beyond the largest target instead. This is a two-line policy-preserving fix;
+ordinary exact-hit/replay coverage remains required. No million-visit runtime
+reproduction is claimed. The new source identity requires fresh core/native
+checks; declaration and generated policy inputs remain unchanged.
