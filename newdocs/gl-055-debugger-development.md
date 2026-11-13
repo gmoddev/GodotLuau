@@ -612,3 +612,15 @@ generation-123 worker lease after owned processes are idle. The optional
 Retain [both receipts](gl-055-debugger-qualification.md) without changing the
 production index or persistence contracts. Candidate source profiles remain on
 their immutable final-native revision; fixture-only commits do not relabel them.
+
+Candidate 43461782730 now passes all four Debug/Release profiles, source-built
+production products, companion packaging, extracted startup and aggregate
+acceptance. Focused 43470730266 passes both platforms using those exact SCons
+production Release libraries, including the real five-case protocol and native
+editor journey. Their hashes equal the package startup receipts (Windows
+`7879047c8e82aa73a8be2490d2048550d3d46ee22ade3a64ade68e89f4b2e601`, Linux
+`6a2ec57ad73e5111fa2cd8c438c99db0c716512245923eda1f27fabd55103d83`).
+Retain the [hosted summary](evidence/gl055/hosted-qualification.json). This
+qualifies a Release-built extension under the admitted editor host, not an
+interactive exported release-template host. Windows full-native retry remains
+the only pending profile; releases/updater remain disabled and main unchanged.
