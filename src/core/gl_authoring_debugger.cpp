@@ -135,13 +135,18 @@ bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32
         String Nonce=Reply["Session"]; if(Nonce.length()!=32)return true;
         if(!Views.count(Session))_setup_session(Session);auto Found=Views.find(Session);if(Found==Views.end())return true;
         auto& View=Found->second;
-        if(View.Nonce!=Nonce){View.Nonce=Nonce;++View.ConnectionGeneration;View.Request=0;View.Domain="All";View.Pending=Breakpoints;View.LastProfile.clear();}
+        if(View.Nonce!=Nonce) {
+            View.Nonce=Nonce;++View.ConnectionGeneration;View.Request=0;View.Domain="All";View.Pending=Breakpoints;View.LastProfile.clear();
+            if(auto Output=Object::cast_to<RichTextLabel>(ObjectDB::get_instance(View.WatchResult)))Output->set_text("New runtime session. Pause to inspect live values; profiling collection is opt-in.");
+        }
+        if(String(Reply.get("Event",String()))=="Continuing")
+            if(auto Output=Object::cast_to<RichTextLabel>(ObjectDB::get_instance(View.WatchResult)))Output->set_text("Execution resumed. Previous live values are invalidated; pause and Watch to inspect again.");
         View.LastState=Reply.duplicate(true);View.LastState.erase("Session");
         if(String(Reply.get("Event",String()))=="Profile" && Reply.get("Profile",Variant()).get_type()==Variant::DICTIONARY) {
             View.LastProfile=Dictionary(Reply["Profile"]).duplicate(true);
             View.LastProfile["Domain"]=Reply.get("Domain",String());
             View.LastProfile["Ownership"]=Reply.get("Ownership",Dictionary());View.LastProfile["Resources"]=Reply.get("Resources",Dictionary());
-            if(auto Output=Object::cast_to<RichTextLabel>(ObjectDB::get_instance(View.WatchResult)))Output->set_text(JSON::stringify(View.LastProfile,"  ").left(4096));
+            if(auto Output=Object::cast_to<RichTextLabel>(ObjectDB::get_instance(View.WatchResult)))Output->set_text("Profile snapshot (not live values):\n"+JSON::stringify(View.LastProfile,"  ").left(4096));
         }
         if(String(Reply.get("Event",String()))=="Stopped")View.Domain=Reply.get("Domain",String("All"));
         if(String(Reply.get("Event",String()))=="Suspending") {
@@ -153,7 +158,7 @@ bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32
         }
         if(String(Reply.get("Event",String()))=="Watch")
             if(auto Output=Object::cast_to<RichTextLabel>(ObjectDB::get_instance(View.WatchResult)))
-                Output->set_text(bool(Reply.get("Ok",false))?String(Reply.get("Value",Variant())).left(4096):String(Reply.get("Error",String())).left(256));
+                Output->set_text(bool(Reply.get("Ok",false))?String("Live stop ")+String::num_int64(int64_t(Reply.get("StopId",0)))+": "+String(Reply.get("Value",Variant())).left(4096):String(Reply.get("Error",String())).left(256));
         if(auto Status=Object::cast_to<Label>(ObjectDB::get_instance(View.Label)))
             Status->set_text(String(Reply.get("Domain",String()))+" "+String(Reply.get("State",String()))+" stop "+String::num_int64(int64_t(Reply.get("StopId",0)))+" "+String(Reply.get("Reason",String()))+" "+String(Reply.get("Error",String())).left(256));
         if(auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(View.Tree)))if(Reply.get("Breakpoints",Variant()).get_type()==Variant::ARRAY) {

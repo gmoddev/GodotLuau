@@ -112,7 +112,8 @@ GLDebugAction Stop(GLDebugger& Debugger) {
     if(!GLRuntimeDebuggerAvailable() || EngineDebug->get_lines_left()==-2){Disconnect();return GLDebugAction::Detach;}
     GLDebugAction Action=EngineDebug->get_lines_left()>0?
         (EngineDebug->get_depth()<0?GLDebugAction::Into:EngineDebug->get_depth()>0?GLDebugAction::Out:GLDebugAction::Over):GLDebugAction::Continue;
-    Send(&Debugger,"Continuing"); return Action;
+    Dictionary Resuming;Resuming["State"]="Resuming";Resuming["Generation"]=0;Resuming["CoroutineId"]=0;Resuming["Source"]=String();Resuming["Line"]=0;
+    Send(&Debugger,"Continuing",0,String(),Resuming); return Action;
 }
 }
 bool GLRuntimeDebuggerAvailable() {

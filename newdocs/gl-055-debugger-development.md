@@ -420,3 +420,24 @@ for a real 80-level call stack capped at 64 inspected frames and an attached
 infinite loop terminated by the unchanged deterministic safepoint budget.
 These added observations remain pending execution. Keep the already-passing
 eight-scenario summary and 87 original assertions.
+
+## Rendered editor evidence and actual state corrections
+
+Focused 43456316423 passes Windows/Linux including actual editor profiling and
+saved-source reload. Windows offscreen-rendered `graphical-37bba2f-01` completes
+the same native journey in about nine seconds. Inspect all four retained PNGs:
+native source gutter/Watch, Godot stack and locals, step-out location and moved
+reload breakpoint render correctly. No desktop input is injected; the editor
+starts offscreen without activation and the game child stays headless. This is
+rendered programmatic editor evidence, not physical input qualification.
+
+The captures expose two actual presentation defects. Editor replay of an unchanged
+breakpoint replaces its record and resets Hits to zero after the first stop.
+Make identical updates idempotent, retaining explicit reconfiguration/reset
+behavior, and extend the existing real hit-count case. Also invalidate the
+displayed live Watch value on Continuing and clear old report text on a fresh
+runtime nonce; label profile output as a snapshot. Continuing now reports Resuming
+with no live generation/coroutine/source, rather than the still-stacked Suspended
+state before the native callback returns. These are bounded state corrections;
+new compilation/runtime verification is required. No source identity or previous
+rendered evidence is relabeled as containing them.

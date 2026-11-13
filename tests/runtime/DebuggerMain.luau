@@ -4,6 +4,9 @@ local Material = Scope:New("StandardMaterial3D", {Color = Color3.new(0.2, 0.5, 0
 local Increment = 1
 local State = {Answer = 40, Password = "GL055-Secret-Sentinel"}
 State.Cycle = State
+State.List = table.create(256, 7)
+State.Blob = string.rep("x", 2048)
+State.Binary = string.char(0, 255, 254)
 local function Add(Value)
     local Current = Value + Increment -- GL055:Into
     Current += 1 -- GL055:Over

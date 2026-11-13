@@ -70,6 +70,7 @@ bool GLDebugger::SetBreakpoint(const std::string& Source, int Line, bool Active,
     auto Key = std::make_pair(Source, Line);
     auto Found = Breakpoints.find(Key);
     if (Found == Breakpoints.end() && Breakpoints.size() >= 128) return false;
+    if(Found!=Breakpoints.end() && Found->second.Enabled==Active && Found->second.BreakOnHit==BreakOnHit)return true;
     GLDebugBreakpoint Entry; Entry.Source = Source; Entry.Line = Line;
     Entry.Enabled = Active; Entry.BreakOnHit = BreakOnHit;
     Breakpoints[Key] = std::move(Entry);

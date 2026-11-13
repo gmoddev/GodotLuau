@@ -143,6 +143,8 @@ four successful workflows and independently checked artifacts.
 | [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Resolved and normally merged by `a419b93`; stalled control and four-profile proof retained | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
 | [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Resolved and normally merged by `a419b93`; both Linux export/read-start/restart proofs retained | Candidate staging and Godot's dependency export copy lose the companion's executable mode |
 | [GL-061](gl-055-debugger-development.md#disconnect-lifecycle-correction) | P2 | Fixed on unmerged GL-055 branch at `71e8bfd`; Linux full-native and Windows protocol checks pass | Initialized Godot debugger flag survives peer disconnect, so later experimental Luau stops enter an unavailable native session |
+| [GL-062](gl-055-debugger-development.md#rendered-editor-evidence-and-actual-state-corrections) | P2 | Corrected on unmerged GL-055 branch; verification pending | Identical editor breakpoint replay resets the already-hit breakpoint's counter |
+| [GL-063](gl-055-debugger-development.md#rendered-editor-evidence-and-actual-state-corrections) | P2 | Corrected on unmerged GL-055 branch; verification pending | Debugger text presents a previous live Watch/profile result across resume or a fresh runtime session |
 
 ## GL-061: Experimental debugger connection retirement
 

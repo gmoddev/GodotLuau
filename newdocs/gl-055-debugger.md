@@ -76,6 +76,9 @@ admitted through existing owner/reference budgets. BreakOnHit is a bounded exact
 hit target; arbitrary conditional execution is not enabled. Reattachment/source
 changes require new source admission; textual remapping across arbitrary edits
 is not guaranteed. Old owners retire before new callback authority.
+An identical breakpoint update preserves hit accounting. Changing its enabled
+state or hit target resets the record. Native detach requires a fresh Play/runtime
+session; an in-process remote reattach command is not provided.
 
 Custom messages use Godot's existing debugger connection, schema 1, a random
 session nonce and monotonic request IDs. Closed typed fields, bounded strings,

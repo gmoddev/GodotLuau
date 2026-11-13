@@ -61,6 +61,7 @@ int main() {
             Debugger.SetBreakpoint("res://Loop.luau", 4, true, 2);
             Check(Domain.Execute(Owner, "local Value=0\n-- comment\nfor Index=1,4 do\n Value+=1\nend\nassert(Value==4)", "@res://Loop.luau"), "Loop failed");
             Check(Hits == 1, "Hit target not applied");
+            Check(Debugger.SetBreakpoint("res://Loop.luau",4,true,2) && Debugger.GetBreakpoints()[1].Hits==4,"Identical breakpoint replay reset hit accounting");
             Check(!Debugger.GetBreakpoints()[0].AdmittedLines.empty() && Debugger.GetBreakpoints()[0].AdmittedLines[0] == 3, "Executable-line remap missing");
             Debugger.SetBreakpoint("res://Loop.luau", 2, false);
             Debugger.SetBreakpoint("res://Loop.luau", 4, false);
