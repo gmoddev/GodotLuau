@@ -6,6 +6,12 @@
 #include <godot_cpp/classes/script_editor_base.hpp>
 #include <godot_cpp/variant/callable.hpp>
 #include "luau_script.h"
+#include "gl_native_editor_api.h"
+#include "gl_execution_domain.h"
+#include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/os.hpp>
+#include <godot_cpp/classes/tree.hpp>
+#include <godot_cpp/classes/tree_item.hpp>
 
 using namespace godot;
 
@@ -33,6 +39,8 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OpenRuntimeError"), &GLNativeEditorPlugin::OpenRuntimeError);
     ClassDB::bind_method(D_METHOD("OpenRuntimeFrame"), &GLNativeEditorPlugin::OpenRuntimeFrame);
     ClassDB::bind_method(D_METHOD("GetRuntimeDiagnostics"), &GLNativeEditorPlugin::GetRuntimeDiagnostics);
+    ClassDB::bind_method(D_METHOD("IndexProject","Module","Member"), &GLNativeEditorPlugin::IndexProject);
+    ClassDB::bind_method(D_METHOD("FindProjectUses"), &GLNativeEditorPlugin::FindProjectUses);
 }
 
 void GLNativeEditorPlugin::_enter_tree() {
@@ -84,4 +92,42 @@ void GLNativeEditorPlugin::ConfigureEditor() {
         Prefixes.push_back(":");
         Code->set_code_completion_prefixes(Prefixes);
     }
+}
+Dictionary GLNativeEditorPlugin::IndexProject(const String& Module,const String& Member) {
+    Dictionary Buffers;
+    if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id())return Dictionary();
+    if(auto Editor=GetEditor()) {
+        auto Scripts=Editor->get_open_scripts();
+        for(int Index=0;Index<Scripts.size() && Index<64;++Index) {
+            Ref<Script> Script=Scripts[Index];
+            auto Source=Script.is_valid()?Object::cast_to<LuauScript>(Script.ptr()):nullptr;
+            if(Source && Source->_get_source_code().utf8().length()<=256*1024)Buffers[Source->get_path()]=Source->_get_source_code();
+        }
+        Ref<Script> Current=Editor->get_current_script();auto Tab=Editor->get_current_editor();
+        auto Code=Tab?Object::cast_to<CodeEdit>(Tab->get_base_editor()):nullptr;
+        if(Current.is_valid() && Current->is_class("LuauScript") && Code && Code->get_text().utf8().length()<=256*1024)Buffers[Current->get_path()]=Code->get_text();
+    }
+    return GLIndexProjectModule(Module,Member,Buffers);
+}
+void GLNativeEditorPlugin::FindProjectUses() {
+    auto Editor=GetEditor();Ref<Script> Current=Editor?Editor->get_current_script():Ref<Script>();
+    auto Tab=Editor?Editor->get_current_editor():nullptr;auto Code=Tab?Object::cast_to<CodeEdit>(Tab->get_base_editor()):nullptr;
+    if(Current.is_null() || !Current->is_class("LuauScript") || !Code){ShowStatus("Open a Luau module member or export to find its static project uses");return;}
+    String Symbol=Code->get_word_under_caret();String Source=Code->get_text();
+    auto Lines=Source.split("\n");int Line=Code->get_caret_line(),Column=Code->get_caret_column();
+    if(Line<0 || Line>=Lines.size())return;
+    Lines[Line]=String(Lines[Line]).insert(Column,String::chr(0xffff));Source=String("\n").join(Lines);
+    Dictionary Target=GLNavigateNativeCode(Source,Symbol,Current->get_path());
+    String Module=Target.get("script_path",Current->get_path());
+    Dictionary Report=IndexProject(Module,Symbol);
+    if(int(Report.get("result",ERR_UNAVAILABLE))!=OK){ShowStatus("This selection has no supported static module reference index");return;}
+    auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(RuntimeTree));if(!TreeNode)return;
+    TreeNode->clear();TreeNode->show();auto Root=TreeNode->create_item();Root->set_text(0,Module+" :: "+Symbol);
+    Root->set_text(1,bool(Report["Truncated"])?"Partial bounded index":"Static import uses");
+    Array Uses=Report["References"];
+    for(int Index=0;Index<Uses.size();++Index) {
+        Dictionary Use=Uses[Index];auto Row=TreeNode->create_item(Root);
+        Row->set_text(0,String(Use["Path"])+":"+String::num_int64(int(Use["Line"])));Row->set_text(1,"Module member reference");Row->set_metadata(0,Use);
+    }
+    ShowStatus(String::num_int64(Uses.size())+" static uses across "+String::num_int64(int(Report["ScannedFiles"]))+" Luau files; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
 }

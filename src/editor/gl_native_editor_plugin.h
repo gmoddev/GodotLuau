@@ -57,6 +57,8 @@ public:
     void ReceiveRuntimeError(const godot::Array& Data);
     void OpenRuntimeError();
     void OpenRuntimeFrame();
+    godot::Dictionary IndexProject(const godot::String& Module,const godot::String& Member);
+    void FindProjectUses();
     godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(true); }
 };
 

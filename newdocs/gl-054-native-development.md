@@ -65,3 +65,31 @@ not implemented. Godot's ScriptLanguage stack hook remains empty because there i
 no safely suspended domain/frame to advertise. A live debugger would require an
 explicit scheduler suspension/ownership contract and coordinated Godot debugger
 session control; this campaign does not fake that contract with a stored trace.
+
+## Static project reference index
+
+The native editor's Project Uses action resolves a selected static imported member
+through the existing AST navigator, then lists project uses by exact module path
+and member name. It recognizes immutable local require aliases and local function
+aliases, preserves lexical shadowing, and conservatively excludes reassigned
+imports. It is not whole-program semantic search: dynamic imports/exports,
+metatables, arbitrary field flow and re-export chains are unsupported. Columns
+are reported in parser UTF-8 bytes; explicit navigation opens the source line.
+
+This trusted editor operation rejects gameplay/preview execution, non-editor
+processes and calls from other threads. Reads reuse the existing project-resource
+path checks, skip linked/hidden directories, and never execute source or acquire
+gameplay filesystem authority. It indexes at most 256 source files/directories,
+depth eight, 256 KiB per file and 8 MiB per query, with 128 static records per file
+and 1,024 returned matches. A 250 ms budget is checked between bounded directory
+and parse operations; it is not an interruptible disk-I/O or hard-real-time bound.
+Any bound, malformed source or unavailable file is reported as partial rather
+than silently claiming complete project coverage.
+
+Cached entries retain only source hashes and string/coordinate records. Changed
+sources reparse; removed/out-of-snapshot entries retire. The active unsaved CodeEdit
+text overrides disk, and other open Luau resources contribute their current
+resource text. This does not claim to observe unapplied editor text in every
+inactive tab. No AST, Script resource, object handle or VM reference is retained.
+The native editor fixture exercises exact module identity, aliases, shadowing,
+reassignment, warm reuse, active unsaved edits and preservation of saved source.

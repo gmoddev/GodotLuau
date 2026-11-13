@@ -226,3 +226,20 @@ in the external observer. Each checks that the old native identity retires and
 only the UI/current-world scopes remain. It records input-to-snapshot latency and
 native object/resource count deltas, without equating engine cache growth with a
 proven leak or these end-to-end timings with isolated binding dispatch cost.
+
+Both platform core and declaration jobs pass at corrected `31d64a5` (runs
+43369152931 and 43369152884). Its native run 43369152927 remains pending.
+DockerPC's cooperative worker remains held by an active unrelated campaign;
+admission was denied and no load, cleanup or takeover was attempted.
+
+## Phase 5 — bounded editor project references (qualification pending)
+
+Project Uses extends the existing AST navigation with a cached, read-only index
+of static module member and local function-alias uses. Exact module paths and
+lexical identity distinguish unrelated/shadowed names. Active unsaved editor text
+participates; changed sources reparse, unchanged hashes reuse pure cached records.
+The [contract](gl-054-native-development.md) defines bounds, partial results and
+unsupported dynamic/re-export semantics. The editor-only/main-thread/non-Luau
+gates preserve gameplay capability restrictions. UI navigation remains explicit.
+The actual native editor workflow now checks these behaviors and records cold,
+warm and changed-buffer query timings. No index or graphical pass is claimed yet.

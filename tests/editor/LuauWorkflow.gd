@@ -31,6 +31,7 @@ func Run() -> void:
         Check(Plugins.size() == 1, "Actual native authoring plugin is installed")
         if Plugins.size() == 1:
             var Plugin: Node = Plugins[0]
+            await load('res://ProjectIndex.gd').new().Run(self,Plugin)
             var Created: Dictionary = Plugin.call("CreateLuauScene", "res://Fresh.tscn")
             Check(Created.get("Passed", false), "Native action creates scene and .luau entrypoint")
             Check(not Plugin.call("CreateLuauScene", "res://Fresh.tscn").get("Passed", false), "Creation never overwrites an existing project scene")
