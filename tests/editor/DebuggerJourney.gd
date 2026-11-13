@@ -6,6 +6,7 @@ var Finished = false
 var Native: Node
 var Graphical = false
 var Captures: Array = []
+var ExpectedLines: Dictionary = {}
 
 func _enter_tree() -> void:
     call_deferred("Run")
@@ -41,10 +42,34 @@ func WaitStop(Stop: int, Connection: int = 0) -> Dictionary:
     var Deadline = Time.get_ticks_msec() + 25000
     while Time.get_ticks_msec() < Deadline:
         var State = Session(Stop, Connection)
-        if not State.is_empty():
+        if not State.is_empty() and FrameReady(Stop):
+            Check(true, "Actual native stack and variables are ready for stop %d" % Stop)
             return State
         await get_tree().process_frame
     return {}
+
+func FrameReady(Stop: int) -> bool:
+    var Root = EditorInterface.get_base_control()
+    var HasStack = false
+    for Stack in Root.find_children("*", "Tree", true, false):
+        var Frame = Stack.get_root().get_first_child() if Stack.get_root() else null
+        if Frame and Frame.get_text(0).begins_with("0 - res://Journey.luau:%d -" % ExpectedLines[Stop]):
+            HasStack = true
+            break
+    if not HasStack:
+        return false
+    var Locals = {1: ["Increment", 1], 2: ["Value", 40], 3: ["Current", 41], 4: ["Result", 42]}
+    for Inspector in Root.find_children("*", "EditorInspector", true, false):
+        if not Inspector.is_class("EditorDebuggerInspector"):
+            continue
+        var Object = Inspector.get_edited_object()
+        if not Object:
+            continue
+        var Names = Object.get_property_list().map(func(Item): return str(Item.name))
+        var Local = "Locals/" + Locals[Stop][0]
+        if Names.has(Local) and Names.has("Globals/StopId") and Object.get("Globals/StopId") == Stop and Object.get(Local) == Locals[Stop][1]:
+            return true
+    return false
 
 func Tab() -> Node:
     var Root = EditorInterface.get_base_control()
@@ -108,6 +133,8 @@ func Finish(Passed: bool) -> void:
     Finished = true
     if EditorInterface.is_playing_scene():
         EditorInterface.stop_playing_scene()
+    for Index in range(8):
+        await get_tree().process_frame
     var File = FileAccess.open("res://editor-debugger-results.json", FileAccess.WRITE)
     File.store_string(JSON.stringify({"Passed": Passed, "Checks": Checks, "Graphical": Graphical, "Captures": Captures, "PhysicalInput": false}, "  "))
     File.close()
@@ -134,8 +161,13 @@ func Run() -> void:
         return
     var EntryLine = -1
     for Line in range(Code.get_line_count()):
-        if Code.get_line(Line).contains("GL055:Entry"):
+        var Text = Code.get_line(Line)
+        if Text.contains("GL055:Entry"):
             EntryLine = Line
+            ExpectedLines[1] = Line + 1
+        for Marker in {"Into": 2, "Over": 3, "Out": 4}:
+            if Text.contains("GL055:" + Marker):
+                ExpectedLines[{"Into": 2, "Over": 3, "Out": 4}[Marker]] = Line + 1
     if not Check(EntryLine >= 0, "Entrypoint breakpoint source exists"):
         Finish(false)
         return

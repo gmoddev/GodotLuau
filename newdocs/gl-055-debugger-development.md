@@ -210,6 +210,7 @@ continue using the established invalidation path. Extend the actual native edito
 fixture for types/functions/imports/lexical definitions and navigation latency.
 Three changed native units pass bounded MSVC syntax checks; runtime/editor
 execution remains pending. Dynamic/global/type resolution is not claimed.
+
 ## First actual native stop and protocol correction
 
 Native 43437162267 compiles on Linux and reaches a real, continuable Luau stop,
@@ -299,3 +300,22 @@ new executable breakpoint, and checks the old instruction/callbacks cannot run
 and native objects are destroyed. Both new GDScript peers parse under verified
 Godot 4.7.1; the three affected C++ units pass bounded syntax checks. Execution
 qualification of reload is pending; no new engine patch or scheduler is added.
+## Editor stack/variable readiness correction
+
+Focused 43443105126 executes the actual Linux native editor journey: gutter,
+watch, four stop identities, Continue, Stop/Play and detach assertions pass. The
+editor still logs Godot DAP missing-scope errors. The driver currently advances
+when the native stop appears, without waiting for the requested native stack and
+variable replies. Require the actual Stack Frames row and debugger inspector's
+live local value/StopId before advancing each step, and allow bounded teardown
+frames before exit. This also establishes the previously untested displayed
+stack/variable acceptance facts. Keep the unhandled-error gate unchanged; this
+initial run is not clean editor qualification. The corrected script parses under
+the verified host; runtime rerun is pending.
+
+Focused 43444009583's Linux editor report then passes all native displayed-stack,
+live-variable, Watch and control/restart/detach checks without unhandled editor
+errors. It records four ObjectDB exit warnings; no graphical or leak-free editor
+claim is made. The overall workflow still fails its known old-product disconnect
+case. The newer `71e8bfd` Linux native job independently passes the fixed protocol
+and editor checks together with the full existing native suite.
