@@ -381,3 +381,13 @@ pending; no sanitizer result or dedicated ENet pause coordination is implied.
 That profile also requires an actual no-opt-in negative case: the same debug
 template, initialized remote connection and configured Luau breakpoints must run
 to completion with zero Luau stops when the explicit flag is absent.
+## Controlled reload observer ordering
+Selective-reload run 43446022999's Linux peer reaches the replacement owner and
+new breakpoint, but the target observer inspects the old scope after it has already
+been retired and destroyed. Replace its one-frame assumption with an explicit
+primed/observed barrier: the old source cannot reach its breakpoint until the
+target captures both native IDs. Arm the cancellation timer only after that
+barrier. Retain all old-code/callback/destroyed-object assertions. This fixture
+correction changes no native input; reuse the exact `24dd94b` adapter in focused
+qualification. Cancel sanitizer 43450112103 early because it uses this known bad
+observer ordering; restart with the corrected fixture, retaining the attempt.
