@@ -503,3 +503,10 @@ missing-cache error; corrected source/fixtures run as 43460768247. Performance
 43460768309 and candidate 43460768137 cover the measured allocation correction.
 Superseded duplicate native runs are canceled rather than rebuilding identical
 implementation inputs merely for later benchmark or documentation commits.
+
+The same focused driver can consume the existing candidate profile artifact's
+SCons production Release library and source identity, rather than rebuilding an
+identical implementation. Both real protocol and editor journeys still run;
+the strict native fingerprint check remains. This covers interactive development
+debugging using a Release-built extension under the verified editor host, not
+enabling debugging in an exported release-template host.

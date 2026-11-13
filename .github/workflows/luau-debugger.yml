@@ -6,6 +6,10 @@ on:
         description: "Native CI run providing an adapter with the identical native source fingerprint"
         type: string
         required: false
+      CandidateRun:
+        description: "Candidate run providing source-built production Release products; use instead of NativeRun"
+        type: string
+        required: false
       MeasurePerformance:
         description: "Measure baseline/current production-core debugger modes in Release"
         type: boolean
@@ -15,7 +19,7 @@ permissions:
   actions: read
 jobs:
   Debugger:
-    if: ${{ inputs.NativeRun != '' }}
+    if: ${{ inputs.NativeRun != '' || inputs.CandidateRun != '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -44,9 +48,23 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           DEBUGGER_NATIVE_RUN: ${{ inputs.NativeRun }}
+          DEBUGGER_CANDIDATE_RUN: ${{ inputs.CandidateRun }}
         run: |
-          [[ "$DEBUGGER_NATIVE_RUN" =~ ^[0-9]+$ ]]
-          gh run download "$DEBUGGER_NATIVE_RUN" --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"
+          if [[ -n "$DEBUGGER_CANDIDATE_RUN" ]]; then
+            [[ -z "$DEBUGGER_NATIVE_RUN" && "$DEBUGGER_CANDIDATE_RUN" =~ ^[0-9]+$ ]]
+            gh run download "$DEBUGGER_CANDIDATE_RUN" --repo '${{ github.repository }}' --name 'profile-${{ matrix.Platform }}-Release' --dir "$RUNNER_TEMP/adapter"
+            python - <<'PY'
+          import json,os
+          from pathlib import Path
+          Root=Path(os.environ['RUNNER_TEMP'])/'adapter'
+          Record=json.loads((Root/'profile.json').read_text())
+          assert Record['Configuration']=='Release' and Record['Platform']=='${{ matrix.Platform }}'
+          (Root/'source.json').write_text(json.dumps(Record['Source']['NativeSource']))
+          PY
+          else
+            [[ "$DEBUGGER_NATIVE_RUN" =~ ^[0-9]+$ ]]
+            gh run download "$DEBUGGER_NATIVE_RUN" --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"
+          fi
       - name: Provision existing verified official host
         run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
       - name: Expose installed MSVC Debug runtime
@@ -62,12 +80,13 @@ jobs:
         env:
           DEBUGGER_GODOT: ${{ runner.temp }}/godot/${{ matrix.Executable }}
           DEBUGGER_SUFFIX: ${{ matrix.Suffix }}
+          DEBUGGER_CANDIDATE_RUN: ${{ inputs.CandidateRun }}
         run: |
           python - <<'PY'
           import os,subprocess,sys
           from pathlib import Path
           Root=Path(os.environ['RUNNER_TEMP'])
-          Adapter=next((Root/'adapter').rglob('godot_luau.'+os.environ['DEBUGGER_SUFFIX']))
+          Adapter=(next((Root/'adapter/products').glob('godot_luau.*.'+os.environ['DEBUGGER_SUFFIX'])) if os.environ['DEBUGGER_CANDIDATE_RUN'] else next((Root/'adapter').rglob('godot_luau.'+os.environ['DEBUGGER_SUFFIX'])))
           Source=next((Root/'adapter').rglob('source.json'))
           Protocol=subprocess.run([sys.executable,'tests/runtime/RunDebuggerQualification.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--source',str(Source),'--output',str(Root/'debugger')])
           Editor=subprocess.run([sys.executable,'tests/editor/RunNativeAuthoring.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--output',str(Root/'debugger-editor'),'--debugger','--timeout','140'])
@@ -76,7 +95,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: luau-debugger-${{ matrix.Platform }}
+          name: luau-debugger-${{ matrix.Platform }}-${{ inputs.CandidateRun != '' && 'Release' || 'Debug' }}
           retention-days: 14
           path: |
             ${{ runner.temp }}/debugger/**/*.json
