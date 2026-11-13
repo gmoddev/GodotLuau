@@ -602,3 +602,13 @@ Linux input scope instead of rebuilding it. Final candidate profiles keep their
 original source/harness identities. The new optional index benchmark runs the
 production cache on 256 generated modules, recording partial warming explicitly;
 it is not added as another standard CI gate.
+
+On DockerPC, the corrected explicit-release fixture passes all 23 ordinary
+DataStore actors at `1673225`; holder exit is successful. Retain the ordinary
+receipt separately from the pending Windows ASan retry 43468940617. Release
+generation-123 worker lease after owned processes are idle. The optional
+256-module index observation returns explicit partial results at its existing
+250-ms soft deadline; warming is incomplete and no smooth-frame claim is made.
+Retain [both receipts](gl-055-debugger-qualification.md) without changing the
+production index or persistence contracts. Candidate source profiles remain on
+their immutable final-native revision; fixture-only commits do not relabel them.

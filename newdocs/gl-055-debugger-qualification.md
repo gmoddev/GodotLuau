@@ -41,9 +41,18 @@ gameplay authority, persistence protocol or distribution channel is introduced.
 | [Candidate 43450118761](https://github.com/gmoddev/GodotLuau/actions/runs/43450118761) | All four source-built Debug/Release profiles, packages and Linux core ASan/LSan PASS at `37bba2f`; retained within unchanged behavior scope |
 | [Declarations 43448955594](https://github.com/gmoddev/GodotLuau/actions/runs/43448955594) | Windows/Linux policy, generated drift and type checks PASS. Later changes do not modify these declaration/policy inputs |
 | [Sanitizers 43455004645](https://github.com/gmoddev/GodotLuau/actions/runs/43455004645) | Overall FAIL; missing test-peer class cache rejects stderr after successful local debugger assertions. Linux controls, core and 141 native actors pass; no unexpected sanitizer report. Not a full debugger sanitizer pass |
-| [Native 43461738974](https://github.com/gmoddev/GodotLuau/actions/runs/43461738974) | Pending final native implementation |
+| [Native 43461738974](https://github.com/gmoddev/GodotLuau/actions/runs/43461738974) | Windows/Linux PASS at final native implementation: full regression suite, five protocol cases and actual native editor |
 | [Candidate 43461782730](https://github.com/gmoddev/GodotLuau/actions/runs/43461782730) | Pending final native implementation |
-| [Sanitizers 43461776259](https://github.com/gmoddev/GodotLuau/actions/runs/43461776259) | Pending corrected peer fixture and final native implementation |
+| [Sanitizers 43461776259](https://github.com/gmoddev/GodotLuau/actions/runs/43461776259) | Linux ASan/LSan PASS; Windows FAIL on the existing timed DataStore holder. Both platforms pass all six debugger cases; no unexpected sanitizer reports |
+| [Windows sanitizer 43468940617](https://github.com/gmoddev/GodotLuau/actions/runs/43468940617) | Pending explicit-release contention fixture; final native inputs unchanged |
+
+Final native 43461738974 now passes Windows/Linux. Full-native 43461776259 passes
+Linux ASan/LSan with all 28 groups and six debugger cases. Windows also passes all
+six debugger cases and reports no unexpected sanitizer finding, but its existing
+DataStore contention fixture loses its fixed-duration lock holder; the overall
+Windows profile fails. The [explicit-release fixture correction](evidence/gl055/barrier-qualification.json)
+passes all 23 ordinary Windows DataStore actors. The Windows-only full-profile
+retry is [43468940617](https://github.com/gmoddev/GodotLuau/actions/runs/43468940617).
 
 The existing native suite includes Foundry Expedition persistence restart,
 Relay Siege solo/listen/dedicated, Character/animation/network authority,
@@ -91,6 +100,18 @@ truncation. DockerPC's final native protocol records stack/variables medians
 and Godot transport. These are measured scopes, not hard latency guarantees or
 large-project benchmarks. Both final native/editor receipts and actual rendered
 state corrections pass; hosted final profiles remain pending.
+
+The separate [large-index observation](evidence/gl055/index-qualification.json)
+uses 256 generated modules / 661,760 bytes. Four sequential main-thread queries
+take 250.98, 251.71, 251.46 and 250.59 ms; each reaches the established soft scan
+deadline and explicitly truncates its 4,096-entry report. Parsed/cache counts
+remain in the receipt: even the last query still parses 32 files, so it is not a
+fully warmed-cache result. Static Godot allocator observations increase about
+4.22 MiB on the cold query, but include other editor activity and are not isolated
+index allocation measurements. Large navigation queries can occupy the editor
+main thread for this bounded interval; no smooth-frame or instantaneous
+whole-project navigation claim is made. This is an optional measurement, not an
+extra standard CI gate.
 
 ## Supported and limited behavior
 
