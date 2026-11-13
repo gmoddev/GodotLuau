@@ -223,3 +223,14 @@ detach. It uses the cached headless child arguments before editor startup.
 Godot 4.7.1 parses the journey successfully; execution remains pending the new
 native binary. The automated headless journey is not graphical or physical-input
 qualification. No controller, host, dependency or publication setting changes.
+
+Focused 43443105126 executes the actual Linux native editor journey: gutter,
+watch, four stop identities, Continue, Stop/Play and detach assertions pass. The
+editor still logs Godot DAP missing-scope errors. The driver currently advances
+when the native stop appears, without waiting for the requested native stack and
+variable replies. Require the actual Stack Frames row and debugger inspector's
+live local value/StopId before advancing each step, and allow bounded teardown
+frames before exit. This also establishes the previously untested displayed
+stack/variable acceptance facts. Keep the unhandled-error gate unchanged; this
+initial run is not clean editor qualification. The corrected script parses under
+the verified host; runtime rerun is pending.
