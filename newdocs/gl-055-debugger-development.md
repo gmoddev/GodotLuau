@@ -142,3 +142,10 @@ A focused workflow can reuse the exact adapter artifact after fixture-only
 corrections, enforcing the unchanged native fingerprint rather than rebuilding
 the same native source. Neither fixture has passed yet; graphical editor
 interaction, restricted watches and later phases remain outstanding.
+
+Before running the fixture, source review corrects two fixture assumptions:
+resource handles use Scope:Get/Call rather than direct userdata ClassName
+indexing, and a stale-sequence test must first admit a valid request (malformed
+requests deliberately do not consume the sequence). Keep the actual resource
+inspection and four-rejection assertions. These fixture-only corrections can
+reuse the identical native product and do not constitute passing evidence.

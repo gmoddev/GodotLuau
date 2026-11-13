@@ -79,6 +79,7 @@ func AfterVariables() -> void:
             return
         # Closed types, session identity, sequence and domain rejection. All
         # commands go through the real EngineDebugger capture, without Lua eval.
+        Command("Status")
         Command("Status", {"Session": "wrong"})
         Command("Breakpoint", {"Source": ["bad"], "Line": 1, "Enabled": true})
         Command("Status", {"Unexpected": true})

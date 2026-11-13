@@ -23,5 +23,5 @@ while not game:GetAttribute("CallbackDone") do task.wait() end
 Box:Destroy()
 task.wait()
 local Missing = Box -- GL055:Stale
-assert(Material.ClassName == "StandardMaterial3D")
+assert(Material ~= nil and Missing ~= nil)
 game:SetAttribute("DebuggerDone", Result)
