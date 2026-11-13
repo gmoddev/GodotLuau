@@ -482,3 +482,38 @@ provides an image. The existing rendered expansion runner includes those product
 cases; the focused Windows renderer run passes against `f1a996b`, including actual
 GPU-backed 2x2 image readback. Lightweight/headless hosts may return nil and do not
 qualify renderer readback. No recorder or extra framework is added to production.
+
+## Corrected-source native and sanitizer qualification
+
+[Native run 43379513518](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518)
+passes Windows/Linux at `f1a996b`, retaining the exact 128-input native fingerprint,
+141 existing actors per platform and passing Foundry/restart. The
+[full-native sanitizer run 43379555285](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285)
+also passes: Windows 26 controls and Linux 27, ControlsPassed true, complete
+qualification and zero unexpected reports. It includes the existing 87 core cases
+and 141 native actors under instrumentation. Preserve the established Windows
+LSan, admitted-host renderer/navigation and editor limitations; this does not label
+ordinary full-host Foundry as sanitizer-covered navigation.
+
+Sanitizer artifact digests are Windows
+`4163559b4935e90c9176b11360fc8d1f13a99ec2bc098a4ed9cdd4cfe129882d`
+and Linux `fae153ecd22fc5ba509a202fc2908773c21b94658b2651e4008b96b2aad92ff9`.
+The downloaded canonical summaries confirm their complete outcomes and source
+identities. This closes GL-056/057/058 on the feature branch within their precise
+fix scope; main is unchanged. Later fixture-only additions qualify text-report
+decoding, graphical scene-readiness and the two additional call observations
+without changing that native implementation. Four production profiles, accepted
+packages, standalone exports and current Relay Siege checks remain outstanding.
+
+Both Linux production configurations now pass in candidate run 43379558294.
+Its Release evidence ZIP confirms all 87 core cases, 141 existing native actors
+and 44 actual Foundry assertions plus durable restart with the SCons product.
+Windows Debug/Release and package assembly remain active.
+
+The existing read-only game-package workflow now also invokes the established
+Relay Siege solo/recovery and four-player listen/dedicated runners, reusing its
+already downloaded candidate, admitted renderer host and imported assets. It adds
+no build, new host, scenario framework or gameplay implementation. Existing actor
+deadlines/assertions remain unchanged; the job allows bounded time for the added
+workloads. This supplies the required fresh multiplayer regression alongside
+Foundry's separate solo exports without duplicating infrastructure on another host.

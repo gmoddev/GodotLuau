@@ -12,7 +12,7 @@ supports the existing DataModel-style metadata and BindToClose facade regardless
 of its name. Its native ClassName/ObjectID remain unchanged. This does not grant
 Server persistence or other capabilities to Client execution; native service
 authorization remains authoritative. GL-056 records the reproduced prior defect
-and pending qualification. A context initialized without a current scene retains
+and its feature-branch qualification. A context initialized without a current scene retains
 the existing Window fallback; late scene replacement follows domain retirement.
 
 Ancestor property writes use the same ownership condition as structural mutation:
@@ -22,7 +22,7 @@ ancestor's direct writes, including unknown-member assignments, reject before
 legacy dispatch. Use explicit SetAttribute/GetAttribute for shared application
 data; those metadata channels do not mutate the native scene graph. Same-owner
 ancestor changes remain supported. GL-057 records the compatibility correction
-and pending runtime qualification.
+and its feature-branch runtime qualification.
 
 Attribute string values decode Luau UTF-8 explicitly rather than using Godot's
 Latin-1 constructor. GL-058 records the reproduced snapshot-text correction.

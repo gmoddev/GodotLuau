@@ -72,7 +72,7 @@ jobs:
 
   Package:
     runs-on: windows-2022
-    timeout-minutes: 15
+    timeout-minutes: 20
     defaults:
       run:
         shell: pwsh
@@ -111,6 +111,30 @@ jobs:
           python -c "import ctypes,subprocess; from pathlib import Path; ctypes.windll.kernel32.SetErrorMode(0x8003); D=Path(r'$Game'); R=subprocess.run([str(D/'RelaySiege.exe'),'--disable-crash-handler','--headless','--path',str(D),'--max-fps','30','--quit-after','120','--','--mode','solo','--probe'],capture_output=True,text=True,timeout=20); (D/'startup.stdout.log').write_text(R.stdout); (D/'startup.stderr.log').write_text(R.stderr); assert R.returncode==0 and '[Game:Rules] Ready' in R.stdout and '[Runtime:Script]' not in R.stdout and 'SCRIPT ERROR' not in R.stderr"
           Copy-Item "$Game/game-package.json" "$env:RUNNER_TEMP/game-package.json"
           Copy-Item "$Game/startup.*.log" "$env:RUNNER_TEMP/"
+      - name: Actual Relay Siege solo and durable restart regression
+        timeout-minutes: 5
+        run: |
+          python tests/runtime/RunRelaySiege.py --game "$env:RUNNER_TEMP/extracted/RelaySiege" --output "$env:RUNNER_TEMP/relay-solo" --scenario local --mode solo --timeout 220
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/runtime/RunRelaySiege.py --game "$env:RUNNER_TEMP/extracted/RelaySiege" --output "$env:RUNNER_TEMP/relay-recovery" --scenario recovery --mode solo --timeout 40
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Existing four-player listen and dedicated ENet game workloads
+        timeout-minutes: 8
+        run: |
+          $Inputs=@('--candidate',"$env:RUNNER_TEMP/candidate/GodotLuau-Windows.zip",'--engine',"$env:RUNNER_TEMP/host/godot.windows.template_release.x86_64.exe",'--host-manifest',"$env:RUNNER_TEMP/host/remote-host.json",'--assets',"$env:RUNNER_TEMP/game-asset-inputs/asset-import")
+          python tests/runtime/RunRelaySiegeMultiplayer.py @Inputs --output "$env:RUNNER_TEMP/relay-listen"
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          python tests/runtime/RunRelaySiegeMultiplayer.py @Inputs --output "$env:RUNNER_TEMP/relay-dedicated" --dedicated
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: RelaySiege-Game-Qualification
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/relay-*/**/*.json
+            ${{ runner.temp }}/relay-*/**/*.log
       - name: Export and independently start the new Luau-only game
         timeout-minutes: 5
         run: |

@@ -133,9 +133,9 @@ four successful workflows and independently checked artifacts.
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 | GL-054 | P2 | Resolved and normally integrated by `47bbb6d`; core/native verification linked below | Changed project module leaves cached transitive importers and their callbacks alive |
 | GL-055 | P2 | Resolved and normally integrated by `47bbb6d`; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
-| [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Reproduced Windows/Linux at `31d64a5`; bounded fix implemented, qualification pending | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
-| [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Reproduced on the retained Windows `31d64a5` adapter; fix implemented, qualification pending | A different execution owner can transform an ancestor of another owner's native SceneScope |
-| [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Reproduced in Windows rendered Foundry at `76bc473`; one-line fix implemented, qualification pending | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
+| [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
+| [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | A different execution owner can transform an ancestor of another owner's native SceneScope |
+| [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Resolved for attribute values on unmerged GL-054 branch; cross-platform and rendered evidence linked below | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
 
 ## GL-058: Attribute string value encoding
 
@@ -146,7 +146,12 @@ the Latin-1 constructor. The bounded correction uses String::utf8 at that value
 conversion; a native integration assertion round-trips accented, punctuation and
 supplementary-plane characters, and Foundry checks its actual JSON snapshot path.
 No JSON codec, persistence format, legacy attribute-key encoding or network
-protocol is changed. Cross-platform native/sanitizer/package checks are pending.
+protocol is changed. Fix [f1a996b](https://github.com/gmoddev/GodotLuau/commit/f1a996b5f6fc9be1e4190d21ecd021ac279a9ab3)
+passes [Windows/Linux native qualification](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518)
+and [full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285).
+The corrected Windows rendered Foundry capture and in-engine exact message
+assertion pass. Resolved within that value-conversion scope on the unmerged feature;
+legacy key/binary-string behavior is not reclassified as fixed.
 
 ## GL-057: Shared ancestor property writes bypass scene ownership
 
@@ -163,9 +168,13 @@ descendant native scopes belong to it. Explicit SetAttribute application channel
 remain available. This intentionally rejects direct property/unknown-member writes
 on a shared ancestor; projects should use SetAttribute for shared application data.
 Native ancestor regression checks valid same-owner use, wrong-owner aliases,
-rejection before side effects, explicit attributes and subtree retirement. Closure
-requires the linked fix and native Windows/Linux/sanitizer evidence in the
-[campaign record](gl-054-engine-development.md#shared-ancestor-authority-defect).
+rejection before side effects, explicit attributes and subtree retirement.
+Fix [76bc473](https://github.com/gmoddev/GodotLuau/commit/76bc47347aa321964ab45235e8626958486826af)
+is verified in [Windows/Linux native run 43379513518](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518)
+and [sanitizer run 43379555285](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285),
+with the existing Character/network/owner suites preserved. The actual Foundry
+wrong-owner physics/ancestor probes and retirement checks also pass. Resolved on
+the unmerged GL-054 branch; this does not assert an integrated-main correction.
 
 ## GL-056: Plain native scene root and shutdown facade
 
@@ -176,8 +185,14 @@ selection and DataModel compatibility recognize legacy classes/Game names only.
 This is a runtime compatibility defect, not a storage transaction or authority
 finding. The [bounded fix and qualification state](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect)
 preserve legacy selection, then select the actual current scene root and admit
-its existing close/metadata facade. Exact plain-root native regression remains
-required before closure. No fake Model/DataModel identity or extra VM is introduced.
+its existing close/metadata facade. Fix
+[006fbe1](https://github.com/gmoddev/GodotLuau/commit/006fbe1eba65f67a85ba4d3ba7424c6c8842d2e0)
+passes [Windows/Linux native run 43379513518](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518)
+and [full-native sanitizer run 43379555285](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285).
+Both full-host Foundry processes resolve the exact plain root, initialize services,
+complete three sectors and read durable progress after restart; Windows rendering
+also passes. Resolved on the unmerged branch. No fake Model/DataModel identity or
+extra VM is introduced.
 
 ## GL-055: Native layout preset ordering
 
