@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3]
+[ext_resource type="NavigationMesh" path="res://Assets/Navigation.tres" id="1"]
+[sub_resource type="BoxShape3D" id="Shape"]
+size=Vector3(20,1,20)
+[sub_resource type="BoxMesh" id="Mesh"]
+size=Vector3(20,1,20)
+[sub_resource type="StandardMaterial3D" id="Material"]
+albedo_color=Color(0.12,0.2,0.27,1)
+roughness=0.9
+[node name="Chamber" type="Node3D"]
+[node name="Floor" type="StaticBody3D" parent="."]
+position=Vector3(0,-0.5,0)
+collision_layer=4194304
+[node name="Shape" type="CollisionShape3D" parent="Floor"]
+shape=SubResource("Shape")
+[node name="Surface" type="MeshInstance3D" parent="Floor"]
+mesh=SubResource("Mesh")
+material_override=SubResource("Material")
+[node name="Navigation" type="NavigationRegion3D" parent="."]
+navigation_mesh=ExtResource("1")

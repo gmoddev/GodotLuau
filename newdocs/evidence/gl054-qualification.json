@@ -1,0 +1,55 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-054",
+  "Status": "Qualified within documented profiles; unmerged",
+  "Branch": "feature/gl-054-engine-production",
+  "MainBaseline": "e3d7b53e78dd483e3765d64995e862810d94c6f8",
+  "NativeImplementationRevision": "f1a996b5f6fc9be1e4190d21ecd021ac279a9ab3",
+  "NativeFingerprint": {
+    "SHA256": "ba44f2ac38c33ed616d305434cef2f8beca232bffc0455d7c5159efa50c5e49d",
+    "Files": 128,
+    "Newlines": "LF normalized"
+  },
+  "CandidateRevision": "678469610dbada94ecc1b210bc930c890d9ebb30",
+  "CandidateTree": "157b4111950718d6dbc6875e2c2f823d351c29e9",
+  "PackagingCorrectionRevision": "5b642d2e115732ace71378abcd18cdb782952639",
+  "PolicySHA256": "c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace",
+  "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
+  "SelectedSurface": {"Constructors": 113, "Methods": 225, "Properties": 384, "Signals": 41, "EnumValues": 51},
+  "ObservedSuccessfulSurface": {
+    "Constructors": 82, "Methods": 126, "PropertyReads": 22, "PropertyWrites": 165,
+    "SignalDeliveries": 12, "ValueConstructors": 26, "DomainMemberPairs": 587,
+    "Logs": 16,
+    "ReportSHA256": "3fd4d8ee01b1293f3677f09b9b0ea0bc427d06bfe8b9bbfb29c3cb2bad788cbb",
+    "Scope": "NativeCoverageReport: native 43379513518 Linux plus current Windows rendered production case; successful invocation is separate from assertions"
+  },
+  "Runs": {
+    "Core": 43387293361,
+    "Definitions": 43380937977,
+    "Native": 43387293637,
+    "FullNativeSanitizers": 43379555285,
+    "AcceptedCandidate": 43387294744,
+    "WindowsExportsAndGame": 43399518780,
+    "LinuxExports": 43400803390
+  },
+  "CandidatePackages": {
+    "Windows": "0861a94d7870d9a3523049b8f8aebce59839292f9b6e2f77adaf827f6459cf90",
+    "Linux": "dd5400e283a7c1b0341d3f8f27b88fd4b95f48d687c34bcfac379933075fe95d"
+  },
+  "NativeActorsPerPlatform": 141,
+  "CoreCasesPerProductionProfile": 87,
+  "FullNativeSanitizers": {"WindowsControls": 26, "LinuxControls": 27, "UnexpectedReports": 0},
+  "Foundry": {"Checks": 44, "Sectors": 3, "WorldRebuilds": 24, "ObservedNativeObjectDelta": 0, "ObservedNativeResourceDelta": 0, "DurableRestart": true},
+  "LinuxCompanionModesOctal": {"Staged": "0755", "GodotExportCopy": "0644", "Finalized": "0755"},
+  "RelaySiege": {"SoloChecks": 26, "RecoveryChecks": 7, "ListenPlayers": 4, "DedicatedPlayers": 4, "ActorFailures": 0, "LateJoin": true},
+  "ResolvedOnFeatureBranch": ["GL-056", "GL-057", "GL-058", "GL-059", "GL-060"],
+  "Boundaries": {
+    "MainMerged": false, "ReleasePublicationEnabled": false, "UpdaterDistributionEnabled": false,
+    "NativeControllerDefault": true, "ScriptedControllerOptIn": true,
+    "DependenciesOrAdmittedHostsChanged": false,
+    "GraphicalScope": "Windows programmatic/offscreen; no physical-device or Linux graphical claim",
+    "StandaloneScope": "Export packaging, entrypoint/initial DataStore startup and restart; not a full exported-game observer",
+    "SanitizerScope": "Retain existing Windows LSan and admitted-host renderer/navigation/editor limitations",
+    "Unsupported": ["Live breakpoints/stepping/evaluation", "Raw native RID/Callable/Signal values", "Unrestricted Godot API parity", "Dynamic whole-program indexing"]
+  }
+}

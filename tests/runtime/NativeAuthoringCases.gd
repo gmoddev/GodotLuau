@@ -33,6 +33,9 @@ func Run(Host: SceneTree, Game: Node) -> void:
     var Owner: Node = Runner.CreateScript("ServerScript", "NativeAuthoringOwner", """
 local Scope = Scene.new(script.Parent)
 Scope.Name = 'NativeAuthoring'
+local Text = utf8.char(0xe9,0x2022,0x1f600)
+game:SetAttribute('NativeAttributeUtf8',Text)
+assert(game:GetAttribute('NativeAttributeUtf8')==Text)
 local LegacyClone = game.Clone
 assert(type(LegacyClone) == 'function' and type(_InstanceNew) == 'function')
 assert(not pcall(function() LegacyClone(Scope) end))

@@ -4,6 +4,7 @@
 #include "gl_runtime.h"
 #include "gl_scene_authoring.h"
 #include "gl_errors.h"
+#include "gl_debug_snapshot.h"
 #include "gl_net_bridge.h"
 #include "rbx_character.h"
 #include "roblox_network.h"
@@ -133,6 +134,8 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
     size_t Index = Kind == GLDomainKind::Server ? 0 : 1;
     if (!Domains[Index]) {
         Domains[Index] = std::make_unique<GLExecutionDomain>(Kind, GLLimits(Kind));
+        auto Debugger=EngineDebugger::get_singleton();
+        Domains[Index]->SetDebugInfo(Debugger && Debugger->is_active());
         Domains[Index]->SetTimeProvider([]() { return static_cast<double>(Time::get_singleton()->get_ticks_msec()) / 1000.0; });
         Domains[Index]->SetEnvironmentHook([](lua_State* Thread, uint64_t Identity) {
             Node* Script = Object::cast_to<Node>(ObjectDB::get_instance(Identity));
@@ -178,6 +181,7 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
                 Array Data;Data.push_back(Source.is_valid()?Source->get_path():String());
                 Data.push_back(String::utf8(Error.c_str()).left(4096));
                 Data.push_back(Owner && !Owner->Domain->HasMemoryFailure()?String::utf8(lua_debugtrace(Thread)).left(8192):String());
+                Data.push_back(GLCaptureErrorSnapshot(Thread));
                 Debugger->send_message("godotluau:runtime_error",Data);
             }
             // An exhausted VM must not allocate while collecting a Lua trace.

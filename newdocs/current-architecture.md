@@ -1,5 +1,12 @@
 # Current architecture
 
+The unmerged [GL-054 feature campaign](gl-054-engine-development.md) extends the
+same dispatcher with typed scoped collections and additional native feature
+families. Its [contract](gl-054-native-development.md) also defines bounded
+error-time primitive-local snapshots over the existing editor debugger transport;
+these are historical copies, not suspended execution. Qualification remains
+separate from implementation and unchanged integrated evidence below.
+
 The [integrated GL-053 native expansion](gl-053-main-integration.md) extends the
 existing policy dispatcher with bounded pure values/collections, observation
 properties, scoped Node payloads, checked defaults and useful 2D/UI/resource

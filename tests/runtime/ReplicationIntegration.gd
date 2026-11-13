@@ -25,9 +25,12 @@ func Until(Predicate: Callable, Label: String) -> void:
     Check(bool(Predicate.call()), Label)
 
 func Mark(Name: String, Value := "ready") -> void:
-    var File := FileAccess.open("res://replication-" + Name, FileAccess.WRITE)
+    var Path := "res://replication-" + Name
+    var Pending := Path + ".pending"
+    var File := FileAccess.open(Pending, FileAccess.WRITE)
     File.store_string(Value)
     File.close()
+    Check(DirAccess.rename_absolute(ProjectSettings.globalize_path(Pending),ProjectSettings.globalize_path(Path))==OK,"publish complete barrier " + Name)
 
 func Wait(Name: String) -> void:
     await Until(func(): return FileAccess.file_exists("res://replication-" + Name), "barrier " + Name)

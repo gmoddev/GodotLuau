@@ -33,6 +33,8 @@ func Run(Runner) -> void:
     Runner.Check(not Info.Handled,"Native enum completion respects local Scene shadowing")
     Info = Resource.call("InspectNativeCode",Prefix+"local List=Scope:New('ItemList',{})\nScope:Call(List,'AddItem',"+Marker+")","res://NativeEditor.lua")
     Runner.Check(Info.Handled and str(Info.call_hint).contains("ItemList.AddItem(text: string") and str(Info.call_hint).contains("icon: Texture2D = null"),"Native editor call hints include exact metadata names types and defaults")
+    Info = Resource.call("InspectNativeCode",Prefix+"local Code=Scope:New('CodeEdit',{})\nScope:Call(Code,'SetLineLengthGuidelines',"+Marker+")","res://NativeEditor.lua")
+    Runner.Check(Info.Handled and str(Info.call_hint).contains("guideline_columns: Array<int>"),"Native editor signature help preserves the exact typed-array element")
     Info = Resource.call("InspectNativeCode","local Value=Scene.Value('Packed"+Marker+"',{})","res://NativeEditor.lua")
     Runner.Check(Info.Handled and "PackedVector4Array" in Names(Info.Options),"Native editor discovers pure value representations")
     Info = Resource.call("InspectNativeCode",Prefix+"local Timer=Scope:New('Timer',{})\nTimer.TimeLeft=1\nScope:Configure(Timer,{TimeLeft=2})","res://NativeEditor.lua")

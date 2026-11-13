@@ -1,7 +1,8 @@
 # Native foundation projects
 
-Unmerged GL-053 acceptance workloads. Sources are implemented; qualification is
-tracked in [the campaign journal](../../newdocs/gl-053-native-development.md).
+GL-053 acceptance workloads, integrated within their documented qualification
+scope. See [the qualification record](../../newdocs/gl-053-native-qualification.md)
+and the [native Luau quick start](../../newdocs/luau-project-start.md).
 These projects contain no application GDScript. Godot owns rendering, physics,
 navigation, controls and resources; the Luau entrypoints own their Scene scopes.
 

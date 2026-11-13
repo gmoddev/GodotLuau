@@ -35,6 +35,8 @@ def Main():
     Plugin = Output / "addons/NativeEditor"
     Plugin.mkdir(parents=True)
     shutil.copyfile(Path(__file__).with_name("LuauWorkflow.gd" if Args.workflow else "NativeAuthoring.gd"), Plugin / "plugin.gd")
+    if Args.workflow and not Args.baseline:
+        shutil.copy2(Path(__file__).with_name('ProjectIndex.gd'),Output/'ProjectIndex.gd')
     (Plugin / "plugin.cfg").write_text('[plugin]\nname="NativeEditorFixture"\ndescription="Bounded GL-051 editor integration"\nauthor="GodotLuau"\nversion="1"\nscript="plugin.gd"\n')
     with (Output / "project.godot").open("a") as File:
         File.write('[editor_plugins]\nenabled=PackedStringArray("res://addons/NativeEditor/plugin.cfg")\n')

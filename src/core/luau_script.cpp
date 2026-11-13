@@ -365,6 +365,9 @@ void ScriptNodeBase::InitializeDomain(GLExecutionDomain& Runtime) {
                 }
             }
         }
+        // Plain native Luau projects use their actual scene root regardless of
+        // its display name. Preserve the earlier legacy bootstrap selection.
+        if (!game_node) game_node = _st2->get_current_scene();
         if (!game_node) game_node = root;
         ws_node = game_node->get_node_or_null("Workspace");
         if (!ws_node) ws_node = (Node*)get_viewport();

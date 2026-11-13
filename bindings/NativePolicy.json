@@ -565,6 +565,120 @@
       "Kind": "Resource",
       "Construct": true,
       "Authority": "OwnedScene"
+    },
+    {
+      "Name": "Area3D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "ShapeCast2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "ShapeCast3D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "NavigationAgent2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "NavigationRegion2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "NavigationObstacle2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "NavigationObstacle3D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "CodeEdit",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "PointLight2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "DirectionalLight2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "CPUParticles2D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "CPUParticles3D",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "Decal",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "TileMapLayer",
+      "Kind": "Node",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "Image",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "ImageTexture",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "Texture2DArray",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "TileSet",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Name": "TileMapPattern",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
     }
   ],
   "Properties": [
@@ -3331,6 +3445,652 @@
       "Max": 600,
       "Authority": "OwnedScene",
       "ReadOnly": true
+    },
+    {
+      "Class": "Area3D",
+      "Name": "Monitoring",
+      "Native": "monitoring",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "Monitorable",
+      "Native": "monitorable",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "Shape",
+      "Native": "shape",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Shape2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "Margin",
+      "Native": "margin",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "MaxResults",
+      "Native": "max_results",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "CollideWithAreas",
+      "Native": "collide_with_areas",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "CollideWithBodies",
+      "Native": "collide_with_bodies",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "ExcludeParent",
+      "Native": "exclude_parent",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "Shape",
+      "Native": "shape",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Shape3D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "Margin",
+      "Native": "margin",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "MaxResults",
+      "Native": "max_results",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "CollideWithAreas",
+      "Native": "collide_with_areas",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "CollideWithBodies",
+      "Native": "collide_with_bodies",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "ExcludeParent",
+      "Native": "exclude_parent",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "PathDesiredDistance",
+      "Native": "path_desired_distance",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "TargetDesiredDistance",
+      "Native": "target_desired_distance",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "NavigationLayers",
+      "Native": "navigation_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "AvoidanceEnabled",
+      "Native": "avoidance_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "MaxSpeed",
+      "Native": "max_speed",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "NeighborDistance",
+      "Native": "neighbor_distance",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "MaxNeighbors",
+      "Native": "max_neighbors",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "AvoidanceEnabled",
+      "Native": "avoidance_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "AvoidanceLayers",
+      "Native": "avoidance_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "AvoidanceEnabled",
+      "Native": "avoidance_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "AvoidanceLayers",
+      "Native": "avoidance_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion2D",
+      "Name": "NavigationPolygon",
+      "Native": "navigation_polygon",
+      "Kind": "ResourceValue",
+      "ResourceClass": "NavigationPolygon",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion2D",
+      "Name": "NavigationLayers",
+      "Native": "navigation_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Emitting",
+      "Native": "emitting",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Amount",
+      "Native": "amount",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Lifetime",
+      "Native": "lifetime",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 30,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "OneShot",
+      "Native": "one_shot",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Explosiveness",
+      "Native": "explosiveness",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "InitialVelocityMin",
+      "Native": "initial_velocity_min",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "InitialVelocityMax",
+      "Native": "initial_velocity_max",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Gravity",
+      "Native": "gravity",
+      "Kind": "Vector2Value",
+      "Min": -100,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "LocalCoords",
+      "Native": "local_coords",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Emitting",
+      "Native": "emitting",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Amount",
+      "Native": "amount",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Lifetime",
+      "Native": "lifetime",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 30,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "OneShot",
+      "Native": "one_shot",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Explosiveness",
+      "Native": "explosiveness",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "InitialVelocityMin",
+      "Native": "initial_velocity_min",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "InitialVelocityMax",
+      "Native": "initial_velocity_max",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Gravity",
+      "Native": "gravity",
+      "Kind": "Vector",
+      "Min": -100,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "LocalCoords",
+      "Native": "local_coords",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Mesh",
+      "Native": "mesh",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Mesh",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "Albedo",
+      "Native": "texture_albedo",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "Modulate",
+      "Native": "modulate",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "AlbedoMix",
+      "Native": "albedo_mix",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "UpperFade",
+      "Native": "upper_fade",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "LowerFade",
+      "Native": "lower_fade",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "TileSet",
+      "Native": "tile_set",
+      "Kind": "ResourceValue",
+      "ResourceClass": "TileSet",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "CollisionEnabled",
+      "Native": "collision_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "Energy",
+      "Native": "energy",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "ShadowEnabled",
+      "Native": "shadow_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PointLight2D",
+      "Name": "Texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PointLight2D",
+      "Name": "TextureScale",
+      "Native": "texture_scale",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 64,
+      "Authority": "OwnedScene"
     }
   ],
   "Methods": [
@@ -5296,6 +6056,474 @@
       "Native": "is_playing",
       "Mutates": false,
       "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "GetOverlappingBodies",
+      "Native": "get_overlapping_bodies",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "GetOverlappingAreas",
+      "Native": "get_overlapping_areas",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "OverlapsBody",
+      "Native": "overlaps_body",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area2D",
+      "Name": "OverlapsArea",
+      "Native": "overlaps_area",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "GetOverlappingBodies",
+      "Native": "get_overlapping_bodies",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "GetOverlappingAreas",
+      "Native": "get_overlapping_areas",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "HasOverlappingBodies",
+      "Native": "has_overlapping_bodies",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "HasOverlappingAreas",
+      "Native": "has_overlapping_areas",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "OverlapsBody",
+      "Native": "overlaps_body",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "OverlapsArea",
+      "Native": "overlaps_area",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "IsColliding",
+      "Native": "is_colliding",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollisionCount",
+      "Native": "get_collision_count",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollisionPoint",
+      "Native": "get_collision_point",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollisionNormal",
+      "Native": "get_collision_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollider",
+      "Native": "get_collider",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "ReturnNodeClass": "Node2D",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "ForceUpdate",
+      "Native": "force_shapecast_update",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "AddException",
+      "Native": "add_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "RemoveException",
+      "Native": "remove_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "ClearExceptions",
+      "Native": "clear_exceptions",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "IsColliding",
+      "Native": "is_colliding",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollisionCount",
+      "Native": "get_collision_count",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollisionPoint",
+      "Native": "get_collision_point",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollisionNormal",
+      "Native": "get_collision_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollider",
+      "Native": "get_collider",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "ReturnNodeClass": "Node3D",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "ForceUpdate",
+      "Native": "force_shapecast_update",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "AddException",
+      "Native": "add_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "RemoveException",
+      "Native": "remove_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "ClearExceptions",
+      "Native": "clear_exceptions",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "GetNextPathPosition",
+      "Native": "get_next_path_position",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "DistanceToTarget",
+      "Native": "distance_to_target",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "IsTargetReached",
+      "Native": "is_target_reached",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "IsTargetReachable",
+      "Native": "is_target_reachable",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "IsNavigationFinished",
+      "Native": "is_navigation_finished",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "GetFinalPosition",
+      "Native": "get_final_position",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "GetCurrentNavigationPath",
+      "Native": "get_current_navigation_path",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "SetStringDelimiters",
+      "Native": "set_string_delimiters",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "SetCommentDelimiters",
+      "Native": "set_comment_delimiters",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "SetLineLengthGuidelines",
+      "Native": "set_line_length_guidelines",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {"guideline_columns": [0, 10000]}
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "GetPattern",
+      "Native": "get_pattern",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "GetUsedCells",
+      "Native": "get_used_cells",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapPattern",
+      "Name": "SetCell",
+      "Native": "set_cell",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {"coords": [0, 1023], "source_id": [-1, 1023], "atlas_coords": [-1, 1023], "alternative_tile": [-1, 1023]},
+      "Validation": {"Capacity": {"Query": "get_used_cells", "Maximum": 1024}}
+    },
+    {
+      "Class": "TileMapPattern",
+      "Name": "GetUsedCells",
+      "Native": "get_used_cells",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapPattern",
+      "Name": "GetSize",
+      "Native": "get_size",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Image",
+      "Name": "GetWidth",
+      "Native": "get_width",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Image",
+      "Name": "GetHeight",
+      "Native": "get_height",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Image",
+      "Name": "GetData",
+      "Native": "get_data",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Image",
+      "Name": "IsEmpty",
+      "Native": "is_empty",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Image",
+      "Name": "GetFormat",
+      "Native": "get_format",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Image",
+      "Name": "SetData",
+      "Native": "set_data",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "width": [
+          1,
+          16
+        ],
+        "height": [
+          1,
+          16
+        ],
+        "format": [
+          4,
+          5
+        ],
+        "data": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "Fill",
+      "Native": "fill",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "ArgumentKinds": {
+        "color": "Colour4"
+      }
+    },
+    {
+      "Class": "ImageTexture",
+      "Name": "SetImage",
+      "Native": "set_image",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ImageTexture",
+      "Name": "Update",
+      "Native": "update",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Texture2D",
+      "Name": "GetImage",
+      "Native": "get_image",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ImageTextureLayered",
+      "Name": "CreateFromImages",
+      "Native": "create_from_images",
+      "Mutates": true,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "GetStringDelimiters",
+      "Native": "get_string_delimiters",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "GetCommentDelimiters",
+      "Native": "get_comment_delimiters",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "GetLineLengthGuidelines",
+      "Native": "get_line_length_guidelines",
+      "Mutates": false,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TextureLayered",
+      "Name": "GetLayers",
+      "Native": "get_layers",
+      "Mutates": false,
+      "Authority": "OwnedScene"
     }
   ],
   "Signals": [
@@ -5496,6 +6724,54 @@
       "Name": "AnimationFinished",
       "Native": "animation_finished",
       "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "BodyEntered",
+      "Native": "body_entered",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "BodyExited",
+      "Native": "body_exited",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "AreaEntered",
+      "Native": "area_entered",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "AreaExited",
+      "Native": "area_exited",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "PathChanged",
+      "Native": "path_changed",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "TargetReached",
+      "Native": "target_reached",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "NavigationFinished",
+      "Native": "navigation_finished",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "VelocityComputed",
+      "Native": "velocity_computed",
+      "Authority": "OwnedScene"
     }
   ],
   "Enums": [
@@ -5561,6 +6837,14 @@
     {
       "Class": "Animation",
       "Name": "LoopMode"
+    },
+    {
+      "Class": "Image",
+      "Name": "Format",
+      "Values": [
+        "FORMAT_RGB8",
+        "FORMAT_RGBA8"
+      ]
     }
   ],
   "LoadTypes": [
@@ -5579,6 +6863,10 @@
     "Gradient",
     "NavigationMesh",
     "Animation",
-    "AnimationLibrary"
+    "AnimationLibrary",
+    "Image",
+    "NavigationPolygon",
+    "TileSet",
+    "TileMapPattern"
   ]
 }

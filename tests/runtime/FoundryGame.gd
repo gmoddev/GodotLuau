@@ -1,0 +1,185 @@
+extends SceneTree
+## External observer drives the shipped Luau rules/UI; no replacement game logic.
+var Game: Node
+var Checks: Array[String]=[]
+var Passed := true
+var Measurements: Dictionary={}
+
+func Check(Value: bool,Message: String) -> void:
+    Checks.append(Message)
+    if not Value:
+        Passed=false
+        print('[Foundry:Qualification] FAIL ',Message)
+
+func Snapshot() -> Dictionary:
+    var Value=JSON.parse_string(Game.get_meta('FoundrySnapshot','{}'))
+    return Value if Value is Dictionary else {}
+
+func Frames(Count := 1) -> void:
+    for Index in range(Count): await physics_frame
+
+func Until(Predicate: Callable,Count := 240) -> bool:
+    for Index in range(Count):
+        if Predicate.call(): return true
+        await physics_frame
+    Check(false,'Timed out waiting for production game state')
+    return false
+
+func Key(Code: int,Pressed: bool) -> void:
+    var Event := InputEventKey.new()
+    Event.keycode=Code
+    Event.pressed=Pressed
+    root.push_input(Event,true)
+
+func Tap(Code: int) -> void:
+    Key(Code,true)
+    await Frames(2)
+    Key(Code,false)
+    await Frames(2)
+
+func Capture(Name: String) -> void:
+    if '--graphical' in OS.get_cmdline_user_args():
+        await RenderingServer.frame_post_draw
+        root.get_texture().get_image().save_png('res://foundry-'+Name+'.png')
+
+func _initialize() -> void:
+    call_deferred('Run')
+
+func Run() -> void:
+    Game=load('res://Main.tscn').instantiate()
+    root.add_child(Game)
+    current_scene=Game
+    if not await Until(func(): return Game.get_meta('FoundryClientReady',false) and Snapshot().get('Phase','')=='Menu'):
+        Finish();return
+    Check(Game.name=='FoundryExpedition' and Game.get_meta('FoundryServerReady',false),'Plain scene root supports Server and Client game facade plus BindToClose without a legacy name')
+    var Restart='--restart' in OS.get_cmdline_user_args()
+    if Restart:
+        Check(Snapshot().get('Completed',0)==3 and Snapshot().get('Wins',0)>=3,'Fresh process reads the durably committed campaign')
+        Finish();return
+    var UI=Game.get_node('ExpeditionInterface/HUD')
+    await Capture('menu')
+    var Start=UI.get_node('Menu/Content/Start') as Button
+    Start.pressed.emit()
+    if not await Until(func(): return Snapshot().get('Phase','')=='Active'):
+        Finish();return
+    var World=Game.get_node('ExpeditionWorld')
+    var Body=World.get_node('Explorer') as CharacterBody3D
+    Check((World.get_node('Cargo') as MeshInstance3D).mesh is ArrayMesh,'Project-local imported OBJ reaches the native rendering resource')
+    var Samples: Array[int]=[]
+    var Objects=Performance.get_monitor(Performance.OBJECT_COUNT)
+    var Resources=Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)
+    var Started=Time.get_ticks_usec()
+    for Cycle in range(24):
+        var Old=Game.get_node('ExpeditionWorld').get_instance_id()
+        var Revision=Snapshot().Revision
+        (UI.get_node('Pause') as Button).pressed.emit()
+        await Until(func(): return Snapshot().get('Phase','')=='Paused')
+        var CommandAt=Time.get_ticks_usec()
+        (UI.get_node('Menu/Content/Restart') as Button).pressed.emit()
+        await Until(func(): return Snapshot().get('Revision',0)>Revision)
+        await Frames(2)
+        Samples.append(Time.get_ticks_usec()-CommandAt)
+        Check(not is_instance_id_valid(Old) and Game.find_children('*','SceneScope',true,false).size()==2,'Restart retires exact old world without retaining scene scopes, cycle '+str(Cycle))
+    Measurements={'RestartCycles':24,'InputToSnapshotMicroseconds':Samples,'StressMicroseconds':Time.get_ticks_usec()-Started,'ObjectCountDelta':Performance.get_monitor(Performance.OBJECT_COUNT)-Objects,'ResourceCountDelta':Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)-Resources,'ScopeLimitAfterEachCycle':2,'TimingScope':'Includes input dispatch, native construction, asset resolution and snapshot/frame scheduling; not an isolated dispatch benchmark'}
+    var OldWorld=Game.get_node('ExpeditionWorld').get_instance_id()
+    Game.get_node('Rules').set('Enabled',false)
+    await Frames(3)
+    Check(not is_instance_id_valid(OldWorld),'Disabling the Server entrypoint retires its actual game world')
+    Game.get_node('Rules').set('Enabled',true)
+    await Until(func(): return Snapshot().get('Phase','')=='Menu')
+    UI.get_node('Menu/Content/Start').pressed.emit()
+    await Until(func(): return Snapshot().get('Phase','')=='Active')
+    World=Game.get_node('ExpeditionWorld')
+    Body=World.get_node('Explorer') as CharacterBody3D
+    await Frames(20)
+    var Before=Body.position
+    Key(KEY_D,true)
+    await Frames(15)
+    Key(KEY_D,false)
+    await Frames(2)
+    Check(Body.position.x>Before.x+0.5 and Body.is_on_floor(),'Real keyboard input reaches Server-owned CharacterBody3D physics')
+    await Capture('active')
+    Key(KEY_D,true)
+    await Frames(3)
+    Game.get_node('Interface').set('Enabled',false)
+    await Frames(25)
+    Check(absf(Body.velocity.x)<0.01,'Retired Client producer cannot leave persistent movement intent after its bounded heartbeat expires')
+    Key(KEY_D,false)
+    Game.get_node('Interface').set('Enabled',true)
+    await Until(func(): return Game.get_node_or_null('ExpeditionInterface/HUD')!=null)
+    await Frames(5)
+    UI=Game.get_node('ExpeditionInterface/HUD')
+    Check(Game.find_children('*','SceneScope',true,false).size()==2,'Fresh entrypoint generations recreate UI/world without retaining retired scopes')
+    await Tap(KEY_SPACE)
+    Check(Body.position.y>Before.y+0.2,'Jump action moves the native body')
+    await Frames(45)
+    (UI.get_node('Pause') as Button).pressed.emit()
+    await Until(func(): return Snapshot().get('Phase','')=='Paused')
+    Before=Body.position
+    Key(KEY_D,true)
+    await Frames(10)
+    Key(KEY_D,false)
+    Check(Body.position.distance_to(Before)<0.05,'Pause neutralizes gameplay input while native UI remains available')
+    (UI.get_node('Menu/Content/Fov') as HSlider).value=80
+    (UI.get_node('Menu/Content/Volume') as HSlider).value=-35
+    (UI.get_node('Menu/Content/Start') as Button).pressed.emit()
+    await Until(func(): return Snapshot().get('Phase','')=='Active')
+    await Frames(3)
+    Check(is_equal_approx((Body.get_node('Camera') as Camera3D).fov,80),'Settings signal updates the owned native camera')
+    # Attempt ordinary Client capability writes; rules never consume claimed
+    # health/reward values. The direct Scene handle write must also reject.
+    var Guest=ClassDB.instantiate('LocalScript')
+    var Source=ClassDB.instantiate('LuauScript')
+    Source.source_code="game:SetAttribute('FoundryHealth',999);game:SetAttribute('FoundryWins',999);local W=script.Parent:FindFirstChild('ExpeditionWorld');assert(not pcall(function() W.Explorer.Position=Vector3.new(0,999,0) end));assert(not pcall(function() script.Parent.Position=Vector3.new(999,0,0) end));assert(not pcall(function() script.Parent.position=Vector3.new(999,0,0) end));game:SetAttribute('FoundryGuestRejected',true)"
+    Guest.name='GuestProbe';Guest.set_codigo_luau(Source);Game.add_child(Guest)
+    await Until(func(): return Game.get_meta('FoundryGuestRejected',false))
+    await Frames(5)
+    Check(Snapshot().Health<=100 and Snapshot().Wins<999 and Body.position.y<5 and Game.position==Vector3.ZERO,'Client cannot author Server physics ancestor transforms health or durable rewards')
+    Guest.queue_free()
+    for Level in range(1,4):
+        if not await Until(func(): return Snapshot().get('Level',0)==Level and Snapshot().get('Phase','')=='Active'):
+            break
+        World=Game.get_node('ExpeditionWorld')
+        Body=World.get_node('Explorer') as CharacterBody3D
+        var Retired=World.get_instance_id()
+        var Collected=0
+        for Position in [Vector3(-6,1,2),Vector3(6,1,2),Vector3(0,1,-5)]:
+            Body.position=Position
+            Collected+=1
+            await Until(func(): return Snapshot().get('Cells',0)>=Collected)
+        Check(Snapshot().get('Cells',0)==3,'Native Area3D collection uses actual physics overlaps, sector '+str(Level))
+        Body.position=Vector3(0,1,6)
+        await Tap(KEY_W)
+        var Guards=World.find_children('Guard*','CharacterBody3D',false,false)
+        for Guard in Guards:
+            if not is_instance_valid(Guard): continue
+            # Deterministic spatial setup; attacks still run through actual input,
+            # shape queries and the production Server-owned damage implementation.
+            Guard.position=Body.position+Vector3(0,0,-3)
+            for Shot in range(12):
+                if not is_instance_valid(Guard) or Guard.is_queued_for_deletion(): break
+                await Tap(KEY_F)
+                await Frames(7)
+        if not await Until(func(): return Snapshot().get('Remaining',99)==0,120): break
+        Check(Snapshot().get('Health',0)>0,'Navigation-driven guards and pulse combat complete sector '+str(Level))
+        Body.position=Vector3(0,1,-7.5)
+        await Frames(3)
+        await Tap(KEY_E)
+        if Level<3:
+            await Until(func(): return Snapshot().get('Level',0)==Level+1)
+            Check(not is_instance_id_valid(Retired),'Room transition retires the previous native hierarchy and callbacks')
+    await Until(func(): return Snapshot().get('Phase','')=='Complete')
+    await Until(func(): return Snapshot().get('Persistence','')=='Durably saved')
+    Check(Snapshot().get('Completed',0)==3 and Snapshot().get('Wins',0)>=3,'Actual DataStore UpdateAsync acknowledges all sector receipts')
+    Check(Snapshot().get('Message','')=='Foundry restored '+String.chr(0x2022)+' check the persistence acknowledgment below','UTF-8 survives the real Server snapshot attribute and Client JSON presentation path')
+    if '--graphical' in OS.get_cmdline_user_args():
+        await RenderingServer.frame_post_draw
+        root.get_texture().get_image().save_png('res://foundry.png')
+    Finish()
+
+func Finish() -> void:
+    var File=FileAccess.open('res://foundry-results.json',FileAccess.WRITE)
+    File.store_string(JSON.stringify({'Passed':Passed,'Checks':Checks,'Snapshot':Snapshot(),'Measurements':Measurements}))
+    File.close()
+    print('[Foundry:Qualification] ','PASS' if Passed else 'FAIL')
+    quit(0 if Passed else 1)

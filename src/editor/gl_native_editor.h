@@ -43,7 +43,8 @@ inline const GLNative::Method* Method(const std::string& Name, const std::string
     for (const auto& Item:GLNative::Methods) if (Key==Item.Name && IsA(Name,Item.Class) && (!Best || IsA(Item.Class,Best->Class))) Best=&Item;
     return Best;
 }
-inline std::string TypeName(GLNative::Kind Type,const char* Class=nullptr) {
+inline std::string TypeName(GLNative::Kind Type,const char* Class=nullptr,const char* Element=nullptr) {
+    if(Element)return std::string("Array<")+Element+">";
     if(Class)return Class;
     if(auto Name=GLNativeValueName(Type))return Name;
     switch(Type) {
@@ -58,10 +59,10 @@ inline std::string Signature(const GLNative::Method& Method) {
     for(int Index=0;Index<Method.Arguments;++Index) {
         const auto& Argument=GLNative::Arguments[Method.FirstArgument+Index];
         if(Index)Result+=", ";
-        Result+=std::string(Argument.Name)+": "+TypeName(Argument.Type,Argument.ResourceClass);
+        Result+=std::string(Argument.Name)+": "+TypeName(Argument.Type,Argument.ResourceClass,Argument.Element);
         if(Argument.Default)Result+=" = "+std::string(Argument.Default);
     }
-    return Result+") -> "+TypeName(Method.Return,Method.ReturnClass);
+    return Result+") -> "+TypeName(Method.Return,Method.ReturnClass,Method.ReturnElement);
 }
 inline std::string StaticPath(const Luau::AstExpr* Expression,int Depth=0) {
     if(!Expression || Depth>16)return {};

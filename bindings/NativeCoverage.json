@@ -10,7 +10,7 @@
     "version_full_name": "Godot Engine v4.3.stable.official"
   },
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
-  "PolicySHA256": "b7718227d093f5add343d299ee1ca181f5ea6847d54f592978b6fac369de4453",
+  "PolicySHA256": "c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace",
   "Interpretation": "Declared members; inheritance follows Base. Catalog specifies exact receivers, aliases, bounds and runtime permissions. Metadata existence is not host availability or qualification.",
   "Runtime": {
     "Domains": [
@@ -28,11 +28,11 @@
   },
   "Summary": {
     "MetadataClasses": 920,
-    "ConstructibleClasses": 94,
-    "SelectedProperties": 306,
-    "SelectedMethods": 167,
-    "SelectedSignals": 33,
-    "SelectedConstants": 49,
+    "ConstructibleClasses": 113,
+    "SelectedProperties": 384,
+    "SelectedMethods": 225,
+    "SelectedSignals": 41,
+    "SelectedConstants": 51,
     "DeclaredMembers": {
       "methods": 14379,
       "properties": 3676,
@@ -465,12 +465,12 @@
             "fill_weight_scale_region",
             "clear",
             "get_point_position",
-            "get_point_path"
+            "get_point_path",
+            "get_id_path"
           ],
           "Blocked": [
             "_estimate_cost",
-            "_compute_cost",
-            "get_id_path"
+            "_compute_cost"
           ]
         },
         "properties": {
@@ -957,6 +957,7 @@
             "rename_animation_library",
             "has_animation_library",
             "get_animation_library",
+            "get_animation_library_list",
             "has_animation",
             "get_animation",
             "set_active",
@@ -990,8 +991,7 @@
             "find_animation_library"
           ],
           "Blocked": [
-            "_post_process_key_value",
-            "get_animation_library_list"
+            "_post_process_key_value"
           ]
         },
         "properties": {
@@ -1533,9 +1533,7 @@
             "get_current_node",
             "get_current_play_position",
             "get_current_length",
-            "get_fading_from_node"
-          ],
-          "Blocked": [
+            "get_fading_from_node",
             "get_travel_path"
           ]
         },
@@ -1894,8 +1892,12 @@
       "Members": {
         "methods": {
           "Supported": [
+            "get_overlapping_bodies",
+            "get_overlapping_areas",
             "has_overlapping_bodies",
-            "has_overlapping_areas"
+            "has_overlapping_areas",
+            "overlaps_body",
+            "overlaps_area"
           ],
           "Unsupported": [
             "set_gravity_space_override_mode",
@@ -1928,12 +1930,6 @@
             "get_audio_bus_name",
             "set_audio_bus_override",
             "is_overriding_audio_bus"
-          ],
-          "Blocked": [
-            "get_overlapping_bodies",
-            "get_overlapping_areas",
-            "overlaps_body",
-            "overlaps_area"
           ]
         },
         "properties": {
@@ -1982,15 +1978,23 @@
     {
       "Name": "Area3D",
       "Base": "CollisionObject3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "get_overlapping_bodies",
+            "get_overlapping_areas",
+            "has_overlapping_bodies",
+            "has_overlapping_areas",
+            "overlaps_body",
+            "overlaps_area"
+          ],
           "Unsupported": [
             "set_gravity_space_override_mode",
             "get_gravity_space_override_mode",
@@ -2024,8 +2028,6 @@
             "is_monitorable",
             "set_monitoring",
             "is_monitoring",
-            "has_overlapping_bodies",
-            "has_overlapping_areas",
             "set_audio_bus_override",
             "is_overriding_audio_bus",
             "set_audio_bus_name",
@@ -2038,18 +2040,14 @@
             "get_reverb_amount",
             "set_reverb_uniformity",
             "get_reverb_uniformity"
-          ],
-          "Blocked": [
-            "get_overlapping_bodies",
-            "get_overlapping_areas",
-            "overlaps_body",
-            "overlaps_area"
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "monitoring",
-            "monitorable",
+            "monitorable"
+          ],
+          "Unsupported": [
             "priority",
             "gravity_space_override",
             "gravity_point",
@@ -2073,15 +2071,17 @@
           ]
         },
         "signals": {
+          "Supported": [
+            "body_entered",
+            "body_exited",
+            "area_entered",
+            "area_exited"
+          ],
           "Unsupported": [
             "body_shape_entered",
             "body_shape_exited",
-            "body_entered",
-            "body_exited",
             "area_shape_entered",
-            "area_shape_exited",
-            "area_entered",
-            "area_exited"
+            "area_shape_exited"
           ]
         },
         "enums": {
@@ -2112,6 +2112,7 @@
             "clear_blend_shapes",
             "set_blend_shape_mode",
             "get_blend_shape_mode",
+            "add_surface_from_arrays",
             "clear_surfaces",
             "surface_update_vertex_region",
             "surface_update_attribute_region",
@@ -2129,9 +2130,6 @@
             "get_custom_aabb",
             "set_shadow_mesh",
             "get_shadow_mesh"
-          ],
-          "Blocked": [
-            "add_surface_from_arrays"
           ]
         },
         "properties": {
@@ -4732,9 +4730,7 @@
             "get_size",
             "resize",
             "grow_mask",
-            "convert_to_image"
-          ],
-          "Blocked": [
+            "convert_to_image",
             "opaque_to_polygons"
           ]
         },
@@ -5061,12 +5057,12 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "get_buttons",
             "set_allow_unpress",
             "is_allow_unpress"
           ],
           "Blocked": [
-            "get_pressed_button",
-            "get_buttons"
+            "get_pressed_button"
           ]
         },
         "properties": {
@@ -5086,13 +5082,13 @@
     {
       "Name": "CPUParticles2D",
       "Base": "Node2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -5169,21 +5165,27 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "emitting",
             "amount",
             "lifetime",
             "one_shot",
+            "explosiveness",
+            "local_coords",
+            "texture",
+            "gravity",
+            "initial_velocity_min",
+            "initial_velocity_max",
+            "color"
+          ],
+          "Unsupported": [
             "preprocess",
             "speed_scale",
-            "explosiveness",
             "randomness",
             "lifetime_randomness",
             "fixed_fps",
             "fract_delta",
-            "local_coords",
             "draw_order",
-            "texture",
             "emission_shape",
             "emission_sphere_radius",
             "emission_rect_extents",
@@ -5193,9 +5195,6 @@
             "particle_flag_align_y",
             "direction",
             "spread",
-            "gravity",
-            "initial_velocity_min",
-            "initial_velocity_max",
             "angular_velocity_min",
             "angular_velocity_max",
             "angular_velocity_curve",
@@ -5223,7 +5222,6 @@
             "split_scale",
             "scale_curve_x",
             "scale_curve_y",
-            "color",
             "color_ramp",
             "color_initial_ramp",
             "hue_variation_min",
@@ -5256,13 +5254,13 @@
     {
       "Name": "CPUParticles3D",
       "Base": "GeometryInstance3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -5353,22 +5351,28 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "emitting",
             "amount",
             "lifetime",
             "one_shot",
+            "explosiveness",
+            "local_coords",
+            "mesh",
+            "gravity",
+            "initial_velocity_min",
+            "initial_velocity_max",
+            "color"
+          ],
+          "Unsupported": [
             "preprocess",
             "speed_scale",
-            "explosiveness",
             "randomness",
             "lifetime_randomness",
             "fixed_fps",
             "fract_delta",
             "visibility_aabb",
-            "local_coords",
             "draw_order",
-            "mesh",
             "emission_shape",
             "emission_sphere_radius",
             "emission_box_extents",
@@ -5385,9 +5389,6 @@
             "direction",
             "spread",
             "flatness",
-            "gravity",
-            "initial_velocity_min",
-            "initial_velocity_max",
             "angular_velocity_min",
             "angular_velocity_max",
             "angular_velocity_curve",
@@ -5416,7 +5417,6 @@
             "scale_curve_x",
             "scale_curve_y",
             "scale_curve_z",
-            "color",
             "color_ramp",
             "color_initial_ramp",
             "hue_variation_min",
@@ -5997,13 +5997,13 @@
             "get_keep_aspect_mode",
             "set_doppler_tracking",
             "get_doppler_tracking",
+            "get_frustum",
             "is_position_in_frustum",
             "set_cull_mask_value",
             "get_cull_mask_value"
           ],
           "Blocked": [
             "get_camera_projection",
-            "get_frustum",
             "get_camera_rid",
             "get_pyramid_shape_rid"
           ]
@@ -7163,15 +7163,23 @@
     {
       "Name": "CodeEdit",
       "Base": "TextEdit",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "set_string_delimiters",
+            "get_string_delimiters",
+            "set_comment_delimiters",
+            "get_comment_delimiters",
+            "set_line_length_guidelines",
+            "get_line_length_guidelines"
+          ],
           "Unsupported": [
             "set_indent_size",
             "get_indent_size",
@@ -7179,6 +7187,8 @@
             "is_indent_using_spaces",
             "set_auto_indent_enabled",
             "is_auto_indent_enabled",
+            "set_auto_indent_prefixes",
+            "get_auto_indent_prefixes",
             "do_indent",
             "indent_lines",
             "unindent_lines",
@@ -7227,6 +7237,7 @@
             "toggle_foldable_line",
             "toggle_foldable_lines_at_carets",
             "is_line_folded",
+            "get_folded_lines",
             "create_code_region",
             "get_code_region_start_tag",
             "get_code_region_end_tag",
@@ -7253,6 +7264,7 @@
             "request_code_completion",
             "add_code_completion_option",
             "update_code_completion_options",
+            "get_code_completion_options",
             "get_code_completion_option",
             "get_code_completion_selected_index",
             "set_code_completion_selected_index",
@@ -7260,6 +7272,8 @@
             "cancel_code_completion",
             "set_code_completion_enabled",
             "is_code_completion_enabled",
+            "set_code_completion_prefixes",
+            "get_code_completion_prefixes",
             "set_symbol_lookup_on_click_enabled",
             "is_symbol_lookup_on_click_enabled",
             "get_text_for_symbol_lookup",
@@ -7274,19 +7288,7 @@
           "Blocked": [
             "_confirm_code_completion",
             "_request_code_completion",
-            "_filter_code_completion_candidates",
-            "set_auto_indent_prefixes",
-            "get_auto_indent_prefixes",
-            "get_folded_lines",
-            "set_string_delimiters",
-            "get_string_delimiters",
-            "set_comment_delimiters",
-            "get_comment_delimiters",
-            "get_code_completion_options",
-            "set_code_completion_prefixes",
-            "get_code_completion_prefixes",
-            "set_line_length_guidelines",
-            "get_line_length_guidelines"
+            "_filter_code_completion_candidates"
           ]
         },
         "properties": {
@@ -7857,7 +7859,7 @@
       "Editor": "Metadata only",
       "Members": {
         "methods": {
-          "Blocked": [
+          "Unsupported": [
             "set_compositor_effects",
             "get_compositor_effects"
           ]
@@ -9040,13 +9042,13 @@
     {
       "Name": "Decal",
       "Base": "VisualInstance3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -9077,18 +9079,20 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "size",
             "texture_albedo",
+            "modulate",
+            "albedo_mix",
+            "upper_fade",
+            "lower_fade"
+          ],
+          "Unsupported": [
             "texture_normal",
             "texture_orm",
             "texture_emission",
             "emission_energy",
-            "modulate",
-            "albedo_mix",
             "normal_fade",
-            "upper_fade",
-            "lower_fade",
             "distance_fade_enabled",
             "distance_fade_begin",
             "distance_fade_length",
@@ -9170,13 +9174,13 @@
     {
       "Name": "DirectionalLight2D",
       "Base": "Light2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -10985,13 +10989,13 @@
       "Members": {
         "methods": {
           "Unsupported": [
-            "clear"
+            "clear",
+            "get_selected_nodes",
+            "get_transformable_selected_nodes"
           ],
           "Blocked": [
             "add_node",
-            "remove_node",
-            "get_selected_nodes",
-            "get_transformable_selected_nodes"
+            "remove_node"
           ]
         },
         "properties": {},
@@ -11029,12 +11033,10 @@
             "get_favorites",
             "set_recent_dirs",
             "get_recent_dirs",
+            "set_builtin_action_override",
             "check_changed_settings_in_group",
             "get_changed_settings",
             "mark_setting_changed"
-          ],
-          "Blocked": [
-            "set_builtin_action_override"
           ]
         },
         "properties": {},
@@ -11205,6 +11207,8 @@
             "create_diff_file",
             "create_commit",
             "create_status_file",
+            "add_diff_hunks_into_diff_file",
+            "add_line_diffs_into_diff_hunk",
             "popup_error"
           ],
           "Blocked": [
@@ -11230,9 +11234,7 @@
             "_pull",
             "_push",
             "_fetch",
-            "_get_line_diff",
-            "add_diff_hunks_into_diff_file",
-            "add_line_diffs_into_diff_hunk"
+            "_get_line_diff"
           ]
         },
         "properties": {},
@@ -12225,6 +12227,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_fallbacks",
+            "get_fallbacks",
             "get_height",
             "get_ascent",
             "get_descent",
@@ -12251,8 +12255,6 @@
             "get_face_count"
           ],
           "Blocked": [
-            "set_fallbacks",
-            "get_fallbacks",
             "find_variation",
             "get_rids",
             "draw_string",
@@ -12324,6 +12326,7 @@
             "get_cache_count",
             "clear_cache",
             "remove_cache",
+            "get_size_cache_list",
             "clear_size_cache",
             "remove_size_cache",
             "set_variation_coordinates",
@@ -12368,6 +12371,7 @@
             "get_glyph_uv_rect",
             "set_glyph_texture_idx",
             "get_glyph_texture_idx",
+            "get_kerning_list",
             "clear_kerning_map",
             "remove_kerning",
             "set_kerning",
@@ -12386,10 +12390,6 @@
             "get_opentype_feature_overrides",
             "get_glyph_index",
             "get_char_from_glyph_index"
-          ],
-          "Blocked": [
-            "get_size_cache_list",
-            "get_kerning_list"
           ]
         },
         "properties": {
@@ -12943,12 +12943,10 @@
             "set_mesh",
             "get_blend_weights",
             "set_blend_weights",
+            "get_instance_materials",
+            "set_instance_materials",
             "get_additional_data",
             "set_additional_data"
-          ],
-          "Blocked": [
-            "get_instance_materials",
-            "set_instance_materials"
           ]
         },
         "properties": {
@@ -13155,14 +13153,14 @@
             "set_joints",
             "get_roots",
             "set_roots",
+            "get_unique_names",
+            "set_unique_names",
             "get_godot_bone_node",
             "set_godot_bone_node",
             "get_bone_attachment_count"
           ],
           "Blocked": [
             "get_godot_skeleton",
-            "get_unique_names",
-            "set_unique_names",
             "get_bone_attachment"
           ]
         },
@@ -13196,6 +13194,8 @@
             "set_skin_root",
             "get_joints_original",
             "set_joints_original",
+            "get_inverse_binds",
+            "set_inverse_binds",
             "get_joints",
             "set_joints",
             "get_non_joints",
@@ -13210,10 +13210,6 @@
             "set_joint_i_to_name",
             "get_godot_skin",
             "set_godot_skin"
-          ],
-          "Blocked": [
-            "get_inverse_binds",
-            "set_inverse_binds"
           ]
         },
         "properties": {
@@ -13303,27 +13299,6 @@
             "set_glb_data",
             "get_use_named_skin_binds",
             "set_use_named_skin_binds",
-            "get_animation_players_count",
-            "get_scene_name",
-            "set_scene_name",
-            "get_base_path",
-            "set_base_path",
-            "get_filename",
-            "set_filename",
-            "get_root_nodes",
-            "set_root_nodes",
-            "get_create_animations",
-            "set_create_animations",
-            "get_import_as_skeleton_bones",
-            "set_import_as_skeleton_bones",
-            "get_additional_data",
-            "set_additional_data",
-            "get_handle_binary_image",
-            "set_handle_binary_image",
-            "set_bake_fps",
-            "get_bake_fps"
-          ],
-          "Blocked": [
             "get_nodes",
             "set_nodes",
             "get_buffers",
@@ -13334,9 +13309,17 @@
             "set_accessors",
             "get_meshes",
             "set_meshes",
-            "get_animation_player",
+            "get_animation_players_count",
             "get_materials",
             "set_materials",
+            "get_scene_name",
+            "set_scene_name",
+            "get_base_path",
+            "set_base_path",
+            "get_filename",
+            "set_filename",
+            "get_root_nodes",
+            "set_root_nodes",
             "get_textures",
             "set_textures",
             "get_texture_samplers",
@@ -13355,8 +13338,21 @@
             "set_unique_animation_names",
             "get_skeletons",
             "set_skeletons",
+            "get_create_animations",
+            "set_create_animations",
+            "get_import_as_skeleton_bones",
+            "set_import_as_skeleton_bones",
             "get_animations",
             "set_animations",
+            "get_additional_data",
+            "set_additional_data",
+            "get_handle_binary_image",
+            "set_handle_binary_image",
+            "set_bake_fps",
+            "get_bake_fps"
+          ],
+          "Blocked": [
+            "get_animation_player",
             "get_scene_node",
             "get_node_index"
           ]
@@ -14353,7 +14349,9 @@
             "is_node_connected",
             "disconnect_node",
             "set_connection_activity",
+            "get_connection_list",
             "get_closest_connection_at_point",
+            "get_connections_intersecting_with_rect",
             "clear_connections",
             "force_connection_drag_end",
             "get_scroll_offset",
@@ -14368,6 +14366,7 @@
             "get_connection_line",
             "attach_graph_element_to_frame",
             "detach_graph_element_from_frame",
+            "get_attached_nodes_of_frame",
             "set_panning_scheme",
             "get_panning_scheme",
             "set_zoom",
@@ -14419,10 +14418,7 @@
             "_is_in_output_hotzone",
             "_get_connection_line",
             "_is_node_hover_valid",
-            "get_connection_list",
-            "get_connections_intersecting_with_rect",
             "get_element_frame",
-            "get_attached_nodes_of_frame",
             "get_menu_hbox",
             "set_selected"
           ]
@@ -14731,6 +14727,8 @@
             "set_center_z",
             "get_center_z",
             "clear",
+            "get_used_cells",
+            "get_used_cells_by_item",
             "get_meshes",
             "get_bake_meshes",
             "clear_baked_meshes",
@@ -14739,8 +14737,6 @@
           "Blocked": [
             "set_navigation_map",
             "get_navigation_map",
-            "get_used_cells",
-            "get_used_cells_by_item",
             "get_bake_mesh_instance"
           ]
         },
@@ -15197,22 +15193,27 @@
     {
       "Name": "Image",
       "Base": "Resource",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
-      "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
+      "Loadable": true,
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Supported": [
             "get_width",
             "get_height",
-            "get_size",
-            "has_mipmaps",
             "get_format",
             "get_data",
+            "set_data",
+            "is_empty",
+            "fill"
+          ],
+          "Unsupported": [
+            "get_size",
+            "has_mipmaps",
             "get_data_size",
             "convert",
             "get_mipmap_count",
@@ -15225,8 +15226,6 @@
             "flip_y",
             "generate_mipmaps",
             "clear_mipmaps",
-            "set_data",
-            "is_empty",
             "load",
             "save_png",
             "save_png_to_buffer",
@@ -15256,7 +15255,6 @@
             "blit_rect_mask",
             "blend_rect",
             "blend_rect_mask",
-            "fill",
             "fill_rect",
             "get_used_rect",
             "get_region",
@@ -15289,8 +15287,10 @@
         },
         "signals": {},
         "enums": {
+          "Supported": [
+            "Format"
+          ],
           "Unsupported": [
-            "Format",
             "Interpolation",
             "AlphaMode",
             "CompressMode",
@@ -15359,19 +15359,21 @@
     {
       "Name": "ImageTexture",
       "Base": "Texture2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "set_image",
+            "update"
+          ],
           "Unsupported": [
             "get_format",
-            "set_image",
-            "update",
             "set_size_override"
           ],
           "Blocked": [
@@ -15396,7 +15398,7 @@
       "Editor": "Metadata only",
       "Members": {
         "methods": {
-          "Blocked": [
+          "Unsupported": [
             "create",
             "update"
           ]
@@ -15410,20 +15412,20 @@
     {
       "Name": "ImageTextureLayered",
       "Base": "TextureLayered",
-      "Status": "Unsupported",
+      "Status": "Partial",
       "Constructible": false,
       "ConstructionStatus": "Not admitted",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "create_from_images"
+          ],
           "Unsupported": [
             "update_layer"
-          ],
-          "Blocked": [
-            "create_from_images"
           ]
         },
         "properties": {},
@@ -15481,6 +15483,7 @@
             "get_blend_shape_name",
             "set_blend_shape_mode",
             "get_blend_shape_mode",
+            "add_surface",
             "get_surface_count",
             "get_surface_primitive_type",
             "get_surface_name",
@@ -15498,9 +15501,6 @@
             "clear",
             "set_lightmap_size_hint",
             "get_lightmap_size_hint"
-          ],
-          "Blocked": [
-            "add_surface"
           ]
         },
         "properties": {},
@@ -17080,13 +17080,13 @@
     {
       "Name": "Light2D",
       "Base": "Node2D",
-      "Status": "Unsupported",
+      "Status": "Partial",
       "Constructible": false,
       "ConstructionStatus": "Not admitted",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -17125,18 +17125,20 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "enabled",
-            "editor_only",
             "color",
             "energy",
+            "shadow_enabled"
+          ],
+          "Unsupported": [
+            "editor_only",
             "blend_mode",
             "range_z_min",
             "range_z_max",
             "range_layer_min",
             "range_layer_max",
             "range_item_cull_mask",
-            "shadow_enabled",
             "shadow_color",
             "shadow_filter",
             "shadow_filter_smooth",
@@ -17373,6 +17375,8 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_lightmap_textures",
+            "get_lightmap_textures",
             "set_uses_spherical_harmonics",
             "is_using_spherical_harmonics",
             "add_user",
@@ -17381,22 +17385,16 @@
             "clear_users",
             "set_light_texture",
             "get_light_texture"
-          ],
-          "Blocked": [
-            "set_lightmap_textures",
-            "get_lightmap_textures"
           ]
         },
         "properties": {
           "Unsupported": [
+            "lightmap_textures",
             "uses_spherical_harmonics",
             "user_data",
             "probe_data",
             "light_texture",
             "light_textures"
-          ],
-          "Blocked": [
-            "lightmap_textures"
           ]
         },
         "signals": {},
@@ -18033,6 +18031,7 @@
             "get_lightmap_size_hint",
             "get_faces",
             "surface_get_arrays",
+            "surface_get_blend_shape_arrays",
             "surface_set_material",
             "surface_get_material",
             "create_placeholder",
@@ -18055,7 +18054,6 @@
             "_get_blend_shape_name",
             "_set_blend_shape_name",
             "_get_aabb",
-            "surface_get_blend_shape_arrays",
             "generate_triangle_mesh"
           ]
         },
@@ -19076,15 +19074,24 @@
     {
       "Name": "NavigationAgent2D",
       "Base": "Node",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "get_next_path_position",
+            "distance_to_target",
+            "get_current_navigation_path",
+            "is_target_reached",
+            "is_target_reachable",
+            "is_navigation_finished",
+            "get_final_position"
+          ],
           "Unsupported": [
             "set_avoidance_enabled",
             "get_avoidance_enabled",
@@ -19122,17 +19129,10 @@
             "get_simplify_path",
             "set_simplify_epsilon",
             "get_simplify_epsilon",
-            "get_next_path_position",
             "set_velocity_forced",
             "set_velocity",
             "get_velocity",
-            "distance_to_target",
-            "get_current_navigation_path",
             "get_current_navigation_path_index",
-            "is_target_reached",
-            "is_target_reachable",
-            "is_navigation_finished",
-            "get_final_position",
             "set_avoidance_layers",
             "get_avoidance_layers",
             "set_avoidance_mask",
@@ -19162,25 +19162,27 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "target_position",
             "path_desired_distance",
             "target_desired_distance",
-            "path_max_distance",
             "navigation_layers",
-            "pathfinding_algorithm",
-            "path_postprocessing",
-            "path_metadata_flags",
-            "simplify_path",
-            "simplify_epsilon",
             "avoidance_enabled",
             "velocity",
             "radius",
             "neighbor_distance",
             "max_neighbors",
+            "max_speed"
+          ],
+          "Unsupported": [
+            "path_max_distance",
+            "pathfinding_algorithm",
+            "path_postprocessing",
+            "path_metadata_flags",
+            "simplify_path",
+            "simplify_epsilon",
             "time_horizon_agents",
             "time_horizon_obstacles",
-            "max_speed",
             "avoidance_layers",
             "avoidance_mask",
             "avoidance_priority",
@@ -19192,13 +19194,15 @@
           ]
         },
         "signals": {
-          "Unsupported": [
+          "Supported": [
             "path_changed",
             "target_reached",
-            "waypoint_reached",
-            "link_reached",
             "navigation_finished",
             "velocity_computed"
+          ],
+          "Unsupported": [
+            "waypoint_reached",
+            "link_reached"
           ]
         },
         "enums": {},
@@ -19614,6 +19618,12 @@
           "Unsupported": [
             "clear",
             "has_data",
+            "set_traversable_outlines",
+            "get_traversable_outlines",
+            "set_obstruction_outlines",
+            "get_obstruction_outlines",
+            "append_traversable_outlines",
+            "append_obstruction_outlines",
             "add_traversable_outline",
             "add_obstruction_outline",
             "merge",
@@ -19621,14 +19631,6 @@
             "clear_projected_obstructions",
             "set_projected_obstructions",
             "get_projected_obstructions"
-          ],
-          "Blocked": [
-            "set_traversable_outlines",
-            "get_traversable_outlines",
-            "set_obstruction_outlines",
-            "get_obstruction_outlines",
-            "append_traversable_outlines",
-            "append_obstruction_outlines"
           ]
         },
         "properties": {
@@ -19688,13 +19690,13 @@
     {
       "Name": "NavigationObstacle2D",
       "Base": "Node2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -19722,14 +19724,16 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "radius",
-            "vertices",
-            "affect_navigation_mesh",
-            "carve_navigation_mesh",
             "avoidance_enabled",
             "velocity",
             "avoidance_layers"
+          ],
+          "Unsupported": [
+            "vertices",
+            "affect_navigation_mesh",
+            "carve_navigation_mesh"
           ]
         },
         "signals": {},
@@ -19740,13 +19744,13 @@
     {
       "Name": "NavigationObstacle3D",
       "Base": "Node3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -19778,15 +19782,17 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "radius",
+            "avoidance_enabled",
+            "velocity",
+            "avoidance_layers"
+          ],
+          "Unsupported": [
             "height",
             "vertices",
             "affect_navigation_mesh",
             "carve_navigation_mesh",
-            "avoidance_enabled",
-            "velocity",
-            "avoidance_layers",
             "use_3d_avoidance"
           ]
         },
@@ -20014,13 +20020,13 @@
     {
       "Name": "NavigationPolygon",
       "Base": "Resource",
-      "Status": "Unsupported",
+      "Status": "Partial",
       "Constructible": false,
       "ConstructionStatus": "Not admitted",
-      "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "Loadable": true,
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -20091,13 +20097,13 @@
     {
       "Name": "NavigationRegion2D",
       "Base": "Node2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -20126,11 +20132,13 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "navigation_polygon",
             "enabled",
+            "navigation_layers"
+          ],
+          "Unsupported": [
             "use_edge_connections",
-            "navigation_layers",
             "enter_cost",
             "travel_cost"
           ]
@@ -20617,7 +20625,9 @@
           "Unsupported": [
             "set_name",
             "get_name",
+            "get_children",
             "has_node",
+            "find_children",
             "has_node_and_resource",
             "get_node_and_resource",
             "is_inside_tree",
@@ -20626,6 +20636,7 @@
             "add_to_group",
             "remove_from_group",
             "is_in_group",
+            "get_groups",
             "get_index",
             "print_tree",
             "print_tree_pretty",
@@ -20707,19 +20718,16 @@
             "_unhandled_key_input",
             "print_orphan_nodes",
             "add_sibling",
-            "get_children",
             "get_child",
             "get_node",
             "get_node_or_null",
             "get_parent",
             "find_child",
-            "find_children",
             "find_parent",
             "is_ancestor_of",
             "is_greater_than",
             "get_path_to",
             "move_child",
-            "get_groups",
             "get_owner",
             "get_last_exclusive_window",
             "create_tween",
@@ -21070,9 +21078,7 @@
             "get_noise_3d",
             "get_noise_3dv",
             "get_image",
-            "get_seamless_image"
-          ],
-          "Blocked": [
+            "get_seamless_image",
             "get_image_3d",
             "get_seamless_image_3d"
           ]
@@ -21342,6 +21348,8 @@
           "Unsupported": [
             "get_class",
             "is_class",
+            "get_property_list",
+            "get_method_list",
             "property_can_revert",
             "property_get_revert",
             "notification",
@@ -21351,12 +21359,16 @@
             "remove_meta",
             "get_meta",
             "has_meta",
+            "get_meta_list",
             "add_user_signal",
             "has_user_signal",
             "remove_user_signal",
             "has_method",
             "get_method_argument_count",
             "has_signal",
+            "get_signal_list",
+            "get_signal_connection_list",
+            "get_incoming_connections",
             "set_block_signals",
             "is_blocking_signals",
             "notify_property_list_changed",
@@ -21368,12 +21380,6 @@
             "cancel_free"
           ],
           "Blocked": [
-            "get_property_list",
-            "get_method_list",
-            "get_meta_list",
-            "get_signal_list",
-            "get_signal_connection_list",
-            "get_incoming_connections",
             "disconnect",
             "is_connected"
           ]
@@ -21525,24 +21531,20 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "set_packet_data",
+            "get_packet_data",
             "set_packet_granule_positions",
             "get_packet_granule_positions",
             "set_sampling_rate",
             "get_sampling_rate",
             "get_length"
-          ],
-          "Blocked": [
-            "set_packet_data",
-            "get_packet_data"
           ]
         },
         "properties": {
           "Unsupported": [
+            "packet_data",
             "granule_positions",
             "sampling_rate"
-          ],
-          "Blocked": [
-            "packet_data"
           ]
         },
         "signals": {},
@@ -23293,10 +23295,10 @@
         "methods": {
           "Unsupported": [
             "is_simulating_physics",
-            "physical_bones_stop_simulation"
+            "physical_bones_stop_simulation",
+            "physical_bones_start_simulation"
           ],
           "Blocked": [
-            "physical_bones_start_simulation",
             "physical_bones_add_collision_exception",
             "physical_bones_remove_collision_exception"
           ]
@@ -23377,12 +23379,12 @@
       "Members": {
         "methods": {
           "Unsupported": [
-            "get_gravity"
+            "get_gravity",
+            "get_collision_exceptions"
           ],
           "Blocked": [
             "move_and_collide",
             "test_move",
-            "get_collision_exceptions",
             "add_collision_exception_with",
             "remove_collision_exception_with"
           ]
@@ -23408,12 +23410,12 @@
           "Unsupported": [
             "get_gravity",
             "set_axis_lock",
-            "get_axis_lock"
+            "get_axis_lock",
+            "get_collision_exceptions"
           ],
           "Blocked": [
             "move_and_collide",
             "test_move",
-            "get_collision_exceptions",
             "add_collision_exception_with",
             "remove_collision_exception_with"
           ]
@@ -25025,14 +25027,14 @@
             "set_margin",
             "is_collide_separation_ray_enabled",
             "set_collide_separation_ray_enabled",
+            "get_exclude_objects",
+            "set_exclude_objects",
             "is_recovery_as_collision_enabled",
             "set_recovery_as_collision_enabled"
           ],
           "Blocked": [
             "get_exclude_bodies",
-            "set_exclude_bodies",
-            "get_exclude_objects",
-            "set_exclude_objects"
+            "set_exclude_bodies"
           ]
         },
         "properties": {
@@ -25076,14 +25078,14 @@
             "set_max_collisions",
             "is_collide_separation_ray_enabled",
             "set_collide_separation_ray_enabled",
+            "get_exclude_objects",
+            "set_exclude_objects",
             "is_recovery_as_collision_enabled",
             "set_recovery_as_collision_enabled"
           ],
           "Blocked": [
             "get_exclude_bodies",
-            "set_exclude_bodies",
-            "get_exclude_objects",
-            "set_exclude_objects"
+            "set_exclude_bodies"
           ]
         },
         "properties": {
@@ -25475,13 +25477,13 @@
     {
       "Name": "PointLight2D",
       "Base": "Light2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -25494,10 +25496,12 @@
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "texture",
+            "texture_scale"
+          ],
+          "Unsupported": [
             "offset",
-            "texture_scale",
             "height"
           ]
         },
@@ -26457,9 +26461,7 @@
             "set_enable_alpha_to_coverage",
             "get_enable_alpha_to_coverage",
             "set_enable_alpha_to_one",
-            "get_enable_alpha_to_one"
-          ],
-          "Blocked": [
+            "get_enable_alpha_to_one",
             "set_sample_masks",
             "get_sample_masks"
           ]
@@ -26470,9 +26472,7 @@
             "enable_sample_shading",
             "min_sample_shading",
             "enable_alpha_to_coverage",
-            "enable_alpha_to_one"
-          ],
-          "Blocked": [
+            "enable_alpha_to_one",
             "sample_masks"
           ]
         },
@@ -26652,11 +26652,9 @@
           "Unsupported": [
             "set_bytecode",
             "get_spirv",
+            "get_version_list",
             "set_base_error",
             "get_base_error"
-          ],
-          "Blocked": [
-            "get_version_list"
           ]
         },
         "properties": {
@@ -29406,11 +29404,11 @@
             "set_freeze_enabled",
             "is_freeze_enabled",
             "set_freeze_mode",
-            "get_freeze_mode"
+            "get_freeze_mode",
+            "get_colliding_bodies"
           ],
           "Blocked": [
-            "_integrate_forces",
-            "get_colliding_bodies"
+            "_integrate_forces"
           ]
         },
         "properties": {
@@ -29536,11 +29534,11 @@
             "set_freeze_enabled",
             "is_freeze_enabled",
             "set_freeze_mode",
-            "get_freeze_mode"
+            "get_freeze_mode",
+            "get_colliding_bodies"
           ],
           "Blocked": [
-            "_integrate_forces",
-            "get_colliding_bodies"
+            "_integrate_forces"
           ]
         },
         "properties": {
@@ -29707,6 +29705,7 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "get_properties",
             "add_property",
             "has_property",
             "remove_property",
@@ -29719,9 +29718,6 @@
             "property_set_sync",
             "property_get_watch",
             "property_set_watch"
-          ],
-          "Blocked": [
-            "get_properties"
           ]
         },
         "properties": {},
@@ -29986,17 +29982,17 @@
       "Members": {
         "methods": {
           "Unsupported": [
+            "get_open_script_editors",
             "register_syntax_highlighter",
             "unregister_syntax_highlighter",
             "goto_line",
             "get_current_script",
+            "get_open_scripts",
             "open_script_create_dialog",
             "goto_help"
           ],
           "Blocked": [
-            "get_current_editor",
-            "get_open_script_editors",
-            "get_open_scripts"
+            "get_current_editor"
           ]
         },
         "properties": {},
@@ -30618,15 +30614,26 @@
     {
       "Name": "ShapeCast2D",
       "Base": "Node2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "is_colliding",
+            "get_collision_count",
+            "force_shapecast_update",
+            "get_collider",
+            "get_collision_point",
+            "get_collision_normal",
+            "add_exception",
+            "remove_exception",
+            "clear_exceptions"
+          ],
           "Unsupported": [
             "set_enabled",
             "is_enabled",
@@ -30638,15 +30645,9 @@
             "get_margin",
             "set_max_results",
             "get_max_results",
-            "is_colliding",
-            "get_collision_count",
-            "force_shapecast_update",
             "get_collider_shape",
-            "get_collision_point",
-            "get_collision_normal",
             "get_closest_collision_safe_fraction",
             "get_closest_collision_unsafe_fraction",
-            "clear_exceptions",
             "set_collision_mask",
             "get_collision_mask",
             "set_collision_mask_value",
@@ -30659,16 +30660,13 @@
             "is_collide_with_bodies_enabled"
           ],
           "Blocked": [
-            "get_collider",
             "get_collider_rid",
             "add_exception_rid",
-            "add_exception",
-            "remove_exception_rid",
-            "remove_exception"
+            "remove_exception_rid"
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "enabled",
             "shape",
             "exclude_parent",
@@ -30691,15 +30689,26 @@
     {
       "Name": "ShapeCast3D",
       "Base": "Node3D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "is_colliding",
+            "get_collision_count",
+            "force_shapecast_update",
+            "get_collider",
+            "get_collision_point",
+            "get_collision_normal",
+            "add_exception",
+            "remove_exception",
+            "clear_exceptions"
+          ],
           "Unsupported": [
             "resource_changed",
             "set_enabled",
@@ -30712,15 +30721,9 @@
             "get_margin",
             "set_max_results",
             "get_max_results",
-            "is_colliding",
-            "get_collision_count",
-            "force_shapecast_update",
             "get_collider_shape",
-            "get_collision_point",
-            "get_collision_normal",
             "get_closest_collision_safe_fraction",
             "get_closest_collision_unsafe_fraction",
-            "clear_exceptions",
             "set_collision_mask",
             "get_collision_mask",
             "set_collision_mask_value",
@@ -30735,16 +30738,13 @@
             "get_debug_shape_custom_color"
           ],
           "Blocked": [
-            "get_collider",
             "get_collider_rid",
             "add_exception_rid",
-            "add_exception",
-            "remove_exception_rid",
-            "remove_exception"
+            "remove_exception_rid"
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "enabled",
             "shape",
             "exclude_parent",
@@ -30753,7 +30753,9 @@
             "max_results",
             "collision_mask",
             "collide_with_areas",
-            "collide_with_bodies",
+            "collide_with_bodies"
+          ],
+          "Unsupported": [
             "debug_shape_custom_color"
           ],
           "Blocked": [
@@ -30891,11 +30893,11 @@
             "get_bone_global_pose_no_override",
             "set_animate_physical_bones",
             "get_animate_physical_bones",
-            "physical_bones_stop_simulation"
+            "physical_bones_stop_simulation",
+            "physical_bones_start_simulation"
           ],
           "Blocked": [
             "register_skin",
-            "physical_bones_start_simulation",
             "physical_bones_add_collision_exception",
             "physical_bones_remove_collision_exception"
           ]
@@ -31242,9 +31244,7 @@
             "get_physical_bone_chain_length",
             "set_physical_bone_node",
             "get_physical_bone_node",
-            "fetch_physical_bones"
-          ],
-          "Blocked": [
+            "fetch_physical_bones",
             "start_simulation",
             "stop_simulation"
           ]
@@ -31679,6 +31679,7 @@
             "get_parent_collision_ignore",
             "set_disable_mode",
             "get_disable_mode",
+            "get_collision_exceptions",
             "set_simulation_precision",
             "get_simulation_precision",
             "set_total_mass",
@@ -31699,7 +31700,6 @@
           ],
           "Blocked": [
             "get_physics_rid",
-            "get_collision_exceptions",
             "add_collision_exception_with",
             "remove_collision_exception_with"
           ]
@@ -32922,6 +32922,7 @@
             "set_weights",
             "set_custom",
             "set_smooth_group",
+            "add_triangle_fan",
             "add_index",
             "index",
             "deindex",
@@ -32939,9 +32940,6 @@
             "append_from",
             "commit",
             "commit_to_arrays"
-          ],
-          "Blocked": [
-            "add_triangle_fan"
           ]
         },
         "properties": {},
@@ -33469,6 +33467,7 @@
             "skip_selection_for_next_occurrence",
             "select",
             "get_selection_at_line_column",
+            "get_line_ranges_from_carets",
             "get_selection_origin_line",
             "get_selection_origin_column",
             "set_selection_origin_line",
@@ -33572,7 +33571,6 @@
             "_paste",
             "_paste_primary_clipboard",
             "set_tooltip_request_func",
-            "get_line_ranges_from_carets",
             "get_v_scroll_bar",
             "get_h_scroll_bar",
             "set_gutter_custom_draw",
@@ -33934,7 +33932,8 @@
             "is_valid_letter",
             "string_to_upper",
             "string_to_lower",
-            "string_to_title"
+            "string_to_title",
+            "parse_structured_text"
           ],
           "Blocked": [
             "has",
@@ -34122,8 +34121,7 @@
             "shaped_text_closest_character_pos",
             "shaped_text_draw",
             "shaped_text_draw_outline",
-            "shaped_text_get_dominant_direction_in_range",
-            "parse_structured_text"
+            "shaped_text_get_dominant_direction_in_range"
           ]
         },
         "properties": {},
@@ -34493,12 +34491,12 @@
         "methods": {
           "Supported": [
             "get_width",
-            "get_height"
+            "get_height",
+            "get_image"
           ],
           "Unsupported": [
             "get_size",
             "has_alpha",
-            "get_image",
             "create_placeholder"
           ],
           "Blocked": [
@@ -34523,13 +34521,13 @@
     {
       "Name": "Texture2DArray",
       "Base": "ImageTextureLayered",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -34605,6 +34603,7 @@
             "get_height",
             "get_depth",
             "has_mipmaps",
+            "get_data",
             "create_placeholder"
           ],
           "Blocked": [
@@ -34613,8 +34612,7 @@
             "_get_height",
             "_get_depth",
             "_has_mipmaps",
-            "_get_data",
-            "get_data"
+            "_get_data"
           ]
         },
         "properties": {},
@@ -34747,21 +34745,23 @@
     {
       "Name": "TextureLayered",
       "Base": "Texture",
-      "Status": "Unsupported",
+      "Status": "Partial",
       "Constructible": false,
       "ConstructionStatus": "Not admitted",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "get_layers"
+          ],
           "Unsupported": [
             "get_format",
             "get_layered_type",
             "get_width",
             "get_height",
-            "get_layers",
             "has_mipmaps",
             "get_layer_data"
           ],
@@ -35238,13 +35238,19 @@
             "get_cell_source_id",
             "get_cell_atlas_coords",
             "get_cell_alternative_tile",
+            "get_pattern",
             "map_pattern",
             "set_pattern",
+            "set_cells_terrain_connect",
+            "set_cells_terrain_path",
             "fix_invalid_tiles",
             "clear_layer",
             "clear",
             "update_internals",
             "notify_runtime_tile_data_update",
+            "get_surrounding_cells",
+            "get_used_cells",
+            "get_used_cells_by_id",
             "get_used_rect",
             "map_to_local",
             "local_to_map",
@@ -35259,13 +35265,7 @@
             "get_layer_navigation_map",
             "get_cell_tile_data",
             "get_coords_for_body_rid",
-            "get_layer_for_body_rid",
-            "get_pattern",
-            "set_cells_terrain_connect",
-            "set_cells_terrain_path",
-            "get_surrounding_cells",
-            "get_used_cells",
-            "get_used_cells_by_id"
+            "get_layer_for_body_rid"
           ]
         },
         "properties": {
@@ -35293,15 +35293,19 @@
     {
       "Name": "TileMapLayer",
       "Base": "Node2D",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "get_used_cells",
+            "get_pattern"
+          ],
           "Unsupported": [
             "set_cell",
             "erase_cell",
@@ -35310,11 +35314,15 @@
             "get_cell_source_id",
             "get_cell_atlas_coords",
             "get_cell_alternative_tile",
+            "get_used_cells_by_id",
             "get_used_rect",
             "set_pattern",
+            "set_cells_terrain_connect",
+            "set_cells_terrain_path",
             "update_internals",
             "notify_runtime_tile_data_update",
             "map_pattern",
+            "get_surrounding_cells",
             "get_neighbor_cell",
             "map_to_local",
             "local_to_map",
@@ -35345,27 +35353,23 @@
             "_use_tile_data_runtime_update",
             "_tile_data_runtime_update",
             "get_cell_tile_data",
-            "get_used_cells",
-            "get_used_cells_by_id",
-            "get_pattern",
-            "set_cells_terrain_connect",
-            "set_cells_terrain_path",
             "has_body_rid",
             "get_coords_for_body_rid",
-            "get_surrounding_cells",
             "set_navigation_map",
             "get_navigation_map"
           ]
         },
         "properties": {
-          "Unsupported": [
-            "tile_map_data",
+          "Supported": [
             "enabled",
             "tile_set",
+            "collision_enabled"
+          ],
+          "Unsupported": [
+            "tile_map_data",
             "y_sort_origin",
             "x_draw_order_reversed",
             "rendering_quadrant_size",
-            "collision_enabled",
             "use_kinematic_bodies",
             "collision_visibility_mode",
             "navigation_enabled",
@@ -35388,28 +35392,28 @@
     {
       "Name": "TileMapPattern",
       "Base": "Resource",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
-      "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
+      "Loadable": true,
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
-          "Unsupported": [
+          "Supported": [
             "set_cell",
+            "get_used_cells",
+            "get_size"
+          ],
+          "Unsupported": [
             "has_cell",
             "remove_cell",
             "get_cell_source_id",
             "get_cell_atlas_coords",
             "get_cell_alternative_tile",
-            "get_size",
             "set_size",
             "is_empty"
-          ],
-          "Blocked": [
-            "get_used_cells"
           ]
         },
         "properties": {},
@@ -35421,13 +35425,13 @@
     {
       "Name": "TileSet",
       "Base": "Resource",
-      "Status": "Unsupported",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
-      "Loadable": false,
-      "GeneratedHandle": false,
-      "Permission": "Not admitted",
-      "Editor": "Metadata only",
+      "Status": "Partial",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
+      "Loadable": true,
+      "GeneratedHandle": true,
+      "Permission": "Exact live SceneScope owner",
+      "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
           "Unsupported": [
@@ -37399,6 +37403,7 @@
             "connect_nodes",
             "disconnect_nodes",
             "connect_nodes_forced",
+            "get_node_connections",
             "set_graph_offset",
             "get_graph_offset",
             "attach_node_to_frame",
@@ -37406,9 +37411,6 @@
             "add_varying",
             "remove_varying",
             "has_varying"
-          ],
-          "Blocked": [
-            "get_node_connections"
           ]
         },
         "properties": {

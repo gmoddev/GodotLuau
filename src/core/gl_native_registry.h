@@ -19,6 +19,7 @@ struct Property {
     const char* ResourceClass = nullptr;
     const char* Default = nullptr;
     bool ReadOnly = false;
+    const char* Element = nullptr; // Exact metadata element for typed arrays.
 };
 struct Class { const char* Name; const char* Base; bool Construct; bool Resource; };
 struct Method {
@@ -40,6 +41,7 @@ struct Method {
     bool KeyAbsent = false;
     int CountArgument = -1;
     int CountLimit = -1;
+    const char* ReturnElement = nullptr;
 };
 struct Signal { const char* Class; const char* Name; const char* Native; int FirstArgument; int Arguments; };
 struct Constant { const char* Class; const char* Enum; const char* Name; int Value; };

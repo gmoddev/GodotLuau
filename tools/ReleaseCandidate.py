@@ -69,9 +69,9 @@ def Identity(Revision):
     Harness = {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.gd', '.py', '.cpp', '.pem'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']}
     Harness['PlayerController.luau'] = hashlib.sha256((Source/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     Harness['Controller.luau'] = hashlib.sha256((Source/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
-    for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring'):
+    for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring','examples/foundry-expedition','tests/editor'):
         for File in sorted((Source/Folder).rglob('*')):
-            if File.is_file() and File.suffix in ('.luau','.tres','.gdshader'):
+            if File.is_file() and File.suffix in ('.luau','.tres','.gdshader','.gd','.py','.tscn','.svg','.obj','.godot','.cfg'):
                 Harness[File.relative_to(Source).as_posix()]=hashlib.sha256(File.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
     return {'Revision': Revision, 'Tree': Git('rev-parse', Revision+'^{tree}'), 'Dependencies': Dependencies,
             'NativeSource': GetFingerprint(Source), 'HarnessHashes': Harness,
@@ -171,12 +171,15 @@ def Build(Args):
     Save(Output/'source.json', Before)
     Commands.append(Execute([sys.executable, Source/'tests/runtime/RunLuauOnly.py', '--godot', Host['Executable'],
         '--extension', Adapter/AdapterName, '--source', Output/'source.json', '--output', Output/'luau-game'], Output/'luau-game.log', 70))
+    Commands.append(Execute([sys.executable, Source/'tests/runtime/RunLuauOnly.py', '--godot', Engine,
+        '--extension', Products/LibraryName, '--source', Output/'source.json', '--profile', 'Foundry',
+        '--output', Output/'foundry'], Output/'foundry.log', 260))
     Require(Identity(Args.revision) == Before, 'Source inputs changed during build/qualification')
     Summary = Load(Output/'native/summary.json')
     Require(Summary['Revision'] == Args.revision and Summary['Processes'] == 141 and Summary['HarnessHashes'] == Before['HarnessHashes'], 'Native qualification identity/count mismatch')
     Payload = Output/'evidence.zip'
     with zipfile.ZipFile(Payload, 'w', zipfile.ZIP_DEFLATED) as Archive:
-        for Directory in [Output/'core', Output/'native', Output/'godot', Output/'host', Output/'luau-game']:
+        for Directory in [Output/'core', Output/'native', Output/'godot', Output/'host', Output/'luau-game', Output/'foundry']:
             for File in sorted(Directory.rglob('*')):
                 if File.is_file() and File.suffix in ['.json', '.log', '.xml', '.txt']: Archive.write(File, File.relative_to(Output).as_posix())
         for File in sorted(Output.glob('*.log')): Archive.write(File, File.name)

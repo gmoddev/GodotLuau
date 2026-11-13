@@ -37,6 +37,12 @@
       "Resource": false
     },
     {
+      "Name": "Area3D",
+      "Base": "CollisionObject3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "ArrayMesh",
       "Base": "Mesh",
       "Construct": false,
@@ -105,6 +111,18 @@
     {
       "Name": "Button",
       "Base": "BaseButton",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "CPUParticles2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "CPUParticles3D",
+      "Base": "GeometryInstance3D",
       "Construct": true,
       "Resource": false
     },
@@ -187,6 +205,12 @@
       "Resource": true
     },
     {
+      "Name": "CodeEdit",
+      "Base": "TextEdit",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "CollisionObject2D",
       "Base": "Node2D",
       "Construct": false,
@@ -239,6 +263,18 @@
       "Base": "Shape3D",
       "Construct": true,
       "Resource": true
+    },
+    {
+      "Name": "Decal",
+      "Base": "VisualInstance3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "DirectionalLight2D",
+      "Base": "Light2D",
+      "Construct": true,
+      "Resource": false
     },
     {
       "Name": "DirectionalLight3D",
@@ -313,6 +349,24 @@
       "Resource": false
     },
     {
+      "Name": "Image",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "ImageTexture",
+      "Base": "Texture2D",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "ImageTextureLayered",
+      "Base": "TextureLayered",
+      "Construct": false,
+      "Resource": true
+    },
+    {
       "Name": "ItemList",
       "Base": "Control",
       "Construct": true,
@@ -328,6 +382,12 @@
       "Name": "Label3D",
       "Base": "GeometryInstance3D",
       "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "Light2D",
+      "Base": "Node2D",
+      "Construct": false,
       "Resource": false
     },
     {
@@ -385,6 +445,12 @@
       "Resource": false
     },
     {
+      "Name": "NavigationAgent2D",
+      "Base": "Node",
+      "Construct": true,
+      "Resource": false
+    },
+    {
       "Name": "NavigationAgent3D",
       "Base": "Node",
       "Construct": true,
@@ -395,6 +461,30 @@
       "Base": "Resource",
       "Construct": false,
       "Resource": true
+    },
+    {
+      "Name": "NavigationObstacle2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "NavigationObstacle3D",
+      "Base": "Node3D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "NavigationPolygon",
+      "Base": "Resource",
+      "Construct": false,
+      "Resource": true
+    },
+    {
+      "Name": "NavigationRegion2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
     },
     {
       "Name": "NavigationRegion3D",
@@ -473,6 +563,12 @@
       "Base": "PrimitiveMesh",
       "Construct": true,
       "Resource": true
+    },
+    {
+      "Name": "PointLight2D",
+      "Base": "Light2D",
+      "Construct": true,
+      "Resource": false
     },
     {
       "Name": "PrimitiveMesh",
@@ -587,6 +683,18 @@
       "Base": "Resource",
       "Construct": false,
       "Resource": true
+    },
+    {
+      "Name": "ShapeCast2D",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "ShapeCast3D",
+      "Base": "Node3D",
+      "Construct": true,
+      "Resource": false
     },
     {
       "Name": "Skeleton3D",
@@ -721,6 +829,18 @@
       "Resource": true
     },
     {
+      "Name": "Texture2DArray",
+      "Base": "ImageTextureLayered",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "TextureLayered",
+      "Base": "Texture",
+      "Construct": false,
+      "Resource": true
+    },
+    {
       "Name": "TextureProgressBar",
       "Base": "Range",
       "Construct": true,
@@ -736,6 +856,24 @@
       "Name": "Theme",
       "Base": "Resource",
       "Construct": false,
+      "Resource": true
+    },
+    {
+      "Name": "TileMapLayer",
+      "Base": "Node2D",
+      "Construct": true,
+      "Resource": false
+    },
+    {
+      "Name": "TileMapPattern",
+      "Base": "Resource",
+      "Construct": true,
+      "Resource": true
+    },
+    {
+      "Name": "TileSet",
+      "Base": "Resource",
+      "Construct": true,
       "Resource": true
     },
     {
@@ -3545,6 +3683,652 @@
       "Max": 600,
       "Authority": "OwnedScene",
       "ReadOnly": true
+    },
+    {
+      "Class": "Area3D",
+      "Name": "Monitoring",
+      "Native": "monitoring",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Area3D",
+      "Name": "Monitorable",
+      "Native": "monitorable",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "Shape",
+      "Native": "shape",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Shape2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "Margin",
+      "Native": "margin",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "MaxResults",
+      "Native": "max_results",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "CollideWithAreas",
+      "Native": "collide_with_areas",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "CollideWithBodies",
+      "Native": "collide_with_bodies",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "ExcludeParent",
+      "Native": "exclude_parent",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "Shape",
+      "Native": "shape",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Shape3D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "Margin",
+      "Native": "margin",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "MaxResults",
+      "Native": "max_results",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "CollisionMask",
+      "Native": "collision_mask",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "CollideWithAreas",
+      "Native": "collide_with_areas",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "CollideWithBodies",
+      "Native": "collide_with_bodies",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "ExcludeParent",
+      "Native": "exclude_parent",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "TargetPosition",
+      "Native": "target_position",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "PathDesiredDistance",
+      "Native": "path_desired_distance",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "TargetDesiredDistance",
+      "Native": "target_desired_distance",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "NavigationLayers",
+      "Native": "navigation_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "AvoidanceEnabled",
+      "Native": "avoidance_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "MaxSpeed",
+      "Native": "max_speed",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "NeighborDistance",
+      "Native": "neighbor_distance",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "MaxNeighbors",
+      "Native": "max_neighbors",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 32,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector2Value",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "AvoidanceEnabled",
+      "Native": "avoidance_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle2D",
+      "Name": "AvoidanceLayers",
+      "Native": "avoidance_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "Radius",
+      "Native": "radius",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "Velocity",
+      "Native": "velocity",
+      "Kind": "Vector",
+      "Min": -10000,
+      "Max": 10000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "AvoidanceEnabled",
+      "Native": "avoidance_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationObstacle3D",
+      "Name": "AvoidanceLayers",
+      "Native": "avoidance_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion2D",
+      "Name": "NavigationPolygon",
+      "Native": "navigation_polygon",
+      "Kind": "ResourceValue",
+      "ResourceClass": "NavigationPolygon",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "NavigationRegion2D",
+      "Name": "NavigationLayers",
+      "Native": "navigation_layers",
+      "Kind": "Integer",
+      "Min": 0,
+      "Max": 4294967295,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Emitting",
+      "Native": "emitting",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Amount",
+      "Native": "amount",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Lifetime",
+      "Native": "lifetime",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 30,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "OneShot",
+      "Native": "one_shot",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Explosiveness",
+      "Native": "explosiveness",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "InitialVelocityMin",
+      "Native": "initial_velocity_min",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "InitialVelocityMax",
+      "Native": "initial_velocity_max",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Gravity",
+      "Native": "gravity",
+      "Kind": "Vector2Value",
+      "Min": -100,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "LocalCoords",
+      "Native": "local_coords",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles2D",
+      "Name": "Texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Emitting",
+      "Native": "emitting",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Amount",
+      "Native": "amount",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 128,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Lifetime",
+      "Native": "lifetime",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 30,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "OneShot",
+      "Native": "one_shot",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Explosiveness",
+      "Native": "explosiveness",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "InitialVelocityMin",
+      "Native": "initial_velocity_min",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "InitialVelocityMax",
+      "Native": "initial_velocity_max",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Gravity",
+      "Native": "gravity",
+      "Kind": "Vector",
+      "Min": -100,
+      "Max": 100,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "LocalCoords",
+      "Native": "local_coords",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "CPUParticles3D",
+      "Name": "Mesh",
+      "Native": "mesh",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Mesh",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "Size",
+      "Native": "size",
+      "Kind": "Vector",
+      "Min": 0.01,
+      "Max": 1000,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "Albedo",
+      "Native": "texture_albedo",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "Modulate",
+      "Native": "modulate",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "AlbedoMix",
+      "Native": "albedo_mix",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "UpperFade",
+      "Native": "upper_fade",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Decal",
+      "Name": "LowerFade",
+      "Native": "lower_fade",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "TileSet",
+      "Native": "tile_set",
+      "Kind": "ResourceValue",
+      "ResourceClass": "TileSet",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "CollisionEnabled",
+      "Native": "collision_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "Enabled",
+      "Native": "enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "Color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "Energy",
+      "Native": "energy",
+      "Kind": "Number",
+      "Min": 0,
+      "Max": 64,
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "Light2D",
+      "Name": "ShadowEnabled",
+      "Native": "shadow_enabled",
+      "Kind": "Boolean",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PointLight2D",
+      "Name": "Texture",
+      "Native": "texture",
+      "Kind": "ResourceValue",
+      "ResourceClass": "Texture2D",
+      "Authority": "OwnedScene"
+    },
+    {
+      "Class": "PointLight2D",
+      "Name": "TextureScale",
+      "Native": "texture_scale",
+      "Kind": "Number",
+      "Min": 0.01,
+      "Max": 64,
+      "Authority": "OwnedScene"
     }
   ],
   "Methods": [
@@ -3569,6 +4353,7 @@
       "FirstArgument": 0,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_global_position",
         "is_const": true,
@@ -3602,6 +4387,7 @@
       "FirstArgument": 0,
       "Return": "Vector2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_global_position",
         "is_const": true,
@@ -3640,6 +4426,7 @@
       "FirstArgument": 0,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "to_local",
         "is_const": true,
@@ -3684,6 +4471,7 @@
       "FirstArgument": 1,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "to_global",
         "is_const": true,
@@ -3723,6 +4511,7 @@
       "FirstArgument": 2,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "show",
         "is_const": false,
@@ -3753,6 +4542,7 @@
       "FirstArgument": 2,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "hide",
         "is_const": false,
@@ -3783,6 +4573,7 @@
       "FirstArgument": 2,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_visible",
         "is_const": true,
@@ -3816,6 +4607,7 @@
       "FirstArgument": 2,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "grab_focus",
         "is_const": false,
@@ -3846,6 +4638,7 @@
       "FirstArgument": 2,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "release_focus",
         "is_const": false,
@@ -3876,6 +4669,7 @@
       "FirstArgument": 2,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "has_focus",
         "is_const": true,
@@ -3909,6 +4703,7 @@
       "FirstArgument": 2,
       "Return": "Vector2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_combined_minimum_size",
         "is_const": true,
@@ -3942,6 +4737,7 @@
       "FirstArgument": 2,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_pressed_no_signal",
         "is_const": false,
@@ -3978,6 +4774,7 @@
       "FirstArgument": 3,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_pressed",
         "is_const": true,
@@ -4011,6 +4808,7 @@
       "FirstArgument": 3,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "clear",
         "is_const": false,
@@ -4041,6 +4839,7 @@
       "FirstArgument": 3,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "select_all",
         "is_const": false,
@@ -4071,6 +4870,7 @@
       "FirstArgument": 3,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "deselect",
         "is_const": false,
@@ -4106,6 +4906,7 @@
       "FirstArgument": 3,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_value_no_signal",
         "is_const": false,
@@ -4148,6 +4949,7 @@
       "FirstArgument": 4,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "play",
         "is_const": false,
@@ -4186,6 +4988,7 @@
       "FirstArgument": 5,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "stop",
         "is_const": false,
@@ -4216,6 +5019,7 @@
       "FirstArgument": 5,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_playing",
         "is_const": true,
@@ -4249,6 +5053,7 @@
       "FirstArgument": 5,
       "Return": "Number",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_playback_position",
         "is_const": false,
@@ -4288,6 +5093,7 @@
       "FirstArgument": 5,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "seek",
         "is_const": false,
@@ -4325,6 +5131,7 @@
       "FirstArgument": 6,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_width",
         "is_const": true,
@@ -4359,6 +5166,7 @@
       "FirstArgument": 6,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_height",
         "is_const": true,
@@ -4393,6 +5201,7 @@
       "FirstArgument": 6,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_surface_count",
         "is_const": true,
@@ -4427,6 +5236,7 @@
       "FirstArgument": 6,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_child_count",
         "is_const": true,
@@ -4473,6 +5283,7 @@
       "FirstArgument": 7,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_roughness",
         "is_const": false,
@@ -4515,6 +5326,7 @@
       "FirstArgument": 8,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "play",
         "is_const": false,
@@ -4552,6 +5364,7 @@
       "FirstArgument": 9,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "stop",
         "is_const": false,
@@ -4581,6 +5394,7 @@
       "FirstArgument": 9,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_playing",
         "is_const": true,
@@ -4619,6 +5433,7 @@
       "FirstArgument": 9,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "play",
         "is_const": false,
@@ -4656,6 +5471,7 @@
       "FirstArgument": 10,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "stop",
         "is_const": false,
@@ -4685,6 +5501,7 @@
       "FirstArgument": 10,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_playing",
         "is_const": true,
@@ -4723,6 +5540,7 @@
       "FirstArgument": 10,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "start",
         "is_const": false,
@@ -4760,6 +5578,7 @@
       "FirstArgument": 11,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "stop",
         "is_const": false,
@@ -4789,6 +5608,7 @@
       "FirstArgument": 11,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_stopped",
         "is_const": true,
@@ -4821,6 +5641,7 @@
       "FirstArgument": 11,
       "Return": "Vector2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "to_local",
         "is_const": true,
@@ -4859,6 +5680,7 @@
       "FirstArgument": 12,
       "Return": "Vector2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "to_global",
         "is_const": true,
@@ -4897,6 +5719,7 @@
       "FirstArgument": 13,
       "Return": "Rectangle",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_rect",
         "is_const": true,
@@ -4929,6 +5752,7 @@
       "FirstArgument": 13,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "apply_central_impulse",
         "is_const": false,
@@ -4965,6 +5789,7 @@
       "FirstArgument": 14,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "apply_impulse",
         "is_const": false,
@@ -5008,6 +5833,7 @@
       "FirstArgument": 16,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "apply_central_force",
         "is_const": false,
@@ -5043,6 +5869,7 @@
       "FirstArgument": 17,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "apply_force",
         "is_const": false,
@@ -5086,6 +5913,7 @@
       "FirstArgument": 19,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "apply_torque",
         "is_const": false,
@@ -5122,6 +5950,7 @@
       "FirstArgument": 20,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "apply_torque_impulse",
         "is_const": false,
@@ -5158,6 +5987,7 @@
       "FirstArgument": 21,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_contact_count",
         "is_const": true,
@@ -5191,6 +6021,7 @@
       "FirstArgument": 21,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "has_overlapping_bodies",
         "is_const": true,
@@ -5223,6 +6054,7 @@
       "FirstArgument": 21,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "has_overlapping_areas",
         "is_const": true,
@@ -5255,6 +6087,7 @@
       "FirstArgument": 21,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_playing",
         "is_const": true,
@@ -5287,6 +6120,7 @@
       "FirstArgument": 21,
       "Return": "Number",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_playing_speed",
         "is_const": true,
@@ -5330,6 +6164,7 @@
       "FirstArgument": 21,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "play",
         "is_const": false,
@@ -5377,6 +6212,7 @@
       "FirstArgument": 24,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "play_backwards",
         "is_const": false,
@@ -5413,6 +6249,7 @@
       "FirstArgument": 25,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "pause",
         "is_const": false,
@@ -5442,6 +6279,7 @@
       "FirstArgument": 25,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "stop",
         "is_const": false,
@@ -5471,6 +6309,7 @@
       "FirstArgument": 25,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "has_animation",
         "is_const": true,
@@ -5509,6 +6348,7 @@
       "FirstArgument": 26,
       "Return": "StringsValue",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_animation_names",
         "is_const": true,
@@ -5558,6 +6398,7 @@
       "FirstArgument": 26,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_animation",
         "is_const": false,
@@ -5609,6 +6450,7 @@
       "FirstArgument": 27,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_animation_speed",
         "is_const": false,
@@ -5661,6 +6503,7 @@
       "FirstArgument": 29,
       "Return": "Number",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_animation_speed",
         "is_const": true,
@@ -5712,6 +6555,7 @@
       "FirstArgument": 30,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_animation_loop",
         "is_const": false,
@@ -5763,6 +6607,7 @@
       "FirstArgument": 32,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_animation_loop",
         "is_const": true,
@@ -5813,6 +6658,7 @@
       "FirstArgument": 33,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_frame_count",
         "is_const": true,
@@ -5868,6 +6714,7 @@
       "FirstArgument": 34,
       "Return": "ResourceValue",
       "ReturnClass": "Texture2D",
+      "ReturnElement": null,
       "Signature": {
         "name": "get_frame_texture",
         "is_const": true,
@@ -5927,6 +6774,7 @@
       "FirstArgument": 36,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "remove_frame",
         "is_const": false,
@@ -5998,6 +6846,7 @@
       "FirstArgument": 38,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_frame",
         "is_const": false,
@@ -6058,6 +6907,7 @@
       "FirstArgument": 42,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_item",
         "is_const": false,
@@ -6110,6 +6960,7 @@
       "FirstArgument": 45,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_item_count",
         "is_const": true,
@@ -6149,6 +7000,7 @@
       "FirstArgument": 45,
       "Return": "Text",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_item_text",
         "is_const": true,
@@ -6194,6 +7046,7 @@
       "FirstArgument": 46,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_item_text",
         "is_const": false,
@@ -6240,6 +7093,7 @@
       "FirstArgument": 48,
       "Return": "ResourceValue",
       "ReturnClass": "Texture2D",
+      "ReturnElement": null,
       "Signature": {
         "name": "get_item_icon",
         "is_const": true,
@@ -6285,6 +7139,7 @@
       "FirstArgument": 49,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_item_icon",
         "is_const": false,
@@ -6331,6 +7186,7 @@
       "FirstArgument": 51,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_selected",
         "is_const": true,
@@ -6376,6 +7232,7 @@
       "FirstArgument": 52,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "select",
         "is_const": false,
@@ -6426,6 +7283,7 @@
       "FirstArgument": 54,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "deselect",
         "is_const": false,
@@ -6462,6 +7320,7 @@
       "FirstArgument": 55,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "deselect_all",
         "is_const": false,
@@ -6497,6 +7356,7 @@
       "FirstArgument": 55,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "remove_item",
         "is_const": false,
@@ -6533,6 +7393,7 @@
       "FirstArgument": 56,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "clear",
         "is_const": false,
@@ -6562,6 +7423,7 @@
       "FirstArgument": 56,
       "Return": "IntegersValue",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_selected_items",
         "is_const": false,
@@ -6594,6 +7456,7 @@
       "FirstArgument": 56,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_line_count",
         "is_const": true,
@@ -6627,6 +7490,7 @@
       "FirstArgument": 56,
       "Return": "Text",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_selected_text",
         "is_const": false,
@@ -6667,6 +7531,7 @@
       "FirstArgument": 57,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "has_selection",
         "is_const": true,
@@ -6707,6 +7572,7 @@
       "FirstArgument": 58,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "deselect",
         "is_const": false,
@@ -6744,6 +7610,7 @@
       "FirstArgument": 59,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "clear",
         "is_const": false,
@@ -6773,6 +7640,7 @@
       "FirstArgument": 59,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_total_character_count",
         "is_const": true,
@@ -6818,6 +7686,7 @@
       "FirstArgument": 59,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_instance_transform",
         "is_const": false,
@@ -6870,6 +7739,7 @@
       "FirstArgument": 61,
       "Return": "Transform3Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_instance_transform",
         "is_const": true,
@@ -6921,6 +7791,7 @@
       "FirstArgument": 62,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_instance_transform_2d",
         "is_const": false,
@@ -6973,6 +7844,7 @@
       "FirstArgument": 64,
       "Return": "Transform2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_instance_transform_2d",
         "is_const": true,
@@ -7027,6 +7899,7 @@
       "FirstArgument": 65,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_instance_color",
         "is_const": false,
@@ -7080,6 +7953,7 @@
       "FirstArgument": 67,
       "Return": "Colour4",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_instance_color",
         "is_const": true,
@@ -7119,6 +7993,7 @@
       "FirstArgument": 68,
       "Return": "BoundsValue",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_aabb",
         "is_const": true,
@@ -7157,6 +8032,7 @@
       "FirstArgument": 68,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_shader_parameter",
         "is_const": false,
@@ -7202,6 +8078,7 @@
       "FirstArgument": 70,
       "Return": "VariantValue",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_shader_parameter",
         "is_const": true,
@@ -7240,6 +8117,7 @@
       "FirstArgument": 71,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_point_count",
         "is_const": true,
@@ -7280,6 +8158,7 @@
       "FirstArgument": 71,
       "Return": "Colour4",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "sample",
         "is_const": false,
@@ -7326,6 +8205,7 @@
       "FirstArgument": 72,
       "Return": "Colour4",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_color",
         "is_const": false,
@@ -7374,6 +8254,7 @@
       "FirstArgument": 73,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_color",
         "is_const": false,
@@ -7420,6 +8301,7 @@
       "FirstArgument": 75,
       "Return": "Number",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_offset",
         "is_const": false,
@@ -7472,6 +8354,7 @@
       "FirstArgument": 76,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_offset",
         "is_const": false,
@@ -7528,6 +8411,7 @@
       "FirstArgument": 78,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_point",
         "is_const": false,
@@ -7574,6 +8458,7 @@
       "FirstArgument": 80,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "remove_point",
         "is_const": false,
@@ -7610,6 +8495,7 @@
       "FirstArgument": 81,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_colliding",
         "is_const": true,
@@ -7642,6 +8528,7 @@
       "FirstArgument": 81,
       "Return": "Vector2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_collision_point",
         "is_const": true,
@@ -7674,6 +8561,7 @@
       "FirstArgument": 81,
       "Return": "Vector2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_collision_normal",
         "is_const": true,
@@ -7706,6 +8594,7 @@
       "FirstArgument": 81,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "force_raycast_update",
         "is_const": false,
@@ -7735,6 +8624,7 @@
       "FirstArgument": 81,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_exception",
         "is_const": false,
@@ -7770,6 +8660,7 @@
       "FirstArgument": 82,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "clear_exceptions",
         "is_const": false,
@@ -7800,6 +8691,7 @@
       "FirstArgument": 82,
       "Return": "NodeValue",
       "ReturnClass": "CollisionObject2D",
+      "ReturnElement": null,
       "Signature": {
         "name": "get_collider",
         "is_const": true,
@@ -7832,6 +8724,7 @@
       "FirstArgument": 82,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_colliding",
         "is_const": true,
@@ -7864,6 +8757,7 @@
       "FirstArgument": 82,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_collision_point",
         "is_const": true,
@@ -7896,6 +8790,7 @@
       "FirstArgument": 82,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_collision_normal",
         "is_const": true,
@@ -7928,6 +8823,7 @@
       "FirstArgument": 82,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "force_raycast_update",
         "is_const": false,
@@ -7957,6 +8853,7 @@
       "FirstArgument": 82,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_exception",
         "is_const": false,
@@ -7992,6 +8889,7 @@
       "FirstArgument": 83,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "clear_exceptions",
         "is_const": false,
@@ -8022,6 +8920,7 @@
       "FirstArgument": 83,
       "Return": "NodeValue",
       "ReturnClass": "CollisionObject3D",
+      "ReturnElement": null,
       "Signature": {
         "name": "get_collider",
         "is_const": true,
@@ -8054,6 +8953,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "move_and_slide",
         "is_const": false,
@@ -8086,6 +8986,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_on_floor",
         "is_const": true,
@@ -8118,6 +9019,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_on_wall",
         "is_const": true,
@@ -8150,6 +9052,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_on_ceiling",
         "is_const": true,
@@ -8182,6 +9085,7 @@
       "FirstArgument": 83,
       "Return": "Vector2Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_floor_normal",
         "is_const": true,
@@ -8214,6 +9118,7 @@
       "FirstArgument": 83,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_slide_collision_count",
         "is_const": true,
@@ -8247,6 +9152,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "move_and_slide",
         "is_const": false,
@@ -8279,6 +9185,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_on_floor",
         "is_const": true,
@@ -8311,6 +9218,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_on_wall",
         "is_const": true,
@@ -8343,6 +9251,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_on_ceiling",
         "is_const": true,
@@ -8375,6 +9284,7 @@
       "FirstArgument": 83,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_floor_normal",
         "is_const": true,
@@ -8407,6 +9317,7 @@
       "FirstArgument": 83,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_slide_collision_count",
         "is_const": true,
@@ -8440,6 +9351,7 @@
       "FirstArgument": 83,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_next_path_position",
         "is_const": false,
@@ -8472,6 +9384,7 @@
       "FirstArgument": 83,
       "Return": "Vectors3Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_current_navigation_path",
         "is_const": true,
@@ -8504,6 +9417,7 @@
       "FirstArgument": 83,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_final_position",
         "is_const": false,
@@ -8536,6 +9450,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_navigation_finished",
         "is_const": false,
@@ -8568,6 +9483,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_target_reached",
         "is_const": true,
@@ -8600,6 +9516,7 @@
       "FirstArgument": 83,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_target_reachable",
         "is_const": false,
@@ -8649,6 +9566,7 @@
       "FirstArgument": 83,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_bone",
         "is_const": false,
@@ -8697,6 +9615,7 @@
       "FirstArgument": 84,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "find_bone",
         "is_const": true,
@@ -8736,6 +9655,7 @@
       "FirstArgument": 85,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_count",
         "is_const": true,
@@ -8781,6 +9701,7 @@
       "FirstArgument": 85,
       "Return": "Text",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_name",
         "is_const": true,
@@ -8832,6 +9753,7 @@
       "FirstArgument": 86,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_parent",
         "is_const": true,
@@ -8884,6 +9806,7 @@
       "FirstArgument": 87,
       "Return": "Transform3Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_rest",
         "is_const": true,
@@ -8935,6 +9858,7 @@
       "FirstArgument": 88,
       "Return": "Transform3Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_global_rest",
         "is_const": true,
@@ -8986,6 +9910,7 @@
       "FirstArgument": 89,
       "Return": "Transform3Value",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_pose",
         "is_const": true,
@@ -9037,6 +9962,7 @@
       "FirstArgument": 90,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_pose_position",
         "is_const": true,
@@ -9088,6 +10014,7 @@
       "FirstArgument": 91,
       "Return": "Rotation",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_pose_rotation",
         "is_const": true,
@@ -9139,6 +10066,7 @@
       "FirstArgument": 92,
       "Return": "Vector",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_bone_pose_scale",
         "is_const": true,
@@ -9194,6 +10122,7 @@
       "FirstArgument": 93,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_bone_parent",
         "is_const": false,
@@ -9247,6 +10176,7 @@
       "FirstArgument": 95,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_bone_rest",
         "is_const": false,
@@ -9299,6 +10229,7 @@
       "FirstArgument": 97,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_bone_pose_position",
         "is_const": false,
@@ -9351,6 +10282,7 @@
       "FirstArgument": 99,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_bone_pose_rotation",
         "is_const": false,
@@ -9407,6 +10339,7 @@
       "FirstArgument": 101,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "set_bone_pose_scale",
         "is_const": false,
@@ -9459,6 +10392,7 @@
       "FirstArgument": 103,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "reset_bone_pose",
         "is_const": false,
@@ -9517,6 +10451,7 @@
       "FirstArgument": 104,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_track",
         "is_const": false,
@@ -9565,6 +10500,7 @@
       "FirstArgument": 106,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_track_count",
         "is_const": true,
@@ -9610,6 +10546,7 @@
       "FirstArgument": 106,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "remove_track",
         "is_const": false,
@@ -9658,6 +10595,7 @@
       "FirstArgument": 107,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "track_set_path",
         "is_const": false,
@@ -9710,6 +10648,7 @@
       "FirstArgument": 109,
       "Return": "PathValue",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "track_get_path",
         "is_const": true,
@@ -9761,6 +10700,7 @@
       "FirstArgument": 110,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "track_get_key_count",
         "is_const": true,
@@ -9817,6 +10757,7 @@
       "FirstArgument": 111,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "track_set_interpolation_type",
         "is_const": false,
@@ -9877,6 +10818,7 @@
       "FirstArgument": 113,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "track_insert_key",
         "is_const": false,
@@ -9952,6 +10894,7 @@
       "FirstArgument": 117,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_animation",
         "is_const": false,
@@ -9994,6 +10937,7 @@
       "FirstArgument": 119,
       "Return": "ArrayValue",
       "ReturnClass": null,
+      "ReturnElement": "StringName",
       "Signature": {
         "name": "get_animation_list",
         "is_const": true,
@@ -10038,6 +10982,7 @@
       "FirstArgument": 119,
       "Return": "ResourceValue",
       "ReturnClass": "Animation",
+      "ReturnElement": null,
       "Signature": {
         "name": "get_animation",
         "is_const": true,
@@ -10093,6 +11038,7 @@
       "FirstArgument": 120,
       "Return": "Integer",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "add_animation_library",
         "is_const": false,
@@ -10135,6 +11081,7 @@
       "FirstArgument": 122,
       "Return": "StringsValue",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "get_animation_list",
         "is_const": true,
@@ -10181,6 +11128,7 @@
       "FirstArgument": 122,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "play",
         "is_const": false,
@@ -10237,6 +11185,7 @@
       "FirstArgument": 126,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "stop",
         "is_const": false,
@@ -10273,6 +11222,7 @@
       "FirstArgument": 127,
       "Return": "Void",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "pause",
         "is_const": false,
@@ -10302,6 +11252,7 @@
       "FirstArgument": 127,
       "Return": "Boolean",
       "ReturnClass": null,
+      "ReturnElement": null,
       "Signature": {
         "name": "is_playing",
         "is_const": true,
@@ -10313,6 +11264,2155 @@
           "type": "bool"
         }
       }
+    },
+    {
+      "Class": "Area2D",
+      "Name": "GetOverlappingBodies",
+      "Native": "get_overlapping_bodies",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 127,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "Node2D",
+      "Signature": {
+        "name": "get_overlapping_bodies",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::Node2D"
+        }
+      }
+    },
+    {
+      "Class": "Area2D",
+      "Name": "GetOverlappingAreas",
+      "Native": "get_overlapping_areas",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 127,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "Area2D",
+      "Signature": {
+        "name": "get_overlapping_areas",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::Area2D"
+        }
+      }
+    },
+    {
+      "Class": "Area2D",
+      "Name": "OverlapsBody",
+      "Native": "overlaps_body",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 127,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "overlaps_body",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3093956946,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "body",
+            "type": "Node"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Area2D",
+      "Name": "OverlapsArea",
+      "Native": "overlaps_area",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 128,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "overlaps_area",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3093956946,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "area",
+            "type": "Node"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Area3D",
+      "Name": "GetOverlappingBodies",
+      "Native": "get_overlapping_bodies",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 129,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "Node3D",
+      "Signature": {
+        "name": "get_overlapping_bodies",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::Node3D"
+        }
+      }
+    },
+    {
+      "Class": "Area3D",
+      "Name": "GetOverlappingAreas",
+      "Native": "get_overlapping_areas",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 129,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "Area3D",
+      "Signature": {
+        "name": "get_overlapping_areas",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::Area3D"
+        }
+      }
+    },
+    {
+      "Class": "Area3D",
+      "Name": "HasOverlappingBodies",
+      "Native": "has_overlapping_bodies",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 129,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "has_overlapping_bodies",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "Area3D",
+      "Name": "HasOverlappingAreas",
+      "Native": "has_overlapping_areas",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 129,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "has_overlapping_areas",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "Area3D",
+      "Name": "OverlapsBody",
+      "Native": "overlaps_body",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 129,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "overlaps_body",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3093956946,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "body",
+            "type": "Node"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Area3D",
+      "Name": "OverlapsArea",
+      "Native": "overlaps_area",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 130,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "overlaps_area",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3093956946,
+        "return_value": {
+          "type": "bool"
+        },
+        "arguments": [
+          {
+            "name": "area",
+            "type": "Node"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "IsColliding",
+      "Native": "is_colliding",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 131,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "is_colliding",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollisionCount",
+      "Native": "get_collision_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 131,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collision_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollisionPoint",
+      "Native": "get_collision_point",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      },
+      "CountQuery": "get_collision_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 131,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collision_point",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2299179447,
+        "return_value": {
+          "type": "Vector2"
+        },
+        "arguments": [
+          {
+            "name": "index",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollisionNormal",
+      "Native": "get_collision_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      },
+      "CountQuery": "get_collision_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 132,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collision_normal",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2299179447,
+        "return_value": {
+          "type": "Vector2"
+        },
+        "arguments": [
+          {
+            "name": "index",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "GetCollider",
+      "Native": "get_collider",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "ReturnNodeClass": "Node2D",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      },
+      "CountQuery": "get_collision_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 133,
+      "Return": "NodeValue",
+      "ReturnClass": "Node2D",
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collider",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3332903315,
+        "return_value": {
+          "type": "Object"
+        },
+        "arguments": [
+          {
+            "name": "index",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "ForceUpdate",
+      "Native": "force_shapecast_update",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 134,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "force_shapecast_update",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "AddException",
+      "Native": "add_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 134,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "add_exception",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3090941106,
+        "arguments": [
+          {
+            "name": "node",
+            "type": "CollisionObject2D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "RemoveException",
+      "Native": "remove_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 135,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "remove_exception",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3090941106,
+        "arguments": [
+          {
+            "name": "node",
+            "type": "CollisionObject2D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast2D",
+      "Name": "ClearExceptions",
+      "Native": "clear_exceptions",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 136,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "clear_exceptions",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "IsColliding",
+      "Native": "is_colliding",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 136,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "is_colliding",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollisionCount",
+      "Native": "get_collision_count",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 136,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collision_count",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollisionPoint",
+      "Native": "get_collision_point",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      },
+      "CountQuery": "get_collision_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 136,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collision_point",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 711720468,
+        "return_value": {
+          "type": "Vector3"
+        },
+        "arguments": [
+          {
+            "name": "index",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollisionNormal",
+      "Native": "get_collision_normal",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      },
+      "CountQuery": "get_collision_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 137,
+      "Return": "Vector",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collision_normal",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 711720468,
+        "return_value": {
+          "type": "Vector3"
+        },
+        "arguments": [
+          {
+            "name": "index",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "GetCollider",
+      "Native": "get_collider",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "ReturnNodeClass": "Node3D",
+      "Validation": {
+        "Index": {
+          "Argument": "index",
+          "Query": "get_collision_count"
+        }
+      },
+      "CountQuery": "get_collision_count",
+      "IndexArgument": 0,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 138,
+      "Return": "NodeValue",
+      "ReturnClass": "Node3D",
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_collider",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3332903315,
+        "return_value": {
+          "type": "Object"
+        },
+        "arguments": [
+          {
+            "name": "index",
+            "type": "int",
+            "meta": "int32"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "ForceUpdate",
+      "Native": "force_shapecast_update",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 139,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "force_shapecast_update",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "AddException",
+      "Native": "add_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 139,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "add_exception",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1976431078,
+        "arguments": [
+          {
+            "name": "node",
+            "type": "CollisionObject3D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "RemoveException",
+      "Native": "remove_exception",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 140,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "remove_exception",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1976431078,
+        "arguments": [
+          {
+            "name": "node",
+            "type": "CollisionObject3D"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ShapeCast3D",
+      "Name": "ClearExceptions",
+      "Native": "clear_exceptions",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "clear_exceptions",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3218959716
+      }
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "GetNextPathPosition",
+      "Native": "get_next_path_position",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_next_path_position",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1497962370,
+        "return_value": {
+          "type": "Vector2"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "DistanceToTarget",
+      "Native": "distance_to_target",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Number",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "distance_to_target",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1740695150,
+        "return_value": {
+          "type": "float",
+          "meta": "float"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "IsTargetReached",
+      "Native": "is_target_reached",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "is_target_reached",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "IsTargetReachable",
+      "Native": "is_target_reachable",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "is_target_reachable",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2240911060,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "IsNavigationFinished",
+      "Native": "is_navigation_finished",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "is_navigation_finished",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2240911060,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "GetFinalPosition",
+      "Native": "get_final_position",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Vector2Value",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_final_position",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 1497962370,
+        "return_value": {
+          "type": "Vector2"
+        }
+      }
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "GetCurrentNavigationPath",
+      "Native": "get_current_navigation_path",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 141,
+      "Return": "Vectors2Value",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_current_navigation_path",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2961356807,
+        "return_value": {
+          "type": "PackedVector2Array"
+        }
+      }
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "SetStringDelimiters",
+      "Native": "set_string_delimiters",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 141,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "set_string_delimiters",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 381264803,
+        "arguments": [
+          {
+            "name": "string_delimiters",
+            "type": "typedarray::String"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "SetCommentDelimiters",
+      "Native": "set_comment_delimiters",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 142,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "set_comment_delimiters",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 381264803,
+        "arguments": [
+          {
+            "name": "comment_delimiters",
+            "type": "typedarray::String"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "SetLineLengthGuidelines",
+      "Native": "set_line_length_guidelines",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "guideline_columns": [
+          0,
+          10000
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 143,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "set_line_length_guidelines",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 381264803,
+        "arguments": [
+          {
+            "name": "guideline_columns",
+            "type": "typedarray::int"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "GetPattern",
+      "Native": "get_pattern",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 144,
+      "Return": "ResourceValue",
+      "ReturnClass": "TileMapPattern",
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_pattern",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3820813253,
+        "return_value": {
+          "type": "TileMapPattern"
+        },
+        "arguments": [
+          {
+            "name": "coords_array",
+            "type": "typedarray::Vector2i"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "TileMapLayer",
+      "Name": "GetUsedCells",
+      "Native": "get_used_cells",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 145,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "Vector2i",
+      "Signature": {
+        "name": "get_used_cells",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::Vector2i"
+        }
+      }
+    },
+    {
+      "Class": "TileMapPattern",
+      "Name": "SetCell",
+      "Native": "set_cell",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "coords": [
+          0,
+          1023
+        ],
+        "source_id": [
+          -1,
+          1023
+        ],
+        "atlas_coords": [
+          -1,
+          1023
+        ],
+        "alternative_tile": [
+          -1,
+          1023
+        ]
+      },
+      "Validation": {
+        "Capacity": {
+          "Query": "get_used_cells",
+          "Maximum": 1024
+        }
+      },
+      "CountQuery": "get_used_cells",
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": 1024,
+      "Arguments": 4,
+      "Required": 1,
+      "FirstArgument": 145,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "set_cell",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2224802556,
+        "hash_compatibility": [
+          634000503
+        ],
+        "arguments": [
+          {
+            "name": "coords",
+            "type": "Vector2i"
+          },
+          {
+            "name": "source_id",
+            "type": "int",
+            "meta": "int32",
+            "default_value": "-1"
+          },
+          {
+            "name": "atlas_coords",
+            "type": "Vector2i",
+            "default_value": "Vector2i(-1, -1)"
+          },
+          {
+            "name": "alternative_tile",
+            "type": "int",
+            "meta": "int32",
+            "default_value": "-1"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "TileMapPattern",
+      "Name": "GetUsedCells",
+      "Native": "get_used_cells",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 149,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "Vector2i",
+      "Signature": {
+        "name": "get_used_cells",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::Vector2i"
+        }
+      }
+    },
+    {
+      "Class": "TileMapPattern",
+      "Name": "GetSize",
+      "Native": "get_size",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 149,
+      "Return": "Vector2Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_size",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3690982128,
+        "return_value": {
+          "type": "Vector2i"
+        }
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "GetWidth",
+      "Native": "get_width",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 149,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_width",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "GetHeight",
+      "Native": "get_height",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 149,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_height",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "GetData",
+      "Native": "get_data",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 149,
+      "Return": "BytesValue",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_data",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2362200018,
+        "return_value": {
+          "type": "PackedByteArray"
+        }
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "IsEmpty",
+      "Native": "is_empty",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 149,
+      "Return": "Boolean",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "is_empty",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 36873697,
+        "return_value": {
+          "type": "bool"
+        }
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "GetFormat",
+      "Native": "get_format",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 149,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_format",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3847873762,
+        "return_value": {
+          "type": "enum::Image.Format"
+        }
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "SetData",
+      "Native": "set_data",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "Bounds": {
+        "width": [
+          1,
+          16
+        ],
+        "height": [
+          1,
+          16
+        ],
+        "format": [
+          4,
+          5
+        ],
+        "data": [
+          0,
+          255
+        ]
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 5,
+      "Required": 5,
+      "FirstArgument": 149,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "set_data",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2740482212,
+        "arguments": [
+          {
+            "name": "width",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "height",
+            "type": "int",
+            "meta": "int32"
+          },
+          {
+            "name": "use_mipmaps",
+            "type": "bool"
+          },
+          {
+            "name": "format",
+            "type": "enum::Image.Format"
+          },
+          {
+            "name": "data",
+            "type": "PackedByteArray"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Image",
+      "Name": "Fill",
+      "Native": "fill",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "ArgumentKinds": {
+        "color": "Colour4"
+      },
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 154,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "fill",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2920490490,
+        "arguments": [
+          {
+            "name": "color",
+            "type": "Color"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ImageTexture",
+      "Name": "SetImage",
+      "Native": "set_image",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 155,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "set_image",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 532598488,
+        "arguments": [
+          {
+            "name": "image",
+            "type": "Image"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "ImageTexture",
+      "Name": "Update",
+      "Native": "update",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 156,
+      "Return": "Void",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "update",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 532598488,
+        "arguments": [
+          {
+            "name": "image",
+            "type": "Image"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "Texture2D",
+      "Name": "GetImage",
+      "Native": "get_image",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 157,
+      "Return": "ResourceValue",
+      "ReturnClass": "Image",
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_image",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 4190603485,
+        "return_value": {
+          "type": "Image"
+        }
+      }
+    },
+    {
+      "Class": "ImageTextureLayered",
+      "Name": "CreateFromImages",
+      "Native": "create_from_images",
+      "Mutates": true,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 1,
+      "Required": 1,
+      "FirstArgument": 157,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "create_from_images",
+        "is_const": false,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 2785773503,
+        "return_value": {
+          "type": "enum::Error"
+        },
+        "arguments": [
+          {
+            "name": "images",
+            "type": "typedarray::Image"
+          }
+        ]
+      }
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "GetStringDelimiters",
+      "Native": "get_string_delimiters",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 158,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "String",
+      "Signature": {
+        "name": "get_string_delimiters",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::String"
+        }
+      }
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "GetCommentDelimiters",
+      "Native": "get_comment_delimiters",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 158,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "String",
+      "Signature": {
+        "name": "get_comment_delimiters",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::String"
+        }
+      }
+    },
+    {
+      "Class": "CodeEdit",
+      "Name": "GetLineLengthGuidelines",
+      "Native": "get_line_length_guidelines",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 158,
+      "Return": "ArrayValue",
+      "ReturnClass": null,
+      "ReturnElement": "int",
+      "Signature": {
+        "name": "get_line_length_guidelines",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3995934104,
+        "return_value": {
+          "type": "typedarray::int"
+        }
+      }
+    },
+    {
+      "Class": "TextureLayered",
+      "Name": "GetLayers",
+      "Native": "get_layers",
+      "Mutates": false,
+      "Authority": "OwnedScene",
+      "CountQuery": null,
+      "IndexArgument": -1,
+      "AllowEnd": false,
+      "AllowNegativeOne": false,
+      "KeyQuery": null,
+      "KeyArgument": -1,
+      "KeyAbsent": false,
+      "CountArgument": -1,
+      "CountLimit": -1,
+      "Arguments": 0,
+      "Required": 0,
+      "FirstArgument": 158,
+      "Return": "Integer",
+      "ReturnClass": null,
+      "ReturnElement": null,
+      "Signature": {
+        "name": "get_layers",
+        "is_const": true,
+        "is_vararg": false,
+        "is_static": false,
+        "is_virtual": false,
+        "hash": 3905245786,
+        "return_value": {
+          "type": "int",
+          "meta": "int32"
+        }
+      }
     }
   ],
   "Signals": [
@@ -10321,7 +13421,7 @@
       "Name": "Pressed",
       "Native": "pressed",
       "Authority": "OwnedScene",
-      "FirstArgument": 127,
+      "FirstArgument": 158,
       "Arguments": 0
     },
     {
@@ -10329,7 +13429,7 @@
       "Name": "Toggled",
       "Native": "toggled",
       "Authority": "OwnedScene",
-      "FirstArgument": 127,
+      "FirstArgument": 158,
       "Arguments": 1
     },
     {
@@ -10337,7 +13437,7 @@
       "Name": "ButtonDown",
       "Native": "button_down",
       "Authority": "OwnedScene",
-      "FirstArgument": 128,
+      "FirstArgument": 159,
       "Arguments": 0
     },
     {
@@ -10345,7 +13445,7 @@
       "Name": "ButtonUp",
       "Native": "button_up",
       "Authority": "OwnedScene",
-      "FirstArgument": 128,
+      "FirstArgument": 159,
       "Arguments": 0
     },
     {
@@ -10353,7 +13453,7 @@
       "Name": "TextSubmitted",
       "Native": "text_submitted",
       "Authority": "OwnedScene",
-      "FirstArgument": 128,
+      "FirstArgument": 159,
       "Arguments": 1
     },
     {
@@ -10361,7 +13461,7 @@
       "Name": "TextChanged",
       "Native": "text_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 129,
+      "FirstArgument": 160,
       "Arguments": 1
     },
     {
@@ -10369,7 +13469,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 130,
+      "FirstArgument": 161,
       "Arguments": 0
     },
     {
@@ -10377,7 +13477,7 @@
       "Name": "Resized",
       "Native": "resized",
       "Authority": "OwnedScene",
-      "FirstArgument": 130,
+      "FirstArgument": 161,
       "Arguments": 0
     },
     {
@@ -10385,7 +13485,7 @@
       "Name": "FocusEntered",
       "Native": "focus_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 130,
+      "FirstArgument": 161,
       "Arguments": 0
     },
     {
@@ -10393,7 +13493,7 @@
       "Name": "FocusExited",
       "Native": "focus_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 130,
+      "FirstArgument": 161,
       "Arguments": 0
     },
     {
@@ -10401,7 +13501,7 @@
       "Name": "VisibilityChanged",
       "Native": "visibility_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 130,
+      "FirstArgument": 161,
       "Arguments": 0
     },
     {
@@ -10409,7 +13509,7 @@
       "Name": "ValueChanged",
       "Native": "value_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 130,
+      "FirstArgument": 161,
       "Arguments": 1
     },
     {
@@ -10417,7 +13517,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 131,
+      "FirstArgument": 162,
       "Arguments": 0
     },
     {
@@ -10425,7 +13525,7 @@
       "Name": "Finished",
       "Native": "finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 131,
+      "FirstArgument": 162,
       "Arguments": 0
     },
     {
@@ -10433,7 +13533,7 @@
       "Name": "Timeout",
       "Native": "timeout",
       "Authority": "OwnedScene",
-      "FirstArgument": 131,
+      "FirstArgument": 162,
       "Arguments": 0
     },
     {
@@ -10441,7 +13541,7 @@
       "Name": "BodyEntered",
       "Native": "body_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 131,
+      "FirstArgument": 162,
       "Arguments": 1
     },
     {
@@ -10449,7 +13549,7 @@
       "Name": "BodyExited",
       "Native": "body_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 132,
+      "FirstArgument": 163,
       "Arguments": 1
     },
     {
@@ -10457,7 +13557,7 @@
       "Name": "BodyEntered",
       "Native": "body_entered",
       "Authority": "OwnedScene",
-      "FirstArgument": 133,
+      "FirstArgument": 164,
       "Arguments": 1
     },
     {
@@ -10465,7 +13565,7 @@
       "Name": "BodyExited",
       "Native": "body_exited",
       "Authority": "OwnedScene",
-      "FirstArgument": 134,
+      "FirstArgument": 165,
       "Arguments": 1
     },
     {
@@ -10473,7 +13573,7 @@
       "Name": "AnimationFinished",
       "Native": "animation_finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 135,
+      "FirstArgument": 166,
       "Arguments": 0
     },
     {
@@ -10481,7 +13581,7 @@
       "Name": "AnimationLooped",
       "Native": "animation_looped",
       "Authority": "OwnedScene",
-      "FirstArgument": 135,
+      "FirstArgument": 166,
       "Arguments": 0
     },
     {
@@ -10489,7 +13589,7 @@
       "Name": "FrameChanged",
       "Native": "frame_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 135,
+      "FirstArgument": 166,
       "Arguments": 0
     },
     {
@@ -10497,7 +13597,7 @@
       "Name": "AnimationChanged",
       "Native": "animation_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 135,
+      "FirstArgument": 166,
       "Arguments": 0
     },
     {
@@ -10505,7 +13605,7 @@
       "Name": "ItemSelected",
       "Native": "item_selected",
       "Authority": "OwnedScene",
-      "FirstArgument": 135,
+      "FirstArgument": 166,
       "Arguments": 1
     },
     {
@@ -10513,7 +13613,7 @@
       "Name": "MultiSelected",
       "Native": "multi_selected",
       "Authority": "OwnedScene",
-      "FirstArgument": 136,
+      "FirstArgument": 167,
       "Arguments": 2
     },
     {
@@ -10521,7 +13621,7 @@
       "Name": "EmptyClicked",
       "Native": "empty_clicked",
       "Authority": "OwnedScene",
-      "FirstArgument": 138,
+      "FirstArgument": 169,
       "Arguments": 2
     },
     {
@@ -10529,7 +13629,7 @@
       "Name": "ItemActivated",
       "Native": "item_activated",
       "Authority": "OwnedScene",
-      "FirstArgument": 140,
+      "FirstArgument": 171,
       "Arguments": 1
     },
     {
@@ -10537,7 +13637,7 @@
       "Name": "TextChanged",
       "Native": "text_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 141,
+      "FirstArgument": 172,
       "Arguments": 0
     },
     {
@@ -10545,7 +13645,7 @@
       "Name": "PathChanged",
       "Native": "path_changed",
       "Authority": "OwnedScene",
-      "FirstArgument": 141,
+      "FirstArgument": 172,
       "Arguments": 0
     },
     {
@@ -10553,7 +13653,7 @@
       "Name": "TargetReached",
       "Native": "target_reached",
       "Authority": "OwnedScene",
-      "FirstArgument": 141,
+      "FirstArgument": 172,
       "Arguments": 0
     },
     {
@@ -10561,7 +13661,7 @@
       "Name": "NavigationFinished",
       "Native": "navigation_finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 141,
+      "FirstArgument": 172,
       "Arguments": 0
     },
     {
@@ -10569,7 +13669,7 @@
       "Name": "PoseUpdated",
       "Native": "pose_updated",
       "Authority": "OwnedScene",
-      "FirstArgument": 141,
+      "FirstArgument": 172,
       "Arguments": 0
     },
     {
@@ -10577,7 +13677,71 @@
       "Name": "AnimationFinished",
       "Native": "animation_finished",
       "Authority": "OwnedScene",
-      "FirstArgument": 141,
+      "FirstArgument": 172,
+      "Arguments": 1
+    },
+    {
+      "Class": "Area3D",
+      "Name": "BodyEntered",
+      "Native": "body_entered",
+      "Authority": "OwnedScene",
+      "FirstArgument": 173,
+      "Arguments": 1
+    },
+    {
+      "Class": "Area3D",
+      "Name": "BodyExited",
+      "Native": "body_exited",
+      "Authority": "OwnedScene",
+      "FirstArgument": 174,
+      "Arguments": 1
+    },
+    {
+      "Class": "Area3D",
+      "Name": "AreaEntered",
+      "Native": "area_entered",
+      "Authority": "OwnedScene",
+      "FirstArgument": 175,
+      "Arguments": 1
+    },
+    {
+      "Class": "Area3D",
+      "Name": "AreaExited",
+      "Native": "area_exited",
+      "Authority": "OwnedScene",
+      "FirstArgument": 176,
+      "Arguments": 1
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "PathChanged",
+      "Native": "path_changed",
+      "Authority": "OwnedScene",
+      "FirstArgument": 177,
+      "Arguments": 0
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "TargetReached",
+      "Native": "target_reached",
+      "Authority": "OwnedScene",
+      "FirstArgument": 177,
+      "Arguments": 0
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "NavigationFinished",
+      "Native": "navigation_finished",
+      "Authority": "OwnedScene",
+      "FirstArgument": 177,
+      "Arguments": 0
+    },
+    {
+      "Class": "NavigationAgent2D",
+      "Name": "VelocityComputed",
+      "Native": "velocity_computed",
+      "Authority": "OwnedScene",
+      "FirstArgument": 177,
       "Arguments": 1
     }
   ],
@@ -10875,6 +14039,18 @@
       "Enum": "LoopMode",
       "Name": "LOOP_PINGPONG",
       "Value": 2
+    },
+    {
+      "Class": "Image",
+      "Enum": "Format",
+      "Name": "FORMAT_RGB8",
+      "Value": 4
+    },
+    {
+      "Class": "Image",
+      "Enum": "Format",
+      "Name": "FORMAT_RGBA8",
+      "Value": 5
     }
   ],
   "Arguments": [
@@ -11929,6 +15105,272 @@
       "Default": "false"
     },
     {
+      "Class": "Area2D.OverlapsBody",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node"
+    },
+    {
+      "Class": "Area2D.OverlapsArea",
+      "Name": "area",
+      "Native": "area",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node"
+    },
+    {
+      "Class": "Area3D.OverlapsBody",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node"
+    },
+    {
+      "Class": "Area3D.OverlapsArea",
+      "Name": "area",
+      "Native": "area",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node"
+    },
+    {
+      "Class": "ShapeCast2D.GetCollisionPoint",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ShapeCast2D.GetCollisionNormal",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ShapeCast2D.GetCollider",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ShapeCast2D.AddException",
+      "Name": "node",
+      "Native": "node",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "CollisionObject2D"
+    },
+    {
+      "Class": "ShapeCast2D.RemoveException",
+      "Name": "node",
+      "Native": "node",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "CollisionObject2D"
+    },
+    {
+      "Class": "ShapeCast3D.GetCollisionPoint",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ShapeCast3D.GetCollisionNormal",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ShapeCast3D.GetCollider",
+      "Name": "index",
+      "Native": "index",
+      "Kind": "Integer",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ShapeCast3D.AddException",
+      "Name": "node",
+      "Native": "node",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "CollisionObject3D"
+    },
+    {
+      "Class": "ShapeCast3D.RemoveException",
+      "Name": "node",
+      "Native": "node",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "CollisionObject3D"
+    },
+    {
+      "Class": "CodeEdit.SetStringDelimiters",
+      "Name": "string_delimiters",
+      "Native": "string_delimiters",
+      "Kind": "ArrayValue",
+      "Min": -100000,
+      "Max": 100000,
+      "Element": "String"
+    },
+    {
+      "Class": "CodeEdit.SetCommentDelimiters",
+      "Name": "comment_delimiters",
+      "Native": "comment_delimiters",
+      "Kind": "ArrayValue",
+      "Min": -100000,
+      "Max": 100000,
+      "Element": "String"
+    },
+    {
+      "Class": "CodeEdit.SetLineLengthGuidelines",
+      "Name": "guideline_columns",
+      "Native": "guideline_columns",
+      "Kind": "ArrayValue",
+      "Min": 0,
+      "Max": 10000,
+      "Element": "int"
+    },
+    {
+      "Class": "TileMapLayer.GetPattern",
+      "Name": "coords_array",
+      "Native": "coords_array",
+      "Kind": "ArrayValue",
+      "Min": -100000,
+      "Max": 100000,
+      "Element": "Vector2i"
+    },
+    {
+      "Class": "TileMapPattern.SetCell",
+      "Name": "coords",
+      "Native": "coords",
+      "Kind": "Vector2Integer",
+      "Min": 0,
+      "Max": 1023
+    },
+    {
+      "Class": "TileMapPattern.SetCell",
+      "Name": "source_id",
+      "Native": "source_id",
+      "Kind": "Integer",
+      "Min": -1,
+      "Max": 1023,
+      "Default": "-1"
+    },
+    {
+      "Class": "TileMapPattern.SetCell",
+      "Name": "atlas_coords",
+      "Native": "atlas_coords",
+      "Kind": "Vector2Integer",
+      "Min": -1,
+      "Max": 1023,
+      "Default": "Vector2i(-1, -1)"
+    },
+    {
+      "Class": "TileMapPattern.SetCell",
+      "Name": "alternative_tile",
+      "Native": "alternative_tile",
+      "Kind": "Integer",
+      "Min": -1,
+      "Max": 1023,
+      "Default": "-1"
+    },
+    {
+      "Class": "Image.SetData",
+      "Name": "width",
+      "Native": "width",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 16
+    },
+    {
+      "Class": "Image.SetData",
+      "Name": "height",
+      "Native": "height",
+      "Kind": "Integer",
+      "Min": 1,
+      "Max": 16
+    },
+    {
+      "Class": "Image.SetData",
+      "Name": "use_mipmaps",
+      "Native": "use_mipmaps",
+      "Kind": "Boolean",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "Image.SetData",
+      "Name": "format",
+      "Native": "format",
+      "Kind": "Integer",
+      "Min": 4,
+      "Max": 5
+    },
+    {
+      "Class": "Image.SetData",
+      "Name": "data",
+      "Native": "data",
+      "Kind": "BytesValue",
+      "Min": 0,
+      "Max": 255
+    },
+    {
+      "Class": "Image.Fill",
+      "Name": "color",
+      "Native": "color",
+      "Kind": "Colour4",
+      "Min": -100000,
+      "Max": 100000
+    },
+    {
+      "Class": "ImageTexture.SetImage",
+      "Name": "image",
+      "Native": "image",
+      "Kind": "ResourceValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Image"
+    },
+    {
+      "Class": "ImageTexture.Update",
+      "Name": "image",
+      "Native": "image",
+      "Kind": "ResourceValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Image"
+    },
+    {
+      "Class": "ImageTextureLayered.CreateFromImages",
+      "Name": "images",
+      "Native": "images",
+      "Kind": "ArrayValue",
+      "Min": -100000,
+      "Max": 100000,
+      "Element": "Image"
+    },
+    {
       "Class": "BaseButton.Toggled",
       "Name": "toggled_on",
       "Native": "toggled_on",
@@ -12051,6 +15493,50 @@
       "Kind": "Text",
       "Min": 0,
       "Max": 8192
+    },
+    {
+      "Class": "Area3D.BodyEntered",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node3D"
+    },
+    {
+      "Class": "Area3D.BodyExited",
+      "Name": "body",
+      "Native": "body",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Node3D"
+    },
+    {
+      "Class": "Area3D.AreaEntered",
+      "Name": "area",
+      "Native": "area",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Area3D"
+    },
+    {
+      "Class": "Area3D.AreaExited",
+      "Name": "area",
+      "Native": "area",
+      "Kind": "NodeValue",
+      "Min": -100000,
+      "Max": 100000,
+      "ResourceClass": "Area3D"
+    },
+    {
+      "Class": "NavigationAgent2D.VelocityComputed",
+      "Name": "safe_velocity",
+      "Native": "safe_velocity",
+      "Kind": "Vector2Value",
+      "Min": -100000,
+      "Max": 100000
     }
   ],
   "LoadTypes": [
@@ -12069,10 +15555,14 @@
     "Gradient",
     "NavigationMesh",
     "Animation",
-    "AnimationLibrary"
+    "AnimationLibrary",
+    "Image",
+    "NavigationPolygon",
+    "TileSet",
+    "TileMapPattern"
   ],
   "Schema": 1,
-  "PolicySHA256": "b7718227d093f5add343d299ee1ca181f5ea6847d54f592978b6fac369de4453",
+  "PolicySHA256": "c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
   "ScopeOperations": [
     {

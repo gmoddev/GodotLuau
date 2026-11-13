@@ -11,6 +11,7 @@ func Run() -> void:
     root.add_child(Game)
     current_scene=Game
     await load("res://NativeGameplayCases.gd").new().Run(self,Game,true)
+    await load("res://NativeProductionCases.gd").new().Run(self,Game,true)
     Game.queue_free()
     await process_frame
     await process_frame

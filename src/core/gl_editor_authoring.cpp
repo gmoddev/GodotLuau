@@ -6,6 +6,7 @@
 #include "gl_runtime.h"
 #include "gl_project_modules.h"
 #include "gl_authoring_debugger.h"
+#include "gl_debug_snapshot.h"
 #include <godot_cpp/classes/button.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/editor_file_dialog.hpp>
@@ -75,12 +76,18 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     Profiles->set_tooltip_text("Template for a new Luau scene; existing projects are preserved");Buttons->add_child(Profiles);
     for (auto Entry : {std::pair<const char*,const char*>("New Luau Scene","NewSceneDialog"),
         {"Preview Luau","PreviewSelected"},{"Clear Preview","StopPreview"},{"Save Preview As","SavePreviewDialog"},
-        {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"}}) {
+        {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"},{"Project Uses","FindProjectUses"}}) {
         auto ButtonNode=memnew(Button); ButtonNode->set_text(Entry.first);
         ButtonNode->connect("pressed",Callable(this,Entry.second)); Buttons->add_child(ButtonNode);
     }
     auto Status=memnew(Label); StatusLabel=Status->get_instance_id();
     Status->set_text("Explicit preview only. Runtime services are unavailable here."); Panel->add_child(Status);
+    auto Errors=memnew(Tree);RuntimeTree=Errors->get_instance_id();Errors->set_columns(2);
+    Errors->hide();
+    Errors->set_column_title(0,"Error stack / local");Errors->set_column_title(1,"Snapshot value");
+    Errors->set_column_titles_visible(true);Errors->set_custom_minimum_size(Vector2(600,110));
+    Errors->set_tooltip_text("Error-time copies only. Double-click a project source frame to open it. No suspended VM or object inspection.");
+    Errors->connect("item_activated",Callable(this,"OpenRuntimeFrame"));Panel->add_child(Errors);
     auto Content=memnew(HBoxContainer); Panel->add_child(Content);
     auto Hierarchy=memnew(Tree); PreviewTree=Hierarchy->get_instance_id();
     Hierarchy->set_custom_minimum_size(Vector2(220,200));
@@ -166,11 +173,16 @@ Dictionary GLNativeEditorPlugin::PreviewScript(const Ref<LuauScript>& Source) {
         GLDomainLimits Limits; Limits.ResumeMilliseconds=100; Limits.MaxSafepoints=500000;
         Limits.MemoryBytes=64*1024*1024; Limits.Tasks=512; Limits.Coroutines=1024; Limits.References=2048; Limits.Owners=128;
         PreviewDomain=std::make_unique<GLExecutionDomain>(GLDomainKind::EditorPreview,Limits);
+        PreviewDomain->SetDebugInfo(true);
         PreviewModules=std::make_unique<GLProjectModules>();
         PreviewDomain->SetModuleResolver([this](lua_State* Thread,int Argument,GLModuleSource& Module) { return PreviewModules->Resolve(Thread,Argument,Module); });
         PreviewDomain->SetModuleLoader([this](GLModuleSource& Module) { return PreviewModules->Load(Module); });
         PreviewDomain->SetInvalidationHook([](lua_State* Anchor){ GLRetireScenes(Anchor); });
-        PreviewDomain->SetErrorHandler([this](lua_State*,const std::string& Error){ PreviewError=String::utf8(Error.c_str()).left(4096); });
+        PreviewDomain->SetErrorHandler([this](lua_State* Thread,const std::string& Error){
+            PreviewError=String::utf8(Error.c_str()).left(4096);
+            Array Data;Data.push_back(PreviewSource.is_valid()?PreviewSource->get_path():String());Data.push_back(PreviewError);Data.push_back(String());Data.push_back(GLCaptureErrorSnapshot(Thread));
+            ReceiveRuntimeError(Data);
+        });
         PreviewDomain->InitializeHost([this](lua_State* Thread) {
             RegisterLuauValueMetatables(Thread); RegisterLuauValueGlobals(Thread); GLRegisterScene(Thread);
             GLPushNodeHandle(Thread,this);

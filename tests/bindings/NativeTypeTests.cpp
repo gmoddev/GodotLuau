@@ -57,6 +57,24 @@ int main(int Count, char** Arguments) {
     Luau::freeze(Frontend.globals.globalTypes);
     struct Case { const char* Name; const char* Source; bool Valid; };
     const Case Cases[]={
+        {"typed primitive and scoped resource collections",R"(local S=Scene.new(Parent)
+local Editor=S:New("CodeEdit",{})
+S:Call(Editor,"SetLineLengthGuidelines",{80,120})
+local Columns:{number}=S:Call(Editor,"GetLineLengthGuidelines")
+local Image=S:New("Image",{})
+local Layers=S:New("Texture2DArray",{})
+local Status:number=S:Call(Layers,"CreateFromImages",{Image})
+local Area=S:New("Area3D",{})
+local Bodies:{NativeNode3D}=S:Call(Area,"GetOverlappingBodies")
+)",true},
+        {"reject typed primitive element mismatch",R"(local S=Scene.new(Parent)
+local Editor=S:New("CodeEdit",{})
+S:Call(Editor,"SetLineLengthGuidelines",{"eighty"})
+)",false},
+        {"reject typed resource element mismatch",R"(local S=Scene.new(Parent)
+local Layers=S:New("Texture2DArray",{})
+S:Call(Layers,"CreateFromImages",{S:New("BoxMesh",{})})
+)",false},
         {"construct and property",R"(local S=Scene.new(Parent)
 local B=S:New("Button",{Text="Native",MinSize=Vector2.new(100,32)})
 B.Text="Ready"

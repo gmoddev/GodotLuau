@@ -167,6 +167,22 @@ bool Read(lua_State* Thread,const Property& Item,int Index,Variant& Result,int D
     } else {
         for (int I=1;Valid && I<=Count;++I) {
             lua_rawgeti(Thread,Index,I);Variant Child;Property Dynamic=Item;Dynamic.Type=VariantValue;
+            Dynamic.Element=nullptr;
+            if(Item.Element) {
+                auto Element=GLNativeElementType(Item.Element);
+                if(Element==Variant::NIL) {Valid=false;lua_pop(Thread,1);break;}
+                Dynamic.Type=GLNativeValueKind(Item.Element);
+                if(Element==Variant::STRING || Element==Variant::STRING_NAME) {
+                    String Text;Valid=TextAt(Thread,-1,Text);Child=Element==Variant::STRING_NAME?Variant(StringName(Text)):Variant(Text);
+                } else if(Element==Variant::BOOL) {Valid=lua_type(Thread,-1)==LUA_TBOOLEAN;Child=bool(lua_toboolean(Thread,-1));}
+                else if(Element==Variant::INT || Element==Variant::FLOAT) {
+                    double N=lua_tonumber(Thread,-1);
+                    Valid=lua_type(Thread,-1)==LUA_TNUMBER && std::isfinite(N) && N>=Item.Min && N<=Item.Max &&
+                        (Element!=Variant::INT || (N==std::floor(N) && std::abs(N)<=9007199254740991.0));
+                    Child=Element==Variant::INT?Variant(int64_t(Valid?N:0)):Variant(N);
+                } else Valid=Read(Thread,Dynamic,lua_gettop(Thread),Child,Depth+1,Cells,Seen);
+                lua_pop(Thread,1);if(Valid)Values.push_back(Child);continue;
+            }
             if(Item.Type==Vectors2Value)Dynamic.Type=Vector2Value;
             else if(Item.Type==Vectors3Value)Dynamic.Type=GLNative::Vector;
             else if(Item.Type==ColoursValue)Dynamic.Type=Colour4;
@@ -181,6 +197,9 @@ bool Read(lua_State* Thread,const Property& Item,int Index,Variant& Result,int D
             lua_pop(Thread,1);
         }
         Result=Values;
+        if(Item.Element && Valid) {
+            Array Typed;Typed.set_typed(GLNativeElementType(Item.Element),StringName(),Variant());Typed.assign(Values);Result=Typed;
+        }
         for (const auto& Type:ValueTypes) if (Type.Type==Item.Type && Type.Native!=Variant::ARRAY) {
             for (int I=0;Valid && I<Values.size();++I) {
                 Variant V=Values[I];
@@ -279,9 +298,25 @@ void Push(lua_State* Thread,const Variant& Value) {
 }
 const char* GLNativeValueName(Kind Type){for(const auto& T:ValueTypes)if(T.Type==Type)return T.Name;return nullptr;}
 Kind GLNativeValueKind(const char* Name){for(const auto& T:ValueTypes)if(!strcmp(T.Name,Name))return T.Type;return Void;}
+Variant::Type GLNativeElementType(const char* Name){
+    if(!Name)return Variant::NIL;
+    if(!strcmp(Name,"StringName"))return Variant::STRING_NAME;
+    if(!strcmp(Name,"String"))return Variant::STRING;
+    if(!strcmp(Name,"int"))return Variant::INT;
+    if(!strcmp(Name,"float"))return Variant::FLOAT;
+    if(!strcmp(Name,"bool"))return Variant::BOOL;
+    for(const auto& T:ValueTypes)if(!strcmp(T.Name,Name))return T.Native;
+    return Variant::NIL;
+}
 bool GLReadNativeValue(lua_State* Thread,const Property& Item,int Index,Variant& Result){int Cells=0;std::vector<const void*> Seen;return Read(Thread,Item,Index,Result,0,Cells,Seen)&&GLValidNativeValue(Item,Result);}
 bool GLValidNativeValue(const Property& Item,const Variant& Value){
     if(Item.Type!=VariantValue){bool Found=false;for(const auto& T:ValueTypes)if(T.Type==Item.Type){Found=T.Native==Value.get_type();break;}if(!Found)return false;}
+    if(Item.Element) {
+        if(Value.get_type()!=Variant::ARRAY)return false;
+        Array Values=Value;auto Element=GLNativeElementType(Item.Element);
+        if(Element==Variant::NIL || Values.size()>MaxCollection)return false;
+        for(int I=0;I<Values.size();++I)if(Variant(Values[I]).get_type()!=Element)return false;
+    }
     int Cells=0;return Valid(Item,Value,0,Cells);
 }
 bool GLPushNativeValue(lua_State* Thread,const Variant& Value){Property Item{"","","",VariantValue,-1e12,1e12};if(!GLValidNativeValue(Item,Value))return false;Push(Thread,Value);return true;}

@@ -20,6 +20,7 @@ func Run() -> void:
     Service.name="RunService"
     Game.add_child(Service)
     await load("res://NativeExpansionCases.gd").new().Run(self,Game,true)
+    await load("res://NativeProductionCases.gd").new().Run(self,Game,true)
     Game.queue_free()
     await process_frame
     await process_frame

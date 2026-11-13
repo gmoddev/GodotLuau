@@ -5,7 +5,9 @@ on:
     paths:
       - "src/**"
       - "tests/runtime/**"
+      - "tests/editor/**"
       - "tests/packaging/**"
+      - "examples/foundry-expedition/**"
       - "tools/generar_release.py"
       - "luau"
       - "godot-cpp"
@@ -15,7 +17,9 @@ on:
     paths:
       - "src/**"
       - "tests/runtime/**"
+      - "tests/editor/**"
       - "tests/packaging/**"
+      - "examples/foundry-expedition/**"
       - "tools/generar_release.py"
       - "luau"
       - "godot-cpp"
@@ -145,6 +149,8 @@ jobs:
 
       - name: Single-player listen dedicated and editor lifecycle
         timeout-minutes: 4
+        env:
+          GL_NATIVE_COVERAGE: '1'
         run: |
           python tests/runtime/RunQualification.py \
             --godot "$GODOT_RUNTIME" \
@@ -153,6 +159,8 @@ jobs:
 
       - name: Actual Godot ScriptEditor native bindings and diagnostics
         timeout-minutes: 2
+        env:
+          GL_NATIVE_COVERAGE: '1'
         run: |
           python tests/editor/RunNativeAuthoring.py \
             --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
@@ -161,6 +169,8 @@ jobs:
 
       - name: Native physics and navigation on verified official host
         timeout-minutes: 2
+        env:
+          GL_NATIVE_COVERAGE: '1'
         run: |
           python tests/runtime/RunQualification.py \
             --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
@@ -169,6 +179,8 @@ jobs:
 
       - name: Actual native Luau clean-project authoring and preview workflow
         timeout-minutes: 2
+        env:
+          GL_NATIVE_COVERAGE: '1'
         run: |
           python tests/editor/RunNativeAuthoring.py \
             --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
@@ -181,6 +193,17 @@ jobs:
           python tests/runtime/RunLuauOnly.py \
             --godot "$GODOT_RUNTIME" --extension "build/native/${{ matrix.Library }}" \
             --source "$RUNNER_TEMP/native-ci/source.json" --output "$RUNNER_TEMP/native-ci/luau-game"
+
+      - name: Foundry Expedition Luau-only gameplay assets and persistence restart
+        timeout-minutes: 5
+        env:
+          GL_NATIVE_COVERAGE: '1'
+        run: |
+          python tests/runtime/RunLuauOnly.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --source "$RUNNER_TEMP/native-ci/source.json" --profile Foundry \
+            --output "$RUNNER_TEMP/native-ci/foundry"
 
       - name: GL-006 and GL-008 existing network regressions
         timeout-minutes: 4
@@ -303,7 +326,11 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --godot-evidence "$RUNNER_TEMP/godot-4.7.1/provenance.json" \
             --remote-host-evidence "$RUNNER_TEMP/remote-host/remote-host.json" \
-            --remote-host-qualification "$RUNNER_TEMP/native-ci/hostqualification" --revision "$GITHUB_SHA"
+            --remote-host-qualification "$RUNNER_TEMP/native-ci/hostqualification" --revision "$GITHUB_SHA" --foundry
+
+      - name: Record actual native API invocations separately from assertions
+        timeout-minutes: 1
+        run: python tools/NativeCoverageReport.py --logs "$RUNNER_TEMP/native-ci" --output "$RUNNER_TEMP/native-ci/api-invocations.json"
 
       - name: Retain native qualification diagnostics
         if: ${{ always() }}
@@ -329,6 +356,7 @@ jobs:
             ${{ runner.temp }}/native-ci/**/latency-proxy.json
             ${{ runner.temp }}/native-ci/source.json
             ${{ runner.temp }}/native-ci/summary.json
+            ${{ runner.temp }}/native-ci/api-invocations.json
             ${{ runner.temp }}/godot-4.7.1/provenance.json
             ${{ runner.temp }}/remote-host/remote-host.json
             ${{ runner.temp }}/remote-host-attempts/**

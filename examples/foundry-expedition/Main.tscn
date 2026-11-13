@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="LuauScript" path="res://Server.luau" id="1"]
+[ext_resource type="LuauScript" path="res://Client.luau" id="2"]
+[node name="FoundryExpedition" type="Node3D"]
+[node name="Rules" type="ServerScript" parent="."]
+codigo_luau=ExtResource("1")
+[node name="Interface" type="LocalScript" parent="."]
+codigo_luau=ExtResource("2")

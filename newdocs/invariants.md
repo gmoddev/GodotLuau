@@ -81,6 +81,11 @@ Packing expanded snapshot descendants must not retain PackedScene instance paths
 that would create those descendants again on reopen. Native resource references
 remain, while the saved snapshot and original preview have separate identities.
 
+GL-054 error inspection copies bounded primitive data only. It must not evaluate
+metamethods or retain native handles, tables, VM frames or registry references.
+Skip VM inspection after memory failure. A historical error snapshot is never
+advertised through a live suspended-stack interface or used to resume execution.
+
 - Client/server context describes execution, not a privilege grant. Check native
   operations at the boundary rather than relying on a higher-level wrapper or
   the name/visibility of a global. Integrated GL-003 implements the bounded native

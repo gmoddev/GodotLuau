@@ -1,0 +1,637 @@
+# GL-054 engine and production campaign
+
+Status: qualified within the [recorded profiles and limitations](gl-054-qualification.md),
+unmerged and ready for integration review. This campaign name is distinct from
+the historical GL-054 transitive-module-reload finding, already resolved on main.
+Never renumber or reopen that finding without new evidence.
+
+## Baseline and boundaries
+
+On 2026-11-12, remote main and the clean integration worktree both resolve to
+`e3d7b53e78dd483e3765d64995e862810d94c6f8`. Work is isolated on
+`feature/gl-054-engine-production`. Preserve dependency pins:
+godot-cpp `d5cc777a89d899665fb61f1650ef0dc0cf6488c4`,
+Luau `9e2984fd0334414a2ef62ceede0c06dab7574d55`.
+No main merge, publication or updater admission is authorized by this campaign.
+
+Read AGENTS, the documentation classes/architecture/invariants/issue ledger,
+ADR-014/015/016/017, and GL-049/051/052/053 source and retained qualification.
+Existing domains, ownership/generations, ObjectDB/Ref identity, native Godot
+systems, Character authority, persistence and transport remain authoritative.
+Native remains default; Scripted remains explicit opt-in.
+
+GL-050 is closed within its recorded scope. The retained main receipt identifies
+fresh core/native/types passes at `502bcbe`, including 141 native actors on each
+platform and the controlled real-companion reply/exit marker. Retained native
+fingerprint is `fda36b81c44f8dc11a2c3b52d17687fbda78b5b2f911ea230fd544a54e6b1cb2`.
+Do not repeat those unchanged gates merely to establish this starting point.
+
+## Consequential phases and acceptance facts
+
+1. Measure the existing approved surface against the same pinned metadata
+   denominators. Keep discoverability, authorization, conversion/call support,
+   generated typing, actual execution and representative application use separate.
+   Add bounded test-build invocation evidence rather than infer execution from
+   declarations, source strings or policy selections.
+2. Expand Variant/binding support and complete useful native feature families:
+   typed collections, scoped object/resource collections, nullable/default
+   arguments, physics/area/casts, navigation, lighting/particles, UI, rendering
+   and asset resources. Each family needs valid calls, rejection without mutation,
+   bounds, wrong-owner and retirement coverage before it is called qualified.
+3. Extend native composition, controlled lifecycle/effects and resource workflows
+   where the existing boundary can represent them. Record a focused decision
+   before a new ownership/effect model; never expose raw global engine authority
+   to bypass a missing interface.
+4. Improve actual editor navigation/indexing, diagnostics, inspectable error
+   context, preview/reload and project templates. Distinguish error snapshots from
+   suspended debugging; do not advertise breakpoints/locals without a real bridge.
+5. Build a mechanically substantial, modular Luau-only 3D acceptance game using
+   native physics, navigation, animation, UI/audio/resources, transitions and
+   persistence. Use existing networking/Relay Siege for unchanged transport and
+   multiplayer regression, rather than introduce a competing framework.
+6. Qualify bounded stress/performance, actual graphical/editor/export behavior,
+   Windows/Linux Debug/Release, core/native/types/sanitizers and non-publishing
+   packages. Reuse trustworthy evidence only within identical input/scope limits.
+
+Continue through independent phases; this plan is not an implementation result.
+If a family needs unavailable capability/host/debugger support, document its exact
+blocker and continue feasible work. API counts are not acceptance by themselves.
+
+## Source-confirmed starting observations
+
+The generated baseline reports 920 metadata classes and 14,379 declared methods;
+94 classes are constructible, with 306 selected property descriptors, 167 methods,
+33 signals and 49 constants. Those are policy selections, not execution coverage.
+NativeCoverage.json inventories metadata and permissions but has no invocation
+receipt. Generator Value explicitly rejects typed-array arguments; outputs admit
+only limited primitive typed arrays. Generic nested Variant values reject native
+object references. Existing direct Node/Resource arguments retain scoped authority.
+
+Existing GL-053 already implements bounded compound/packed values, native physics
+and navigation, sealed owned value-track animation, nested/inherited scene
+preflight, transitive module invalidation, module navigation and four native
+starter scenes. Preserve those instead of rebuilding their infrastructure.
+
+DockerPC was busy at the initial worker admission check. No worker load or local
+native compilation was started. Keep source work progressing and use existing
+hosted qualification until safe worker admission is available.
+
+## Phase 1 — invocation baseline (implementation, qualification pending)
+
+The CMake test adapter now optionally records successful constructors, member
+reads/writes, calls, delivered signals and pure-value construction, keyed by live
+execution domain and exact policy descriptor. `GL_NATIVE_COVERAGE=1` enables it;
+SCons production builds contain no recorder. Counts are bounded and saturation is
+explicit. No native handles, callbacks or owner references are retained by it.
+The existing native CI workloads collect this evidence without instrumenting the
+performance steps. `tools/NativeCoverageReport.py` joins same-policy receipts with
+the stable pinned metadata inventory. Successful invocation is not a correctness
+assertion, nor evidence for unmeasured enum reads or scope operations.
+
+Read-only generation check passed; the initial inventory reports zero invocation
+receipts until the instrumented workloads run. This deliberately does not invent
+executable coverage from the previously qualified source or declarations.
+The starting selections are 94 constructors, 306 properties, 167 methods,
+33 signals and 49 enum values. The denominators remain 920 metadata classes,
+14,379 methods, 3,676 properties, 447 signals, 647 enum declarations and 155
+standalone class constants; selected enum values are not compared to that last
+constant denominator. The journal and inventory implementation are a first
+reviewable phase, not completion of GL-054.
+
+## Phase 2 — collections and native feature families (qualification pending)
+
+Typed primitive arrays now preserve their Godot element type on input and validate
+it on output. Scoped typed Node/Resource arrays use the existing live SceneScope
+authority: every input handle must belong to that scope, all arguments validate
+before invocation, resource query handles remain immutable, and Node query arrays
+project only live owned nodes into a dense frozen result. Foreign query bodies
+provide no native handle. Arbitrary objects nested in general Variant dictionaries
+remain unsupported; no raw RID/Callable/Signal capability is introduced.
+Typed arrays retain the 1,024-element collection bound. Exact metadata defaults
+now include Vector3, integer Vector2, NodePath and empty typed arrays, without
+evaluating source expressions.
+
+New approved families include Area3D and scoped 2D/3D overlap queries, 2D/3D
+ShapeCast with bounded collision-index inspection and owned exceptions, 2D
+navigation agents/regions and 2D/3D avoidance obstacles, CPU particles, 2D lights,
+decals, procedural images/textures, tile pattern inspection and typed CodeEdit
+configuration. Existing generic descriptors, handles and generated types remain
+the implementation path. Shape updates and navigation calls use the established
+runtime physics-phase gate; 2D navigation also checks map synchronization.
+
+Image initialization accepts exact RGB8/RGBA8 data, dimensions 1..16, no mipmaps;
+the packed collection limit remains unchanged. Mutable ImageTexture uploads are
+non-mipmapped and bounded to 1,048,576 pixels; updates must match existing size and
+format. Layered textures accept 1..16 matching owned images within the same total
+pixel budget. Invalid inputs reject before native mutation. Loaded project assets
+remain trusted local resources, not a hostile-file sandbox. CPU particles start
+inactive and preview rejects enabling emission, matching existing temporal-effect
+restrictions. Tile patterns have bounded cell capacity; this is not unrestricted
+TileSet editing or terrain baking.
+
+`NativeProductionCases.gd` exercises actual dispatch, primitive/resource arrays,
+invalid arrays without mutation, cross-scope/cross-owner rejection, foreign-body
+projection, native image state, both cast dimensions, overlaps, navigation on the
+official full-featured host, and owner retirement. These tests are implemented but
+not yet reported as passing. The existing admitted lightweight hosts still omit
+navigation; their negative availability evidence remains distinct from full-host
+path qualification. Baseline hosted runs: core 43364130777 and native 43364130679.
+
+Both platform declaration jobs passed for `c628b81` in run 43365508318. The new
+runtime cases remain pending native builds; selections are not yet qualified by
+that type result. Core/native runs 43365508309/43365508357 cover that revision.
+
+## Phase 3 — practical error inspection (qualification pending)
+
+The existing editor debugger transport now supports bounded error-time frame and
+primitive-local snapshots, domain/generation labels, opaque native/table values,
+and explicit project-source frame navigation. Full local-name compilation is
+selected by the trusted editor host, not by gameplay scripts. The
+[native development contract](gl-054-native-development.md) records bounds,
+compatibility, memory-failure handling and the precise live-debugger limitation.
+The actual EditorInterface play/stop fixture now checks real debugger delivery of
+copied locals, opacity, domain identity and source navigation. Signature help also
+retains typed collection elements. These are implementation statements awaiting
+execution; no interactive/graphical debugger pass is claimed yet.
+
+## Retained baseline result and first candidate failure
+
+Native run [43364130679](https://github.com/gmoddev/GodotLuau/actions/runs/43364130679)
+passed Windows/Linux at `65c0921e3e517a702c764ecbe02d55826ff1b612`, 141 actors
+per platform. Native identity is `0d79e0b7e00759ec452927096c3529950069c8b8c2d451028f985899c7020bee`
+(125 LF-normalized inputs). Both invocation reports contain 12 process logs and
+440 domain/member pairs with identical membership. Across domains, the union is
+61 constructors, 61 methods, 22 property reads, 116 writes, 11 delivered signals
+and 26 value constructors. Per-domain constructor/call counts are Server 53/59,
+Client 29/12 and EditorPreview 31/3. This is use evidence under the unchanged
+baseline workloads, not whole-API correctness or an application coverage claim.
+
+Retained native ZIP digests: Windows artifact 14011375457
+`d8e423e6d15098a26a1f3c8a6cc8d759b6f8a9f88c62d6175db953d65be1de77`;
+Linux 14010497351
+`b3aca80cca09676aa55208b318a8e646da9aab43bc2ae6f4f55807a274ec4e21`.
+
+The first expansion's Linux run 43365508357 failed at ProductionOwner line 44:
+the fixture assumed TileMapPattern.SetCell with default -1 IDs removes the cell.
+A direct control on the existing official Godot 4.7.1 returned two coordinates
+and size (2,1). The fixture now checks that actual native result while retaining
+the default-argument test. No engine/product behavior was changed to fit the
+assertion. Preserve the failed artifact 14010797518, ZIP
+`cdcb705acd3f55afd89f6939f762a368f04fc58372c8cad278dbcdea3283ac0a`.
+Four new Color4 properties also lacked explicit 0..1 descriptor bounds; source
+review corrected those before qualification. Non-const native observations now
+carry matching mutation metadata. These are candidate corrections, not passes.
+Core CI also passed the snapshot implementation at 02ef3bc (43366364704).
+
+## Phase 4 — Foundry Expedition (implementation, qualification pending)
+
+Added a new [modular acceptance game](../examples/foundry-expedition/README.md)
+using only Luau game code. Server rules own scene-native movement, health,
+shape-cast combat, navigating guards, collection, three inherited room scenes,
+transitions and transactional progression. Client code owns native UI, keyboard/
+gamepad semantic input and session settings. This is single-process solo: the
+bounded root-attribute input/presentation bridge is not a network protocol.
+Relay Siege remains the multiplayer regression. The Explorer is an independent
+scene-owned CharacterBody3D; Native/Scripted Character V2 defaults are untouched.
+
+Native animation and particles, project-local SVG/OBJ/audio/shader resources,
+procedural UI texture upload and per-room reconstruction exercise the expanded
+surface. GL-009 transforms use bounded server-generated receipts to tolerate
+retry/ambiguous acknowledgments. Up to three receipts are pending; failed saving
+backs off and stops after three attempts until explicitly retried. Unacknowledged
+progress is never labeled durable. Close-hook failure remains explicit.
+
+The existing staging/qualification path gains a Foundry profile, retaining fresh
+directory creation, explicit adapter/candidate identity, owned child processes,
+crash-UI suppression and isolated user-data roots. The external observer drives
+real native input/UI, movement/jump, pause/settings, wrong-owner rejection,
+collection, navigation/combat, transitions and a fresh-process persistence read.
+It uses deterministic native spatial setup for combat, not substitute game rules;
+that is narrower than human gameplay completion. Headless CI uses the existing
+verified full-featured official host. Graphical/editor/export, stress, performance,
+sanitizer and final Windows/Linux Debug/Release gates remain outstanding.
+
+The snapshot native run 43366364538 found missing direct String/Variant includes
+in the new translation unit; added those includes without changing behavior.
+The new declaration regressions in 43368429635 found a real mutable-resource
+array variance gap: the pinned frontend rejects `{MutableNativeImage}` where an
+invariant `{NativeImage}` is expected. Generated typed-resource inputs now admit
+the exact immutable/mutable array shapes for admitted constructible subclasses,
+without `any`, dropping element checks or changing native permissions. Positive
+and wrong-element cases stay enabled. Pending native run 43368429595 was canceled
+because it contains the same already-diagnosed compile error; rerun the corrected
+head rather than rebuild that known-bad input. Failed attempts remain retained.
+
+Foundry's explicit pause-menu restart now also drives 24 production world rebuilds
+in the external observer. Each checks that the old native identity retires and
+only the UI/current-world scopes remain. It records input-to-snapshot latency and
+native object/resource count deltas, without equating engine cache growth with a
+proven leak or these end-to-end timings with isolated binding dispatch cost.
+
+Both platform core and declaration jobs pass at corrected `31d64a5` (runs
+43369152931 and 43369152884). Its native run 43369152927 remains pending.
+DockerPC's cooperative worker remains held by an active unrelated campaign;
+admission was denied and no load, cleanup or takeover was attempted.
+
+## Phase 5 — bounded editor project references (qualification pending)
+
+Project Uses extends the existing AST navigation with a cached, read-only index
+of static module member and local function-alias uses. Exact module paths and
+lexical identity distinguish unrelated/shadowed names. Active unsaved editor text
+participates; changed sources reparse, unchanged hashes reuse pure cached records.
+The [contract](gl-054-native-development.md) defines bounds, partial results and
+unsupported dynamic/re-export semantics. The editor-only/main-thread/non-Luau
+gates preserve gameplay capability restrictions. UI navigation remains explicit.
+The actual native editor workflow now checks these behaviors and records cold,
+warm and changed-buffer query timings. No index or graphical pass is claimed yet.
+
+A bounded local MSVC `/Zs` check passed the new index, editor-plugin and snapshot
+translation units using headers generated from the unchanged pinned API and the
+existing pinned Luau headers. It used one process for about four seconds; no
+object/library or sustained local build was produced. This caught source/header
+issues only and is not Windows runtime, target-compiler or cross-platform
+qualification. The checked command is retained under the task's syntax artifacts.
+
+## Production/sanitizer qualification wiring
+
+Current policy selections are 113 constructors, 384 properties, 225 methods,
+41 signals and 51 enum values against the unchanged metadata denominators. Policy
+identity is `c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace`.
+These selection counts remain implementation measurements, not final execution
+qualification.
+
+The shared native checker also serves admitted-host sanitizer and candidate actor
+profiles, which omit navigation. Foundry is therefore an explicit required flag
+in the full-featured native CI job, not a falsely mandatory workload on those
+unsupported hosts. Existing actor assertions remain mandatory in every profile.
+Each production Debug/Release candidate separately runs Foundry with its actual
+SCons product on the existing verified full-featured official host. Candidate
+evidence archives retain that gameplay/restart result. Application assets and
+editor fixture inputs join the existing source hashes; no second qualification
+framework, host admission, dependency or publishing path is introduced.
+
+The existing 17 candidate and 12 retention unit checks pass locally after wiring
+review; production builds, package extraction and sanitizer workflows remain to
+be executed. Full-native sanitizer profiles retain their existing host/editor/
+navigation limitations; ordinary full-host game results must not be relabeled as
+sanitizer coverage of an unsupported configuration.
+
+## Actual plain-scene bootstrap defect
+
+Run 43369152927 completed the expanded integration, positive 2D navigation,
+editor snapshot workflow and Orb Run gates on both platforms, then failed Foundry
+startup: `BindToClose is not a valid member of Window`. The inherited global
+initializer selects only legacy classes/a node named Game and otherwise wraps the
+Window. The DataModel compatibility branch likewise excludes an ordinary scene
+root. This is a reproduced engine integration defect, not a storage race or an
+argument to add GDScript bootstrap logic.
+
+The bounded fix preserves legacy selection, then uses the actual current scene
+root before the existing Window fallback; the compatibility branch recognizes
+that exact live scene root for BindToClose/metadata. Foundry retains its own
+ordinary root name and now asserts `game == script.Parent`, with the external
+fixture observing Server/Client state on that same root. No extra DataModel,
+controller, domain or filesystem authority is introduced. Qualification is pending.
+
+## Shared ancestor authority defect
+
+An isolated control using the retained Windows `31d64a5` adapter confirms that a
+Client can move/rotate a shared plain ancestor of a Server-owned SceneScope:
+Position succeeds with X=123 and Rotation with Y=90. Native set/set_position calls
+reject. Lowercase position assignment succeeds as unknown-member metadata without
+moving the node. The new property guard reuses GLSceneMutation for ancestors,
+closing the path consistently rather than weakening native scope checks. Same-owner
+ancestors remain writable; explicit metadata channels remain available. GL-057
+tracks the actual defect and required cross-platform/sanitizer verification.
+
+Foundry's controlled legacy-root runs also exposed application/fixture problems:
+deferred deletion left the prior world name occupied, so the new world was renamed;
+the app now releases that name before queueing retirement. A transition continued
+its old frame and attempted camera settings through retired handles; it now exits
+that frame immediately. Native authority correctly rejected those stale writes.
+Collection observation now waits on the actual published cell count rather than a
+six-frame timing assumption. The failed attempts remain under local control-01/02
+artifacts and are not final plain-root qualification. Control-02 nevertheless
+completed 24 restarts with zero measured native object/resource count delta and
+exactly two live scopes after each cycle; these scoped observations do not imply
+sanitizer leak freedom or a passing overall attempt.
+
+The index-era native runs reached an actual fixture parse error: a GDScript local
+named Script shadowed its type annotation in ProjectIndex.gd. Renamed that local
+without relaxing assertions. A focused Windows run then passes 52 real editor
+workflow checks plus seven fresh-process reopen checks, including the index and
+error-local snapshots, using the retained 7f431a2 adapter (DLL
+`ed93abe52b35f888271f22eec5eb3d0c7e0660b7f71dd9d82ea27734db429d38`).
+Its unchanged editor implementation is the tested leaf; later root/ancestor fixes
+still need their own native run. For 22 files, measured cold/warm/changed-buffer
+queries are 38.688/28.047/27.978 ms, with no truncation and only the changed file
+reparsed. Twenty existing preview cycles take 142.61 ms; native static-memory
+counts increase by 198,958 bytes in that observed editor window, not a leak-free
+claim. The native workflow now includes tests/editor path changes so this fixture
+correction receives hosted checks as well. Preserve prior failed attempts.
+
+## Acceptance-game reload and qualification progress
+
+The expanded full-native sanitizer run [43371474085](https://github.com/gmoddev/GodotLuau/actions/runs/43371474085)
+passes Windows ASan and Linux ASan/LSan at `f98e321`, including the established
+controls, 87 core cases and 141 native actors. It qualifies the expanded collection
+implementation within those profiles; it predates the GL-056/057 fixes and does
+not establish sanitizer coverage of full-host navigation, editor or Foundry.
+Retained artifact digests are Windows
+`818359159b1b7ae244dbd0733f3c9672dd71d16f5eb5a47f2cefd956b262b893`
+and Linux `d398c64f7d677de53b4697a4d23c724f32292485c79bb9ed56c3aa8cf74993f5`.
+
+Foundry rule/progress module factories now separate cached code from entrypoint
+session state. Reload reconstructs a fresh owner/world and reads durable progress;
+it does not promise preservation of unacknowledged volatile session state. Input
+command watermarks prevent replay and a bounded simulation-time heartbeat removes
+stale movement intent when the Client entrypoint retires. The existing observer
+now exercises actual Server/Client disable/re-enable and native scope retirement.
+Its first focused attempt used a nonexistent GDScript set_disabled method and was
+stopped; the observer now uses the established Enabled property. That fixture
+failure is retained under foundry-current-01, not reported as a runtime defect.
+
+Matching official 4.7.1 solo export templates were fetched without installation
+or admission changes. The release archive SHA256 is
+`86409db6200b6f8fd3230989c2d2002851f3dd18acf11d7bdbafddf5a0dd0f72`
+(1,280,486,955 bytes, source `a13da4feb8d8aefc283c3763d33a2f170a18d541`).
+Member hashes and provenance are retained locally. These templates have full
+navigation; they are not newly admitted networking/sanitizer hosts. Export checks
+and final corrected-source qualification remain pending.
+
+The focused Windows Foundry run foundry-current-02 passes the corrected plain
+scene bootstrap, 24 world rebuilds, Server/Client generation replacement, stale
+movement neutralization, three actual sectors and durable fresh-process restart.
+It uses the retained `76bc473` Debug adapter; newer edits in this check are
+application/fixture inputs only. No production candidate or graphical pass is
+inferred. Corrected-source full-native sanitizer run 43378694518 and four-profile
+production candidate run 43378776092 were dispatched at `6ef518a`.
+
+The existing export helper now supports explicit verified matching official solo
+templates on both platforms, Debug/Release and Foundry, with no global template
+installation or admitted-host changes. It exports through the normal editor,
+verifies the native library/companion in the standalone directory, then launches
+twice there with isolated user data. For Foundry it requires both Luau entrypoints
+and the initial DataStore read to complete. This is standalone startup/restart,
+not exported interactive gameplay. Qualification-only adapters remain explicitly
+labeled; final package evidence must use actual qualified production candidates.
+The existing game-package workflow runs these checks in both configurations on
+Windows/Linux alongside the unchanged Relay Siege package regression.
+
+## Attribute string encoding
+
+The Windows offscreen-rendered Foundry run foundry-rendered-01 passes the full
+game/reload/persistence observer and restart. Its retained active/menu/completion
+captures were visually inspected: native geometry, camera, UI and imported cargo
+render, but snapshot text displays a corrupted bullet. The saved native snapshot
+contains `Foundry restored â¢ ...`; direct native Label text has a correct bullet.
+This is a reproduced UTF-8 value conversion defect in SetAttribute, not evidence
+that GL-023's JSON codec is broken. GL-058 records the finding.
+
+The smallest correction changes that value's Godot String constructor to
+String::utf8. Existing metadata authority, key encoding, JSON and persistence
+contracts remain unchanged. The established native authoring actor now asserts
+an accented/punctuation/supplementary-character round-trip; the actual Foundry
+observer also asserts its completed JSON snapshot message. The earlier rendered
+run remains evidence for its tested behavior, not a passing Unicode regression.
+Native source identity changes, so final candidate/sanitizer checks must use the
+corrected source. Export adapter control foundry-export-adapter-01 passes normal
+Windows Debug export and two standalone starts with the old adapter; it establishes
+only that explicit template workflow, not production-package qualification.
+
+DockerPC admission subsequently became free. Lease generation 119 covered a
+two-job incremental build in the existing GL-053 cache, retaining its pins and
+MSVC 19.44.35228. The prior published GL-053 allocation diff was preserved in a
+named stash. The first build omitted new translation units because the old CMake
+glob had not been regenerated; normal reconfiguration then builds the three new
+units and links successfully. Both attempts remain retained. No cache/toolchain
+was replaced. The worker tree is clean and the lease was released after completion.
+
+Corrected native fingerprint is
+`ba44f2ac38c33ed616d305434cef2f8beca232bffc0455d7c5159efa50c5e49d`
+(128 LF-normalized inputs), revision `f1a996b`, tree
+`4a5bdfd564f055cab1225619a5e854be0460c5ba`. Worker Debug adapter SHA256 is
+`c7d551e8e62f8d4a0a1bf59f0ab6a67278c2432488468f564f79bccacc529208`.
+The corrected Windows rendered Foundry run passes all gameplay/reload/Unicode
+checks and durable restart; menu/active/completion captures show the bullet now
+renders correctly. This is bounded offscreen rendering with injected semantic
+input and deterministic combat setup, not human/physical-device acceptance.
+
+The exact retained GL-053 seven-trial binding fixture (hash
+`06337119c9255a45f5de24e9ef5b28bb4fe1be2c32f26610aeb6f67b983b6da0`)
+runs against that adapter on the same MainPC/official host with recording disabled.
+Excluding warmup, the idle run measures 42.917 ms for 10,000 Position set/read
+pairs, 0.695 ms for 64-node construction and 11.454 ms for 2,000 Transform3D
+roundtrips. Retained GL-053 values were 40.124/0.642/11.021 ms: approximately
+7.0/8.3/3.9% higher in this Debug test profile, not a claimed speedup or production
+regression. The new test adapter includes disabled recorder call sites; SCons has
+no recorder. An earlier sample overlapped asset import and remains retained but
+is excluded from the comparison. Do not infer causes or universal timings from
+these observations. The rendered 24-world-restart window takes 5.53 seconds with
+zero measured native object/resource count delta and exactly two scopes per cycle.
+
+At `f1a996b`, hosted core run 43379513552 and declaration run 43379561987 pass.
+Candidate 43379558294 and full-native sanitizer 43379555285 replace the canceled
+`6ef518a` attempts because the actual UTF-8 product correction changes native
+identity. Their final outcomes and current native run 43379513518 remain pending.
+
+The Windows report reader also used the locale default for Godot's UTF-8 JSON,
+so its copied message field could remain mojibake even after the in-engine Unicode
+assertion and rendered capture passed. RunLuauOnly now reads that actual result
+and logs explicitly as UTF-8. This corrects retained text representation, not the
+gameplay assertions or acceptance threshold. Earlier reports remain preserved;
+their in-engine assertions and images establish their stated scope.
+
+The new native Luau quick start consolidates existing template/staging paths,
+scope/module lifetime guidance, bounded indexing/error inspection, example choices
+and export/data policies. It adds no new starter framework or runtime authority.
+The root README's stale enabled-updater claim is corrected; the updater and
+publication remain disabled in implementation and workflows.
+
+## Graphical editor and final surface observations
+
+The existing actual editor workflow was rendered offscreen on Windows with the
+current worker Debug adapter and capture-only artifact hooks. Project Uses, native
+preview/save, editor-run error stack/primitive locals, explicit source navigation,
+error recovery and rerun pass all 52 existing assertions. Inspected captures are
+retained under graphical-editor-f1a-03. This is programmatic native UI/rendered
+evidence, not physical mouse/keyboard acceptance. No foreground interaction or
+editor configuration outside the disposable project is required.
+
+Retain the initial capture-hook parse error and offscreen draw-wait timeout as
+failed qualification attempts. They do not establish product defects. A separate
+graphical reopen first failed because the fixture waited five frames after
+open_scene_from_path and observed the previous scene. The smallest correction
+waits at most five seconds for the exact requested scene, preserving all original
+assertions. A focused fresh graphical process then passes all seven reopen checks.
+The fixture now uses that deterministic condition on both profiles.
+
+Completed native run 43376170470 passes Windows/Linux at `31b37f0`, including
+141 existing actors each, editor/index/snapshot checks, full-host navigation and
+Foundry's three-sector/persistence path before its later reload/Unicode additions.
+Its same-policy invocation inventory records 582 domain/member pairs in 15 logs:
+82 constructors, 121 methods, 22 property reads, 165 writes, 12 signals and 26 value
+constructors in the union. Every one of the 19 newly selected constructors is
+observed; 56 of 58 newly selected methods are observed in those CI receipts.
+These are successful invocations, not assertion counts or claims that all selected
+properties/signals have runtime proof.
+
+The two remaining method paths now join the existing production cases:
+Area2D.OverlapsArea's empty/self result, and Texture2D.GetImage. The latter verifies
+bounded pixel readback and immutable returned-resource authority when the host
+provides an image. The existing rendered expansion runner includes those production
+cases; the focused Windows renderer run passes against `f1a996b`, including actual
+GPU-backed 2x2 image readback. Lightweight/headless hosts may return nil and do not
+qualify renderer readback. No recorder or extra framework is added to production.
+
+## Corrected-source native and sanitizer qualification
+
+[Native run 43379513518](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518)
+passes Windows/Linux at `f1a996b`, retaining the exact 128-input native fingerprint,
+141 existing actors per platform and passing Foundry/restart. The
+[full-native sanitizer run 43379555285](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285)
+also passes: Windows 26 controls and Linux 27, ControlsPassed true, complete
+qualification and zero unexpected reports. It includes the existing 87 core cases
+and 141 native actors under instrumentation. Preserve the established Windows
+LSan, admitted-host renderer/navigation and editor limitations; this does not label
+ordinary full-host Foundry as sanitizer-covered navigation.
+
+Sanitizer artifact digests are Windows
+`4163559b4935e90c9176b11360fc8d1f13a99ec2bc098a4ed9cdd4cfe129882d`
+and Linux `fae153ecd22fc5ba509a202fc2908773c21b94658b2651e4008b96b2aad92ff9`.
+The downloaded canonical summaries confirm their complete outcomes and source
+identities. This closes GL-056/057/058 on the feature branch within their precise
+fix scope; main is unchanged. Later fixture-only additions qualify text-report
+decoding, graphical scene-readiness and the two additional call observations
+without changing that native implementation. Four production profiles, accepted
+packages, standalone exports and current Relay Siege checks remain outstanding.
+
+Both Linux production configurations now pass in candidate run 43379558294.
+Its Release evidence ZIP confirms all 87 core cases, 141 existing native actors
+and 44 actual Foundry assertions plus durable restart with the SCons product.
+Windows Debug/Release and package assembly remain active.
+
+The existing read-only game-package workflow now also invokes the established
+Relay Siege solo/recovery and four-player listen/dedicated runners, reusing its
+already downloaded candidate, admitted renderer host and imported assets. It adds
+no build, new host, scenario framework or gameplay implementation. Existing actor
+deadlines/assertions remain unchanged; the job allows bounded time for the added
+workloads. This supplies the required fresh multiplayer regression alongside
+Foundry's separate solo exports without duplicating infrastructure on another host.
+
+Final contract review corrected Foundry's shutdown error text: an unacknowledged
+GL-009 commit can already have taken effect. It now directs restart to the latest
+committed data instead of claiming the prior value definitely survived unchanged.
+README/quick-start wording matches. Receipt retry, return/error behavior, storage
+and acknowledgment logic are unchanged; this is a diagnostic correction, not a
+new persistence protocol or a claim of application fault-injection qualification.
+
+## Actual Release qualification barrier race
+
+Candidate 43379558294 passes Linux Debug/Release and Windows Debug but rejects
+Windows Release in the existing dedicated relevance/reconnect actor. Its Client
+restores the current native views and a new session, while the Server times out
+waiting for the acknowledged view. Preserve this failed attempt; packages were
+correctly skipped and no candidate was accepted.
+
+The fixture's Mark opens the final filename before storing its payload, while
+Wait observes only existence and the Server immediately parses the peer ID.
+A focused control uses the retained Release adapter and previously admitted
+Release renderer host, stalling that marker writer for 75 ms after open. It
+reproduces the same acknowledgment failure with a directly logged NewPeer=0.
+This establishes a real partial-marker fixture race; the original CI attempt
+did not log its parsed ID, so the precise original value is not invented.
+
+The bounded correction writes/closes a sibling .pending file then renames it to
+the marker and checks publication success. The same stalled control now passes
+all seven existing listen/dedicated/root-guard actors with valid new peer IDs.
+Network code, carrier/session semantics, timeout limits and assertions are
+unchanged. Local before/after artifacts are relevance-release-barrier-before/after;
+they reuse the actual retained Release DLL, not mocked networking. GL-059 records
+the fixture finding. The queued diagnostic-only native rerun 43385930638 was
+canceled as redundant; the corrected fixture now needs its actual cohort.
+
+Corrected cohort 43387294744 uses immutable `6784696` and the same 128-input
+native fingerprint. Its Linux Debug/Release jobs fail before project compilation:
+the selected signed Ubuntu archive at mirrors.edge.kernel.org times out during
+APT index/package downloads. Retained per-job logs distinguish this provisioning
+failure from the reconnect fixture defect. Another current Linux native job
+passes that same provisioning step. Windows production jobs continue; GitHub
+rejects rerunning individual failed jobs while the containing workflow is still
+active. Retry only the provisioning failures after it completes, without changing
+packages, compilers, host admission or signature verification.
+
+The fixture-expanded native run 43382538838 passes both platforms at `f9c4119`,
+including graphical-readiness barrier handling in the normal editor profile and
+the additional texture/area calls. The atomic marker follow-up has its own current
+native run 43387293637. Ordinary export templates do not execute an external
+observer through --script in the bounded CLI probe; retain the explicit standalone
+startup/restart scope rather than inventing exported full-game test evidence.
+
+## Accepted candidate and application export correction
+
+Candidate 43387294744 attempt 2 is ACCEPTED_NONPUBLISHING_CANDIDATE at `6784696`,
+tree `157b4111950718d6dbc6875e2c2f823d351c29e9`. Both Windows source profiles
+passed on the first attempt; the two Linux provisioning failures alone were
+retried after the run finished. Both then passed without source/toolchain/mirror
+changes. All four 87-case core/141-actor native profiles, SCons Foundry/restart,
+both package extractions/Debug-Release companion starts, policy/retention and
+production core ASan/LSan gates pass. Acceptance artifact digest is
+`641ad833eb24377e2124f57513d6ccd0e1c0cc0e1738914896903d8940b33d2a`.
+Archive SHA256: Windows `0861a94d7870d9a3523049b8f8aebce59839292f9b6e2f77adaf827f6459cf90`,
+Linux `dd5400e283a7c1b0341d3f8f27b88fd4b95f48d687c34bcfac379933075fe95d`.
+
+Application workflow 43399518780 reuses those accepted products. Windows Foundry
+Debug/Release exports pass. Its Linux Debug export starts both Luau entrypoints
+but reports Load failed, so the explicit initial DataStore-read marker rejects
+the run. Earlier commentary mistook artifact upload for success; this paragraph
+records the actual failure. The candidate records the companion mode as 0755,
+while the example stager's direct zipfile.extractall does not restore Unix modes.
+The bounded fix restores the already verified member modes, matching the existing
+strict candidate extractor. Export checks now explicitly reject a nonexecutable
+staged/exported companion. No native product or storage protocol changes.
+GL-060 records this application-staging defect; corrected export evidence is pending.
+
+The next Linux attempt, 43400288713, confirms staging is executable but the
+exported companion is not. Godot's extension-dependency copy drops the program
+bit. The export helper now finalizes that one already hash-verified companion
+from the verified staged mode, records before/final modes and keeps executable
+access/read-start assertions. Normal-editor Linux instructions document chmod
+0755 before launching/archiving. This corrects application packaging without a
+native dependency, loader/backend change or weakened assertion.
+
+The existing workflow gains an opt-in LinuxExportOnly input for this focused
+correction. Its default still runs both platforms and all game checks; the focused
+run explicitly reuses the passing Windows exports, Orb Run and Relay Siege
+solo/recovery/listen/dedicated job from 43399518780. The old failure remains
+retained. The automatic CMake-adapter rerun 43400287508 was canceled because
+candidate-only mode restoration is outside that unchanged adapter profile; actual
+accepted-product export checks remain required.
+
+## Campaign completion
+
+Focused Linux workflow 43400803390 passes at `5b642d2`, reusing accepted native
+products from 43387294744. Both configurations record staged mode 0755, Godot's
+copied mode 0644 and finalized mode 0755, then pass standalone startup/restart and
+initial DataStore-read markers. Artifact digest is
+`98fe930abf9fa0575b2ede084b7222b0b8bcf388ab60de4313c36aaab2a64fac`.
+Windows Foundry Debug/Release exports, Orb Run export and the complete Relay Siege
+Package job pass in 43399518780 (and the unchanged Windows jobs pass again in
+43400288713). The focused run deliberately skips them and reuses their identical
+input proof. The canceled automatic adapter reruns 43400287508/43400802042 do not
+exercise candidate-only extraction/export mode handling; they are not represented
+as passing tests. No C++ input changed after the qualified fingerprint.
+
+Relay Siege's retained evidence reports solo 26 checks and recovery seven;
+four-player listen and dedicated sessions complete with zero failures for every
+actor. Leader has 27 checks, each observer/late join nine, and the dedicated
+server two. The existing controller/network/authority/lifecycle behavior remains
+intact. This is fresh headless multiplayer regression; prior unchanged rendered
+Relay Siege evidence is not relabeled as a new graphical pass.
+
+The [qualification record](gl-054-qualification.md) consolidates final surface,
+source/cohort identities, actual commands/results, performance and limitations.
+GL-056/057/058/059/060 are resolved on this feature branch within their linked
+scope. The campaign is ready for integration review, with no main merge authorized.
+Native remains the Character default and Scripted opt-in. Dependencies/admitted
+hosts, release publication and updater distribution remain unchanged/disabled.
