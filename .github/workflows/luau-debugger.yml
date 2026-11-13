@@ -1,5 +1,8 @@
 name: Luau debugger focused qualification (no publication)
 on:
+  push:
+    branches: [qualification/gl-055-native-protocol]
+    paths: [tests/runtime/DebuggerPeer.gd, .github/workflows/luau-debugger.yml]
   workflow_dispatch:
     inputs:
       NativeRun:
@@ -38,7 +41,8 @@ jobs:
       - name: Fetch existing native adapter evidence
         env:
           GH_TOKEN: ${{ github.token }}
-          DEBUGGER_NATIVE_RUN: ${{ inputs.NativeRun }}
+          # This qualification-only branch preserves the immutable product.
+          DEBUGGER_NATIVE_RUN: ${{ inputs.NativeRun || '43437162267' }}
         run: |
           [[ "$DEBUGGER_NATIVE_RUN" =~ ^[0-9]+$ ]]
           gh run download "$DEBUGGER_NATIVE_RUN" --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"

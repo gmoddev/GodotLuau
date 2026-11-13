@@ -193,3 +193,9 @@ to require the five typed fields; retain all value/authority/stepping assertions
 The fixture-only qualification branch reuses the exact `1e46bc5` native adapter
 through the existing focused workflow, avoiding a duplicate native build. This
 is partial execution evidence, not a passing debugger result.
+
+GitHub cannot manually dispatch the new focused workflow before it exists on
+default main. Use its push trigger on this qualification-only branch with the
+explicit original adapter run, retaining exact native-source admission. Cancel
+43440700078/43440700081: the fixture repair changes no native/core implementation.
+No default-branch modification or additional native rebuild is needed for it.
