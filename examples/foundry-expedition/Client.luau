@@ -4,6 +4,10 @@ local Run=game:GetService('RunService')
 local Http=game:GetService('HttpService')
 local Counts={}
 local function Send(Name)
+ if Counts[Name]==nil then
+  local Current=game:GetAttribute('Foundry'..Name)
+  Counts[Name]=type(Current)=='number' and Current==math.floor(Current) and Current>=0 and Current<2147483647 and Current or 0
+ end
  Counts[Name]=(Counts[Name] or 0)+1
  game:SetAttribute('Foundry'..Name,Counts[Name])
 end
@@ -34,6 +38,8 @@ Interact.Pressed:Connect(function() Send('Interact') end)
 Pause.Pressed:Connect(function() Send('Pause') end)
 local Active=false
 local Encoded
+local InputSerial=game:GetAttribute('FoundryInputSerial')
+if type(InputSerial)~='number' or InputSerial~=math.floor(InputSerial) or InputSerial<0 or InputSerial>1000000000 then InputSerial=0 end
 Run.RenderStepped:Connect(function()
  local Next=game:GetAttribute('FoundrySnapshot')
  if type(Next)=='string' and Next~=Encoded then
@@ -51,6 +57,8 @@ Run.Stepped:Connect(function()
  game:SetAttribute('FoundryMoveX',Active and Value.X or 0)
  game:SetAttribute('FoundryMoveY',Active and Value.Y or 0)
  game:SetAttribute('FoundryDash',Active and Dash:GetPhysicsValue())
+ InputSerial=InputSerial>=1000000000 and 0 or InputSerial+1
+ game:SetAttribute('FoundryInputSerial',InputSerial)
 end)
 game:SetAttribute('FoundryClientReady',true)
 print('[Foundry:Client] Ready; native UI and semantic input only')

@@ -29,6 +29,15 @@ Modules separate world, art/animation, enemies, rules, transactional progress an
 UI. Assets remain project-local. Navigation requires a full-featured Godot host;
 the lightweight admitted network hosts omit it and cannot run this game.
 
+Cached rule/progress modules expose factories: each Server entrypoint generation
+starts a fresh session and reloads acknowledged progress. Disabling that entrypoint
+retires its world; volatile movement, combat and unacknowledged session state are
+not a saved checkpoint. Command watermarks prevent replay after reload. Client
+reload reconstructs UI/input under its fresh owner and continues command counters.
+A heartbeat neutralizes movement/dash after 0.25 seconds of simulation without
+fresh input production; shared attributes alone do not keep a retired producer
+moving the body. These are local application rules, not a network admission token.
+
 Progress uses GL-009 UpdateAsync with pure retryable transforms and bounded
 server-generated idempotency receipts. A stage clear is not a durability
 acknowledgment: the HUD reports committing, durably saved or unacknowledged.

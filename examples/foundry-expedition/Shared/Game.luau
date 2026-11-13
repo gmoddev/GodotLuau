@@ -1,11 +1,21 @@
 local World=require('res://Shared/World.luau')
 local Art=require('res://Shared/Art.luau')
 local Enemies=require('res://Shared/Enemies.luau')
-local Progress=require('res://Shared/Progress.luau')
+local ProgressFactory=require('res://Shared/Progress.luau')
 local Http=game:GetService('HttpService')
+-- Module caches retain factories, never an entrypoint generation's scene handles.
+return function(Parent)
+local Progress=ProgressFactory()
 local Game={Phase='Loading',Level=1,Health=100,Cells=0,Kills=0,Energy=100,Revision=0,Clock=0,ShotClock=0,DamageClock=0,SaveClock=0,Last={},Facing=Vector3.new(0,0,-1),Message='Recover the foundry power cells'}
+Game.Parent=Parent
+Game.InputAge=1
+Game.InputSerial=game:GetAttribute('FoundryInputSerial')
 local function Finite(Value,Low,High)
  return type(Value)=='number' and Value==Value and Value>=Low and Value<=High
+end
+for _,Name in ipairs({'Start','Restart','Pause','Save','Jump','Fire','Interact'}) do
+ local Value=game:GetAttribute('Foundry'..Name)
+ Game.Last[Name]=Finite(Value,0,2147483647) and Value==math.floor(Value) and Value or 0
 end
 function Game.Command(Name)
  local Value=game:GetAttribute('Foundry'..Name)
@@ -38,6 +48,9 @@ function Game.Publish()
 end
 function Game.Step(Delta)
  Delta=math.min(Delta,0.05)
+ local Serial=game:GetAttribute('FoundryInputSerial')
+ if Finite(Serial,0,1000000000) and Serial==math.floor(Serial) and Serial~=Game.InputSerial then Game.InputAge=0;Game.InputSerial=Serial
+ else Game.InputAge+=Delta end
  Game.Clock+=Delta
  Game.ShotClock=math.max(0,Game.ShotClock-Delta)
  Game.DamageClock=math.max(0,Game.DamageClock-Delta)
@@ -51,10 +64,11 @@ function Game.Step(Delta)
   local W=Game.World
   local X,Z=game:GetAttribute('FoundryMoveX'),game:GetAttribute('FoundryMoveY')
   X=Finite(X,-1,1) and X or 0;Z=Finite(Z,-1,1) and Z or 0
+  if Game.InputAge>0.25 then X,Z=0,0 end
   local Length=math.sqrt(X*X+Z*Z)
   if Length>1 then X,Z=X/Length,Z/Length end
   if Length>0.1 then Game.Facing=Vector3.new(X,0,Z);W.Visual.RotationDegrees=Vector3.new(0,math.deg(math.atan2(-X,-Z)),0) end
-  local Dash=game:GetAttribute('FoundryDash')==true and Game.Energy>5 and Length>0.1
+  local Dash=Game.InputAge<=0.25 and game:GetAttribute('FoundryDash')==true and Game.Energy>5 and Length>0.1
   local Speed=Dash and 8 or 4.5
   Game.Energy=math.clamp(Game.Energy+(Dash and -35 or 18)*Delta,0,100)
   local Vertical=math.max(-35,W.Body.Velocity.Y-22*Delta)
@@ -109,3 +123,4 @@ function Game.Close()
  assert(not Progress.Dirty,'Progress save not acknowledged; retained previous commit')
 end
 return Game
+end

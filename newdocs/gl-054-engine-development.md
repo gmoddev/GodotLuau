@@ -328,3 +328,32 @@ reparsed. Twenty existing preview cycles take 142.61 ms; native static-memory
 counts increase by 198,958 bytes in that observed editor window, not a leak-free
 claim. The native workflow now includes tests/editor path changes so this fixture
 correction receives hosted checks as well. Preserve prior failed attempts.
+
+## Acceptance-game reload and qualification progress
+
+The expanded full-native sanitizer run [43371474085](https://github.com/gmoddev/GodotLuau/actions/runs/43371474085)
+passes Windows ASan and Linux ASan/LSan at `f98e321`, including the established
+controls, 87 core cases and 141 native actors. It qualifies the expanded collection
+implementation within those profiles; it predates the GL-056/057 fixes and does
+not establish sanitizer coverage of full-host navigation, editor or Foundry.
+Retained artifact digests are Windows
+`818359159b1b7ae244dbd0733f3c9672dd71d16f5eb5a47f2cefd956b262b893`
+and Linux `d398c64f7d677de53b4697a4d23c724f32292485c79bb9ed56c3aa8cf74993f5`.
+
+Foundry rule/progress module factories now separate cached code from entrypoint
+session state. Reload reconstructs a fresh owner/world and reads durable progress;
+it does not promise preservation of unacknowledged volatile session state. Input
+command watermarks prevent replay and a bounded simulation-time heartbeat removes
+stale movement intent when the Client entrypoint retires. The existing observer
+now exercises actual Server/Client disable/re-enable and native scope retirement.
+Its first focused attempt used a nonexistent GDScript set_disabled method and was
+stopped; the observer now uses the established Enabled property. That fixture
+failure is retained under foundry-current-01, not reported as a runtime defect.
+
+Matching official 4.7.1 solo export templates were fetched without installation
+or admission changes. The release archive SHA256 is
+`86409db6200b6f8fd3230989c2d2002851f3dd18acf11d7bdbafddf5a0dd0f72`
+(1,280,486,955 bytes, source `a13da4feb8d8aefc283c3763d33a2f170a18d541`).
+Member hashes and provenance are retained locally. These templates have full
+navigation; they are not newly admitted networking/sanitizer hosts. Export checks
+and final corrected-source qualification remain pending.

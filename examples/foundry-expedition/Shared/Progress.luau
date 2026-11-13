@@ -1,5 +1,6 @@
 -- Only Server calls this module. Transforms are pure because GL-009 may retry.
 local Store=game:GetService('DataStoreService'):GetDataStore('FoundryExpeditionV1')
+return function()
 local Progress={Value={Completed=0,Wins=0,Receipts={}},Status='Loading',Busy=false,Dirty=false,Pending={},Attempts=0}
 local function Integer(Value,Maximum)
  return type(Value)=='number' and Value==math.floor(Value) and Value>=0 and Value<=Maximum
@@ -57,3 +58,4 @@ function Progress.Save()
  else Progress.Status='Save not acknowledged; retry available' end
 end
 return Progress
+end
