@@ -26,6 +26,10 @@ var ProfileRequested = false
 var ProfileComplete = false
 var ProfileReferences = -1
 var ReplayId = -1
+var Measurements: Dictionary = {"StackRoundTripMicroseconds": [], "VariablesRoundTripMicroseconds": [], "WatchRoundTrips": []}
+var StackStarted = 0
+var VariablesStarted = 0
+var WatchStarted: Dictionary = {}
 
 func _initialize() -> void:
     call_deferred("Run")
@@ -42,7 +46,7 @@ func Finish(Passed: bool) -> void:
     if Finished:
         return
     Finished = true
-    var Report = {"Passed": Passed, "Checks": Checks, "Stops": Stops, "ErrorsRejected": Errors, "Graphical": false}
+    var Report = {"Passed": Passed, "Checks": Checks, "Stops": Stops, "ErrorsRejected": Errors, "Graphical": false, "Measurements": Measurements}
     var File = FileAccess.open("res://results.json", FileAccess.WRITE)
     File.store_string(JSON.stringify(Report, "  "))
     File.close()
@@ -61,6 +65,8 @@ func Command(Op: String, Fields: Dictionary = {}) -> void:
     RequestId += 1
     var Request = {"Schema": 1, "Session": Nonce, "Request": RequestId, "Op": Op}
     Request.merge(Fields, true)
+    if Op == "Watch":
+        WatchStarted[RequestId] = Time.get_ticks_usec()
     Send("godotluau:command", [Request])
 
 func Value(Name: String) -> Variant:
@@ -196,6 +202,9 @@ func Receive(Message: Array) -> void:
                 AfterVariables()
         if Reply.get("Event") == "Watch":
             var Identity: int = Reply.get("Request", 0)
+            if WatchStarted.has(Identity):
+                Measurements.WatchRoundTrips.append({"Expression": PendingWatches.get(Identity, {}).get("Expression", ""), "Microseconds": Time.get_ticks_usec() - WatchStarted[Identity]})
+                WatchStarted.erase(Identity)
             Check(PendingWatches.has(Identity), "Watch reply correlates to the active request")
             if Finished:
                 return
@@ -211,17 +220,20 @@ func Receive(Message: Array) -> void:
             CurrentDomain = Reply.get("Domain", "")
     elif Name == "debug_enter":
         Check(Stops < Expected.size() and Data.size() >= 3 and Data[0] == true and Data[2] == true, "Godot enters a continuable live Luau stack")
+        StackStarted = Time.get_ticks_usec()
         Send("get_stack_dump")
     elif Name == "debug_exit" and DisconnectAfterContinue:
         Check(true, "Disconnect after Godot confirms the application resumed")
         Finish(true)
     elif Name == "stack_dump":
+        Measurements.StackRoundTripMicroseconds.append(Time.get_ticks_usec() - StackStarted)
         Check(Data.size() >= 4 and Data[0] >= 3 and Data[0] <= 192, "Bounded native stack dump")
         if Finished:
             return
         CurrentSource = Data[1]
         CurrentLine = Data[2]
         Variables = {}
+        VariablesStarted = Time.get_ticks_usec()
         Send("get_stack_frame_vars", [0])
     elif Name == "stack_frame_vars":
         Check(Data.size() == 1 and Data[0] > 0 and Data[0] <= 256, "Bounded native variable count")
@@ -236,6 +248,7 @@ func Receive(Message: Array) -> void:
         Variables[("context: " if Data[1] == 2 else "") + Data[0]] = Data[3]
         VariablesLeft -= 1
         if VariablesLeft == 0:
+            Measurements.VariablesRoundTripMicroseconds.append(Time.get_ticks_usec() - VariablesStarted)
             AfterVariables()
     elif Name == "output":
         # Target process exit is checked independently by the process runner.

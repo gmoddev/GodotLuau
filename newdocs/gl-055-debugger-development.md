@@ -492,3 +492,14 @@ pausing or preservation of a timed-out connection. The new case and allocation
 correction are pending execution. Linux Release candidate 43457871556 encounters
 an apt mirror connection timeout before compilation; retry that environmental
 failure without changing dependencies or qualification assertions.
+
+Retain stack/variable and restricted native-watch request round-trip timings in
+the existing native peer receipt. They include Godot framing, process polling
+and transport latency; they are not isolated C++ inspection timings. No new test
+suite or acceptance threshold is introduced. Existing native editor index
+receipts already record cold/warm/navigation/changed-buffer microseconds.
+Sanitizer 43457876059 is canceled because its isolated peer has the same known
+missing-cache error; corrected source/fixtures run as 43460768247. Performance
+43460768309 and candidate 43460768137 cover the measured allocation correction.
+Superseded duplicate native runs are canceled rather than rebuilding identical
+implementation inputs merely for later benchmark or documentation commits.
