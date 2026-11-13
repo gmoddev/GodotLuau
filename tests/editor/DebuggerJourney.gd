@@ -222,6 +222,7 @@ func Run() -> void:
     if not await Watch():
         Finish(false)
         return
+    Check(Session(1).get("Breakpoints", []).any(func(Item): return Item.get("Source") == "res://Journey.luau" and Item.get("Line") == EntryLine + 1 and Item.get("Hits") == 1), "Editor breakpoint replay preserves the displayed first hit")
     await Capture("breakpoint")
     await Capture("stack")
     if not Press("StepInto") or (await WaitStop(2)).is_empty():
@@ -241,6 +242,10 @@ func Run() -> void:
     while not Session(4).is_empty() and Time.get_ticks_msec() < Continued:
         await get_tree().process_frame
     Check(Session(4).is_empty() and EditorInterface.is_playing_scene(), "Continue leaves the debugger stop and keeps the application running")
+    var ValuesCleared = false
+    for Control in Tab().find_children("*", "RichTextLabel", true, false):
+        ValuesCleared = ValuesCleared or Control.text.begins_with("Execution resumed.")
+    Check(ValuesCleared, "Native editor invalidates the previous live Watch display on resume")
     for Index in range(8):
         await get_tree().process_frame
     if not await Profile(false):
@@ -256,6 +261,10 @@ func Run() -> void:
     if not Check(not Restart.is_empty(), "A fresh native debugger connection admits the retained gutter breakpoint"):
         Finish(false)
         return
+    var FreshDisplay = false
+    for Control in Tab().find_children("*", "RichTextLabel", true, false):
+        FreshDisplay = FreshDisplay or Control.text.begins_with("New runtime session.")
+    Check(FreshDisplay and not Restart.has("ProfileSnapshot"), "Fresh native session clears the previous profiler and Watch display")
     Code.set_line_as_breakpoint(EntryLine, false)
     var Replacement = "-- Saved during a native stop\n" + Source.source_code
     Source.source_code = Replacement
