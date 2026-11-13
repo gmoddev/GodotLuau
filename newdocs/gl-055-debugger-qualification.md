@@ -70,7 +70,7 @@ Execute duration, C++ new counts/bytes and VM peaks remain in its artifacts.
 
 Disabled/attached modes allocate zero C++ objects during the measured loop.
 All modes report the same 504,336-byte VM peak for this workload. Profiling now
-allocates only its two initial map records (104 Windows / 91 Linux bytes), versus
+performs only two initial native-key allocations (104 Windows / 91 Linux bytes), versus
 100,002 allocations in [the retained first measurement](https://github.com/gmoddev/GodotLuau/actions/runs/43459001752).
 The correction removes steady-state temporary-key allocations; timings from
 different hosted runners are not a controlled before/after speedup claim.

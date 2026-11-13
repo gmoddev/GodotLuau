@@ -40,13 +40,15 @@ def Qualify(Args, Output, Environment):
                 time.sleep(.01)
             Root=Path((Project/'root.txt').read_text())
             with (Project/'holder.stdout.log').open('w') as Out,(Project/'holder.stderr.log').open('w') as Err:
-                Holder=StartProcess([str(Args.probe),str(Root),'pause','2'],Out,Err,Env)
+                Holder=StartProcess([str(Args.probe),str(Root),'pause','2','hold'],Out,Err,Env)
             try:
                 while not (Root/'stage.marker').is_file():
                     if Holder.poll() is not None or time.monotonic()>Deadline: raise RuntimeError('Lock holder failed')
                     time.sleep(.005)
                 (Project/'locked.marker').write_text('locked')
                 Finish(Entry,Case)
+                (Root/'release.marker').write_text('release')
+                if Holder.wait(timeout=10)!=0: raise RuntimeError('Lock holder failed after release')
             finally: StopProcess(Holder)
             continue
         if Case in ['basic','failures','lifecycle','memory','unavailable','incompatible']:

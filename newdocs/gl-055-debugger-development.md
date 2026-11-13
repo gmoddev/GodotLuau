@@ -577,3 +577,28 @@ claimed. This is an editor-only qualification limitation; the full-native game
 sanitizer checks remain separate. Do not patch the engine or hide warnings to
 claim a leak-free editor. Earlier references to four ObjectDB warnings meant
 four leaked instances in the earlier, shorter journey, not four warning events.
+
+## Windows sanitizer contention barrier
+
+Final native CI 43461738974 passes Windows/Linux with all five debugger cases and
+the complete existing suite. Full-native 43461776259 passes Linux ASan/LSan with
+28 groups, including six debugger cases (explicit debug-template opt-in and the
+zero-stop no-opt-in negative). Windows passes all six debugger cases, controls,
+core and all groups except the DataStore contention case; it reports no unexpected
+sanitizer finding. Strict aggregation also fails because that group has no
+complete receipt. Preserve that failure rather than calling the run passing.
+
+The contention actor unexpectedly reads a missing key successfully; the holder
+log reports its completed paused commit. Its fixed ten-second sleep can expire
+before a delayed instrumented actor attempts the read. Replace only that fixture
+assumption: an optional probe hold waits for explicit controller release, bounded
+to 120 seconds and terminated through existing owned-process cleanup on failure.
+Normal kill/recovery pause behavior is unchanged. Keep the original contention
+error, 0.8–3-second operation bound and frame-progress assertions. Require the
+holder's successful exit after release. No persistence production code changes.
+
+The sanitizer workflow permits a Windows-only retry to reuse the already-green
+Linux input scope instead of rebuilding it. Final candidate profiles keep their
+original source/harness identities. The new optional index benchmark runs the
+production cache on 256 generated modules, recording partial warming explicitly;
+it is not added as another standard CI gate.

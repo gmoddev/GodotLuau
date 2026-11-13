@@ -23,8 +23,10 @@ def Main():
     Parser.add_argument("--workflow", action="store_true", help="Exercise the clean-project GL-052 production workflow")
     Parser.add_argument("--baseline", action="store_true", help="Record missing workflow capabilities in the qualified GL-051 product")
     Parser.add_argument("--debugger", action="store_true", help="Exercise the actual native Luau debugger session and CodeEdit gutter")
+    Parser.add_argument("--index-benchmark", action="store_true", help="Measure the existing native project index on a bounded 256-module dataset")
     Args = Parser.parse_args()
     assert not Args.debugger or not (Args.workflow or Args.baseline), "Debugger journey is a separate editor mode"
+    assert not Args.index_benchmark or not (Args.debugger or Args.workflow or Args.baseline), "Index benchmark is a separate optional editor mode"
     Output = Args.output.resolve()
     Output.mkdir(parents=True, exist_ok=False)
     Prepare(Output, Args.extension.resolve())
@@ -36,7 +38,7 @@ def Main():
     (Output / ".godot/extension_list.cfg").write_text('res://godot_luau.gdextension\n')
     Plugin = Output / "addons/NativeEditor"
     Plugin.mkdir(parents=True)
-    shutil.copyfile(Path(__file__).with_name("DebuggerJourney.gd" if Args.debugger else "LuauWorkflow.gd" if Args.workflow else "NativeAuthoring.gd"), Plugin / "plugin.gd")
+    shutil.copyfile(Path(__file__).with_name("ProjectIndexBenchmark.gd" if Args.index_benchmark else "DebuggerJourney.gd" if Args.debugger else "LuauWorkflow.gd" if Args.workflow else "NativeAuthoring.gd"), Plugin / "plugin.gd")
     if Args.debugger:
         shutil.copy2(Path(__file__).with_name("DebuggerJourney.luau"), Output / "Journey.luau")
         shutil.copy2(Path(__file__).with_name("DebuggerJourney.tscn"), Output / "Journey.tscn")
