@@ -1,6 +1,7 @@
 # Native API expansion contract
 
-Unmerged GL-053 campaign extension of [ADR-015](adr-015-policy-driven-native-bindings.md).
+GL-053 extension of [ADR-015](adr-015-policy-driven-native-bindings.md),
+[integrated normally](gl-053-main-integration.md) with its qualified history.
 Qualification status lives in the [record](gl-053-native-qualification.md);
 the [journal](gl-053-native-development.md) retains implementation attempts.
 The generated [catalog](../bindings/NativeCatalog.json) is the exact admitted

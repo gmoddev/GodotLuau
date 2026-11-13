@@ -1,8 +1,9 @@
 # GL-053 native expansion qualification
 
-Status: supported scope qualified and ready for the authorized normal merge.
-Branch `feature/gl-053-native-api-expansion`
-remains unmerged; main baseline is `16e8597cb342a1bbc888f190680c678ecf9ba055`.
+Status: supported scope qualified and normally integrated by merge `47bbb6d`.
+Source branch `feature/gl-053-native-api-expansion` is retained at `3e40b95`;
+main baseline was `16e8597cb342a1bbc888f190680c678ecf9ba055`.
+The [integration record](gl-053-main-integration.md) tracks fresh main CI.
 The [journal](gl-053-native-development.md) preserves failed attempts and fixes;
 the [API contract](gl-053-native-api.md) describes implemented bounds, not parity.
 The [versioned receipt](evidence/gl053-native/qualification-20261112.json)

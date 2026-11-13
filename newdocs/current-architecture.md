@@ -1,6 +1,6 @@
 # Current architecture
 
-The unmerged [GL-053 native expansion](gl-053-native-development.md) extends the
+The [integrated GL-053 native expansion](gl-053-main-integration.md) extends the
 existing policy dispatcher with bounded pure values/collections, observation
 properties, scoped Node payloads, checked defaults and useful 2D/UI/resource
 families. Its [API contract](gl-053-native-api.md) separates implementation from
@@ -9,8 +9,9 @@ broad Godot API parity. The branch also implements sealed owned value-track
 animation under ADR-017, native physics/navigation and skeleton observations,
 nested/inherited scene preflight, transitive project-module invalidation and
 native editor/templates/acceptance projects. Existing Godot graphs, resources,
-domains, callbacks and native authority remain authoritative. Main has not yet
-received these unmerged changes; remaining campaign gates are explicit.
+domains, callbacks and native authority remain authoritative. Normal merge
+`47bbb6d` preserves all 30 feature commits and the qualified tree. The integration
+record separates retained qualification from fresh main CI and profile limits.
 
 The [integrated GL-052 change](gl-052-main-integration.md) provides native editor
 actions that create a plain scene and

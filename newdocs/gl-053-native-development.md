@@ -639,3 +639,14 @@ and Linux `85062b288fe0d3f4939c54093917ab9840652371f519c9a4030f5394489f9be2`.
 The source and final correction receipts preserve failed attempts and explicit
 reuse scope. Qualification is complete within the documented limits; proceed
 with the authorized normal merge, exact-tree/history checks and fresh main CI.
+
+## Authorized main integration
+
+Normal merge `47bbb6d05e8e71c5042dcb22370f7815d3cfda95` preserves all 30 feature
+commits from final tip `3e40b95`, with verified main `16e8597` as first parent.
+Its tree exactly equals qualified feature tree `7acb85c...1771c7`; no conflicts,
+runtime edits or dependency changes accompany integration. Initial integration
+notes update documentation only. Keep the feature and correction receipts
+unchanged, push the normal merge and notes, then verify fresh main core/native/
+definitions CI. The [integration record](gl-053-main-integration.md) and receipt
+track post-merge results separately. Release/updater admission remains disabled.

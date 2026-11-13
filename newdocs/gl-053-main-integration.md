@@ -1,7 +1,15 @@
 # GL-053 native expansion main integration
 
-Status: qualified and ready for normal merge. Main remains
-`16e8597cb342a1bbc888f190680c678ecf9ba055`.
+Status: integrated by normal merge; fresh main CI pending.
+
+Merge `47bbb6d05e8e71c5042dcb22370f7815d3cfda95` has parents
+`16e8597cb342a1bbc888f190680c678ecf9ba055` (verified main) and
+`3e40b95a489fa78bcfe8674542adcd30e8136447` (completed feature tip).
+All 30 feature commits remain ancestors, with no conflicts or history rewriting.
+The merge tree exactly equals feature tree
+`7acb85c26d58fe5627cb7730060c51bf431771c7`. Following integration notes change
+documentation only. The [integration receipt](evidence/gl053-native/main-integration-20261112.json)
+preserves the complete commit list and evidence identities.
 
 The owner authorizes a normal merge preserving all feature commits, followed by
 fresh main CI. Releases and updater distribution remain disabled. Historical
@@ -59,6 +67,8 @@ controlled receive/exit defect.
 
 ## Integration and post-merge verification
 
-All pre-merge gates are established. Preserve a merge tree equal to the completed
-feature tree and verify fresh core/native/declarations against the integrated
-main revision. No release workflow or updater channel is enabled.
+All pre-merge gates are established and exact-tree/history checks pass.
+Fresh core/native/declarations CI will verify the integrated main revision.
+The feature/native/sanitizer/candidate receipts remain unchanged. No release
+workflow or updater channel is enabled. Native stays the default Character
+controller; Scripted remains explicit opt-in.
