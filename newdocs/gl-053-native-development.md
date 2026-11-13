@@ -573,3 +573,40 @@ confinement or change production persistence. Retain the failed logs/artifact
 under `gl053-followup-20261112/sanitizer-linux-attempt1`. The final native build
 fingerprint stays unchanged; fixture identity and hosted qualification must use
 the corrected input. Supersede the in-flight cohort for that concrete correction.
+
+The corrected fixture passes Windows on the final adapter with raw fixture hash
+`7636c35441a30e0200077e1e12097dd061520c3d82c00504ec3d87d3e6186461`.
+Final qualification revision is `bb15aab`: core 43346809940 passes; native
+43346810000, full-native sanitizers 43346827388 and non-publishing candidate
+43346831705 run the corrected fixture. The normalized native fingerprint remains
+`fda36b81...6b1cb2`; no product rebuild is needed for the local focused checks.
+The [final correction receipt](evidence/gl053-native/final-corrections-20261112.json)
+records those distinctions and preserves the preceding accepted receipt unchanged.
+
+Linux full-native sanitizer 43346827388 passes the corrected `bb15aab` fixture:
+27 stages, controls, 87 core cases, 141 actors and no unexpected ASan/LSan report.
+The basic persistence log explicitly passes controlled empty-read/exit reply and
+ordinary prototype/BindToClose. Retained artifact 14003151397 has archive SHA256
+`eff288166f3676fe63c0dc08ab414ddf1f6b689b30cbbacf84d8885fb3ececee`.
+Its strict native summary records the expected native fingerprint and revision.
+Together with the Windows controlled before/after, this closes GL-050's scoped
+transport defect on the branch. Remaining Windows/native/candidate gates still
+run; do not conflate that issue closure with completion of the main integration.
+
+Native 43346810000 passes both Windows and Linux at `bb15aab`, each with all
+141 required actors and the unchanged strict checker. Both summaries retain the
+expected native fingerprint, four storage fault stages, four kill/recovery stages
+and 40 independent native increments. Actual native editor, authoring/reopen and
+official-host path checks also pass. Windows evidence artifact 14004275361 has
+archive SHA256 `97438b6c195f99a175346bec9a8dc2277e530e20643cc14b7db91f8725850246`;
+Linux artifact 14003027221 has
+`a3390da796ec87f09dab5702d2f1a809ccd0f5d34fc1603d962e8d4e2376670c`.
+Keep waiting for complete Windows sanitizer and candidate/package acceptance.
+
+Full-native sanitizer 43346827388 now passes both platforms: Windows 26 stages,
+Linux 27 stages; both controls, 87 core cases, 141 actors and zero unexpected
+reports. Windows explicitly passes the controlled empty-read/exit marker and
+ordinary persistence/BindToClose. Artifact 14003528598 has archive SHA256
+`82bf6d8e9257ccc4ae4ccf22a31176c59011484fe7237518d244774460059f6a`.
+Retain GL-018's Windows sanitizer/LSan limits. Only final non-publishing candidate
+build/package/extracted-startup acceptance remains before the normal merge.

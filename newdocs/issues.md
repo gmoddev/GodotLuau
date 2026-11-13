@@ -33,7 +33,8 @@ passes at 15af022; the integration receipt preserves source and artifact identit
 Windows interactive acceptance is complete. The final default-script `print`
 follow-up passes core/native CI,
 all four production profiles, both packages and actual game export/startup.
-GL-050 remains separately unresolved.
+GL-050's later transport correction is qualified on the native-expansion branch;
+see its scoped resolution below.
 The [qualification record](gl-052-qualification.md) preserves actual editor/game
 passes, completed Windows/Linux core/native/types/sanitizers, accepted production
 packages and Windows export/rendered multiplayer. The
@@ -119,7 +120,7 @@ four successful workflows and independently checked artifacts.
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
-| GL-050 | P2 | Fixed at `b7297fb`; controlled Windows before/after passes; cross-platform CI pending | DataStore parent could miss a final helper reply after an empty pipe read |
+| GL-050 | P2 | Resolved on native-expansion branch at `b7297fb`; controlled Windows before/after and Linux full-native ASan/LSan pass | DataStore parent could miss a final helper reply after an empty pipe read |
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 | GL-052 | P2 | Integrated and verified within documented ADR-016 scope; retained limits unchanged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
@@ -186,7 +187,7 @@ records verified artifacts separately from retained branch qualification.
 This is not full
 Godot API parity, a complete embedded debugger/type checker or Linux rendered
 qualification. Remaining composition/loading limits stay explicit.
-GL-050 remains separate and unfixed.
+GL-050's later transport correction and qualification are recorded separately below.
 
 ## GL-050: DataStore receive/exit ordering
 
@@ -198,9 +199,13 @@ output pipe on both platforms. Snapshotting exit state before draining is
 implemented at `b7297fb`, preserved by `0af6e4d`. The CMake-only real-companion
 barrier forces exit after an empty read: the old decision fails with committed
 value `37` present, while the fixed adapter drains and acknowledges it. Windows
-also passes the unchanged large payload and BindToClose checks. Final
-cross-platform native/sanitizer/candidate CI is pending; see the
-[qualification record](gl-053-native-qualification.md).
+also passes the unchanged large payload and BindToClose checks. Corrected fixture
+revision `bb15aab` passes Linux full-native ASan/LSan in run
+[43346827388](https://github.com/gmoddev/GodotLuau/actions/runs/43346827388):
+27 stages, 87 core cases, 141 native actors, detection controls and no unexpected
+reports, including the controlled exit/reply marker. Resolve this transport defect
+on the branch; see the [qualification record](gl-053-native-qualification.md) and
+[correction receipt](evidence/gl053-native/final-corrections-20261112.json).
 
 This is not an established cause of the recorded candidate close-save failures.
 A missed OK reply would leave its committed value present; those failures also

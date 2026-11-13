@@ -7,6 +7,9 @@ The [journal](gl-053-native-development.md) preserves failed attempts and fixes;
 the [API contract](gl-053-native-api.md) describes implemented bounds, not parity.
 The [versioned receipt](evidence/gl053-native/qualification-20261112.json)
 retains source/package identities, current measurements and application evidence.
+The [final-correction receipt](evidence/gl053-native/final-corrections-20261112.json)
+preserves the original receipt unchanged and records focused fixes, raw timing
+samples, actual editor scope and the retained Linux fixture failure.
 
 ## Final correction cohort
 
@@ -20,8 +23,15 @@ Existing authority, ownership, wait/deadline, protocol
 and durability contracts remain unchanged. Native fingerprint:
 `fda36b81c44f8dc11a2c3b52d17687fbda78b5b2f911ea230fd544a54e6b1cb2` (123 files).
 
-Core 43343578815 passes. Native 43343578813, full-native sanitizers 43343586993
-and non-publishing candidate 43343590025 are pending at this checkpoint.
+Qualification revision `bb15aab1e47c22e63199909049fa19dfbe7b522e` changes only
+the regression fixture's root argument and documentation. Core 43346809940
+passes. Native 43346810000 and full-native sanitizers 43346827388 pass both
+platforms. Sanitizers complete 26 Windows / 27 Linux stages, controls, 87 core
+cases and 141 native actors, with no unexpected reports. Non-publishing candidate
+43346831705 is pending at this checkpoint. The preceding Linux
+sanitizer attempt 43343586993 failed the new fixture's trailing root component,
+with controls passing, no unexpected reports and close-save value `99` present.
+That failed attempt is preserved; native confinement and deadlines are unchanged.
 Declarations 43342974114 pass the unchanged declaration/type-fixture inputs.
 Earlier results below remain evidence for their recorded inputs, rather than
 passes for this changed native cohort. In-flight `b7297fb` native, sanitizer and
@@ -42,8 +52,9 @@ earlier desktop access failure and actual interactive captures.
 
 ## Source and scope
 
-Current native build fingerprint: `685cbd6a9978bea0516265967c5ffc4da22f67fda438d39f5735aeed76481149`,
-123 LF-normalized files. The descriptor/effect follow-up changes the preceding
+Preceding accepted native build fingerprint: `685cbd6a9978bea0516265967c5ffc4da22f67fda438d39f5735aeed76481149`,
+123 LF-normalized files. The current correction fingerprint is recorded above.
+That historical descriptor/effect follow-up changes the preceding
 `e2735ec54012feb7c62032d50c87e325c6cf9dc4` fingerprint
 `ce6e7638ae6386d6d4eef5d6df66962eb303e8f155d3c1616b0027bb9a5699c5`.
 Preceding component evidence is retained with its actual identity.
@@ -61,10 +72,10 @@ complete class coverage. The pinned 4.3 metadata has 920 classes and 14,379
 declared methods; the complete generated inventory retains unsupported and
 restricted entries. Editor/runtime hosts remain 4.7.1 with unchanged pins.
 
-## Established results
+## Retained preceding results
 
 - Core run [43236560018](https://github.com/gmoddev/GodotLuau/actions/runs/43236560018)
-  passes Windows/Linux at the current native implementation: 71 ordinary and 16
+  passes Windows/Linux at the preceding native implementation: 71 ordinary and 16
   isolated cases, including transitive module invalidation.
 - Definitions run [43249386432](https://github.com/gmoddev/GodotLuau/actions/runs/43249386432)
   passes the unchanged current generated declarations on both platforms, actual
@@ -82,8 +93,9 @@ restricted entries. Editor/runtime hosts remain 4.7.1 with unchanged pins.
   sanitizer reports. The single failed-job-only fresh-runner retry passes the
   complete Linux ASan/LSan profile, including close-save value 99. Both platforms
   pass detection controls, 87 core cases and 141 native actors. Keep the initial
-  functional failure; neither the retry nor this campaign resolves GL-050.
-- The current `3a5adb6` Debug adapter passes actual native pathfinding, rendered expansion
+  functional failure; that retry did not resolve GL-050. The later correction
+  and its controlled evidence are recorded above.
+- The retained `3a5adb6` Debug adapter passes actual native pathfinding, rendered expansion
   and all shipped 2D/UI/3D gameplay logic on the verified official Windows host,
   exiting normally. Headless native editor creation/preview/save/reopen passes.
   Retained logs: `gl053-native-20261112/3a-components-final` and `3a-editor`.
@@ -170,8 +182,9 @@ editor/reopen and rendered checks within their documented scope.
 | Reload | Reverse dependency closure invalidates cached modules and retires callbacks. Returned values remain snapshots; no automatic runtime state migration or rollback to stale executable generations. |
 | Devices/platforms | No Windows LSan, Linux graphical/device claim, or physical gamepad/mobile device claim. Preserve the existing admitted sanitizer limits. |
 
-GL-050's transport correction has a controlled Windows before/after reproduction;
-cross-platform CI is pending. It does not establish the cause of earlier missing
+GL-050's transport correction passes controlled Windows before/after and complete
+Windows/Linux full-native sanitizer profiles. Candidate/package CI is pending.
+The correction does not establish the cause of earlier missing
 close-save values. Native remains the default Character controller; Scripted
 remains explicit opt-in. Networking, persistence authority, production release
 and updater admission remain unchanged.
