@@ -97,6 +97,17 @@ void GLAuthoringDebugger::Flush() {
         }
     }
 }
+Array GLAuthoringDebugger::DescribeSessions() {
+    Array Result;
+    for(const auto& Entry:Views) {
+        auto Native=get_session(Entry.first);if(Native.is_null())continue;
+        Dictionary State=Entry.second.LastState.duplicate(true);
+        State["EditorSession"]=Entry.first;State["ConnectionGeneration"]=Entry.second.ConnectionGeneration;
+        State["Active"]=Native->is_active();State["Paused"]=Native->is_breaked();
+        Result.push_back(State);
+    }
+    return Result;
+}
 bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32_t Session) {
     if(Message=="godotluau:debugger") {
         if(Data.size()!=1 || Data[0].get_type()!=Variant::DICTIONARY)return true;
@@ -104,13 +115,14 @@ bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32
         String Nonce=Reply["Session"]; if(Nonce.length()!=32)return true;
         if(!Views.count(Session))_setup_session(Session);auto Found=Views.find(Session);if(Found==Views.end())return true;
         auto& View=Found->second;
-        if(View.Nonce!=Nonce){View.Nonce=Nonce;View.Request=0;View.Domain="All";View.Pending=Breakpoints;}
+        if(View.Nonce!=Nonce){View.Nonce=Nonce;++View.ConnectionGeneration;View.Request=0;View.Domain="All";View.Pending=Breakpoints;}
+        View.LastState=Reply.duplicate(true);View.LastState.erase("Session");
         if(String(Reply.get("Event",String()))=="Stopped")View.Domain=Reply.get("Domain",String("All"));
         if(String(Reply.get("Event",String()))=="Watch")
             if(auto Output=Object::cast_to<Label>(ObjectDB::get_instance(View.WatchResult)))
                 Output->set_text(bool(Reply.get("Ok",false))?String(Reply.get("Value",Variant())).left(4096):String(Reply.get("Error",String())).left(256));
         if(auto Status=Object::cast_to<Label>(ObjectDB::get_instance(View.Label)))
-            Status->set_text(String(Reply.get("Domain",String()))+" "+String(Reply.get("State",String()))+" "+String(Reply.get("Reason",String()))+" "+String(Reply.get("Error",String())).left(256));
+            Status->set_text(String(Reply.get("Domain",String()))+" "+String(Reply.get("State",String()))+" stop "+String::num_int64(int64_t(Reply.get("StopId",0)))+" "+String(Reply.get("Reason",String()))+" "+String(Reply.get("Error",String())).left(256));
         if(auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(View.Tree)))if(Reply.get("Breakpoints",Variant()).get_type()==Variant::ARRAY) {
             TreeNode->clear();auto Root=TreeNode->create_item(); Array Locations=Reply["Breakpoints"];
             for(int Index=0;Index<Locations.size() && Index<128;++Index)if(Locations[Index].get_type()==Variant::DICTIONARY) {

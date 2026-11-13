@@ -65,6 +65,7 @@ jobs:
           Adapter=next((Root/'adapter').rglob('godot_luau.'+os.environ['DEBUGGER_SUFFIX']))
           Source=next((Root/'adapter').rglob('source.json'))
           subprocess.run([sys.executable,'tests/runtime/RunDebuggerQualification.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--source',str(Source),'--output',str(Root/'debugger')],check=True)
+          subprocess.run([sys.executable,'tests/editor/RunNativeAuthoring.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--output',str(Root/'debugger-editor'),'--debugger','--timeout','140'],check=True)
           PY
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
@@ -74,3 +75,5 @@ jobs:
           path: |
             ${{ runner.temp }}/debugger/**/*.json
             ${{ runner.temp }}/debugger/**/*.log
+            ${{ runner.temp }}/debugger-editor/**/*.json
+            ${{ runner.temp }}/debugger-editor/**/*.log

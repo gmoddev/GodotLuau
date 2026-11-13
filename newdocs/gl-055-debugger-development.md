@@ -181,3 +181,17 @@ protocol execution, graphical editor interaction, lifecycle/adversarial expansio
 profiling/indexing, cross-profile/sanitizer and performance qualification remain
 outstanding. Main, dependencies, default controllers and publication guards are
 unchanged. Do not close this campaign from core or syntax checks alone.
+
+## Native editor journey preparation
+
+Core 43437162294 passes Windows/Linux at `1e46bc5` (87 existing and seven
+debugger scenarios). Native 43437162267 is still building the actual adapter.
+Add an editor-only, main-thread session descriptor with copied state and a
+connection generation, excluding transport nonces and live VM/native handles.
+The existing editor runner's separate `--debugger` mode opens actual Luau source,
+sets its native CodeEdit gutter, starts a real game process and exercises the
+native Luau tab's Watch, into/over/out/continue, application Stop, fresh Play and
+detach. It uses the cached headless child arguments before editor startup.
+Godot 4.7.1 parses the journey successfully; execution remains pending the new
+native binary. The automated headless journey is not graphical or physical-input
+qualification. No controller, host, dependency or publication setting changes.

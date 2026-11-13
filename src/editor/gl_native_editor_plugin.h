@@ -61,6 +61,7 @@ public:
     godot::Dictionary IndexProject(const godot::String& Module,const godot::String& Member);
     void FindProjectUses();
     godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(true); }
+    godot::Array GetDebuggerSessions();
 };
 
 #endif
