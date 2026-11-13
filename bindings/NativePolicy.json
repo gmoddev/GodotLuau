@@ -3857,6 +3857,8 @@
       "Name": "Color",
       "Native": "color",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -3947,6 +3949,8 @@
       "Name": "Color",
       "Native": "color",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -3986,6 +3990,8 @@
       "Name": "Modulate",
       "Native": "modulate",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -4049,6 +4055,8 @@
       "Name": "Color",
       "Native": "color",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -6287,7 +6295,7 @@
       "Class": "NavigationAgent2D",
       "Name": "GetNextPathPosition",
       "Native": "get_next_path_position",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene"
     },
     {
@@ -6308,21 +6316,21 @@
       "Class": "NavigationAgent2D",
       "Name": "IsTargetReachable",
       "Native": "is_target_reachable",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene"
     },
     {
       "Class": "NavigationAgent2D",
       "Name": "IsNavigationFinished",
       "Native": "is_navigation_finished",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene"
     },
     {
       "Class": "NavigationAgent2D",
       "Name": "GetFinalPosition",
       "Native": "get_final_position",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene"
     },
     {
@@ -6358,7 +6366,7 @@
       "Class": "TileMapLayer",
       "Name": "GetPattern",
       "Native": "get_pattern",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene"
     },
     {

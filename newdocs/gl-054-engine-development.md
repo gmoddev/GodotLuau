@@ -152,3 +152,32 @@ The actual EditorInterface play/stop fixture now checks real debugger delivery o
 copied locals, opacity, domain identity and source navigation. Signature help also
 retains typed collection elements. These are implementation statements awaiting
 execution; no interactive/graphical debugger pass is claimed yet.
+
+## Retained baseline result and first candidate failure
+
+Native run [43364130679](https://github.com/gmoddev/GodotLuau/actions/runs/43364130679)
+passed Windows/Linux at `65c0921e3e517a702c764ecbe02d55826ff1b612`, 141 actors
+per platform. Native identity is `0d79e0b7e00759ec452927096c3529950069c8b8c2d451028f985899c7020bee`
+(125 LF-normalized inputs). Both invocation reports contain 12 process logs and
+440 domain/member pairs with identical membership. Across domains, the union is
+61 constructors, 61 methods, 22 property reads, 116 writes, 11 delivered signals
+and 26 value constructors. Per-domain constructor/call counts are Server 53/59,
+Client 29/12 and EditorPreview 31/3. This is use evidence under the unchanged
+baseline workloads, not whole-API correctness or an application coverage claim.
+
+Retained native ZIP digests: Windows artifact 14011375457
+`d8e423e6d15098a26a1f3c8a6cc8d759b6f8a9f88c62d6175db953d65be1de77`;
+Linux 14010497351
+`b3aca80cca09676aa55208b318a8e646da9aab43bc2ae6f4f55807a274ec4e21`.
+
+The first expansion's Linux run 43365508357 failed at ProductionOwner line 44:
+the fixture assumed TileMapPattern.SetCell with default -1 IDs removes the cell.
+A direct control on the existing official Godot 4.7.1 returned two coordinates
+and size (2,1). The fixture now checks that actual native result while retaining
+the default-argument test. No engine/product behavior was changed to fit the
+assertion. Preserve the failed artifact 14010797518, ZIP
+`cdcb705acd3f55afd89f6939f762a368f04fc58372c8cad278dbcdea3283ac0a`.
+Four new Color4 properties also lacked explicit 0..1 descriptor bounds; source
+review corrected those before qualification. Non-const native observations now
+carry matching mutation metadata. These are candidate corrections, not passes.
+Core CI also passed the snapshot implementation at 02ef3bc (43366364704).

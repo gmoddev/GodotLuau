@@ -83,6 +83,7 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     auto Status=memnew(Label); StatusLabel=Status->get_instance_id();
     Status->set_text("Explicit preview only. Runtime services are unavailable here."); Panel->add_child(Status);
     auto Errors=memnew(Tree);RuntimeTree=Errors->get_instance_id();Errors->set_columns(2);
+    Errors->hide();
     Errors->set_column_title(0,"Error stack / local");Errors->set_column_title(1,"Snapshot value");
     Errors->set_column_titles_visible(true);Errors->set_custom_minimum_size(Vector2(600,110));
     Errors->set_tooltip_text("Error-time copies only. Double-click a project source frame to open it. No suspended VM or object inspection.");

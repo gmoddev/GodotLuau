@@ -59,7 +59,7 @@ local Pattern=S:New('TileMapPattern',{})
 S:Call(Pattern,'SetCell',V2(0,0),0,V2(0,0),0)
 S:Call(Pattern,'SetCell',V2(1,0)) -- exact Vector2i defaults, no expression evaluator
 local Cells=S:Call(Pattern,'GetUsedCells')
-assert(#Cells==1 and Cells[1].X==0 and S:Call(Pattern,'GetSize').X>=1)
+assert(#Cells==2 and Cells[1].X==0 and Cells[2].X==1 and S:Call(Pattern,'GetSize').X==2)
 local Map=S:New('TileMapLayer',{Name='Tiles',TileSet=S:New('TileSet',{})})
 assert(#S:Call(Map,'GetUsedCells')==0)
 local Copy=S:Call(Map,'GetPattern',{V2(0,0),V2(1,0)})

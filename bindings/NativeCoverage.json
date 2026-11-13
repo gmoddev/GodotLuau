@@ -10,7 +10,7 @@
     "version_full_name": "Godot Engine v4.3.stable.official"
   },
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
-  "PolicySHA256": "9faa226712e5de468ba31cd11add780ba675838d385eb9324b334eba0ef29c4f",
+  "PolicySHA256": "c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace",
   "Interpretation": "Declared members; inheritance follows Base. Catalog specifies exact receivers, aliases, bounds and runtime permissions. Metadata existence is not host availability or qualification.",
   "Runtime": {
     "Domains": [

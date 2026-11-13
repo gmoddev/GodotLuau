@@ -26,9 +26,11 @@ void GLNativeEditorPlugin::ReceiveRuntimeError(const Array& Data) {
     auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(RuntimeTree));
     if(!TreeNode)return;
     TreeNode->clear();
+    TreeNode->hide();
     if(Data.size()!=4)return;
     Dictionary Snapshot=Data[3];
     if(int(Snapshot.get("Schema",0))!=1 || Snapshot.get("Frames",Variant()).get_type()!=Variant::ARRAY)return;
+    TreeNode->show();
     auto Root=TreeNode->create_item();Root->set_text(0,String(Snapshot.get("Domain",String()))+" error snapshot");
     Root->set_text(1,"Not suspended; opaque values are not retained");
     Array Frames=Snapshot["Frames"];

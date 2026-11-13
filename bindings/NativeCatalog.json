@@ -4095,6 +4095,8 @@
       "Name": "Color",
       "Native": "color",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -4185,6 +4187,8 @@
       "Name": "Color",
       "Native": "color",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -4224,6 +4228,8 @@
       "Name": "Modulate",
       "Native": "modulate",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -4287,6 +4293,8 @@
       "Name": "Color",
       "Native": "color",
       "Kind": "Colour4",
+      "Min": 0,
+      "Max": 1,
       "Authority": "OwnedScene"
     },
     {
@@ -12291,7 +12299,7 @@
       "Class": "NavigationAgent2D",
       "Name": "GetNextPathPosition",
       "Native": "get_next_path_position",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene",
       "CountQuery": null,
       "IndexArgument": -1,
@@ -12391,7 +12399,7 @@
       "Class": "NavigationAgent2D",
       "Name": "IsTargetReachable",
       "Native": "is_target_reachable",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene",
       "CountQuery": null,
       "IndexArgument": -1,
@@ -12424,7 +12432,7 @@
       "Class": "NavigationAgent2D",
       "Name": "IsNavigationFinished",
       "Native": "is_navigation_finished",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene",
       "CountQuery": null,
       "IndexArgument": -1,
@@ -12457,7 +12465,7 @@
       "Class": "NavigationAgent2D",
       "Name": "GetFinalPosition",
       "Native": "get_final_position",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene",
       "CountQuery": null,
       "IndexArgument": -1,
@@ -12637,7 +12645,7 @@
       "Class": "TileMapLayer",
       "Name": "GetPattern",
       "Native": "get_pattern",
-      "Mutates": false,
+      "Mutates": true,
       "Authority": "OwnedScene",
       "CountQuery": null,
       "IndexArgument": -1,
@@ -15554,7 +15562,7 @@
     "TileMapPattern"
   ],
   "Schema": 1,
-  "PolicySHA256": "9faa226712e5de468ba31cd11add780ba675838d385eb9324b334eba0ef29c4f",
+  "PolicySHA256": "c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace",
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
   "ScopeOperations": [
     {

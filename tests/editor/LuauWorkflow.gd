@@ -139,7 +139,7 @@ func Run() -> void:
                 var Captured: Array = []
                 while Time.get_ticks_msec() < Deadline:
                     Captured = Plugin.call("GetRuntimeDiagnostics")
-                    if Captured.size() >= 3: break
+                    if Captured.size() >= 3 and str(Captured[0])=="res://Failure.luau" and str(Captured[1]).contains("expected editor-run diagnostic"): break
                     await get_tree().process_frame
                 Check(Captured.size() == 4 and str(Captured[0]) == "res://Failure.luau" and str(Captured[1]).contains("expected editor-run diagnostic") and str(Captured[1]).contains(":2:"), "Actual editor-run Luau error reaches native debugger capture with source and line")
                 var LocalFound := false
