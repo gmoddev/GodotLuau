@@ -10,6 +10,7 @@ def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     Parser.add_argument('--output', type=Path, required=True)
     Parser.add_argument('--extension', type=Path, required=True)
+    Parser.add_argument('--debugger', action='store_true')
     Parser.add_argument('--godot-evidence', type=Path, required=True)
     Parser.add_argument('--remote-host-evidence', type=Path, required=True)
     Parser.add_argument('--remote-host-qualification', type=Path, required=True)
@@ -250,6 +251,14 @@ def Main():
     Evidence['CharacterLatency'] = Latency
     if Evidence['DataStoreNative']!={'FaultStages':4,'KillStages':4,'IndependentIncrements':40,'PowerLossTest':False}:
         raise ValueError('Missing DataStore native interruption/recovery qualification')
+    if Args.debugger:
+        Debugger = json.loads((Args.output/'debugger/results.json').read_text(encoding='utf-8'))
+        if (not Debugger['Passed'] or Debugger['Graphical'] or Debugger['NativeSource'] != Evidence['NativeSource'] or
+                Debugger['ExtensionSHA256'] != Evidence['ExtensionSHA256'] or len(Debugger['Cases']) != 2 or
+                [Case['Stops'] for Case in Debugger['Cases']] != [8, 1] or
+                any(not Case['Passed'] or not all(Check['Passed'] for Check in Case['Checks']) for Case in Debugger['Cases'])):
+            raise ValueError('Missing actual native debugger execution/inspection/disconnect qualification')
+        Evidence['DebuggerNative'] = Debugger
     (Args.output / 'summary.json').write_text(json.dumps(Evidence, indent=2))
     print('[Runtime:NativeCI] PASS '+str(Evidence['Processes'])+' required process results')
 

@@ -1,0 +1,73 @@
+name: Luau debugger focused qualification (no publication)
+on:
+  workflow_dispatch:
+    inputs:
+      NativeRun:
+        description: "Native CI run providing an adapter with the identical native source fingerprint"
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  Debugger:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+            Executable: Godot_v4.7.1-stable_win64.exe
+            Suffix: dll
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Executable: Godot_v4.7.1-stable_linux.x86_64
+            Suffix: so
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 12
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch existing native adapter evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download '${{ inputs.NativeRun }}' --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"
+      - name: Provision existing verified official host
+        run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
+      - name: Expose installed MSVC Debug runtime
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $Installation = & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          $Runtime = Get-ChildItem -Path "$Installation\VC\Redist\MSVC\*\debug_nonredist\x64\Microsoft.VC*.DebugCRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $Runtime) { throw '[Debugger:Qualification] Installed Debug runtime unavailable' }
+          $Runtime.FullName | Out-File $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Run actual native debugger with exact source admission
+        env:
+          DEBUGGER_GODOT: ${{ runner.temp }}/godot/${{ matrix.Executable }}
+          DEBUGGER_SUFFIX: ${{ matrix.Suffix }}
+        run: |
+          python - <<'PY'
+          import os,subprocess,sys
+          from pathlib import Path
+          Root=Path(os.environ['RUNNER_TEMP'])
+          Adapter=next((Root/'adapter').rglob('godot_luau.'+os.environ['DEBUGGER_SUFFIX']))
+          Source=next((Root/'adapter').rglob('source.json'))
+          subprocess.run([sys.executable,'tests/runtime/RunDebuggerQualification.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--source',str(Source),'--output',str(Root/'debugger')],check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: luau-debugger-${{ matrix.Platform }}
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/debugger/**/*.json
+            ${{ runner.temp }}/debugger/**/*.log

@@ -122,3 +122,23 @@ actual native compilation, protocol, editor, lifecycle and sanitizer evidence.
 Intermediate native rerun 43425256514 is canceled because its native inputs equal
 the original checkpoint, while core-only fixture correction is being established.
 It is not a passing result. No existing acceptance assertion is removed.
+
+Core 43427400040 passes Windows/Linux at `b3e18af`: all 87 existing cases and
+seven actual debugger scenarios. Native run 43427400110's Linux adapter compile
+finds one const-reference mismatch: project path validation accepts a mutable
+String for canonicalization, while breakpoint registration passes its const
+input. Validate a local copy and retain that canonical path. Static review also
+removes a namespace-scope Godot String before extension binding initialization;
+use an ordinary std::string for the session nonce. The startup risk was not
+reproduced by the compile-blocked run.
+
+Add a real Godot Variant-protocol editor peer fixture: actual breakpoints, native
+stack/locals/upvalues, into/over/out, imported module, separate Client frame,
+signal callback, destroyed native wrapper, malformed/stale/session rejection and
+disconnect while stopped. Both processes use existing bounded ownership helpers
+and headless crash-UI suppression. Native CI now requires this fixture; its
+four test-owned processes remain separate from the existing 141-actor cohort.
+A focused workflow can reuse the exact adapter artifact after fixture-only
+corrections, enforcing the unchanged native fingerprint rather than rebuilding
+the same native source. Neither fixture has passed yet; graphical editor
+interaction, restricted watches and later phases remain outstanding.

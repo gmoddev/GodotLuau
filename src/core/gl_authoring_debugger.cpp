@@ -60,8 +60,9 @@ void GLAuthoringDebugger::Command(int Session,const String& Op) {
     }
 }
 void GLAuthoringDebugger::RecordBreakpoint(const String& Source,int Line,bool Enabled) {
-    if(!GLProjectResourcePath(Source) || Line<1 || Line>1000000 || Source.utf8().length()>1024)return;
-    Location Key{Source.utf8().get_data(),Line};
+    String Path=Source;
+    if(Path.length()>1024 || !GLProjectResourcePath(Path) || Line<1 || Line>1000000 || Path.utf8().length()>1024)return;
+    Location Key{Path.utf8().get_data(),Line};
     if(Enabled) {if(Breakpoints.size()>=128 && !Breakpoints.count(Key))return;Breakpoints[Key]=true;}
     else Breakpoints.erase(Key);
     for(auto& Entry:Views)if(Entry.second.Pending.size()<256 || Entry.second.Pending.count(Key))Entry.second.Pending[Key]=Enabled;

@@ -15,7 +15,7 @@ using namespace godot;
 namespace {
 uint64_t HostId=0, Window=0, LastRequest=0;
 unsigned Commands=0;
-String Session;
+std::string Session; // Godot built-in objects cannot initialize before extension binding.
 bool Polling=false, Detached=false;
 GLDebugger* Suspended=nullptr;
 const char* DomainName(const GLExecutionDomain& Domain) { return Domain.GetKind()==GLDomainKind::Server?"Server":"Client"; }
@@ -27,7 +27,7 @@ void Poll() {
 }
 void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const String& Error={}) {
     if(!GLRuntimeDebuggerAvailable())return;
-    Dictionary Reply; Reply["Schema"]=1; Reply["Session"]=Session; Reply["Event"]=Event; Reply["Request"]=Request;
+    Dictionary Reply; Reply["Schema"]=1; Reply["Session"]=String::utf8(Session.c_str()); Reply["Event"]=Event; Reply["Request"]=Request;
     if(!Error.is_empty())Reply["Error"]=Error.left(256);
     if(Debugger) {
         Reply["Domain"]=DomainName(Debugger->GetDomain()); Reply["State"]=GLDebugger::StateName(Debugger->GetState());
@@ -70,7 +70,7 @@ void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
     if(!HostId) {
         Ref<Crypto> Provider; Provider.instantiate(); auto Bytes=Provider->generate_random_bytes(16);
         if(Bytes.size()!=16 || EngineDebug->has_capture("godotluau"))return;
-        HostId=Host.get_instance_id(); Session=Bytes.hex_encode(); LastRequest=0;
+        HostId=Host.get_instance_id(); Session=Bytes.hex_encode().utf8().get_data(); LastRequest=0;
         EngineDebug->register_message_capture("godotluau",Callable(&Host,"CaptureDebuggerCommand"));
     }
     if(HostId!=uint64_t(Host.get_instance_id()))return;
@@ -92,7 +92,7 @@ void GLRuntimeDebuggerTick(GLDomainHost& Host) {
 void GLRuntimeDebuggerShutdown(GLDomainHost& Host) {
     if(HostId!=uint64_t(Host.get_instance_id()))return;
     if(auto Debugger=EngineDebugger::get_singleton())if(Debugger->has_capture("godotluau"))Debugger->unregister_message_capture("godotluau");
-    HostId=0; Session=String(); LastRequest=0; Detached=false;
+    HostId=0; Session.clear(); LastRequest=0; Detached=false;
 }
 bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const Array& Data) {
     if(Message!="command")return false;
@@ -102,6 +102,7 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
     if(++Commands>32)return true;
     if(Data.size()!=1 || Data[0].get_type()!=Variant::DICTIONARY){Send(nullptr,"Error",0,"Expected one command dictionary");return true;}
     Dictionary Request=Data[0];
+    if(Request.size()>10){Send(nullptr,"Error",0,"Too many debugger fields");return true;}
     for(const Variant& Key:Request.keys()) {
         if(Key.get_type()!=Variant::STRING){Send(nullptr,"Error",0,"Invalid field name");return true;}
         String Name=Key;
@@ -112,10 +113,10 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         if((Name=="Schema" || Name=="Request" || Name=="Line" || Name=="BreakOnHit") && Value.get_type()!=Variant::INT){Send(nullptr,"Error",0,"Expected integer field");return true;}
         if(Name=="Enabled" && Value.get_type()!=Variant::BOOL){Send(nullptr,"Error",0,"Expected boolean field");return true;}
         if(Name=="Session" || Name=="Op" || Name=="Domain" || Name=="Source")
-            if(Value.get_type()!=Variant::STRING || String(Value).utf8().length()>1024){Send(nullptr,"Error",0,"Expected bounded string field");return true;}
+            if(Value.get_type()!=Variant::STRING || String(Value).length()>1024 || String(Value).utf8().length()>1024){Send(nullptr,"Error",0,"Expected bounded string field");return true;}
     }
     if(Request.size()>10 || Request.get("Schema",Variant()).get_type()!=Variant::INT || int(Request["Schema"])!=1 ||
-       Request.get("Session",Variant()).get_type()!=Variant::STRING || String(Request["Session"])!=Session ||
+       Request.get("Session",Variant()).get_type()!=Variant::STRING || String(Request["Session"])!=String::utf8(Session.c_str()) ||
        Request.get("Request",Variant()).get_type()!=Variant::INT || Request.get("Op",Variant()).get_type()!=Variant::STRING) {
         Send(nullptr,"Error",0,"Invalid debugger envelope"); return true;
     }
