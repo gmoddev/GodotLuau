@@ -1,6 +1,7 @@
 # GL-054 engine and production campaign
 
-Status: implementation in progress, unmerged. This campaign name is distinct from
+Status: qualified within the [recorded profiles and limitations](gl-054-qualification.md),
+unmerged and ready for integration review. This campaign name is distinct from
 the historical GL-054 transitive-module-reload finding, already resolved on main.
 Never renumber or reopen that finding without new evidence.
 
@@ -606,3 +607,31 @@ solo/recovery/listen/dedicated job from 43399518780. The old failure remains
 retained. The automatic CMake-adapter rerun 43400287508 was canceled because
 candidate-only mode restoration is outside that unchanged adapter profile; actual
 accepted-product export checks remain required.
+
+## Campaign completion
+
+Focused Linux workflow 43400803390 passes at `5b642d2`, reusing accepted native
+products from 43387294744. Both configurations record staged mode 0755, Godot's
+copied mode 0644 and finalized mode 0755, then pass standalone startup/restart and
+initial DataStore-read markers. Artifact digest is
+`98fe930abf9fa0575b2ede084b7222b0b8bcf388ab60de4313c36aaab2a64fac`.
+Windows Foundry Debug/Release exports, Orb Run export and the complete Relay Siege
+Package job pass in 43399518780 (and the unchanged Windows jobs pass again in
+43400288713). The focused run deliberately skips them and reuses their identical
+input proof. The canceled automatic adapter reruns 43400287508/43400802042 do not
+exercise candidate-only extraction/export mode handling; they are not represented
+as passing tests. No C++ input changed after the qualified fingerprint.
+
+Relay Siege's retained evidence reports solo 26 checks and recovery seven;
+four-player listen and dedicated sessions complete with zero failures for every
+actor. Leader has 27 checks, each observer/late join nine, and the dedicated
+server two. The existing controller/network/authority/lifecycle behavior remains
+intact. This is fresh headless multiplayer regression; prior unchanged rendered
+Relay Siege evidence is not relabeled as a new graphical pass.
+
+The [qualification record](gl-054-qualification.md) consolidates final surface,
+source/cohort identities, actual commands/results, performance and limitations.
+GL-056/057/058/059/060 are resolved on this feature branch within their linked
+scope. The campaign is ready for integration review, with no main merge authorized.
+Native remains the Character default and Scripted opt-in. Dependencies/admitted
+hosts, release publication and updater distribution remain unchanged/disabled.

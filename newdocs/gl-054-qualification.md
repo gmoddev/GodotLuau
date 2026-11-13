@@ -1,10 +1,11 @@
 # GL-054 qualification
 
-Status: native/editor/game implementation qualified within the profiles below;
-production package/export and current multiplayer completion are pending. Work
-remains on `feature/gl-054-engine-production`, unmerged. The
+Status: qualified within the profiles and limitations below; ready for integration
+review. Work remains on `feature/gl-054-engine-production`, unmerged. The
 [development journal](gl-054-engine-development.md) retains failed attempts,
 corrections, commands, timing context and qualification limits.
+The [compact receipt](evidence/gl054-qualification.json) records the final identities
+and scoped outcomes for subsequent integration review.
 
 ## Identity and implementation
 
@@ -64,11 +65,15 @@ The journal retains the independently passing Windows native cohort as well.
 | --- | --- | --- |
 | Core | [43379513552](https://github.com/gmoddev/GodotLuau/actions/runs/43379513552), later [43382538818](https://github.com/gmoddev/GodotLuau/actions/runs/43382538818) | Existing Windows/Linux core qualification |
 | Generated declarations | [43379561987](https://github.com/gmoddev/GodotLuau/actions/runs/43379561987), later [43380937977](https://github.com/gmoddev/GodotLuau/actions/runs/43380937977) | Both pinned-frontend platform jobs, generation/policy and positive/negative calls |
-| Native | [43379513518](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518) | 141 existing actors per platform, actual editor/index/snapshots, full-host physics/navigation, Foundry/restart |
+| Native | [43379513518](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518), final [43387293637](https://github.com/gmoddev/GodotLuau/actions/runs/43387293637) | 141 existing actors per platform, actual editor/index/snapshots, full-host physics/navigation, 44 Foundry checks/restart, corrected marker fixture |
 | Full-native sanitizers | [43379555285](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285) | Windows 26 / Linux 27 controls; 87 core cases, 141 native actors, zero unexpected reports |
 | Windows rendered Foundry | `foundry-rendered-f1a` retained local evidence | 44 assertions, three sectors, 24 world rebuilds, actual native input/physics/combat, reload, authority, Unicode, durable restart |
 | Windows graphical editor | `graphical-editor-f1a-03`, focused reopen receipt | 52 established editor assertions and seven fresh-process reopen assertions; inspected captures |
 | Windows rendered production API | `production-rendered-f1a` | Native expansion plus real texture readback/immutable result, physics and navigation cases |
+| Four production profiles and packages | [43387294744](https://github.com/gmoddev/GodotLuau/actions/runs/43387294744) | Accepted non-publishing Windows/Linux Debug/Release; 87 core cases and 141 native actors each, actual SCons Foundry/restart, extracted companion starts |
+| Windows standalone applications | [43399518780](https://github.com/gmoddev/GodotLuau/actions/runs/43399518780) Windows jobs | Foundry Debug/Release export/start/restart, Orb Run export and Relay Siege extracted startup |
+| Relay Siege regression | Same run's passing Package job | Solo 26 checks, recovery seven, four-player listen and dedicated with late join; every actor exits zero |
+| Linux standalone applications | [43400803390](https://github.com/gmoddev/GodotLuau/actions/runs/43400803390) | Foundry Debug/Release export/start/restart with verified native bytes and executable companion; unchanged Windows/game proof reused explicitly |
 
 Local evidence root is `C:\Users\aiden\.codex\artifacts\godotluau\gl054`.
 Windows worker Debug adapter SHA256 is
@@ -94,15 +99,47 @@ producer cannot keep moving the body. Completed sectors become acknowledged only
 after GL-009 commits; fresh-process restart reads them. No general leak freedom,
 exactly-once arbitrary callback execution or live debugger suspension is claimed.
 
+## Production identity and corrections
+
+The accepted candidate uses `678469610dbada94ecc1b210bc930c890d9ebb30`, tree
+`157b4111950718d6dbc6875e2c2f823d351c29e9`, and the same native fingerprint above.
+Windows archive SHA256 is
+`0861a94d7870d9a3523049b8f8aebce59839292f9b6e2f77adaf827f6459cf90`;
+Linux is `dd5400e283a7c1b0341d3f8f27b88fd4b95f48d687c34bcfac379933075fe95d`.
+Both packages start Debug/Release companions successfully. Acceptance artifact
+digest is `641ad833eb24377e2124f57513d6ccd0e1c0cc0e1738914896903d8940b33d2a`.
+
+The initial candidate 43379558294 rejected a real fixture marker race. A 75 ms
+writer stall reproduced NewPeer=0 and the failed reconnect predicate. Atomic
+marker publication preserves every network assertion/deadline; the same stalled
+control and final native/production cohorts pass. The corrected candidate's first
+Linux attempts failed at the Ubuntu package mirror before compilation. Retrying
+only failed jobs succeeded without changing source, packages or signed verification.
+All attempts remain retained; no failed cohort was relabeled as accepted.
+
+GL-060 corrects two Linux packaging mode losses. Staging restores verified ZIP
+modes; after checking exported native byte hashes, export finalization restores
+the companion's executable mode. Both corrected Linux configurations record
+0755 staged, 0644 copied by Godot and 0755 final, then complete the initial
+DataStore read in both starts. Manual editor export requires the same documented
+chmod step. Source built products are reused; no native dependency, authority or
+storage protocol changed. Focused Linux artifact digest is
+`98fe930abf9fa0575b2ede084b7222b0b8bcf388ab60de4313c36aaab2a64fac`.
+
+The complete Windows Package job passes solo/recovery and actual four-player
+listen/dedicated sessions. Listen has four actors; dedicated has a server plus
+four players. Every actor reports zero failures, including late join and retained
+authority/lifecycle/persistence assertions. Evidence artifact digest is
+`d02d068f101810b056b72b10d2733e5f12bb359f7286708a15b9c0f146f60700`.
+The focused Linux run intentionally skips that unchanged Windows job; it does
+not turn a skipped job into a passing multiplayer claim.
+
 ## Remaining boundaries
 
-Production candidate [43379558294](https://github.com/gmoddev/GodotLuau/actions/runs/43379558294)
-rejected Windows Release at the existing reconnect fixture; the other three
-profiles pass. GL-059's partial marker publication is reproduced and corrected
-without a network implementation change; its focused stalled-writer control
-passes all seven actors. A corrected coherent candidate cohort is required. Accepted package
-extraction, both-platform Debug/Release standalone exports and fresh Relay Siege
-solo/listen/dedicated evidence remain to be completed before campaign readiness.
+Standalone exports establish packaging, entrypoint/initial DataStore startup and
+restart. Full gameplay is qualified with the actual production library on the
+full-featured host; it is not relabeled as a full exported-gameplay observer pass.
+The ordinary templates do not run that external observer through --script.
 
 Graphical editor/game observations use programmatic native actions and offscreen
 rendering. They are not physical keyboard/gamepad/mobile or human-interaction

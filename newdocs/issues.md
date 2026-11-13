@@ -136,8 +136,8 @@ four successful workflows and independently checked artifacts.
 | [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
 | [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | A different execution owner can transform an ancestor of another owner's native SceneScope |
 | [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Resolved for attribute values on unmerged GL-054 branch; cross-platform and rendered evidence linked below | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
-| [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Reproduced qualification-fixture defect; atomic marker fix passes focused stalled-writer control, hosted cohort pending | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
-| [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Linux export read fails; source-verified mode loss corrected, export rerun pending | The Luau-only example stager drops verified Unix executable modes when extracting a candidate |
+| [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Resolved on unmerged branch; stalled-writer control, native and four-profile candidate pass | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
+| [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Resolved on unmerged branch; both Linux production exports/read-start/restart pass | Candidate staging and Godot's dependency export copy lose the companion's executable mode |
 
 ## GL-060: Candidate example staging drops Unix modes
 
@@ -146,10 +146,17 @@ canonical extracted startup passes. PrepareProject used zipfile.extractall
 without restoring member modes. Workflow 43399518780's exported Foundry initializes
 both Luau entrypoints but fails its initial DataStore read. The stager now applies
 the already verified member modes on POSIX, as the canonical extractor does.
-The export helper explicitly checks executable access before startup. This is a
-bounded example-staging correction, not a native backend or authority change.
+Godot's dependency copy also drops executable mode. After byte-hash verification,
+the helper finalizes the companion from its verified staged mode and checks
+executable access before startup. Manual Linux exports document the same chmod
+step. Fixes [c5a0fc6](https://github.com/gmoddev/GodotLuau/commit/c5a0fc6a3689c1edd7af9b85065e834fee797e17)
+and [5b642d2](https://github.com/gmoddev/GodotLuau/commit/5b642d2e115732ace71378abcd18cdb782952639)
+pass [43400803390](https://github.com/gmoddev/GodotLuau/actions/runs/43400803390):
+both production configurations export, read DataStore and restart, recording
+0755/0644/0755 staged/copied/final modes. Resolved within this Linux packaging
+scope, with the manual step explicit; no native backend or authority change.
 See the [campaign record](gl-054-engine-development.md#accepted-candidate-and-application-export-correction)
-for retained failure, accepted product identities and pending corrected export.
+for retained failures and accepted product identities.
 
 ## GL-059: Partial qualification marker publication
 
@@ -165,8 +172,12 @@ Writing/closing a sibling .pending file and renaming it to the final marker
 removes partial publication. The same stalled control passes seven existing
 listen/dedicated/root-guard actors without assertion/deadline changes. This is a
 test-fixture race, not a reproduced networking vulnerability or runtime refactor.
-See the [campaign evidence](gl-054-engine-development.md#actual-release-qualification-barrier-race)
-for the failed candidate, controls and pending hosted verification.
+Fix [6784696](https://github.com/gmoddev/GodotLuau/commit/678469610dbada94ecc1b210bc930c890d9ebb30)
+passes [Windows/Linux native CI](https://github.com/gmoddev/GodotLuau/actions/runs/43387293637)
+and the [accepted four-profile candidate](https://github.com/gmoddev/GodotLuau/actions/runs/43387294744).
+Resolved on the unmerged feature branch. The
+[campaign evidence](gl-054-engine-development.md#actual-release-qualification-barrier-race)
+preserves the failed candidate and controlled before/after observations.
 
 ## GL-058: Attribute string value encoding
 

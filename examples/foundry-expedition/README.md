@@ -1,7 +1,7 @@
 # Foundry Expedition
 
-GL-054 production acceptance project. Implementation exists; qualification is
-pending in the [campaign journal](../../newdocs/gl-054-engine-development.md).
+GL-054 production acceptance project, qualified within the
+[recorded profiles and limitations](../../newdocs/gl-054-qualification.md).
 All authored game logic is Luau. Godot scenes/resources/shaders/SVG provide native
 content. External GDScript observers are test fixtures, not shipped game logic.
 
