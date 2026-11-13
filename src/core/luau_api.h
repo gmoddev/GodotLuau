@@ -1184,7 +1184,8 @@ static int godot_object_index(lua_State* L) {
     // Sin esto, un DataService que lee game.PlaceId tumbaba todo el modulo. No
     // hay servidores de Roblox detras, asi que se devuelven valores locales
     // coherentes y editables como atributos del nodo Game.
-    if (n->is_class("RobloxTemplate") || n->get_name() == StringName("Game")) {
+    if (n->is_class("RobloxTemplate") || n->get_name() == StringName("Game") ||
+        (n->is_inside_tree() && n->get_tree()->get_current_scene()==n)) {
         if (strcmp(key, "PlaceId") == 0) {
             Variant v = n->has_meta("PlaceId") ? n->get_meta("PlaceId") : Variant();
             lua_pushnumber(L, v.get_type() == Variant::NIL ? 0.0 : (double)v);

@@ -133,6 +133,19 @@ four successful workflows and independently checked artifacts.
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 | GL-054 | P2 | Resolved and normally integrated by `47bbb6d`; core/native verification linked below | Changed project module leaves cached transitive importers and their callbacks alive |
 | GL-055 | P2 | Resolved and normally integrated by `47bbb6d`; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
+| [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Reproduced Windows/Linux at `31d64a5`; bounded fix implemented, qualification pending | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
+
+## GL-056: Plain native scene root and shutdown facade
+
+The GL-054 Foundry workload reproduces startup failure on Windows/Linux in run
+43369152927: a root named FoundryExpedition receives Window as `game`, and
+BindToClose lookup fails before persistence initialization. Existing global
+selection and DataModel compatibility recognize legacy classes/Game names only.
+This is a runtime compatibility defect, not a storage transaction or authority
+finding. The [bounded fix and qualification state](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect)
+preserve legacy selection, then select the actual current scene root and admit
+its existing close/metadata facade. Exact plain-root native regression remains
+required before closure. No fake Model/DataModel identity or extra VM is introduced.
 
 ## GL-055: Native layout preset ordering
 

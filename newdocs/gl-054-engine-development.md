@@ -274,3 +274,20 @@ review; production builds, package extraction and sanitizer workflows remain to
 be executed. Full-native sanitizer profiles retain their existing host/editor/
 navigation limitations; ordinary full-host game results must not be relabeled as
 sanitizer coverage of an unsupported configuration.
+
+## Actual plain-scene bootstrap defect
+
+Run 43369152927 completed the expanded integration, positive 2D navigation,
+editor snapshot workflow and Orb Run gates on both platforms, then failed Foundry
+startup: `BindToClose is not a valid member of Window`. The inherited global
+initializer selects only legacy classes/a node named Game and otherwise wraps the
+Window. The DataModel compatibility branch likewise excludes an ordinary scene
+root. This is a reproduced engine integration defect, not a storage race or an
+argument to add GDScript bootstrap logic.
+
+The bounded fix preserves legacy selection, then uses the actual current scene
+root before the existing Window fallback; the compatibility branch recognizes
+that exact live scene root for BindToClose/metadata. Foundry retains its own
+ordinary root name and now asserts `game == script.Parent`, with the external
+fixture observing Server/Client state on that same root. No extra DataModel,
+controller, domain or filesystem authority is introduced. Qualification is pending.

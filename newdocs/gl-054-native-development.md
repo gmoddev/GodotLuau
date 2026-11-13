@@ -4,6 +4,17 @@ Implementation on `feature/gl-054-engine-production`; qualification status and
 identities are in the [campaign journal](gl-054-engine-development.md). This is a
 feature-branch extension of ADR-015/016/017, not an integrated-main guarantee.
 
+## Plain scene bootstrap
+
+After preserving legacy root discovery, the runtime selects the actual current
+scene as `game` before its historical Window fallback. The exact live scene root
+supports the existing DataModel-style metadata and BindToClose facade regardless
+of its name. Its native ClassName/ObjectID remain unchanged. This does not grant
+Server persistence or other capabilities to Client execution; native service
+authorization remains authoritative. GL-056 records the reproduced prior defect
+and pending qualification. A context initialized without a current scene retains
+the existing Window fallback; late scene replacement follows domain retirement.
+
 ## Collections and effects
 
 Metadata typed arrays preserve their exact engine element type. Primitive inputs

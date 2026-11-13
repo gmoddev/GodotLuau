@@ -46,6 +46,7 @@ func Run() -> void:
     current_scene=Game
     if not await Until(func(): return Game.get_meta('FoundryClientReady',false) and Snapshot().get('Phase','')=='Menu'):
         Finish();return
+    Check(Game.name=='FoundryExpedition' and Game.get_meta('FoundryServerReady',false),'Plain scene root supports Server and Client game facade plus BindToClose without a legacy name')
     var Restart='--restart' in OS.get_cmdline_user_args()
     if Restart:
         Check(Snapshot().get('Completed',0)==3 and Snapshot().get('Wins',0)>=3,'Fresh process reads the durably committed campaign')

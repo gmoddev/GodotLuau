@@ -1,3 +1,4 @@
+assert(game==script.Parent,'Native game facade must resolve this plain scene root')
 local Expedition=require('res://Shared/Game.luau')
 Expedition.Parent=script.Parent
 game:GetService('RunService').Stepped:Connect(Expedition.Step)
