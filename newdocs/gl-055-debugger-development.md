@@ -181,3 +181,15 @@ protocol execution, graphical editor interaction, lifecycle/adversarial expansio
 profiling/indexing, cross-profile/sanitizer and performance qualification remain
 outstanding. Main, dependencies, default controllers and publication guards are
 unchanged. Do not close this campaign from core or syntax checks alone.
+
+## First actual native stop and protocol correction
+
+Native 43437162267 compiles on Linux and reaches a real, continuable Luau stop,
+returning its stack and variable count. The peer rejects the first variable
+payload: the admitted Godot 4.7.1 host appends a fifth type-hint field, unlike the
+four-field 4.3 source originally consulted. Its actual upstream
+`core/debugger/debugger_marshalls.cpp` confirms this wire shape. Correct the peer
+to require the five typed fields; retain all value/authority/stepping assertions.
+The fixture-only qualification branch reuses the exact `1e46bc5` native adapter
+through the existing focused workflow, avoiding a duplicate native build. This
+is partial execution evidence, not a passing debugger result.

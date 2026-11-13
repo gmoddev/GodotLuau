@@ -167,7 +167,8 @@ func Receive(Message: Array) -> void:
         Check(Data.size() == 1 and Data[0] > 0 and Data[0] <= 256, "Bounded native variable count")
         VariablesLeft = Data[0]
     elif Name == "stack_frame_var":
-        Check(Data.size() == 4 and Data[0] is String, "Native variable payload")
+        # The admitted 4.7.1 host appends type_hint to name/group/type/value.
+        Check(Data.size() == 5 and Data[0] is String and Data[1] is int and Data[2] is int and Data[4] is String, "Native variable payload")
         if Finished:
             return
         Variables[Data[0]] = Data[3]
