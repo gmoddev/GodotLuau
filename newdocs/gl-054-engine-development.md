@@ -517,3 +517,10 @@ no build, new host, scenario framework or gameplay implementation. Existing acto
 deadlines/assertions remain unchanged; the job allows bounded time for the added
 workloads. This supplies the required fresh multiplayer regression alongside
 Foundry's separate solo exports without duplicating infrastructure on another host.
+
+Final contract review corrected Foundry's shutdown error text: an unacknowledged
+GL-009 commit can already have taken effect. It now directs restart to the latest
+committed data instead of claiming the prior value definitely survived unchanged.
+README/quick-start wording matches. Receipt retry, return/error behavior, storage
+and acknowledgment logic are unchanged; this is a diagnostic correction, not a
+new persistence protocol or a claim of application fault-injection qualification.

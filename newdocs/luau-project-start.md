@@ -83,7 +83,8 @@ path in RunLuauExport avoids installing templates or changing global settings;
 it is a solo profile, not an admission of a new networking/sanitizer host.
 
 Foundry's HUD distinguishes a completed sector from durable acknowledgment.
-Reload restores acknowledged progress; volatile combat and pending session state
+Reload reads committed progress; an unacknowledged commit may already have taken
+effect. Volatile combat and pending session state
 are not a saved checkpoint. Back up the existing user-data root before deployment
 changes, and preserve GL-009's prohibition on concurrent legacy writers.
 Application startup/export evidence and actual interactive gameplay are reported

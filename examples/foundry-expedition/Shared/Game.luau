@@ -121,7 +121,7 @@ function Game.Close()
  while Progress.Busy and Waited<2 do task.wait(0.05);Waited+=0.05 end
  assert(not Progress.Busy,'Pending progress has not been acknowledged')
  Progress.Save()
- assert(not Progress.Dirty,'Progress save not acknowledged; retained previous commit')
+ assert(not Progress.Dirty,'Progress save not acknowledged; restart reads latest committed data')
 end
 return Game
 end

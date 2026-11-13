@@ -30,7 +30,7 @@ UI. Assets remain project-local. Navigation requires a full-featured Godot host;
 the lightweight admitted network hosts omit it and cannot run this game.
 
 Cached rule/progress modules expose factories: each Server entrypoint generation
-starts a fresh session and reloads acknowledged progress. Disabling that entrypoint
+starts a fresh session and reloads committed progress. Disabling that entrypoint
 retires its world; volatile movement, combat and unacknowledged session state are
 not a saved checkpoint. Command watermarks prevent replay after reload. Client
 reload reconstructs UI/input under its fresh owner and continues command counters.
@@ -43,8 +43,10 @@ server-generated idempotency receipts. A stage clear is not a durability
 acknowledgment: the HUD reports committing, durably saved or unacknowledged.
 At most three receipts are pending, retries back off and stop after three failed
 attempts until explicitly requested. Shutdown waits boundedly for active saving
-and attempts remaining progress; failure stays explicit and preserves the prior
-committed record. The supplied user-data folder is distinct from other examples.
+and attempts remaining progress; failure stays explicit. An unacknowledged commit
+may already have taken effect under GL-009's documented indeterminate-outcome
+contract; retry uses the same receipt and restart reads the latest committed
+record. The supplied user-data folder is distinct from other examples.
 
 Stage from an explicit verified adapter or candidate with the existing helper:
 
