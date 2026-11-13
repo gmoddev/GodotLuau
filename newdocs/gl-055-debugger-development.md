@@ -319,3 +319,13 @@ errors. It records four ObjectDB exit warnings; no graphical or leak-free editor
 claim is made. The overall workflow still fails its known old-product disconnect
 case. The newer `71e8bfd` Linux native job independently passes the fixed protocol
 and editor checks together with the full existing native suite.
+
+Selective-reload run 43446022999's Linux peer reaches the replacement owner and
+new breakpoint, but the target observer inspects the old scope after it has already
+been retired and destroyed. Replace its one-frame assumption with an explicit
+primed/observed barrier: the old source cannot reach its breakpoint until the
+target captures both native IDs. Arm the cancellation timer only after that
+barrier. Retain all old-code/callback/destroyed-object assertions. This fixture
+correction changes no native input; reuse the exact `24dd94b` adapter in focused
+qualification. Cancel sanitizer 43450112103 early because it uses this known bad
+observer ordering; restart with the corrected fixture, retaining the attempt.

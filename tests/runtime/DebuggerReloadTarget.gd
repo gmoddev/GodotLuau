@@ -21,6 +21,7 @@ func Run() -> void:
         return
     var BoxId = Box.get_instance_id()
     var ButtonId = Button.get_instance_id()
+    World.set_meta("ReloadObserved", true)
     while World.get_meta("ReloadDone", 0) != 42 and Time.get_ticks_msec() < Deadline:
         await process_frame
     await create_timer(0.6).timeout
