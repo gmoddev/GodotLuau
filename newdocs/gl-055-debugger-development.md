@@ -81,3 +81,10 @@ introduced. Real Godot editor integration/inspection remains in progress.
 DockerPC's worker-heavy generation 121 belongs to StudioCreatorFoundation3;
 no workload is started, stopped or reserved there. Use hosted core CI for the
 first checkpoint while continuing independent editor implementation.
+
+Core CI 43424637985 compiles both platforms but rejects the additional CTest
+entry at the existing exact discovery guard, before executing tests. Keep that
+guard and its 87 legacy assertions intact: invoke DebuggerTests through the
+existing bounded RunCoreTests process wrapper, and additionally require seven
+distinct debugger scenario markers. The original failed attempt remains visible;
+compilation alone is not runtime qualification. No fixture assertion is relaxed.

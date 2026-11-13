@@ -48,6 +48,7 @@ int main() {
             });
             Debugger.SetBreakpoint("res://Steps.luau", 6, true);
             Check(Domain.Execute(Owner, "local function Add(Value)\n local Next=Value+1\n Next+=1\n return Next\nend\nlocal Value=Add(40)\nassert(Value==42)", "@res://Steps.luau"), "Stepping failed");
+            for (int Line : Lines) std::printf("[Debugger:Steps] Line=%d\n", Line);
             Check(Lines == std::vector<int>({6,2,3,7}), "Source stepping sequence differs");
         });
         Run("enable disable removal remapping and bounded hit count", [] {

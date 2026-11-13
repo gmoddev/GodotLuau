@@ -41,4 +41,18 @@ for Case in ['normal', *Cases]:
         raise SystemExit('[Runtime:Test] Failure or watchdog containment: ' + Case)
     if Case != 'normal':
         print('[Runtime:Test] PASS Isolated execution resource case ' + Case)
+DebuggerBinary = Args.binary.with_name('DebuggerTests' + Args.binary.suffix)
+with (Output / 'debugger.stdout.log').open('w') as Stdout, (Output / 'debugger.stderr.log').open('w') as Stderr:
+    Process = StartProcess([str(DebuggerBinary.resolve())], Stdout, Stderr, dict(os.environ))
+    try:
+        Result = Process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        Result = -1
+    finally:
+        StopProcess(Process)
+Text = (Output / 'debugger.stdout.log').read_text(errors='replace')
+print(Text, end='')
+if Result != 0 or '[Debugger:Test] 7 passed, 0 failed' not in Text:
+    print((Output / 'debugger.stderr.log').read_text(errors='replace'))
+    raise SystemExit('[Debugger:Test] Failure or watchdog containment')
 print('[Runtime:Test] 87 passed, 0 failed')
