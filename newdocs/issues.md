@@ -135,6 +135,18 @@ four successful workflows and independently checked artifacts.
 | GL-055 | P2 | Resolved and normally integrated by `47bbb6d`; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
 | [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Reproduced Windows/Linux at `31d64a5`; bounded fix implemented, qualification pending | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
 | [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Reproduced on the retained Windows `31d64a5` adapter; fix implemented, qualification pending | A different execution owner can transform an ancestor of another owner's native SceneScope |
+| [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Reproduced in Windows rendered Foundry at `76bc473`; one-line fix implemented, qualification pending | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
+
+## GL-058: Attribute string value encoding
+
+The GL-054 rendered Foundry run preserves `Foundry restored â¢ ...` in the
+native metadata snapshot while direct native labels render their bullet correctly.
+`method_setattribute` constructs a Godot String from the Luau UTF-8 bytes using
+the Latin-1 constructor. The bounded correction uses String::utf8 at that value
+conversion; a native integration assertion round-trips accented, punctuation and
+supplementary-plane characters, and Foundry checks its actual JSON snapshot path.
+No JSON codec, persistence format, legacy attribute-key encoding or network
+protocol is changed. Cross-platform native/sanitizer/package checks are pending.
 
 ## GL-057: Shared ancestor property writes bypass scene ownership
 

@@ -37,6 +37,11 @@ func Tap(Code: int) -> void:
     Key(Code,false)
     await Frames(2)
 
+func Capture(Name: String) -> void:
+    if '--graphical' in OS.get_cmdline_user_args():
+        await RenderingServer.frame_post_draw
+        root.get_texture().get_image().save_png('res://foundry-'+Name+'.png')
+
 func _initialize() -> void:
     call_deferred('Run')
 
@@ -52,6 +57,7 @@ func Run() -> void:
         Check(Snapshot().get('Completed',0)==3 and Snapshot().get('Wins',0)>=3,'Fresh process reads the durably committed campaign')
         Finish();return
     var UI=Game.get_node('ExpeditionInterface/HUD')
+    await Capture('menu')
     var Start=UI.get_node('Menu/Content/Start') as Button
     Start.pressed.emit()
     if not await Until(func(): return Snapshot().get('Phase','')=='Active'):
@@ -92,6 +98,7 @@ func Run() -> void:
     Key(KEY_D,false)
     await Frames(2)
     Check(Body.position.x>Before.x+0.5 and Body.is_on_floor(),'Real keyboard input reaches Server-owned CharacterBody3D physics')
+    await Capture('active')
     Key(KEY_D,true)
     await Frames(3)
     Game.get_node('Interface').set('Enabled',false)
@@ -164,6 +171,7 @@ func Run() -> void:
     await Until(func(): return Snapshot().get('Phase','')=='Complete')
     await Until(func(): return Snapshot().get('Persistence','')=='Durably saved')
     Check(Snapshot().get('Completed',0)==3 and Snapshot().get('Wins',0)>=3,'Actual DataStore UpdateAsync acknowledges all sector receipts')
+    Check(Snapshot().get('Message','')=='Foundry restored '+String.chr(0x2022)+' check the persistence acknowledgment below','UTF-8 survives the real Server snapshot attribute and Client JSON presentation path')
     if '--graphical' in OS.get_cmdline_user_args():
         await RenderingServer.frame_post_draw
         root.get_texture().get_image().save_png('res://foundry.png')

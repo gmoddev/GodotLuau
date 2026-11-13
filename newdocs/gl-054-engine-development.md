@@ -357,3 +357,43 @@ or admission changes. The release archive SHA256 is
 Member hashes and provenance are retained locally. These templates have full
 navigation; they are not newly admitted networking/sanitizer hosts. Export checks
 and final corrected-source qualification remain pending.
+
+The focused Windows Foundry run foundry-current-02 passes the corrected plain
+scene bootstrap, 24 world rebuilds, Server/Client generation replacement, stale
+movement neutralization, three actual sectors and durable fresh-process restart.
+It uses the retained `76bc473` Debug adapter; newer edits in this check are
+application/fixture inputs only. No production candidate or graphical pass is
+inferred. Corrected-source full-native sanitizer run 43378694518 and four-profile
+production candidate run 43378776092 were dispatched at `6ef518a`.
+
+The existing export helper now supports explicit verified matching official solo
+templates on both platforms, Debug/Release and Foundry, with no global template
+installation or admitted-host changes. It exports through the normal editor,
+verifies the native library/companion in the standalone directory, then launches
+twice there with isolated user data. For Foundry it requires both Luau entrypoints
+and the initial DataStore read to complete. This is standalone startup/restart,
+not exported interactive gameplay. Qualification-only adapters remain explicitly
+labeled; final package evidence must use actual qualified production candidates.
+The existing game-package workflow runs these checks in both configurations on
+Windows/Linux alongside the unchanged Relay Siege package regression.
+
+## Attribute string encoding
+
+The Windows offscreen-rendered Foundry run foundry-rendered-01 passes the full
+game/reload/persistence observer and restart. Its retained active/menu/completion
+captures were visually inspected: native geometry, camera, UI and imported cargo
+render, but snapshot text displays a corrupted bullet. The saved native snapshot
+contains `Foundry restored â¢ ...`; direct native Label text has a correct bullet.
+This is a reproduced UTF-8 value conversion defect in SetAttribute, not evidence
+that GL-023's JSON codec is broken. GL-058 records the finding.
+
+The smallest correction changes that value's Godot String constructor to
+String::utf8. Existing metadata authority, key encoding, JSON and persistence
+contracts remain unchanged. The established native authoring actor now asserts
+an accented/punctuation/supplementary-character round-trip; the actual Foundry
+observer also asserts its completed JSON snapshot message. The earlier rendered
+run remains evidence for its tested behavior, not a passing Unicode regression.
+Native source identity changes, so final candidate/sanitizer checks must use the
+corrected source. Export adapter control foundry-export-adapter-01 passes normal
+Windows Debug export and two standalone starts with the old adapter; it establishes
+only that explicit template workflow, not production-package qualification.

@@ -114,6 +114,7 @@ function Game.Load()
  Progress.Load()
  Game.Phase='Menu'
  Game.Publish()
+ print('[Foundry:Progress] '..Progress.Status)
 end
 function Game.Close()
  local Waited=0

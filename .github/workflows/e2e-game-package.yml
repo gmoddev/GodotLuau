@@ -14,6 +14,62 @@ permissions:
   contents: read
   actions: read
 jobs:
+  Foundry:
+    name: Foundry standalone (${{ matrix.Platform }})
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+          - Platform: Linux
+            Runner: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select existing Windows runtime
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./tools/InitializeReleaseToolchain.ps1
+      - uses: actions/download-artifact@v4
+        with:
+          name: candidate-${{ matrix.Platform }}
+          run-id: ${{ inputs.CandidateRun || '42752234638' }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Provision matching verified official editor and solo templates
+        timeout-minutes: 6
+        run: |
+          python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/editor"
+          python tests/runtime/ProvisionGodot.py --templates --output "$RUNNER_TEMP/templates"
+      - name: Export and restart both actual production configurations
+        timeout-minutes: 5
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then EDITOR="$RUNNER_TEMP/editor/Godot_v4.7.1-stable_win64.exe"; else EDITOR="$RUNNER_TEMP/editor/Godot_v4.7.1-stable_linux.x86_64"; fi
+          for CONFIGURATION in Debug Release; do
+            python tests/editor/RunLuauExport.py --candidate "$RUNNER_TEMP/candidate" --editor "$EDITOR" --templates "$RUNNER_TEMP/templates" --profile Foundry --configuration "$CONFIGURATION" --output "$RUNNER_TEMP/foundry-$CONFIGURATION"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Foundry-${{ matrix.Platform }}-Export
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/templates/provenance.json
+            ${{ runner.temp }}/foundry-*/*.json
+            ${{ runner.temp }}/foundry-*/*.log
+            ${{ runner.temp }}/foundry-*/standalone/*
+
   Package:
     runs-on: windows-2022
     timeout-minutes: 15

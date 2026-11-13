@@ -58,11 +58,47 @@ def Provision(Output):
     print('[Runtime:Godot] Verified ' + Result.stdout.strip())
 
 
+def ProvisionTemplates(Output):
+    Manifest=json.loads(Path(__file__).with_name('GodotDistribution.json').read_text())
+    Spec=Manifest['ExportTemplates']
+    Platform='Windows' if os.name=='nt' else 'Linux'
+    Output.mkdir(parents=True,exist_ok=False)
+    Archive=Output/'templates.tpz'
+    Digest=hashlib.sha256();Size=0;Deadline=time.monotonic()+240
+    Request=urllib.request.Request(Spec['URL'],headers={'User-Agent':'GodotLuau-Native-Qualification'})
+    with urllib.request.urlopen(Request,timeout=30) as Response,Archive.open('xb') as Target:
+        while Chunk:=Response.read(1024*1024):
+            Size+=len(Chunk)
+            if Size>Spec['Bytes'] or time.monotonic()>Deadline:
+                raise ValueError('Export template download exceeded its pinned size/deadline')
+            Target.write(Chunk);Digest.update(Chunk)
+    if Size!=Spec['Bytes'] or Digest.hexdigest()!=Spec['SHA256']:
+        raise ValueError('Export templates do not match the pinned archive')
+    Members={}
+    with zipfile.ZipFile(Archive) as Package:
+        for Name,Expected in Spec[Platform].items():
+            Info=Package.getinfo('templates/'+Name)
+            if Info.file_size>150*1024*1024: raise ValueError('Unexpected template size')
+            Target=Output/Name
+            with Package.open(Info) as Source,Target.open('xb') as Stream:
+                shutil.copyfileobj(Source,Stream)
+            Actual=hashlib.sha256(Target.read_bytes()).hexdigest()
+            if Actual!=Expected: raise ValueError('Export template member mismatch: '+Name)
+            Target.chmod(0o755)
+            Members[Name]={'SHA256':Actual,'Bytes':Target.stat().st_size}
+    Record={'SourceRevision':Manifest['SourceRevision'],'ReleaseID':Manifest['ReleaseID'],
+            'SHA256':Digest.hexdigest(),'Bytes':Size,'Members':Members,
+            'Scope':'Matching official solo export templates; not admitted networking/sanitizer hosts'}
+    (Output/'provenance.json').write_text(json.dumps(Record,indent=2)+'\n')
+    print('[Runtime:Templates] Verified matching official '+Platform+' export templates')
+
+
 def Main():
     Parser = argparse.ArgumentParser(description=__doc__)
     Parser.add_argument('--output', type=Path, required=True)
+    Parser.add_argument('--templates',action='store_true',help='Stage matching official solo export templates, without installation')
     Args = Parser.parse_args()
-    Provision(Args.output.resolve())
+    (ProvisionTemplates if Args.templates else Provision)(Args.output.resolve())
 
 
 if __name__ == '__main__':

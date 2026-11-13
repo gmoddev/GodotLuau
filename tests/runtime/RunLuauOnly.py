@@ -51,7 +51,7 @@ def Main():
             StopProcess(Process)
     Command=[str(Args.godot.resolve()),'--disable-crash-handler','--single-threaded-scene',
              '--path',str(Project),'--max-fps','30','--script','res://'+Fixture]
-    if Args.graphical: Command+=['--position','16000,16000','--resolution','960x640','--','--graphical']
+    if Args.graphical: Command+=['--position','16000,16000','--resolution','1100x720' if Args.profile=='Foundry' else '960x640','--','--graphical']
     else: Command+=['--headless']
     with (Output/'game.stdout.log').open('w') as Stdout,(Output/'game.stderr.log').open('w') as Stderr:
         if os.name=='nt' and Args.graphical:
@@ -75,6 +75,8 @@ def Main():
     if Args.graphical:
         Picture='foundry.png' if Args.profile=='Foundry' else 'orb-run.png'
         shutil.copy2(Project/Picture,Output/Picture)
+        if Args.profile=='Foundry':
+            for Image in Project.glob('foundry-*.png'): shutil.copy2(Image,Output/Image.name)
     if Args.profile=='Foundry':
         Restart=[str(Args.godot.resolve()),'--headless','--disable-crash-handler',
                  '--single-threaded-scene','--path',str(Project),'--script','res://'+Fixture,'--','--restart']

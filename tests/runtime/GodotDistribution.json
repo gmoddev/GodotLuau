@@ -13,6 +13,20 @@
     "SHA256": "c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1",
     "Executable": "Godot_v4.7.1-stable_win64.exe"
   },
+  "ExportTemplates": {
+    "AssetID": 476988888,
+    "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_export_templates.tpz",
+    "Bytes": 1280486955,
+    "SHA256": "86409db6200b6f8fd3230989c2d2002851f3dd18acf11d7bdbafddf5a0dd0f72",
+    "Windows": {
+      "windows_debug_x86_64.exe": "5bf89f938102f0e3119a5fdaafac4f55884c877681667d0dce844509c8bd8752",
+      "windows_release_x86_64.exe": "76269a403bb832599edeee4432a5b7a7e88c018eb5c9c798dfd8289359b0ec07"
+    },
+    "Linux": {
+      "linux_debug.x86_64": "0b20d290d99ab6e73b1b5888bea582859fde5be8116160f0eb192cc1b2611808",
+      "linux_release.x86_64": "2cb27aee3f7fdf763d0ae16972f6975606959a071f4cd33f6ef1429eb8385049"
+    }
+  },
   "Linux": {
     "AssetID": 476992009,
     "URL": "https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip",

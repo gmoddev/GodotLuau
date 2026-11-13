@@ -522,7 +522,7 @@ static int method_setattribute(lua_State* L) {
         } else if (lua_isboolean(L, 3)) {
             gow_node(w)->set_meta(key, (bool)lua_toboolean(L, 3));
         } else {
-            gow_node(w)->set_meta(key, String(lua_tostring(L, 3)));
+            gow_node(w)->set_meta(key, String::utf8(lua_tostring(L, 3)));
         }
         gl_fire_attribute_changed(gow_node(w), String(key));
         gl_fire_attribute_changed(gow_node(w), String("__any__"));   // Instance.Changed
