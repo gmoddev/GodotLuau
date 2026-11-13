@@ -16,7 +16,12 @@ function Game.Command(Name)
  return true
 end
 function Game.Start(Level)
- if Game.World then Game.World.Scope:Destroy() end
+ if Game.World then
+  -- queue_free preserves the old sibling until the frame fence. Release its
+  -- display name before reconstructing so Godot need not rename the new world.
+  Game.World.Scope.Name='RetiringWorld'..Game.Revision
+  Game.World.Scope:Destroy()
+ end
  Game.Level=Level or 1
  Game.Health,Game.Cells,Game.Kills,Game.Energy=100,0,0,100
  Game.Phase='Active'
@@ -80,7 +85,7 @@ function Game.Step(Delta)
   elseif Game.Command('Interact') then
    if Game.Cells==3 and next(W.Guards)==nil and Art.Distance(W.Body.Position,W.Exit.Position)<2.2 then
     Progress.Complete(Game.Level,Game.Receipt)
-    if Game.Level<3 then Game.Start(Game.Level+1)
+    if Game.Level<3 then Game.Start(Game.Level+1);return
     else Game.Phase='Complete';Game.Message='Foundry restored • check the persistence acknowledgment below' end
    else Game.Message='Gate needs 3 cells, no remaining guards, and a nearby explorer' end
   end

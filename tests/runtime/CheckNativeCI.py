@@ -54,6 +54,8 @@ def Main():
         raise ValueError('Native gameplay expansion cases did not complete')
     if '[Runtime:NativeProduction] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
         raise ValueError('Native production collection/physics cases did not complete')
+    if '[Runtime:NativeAncestor] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native ancestor property authority cases did not complete')
     Foundry={'Status':'Not part of this native actor profile; requires a full-featured host'}
     if Args.foundry:
         Foundry=json.loads((Args.output/'foundry/results.json').read_text())

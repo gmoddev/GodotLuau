@@ -15,6 +15,15 @@ authorization remains authoritative. GL-056 records the reproduced prior defect
 and pending qualification. A context initialized without a current scene retains
 the existing Window fallback; late scene replacement follows domain retirement.
 
+Ancestor property writes use the same ownership condition as structural mutation:
+every live descendant SceneScope must belong to the executing owner. This prevents
+parent transforms/process properties from bypassing child ownership. A shared
+ancestor's direct writes, including unknown-member assignments, reject before
+legacy dispatch. Use explicit SetAttribute/GetAttribute for shared application
+data; those metadata channels do not mutate the native scene graph. Same-owner
+ancestor changes remain supported. GL-057 records the compatibility correction
+and pending runtime qualification.
+
 ## Collections and effects
 
 Metadata typed arrays preserve their exact engine element type. Primitive inputs

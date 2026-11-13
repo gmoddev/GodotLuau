@@ -1327,7 +1327,14 @@ bool GLSceneIndex(lua_State* Thread, Node* Target, const char* Key) {
     PushProperty(Thread,Scope,Target,Key,Item); return true;
 }
 bool GLSceneWrite(lua_State* Thread, Node* Target, const char* Key) {
-    auto Scope=ScopeOf(Target); if (!Scope) return false;
+    auto Scope=ScopeOf(Target);
+    if(!Scope) {
+        // Parent transforms/process properties affect their owned descendants.
+        // Use the same authority check as structural mutation before legacy
+        // property aliases can reach a shared bootstrap/ancestor node.
+        if(!GLSceneMutation(Thread,Target))luaL_error(Thread,"[Scene:Authority] Ancestor property write would affect another scene owner; use SetAttribute for shared application data");
+        return false;
+    }
     Key=CheckedString(Thread,2);
     if (!Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Authority] Scene write requires its live execution owner");
     const Property* Item=FindProperty(Target,Key);

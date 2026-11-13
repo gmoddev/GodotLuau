@@ -291,3 +291,26 @@ that exact live scene root for BindToClose/metadata. Foundry retains its own
 ordinary root name and now asserts `game == script.Parent`, with the external
 fixture observing Server/Client state on that same root. No extra DataModel,
 controller, domain or filesystem authority is introduced. Qualification is pending.
+
+## Shared ancestor authority defect
+
+An isolated control using the retained Windows `31d64a5` adapter confirms that a
+Client can move/rotate a shared plain ancestor of a Server-owned SceneScope:
+Position succeeds with X=123 and Rotation with Y=90. Native set/set_position calls
+reject. Lowercase position assignment succeeds as unknown-member metadata without
+moving the node. The new property guard reuses GLSceneMutation for ancestors,
+closing the path consistently rather than weakening native scope checks. Same-owner
+ancestors remain writable; explicit metadata channels remain available. GL-057
+tracks the actual defect and required cross-platform/sanitizer verification.
+
+Foundry's controlled legacy-root runs also exposed application/fixture problems:
+deferred deletion left the prior world name occupied, so the new world was renamed;
+the app now releases that name before queueing retirement. A transition continued
+its old frame and attempted camera settings through retired handles; it now exits
+that frame immediately. Native authority correctly rejected those stale writes.
+Collection observation now waits on the actual published cell count rather than a
+six-frame timing assumption. The failed attempts remain under local control-01/02
+artifacts and are not final plain-root qualification. Control-02 nevertheless
+completed 24 restarts with zero measured native object/resource count delta and
+exactly two live scopes after each cycle; these scoped observations do not imply
+sanitizer leak freedom or a passing overall attempt.

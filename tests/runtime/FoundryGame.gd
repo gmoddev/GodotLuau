@@ -104,11 +104,11 @@ func Run() -> void:
     # health/reward values. The direct Scene handle write must also reject.
     var Guest=ClassDB.instantiate('LocalScript')
     var Source=ClassDB.instantiate('LuauScript')
-    Source.source_code="game:SetAttribute('FoundryHealth',999);game:SetAttribute('FoundryWins',999);local W=script.Parent:FindFirstChild('ExpeditionWorld');assert(not pcall(function() W.Explorer.Position=Vector3.new(0,999,0) end));game:SetAttribute('FoundryGuestRejected',true)"
+    Source.source_code="game:SetAttribute('FoundryHealth',999);game:SetAttribute('FoundryWins',999);local W=script.Parent:FindFirstChild('ExpeditionWorld');assert(not pcall(function() W.Explorer.Position=Vector3.new(0,999,0) end));assert(not pcall(function() script.Parent.Position=Vector3.new(999,0,0) end));assert(not pcall(function() script.Parent.position=Vector3.new(999,0,0) end));game:SetAttribute('FoundryGuestRejected',true)"
     Guest.name='GuestProbe';Guest.set_codigo_luau(Source);Game.add_child(Guest)
     await Until(func(): return Game.get_meta('FoundryGuestRejected',false))
     await Frames(5)
-    Check(Snapshot().Health<=100 and Snapshot().Wins<999 and Body.position.y<5,'Client cannot author Server physics health or durable rewards')
+    Check(Snapshot().Health<=100 and Snapshot().Wins<999 and Body.position.y<5 and Game.position==Vector3.ZERO,'Client cannot author Server physics ancestor transforms health or durable rewards')
     Guest.queue_free()
     for Level in range(1,4):
         if not await Until(func(): return Snapshot().get('Level',0)==Level and Snapshot().get('Phase','')=='Active'):
@@ -116,9 +116,11 @@ func Run() -> void:
         World=Game.get_node('ExpeditionWorld')
         Body=World.get_node('Explorer') as CharacterBody3D
         var Retired=World.get_instance_id()
+        var Collected=0
         for Position in [Vector3(-6,1,2),Vector3(6,1,2),Vector3(0,1,-5)]:
             Body.position=Position
-            await Frames(6)
+            Collected+=1
+            await Until(func(): return Snapshot().get('Cells',0)>=Collected)
         Check(Snapshot().get('Cells',0)==3,'Native Area3D collection uses actual physics overlaps, sector '+str(Level))
         Body.position=Vector3(0,1,6)
         await Tap(KEY_W)

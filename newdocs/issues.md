@@ -134,6 +134,26 @@ four successful workflows and independently checked artifacts.
 | GL-054 | P2 | Resolved and normally integrated by `47bbb6d`; core/native verification linked below | Changed project module leaves cached transitive importers and their callbacks alive |
 | GL-055 | P2 | Resolved and normally integrated by `47bbb6d`; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
 | [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Reproduced Windows/Linux at `31d64a5`; bounded fix implemented, qualification pending | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
+| [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Reproduced on the retained Windows `31d64a5` adapter; fix implemented, qualification pending | A different execution owner can transform an ancestor of another owner's native SceneScope |
+
+## GL-057: Shared ancestor property writes bypass scene ownership
+
+A controlled Windows `31d64a5` runtime places a Server-owned SceneScope under a
+plain native root, then executes Client writes against that ancestor. Position
+changes to X=123 and Rotation to Y=90 both succeed; direct native method calls
+reject. Lowercase unknown writes succeed as metadata and do not move the node.
+This is a reproduced authority defect in the property path, not a claimed remote
+exploit. Direct scope writes and structural mutation already check ownership.
+
+The bounded correction reuses the existing descendant-scope mutation check before
+legacy ancestor property aliases. An owner may affect an ancestor only when all
+descendant native scopes belong to it. Explicit SetAttribute application channels
+remain available. This intentionally rejects direct property/unknown-member writes
+on a shared ancestor; projects should use SetAttribute for shared application data.
+Native ancestor regression checks valid same-owner use, wrong-owner aliases,
+rejection before side effects, explicit attributes and subtree retirement. Closure
+requires the linked fix and native Windows/Linux/sanitizer evidence in the
+[campaign record](gl-054-engine-development.md#shared-ancestor-authority-defect).
 
 ## GL-056: Plain native scene root and shutdown facade
 
