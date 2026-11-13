@@ -250,3 +250,27 @@ existing pinned Luau headers. It used one process for about four seconds; no
 object/library or sustained local build was produced. This caught source/header
 issues only and is not Windows runtime, target-compiler or cross-platform
 qualification. The checked command is retained under the task's syntax artifacts.
+
+## Production/sanitizer qualification wiring
+
+Current policy selections are 113 constructors, 384 properties, 225 methods,
+41 signals and 51 enum values against the unchanged metadata denominators. Policy
+identity is `c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace`.
+These selection counts remain implementation measurements, not final execution
+qualification.
+
+The shared native checker also serves admitted-host sanitizer and candidate actor
+profiles, which omit navigation. Foundry is therefore an explicit required flag
+in the full-featured native CI job, not a falsely mandatory workload on those
+unsupported hosts. Existing actor assertions remain mandatory in every profile.
+Each production Debug/Release candidate separately runs Foundry with its actual
+SCons product on the existing verified full-featured official host. Candidate
+evidence archives retain that gameplay/restart result. Application assets and
+editor fixture inputs join the existing source hashes; no second qualification
+framework, host admission, dependency or publishing path is introduced.
+
+The existing 17 candidate and 12 retention unit checks pass locally after wiring
+review; production builds, package extraction and sanitizer workflows remain to
+be executed. Full-native sanitizer profiles retain their existing host/editor/
+navigation limitations; ordinary full-host game results must not be relabeled as
+sanitizer coverage of an unsupported configuration.

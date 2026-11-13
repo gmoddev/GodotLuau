@@ -14,6 +14,7 @@ def Main():
     Parser.add_argument('--remote-host-evidence', type=Path, required=True)
     Parser.add_argument('--remote-host-qualification', type=Path, required=True)
     Parser.add_argument('--revision', required=True)
+    Parser.add_argument('--foundry', action='store_true', help='Require the full-featured-host game and restart profile')
     Args = Parser.parse_args()
     from RemoteHostIdentity import VerifyRemoteHost
     Host = VerifyRemoteHost(json.loads(Args.remote_host_evidence.read_text()))
@@ -53,9 +54,11 @@ def Main():
         raise ValueError('Native gameplay expansion cases did not complete')
     if '[Runtime:NativeProduction] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
         raise ValueError('Native production collection/physics cases did not complete')
-    Foundry=json.loads((Args.output/'foundry/results.json').read_text())
-    if not Foundry.get('Passed') or not Foundry.get('Restart',{}).get('Passed') or Foundry.get('Graphical') or Foundry.get('Snapshot',{}).get('Completed')!=3:
-        raise ValueError('Foundry production gameplay and persistence restart incomplete')
+    Foundry={'Status':'Not part of this native actor profile; requires a full-featured host'}
+    if Args.foundry:
+        Foundry=json.loads((Args.output/'foundry/results.json').read_text())
+        if not Foundry.get('Passed') or not Foundry.get('Restart',{}).get('Passed') or Foundry.get('Graphical') or Foundry.get('Snapshot',{}).get('Completed')!=3:
+            raise ValueError('Foundry production gameplay and persistence restart incomplete')
     if '[Runtime:NativeAnimation] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
         raise ValueError('Native animation expansion cases did not complete')
     if '[Authoring:Templates] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
@@ -234,7 +237,7 @@ def Main():
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},
         'FoundryNative': Foundry,
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
-        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']} | {'PlayerController.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), 'Controller.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()} | {File.relative_to(Path(__file__).resolve().parents[2]).as_posix(): hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring') for File in sorted((Path(__file__).resolve().parents[2]/Folder).rglob('*')) if File.is_file() and File.suffix in ('.luau','.tres','.gdshader')},
+        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']} | {'PlayerController.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), 'Controller.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()} | {File.relative_to(Path(__file__).resolve().parents[2]).as_posix(): hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring','examples/foundry-expedition','tests/editor') for File in sorted((Path(__file__).resolve().parents[2]/Folder).rglob('*')) if File.is_file() and File.suffix in ('.luau','.tres','.gdshader','.gd','.py','.tscn','.svg','.obj','.godot','.cfg')},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
         'Scope': 'Native fixtures including actual GL-020 ENet authority/handler/life cases, GL-023 public HTTP/JSON/native UUID, Model Character V2 and inherited GL-007 authority; sanitizer configuration and remaining qualification limits are recorded by the invoking matrix'
