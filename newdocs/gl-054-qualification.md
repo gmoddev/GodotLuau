@@ -1,7 +1,8 @@
 # GL-054 qualification
 
-Status: qualified within the profiles and limitations below; ready for integration
-review. Work remains on `feature/gl-054-engine-production`, unmerged. The
+Status: qualified within the profiles and limitations below; normally merged by
+`a419b93`. Fresh main verification is tracked in the
+[integration record](gl-054-main-integration.md). The
 [development journal](gl-054-engine-development.md) retains failed attempts,
 corrections, commands, timing context and qualification limits.
 The [compact receipt](evidence/gl054-qualification.json) records the final identities
@@ -152,4 +153,5 @@ Raw native RID/Callable/Signal values, arbitrary object graphs, live breakpoints
 stepping/evaluation, dynamic whole-program indexing and unrestricted Godot API
 parity remain unsupported. The explicit callback, capability and bounded Variant
 contracts remain authoritative. Release publication and updater distribution stay
-disabled; no main integration is authorized by this campaign.
+disabled. The separate owner-authorized main integration preserves this evidence
+and records fresh CI without expanding these qualification claims.

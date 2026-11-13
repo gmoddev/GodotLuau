@@ -1,8 +1,9 @@
 # GL-054 native development contract
 
-Implementation on `feature/gl-054-engine-production`; qualification status and
-identities are in the [campaign journal](gl-054-engine-development.md). This is a
-feature-branch extension of ADR-015/016/017, not an integrated-main guarantee.
+Implementation retained on `feature/gl-054-engine-production`; qualification
+status and identities are in the [campaign journal](gl-054-engine-development.md).
+This extension of ADR-015/016/017 is normally merged by `a419b93`; the
+[integration record](gl-054-main-integration.md) tracks fresh main verification.
 
 ## Plain scene bootstrap
 

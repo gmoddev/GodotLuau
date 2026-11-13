@@ -1,6 +1,6 @@
 # GodotLuau issue ledger
 
-The unmerged [GL-054 engine campaign](gl-054-engine-development.md) tracks typed
+The normally [merged GL-054 engine campaign](gl-054-main-integration.md) tracks typed
 collection/API expansion and editor error inspection with implementation and
 qualification status separated. Historical issue GL-054 remains the already
 resolved transitive-module finding; the campaign name does not reopen it. Live
@@ -133,11 +133,11 @@ four successful workflows and independently checked artifacts.
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 | GL-054 | P2 | Resolved and normally integrated by `47bbb6d`; core/native verification linked below | Changed project module leaves cached transitive importers and their callbacks alive |
 | GL-055 | P2 | Resolved and normally integrated by `47bbb6d`; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
-| [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
-| [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | A different execution owner can transform an ancestor of another owner's native SceneScope |
-| [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Resolved for attribute values on unmerged GL-054 branch; cross-platform and rendered evidence linked below | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
-| [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Resolved on unmerged branch; stalled-writer control, native and four-profile candidate pass | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
-| [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Resolved on unmerged branch; both Linux production exports/read-start/restart pass | Candidate staging and Godot's dependency export copy lose the companion's executable mode |
+| [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Resolved and normally merged by `a419b93`; fresh main CI tracked in integration record | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
+| [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved and normally merged by `a419b93`; fresh main CI tracked in integration record | A different execution owner can transform an ancestor of another owner's native SceneScope |
+| [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Attribute-value fix normally merged by `a419b93`; fresh main CI tracked in integration record | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
+| [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Resolved and normally merged by `a419b93`; stalled control and four-profile proof retained | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
+| [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Resolved and normally merged by `a419b93`; both Linux export/read-start/restart proofs retained | Candidate staging and Godot's dependency export copy lose the companion's executable mode |
 
 ## GL-060: Candidate example staging drops Unix modes
 
@@ -156,7 +156,9 @@ both production configurations export, read DataStore and restart, recording
 0755/0644/0755 staged/copied/final modes. Resolved within this Linux packaging
 scope, with the manual step explicit; no native backend or authority change.
 See the [campaign record](gl-054-engine-development.md#accepted-candidate-and-application-export-correction)
-for retained failures and accepted product identities.
+for retained failures and accepted product identities. The
+[main integration record](gl-054-main-integration.md) tracks the preserving merge
+and fresh integrated verification for GL-056 through GL-060.
 
 ## GL-059: Partial qualification marker publication
 
@@ -175,7 +177,7 @@ test-fixture race, not a reproduced networking vulnerability or runtime refactor
 Fix [6784696](https://github.com/gmoddev/GodotLuau/commit/678469610dbada94ecc1b210bc930c890d9ebb30)
 passes [Windows/Linux native CI](https://github.com/gmoddev/GodotLuau/actions/runs/43387293637)
 and the [accepted four-profile candidate](https://github.com/gmoddev/GodotLuau/actions/runs/43387294744).
-Resolved on the unmerged feature branch. The
+Resolved and normally merged by `a419b93`. The
 [campaign evidence](gl-054-engine-development.md#actual-release-qualification-barrier-race)
 preserves the failed candidate and controlled before/after observations.
 
@@ -192,7 +194,7 @@ protocol is changed. Fix [f1a996b](https://github.com/gmoddev/GodotLuau/commit/f
 passes [Windows/Linux native qualification](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518)
 and [full-native sanitizers](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285).
 The corrected Windows rendered Foundry capture and in-engine exact message
-assertion pass. Resolved within that value-conversion scope on the unmerged feature;
+assertion pass. Resolved within that value-conversion scope and merged by `a419b93`;
 legacy key/binary-string behavior is not reclassified as fixed.
 
 ## GL-057: Shared ancestor property writes bypass scene ownership
@@ -215,8 +217,8 @@ Fix [76bc473](https://github.com/gmoddev/GodotLuau/commit/76bc47347aa321964ab452
 is verified in [Windows/Linux native run 43379513518](https://github.com/gmoddev/GodotLuau/actions/runs/43379513518)
 and [sanitizer run 43379555285](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285),
 with the existing Character/network/owner suites preserved. The actual Foundry
-wrong-owner physics/ancestor probes and retirement checks also pass. Resolved on
-the unmerged GL-054 branch; this does not assert an integrated-main correction.
+wrong-owner physics/ancestor probes and retirement checks also pass. The fix is
+normally merged by `a419b93`; fresh main CI is tracked in the integration record.
 
 ## GL-056: Plain native scene root and shutdown facade
 
@@ -233,7 +235,7 @@ passes [Windows/Linux native run 43379513518](https://github.com/gmoddev/GodotLu
 and [full-native sanitizer run 43379555285](https://github.com/gmoddev/GodotLuau/actions/runs/43379555285).
 Both full-host Foundry processes resolve the exact plain root, initialize services,
 complete three sectors and read durable progress after restart; Windows rendering
-also passes. Resolved on the unmerged branch. No fake Model/DataModel identity or
+also passes. Resolved and normally merged by `a419b93`. No fake Model/DataModel identity or
 extra VM is introduced.
 
 ## GL-055: Native layout preset ordering

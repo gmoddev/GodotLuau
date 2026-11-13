@@ -1,7 +1,8 @@
 # GL-054 engine and production campaign
 
 Status: qualified within the [recorded profiles and limitations](gl-054-qualification.md),
-unmerged and ready for integration review. This campaign name is distinct from
+normally merged by `a419b93`; fresh main verification is tracked in the
+[integration record](gl-054-main-integration.md). This campaign name is distinct from
 the historical GL-054 transitive-module-reload finding, already resolved on main.
 Never renumber or reopen that finding without new evidence.
 
