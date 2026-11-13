@@ -83,8 +83,12 @@ def Main():
     if os.name!='nt': Executable.chmod(0o755)
     Library=Project/('GodotLuau/bin/godot_luau.'+Platform.lower()+'.template_'+Mode+'.x86_64'+('.dll' if os.name=='nt' else '.so')) if Args.candidate else Project/'bin'/Args.adapter.name
     Worker=Library.with_name('godot_luau_store_worker'+('.exe' if os.name=='nt' else ''))
+    if os.name!='nt':
+        assert os.access(Worker,os.X_OK), 'Staged DataStore companion is not executable'
     for File in (Library,Worker):
         assert (Standalone/File.name).is_file() and Hash(Standalone/File.name)==Hash(File), 'Export omitted or changed native product: '+File.name
+    if os.name!='nt':
+        assert os.access(Standalone/Worker.name,os.X_OK), 'Exported DataStore companion is not executable'
     for Name in ('startup','restart'):
         Commands.append(Execute([Executable,'--headless','--disable-crash-handler',
             '--max-fps','30','--quit-after','90'],Output/(Name+'.log'),20,Environment,Standalone))

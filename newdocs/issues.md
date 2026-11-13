@@ -137,6 +137,19 @@ four successful workflows and independently checked artifacts.
 | [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved on unmerged GL-054 branch; Windows/Linux native and sanitizer evidence linked below | A different execution owner can transform an ancestor of another owner's native SceneScope |
 | [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Resolved for attribute values on unmerged GL-054 branch; cross-platform and rendered evidence linked below | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
 | [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Reproduced qualification-fixture defect; atomic marker fix passes focused stalled-writer control, hosted cohort pending | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
+| [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Linux export read fails; source-verified mode loss corrected, export rerun pending | The Luau-only example stager drops verified Unix executable modes when extracting a candidate |
+
+## GL-060: Candidate example staging drops Unix modes
+
+Accepted Linux candidates record the DataStore companion as mode 0755, and their
+canonical extracted startup passes. PrepareProject used zipfile.extractall
+without restoring member modes. Workflow 43399518780's exported Foundry initializes
+both Luau entrypoints but fails its initial DataStore read. The stager now applies
+the already verified member modes on POSIX, as the canonical extractor does.
+The export helper explicitly checks executable access before startup. This is a
+bounded example-staging correction, not a native backend or authority change.
+See the [campaign record](gl-054-engine-development.md#accepted-candidate-and-application-export-correction)
+for retained failure, accepted product identities and pending corrected export.
 
 ## GL-059: Partial qualification marker publication
 

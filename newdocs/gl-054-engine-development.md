@@ -566,3 +566,27 @@ the additional texture/area calls. The atomic marker follow-up has its own curre
 native run 43387293637. Ordinary export templates do not execute an external
 observer through --script in the bounded CLI probe; retain the explicit standalone
 startup/restart scope rather than inventing exported full-game test evidence.
+
+## Accepted candidate and application export correction
+
+Candidate 43387294744 attempt 2 is ACCEPTED_NONPUBLISHING_CANDIDATE at `6784696`,
+tree `157b4111950718d6dbc6875e2c2f823d351c29e9`. Both Windows source profiles
+passed on the first attempt; the two Linux provisioning failures alone were
+retried after the run finished. Both then passed without source/toolchain/mirror
+changes. All four 87-case core/141-actor native profiles, SCons Foundry/restart,
+both package extractions/Debug-Release companion starts, policy/retention and
+production core ASan/LSan gates pass. Acceptance artifact digest is
+`641ad833eb24377e2124f57513d6ccd0e1c0cc0e1738914896903d8940b33d2a`.
+Archive SHA256: Windows `0861a94d7870d9a3523049b8f8aebce59839292f9b6e2f77adaf827f6459cf90`,
+Linux `dd5400e283a7c1b0341d3f8f27b88fd4b95f48d687c34bcfac379933075fe95d`.
+
+Application workflow 43399518780 reuses those accepted products. Windows Foundry
+Debug/Release exports pass. Its Linux Debug export starts both Luau entrypoints
+but reports Load failed, so the explicit initial DataStore-read marker rejects
+the run. Earlier commentary mistook artifact upload for success; this paragraph
+records the actual failure. The candidate records the companion mode as 0755,
+while the example stager's direct zipfile.extractall does not restore Unix modes.
+The bounded fix restores the already verified member modes, matching the existing
+strict candidate extractor. Export checks now explicitly reject a nonexecutable
+staged/exported companion. No native product or storage protocol changes.
+GL-060 records this application-staging defect; corrected export evidence is pending.

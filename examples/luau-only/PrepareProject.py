@@ -6,6 +6,7 @@ replace an existing project. Export templates remain explicit supplied inputs.
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -53,7 +54,11 @@ def Main():
         with zipfile.ZipFile(Args.candidate/Package['Package']['File']) as Archive:
             # The disabled updater is not an application dependency. Keep the
             # verified fork archive intact; omit that addon from this new game.
-            Archive.extractall(Output,[Name for Name in Archive.namelist() if not Name.startswith('addons/GodotLuauUpdater/')])
+            Members=[Name for Name in Archive.namelist() if not Name.startswith('addons/GodotLuauUpdater/')]
+            Archive.extractall(Output,Members)
+            if os.name!='nt':
+                for Name in Members:
+                    (Output/Name).chmod(Package['Package']['Members'][Name]['Mode'])
         Record['OmittedAddon']='Disabled GodotLuauUpdater; not required by the application'
     else:
         if not Args.adapter_source: Parser.error('Adapter staging requires its retained source.json identity')
