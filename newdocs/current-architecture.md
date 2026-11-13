@@ -1,5 +1,11 @@
 # Current architecture
 
+The unmerged [GL-055 debugger campaign](gl-055-debugger-development.md) implements
+live Luau execution control through Godot's supported debugger loop under
+[ADR-018](adr-018-native-luau-debugger.md). Core control passes Windows/Linux;
+native/editor/watch qualification remains in progress. It does not change the
+integrated-main qualification claims below or turn error snapshots into live state.
+
 The normally [merged GL-054 campaign](gl-054-main-integration.md) extends the
 same dispatcher with typed scoped collections and additional native feature
 families. Its [contract](gl-054-native-development.md) also defines bounded

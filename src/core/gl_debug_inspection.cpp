@@ -10,7 +10,25 @@
 #include <map>
 
 using namespace godot;
+bool GLDebugText(const char* Value,size_t Length,size_t Maximum,String& Result) {
+    size_t Size=(std::min)(Length,Maximum);
+    while(Size && Size<Length && (static_cast<unsigned char>(Value[Size])&0xc0)==0x80)--Size;
+    for(size_t Index=0;Index<Size;) {
+        unsigned char First=Value[Index++];if(First<0x80){if(!First)return false;continue;}
+        int Extra=First>=0xc2 && First<=0xdf?1:First>=0xe0 && First<=0xef?2:First>=0xf0 && First<=0xf4?3:-1;
+        if(Extra<0 || Index+Extra>Size)return false;
+        for(int Offset=0;Offset<Extra;++Offset) {
+            unsigned char Next=Value[Index++];if((Next&0xc0)!=0x80)return false;
+            if(Offset==0 && ((First==0xe0 && Next<0xa0) || (First==0xed && Next>=0xa0) ||
+                (First==0xf0 && Next<0x90) || (First==0xf4 && Next>=0x90)))return false;
+        }
+    }
+    Result=String::utf8(Value,int(Size));return true;
+}
 namespace {
+Dictionary Restricted(const char* Reason) {
+    Dictionary Value;Value["Kind"]="Restricted";Value["Reason"]=Reason;Value["Preview"]="<redacted>";return Value;
+}
 bool Redacted(const String& Name) {
     auto Lower = Name.to_lower();
     for (const char* Key : {"password", "secret", "authorization", "access_token", "accesstoken", "api_key", "apikey", "privatekey"})
@@ -27,21 +45,30 @@ struct Reader {
     std::map<const void*, int> Seen;
     String Text(const char* Value, size_t Length, size_t Maximum = 512) {
         size_t Size = (std::min)({Length, Maximum, Bytes}); Bytes -= Size;
-        return String::utf8(Value, int(Size));
+        String Result;return GLDebugText(Value,Length,Size,Result)?Result:String("<binary key/name>");
     }
     Variant Copy(lua_State* Thread, int Index, int Level = 0) {
-        if (--Remaining < 0 || !Bytes) return String("<inspection limit>");
+        if (--Remaining < 0 || !Bytes) return Restricted("Inspection work or string budget");
         if (Index < 0) Index = lua_gettop(Thread) + Index + 1;
         switch (lua_type(Thread, Index)) {
             case LUA_TNIL: return Variant();
             case LUA_TBOOLEAN: return bool(lua_toboolean(Thread, Index));
             case LUA_TNUMBER: { double Value = lua_tonumber(Thread, Index); return std::isfinite(Value) ? Variant(Value) : Variant(String("<non-finite>")); }
-            case LUA_TSTRING: { size_t Length = 0; auto Value = lua_tolstring(Thread, Index, &Length); return Text(Value, Length); }
+            case LUA_TSTRING: {
+                size_t Length=0;auto Value=lua_tolstring(Thread,Index,&Length);String Result;
+                size_t Maximum=(std::min)(size_t(512),Bytes);Bytes-=(std::min)(Length,Maximum);
+                bool Valid=GLDebugText(Value,Length,Maximum,Result);
+                if(!Valid || Length>Maximum) {
+                    Dictionary Preview;Preview["Kind"]="StringPreview";Preview["Text"]=Valid?Result:String("<binary string>");
+                    Preview["Length"]=int64_t(Length);Preview["Truncated"]=Length>Maximum;Preview["Binary"]=!Valid;return Preview;
+                }
+                return Result;
+            }
             case LUA_TTABLE: {
                 const void* Identity = lua_topointer(Thread, Index); auto Found = Seen.find(Identity);
                 if (Found != Seen.end()) { Dictionary Reference; Reference["Reference"] = Found->second; return Reference; }
                 int IdentityNumber = int(Seen.size()) + 1; Seen.emplace(Identity, IdentityNumber);
-                Dictionary Table; Table["Kind"] = "Table"; Table["Identity"] = IdentityNumber;
+                Dictionary Table; Table["Kind"] = "Table"; Table["Identity"] = IdentityNumber;Table["Length"]=int64_t(lua_objlen(Thread,Index));
                 if (Level >= Depth) { Table["Truncated"] = true; return Table; }
                 Array Entries; int Count = 0; bool More = false;
                 lua_pushnil(Thread);
@@ -52,15 +79,15 @@ struct Reader {
                     else if (lua_type(Thread, -2) == LUA_TNUMBER) Key=lua_tonumber(Thread,-2);
                     else Key=String("<restricted key>");
                     Entry["Key"] = Key;
-                    Entry["Value"] = Key.get_type()==Variant::STRING && Redacted(Key) ? Variant(String("<redacted>")) : Copy(Thread,-1,Level+1);
+                    Entry["Value"] = Key.get_type()==Variant::STRING && Redacted(Key) ? Variant(Restricted("Sensitive name")) : Copy(Thread,-1,Level+1);
                     Entries.push_back(Entry); lua_pop(Thread,1);
                 }
                 Table["Entries"] = Entries; Table["Truncated"] = More; return Table;
             }
             case LUA_TUSERDATA:
-                if (--NativeRemaining<0 || Bytes<4096) return String("<native inspection limit>");
+                if (--NativeRemaining<0 || Bytes<4096) return Restricted("Native projection budget");
                 Bytes-=4096; return GLDebugSceneHandle(Thread, Index);
-            default: return String("<restricted ") + String::utf8(lua_typename(Thread,lua_type(Thread,Index))) + ">";
+            default: return Restricted(lua_typename(Thread,lua_type(Thread,Index)));
         }
     }
 };
@@ -75,11 +102,13 @@ Dictionary GLDebugVariables(int Level, int MaxItems, int MaxDepth, bool Upvalues
     auto Debugger=GLGetSuspendedDebugger(); auto Thread=Debugger?Debugger->GetInspectionThread():nullptr;
     const char* Key=Upvalues?"members":"locals";
     Result[Key]=Names; Result["values"]=Values;
-    if (!Thread || Level<0 || Level>=64 || !lua_checkstack(Thread,32)) return Result;
+    if (!Thread || !Debugger->IsFrameInspectable(Thread,Level) || !lua_checkstack(Thread,32)) return Result;
+    lua_Debug FrameKind{};
+    if(!lua_getinfo(Thread,Level,"s",&FrameKind) || !FrameKind.what || !std::strcmp(FrameKind.what,"C"))return Result;
     Reader Read; Read.Items=MaxItems<0?32:(std::clamp)(MaxItems,1,64); Read.Depth=MaxDepth<0?3:(std::clamp)(MaxDepth,0,4);
     int Top=lua_gettop(Thread);
     auto Add=[&](const String& Name) {
-        Names.push_back(Name.left(128)); Values.push_back(Redacted(Name)?Variant(String("<redacted>")):Read.Copy(Thread,-1)); lua_pop(Thread,1);
+        Names.push_back(Name.left(128)); Values.push_back(Redacted(Name)?Variant(Restricted("Sensitive name")):Read.Copy(Thread,-1)); lua_pop(Thread,1);
     };
     if (Upvalues) {
         lua_Debug Frame{};
@@ -108,6 +137,7 @@ Dictionary GLDebugContext() {
     if(!Debugger || !Debugger->GetInspectionThread()) return Result;
     Result["Domain"]=Debugger->GetDomain().GetKind()==GLDomainKind::Server?"Server":"Client";
     Result["Generation"]=int64_t(Debugger->GetGeneration()); Result["StopId"]=int64_t(Debugger->GetStopId());
+    Result["CoroutineId"]=int64_t(Debugger->GetCoroutineId());
     Result["State"]="Suspended"; Result["Reason"]=String::utf8(Debugger->GetReason().c_str());
     return Result;
 }

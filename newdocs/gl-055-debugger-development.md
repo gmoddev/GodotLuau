@@ -149,3 +149,35 @@ indexing, and a stale-sequence test must first admit a valid request (malformed
 requests deliberately do not consume the sequence). Keep the actual resource
 inspection and four-rejection assertions. These fixture-only corrections can
 reuse the identical native product and do not constitute passing evidence.
+
+## Restricted inspection and watches checkpoint
+
+Native 43429591460 and fixture-only 43432075758 reject the new inspection unit's
+missing direct Variant include before runtime qualification. Add that dependency.
+Bounded MSVC /Zs probes using the existing pinned generated headers also find and
+correct non-iterable Godot Array range loops and the command-window name colliding
+with godot::Window. Eight affected native translation units pass these syntax
+probes, in single-compiler invocations of approximately 3–9 seconds; no dependency
+build, local sustained compilation, vendor modification or runtime pass is claimed.
+
+Implement a restricted evaluator using the pinned Luau AST, without executing Lua.
+It reads bounded copies of live frame locals/upvalues, raw table entries and
+approved owned native-property projections. Calls/constructors, mutation, globals,
+non-finite arithmetic, excessive depth/work and out-of-projection reads reject.
+The supported native session tab adds frame selection and Watch, with seven actual
+protocol queries and an unchanged-state sentinel for rejected function calls.
+
+Native C frames and unregistered bootstrap-source frames remain opaque, preventing
+private C/native-service upvalues from entering variable inspection. Coroutine
+labels use bounded weak identities erased on thread destruction; step state also
+retires at resume/native async boundaries. Tagged redaction, binary/truncated
+string previews and UTF-8 prefix handling preserve explicit inspection state.
+The source-admission map labels the executing owner; exact lexical definition
+versions of arbitrarily retained module closures are not claimed.
+
+The [debugger guide](gl-055-debugger.md) records implemented controls, projection
+limits, source/reload constraints and the custom message envelope. Primary native
+protocol execution, graphical editor interaction, lifecycle/adversarial expansion,
+profiling/indexing, cross-profile/sanitizer and performance qualification remain
+outstanding. Main, dependencies, default controllers and publication guards are
+unchanged. Do not close this campaign from core or syntax checks alone.

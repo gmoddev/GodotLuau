@@ -17,6 +17,7 @@ GLDebugFrame GetFrame(lua_State* Thread, int Level) {
     };
     std::string Source = Text(Frame.source, 1024);
     if (!Source.empty() && (Source.front() == '@' || Source.front() == '=')) Source.erase(0, 1);
+    if(Frame.what && !std::strcmp(Frame.what,"C"))return {"",Text(Frame.name,128).empty()?"native boundary":Text(Frame.name,128),0};
     return {Source, Text(Frame.name, 128), Frame.currentline};
 }
 }
@@ -53,6 +54,7 @@ void GLDebugger::Detach() {
     ClearBreakpoints();
     for (auto& Loaded : Chunks) Release(Loaded);
     Chunks.clear();
+    CoroutineIds.clear();CoroutineId=0;
     // Callback pointers stay installed until the protected resume returns.
     // Pinned Luau forbids changing callbacks while its VM is executing.
 }
@@ -161,6 +163,7 @@ void GLDebugger::EndResume(lua_State* Thread, int) {
     if (!Enabled) { lua_singlestep(Thread, false); State = GLDebugState::Detached; }
 }
 void GLDebugger::RetireThread(lua_State* Thread) {
+    CoroutineIds.erase(Thread);
     if(StepThread==Thread){StepThread=nullptr;Step=GLDebugAction::Continue;}
     if(InspectionThread==Thread){InspectionThread=nullptr;Generation=0;State=GLDebugState::Faulted;}
 }
@@ -190,6 +193,7 @@ void GLDebugger::Hook(lua_State* Thread, bool IsBreakpoint) {
         return;
     }
     if (StepThread != Thread || Step == GLDebugAction::Continue) return;
+    if (!IsFrameInspectable(Thread,0))return;
     auto Frame = GetFrame(Thread, 0); int Depth = lua_stackdepth(Thread);
     bool Changed = Frame.Line != StepOrigin.Line || Frame.Source != StepOrigin.Source || Depth != StepDepth;
     if (Changed && Frame.Line > 0 && (Step == GLDebugAction::Into ||
@@ -201,12 +205,14 @@ void GLDebugger::Suspend(lua_State* Thread, const char* SelectedReason) {
     if (!Stop || !Owner || !Owner->Alive) return;
     State = GLDebugState::Suspended; InspectionThread = Thread;
     Generation = Owner->Token; ++StopId; Reason = SelectedReason;
+    if(!CoroutineIds.count(Thread) && CoroutineIds.size()<1024)CoroutineIds[Thread]=NextCoroutineId++;
+    auto Identity=CoroutineIds.find(Thread);CoroutineId=Identity==CoroutineIds.end()?0:Identity->second;
     OverrideAction = false;
     GLDebugAction Action = GLDebugAction::Continue;
     try { Domain.DebuggerPause([&] { Action = Stop(*this); }); }
-    catch (...) { InspectionThread=nullptr;Generation=0;State=GLDebugState::Faulted;throw; }
+    catch (...) { InspectionThread=nullptr;Generation=0;CoroutineId=0;State=GLDebugState::Faulted;throw; }
     if (OverrideAction) Action = NextAction;
-    InspectionThread = nullptr; Generation = 0;
+    InspectionThread = nullptr; Generation = 0; CoroutineId=0;
     if (!Owner->Alive || Domain.IsClosing() || Action == GLDebugAction::Stop) {
         State = GLDebugState::Terminating; Domain.CancelOwner(Owner);
         luaL_error(Thread, "[Debugger:Lifecycle] Suspended execution was retired");
@@ -225,6 +231,17 @@ lua_State* GLDebugger::GetInspectionThread() const {
 std::vector<GLDebugFrame> GLDebugger::GetFrames() const {
     std::vector<GLDebugFrame> Frames;
     auto Thread = GetInspectionThread();
-    if (Thread) for (int Level = 0; Level < (std::min)(64, lua_stackdepth(Thread)); ++Level) Frames.push_back(GetFrame(Thread, Level));
+    if (Thread) for (int Level = 0; Level < (std::min)(64, lua_stackdepth(Thread)); ++Level) {
+        auto Frame=GetFrame(Thread,Level);
+        if(!IsFrameInspectable(Thread,Level)){Frame.Source.clear();Frame.Line=0;Frame.Function="opaque native/bootstrap: "+Frame.Function;}
+        Frames.push_back(std::move(Frame));
+    }
     return Frames;
+}
+bool GLDebugger::IsFrameInspectable(lua_State* Thread,int Level) const {
+    if(!Thread || Level<0 || Level>=64)return false;
+    auto Owner=GLGetOwner(Thread);if(!Owner || !Owner->Alive || Owner->Domain!=&Domain)return false;
+    auto Frame=GetFrame(Thread,Level);if(Frame.Source.empty())return false;
+    for(const auto& Loaded:Chunks)if(Loaded.Owner->Alive && Loaded.Source==Frame.Source)return true;
+    return false;
 }

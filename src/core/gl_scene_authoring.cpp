@@ -1323,7 +1323,7 @@ Dictionary GLDebugSceneHandle(lua_State* Thread, int Index) {
         if(Value.get_type()==Variant::OBJECT || Value.get_type()==Variant::CALLABLE || Value.get_type()==Variant::SIGNAL ||
            Value.get_type()==Variant::RID || Value.get_type()>=Variant::DICTIONARY)continue;
         if(Value.get_type()==Variant::STRING || Value.get_type()==Variant::STRING_NAME)Value=String(Value).left(128);
-        else if(Value.get_type()>Variant::STRING)Value=String(Value).left(128);
+        else if(Value.get_type()==Variant::NODE_PATH)Value=String(Value).left(128);
         Values[Item.Name]=Value;
     }
     Result["Properties"]=Values; return Result;

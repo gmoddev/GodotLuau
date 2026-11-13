@@ -117,10 +117,14 @@ public:
     void* _debug_get_stack_level_instance(int32_t) override { return nullptr; }
     Dictionary _debug_get_globals(int32_t,int32_t) override {
         Dictionary Result; PackedStringArray Names; Array Values; auto Context=GLDebugContext();
-        for(const Variant& Key:Context.keys()) { Names.push_back(Key); Values.push_back(Context[Key]); }
+        Array Keys=Context.keys();
+        for(int Index=0;Index<Keys.size();++Index) { Variant Key=Keys[Index];Names.push_back(Key); Values.push_back(Context[Key]); }
         Result["globals"]=Names; Result["values"]=Values; return Result;
     }
-    String _debug_parse_stack_level_expression(int32_t,const String&,int32_t,int32_t) override { return "Restricted watches are not yet implemented"; }
+    String _debug_parse_stack_level_expression(int32_t Level,const String& Expression,int32_t,int32_t) override {
+        Dictionary Result=GLDebugEvaluate(Level,Expression);
+        return bool(Result.get("Ok",false))?String(Result.get("Value",Variant())).left(4096):String(Result.get("Error",String()));
+    }
     TypedArray<Dictionary> _debug_get_current_stack_info() override {
         TypedArray<Dictionary> Result; auto Debugger=GLGetSuspendedDebugger();
         if(Debugger) for(const auto& Frame:Debugger->GetFrames()) {

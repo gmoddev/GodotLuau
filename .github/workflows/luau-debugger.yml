@@ -38,7 +38,10 @@ jobs:
       - name: Fetch existing native adapter evidence
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download '${{ inputs.NativeRun }}' --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"
+          DEBUGGER_NATIVE_RUN: ${{ inputs.NativeRun }}
+        run: |
+          [[ "$DEBUGGER_NATIVE_RUN" =~ ^[0-9]+$ ]]
+          gh run download "$DEBUGGER_NATIVE_RUN" --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"
       - name: Provision existing verified official host
         run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
       - name: Expose installed MSVC Debug runtime

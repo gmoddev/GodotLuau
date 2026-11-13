@@ -9,11 +9,12 @@
 #include <godot_cpp/classes/engine_debugger.hpp>
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/time.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 #include <algorithm>
 
 using namespace godot;
 namespace {
-uint64_t HostId=0, Window=0, LastRequest=0;
+uint64_t HostId=0, CommandWindow=0, LastRequest=0;
 unsigned Commands=0;
 std::string Session; // Godot built-in objects cannot initialize before extension binding.
 bool Polling=false, Detached=false;
@@ -25,13 +26,15 @@ void Poll() {
     EngineDebugger::get_singleton()->line_poll();
     Polling=Before;
 }
-void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const String& Error={}) {
+void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const String& Error={},const Dictionary& Extra={}) {
     if(!GLRuntimeDebuggerAvailable())return;
     Dictionary Reply; Reply["Schema"]=1; Reply["Session"]=String::utf8(Session.c_str()); Reply["Event"]=Event; Reply["Request"]=Request;
     if(!Error.is_empty())Reply["Error"]=Error.left(256);
     if(Debugger) {
         Reply["Domain"]=DomainName(Debugger->GetDomain()); Reply["State"]=GLDebugger::StateName(Debugger->GetState());
         Reply["Generation"]=int64_t(Debugger->GetGeneration()); Reply["StopId"]=int64_t(Debugger->GetStopId());
+        Reply["CoroutineId"]=int64_t(Debugger->GetCoroutineId());
+        auto Thread=Debugger->GetInspectionThread();Reply["StackTruncated"]=Thread && lua_stackdepth(Thread)>64;
         Reply["Reason"]=String::utf8(Debugger->GetReason().c_str());
         Array Breakpoints; size_t Bytes=0;
         for(const auto& Entry:Debugger->GetBreakpoints()) {
@@ -43,6 +46,9 @@ void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const St
         }
         Reply["Breakpoints"]=Breakpoints;
     }
+    Reply.merge(Extra,true);
+    if(UtilityFunctions::var_to_bytes(Reply).size()>65536){Reply.erase("Breakpoints");Reply["Truncated"]=true;}
+    if(UtilityFunctions::var_to_bytes(Reply).size()>65536){Reply.erase("Value");Reply["Ok"]=false;Reply["Error"]="Diagnostic response exceeds 64 KiB";}
     Array Data; Data.push_back(Reply); EngineDebugger::get_singleton()->send_message("godotluau:debugger",Data);
 }
 GLDebugAction Stop(GLDebugger& Debugger) {
@@ -98,24 +104,26 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
     if(Message!="command")return false;
     if(!GLRuntimeDebuggerAvailable() || HostId!=uint64_t(Host.get_instance_id()) ||
         (GLExecutionDomain::IsExecuting() && !Polling && !Suspended))return true;
-    uint64_t Now=Time::get_singleton()->get_ticks_msec(); if(Now-Window>=1000){Window=Now;Commands=0;}
+    uint64_t Now=Time::get_singleton()->get_ticks_msec(); if(Now-CommandWindow>=1000){CommandWindow=Now;Commands=0;}
     if(++Commands>32)return true;
     if(Data.size()!=1 || Data[0].get_type()!=Variant::DICTIONARY){Send(nullptr,"Error",0,"Expected one command dictionary");return true;}
     Dictionary Request=Data[0];
-    if(Request.size()>10){Send(nullptr,"Error",0,"Too many debugger fields");return true;}
-    for(const Variant& Key:Request.keys()) {
+    if(Request.size()>12){Send(nullptr,"Error",0,"Too many debugger fields");return true;}
+    Array Keys=Request.keys();
+    for(int Index=0;Index<Keys.size();++Index) {
+        Variant Key=Keys[Index];
         if(Key.get_type()!=Variant::STRING){Send(nullptr,"Error",0,"Invalid field name");return true;}
         String Name=Key;
-        if(Name!="Schema" && Name!="Session" && Name!="Request" && Name!="Op" && Name!="Domain" && Name!="Source" && Name!="Line" && Name!="Enabled" && Name!="BreakOnHit") {
+        if(Name!="Schema" && Name!="Session" && Name!="Request" && Name!="Op" && Name!="Domain" && Name!="Source" && Name!="Line" && Name!="Enabled" && Name!="BreakOnHit" && Name!="Expression" && Name!="Frame") {
             Send(nullptr,"Error",0,"Unknown debugger field");return true;
         }
         Variant Value=Request[Key];
-        if((Name=="Schema" || Name=="Request" || Name=="Line" || Name=="BreakOnHit") && Value.get_type()!=Variant::INT){Send(nullptr,"Error",0,"Expected integer field");return true;}
+        if((Name=="Schema" || Name=="Request" || Name=="Line" || Name=="BreakOnHit" || Name=="Frame") && Value.get_type()!=Variant::INT){Send(nullptr,"Error",0,"Expected integer field");return true;}
         if(Name=="Enabled" && Value.get_type()!=Variant::BOOL){Send(nullptr,"Error",0,"Expected boolean field");return true;}
-        if(Name=="Session" || Name=="Op" || Name=="Domain" || Name=="Source")
+        if(Name=="Session" || Name=="Op" || Name=="Domain" || Name=="Source" || Name=="Expression")
             if(Value.get_type()!=Variant::STRING || String(Value).length()>1024 || String(Value).utf8().length()>1024){Send(nullptr,"Error",0,"Expected bounded string field");return true;}
     }
-    if(Request.size()>10 || Request.get("Schema",Variant()).get_type()!=Variant::INT || int(Request["Schema"])!=1 ||
+    if(Request.size()>12 || Request.get("Schema",Variant()).get_type()!=Variant::INT || int(Request["Schema"])!=1 ||
        Request.get("Session",Variant()).get_type()!=Variant::STRING || String(Request["Session"])!=String::utf8(Session.c_str()) ||
        Request.get("Request",Variant()).get_type()!=Variant::INT || Request.get("Op",Variant()).get_type()!=Variant::STRING) {
         Send(nullptr,"Error",0,"Invalid debugger envelope"); return true;
@@ -144,6 +152,15 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         else if(Op=="StepOut") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Out); }
         else if(Op=="Stop") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Stop); }
         else if(Op=="Detach")Debugger->Detach();
+        else if(Op=="Watch") {
+            if(Suspended!=Debugger || Request.get("Expression",Variant()).get_type()!=Variant::STRING)Send(Debugger,"Error",Id,"Watch requires the selected live suspended domain");
+            else {
+                int64_t Frame=Request.get("Frame",0);
+                Dictionary Result=GLDebugEvaluate(Frame>=0 && Frame<64?int(Frame):-1,Request["Expression"]);
+                Send(Debugger,"Watch",Id,String(),Result);
+            }
+            continue;
+        }
         else if(Op!="Status")Success=false;
         Send(Debugger,Success?"Reply":"Error",Id,Success?String():String("Command unavailable in current state"));
     }

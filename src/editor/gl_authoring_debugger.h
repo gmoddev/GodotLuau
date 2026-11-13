@@ -12,7 +12,7 @@ class GLAuthoringDebugger : public godot::EditorDebuggerPlugin {
     struct SessionView {
         godot::String Nonce, Domain="All", PauseDomain="Server";
         int64_t Request=0;
-        uint64_t Label=0, Tree=0;
+        uint64_t Label=0, Tree=0, WatchInput=0, WatchFrame=0, WatchResult=0;
         std::map<Location,bool> Pending;
     };
     std::map<int,SessionView> Views;

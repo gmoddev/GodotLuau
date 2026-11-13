@@ -4,8 +4,11 @@ The normally [merged GL-054 engine campaign](gl-054-main-integration.md) tracks 
 collection/API expansion and editor error inspection with implementation and
 qualification status separated. Historical issue GL-054 remains the already
 resolved transitive-module finding; the campaign name does not reopen it. Live
-breakpoints/stepping remain unsupported for the precise suspension-contract gap
-in the [development contract](gl-054-native-development.md).
+breakpoints/stepping remain absent from integrated main as recorded in the
+[GL-054 contract](gl-054-native-development.md). The distinct unmerged
+[GL-055 debugger campaign](gl-055-debugger-development.md) implements live
+control/inspection and restricted watches; core passes Windows/Linux while native
+editor qualification remains in progress. It does not reopen historical GL-055.
 
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.

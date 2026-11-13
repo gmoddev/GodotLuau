@@ -86,6 +86,12 @@ metamethods or retain native handles, tables, VM frames or registry references.
 Skip VM inspection after memory failure. A historical error snapshot is never
 advertised through a live suspended-stack interface or used to resume execution.
 
+GL-055 live debugging follows [ADR-018](adr-018-native-luau-debugger.md): use the
+actual safe stopped coroutine, preserve owner/domain lifetime, keep C/bootstrap
+capability state opaque, and never execute gameplay from inspection or watches.
+Exclude only actual debugger wait time from wall-clock budgets. Preserve all
+allocation/safepoint/admission limits and existing production controller defaults.
+
 - Client/server context describes execution, not a privilege grant. Check native
   operations at the boundary rather than relying on a higher-level wrapper or
   the name/visibility of a global. Integrated GL-003 implements the bounded native

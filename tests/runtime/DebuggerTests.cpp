@@ -70,10 +70,16 @@ int main() {
             GLExecutionDomain Domain(GLDomainKind::Server); auto Owner = Domain.CreateOwner(4);
             Domain.SetModuleResolver([](lua_State*, int, GLModuleSource& Source) { Source={99,"local Value=8\nreturn Value+1","@res://Module.luau"}; return true; });
             auto& Debugger = Domain.EnableDebugger(); std::vector<std::string> Sources;
-            Debugger.Attach([&](GLDebugger& Debug) { Sources.push_back(Debug.GetFrames()[0].Source); return GLDebugAction::Continue; });
+            Debugger.Attach([&](GLDebugger& Debug) {
+                Sources.push_back(Debug.GetFrames()[0].Source);
+                return Sources.back()=="res://Coroutine.luau"?GLDebugAction::Out:GLDebugAction::Continue;
+            });
             Debugger.SetBreakpoint("res://Coroutine.luau", 2, true); Debugger.SetBreakpoint("res://Module.luau", 2, true);
             Check(Domain.Execute(Owner, "local Thread=coroutine.create(function()\n local Value=4\n return Value\nend)\nlocal Ok,Value=coroutine.resume(Thread)\nassert(Ok and Value==4)\nassert(require(99)==9)", "@res://Coroutine.luau"), "Coroutine/module execution failed");
             Check(Sources == std::vector<std::string>({"res://Coroutine.luau","res://Module.luau"}), "Coroutine/module breakpoint missing");
+            lua_gc(Domain.GetState(),LUA_GCCOLLECT,0);
+            Domain.CancelOwner(Owner);Domain.Tick(0);
+            Check(Debugger.GetChunkCount()==1,"Caller retirement affected independent module ownership");
         });
         Run("retirement during a stop cannot execute the next instruction", [] {
             GLExecutionDomain Domain(GLDomainKind::Server); auto Owner = Domain.CreateOwner(5);

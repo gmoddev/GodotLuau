@@ -27,7 +27,7 @@ func Run() -> void:
     Button.emit_signal("pressed")
     while not World.get_meta("DebuggerDone", false) and Time.get_ticks_msec() < Deadline:
         await process_frame
-    var Passed = World.get_meta("DebuggerDone", 0) == 42 and World.get_meta("CallbackDone", 0) == 42
+    var Passed = World.get_meta("DebuggerDone", 0) == 42 and World.get_meta("CallbackDone", 0) == 42 and not World.has_meta("Bypass")
     print("[Debugger:Target] %s actual game and native signal completion" % ("PASS" if Passed else "FAIL"))
     World.queue_free()
     await process_frame

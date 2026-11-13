@@ -19,6 +19,8 @@ var CurrentSource = ""
 var CurrentLine = 0
 var CurrentDomain = ""
 var Finished = false
+var PendingWatches: Dictionary = {}
+var WatchesComplete = false
 
 func _initialize() -> void:
     call_deferred("Run")
@@ -77,6 +79,19 @@ func AfterVariables() -> void:
             Stops += 1
             Finish(true)
             return
+        if not WatchesComplete:
+            for Query in [
+                {"Expression": "State.Answer + 2", "Ok": true, "Value": 42},
+                {"Expression": "Box.ClassName == 'Node3D'", "Ok": true, "Value": true},
+                {"Expression": "State.Answer > 0 and 'ready' .. '!'", "Ok": true, "Value": "ready!"},
+                {"Expression": "(function() game:SetAttribute('Bypass', true) end)()", "Ok": false},
+                {"Expression": "State.Password", "Ok": false},
+                {"Expression": "State.Cycle.Answer", "Ok": false},
+                {"Expression": "1 / 0", "Ok": false},
+            ]:
+                Command("Watch", {"Domain": "Server", "Frame": 0, "Expression": Query.Expression})
+                PendingWatches[RequestId] = Query
+            return
         # Closed types, session identity, sequence and domain rejection. All
         # commands go through the real EngineDebugger capture, without Lua eval.
         Command("Status")
@@ -122,6 +137,19 @@ func Receive(Message: Array) -> void:
         Nonce = Reply.get("Session", "")
         if Reply.get("Event") == "Error":
             Errors += 1
+        if Reply.get("Event") == "Watch":
+            var Identity: int = Reply.get("Request", 0)
+            Check(PendingWatches.has(Identity), "Watch reply correlates to the active request")
+            if Finished:
+                return
+            var Query: Dictionary = PendingWatches[Identity]
+            Check(Reply.get("Ok", false) == Query.Ok, "Restricted watch admission: " + Query.Expression)
+            if Query.Ok:
+                Check(Reply.get("Value") == Query.Value, "Actual read-only watch value: " + Query.Expression)
+            PendingWatches.erase(Identity)
+            if PendingWatches.is_empty():
+                WatchesComplete = true
+                AfterVariables()
         if Reply.get("Event") == "Stopped":
             CurrentDomain = Reply.get("Domain", "")
     elif Name == "debug_enter":

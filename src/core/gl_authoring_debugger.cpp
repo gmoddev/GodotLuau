@@ -13,6 +13,8 @@
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/option_button.hpp>
+#include <godot_cpp/classes/line_edit.hpp>
+#include <godot_cpp/classes/spin_box.hpp>
 
 using namespace godot;
 void GLAuthoringDebugger::_bind_methods() {
@@ -35,6 +37,12 @@ void GLAuthoringDebugger::_setup_session(int32_t Session) {
     TreeNode->set_column_title(0,"Source / requested line"); TreeNode->set_column_title(1,"Admitted lines"); TreeNode->set_column_title(2,"Hits");
     TreeNode->set_column_titles_visible(true); TreeNode->set_custom_minimum_size(Vector2(600,150)); Panel->add_child(TreeNode);
     auto& View=Views[Session]; View.Label=Status->get_instance_id(); View.Tree=TreeNode->get_instance_id();
+    auto Watch=memnew(HBoxContainer);Panel->add_child(Watch);
+    auto Frame=memnew(SpinBox);Frame->set_min(0);Frame->set_max(63);Frame->set_tooltip_text("Live Luau frame index; native C frames remain opaque");Watch->add_child(Frame);
+    auto Expression=memnew(LineEdit);Expression->set_placeholder("Restricted watch: State.Answer + 2");Expression->set_max_length(1024);Expression->set_custom_minimum_size(Vector2(320,0));Watch->add_child(Expression);
+    auto Evaluate=memnew(Button);Evaluate->set_text("Watch");Evaluate->connect("pressed",Callable(this,"Command").bind(Session,String("Watch")));Watch->add_child(Evaluate);
+    auto WatchResult=memnew(Label);WatchResult->set_text("Read-only locals/upvalues, raw table projections and approved native properties. Calls are forbidden.");Panel->add_child(WatchResult);
+    View.WatchInput=Expression->get_instance_id();View.WatchFrame=Frame->get_instance_id();View.WatchResult=WatchResult->get_instance_id();
     Native->add_session_tab(Panel);
 }
 void GLAuthoringDebugger::Send(int Session,const String& Op,const Dictionary& Fields) {
@@ -50,7 +58,12 @@ void GLAuthoringDebugger::SelectDomain(int Index,int Session) {
 }
 void GLAuthoringDebugger::Command(int Session,const String& Op) {
     auto Native=get_session(Session); if(Native.is_null() || !Native->is_active())return;
-    if(Op=="Continue" || Op=="StepInto" || Op=="StepOver") {
+    if(Op=="Watch") {
+        auto Found=Views.find(Session);if(Found==Views.end() || !Native->is_breaked())return;
+        auto Text=Object::cast_to<LineEdit>(ObjectDB::get_instance(Found->second.WatchInput));
+        auto Frame=Object::cast_to<SpinBox>(ObjectDB::get_instance(Found->second.WatchFrame));
+        if(Text && Frame){Dictionary Fields;Fields["Expression"]=Text->get_text();Fields["Frame"]=int64_t(Frame->get_value());Send(Session,Op,Fields);}
+    } else if(Op=="Continue" || Op=="StepInto" || Op=="StepOver") {
         if(Native->is_breaked())Native->send_message(Op=="Continue"?"continue":Op=="StepInto"?"step":"next");
     } else if(Op=="StepOut") {
         if(Native->is_breaked()){Send(Session,Op);Native->send_message("continue");}
@@ -87,12 +100,15 @@ void GLAuthoringDebugger::Flush() {
 bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32_t Session) {
     if(Message=="godotluau:debugger") {
         if(Data.size()!=1 || Data[0].get_type()!=Variant::DICTIONARY)return true;
-        Dictionary Reply=Data[0]; if(Reply.size()>16 || int(Reply.get("Schema",0))!=1 || Reply.get("Session",Variant()).get_type()!=Variant::STRING)return true;
+        Dictionary Reply=Data[0]; if(Reply.size()>24 || Reply.get("Schema",Variant()).get_type()!=Variant::INT || int(Reply["Schema"])!=1 || Reply.get("Session",Variant()).get_type()!=Variant::STRING)return true;
         String Nonce=Reply["Session"]; if(Nonce.length()!=32)return true;
         if(!Views.count(Session))_setup_session(Session);auto Found=Views.find(Session);if(Found==Views.end())return true;
         auto& View=Found->second;
         if(View.Nonce!=Nonce){View.Nonce=Nonce;View.Request=0;View.Domain="All";View.Pending=Breakpoints;}
         if(String(Reply.get("Event",String()))=="Stopped")View.Domain=Reply.get("Domain",String("All"));
+        if(String(Reply.get("Event",String()))=="Watch")
+            if(auto Output=Object::cast_to<Label>(ObjectDB::get_instance(View.WatchResult)))
+                Output->set_text(bool(Reply.get("Ok",false))?String(Reply.get("Value",Variant())).left(4096):String(Reply.get("Error",String())).left(256));
         if(auto Status=Object::cast_to<Label>(ObjectDB::get_instance(View.Label)))
             Status->set_text(String(Reply.get("Domain",String()))+" "+String(Reply.get("State",String()))+" "+String(Reply.get("Reason",String()))+" "+String(Reply.get("Error",String())).left(256));
         if(auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(View.Tree)))if(Reply.get("Breakpoints",Variant()).get_type()==Variant::ARRAY) {

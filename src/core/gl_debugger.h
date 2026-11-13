@@ -46,8 +46,10 @@ public:
     void Shutdown();
     std::vector<GLDebugFrame> GetFrames() const;
     lua_State* GetInspectionThread() const;
+    bool IsFrameInspectable(lua_State* Thread,int Level) const;
     uint64_t GetStopId() const { return StopId; }
     uint64_t GetGeneration() const { return Generation; }
+    uint64_t GetCoroutineId() const { return CoroutineId; }
     const std::string& GetReason() const { return Reason; }
     size_t GetChunkCount() const { return Chunks.size(); }
     GLExecutionDomain& GetDomain() const { return Domain; }
@@ -75,6 +77,8 @@ private:
     GLDebugFrame StepOrigin;
     int StepDepth = 0;
     uint64_t StopId = 0, Generation = 0, Instructions = 0;
+    uint64_t CoroutineId=0, NextCoroutineId=1;
+    std::map<lua_State*,uint64_t> CoroutineIds; // bounded weak labels; destruction callback erases them
     std::string Reason;
     static void OnBreakpoint(lua_State* Thread, lua_Debug* Frame);
     static void OnStep(lua_State* Thread, lua_Debug* Frame);
