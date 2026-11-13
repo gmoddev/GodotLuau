@@ -88,3 +88,10 @@ guard and its 87 legacy assertions intact: invoke DebuggerTests through the
 existing bounded RunCoreTests process wrapper, and additionally require seven
 distinct debugger scenario markers. The original failed attempt remains visible;
 compilation alone is not runtime qualification. No fixture assertion is relaxed.
+
+The corrected discovery run 43425256561 executes the production core: the first
+live breakpoint/local case and exact step sequence 6 -> 2 -> 3 -> 7 pass on both
+platforms. The hit-count scenario incorrectly expects the for-loop setup line to
+execute repeatedly. Separate its comment-to-executable-line admission check from
+the hit target on the actual repeating loop body. Keep the one-stop hit assertion
+and disabled-breakpoint assertions unchanged; retain the failed run.

@@ -56,11 +56,13 @@ int main() {
             auto& Debugger = Domain.EnableDebugger(); int Hits=0;
             Debugger.Attach([&](GLDebugger&) { ++Hits; return GLDebugAction::Continue; });
             Check(!Debugger.SetBreakpoint("res://Loop.luau", 0, true), "Invalid line admitted");
-            Debugger.SetBreakpoint("res://Loop.luau", 2, true, 2);
+            Debugger.SetBreakpoint("res://Loop.luau", 2, true, 1000000);
+            Debugger.SetBreakpoint("res://Loop.luau", 4, true, 2);
             Check(Domain.Execute(Owner, "local Value=0\n-- comment\nfor Index=1,4 do\n Value+=1\nend\nassert(Value==4)", "@res://Loop.luau"), "Loop failed");
             Check(Hits == 1, "Hit target not applied");
             Check(!Debugger.GetBreakpoints()[0].AdmittedLines.empty() && Debugger.GetBreakpoints()[0].AdmittedLines[0] == 3, "Executable-line remap missing");
             Debugger.SetBreakpoint("res://Loop.luau", 2, false);
+            Debugger.SetBreakpoint("res://Loop.luau", 4, false);
             Check(Domain.Execute(Owner, "local Value=0\n\nValue+=1", "@res://Loop.luau") && Hits == 1, "Disabled breakpoint hit");
             Debugger.ClearBreakpoints(); Check(Debugger.GetBreakpoints().empty(), "Removal failed");
         });
