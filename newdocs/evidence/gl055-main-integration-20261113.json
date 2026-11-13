@@ -1,0 +1,240 @@
+{
+  "Status": "Integrated and verified with retained limitations",
+  "Date": "2026-11-13",
+  "Repository": "gmoddev/GodotLuau",
+  "MainBefore": "b5389f0ff08c50e38bc11d868dbe12729a293535",
+  "Source": {
+    "Branch": "feature/gl-055-native-debugger",
+    "Revision": "9b77fdab6425c1f026917b342298ed86e0ba0d5b",
+    "Tree": "873eda1f42b886e609c9bf5ca279524c49a9badc",
+    "PreservedCommits": [
+      "5a49e1a1207a3a25f8b9fbf5fa99089d6af0fb22",
+      "dd5caaec94a6f2d7d1f47d6d01723fef56f88759",
+      "0d75b54c71a6c783e64acdf010d3995c33ebb3c6",
+      "b3e18af3cd35854fdc597bd62707a5a3dd7fd26b",
+      "80d07335ab9b080a3c4eaa4eef1419a122b97629",
+      "c905397362ee94e42610874ab7ee02f6ed8ce4b7",
+      "1e46bc534a6f5364241fb99fe35dc1d2aac158b2",
+      "4feac20550a5e1a248ef73e6b41beeb441917d30",
+      "a0b2972e317834bb978304428d6e2c43e51f600e",
+      "18b9a0131d5c8bcb7b661d9e32c0c588a63e1342",
+      "8d51a1e46a2fa61eb512bd3f0bac339655e98858",
+      "f03827aadcff212d31708dff1873f17b923c854d",
+      "636f0b2e79aa6042471390b480cd768c5891e4db",
+      "127ffe83fe98f78e005daa8314bc23894d5ffca5",
+      "6994db4739d5649e5d98dea9d12621470e38c7ec",
+      "71e8bfd7c43cf90d572ffa7a9eeb9422c2ae881d",
+      "3e653f350ac8f93d132d191d2daac6c0087bbc3e",
+      "431c1dea7d8e411bf64b17432792922918ed3706",
+      "c082751abd3be05bcb15259ad9e328e0771b02c6",
+      "24dd94bd4812b5b51c9a095c3743b14903a730b3",
+      "5466af12d8c176882ce7883e3cb71d9f002ac876",
+      "9d39a54fe36c263a907c422496131c65a91324d6",
+      "37bba2f4862593851c6dc894a745416359bceabb",
+      "3699b6b763aa954c8102cd9b85b7ac1c2f881bfb",
+      "350ae5733b4b93f81be65812406efb2ca8e61dd5",
+      "4a7509cea7acab16d632c653ecc50661ab5d6999",
+      "15286e096da6d72ffbf04eed9b6720f3d53d4aa3",
+      "108c57b0f3531af28ca5666e9f4d6e2b67deea31",
+      "d8ccb0da9e33b56e93ec21acb02c2853565c98cb",
+      "a54c05e59189b876b9f7eeccd7f6e3f5eaff5202",
+      "ce97e1620f8f11ce28f9c8d74f2c2e14b81452be",
+      "d1c62a75c86a3db8a6f056dac00609ebe463a0c2",
+      "52bf37d394eaacfd8aa20485194f75f5a77c6dd9",
+      "63a7025535d5a8214ac0902dc5e603cb8d435c82",
+      "fd86f83223ae4bb3c87b333b875cdd6307903a12",
+      "f5b1258b837d62daaff3d70aeccd737e7e5dc59e",
+      "f727839f0aa0b37fe8d71c15d7dc42cea7c42c97",
+      "002efdd928fd846fb2342a6edc4103f2fa725087",
+      "670b404ab1e260ead12c0b6f3857e2e8cebe05f9",
+      "1673225e61b823887e22a1558c5433e0eb257f34",
+      "4681e5c3d1d386b675b1c7612c14f655009ae203",
+      "64566ef6539b736bbfb9113954f893e01d0beeea",
+      "9b77fdab6425c1f026917b342298ed86e0ba0d5b"
+    ]
+  },
+  "Merge": {
+    "Revision": "9ecfc9ebf1509a50247c5104b2e09d6429a9804e",
+    "Parents": [
+      "b5389f0ff08c50e38bc11d868dbe12729a293535",
+      "9b77fdab6425c1f026917b342298ed86e0ba0d5b"
+    ],
+    "Tree": "873eda1f42b886e609c9bf5ca279524c49a9badc",
+    "TreeEqualsQualifiedSource": true,
+    "Conflicts": false,
+    "HistoryRewritten": false
+  },
+  "TestedMainRevision": "4838cd9a774eaa05bda4be68ac5c2891fb0cb026",
+  "NativeSource": {
+    "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+    "Files": 136,
+    "Newlines": "LF normalized"
+  },
+  "Dependencies": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "CI": {
+    "Core": {
+      "Run": 43514235000,
+      "Result": "PASS Windows/Linux",
+      "OriginalCases": 87,
+      "DebuggerScenarios": 8,
+      "Revision": "4838cd9a774eaa05bda4be68ac5c2891fb0cb026",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43514235000",
+      "Jobs": [
+        {
+          "Name": "Core (Windows, Debug)",
+          "Result": "success",
+          "Attempt": 1
+        },
+        {
+          "Name": "Core (Linux, Debug)",
+          "Result": "success",
+          "Attempt": 1
+        }
+      ]
+    },
+    "Native": {
+      "Run": 43514235142,
+      "Result": "PASS Windows/Linux",
+      "Revision": "4838cd9a774eaa05bda4be68ac5c2891fb0cb026",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43514235142",
+      "Jobs": [
+        {
+          "Name": "Native (Windows, Debug)",
+          "Result": "success",
+          "Attempt": 1
+        },
+        {
+          "Name": "Native (Linux, Debug)",
+          "Result": "success",
+          "Attempt": 1
+        }
+      ],
+      "Artifacts": {
+        "Windows": {
+          "ArtifactId": 14082232175,
+          "ArtifactName": "runtime-native-Windows-Debug",
+          "ArtifactDigest": "sha256:4f99e05d2b4dfb46b03b5869f8ffdef677d54349296c2c829738c313269139c1",
+          "ArtifactBytes": 524462,
+          "SummarySHA256": "b64eb8264398ff4992dacfe7ab1eea6bac9dc684d31ed00ded5826b79a897422",
+          "ExtensionSHA256": "cfc6b1fd328e55f700ff23b179afd0f91922ce4a8c7581131d34e0fa8e4ca3cc",
+          "DataStoreWorkerSHA256": "d14ee13d595227f7031f6589da930daf6fa5485718c5d19b2602ff4af50c506a",
+          "RequiredProcesses": 141,
+          "DebuggerCases": [
+            {
+              "Case": "local",
+              "Stops": 8,
+              "Passed": true
+            },
+            {
+              "Case": "disconnect",
+              "Stops": 1,
+              "Passed": true
+            },
+            {
+              "Case": "running-disconnect",
+              "Stops": 1,
+              "Passed": true
+            },
+            {
+              "Case": "reload",
+              "Stops": 2,
+              "Passed": true
+            },
+            {
+              "Case": "network",
+              "Stops": 1,
+              "Passed": true
+            }
+          ],
+          "NativeEditorPassed": true,
+          "FoundryChecks": 44,
+          "FoundryExit": 0
+        },
+        "Linux": {
+          "ArtifactId": 14082156081,
+          "ArtifactName": "runtime-native-Linux-Debug",
+          "ArtifactDigest": "sha256:9297cdbaf4acacaff662b320a8c1b6971751913663153839b30c2ab7c9098263",
+          "ArtifactBytes": 525849,
+          "SummarySHA256": "871cdaf0f742ae77c039e75662861c2fc62e5432b61bb392f24d5ac42931dacd",
+          "ExtensionSHA256": "3c7ea0231c0ec978a53edc6da1f1447022efbf6ca73227d91fdad433d4f44115",
+          "DataStoreWorkerSHA256": "c43a28765307a69a6aab15a7c5835e8a7ae24c6247e0ed83e7b375b5617e7304",
+          "RequiredProcesses": 141,
+          "DebuggerCases": [
+            {
+              "Case": "local",
+              "Stops": 8,
+              "Passed": true
+            },
+            {
+              "Case": "disconnect",
+              "Stops": 1,
+              "Passed": true
+            },
+            {
+              "Case": "running-disconnect",
+              "Stops": 1,
+              "Passed": true
+            },
+            {
+              "Case": "reload",
+              "Stops": 2,
+              "Passed": true
+            },
+            {
+              "Case": "network",
+              "Stops": 1,
+              "Passed": true
+            }
+          ],
+          "NativeEditorPassed": true,
+          "FoundryChecks": 44,
+          "FoundryExit": 0
+        }
+      }
+    },
+    "Declarations": {
+      "Run": 43514259015,
+      "Result": "PASS Windows/Linux",
+      "Revision": "4838cd9a774eaa05bda4be68ac5c2891fb0cb026",
+      "URL": "https://github.com/gmoddev/GodotLuau/actions/runs/43514259015",
+      "Jobs": [
+        {
+          "Name": "Types (Windows, windows-2022, Visual Studio 17 2022)",
+          "Result": "success",
+          "Attempt": 1
+        },
+        {
+          "Name": "Types (Linux, ubuntu-24.04, Ninja)",
+          "Result": "success",
+          "Attempt": 1
+        }
+      ]
+    }
+  },
+  "RetainedEvidence": {
+    "Scope": "Original qualified source, fixtures, archives and rendered/sanitizer receipts retain original identities; no old binary relabeled as main",
+    "Qualification": "newdocs/gl-055-debugger-qualification.md",
+    "HostedReceiptBlob": "bb92696b824bca077787ba0aefca1c08f6207d43",
+    "FocusedReceiptBlob": "e15ec6fbec68d7f47dcda7d5e452321490f40470"
+  },
+  "Preserved": {
+    "NativeControllerDefault": true,
+    "ScriptedControllerExplicitOptIn": true,
+    "ReleasePublicationDisabled": true,
+    "UpdaterDistributionDisabled": true,
+    "DependenciesUnchanged": true,
+    "AdmittedHostsUnchanged": true,
+    "QualifiedRuntimeAndFixtureInputsUnchanged": true,
+    "OriginalFeatureRefUnchanged": true
+  },
+  "Limitations": [
+    "GL-065 external Godot editor breakpoint-row cleanup",
+    "Synchronous large-index queries near the existing 250-ms soft deadline; explicit partial results",
+    "No Windows LSan, Linux graphical or physical-input qualification",
+    "Restricted evaluation, async stepping, reload/reattach and profiling attribution retain documented limits"
+  ],
+  "ClosingNotes": "Closing documentation only; runtime, fixture, workflow, package and declaration inputs equal qualified source 9b77fda and tested main 4838cd9. Original feature receipts remain unchanged."
+}

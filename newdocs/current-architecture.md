@@ -9,7 +9,8 @@ Final core/native, production Debug/Release, candidate/package and available
 Windows/Linux sanitizer profiles pass within those scopes. External engine-editor
 cleanup and synchronous large-index latency remain explicit limits. Normal merge
 `9ecfc9e` preserves all 43 feature commits and the exact qualified tree; fresh
-main CI is tracked separately in the integration record. Historical error
+main core/native/declaration CI passes Windows/Linux at `4838cd9`, separately
+recorded from retained feature qualification. Historical error
 snapshots remain distinct from live suspended state.
 
 The normally [merged GL-054 campaign](gl-054-main-integration.md) extends the

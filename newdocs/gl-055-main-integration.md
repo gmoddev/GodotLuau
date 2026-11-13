@@ -1,9 +1,12 @@
 # GL-055 main integration
 
-Status: integration prepared; fresh main core/native/declaration CI pending.
+Status: **INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS**. Fresh main core,
+native and declaration CI passes Windows/Linux.
 The owner authorized the normal merge on 2026-11-13, superseding the feature
 campaign's earlier no-merge boundary. Release publication and updater
 distribution remain disabled.
+The [integration receipt](evidence/gl055-main-integration-20261113.json) records
+the exact history, source, workflow outcomes and native artifact identities.
 
 ## History and identity
 
@@ -50,8 +53,39 @@ Fresh hosted checks on the integrated revision must cover:
   frontend positive/negative type checks. Dispatch explicitly because unchanged
   declaration paths do not trigger this workflow automatically.
 
-CI identities and results will be recorded after the main push. Fresh main
-acceptance is pending, not inferred from retained feature results.
+The merge and initial documentation are pushed to main at
+`4838cd9a774eaa05bda4be68ac5c2891fb0cb026`, verified with `git ls-remote`.
+The feature ref stays at `9b77fda`. All three fresh workflows identify that
+integrated revision:
+
+| Boundary | Run | Result |
+| --- | --- | --- |
+| Core | [43514235000](https://github.com/gmoddev/GodotLuau/actions/runs/43514235000) | Windows/Linux pass |
+| Native | [43514235142](https://github.com/gmoddev/GodotLuau/actions/runs/43514235142) | Windows/Linux pass |
+| Declarations | [43514259015](https://github.com/gmoddev/GodotLuau/actions/runs/43514259015) | Windows/Linux pass |
+
+Both native artifacts identify the tested revision and expected native
+fingerprint. Each records 141 required process results, five real debugger cases
+with stop counts `[8, 1, 1, 2, 1]`, a passing native editor journey and 44 Foundry
+checks. Reload, disconnect, ENet timeout/reconnection, profiling/ownership,
+authority, lifetime, HTTP/storage interruption/recovery and Native/Scripted
+controller regressions pass. All three workflows pass on their first attempts;
+no runtime/fixture change or retry is needed for integration. Fresh native
+results are headless; retained Windows rendered and sanitizer evidence keeps its
+original identity and scope.
+
+Native artifact digests are Windows
+`4f99e05d2b4dfb46b03b5869f8ffdef677d54349296c2c829738c313269139c1`
+and Linux `9297cdbaf4acacaff662b320a8c1b6971751913663153839b30c2ab7c9098263`.
+Their IDs, downloaded summary hashes and extension/companion identities are in
+the integration receipt.
+
+The current quick start now distinguishes GL-054 historical error snapshots from
+GL-055 live debugging. These documentation corrections do not alter qualified
+runtime, fixture, workflow, package or declaration inputs.
+Closing notes and the receipt also change documentation only. Those inputs equal
+qualified `9b77fda` and tested main `4838cd9`; all original feature receipts remain
+unchanged. No redundant rebuild is required for these closing notes.
 
 ## Preserved boundaries and limits
 

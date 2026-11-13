@@ -1,6 +1,9 @@
 # GL-055 native debugger campaign
 
-Status: implementation in progress on `feature/gl-055-native-debugger`; unmerged.
+Historical development journal for `feature/gl-055-native-debugger`, qualified at
+`9b77fda` and normally integrated by `9ecfc9e`. Earlier progress/unmerged entries
+retain their checkpoint meanings. Current main acceptance is in the
+[integration record](gl-055-main-integration.md).
 This campaign is distinct from the resolved historical GL-055 native layout
 preset issue. Its ID and evidence remain unchanged.
 
@@ -655,3 +658,12 @@ above describe their historical campaign checkpoints. The
 [integration record](gl-055-main-integration.md) separates reused qualification
 from fresh core/native/declaration checks on main. Native remains default,
 Scripted opt-in, and release/updater distribution disabled.
+
+Fresh main `4838cd9` passes Windows/Linux core (43514235000), native (43514235142)
+and declaration (43514259015) workflows on their first attempts. The downloaded
+native artifacts record the expected fingerprint, 141 required process results,
+all five debugger cases and the actual native editor journey. The
+[integration receipt](evidence/gl055-main-integration-20261113.json) retains
+history and artifact identities. Closing notes/quick-start corrections are
+documentation only; the original feature ref, qualification receipts, dependency
+pins, admitted hosts and publication/updater guards remain unchanged.

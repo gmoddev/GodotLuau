@@ -3,7 +3,9 @@
 Use a matching qualified GodotLuau candidate and Godot host. The runtime updater
 and release publication remain disabled. Candidate packages are explicit private
 qualification inputs; inherited repository binaries are not qualified fork builds.
-See the [GL-054 journal](gl-054-engine-development.md) for current branch status.
+See the [GL-055 integration record](gl-055-main-integration.md) for current
+main verification and the [qualification record](gl-055-debugger-qualification.md)
+for supported debugger/profile limits.
 
 ## Create and edit
 
@@ -33,6 +35,9 @@ The ScriptEditor supplies native completion, signatures, diagnostics and static
 module navigation. Project Uses lists exact static imported-member references,
 including the active unsaved buffer. It is bounded and labels partial results;
 dynamic/re-export analysis is outside its [contract](gl-054-native-development.md).
+Project Symbols adds bounded function/type definitions, static imports and
+lexical reference locations through the same cache. Large queries can reach the
+250-ms soft deadline and return explicit partial results.
 
 ## Preview, run and debug
 
@@ -47,9 +52,20 @@ native Explorer does not replace Character V2 or its replication contracts.
 
 Editor-connected runtime failures provide a bounded historical stack with primitive
 locals, execution domain and owner generation. Open Runtime Error or activate a
-frame to navigate explicitly. Native handles/tables remain opaque. This is not a
-suspended debugger: breakpoints, stepping and live evaluation are unsupported.
+frame to navigate explicitly. Native handles/tables remain opaque in these
+historical error snapshots.
 Fix the source and run again; editor restart is not the normal recovery path.
+
+For live debugging, run from a supported editor host with its debugger connected
+and set a Luau gutter breakpoint. The Debugger's Luau tab shows actual admission
+and supplies pause, continue, stepping, restricted Watch, profiling and saved-source
+reload. Godot's native stack/variable panes inspect the stopped coroutine. Watch
+reads bounded local/upvalue/table/native-property projections; arbitrary calls
+and mutation are unavailable. Use Luau Watch rather than Godot's stock Evaluate
+path. Pausing stops the game process, including both domains and physics;
+independent peers can time out. See the [debugger guide](gl-055-debugger.md) for
+reload, disconnect, dedicated development hosts and remaining limits. Production
+release templates do not acquire interactive debugging.
 
 ## Choose an example
 
