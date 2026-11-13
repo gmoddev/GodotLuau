@@ -18,7 +18,7 @@ bool Enabled() {
 std::map<std::string,uint32_t> Counts;
 bool Truncated=false;
 }
-void GLTraceNative(lua_State* Thread,const char* Category,const char* Class,const char* Member) {
+void GLCoverageNative(lua_State* Thread,const char* Category,const char* Class,const char* Member) {
     if (!Enabled()) return;
     auto Owner=GLGetOwner(Thread);
     if (!Owner || !Owner->Alive || !Owner->Domain) return;

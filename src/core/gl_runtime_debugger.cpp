@@ -1,6 +1,9 @@
 #include "gl_runtime_debugger.h"
 #include "gl_debugger.h"
 #include "gl_debug_inspection.h"
+#include "gl_profiler.h"
+#include "gl_scene_authoring.h"
+#include "gl_native_registry.gen.h"
 #include "gl_domain_host.h"
 #include "gl_asset.h"
 #include "luau_language.h"
@@ -22,6 +25,29 @@ bool Polling=false, Detached=false;
 uint64_t AwaitingStop=0;
 bool StopAcknowledged=false;
 GLDebugger* Suspended=nullptr;
+Dictionary ProfileSnapshot(const GLExecutionDomain& Domain) {
+    Dictionary Result;auto Profile=Domain.GetProfiler();Result["Enabled"]=Profile && Profile->IsEnabled();
+    Result["HostTicksMicroseconds"]=int64_t(Time::get_singleton()->get_ticks_usec());
+    Result["ApiSHA256"]=GLNative::ApiSHA256;Result["PolicySHA256"]=GLNative::PolicySHA256;
+    Result["Scope"]="Inclusive protected/resume wall time excluding debugger wait; nested entries may overlap. Successful native calls only. Not per-function CPU timing.";
+    Array Rows;Dictionary Native;
+    if(Profile) {
+        Result["Epoch"]=int64_t(Profile->GetEpoch());Result["Truncated"]=Profile->IsTruncated() || Profile->GetScripts().size()>24 || Profile->GetNativeCalls().size()>64;
+        Result["ScriptRecords"]=int64_t(Profile->GetScripts().size());Result["NativeRecords"]=int64_t(Profile->GetNativeCalls().size());
+        for(const auto& Entry:Profile->GetScripts()) {
+            if(Rows.size()>=24)break;const auto& Row=Entry.second;Dictionary Item;String Source;
+            GLDebugText(Row.Source.data(),Row.Source.size(),256,Source);
+            Item["Generation"]=int64_t(Row.Generation);Item["NativeId"]=int64_t(Row.NativeId);Item["Source"]=Source;
+            Item["Resumes"]=int64_t(Row.Resumes);Item["ProtectedCalls"]=int64_t(Row.ProtectedCalls);
+            Item["InclusiveExecutionMicroseconds"]=int64_t(Row.ExecutionNanoseconds/1000);
+            Item["CompileMicroseconds"]=int64_t(Row.CompileNanoseconds/1000);Item["Compilations"]=int64_t(Row.Compilations);
+            Item["ModuleCompilations"]=int64_t(Row.ModuleCompilations);Item["Callbacks"]=int64_t(Row.Callbacks);
+            Item["Requires"]=int64_t(Row.Requires);Item["Coroutines"]=int64_t(Row.Coroutines);Item["Retired"]=Row.Retired;Rows.push_back(Item);
+        }
+        for(const auto& Entry:Profile->GetNativeCalls()){if(Native.size()>=64)break;Native[String::utf8(Entry.first.c_str())]=int64_t(Entry.second);}
+    }
+    Result["Scripts"]=Rows;Result["NativeCalls"]=Native;return Result;
+}
 const char* DomainName(const GLExecutionDomain& Domain) { return Domain.GetKind()==GLDomainKind::Server?"Server":"Client"; }
 void Poll(bool Immediate=false) {
     if(!GLRuntimeDebuggerAvailable())return;
@@ -54,7 +80,7 @@ void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const St
     }
     Reply.merge(Extra,true);
     if(UtilityFunctions::var_to_bytes(Reply).size()>65536){Reply.erase("Breakpoints");Reply["Truncated"]=true;}
-    if(UtilityFunctions::var_to_bytes(Reply).size()>65536){Reply.erase("Value");Reply["Ok"]=false;Reply["Error"]="Diagnostic response exceeds 64 KiB";}
+    if(UtilityFunctions::var_to_bytes(Reply).size()>65536){Reply.erase("Value");Reply.erase("Profile");Reply.erase("Ownership");Reply["Ok"]=false;Reply["Error"]="Diagnostic response exceeds 64 KiB";}
     Array Data; Data.push_back(Reply); EngineDebugger::get_singleton()->send_message("godotluau:debugger",Data);
 }
 GLDebugAction Stop(GLDebugger& Debugger) {
@@ -71,8 +97,10 @@ GLDebugAction Stop(GLDebugger& Debugger) {
     auto Disconnect=[] {
         Detached=true;
         if(auto Host=Object::cast_to<GLDomainHost>(ObjectDB::get_instance(HostId)))
-            for(bool Client:{false,true})if(auto Domain=Host->GetExistingDomain(Client))
+            for(bool Client:{false,true})if(auto Domain=Host->GetExistingDomain(Client)) {
                 if(auto Current=Domain->GetDebugger())Current->Detach();
+                if(auto Profile=Domain->GetProfiler())Profile->Stop();
+            }
     };
     if(!StopAcknowledged || Detached){Disconnect();return GLDebugAction::Detach;}
     Send(&Debugger,"Stopped");
@@ -195,7 +223,7 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         else if(Op=="Pause")Success=Debugger->RequestPause();
         else if(Op=="StepOut") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Out); }
         else if(Op=="Stop") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Stop); }
-        else if(Op=="Detach")Debugger->Detach();
+        else if(Op=="Detach") {Debugger->Detach();if(auto Profile=Domain->GetProfiler())Profile->Stop();}
         else if(Op=="Reload") {
             auto Frames=Debugger->GetFrames();
             Success=Suspended==Debugger && !Frames.empty() && Source==String::utf8(Frames[0].Source.c_str()) && ResourceLoader::get_singleton()->has_cached(Source);
@@ -206,6 +234,15 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
             }
             Send(Debugger,Success?"Reloaded":"Error",Id,Success?String():String("Saved-source reload failed or is unavailable"));
             continue;
+        }
+        else if(Op=="ProfileStart" || Op=="ProfileStop" || Op=="Profile") {
+            if(Op=="ProfileStart") {
+                try {Domain->EnableProfiler().Start();}
+                catch(const std::bad_alloc&){Send(Debugger,"Error",Id,"Profiler allocation unavailable");continue;}
+            }
+            if(Op=="ProfileStop")if(auto Profile=Domain->GetProfiler())Profile->Stop();
+            Dictionary Extra;Extra["Profile"]=ProfileSnapshot(*Domain);Extra["Ownership"]=GLDebugSceneScopes(*Domain);Extra["Resources"]=Host.GetResourceStats(Client);Extra["Operation"]=Op;
+            Send(Debugger,"Profile",Id,String(),Extra);continue;
         }
         else if(Op=="Watch") {
             if(Suspended!=Debugger || Request.get("Expression",Variant()).get_type()!=Variant::STRING)Send(Debugger,"Error",Id,"Watch requires the selected live suspended domain");

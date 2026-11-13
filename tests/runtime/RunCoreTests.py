@@ -52,7 +52,7 @@ with (Output / 'debugger.stdout.log').open('w') as Stdout, (Output / 'debugger.s
         StopProcess(Process)
 Text = (Output / 'debugger.stdout.log').read_text(errors='replace')
 print(Text, end='')
-if Result != 0 or '[Debugger:Test] 7 passed, 0 failed' not in Text:
+if Result != 0 or '[Debugger:Test] 8 passed, 0 failed' not in Text:
     print((Output / 'debugger.stderr.log').read_text(errors='replace'))
     raise SystemExit('[Debugger:Test] Failure or watchdog containment')
 print('[Runtime:Test] 87 passed, 0 failed')

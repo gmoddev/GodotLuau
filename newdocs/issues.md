@@ -7,8 +7,9 @@ resolved transitive-module finding; the campaign name does not reopen it. Live
 breakpoints/stepping remain absent from integrated main as recorded in the
 [GL-054 contract](gl-054-native-development.md). The distinct unmerged
 [GL-055 debugger campaign](gl-055-debugger-development.md) implements live
-control/inspection and restricted watches; core passes Windows/Linux while native
-editor qualification remains in progress. It does not reopen historical GL-055.
+control/inspection and restricted watches; core passes Windows/Linux and the Linux
+Debug native suite passes. Windows editor/selective reload and the new profiling
+boundary remain in qualification. It does not reopen historical GL-055.
 
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
@@ -141,6 +142,20 @@ four successful workflows and independently checked artifacts.
 | [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Attribute-value fix normally merged by `a419b93`; fresh Windows/Linux main core/native/declarations pass | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
 | [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Resolved and normally merged by `a419b93`; stalled control and four-profile proof retained | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
 | [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Resolved and normally merged by `a419b93`; both Linux export/read-start/restart proofs retained | Candidate staging and Godot's dependency export copy lose the companion's executable mode |
+| [GL-061](gl-055-debugger-development.md#disconnect-lifecycle-correction) | P2 | Fixed on unmerged GL-055 branch at `71e8bfd`; Linux full-native and Windows protocol checks pass | Initialized Godot debugger flag survives peer disconnect, so later experimental Luau stops enter an unavailable native session |
+
+## GL-061: Experimental debugger connection retirement
+
+This finding affects the unmerged GL-055 implementation, not integrated main.
+Actual native disconnect qualification reproduces repeated Godot errors after a
+peer disconnect while stopped. `EngineDebugger.is_active()` reports initialization
+rather than connection liveness. Fix `71e8bfd` requires a bounded stop acknowledgment
+and detaches both domains after uncommanded native-loop exit. Native run
+[43442668524](https://github.com/gmoddev/GodotLuau/actions/runs/43442668524)
+passes stopped/running disconnect cases on both platforms; its Linux job also
+passes the full existing native suite. Its Windows editor-driver failure is
+retained separately in the [journal](gl-055-debugger-development.md).
+Integration and later GL-055 profile qualification remain outstanding.
 
 ## GL-060: Candidate example staging drops Unix modes
 

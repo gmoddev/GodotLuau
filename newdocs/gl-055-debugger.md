@@ -104,9 +104,26 @@ they do not establish whole-program types or runtime authority. Reports cap at
 partial files/reports are explicitly marked. The existing 250-ms scan deadline
 is checked between bounded operations, not a hard preemption of an AST parse.
 
-Only time actually spent in the native break loop is excluded from active
+ProfileStart, ProfileStop and Profile explicitly control development collection
+for the selected live domain. Reports contain per-owner inclusive resume/protected
+wall time excluding debugger waits, compilation/module compilation, coroutine,
+require and callback activity, successful native operation counts and existing
+resource statistics. Nested execution intervals can overlap; summing them is not
+total CPU time. In-flight intervals interrupted by profiling Start/Stop are
+excluded. These are not arbitrary Lua function-call counts, a sampling profiler,
+native-only dispatch latency or a complete allocation history.
+
+Collection is disabled by default and retains no VM/native references. It caps at
+128 owners and 256 native operation names per domain, with a 24-owner/64-operation
+report preview and explicit truncation. Ownership snapshots show up to 16 scopes,
+4,096 node observations, weak resource/subscription counts and queued/destroyed
+states. Retired owners without valid guards are excluded; their profile rows
+retain a retired label. CopyProfile explicitly copies the bounded report as JSON
+for export. A fresh connection clears the previous session's stored report.
+
+Only time actually spent in debugger suspension/handshake is excluded from active
 wall-clock execution deadlines. Allocation, safepoint and admission bounds
 remain enforced. Attached execution uses the pinned VM's debug interpreter;
 disabled execution keeps its original interpreter. Attached/disabled overhead
-and later profiling/indexing features need their own recorded measurements.
+and profiling/indexing overhead need their own recorded measurements.
 Releases and updater distribution remain disabled.
