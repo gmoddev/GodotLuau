@@ -3,7 +3,7 @@ extends RefCounted
 
 func Run(Runner,Plugin) -> void:
     var Sources={
-        'IndexModule.luau':'return {Build=function() return 54 end}\n',
+        'IndexModule.luau':'export type Product = {Value: number}\nlocal function Build(Value: number): Product return {Value=Value} end\nreturn {Build=Build}\n',
         'IndexOther.luau':'return {Build=function() return 55 end}\n',
         'IndexConsumer.luau':"local M=require('res://IndexModule.luau')\nM.Build()\nlocal Alias=M.Build\nAlias()\n",
         'IndexUnrelated.luau':"local M=require('res://IndexOther.luau')\nM.Build()\n",
@@ -19,6 +19,16 @@ func Run(Runner,Plugin) -> void:
     Runner.Check(Uses.all(func(Use): return Use.Path=='res://IndexConsumer.luau' and Use.SourceSHA256.length()==64),'Project references retain source identity and locations')
     var Second: Dictionary=Plugin.call('IndexProject','res://IndexModule.luau','Build')
     Runner.Check(Second.get('ParsedFiles',-1)==0 and Second.get('CachedFiles',0)>0 and Second.get('References',[]).size()==3,'Repeated project query reuses unchanged parsed source results')
+    var Navigation: Dictionary=Plugin.call('IndexProject','','')
+    var Documents: Array=Navigation.get('Documents',[])
+    var Module=Documents.filter(func(Item): return Item.Path=='res://IndexModule.luau')
+    var Consumer=Documents.filter(func(Item): return Item.Path=='res://IndexConsumer.luau')
+    Runner.Check(Navigation.get('result',ERR_UNAVAILABLE)==OK and Module.size()==1 and Consumer.size()==1,'Project navigation shares the bounded cached module scan')
+    if Module.size()==1 and Consumer.size()==1:
+        var Entries: Array=Module[0].Entries
+        Runner.Check(Entries.any(func(Item): return Item.Kind=='ExportedType' and Item.Name=='Product' and Item.Line==1) and Entries.any(func(Item): return Item.Kind=='Function' and Item.Name=='Build' and Item.Line==2),'Project index records actual Luau type and function definitions')
+        Runner.Check(Entries.any(func(Item): return Item.Kind=='LocalReference' and Item.Name=='Build' and Item.get('DefinitionLine')==2),'Lexical local references retain their exact definition location')
+        Runner.Check(Consumer[0].Entries.any(func(Item): return Item.Kind=='Import' and Item.get('Target')=='res://IndexModule.luau') and Consumer[0].Entries.any(func(Item): return Item.Kind=='ImportedMember' and Item.Name=='Build'),'Project import graph and static member locations preserve module identity')
     var Resource: Script=load('res://IndexConsumer.luau')
     EditorInterface.edit_script(Resource,-1,0,true)
     for Index in range(5): await Runner.get_tree().process_frame
@@ -29,5 +39,5 @@ func Run(Runner,Plugin) -> void:
         Runner.Check(Changed.get('References',[]).size()==4 and Changed.get('ParsedFiles',0)==1,'Project index refreshes the active unsaved editor buffer without recompiling unrelated modules')
         Runner.Check(FileAccess.get_file_as_string('res://IndexConsumer.luau')==Sources['IndexConsumer.luau'],'Reference indexing preserves saved source')
         Code.text=Sources['IndexConsumer.luau']
-        Runner.Measurements.ProjectIndex={'ColdMicroseconds':First.get('Microseconds',0),'WarmMicroseconds':Second.get('Microseconds',0),'ChangedMicroseconds':Changed.get('Microseconds',0),'Files':First.get('ScannedFiles',0),'Truncated':Changed.get('Truncated',true)}
+        Runner.Measurements.ProjectIndex={'ColdMicroseconds':First.get('Microseconds',0),'WarmMicroseconds':Second.get('Microseconds',0),'ChangedMicroseconds':Changed.get('Microseconds',0),'NavigationMicroseconds':Navigation.get('Microseconds',0),'Files':First.get('ScannedFiles',0),'Truncated':Changed.get('Truncated',true)}
     else: Runner.Check(false,'Project index can observe the actual Luau CodeEdit')

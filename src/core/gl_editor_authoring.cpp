@@ -76,7 +76,7 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     Profiles->set_tooltip_text("Template for a new Luau scene; existing projects are preserved");Buttons->add_child(Profiles);
     for (auto Entry : {std::pair<const char*,const char*>("New Luau Scene","NewSceneDialog"),
         {"Preview Luau","PreviewSelected"},{"Clear Preview","StopPreview"},{"Save Preview As","SavePreviewDialog"},
-        {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"},{"Project Uses","FindProjectUses"}}) {
+        {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"},{"Project Uses","FindProjectUses"},{"Project Symbols","ShowProjectSymbols"}}) {
         auto ButtonNode=memnew(Button); ButtonNode->set_text(Entry.first);
         ButtonNode->connect("pressed",Callable(this,Entry.second)); Buttons->add_child(ButtonNode);
     }

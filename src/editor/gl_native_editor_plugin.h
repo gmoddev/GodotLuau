@@ -60,6 +60,7 @@ public:
     void OpenRuntimeFrame();
     godot::Dictionary IndexProject(const godot::String& Module,const godot::String& Member);
     void FindProjectUses();
+    void ShowProjectSymbols();
     godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(true); }
     godot::Array GetDebuggerSessions();
 };

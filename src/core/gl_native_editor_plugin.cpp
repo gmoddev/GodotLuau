@@ -44,6 +44,7 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("GetDebuggerSessions"), &GLNativeEditorPlugin::GetDebuggerSessions);
     ClassDB::bind_method(D_METHOD("IndexProject","Module","Member"), &GLNativeEditorPlugin::IndexProject);
     ClassDB::bind_method(D_METHOD("FindProjectUses"), &GLNativeEditorPlugin::FindProjectUses);
+    ClassDB::bind_method(D_METHOD("ShowProjectSymbols"), &GLNativeEditorPlugin::ShowProjectSymbols);
 }
 
 void GLNativeEditorPlugin::_enter_tree() {
@@ -148,4 +149,23 @@ void GLNativeEditorPlugin::FindProjectUses() {
         Row->set_text(0,String(Use["Path"])+":"+String::num_int64(int(Use["Line"])));Row->set_text(1,"Module member reference");Row->set_metadata(0,Use);
     }
     ShowStatus(String::num_int64(Uses.size())+" static uses across "+String::num_int64(int(Report["ScannedFiles"]))+" Luau files; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
+}
+void GLNativeEditorPlugin::ShowProjectSymbols() {
+    Dictionary Report=IndexProject("","");
+    if(int(Report.get("result",ERR_UNAVAILABLE))!=OK)return;
+    auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(RuntimeTree));if(!TreeNode)return;
+    TreeNode->clear();TreeNode->show();auto Root=TreeNode->create_item();Root->set_text(0,"Project symbols and static imports");
+    Root->set_text(1,bool(Report["Truncated"])?"Partial bounded index":"Syntactic navigation; not whole-program types");
+    Array Documents=Report.get("Documents",Array());
+    for(int Index=0;Index<Documents.size();++Index) {
+        Dictionary Document=Documents[Index];String Path=Document["Path"];Array Entries=Document["Entries"];TreeItem* Group=nullptr;
+        for(int Entry=0;Entry<Entries.size();++Entry) {
+            Dictionary Item=Entries[Entry];String Kind=Item["Kind"];
+            if(Kind!="Function" && Kind!="Type" && Kind!="ExportedType" && Kind!="Import" && Kind!="NativeClassCandidate")continue;
+            if(!Group){Group=TreeNode->create_item(Root);Group->set_text(0,Path);}
+            auto Row=TreeNode->create_item(Group);Row->set_text(0,String(Item["Name"])+":"+String::num_int64(int(Item["Line"])));
+            Row->set_text(1,Kind+" "+String(Item.get("Target",String())));Item["Path"]=Path;Row->set_metadata(0,Item);
+        }
+    }
+    ShowStatus(String::num_int64(int(Report["ScannedFiles"]))+" indexed Luau files; "+String::num_int64(int(Report["ParsedFiles"]))+" parsed; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
 }

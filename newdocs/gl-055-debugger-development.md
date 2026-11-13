@@ -195,3 +195,18 @@ detach. It uses the cached headless child arguments before editor startup.
 Godot 4.7.1 parses the journey successfully; execution remains pending the new
 native binary. The automated headless journey is not graphical or physical-input
 qualification. No controller, host, dependency or publication setting changes.
+
+## Cached project navigation checkpoint
+
+Extend the existing GL-054 AST/cache scan rather than adding a second parser or
+index service. Empty Module/Member requests return bounded per-file symbols,
+type aliases, static require edges, lexical local-reference definition locations,
+imported members and explicitly syntactic global/member/native-class candidates.
+The editor's Project Symbols command opens these source locations in the existing
+diagnostics tree. Existing exact module-member queries retain their contract.
+Navigation has its own truncation state, 512 records/file and 4,096 records/report,
+under the existing file/byte/traversal bounds. Unsaved current buffers and hashes
+continue using the established invalidation path. Extend the actual native editor
+fixture for types/functions/imports/lexical definitions and navigation latency.
+Three changed native units pass bounded MSVC syntax checks; runtime/editor
+execution remains pending. Dynamic/global/type resolution is not claimed.
