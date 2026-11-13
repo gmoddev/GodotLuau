@@ -1,6 +1,6 @@
 # GL-053 native expansion main integration
 
-Status: pre-merge; final hosted qualification is running. Main remains
+Status: qualified and ready for normal merge. Main remains
 `16e8597cb342a1bbc888f190680c678ecf9ba055`.
 
 The owner authorizes a normal merge preserving all feature commits, followed by
@@ -40,7 +40,14 @@ replication authority or controller design is introduced.
 - Full-native sanitizers 43346827388 pass Windows/Linux: 26/27 stages,
   detection controls, 87 core cases, 141 native actors and no unexpected reports.
   Preserve existing Windows LSan and admitted-host limitations.
-- Non-publishing candidate 43346831705 is pending.
+- Candidate 43346831705 passes all four Windows/Linux Debug/Release source-built
+  profiles and core sanitizer/policy/retention gates. Its original package startup
+  failures are preserved: production libraries correctly exclude the private
+  test method that the shared fixture incorrectly required.
+- [Repackage 43355306613](https://github.com/gmoddev/GodotLuau/actions/runs/43355306613)
+  reuses the exact qualified products with the reviewed checker repair at
+  `2d8b16f`. Both strict archives, all extracted Debug/Release startups and final
+  acceptance pass. No runtime or dependency change accompanies the repair.
 - Declarations 43342974114 pass the unchanged policy/type-fixture inputs.
 
 The failed Linux sanitizer attempt 43343586993 is preserved. Its new fixture
@@ -52,6 +59,6 @@ controlled receive/exit defect.
 
 ## Integration and post-merge verification
 
-Pending the final platform/package results. Preserve a merge tree equal to the
-completed feature tree and verify fresh core/native/declarations against the
-integrated main revision. No release workflow or updater channel is enabled.
+All pre-merge gates are established. Preserve a merge tree equal to the completed
+feature tree and verify fresh core/native/declarations against the integrated
+main revision. No release workflow or updater channel is enabled.

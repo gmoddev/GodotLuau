@@ -1,7 +1,7 @@
 # GL-053 native expansion qualification
 
-Status: final corrections and integration qualification in progress. The owner
-authorizes normal merge after checks. Branch `feature/gl-053-native-api-expansion`
+Status: supported scope qualified and ready for the authorized normal merge.
+Branch `feature/gl-053-native-api-expansion`
 remains unmerged; main baseline is `16e8597cb342a1bbc888f190680c678ecf9ba055`.
 The [journal](gl-053-native-development.md) preserves failed attempts and fixes;
 the [API contract](gl-053-native-api.md) describes implemented bounds, not parity.
@@ -27,8 +27,16 @@ Qualification revision `bb15aab1e47c22e63199909049fa19dfbe7b522e` changes only
 the regression fixture's root argument and documentation. Core 43346809940
 passes. Native 43346810000 and full-native sanitizers 43346827388 pass both
 platforms. Sanitizers complete 26 Windows / 27 Linux stages, controls, 87 core
-cases and 141 native actors, with no unexpected reports. Non-publishing candidate
-43346831705 is pending at this checkpoint. The preceding Linux
+cases and 141 native actors, with no unexpected reports. Candidate 43346831705
+passes all four production profiles, policy/retention and core ASan/LSan, but its
+package startup fails because the shared fixture required a CMake-only method
+from SCons products. Bounded checker repair `2d8b16f` keeps the race check mandatory
+on test adapters and all ordinary persistence checks active on production.
+Existing repackage run [43355306613](https://github.com/gmoddev/GodotLuau/actions/runs/43355306613)
+accepts the exact qualified products, both packages and all four extracted
+Debug/Release startups. Its receipt identifies original source `bb15aab` and the
+reviewed checker revision separately. No compilation or runtime change is hidden
+by this reuse. The original package failures remain evidence. The preceding Linux
 sanitizer attempt 43343586993 failed the new fixture's trailing root component,
 with controls passing, no unexpected reports and close-save value `99` present.
 That failed attempt is preserved; native confinement and deadlines are unchanged.
@@ -183,7 +191,8 @@ editor/reopen and rendered checks within their documented scope.
 | Devices/platforms | No Windows LSan, Linux graphical/device claim, or physical gamepad/mobile device claim. Preserve the existing admitted sanitizer limits. |
 
 GL-050's transport correction passes controlled Windows before/after and complete
-Windows/Linux full-native sanitizer profiles. Candidate/package CI is pending.
+Windows/Linux full-native sanitizer profiles. Candidate/package acceptance passes
+through the recorded bounded checker repair.
 The correction does not establish the cause of earlier missing
 close-save values. Native remains the default Character controller; Scripted
 remains explicit opt-in. Networking, persistence authority, production release

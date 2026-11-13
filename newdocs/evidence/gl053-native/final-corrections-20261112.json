@@ -1,7 +1,7 @@
 {
   "Schema": 1,
   "Campaign": "GL-053 final corrections and integration qualification",
-  "Result": "AWAITING_NONPUBLISHING_CANDIDATE",
+  "Result": "QUALIFIED_SUPPORTED_SCOPE_READY_FOR_NORMAL_MERGE",
   "RuntimeRevision": "0af6e4d66908f6ab4dade30a4290455f982c5b4a",
   "RuntimeTree": "ffd4de98c780a7df46da28d46ca360a0b031363d",
   "QualificationRevision": "bb15aab1e47c22e63199909049fa19dfbe7b522e",
@@ -273,7 +273,31 @@
     },
     "Candidate": {
       "Run": 43346831705,
-      "Status": "PENDING"
+      "Status": "ALL_FOUR_PROFILES_PASS_PACKAGE_FIXTURE_FAILED",
+      "Disposition": "Production SCons correctly excludes private CMake methods; startup fixture scope repaired without changing products. Original failure retained."
+    },
+    "Repackage": {
+      "Run": 43355306613,
+      "Status": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+      "SourceRun": 43346831705,
+      "SourceRevision": "bb15aab1e47c22e63199909049fa19dfbe7b522e",
+      "SourceTree": "dac73c83b7ba794cc97a277142b0f19ff8f27b53",
+      "CheckerRevision": "2d8b16fdcd69e683471ea932a07d6438e7240f89",
+      "AcceptedEvidenceSHA256": "0c53d2cc038754a61aad84468bc0e1a62bf5f9e5d7d0ff298be0284dead44ec2",
+      "RepairEvidenceSHA256": "fd68de9d66322a55294d59a8dd3a5f03a320eb744bfeca8631593408a0fdf85a",
+      "Windows": {
+        "PackageSHA256": "be9c979c28f0208a42bbded1f90ad432e86084809916f8401793d787c4aef949",
+        "StartupDebug": "PASS",
+        "StartupRelease": "PASS",
+        "StartupFixtureRawSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1"
+      },
+      "Linux": {
+        "PackageSHA256": "85062b288fe0d3f4939c54093917ab9840652371f519c9a4030f5394489f9be2",
+        "StartupDebug": "PASS",
+        "StartupRelease": "PASS",
+        "StartupFixtureRawSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2"
+      },
+      "Reuse": "Exact original qualified native products and profile receipts; reviewed startup checker identified separately. Ordinary persistence assertions remain required."
     },
     "Declarations": {
       "Run": 43342974114,

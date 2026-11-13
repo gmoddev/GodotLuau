@@ -626,3 +626,16 @@ its actual fixture hash; product/source identities, all profile checks, archive
 checks, extracted startup and acceptance remain enforced. Preserve original
 profile/fixture identities in provenance and the repair revision separately.
 This avoids rebuilding unchanged products for a demonstrated fixture-scope error.
+
+Repackage 43355306613 passes Policy, both platform packages and final Acceptance.
+Accepted source remains immutable `bb15aab`; checker revision is `2d8b16f`.
+All original profile/product identities and existing checks remain enforced.
+Windows/Linux Debug and Release extracted companion startups pass. Corrected
+Windows CMake fixture replay also explicitly passes the controlled race marker.
+Accepted evidence SHA256 is
+`0c53d2cc038754a61aad84468bc0e1a62bf5f9e5d7d0ff298be0284dead44ec2`.
+Archive hashes are Windows `be9c979c28f0208a42bbded1f90ad432e86084809916f8401793d787c4aef949`
+and Linux `85062b288fe0d3f4939c54093917ab9840652371f519c9a4030f5394489f9be2`.
+The source and final correction receipts preserve failed attempts and explicit
+reuse scope. Qualification is complete within the documented limits; proceed
+with the authorized normal merge, exact-tree/history checks and fresh main CI.

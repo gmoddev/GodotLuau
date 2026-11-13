@@ -1,7 +1,7 @@
 # ADR-017: Owned native animation effects
 
 Status: accepted for GL-053 implementation, with Windows/Linux native and
-Windows full-native sanitizer evidence in the
+full-native sanitizer evidence in the
 [qualification record](gl-053-native-qualification.md). Remaining campaign gates
 stay explicit. Extends ADR-015 without changing
 Character V2, GL-020 replication, VM scheduling or native object identity.
