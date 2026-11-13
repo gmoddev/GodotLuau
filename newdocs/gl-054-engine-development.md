@@ -397,3 +397,52 @@ Native source identity changes, so final candidate/sanitizer checks must use the
 corrected source. Export adapter control foundry-export-adapter-01 passes normal
 Windows Debug export and two standalone starts with the old adapter; it establishes
 only that explicit template workflow, not production-package qualification.
+
+DockerPC admission subsequently became free. Lease generation 119 covered a
+two-job incremental build in the existing GL-053 cache, retaining its pins and
+MSVC 19.44.35228. The prior published GL-053 allocation diff was preserved in a
+named stash. The first build omitted new translation units because the old CMake
+glob had not been regenerated; normal reconfiguration then builds the three new
+units and links successfully. Both attempts remain retained. No cache/toolchain
+was replaced. The worker tree is clean and the lease was released after completion.
+
+Corrected native fingerprint is
+`ba44f2ac38c33ed616d305434cef2f8beca232bffc0455d7c5159efa50c5e49d`
+(128 LF-normalized inputs), revision `f1a996b`, tree
+`4a5bdfd564f055cab1225619a5e854be0460c5ba`. Worker Debug adapter SHA256 is
+`c7d551e8e62f8d4a0a1bf59f0ab6a67278c2432488468f564f79bccacc529208`.
+The corrected Windows rendered Foundry run passes all gameplay/reload/Unicode
+checks and durable restart; menu/active/completion captures show the bullet now
+renders correctly. This is bounded offscreen rendering with injected semantic
+input and deterministic combat setup, not human/physical-device acceptance.
+
+The exact retained GL-053 seven-trial binding fixture (hash
+`06337119c9255a45f5de24e9ef5b28bb4fe1be2c32f26610aeb6f67b983b6da0`)
+runs against that adapter on the same MainPC/official host with recording disabled.
+Excluding warmup, the idle run measures 42.917 ms for 10,000 Position set/read
+pairs, 0.695 ms for 64-node construction and 11.454 ms for 2,000 Transform3D
+roundtrips. Retained GL-053 values were 40.124/0.642/11.021 ms: approximately
+7.0/8.3/3.9% higher in this Debug test profile, not a claimed speedup or production
+regression. The new test adapter includes disabled recorder call sites; SCons has
+no recorder. An earlier sample overlapped asset import and remains retained but
+is excluded from the comparison. Do not infer causes or universal timings from
+these observations. The rendered 24-world-restart window takes 5.53 seconds with
+zero measured native object/resource count delta and exactly two scopes per cycle.
+
+At `f1a996b`, hosted core run 43379513552 and declaration run 43379561987 pass.
+Candidate 43379558294 and full-native sanitizer 43379555285 replace the canceled
+`6ef518a` attempts because the actual UTF-8 product correction changes native
+identity. Their final outcomes and current native run 43379513518 remain pending.
+
+The Windows report reader also used the locale default for Godot's UTF-8 JSON,
+so its copied message field could remain mojibake even after the in-engine Unicode
+assertion and rendered capture passed. RunLuauOnly now reads that actual result
+and logs explicitly as UTF-8. This corrects retained text representation, not the
+gameplay assertions or acceptance threshold. Earlier reports remain preserved;
+their in-engine assertions and images establish their stated scope.
+
+The new native Luau quick start consolidates existing template/staging paths,
+scope/module lifetime guidance, bounded indexing/error inspection, example choices
+and export/data policies. It adds no new starter framework or runtime authority.
+The root README's stale enabled-updater claim is corrected; the updater and
+publication remain disabled in implementation and workflows.

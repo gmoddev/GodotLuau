@@ -24,6 +24,11 @@ data; those metadata channels do not mutate the native scene graph. Same-owner
 ancestor changes remain supported. GL-057 records the compatibility correction
 and pending runtime qualification.
 
+Attribute string values decode Luau UTF-8 explicitly rather than using Godot's
+Latin-1 constructor. GL-058 records the reproduced snapshot-text correction.
+Legacy attribute-key encoding and the separate JSON/persistence wire formats are
+unchanged; this value correction does not claim a complete binary-string API.
+
 ## Collections and effects
 
 Metadata typed arrays preserve their exact engine element type. Primitive inputs

@@ -66,9 +66,9 @@ def Main():
     Marker='[Foundry:Qualification] PASS' if Args.profile=='Foundry' else '[Authoring:GameQualification] PASS'
     Result=Check(Process,time.monotonic()+(150 if Args.profile=='Foundry' else 40),Output,'game',Marker)
     ResultName='foundry-results.json' if Args.profile=='Foundry' else 'luau-only-results.json'
-    Detail=json.loads((Project/ResultName).read_text());assert Detail['Passed'],Detail
-    Stdout=(Output/'game.stdout.log').read_text(errors='replace')
-    Stderr=(Output/'game.stderr.log').read_text(errors='replace')
+    Detail=json.loads((Project/ResultName).read_text(encoding='utf-8'));assert Detail['Passed'],Detail
+    Stdout=(Output/'game.stdout.log').read_text(encoding='utf-8',errors='replace')
+    Stderr=(Output/'game.stderr.log').read_text(encoding='utf-8',errors='replace')
     assert '[Runtime:Script]' not in Stdout and 'SCRIPT ERROR' not in Stderr and 'ERROR:' not in Stderr
     Result.update(Detail,Command=Command,NativeSource=json.loads(Args.source.read_text()),
                   ExtensionSHA256=hashlib.sha256(Args.extension.read_bytes()).hexdigest(),Graphical=Args.graphical,Interactive=False)
@@ -83,7 +83,7 @@ def Main():
         with (Output/'restart.stdout.log').open('w') as Stdout,(Output/'restart.stderr.log').open('w') as Stderr:
             Process=StartProcess(Restart,Stdout,Stderr,Environment)
         RestartResult=Check(Process,time.monotonic()+30,Output,'restart',Marker)
-        RestartResult.update(json.loads((Project/ResultName).read_text()))
+        RestartResult.update(json.loads((Project/ResultName).read_text(encoding='utf-8')))
         assert RestartResult['Passed'],RestartResult
         Result['Restart']=RestartResult
         Result['ApplicationFiles']=json.loads((Project/'authoring-project.json').read_text())['Files']

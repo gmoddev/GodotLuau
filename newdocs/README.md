@@ -33,6 +33,9 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+For a new project, use the [native Luau quick start](luau-project-start.md) for
+editor actions, scopes/modules, debugging limits, example profiles and export.
+
 The unmerged [GL-054 engine/production campaign](gl-054-engine-development.md)
 builds on integrated GL-053. Its journal separates new implementation and proof
 from metadata-only inventory and retained qualification. The historical GL-054

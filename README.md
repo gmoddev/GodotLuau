@@ -1,6 +1,6 @@
 # GodotLuau
 
-> **Public fork:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), based on PimpoliDev's upstream project. Start with [fork documentation](newdocs/README.md), [validated issues](newdocs/issues.md), and the [AI contribution policy](AGENTS.md). `main` is the optimized shared Server/Client VM development baseline, including GL-019; see [integration and qualification evidence](newdocs/shared-domains-validation.md#gl-019-main-integration-2026-10-26). Inherited binaries are not qualified fork builds. The enabled updater still downloads upstream packages (GL-016).
+> **Public fork:** [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau), based on PimpoliDev's upstream project. Start with the [native Luau quick start](newdocs/luau-project-start.md), [fork documentation](newdocs/README.md), [validated issues](newdocs/issues.md), and [AI contribution policy](AGENTS.md). The integrated development baseline and current feature qualification are documented there. Inherited binaries are not qualified fork builds. Release publication and runtime updater distribution remain disabled (GL-016).
 
 **Write Roblox-style games in Luau, run them on Godot 4.**
 
