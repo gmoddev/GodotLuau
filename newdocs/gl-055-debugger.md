@@ -73,6 +73,12 @@ input without creating domains or granting gameplay capabilities. The nonce
 binds messages to the current connection; it does not replace Godot's transport
 admission. No new runtime listener is created.
 
+A `Suspending` notification requires an `AcknowledgeStop` bound to its domain
+and StopId before the native blocking loop starts. The supported editor plugin
+handles this automatically. Missing acknowledgment detaches after one second;
+unexpected native-loop exit detaches both domains. This avoids interpreting
+Godot's initialized debugger flag as proof that its peer is still connected.
+
 Editor tooling can obtain bounded copied session descriptors through the native
 editor plugin's `GetDebuggerSessions()`: connection generation, runtime state,
 stop/domain identity and admitted locations. These omit session nonces and

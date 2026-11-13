@@ -24,7 +24,13 @@ Server/Client execution, physics and rendering in that game process pause
 together. Other peers continue and may time out. Preserve the actual transport,
 queue, storage and cancellation contracts; do not invent pause replication.
 
-Exclude only measured time spent in the native debugger break loop from all
+Godot's initialized debugger flag is not a live-connection check. Require a
+session/domain/StopId-bound acknowledgment before entering its break loop,
+bounded to one second, and detach both domains if it is missing. Distinguish
+an uncommanded native-loop return from an explicit resume/step and detach after
+disconnect. Include this measured handshake in debugger pause time.
+
+Exclude only measured time spent in debugger suspension/handshake from all
 currently active ADR-002 wall-clock deadlines. Keep instruction/safepoint,
 allocation, admission and owner limits intact. Compilation, inspection and
 ordinary native work do not gain an unbounded gameplay budget.

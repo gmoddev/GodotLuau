@@ -36,8 +36,8 @@ def Main():
     Expected = [Locations[Name] for Name in ['Entry', 'Into', 'Over', 'Out', 'Module', 'Client', 'Callback', 'Stale']]
     Breakpoints = ','.join(Item['Source'] + ':' + str(Item['Line']) for Name, Item in Locations.items() if Name in ['Entry', 'Module', 'Client', 'Callback', 'Stale'])
     Results = []
-    for Disconnect in [False, True]:
-        Case = Output / ('disconnect' if Disconnect else 'local')
+    for Mode in ['local', 'disconnect', 'running-disconnect']:
+        Case = Output / Mode
         Target, Peer = Case / 'target', Case / 'peer'
         Prepare(Target, Args.extension.resolve())
         (Target / '.godot/extension_list.cfg').write_text('res://godot_luau.gdextension\n')
@@ -49,7 +49,7 @@ def Main():
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as Probe:
             Probe.bind(('127.0.0.1', 0))
             Port = Probe.getsockname()[1]
-        (Peer / 'inputs.json').write_text(json.dumps({'Port': Port, 'Expected': Expected, 'Disconnect': Disconnect}))
+        (Peer / 'inputs.json').write_text(json.dumps({'Port': Port, 'Expected': Expected, 'Disconnect': Mode == 'disconnect', 'DisconnectRunning': Mode == 'running-disconnect'}))
         Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING='1')
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
             Environment[Name] = str(GetProfileFolder(Case, Name))

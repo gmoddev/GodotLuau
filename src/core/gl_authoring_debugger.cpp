@@ -118,6 +118,10 @@ bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32
         if(View.Nonce!=Nonce){View.Nonce=Nonce;++View.ConnectionGeneration;View.Request=0;View.Domain="All";View.Pending=Breakpoints;}
         View.LastState=Reply.duplicate(true);View.LastState.erase("Session");
         if(String(Reply.get("Event",String()))=="Stopped")View.Domain=Reply.get("Domain",String("All"));
+        if(String(Reply.get("Event",String()))=="Suspending") {
+            View.Domain=Reply.get("Domain",String("All"));Dictionary Fields;Fields["StopId"]=Reply.get("StopId",0);
+            Send(Session,"AcknowledgeStop",Fields);
+        }
         if(String(Reply.get("Event",String()))=="Watch")
             if(auto Output=Object::cast_to<Label>(ObjectDB::get_instance(View.WatchResult)))
                 Output->set_text(bool(Reply.get("Ok",false))?String(Reply.get("Value",Variant())).left(4096):String(Reply.get("Error",String())).left(256));

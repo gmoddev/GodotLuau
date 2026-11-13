@@ -238,3 +238,31 @@ Retain the destroyed-handle assertion. The unexpected-disconnect attempt also
 shows a product issue: Godot's `is_active()` remains true after losing the peer,
 so later Luau stops invoke an unavailable native session. Keep its no-error gate
 and fix the product lifecycle separately; no full debugger pass is claimed.
+
+## Disconnect lifecycle correction
+
+Godot's public `is_active()` reports initialization, not connection liveness.
+Before entering its blocking loop, request a nonce/sequence/domain/stop-bound
+acknowledgment through the existing capture; allow one second of measured pause
+time, then detach both domains if it is absent. Godot's public `line_poll()`
+itself polls every 2,048 calls, so use a bounded burst only during this handshake
+and source admission, when ordinary engine frames cannot advance. During a native
+break loop, a negative lines-left sentinel distinguishes an uncommanded return
+(disconnect) from native Continue/Into/Over/Out. Detach both domains and release
+breakpoint roots before any subsequent stop can invoke a disconnected session.
+Also map Godot's native positive-depth Out command to Luau Out.
+
+Extend the actual native peer for disconnect while suspended and a distinct
+disconnect after native `debug_exit`, before the next stop. Existing no-error,
+target completion and ownership assertions remain required. The actual editor
+plugin acknowledges stops automatically, without exposing the transport nonce.
+Two changed native units pass bounded MSVC syntax checks; runtime qualification
+of the correction is pending. This bounded handshake is justified by the observed
+disconnect defect, not a new gameplay transport or scheduler.
+
+Focused 43442092977 confirms the unchanged `1e46bc5` Linux product completes all
+eight local stops and four malformed/stale rejections without target errors,
+including all seven restricted watch queries. Its separate disconnect case
+retains the observed target errors and therefore fails the overall run. Windows
+artifact admission is pending the original build. Do not relabel this mixed run
+as complete cross-platform qualification.

@@ -21,6 +21,7 @@ var CurrentDomain = ""
 var Finished = false
 var PendingWatches: Dictionary = {}
 var WatchesComplete = false
+var DisconnectAfterContinue = false
 
 func _initialize() -> void:
     call_deferred("Run")
@@ -82,6 +83,11 @@ func AfterVariables() -> void:
             Stops += 1
             Finish(true)
             return
+        if Inputs.get("DisconnectRunning", false):
+            DisconnectAfterContinue = true
+            Send("continue")
+            Stops += 1
+            return
         if not WatchesComplete:
             for Query in [
                 {"Expression": "State.Answer + 2", "Ok": true, "Value": 42},
@@ -138,6 +144,8 @@ func Receive(Message: Array) -> void:
     if Name == "godotluau:debugger" and Data.size() == 1 and Data[0] is Dictionary:
         var Reply: Dictionary = Data[0]
         Nonce = Reply.get("Session", "")
+        if Reply.get("Event") == "Suspending":
+            Command("AcknowledgeStop", {"Domain": Reply.Domain, "StopId": Reply.StopId})
         if Reply.get("Event") == "Error":
             Errors += 1
         if Reply.get("Event") == "Watch":
@@ -158,6 +166,9 @@ func Receive(Message: Array) -> void:
     elif Name == "debug_enter":
         Check(Stops < Expected.size() and Data.size() >= 3 and Data[0] == true and Data[2] == true, "Godot enters a continuable live Luau stack")
         Send("get_stack_dump")
+    elif Name == "debug_exit" and DisconnectAfterContinue:
+        Check(true, "Disconnect after Godot confirms the application resumed")
+        Finish(true)
     elif Name == "stack_dump":
         Check(Data.size() >= 4 and Data[0] >= 3 and Data[0] <= 192, "Bounded native stack dump")
         if Finished:

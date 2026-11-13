@@ -18,12 +18,16 @@ uint64_t HostId=0, CommandWindow=0, LastRequest=0;
 unsigned Commands=0;
 std::string Session; // Godot built-in objects cannot initialize before extension binding.
 bool Polling=false, Detached=false;
+uint64_t AwaitingStop=0;
+bool StopAcknowledged=false;
 GLDebugger* Suspended=nullptr;
 const char* DomainName(const GLExecutionDomain& Domain) { return Domain.GetKind()==GLDomainKind::Server?"Server":"Client"; }
-void Poll() {
+void Poll(bool Immediate=false) {
     if(!GLRuntimeDebuggerAvailable())return;
     bool Before=Polling; Polling=true;
-    EngineDebugger::get_singleton()->line_poll();
+    // Godot's public line_poll itself polls only every 2,048 calls. A bounded
+    // burst is needed while no Lua instructions/engine frames can advance.
+    for(int Index=0;Index<(Immediate?2048:1);++Index)EngineDebugger::get_singleton()->line_poll();
     Polling=Before;
 }
 void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const String& Error={},const Dictionary& Extra={}) {
@@ -55,12 +59,29 @@ GLDebugAction Stop(GLDebugger& Debugger) {
     if(!GLRuntimeDebuggerAvailable())return GLDebugAction::Detach;
     struct ActiveScope { GLDebugger* Before=Suspended; ~ActiveScope(){Suspended=Before;} } Active;
     Suspended=&Debugger;
+    AwaitingStop=Debugger.GetStopId();StopAcknowledged=false;
+    Send(&Debugger,"Suspending");
+    uint64_t Deadline=Time::get_singleton()->get_ticks_msec()+1000;
+    while(!StopAcknowledged && !Detached && Time::get_singleton()->get_ticks_msec()<Deadline) {
+        Poll(true);if(!StopAcknowledged)OS::get_singleton()->delay_usec(1000);
+    }
+    AwaitingStop=0;
+    auto Disconnect=[] {
+        Detached=true;
+        if(auto Host=Object::cast_to<GLDomainHost>(ObjectDB::get_instance(HostId)))
+            for(bool Client:{false,true})if(auto Domain=Host->GetExistingDomain(Client))
+                if(auto Current=Domain->GetDebugger())Current->Detach();
+    };
+    if(!StopAcknowledged || Detached){Disconnect();return GLDebugAction::Detach;}
     Send(&Debugger,"Stopped");
     auto EngineDebug=EngineDebugger::get_singleton();
+    // A real continue/step command replaces this sentinel. Godot leaves it
+    // untouched when its loop exits because the peer disconnected.
+    EngineDebug->set_lines_left(-2);
     EngineDebug->script_debug(LuauLanguage::get_singleton(),true,false);
-    if(!GLRuntimeDebuggerAvailable())return GLDebugAction::Detach;
+    if(!GLRuntimeDebuggerAvailable() || EngineDebug->get_lines_left()==-2){Disconnect();return GLDebugAction::Detach;}
     GLDebugAction Action=EngineDebug->get_lines_left()>0?
-        (EngineDebug->get_depth()<0?GLDebugAction::Into:GLDebugAction::Over):GLDebugAction::Continue;
+        (EngineDebug->get_depth()<0?GLDebugAction::Into:EngineDebug->get_depth()>0?GLDebugAction::Out:GLDebugAction::Over):GLDebugAction::Continue;
     Send(&Debugger,"Continuing"); return Action;
 }
 }
@@ -80,10 +101,10 @@ void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
         EngineDebug->register_message_capture("godotluau",Callable(&Host,"CaptureDebuggerCommand"));
     }
     if(HostId!=uint64_t(Host.get_instance_id()))return;
-    auto& Debugger=Domain.EnableDebugger(); Debugger.Attach(Stop); Debugger.SetPollHandler(Poll);
+    auto& Debugger=Domain.EnableDebugger(); Debugger.Attach(Stop); Debugger.SetPollHandler([]{Poll();});
     Debugger.SetSourceHandler([&Debugger](const std::string& Source,int Lines) {
         String Path=String::utf8(Source.c_str()); if(!GLProjectResourcePath(Path))return;
-        Poll(); auto EngineDebug=EngineDebugger::get_singleton();
+        Poll(true); auto EngineDebug=EngineDebugger::get_singleton();
         auto Existing=Debugger.GetBreakpoints();
         for(int Line=1;Line<=(std::min)(65536,Lines);++Line)if(EngineDebug->is_breakpoint(Line,Path)) {
             bool Known=false; for(const auto& Entry:Existing)if(Entry.Source==Source && Entry.Line==Line)Known=true;
@@ -98,7 +119,7 @@ void GLRuntimeDebuggerTick(GLDomainHost& Host) {
 void GLRuntimeDebuggerShutdown(GLDomainHost& Host) {
     if(HostId!=uint64_t(Host.get_instance_id()))return;
     if(auto Debugger=EngineDebugger::get_singleton())if(Debugger->has_capture("godotluau"))Debugger->unregister_message_capture("godotluau");
-    HostId=0; Session.clear(); LastRequest=0; Detached=false;
+    HostId=0; Session.clear(); LastRequest=0; Detached=false;AwaitingStop=0;StopAcknowledged=false;
 }
 bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const Array& Data) {
     if(Message!="command")return false;
@@ -114,11 +135,11 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         Variant Key=Keys[Index];
         if(Key.get_type()!=Variant::STRING){Send(nullptr,"Error",0,"Invalid field name");return true;}
         String Name=Key;
-        if(Name!="Schema" && Name!="Session" && Name!="Request" && Name!="Op" && Name!="Domain" && Name!="Source" && Name!="Line" && Name!="Enabled" && Name!="BreakOnHit" && Name!="Expression" && Name!="Frame") {
+        if(Name!="Schema" && Name!="Session" && Name!="Request" && Name!="Op" && Name!="Domain" && Name!="Source" && Name!="Line" && Name!="Enabled" && Name!="BreakOnHit" && Name!="Expression" && Name!="Frame" && Name!="StopId") {
             Send(nullptr,"Error",0,"Unknown debugger field");return true;
         }
         Variant Value=Request[Key];
-        if((Name=="Schema" || Name=="Request" || Name=="Line" || Name=="BreakOnHit" || Name=="Frame") && Value.get_type()!=Variant::INT){Send(nullptr,"Error",0,"Expected integer field");return true;}
+        if((Name=="Schema" || Name=="Request" || Name=="Line" || Name=="BreakOnHit" || Name=="Frame" || Name=="StopId") && Value.get_type()!=Variant::INT){Send(nullptr,"Error",0,"Expected integer field");return true;}
         if(Name=="Enabled" && Value.get_type()!=Variant::BOOL){Send(nullptr,"Error",0,"Expected boolean field");return true;}
         if(Name=="Session" || Name=="Op" || Name=="Domain" || Name=="Source" || Name=="Expression")
             if(Value.get_type()!=Variant::STRING || String(Value).length()>1024 || String(Value).utf8().length()>1024){Send(nullptr,"Error",0,"Expected bounded string field");return true;}
@@ -132,6 +153,12 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
     LastRequest=uint64_t(Id);
     String Op=Request["Op"]; String Selected=Request.get("Domain",String("All"));
     if(Op.length()>32 || (Selected!="All" && Selected!="Server" && Selected!="Client")){Send(nullptr,"Error",Id,"Unsupported command or domain");return true;}
+    if(Op=="AcknowledgeStop") {
+        if(Suspended && AwaitingStop && Request.get("StopId",Variant()).get_type()==Variant::INT &&
+            int64_t(Request["StopId"])==int64_t(AwaitingStop) && Selected==DomainName(Suspended->GetDomain()))StopAcknowledged=true;
+        else Send(nullptr,"Error",Id,"Stale or wrong-domain stop acknowledgment");
+        return true;
+    }
     String Source=Request.get("Source",String());
     if(Op=="Breakpoint" && (Request.get("Source",Variant()).get_type()!=Variant::STRING || Source.utf8().length()>1024 ||
         !GLProjectResourcePath(Source) || (Source.get_extension()!="luau" && Source.get_extension()!="lua") ||
