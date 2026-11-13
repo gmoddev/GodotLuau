@@ -13,10 +13,14 @@ No second scheduler, VM, gameplay transport, scene graph or native object regist
 is introduced. Snapshot inspection remains a separate historical facility.
 
 Interactive admission requires a connected debugger, an editor-capable runtime
-host, the main thread and gameplay execution. Never enter a break loop in the
+host (or a debug-template host explicitly launched with `--gl-luau-debugger`),
+the main thread and gameplay execution. Never enter a break loop in the
 editor's own EditorPreview domain or during shutdown, memory failure, inspection
 or a non-yieldable Luau/native boundary. Export templates do not silently acquire
-interactive debugging. Unsupported stops must be reported honestly.
+interactive debugging. A debug template requires that explicit user command-line
+opt-in plus the existing initialized debugger/stop acknowledgment; release
+templates remain rejected. This supports dedicated development/sanitizer hosts
+without changing admitted engine inputs. Unsupported stops must be reported honestly.
 
 Godot's existing loop handles editor commands/disconnect while the game process
 is paused; the editor remains a separate responsive process. All main-thread

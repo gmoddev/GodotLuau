@@ -164,6 +164,10 @@ def Main():
             for Group, Script, Flags in [('presentation','RunCharacterPresentation.py',[]),('performance','RunCharacterPerformance.py',['--trials','1','--samples','120','--counts','1,16'])]:
                 Observe([sys.executable, Runtime/Script, '--godot', Args.godot, '--asset-godot', Args.asset_godot, '--extension', Args.extension, '--output', Native/Group, *Flags], 'suite-'+Group, 360)
             Observe([sys.executable, Runtime/'RunCoreQualification.py', '--build', Args.build, '--output', Args.output/'core'], 'suite-core', 150)
+            NativeSource=Args.output/'debugger-source.json'
+            NativeSource.write_text(json.dumps(GetFingerprint(Source)))
+            Observe([sys.executable, Runtime/'RunDebuggerQualification.py', '--godot', Args.godot, '--extension', Args.extension,
+                     '--source', NativeSource, '--output', Native/'debugger', '--development-host'], 'suite-debugger', 180)
             (Args.output/'host-provenance.json').write_text(json.dumps(Identity['Host'], indent=2))
             Observe([sys.executable, Runtime/'CheckNativeCI.py', '--output', Native, '--extension', Args.extension, '--godot-evidence', Args.output/'host-provenance.json',
                      '--remote-host-evidence', Args.host_manifest, '--remote-host-qualification', Args.output/'remote-host', '--revision', Args.revision], 'strict-native-check', 60)

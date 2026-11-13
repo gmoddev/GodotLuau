@@ -19,6 +19,7 @@ def Main():
     Parser.add_argument('--extension', type=Path, required=True)
     Parser.add_argument('--source', type=Path, required=True)
     Parser.add_argument('--output', type=Path, required=True)
+    Parser.add_argument('--development-host', action='store_true', help='Explicitly opt a debug template host into the existing debugger connection')
     Args = Parser.parse_args()
     Repository = Path(__file__).resolve().parents[2]
     NativeSource = json.loads(Args.source.read_text(encoding='utf-8'))
@@ -37,7 +38,8 @@ def Main():
     Expected = [Locations[Name] for Name in ['Entry', 'Into', 'Over', 'Out', 'Module', 'Client', 'Callback', 'Stale']]
     Breakpoints = ','.join(Item['Source'] + ':' + str(Item['Line']) for Name, Item in Locations.items() if Name in ['Entry', 'Module', 'Client', 'Callback', 'Stale'])
     Results = []
-    for Mode in ['local', 'disconnect', 'running-disconnect', 'reload']:
+    Modes = ['local', 'disconnect', 'running-disconnect', 'reload'] + (['no-opt-in'] if Args.development_host else [])
+    for Mode in Modes:
         Case = Output / Mode
         Target, Peer = Case / 'target', Case / 'peer'
         Prepare(Target, Args.extension.resolve())
@@ -52,6 +54,7 @@ def Main():
             Probe.bind(('127.0.0.1', 0))
             Port = Probe.getsockname()[1]
         Stops, Admitted = Expected, Breakpoints
+        if Mode == 'no-opt-in': Stops = []
         if Mode == 'reload':
             Line = next(Index for Index, Text in enumerate(Path(__file__).with_name('DebuggerReload.luau').read_text().splitlines(), 1) if 'GL055:ReloadOld' in Text)
             Stops = [{'Source': 'res://DebuggerReload.luau', 'Line': Item, 'Domain': 'Server'} for Item in [Line, 2]]
@@ -70,6 +73,7 @@ def Main():
         assert (Peer / 'ready.json').is_file(), 'Native peer did not become ready; inspect peer.stderr.log'
         TargetCommand = [*Base, '--path', str(Target), '--debug', '--remote-debug', f'tcp://127.0.0.1:{Port}',
                          '--breakpoints', Admitted, '--script', 'res://' + ('DebuggerReloadTarget.gd' if Mode == 'reload' else 'DebuggerTarget.gd')]
+        if Args.development_host and Mode != 'no-opt-in': TargetCommand += ['--', '--gl-luau-debugger']
         with (Case / 'target.stdout.log').open('w') as Stdout, (Case / 'target.stderr.log').open('w') as Stderr:
             TargetProcess = StartProcess(TargetCommand, Stdout, Stderr, Environment)
         try:
@@ -89,7 +93,7 @@ def Main():
         Results.append(Detail)
     Evidence = {'Passed': True, 'NativeSource': NativeSource, 'ExtensionSHA256': hashlib.sha256(Args.extension.read_bytes()).hexdigest(),
                 'Fixtures': {Name: hashlib.sha256(Path(__file__).with_name(Name).read_bytes().replace(b'\r\n', b'\n')).hexdigest() for Name in Fixtures},
-                'Graphical': False, 'Cases': Results}
+                'Graphical': False, 'DevelopmentHostOptIn': Args.development_host, 'Cases': Results}
     (Output / 'results.json').write_text(json.dumps(Evidence, indent=2))
     print('[Debugger:Qualification] PASS real native protocol and disconnect', flush=True)
 

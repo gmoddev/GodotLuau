@@ -10,7 +10,10 @@ the implemented interface, not a completed qualification claim.
 
 Run a project from Godot's editor using an editor-capable host. A connected
 native debugger is required; ordinary export templates do not enable this
-facility. Set Luau source breakpoints in the ScriptEditor gutter. The native
+facility. A dedicated debug-template development host may explicitly opt in with
+`--debug --remote-debug tcp://127.0.0.1:PORT -- --gl-luau-debugger`; this creates
+no listener and still requires the session-bound stop exchange. Release templates
+and debug templates without the opt-in remain rejected. Set Luau source breakpoints in the ScriptEditor gutter. The native
 Debugger's Luau tab shows requested and actually admitted executable lines, hit
 counts, domain and state. An unresolved location is not an active breakpoint.
 The pinned VM can remap a comment/empty line to its next executable line.

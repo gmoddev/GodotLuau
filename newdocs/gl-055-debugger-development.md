@@ -364,3 +364,20 @@ both platforms, but the existing outer runner still requires the old seven-case
 summary. Update that final summary gate to eight, matching the already-updated
 distinct-case verifier. Preserve its watchdog and all 87 prior cases. This is a
 runner synchronization correction; the native implementation is unchanged.
+
+## Explicit dedicated development host admission
+
+The admitted sanitizer/dedicated hosts intentionally omit editor tools, so the
+original editor-feature-only admission cannot exercise native inspection/reload
+under ASan. Add an explicit `--gl-luau-debugger` user-argument opt-in restricted
+to debug hosts with an initialized existing debugger and successful stop exchange.
+Release templates and ordinary debug-template launches stay closed. This changes
+only debugger admission, not engine revisions/patches, admitted hosts, gameplay
+capabilities, listeners or distribution defaults. It also provides the requested
+dedicated development debugging path. The existing full-native sanitizer runner
+now runs the actual four-case debugger fixture with this opt-in, preserving its
+detection controls and all existing core/native gates. ASan/LSan execution is
+pending; no sanitizer result or dedicated ENet pause coordination is implied.
+That profile also requires an actual no-opt-in negative case: the same debug
+template, initialized remote connection and configured Luau breakpoints must run
+to completion with zero Luau stops when the explicit flag is absent.

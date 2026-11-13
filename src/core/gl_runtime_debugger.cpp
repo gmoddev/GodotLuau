@@ -117,8 +117,14 @@ GLDebugAction Stop(GLDebugger& Debugger) {
 }
 bool GLRuntimeDebuggerAvailable() {
     auto Debugger=EngineDebugger::get_singleton(); auto System=OS::get_singleton();
-    return Debugger && Debugger->is_active() && System && System->has_feature("editor") &&
-        !Engine::get_singleton()->is_editor_hint() && System->get_thread_caller_id()==System->get_main_thread_id();
+    if(!Debugger || !Debugger->is_active() || !System || Engine::get_singleton()->is_editor_hint() ||
+        System->get_thread_caller_id()!=System->get_main_thread_id())return false;
+    static const bool DevelopmentOptIn=[] {
+        auto Arguments=OS::get_singleton()->get_cmdline_user_args();
+        for(int Index=0;Index<Arguments.size();++Index)if(Arguments[Index]=="--gl-luau-debugger")return true;
+        return false;
+    }();
+    return System->has_feature("editor") || (DevelopmentOptIn && System->has_feature("debug"));
 }
 Error GLReloadLuauScripts(const Array& Scripts) {
     auto System=OS::get_singleton();
