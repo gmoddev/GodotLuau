@@ -15,6 +15,9 @@
 #include <godot_cpp/classes/option_button.hpp>
 #include <godot_cpp/classes/line_edit.hpp>
 #include <godot_cpp/classes/spin_box.hpp>
+#include <godot_cpp/classes/display_server.hpp>
+#include <godot_cpp/classes/json.hpp>
+#include <godot_cpp/classes/rich_text_label.hpp>
 #include <cstring>
 
 using namespace godot;
@@ -43,8 +46,13 @@ void GLAuthoringDebugger::_setup_session(int32_t Session) {
     auto Frame=memnew(SpinBox);Frame->set_min(0);Frame->set_max(63);Frame->set_tooltip_text("Live Luau frame index; native C frames remain opaque");Watch->add_child(Frame);
     auto Expression=memnew(LineEdit);Expression->set_placeholder("Restricted watch: State.Answer + 2");Expression->set_max_length(1024);Expression->set_custom_minimum_size(Vector2(320,0));Watch->add_child(Expression);
     auto Evaluate=memnew(Button);Evaluate->set_text("Watch");Evaluate->connect("pressed",Callable(this,"Command").bind(Session,String("Watch")));Watch->add_child(Evaluate);
-    auto WatchResult=memnew(Label);WatchResult->set_text("Read-only locals/upvalues, raw table projections and approved native properties. Calls are forbidden.");Panel->add_child(WatchResult);
+    auto WatchResult=memnew(RichTextLabel);WatchResult->set_custom_minimum_size(Vector2(600,140));WatchResult->set_scroll_active(true);
+    WatchResult->set_text("Read-only locals/upvalues, raw table projections and approved native properties. Calls are forbidden.");Panel->add_child(WatchResult);
     View.WatchInput=Expression->get_instance_id();View.WatchFrame=Frame->get_instance_id();View.WatchResult=WatchResult->get_instance_id();
+    auto Profiling=memnew(HBoxContainer);Panel->add_child(Profiling);
+    for(const char* Op:{"ProfileStart","ProfileStop","Profile","CopyProfile"}) {
+        auto Control=memnew(Button);Control->set_text(Op);Control->connect("pressed",Callable(this,"Command").bind(Session,String(Op)));Profiling->add_child(Control);
+    }
     Native->add_session_tab(Panel);
 }
 void GLAuthoringDebugger::Send(int Session,const String& Op,const Dictionary& Fields) {
@@ -60,6 +68,11 @@ void GLAuthoringDebugger::SelectDomain(int Index,int Session) {
 }
 void GLAuthoringDebugger::Command(int Session,const String& Op) {
     auto Native=get_session(Session); if(Native.is_null() || !Native->is_active())return;
+    if(Op=="CopyProfile") {
+        auto Found=Views.find(Session);if(Found!=Views.end() && !Found->second.LastProfile.is_empty())
+            DisplayServer::get_singleton()->clipboard_set(JSON::stringify(Found->second.LastProfile,"  "));
+        return;
+    }
     if(Op=="Watch") {
         auto Found=Views.find(Session);if(Found==Views.end() || !Native->is_breaked())return;
         auto Text=Object::cast_to<LineEdit>(ObjectDB::get_instance(Found->second.WatchInput));
@@ -110,6 +123,7 @@ Array GLAuthoringDebugger::DescribeSessions() {
         Dictionary State=Entry.second.LastState.duplicate(true);
         State["EditorSession"]=Entry.first;State["ConnectionGeneration"]=Entry.second.ConnectionGeneration;
         State["Active"]=Native->is_active();State["Paused"]=Native->is_breaked();
+        if(!Entry.second.LastProfile.is_empty())State["ProfileSnapshot"]=Entry.second.LastProfile.duplicate(true);
         Result.push_back(State);
     }
     return Result;
@@ -121,8 +135,14 @@ bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32
         String Nonce=Reply["Session"]; if(Nonce.length()!=32)return true;
         if(!Views.count(Session))_setup_session(Session);auto Found=Views.find(Session);if(Found==Views.end())return true;
         auto& View=Found->second;
-        if(View.Nonce!=Nonce){View.Nonce=Nonce;++View.ConnectionGeneration;View.Request=0;View.Domain="All";View.Pending=Breakpoints;}
+        if(View.Nonce!=Nonce){View.Nonce=Nonce;++View.ConnectionGeneration;View.Request=0;View.Domain="All";View.Pending=Breakpoints;View.LastProfile.clear();}
         View.LastState=Reply.duplicate(true);View.LastState.erase("Session");
+        if(String(Reply.get("Event",String()))=="Profile" && Reply.get("Profile",Variant()).get_type()==Variant::DICTIONARY) {
+            View.LastProfile=Dictionary(Reply["Profile"]).duplicate(true);
+            View.LastProfile["Domain"]=Reply.get("Domain",String());
+            View.LastProfile["Ownership"]=Reply.get("Ownership",Dictionary());View.LastProfile["Resources"]=Reply.get("Resources",Dictionary());
+            if(auto Output=Object::cast_to<RichTextLabel>(ObjectDB::get_instance(View.WatchResult)))Output->set_text(JSON::stringify(View.LastProfile,"  ").left(4096));
+        }
         if(String(Reply.get("Event",String()))=="Stopped")View.Domain=Reply.get("Domain",String("All"));
         if(String(Reply.get("Event",String()))=="Suspending") {
             View.Domain=Reply.get("Domain",String("All"));Dictionary Fields;Fields["StopId"]=Reply.get("StopId",0);
@@ -132,7 +152,7 @@ bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32
             auto Native=get_session(Session);if(Native.is_valid() && Native->is_breaked())Native->send_message("continue");
         }
         if(String(Reply.get("Event",String()))=="Watch")
-            if(auto Output=Object::cast_to<Label>(ObjectDB::get_instance(View.WatchResult)))
+            if(auto Output=Object::cast_to<RichTextLabel>(ObjectDB::get_instance(View.WatchResult)))
                 Output->set_text(bool(Reply.get("Ok",false))?String(Reply.get("Value",Variant())).left(4096):String(Reply.get("Error",String())).left(256));
         if(auto Status=Object::cast_to<Label>(ObjectDB::get_instance(View.Label)))
             Status->set_text(String(Reply.get("Domain",String()))+" "+String(Reply.get("State",String()))+" stop "+String::num_int64(int64_t(Reply.get("StopId",0)))+" "+String(Reply.get("Reason",String()))+" "+String(Reply.get("Error",String())).left(256));

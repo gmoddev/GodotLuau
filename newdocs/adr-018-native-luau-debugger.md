@@ -79,6 +79,12 @@ No new listening endpoint. Custom messages require version/session/correlation,
 type/size/count limits, bounded feedback and stale/duplicate rejection. No custom
 message is a gameplay capability. Development profiling/indexing is opt-in and
 bounded; collection cannot retain native objects or prevent teardown.
+Development profiling uses opt-in bounded copied owner/native-operation counters
+and inclusive protected-execution timings, excluding measured debugger waits.
+It shares existing dispatcher observations and is separate from test coverage.
+Nested time can overlap and in-flight Start/Stop intervals are excluded. Scope
+diagnostics use live guards/ObjectDB/weak resource slots; snapshots grant no
+native or callback capabilities. Detach/disconnect stops profiling collection.
 
 ## Compatibility
 

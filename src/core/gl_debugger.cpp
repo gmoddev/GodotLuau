@@ -154,6 +154,10 @@ bool GLDebugger::RequestPause() {
     if (!Enabled || State == GLDebugState::Suspended || Domain.IsClosing()) return false;
     State = GLDebugState::PauseRequested; return true;
 }
+const std::string& GLDebugger::GetOwnerSource(GLExecutionOwner* Owner) const {
+    for(const auto& Loaded:Chunks)if(Loaded.Owner==Owner && Owner->Alive)return Loaded.Source;
+    static const std::string Empty;return Empty;
+}
 void GLDebugger::BeginResume(lua_State* Thread) {
     lua_singlestep(Thread, Enabled);
     if (Enabled && State == GLDebugState::Attached) State = GLDebugState::Running;

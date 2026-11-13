@@ -11,6 +11,7 @@
 #include <unordered_set>
 #include <string>
 struct lua_State;
+class GLExecutionDomain;
 
 struct GLSceneResource {
     godot::Ref<godot::Resource> Value;
@@ -55,4 +56,5 @@ bool GLSceneMutation(lua_State* Thread, godot::Node* Target, bool Clone = false)
 bool GLSceneIndex(lua_State* Thread, godot::Node* Target, const char* Key);
 bool GLSceneWrite(lua_State* Thread, godot::Node* Target, const char* Key);
 godot::Dictionary GLDebugSceneHandle(lua_State* Thread, int Index);
+godot::Dictionary GLDebugSceneScopes(const GLExecutionDomain& Domain);
 #endif

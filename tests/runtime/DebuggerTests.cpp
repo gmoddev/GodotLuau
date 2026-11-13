@@ -1,5 +1,6 @@
 #include "gl_debugger.h"
 #include "gl_execution_domain.h"
+#include "gl_profiler.h"
 #include <cstdio>
 #include <stdexcept>
 #include <thread>
@@ -97,9 +98,14 @@ int main() {
             GLDomainLimits Limits; Limits.ResumeMilliseconds=20;
             GLExecutionDomain Domain(GLDomainKind::Server, Limits); auto Owner=Domain.CreateOwner(6);
             auto& Debugger=Domain.EnableDebugger();
+            auto& Profile=Domain.EnableProfiler();Profile.Start();
             Debugger.Attach([](GLDebugger&) { std::this_thread::sleep_for(std::chrono::milliseconds(35)); return GLDebugAction::Detach; });
             Debugger.SetBreakpoint("res://Budget.luau",1,true);
+            auto Started=std::chrono::steady_clock::now();
             Check(Domain.Execute(Owner,"local Value=1\nassert(Value==1)","@res://Budget.luau"),"Debugger wait consumed execution budget");
+            auto Elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-Started).count();
+            const auto& Row=Profile.GetScripts().at(Owner->Token);
+            Check(Row.Resumes==1 && Row.Compilations==1 && Elapsed-int64_t(Row.ExecutionNanoseconds)>=30000000,"Profiler included debugger suspension time");
             Check(Owner->Alive && !Debugger.IsAttached(), "Detach cancelled valid owner");
         });
         Run("pause and domain isolation remain independent", [] {
@@ -111,6 +117,26 @@ int main() {
             Check(Client.Execute(CO,"local Value=1", "@res://Same.luau") && Stops==0,"Cross-domain pause");
             Check(Server.Execute(SO,"local Value=1", "@res://Same.luau") && Stops==1,"Pause not admitted");
         });
-        std::puts("[Debugger:Test] 7 passed, 0 failed"); return 0;
+        Run("profiling is bounded opt in and retains no execution ownership", [] {
+            GLExecutionDomain Domain(GLDomainKind::Server);
+            Check(!Domain.GetProfiler() && GLNativeProfileCollectors==0,"Profiler enabled by default");
+            auto& Profile=Domain.EnableProfiler();Profile.Start();
+            auto Baseline=Domain.GetReferenceCount();
+            for(uint64_t Index=0;Index<140;++Index) {
+                auto Owner=Domain.CreateOwner(1000+Index);
+                Check(Domain.Execute(Owner,"shared.ProfileCount=(shared.ProfileCount or 0)+1", "@res://Profile.luau"),"Profiler changed execution");
+                Domain.CancelOwner(Owner);Domain.Tick(0);
+            }
+            Check(Profile.GetScripts().size()==128 && Profile.IsTruncated(),"Unbounded script profile records");
+            Check(Domain.GetReferenceCount()==Baseline && Domain.GetOwnerCount()==0,"Profiler retained owners or references");
+            for(const auto& Entry:Profile.GetScripts())Check(Entry.second.Retired,"Profile lost retirement disposition");
+            Profile.Stop();Check(GLNativeProfileCollectors==0,"Native profiler gate survived Stop");
+            auto Count=Profile.GetScripts().begin()->second.Resumes;
+            auto Owner=Domain.CreateOwner(2000);
+            Check(Domain.Execute(Owner,"assert(shared.ProfileCount==140)", "@res://Stopped.luau"),"Stopped profiling altered shared state");
+            Check(Profile.GetScripts().size()==128 && Profile.GetScripts().begin()->second.Resumes==Count,"Stopped profiler collected work");
+            Profile.Start(false);Check(Profile.GetScripts().empty() && GLNativeProfileCollectors==0,"Restart did not clear bounded profile or disable native capture");
+        });
+        std::puts("[Debugger:Test] 8 passed, 0 failed"); return 0;
     } catch (const std::exception& Error) { std::fprintf(stderr,"[Debugger:Test] FAIL %s\n",Error.what()); return 1; }
 }

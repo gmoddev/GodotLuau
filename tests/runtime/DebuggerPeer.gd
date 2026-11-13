@@ -22,6 +22,9 @@ var Finished = false
 var PendingWatches: Dictionary = {}
 var WatchesComplete = false
 var DisconnectAfterContinue = false
+var ProfileRequested = false
+var ProfileComplete = false
+var ProfileReferences = -1
 
 func _initialize() -> void:
     call_deferred("Run")
@@ -103,6 +106,7 @@ func AfterVariables() -> void:
             return
         # Closed types, session identity, sequence and domain rejection. All
         # commands go through the real EngineDebugger capture, without Lua eval.
+        Command("ProfileStart", {"Domain": "Server"})
         Command("Status")
         Command("Status", {"Session": "wrong"})
         Command("Breakpoint", {"Source": ["bad"], "Line": 1, "Enabled": true})
@@ -131,6 +135,11 @@ func AfterVariables() -> void:
     elif Stops == 7:
         Check(Value("Box") is Dictionary and Value("Box").get("State") == "Destroyed", "Destroyed native handle reports invalidation without a native reference")
         Check(Errors >= 4, "Malformed stale duplicate and wrong-session commands reject")
+        if not ProfileComplete:
+            if not ProfileRequested:
+                ProfileRequested = true
+                Command("ProfileStop", {"Domain": "Server"})
+            return
         Send("continue")
     Stops += 1
 
@@ -148,6 +157,24 @@ func Receive(Message: Array) -> void:
             Command("AcknowledgeStop", {"Domain": Reply.Domain, "StopId": Reply.StopId})
         if Reply.get("Event") == "Error":
             Errors += 1
+        if Reply.get("Event") == "Profile":
+            var Report: Dictionary = Reply.get("Profile", {})
+            Check(Reply.get("Domain") == "Server" and Report.get("Scripts", []).size() <= 32, "Bounded domain-specific profiler report")
+            if Reply.get("Operation") == "ProfileStart":
+                Check(Report.get("Enabled", false), "Explicit profiler Start admits development collection")
+            elif Reply.get("Operation") == "ProfileStop":
+                var Counts: Dictionary = Report.get("NativeCalls", {})
+                var Rows: Array = Report.get("Scripts", [])
+                var Scopes: Array = Reply.get("Ownership", {}).get("Scopes", [])
+                Check(not Report.get("Enabled", true) and Counts.get("Construct:Button.new", 0) >= 1 and Counts.get("Signal:Button.Pressed", 0) >= 1, "Actual successful native construction and signal dispatch counts")
+                Check(Rows.any(func(Row): return Row.get("ModuleCompilations", 0) > 0) and Rows.any(func(Row): return Row.get("Callbacks", 0) > 0) and Rows.all(func(Row): return not str(Row.get("Source", "")).contains("DebuggerClient")), "Actual module compilation callback activity and Client exclusion")
+                Check(Scopes.size() == 1 and Scopes[0].get("LiveResourceSlots", 0) >= 1 and Scopes[0].get("LiveCallbacks", 0) == 1 and Scopes[0].get("DestroyedNodes", 0) >= 1, "Actual native ownership snapshot distinguishes live resource callback and destroyed node slots")
+                ProfileReferences = Reply.get("Resources", {}).get("References", -1)
+                Command("Profile", {"Domain": "Server"})
+            elif Reply.get("Operation") == "Profile":
+                Check(ProfileReferences >= 0 and Reply.get("Resources", {}).get("References") == ProfileReferences, "Repeated diagnostic snapshots retain no VM references")
+                ProfileComplete = true
+                AfterVariables()
         if Reply.get("Event") == "Watch":
             var Identity: int = Reply.get("Request", 0)
             Check(PendingWatches.has(Identity), "Watch reply correlates to the active request")

@@ -319,3 +319,42 @@ errors. It records four ObjectDB exit warnings; no graphical or leak-free editor
 claim is made. The overall workflow still fails its known old-product disconnect
 case. The newer `71e8bfd` Linux native job independently passes the fixed protocol
 and editor checks together with the full existing native suite.
+
+## Bounded development profiling and ownership snapshots
+
+Add explicit ProfileStart/ProfileStop/Profile controls through the admitted
+debugger capture and a bounded native tab report with CopyProfile JSON export.
+Collection defaults off. Core instrumentation records per-owner inclusive resume
+and protected-call wall time, compile/module-compile duration, callback admissions,
+require requests and coroutine creation. It excludes measured debugger waits and
+keeps overlapping nested entries explicit; this is not per-function CPU sampling
+or native-only dispatch timing. Starting/stopping during a live execution excludes
+that in-flight interval. Successful native operation counts reuse the existing
+dispatcher trace points; the separate GL_RUNTIME_TESTS coverage recorder retains
+its prior behavior. Ordinary products have only a disabled collection branch.
+
+Records cap at 128 copied owner identities and 256 native operation names/domain,
+with bounded source strings. Snapshot previews cap at 24 owners/64 operations and
+mark truncation. They include existing VM/resource stats plus weak scope/node/
+resource/subscription counts, selected ObjectIDs and queued/destroyed states.
+Scope snapshots cap at 16 live-guard scopes and 4,096 node observations; retired
+owners without a valid guard are deliberately excluded, while profile records
+retain their retired disposition. Nothing retains Lua references, native Objects,
+Resources or callback capabilities. Host allocation rejection drops observations.
+
+Extend core qualification to eight debugger/profiler scenarios (87 original cases
+unchanged), including measured pause exclusion, 140 real owners overflowing the
+bounded report without changing execution, retirement/reference release and
+start/stop/reset. The actual native peer checks accepted Button construction and
+signal dispatch counts, module compilation, callback activity, Client exclusion,
+destroyed node slots and stable VM-reference counts across repeated snapshots.
+Changed native units pass bounded MSVC syntax probes and the peer parses under
+verified Godot. Profiling/runtime/overhead qualification is pending; no exact
+arbitrary Lua function-call count, sampling profiler or native-only timing is
+claimed. Dependencies, execution architecture and publication guards are unchanged.
+
+Windows `71e8bfd` native protocol passes all three cases, but its older editor
+driver fails waiting for the Watch response before native variables settle. The
+displayed-stack/variable-ready fixture is included in the next revision; retain
+that failed attempt. Core 43446023196 passes Windows/Linux at `24dd94b`; native
+43446022999 is building that selective-reload checkpoint.

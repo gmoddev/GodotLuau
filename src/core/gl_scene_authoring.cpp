@@ -1328,6 +1328,33 @@ Dictionary GLDebugSceneHandle(lua_State* Thread, int Index) {
     }
     Result["Properties"]=Values; return Result;
 }
+Dictionary GLDebugSceneScopes(const GLExecutionDomain& Domain) {
+    Dictionary Result;Array Rows;bool Truncated=false;size_t Work=0;
+    for(uint64_t Identity:Scopes) {
+        auto Scope=Resolve<SceneScope>(Identity);if(!Scope)continue;
+        // The reference registry validates lifetime before reading any Lua owner.
+        auto Anchor=GLReferenceState(Scope->Guard);auto Owner=Anchor?GLGetOwner(Anchor):nullptr;
+        if(!Owner || Owner->Domain!=&Domain)continue;
+        if(Rows.size()>=16){Truncated=true;break;}
+        Dictionary Row;Row["ScopeId"]=int64_t(Identity);Row["Generation"]=int64_t(Owner->Token);Row["NativeOwnerId"]=int64_t(Owner->NativeId);
+        Row["Retired"]=Scope->Retired;Row["QueuedForDeletion"]=Scope->is_queued_for_deletion();
+        int Alive=0,Destroyed=0,Queued=0,LiveResources=0,Callbacks=0;Array Preview;
+        for(uint64_t Id:Scope->Nodes) {
+            if(++Work>4096){Truncated=true;break;}auto Node=Resolve<godot::Node>(Id);
+            const char* State=!Node?"Destroyed":Node->is_queued_for_deletion()?"Queued":"Alive";
+            if(!Node)++Destroyed;else if(Node->is_queued_for_deletion())++Queued;else ++Alive;
+            if(Preview.size()<4){Dictionary Item;Item["NativeId"]=int64_t(Id);Item["State"]=State;if(Node)Item["ClassName"]=Node->get_class();Preview.push_back(Item);}
+        }
+        for(const auto& Slot:Scope->Resources)if(!Slot.expired())++LiveResources;
+        for(const auto& Subscription:Scope->Subscriptions)if(GLReferenceState(Subscription.Reference))++Callbacks;
+        Row["NodeSlots"]=int64_t(Scope->Nodes.size());Row["AliveNodes"]=Alive;Row["DestroyedNodes"]=Destroyed;Row["QueuedNodes"]=Queued;Row["NodePreview"]=Preview;
+        Row["ResourceSlots"]=int64_t(Scope->Resources.size());Row["LiveResourceSlots"]=LiveResources;
+        Row["Subscriptions"]=int64_t(Scope->Subscriptions.size());Row["LiveCallbacks"]=Callbacks;Rows.push_back(Row);
+    }
+    Result["Scopes"]=Rows;Result["Truncated"]=Truncated;
+    Result["Scope"]="Weak copied identities and counts for live authorized generations; retired owners without guards are excluded. No references are retained.";
+    return Result;
+}
 bool GLSceneMutation(lua_State* Thread, Node* Target, bool Clone) {
     if (auto Scope=ScopeOf(Target)) if (Clone || !Scope->CanUse(Thread)) return false;
     for (uint64_t Id:Scopes) if (auto Scope=Resolve<SceneScope>(Id))

@@ -52,6 +52,7 @@ public:
     uint64_t GetCoroutineId() const { return CoroutineId; }
     const std::string& GetReason() const { return Reason; }
     size_t GetChunkCount() const { return Chunks.size(); }
+    const std::string& GetOwnerSource(GLExecutionOwner* Owner) const;
     GLExecutionDomain& GetDomain() const { return Domain; }
     void SetNextAction(GLDebugAction Action) { NextAction = Action; OverrideAction = true; }
 
