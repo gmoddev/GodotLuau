@@ -16,7 +16,11 @@
 namespace {
 using namespace godot;
 struct Use {std::string Module,Member;int Line,Column;};
-struct Cached {std::string Hash;std::vector<Use> Uses;bool Complete=true;};
+struct Location {
+    std::string Name,Kind,Target;
+    int Line=0,Column=0,DefinitionLine=0,DefinitionColumn=0;
+};
+struct Cached {std::string Hash;std::vector<Use> Uses;std::vector<Location> Locations;bool Complete=true,NavigationComplete=true;};
 // Pure strings/coordinates only; no AST pointers, Godot objects or VM roots.
 std::map<std::string,Cached> Cache;
 String Import(const Luau::AstExpr* Value) {
@@ -39,7 +43,7 @@ struct Writes : Luau::AstVisitor {
 struct References : Luau::AstVisitor {
     const std::set<const Luau::AstLocal*>& Assigned;
     std::map<const Luau::AstLocal*,std::pair<std::string,std::string>> Imports;
-    std::vector<Use> Uses;unsigned Visited=0;bool Complete=true;
+    std::vector<Use> Uses;std::vector<Location> Locations;unsigned Visited=0;bool Complete=true,NavigationComplete=true;
     explicit References(const std::set<const Luau::AstLocal*>& Values):Assigned(Values){}
     bool Continue() {if(++Visited>=100000){Complete=false;return false;}return true;}
     bool visit(Luau::AstNode*) override {return Continue();}
@@ -60,18 +64,58 @@ struct References : Luau::AstVisitor {
         if(Uses.size()>=128){Complete=false;return;}
         Uses.push_back({Value.first,Value.second,int(Location.begin.line)+1,int(Location.begin.column)+1});
     }
+    void Record(const std::string& Name,const char* Kind,const Luau::Location& Where,const std::string& Target={},const Luau::Location* Definition=nullptr) {
+        if(Locations.size()>=512 || Name.size()>128 || Target.size()>1024){NavigationComplete=false;return;}
+        Location Item;Item.Name=Name;Item.Kind=Kind;Item.Target=Target;
+        Item.Line=int(Where.begin.line)+1;Item.Column=int(Where.begin.column)+1;
+        if(Definition){Item.DefinitionLine=int(Definition->begin.line)+1;Item.DefinitionColumn=int(Definition->begin.column)+1;}
+        Locations.push_back(std::move(Item));
+    }
     bool visit(Luau::AstStatLocal* Node) override {
+        for(size_t I=0;I<Node->vars.size;++I) {
+            auto Local=Node->vars.data[I];
+            bool Function=I<Node->values.size && Node->values.data[I]->is<Luau::AstExprFunction>();
+            Record(Local->name.value,Function?"Function":"Local",Local->location);
+        }
         for(size_t I=0;I<Node->vars.size && I<Node->values.size;++I) {
             auto Local=Node->vars.data[I];if(Assigned.count(Local))continue;
             auto Value=Resolve(Node->values.data[I]);if(!Value.first.empty())Imports[Local]=Value;
         }
         return Continue();
     }
-    bool visit(Luau::AstExprIndexName* Node) override {Add(Resolve(Node),Node->indexLocation);return Continue();}
-    bool visit(Luau::AstExprLocal* Node) override {
-        auto Found=Imports.find(Node->local);if(Found!=Imports.end())Add(Found->second,Node->location);
+    bool visit(Luau::AstStatLocalFunction* Node) override {Record(Node->name->name.value,"Function",Node->name->location);return Continue();}
+    bool visit(Luau::AstStatFunction* Node) override {
+        if(auto Field=Node->name->as<Luau::AstExprIndexName>())Record(Field->index.value,"Function",Field->indexLocation);
+        else if(auto Global=Node->name->as<Luau::AstExprGlobal>())Record(Global->name.value,"Function",Global->location);
         return Continue();
     }
+    bool visit(Luau::AstStatTypeAlias* Node) override {Record(Node->name.value,Node->exported?"ExportedType":"Type",Node->nameLocation);return Continue();}
+    bool visit(Luau::AstExprFunction* Node) override {
+        for(auto Argument:Node->args)Record(Argument->name.value,"Argument",Argument->location);
+        return Continue();
+    }
+    bool visit(Luau::AstExprCall* Node) override {
+        String Path=Import(Node);
+        if(!Path.is_empty())Record("require","Import",Node->location,Path.utf8().get_data());
+        if(auto Field=Node->func->as<Luau::AstExprIndexName>()) {
+            if(std::strcmp(Field->index.value,"New")==0 && Node->args.size) {
+                auto Name=GLNativeEditor::Text(Node->args.data[0]);
+                if(GLNativeEditor::Class(Name))Record(Name,"NativeClassCandidate",Field->indexLocation);
+            }
+        }
+        return Continue();
+    }
+    bool visit(Luau::AstExprIndexName* Node) override {
+        auto Import=Resolve(Node);Add(Import,Node->indexLocation);
+        Record(Node->index.value,Import.first.empty()?"SyntacticMember":"ImportedMember",Node->indexLocation,Import.first);
+        return Continue();
+    }
+    bool visit(Luau::AstExprLocal* Node) override {
+        auto Found=Imports.find(Node->local);if(Found!=Imports.end())Add(Found->second,Node->location);
+        Record(Node->local->name.value,"LocalReference",Node->location,{},&Node->local->location);
+        return Continue();
+    }
+    bool visit(Luau::AstExprGlobal* Node) override {Record(Node->name.value,"SyntacticGlobal",Node->location);return Continue();}
 };
 Cached Parse(const String& Source,const std::string& Hash) {
     Cached Result;Result.Hash=Hash;auto Bytes=Source.utf8();
@@ -81,7 +125,8 @@ Cached Parse(const String& Source,const std::string& Hash) {
     Writes Mutations;Parsed.root->visit(&Mutations);
     if(Mutations.Visited>=100000){Result.Complete=false;return Result;}
     References Visitor(Mutations.Assigned);Parsed.root->visit(&Visitor);
-    Result.Uses=std::move(Visitor.Uses);Result.Complete=Visitor.Complete;return Result;
+    Result.Uses=std::move(Visitor.Uses);Result.Locations=std::move(Visitor.Locations);Result.Complete=Visitor.Complete;
+    Result.NavigationComplete=Visitor.NavigationComplete;return Result;
 }
 }
 
@@ -89,8 +134,9 @@ godot::Dictionary GLIndexProjectModule(const godot::String& Module,const godot::
     using namespace godot;
     Dictionary Result;Result["result"]=ERR_UNAVAILABLE;Result["References"]=Array();
     String TargetModule=Module;
+    const bool Navigation=Module.is_empty() && Member.is_empty();
     if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id() ||
-       !GLProjectResourcePath(TargetModule) || (TargetModule.get_extension()!="luau" && TargetModule.get_extension()!="lua") || Member.is_empty() || Member.utf8().length()>128)return Result;
+       (!Navigation && (!GLProjectResourcePath(TargetModule) || (TargetModule.get_extension()!="luau" && TargetModule.get_extension()!="lua") || Member.is_empty() || Member.utf8().length()>128)))return Result;
     for(int Index=0;Index<Member.length();++Index) {
         char32_t C=Member[Index];if(!((C>='A'&&C<='Z')||(C>='a'&&C<='z')||C=='_'||(Index>0&&C>='0'&&C<='9')))return Result;
     }
@@ -120,7 +166,7 @@ godot::Dictionary GLIndexProjectModule(const godot::String& Module,const godot::
         }
         if(Time::get_singleton()->get_ticks_usec()-Started>250000){Truncated=true;break;}
     }
-    Array Matches;size_t BytesRead=0;int ParsedCount=0,CachedCount=0,Scanned=0;std::set<std::string> Retained;
+    Array Matches,Documents;size_t BytesRead=0;int ParsedCount=0,CachedCount=0,Scanned=0,NavigationCount=0;std::set<std::string> Retained;
     const std::string WantedModule=TargetModule.utf8().get_data(),WantedMember=Member.utf8().get_data();
     for(const auto& Path:Files) {
         if(Time::get_singleton()->get_ticks_usec()-Started>250000){Truncated=true;break;}
@@ -138,6 +184,21 @@ godot::Dictionary GLIndexProjectModule(const godot::String& Module,const godot::
         if(Found==Cache.end() || Found->second.Hash!=Hash){Found=Cache.insert_or_assign(Path,Parse(Source,Hash)).first;++ParsedCount;}
         else ++CachedCount;
         if(!Found->second.Complete)Truncated=true;
+        if(Navigation) {
+            if(!Found->second.NavigationComplete)Truncated=true;
+            Dictionary Document;Array Entries;
+            for(const auto& Location:Found->second.Locations) {
+                if(NavigationCount>=4096){Truncated=true;break;}++NavigationCount;
+                Dictionary Item;Item["Name"]=String::utf8(Location.Name.c_str());Item["Kind"]=String::utf8(Location.Kind.c_str());
+                Item["Line"]=Location.Line;Item["Column"]=Location.Column;
+                if(!Location.Target.empty())Item["Target"]=String::utf8(Location.Target.c_str());
+                if(Location.DefinitionLine){Item["DefinitionLine"]=Location.DefinitionLine;Item["DefinitionColumn"]=Location.DefinitionColumn;}
+                Entries.push_back(Item);
+            }
+            Document["Path"]=NativePath;Document["SourceSHA256"]=String::utf8(Hash.c_str());Document["Entries"]=Entries;
+            Document["Complete"]=Found->second.Complete && Found->second.NavigationComplete && Entries.size()==int(Found->second.Locations.size());
+            Documents.push_back(Document);
+        }
         for(const auto& Use:Found->second.Uses)if(Use.Module==WantedModule && Use.Member==WantedMember) {
             if(Matches.size()>=1024){Truncated=true;break;}
             Dictionary Item;Item["Path"]=NativePath;Item["Line"]=Use.Line;Item["Column"]=Use.Column;Item["SourceSHA256"]=String::utf8(Hash.c_str());Matches.push_back(Item);
@@ -145,9 +206,10 @@ godot::Dictionary GLIndexProjectModule(const godot::String& Module,const godot::
     }
     for(auto Entry=Cache.begin();Entry!=Cache.end();)if(!Retained.count(Entry->first))Entry=Cache.erase(Entry);else ++Entry;
     Result["result"]=OK;Result["Module"]=TargetModule;Result["Member"]=Member;Result["References"]=Matches;
+    if(Navigation)Result["Documents"]=Documents;
     Result["ScannedFiles"]=Scanned;Result["ParsedFiles"]=ParsedCount;Result["CachedFiles"]=CachedCount;Result["BytesRead"]=int64_t(BytesRead);
     Result["Truncated"]=Truncated;Result["Microseconds"]=int64_t(Time::get_singleton()->get_ticks_usec()-Started);
-    Result["Scope"]="Static require member/alias uses; reassigned imports and dynamic exports are unsupported";
+    Result["Scope"]=Navigation?"Bounded syntactic symbols/import graph and lexical local references; native class calls are candidates, dynamic/global/member resolution is not whole-program analysis":"Static require member/alias uses; reassigned imports and dynamic exports are unsupported";
     Result["ColumnEncoding"]="UTF-8 bytes; navigation opens the exact source line";
     return Result;
 }

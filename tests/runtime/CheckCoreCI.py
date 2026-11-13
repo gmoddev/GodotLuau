@@ -23,6 +23,9 @@ def CheckReport(Report):
     Cases = re.findall(r'^\[Runtime:Test\] PASS (.+)$', Output, re.MULTILINE)
     if len(Cases) != 87 or len(set(Cases)) != 87 or '[Runtime:Test] 87 passed, 0 failed' not in Output or '[Runtime:Test] FAIL ' in Output:
         raise ValueError('Expected completion of all 87 distinct production-core cases.')
+    DebuggerCases = re.findall(r'^\[Debugger:Test\] PASS (.+)$', Output, re.MULTILINE)
+    if len(DebuggerCases) != 8 or len(set(DebuggerCases)) != 8 or '[Debugger:Test] 8 passed, 0 failed' not in Output:
+        raise ValueError('Expected completion of all eight native Luau debugger/profiler scenarios.')
 
 
 def Main():

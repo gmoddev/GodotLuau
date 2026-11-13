@@ -10,6 +10,11 @@ on:
       - "luau"
       - ".github/workflows/runtime-native-sanitizers.yml"
   workflow_dispatch:
+    inputs:
+      WindowsOnly:
+        description: "Retry only Windows when unchanged Linux qualification is already retained"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -22,19 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - Platform: Windows
-            Runner: windows-2022
-            Executable: Godot_v4.7.1-stable_win64.exe
-            Library: godot_luau.dll
-            Loader: NativeSanitizerLoader.exe
-            Probe: NativeSanitizerProbe.dll
-          - Platform: Linux
-            Runner: ubuntu-24.04
-            Executable: Godot_v4.7.1-stable_linux.x86_64
-            Library: godot_luau.so
-            Loader: NativeSanitizerLoader
-            Probe: NativeSanitizerProbe.so
+        include: ${{ fromJSON(inputs.WindowsOnly && '[{"Platform":"Windows","Runner":"windows-2022","Executable":"Godot_v4.7.1-stable_win64.exe","Library":"godot_luau.dll","Loader":"NativeSanitizerLoader.exe","Probe":"NativeSanitizerProbe.dll"}]' || '[{"Platform":"Windows","Runner":"windows-2022","Executable":"Godot_v4.7.1-stable_win64.exe","Library":"godot_luau.dll","Loader":"NativeSanitizerLoader.exe","Probe":"NativeSanitizerProbe.dll"},{"Platform":"Linux","Runner":"ubuntu-24.04","Executable":"Godot_v4.7.1-stable_linux.x86_64","Library":"godot_luau.so","Loader":"NativeSanitizerLoader","Probe":"NativeSanitizerProbe.so"}]') }}
     defaults:
       run:
         shell: pwsh

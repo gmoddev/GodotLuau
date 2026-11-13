@@ -25,6 +25,8 @@ struct GLDomainLimits {
 
 enum class GLDomainKind { Server, Client, EditorPreview };
 class GLExecutionDomain;
+class GLDebugger;
+class GLProfiler;
 
 struct GLExecutionOwner {
     GLExecutionDomain* Domain = nullptr;
@@ -79,6 +81,13 @@ public:
     void SetErrorHandler(ErrorHandler Handler) { ReportError = std::move(Handler); }
     void SetDebugInfo(bool Enabled) { DebugInfo=Enabled; }
     bool HasDebugInfo() const { return DebugInfo; }
+    GLDebugger& EnableDebugger(); // trusted host only, before gameplay entry
+    GLDebugger* GetDebugger() const { return Debugger.get(); }
+    GLProfiler& EnableProfiler(); // trusted host only; collection remains opt-in
+    GLProfiler* GetProfiler() const { return Profiler.get(); }
+    uint64_t GetDebuggerPauseNanoseconds()const{return DebuggerPauseNanoseconds;}
+    bool IsResuming() const { return ResumeDepth!=0; }
+    void DebuggerPause(const std::function<void()>& Wait);
     void SetTimeProvider(std::function<double()> Provider) { GetTime = std::move(Provider); }
     GLExecutionOwner* CreateOwner(uint64_t NativeId);
     GLExecutionOwner* FindOwner(uint64_t NativeId) const;
@@ -191,6 +200,9 @@ private:
     bool Sandboxed = false;
     bool MemoryFailed = false;
     bool DebugInfo = false; // Trusted host selects full local names for editor runs.
+    std::unique_ptr<GLDebugger> Debugger;
+    std::unique_ptr<GLProfiler> Profiler;
+    uint64_t DebuggerPauseNanoseconds=0;
     size_t LiveCoroutines = 1;
     size_t LiveReferences = 0;
     size_t LiveOwners = 0;

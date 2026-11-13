@@ -1,0 +1,448 @@
+{
+  "Status": "Core/native/candidate/production Release debugger and Windows/Linux full-native sanitizer PASS within documented limits",
+  "NativeSource": {
+    "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+    "Files": 136,
+    "Newlines": "LF normalized"
+  },
+  "Core": {
+    "Run": 43461738984,
+    "Platforms": [
+      "Windows",
+      "Linux"
+    ],
+    "Result": "PASS",
+    "OriginalCases": 87,
+    "DebuggerScenarios": 8
+  },
+  "Native": {
+    "Run": 43461738974,
+    "Result": "PASS",
+    "Platforms": {
+      "Windows": {
+        "Revision": "fd86f83223ae4bb3c87b333b875cdd6307903a12",
+        "NativeSource": {
+          "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+          "Files": 136,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "34fba02f77bd16524b063192ded7dd0d2733144c8fff9ee1507f525d56ba3037",
+        "ReceiptSHA256": "039391536216ca5623e2a6e6c1d01b73815431ac66dff379aa7bf85f7aa8ff5e",
+        "DebuggerCases": [
+          {
+            "Case": "local",
+            "Stops": 8,
+            "Passed": true
+          },
+          {
+            "Case": "disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "running-disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "reload",
+            "Stops": 2,
+            "Passed": true
+          },
+          {
+            "Case": "network",
+            "Stops": 1,
+            "Passed": true
+          }
+        ],
+        "EditorPassed": true,
+        "ExistingNativeActors": 141
+      },
+      "Linux": {
+        "Revision": "fd86f83223ae4bb3c87b333b875cdd6307903a12",
+        "NativeSource": {
+          "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+          "Files": 136,
+          "Newlines": "LF normalized"
+        },
+        "ExtensionSHA256": "3c7ea0231c0ec978a53edc6da1f1447022efbf6ca73227d91fdad433d4f44115",
+        "ReceiptSHA256": "455d4bfb7dd9d84b769b6317c5f96d6b6dd6f95f25f6ac7a885960f07e4aef8b",
+        "DebuggerCases": [
+          {
+            "Case": "local",
+            "Stops": 8,
+            "Passed": true
+          },
+          {
+            "Case": "disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "running-disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "reload",
+            "Stops": 2,
+            "Passed": true
+          },
+          {
+            "Case": "network",
+            "Stops": 1,
+            "Passed": true
+          }
+        ],
+        "EditorPassed": true,
+        "ExistingNativeActors": 141
+      }
+    }
+  },
+  "Candidate": {
+    "Run": 43461782730,
+    "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+    "SourceRevision": "fd86f83223ae4bb3c87b333b875cdd6307903a12",
+    "SourceTree": "2df6fa8809abbcab5a0bfcc76737b6d6488ef73b",
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    },
+    "AcceptedReceiptSHA256": "f18d6eb6e9364be3b08c97f6063a3009acad0d960ce71a67883d74bc3564df4b",
+    "Jobs": {
+      "Policy": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Profiles": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Sanitizer": {
+        "result": "success",
+        "outputs": {}
+      },
+      "Packages": {
+        "result": "success",
+        "outputs": {}
+      }
+    },
+    "Packages": {
+      "Windows": {
+        "Result": "PASS",
+        "Package": {
+          "File": "GodotLuau-Windows.zip",
+          "SHA256": "d008286cf8832861ed28122407702755bc01c3b4064c23996198dd3f3bcceed6",
+          "Bytes": 9156096
+        },
+        "Members": 140,
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Label": "package-Debug",
+            "Exit": 0,
+            "Diagnostics": "",
+            "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+            "ExtensionSHA256": "85ac53abf76a3175b1ab6037de87f635ac5c00429ab3166882761a4ddc2c8c67",
+            "CompanionSHA256": "e3055cb9cc6364da1d880e6c4fecc166e4b7fcea4e09355dc14e4312b427e543",
+            "Logs": {
+              "stdout": "d1ce84456ee8663993c53a3384d3d3669ad09ee92a95eaacff3dcbb99e507738",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          {
+            "Configuration": "Release",
+            "Label": "package-Release",
+            "Exit": 0,
+            "Diagnostics": "",
+            "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+            "ExtensionSHA256": "7879047c8e82aa73a8be2490d2048550d3d46ee22ade3a64ade68e89f4b2e601",
+            "CompanionSHA256": "e3055cb9cc6364da1d880e6c4fecc166e4b7fcea4e09355dc14e4312b427e543",
+            "Logs": {
+              "stdout": "05c5956b5e0958043827c1262644ab5d34a10049201b9e454a4a769b897f0fb7",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ]
+      },
+      "Linux": {
+        "Result": "PASS",
+        "Package": {
+          "File": "GodotLuau-Linux.zip",
+          "SHA256": "843814646ecdba0faa9499cd417f78a0313e9d01d4dbf1adfaa0a0a4ad0c0241",
+          "Bytes": 12564016
+        },
+        "Members": 140,
+        "Startup": [
+          {
+            "Configuration": "Debug",
+            "Label": "package-Debug",
+            "Exit": 0,
+            "Diagnostics": "",
+            "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+            "ExtensionSHA256": "8f16ed3dba77a80f5d60d1c9c32122639c938875554351d58d574339aebb5783",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "Logs": {
+              "stdout": "5f2262fd3930514d4196c635cb6916e9a1b1c53ccc58a3203cf87c36a40bb01f",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          {
+            "Configuration": "Release",
+            "Label": "package-Release",
+            "Exit": 0,
+            "Diagnostics": "",
+            "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+            "ExtensionSHA256": "6a2ec57ad73e5111fa2cd8c438c99db0c716512245923eda1f27fabd55103d83",
+            "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+            "Logs": {
+              "stdout": "6a981a652d6ffd6ab0f60392ed962f3eb0f3494cbe5239378e790b1f672d9399",
+              "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        ]
+      }
+    },
+    "Scope": "All four source-built profiles and extracted package startup; no publication or updater admission"
+  },
+  "ReleaseDebugger": {
+    "Run": 43470730266,
+    "Result": "PASS",
+    "Platforms": {
+      "Windows": {
+        "NativeSource": {
+          "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+          "Files": 136,
+          "Newlines": "LF normalized"
+        },
+        "ProductionLibrarySHA256": "7879047c8e82aa73a8be2490d2048550d3d46ee22ade3a64ade68e89f4b2e601",
+        "ProtocolPassed": true,
+        "EditorPassed": true,
+        "Cases": [
+          {
+            "Case": "local",
+            "Stops": 8,
+            "Passed": true
+          },
+          {
+            "Case": "disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "running-disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "reload",
+            "Stops": 2,
+            "Passed": true
+          },
+          {
+            "Case": "network",
+            "Stops": 1,
+            "Passed": true
+          }
+        ]
+      },
+      "Linux": {
+        "NativeSource": {
+          "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+          "Files": 136,
+          "Newlines": "LF normalized"
+        },
+        "ProductionLibrarySHA256": "6a2ec57ad73e5111fa2cd8c438c99db0c716512245923eda1f27fabd55103d83",
+        "ProtocolPassed": true,
+        "EditorPassed": true,
+        "Cases": [
+          {
+            "Case": "local",
+            "Stops": 8,
+            "Passed": true
+          },
+          {
+            "Case": "disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "running-disconnect",
+            "Stops": 1,
+            "Passed": true
+          },
+          {
+            "Case": "reload",
+            "Stops": 2,
+            "Passed": true
+          },
+          {
+            "Case": "network",
+            "Stops": 1,
+            "Passed": true
+          }
+        ]
+      }
+    },
+    "Scope": "Exact SCons production Release libraries under verified official editor host; not release-template debugger admission"
+  },
+  "LinuxFullNativeSanitizer": {
+    "Run": 43461776259,
+    "Result": "PASS",
+    "FullQualification": true,
+    "ControlsPassed": true,
+    "UnexpectedReports": [],
+    "PassedGroups": [
+      "standalone-clean",
+      "standalone-uaf",
+      "engine-only",
+      "minimal-reload",
+      "host-uaf",
+      "host-leak",
+      "production-registration",
+      "production-vm-reload",
+      "suite-luau-game",
+      "remote-host-qualification",
+      "suite-regression",
+      "suite-security",
+      "suite-animation",
+      "suite-remote",
+      "suite-characters",
+      "suite-input",
+      "suite-controller",
+      "suite-resources",
+      "suite-filesystem",
+      "suite-http",
+      "suite-httpservice",
+      "suite-callers",
+      "suite-datastore",
+      "suite-presentation",
+      "suite-performance",
+      "suite-core",
+      "suite-debugger",
+      "strict-native-check"
+    ],
+    "ReceiptSHA256": "edc0c161b3af85afc7db506f1cd8b8816bf04ac01d4f1cece170ccc3587997ab",
+    "NativeSource": {
+      "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+      "Files": 136,
+      "Newlines": "LF normalized"
+    },
+    "DebuggerCases": [
+      {
+        "Case": "local",
+        "Stops": 8,
+        "Passed": true
+      },
+      {
+        "Case": "disconnect",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "running-disconnect",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "reload",
+        "Stops": 2,
+        "Passed": true
+      },
+      {
+        "Case": "network",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "no-opt-in",
+        "Stops": 0,
+        "Passed": true
+      }
+    ]
+  },
+  "WindowsFullNativeSanitizer": {
+    "FailedRun": 43461776259,
+    "Failure": "Existing fixed-duration DataStore contention holder expired; no unexpected sanitizer finding; all six debugger cases passed",
+    "CorrectedFixtureCommit": "1673225e61b823887e22a1558c5433e0eb257f34",
+    "RetryRun": 43468940617,
+    "RetryStatus": "PASS",
+    "Result": "PASS",
+    "FullQualification": true,
+    "ControlsPassed": true,
+    "UnexpectedReports": [],
+    "PassedGroups": [
+      "standalone-clean",
+      "standalone-uaf",
+      "engine-only",
+      "minimal-reload",
+      "host-uaf",
+      "production-registration",
+      "production-vm-reload",
+      "suite-luau-game",
+      "remote-host-qualification",
+      "suite-regression",
+      "suite-security",
+      "suite-animation",
+      "suite-remote",
+      "suite-characters",
+      "suite-input",
+      "suite-controller",
+      "suite-resources",
+      "suite-filesystem",
+      "suite-http",
+      "suite-httpservice",
+      "suite-callers",
+      "suite-datastore",
+      "suite-presentation",
+      "suite-performance",
+      "suite-core",
+      "suite-debugger",
+      "strict-native-check"
+    ],
+    "ReceiptSHA256": "572d6244bfcdd58ad313c90385d7823037e50ef2039d08fe9fbe3c41885798a7",
+    "NativeSource": {
+      "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+      "Files": 136,
+      "Newlines": "LF normalized"
+    },
+    "DebuggerCases": [
+      {
+        "Case": "local",
+        "Stops": 8,
+        "Passed": true
+      },
+      {
+        "Case": "disconnect",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "running-disconnect",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "reload",
+        "Stops": 2,
+        "Passed": true
+      },
+      {
+        "Case": "network",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "no-opt-in",
+        "Stops": 0,
+        "Passed": true
+      }
+    ],
+    "WindowsLSanSupported": false
+  },
+  "Declarations": {
+    "Run": 43448955594,
+    "Result": "PASS both platforms",
+    "Scope": "Unchanged declaration/generated policy inputs; later runtime and fixture changes do not regenerate declarations"
+  }
+}

@@ -1,6 +1,7 @@
 #include "gl_native_editor_plugin.h"
 #include <godot_cpp/classes/code_edit.hpp>
 #include "gl_luau_highlighter.h"
+#include "gl_authoring_debugger.h"
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/script_editor.hpp>
 #include <godot_cpp/classes/script_editor_base.hpp>
@@ -25,6 +26,7 @@ ScriptEditor* GetEditor() {
 void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OnScriptChanged", "Script"), &GLNativeEditorPlugin::OnScriptChanged);
     ClassDB::bind_method(D_METHOD("ConfigureEditor"), &GLNativeEditorPlugin::ConfigureEditor);
+    ClassDB::bind_method(D_METHOD("OnBreakpointToggle","Line","Code","Path"), &GLNativeEditorPlugin::OnBreakpointToggle);
     ClassDB::bind_method(D_METHOD("CreateLuauScene", "Path","Profile"), &GLNativeEditorPlugin::CreateLuauScene,DEFVAL(String("3D")));
     ClassDB::bind_method(D_METHOD("PreviewScript", "Source"), &GLNativeEditorPlugin::PreviewScript);
     ClassDB::bind_method(D_METHOD("StopPreview"), &GLNativeEditorPlugin::StopPreview);
@@ -39,11 +41,14 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OpenRuntimeError"), &GLNativeEditorPlugin::OpenRuntimeError);
     ClassDB::bind_method(D_METHOD("OpenRuntimeFrame"), &GLNativeEditorPlugin::OpenRuntimeFrame);
     ClassDB::bind_method(D_METHOD("GetRuntimeDiagnostics"), &GLNativeEditorPlugin::GetRuntimeDiagnostics);
+    ClassDB::bind_method(D_METHOD("GetDebuggerSessions"), &GLNativeEditorPlugin::GetDebuggerSessions);
     ClassDB::bind_method(D_METHOD("IndexProject","Module","Member"), &GLNativeEditorPlugin::IndexProject);
     ClassDB::bind_method(D_METHOD("FindProjectUses"), &GLNativeEditorPlugin::FindProjectUses);
+    ClassDB::bind_method(D_METHOD("ShowProjectSymbols"), &GLNativeEditorPlugin::ShowProjectSymbols);
 }
 
 void GLNativeEditorPlugin::_enter_tree() {
+    set_process(true);
     SetupAuthoring();
     Ref<GLLuauHighlighter> Highlight;Highlight.instantiate();Highlighter=Highlight;
     if (auto Editor = GetEditor()) {
@@ -87,11 +92,25 @@ void GLNativeEditorPlugin::ConfigureEditor() {
     auto Tab = Editor->get_current_editor();
     auto Code = Tab ? Object::cast_to<CodeEdit>(Tab->get_base_editor()) : nullptr;
     if (!Code) return;
+    Code->set_draw_breakpoints_gutter(true);
+    Callable BreakpointHandler=Callable(this,"OnBreakpointToggle").bind(int64_t(Code->get_instance_id()),Script->get_path());
+    if(!Code->is_connected("breakpoint_toggled",BreakpointHandler))Code->connect("breakpoint_toggled",BreakpointHandler);
+    if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))
+        for(int Line:Code->get_breakpointed_lines())Capture->RecordBreakpoint(Script->get_path(),Line+1,true);
     auto Prefixes = Code->get_code_completion_prefixes();
     if (!Prefixes.has(":")) {
         Prefixes.push_back(":");
         Code->set_code_completion_prefixes(Prefixes);
     }
+}
+void GLNativeEditorPlugin::OnBreakpointToggle(int64_t Line,int64_t Identity,const String& Path) {
+    auto Code=Object::cast_to<CodeEdit>(ObjectDB::get_instance(Identity));
+    if(Code && Line>=0 && Line<Code->get_line_count())
+        if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))Capture->RecordBreakpoint(Path,int(Line)+1,Code->is_line_breakpointed(int(Line)));
+}
+Array GLNativeEditorPlugin::GetDebuggerSessions() {
+    if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id())return Array();
+    auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr());return Capture?Capture->DescribeSessions():Array();
 }
 Dictionary GLNativeEditorPlugin::IndexProject(const String& Module,const String& Member) {
     Dictionary Buffers;
@@ -130,4 +149,23 @@ void GLNativeEditorPlugin::FindProjectUses() {
         Row->set_text(0,String(Use["Path"])+":"+String::num_int64(int(Use["Line"])));Row->set_text(1,"Module member reference");Row->set_metadata(0,Use);
     }
     ShowStatus(String::num_int64(Uses.size())+" static uses across "+String::num_int64(int(Report["ScannedFiles"]))+" Luau files; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
+}
+void GLNativeEditorPlugin::ShowProjectSymbols() {
+    Dictionary Report=IndexProject("","");
+    if(int(Report.get("result",ERR_UNAVAILABLE))!=OK)return;
+    auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(RuntimeTree));if(!TreeNode)return;
+    TreeNode->clear();TreeNode->show();auto Root=TreeNode->create_item();Root->set_text(0,"Project symbols and static imports");
+    Root->set_text(1,bool(Report["Truncated"])?"Partial bounded index":"Syntactic navigation; not whole-program types");
+    Array Documents=Report.get("Documents",Array());
+    for(int Index=0;Index<Documents.size();++Index) {
+        Dictionary Document=Documents[Index];String Path=Document["Path"];Array Entries=Document["Entries"];TreeItem* Group=nullptr;
+        for(int Entry=0;Entry<Entries.size();++Entry) {
+            Dictionary Item=Entries[Entry];String Kind=Item["Kind"];
+            if(Kind!="Function" && Kind!="Type" && Kind!="ExportedType" && Kind!="Import" && Kind!="NativeClassCandidate")continue;
+            if(!Group){Group=TreeNode->create_item(Root);Group->set_text(0,Path);}
+            auto Row=TreeNode->create_item(Group);Row->set_text(0,String(Item["Name"])+":"+String::num_int64(int(Item["Line"])));
+            Row->set_text(1,Kind+" "+String(Item.get("Target",String())));Item["Path"]=Path;Row->set_metadata(0,Item);
+        }
+    }
+    ShowStatus(String::num_int64(int(Report["ScannedFiles"]))+" indexed Luau files; "+String::num_int64(int(Report["ParsedFiles"]))+" parsed; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
 }

@@ -1,0 +1,146 @@
+name: Luau debugger focused qualification (no publication)
+on:
+  workflow_dispatch:
+    inputs:
+      NativeRun:
+        description: "Native CI run providing an adapter with the identical native source fingerprint"
+        type: string
+        required: false
+      CandidateRun:
+        description: "Candidate run providing source-built production Release products; use instead of NativeRun"
+        type: string
+        required: false
+      MeasurePerformance:
+        description: "Measure baseline/current production-core debugger modes in Release"
+        type: boolean
+        default: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  Debugger:
+    if: ${{ inputs.NativeRun != '' || inputs.CandidateRun != '' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+            Executable: Godot_v4.7.1-stable_win64.exe
+            Suffix: dll
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Executable: Godot_v4.7.1-stable_linux.x86_64
+            Suffix: so
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 12
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch existing native adapter evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEBUGGER_NATIVE_RUN: ${{ inputs.NativeRun }}
+          DEBUGGER_CANDIDATE_RUN: ${{ inputs.CandidateRun }}
+        run: |
+          if [[ -n "$DEBUGGER_CANDIDATE_RUN" ]]; then
+            [[ -z "$DEBUGGER_NATIVE_RUN" && "$DEBUGGER_CANDIDATE_RUN" =~ ^[0-9]+$ ]]
+            gh run download "$DEBUGGER_CANDIDATE_RUN" --repo '${{ github.repository }}' --name 'profile-${{ matrix.Platform }}-Release' --dir "$RUNNER_TEMP/adapter"
+            python - <<'PY'
+          import json,os
+          from pathlib import Path
+          Root=Path(os.environ['RUNNER_TEMP'])/'adapter'
+          Record=json.loads((Root/'profile.json').read_text())
+          assert Record['Configuration']=='Release' and Record['Platform']=='${{ matrix.Platform }}'
+          (Root/'source.json').write_text(json.dumps(Record['Source']['NativeSource']))
+          PY
+          else
+            [[ "$DEBUGGER_NATIVE_RUN" =~ ^[0-9]+$ ]]
+            gh run download "$DEBUGGER_NATIVE_RUN" --repo '${{ github.repository }}' --name 'authoring-adapter-${{ matrix.Platform }}-Debug' --dir "$RUNNER_TEMP/adapter"
+          fi
+      - name: Provision existing verified official host
+        run: python tests/runtime/ProvisionGodot.py --output "$RUNNER_TEMP/godot"
+      - name: Expose installed MSVC Debug runtime
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $Installation = & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          $Runtime = Get-ChildItem -Path "$Installation\VC\Redist\MSVC\*\debug_nonredist\x64\Microsoft.VC*.DebugCRT" -Directory | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $Runtime) { throw '[Debugger:Qualification] Installed Debug runtime unavailable' }
+          $Runtime.FullName | Out-File $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Run actual native debugger with exact source admission
+        env:
+          DEBUGGER_GODOT: ${{ runner.temp }}/godot/${{ matrix.Executable }}
+          DEBUGGER_SUFFIX: ${{ matrix.Suffix }}
+          DEBUGGER_CANDIDATE_RUN: ${{ inputs.CandidateRun }}
+        run: |
+          python - <<'PY'
+          import os,subprocess,sys
+          from pathlib import Path
+          Root=Path(os.environ['RUNNER_TEMP'])
+          Adapter=(next((Root/'adapter/products').glob('godot_luau.*.'+os.environ['DEBUGGER_SUFFIX'])) if os.environ['DEBUGGER_CANDIDATE_RUN'] else next((Root/'adapter').rglob('godot_luau.'+os.environ['DEBUGGER_SUFFIX'])))
+          Source=next((Root/'adapter').rglob('source.json'))
+          Protocol=subprocess.run([sys.executable,'tests/runtime/RunDebuggerQualification.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--source',str(Source),'--output',str(Root/'debugger')])
+          Editor=subprocess.run([sys.executable,'tests/editor/RunNativeAuthoring.py','--godot',os.environ['DEBUGGER_GODOT'],'--extension',str(Adapter),'--output',str(Root/'debugger-editor'),'--debugger','--timeout','140'])
+          sys.exit(Protocol.returncode or Editor.returncode)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: luau-debugger-${{ matrix.Platform }}-${{ inputs.CandidateRun != '' && 'Release' || 'Debug' }}
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/debugger/**/*.json
+            ${{ runner.temp }}/debugger/**/*.log
+            ${{ runner.temp }}/debugger-editor/**/*.json
+            ${{ runner.temp }}/debugger-editor/**/*.log
+  Performance:
+    if: ${{ inputs.MeasurePerformance }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+            Generator: Visual Studio 17 2022
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Generator: Ninja
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build baseline and candidate against identical pinned Luau
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/baseline" b5389f0ff08c50e38bc11d868dbe12729a293535
+          cmake -S tests/runtime -B build/debugger-perf -G "${{ matrix.Generator }}" -DCMAKE_BUILD_TYPE=Release -DGL_BUILD_CORE_TESTS=OFF -DGL_BUILD_GODOT_ADAPTER=OFF -DGL_BUILD_DEBUGGER_BENCHMARKS=ON -DGL_BASELINE_SOURCE_ROOT="$RUNNER_TEMP/baseline"
+          cmake --build build/debugger-perf --config Release --target DebuggerBenchmarkCandidate DebuggerBenchmarkBaseline --parallel 2
+      - name: Measure actual production-core execution modes
+        run: |
+          mkdir -p "$RUNNER_TEMP/debugger-perf"
+          if [[ "$RUNNER_OS" == Windows ]]; then Prefix=build/debugger-perf/Release; Suffix=.exe; else Prefix=build/debugger-perf; Suffix=; fi
+          "$Prefix/DebuggerBenchmarkBaseline$Suffix" > "$RUNNER_TEMP/debugger-perf/baseline.jsonl"
+          "$Prefix/DebuggerBenchmarkCandidate$Suffix" > "$RUNNER_TEMP/debugger-perf/candidate.jsonl"
+          git rev-parse HEAD > "$RUNNER_TEMP/debugger-perf/revision.txt"
+          python tests/runtime/SourceFingerprint.py . > "$RUNNER_TEMP/debugger-perf/source.json"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: debugger-performance-${{ matrix.Platform }}
+          retention-days: 14
+          path: ${{ runner.temp }}/debugger-perf/*

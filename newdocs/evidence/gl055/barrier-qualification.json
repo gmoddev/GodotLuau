@@ -1,0 +1,13 @@
+{
+  "Revision": "1673225e61b823887e22a1558c5433e0eb257f34",
+  "ActorResults": 23,
+  "AllExitZero": true,
+  "ProbeSHA256": "5802d1b2790ed94524c591a381b529664cfa8f3a1485d3f82fb14a71e55f2924",
+  "Scope": "Full existing 23-actor ordinary Windows DataStore fixture using explicit holder release; not ASan qualification",
+  "HolderOutput": "[Persistence:Backend] PASS pause\n",
+  "ContentionActor": {
+    "Label": "datastore-contention-contention-single",
+    "Exit": 0,
+    "Diagnostics": ""
+  }
+}

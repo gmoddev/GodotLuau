@@ -1,4 +1,6 @@
 #include "gl_execution_domain.h"
+#include "gl_debugger.h"
+#include "gl_profiler.h"
 #include "Luau/Compiler.h"
 #include <algorithm>
 #include <cmath>
@@ -13,6 +15,28 @@ constexpr const char* GLDeadlineMessage = "[Runtime:Execution] Resume deadline e
 constexpr const char* GLSafepointMessage = "[Runtime:Execution] VM safepoint budget exceeded";
 constexpr const char* GLAncestorAllocationMessage = "[Runtime:Execution] Active domain allocation rejection blocks execution";
 thread_local GLExecutionDomain* GLActiveBudget = nullptr;
+struct GLProfileOperation {
+    GLExecutionDomain& Domain;GLProfiler* Profile=nullptr;
+    uint64_t Epoch=0,Generation=0,NativeId=0,Paused=0;
+    GLProfileEvent Event;
+    std::chrono::steady_clock::time_point Start;
+    GLProfileOperation(GLExecutionDomain& Selected,GLExecutionOwner* Owner,GLProfileEvent Kind):Domain(Selected),Event(Kind) {
+        auto Current=Domain.GetProfiler();
+        if(Current && Current->IsEnabled() && Owner && Owner->NativeId) {
+            Profile=Current;Epoch=Profile->GetEpoch();Generation=Owner->Token;NativeId=Owner->NativeId;
+            auto Row=Profile->GetScripts().find(Generation);
+            if((Row==Profile->GetScripts().end() || Row->second.Source.empty()) && Domain.GetDebugger())
+                Profile->Define(Generation,NativeId,Domain.GetDebugger()->GetOwnerSource(Owner));
+            Paused=Domain.GetDebuggerPauseNanoseconds();Start=std::chrono::steady_clock::now();
+        }
+    }
+    ~GLProfileOperation() {
+        if(!Profile || !Profile->IsEnabled() || Profile->GetEpoch()!=Epoch)return;
+        uint64_t Elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-Start).count();
+        uint64_t Waiting=Domain.GetDebuggerPauseNanoseconds()-Paused;
+        Profile->Record(Generation,NativeId,Event,Elapsed>Waiting?Elapsed-Waiting:0);
+    }
+};
 const char* GLFailureText(lua_State* Thread, const char* Fallback) {
     // lua_tostring converts numbers by allocating. Error reporting is outside
     // VM protection, so only read an existing string here.
@@ -49,6 +73,11 @@ end
 
 GLExecutionOwner* GLGetOwner(lua_State* Thread) {
     return Thread ? static_cast<GLExecutionOwner*>(lua_getthreaddata(Thread)) : nullptr;
+}
+GLProfiler& GLExecutionDomain::EnableProfiler(){if(!Profiler)Profiler=std::make_unique<GLProfiler>();return *Profiler;}
+void GLRecordNativeProfile(lua_State* Thread,const char* Category,const char* Class,const char* Member) {
+    auto Owner=GLGetOwner(Thread);
+    if(Owner && Owner->Alive && Owner->NativeId)if(auto Profile=Owner->Domain->GetProfiler())Profile->NativeCall(Category,Class,Member);
 }
 lua_State* GLGetOwnerState(lua_State* Thread) {
     GLExecutionOwner* Owner = GLGetOwner(Thread);
@@ -148,6 +177,24 @@ bool GLExecutionDomain::IsClientExecution() {
     return GLActiveBudget && GLActiveBudget->GetKind() == GLDomainKind::Client;
 }
 bool GLExecutionDomain::IsExecuting() { return GLActiveBudget != nullptr; }
+
+GLDebugger& GLExecutionDomain::EnableDebugger() {
+    if (!Debugger) Debugger = std::make_unique<GLDebugger>(*this);
+    return *Debugger;
+}
+void GLExecutionDomain::DebuggerPause(const std::function<void()>& Wait) {
+    struct PauseScope {
+        std::chrono::steady_clock::time_point Start = std::chrono::steady_clock::now();
+        ~PauseScope() {
+            auto Duration = std::chrono::steady_clock::now() - Start;
+            for (auto Scope = GLActiveBudget; Scope; Scope = Scope->BudgetParent) {
+                Scope->ExecutionDeadline += Duration;
+                Scope->DebuggerPauseNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(Duration).count();
+            }
+        }
+    } Pause;
+    Wait();
+}
 
 GLExecutionDomain::BudgetScope::BudgetScope(GLExecutionDomain& Selected) : Domain(Selected) {
     if (Domain.BudgetDepth++ == 0) {
@@ -256,7 +303,9 @@ GLExecutionDomain::GLExecutionDomain(GLDomainKind SelectedKind, GLDomainLimits S
     }
 }
 GLExecutionDomain::~GLExecutionDomain() {
+    if(Profiler)Profiler->Stop();
     Shutdown();
+    Debugger.reset(); // release debug references while VM and owners still exist
     if (State) {
         // The host must never destroy the domain from inside one of its resumes.
         // Shutdown itself is reentrant-safe and only invalidates/cancels admission.
@@ -342,11 +391,13 @@ void GLExecutionDomain::OnThread(lua_State* Parent, lua_State* Thread) {
         }
         lua_setthreaddata(Thread, Owner);
         if (Owner) {
+            if(Owner->NativeId)if(auto Profile=Owner->Domain->GetProfiler())Profile->Record(Owner->Token,Owner->NativeId,GLProfileEvent::Coroutine);
             ++Owner->ThreadCount; ++Owner->Domain->LiveCoroutines;
             Owner->Domain->CoroutinePeak = (std::max)(Owner->Domain->CoroutinePeak, Owner->Domain->LiveCoroutines);
         }
     } else {
         GLExecutionOwner* Owner = GLGetOwner(Thread);
+        if(Owner && Owner->Domain->Debugger)Owner->Domain->Debugger->RetireThread(Thread);
         if (Owner && Owner->ThreadCount) { --Owner->ThreadCount; --Owner->Domain->LiveCoroutines; }
     }
 }
@@ -427,6 +478,8 @@ GLExecutionOwner* GLExecutionDomain::FindOwner(uint64_t NativeId) const {
 void GLExecutionDomain::CancelOwner(GLExecutionOwner* Owner) {
     if (!Owner || Owner->Domain != this || !Owner->Alive) return;
     Owner->Alive = false; // denial precedes callbacks, registry release, and cancellation
+    if(Profiler)Profiler->Retire(Owner->Token);
+    if (Debugger) Debugger->RetireOwner(Owner);
     if (Owner != BootstrapOwner) --LiveOwners;
     if (InvalidateNative) InvalidateNative(Owner->Anchor);
     auto Found = ActiveOwners.find(Owner->NativeId);
@@ -483,8 +536,11 @@ bool GLExecutionDomain::Execute(GLExecutionOwner* Owner, const std::string& Sour
     // API requires invalidating import optimizations when loading it again.
     lua_setsafeenv(Thread, LUA_GLOBALSINDEX, false);
     Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
-    std::string Bytecode = Luau::compile(Source,Options);
+    std::string Bytecode;
+    if(Profiler && Owner->NativeId)Profiler->Define(Owner->Token,Owner->NativeId,ChunkName);
+    {GLProfileOperation Profile(*this,Owner,GLProfileEvent::Compile);Bytecode=Luau::compile(Source,Options);}
     int Status = luau_load(Thread, ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
+    if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Thread, ChunkName, int(std::count(Source.begin(),Source.end(),'\n'))+1);
     if (Status == LUA_OK) Status = Resume(Thread, nullptr, 0);
     else if (!CheckMemoryFailure(Thread, Status)) FinishThread(Task, Status);
     lua_unref(State, Root);
@@ -568,8 +624,11 @@ int GLExecutionDomain::Resume(lua_State* Thread, lua_State* From, int Arguments,
         return LUA_ERRRUN;
     }
     ++ResumeDepth;
-    int Status = RaiseError ? lua_resumeerror(Thread, From) : lua_resume(Thread, From, Arguments);
+    if (Debugger) Debugger->BeginResume(Thread);
+    int Status;
+    {GLProfileOperation Profile(*this,Task->Owner,GLProfileEvent::Resume);Status=RaiseError ? lua_resumeerror(Thread, From) : lua_resume(Thread, From, Arguments);}
     --ResumeDepth;
+    if (Debugger) Debugger->EndResume(Thread, Status);
     Task->Running = false;
     if (CheckMemoryFailure(Thread, Status)) return LUA_ERRMEM;
     if (CheckExecutionBudget()) {
@@ -603,7 +662,8 @@ int GLExecutionDomain::Resume(lua_State* Thread, lua_State* From, int Arguments,
 int GLExecutionDomain::ProtectedCall(lua_State* Thread, int Arguments, int Results, int Handler) {
     BudgetScope Budget(*this);
     int Prefix = lua_gettop(Thread) - Arguments - 1;
-    int Status = CheckExecutionBudget() ? LUA_ERRRUN : lua_pcall(Thread, Arguments, Results, Handler);
+    int Status;
+    {GLProfileOperation Profile(*this,GLGetOwner(Thread),GLProfileEvent::ProtectedCall);Status=CheckExecutionBudget()?LUA_ERRRUN:lua_pcall(Thread, Arguments, Results, Handler);}
     if (CheckMemoryFailure(Thread, Status)) return LUA_ERRMEM;
     if (CheckExecutionBudget()) {
         lua_settop(Thread, Prefix);
@@ -617,6 +677,7 @@ int GLExecutionDomain::ProtectedCall(lua_State* Thread, int Arguments, int Resul
 int GLExecutionDomain::Dispatch(int Reference, const std::function<int(lua_State*)>& Marshal) {
     lua_State* Anchor = GLReferenceState(Reference);
     if (!Anchor || GLGetOwner(Anchor)->Domain != this || IsClosing()) return LUA_OK;
+    if(Profiler)Profiler->Record(GLGetOwner(Anchor)->Token,GLGetOwner(Anchor)->NativeId,GLProfileEvent::Callback);
     BudgetScope Budget(*this); // argument conversion may invoke gameplay constructors
     int Root = LUA_NOREF;
     lua_State* Thread = CreateThread(GLGetOwner(Anchor), Root);
@@ -868,6 +929,7 @@ int GLExecutionDomain::PushModuleResult(lua_State* Thread, const std::shared_ptr
 int GLExecutionDomain::BeginRequire(lua_State* Thread) {
     GLExecutionOwner* Caller = GLGetOwner(Thread);
     if (!Caller || !Caller->Alive) luaL_error(Thread, "[Runtime:Require] Inactive execution owner");
+    if(Profiler)Profiler->Record(Caller->Token,Caller->NativeId,GLProfileEvent::Require);
     GLModuleSource Source;
     if (!ResolveModule || !ResolveModule(Thread, 1, Source) || !Source.Identity)
         luaL_error(Thread, "[Runtime:Require] Expected a live ModuleScript");
@@ -937,8 +999,11 @@ int GLExecutionDomain::BeginRequire(lua_State* Thread) {
             return PushModuleResult(Thread, Module);
         }
         Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
-        std::string Bytecode = Luau::compile(Source.Source,Options);
+        std::string Bytecode;
+        if(Profiler)Profiler->Define(Module->Owner->Token,Module->Owner->NativeId,Source.ChunkName);
+        {GLProfileOperation Profile(*this,Module->Owner,GLProfileEvent::ModuleCompile);Bytecode=Luau::compile(Source.Source,Options);}
         int Status = luau_load(Initializer, Source.ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
+        if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Initializer, Source.ChunkName, int(std::count(Source.Source.begin(),Source.Source.end(),'\n'))+1);
         if (Status == LUA_OK) Resume(Initializer, nullptr, 0);
         else if (!CheckMemoryFailure(Initializer, Status)) FinishThread(Task, Status);
         lua_unref(State, Root);
@@ -1154,6 +1219,7 @@ void GLExecutionDomain::AddCloseCallback(lua_State* Thread, int Reference) {
 }
 void GLExecutionDomain::Shutdown() {
     if (Closing) return;
+    if (Debugger) Debugger->Shutdown();
     BudgetScope Budget(*this); // one aggregate deadline for the entire hook snapshot
     Closing = true;
     StopAdmission();

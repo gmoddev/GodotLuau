@@ -55,6 +55,7 @@ class GLDomainHost : public godot::Node {
 protected:
     static void _bind_methods() {
         godot::ClassDB::bind_method(godot::D_METHOD("GetResourceStats", "client"), &GLDomainHost::GetResourceStats);
+        godot::ClassDB::bind_method(godot::D_METHOD("CaptureDebuggerCommand", "message", "data"), &GLDomainHost::CaptureDebuggerCommand);
 #ifdef GL_RUNTIME_TESTS
         godot::ClassDB::bind_method(godot::D_METHOD("_gl_test_reset_domain", "client"), &GLDomainHost::ResetDomainForTests);
         godot::ClassDB::bind_method(godot::D_METHOD("_gl_test_datastore_exit", "root"), &GLDomainHost::TestDataStoreExit);
@@ -65,6 +66,8 @@ protected:
 public:
     ~GLDomainHost();
     GLExecutionDomain& GetDomain(GLDomainKind Kind);
+    GLExecutionDomain* GetExistingDomain(bool Client) const { return Domains[Client?1:0].get(); }
+    bool CaptureDebuggerCommand(const godot::String& Message, const godot::Array& Data);
     godot::Dictionary GetResourceStats(bool Client) const;
     bool ClaimInitialization(GLDomainKind Kind);
     void InstallHttp(lua_State* Thread,GLExecutionDomain& Domain);

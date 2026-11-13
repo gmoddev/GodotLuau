@@ -8,5 +8,6 @@
 godot::Dictionary GLInspectNativeCode(const godot::String& Code, const godot::String& Path);
 godot::Dictionary GLNavigateNativeCode(const godot::String& Code, const godot::String& Symbol, const godot::String& Path);
 // Trusted native editor only. Bounded project reads and pure cached AST results.
+// Empty Module and Member request project symbols, lexical references and imports.
 godot::Dictionary GLIndexProjectModule(const godot::String& Module,const godot::String& Member,const godot::Dictionary& Buffers);
 #endif

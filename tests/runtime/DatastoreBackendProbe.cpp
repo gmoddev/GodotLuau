@@ -15,13 +15,21 @@ int main(int Count,char** Arguments) {
         Request Input; Input.Root=Root.u8string(); Input.Leaf="ds_GL009_probe.json";
         std::string Mode=Arguments[2];
         if (Mode=="pause") {
-            if (Count!=4) return 2;
+            if (Count!=4 && Count!=5) return 2;
+            bool Hold=Count==5 && std::string(Arguments[4])=="hold";
+            if(Count==5 && !Hold)return 2;
             Input.Op=Operation::Set; Input.Data="999";
             int Target=std::stoi(Arguments[3]);
             auto Answer=GLDataStoreBackend::Execute(Input,[&](int Stage) {
                 if (Stage==Target) {
                     std::ofstream Marker(Root/"stage.marker"); Marker<<Stage; Marker.close();
-                    std::this_thread::sleep_for(std::chrono::seconds(10));
+                    if(Hold) {
+                        auto Deadline=std::chrono::steady_clock::now()+std::chrono::seconds(120);
+                        while(!std::filesystem::exists(Root/"release.marker")) {
+                            if(std::chrono::steady_clock::now()>=Deadline)return false;
+                            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+                        }
+                    } else std::this_thread::sleep_for(std::chrono::seconds(10));
                 }
                 return true;
             });

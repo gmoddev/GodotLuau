@@ -5,6 +5,7 @@
 #include "gl_scene_authoring.h"
 #include "gl_errors.h"
 #include "gl_debug_snapshot.h"
+#include "gl_runtime_debugger.h"
 #include "gl_net_bridge.h"
 #include "rbx_character.h"
 #include "roblox_network.h"
@@ -126,6 +127,7 @@ bool GLDomainAllowed(GLDomainKind Kind) {
     return true; // local single-player and a player-host may need both domains
 }
 GLDomainHost::~GLDomainHost() {
+    GLRuntimeDebuggerShutdown(*this);
     Shutdown();
     for (const auto& Domain : Domains) if (Domain) gl_unregister_state(Domain->GetState());
     if (GLHostIdentity == static_cast<uint64_t>(get_instance_id())) GLHostIdentity = 0;
@@ -162,7 +164,7 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
             if (Resource.is_null() || static_cast<uint64_t>(Resource->get_instance_id()) != Module.ResourceIdentity ||
                 Resource->GetSourceRevision() != Module.Revision) return false;
             Module.Source = Resource->_get_source_code().utf8().get_data();
-            Module.ChunkName = (String("=") + gl_instance_fullname(Script)).utf8().get_data();
+            Module.ChunkName = (Resource->get_path().begins_with("res://")?String("@")+Resource->get_path():String("=")+gl_instance_fullname(Script)).utf8().get_data();
             return true;
         });
         Domains[Index]->SetInvalidationHook([this](lua_State* Anchor) { InvalidateOwner(Anchor); });
@@ -189,9 +191,11 @@ GLExecutionDomain& GLDomainHost::GetDomain(GLDomainKind Kind) {
             if (Owner && !Owner->Domain->HasMemoryFailure()) gl_report_script_error(Thread);
         });
         if (Domains[Index]->GetFailure()) UtilityFunctions::print(String::utf8(Domains[Index]->GetFailure()));
+        GLConfigureRuntimeDebugger(*this,*Domains[Index]);
     }
     return *Domains[Index];
 }
+bool GLDomainHost::CaptureDebuggerCommand(const String& Message,const Array& Data) { return GLCaptureDebuggerCommand(*this,Message,Data); }
 Dictionary GLDomainHost::GetResourceStats(bool Client) const {
     Dictionary Stats;
     const auto& Domain = Domains[Client ? 1 : 0];
@@ -383,6 +387,7 @@ void GLDomainHost::InvalidateThread(lua_State* Thread) {
     Visit(Tree->get_root());
 }
 void GLDomainHost::_process(double Delta) {
+    GLRuntimeDebuggerTick(*this);
     if (DataStore) DataStore->Tick();
     if (Http) Http->Tick();
     // Weak native targets may be destroyed while their script/module survives.

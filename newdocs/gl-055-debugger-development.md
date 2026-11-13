@@ -1,0 +1,647 @@
+# GL-055 native debugger campaign
+
+Status: implementation in progress on `feature/gl-055-native-debugger`; unmerged.
+This campaign is distinct from the resolved historical GL-055 native layout
+preset issue. Its ID and evidence remain unchanged.
+
+## Verified baseline
+
+On 2026-11-13 remote main is `b5389f0ff08c50e38bc11d868dbe12729a293535`.
+The clean feature worktree starts there. GL-054's integration retains 23 feature
+commits, native fingerprint
+`ba44f2ac38c33ed616d305434cef2f8beca232bffc0455d7c5159efa50c5e49d`
+(128 LF-normalized inputs), passing Windows/Linux core/native/declarations and
+the separately scoped sanitizer/production/export/rendered evidence. Read the
+[integration record](gl-054-main-integration.md) and linked GL-049/051/052/053
+contracts before extending the existing domains, editor or ownership boundary.
+
+Dependencies remain godot-cpp `d5cc777a89d899665fb61f1650ef0dc0cf6488c4` and
+Luau `9e2984fd0334414a2ef62ceede0c06dab7574d55`. Native stays the default
+Character controller, Scripted opt-in; releases/updater remain disabled.
+
+## Source findings and decision
+
+The pinned VM exposes `lua_breakpoint`, `lua_singlestep`, debug callbacks,
+`lua_getinfo`, argument/local/upvalue inspection and `lua_isyieldable`. A
+`lua_break` cannot cross a non-yieldable native boundary. Existing scheduler
+completion treats statuses other than LUA_YIELD as completion/error; silently
+inserting LUA_BREAK there would require new lifecycle and nested-coroutine rules.
+
+The pinned Godot metadata already exposes EngineDebugger.script_debug,
+line_poll, breakpoint and stepping controls; ScriptLanguageExtension exposes
+live stack/variable hooks. The existing implementation leaves those hooks empty.
+Godot's remote debugger owns the game-process break loop and standard editor UI.
+Use that supported route at safe Luau opcode hooks, preserving the live VM/native
+stack rather than inventing a second scheduler or passing snapshots as live state.
+[ADR-018](adr-018-native-luau-debugger.md) defines the implementation contract.
+
+Primary references: pinned `luau/VM/include/lua.h`, `VM/src/ldo.cpp`,
+`VM/src/ldebug.cpp`, `tests/Conformance.test.cpp`; pinned godot-cpp
+`gdextension/extension_api.json`; Godot's
+[EngineDebugger API](https://docs.godotengine.org/en/4.3/classes/class_enginedebugger.html),
+[language hooks](https://docs.godotengine.org/en/4.3/classes/class_scriptlanguageextension.html)
+and [remote break loop](https://github.com/godotengine/godot/blob/4.3/core/debugger/remote_debugger.cpp).
+Metadata is the extension API authority; runtime hosts remain the admitted 4.7.1
+profiles. No engine or dependency patch is authorized or needed for this route.
+
+## Acceptance and phase record
+
+Implement and qualify real breakpoints, resume and step into/over/out, live frames
+and bounded read-only variables first. Then extend native inspection, restricted
+watches, editor integration, reload/domain lifecycle, project navigation and
+development-only profiling as independently testable phases. Acceptance must use
+the production core and actual Godot debugger protocol/editor, including callbacks,
+imports, coroutines, rejection/bounds, disconnect and retirement. Core-only tests
+do not establish successful graphical editor interaction.
+
+Record commands, exact source/fixture identities, actual failures and corrections,
+Windows/Linux Debug/Release/native/declaration/sanitizer results and comparable
+disabled/attached performance here. Reuse unchanged game/export evidence within
+its proven scope; changes to debugger/runtime inputs need their own relevant
+regression. Do not relabel GL-054 snapshots as interactive debugging.
+
+## Runtime control implementation checkpoint
+
+The first code phase adds a host-only GLDebugger using real patched Luau
+breakpoints, admitted executable-line reporting, bounded hit targets, safe opcode
+pause/step hooks and live frame identity. The existing scheduler still owns every
+resume/task. Godot integration will supply the native break loop; the core fixture
+supplies commands directly to exercise the actual pinned VM and production core.
+Seven focused scenarios cover live locals/continue, into/over/out, disabled and
+remapped breakpoints/hit target, coroutine/import stops, retirement during a stop,
+paused wall time/detach and domain isolation. These are implementation inputs,
+not yet passing qualification evidence.
+
+The pinned VM chooses its debug interpreter at entry. Attached threads therefore
+keep single-step hooks available, even between explicit step requests; detached
+execution keeps its original interpreter and compilation policy. This attached
+cost must be measured. A status-only scheduler LUA_BREAK implementation is not
+introduced. Real Godot editor integration/inspection remains in progress.
+
+DockerPC's worker-heavy generation 121 belongs to StudioCreatorFoundation3;
+no workload is started, stopped or reserved there. Use hosted core CI for the
+first checkpoint while continuing independent editor implementation.
+
+Core CI 43424637985 compiles both platforms but rejects the additional CTest
+entry at the existing exact discovery guard, before executing tests. Keep that
+guard and its 87 legacy assertions intact: invoke DebuggerTests through the
+existing bounded RunCoreTests process wrapper, and additionally require seven
+distinct debugger scenario markers. The original failed attempt remains visible;
+compilation alone is not runtime qualification. No fixture assertion is relaxed.
+
+The corrected discovery run 43425256561 executes the production core: the first
+live breakpoint/local case and exact step sequence 6 -> 2 -> 3 -> 7 pass on both
+platforms. The hit-count scenario incorrectly expects the for-loop setup line to
+execute repeatedly. Separate its comment-to-executable-line admission check from
+the hit target on the actual repeating loop body. Keep the one-stop hit assertion
+and disabled-breakpoint assertions unchanged; retain the failed run.
+
+Run 43426485509 passes real locals/continue, exact stepping, hit-target/remapping
+and coroutine/module stops on both platforms. The retirement scenario's compound
+assertion assumes one error report, whereas existing scheduler cancellation
+deliberately suppresses ordinary script failures for an already retired owner.
+Split the assertions into execution rejection, dead owner, no ordinary error and
+the existing unchanged-mutation sentinel. This preserves inherited cancellation
+semantics. No runtime failure or post-retirement mutation was demonstrated by
+that compound fixture failure.
+
+## Native editor and inspection implementation checkpoint
+
+The next source phase wires the real Godot script_debug loop and LuauLanguage
+stack/local/upvalue hooks, domain-aware native session controls, native breakpoint
+gutter changes/admission feedback and bounded raw table/native-handle projection.
+It requires an active debugger on an editor-capable gameplay host, rejecting
+editor preview and ordinary export templates. Godot owns the game-process pause;
+the scheduler is unchanged. Native wrappers resolve through existing SceneScope
+ownership, and no raw Object Variant or new gameplay capability is returned.
+Custom command envelopes use a crypto-generated connection nonce, monotonic
+request IDs, closed primitive fields and a 32-command/second bound. Editor
+breakpoint updates coalesce and drain under that bound. These changes still need
+actual native compilation, protocol, editor, lifecycle and sanitizer evidence.
+
+Intermediate native rerun 43425256514 is canceled because its native inputs equal
+the original checkpoint, while core-only fixture correction is being established.
+It is not a passing result. No existing acceptance assertion is removed.
+
+Core 43427400040 passes Windows/Linux at `b3e18af`: all 87 existing cases and
+seven actual debugger scenarios. Native run 43427400110's Linux adapter compile
+finds one const-reference mismatch: project path validation accepts a mutable
+String for canonicalization, while breakpoint registration passes its const
+input. Validate a local copy and retain that canonical path. Static review also
+removes a namespace-scope Godot String before extension binding initialization;
+use an ordinary std::string for the session nonce. The startup risk was not
+reproduced by the compile-blocked run.
+
+Add a real Godot Variant-protocol editor peer fixture: actual breakpoints, native
+stack/locals/upvalues, into/over/out, imported module, separate Client frame,
+signal callback, destroyed native wrapper, malformed/stale/session rejection and
+disconnect while stopped. Both processes use existing bounded ownership helpers
+and headless crash-UI suppression. Native CI now requires this fixture; its
+four test-owned processes remain separate from the existing 141-actor cohort.
+A focused workflow can reuse the exact adapter artifact after fixture-only
+corrections, enforcing the unchanged native fingerprint rather than rebuilding
+the same native source. Neither fixture has passed yet; graphical editor
+interaction, restricted watches and later phases remain outstanding.
+
+Before running the fixture, source review corrects two fixture assumptions:
+resource handles use Scope:Get/Call rather than direct userdata ClassName
+indexing, and a stale-sequence test must first admit a valid request (malformed
+requests deliberately do not consume the sequence). Keep the actual resource
+inspection and four-rejection assertions. These fixture-only corrections can
+reuse the identical native product and do not constitute passing evidence.
+
+## Restricted inspection and watches checkpoint
+
+Native 43429591460 and fixture-only 43432075758 reject the new inspection unit's
+missing direct Variant include before runtime qualification. Add that dependency.
+Bounded MSVC /Zs probes using the existing pinned generated headers also find and
+correct non-iterable Godot Array range loops and the command-window name colliding
+with godot::Window. Eight affected native translation units pass these syntax
+probes, in single-compiler invocations of approximately 3–9 seconds; no dependency
+build, local sustained compilation, vendor modification or runtime pass is claimed.
+
+Implement a restricted evaluator using the pinned Luau AST, without executing Lua.
+It reads bounded copies of live frame locals/upvalues, raw table entries and
+approved owned native-property projections. Calls/constructors, mutation, globals,
+non-finite arithmetic, excessive depth/work and out-of-projection reads reject.
+The supported native session tab adds frame selection and Watch, with seven actual
+protocol queries and an unchanged-state sentinel for rejected function calls.
+
+Native C frames and unregistered bootstrap-source frames remain opaque, preventing
+private C/native-service upvalues from entering variable inspection. Coroutine
+labels use bounded weak identities erased on thread destruction; step state also
+retires at resume/native async boundaries. Tagged redaction, binary/truncated
+string previews and UTF-8 prefix handling preserve explicit inspection state.
+The source-admission map labels the executing owner; exact lexical definition
+versions of arbitrarily retained module closures are not claimed.
+
+The [debugger guide](gl-055-debugger.md) records implemented controls, projection
+limits, source/reload constraints and the custom message envelope. Primary native
+protocol execution, graphical editor interaction, lifecycle/adversarial expansion,
+profiling/indexing, cross-profile/sanitizer and performance qualification remain
+outstanding. Main, dependencies, default controllers and publication guards are
+unchanged. Do not close this campaign from core or syntax checks alone.
+
+## Native editor journey preparation
+
+Core 43437162294 passes Windows/Linux at `1e46bc5` (87 existing and seven
+debugger scenarios). Native 43437162267 is still building the actual adapter.
+Add an editor-only, main-thread session descriptor with copied state and a
+connection generation, excluding transport nonces and live VM/native handles.
+The existing editor runner's separate `--debugger` mode opens actual Luau source,
+sets its native CodeEdit gutter, starts a real game process and exercises the
+native Luau tab's Watch, into/over/out/continue, application Stop, fresh Play and
+detach. It uses the cached headless child arguments before editor startup.
+Godot 4.7.1 parses the journey successfully; execution remains pending the new
+native binary. The automated headless journey is not graphical or physical-input
+qualification. No controller, host, dependency or publication setting changes.
+
+## Cached project navigation checkpoint
+
+Extend the existing GL-054 AST/cache scan rather than adding a second parser or
+index service. Empty Module/Member requests return bounded per-file symbols,
+type aliases, static require edges, lexical local-reference definition locations,
+imported members and explicitly syntactic global/member/native-class candidates.
+The editor's Project Symbols command opens these source locations in the existing
+diagnostics tree. Existing exact module-member queries retain their contract.
+Navigation has its own truncation state, 512 records/file and 4,096 records/report,
+under the existing file/byte/traversal bounds. Unsaved current buffers and hashes
+continue using the established invalidation path. Extend the actual native editor
+fixture for types/functions/imports/lexical definitions and navigation latency.
+Three changed native units pass bounded MSVC syntax checks; runtime/editor
+execution remains pending. Dynamic/global/type resolution is not claimed.
+
+## First actual native stop and protocol correction
+
+Native 43437162267 compiles on Linux and reaches a real, continuable Luau stop,
+returning its stack and variable count. The peer rejects the first variable
+payload: the admitted Godot 4.7.1 host appends a fifth type-hint field, unlike the
+four-field 4.3 source originally consulted. Its actual upstream
+`core/debugger/debugger_marshalls.cpp` confirms this wire shape. Correct the peer
+to require the five typed fields; retain all value/authority/stepping assertions.
+The fixture-only qualification branch reuses the exact `1e46bc5` native adapter
+through the existing focused workflow, avoiding a duplicate native build. This
+is partial execution evidence, not a passing debugger result.
+
+GitHub cannot manually dispatch the new focused workflow before it exists on
+default main. Use its push trigger on this qualification-only branch with the
+explicit original adapter run, retaining exact native-source admission. Cancel
+43440700078/43440700081: the fixture repair changes no native/core implementation.
+No default-branch modification or additional native rebuild is needed for it.
+
+Focused 43441210614 exposes a peer-only grouping bug: context `State` overwrites
+the script local of the same name when the peer flattens Godot's separate groups.
+Keep context names separate. Focused 43441438055 then passes actual cyclic/native
+inspection, all seven restricted watches, into/over/out, module, Client and signal
+callback stops. Its final pure local alias has no instruction (requested line 25
+correctly remaps to executable 26); place that fixture marker on the actual assert.
+Retain the destroyed-handle assertion. The unexpected-disconnect attempt also
+shows a product issue: Godot's `is_active()` remains true after losing the peer,
+so later Luau stops invoke an unavailable native session. Keep its no-error gate
+and fix the product lifecycle separately; no full debugger pass is claimed.
+
+## Disconnect lifecycle correction
+
+Godot's public `is_active()` reports initialization, not connection liveness.
+Before entering its blocking loop, request a nonce/sequence/domain/stop-bound
+acknowledgment through the existing capture; allow one second of measured pause
+time, then detach both domains if it is absent. Godot's public `line_poll()`
+itself polls every 2,048 calls, so use a bounded burst only during this handshake
+and source admission, when ordinary engine frames cannot advance. During a native
+break loop, a negative lines-left sentinel distinguishes an uncommanded return
+(disconnect) from native Continue/Into/Over/Out. Detach both domains and release
+breakpoint roots before any subsequent stop can invoke a disconnected session.
+Also map Godot's native positive-depth Out command to Luau Out.
+
+Extend the actual native peer for disconnect while suspended and a distinct
+disconnect after native `debug_exit`, before the next stop. Existing no-error,
+target completion and ownership assertions remain required. The actual editor
+plugin acknowledges stops automatically, without exposing the transport nonce.
+Two changed native units pass bounded MSVC syntax checks; runtime qualification
+of the correction is pending. This bounded handshake is justified by the observed
+disconnect defect, not a new gameplay transport or scheduler.
+
+Focused 43442092977 confirms the unchanged `1e46bc5` Linux product completes all
+eight local stops and four malformed/stale rejections without target errors,
+including all seven restricted watch queries. Its separate disconnect case
+retains the observed target errors and therefore fails the overall run. Windows
+artifact admission is pending the original build. Do not relabel this mixed run
+as complete cross-platform qualification.
+
+## Linux native control and navigation qualification
+
+Native 43442668524's Linux job 131943989757 passes at `71e8bfd`: actual local,
+suspended-disconnect and running-disconnect debugger cases, native editor journey,
+all 141 existing native actors, Foundry/restart, networking and production editor
+regressions complete. Windows is still building. Core 43442668486 passes both
+platforms (87 existing/seven debugger cases). This establishes the disconnect
+correction and cached navigation within that Linux Debug profile. It does not
+establish Release, sanitizer, graphical or new selective-reload evidence.
+
+## Selective saved-source reload checkpoint
+
+Godot's newer `_reload_scripts(Array, bool)` virtual was a compatibility no-op.
+Decode its actual Array ABI and use the existing LuauScript reload/source-change
+path, bounded to 256 resources on the trusted main thread. Editor tool reload
+shares it. File reads retain the existing confined project-path/16-MiB limits;
+export/gameplay callers gain no reload capability. Godot queues its ordinary
+reload until idle, so it cannot retire a paused owner before resumption by itself.
+The Luau tab's explicit Reload command therefore reloads only its actual stopped,
+already-cached source through the existing capture. The changed source retires
+the old owner/callbacks/scopes synchronously; only successful acknowledgment
+continues Godot's native loop, and the replacement starts through the existing
+deferred script entry. Failed reload stays paused. There is no state-preserving
+soft reload; unchanged source simply continues. The all-scripts virtual remains
+unsupported; restart or selected source reload is explicit.
+
+Add an actual native reload fixture with a live scope, signal and delayed callback.
+It replaces the isolated saved file at a breakpoint, requires a fresh owner and
+new executable breakpoint, and checks the old instruction/callbacks cannot run
+and native objects are destroyed. Both new GDScript peers parse under verified
+Godot 4.7.1; the three affected C++ units pass bounded syntax checks. Execution
+qualification of reload is pending; no new engine patch or scheduler is added.
+## Editor stack/variable readiness correction
+
+Focused 43443105126 executes the actual Linux native editor journey: gutter,
+watch, four stop identities, Continue, Stop/Play and detach assertions pass. The
+editor still logs Godot DAP missing-scope errors. The driver currently advances
+when the native stop appears, without waiting for the requested native stack and
+variable replies. Require the actual Stack Frames row and debugger inspector's
+live local value/StopId before advancing each step, and allow bounded teardown
+frames before exit. This also establishes the previously untested displayed
+stack/variable acceptance facts. Keep the unhandled-error gate unchanged; this
+initial run is not clean editor qualification. The corrected script parses under
+the verified host; runtime rerun is pending.
+
+Focused 43444009583's Linux editor report then passes all native displayed-stack,
+live-variable, Watch and control/restart/detach checks without unhandled editor
+errors. It records four ObjectDB exit warnings; no graphical or leak-free editor
+claim is made. The overall workflow still fails its known old-product disconnect
+case. The newer `71e8bfd` Linux native job independently passes the fixed protocol
+and editor checks together with the full existing native suite.
+
+## Controlled reload observer ordering
+Selective-reload run 43446022999's Linux peer reaches the replacement owner and
+new breakpoint, but the target observer inspects the old scope after it has already
+been retired and destroyed. Replace its one-frame assumption with an explicit
+primed/observed barrier: the old source cannot reach its breakpoint until the
+target captures both native IDs. Arm the cancellation timer only after that
+barrier. Retain all old-code/callback/destroyed-object assertions. This fixture
+correction changes no native input; reuse the exact `24dd94b` adapter in focused
+qualification. Cancel sanitizer 43450112103 early because it uses this known bad
+observer ordering; restart with the corrected fixture, retaining the attempt.
+
+## Bounded development profiling and ownership snapshots
+
+Add explicit ProfileStart/ProfileStop/Profile controls through the admitted
+debugger capture and a bounded native tab report with CopyProfile JSON export.
+Collection defaults off. Core instrumentation records per-owner inclusive resume
+and protected-call wall time, compile/module-compile duration, callback admissions,
+require requests and coroutine creation. It excludes measured debugger waits and
+keeps overlapping nested entries explicit; this is not per-function CPU sampling
+or native-only dispatch timing. Starting/stopping during a live execution excludes
+that in-flight interval. Successful native operation counts reuse the existing
+dispatcher trace points; the separate GL_RUNTIME_TESTS coverage recorder retains
+its prior behavior. Ordinary products have only a disabled collection branch.
+
+Records cap at 128 copied owner identities and 256 native operation names/domain,
+with bounded source strings. Snapshot previews cap at 24 owners/64 operations and
+mark truncation. They include existing VM/resource stats plus weak scope/node/
+resource/subscription counts, selected ObjectIDs and queued/destroyed states.
+Scope snapshots cap at 16 live-guard scopes and 4,096 node observations; retired
+owners without a valid guard are deliberately excluded, while profile records
+retain their retired disposition. Nothing retains Lua references, native Objects,
+Resources or callback capabilities. Host allocation rejection drops observations.
+
+Extend core qualification to eight debugger/profiler scenarios (87 original cases
+unchanged), including measured pause exclusion, 140 real owners overflowing the
+bounded report without changing execution, retirement/reference release and
+start/stop/reset. The actual native peer checks accepted Button construction and
+signal dispatch counts, module compilation, callback activity, Client exclusion,
+destroyed node slots and stable VM-reference counts across repeated snapshots.
+Changed native units pass bounded MSVC syntax probes and the peer parses under
+verified Godot. Profiling/runtime/overhead qualification is pending; no exact
+arbitrary Lua function-call count, sampling profiler or native-only timing is
+claimed. Dependencies, execution architecture and publication guards are unchanged.
+
+Windows `71e8bfd` native protocol passes all three cases, but its older editor
+driver fails waiting for the Watch response before native variables settle. The
+displayed-stack/variable-ready fixture is included in the next revision; retain
+that failed attempt. Core 43446023196 passes Windows/Linux at `24dd94b`; native
+43446022999 is building that selective-reload checkpoint.
+
+Core 43448830124 executes all eight debugger/profiler scenarios successfully on
+both platforms, but the existing outer runner still requires the old seven-case
+summary. Update that final summary gate to eight, matching the already-updated
+distinct-case verifier. Preserve its watchdog and all 87 prior cases. This is a
+runner synchronization correction; the native implementation is unchanged.
+
+## Explicit dedicated development host admission
+
+The admitted sanitizer/dedicated hosts intentionally omit editor tools, so the
+original editor-feature-only admission cannot exercise native inspection/reload
+under ASan. Add an explicit `--gl-luau-debugger` user-argument opt-in restricted
+to debug hosts with an initialized existing debugger and successful stop exchange.
+Release templates and ordinary debug-template launches stay closed. This changes
+only debugger admission, not engine revisions/patches, admitted hosts, gameplay
+capabilities, listeners or distribution defaults. It also provides the requested
+dedicated development debugging path. The existing full-native sanitizer runner
+now runs the actual four-case debugger fixture with this opt-in, preserving its
+detection controls and all existing core/native gates. ASan/LSan execution is
+pending; no sanitizer result or dedicated ENet pause coordination is implied.
+That profile also requires an actual no-opt-in negative case: the same debug
+template, initialized remote connection and configured Luau breakpoints must run
+to completion with zero Luau stops when the explicit flag is absent.
+
+## Windows/Linux focused debugger qualification
+
+Focused [43454399358](https://github.com/gmoddev/GodotLuau/actions/runs/43454399358)
+passes both platforms using the immutable `5466af1` adapter. All four actual
+protocol cases, profiling/weak ownership checks and the native displayed-stack/
+variable/control/restart/detach editor journey pass. Correct the expected signal
+counter to its registry declaring class `BaseButton.Pressed`, preserving the count
+assertion. Retain copied profile receipts without transport nonces. The editor
+driver also selects the session tab by its actual bound session ID, avoiding an
+ambiguous first/last tab when Godot creates multiple sessions. These changes do
+not alter native source. Sanitizer 43450756992 is canceled early because it uses
+the known incorrect expected counter; rerun with the corrected fixture. Candidate
+43450118761 remains relevant because its unchanged core/native/package inputs do
+not exercise that peer-only assertion. Main remains untouched.
+
+## Expanded acceptance observations
+
+Extend the actual editor journey to press native profiling Start/Stop, require
+recorded resumed execution, save a changed stopped Luau resource, move its gutter
+breakpoint, wait for the actual update, press native Reload and inspect the new
+owner at its moved line. Graphical capture uses an explicit native draw and selects
+the actual Luau/stack tabs, without physical input. This is fixture-only work;
+the implemented product is unchanged. Extend the existing core isolation scenario
+for a real 80-level call stack capped at 64 inspected frames and an attached
+infinite loop terminated by the unchanged deterministic safepoint budget.
+These added observations remain pending execution. Keep the already-passing
+eight-scenario summary and 87 original assertions.
+
+## Rendered editor evidence and actual state corrections
+
+Focused 43456316423 passes Windows/Linux including actual editor profiling and
+saved-source reload. Windows offscreen-rendered `graphical-37bba2f-01` completes
+the same native journey in about nine seconds. Inspect all four retained PNGs:
+native source gutter/Watch, Godot stack and locals, step-out location and moved
+reload breakpoint render correctly. No desktop input is injected; the editor
+starts offscreen without activation and the game child stays headless. This is
+rendered programmatic editor evidence, not physical input qualification.
+
+The captures expose two actual presentation defects. Editor replay of an unchanged
+breakpoint replaces its record and resets Hits to zero after the first stop.
+Make identical updates idempotent, retaining explicit reconfiguration/reset
+behavior, and extend the existing real hit-count case. Also invalidate the
+displayed live Watch value on Continuing and clear old report text on a fresh
+runtime nonce; label profile output as a snapshot. Continuing now reports Resuming
+with no live generation/coroutine/source, rather than the still-stacked Suspended
+state before the native callback returns. These are bounded state corrections;
+new compilation/runtime verification is required. No source identity or previous
+rendered evidence is relabeled as containing them.
+
+## Performance measurement preparation
+
+Add an opt-in production-core benchmark target to the existing runtime CMake
+project. Baseline `b5389f0` and current code share the identical pinned Luau build,
+Release compiler/configuration and 100,000-operation Lua/native-observation
+workload. Retain warmup plus five measured trials for disabled, attached,
+breakpoint, stepping, stack/local inspection and profiling modes, with wall/CPU
+time, complete Execute duration, C++ new counts/bytes and VM peak bytes. The
+baseline supports the common disabled workload; this avoids inventing baseline
+debugger behavior. Core measurements exclude Godot transport/rendering and do not
+stand in for native IPC/graphical latency. The focused workflow offers this
+optional Windows/Linux measurement without running unrelated native rebuilds.
+The benchmark syntax-checks with MSVC; measurements are pending.
+
+Candidate 43450118761 passes all four production profiles and extracted packages
+at `37bba2f`, including Linux core ASan/LSan, 87 core/eight debugger cases and all
+141 native actors per profile. That receipt predates the small presentation/hit
+corrections; fresh candidate 43457871556 is running for those changed inputs.
+Sanitizer 43455004645 is now running its Linux production/detection suite; the
+newer 43457876059 separately covers the corrected product. Native/controller,
+storage, network, dependency and publication contracts remain unchanged.
+
+## Measured allocation correction and sanitizer fixture cache
+
+Performance run 43459001752 completes on both platforms. For 100,000 observed
+native operations the profiling mode performs 100,002 C++ allocations; the
+disabled mode performs zero and has the same 504,336-byte VM peak as main.
+Windows disabled median is 4.038 ms versus baseline 4.012 ms; Linux is 3.134 ms
+versus 2.959 ms. These short synthetic runs establish workload-specific results,
+not application-wide performance. Replace the per-call temporary string with a
+bounded stack key and transparent map lookup; allocate only for a new operation
+name. Keep the original measurements and rerun the same benchmark for this change.
+
+Linux sanitizer 43455004645 passes its detection controls, core and all 141 native
+actors. Its debugger target and peer execute all eight local stops, watches and
+profile assertions successfully, but the strict stderr gate rejects Godot's
+`Could not load global script cache` from the tools-disabled test peer. The
+isolated peer lacked the empty generated class cache that existing `Prepare`
+already supplies to targets. Supply that same empty cache to test peers; preserve
+the no-ERROR gate. No sanitizer finding or product debugger failure was reported
+in this attempt. Retain its logs and do not label the run passing.
+
+Add a bounded actual ENet server/client case: pause the server in Luau, observe
+the independent client's transport timeout, Continue, then require a fresh ENet
+connection. Short timeout values belong only to this disposable fixture. This
+documents the stop-the-process policy; it does not claim synchronized multiplayer
+pausing or preservation of a timed-out connection. The new case and allocation
+correction are pending execution. Linux Release candidate 43457871556 encounters
+an apt mirror connection timeout before compilation; retry that environmental
+failure without changing dependencies or qualification assertions.
+
+Retain stack/variable and restricted native-watch request round-trip timings in
+the existing native peer receipt. They include Godot framing, process polling
+and transport latency; they are not isolated C++ inspection timings. No new test
+suite or acceptance threshold is introduced. Existing native editor index
+receipts already record cold/warm/navigation/changed-buffer microseconds.
+Sanitizer 43457876059 is canceled because its isolated peer has the same known
+missing-cache error; corrected source/fixtures run as 43460768247. Performance
+43460768309 and candidate 43460768137 cover the measured allocation correction.
+Superseded duplicate native runs are canceled rather than rebuilding identical
+implementation inputs merely for later benchmark or documentation commits.
+
+The same focused driver can consume the existing candidate profile artifact's
+SCons production Release library and source identity, rather than rebuilding an
+identical implementation. Both real protocol and editor journeys still run;
+the strict native fingerprint check remains. This covers interactive development
+debugging using a Release-built extension under the verified editor host, not
+enabling debugging in an exported release-template host.
+
+## Final bounded-counter review
+
+Final bounded-counter review finds a source-verified edge: the observation
+counter saturated at the maximum admitted exact-hit target (1,000,000), making
+that target match again on every subsequent visit. Saturate one observation
+beyond the largest target instead. This is a two-line policy-preserving fix;
+ordinary exact-hit/replay coverage remains required. No million-visit runtime
+reproduction is claimed. The new source identity requires fresh core/native
+checks; declaration and generated policy inputs remain unchanged.
+
+Add one bounded actual million-visit regression to the optional existing Release
+benchmark, without enlarging the fast Debug/core watchdog. It must stop exactly
+once at target 1,000,000 across 1,000,002 visits and retain the capped observation
+count. Execution is pending; this directly checks the discovered product edge,
+not the qualification infrastructure.
+
+Cancel the superseded `43457871556` candidate after its environmental Linux
+Release failure, allowing the final-source candidate to start instead of waiting
+for redundant earlier profiles. Its passing core sanitizer/policy jobs and failed
+mirror logs remain retained. Final implementation runs are native 43461738974,
+candidate 43461782730 and full-native sanitizers 43461776259. No test or product
+input is relabeled as a newer identity.
+
+## Final worker and rendered observations
+
+Acquire DockerPC's free generation-122 lease after the unrelated task releases
+it. Reuse the clean project workspace/dependency cache at
+`C:\Sandbox\Codex\Workspaces\GodotLuauGL053Integration` /
+`C:\Sandbox\Codex\Builds\GodotLuau\gl053-integration`, checking out `f727839`
+detached while retaining its previous revision. Two-job incremental Debug build
+finishes in 60.052 seconds; pinned dependencies are reused. Final native
+fingerprint is `ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83`;
+DLL SHA256 is `e8a35affbd14fc2ff1bcefb8e2e5dedc6d60f3051a2528606c0a1795e674960f`.
+Actual five-case protocol/ENet and native headless editor journeys pass. Capture
+receipts under worker `Artifacts\GodotLuau\gl055-fd86f83`, copy them to local
+`gl055/adapter-fd86f83-worker`, verify the copied DLL hash, observe all task
+processes idle and release the lease. No background worker job remains.
+
+`graphical-fd86f83-01` passes in about eight seconds using this exact adapter.
+Inspect all four actual PNGs: Hits remains one, live Watch is labeled with its
+stop, resumed values are invalidated, stack/locals render and the saved source
+reloads at its moved breakpoint. The fixture remains offscreen/no-activation,
+with no physical input. Native request medians on DockerPC are 16.134 ms stack
+and 37.340 ms variables; the native-property Watch is 24.856 ms. These include
+transport and 60-Hz process polling, not isolated inspection CPU time.
+
+Performance 43463127788 passes both platforms at final native inputs, including
+the bounded 1,000,002-visit regression: the maximum hit target fires once. No
+pre-fix million-visit reproduction is claimed. The prior Windows sanitizer run
+43455004645 also has passing controls/core/141 native actors and no unexpected
+sanitizer report; its only failing group is the same missing-peer-cache gate.
+
+## GL-065: Godot editor breakpoint-row cleanup
+
+The rendered journey reports eight ObjectDB instances at exit. A second bounded
+verbose observation retains four leaked TreeItems and four TextParagraphs, with
+`line` metadata, and TextServer shaped-text RID output. None of those listed
+instances is a Luau owner, scope, node handle or debugger plugin. The pinned
+[Godot breakpoint removal implementation](https://github.com/godotengine/godot/blob/a13da4feb8d8aefc283c3763d33a2f170a18d541/editor/debugger/script_editor_debugger.cpp#L1767)
+detaches the breakpoint row and empty path row without freeing either. Their
+class/metadata/count are consistent with the two actual gutter removals and
+this source-verified engine cleanup defect. No independent GDScript control is
+claimed. This is an editor-only qualification limitation; the full-native game
+sanitizer checks remain separate. Do not patch the engine or hide warnings to
+claim a leak-free editor. Earlier references to four ObjectDB warnings meant
+four leaked instances in the earlier, shorter journey, not four warning events.
+
+## Windows sanitizer contention barrier
+
+Final native CI 43461738974 passes Windows/Linux with all five debugger cases and
+the complete existing suite. Full-native 43461776259 passes Linux ASan/LSan with
+28 groups, including six debugger cases (explicit debug-template opt-in and the
+zero-stop no-opt-in negative). Windows passes all six debugger cases, controls,
+core and all groups except the DataStore contention case; it reports no unexpected
+sanitizer finding. Strict aggregation also fails because that group has no
+complete receipt. Preserve that failure rather than calling the run passing.
+
+The contention actor unexpectedly reads a missing key successfully; the holder
+log reports its completed paused commit. Its fixed ten-second sleep can expire
+before a delayed instrumented actor attempts the read. Replace only that fixture
+assumption: an optional probe hold waits for explicit controller release, bounded
+to 120 seconds and terminated through existing owned-process cleanup on failure.
+Normal kill/recovery pause behavior is unchanged. Keep the original contention
+error, 0.8–3-second operation bound and frame-progress assertions. Require the
+holder's successful exit after release. No persistence production code changes.
+
+The sanitizer workflow permits a Windows-only retry to reuse the already-green
+Linux input scope instead of rebuilding it. Final candidate profiles keep their
+original source/harness identities. The new optional index benchmark runs the
+production cache on 256 generated modules, recording partial warming explicitly;
+it is not added as another standard CI gate.
+
+On DockerPC, the corrected explicit-release fixture passes all 23 ordinary
+DataStore actors at `1673225`; holder exit is successful. Retain the ordinary
+receipt separately from the pending Windows ASan retry 43468940617. Release
+generation-123 worker lease after owned processes are idle. The optional
+256-module index observation returns explicit partial results at its existing
+250-ms soft deadline; warming is incomplete and no smooth-frame claim is made.
+Retain [both receipts](gl-055-debugger-qualification.md) without changing the
+production index or persistence contracts. Candidate source profiles remain on
+their immutable final-native revision; fixture-only commits do not relabel them.
+
+Candidate 43461782730 now passes all four Debug/Release profiles, source-built
+production products, companion packaging, extracted startup and aggregate
+acceptance. Focused 43470730266 passes both platforms using those exact SCons
+production Release libraries, including the real five-case protocol and native
+editor journey. Their hashes equal the package startup receipts (Windows
+`7879047c8e82aa73a8be2490d2048550d3d46ee22ade3a64ade68e89f4b2e601`, Linux
+`6a2ec57ad73e5111fa2cd8c438c99db0c716512245923eda1f27fabd55103d83`).
+Retain the [hosted summary](evidence/gl055/hosted-qualification.json). This
+qualifies a Release-built extension under the admitted editor host, not an
+interactive exported release-template host. Windows full-native retry remains
+the only pending profile; releases/updater remain disabled and main unchanged.
+
+## Qualification closure
+
+Windows-only full-native 43468940617 passes all 27 groups, detection controls,
+87 original core/eight debugger scenarios, the complete native actor suite,
+all 23 DataStore actors and all six debugger cases. There are no unexpected
+sanitizer reports. The explicit-release barrier preserves the original lock
+contention/timing/frame-progress assertions and does not change persistence
+production code. Retain the prior Windows failed attempt and successful Linux
+ASan/LSan 43461776259 separately; Linux's additional group is its supported leak
+control. Windows LSan remains unavailable.
+
+The [qualification record](gl-055-debugger-qualification.md) and committed JSON/
+rendered receipts now cover final native inputs, source-built Debug/Release
+products, packages, actual native/editor/ENet/reload/ownership behavior and the
+available sanitizer scopes. Primary debugging and the supported bounded index/
+profiler subset are qualified for review/integration. GL-065's engine-editor
+cleanup, synchronous large-index latency, missing physical/Linux graphical
+coverage and the explicitly unsupported/deferred features remain visible.
+Main remains `b5389f0ff08c50e38bc11d868dbe12729a293535`; this feature is left
+unmerged with Native default, Scripted opt-in and distribution disabled.

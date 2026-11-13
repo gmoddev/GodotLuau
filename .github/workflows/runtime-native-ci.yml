@@ -147,6 +147,23 @@ jobs:
           $Runtime.FullName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           "[Runtime:NativeCI] Debug CRT: $($Runtime.FullName)" | Tee-Object -FilePath "$env:RUNNER_TEMP/native-ci/msvc-runtime.log"
 
+      - name: GL-055 actual Luau debugger protocol stack variables stepping and disconnect
+        timeout-minutes: 3
+        run: |
+          python tests/runtime/RunDebuggerQualification.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --source "$RUNNER_TEMP/native-ci/source.json" \
+            --output "$RUNNER_TEMP/native-ci/debugger"
+
+      - name: GL-055 actual native editor breakpoint watch stepping restart and detach
+        timeout-minutes: 3
+        run: |
+          python tests/editor/RunNativeAuthoring.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --output "$RUNNER_TEMP/native-ci/debugger-editor" --debugger --timeout 140
+
       - name: Single-player listen dedicated and editor lifecycle
         timeout-minutes: 4
         env:
@@ -326,7 +343,7 @@ jobs:
             --extension "build/native/${{ matrix.Library }}" \
             --godot-evidence "$RUNNER_TEMP/godot-4.7.1/provenance.json" \
             --remote-host-evidence "$RUNNER_TEMP/remote-host/remote-host.json" \
-            --remote-host-qualification "$RUNNER_TEMP/native-ci/hostqualification" --revision "$GITHUB_SHA" --foundry
+            --remote-host-qualification "$RUNNER_TEMP/native-ci/hostqualification" --revision "$GITHUB_SHA" --foundry --debugger
 
       - name: Record actual native API invocations separately from assertions
         timeout-minutes: 1

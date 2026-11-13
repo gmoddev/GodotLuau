@@ -1,0 +1,77 @@
+{
+  "Label": "editor",
+  "Exit": 0,
+  "Diagnostics": "",
+  "Checks": [
+    {
+      "Message": "Actual bounded native index returns explicit truncation for the generated large-project workload",
+      "Passed": true
+    }
+  ],
+  "Measurements": {
+    "Cached": {
+      "CachedFiles": 214,
+      "ElapsedMicroseconds": 250591,
+      "Entries": 4096,
+      "NativeMicroseconds": 250346,
+      "ParsedFiles": 32,
+      "ScannedFiles": 246,
+      "StaticMemoryAfter": 415355272,
+      "StaticMemoryBefore": 415308756,
+      "Truncated": true
+    },
+    "Cold": {
+      "CachedFiles": 0,
+      "ElapsedMicroseconds": 250979,
+      "Entries": 4096,
+      "NativeMicroseconds": 250747,
+      "ParsedFiles": 106,
+      "ScannedFiles": 106,
+      "StaticMemoryAfter": 415144176,
+      "StaticMemoryBefore": 410721204,
+      "Truncated": true
+    },
+    "GeneratedBytes": 661760,
+    "GeneratedModules": 256,
+    "Warm": {
+      "CachedFiles": 184,
+      "ElapsedMicroseconds": 251459,
+      "Entries": 4096,
+      "NativeMicroseconds": 251245,
+      "ParsedFiles": 30,
+      "ScannedFiles": 214,
+      "StaticMemoryAfter": 415307712,
+      "StaticMemoryBefore": 415261512,
+      "Truncated": true
+    },
+    "Warming": {
+      "CachedFiles": 106,
+      "ElapsedMicroseconds": 251707,
+      "Entries": 4096,
+      "NativeMicroseconds": 251441,
+      "ParsedFiles": 78,
+      "ScannedFiles": 184,
+      "StaticMemoryAfter": 415260468,
+      "StaticMemoryBefore": 415145220,
+      "Truncated": true
+    }
+  },
+  "Passed": true,
+  "Command": [
+    "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl055\\godot-official\\Godot_v4.7.1-stable_win64.exe",
+    "--headless",
+    "--disable-crash-handler",
+    "--single-threaded-scene",
+    "--editor",
+    "--path",
+    "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl055\\index-fd86f83-02"
+  ],
+  "ExtensionSHA256": "e8a35affbd14fc2ff1bcefb8e2e5dedc6d60f3051a2528606c0a1795e674960f",
+  "Scope": "One actual Windows headless native editor observation, 256 generated modules; mode names label sequential calls and do not imply complete warming. Each response explicitly truncates.",
+  "NativeSource": {
+    "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+    "Files": 136,
+    "Newlines": "LF normalized"
+  },
+  "FixtureSHA256": "6d971e5b27224d2d505a1846183756f14490dacafc79f5112bc1f1ea6f2145d9"
+}

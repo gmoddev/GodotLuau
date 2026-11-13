@@ -4,6 +4,9 @@
 #include "luau_script.h"
 #include "luau_autocomplete.h"
 #include "Luau/Compiler.h"
+#include "gl_debugger.h"
+#include "gl_debug_inspection.h"
+#include "gl_runtime_debugger.h"
 #include <godot_cpp/classes/script_language_extension.hpp>
 #include <godot_cpp/classes/resource_format_loader.hpp>
 #include <godot_cpp/classes/resource_format_saver.hpp>
@@ -22,10 +25,11 @@ public:
     LuauLanguage()  { singleton = this; }
     ~LuauLanguage() { if (singleton == this) singleton = nullptr; }
 
-    // Godot 4.4+ exige el virtual _reload_scripts (godot-cpp 4.3 no lo declara,
-    // asi que se registra a mano). No-op: los scripts Luau releen su .lua al
-    // ejecutarse; sin esto el motor imprime un ERROR en cada Play.
-    static void _call_reload_scripts(GDExtensionClassInstancePtr, const GDExtensionConstTypePtr*, GDExtensionTypePtr) {}
+    // Godot 4.4+ adds this virtual beyond the pinned 4.3 generated interface.
+    // Use its actual Array ABI and existing source/generation invalidation.
+    static void _call_reload_scripts(GDExtensionClassInstancePtr, const GDExtensionConstTypePtr* Arguments, GDExtensionTypePtr) {
+        GLReloadLuauScripts(PtrToArg<Array>::convert(Arguments[0]));
+    }
     static void _bind_methods() {
         ClassDB::bind_virtual_method(get_class_static(), "_reload_scripts", _call_reload_scripts);
     }
@@ -84,11 +88,55 @@ public:
     void _thread_enter()     override {}
     void _thread_exit()      override {}
     void _reload_all_scripts() override {}
-    void _reload_tool_script(const Ref<Script>& p_script, bool p_soft_reload) override {}
+    void _reload_tool_script(const Ref<Script>& Source, bool) override {
+        Array Scripts;Scripts.push_back(Source);GLReloadLuauScripts(Scripts);
+    }
 
     bool _handles_global_class_type(const String& p_type) const override { return p_type == "LuauScript"; }
     Dictionary _get_global_class_name(const String& p_path) const override { return Dictionary(); }
-    TypedArray<Dictionary> _debug_get_current_stack_info() override { return TypedArray<Dictionary>(); }
+    String _debug_get_error() const override {
+        auto Debugger=GLGetSuspendedDebugger();
+        if(!Debugger)return String();
+        Dictionary Context=GLDebugContext();
+        return String("[Debugger:Luau] ")+String(Context.get("Domain",String()))+" generation "+
+            String::num_uint64(Debugger->GetGeneration())+" - "+String::utf8(Debugger->GetReason().c_str());
+    }
+    int32_t _debug_get_stack_level_count() const override {
+        auto Debugger=GLGetSuspendedDebugger(); return Debugger?int32_t(Debugger->GetFrames().size()):0;
+    }
+    int32_t _debug_get_stack_level_line(int32_t Level) const override {
+        auto Debugger=GLGetSuspendedDebugger(); auto Frames=Debugger?Debugger->GetFrames():std::vector<GLDebugFrame>();
+        return Level>=0 && size_t(Level)<Frames.size()?Frames[Level].Line:0;
+    }
+    String _debug_get_stack_level_source(int32_t Level) const override {
+        auto Debugger=GLGetSuspendedDebugger(); auto Frames=Debugger?Debugger->GetFrames():std::vector<GLDebugFrame>();
+        return Level>=0 && size_t(Level)<Frames.size()?String::utf8(Frames[Level].Source.c_str()):String();
+    }
+    String _debug_get_stack_level_function(int32_t Level) const override {
+        auto Debugger=GLGetSuspendedDebugger(); auto Frames=Debugger?Debugger->GetFrames():std::vector<GLDebugFrame>();
+        return Level>=0 && size_t(Level)<Frames.size()?String::utf8(Frames[Level].Function.c_str()):String();
+    }
+    Dictionary _debug_get_stack_level_locals(int32_t Level,int32_t Items,int32_t Depth) override { return GLDebugVariables(Level,Items,Depth,false); }
+    Dictionary _debug_get_stack_level_members(int32_t Level,int32_t Items,int32_t Depth) override { return GLDebugVariables(Level,Items,Depth,true); }
+    void* _debug_get_stack_level_instance(int32_t) override { return nullptr; }
+    Dictionary _debug_get_globals(int32_t,int32_t) override {
+        Dictionary Result; PackedStringArray Names; Array Values; auto Context=GLDebugContext();
+        Array Keys=Context.keys();
+        for(int Index=0;Index<Keys.size();++Index) { Variant Key=Keys[Index];Names.push_back(Key); Values.push_back(Context[Key]); }
+        Result["globals"]=Names; Result["values"]=Values; return Result;
+    }
+    String _debug_parse_stack_level_expression(int32_t Level,const String& Expression,int32_t,int32_t) override {
+        Dictionary Result=GLDebugEvaluate(Level,Expression);
+        return bool(Result.get("Ok",false))?String(Result.get("Value",Variant())).left(4096):String(Result.get("Error",String()));
+    }
+    TypedArray<Dictionary> _debug_get_current_stack_info() override {
+        TypedArray<Dictionary> Result; auto Debugger=GLGetSuspendedDebugger();
+        if(Debugger) for(const auto& Frame:Debugger->GetFrames()) {
+            Dictionary Item; Item["file"]=String::utf8(Frame.Source.c_str()); Item["line"]=Frame.Line;
+            Item["func"]=String::utf8(Frame.Function.c_str()); Result.push_back(Item);
+        }
+        return Result;
+    }
     TypedArray<Dictionary> _get_public_functions() const override { return TypedArray<Dictionary>(); }
     Dictionary _get_public_constants() const override { return Dictionary(); }
     TypedArray<Dictionary> _get_public_annotations() const override { return TypedArray<Dictionary>(); }

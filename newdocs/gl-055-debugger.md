@@ -1,0 +1,146 @@
+# Native Luau debugger
+
+Implementation on `feature/gl-055-native-debugger`, unmerged. The supported
+debugger, bounded navigation/profiling subset, production Debug/Release products
+and available Windows/Linux sanitizer profiles pass within the
+[qualification record](gl-055-debugger-qualification.md). Consult its limits and
+the [journal](gl-055-debugger-development.md) for failed attempts and corrections.
+
+## Starting and controlling a session
+
+Run a project from Godot's editor using an editor-capable host. A connected
+native debugger is required; ordinary export templates do not enable this
+facility. A dedicated debug-template development host may explicitly opt in with
+`--debug --remote-debug tcp://127.0.0.1:PORT -- --gl-luau-debugger`; this creates
+no listener and still requires the session-bound stop exchange. Release templates
+and debug templates without the opt-in remain rejected. Set Luau source breakpoints in the ScriptEditor gutter. The native
+Debugger's Luau tab shows requested and actually admitted executable lines, hit
+counts, domain and state. An unresolved location is not an active breakpoint.
+The pinned VM can remap a comment/empty line to its next executable line.
+
+Use the Luau tab's Server/Client selector and Pause button for a safe Luau pause
+request. The native Godot stack/variable panes inspect the actual stopped
+coroutine. StepInto, StepOver, StepOut and Continue operate from that stop.
+Native C++ internals and bootstrap frames remain opaque. Stepping ends when its
+resume attempt yields/completes; an asynchronous continuation is not promised to
+retain a source step. Separate module/coroutine breakpoints remain supported.
+Detach clears admitted breakpoints/code references and resumes through Godot's
+existing loop. Stop the application through Godot's normal Stop control.
+
+After saving an edit to the stopped source, use the Luau tab's Reload button to
+retire that generation before continuing. It reloads the selected cached file,
+cancels its owned work and rebuilds through the established deferred entry.
+Successful acknowledgment continues; read/path failure leaves the session paused.
+Reload does not preserve script-local state. Saving alone does not replace the
+live suspended frame: Godot's ordinary reload request runs at idle after resume.
+Reload-all remains unsupported; select sources or restart the application.
+
+The game process pauses on its main thread. Server/Client, physics and rendering
+in that process stop together; other peers continue and may time out. This adds
+no gameplay pause protocol. EditorPreview retains historical error snapshots;
+it cannot block the editor's own UI in a live break loop.
+
+Only active Luau execution deadlines exclude measured debugger pause time.
+HTTP and DataStore operation deadlines keep their existing wall-clock semantics.
+After a long pause an HTTP request may time out; an independent DataStore helper
+may already have committed, so an unacknowledged write retains GL-009's
+indeterminate-outcome contract. Completion still revalidates the live owner and
+current coroutine wait. Pausing is not a cancellation or transaction rollback.
+These consequences are source-traced from the unchanged native managers, not a
+claim of an additional in-flight HTTP/persistence pause fixture.
+
+## Inspecting and watching values
+
+Frames label the active execution owner generation and a weak, bounded coroutine
+identity. Locals, arguments and upvalues come from the selected live frame. No
+value remains live after resume. C closures and unregistered bootstrap sources
+cannot expose private native upvalues. Node/resource projections resolve through
+the existing SceneScope ownership checks, reporting alive, destroyed, restricted
+or unsupported state. They return primitive identity/approved property copies,
+never a new Object/Resource capability. Fixed native mathematical values remain
+pure value copies. The generation label is the executing owner; it does not
+claim precise lexical-definition version tracking for every retained closure.
+
+The Watch field uses the specified zero-based live frame. Its restricted Luau
+AST evaluator supports local/upvalue lookup, bounded table/native-property
+projections, finite arithmetic/comparison, boolean operations and bounded string
+concatenation. Calls, constructors, assignment, global services, native mutation,
+file/network/persistence access and arbitrary evaluation are rejected. A missing
+projected entry in a truncated collection reports an explicit limit; cyclic/shared
+reference expansion beyond the copy is unsupported. This is a read-only
+projection of the stopped context, not a second executing Luau environment.
+
+Inspection limits include 64 frames, 64 locals, 16 arguments, 32 upvalues,
+256 copied values, depth four, at most 64 entries per table and 16 KiB of copied
+string/native-projection budget per variable-group query. Four native handles
+and eight approved properties per handle bound native inspection. Strings have
+bounded previews with explicit length/binary/truncation metadata. Sensitive
+names are redacted; name heuristics do not identify arbitrary secrets embedded
+in otherwise ordinary user data. No unrestricted global/registry dump is offered.
+
+## Development contracts
+
+At most 128 breakpoint records and 256 retained compiled chunks per domain are
+admitted through existing owner/reference budgets. BreakOnHit is a bounded exact
+hit target; arbitrary conditional execution is not enabled. Reattachment/source
+changes require new source admission; textual remapping across arbitrary edits
+is not guaranteed. Old owners retire before new callback authority.
+An identical breakpoint update preserves hit accounting. Changing its enabled
+state or hit target resets the record. Native detach requires a fresh Play/runtime
+session; an in-process remote reattach command is not provided.
+
+Custom messages use Godot's existing debugger connection, schema 1, a random
+session nonce and monotonic request IDs. Closed typed fields, bounded strings,
+32 commands/second and a 64 KiB custom response bound reject malformed/stale
+input without creating domains or granting gameplay capabilities. The nonce
+binds messages to the current connection; it does not replace Godot's transport
+admission. No new runtime listener is created.
+
+A `Suspending` notification requires an `AcknowledgeStop` bound to its domain
+and StopId before the native blocking loop starts. The supported editor plugin
+handles this automatically. Missing acknowledgment detaches after one second;
+unexpected native-loop exit detaches both domains. This avoids interpreting
+Godot's initialized debugger flag as proof that its peer is still connected.
+
+Editor tooling can obtain bounded copied session descriptors through the native
+editor plugin's `GetDebuggerSessions()`: connection generation, runtime state,
+stop/domain identity and admitted locations. These omit session nonces and
+live object handles, and are unavailable to executing gameplay Luau. Their
+connection generation distinguishes repeated Play/Stop sessions.
+
+The native authoring dock's Project Symbols command uses the existing bounded
+project cache for function/type definitions and static imports, opening selected
+locations in the ScriptEditor. Editor tooling can request `IndexProject("", "")`
+for copied per-file entries, source hashes and exact lexical local-reference
+definition locations. Unsaved active buffers participate in cache invalidation.
+Global/member names and native class constructor patterns are syntactic candidates;
+they do not establish whole-program types or runtime authority. Reports cap at
+4,096 entries, 512/file, within the existing 256-file/8-MiB project read bounds;
+partial files/reports are explicitly marked. The existing 250-ms scan deadline
+is checked between bounded operations, not a hard preemption of an AST parse.
+
+ProfileStart, ProfileStop and Profile explicitly control development collection
+for the selected live domain. Reports contain per-owner inclusive resume/protected
+wall time excluding debugger waits, compilation/module compilation, coroutine,
+require and callback activity, successful native operation counts and existing
+resource statistics. Nested execution intervals can overlap; summing them is not
+total CPU time. In-flight intervals interrupted by profiling Start/Stop are
+excluded. These are not arbitrary Lua function-call counts, a sampling profiler,
+native-only dispatch latency or a complete allocation history.
+
+Collection is disabled by default and retains no VM/native references. It caps at
+128 owners and 256 native operation names per domain, with a 24-owner/64-operation
+report preview and explicit truncation. Ownership snapshots show up to 16 scopes,
+4,096 node observations, weak resource/subscription counts and queued/destroyed
+states. Retired owners without valid guards are excluded; their profile rows
+retain a retired label. CopyProfile explicitly copies the bounded report as JSON
+for export. A fresh connection clears the previous session's stored report.
+
+Only time actually spent in debugger suspension/handshake is excluded from active
+wall-clock execution deadlines. Allocation, safepoint and admission bounds
+remain enforced. Attached execution uses the pinned VM's debug interpreter;
+disabled execution keeps its original interpreter. Attached/disabled overhead
+and profiling/indexing measurements are recorded separately in the qualification
+record. Large navigation can occupy the main thread for about its 250-ms soft
+deadline and return explicit partial results; it is not an instantaneous index.
+Releases and updater distribution remain disabled.

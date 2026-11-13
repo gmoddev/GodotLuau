@@ -1,0 +1,472 @@
+{
+  "Status": "Final implementation focused native/rendered/performance PASS; completed hosted profiles retained in hosted-qualification.json",
+  "Baseline": "b5389f0ff08c50e38bc11d868dbe12729a293535",
+  "Branch": "feature/gl-055-native-debugger",
+  "NativeImplementation": "fd86f83223ae4bb3c87b333b875cdd6307903a12",
+  "Worker": {
+    "Revision": "f727839f0aa0b37fe8d71c15d7dc42cea7c42c97",
+    "Tree": "d5e03caa6afbb5935db3837cc5fbc99891178da3",
+    "NativeSource": {
+      "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+      "Files": 136,
+      "Newlines": "LF normalized"
+    },
+    "BuildDirectory": "C:\\Sandbox\\Codex\\Builds\\GodotLuau\\gl053-integration",
+    "SourceDirectory": "C:\\Sandbox\\Codex\\Workspaces\\GodotLuauGL053Integration",
+    "Configuration": "Debug",
+    "GL_RUNTIME_TESTS": true,
+    "Jobs": 2,
+    "Generator": "Visual Studio 17 2022",
+    "BuildSeconds": 60.052,
+    "ExtensionSHA256": "e8a35affbd14fc2ff1bcefb8e2e5dedc6d60f3051a2528606c0a1795e674960f",
+    "BuildLogSHA256": "02889faa0fcf038139fa7b88cbd88f05c79a82073e97997e4709191c4b4de900",
+    "Qualification": {
+      "Protocol": true,
+      "Editor": true
+    },
+    "Scope": "Focused actual protocol/ENet and native headless editor; not full native suite or graphical qualification"
+  },
+  "Protocol": {
+    "Passed": true,
+    "DevelopmentHostOptIn": false,
+    "Cases": [
+      {
+        "Case": "local",
+        "Stops": 8,
+        "Passed": true,
+        "Measurements": {
+          "StackRoundTripMicroseconds": [
+            15811,
+            32855,
+            32835,
+            16229,
+            16097,
+            16132,
+            16136,
+            16044
+          ],
+          "VariablesRoundTripMicroseconds": [
+            39514,
+            21664,
+            38617,
+            23209,
+            37193,
+            37487,
+            36882,
+            41505
+          ],
+          "WatchRoundTrips": [
+            {
+              "Expression": "State.Answer + 2",
+              "Microseconds": 23955
+            },
+            {
+              "Expression": "Box.ClassName == 'Node3D'",
+              "Microseconds": 24856
+            },
+            {
+              "Expression": "State.Answer > 0 and 'ready' .. '!'",
+              "Microseconds": 25595
+            },
+            {
+              "Expression": "(function() game:SetAttribute('Bypass', true) end)()",
+              "Microseconds": 26428
+            },
+            {
+              "Expression": "State.Password",
+              "Microseconds": 26893
+            },
+            {
+              "Expression": "State.Cycle.Answer",
+              "Microseconds": 27391
+            },
+            {
+              "Expression": "1 / 0",
+              "Microseconds": 27853
+            }
+          ]
+        },
+        "Checks": 393,
+        "AllChecksPassed": true
+      },
+      {
+        "Case": "disconnect",
+        "Stops": 1,
+        "Passed": true,
+        "Measurements": {
+          "StackRoundTripMicroseconds": [
+            16204
+          ],
+          "VariablesRoundTripMicroseconds": [
+            39137
+          ],
+          "WatchRoundTrips": []
+        },
+        "Checks": 51,
+        "AllChecksPassed": true
+      },
+      {
+        "Case": "running-disconnect",
+        "Stops": 1,
+        "Passed": true,
+        "Measurements": {
+          "StackRoundTripMicroseconds": [
+            16125
+          ],
+          "VariablesRoundTripMicroseconds": [
+            39872
+          ],
+          "WatchRoundTrips": []
+        },
+        "Checks": 53,
+        "AllChecksPassed": true
+      },
+      {
+        "Case": "reload",
+        "Stops": 2,
+        "Passed": true,
+        "Measurements": {
+          "StackRoundTripMicroseconds": [
+            16002,
+            16049
+          ],
+          "VariablesRoundTripMicroseconds": [
+            21548,
+            20327
+          ],
+          "WatchRoundTrips": []
+        },
+        "Checks": 81,
+        "AllChecksPassed": true
+      },
+      {
+        "Case": "network",
+        "Stops": 1,
+        "Passed": true,
+        "Measurements": {
+          "StackRoundTripMicroseconds": [
+            32375
+          ],
+          "VariablesRoundTripMicroseconds": [
+            36845
+          ],
+          "WatchRoundTrips": []
+        },
+        "Checks": 38,
+        "AllChecksPassed": true
+      }
+    ]
+  },
+  "Rendered": {
+    "Passed": true,
+    "PhysicalInput": false,
+    "Scope": "Actual offscreen native Godot editor controls with no activation or desktop input; source gutter, displayed stack/variables, stepping, Watch, profiling, restart, saved-source reload and detach",
+    "AllChecksPassed": true,
+    "Checks": 44,
+    "Captures": {
+      "debugger-breakpoint.png": {
+        "SHA256": "188c7a5741d754a48a1854d6d19cb4902c76f7aca9470988a24766815446fd5e",
+        "Bytes": 220065
+      },
+      "debugger-stack.png": {
+        "SHA256": "483547674e1077e76e9196314a0cfa91c2ba345de406e24b9fdcf039cd418a43",
+        "Bytes": 228698
+      },
+      "debugger-stepping.png": {
+        "SHA256": "a69b57ce1f1bc7c3e6aff03014e7e33899da43a46ff96ed1ebb6ad6f6a3ef507",
+        "Bytes": 224656
+      },
+      "debugger-reload.png": {
+        "SHA256": "ce8d34324f731830409ef5a2c3a3668f517a062ae995f7867020f57aee13d6d2",
+        "Bytes": 229336
+      }
+    },
+    "EditorExitLimitation": "GL-065: eight UI TreeItem/TextParagraph instances; pinned Godot breakpoint removal detaches without freeing. Not a leak-free editor claim."
+  },
+  "Performance": {
+    "Run": "https://github.com/gmoddev/GodotLuau/actions/runs/43463127788",
+    "Baseline": "b5389f0ff08c50e38bc11d868dbe12729a293535",
+    "Scope": "Release production core, shared pinned Luau, one warmup and five measured 100000-operation trials; C++ new counts exclude Luau malloc; timings exclude native Godot IPC/rendering",
+    "SaturatedTarget": {
+      "PassedBothPlatforms": true,
+      "Target": 1000000,
+      "Visits": 1000002,
+      "Stops": 1,
+      "RetainedCount": 1000001
+    },
+    "Platforms": {
+      "Windows": {
+        "Revision": "f727839f0aa0b37fe8d71c15d7dc42cea7c42c97",
+        "InputHashes": {
+          "baseline.jsonl": "4e4a6c3b31f835a45f83d7056a95d2ac3a86fdd282734fbaccf874532dcb090f",
+          "candidate.jsonl": "fd67fa99a2805b297dce282876c90e515ee39c31f7b0b0f8cda9140ba071ff85",
+          "source.json": "7f00ebfa582f4f5221391c506f33a7397e1e106a2be8f1c422317f66ea014398"
+        },
+        "Modes": {
+          "baseline:Disabled": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 4033.8,
+              "CpuMicroseconds": 4000,
+              "ExecuteMicroseconds": 4062.5,
+              "CppAllocations": 0,
+              "CppAllocationBytes": 0,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              4028.1,
+              4253
+            ]
+          },
+          "candidate:Disabled": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 4038.1,
+              "CpuMicroseconds": 4000,
+              "ExecuteMicroseconds": 4057.1,
+              "CppAllocations": 0,
+              "CppAllocationBytes": 0,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              4027.8,
+              4088.8
+            ]
+          },
+          "candidate:Attached": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 13427.3,
+              "CpuMicroseconds": 13000,
+              "ExecuteMicroseconds": 13450.6,
+              "CppAllocations": 0,
+              "CppAllocationBytes": 0,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              13407.9,
+              13454.2
+            ]
+          },
+          "candidate:Breakpoint": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 54934.7,
+              "CpuMicroseconds": 55000,
+              "ExecuteMicroseconds": 54965,
+              "CppAllocations": 400001,
+              "CppAllocationBytes": 12800048,
+              "VmPeakBytes": 504336,
+              "Stops": 100000,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              54840.8,
+              55960.9
+            ]
+          },
+          "candidate:Step": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 206191.1,
+              "CpuMicroseconds": 206000,
+              "ExecuteMicroseconds": 206225.8,
+              "CppAllocations": 2200011,
+              "CppAllocationBytes": 70400368,
+              "VmPeakBytes": 504336,
+              "Stops": 200002,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              204825,
+              206855.9
+            ]
+          },
+          "candidate:Inspect": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 121062.3,
+              "CpuMicroseconds": 121000,
+              "ExecuteMicroseconds": 121099.2,
+              "CppAllocations": 900001,
+              "CppAllocationBytes": 32800048,
+              "VmPeakBytes": 504336,
+              "Stops": 100000,
+              "Inspections": 300000
+            },
+            "WallMicrosecondsRange": [
+              120770.1,
+              122151.7
+            ]
+          },
+          "candidate:Profile": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 7446,
+              "CpuMicroseconds": 7000,
+              "ExecuteMicroseconds": 7465.5,
+              "CppAllocations": 2,
+              "CppAllocationBytes": 104,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              7395.6,
+              7505.1
+            ]
+          }
+        }
+      },
+      "Linux": {
+        "Revision": "f727839f0aa0b37fe8d71c15d7dc42cea7c42c97",
+        "InputHashes": {
+          "baseline.jsonl": "0b1232180bf24608e0f7447423f57f9dade5aebb445adaae8f96c94bb72c159e",
+          "candidate.jsonl": "08e7183e417217130762b3e75ddab2c4a86625d1e5bc302e3f6df8935be257ed",
+          "source.json": "f0d7b7896c7eb2b7f336dbd2105dc8538df4a9fad4b8ba4fecd29cf5e8687c9c"
+        },
+        "Modes": {
+          "baseline:Disabled": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 2043.802,
+              "CpuMicroseconds": 2044,
+              "ExecuteMicroseconds": 2053.778,
+              "CppAllocations": 0,
+              "CppAllocationBytes": 0,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              2033.006,
+              2048.219
+            ]
+          },
+          "candidate:Disabled": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 2098.615,
+              "CpuMicroseconds": 2099,
+              "ExecuteMicroseconds": 2108.19,
+              "CppAllocations": 0,
+              "CppAllocationBytes": 0,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              2095.15,
+              2118.565
+            ]
+          },
+          "candidate:Attached": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 6085.808,
+              "CpuMicroseconds": 6086,
+              "ExecuteMicroseconds": 6095.263,
+              "CppAllocations": 0,
+              "CppAllocationBytes": 0,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              6029.643,
+              6179.039
+            ]
+          },
+          "candidate:Breakpoint": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 21176.658,
+              "CpuMicroseconds": 21176,
+              "ExecuteMicroseconds": 21194.855,
+              "CppAllocations": 400001,
+              "CppAllocationBytes": 7000048,
+              "VmPeakBytes": 504336,
+              "Stops": 100000,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              21158.54,
+              21244.85
+            ]
+          },
+          "candidate:Step": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 72869.317,
+              "CpuMicroseconds": 72868,
+              "ExecuteMicroseconds": 72892.573,
+              "CppAllocations": 2200011,
+              "CppAllocationBytes": 38500223,
+              "VmPeakBytes": 504336,
+              "Stops": 200002,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              70094.442,
+              73824.739
+            ]
+          },
+          "candidate:Inspect": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 33273.852,
+              "CpuMicroseconds": 33273,
+              "ExecuteMicroseconds": 33287.222,
+              "CppAllocations": 900001,
+              "CppAllocationBytes": 21200048,
+              "VmPeakBytes": 504336,
+              "Stops": 100000,
+              "Inspections": 300000
+            },
+            "WallMicrosecondsRange": [
+              32976.664,
+              33565.843
+            ]
+          },
+          "candidate:Profile": {
+            "Trials": 5,
+            "Medians": {
+              "Operations": 100000,
+              "WallMicroseconds": 3951.59,
+              "CpuMicroseconds": 3952,
+              "ExecuteMicroseconds": 3960.733,
+              "CppAllocations": 2,
+              "CppAllocationBytes": 91,
+              "VmPeakBytes": 504336,
+              "Stops": 0,
+              "Inspections": 0
+            },
+            "WallMicrosecondsRange": [
+              3838.88,
+              3979.441
+            ]
+          }
+        }
+      }
+    }
+  }
+}
