@@ -542,3 +542,34 @@ that environmental attempt alongside its rendered pass.
 Supersede the in-flight `b7297fb` native/sanitizer/candidate checks with the final
 allocation correction's cohort. This is a known source change, not a retry of a
 failed product check. Core 43342974083 and declarations 43342974114 passed.
+
+The final normalized native fingerprint is `fda36b81...6b1cb2`, runtime revision
+`0af6e4d`, tree `ffd4de98c780a7df46da28d46ca360a0b031363d`. The complete final
+seven-trial measurement is 40.124 ms dispatch, 0.642 ms construction and 11.021 ms
+conversion; this includes the explicit string_view include. The actual final
+adapter passes rendered expansion and the existing native editor workflow:
+44 authoring checks and seven fresh-process reopen checks. The emitted UI starter
+and template contain ASCII separators. Reuse the completed actual interactive
+journey for unchanged editor code; do not claim that the later physical-Escape
+interruption was another graphical pass. All task-owned editor processes have
+exited, and DockerPC lease generation 114 is released after its builds finish.
+
+Final hosted cohort: core 43343578815 passes; native 43343578813,
+full-native sanitizers 43343586993 and candidate 43343590025 are still running.
+The candidate policy/retention and Linux core ASan/LSan gates already pass.
+Remote main remains `16e8597`, an ancestor of all 26 current feature commits.
+No dependency pin, admitted host, Character/networking implementation or
+release/updater policy changes are introduced by this integration follow-up.
+
+Linux sanitizer 43343586993 attempt 1 fails the new controlled GL-050 fixture,
+with detection controls passing and no unexpected ASan/LSan report. Its close-save
+file contains `99`; the race-test file is absent. The test directly supplied
+`globalize_path("user://")`, including its trailing slash, whereas production
+supplies a root without that separator. Linux's confined OpenRoot rejects the
+resulting empty final path component; Windows explicitly skips empty components.
+Correct only this fixture argument with trim_suffix("/"). Do not loosen native
+confinement or change production persistence. Retain the failed logs/artifact
+14000824287 (archive SHA256 `ebad20c3c6d431031d0bedc5260fa899ba67c6c9282d8a77105b341021492816`)
+under `gl053-followup-20261112/sanitizer-linux-attempt1`. The final native build
+fingerprint stays unchanged; fixture identity and hosted qualification must use
+the corrected input. Supersede the in-flight cohort for that concrete correction.

@@ -119,7 +119,7 @@ four successful workflows and independently checked artifacts.
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
-| GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
+| GL-050 | P2 | Fixed at `b7297fb`; controlled Windows before/after passes; cross-platform CI pending | DataStore parent could miss a final helper reply after an empty pipe read |
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 | GL-052 | P2 | Integrated and verified within documented ADR-016 scope; retained limits unchanged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
@@ -194,8 +194,13 @@ Focused review during [native authoring qualification](native-authoring-developm
 finds a source-verified race in `gl_datastore.cpp` Work::Advance: Receive can
 return empty, the helper can then write its reply and exit, and the following
 Finished check reports failure without another drain. Finished preserves the
-output pipe on both platforms. Snapshotting exit state before draining is a
-small proposed correction; it is not implemented or qualified by this campaign.
+output pipe on both platforms. Snapshotting exit state before draining is
+implemented at `b7297fb`, preserved by `0af6e4d`. The CMake-only real-companion
+barrier forces exit after an empty read: the old decision fails with committed
+value `37` present, while the fixed adapter drains and acknowledges it. Windows
+also passes the unchanged large payload and BindToClose checks. Final
+cross-platform native/sanitizer/candidate CI is pending; see the
+[qualification record](gl-053-native-qualification.md).
 
 This is not an established cause of the recorded candidate close-save failures.
 A missed OK reply would leave its committed value present; those failures also
@@ -209,7 +214,8 @@ The native-expansion campaign's Linux sanitizer attempt at `3a5adb6` again repor
 an indeterminate BindToClose write in the unchanged basic persistence fixture,
 with no unexpected sanitizer report. This does not establish the receive/exit
 race as its cause. Retain the failure and separate disposition in the
-[campaign journal](gl-053-native-development.md); GL-050 remains unresolved.
+[campaign journal](gl-053-native-development.md). The transport correction does
+not establish the cause of that separate missing-value observation.
 
 ## GL-049: Typed native game authoring
 

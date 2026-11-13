@@ -10,26 +10,35 @@ retains source/package identities, current measurements and application evidence
 
 ## Final correction cohort
 
-`b7297fbd17e739fa52f70782022aa4f35dba3669` replaces property class-name
+`0af6e4d66908f6ab4dade30a4290455f982c5b4a` replaces property class-name
 reflection with an immutable descriptor-name index and live type checks. It also
 snapshots helper exit before reply draining (GL-050) and uses ASCII status
 separators in the embedded UI starter after actual Windows observation exposed
-incorrect text encoding. Existing authority, ownership, wait/deadline, protocol
+incorrect text encoding. One validated Assignment batch serves both effect
+validation and application, avoiding duplicate single-property allocations.
+Existing authority, ownership, wait/deadline, protocol
 and durability contracts remain unchanged. Native fingerprint:
-`6258fc8b1b9f094816da3453b9dd866d9420ea3dcf3e291ab311eb33844af248` (123 files).
+`fda36b81c44f8dc11a2c3b52d17687fbda78b5b2f911ea230fd544a54e6b1cb2` (123 files).
 
-Core 43342974083 passes. Native 43342974043, declarations 43342974114,
-full-native sanitizers 43342991768 and non-publishing candidate 43342995846 are
-pending at this checkpoint. Earlier results below remain evidence for their
-recorded inputs, rather than passes for this changed native cohort.
+Core 43343578815 passes. Native 43343578813, full-native sanitizers 43343586993
+and non-publishing candidate 43343590025 are pending at this checkpoint.
+Declarations 43342974114 pass the unchanged declaration/type-fixture inputs.
+Earlier results below remain evidence for their recorded inputs, rather than
+passes for this changed native cohort. In-flight `b7297fb` native, sanitizer and
+candidate runs were cancelled when the final allocation correction superseded
+their source; no failed result was retried or relabeled as passing.
 
 Actual Windows editor interaction now passes UI-profile creation, preview, native
 node inspection, independent scene saving, highlighted Luau editing, inline
 syntax diagnostics/recovery, approved enum completion, save/re-preview, Play/Stop,
 keyboard input and UI callback output, followed by editor exit 0. This uses the
-retained `e2735ec` adapter with unchanged editor implementation; the corrected
-starter and saved-project reopening still need the new adapter. The journal
-retains the earlier desktop access failure and current captures.
+retained `e2735ec` adapter with unchanged editor implementation. The final
+`0af6e4d` adapter passes the real editor workflow and fresh-process reopening,
+including UI creation/preview and independent native snapshots. Emitted
+StarterUI.luau and TemplateUI.luau contain the corrected ASCII separators. Those
+final checks are automated editor checks; no extra interactive pass is claimed
+from the later session stopped with physical Escape. The journal retains the
+earlier desktop access failure and actual interactive captures.
 
 ## Source and scope
 
@@ -118,19 +127,20 @@ rejection, death/respawn, round transitions and persistence. Solo records 65.253
 1,873 frames, 33.469 ms mean, 150 ms peak and 175 native nodes at the existing
 30 FPS cap. These are representative observations, not an isolated speedup.
 
-## Remaining integration gap
-
 ## Performance observations
 
 The same seven-trial Windows Debug fixture (first trial excluded) measures
 10,000 Position set/read pairs: retained `60913fb` baseline 42.873 ms, first
-expansion 76.257 ms, metadata index alone 77.203 ms, final descriptor/effect
-follow-up 66.921 ms. The last change reduces these observed times by 13.3%, but
-remains 56.1% above the retained baseline. This is a known Debug dispatch cost;
-no production performance improvement is claimed. Baseline binding/API paths
-are unchanged between `60913fb` and integrated baseline `16e8597`.
-Final 64-node construction is 0.772 ms; 2,000 new Transform3D roundtrips are
-11.340 ms. Raw samples/binary/fixture hashes are retained in binding-measurements.json.
+expansion 76.257 ms, metadata index alone 77.203 ms, descriptor/effect follow-up
+66.921 ms. The final same-toolchain comparison builds `7201afa` and `0af6e4d`
+with MSVC 19.44.35228 in one Debug cache and runs them on the same official
+Windows host: 65.016 ms before, 40.124 ms after (38.3% lower). This removes the
+observed regression in this workload; no universal or production speedup is
+claimed. Baseline binding/API paths are unchanged between `60913fb` and
+integrated baseline `16e8597`. Final 64-node construction is 0.642 ms; 2,000
+Transform3D roundtrips are 11.021 ms. Raw samples and binary/fixture hashes remain
+in `gl053-followup-20261112/{baseline-7201,final-0af6}-measure/focused-result.json`;
+preceding observations remain in binding-measurements.json.
 
 A bounded 100-revision native project reload observation has a 6.896 ms median,
 6.922 ms maximum observed iteration, including frame/task scheduling. All stale
@@ -140,13 +150,11 @@ Observed Lua heap changes from 492 to 895 KiB with natural GC; no forced collect
 or memory improvement/leak-free claim is made. Current foundation previews have
 24–27 nodes and observed preview times of 6.8–14.8 ms, excluding later save/reopen.
 
-Interactive editor access is currently blocked: black capture and repeated
-`GetCursorPos: Access is denied (0x80070005)`. The task-owned editor was stopped;
-no interactive pass or normal-exit claim is made from that attempt. Continue
-independent qualification; retain this gap if desktop access remains unavailable.
-It remains unavailable at this checkpoint. Do not call the complete interactive
-editor campaign finished or merge on that basis. All feasible independent gates
-above are complete. Main, release publication and updater admission are unchanged.
+The earlier interactive attempt failed desktop capture/activation with
+`GetCursorPos: Access is denied (0x80070005)`. Keep that failed attempt. Desktop
+access recovered for the actual UI journey recorded above, which exits normally;
+it resolves the earlier access gap. Reuse that evidence with final automated
+editor/reopen and rendered checks within their documented scope.
 
 ## Profile limits and deferred surface
 
@@ -162,6 +170,8 @@ above are complete. Main, release publication and updater admission are unchange
 | Reload | Reverse dependency closure invalidates cached modules and retires callbacks. Returned values remain snapshots; no automatic runtime state migration or rollback to stale executable generations. |
 | Devices/platforms | No Windows LSan, Linux graphical/device claim, or physical gamepad/mobile device claim. Preserve the existing admitted sanitizer limits. |
 
-GL-050 remains separate and unresolved. Native remains the default Character
-controller; Scripted remains explicit opt-in. No networking, persistence,
-production release or updater authority changes are part of this campaign.
+GL-050's transport correction has a controlled Windows before/after reproduction;
+cross-platform CI is pending. It does not establish the cause of earlier missing
+close-save values. Native remains the default Character controller; Scripted
+remains explicit opt-in. Networking, persistence authority, production release
+and updater admission remain unchanged.

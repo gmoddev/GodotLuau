@@ -38,10 +38,10 @@ the integrated authoring foundations. Its name is distinct from the historical
 GL-053 default-damage finding, which remains resolved under its original ID.
 The [qualification record](gl-053-native-qualification.md) separates current
 component evidence, pending acceptance and retained profile limitations.
-Its supported Windows/Linux native/sanitizer/four-profile package scope and
-Windows rendered applications/export/game regressions are qualified. Interactive
-editor acceptance remains blocked by desktop capture/activation access; the
-campaign is not advertised as fully interactive or integrated.
+Its preceding Windows/Linux native/sanitizer/four-profile package cohort and
+Windows rendered applications/export/game regressions are qualified. Actual
+Windows editor interaction now passes; the final dispatch/GL-050 corrections are
+under hosted qualification before the owner-authorized normal main merge.
 
 The normally [integrated GL-052 campaign](gl-052-main-integration.md) preserves
 all 25 qualified feature commits and their evidence. It implements a clean-project,

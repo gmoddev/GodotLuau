@@ -80,7 +80,7 @@ game:SetAttribute('Done',true)
     var ExitRacePassed := false
     for Child in Game.get_children():
         if Child.is_class("GLDomainHost"):
-            ExitRacePassed=Child.has_method("_gl_test_datastore_exit") and Child.call("_gl_test_datastore_exit",ProjectSettings.globalize_path("user://"))
+            ExitRacePassed=Child.has_method("_gl_test_datastore_exit") and Child.call("_gl_test_datastore_exit",ProjectSettings.globalize_path("user://").trim_suffix("/"))
     if not ExitRacePassed: Failed=true
     print("[Persistence:DataStore] ","PASS" if ExitRacePassed else "FAIL"," controlled empty-read/exit reply")
     Gap=0.0; Started=Time.get_ticks_msec()
