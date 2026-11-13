@@ -163,10 +163,15 @@ func Receive(Message: Array) -> void:
             if Reply.get("Operation") == "ProfileStart":
                 Check(Report.get("Enabled", false), "Explicit profiler Start admits development collection")
             elif Reply.get("Operation") == "ProfileStop":
+                var Saved = Reply.duplicate(true)
+                Saved.erase("Session")
+                var File = FileAccess.open("res://profile-snapshot.json", FileAccess.WRITE)
+                File.store_string(JSON.stringify(Saved, "  "))
+                File.close()
                 var Counts: Dictionary = Report.get("NativeCalls", {})
                 var Rows: Array = Report.get("Scripts", [])
                 var Scopes: Array = Reply.get("Ownership", {}).get("Scopes", [])
-                Check(not Report.get("Enabled", true) and Counts.get("Construct:Button.new", 0) >= 1 and Counts.get("Signal:Button.Pressed", 0) >= 1, "Actual successful native construction and signal dispatch counts")
+                Check(not Report.get("Enabled", true) and Counts.get("Construct:Button.new", 0) >= 1 and Counts.get("Signal:BaseButton.Pressed", 0) >= 1, "Actual successful native construction and signal dispatch counts")
                 Check(Rows.any(func(Row): return Row.get("ModuleCompilations", 0) > 0) and Rows.any(func(Row): return Row.get("Callbacks", 0) > 0) and Rows.all(func(Row): return not str(Row.get("Source", "")).contains("DebuggerClient")), "Actual module compilation callback activity and Client exclusion")
                 Check(Scopes.size() == 1 and Scopes[0].get("LiveResourceSlots", 0) >= 1 and Scopes[0].get("LiveCallbacks", 0) == 1 and Scopes[0].get("DestroyedNodes", 0) >= 1, "Actual native ownership snapshot distinguishes live resource callback and destroyed node slots")
                 ProfileReferences = Reply.get("Resources", {}).get("References", -1)

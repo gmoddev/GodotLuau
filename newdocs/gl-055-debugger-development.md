@@ -320,6 +320,17 @@ claim is made. The overall workflow still fails its known old-product disconnect
 case. The newer `71e8bfd` Linux native job independently passes the fixed protocol
 and editor checks together with the full existing native suite.
 
+## Controlled reload observer ordering
+Selective-reload run 43446022999's Linux peer reaches the replacement owner and
+new breakpoint, but the target observer inspects the old scope after it has already
+been retired and destroyed. Replace its one-frame assumption with an explicit
+primed/observed barrier: the old source cannot reach its breakpoint until the
+target captures both native IDs. Arm the cancellation timer only after that
+barrier. Retain all old-code/callback/destroyed-object assertions. This fixture
+correction changes no native input; reuse the exact `24dd94b` adapter in focused
+qualification. Cancel sanitizer 43450112103 early because it uses this known bad
+observer ordering; restart with the corrected fixture, retaining the attempt.
+
 ## Bounded development profiling and ownership snapshots
 
 Add explicit ProfileStart/ProfileStop/Profile controls through the admitted
@@ -381,13 +392,18 @@ pending; no sanitizer result or dedicated ENet pause coordination is implied.
 That profile also requires an actual no-opt-in negative case: the same debug
 template, initialized remote connection and configured Luau breakpoints must run
 to completion with zero Luau stops when the explicit flag is absent.
-## Controlled reload observer ordering
-Selective-reload run 43446022999's Linux peer reaches the replacement owner and
-new breakpoint, but the target observer inspects the old scope after it has already
-been retired and destroyed. Replace its one-frame assumption with an explicit
-primed/observed barrier: the old source cannot reach its breakpoint until the
-target captures both native IDs. Arm the cancellation timer only after that
-barrier. Retain all old-code/callback/destroyed-object assertions. This fixture
-correction changes no native input; reuse the exact `24dd94b` adapter in focused
-qualification. Cancel sanitizer 43450112103 early because it uses this known bad
-observer ordering; restart with the corrected fixture, retaining the attempt.
+
+## Windows/Linux focused debugger qualification
+
+Focused [43454399358](https://github.com/gmoddev/GodotLuau/actions/runs/43454399358)
+passes both platforms using the immutable `5466af1` adapter. All four actual
+protocol cases, profiling/weak ownership checks and the native displayed-stack/
+variable/control/restart/detach editor journey pass. Correct the expected signal
+counter to its registry declaring class `BaseButton.Pressed`, preserving the count
+assertion. Retain copied profile receipts without transport nonces. The editor
+driver also selects the session tab by its actual bound session ID, avoiding an
+ambiguous first/last tab when Godot creates multiple sessions. These changes do
+not alter native source. Sanitizer 43450756992 is canceled early because it uses
+the known incorrect expected counter; rerun with the corrected fixture. Candidate
+43450118761 remains relevant because its unchanged core/native/package inputs do
+not exercise that peer-only assertion. Main remains untouched.

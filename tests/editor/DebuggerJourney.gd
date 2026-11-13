@@ -72,6 +72,10 @@ func FrameReady(Stop: int) -> bool:
     return false
 
 func Tab() -> Node:
+    var Active = -1
+    for State in Native.call("GetDebuggerSessions"):
+        if State.get("Active", false):
+            Active = State.get("EditorSession", -1)
     var Root = EditorInterface.get_base_control()
     var Work: Array = [[Root, 0]]
     var Visited = 0
@@ -80,7 +84,11 @@ func Tab() -> Node:
         var Entry = Work.pop_back()
         var Current: Node = Entry[0]
         if Current is VBoxContainer and Current.name == "Luau" and Find(Current, "Button"):
-            return Current
+            for Control in Current.find_children("*", "Button", true, false):
+                for Connection in Control.get_signal_connection_list("pressed"):
+                    var Bound: Array = Connection.callable.get_bound_arguments()
+                    if Bound.size() == 2 and Bound[0] == Active:
+                        return Current
         if Entry[1] < 32:
             for Child in Current.get_children():
                 Work.append([Child, Entry[1] + 1])
