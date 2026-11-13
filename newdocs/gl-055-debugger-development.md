@@ -645,3 +645,13 @@ cleanup, synchronous large-index latency, missing physical/Linux graphical
 coverage and the explicitly unsupported/deferred features remain visible.
 Main remains `b5389f0ff08c50e38bc11d868dbe12729a293535`; this feature is left
 unmerged with Native default, Scripted opt-in and distribution disabled.
+
+## Main integration authorization
+
+The owner subsequently requests normal main integration on 2026-11-13.
+Merge `9ecfc9ebf1509a50247c5104b2e09d6429a9804e` preserves all 43 feature
+commits and the exact qualified tree. The earlier unmerged/no-merge statements
+above describe their historical campaign checkpoints. The
+[integration record](gl-055-main-integration.md) separates reused qualification
+from fresh core/native/declaration checks on main. Native remains default,
+Scripted opt-in, and release/updater distribution disabled.

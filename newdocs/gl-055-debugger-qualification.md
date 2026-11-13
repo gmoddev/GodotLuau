@@ -1,7 +1,8 @@
 # GL-055 qualification
 
-Status: qualified within the recorded scopes on `feature/gl-055-native-debugger`;
-unmerged. Core, native, production Debug/Release, nonpublishing packages and
+Status: qualified feature checkpoint `9b77fda`, preserved by normal merge
+`9ecfc9e`. The [integration record](gl-055-main-integration.md) separately tracks
+fresh main acceptance. Core, native, production Debug/Release, nonpublishing packages and
 available Windows/Linux sanitizer profiles pass. Limits below remain explicit.
 The [journal](gl-055-debugger-development.md) preserves attempts, corrections and
 their original identities. The [guide](gl-055-debugger.md) describes the supported
@@ -157,9 +158,11 @@ Limits are explicit rather than simulated compatibility:
   sanitizer scope is separate.
 
 Native remains the default Character controller and Scripted remains opt-in.
-Main, release publication and updater distribution remain unchanged. The primary
+The owner's subsequent integration request authorizes the normal main merge;
+release publication and updater distribution remain disabled. The primary
 debugger and the documented bounded navigation/profiling subset are ready for
 review and normal integration within these limits. GL-065 remains an external
 engine-editor issue; large navigation retains its measured synchronous deadline.
 Arbitrary evaluation/function CPU profiling and the other explicitly unsupported
-features are not qualification claims. This campaign does not authorize a merge.
+features are not qualification claims. The original feature campaign's no-merge
+boundary remains historical; main verification is recorded separately.

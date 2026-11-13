@@ -1,9 +1,11 @@
 # GodotLuau fork documentation
 
-The unmerged GL-055 debugger has a [user guide](gl-055-debugger.md),
+The integrated GL-055 debugger has a [user guide](gl-055-debugger.md),
 [qualification record](gl-055-debugger-qualification.md) and
 [development journal](gl-055-debugger-development.md). Results retain their
-source/configuration identities; pending gates are not passing claims.
+source/configuration identities. The [integration record](gl-055-main-integration.md)
+separates retained feature evidence from fresh main CI; pending gates are not
+passing claims.
 
 Public fork: [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau).
 Upstream: [Pimpoli/GodotLuau](https://github.com/Pimpoli/GodotLuau).
@@ -38,8 +40,9 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
-The unmerged [GL-055 native debugger campaign](gl-055-debugger-development.md)
-extends the integrated authoring foundation. [ADR-018](adr-018-native-luau-debugger.md)
+The normally [merged GL-055 native debugger campaign](gl-055-main-integration.md)
+extends the authoring foundation, preserving all 43 feature commits and evidence.
+[ADR-018](adr-018-native-luau-debugger.md)
 defines live suspension and inspection; the journal separates implementation and
 actual qualification from planned phases. Historical GL-055 remains resolved.
 

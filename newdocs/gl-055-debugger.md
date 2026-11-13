@@ -1,6 +1,8 @@
 # Native Luau debugger
 
-Implementation on `feature/gl-055-native-debugger`, unmerged. The supported
+Implementation from `feature/gl-055-native-debugger` is integrated by normal
+merge `9ecfc9e`. The [integration record](gl-055-main-integration.md) tracks fresh
+main checks separately from the preserved feature evidence. The supported
 debugger, bounded navigation/profiling subset, production Debug/Release products
 and available Windows/Linux sanitizer profiles pass within the
 [qualification record](gl-055-debugger-qualification.md). Consult its limits and
