@@ -133,9 +133,9 @@ four successful workflows and independently checked artifacts.
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
 | GL-054 | P2 | Resolved and normally integrated by `47bbb6d`; core/native verification linked below | Changed project module leaves cached transitive importers and their callbacks alive |
 | GL-055 | P2 | Resolved and normally integrated by `47bbb6d`; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
-| [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Resolved and normally merged by `a419b93`; fresh main CI tracked in integration record | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
-| [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved and normally merged by `a419b93`; fresh main CI tracked in integration record | A different execution owner can transform an ancestor of another owner's native SceneScope |
-| [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Attribute-value fix normally merged by `a419b93`; fresh main CI tracked in integration record | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
+| [GL-056](gl-054-engine-development.md#actual-plain-scene-bootstrap-defect) | P2 | Resolved and normally merged by `a419b93`; fresh Windows/Linux main core/native/declarations pass | Ordinary native scene names resolve `game` to Window and cannot register BindToClose |
+| [GL-057](gl-054-engine-development.md#shared-ancestor-authority-defect) | P1 | Resolved and normally merged by `a419b93`; fresh Windows/Linux main core/native/declarations pass | A different execution owner can transform an ancestor of another owner's native SceneScope |
+| [GL-058](gl-054-engine-development.md#attribute-string-encoding) | P2 | Attribute-value fix normally merged by `a419b93`; fresh Windows/Linux main core/native/declarations pass | SetAttribute interprets UTF-8 string values as Latin-1, corrupting snapshot text |
 | [GL-059](gl-054-engine-development.md#actual-release-qualification-barrier-race) | P2 | Resolved and normally merged by `a419b93`; stalled control and four-profile proof retained | Existence-only file barriers can expose an empty reconnect peer ID before the writer finishes |
 | [GL-060](gl-054-engine-development.md#accepted-candidate-and-application-export-correction) | P2 | Resolved and normally merged by `a419b93`; both Linux export/read-start/restart proofs retained | Candidate staging and Godot's dependency export copy lose the companion's executable mode |
 
@@ -158,7 +158,10 @@ scope, with the manual step explicit; no native backend or authority change.
 See the [campaign record](gl-054-engine-development.md#accepted-candidate-and-application-export-correction)
 for retained failures and accepted product identities. The
 [main integration record](gl-054-main-integration.md) tracks the preserving merge
-and fresh integrated verification for GL-056 through GL-060.
+and fresh integrated verification for GL-056 through GL-060. Fresh main core,
+native and declaration CI passes on Windows/Linux at `9ec63eb`, with 141 native
+process results and 44 Foundry checks plus durable restart on each platform.
+Original export/candidate/sanitizer evidence remains scoped to its own inputs.
 
 ## GL-059: Partial qualification marker publication
 

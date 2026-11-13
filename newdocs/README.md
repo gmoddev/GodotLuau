@@ -43,7 +43,8 @@ module-reload finding keeps its original ID and resolved status.
 The [qualification record](gl-054-qualification.md) summarizes exact identities,
 completed native/sanitizer/four-profile/package/export/game gates, surface
 measurements and retained profile limitations. The branch is qualified within
-that scope; the integration record tracks fresh main core/native/declaration CI
+that scope; the integration record includes passing Windows/Linux main core,
+native and declaration CI
 separately from retained feature evidence.
 
 The normally [integrated GL-053 native API campaign](gl-053-main-integration.md) expands

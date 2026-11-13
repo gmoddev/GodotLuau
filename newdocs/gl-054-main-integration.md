@@ -1,7 +1,10 @@
 # GL-054 main integration
 
-Status: normally merged locally; fresh integrated core/native/declaration CI
-pending. The owner separately authorized this integration on 2026-11-13.
+Status: **INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS**. Fresh core,
+native and declaration CI passes Windows/Linux. The owner separately authorized
+this integration on 2026-11-13. The
+[integration receipt](evidence/gl054-main-integration-20261113.json) records exact
+source, history, workflow and native artifact identities.
 
 ## History and identity
 
@@ -49,9 +52,37 @@ Fresh hosted CI must pass on the integrated revision for all three boundaries:
 - Approved native bindings and Luau declarations: both pinned-frontend platform
   jobs, policy/generation drift and representative positive/negative calls.
 
-CI results, exact tested revision and remote verification will be recorded here
-before marking integration complete. There is no reason to repeat unchanged
-candidate/sanitizer/export campaigns merely to qualify their established fixtures.
+The merge and initial documentation are pushed to main at
+`9ec63eb9d07bf66380030f2f753f99a55574c8d2`, verified with `git ls-remote`.
+The feature ref remains at `bb7f505`. Fresh push-triggered workflows identify
+that integrated revision:
+
+| Boundary | Run | Result |
+| --- | --- | --- |
+| Core | [43414942565](https://github.com/gmoddev/GodotLuau/actions/runs/43414942565) | Windows/Linux pass |
+| Native | [43414942556](https://github.com/gmoddev/GodotLuau/actions/runs/43414942556) | Windows/Linux pass |
+| Declarations | [43414942468](https://github.com/gmoddev/GodotLuau/actions/runs/43414942468) | Windows/Linux pass |
+
+Both native artifacts record 141 required process results, 44 Foundry checks,
+successful durable restart and the exact expected native fingerprint. Existing
+editor/index/error-snapshot, authority, lifetime, Character V2, Native/Scripted
+controller, networking, asynchronous HTTP, storage interruption/recovery and
+full-host physics/navigation checks pass. These fresh native results are headless;
+the retained Windows rendered evidence keeps its original identity and scope.
+The three workflows pass on their first attempts, with no runtime/fixture changes
+or retries required by integration.
+
+Windows native evidence artifact digest is
+`feabaf58bec9223f9757a04690c639a35ec9c93d9fa62136801e62b009621e06`;
+Linux is `00671ce1a74db2549f889c73f151596f83b01f1820ea5ee92ecb3d6af35bf86d`.
+The downloaded summaries identify the tested revision and fingerprint above.
+Their SHA256 values and artifact IDs are in the integration receipt.
+
+Closing notes and the receipt change documentation only. `git diff` confirms
+that native build inputs equal `f1a996b`, while all runtime/fixture/workflow/package
+inputs equal `bb7f505` and tested main `9ec63eb`. The original branch receipt is
+unchanged. Existing candidate/sanitizer/export campaigns are reused within their
+documented profiles; no redundant rebuild is required for these closing notes.
 
 ## Preserved boundaries
 

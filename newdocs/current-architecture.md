@@ -7,7 +7,8 @@ error-time primitive-local snapshots over the existing editor debugger transport
 these are historical copies, not suspended execution. Qualification remains
 separate from implementation and unchanged integrated evidence below. Merge
 `a419b93` preserves all 23 feature commits and their exact tree; fresh main
-core/native/declaration verification is tracked in the integration record.
+Windows/Linux core/native/declaration CI passes at `9ec63eb`, separately recorded
+from retained feature qualification and its profile limits.
 
 The [integrated GL-053 native expansion](gl-053-main-integration.md) extends the
 existing policy dispatcher with bounded pure values/collections, observation

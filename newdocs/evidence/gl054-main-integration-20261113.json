@@ -1,0 +1,55 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-054 main integration",
+  "Status": "Integrated and verified within retained qualification limits",
+  "MainBaseline": "e3d7b53e78dd483e3765d64995e862810d94c6f8",
+  "FeatureBranch": "feature/gl-054-engine-production",
+  "FeatureTip": "bb7f505fddf29d74cb99a4575d0d5c68e01dc60a",
+  "FeatureCommitsPreserved": 23,
+  "MergeCommit": "a419b93ce0de0470d3ef2522a67f6015610d4827",
+  "MergeAndFeatureTree": "368b314b16d4f59feb164b609ece0968793ce7c7",
+  "TestedMainRevision": "9ec63eb9d07bf66380030f2f753f99a55574c8d2",
+  "NativeImplementationRevision": "f1a996b5f6fc9be1e4190d21ecd021ac279a9ab3",
+  "NativeFingerprint": {
+    "SHA256": "ba44f2ac38c33ed616d305434cef2f8beca232bffc0455d7c5159efa50c5e49d",
+    "Files": 128,
+    "Newlines": "LF normalized"
+  },
+  "DependencyPins": {
+    "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+    "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+  },
+  "FreshHostedCI": {
+    "Core": {"Run": 43414942565, "Windows": "success", "Linux": "success"},
+    "Native": {"Run": 43414942556, "Windows": "success", "Linux": "success"},
+    "Declarations": {"Run": 43414942468, "Windows": "success", "Linux": "success"}
+  },
+  "NativeArtifacts": {
+    "Windows": {
+      "Id": 14032244770,
+      "DigestSHA256": "feabaf58bec9223f9757a04690c639a35ec9c93d9fa62136801e62b009621e06",
+      "SummarySHA256": "481661b988036489d7af91eb97128bfc5eb812b22eb76c8fcaac7181632ba713"
+    },
+    "Linux": {
+      "Id": 14032173617,
+      "DigestSHA256": "00671ce1a74db2549f889c73f151596f83b01f1820ea5ee92ecb3d6af35bf86d",
+      "SummarySHA256": "bf90bdb6b53fc52d2bd4c94c9309e7b5880305fb538519335efa84b560c80cf8"
+    }
+  },
+  "NativeProcessesPerPlatform": 141,
+  "FoundryChecksPerPlatform": 44,
+  "FoundryDurableRestartBothPlatforms": true,
+  "FreshGraphicalQualification": false,
+  "OriginalBranchReceipt": "gl054-qualification.json",
+  "OriginalBranchReceiptChanged": false,
+  "RuntimeOrFixtureCorrectionsRequiredByIntegration": false,
+  "ClosingChangesDocumentationOnly": true,
+  "Boundaries": {
+    "NativeControllerDefault": true,
+    "ScriptedControllerOptIn": true,
+    "DependenciesOrAdmittedHostsChanged": false,
+    "ReleasePublicationEnabled": false,
+    "UpdaterDistributionEnabled": false,
+    "RetainedLimits": "Original graphical, standalone export, selected-API, live-debugger and sanitizer-host/Windows LSan limits remain in gl-054-qualification.md"
+  }
+}

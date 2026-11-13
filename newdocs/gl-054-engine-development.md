@@ -636,3 +636,22 @@ GL-056/057/058/059/060 are resolved on this feature branch within their linked
 scope. The campaign is ready for integration review, with no main merge authorized.
 Native remains the Character default and Scripted opt-in. Dependencies/admitted
 hosts, release publication and updater distribution remain unchanged/disabled.
+
+## Owner-authorized main integration
+
+On 2026-11-13 the owner separately authorizes a normal integration, preserving
+the feature history and qualification evidence. Before integration, remote main
+is verified at `e3d7b53`; the
+qualified tip `bb7f505` contains 23 commits above it. Normal merge `a419b93`
+preserves all of them without conflicts and exactly matches the feature tree.
+Initial integration notes are pushed with the merge at `9ec63eb`.
+
+Fresh main core 43414942565, native 43414942556 and declarations 43414942468 pass
+Windows/Linux. Both native summaries identify the unchanged 128-input fingerprint,
+141 required process results, 44 Foundry checks and passing durable restart.
+No integration runtime/fixture correction or retry is required. Closing notes
+change documentation only. The [integration record](gl-054-main-integration.md)
+and separate receipt retain exact merge/source/test/artifact identities while
+leaving the original feature receipt and failed attempts unchanged. Prior
+no-merge statements above describe the earlier campaign authorization.
+Native remains default and Scripted opt-in; releases and updater stay disabled.
