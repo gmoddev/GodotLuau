@@ -199,3 +199,14 @@ default main. Use its push trigger on this qualification-only branch with the
 explicit original adapter run, retaining exact native-source admission. Cancel
 43440700078/43440700081: the fixture repair changes no native/core implementation.
 No default-branch modification or additional native rebuild is needed for it.
+
+Focused 43441210614 exposes a peer-only grouping bug: context `State` overwrites
+the script local of the same name when the peer flattens Godot's separate groups.
+Keep context names separate. Focused 43441438055 then passes actual cyclic/native
+inspection, all seven restricted watches, into/over/out, module, Client and signal
+callback stops. Its final pure local alias has no instruction (requested line 25
+correctly remaps to executable 26); place that fixture marker on the actual assert.
+Retain the destroyed-handle assertion. The unexpected-disconnect attempt also
+shows a product issue: Godot's `is_active()` remains true after losing the peer,
+so later Luau stops invoke an unavailable native session. Keep its no-error gate
+and fix the product lifecycle separately; no full debugger pass is claimed.

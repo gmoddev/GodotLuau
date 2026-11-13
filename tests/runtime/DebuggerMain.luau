@@ -22,6 +22,6 @@ game:SetAttribute("DebuggerReady", true)
 while not game:GetAttribute("CallbackDone") do task.wait() end
 Box:Destroy()
 task.wait()
-local Missing = Box -- GL055:Stale
-assert(Material ~= nil and Missing ~= nil)
+local Missing = Box
+assert(Material ~= nil and Missing ~= nil) -- GL055:Stale
 game:SetAttribute("DebuggerDone", Result)
