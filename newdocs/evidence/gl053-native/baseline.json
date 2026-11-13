@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Baseline": "16e8597cb342a1bbc888f190680c678ecf9ba055",
+  "MetadataVersion": "Godot 4.3 stable; admitted hosts remain 4.7.1",
+  "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
+  "NativeSourceSHA256": "140406f7ae825ba24e3400779c8ed5a016fc42fc1f9a68f374f23d2dedd96fd1",
+  "NativeFiles": 121,
+  "CoverageSHA256": "7fa9d62ca44fe700b19720444127a85e374120339cd2063f35c3995dd2017170",
+  "Before": {
+    "MetadataClasses": 920,
+    "ConstructibleClasses": 48,
+    "SelectedProperties": 118,
+    "SelectedMethods": 27,
+    "SelectedSignals": 12,
+    "SelectedConstants": 22,
+    "DeclaredMethods": 14379,
+    "DeclaredProperties": 3676,
+    "DeclaredSignals": 447,
+    "DeclaredEnums": 647,
+    "DeclaredClassConstants": 155
+  },
+  "Interpretation": "Scene API metadata inventory, not broad runtime parity. Legacy Roblox facades are separate. Construction does not mean all class members are supported.",
+  "RetainedBaselineMainRuns": {"Core":43200155305,"Native":43200155340,"Definitions":43200179204},
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false
+}

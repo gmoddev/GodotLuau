@@ -57,6 +57,7 @@ protected:
         godot::ClassDB::bind_method(godot::D_METHOD("GetResourceStats", "client"), &GLDomainHost::GetResourceStats);
 #ifdef GL_RUNTIME_TESTS
         godot::ClassDB::bind_method(godot::D_METHOD("_gl_test_reset_domain", "client"), &GLDomainHost::ResetDomainForTests);
+        godot::ClassDB::bind_method(godot::D_METHOD("_gl_test_datastore_exit", "root"), &GLDomainHost::TestDataStoreExit);
 #endif
     }
     void _notification(int What);
@@ -78,6 +79,7 @@ public:
 #ifdef GL_RUNTIME_TESTS
     // Fixture calls only outside Lua after retiring all executable callers.
     void ResetDomainForTests(bool Client);
+    bool TestDataStoreExit(const godot::String& Root) { return GLDataStoreManager::TestExitReplyRace(Root.utf8().get_data()); }
 #endif
     void WaitForChild(lua_State* Thread, uint64_t Parent, const godot::String& Name, double Timeout, int Reference);
     void WaitForInvoke(lua_State* Thread, int64_t CallId, double Timeout, int Reference);

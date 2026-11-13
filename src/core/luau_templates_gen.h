@@ -17,6 +17,92 @@
 //  Tras tocar un .luau:  python tools/generar_plantillas_luau.py
 // ════════════════════════════════════════════════════════════════════
 
+// ── NativeAuthoring/Empty.luau ──
+static const char* LUAU_TEMPLATE_NATIVE_EMPTY_PATH = "NativeAuthoring/Empty.luau";
+static const char* LUAU_TEMPLATE_NATIVE_EMPTY = R"LUAU(
+-- Empty Luau-owned native scene. Add approved native nodes through this scope.
+local Scope = Scene.new(script.Parent)
+Scope.Name = "Application"
+)LUAU";
+
+// ── NativeAuthoring/ThreeD.luau ──
+static const char* LUAU_TEMPLATE_NATIVE_3D_PATH = "NativeAuthoring/ThreeD.luau";
+static const char* LUAU_TEMPLATE_NATIVE_3D = R"LUAU(
+-- Native authoring entrypoint: no GDScript adapter is needed.
+local Scope = Scene.new(script.Parent)
+local Material = Scope:New("StandardMaterial3D", {Color = Color3.new(0.2, 0.65, 0.9)})
+Scope:New("MeshInstance3D", {Name = "Cube", Mesh = Scope:New("BoxMesh", {}), Material = Material})
+Scope:New("DirectionalLight3D", {RotationDegrees = Vector3.new(-45, -30, 0)})
+Scope:New("Camera3D", {Position = Vector3.new(0, 2, 5), RotationDegrees = Vector3.new(-20, 0, 0)})
+)LUAU";
+
+// ── NativeAuthoring/TwoD.luau ──
+static const char* LUAU_TEMPLATE_NATIVE_2D_PATH = "NativeAuthoring/TwoD.luau";
+static const char* LUAU_TEMPLATE_NATIVE_2D = R"LUAU(
+-- Native 2D starter: static preview, real physics/input during gameplay.
+local Scope = Scene.new(script.Parent)
+Scope.Name = "PlatformStarter"
+local Gradient = Scope:New("Gradient", {})
+Scope:Call(Gradient, "SetColor", 0, {R=0.2, G=0.7, B=0.95, A=1})
+local Texture = Scope:New("GradientTexture2D", {Gradient=Gradient, Width=24, Height=24})
+local Body = Scope:New("CharacterBody2D", {Name="Player", Position=Vector2.new(160,160)})
+Scope:New("CollisionShape2D", {Shape=Scope:New("RectangleShape2D", {Size=Vector2.new(24,24)})}, Body)
+Scope:New("Sprite2D", {Texture=Texture}, Body)
+local Floor = Scope:New("StaticBody2D", {Position=Vector2.new(320,360)})
+Scope:New("CollisionShape2D", {Shape=Scope:New("RectangleShape2D", {Size=Vector2.new(640,32)})}, Floor)
+Scope:New("ColorRect", {Position=Vector2.new(0,344), Size=Vector2.new(640,32), Color=Color3.new(0.15,0.25,0.35)})
+local Layer = Scope:New("CanvasLayer", {})
+Scope:New("Label", {Text="2D STARTER • WASD / left stick • Space / A to jump", Position=Vector2.new(20,20)}, Layer)
+if not __IS_CLIENT then return end
+local Controls = game:GetService("InputService"):AddContext("Native2D")
+local Move = Controls:AddAction("Move", {ValueType=Enum.InputActionValueType.Vector2})
+Move:BindKeyboardVector2()
+Move:BindGamepadStick(Enum.InputStick.Left, {Device=-1})
+local Jump = Controls:AddAction("Jump")
+Jump:AddBinding(Enum.KeyCode.Space)
+Jump:AddBinding(Enum.KeyCode.ButtonA, {Device=-1})
+local JumpRequested = false
+Jump.Pressed:Connect(function() JumpRequested = true end)
+game:GetService("RunService").Stepped:Connect(function(Delta)
+    local Velocity = Body.Velocity
+    local Vertical = math.min(Velocity.Y + 600 * math.min(Delta,0.05), 600)
+    if JumpRequested and Scope:Call(Body,"IsOnFloor") then Vertical = -280 end
+    JumpRequested = false
+    Body.Velocity = Vector2.new(Move:GetPhysicsValue().X * 180, Vertical)
+    Scope:Call(Body,"MoveAndSlide")
+    if Body.Position.Y > 900 then Body.Position = Vector2.new(160,160) end
+end)
+)LUAU";
+
+// ── NativeAuthoring/UI.luau ──
+static const char* LUAU_TEMPLATE_NATIVE_UI_PATH = "NativeAuthoring/UI.luau";
+static const char* LUAU_TEMPLATE_NATIVE_UI = R"LUAU(
+-- Native Control application with keyboard focus, lists, text entry and signals.
+local Scope = Scene.new(script.Parent)
+Scope.Name = "SettingsApp"
+local Layer = Scope:New("CanvasLayer", {Name="UI"})
+local Panel = Scope:New("PanelContainer", {Name="Panel", FullRect=true, OffsetLeft=24, OffsetTop=24, OffsetRight=-24, OffsetBottom=-24}, Layer)
+local Tabs = Scope:New("TabContainer", {Name="Tabs", MinSize=Vector2.new(480,320)}, Panel)
+local Settings = Scope:New("VBoxContainer", {Name="Settings", Separation=12}, Tabs)
+Scope:New("Label", {Text="NATIVE SETTINGS", FontSize=26}, Settings)
+local Name = Scope:New("LineEdit", {Name="NameInput", Text="Player", PlaceholderText="Display name", TooltipText="Name shown in this session"}, Settings)
+local Volume = Scope:New("HSlider", {Name="Volume", MinValue=0, MaxValue=100, Step=1, Value=60, TooltipText="Preview volume"}, Settings)
+local Quality = Scope:New("ItemList", {Name="Quality", MinSize=Vector2.new(320,100), TooltipText="Choose a presentation preset"}, Settings)
+for _, Item in {"Low", "Balanced", "High"} do Scope:Call(Quality,"AddItem",Item) end
+Scope:Call(Quality,"Select",1)
+local Status = Scope:New("Label", {Name="Status", Text="Change settings, then apply."}, Settings)
+local Apply = Scope:New("Button", {Name="Apply", Text="Apply settings", TooltipText="Applies this application's local presentation settings"}, Settings)
+local About = Scope:New("VBoxContainer", {Name="About", Separation=12}, Tabs)
+Scope:New("RichTextLabel", {Text="Built entirely with Luau and native Godot Controls.\nUse Tab, Shift+Tab and arrow keys to navigate.", FitContent=true}, About)
+if not __IS_CLIENT then return end
+Scope:Connect(Apply,"Pressed",function()
+    local Selection = Scope:Call(Quality,"GetSelectedItems")
+    local Preset = #Selection > 0 and Scope:Call(Quality,"GetItemText",Selection[1]) or "Balanced"
+    Status.Text = string.format("%s | %s | volume %d",Name.Text,Preset,Volume.Value)
+end)
+Scope:Call(Name,"GrabFocus")
+)LUAU";
+
 // ── StarterPlayer/StarterCharacterScripts/Health.luau ──
 static const char* LUAU_TEMPLATE_HEALTH_PATH = "StarterPlayer/StarterCharacterScripts/Health.luau";
 static const char* LUAU_TEMPLATE_HEALTH = R"LUAU(

@@ -2,6 +2,7 @@
 #define GL_NATIVE_EDITOR_H
 
 #include "gl_native_registry.gen.h"
+#include "gl_native_values.h"
 #include "Luau/Ast.h"
 #include "Luau/Parser.h"
 #include <godot_cpp/variant/dictionary.hpp>
@@ -33,12 +34,42 @@ inline std::string Text(const Luau::AstExpr* Expression) {
     return {};
 }
 inline const GLNative::Property* Property(const std::string& Name, const std::string& Key) {
-    for (const auto& Item:GLNative::Properties) if (Key==Item.Name && IsA(Name,Item.Class)) return &Item;
-    return nullptr;
+    const GLNative::Property* Best=nullptr;
+    for (const auto& Item:GLNative::Properties) if (Key==Item.Name && IsA(Name,Item.Class) && (!Best || IsA(Item.Class,Best->Class))) Best=&Item;
+    return Best;
 }
 inline const GLNative::Method* Method(const std::string& Name, const std::string& Key) {
-    for (const auto& Item:GLNative::Methods) if (Key==Item.Name && IsA(Name,Item.Class)) return &Item;
-    return nullptr;
+    const GLNative::Method* Best=nullptr;
+    for (const auto& Item:GLNative::Methods) if (Key==Item.Name && IsA(Name,Item.Class) && (!Best || IsA(Item.Class,Best->Class))) Best=&Item;
+    return Best;
+}
+inline std::string TypeName(GLNative::Kind Type,const char* Class=nullptr) {
+    if(Class)return Class;
+    if(auto Name=GLNativeValueName(Type))return Name;
+    switch(Type) {
+        case GLNative::Number:return "number";case GLNative::Integer:return "integer";
+        case GLNative::Boolean:return "boolean";case GLNative::Text:return "string";
+        case GLNative::Colour:return "Color3";case GLNative::Void:return "()";
+        default:return "native value";
+    }
+}
+inline std::string Signature(const GLNative::Method& Method) {
+    std::string Result=std::string(Method.Class)+"."+Method.Name+"(";
+    for(int Index=0;Index<Method.Arguments;++Index) {
+        const auto& Argument=GLNative::Arguments[Method.FirstArgument+Index];
+        if(Index)Result+=", ";
+        Result+=std::string(Argument.Name)+": "+TypeName(Argument.Type,Argument.ResourceClass);
+        if(Argument.Default)Result+=" = "+std::string(Argument.Default);
+    }
+    return Result+") -> "+TypeName(Method.Return,Method.ReturnClass);
+}
+inline std::string StaticPath(const Luau::AstExpr* Expression,int Depth=0) {
+    if(!Expression || Depth>16)return {};
+    if(auto Global=Expression->as<Luau::AstExprGlobal>())return Global->name.value;
+    if(auto Field=Expression->as<Luau::AstExprIndexName>()) {
+        auto Parent=StaticPath(Field->expr,Depth+1);if(!Parent.empty())return Parent+"."+Field->index.value;
+    }
+    return {};
 }
 inline bool Operation(const std::string& Name) {
     for (const auto& Item:GLNative::ScopeOperations) if (Name==Item.Name) return true;
@@ -49,6 +80,7 @@ class Visitor : public Luau::AstVisitor {
     std::unordered_map<const Luau::AstLocal*,Handle> Locals;
     std::unordered_set<std::string> Errors, Suggestions;
     godot::String Path;
+    Luau::Position CursorPosition;
     unsigned Visited=0;
     bool Continue() { return ++Visited<100000; }
     void Error(const Luau::Location& Location, const char* Code, const std::string& Message) {
@@ -114,6 +146,11 @@ class Visitor : public Luau::AstVisitor {
             if (auto Info=Property(Target.Class,Text(Call->args.data[Offset+1])))
                 if (Info->Type==GLNative::ResourceValue) return {Info->ResourceClass,false,true,false};
         }
+        if(Name=="Call" && Call->args.size>Offset+1) {
+            auto Target=Infer(Call->args.data[Offset],Depth+1);
+            if(auto Info=Method(Target.Class,Text(Call->args.data[Offset+1])))
+                if(Info->ReturnClass)if(auto Returned=Class(Info->ReturnClass))return {Returned->Name,false,Returned->Resource,false};
+        }
         if (Name=="Clone") return Infer(Call->args.data[Offset],Depth+1);
         if (Name=="Instantiate") return {"Node",false,false,true};
         return {};
@@ -122,12 +159,12 @@ class Visitor : public Luau::AstVisitor {
         if (!Value) return;
         bool Wrong=false;
         if (auto Number=Value->as<Luau::AstExprConstantNumber>()) {
-            Wrong=(Item.Type!=GLNative::Number && Item.Type!=GLNative::Integer) || !std::isfinite(Number->value) ||
+            Wrong=(Item.Type!=GLNative::Number && Item.Type!=GLNative::Integer && Item.Type!=GLNative::VariantValue) || !std::isfinite(Number->value) ||
                 Number->value<Item.Min || Number->value>Item.Max || (Item.Type==GLNative::Integer && std::floor(Number->value)!=Number->value);
-        } else if (Value->is<Luau::AstExprConstantBool>()) Wrong=Item.Type!=GLNative::Boolean;
-        else if (auto String=Value->as<Luau::AstExprConstantString>()) Wrong=Item.Type!=GLNative::Text || String->value.size<Item.Min || String->value.size>Item.Max;
-        else if (Value->is<Luau::AstExprConstantNil>()) Wrong=Item.Type!=GLNative::ResourceValue;
-        else if (Value->is<Luau::AstExprTable>()) Wrong=Item.Type!=GLNative::Vector2Value;
+        } else if (Value->is<Luau::AstExprConstantBool>()) Wrong=Item.Type!=GLNative::Boolean && Item.Type!=GLNative::VariantValue;
+        else if (auto String=Value->as<Luau::AstExprConstantString>()) Wrong=(Item.Type!=GLNative::Text && Item.Type!=GLNative::VariantValue && Item.Type!=GLNative::PathValue) || (Item.Type==GLNative::Text && (String->value.size<Item.Min || String->value.size>Item.Max));
+        else if (Value->is<Luau::AstExprConstantNil>()) Wrong=Item.Type!=GLNative::ResourceValue && Item.Type!=GLNative::NodeValue && Item.Type!=GLNative::VariantValue;
+        else if (Value->is<Luau::AstExprTable>()) Wrong=Item.Type!=GLNative::Vector2Value && Item.Type<=GLNative::Void;
         if (Wrong) Error(Value->location,"E_NATIVE_TYPE",std::string("Invalid literal for ")+Item.Class+"."+Item.Name+"; check the native type and bounds");
     }
     void CheckProperties(const Handle& Target, const Luau::AstExpr* Expression) {
@@ -138,6 +175,7 @@ class Visitor : public Luau::AstVisitor {
             if (!Entry.key || !Entry.key->is<Luau::AstExprConstantString>()) continue;
             auto Name=Text(Entry.key); auto Item=Property(Target.Class,Name);
             if (!Item) Error(Entry.key->location,"E_NATIVE_PROPERTY","Unapproved property "+Target.Class+"."+Name);
+            else if (Item->ReadOnly) Error(Entry.key->location,"E_NATIVE_READONLY","Observation property cannot be configured: "+Name);
             else CheckValue(*Item,Entry.value);
         }
     }
@@ -150,8 +188,9 @@ class Visitor : public Luau::AstVisitor {
     }
 public:
     godot::Array Diagnostics, Options;
+    godot::String CallHint;
     bool Handled=false;
-    explicit Visitor(const godot::String& SourcePath):Path(SourcePath) {}
+    explicit Visitor(const godot::String& SourcePath,Luau::Position Cursor):Path(SourcePath),CursorPosition(Cursor) {}
     bool visit(Luau::AstNode*) override { return Continue(); }
     bool visit(Luau::AstStatLocal* Statement) override {
         for (size_t Index=0;Index<Statement->vars.size;++Index) {
@@ -174,6 +213,7 @@ public:
                 auto Item=Property(Type.Class,Field->index.value);
                 if (Type.Resource) Error(Field->indexLocation,"E_NATIVE_RESOURCE","Use Scope:Get/Configure for opaque resource handles");
                 else if (!Item) Error(Field->indexLocation,"E_NATIVE_PROPERTY","Unapproved native property "+std::string(Field->index.value));
+                else if (Item->ReadOnly) Error(Field->indexLocation,"E_NATIVE_READONLY","Observation property cannot be assigned");
                 else if (Index<Statement->values.size) CheckValue(*Item,Statement->values.data[Index]);
             }
         }
@@ -181,17 +221,37 @@ public:
     }
     bool visit(Luau::AstExprIndexName* Expression) override {
         std::string Name=Expression->index.value, Filter;
+        if(Cursor(Name,Filter)) {
+            auto Parent=StaticPath(Expression->expr);
+            if(Parent=="Scene.Enums") {Handled=true;for(const auto& Item:GLNative::Constants)Suggest(Item.Class,Filter,0,"Approved native enum family");}
+            else if(Parent.find("Scene.Enums.")==0) {
+                Handled=true;
+                for(const auto& Item:GLNative::Constants) {
+                    auto Family=std::string("Scene.Enums.")+Item.Class;
+                    if(Parent==Family)Suggest(Item.Enum,Filter,0,"Approved native enum");
+                    else if(Parent==Family+"."+Item.Enum)Suggest(Item.Name,Filter,6,(std::string(Item.Name)+" = "+std::to_string(Item.Value)).c_str());
+                }
+            }
+        }
         auto Type=Infer(Expression->expr);
         if (Cursor(Name,Filter) && !Type.Class.empty()) { Handled=true; Members(Type,Filter); }
         else if (Cursor(Name,Filter)) {
             if (auto Global=Expression->expr->as<Luau::AstExprGlobal>()) if (std::string(Global->name.value)=="Scene")
-                { Handled=true; for (const char* Item:{"new","Classes","Describe","Enums","PolicySHA256","ApiSHA256"}) Suggest(Item,Filter,1,"Approved native Scene API"); }
+                { Handled=true; for (const char* Item:{"new","Classes","Describe","Value","Enums","PolicySHA256","ApiSHA256"}) Suggest(Item,Filter,1,"Approved native Scene API"); }
         }
         else if (Type.Resource) Error(Expression->indexLocation,"E_NATIVE_RESOURCE","Use Scope:Get/Configure/Call for opaque resource handles");
         return Continue();
     }
     bool visit(Luau::AstExprCall* Expression) override {
         auto Function=Expression->func->as<Luau::AstExprIndexName>(); if (!Function) return Continue();
+        if(StaticPath(Function)=="Scene.Value" && Expression->args.size) {
+            std::string Filter;
+            if(Cursor(Text(Expression->args.data[0]),Filter)) {
+                Handled=true;
+                for(int Type=GLNative::Vector2Value;Type<=GLNative::PathValue;++Type)
+                    if(Type!=GLNative::VariantValue)if(auto Name=GLNativeValueName(GLNative::Kind(Type)))Suggest(Name,Filter,0,"Bounded pure native value; no object authority");
+            }
+        }
         auto Receiver=Infer(Function->expr); if (!Receiver.Scope) return Continue();
         std::string Name=Function->index.value;
         size_t Offset=Expression->self?0:1;
@@ -217,7 +277,7 @@ public:
             auto Argument=Expression->args.data[Offset+1]; std::string Member=Text(Argument), Filter;
             if (Cursor(Member,Filter)) {
                 Handled=true;
-                if (Name=="Call") for (const auto& Item:GLNative::Methods) if (IsA(Target.Class,Item.Class)) Suggest(Item.Name,Filter,1,"Approved native method");
+                if (Name=="Call") for (const auto& Item:GLNative::Methods) if (IsA(Target.Class,Item.Class)) Suggest(Item.Name,Filter,1,Signature(Item).c_str());
                 if (Name=="Connect") for (const auto& Item:GLNative::Signals) if (IsA(Target.Class,Item.Class)) Suggest(Item.Name,Filter,2,"Owner-scoped native signal");
                 if (Name=="Get") for (const auto& Item:GLNative::Properties) if (IsA(Target.Class,Item.Class) && std::string(Item.Name)!="FullRect") Suggest(Item.Name,Filter,4,"Approved native getter");
             } else if (Argument->is<Luau::AstExprConstantString>()) {
@@ -225,6 +285,7 @@ public:
                 if (Name=="Get") Allowed=Property(Target.Class,Member)!=nullptr && Member!="FullRect";
                 if (Name=="Connect") for (const auto& Item:GLNative::Signals) if (Member==Item.Name && IsA(Target.Class,Item.Class)) Allowed=true;
                 if (Name=="Call") if (auto Item=Method(Target.Class,Member)) {
+                    if(Expression->location.containsClosed(CursorPosition)) {Handled=true;CallHint=godot::String::utf8(Signature(*Item).c_str());}
                     Allowed=true; size_t Count=Expression->args.size-Offset-2;
                     if (Count<size_t(Item->Required) || Count>size_t(Item->Arguments)) Error(Argument->location,"E_NATIVE_ARGUMENTS","Wrong argument count for "+Member);
                     if (Item->Mutates && Target.Resource && !Target.Mutable) Error(Argument->location,"E_NATIVE_IMMUTABLE","Loaded/getter resource cannot receive a mutating call");
@@ -248,9 +309,14 @@ inline godot::Dictionary Inspect(const godot::String& Source, const godot::Strin
     auto Bytes=Code.utf8();
     Luau::Allocator Allocator; Luau::AstNameTable Names(Allocator);
     auto Parsed=Luau::Parser::parse(Bytes.get_data(),Bytes.length(),Names,Allocator);
-    Visitor Analyzer(Path); if (Parsed.root) Parsed.root->visit(&Analyzer);
+    Luau::Position Cursor(~0u,0);
+    if(Position>=0) {
+        Cursor=Luau::Position(0,0);auto Prefix=Source.substr(0,Position).utf8();
+        for(int Index=0;Index<Prefix.length();++Index)if(Prefix[Index]=='\n'){++Cursor.line;Cursor.column=0;}else ++Cursor.column;
+    }
+    Visitor Analyzer(Path,Cursor); if (Parsed.root) Parsed.root->visit(&Analyzer);
     Result["Handled"]=Analyzer.Handled; Result["Diagnostics"]=Analyzer.Diagnostics; Result["Options"]=Analyzer.Options;
-    Result["result"]=int(godot::OK); Result["options"]=Analyzer.Options; Result["force"]=true; Result["call_hint"]="";
+    Result["result"]=int(godot::OK); Result["options"]=Analyzer.Options; Result["force"]=true; Result["call_hint"]=Analyzer.CallHint;
     return Result;
 }
 }

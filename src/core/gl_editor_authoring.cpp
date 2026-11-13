@@ -24,6 +24,8 @@
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/physics_server3d.hpp>
 #include <godot_cpp/classes/world3d.hpp>
+#include <godot_cpp/classes/world2d.hpp>
+#include <godot_cpp/classes/option_button.hpp>
 #include <functional>
 
 using namespace godot;
@@ -45,13 +47,13 @@ Node* PreviewNode(lua_State* Thread, int Index) {
     if (!Value || Value->is_queued_for_deletion()) luaL_error(Thread,"[Authoring:Preview] Retired node");
     return Value;
 }
-const char* DefaultSource=R"LUA(-- Native authoring entrypoint: no GDScript adapter is needed.
-local Scope = Scene.new(script.Parent)
-local Material = Scope:New("StandardMaterial3D", {Color = Color3.new(0.2, 0.65, 0.9)})
-Scope:New("MeshInstance3D", {Name = "Cube", Mesh = Scope:New("BoxMesh", {}), Material = Material})
-Scope:New("DirectionalLight3D", {RotationDegrees = Vector3.new(-45, -30, 0)})
-Scope:New("Camera3D", {Position = Vector3.new(0, 2, 5), RotationDegrees = Vector3.new(-20, 0, 0)})
-)LUA";
+const char* TemplateSource(const String& Profile) {
+    if(Profile=="3D")return LUAU_TEMPLATE_NATIVE_3D;
+    if(Profile=="2D")return LUAU_TEMPLATE_NATIVE_2D;
+    if(Profile=="UI")return LUAU_TEMPLATE_NATIVE_UI;
+    if(Profile=="Empty")return LUAU_TEMPLATE_NATIVE_EMPTY;
+    return nullptr;
+}
 }
 
 GLNativeEditorPlugin::GLNativeEditorPlugin() = default;
@@ -68,6 +70,9 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     auto Panel=memnew(VBoxContainer); PreviewPanel=Panel->get_instance_id();
     Panel->set_custom_minimum_size(Vector2(600,260));
     auto Buttons=memnew(HBoxContainer); Panel->add_child(Buttons);
+    auto Profiles=memnew(OptionButton);TemplatePicker=Profiles->get_instance_id();
+    for(const char* Name:{"3D","2D","UI","Empty"})Profiles->add_item(Name);
+    Profiles->set_tooltip_text("Template for a new Luau scene; existing projects are preserved");Buttons->add_child(Profiles);
     for (auto Entry : {std::pair<const char*,const char*>("New Luau Scene","NewSceneDialog"),
         {"Preview Luau","PreviewSelected"},{"Clear Preview","StopPreview"},{"Save Preview As","SavePreviewDialog"},
         {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"}}) {
@@ -83,7 +88,9 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     auto Container=memnew(SubViewportContainer); Container->set_stretch(true);
     Container->set_custom_minimum_size(Vector2(360,200)); Content->add_child(Container);
     auto Viewport=memnew(SubViewport); PreviewViewport=Viewport->get_instance_id();
-    Viewport->set_size(Vector2i(600,320)); Viewport->set_use_own_world_3d(true); Container->add_child(Viewport);
+    Viewport->set_size(Vector2i(600,320)); Viewport->set_use_own_world_3d(true);
+    Ref<World2D> PreviewWorld2D;PreviewWorld2D.instantiate();Viewport->set_world_2d(PreviewWorld2D);
+    Container->add_child(Viewport);
     add_control_to_bottom_panel(Panel,"Luau Authoring");
     Ref<GLAuthoringDebugger> Capture;Capture.instantiate();Capture->SetReceiver(get_instance_id());
     Debugger=Capture;add_debugger_plugin(Debugger);
@@ -93,17 +100,19 @@ void GLNativeEditorPlugin::SetupAuthoring() {
     add_child(Dialog);
 }
 
-Dictionary GLNativeEditorPlugin::CreateLuauScene(const String& Path) {
+Dictionary GLNativeEditorPlugin::CreateLuauScene(const String& Path,const String& Profile) {
     Dictionary Result; Result["Passed"]=false;
     String SourcePath=Path.get_basename()+".luau";
-    if (!Engine::get_singleton()->is_editor_hint() || !NewProjectPath(Path,"tscn") || !NewProjectPath(SourcePath,"luau")) {
+    const char* Code=TemplateSource(Profile);
+    if (!Code || !Engine::get_singleton()->is_editor_hint() || !NewProjectPath(Path,"tscn") || !NewProjectPath(SourcePath,"luau")) {
         Result["Error"]="Choose fresh project .tscn and .luau paths; existing content is preserved"; return Result;
     }
-    Ref<LuauScript> Source; Source.instantiate(); Source->_set_source_code(DefaultSource);
+    Ref<LuauScript> Source; Source.instantiate(); Source->_set_source_code(Code);
     Error Status=ResourceSaver::get_singleton()->save(Source,SourcePath);
     if (Status!=OK) { Result["Error"]="Cannot save Luau source"; return Result; }
     Source->set_path(SourcePath);
-    auto Root=memnew(Node3D); Root->set_name(Path.get_file().get_basename());
+    Node* Root=Profile=="3D"?static_cast<Node*>(memnew(Node3D)):memnew(Node);
+    Root->set_name(Path.get_file().get_basename());
     auto Entry=memnew(LocalScript); Entry->set_name("Main"); Entry->set_codigo_luau(Source);
     Root->add_child(Entry); Entry->set_owner(Root);
     Ref<PackedScene> Scene; Scene.instantiate(); Status=Scene->pack(Root);
@@ -114,7 +123,7 @@ Dictionary GLNativeEditorPlugin::CreateLuauScene(const String& Path) {
     if (String(Settings->get_setting("application/run/main_scene",String())).is_empty()) {
         Settings->set_setting("application/run/main_scene",Path); Settings->save();
     }
-    Result["Passed"]=true; Result["Scene"]=Path; Result["Source"]=SourcePath;
+    Result["Passed"]=true; Result["Scene"]=Path; Result["Source"]=SourcePath;Result["Template"]=Profile;
     ShowStatus("Created "+Path+" with Luau entrypoint "+SourcePath); return Result;
 }
 
@@ -287,7 +296,9 @@ void GLNativeEditorPlugin::SavePreviewDialog() {
 }
 void GLNativeEditorPlugin::OnAuthoringPath(const String& Path) {
     if (SavingPreview) { SavePreview(Path); return; }
-    Dictionary Result=CreateLuauScene(Path);
+    String Profile="3D";
+    if(auto Profiles=Resolve<OptionButton>(TemplatePicker))Profile=Profiles->get_item_text(Profiles->get_selected());
+    Dictionary Result=CreateLuauScene(Path,Profile);
     if (!(bool)Result["Passed"]) { ShowStatus(Result["Error"]); return; }
     EditorInterface::get_singleton()->open_scene_from_path(Path);
     Ref<Script> Source=ResourceLoader::get_singleton()->load(Result["Source"],"LuauScript");

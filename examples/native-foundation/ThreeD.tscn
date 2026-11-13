@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="LuauScript" path="res://ThreeD.luau" id="1"]
+[node name="Native3D" type="Node3D"]
+[node name="Main" type="LocalScript" parent="."]
+codigo_luau=ExtResource("1")

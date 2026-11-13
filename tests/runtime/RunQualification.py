@@ -50,6 +50,12 @@ def Prepare(Output, Extension):
                          (Repository / "src/core/luau_templates_gen.h").read_text(encoding="utf-8"), re.S)
     assert Embedded and Embedded.group(2) == "\n" + DefaultSource, "Default GameManager disk/embedded sources differ"
     (Output / "DefaultGameManager.luau").write_text(DefaultSource, encoding="utf-8")
+    for Name in ('Empty','ThreeD','TwoD','UI'):
+        shutil.copy2(Repository/'GodotLuau/DefaultScripts/NativeAuthoring'/(Name+'.luau'),Output/('Template'+Name+'.luau'))
+    Foundation=Repository/'examples/native-foundation'
+    for File in Foundation.rglob('*'):
+        if File.is_file() and File.suffix in ('.luau','.tres','.gdshader'):
+            Target=Output/File.relative_to(Foundation);Target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(File,Target)
     for Script in Path(__file__).parent.glob("*.gd"):
         shutil.copyfile(Script, Output / Script.name)
     Controller = Path(__file__).resolve().parents[2] / 'examples/input-controller/Controller.luau'
@@ -679,6 +685,7 @@ def Main():
     Parser.add_argument("--remote", action="store_true")
     Parser.add_argument("--characters", action="store_true")
     Parser.add_argument("--input", action="store_true")
+    Parser.add_argument("--native-gameplay", action="store_true", help="Native physics and navigation on the verified full-featured official host")
     Parser.add_argument("--player-controller", action="store_true")
     Parser.add_argument("--controller-modes", nargs="+", choices=('Local','Listen','Dedicated'), default=['Local','Listen','Dedicated'])
     Parser.add_argument("--manual-characters", action="store_true")
@@ -720,6 +727,9 @@ def Main():
     if Args.load_only:
         Process = Start(Args.godot, Args.output, "SanitizerLoadProbe.gd", "load", [], Environment)
         Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "load", "[Runtime:LoadProbe] PASS")]
+    elif Args.native_gameplay:
+        Process = Start(Args.godot, Args.output, "NativeGameplay.gd", "native-gameplay", [], Environment)
+        Results = [Check(Process, time.monotonic() + Args.timeout, Args.output, "native-gameplay", "[Runtime:NativeGameplay] PASS navigation=path")]
     elif Args.security:
         Results = SecurityFixtures(Args, Args.output, Environment)
     elif Args.animation:

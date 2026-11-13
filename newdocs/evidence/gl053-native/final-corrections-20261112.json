@@ -1,0 +1,319 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-053 final corrections and integration qualification",
+  "Result": "QUALIFIED_SUPPORTED_SCOPE_READY_FOR_NORMAL_MERGE",
+  "RuntimeRevision": "0af6e4d66908f6ab4dade30a4290455f982c5b4a",
+  "RuntimeTree": "ffd4de98c780a7df46da28d46ca360a0b031363d",
+  "QualificationRevision": "bb15aab1e47c22e63199909049fa19dfbe7b522e",
+  "MainBaseline": "16e8597cb342a1bbc888f190680c678ecf9ba055",
+  "NativeSource": {
+    "SHA256": "fda36b81c44f8dc11a2c3b52d17687fbda78b5b2f911ea230fd544a54e6b1cb2",
+    "Files": 123,
+    "Newlines": "LF normalized"
+  },
+  "PreviousReceipt": {
+    "Path": "qualification-20261112.json",
+    "SHA256": "d45dad0c43a7c6bebb6c5705516ecf1f4209df1758e9c1e963f4cc61c4f337c5",
+    "Preserved": true
+  },
+  "Changes": [
+    "Immutable property-name descriptor index with live native type checks",
+    "Reuse one validated Assignment batch for single-property writes",
+    "Snapshot companion exit before reply draining (GL-050)",
+    "ASCII separators in the embedded native UI starter",
+    "Normalize the test-only storage root input by removing its trailing slash"
+  ],
+  "Performance": {
+    "Compiler": "MSVC 19.44.35228 Debug; same incremental cache and official Windows host",
+    "Workload": "Seven trials; first excluded. 10000 Position set/read pairs, 64 Node3D constructions, 2000 Transform3D values.",
+    "BaselineRevision": "7201afa9d127e5a000810f38adf1840ac5177c3a",
+    "Baseline": {
+      "ExtensionSHA256": "acb3f819835569a3e43aba2629a0e3e48be0501497f58ac6fe088a5b3bd65333",
+      "FixtureRawSHA256": "06337119c9255a45f5de24e9ef5b28bb4fe1be2c32f26610aeb6f67b983b6da0",
+      "Result": {
+        "Label": "measure",
+        "Exit": 0,
+        "Diagnostics": ""
+      },
+      "MediansExcludingWarmup": {
+        "ConstructionSeconds": 0.0007400999966193922,
+        "VMKilobytes": 689.5,
+        "ConversionSeconds": 0.011460299996542744,
+        "DispatchSeconds": 0.06501630000275327
+      },
+      "Samples": [
+        {
+          "ConstructionSeconds": 0.0007659999973839149,
+          "VMKilobytes": 763,
+          "ConversionSeconds": 0.011288199995760806,
+          "DispatchSeconds": 0.06727489999320824
+        },
+        {
+          "ConstructionSeconds": 0.0007120000082068145,
+          "VMKilobytes": 523,
+          "ConversionSeconds": 0.011437499997555278,
+          "DispatchSeconds": 0.0640414000081364
+        },
+        {
+          "ConstructionSeconds": 0.0007514000026276335,
+          "VMKilobytes": 765,
+          "ConversionSeconds": 0.011606500003836118,
+          "DispatchSeconds": 0.06511799999861978
+        },
+        {
+          "ConstructionSeconds": 0.0007287999906111509,
+          "VMKilobytes": 585,
+          "ConversionSeconds": 0.01148309999553021,
+          "DispatchSeconds": 0.06532700000389013
+        },
+        {
+          "ConstructionSeconds": 0.0007649000035598874,
+          "VMKilobytes": 821,
+          "ConversionSeconds": 0.01181429999996908,
+          "DispatchSeconds": 0.06491460000688676
+        },
+        {
+          "ConstructionSeconds": 0.0007280999998329207,
+          "VMKilobytes": 614,
+          "ConversionSeconds": 0.01138679998985026,
+          "DispatchSeconds": 0.06804299999203067
+        },
+        {
+          "ConstructionSeconds": 0.0007717999978922307,
+          "VMKilobytes": 771,
+          "ConversionSeconds": 0.011302400002023205,
+          "DispatchSeconds": 0.06468589999713004
+        }
+      ]
+    },
+    "Final": {
+      "ExtensionSHA256": "32c12c9f0dff8ae6f4c127cee1c14cdb22a68c2679ba0bb0370f2076d7a882e1",
+      "FixtureRawSHA256": "06337119c9255a45f5de24e9ef5b28bb4fe1be2c32f26610aeb6f67b983b6da0",
+      "Result": {
+        "Label": "measure",
+        "Exit": 0,
+        "Diagnostics": ""
+      },
+      "MediansExcludingWarmup": {
+        "ConstructionSeconds": 0.0006416999967768788,
+        "VMKilobytes": 608,
+        "ConversionSeconds": 0.011020800004189368,
+        "DispatchSeconds": 0.04012424999382347
+      },
+      "Samples": [
+        {
+          "ConstructionSeconds": 0.0007159999950090423,
+          "VMKilobytes": 763,
+          "ConversionSeconds": 0.011421499992138706,
+          "DispatchSeconds": 0.04153580000274815
+        },
+        {
+          "ConstructionSeconds": 0.0006243999960133806,
+          "VMKilobytes": 522,
+          "ConversionSeconds": 0.01104690000647679,
+          "DispatchSeconds": 0.040803299998515286
+        },
+        {
+          "ConstructionSeconds": 0.0006217000045580789,
+          "VMKilobytes": 758,
+          "ConversionSeconds": 0.010926600007223897,
+          "DispatchSeconds": 0.04027029999997467
+        },
+        {
+          "ConstructionSeconds": 0.0006182000070111826,
+          "VMKilobytes": 565,
+          "ConversionSeconds": 0.010849300000700168,
+          "DispatchSeconds": 0.03997670000535436
+        },
+        {
+          "ConstructionSeconds": 0.0006603000074392185,
+          "VMKilobytes": 781,
+          "ConversionSeconds": 0.011120499999378808,
+          "DispatchSeconds": 0.03997819998767227
+        },
+        {
+          "ConstructionSeconds": 0.0006729000015184283,
+          "VMKilobytes": 547,
+          "ConversionSeconds": 0.010994700001901947,
+          "DispatchSeconds": 0.04030199999397155
+        },
+        {
+          "ConstructionSeconds": 0.0006589999975403771,
+          "VMKilobytes": 651,
+          "ConversionSeconds": 0.011130700004287064,
+          "DispatchSeconds": 0.039936700006364845
+        }
+      ]
+    },
+    "Scope": "Observed Debug dispatch regression removed in this workload; no universal or production performance claim."
+  },
+  "GL050": {
+    "Before": {
+      "Driver": "Real Work::Advance and native companion, CMake-only response barrier",
+      "Source": "gl053-followup-20261112/gl_datastore-before.cpp",
+      "SourceRawSHA256": "b5569cda93fe50d2e302297192e1427768ab7febe8f9363590822ddaf9944335",
+      "LibrarySHA256": "832122560f9c9e6ec0395828013adc68a90e6ac5c1bef1aade5170556f0400f2",
+      "Result": "Expected controlled failure (exit 1) with old post-read exit decision",
+      "CommittedValue": "37"
+    },
+    "After": {
+      "LibrarySHA256": "32c12c9f0dff8ae6f4c127cee1c14cdb22a68c2679ba0bb0370f2076d7a882e1",
+      "FixtureRawSHA256": "7636c35441a30e0200077e1e12097dd061520c3d82c00504ec3d87d3e6186461",
+      "Result": {
+        "Label": "datastore",
+        "Exit": 0,
+        "Diagnostics": ""
+      }
+    },
+    "LinuxFailedAttempt": {
+      "Run": 43343586993,
+      "Artifact": 14000824287,
+      "ArchiveSHA256": "ebad20c3c6d431031d0bedc5260fa899ba67c6c9282d8a77105b341021492816",
+      "Result": "New controlled fixture failed; native root opener rejects its trailing empty component",
+      "ControlsPassed": true,
+      "UnexpectedReports": [],
+      "CloseSaveValue": "99",
+      "Disposition": "bb15aab changes only the fixture root argument; no native authority or deadline changes"
+    },
+    "PriorCloseSaveFailures": "Preserved separately; GL-050 does not establish their cause."
+  },
+  "Editor": {
+    "Interactive": {
+      "SourceRevision": "e2735ec54012feb7c62032d50c87e325c6cf9dc4",
+      "Actions": [
+        "UI scene creation",
+        "Native preview and node inspection",
+        "Independent snapshot save",
+        "Highlighted Luau editing",
+        "Inline syntax error and recovery",
+        "Approved enum completion",
+        "Save and re-preview",
+        "Play and Stop",
+        "Native keyboard input and Apply callback"
+      ],
+      "NormalExit": 0,
+      "PreviewCaptureSHA256": "a044c48f2e0f6c722de99ceb86087156fc8e4665676bb090ddcb2ba57a6bebbf",
+      "PlayCaptureSHA256": "9eb09ab494b842209b7f35986884e4bbd5533d521383171eb0b83fbe19564ebd",
+      "Scope": "Editor implementation unchanged. Later session stopped by physical Escape is not another interactive pass."
+    },
+    "FinalAdapter": {
+      "LibrarySHA256": "32c12c9f0dff8ae6f4c127cee1c14cdb22a68c2679ba0bb0370f2076d7a882e1",
+      "WorkflowExit": 0,
+      "AuthoringChecks": 44,
+      "AuthoringPassed": true,
+      "ReopenChecks": 7,
+      "ReopenPassed": true,
+      "CorrectedEmittedTemplate": "StarterUI.luau and TemplateUI.luau use ASCII pipe separators"
+    }
+  },
+  "RenderedExpansion": {
+    "Result": {
+      "Label": "expansion",
+      "Exit": 0,
+      "Diagnostics": ""
+    },
+    "FixtureRawSHA256": "25092753908099dc6d7488f79adaf5089b3f66f0945f604f8b75eb398f6ca3de"
+  },
+  "Hosted": {
+    "Core": {
+      "Run": 43346809940,
+      "Status": "PASS"
+    },
+    "Native": {
+      "Run": 43346810000,
+      "Status": "PASS",
+      "Linux": {
+        "Result": "PASS",
+        "NativeActors": 141,
+        "EditorChecks": 27,
+        "AuthoringChecks": 44,
+        "Artifact": 14003027221,
+        "ArchiveSHA256": "a3390da796ec87f09dab5702d2f1a809ccd0f5d34fc1603d962e8d4e2376670c",
+        "NativeSummarySHA256": "0e2f1cc487152e4b7c36b3a665612d6022f7752f4d78d26b47ac7471fa94e0cf"
+      },
+      "Windows": {
+        "Result": "PASS",
+        "NativeActors": 141,
+        "Artifact": 14004275361,
+        "ArchiveSHA256": "97438b6c195f99a175346bec9a8dc2277e530e20643cc14b7db91f8725850246",
+        "NativeSummarySHA256": "958cc52288b28341ece4eb64b7bb15022395eb265aa11d186eda538a70bd2ba1"
+      }
+    },
+    "FullNativeSanitizers": {
+      "Run": 43346827388,
+      "Status": "PASS",
+      "Linux": {
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Stages": 27,
+        "CoreCases": 87,
+        "NativeActors": 141,
+        "GL050ControlledInterleaving": "PASS",
+        "Artifact": 14003151397,
+        "ArchiveSHA256": "eff288166f3676fe63c0dc08ab414ddf1f6b689b30cbbacf84d8885fb3ececee",
+        "SanitizerSummarySHA256": "e8da41039f940ed01a58dc5ca69397863e5062fa63ff6413345db86192fd00fd",
+        "NativeSummarySHA256": "22b207e66d4101d7dd26c0fa6a50ca5df61026d845e8ed7f28980ba39285a987"
+      },
+      "Windows": {
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "Stages": 26,
+        "CoreCases": 87,
+        "NativeActors": 141,
+        "GL050ControlledInterleaving": "PASS",
+        "Artifact": 14003528598,
+        "ArchiveSHA256": "82bf6d8e9257ccc4ae4ccf22a31176c59011484fe7237518d244774460059f6a",
+        "SanitizerSummarySHA256": "65eb768a469a54d138f3193ff3d3b794400fda606cacfa65c5afee3416f98f60",
+        "NativeSummarySHA256": "e54e651a22504bb6b41fd54f3a7a801a841246f5018dfcd58172e47c1f3b374b"
+      }
+    },
+    "Candidate": {
+      "Run": 43346831705,
+      "Status": "ALL_FOUR_PROFILES_PASS_PACKAGE_FIXTURE_FAILED",
+      "Disposition": "Production SCons correctly excludes private CMake methods; startup fixture scope repaired without changing products. Original failure retained."
+    },
+    "Repackage": {
+      "Run": 43355306613,
+      "Status": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+      "SourceRun": 43346831705,
+      "SourceRevision": "bb15aab1e47c22e63199909049fa19dfbe7b522e",
+      "SourceTree": "dac73c83b7ba794cc97a277142b0f19ff8f27b53",
+      "CheckerRevision": "2d8b16fdcd69e683471ea932a07d6438e7240f89",
+      "AcceptedEvidenceSHA256": "0c53d2cc038754a61aad84468bc0e1a62bf5f9e5d7d0ff298be0284dead44ec2",
+      "RepairEvidenceSHA256": "fd68de9d66322a55294d59a8dd3a5f03a320eb744bfeca8631593408a0fdf85a",
+      "Windows": {
+        "PackageSHA256": "be9c979c28f0208a42bbded1f90ad432e86084809916f8401793d787c4aef949",
+        "StartupDebug": "PASS",
+        "StartupRelease": "PASS",
+        "StartupFixtureRawSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1"
+      },
+      "Linux": {
+        "PackageSHA256": "85062b288fe0d3f4939c54093917ab9840652371f519c9a4030f5394489f9be2",
+        "StartupDebug": "PASS",
+        "StartupRelease": "PASS",
+        "StartupFixtureRawSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2"
+      },
+      "Reuse": "Exact original qualified native products and profile receipts; reviewed startup checker identified separately. Ordinary persistence assertions remain required."
+    },
+    "Declarations": {
+      "Run": 43342974114,
+      "Revision": "b7297fbd17e739fa52f70782022aa4f35dba3669",
+      "Status": "PASS",
+      "Reuse": "Declaration, policy and type-fixture inputs unchanged"
+    }
+  },
+  "RetainedLimits": [
+    "No Linux graphical or physical mobile/gamepad qualification",
+    "No Windows LSan; existing admitted GL-018 sanitizer limits",
+    "Navigation requires the verified full-featured official host; admitted headless/renderer hosts omit it",
+    "Release renderer host and Debug adapter pairing is unsupported",
+    "Bounded API surface, not broad Godot parity or full debugger"
+  ],
+  "NativeDefaultScriptedOptIn": true,
+  "ReleasesEnabled": false,
+  "UpdaterDistributionEnabled": false
+}

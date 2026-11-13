@@ -45,6 +45,18 @@ def Main():
         if [Result['Label'] for Result in Results] != Labels or any(Result['Exit'] != 0 for Result in Results):
             raise ValueError('Missing or failed native fixture results: ' + Name)
         Groups[Name] = Results
+    if '[Runtime:NativeExpansion] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native API expansion cases did not complete')
+    if '[Authoring:Reload] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Project dependency reload cases did not complete')
+    if '[Runtime:NativeGameplay] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native gameplay expansion cases did not complete')
+    if '[Runtime:NativeAnimation] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native animation expansion cases did not complete')
+    if '[Authoring:Templates] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native starter templates did not complete')
+    if '[Foundation:Acceptance] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Shipped native foundation projects did not complete')
     Controllers = json.loads((Args.output/'controller/controller-evidence.json').read_text())
     if Controllers.get('Actors') != 7 or Controllers.get('Transport') != 'ENet' or len(Controllers.get('Evidence', [])) != 7:
         raise ValueError('Player.Character controller actors incomplete')
@@ -216,7 +228,7 @@ def Main():
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
-        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']} | {'PlayerController.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), 'Controller.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()},
+        'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']} | {'PlayerController.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), 'Controller.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()} | {File.relative_to(Path(__file__).resolve().parents[2]).as_posix(): hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring') for File in sorted((Path(__file__).resolve().parents[2]/Folder).rglob('*')) if File.is_file() and File.suffix in ('.luau','.tres','.gdshader')},
         'Processes': sum(len(Results) for Results in Groups.values()),
         'LogHashes': {str(File.relative_to(Args.output)): hashlib.sha256(File.read_bytes()).hexdigest() for File in sorted(Args.output.rglob('*.log'))},
         'Scope': 'Native fixtures including actual GL-020 ENet authority/handler/life cases, GL-023 public HTTP/JSON/native UUID, Model Character V2 and inherited GL-007 authority; sanitizer configuration and remaining qualification limits are recorded by the invoking matrix'

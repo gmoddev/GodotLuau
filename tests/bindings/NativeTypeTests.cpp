@@ -4,6 +4,8 @@
 #include "Luau/Error.h"
 #include "Luau/Module.h"
 #include "Luau/TypeArena.h"
+#include "Luau/Ast.h"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -11,6 +13,24 @@
 
 struct Sources : Luau::FileResolver {
     std::unordered_map<std::string,std::string> Files;
+    std::unordered_map<std::string,std::filesystem::path> ProjectRoots;
+    std::optional<Luau::ModuleInfo> resolveModule(const Luau::ModuleInfo* Context,Luau::AstExpr* Expression,const Luau::TypeCheckLimits&) override {
+        if(!Context)return std::nullopt;
+        auto Root=ProjectRoots.find(Context->name);
+        auto Text=Expression->as<Luau::AstExprConstantString>();
+        if(Root==ProjectRoots.end() || !Text)return std::nullopt;
+        std::string Path(Text->value.data,Text->value.size);
+        if(Path.size()>1024 || Path.find("res://")!=0 || Path.size()<7 || Path[6]=='/' || Path.substr(6).find(':')!=std::string::npos || Path.find("..")!=std::string::npos || Path.find('\\')!=std::string::npos || Path.find('\0')!=std::string::npos)return std::nullopt;
+        auto File=Root->second/Path.substr(6);
+        if(File.extension()!=".luau" && File.extension()!=".lua")return std::nullopt;
+        auto Name=File.generic_string();
+        if(!Files.count(Name)) {
+            std::ifstream Input(File);std::stringstream Buffer;Buffer<<Input.rdbuf();
+            if(!Input || Buffer.str().size()>1024*1024)return std::nullopt;
+            Files[Name]=Buffer.str();ProjectRoots[Name]=Root->second;
+        }
+        return Luau::ModuleInfo{Name};
+    }
     std::optional<Luau::SourceCode> readSource(const Luau::ModuleName& Name) override {
         auto Found=Files.find(Name);
         if (Found==Files.end()) return std::nullopt;
@@ -61,6 +81,52 @@ local C=S:Connect(B,"Toggled",function(Value:boolean) B.Text=tostring(Value) end
 C:Disconnect()
 )",true},
         {"forbidden constructor",R"(local S=Scene.new(Parent) local O=S:New("OS",{}))",false},
+        {"2D collections and optional resource",R"(local S=Scene.new(Parent)
+local Frames=S:New("SpriteFrames",{})
+local ReadFrames:NativeSpriteFrames=Frames
+local Sprite=S:New("AnimatedSprite2D",{SpriteFrames=Frames})
+local L=S:New("ItemList",{FixedIconSize={X=16,Y=16}})
+local I:number=S:Call(L,"AddItem","First")
+local Selected:{number}=S:Call(L,"GetSelectedItems")
+local T=S:New("Timer",{WaitTime=0.1})
+local Remaining:number=T.TimeLeft
+S:Call(T,"Start")
+local Body=S:New("RigidBody2D",{Mass=2})
+S:Call(Body,"ApplyImpulse",Vector2.new(1,0))
+)",true},
+        {"tagged compound values and shader",R"(local S=Scene.new(Parent)
+local C:NativeColor4=Scene.Value("Color",{R=1,G=0.5,B=0.25,A=0.5})
+local M=S:New("ShaderMaterial",{Shader=S:Load("Shader","res://Tint.gdshader")})
+S:Call(M,"SetShaderParameter","Tint",C)
+local V:NativeVariant=S:Call(M,"GetShaderParameter","Tint")
+local Bytes:{number}=Scene.Value("PackedByteArray",{0,255})
+)",true},
+        {"read-only constructor property",R"(local S=Scene.new(Parent) S:New("Timer",{TimeLeft=1}))",false},
+        {"native animation construction",R"(local S=Scene.new(Parent)
+local A=S:New("Animation",{Length=1})
+local I:number=S:Call(A,"AddTrack",Scene.Enums.Animation.TrackType.TYPE_VALUE)
+S:Call(A,"TrackSetPath",I,"Visual:position")
+S:Call(A,"TrackInsertKey",I,0,Vector3.new(0,0,0))
+local L=S:New("AnimationLibrary",{})
+local Status:number=S:Call(L,"AddAnimation","move",A)
+local Names:{string}=S:Call(L,"GetAnimationList")
+local P=S:New("AnimationPlayer",{})
+S:Call(P,"AddAnimationLibrary","",L)
+S:Call(P,"Play","move")
+)",true},
+        {"scoped physics and bone poses",R"(local S=Scene.new(Parent)
+local Ray=S:New("RayCast3D",{TargetPosition=Vector3.new(0,-5,0)})
+local Hit:NativeCollisionObject3D?=S:Call(Ray,"GetCollider")
+local Body=S:New("CharacterBody3D",{Velocity=Vector3.new(1,0,0)})
+local Body2=S:New("CharacterBody2D",{Velocity=Vector2.new(1,0)})
+S:Call(Body2,"MoveAndSlide")
+local Collided:boolean=S:Call(Body,"MoveAndSlide")
+local Bones=S:New("Skeleton3D",{})
+local Index:number=S:Call(Bones,"AddBone","Root")
+S:Call(Bones,"SetBonePoseRotation",Index,{X=0,Y=0,Z=0,W=1})
+local Region=S:New("NavigationRegion3D",{NavigationMesh=S:Load("NavigationMesh","res://Map.tres")})
+)",true},
+        {"wrong new collection type",R"(local S=Scene.new(Parent) S:New("ItemList",{FixedIconSize="bad"}))",false},
         {"wrong typed property",R"(local S=Scene.new(Parent) local B=S:New("Button",{Text=42}))",false},
         {"unknown direct property",R"(local S=Scene.new(Parent) local B=S:New("Button",{}) B.Script="bad")",false},
         {"forbidden method",R"(local S=Scene.new(Parent) local B=S:New("Button",{}) S:Call(B,"set_script",nil))",false},
@@ -86,6 +152,9 @@ C:Disconnect()
         if (!ModuleInput || ModuleSource.str().empty()) return 2;
         std::string Name="NativeProductionModule"+std::to_string(Index);
         Resolver.Files[Name]=ModuleSource.str();
+        auto Directory=std::filesystem::absolute(Arguments[Index]).parent_path();
+        for(int Depth=0;Depth<16 && Directory!=Directory.parent_path();++Depth,Directory=Directory.parent_path())
+            if(std::filesystem::exists(Directory/"project.godot")){Resolver.ProjectRoots[Name]=Directory;break;}
         auto Result=Frontend.check(Name);
         std::cout<<"[Bindings:Types] "<<(Result.errors.empty()?"PASS ":"FAIL ")<<Arguments[Index]<<'\n';
         if (!Result.errors.empty()) {

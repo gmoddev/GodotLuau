@@ -33,6 +33,17 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+The unmerged [GL-053 native API campaign](gl-053-native-development.md) expands
+the integrated authoring foundations. Its name is distinct from the historical
+GL-053 default-damage finding, which remains resolved under its original ID.
+The [qualification record](gl-053-native-qualification.md) separates current
+component evidence, pending acceptance and retained profile limitations.
+Windows/Linux core/native/sanitizers, all four production profiles, accepted
+non-publishing packages, Windows rendered applications/export/game regressions
+and actual Windows editor interaction pass within their documented scope.
+The [integration record](gl-053-main-integration.md) records the final bounded
+corrections and owner-authorized normal merge preparation.
+
 The normally [integrated GL-052 campaign](gl-052-main-integration.md) preserves
 all 25 qualified feature commits and their evidence. It implements a clean-project,
 Luau-only authoring/editor/export workflow. [ADR-016](adr-016-luau-editor-authoring.md)

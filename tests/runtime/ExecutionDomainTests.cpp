@@ -522,6 +522,30 @@ int main(int Arguments, char** Values) {
         F.Run(1, "shared.Failed = not pcall(require, 100)");
         F.Domain.InvalidateModule(100); F.Tick(3); F.Verify("assert(shared.Failed)");
     });
+    Test("Dependency reload retires transitive cache and callbacks while preserving unrelated modules", [] {
+        Fixture F;F.UseRevisions();
+        F.Sources[100]="shared.ChildRuns=(shared.ChildRuns or 0)+1; return {Value=1}";
+        F.Sources[101]="local Child=require(100); task.delay(1,function() shared.StaleDependencyCallback=true end); return {Child=Child}";
+        F.Sources[102]="return {Parent=require(101)}";
+        F.Sources[103]="return {}";
+        F.Run(1,"shared.Old=require(102); shared.Unrelated=require(103); assert(shared.Old.Parent.Child.Value==1)");
+        F.Sources[100]="shared.ChildRuns=(shared.ChildRuns or 0)+1; return {Value=2}";F.Revisions[100]=2;
+        F.Domain.InvalidateModule(100);
+        F.Run(2,"assert(require(102).Parent.Child.Value==2 and require(103)==shared.Unrelated and shared.Old.Parent.Child.Value==1 and shared.ChildRuns==2)");
+        Check(F.SourceLoads==7,"Dependency reload recompiled an unrelated module or missed a transitive parent");
+        F.Domain.InvalidateModule(100);F.Tick(60);
+        F.Verify("assert(not shared.StaleDependencyCallback)");F.NoErrors();
+    });
+    Test("Dependency reload wakes callers waiting on a transitive initializer", [] {
+        Fixture F;
+        F.Sources[100]="task.wait(10); return 1";
+        F.Sources[101]="return require(100)";F.Sources[102]="return require(101)";
+        F.Run(1,"shared.DependencyWaitFailed=not pcall(require,102)");
+        F.Domain.InvalidateModule(100);F.Tick(3);
+        F.Verify("assert(shared.DependencyWaitFailed)");
+        F.Sources[100]="return 2";
+        F.Run(2,"assert(require(102)==2)");
+    });
     Test("Revision cache loads only on misses and distinguishes replacement resources", [] {
         Fixture F; F.UseRevisions(); F.Sources[100] = "return {Value = 1}";
         F.Run(1, "shared.Old = require(100); for Index = 1, 100 do assert(require(100) == shared.Old) end");

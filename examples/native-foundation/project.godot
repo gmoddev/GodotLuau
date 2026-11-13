@@ -1,0 +1,10 @@
+config_version=5
+[application]
+config/name="GodotLuau Native Foundation"
+run/main_scene="res://TwoD.tscn"
+[display]
+window/size/viewport_width=960
+window/size/viewport_height=640
+[rendering]
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.035,0.045,0.075,1)

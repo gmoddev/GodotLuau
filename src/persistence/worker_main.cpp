@@ -24,6 +24,15 @@ int main() {
     }
     Input.Op=Operation(Sizes[4]); Input.Exists=Sizes[5]!=0;
     Result Value=GLDataStoreBackend::Execute(Input);
+#ifdef GL_RUNTIME_TESTS
+    // CMake integration fixture only; SCons products have no barrier protocol.
+    if (Input.Leaf=="ds_GL050_Race.json") {
+        auto Gate=std::filesystem::u8path(Input.Root)/"gl050.wait";
+        auto Deadline=std::chrono::steady_clock::now()+std::chrono::seconds(5);
+        while (std::filesystem::exists(Gate) && std::chrono::steady_clock::now()<Deadline)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+#endif
     std::string Output=Encode(Value);
     return std::fwrite(Output.data(),1,Output.size(),stdout)==Output.size() && std::fflush(stdout)==0 ? 0:5;
 }

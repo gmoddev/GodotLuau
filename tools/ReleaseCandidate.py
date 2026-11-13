@@ -69,6 +69,10 @@ def Identity(Revision):
     Harness = {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted((Source/'tests/runtime').iterdir()) if File.suffix in ['.gd', '.py', '.cpp', '.pem'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']}
     Harness['PlayerController.luau'] = hashlib.sha256((Source/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     Harness['Controller.luau'] = hashlib.sha256((Source/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+    for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring'):
+        for File in sorted((Source/Folder).rglob('*')):
+            if File.is_file() and File.suffix in ('.luau','.tres','.gdshader'):
+                Harness[File.relative_to(Source).as_posix()]=hashlib.sha256(File.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
     return {'Revision': Revision, 'Tree': Git('rev-parse', Revision+'^{tree}'), 'Dependencies': Dependencies,
             'NativeSource': GetFingerprint(Source), 'HarnessHashes': Harness,
             'PolicySHA256': hashlib.sha256(Path(__file__).with_name('ReleaseCandidatePolicy.json').read_bytes().replace(b'\r\n', b'\n')).hexdigest()}
@@ -178,7 +182,7 @@ def Build(Args):
         for File in sorted(Output.glob('*.log')): Archive.write(File, File.name)
     Files = {File.relative_to(Output).as_posix(): {'SHA256': Hash(File), 'Bytes': File.stat().st_size} for Directory in [Products, Adapter] for File in sorted(Directory.iterdir())}
     Files['evidence.zip'] = {'SHA256': Hash(Payload), 'Bytes': Payload.stat().st_size}
-    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'RemoteHost': Host, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 141}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
+    Save(Output/'profile.json', {'Schema': 1, 'Platform': Selected, 'Configuration': Args.configuration, 'Source': Before, 'Toolchain': Toolchain, 'Commands': Commands, 'Godot': EngineEvidence, 'RemoteHost': Host, 'Files': Files, 'Gates': {'Core': {'Result': 'PASS', 'Cases': 87}, 'Native': {'Result': 'PASS', 'Actors': 141}}, 'QualificationProduct': 'Existing CMake native test adapter with GL_RUNTIME_TESTS; SCons production products are separately checked after packaging', 'Limitations': Policy['Limitations']})
     print('[Release:Candidate] PASS source-built '+Selected+' '+Args.configuration, flush=True)
 
 
@@ -205,7 +209,7 @@ def CheckProfile(Record, Expected, Selected, Configuration):
     Require(Record['Source'] == Expected, 'Stale or mixed source/fixture/dependency inputs')
     VerifyRemoteHost(Record.get('RemoteHost', {}))
     Require(Record['RemoteHost'].get('Platform') == Selected and Record['RemoteHost'].get('Configuration') == Configuration, 'GL-029 host profile mismatch')
-    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 85}, 'Native': {'Result': 'PASS', 'Actors': 141}}, 'Failed, skipped or incomplete qualification gate')
+    Require(Record['Gates'] == {'Core': {'Result': 'PASS', 'Cases': 87}, 'Native': {'Result': 'PASS', 'Actors': 141}}, 'Failed, skipped or incomplete qualification gate')
     Require(Record['Commands'] and all(Item['Exit'] == 0 for Item in Record['Commands']), 'Failed build/qualification command')
     Require(Record['Toolchain']['SCons'] == Policy['SCons'] and Record['Toolchain']['CompilerVersion'], 'Missing toolchain identity')
     LibraryName, WorkerName = Names(Selected, Configuration)
@@ -261,7 +265,7 @@ def SeparateSupplementalEvidence(Evidence, Summary):
 
 def CheckSanitizer(Directory, Expected):
     Record = Load(Directory/'sanitizer.json')
-    Require(Record['Source'] == Expected and Record['Result'] == 'PASS' and Record['Cases'] == 85, 'Missing or failed core sanitizer qualification')
+    Require(Record['Source'] == Expected and Record['Result'] == 'PASS' and Record['Cases'] == 87, 'Missing or failed core sanitizer qualification')
     Require(Record['ASAN_OPTIONS'] == 'detect_leaks=1:halt_on_error=1' and Record['InstrumentedFiles'] >= 2 and Record['ASanSymbolVerified'], 'Sanitizer instrumentation not established')
     for Name, Digest in Record['Files'].items(): Require(SafePath(Name) and Hash(Directory/Name) == Digest, 'Sanitizer evidence hash mismatch')
     CheckDiscovery(Directory/'core/discovery.json'); CheckReport(Directory/'core/core-results.xml')
@@ -282,7 +286,7 @@ def Sanitize(Args):
     Symbols = subprocess.check_output(['nm', str(BuildDirectory/'ExecutionDomainTests')], text=True, timeout=30)
     Require('__asan_init' in Symbols and Identity(Args.revision) == Before, 'ASan symbol/source identity mismatch')
     Files = {str(File.relative_to(Output)): Hash(File) for File in (Output/'core').iterdir() if File.is_file()}
-    Save(Output/'sanitizer.json', {'Source': Before, 'Result': 'PASS', 'Cases': 85, 'ASAN_OPTIONS': Environment['ASAN_OPTIONS'], 'InstrumentedFiles': len(Commands), 'ASanSymbolVerified': True, 'Compiler': subprocess.check_output(['clang++', '--version'], text=True, timeout=15), 'Commands': Commands, 'Files': Files})
+    Save(Output/'sanitizer.json', {'Source': Before, 'Result': 'PASS', 'Cases': 87, 'ASAN_OPTIONS': Environment['ASAN_OPTIONS'], 'InstrumentedFiles': len(Commands), 'ASanSymbolVerified': True, 'Compiler': subprocess.check_output(['clang++', '--version'], text=True, timeout=15), 'Commands': Commands, 'Files': Files})
 
 
 def Stage(Revision, Output):
@@ -319,7 +323,10 @@ def Smoke(Engine, Package, Directory, Selected):
             if os.name != 'nt': Require(os.access(Worker, os.X_OK), 'Extracted companion is not executable')
             (Project/'project.godot').write_text('config_version=5\n[application]\nconfig/use_custom_user_dir=true\nconfig/custom_user_dir_name="GodotLuauCandidate"\n[threading]\nworker_pool/max_threads=2\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n')
             (Project/'.godot').mkdir(); (Project/'.godot/global_script_class_cache.cfg').write_text('list=[]\n')
-            shutil.copy2(Source/'tests/runtime/DatastoreIntegration.gd', Project/'DatastoreIntegration.gd')
+            # A bounded repackage repair may update the startup checker while
+            # retaining the immutable source and products recorded by profiles.
+            Fixture=Path(__file__).resolve().parents[1]/'tests/runtime/DatastoreIntegration.gd'
+            shutil.copy2(Fixture, Project/'DatastoreIntegration.gd')
             if Configuration == 'Release':
                 # The official test host has debug features. Redirect its debug
                 # selection to the packaged Release library in this copy only.
@@ -332,7 +339,7 @@ def Smoke(Engine, Package, Directory, Selected):
             Child = Start(Engine, Project, 'DatastoreIntegration.gd', Label, [], Environment)
             Result = Check(Child, time.monotonic()+60, Project, Label, '[Persistence:DataStore] PASS prototype')
             LibraryName = Names(Selected, Configuration)[0]
-            Actors.append({'Configuration': Configuration, **Result, 'ExtensionSHA256': Hash(Project/'GodotLuau/bin'/LibraryName), 'CompanionSHA256': Hash(Worker), 'Logs': {Name: Hash(Project/(Label+'.'+Name+'.log')) for Name in ['stdout', 'stderr']}})
+            Actors.append({'Configuration': Configuration, **Result, 'FixtureSHA256': Hash(Fixture), 'ExtensionSHA256': Hash(Project/'GodotLuau/bin'/LibraryName), 'CompanionSHA256': Hash(Worker), 'Logs': {Name: Hash(Project/(Label+'.'+Name+'.log')) for Name in ['stdout', 'stderr']}})
     finally: StopAll()
     return Actors
 
@@ -382,7 +389,7 @@ def CheckPackage(Directory, Expected, Selected):
         Provenance = json.loads(Archive.read('GodotLuau/release-provenance.json'))
         Require(Provenance['Platform'] == Selected and Provenance['Source'] == Expected and hashlib.sha256(Archive.read('GodotLuau/release-provenance.json')).hexdigest() == Record['ProvenanceSHA256'], 'Embedded provenance mismatch')
         for PlatformName, Configuration in Profiles: CheckProfile(Provenance['Profiles'][PlatformName+'-'+Configuration], Expected, PlatformName, Configuration)
-        Require(Provenance['Sanitizer']['Source'] == Expected and Provenance['Sanitizer']['Result'] == 'PASS' and Provenance['Sanitizer']['Cases'] == 85 and Provenance['Sanitizer']['ASanSymbolVerified'], 'Missing sanitizer gate in candidate')
+        Require(Provenance['Sanitizer']['Source'] == Expected and Provenance['Sanitizer']['Result'] == 'PASS' and Provenance['Sanitizer']['Cases'] == 87 and Provenance['Sanitizer']['ASanSymbolVerified'], 'Missing sanitizer gate in candidate')
         for Configuration in Policy['Configurations']:
             LibraryName, WorkerName = Names(Selected, Configuration)
             Build = Provenance['Profiles'][Selected+'-'+Configuration]

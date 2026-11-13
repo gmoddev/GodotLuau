@@ -23,5 +23,8 @@ public:
     size_t Peak() const;
     static void StopAll();
     static void DrainRetired();
+#ifdef GL_RUNTIME_TESTS
+    static bool TestExitReplyRace(const std::string& Root);
+#endif
 };
 #endif

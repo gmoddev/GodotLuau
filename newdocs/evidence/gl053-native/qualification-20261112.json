@@ -1,0 +1,560 @@
+{
+  "Schema": 1,
+  "Campaign": "GL-053 native expansion; distinct from resolved default-damage issue GL-053",
+  "Result": "SUPPORTED_SCOPE_QUALIFIED_INTERACTIVE_EDITOR_BLOCKED",
+  "Branch": "feature/gl-053-native-api-expansion",
+  "Baseline": "16e8597cb342a1bbc888f190680c678ecf9ba055",
+  "EngineQualification": {
+    "Source": {
+      "Revision": "b9123fa08c7d9a0559157f5e170cdd9c23865746",
+      "Tree": "4ec830a015fb5f17024e5e7d148a095c4cc742b8",
+      "Dependencies": {
+        "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+        "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+      },
+      "NativeSource": {
+        "SHA256": "685cbd6a9978bea0516265967c5ffc4da22f67fda438d39f5735aeed76481149",
+        "Files": 123,
+        "Newlines": "LF normalized"
+      },
+      "PolicySHA256": "934fe9e055690ced8a4cdeef31d6b3a4468c3805d8ff81c0e222f930fa35e04e"
+    },
+    "CandidateRun": 43236570162,
+    "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+    "ConsumedFiles": 132,
+    "ConsumedFilesSHA256": "a22b9fe0cf2a9c62fe8a16f84b340910dd8e63434bf90cf2a7bddde86bb75a39",
+    "AcceptedEvidenceSHA256": "b2f74632bafb7e810e4a01d51d4755bd0589daf8c76a62e754238055287a29ca"
+  },
+  "ApplicationFollowup": {
+    "Revision": "4ff0ab4760f17bd90cf8eab86b059b7ebfefc85b",
+    "Change": "Distinct second 2D sprite frame; native implementation and declarations unchanged",
+    "Qualification": "Focused real-input gameplay, native distinct texture assertion, Windows Release export/render and Windows/Linux types"
+  },
+  "Coverage": {
+    "MetadataClasses": 920,
+    "ConstructibleClasses": 94,
+    "SelectedProperties": 306,
+    "SelectedMethods": 167,
+    "SelectedSignals": 33,
+    "SelectedConstants": 49,
+    "DeclaredMembers": {
+      "methods": 14379,
+      "properties": 3676,
+      "signals": 447,
+      "enums": 647,
+      "constants": 155
+    }
+  },
+  "CI": {
+    "Core": 43236560018,
+    "Native": 43236559864,
+    "Definitions": 43249386432,
+    "Result": "PASS",
+    "FullNativeSanitizers": {
+      "Run": 43234536332,
+      "WindowsAttempt": 1,
+      "LinuxAttempt": 2,
+      "Result": "PASS",
+      "UnexpectedReports": [],
+      "RetainedLinuxAttempt1": "Indeterminate DataStore BindToClose result; no unexpected sanitizer reports; source unchanged; not attributed to GL-050"
+    }
+  },
+  "Packages": {
+    "Windows": {
+      "File": "GodotLuau-Windows.zip",
+      "SHA256": "60339f20925f2e148bbc9d8fb665bb595c211097b9b85f1d9cf47b4491d9d4c1",
+      "Bytes": 8862456,
+      "ExtractedStartup": [
+        {
+          "Configuration": "Debug",
+          "Exit": 0
+        },
+        {
+          "Configuration": "Release",
+          "Exit": 0
+        }
+      ]
+    },
+    "Linux": {
+      "File": "GodotLuau-Linux.zip",
+      "SHA256": "74493783968bf0eb70bdf7538f475c1ab97259a596525b3d0e3824121db812f4",
+      "Bytes": 12119784,
+      "ExtractedStartup": [
+        {
+          "Configuration": "Debug",
+          "Exit": 0
+        },
+        {
+          "Configuration": "Release",
+          "Exit": 0
+        }
+      ]
+    }
+  },
+  "WindowsComponents": {
+    "Source": {
+      "SHA256": "685cbd6a9978bea0516265967c5ffc4da22f67fda438d39f5735aeed76481149",
+      "Files": 123,
+      "Newlines": "LF normalized"
+    },
+    "Revision": "3a5adb6d5ad70419169e5012bb6ef0dc71cf9c05",
+    "ExtensionSHA256": "9996b4380d7e1c1a95586e191e4ddd142c69834204c9bd246703d6634e87bfac",
+    "HostSHA256": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+    "Results": [
+      {
+        "Label": "navigation",
+        "Exit": 0,
+        "Diagnostics": "",
+        "Command": [
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\e2e-game-20261109\\runtime\\Editor.exe",
+          "--disable-crash-handler",
+          "--single-threaded-scene",
+          "--path",
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\3a-components-final\\navigation",
+          "--script",
+          "res://NativeGameplay.gd",
+          "--headless"
+        ]
+      },
+      {
+        "Label": "expansion",
+        "Exit": 0,
+        "Diagnostics": "",
+        "Command": [
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\e2e-game-20261109\\runtime\\Editor.exe",
+          "--disable-crash-handler",
+          "--single-threaded-scene",
+          "--path",
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\3a-components-final\\expansion",
+          "--script",
+          "res://RenderedNativeExpansion.gd",
+          "--minimized"
+        ]
+      },
+      {
+        "Label": "foundation",
+        "Exit": 0,
+        "Diagnostics": "",
+        "Command": [
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\e2e-game-20261109\\runtime\\Editor.exe",
+          "--disable-crash-handler",
+          "--single-threaded-scene",
+          "--path",
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\3a-components-final\\foundation",
+          "--script",
+          "res://RenderedNativeFoundation.gd",
+          "--minimized"
+        ]
+      },
+      {
+        "Label": "measure",
+        "Exit": 0,
+        "Diagnostics": "",
+        "Command": [
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\e2e-game-20261109\\runtime\\Editor.exe",
+          "--disable-crash-handler",
+          "--single-threaded-scene",
+          "--path",
+          "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\3a-components-final\\measure",
+          "--script",
+          "res://BindingMeasure.gd",
+          "--headless"
+        ]
+      }
+    ]
+  },
+  "Exports": {
+    "2d-pulse": {
+      "Passed": true,
+      "Graphical": false,
+      "Interactive": false,
+      "Application": {
+        "Revision": "4ff0ab4760f17bd90cf8eab86b059b7ebfefc85b",
+        "Example": "Native2D",
+        "Profile": "Qualified candidate",
+        "CandidateSHA256": "60339f20925f2e148bbc9d8fb665bb595c211097b9b85f1d9cf47b4491d9d4c1",
+        "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+        "ApplicationFiles": {
+          "project.godot": "a83904a9950fd8535ac2b96b652cdad87a8513d7d8cb77d8808d0c116352bc77",
+          "ThreeD.luau": "804c2871746428f26574d05f4e2f9057970e569a416c3ca565067f97c5765125",
+          "ThreeD.tscn": "a1890317425b8249ad81a77ceb6d05d12e00d94e20a1a2a52a134a1e839eb397",
+          "TwoD.luau": "a7c3839bcef45c092beb29dcc3539269f6462f7c83ad47700557d3ff645b6c90",
+          "TwoD.tscn": "a17f9682f1fd54187eb443c4ffc090d91becc66d0f0af078e78cf8e4300e7a7f",
+          "UI.luau": "9dc6615f79d9d1ed17e20f5bbc159edff1ece54a3ecad8c0c4830e0eec506492",
+          "UI.tscn": "ad63fc7157d25c02ddb53430007add289cc53df088cf7cacfb6a1d3428350b73",
+          "Assets/Navigation.tres": "49005f35073fd5931319402c1bfc405cd898605e2e1a875aca09ad7255d7c57b",
+          "Assets/PlayerPulse.tres": "f9ecf484c902f71e9b8f8c2623a027a0e1774f73468b17c11497466f5638901c",
+          "Assets/Theme.tres": "92b3e2db58ce3be7a24dc9e942f29ec43fc8bfa95a50ccfecda3717a7b4e970c",
+          "Assets/Tint.gdshader": "1d6f92a41842927c4aa4e130fb8b2830653c5a420be15942eb4a5abf40ddc5a0",
+          "Assets/Token.tres": "42af464c60f6a270ec8e8067b1f994ff287b85d1a25fb2b06fe069c698b986b9",
+          "Shared/Hud.luau": "63b02e5d63282ccb7ccc48bcc47e346421d16e37bb59c7be044ab458697aae13",
+          "Shared/World2D.luau": "20cb39d15aaad840be5b9640d36d029cfbb216575521546b3aceb9cf48db1b45",
+          "Shared/World3D.luau": "190dae5409b200e81915f50b2abf5d35838b0dd6d73f84ec8dcb4d91af5098e0"
+        }
+      },
+      "StandaloneFiles": {
+        "godot_luau.windows.template_release.x86_64.dll": "3d0b59a6899f401267c2c2c9bd4ccf0caf116a522d968dbd79e0b18546868362",
+        "godot_luau_store_worker.exe": "5a4d9a956864b39635cb5de0549c9e430dff8143ae4bd4192efc65f20f74ebfc",
+        "OrbRun.exe": "9dbc4386a7d5049a00ef5ddfd8c2e42a68e40e93300e9c2e4073798bb366d9da"
+      },
+      "EvidenceSHA256": "6896305124e3e0fee39e5b3471f7931ee78c78019b99c73dd7369371a28b27b2"
+    },
+    "3d": {
+      "Passed": true,
+      "Graphical": false,
+      "Interactive": false,
+      "Application": {
+        "Revision": "8194c51ebccff52aa0f0bb7a7113e5dac25dd951",
+        "Example": "Native3D",
+        "Profile": "Qualified candidate",
+        "CandidateSHA256": "60339f20925f2e148bbc9d8fb665bb595c211097b9b85f1d9cf47b4491d9d4c1",
+        "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+        "ApplicationFiles": {
+          "project.godot": "37d41e335064480e221b90bc1d4a308509bb6271f2f2332ebf1fafac21102da8",
+          "ThreeD.luau": "804c2871746428f26574d05f4e2f9057970e569a416c3ca565067f97c5765125",
+          "ThreeD.tscn": "a1890317425b8249ad81a77ceb6d05d12e00d94e20a1a2a52a134a1e839eb397",
+          "TwoD.luau": "a7c3839bcef45c092beb29dcc3539269f6462f7c83ad47700557d3ff645b6c90",
+          "TwoD.tscn": "a17f9682f1fd54187eb443c4ffc090d91becc66d0f0af078e78cf8e4300e7a7f",
+          "UI.luau": "9dc6615f79d9d1ed17e20f5bbc159edff1ece54a3ecad8c0c4830e0eec506492",
+          "UI.tscn": "ad63fc7157d25c02ddb53430007add289cc53df088cf7cacfb6a1d3428350b73",
+          "Assets/Navigation.tres": "49005f35073fd5931319402c1bfc405cd898605e2e1a875aca09ad7255d7c57b",
+          "Assets/Theme.tres": "92b3e2db58ce3be7a24dc9e942f29ec43fc8bfa95a50ccfecda3717a7b4e970c",
+          "Assets/Tint.gdshader": "1d6f92a41842927c4aa4e130fb8b2830653c5a420be15942eb4a5abf40ddc5a0",
+          "Assets/Token.tres": "42af464c60f6a270ec8e8067b1f994ff287b85d1a25fb2b06fe069c698b986b9",
+          "Shared/Hud.luau": "63b02e5d63282ccb7ccc48bcc47e346421d16e37bb59c7be044ab458697aae13",
+          "Shared/World2D.luau": "e1d1f8b229f9e92c160014abdce701514aad0caed27dfe054c0b65d7fcaabcba",
+          "Shared/World3D.luau": "190dae5409b200e81915f50b2abf5d35838b0dd6d73f84ec8dcb4d91af5098e0"
+        }
+      },
+      "StandaloneFiles": {
+        "godot_luau.windows.template_release.x86_64.dll": "3d0b59a6899f401267c2c2c9bd4ccf0caf116a522d968dbd79e0b18546868362",
+        "godot_luau_store_worker.exe": "5a4d9a956864b39635cb5de0549c9e430dff8143ae4bd4192efc65f20f74ebfc",
+        "OrbRun.exe": "104e8c6500be4f50dec03605d3cb5476721cbf568d228c34978c44bff4b874a7"
+      },
+      "EvidenceSHA256": "0305c24e2c67948ce23d3b94878fdf3d9c9b2867a2214311d760f7ddbfa984a2"
+    },
+    "ui": {
+      "Passed": true,
+      "Graphical": false,
+      "Interactive": false,
+      "Application": {
+        "Revision": "8194c51ebccff52aa0f0bb7a7113e5dac25dd951",
+        "Example": "UI",
+        "Profile": "Qualified candidate",
+        "CandidateSHA256": "60339f20925f2e148bbc9d8fb665bb595c211097b9b85f1d9cf47b4491d9d4c1",
+        "EngineSHA256": "09130cf169b0904be4f0f4cc566aaa58519553dcc1ca1a4563999553c3dd0ebc",
+        "ApplicationFiles": {
+          "project.godot": "abd32c2e6335563663ffc570ef6466cf974212ab96166ae7334271f1991cb1dc",
+          "ThreeD.luau": "804c2871746428f26574d05f4e2f9057970e569a416c3ca565067f97c5765125",
+          "ThreeD.tscn": "a1890317425b8249ad81a77ceb6d05d12e00d94e20a1a2a52a134a1e839eb397",
+          "TwoD.luau": "a7c3839bcef45c092beb29dcc3539269f6462f7c83ad47700557d3ff645b6c90",
+          "TwoD.tscn": "a17f9682f1fd54187eb443c4ffc090d91becc66d0f0af078e78cf8e4300e7a7f",
+          "UI.luau": "9dc6615f79d9d1ed17e20f5bbc159edff1ece54a3ecad8c0c4830e0eec506492",
+          "UI.tscn": "ad63fc7157d25c02ddb53430007add289cc53df088cf7cacfb6a1d3428350b73",
+          "Assets/Navigation.tres": "49005f35073fd5931319402c1bfc405cd898605e2e1a875aca09ad7255d7c57b",
+          "Assets/Theme.tres": "92b3e2db58ce3be7a24dc9e942f29ec43fc8bfa95a50ccfecda3717a7b4e970c",
+          "Assets/Tint.gdshader": "1d6f92a41842927c4aa4e130fb8b2830653c5a420be15942eb4a5abf40ddc5a0",
+          "Assets/Token.tres": "42af464c60f6a270ec8e8067b1f994ff287b85d1a25fb2b06fe069c698b986b9",
+          "Shared/Hud.luau": "63b02e5d63282ccb7ccc48bcc47e346421d16e37bb59c7be044ab458697aae13",
+          "Shared/World2D.luau": "e1d1f8b229f9e92c160014abdce701514aad0caed27dfe054c0b65d7fcaabcba",
+          "Shared/World3D.luau": "190dae5409b200e81915f50b2abf5d35838b0dd6d73f84ec8dcb4d91af5098e0"
+        }
+      },
+      "StandaloneFiles": {
+        "godot_luau.windows.template_release.x86_64.dll": "3d0b59a6899f401267c2c2c9bd4ccf0caf116a522d968dbd79e0b18546868362",
+        "godot_luau_store_worker.exe": "5a4d9a956864b39635cb5de0549c9e430dff8143ae4bd4192efc65f20f74ebfc",
+        "OrbRun.exe": "9c213a0e222c4b7ae62f4e022ec14b2e8ccd87c15fc4af463fc1ab289ea1c482"
+      },
+      "EvidenceSHA256": "a25343d4e046d3697b0cb16a1c204f88b12c54799ccf8e31fa7fb3b28b7c9347"
+    }
+  },
+  "StandaloneRender": {
+    "2d-pulse": {
+      "Exit": 0,
+      "Command": [
+        "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\export-2d-pulse\\standalone\\OrbRun.exe",
+        "--disable-crash-handler",
+        "--position",
+        "16000,16000",
+        "--resolution",
+        "960x640",
+        "--write-movie",
+        "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\rendered-standalone-2d-pulse\\frame.png",
+        "--quit-after",
+        "30"
+      ],
+      "Graphical": true,
+      "Interactive": false,
+      "Frames": 30,
+      "LastFrame": "frame00000029.png",
+      "InspectedFrame": "frame00000025.png",
+      "FrameSHA256": "e635bb31505ace9a117d550d60cddafdc15b7bbc7e0154ca4e77034df28624e4"
+    },
+    "3d": {
+      "Exit": 0,
+      "Command": [
+        "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\export-3d\\standalone\\OrbRun.exe",
+        "--disable-crash-handler",
+        "--position",
+        "16000,16000",
+        "--resolution",
+        "960x640",
+        "--write-movie",
+        "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\rendered-standalone-3d\\frame.png",
+        "--quit-after",
+        "30"
+      ],
+      "Graphical": true,
+      "Interactive": false,
+      "Frames": 30,
+      "LastFrame": "frame00000029.png",
+      "InspectedFrame": "frame00000029.png",
+      "FrameSHA256": "5f75d909764b2463acf64bdeb55a4745d7896216f636fd5cf4219589c06413a9"
+    },
+    "ui": {
+      "Exit": 0,
+      "Command": [
+        "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\export-ui\\standalone\\OrbRun.exe",
+        "--disable-crash-handler",
+        "--position",
+        "16000,16000",
+        "--resolution",
+        "960x640",
+        "--write-movie",
+        "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl053-native-20261112\\rendered-standalone-ui\\frame.png",
+        "--quit-after",
+        "30"
+      ],
+      "Graphical": true,
+      "Interactive": false,
+      "Frames": 30,
+      "LastFrame": "frame00000029.png",
+      "InspectedFrame": "frame00000029.png",
+      "FrameSHA256": "9f624489008213e4c6720c3fb00554993b5f78c7acde941019ebcc7daa4d3c90"
+    }
+  },
+  "RelaySiege": {
+    "Solo": {
+      "Failed": 0,
+      "Cases": 27,
+      "Graphical": true,
+      "Seconds": 65.253,
+      "Frames": 1873,
+      "MeanFrameMS": 33.4694824701901,
+      "PeakFrameMS": 150.0,
+      "NativeObjects": 175.0,
+      "EvidenceSHA256": "fa9e02aa329f2b50e0c30a5644ef5c67dbb225f0318b3b7287fe3f0bceadb979"
+    },
+    "Recovery": {
+      "Failed": 0,
+      "Cases": 7,
+      "Graphical": false,
+      "Seconds": 2.942,
+      "Frames": 90,
+      "MeanFrameMS": 32.7369740740741,
+      "PeakFrameMS": 33.398,
+      "NativeObjects": 169.0,
+      "EvidenceSHA256": "3a80999b56723745797fb6d2f0cfad5bc960f0a673159cef53c604bd790365c3"
+    },
+    "listen": {
+      "Dedicated": false,
+      "Graphical": false,
+      "Actors": [
+        {
+          "Name": "leader",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 27
+        },
+        {
+          "Name": "observer1",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 9
+        },
+        {
+          "Name": "observer2",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 9
+        },
+        {
+          "Name": "latejoin",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 9
+        }
+      ],
+      "EvidenceSHA256": "918f224283627bc16160bf63bb811b1cd663877a4478d1eb952acc24af9e99e2"
+    },
+    "dedicated": {
+      "Dedicated": true,
+      "Graphical": false,
+      "Actors": [
+        {
+          "Name": "server",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 2
+        },
+        {
+          "Name": "leader",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 27
+        },
+        {
+          "Name": "observer1",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 9
+        },
+        {
+          "Name": "observer2",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 9
+        },
+        {
+          "Name": "latejoin",
+          "Exit": 0,
+          "Failed": 0,
+          "Cases": 9
+        }
+      ],
+      "EvidenceSHA256": "bb5289d888531eb8f537f75b8fb8b9646c97ae599868c32ab665a8ea94dd4b4b"
+    }
+  },
+  "Performance": {
+    "Bindings": {
+      "Configuration": "Retained Windows Debug adapters, same official editor headless host, seven trials excluding first warmup",
+      "FixtureSHA256": "06337119c9255a45f5de24e9ef5b28bb4fe1be2c32f26610aeb6f67b983b6da0",
+      "Records": [
+        {
+          "Label": "Baseline609",
+          "ExtensionSHA256": "b4b590b86c3e84e2045ff9dabbdbfd23b02fcbab2aaa555f418d328d03de44b7",
+          "MediansExcludingWarmup": {
+            "ConstructionSeconds": 0.0007142000013118377,
+            "VMKilobytes": 803.0,
+            "DispatchSeconds": 0.04287264999948093
+          }
+        },
+        {
+          "Label": "CandidateCB",
+          "ExtensionSHA256": "ec38779f7d483c9bb6d2de5c49c87277ccbe77bbeae7c1532eeda3f4c24b9514",
+          "MediansExcludingWarmup": {
+            "ConstructionSeconds": 0.0007074000004649861,
+            "VMKilobytes": 710.0,
+            "ConversionSeconds": 0.011410799999794108,
+            "DispatchSeconds": 0.07625664999977744
+          }
+        },
+        {
+          "Label": "CandidateE273",
+          "ExtensionSHA256": "83667c1819b5d93fe7d2759d62d78b8c9f75a9afd1da87fb88459094c702e813",
+          "MediansExcludingWarmup": {
+            "ConstructionSeconds": 0.0007240499999170424,
+            "VMKilobytes": 664.5,
+            "ConversionSeconds": 0.011029499999494874,
+            "DispatchSeconds": 0.07720305000111694
+          }
+        },
+        {
+          "Label": "Candidate3A",
+          "ExtensionSHA256": "9996b4380d7e1c1a95586e191e4ddd142c69834204c9bd246703d6634e87bfac",
+          "MediansExcludingWarmup": {
+            "ConstructionSeconds": 0.0007724499992036726,
+            "VMKilobytes": 687.0,
+            "ConversionSeconds": 0.011340300001393189,
+            "DispatchSeconds": 0.06692079999993439
+          }
+        }
+      ],
+      "RawEvidenceSHA256": "01a3f7c6ee1419f6537bf2baa2b6a140039b86ab599777c18ddb4781a65116d8"
+    },
+    "Reload": {
+      "Revisions": 100,
+      "MedianMicroseconds": 6896.0,
+      "MaxMicroseconds": 6922,
+      "InitialStaticBytes": 28159274,
+      "FinalStaticBytes": 28237694,
+      "InitialObjects": 1501.0,
+      "FinalObjects": 1503.0,
+      "VMKBFirst": 492.0,
+      "VMKBLast": 895.0,
+      "ForcedGC": false,
+      "LeakFreeClaim": false,
+      "RawEvidenceSHA256": "0680a72fae56a0cf8da3391953e08b30dd32020936cef0297b5dd427d6281438"
+    }
+  },
+  "Limitations": [
+    "Interactive editor capture black; activation twice fails GetCursorPos Access is denied 0x80070005",
+    "Final Debug dispatch sample remains 56.1% above retained baseline; no production speedup claim",
+    "GL-050 remains separate and unresolved; initial sanitizer close-save failure retained",
+    "Admitted headless/renderer hosts omit navigation; real path tests use verified official full-featured host",
+    "Windows LSan, Linux graphical/devices and physical gamepad/mobile not claimed",
+    "Unsupported native/editor families remain inventoried, not granted"
+  ],
+  "Policy": {
+    "MainUnchanged": true,
+    "ReleasesEnabled": false,
+    "UpdaterDistributionEnabled": false,
+    "NativeControllerDefault": true,
+    "ScriptedControllerOptIn": true,
+    "DependencyPinsChanged": false,
+    "AdmittedHostsChanged": false
+  },
+  "ArtifactRoot": "C:/Users/aiden/.codex/artifacts/godotluau/gl053-native-20261112",
+  "Preview": {
+    "Passed": true,
+    "Records": [
+      {
+        "Microseconds": 35057,
+        "Preview": {
+          "Microseconds": 14764,
+          "Nodes": 24,
+          "Passed": true,
+          "VMBytes": 608360
+        },
+        "Profile": "TwoD",
+        "Reopened": true,
+        "Saved": 0
+      },
+      {
+        "Microseconds": 30186,
+        "Preview": {
+          "Microseconds": 8229,
+          "Nodes": 26,
+          "Passed": true,
+          "VMBytes": 595440
+        },
+        "Profile": "ThreeD",
+        "Reopened": true,
+        "Saved": 0
+      },
+      {
+        "Microseconds": 39079,
+        "Preview": {
+          "Microseconds": 6288,
+          "Nodes": 27,
+          "Passed": true,
+          "VMBytes": 526920
+        },
+        "Profile": "UI",
+        "Reopened": true,
+        "Saved": 0
+      }
+    ]
+  },
+  "ReproductionHelpers": {
+    "RunCurrentComponents.py": "fd261e922e894fedee9bbb480e4c9c7fd9cd88912d8e8f3432f0029a29d117fb",
+    "CaptureFoundation.py": "a9f11054f34da8eef16bb24e39761bc3b53b56a6244361fad43c8c515b1baee5",
+    "CaptureFoundation.gd": "64f31a518747ceaac4bbbaed3c14024d9032e98857719d4e4527cc397a43815e",
+    "FoundationPreview.py": "e6878a0f2fc17c7df4505cb1805b2dde77488d6f03112752c4682daf7ddde136",
+    "FoundationPreview.gd": "1999ad4b8dcd84f799552ede17c84f54bc4b717c49737cd293732abdeeb81c31",
+    "MeasureReload.py": "a712fdedce269cc09c739e0fd1534b881d375c3e252844b36a9e36e91b048fce",
+    "MeasureReload.gd": "20878665e7460b9ffadda028e716adaef8d8326eda74028c5ccf8637adc76d16",
+    "RenderStandalone.py": "efcdb5bea97896a8a534f6a08ac9d2d5390f61fcb237c8c8af1ecb0ce85662cb",
+    "QualifyPulse.py": "b60ae120fc0bf3a810ac51451c11dc47d15cf31a01cad545749a3d063396c9f3"
+  }
+}

@@ -21,6 +21,7 @@ class GLNativeEditorPlugin : public godot::EditorPlugin {
     GLExecutionOwner* PreviewOwner = nullptr;
     uint64_t PreviewRoot = 0, PreviewViewport = 0, PreviewPanel = 0;
     uint64_t PreviewTree = 0, StatusLabel = 0, PathDialog = 0;
+    uint64_t TemplatePicker = 0;
     bool SavingPreview = false;
     godot::String PreviewError;
     size_t PreviewLogBytes = 0;
@@ -41,7 +42,7 @@ public:
     void _process(double Delta) override;
     void OnScriptChanged(const godot::Ref<godot::Script>& Script);
     void ConfigureEditor();
-    godot::Dictionary CreateLuauScene(const godot::String& Path);
+    godot::Dictionary CreateLuauScene(const godot::String& Path,const godot::String& Profile="3D");
     godot::Dictionary PreviewScript(const godot::Ref<LuauScript>& Source);
     void StopPreview();
     void ResetPreviewContext();

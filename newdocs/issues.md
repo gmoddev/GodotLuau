@@ -33,7 +33,8 @@ passes at 15af022; the integration receipt preserves source and artifact identit
 Windows interactive acceptance is complete. The final default-script `print`
 follow-up passes core/native CI,
 all four production profiles, both packages and actual game export/startup.
-GL-050 remains separately unresolved.
+GL-050's later transport correction is qualified on the native-expansion branch;
+see its scoped resolution below.
 The [qualification record](gl-052-qualification.md) preserves actual editor/game
 passes, completed Windows/Linux core/native/types/sanitizers, accepted production
 packages and Windows export/rendered multiplayer. The
@@ -119,10 +120,53 @@ four successful workflows and independently checked artifacts.
 | GL-047 | P3 | Integrated; corrected and qualified within recorded fixture profiles | Legacy invoke cancellation fixture can observe a response before queued owner retirement |
 | GL-048 | P3 | Integrated; corrected and rendered-qualified within game scope | Relay Siege broadcasts snapshots before every joining peer is ready |
 | GL-049 | P2 | Integrated; resolved within qualified ADR-014 scope | Typed native scene/resource/UI/audio/physics authoring and migrated Relay Siege |
-| GL-050 | P2 | Source-verified receive/exit race; controlled reproduction pending | DataStore parent can miss a final helper reply after an empty pipe read |
+| GL-050 | P2 | Resolved on native-expansion branch at `b7297fb`; controlled Windows before/after and Linux full-native ASan/LSan pass | DataStore parent could miss a final helper reply after an empty pipe read |
 | GL-051 | P2 | Integrated and verified within ADR-015 scope | Scalable policy-driven native bindings, composition, resources and editor/type integration |
 | GL-052 | P2 | Integrated and verified within documented ADR-016 scope; retained limits unchanged | Luau-only clean-project authoring, isolated preview, native scene persistence and export workflow |
 | [GL-053](gl-053-default-damage.md) | P2 | Resolved for default templates at `60913fb`; native/sanitizer/four-profile package gates pass | Removed unconfigured DamageEvent from disk and embedded templates; historical sink was commented out; customized scripts require review |
+| GL-054 | P2 | Resolved on unmerged native-expansion branch; core/native verification linked below | Changed project module leaves cached transitive importers and their callbacks alive |
+| GL-055 | P2 | Resolved on unmerged native-expansion branch; native UI verification linked below | FullRect preset can overwrite explicit offsets depending on property-table iteration order |
+
+## GL-055: Native layout preset ordering
+
+The GL-053 UI starter needs FullRect plus explicit margins in one New/Configure
+batch. At main `16e8597`, Apply follows the Lua table's iteration order: a later
+FullRect preset resets offsets already applied. This is source-verified ordering
+behavior, not a reproduced graphical failure. The native-expansion branch applies
+the layout preset before explicit properties, retaining validation before mutation.
+NativeTemplateCases checks actual Control anchors/margins and live UI signals.
+Fix [72d5dc8](https://github.com/gmoddev/GodotLuau/commit/72d5dc8d2bf399db79229a708170e00e911d31aa)
+passes Windows/Linux native run
+[43234500028](https://github.com/gmoddev/GodotLuau/actions/runs/43234500028),
+including the actual template margins/signals. Current Windows rendered UI and
+960x640/1280x800 captures retain explicit margins. See the
+[qualification record](gl-053-native-qualification.md). Resolved on this feature
+branch; main has not received the fix.
+
+## GL-054: Transitive project module reload
+
+At main `16e8597`, GLExecutionDomain tracks a loading module's WaitingOn edge
+for cycle detection but retains no dependency edges after initialization.
+InvalidateModule retires one identity only; LuauScript source changes emit a
+signal without invalidating a project-resource identity. A ready parent cache
+can therefore retain the child's old returned value. This is a source-verified
+iteration discrepancy, not a reproduced crash or authority exploit.
+
+The unmerged native-expansion campaign records module import edges, propagates
+invalidation across the dependent closure and invalidates changed project resource
+identities before changed subscribers run. Existing owner cancellation retires
+callbacks; unrelated caches remain intact. New core tests and the actual native
+ProjectReloadCases cover transitive cache replacement, pending initialization,
+callback retirement and preserved unrelated modules. Fix
+[e92084d](https://github.com/gmoddev/GodotLuau/commit/e92084db59c76d370e7bd0043cc6407226c60e2e)
+passes Windows/Linux core
+[43236560018](https://github.com/gmoddev/GodotLuau/actions/runs/43236560018)
+and complete native
+[43234500028](https://github.com/gmoddev/GodotLuau/actions/runs/43234500028).
+A separate 100-revision Windows observation also passes cancellation/selectivity;
+its natural-GC measurements are not a leak-free claim. See the
+[qualification record](gl-053-native-qualification.md). Resolved on this feature
+branch; main remains unchanged.
 
 ## GL-051: First-class native Luau integration
 
@@ -143,7 +187,7 @@ records verified artifacts separately from retained branch qualification.
 This is not full
 Godot API parity, a complete embedded debugger/type checker or Linux rendered
 qualification. Remaining composition/loading limits stay explicit.
-GL-050 remains separate and unfixed.
+GL-050's later transport correction and qualification are recorded separately below.
 
 ## GL-050: DataStore receive/exit ordering
 
@@ -151,8 +195,17 @@ Focused review during [native authoring qualification](native-authoring-developm
 finds a source-verified race in `gl_datastore.cpp` Work::Advance: Receive can
 return empty, the helper can then write its reply and exit, and the following
 Finished check reports failure without another drain. Finished preserves the
-output pipe on both platforms. Snapshotting exit state before draining is a
-small proposed correction; it is not implemented or qualified by this campaign.
+output pipe on both platforms. Snapshotting exit state before draining is
+implemented at `b7297fb`, preserved by `0af6e4d`. The CMake-only real-companion
+barrier forces exit after an empty read: the old decision fails with committed
+value `37` present, while the fixed adapter drains and acknowledges it. Windows
+also passes the unchanged large payload and BindToClose checks. Corrected fixture
+revision `bb15aab` passes Linux full-native ASan/LSan in run
+[43346827388](https://github.com/gmoddev/GodotLuau/actions/runs/43346827388):
+27 stages, 87 core cases, 141 native actors, detection controls and no unexpected
+reports, including the controlled exit/reply marker. Resolve this transport defect
+on the branch; see the [qualification record](gl-053-native-qualification.md) and
+[correction receipt](evidence/gl053-native/final-corrections-20261112.json).
 
 This is not an established cause of the recorded candidate close-save failures.
 A missed OK reply would leave its committed value present; those failures also
@@ -161,6 +214,13 @@ unexpected failure in one full Linux Debug profile and five filesystem replays.
 Keep this transport finding separate from the unproven close-save cause. A
 follow-up needs controlled transport interleaving coverage and preservation of
 the existing reply, deadline and helper-exit checks, without a storage refactor.
+
+The native-expansion campaign's Linux sanitizer attempt at `3a5adb6` again reports
+an indeterminate BindToClose write in the unchanged basic persistence fixture,
+with no unexpected sanitizer report. This does not establish the receive/exit
+race as its cause. Retain the failure and separate disposition in the
+[campaign journal](gl-053-native-development.md). The transport correction does
+not establish the cause of that separate missing-value observation.
 
 ## GL-049: Typed native game authoring
 

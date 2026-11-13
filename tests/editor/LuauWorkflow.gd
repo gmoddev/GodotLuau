@@ -34,6 +34,14 @@ func Run() -> void:
             var Created: Dictionary = Plugin.call("CreateLuauScene", "res://Fresh.tscn")
             Check(Created.get("Passed", false), "Native action creates scene and .luau entrypoint")
             Check(not Plugin.call("CreateLuauScene", "res://Fresh.tscn").get("Passed", false), "Creation never overwrites an existing project scene")
+            for Profile in ["Empty","2D","UI"]:
+                var TemplatePath: String = "res://Starter"+Profile+".tscn"
+                var Template: Dictionary = Plugin.call("CreateLuauScene",TemplatePath,Profile)
+                Check(Template.get("Passed",false) and Template.get("Template","")==Profile,"Native editor creates "+Profile+" template")
+                var TemplateSource: Script = load(TemplatePath.get_basename()+".luau")
+                Check(Plugin.call("PreviewScript",TemplateSource).get("Passed",false),"Native editor previews "+Profile+" template without gameplay services")
+                Plugin.call("StopPreview")
+            Check(not Plugin.call("CreateLuauScene","res://DeniedTemplate.tscn","Unknown").get("Passed",false) and not FileAccess.file_exists("res://DeniedTemplate.luau"),"Unknown template rejects before creating files")
             var Source: Script = load("res://Fresh.luau")
             Check(Source != null and Source.get_class() == "LuauScript", "Created source uses the real language resource")
             if Source:
