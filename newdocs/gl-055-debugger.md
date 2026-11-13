@@ -40,6 +40,15 @@ in that process stop together; other peers continue and may time out. This adds
 no gameplay pause protocol. EditorPreview retains historical error snapshots;
 it cannot block the editor's own UI in a live break loop.
 
+Only active Luau execution deadlines exclude measured debugger pause time.
+HTTP and DataStore operation deadlines keep their existing wall-clock semantics.
+After a long pause an HTTP request may time out; an independent DataStore helper
+may already have committed, so an unacknowledged write retains GL-009's
+indeterminate-outcome contract. Completion still revalidates the live owner and
+current coroutine wait. Pausing is not a cancellation or transaction rollback.
+These consequences are source-traced from the unchanged native managers, not a
+claim of an additional in-flight HTTP/persistence pause fixture.
+
 ## Inspecting and watching values
 
 Frames label the active execution owner generation and a weak, bounded coroutine

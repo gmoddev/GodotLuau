@@ -27,6 +27,10 @@ is paused; the editor remains a separate responsive process. All main-thread
 Server/Client execution, physics and rendering in that game process pause
 together. Other peers continue and may time out. Preserve the actual transport,
 queue, storage and cancellation contracts; do not invent pause replication.
+Native HTTP/DataStore wall deadlines are not shifted with Luau execution budgets.
+Their existing live-owner/current-wait delivery checks and possible indeterminate
+persistence outcomes remain authoritative after resume; a debugger pause cannot
+promise rollback of an independent companion process commit.
 
 Godot's initialized debugger flag is not a live-connection check. Require a
 session/domain/StopId-bound acknowledgment before entering its break loop,

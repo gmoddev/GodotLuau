@@ -5,6 +5,12 @@ The [journal](gl-055-debugger-development.md) preserves attempts, corrections an
 their original identities. The [guide](gl-055-debugger.md) describes the supported
 interface and [ADR-018](adr-018-native-luau-debugger.md) defines its authority and
 lifecycle contract. This record does not qualify unsupported features by inference.
+The [retained focused receipt](evidence/gl055/focused-qualification.json) includes
+actual source/binary identities, native cases and raw benchmark summaries.
+Original [breakpoint](evidence/gl055/debugger-breakpoint.png),
+[stack](evidence/gl055/debugger-stack.png),
+[stepping](evidence/gl055/debugger-stepping.png) and
+[reload](evidence/gl055/debugger-reload.png) captures are retained with hashes.
 
 ## Source and configuration
 
