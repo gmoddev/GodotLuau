@@ -11,4 +11,5 @@ bool GLValidNativeValue(const GLNative::Property& Item, const godot::Variant& Va
 bool GLPushNativeValue(lua_State* Thread, const godot::Variant& Value);
 const char* GLNativeValueName(GLNative::Kind Type);
 GLNative::Kind GLNativeValueKind(const char* Name);
+godot::Variant::Type GLNativeElementType(const char* Name);
 #endif

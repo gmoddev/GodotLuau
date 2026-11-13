@@ -96,3 +96,42 @@ The starting selections are 94 constructors, 306 properties, 167 methods,
 standalone class constants; selected enum values are not compared to that last
 constant denominator. The journal and inventory implementation are a first
 reviewable phase, not completion of GL-054.
+
+## Phase 2 — collections and native feature families (qualification pending)
+
+Typed primitive arrays now preserve their Godot element type on input and validate
+it on output. Scoped typed Node/Resource arrays use the existing live SceneScope
+authority: every input handle must belong to that scope, all arguments validate
+before invocation, resource query handles remain immutable, and Node query arrays
+project only live owned nodes into a dense frozen result. Foreign query bodies
+provide no native handle. Arbitrary objects nested in general Variant dictionaries
+remain unsupported; no raw RID/Callable/Signal capability is introduced.
+Typed arrays retain the 1,024-element collection bound. Exact metadata defaults
+now include Vector3, integer Vector2, NodePath and empty typed arrays, without
+evaluating source expressions.
+
+New approved families include Area3D and scoped 2D/3D overlap queries, 2D/3D
+ShapeCast with bounded collision-index inspection and owned exceptions, 2D
+navigation agents/regions and 2D/3D avoidance obstacles, CPU particles, 2D lights,
+decals, procedural images/textures, tile pattern inspection and typed CodeEdit
+configuration. Existing generic descriptors, handles and generated types remain
+the implementation path. Shape updates and navigation calls use the established
+runtime physics-phase gate; 2D navigation also checks map synchronization.
+
+Image initialization accepts exact RGB8/RGBA8 data, dimensions 1..16, no mipmaps;
+the packed collection limit remains unchanged. Mutable ImageTexture uploads are
+non-mipmapped and bounded to 1,048,576 pixels; updates must match existing size and
+format. Layered textures accept 1..16 matching owned images within the same total
+pixel budget. Invalid inputs reject before native mutation. Loaded project assets
+remain trusted local resources, not a hostile-file sandbox. CPU particles start
+inactive and preview rejects enabling emission, matching existing temporal-effect
+restrictions. Tile patterns have bounded cell capacity; this is not unrestricted
+TileSet editing or terrain baking.
+
+`NativeProductionCases.gd` exercises actual dispatch, primitive/resource arrays,
+invalid arrays without mutation, cross-scope/cross-owner rejection, foreign-body
+projection, native image state, both cast dimensions, overlaps, navigation on the
+official full-featured host, and owner retirement. These tests are implemented but
+not yet reported as passing. The existing admitted lightweight hosts still omit
+navigation; their negative availability evidence remains distinct from full-host
+path qualification. Baseline hosted runs: core 43364130777 and native 43364130679.

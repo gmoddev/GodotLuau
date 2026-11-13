@@ -84,7 +84,10 @@ def Build(Policy, Api):
 
     def Kind(Type):
         if Type and Type.startswith('typedarray::'):
-            Require(Type[12:] in Kinds and Kinds[Type[12:]] not in ('VariantValue','ArrayValue','DictionaryValue'),'Unsupported native typed-array element: '+Type)
+            Element=Type[12:]
+            Require((Element in Kinds and Kinds[Element] not in ('VariantValue','ArrayValue','DictionaryValue')) or
+                    (Element in Classes and (Inherits(Element,'Node') or Inherits(Element,'Resource'))),
+                    'Unsupported native typed-array element: '+Type)
             return 'ArrayValue'
         if ',' in Type and all(T in Classes and Inherits(T, 'Resource') for T in Type.split(',')):
             return 'ResourceValue'
@@ -99,7 +102,6 @@ def Build(Policy, Api):
         raise ValueError('Unsupported native Variant signature: ' + Type)
 
     def Value(Name, Type, Bounds=None, Default=None, Override=None):
-        Require(not Type.startswith('typedarray::'),'Native typed-array arguments require element admission: '+Name)
         K = Kind(Type)
         if Override:
             Require((K,Override)==('Colour','Colour4'), 'Unreviewed argument conversion override: '+Name)
@@ -112,14 +114,24 @@ def Build(Policy, Api):
                 Require(isinstance(Default,str) and Low<=len(Default.encode())<=High and '\0' not in Default, 'Invalid text default: '+Name)
             elif K in ('ResourceValue','NodeValue'):
                 Require(Default=='null', 'Unsupported object default: '+Name)
-            elif K=='Vector2Value':
-                Match=re.fullmatch(r'Vector2\(\s*(-?[0-9.]+)\s*,\s*(-?[0-9.]+)\s*\)',Default)
-                Require(Match and all(Low<=float(N)<=High for N in Match.groups()),'Unsupported Vector2 default: '+Name)
+            elif K in ('Vector2Value','Vector2Integer','Vector'):
+                Components=3 if K=='Vector' else 2
+                Constructor='Vector2i' if K=='Vector2Integer' else 'Vector2' if Components==2 else 'Vector3'
+                Match=re.fullmatch(Constructor+r'\(\s*'+r'\s*,\s*'.join([r'(-?[0-9.]+)']*Components)+r'\s*\)',Default)
+                Require(Match and all(math.isfinite(float(N)) and Low<=float(N)<=High for N in Match.groups()),'Unsupported vector default: '+Name)
+                Require(K!='Vector2Integer' or all(float(N)==int(float(N)) for N in Match.groups()),'Integer vector default required: '+Name)
+            elif K=='PathValue':
+                Default=json.loads(Default[1:] if Default.startswith('^') else Default)
+                Require(isinstance(Default,str) and len(Default.encode())<=1024 and '\0' not in Default,'Invalid NodePath default: '+Name)
+            elif Type.startswith('typedarray::'):
+                Require(Default=='Array['+Type[12:]+']([])','Only an empty typed-array default is admitted: '+Name)
+                Default='[]'
             else:
                 Require(K in ['Number','Integer','Boolean'] and re.fullmatch(r'-?[0-9]+(?:\.[0-9]+)?|true|false',Default), 'Unsupported native default: ' + Name)
             if K in ['Number','Integer']:
                 Require(Low<=float(Default)<=High, 'Default outside policy bounds: ' + Name)
         return {'Class': '', 'Name': Name, 'Native': Name, 'Kind': K, 'Min': Low, 'Max': High,
+                **({'Element':Type[12:]} if Type.startswith('typedarray::') else {}),
                 **({'ResourceClass': Type} if K in ('ResourceValue','NodeValue') else {}), **({'Default':Default} if Default is not None else {})}
 
     Construct = {}
@@ -165,6 +177,7 @@ def Build(Policy, Api):
         for A in Args:
             Arguments.append(Value(A['name'], A['type'], P.get('Bounds', {}).get(A['name']), A.get('default_value'), P.get('ArgumentKinds',{}).get(A['name'])))
             Arguments[-1]['Class']=C+'.'+N
+            if Arguments[-1].get('Element') in Classes: Selected.add(Arguments[-1]['Element'])
             if Arguments[-1].get('ResourceClass'): Selected.add(A['type'])
             Required += 'default_value' not in A
         Return = M.get('return_value', {}).get('type')
@@ -199,13 +212,16 @@ def Build(Policy, Api):
         if 'Capacity' in Validation:
             V=Validation['Capacity'];Q=Member(C,'methods',V['Query']);QA=Q.get('arguments',[])
             CountArgument=next((I for I,A in enumerate(Args) if A['name']==V.get('Argument')),-1)
-            Require(Q.get('is_const') and not Q.get('is_static') and not Q.get('is_virtual') and not Q.get('is_vararg') and Q.get('return_value',{}).get('type') in ('int','PackedStringArray','Array','typedarray::StringName'),'Invalid capacity observation')
+            ReturnType=Q.get('return_value',{}).get('type','')
+            Require(Q.get('is_const') and not Q.get('is_static') and not Q.get('is_virtual') and not Q.get('is_vararg') and (ReturnType in ('int','PackedStringArray','Array') or ReturnType.startswith('typedarray::')),'Invalid capacity observation')
             Require(not QA or (len(QA)==1 and CountArgument>=0 and QA[0]['type']==Args[CountArgument]['type']),'Capacity query signature mismatch')
             Require(0<V['Maximum']<=1024 and Rule['CountQuery'] in (None,V['Query']),'Invalid bounded capacity rule')
             Rule.update(CountQuery=V['Query'],CountLimit=V['Maximum'],CountArgument=CountArgument if QA else -1)
         Methods.append({**P, **Rule, 'Arguments': len(Args), 'Required': Required, 'FirstArgument': First,
                         'Return': ReturnKind, 'ReturnClass': ReturnNode or (Return if Return in Classes else None),
+                        'ReturnElement': Return[12:] if Return and Return.startswith('typedarray::') else None,
                         'Signature': M})
+        if Return and Return.startswith('typedarray::') and Return[12:] in Classes: Selected.add(Return[12:])
         Selected.add(C)
     for P in Policy['Signals']:
         Require(Inherits(P['Class'],'Node'),'Resource handles cannot become Node signal sources')
@@ -241,10 +257,13 @@ def Quote(Value):
 
 def PropertyLine(P):
     return '{' + ','.join([Quote(P['Class']), Quote(P['Name']), Quote(P['Native']), P['Kind'],
-                          str(P.get('Min', 0)), str(P.get('Max', 0)), Quote(P.get('ResourceClass')), Quote(P.get('Default')),str(bool(P.get('ReadOnly'))).lower()]) + '}'
+                          str(P.get('Min', 0)), str(P.get('Max', 0)), Quote(P.get('ResourceClass')), Quote(P.get('Default')),str(bool(P.get('ReadOnly'))).lower(),Quote(P.get('Element'))]) + '}'
 
 
 def Type(P, Mutable=False):
+    if P.get('Element'):
+        Element=P['Element']
+        return '{'+(Types[Kinds[Element]] if Element in Kinds else 'Native'+Element)+'}'
     if P['Kind'] == 'NodeValue':
         return 'Native'+P['ResourceClass']+'?'
     if P['Kind'] == 'ResourceValue':
@@ -271,6 +290,7 @@ def Coverage(Policy, Api, Catalog):
         return False
 
     def Convertible(Name):
+        if Name and Name.startswith('typedarray::'): return Convertible(Name[12:]) or Inherits(Name[12:],'Node')
         return not Name or Name in Kinds or Name.startswith(('enum::', 'bitfield::')) or all(Inherits(T, 'Resource') for T in Name.split(','))
 
     Selections = {K: {} for K in ('methods', 'properties', 'signals', 'enums')}
@@ -347,7 +367,7 @@ def Generate(Policy, Api):
     Tables = [('Class', 'Classes', ['{' + ','.join([Quote(C['Name']), Quote(C['Base']), str(C['Construct']).lower(), str(C['Resource']).lower()]) + '}' for C in D['Classes']]),
               ('Property', 'Properties', [PropertyLine(P) for P in D['Properties']]),
               ('Property', 'Arguments', [PropertyLine(P) for P in D['Arguments']]),
-              ('Method', 'Methods', ['{' + ','.join([Quote(M['Class']), Quote(M['Name']), Quote(M['Native']), str(M['Mutates']).lower(), str(M['FirstArgument']), str(M['Arguments']), str(M['Required']), M['Return'], Quote(M['ReturnClass']),Quote(M['CountQuery']),str(M['IndexArgument']),str(M['AllowEnd']).lower(),str(M['AllowNegativeOne']).lower(),Quote(M['KeyQuery']),str(M['KeyArgument']),str(M['KeyAbsent']).lower(),str(M['CountArgument']),str(M['CountLimit'])]) + '}' for M in D['Methods']]),
+              ('Method', 'Methods', ['{' + ','.join([Quote(M['Class']), Quote(M['Name']), Quote(M['Native']), str(M['Mutates']).lower(), str(M['FirstArgument']), str(M['Arguments']), str(M['Required']), M['Return'], Quote(M['ReturnClass']),Quote(M['CountQuery']),str(M['IndexArgument']),str(M['AllowEnd']).lower(),str(M['AllowNegativeOne']).lower(),Quote(M['KeyQuery']),str(M['KeyArgument']),str(M['KeyAbsent']).lower(),str(M['CountArgument']),str(M['CountLimit']),Quote(M.get('ReturnElement'))]) + '}' for M in D['Methods']]),
               ('Signal', 'Signals', ['{' + ','.join([Quote(S['Class']), Quote(S['Name']), Quote(S['Native']), str(S['FirstArgument']), str(S['Arguments'])]) + '}' for S in D['Signals']]),
               ('Constant', 'Constants', ['{' + ','.join([Quote(C['Class']), Quote(C['Enum']), Quote(C['Name']), str(C['Value'])]) + '}' for C in D['Constants']]),
               ('Operation', 'ScopeOperations', ['{' + Quote(N) + ',' + Quote(S) + '}' for N, S in ScopeOperations])]
@@ -446,9 +466,7 @@ def Generate(Policy, Api):
             C='('+' | '.join(Receivers)+')'
         else:
             C='Native'+M['Class']
-        Return = Type({'Kind': M['Return'], 'ResourceClass': M['ReturnClass']})
-        NativeReturn=M['Signature'].get('return_value',{}).get('type','')
-        if NativeReturn.startswith('typedarray::'):Return='{'+Types[Kinds[NativeReturn[12:]]]+'}'
+        Return = Type({'Kind': M['Return'], 'ResourceClass': M['ReturnClass'], 'Element': M.get('ReturnElement')})
         Call.append(f'(self: NativeSceneScope, Target: {C}, Method: "{M["Name"]}"{Tail}) -> {Return}')
     for S in D['Signals']:
         Args = D['Arguments'][S['FirstArgument']:S['FirstArgument'] + S['Arguments']]
