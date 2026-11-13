@@ -132,7 +132,6 @@ Object* TargetAt(lua_State* Thread, SceneScope* Scope, int Index, bool Write) {
 bool RegistryIsA(const char* Name, const char* Base);
 const GLNative::Class* FindClass(const char* Name);
 struct NativeMembers {
-    std::unordered_map<std::string,const Property*> Properties;
     std::unordered_map<std::string,const GLNative::Method*> Methods;
     std::unordered_map<std::string,const GLNative::Signal*> Signals;
 };
@@ -144,7 +143,6 @@ const NativeMembers* GetNativeMembers(Object* Target) {
         for(const auto& Class:GLNative::Classes) {
             auto& Members=Result[Class.Name];const auto* Current=&Class;
             for(int Depth=0;Current && Depth<64;++Depth,Current=FindClass(Current->Base)) {
-                for(const auto& Item:GLNative::Properties)if(!strcmp(Item.Class,Current->Name))Members.Properties.emplace(Item.Name,&Item);
                 for(const auto& Item:GLNative::Methods)if(!strcmp(Item.Class,Current->Name))Members.Methods.emplace(Item.Name,&Item);
                 for(const auto& Item:GLNative::Signals)if(!strcmp(Item.Class,Current->Name))Members.Signals.emplace(Item.Name,&Item);
             }
@@ -156,13 +154,23 @@ const NativeMembers* GetNativeMembers(Object* Target) {
     auto Found=Index.find(Name);return Found==Index.end()?nullptr:&Found->second;
 }
 const Property* FindProperty(Object* Target, const char* Key) {
-    if(auto Members=GetNativeMembers(Target)) {
-        auto Found=Members->Properties.find(Key);return Found==Members->Properties.end()?nullptr:Found->second;
-    }
-    const Property* Best=nullptr;
-    for (const auto& Item:Properties) if (!strcmp(Item.Name,Key) && Target->is_class(Item.Class) &&
-        (!Best || RegistryIsA(Item.Class,Best->Class))) Best=&Item;
-    return Best;
+    // Index immutable descriptors by query name, without reflecting/copying the
+    // target class name on each read/write. Derived entries precede their bases;
+    // unrelated classes retain policy order. Every query still checks the live type.
+    static const auto Index=[] {
+        std::unordered_map<std::string,std::vector<const Property*>> Result;
+        for(const auto& Item:Properties) {
+            auto& Candidates=Result[Item.Name];
+            auto Position=std::find_if(Candidates.begin(),Candidates.end(),[&](const Property* Previous) {
+                return RegistryIsA(Item.Class,Previous->Class);
+            });
+            Candidates.insert(Position,&Item);
+        }
+        return Result;
+    }();
+    auto Found=Index.find(Key);
+    if(Found!=Index.end())for(const auto* Item:Found->second)if(Target->is_class(Item->Class))return Item;
+    return nullptr;
 }
 bool Bounded(double Value, double Min, double Max) { return std::isfinite(Value) && Value>=Min && Value<=Max; }
 Variant ReadValue(lua_State* Thread, SceneScope* Scope, const Property& Item, int Index) {

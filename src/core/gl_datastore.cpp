@@ -8,6 +8,10 @@
 #include <godot_cpp/classes/time.hpp>
 #include <array>
 #include <vector>
+#ifdef GL_RUNTIME_TESTS
+#include <functional>
+#include <fstream>
+#endif
 #ifndef _WIN32
 #include <dlfcn.h>
 #endif
@@ -61,6 +65,9 @@ struct Work {
     Result Answer;
     const char* Error=nullptr;
     bool Done=false,OwnSlot=false,Replied=false;
+#ifdef GL_RUNTIME_TESTS
+    std::function<void()> AfterEmptyReceive;
+#endif
     ~Work() {
         if (Child) {
             Child->Cancel();
@@ -97,12 +104,22 @@ struct Work {
             if (!Count) break;
             Sent+=Count; Budget-=Count;
         }
+        // Exit observed before the drain makes an empty pipe definitive. A
+        // helper exiting after an empty read may still have published a reply;
+        // leave that request pending so the next tick drains it.
+        bool Finished=Child->Finished();
         Budget=1024*1024;
         bool Empty=false;
         while (Budget) {
             std::array<char,65536> Bytes;
             size_t Count=Child->Receive(Bytes.data(),std::min(Bytes.size(),Budget));
-            if (!Count) { Empty=true; break; }
+            if (!Count) {
+                Empty=true;
+#ifdef GL_RUNTIME_TESTS
+                if (AfterEmptyReceive) AfterEmptyReceive();
+#endif
+                break;
+            }
             if (Output.size()+Count>MaxData+24) { Fail("Invalid helper response"); return; }
             Output.append(Bytes.data(),Count); Budget-=Count;
         }
@@ -115,7 +132,7 @@ struct Work {
                 return;
             }
         }
-        if (Child->Failed || (Empty && Child->Finished())) Fail("Helper exited without completion");
+        if (Child->Failed || (Empty && Finished)) Fail("Helper exited without completion");
     }
     int Marshal(lua_State* Thread) {
         if (Error) { lua_pushfstring(Thread,"[Persistence:DataStore] %s",Error); return 1; }
@@ -133,6 +150,32 @@ struct GLDataStoreManager::State {
 };
 GLDataStoreManager::GLDataStoreManager():Data(std::make_unique<State>()) {}
 GLDataStoreManager::~GLDataStoreManager() { CancelAll(); }
+#ifdef GL_RUNTIME_TESTS
+bool GLDataStoreManager::TestExitReplyRace(const std::string& Root) {
+    // The actual companion cannot publish its reply until the empty pipe read.
+    // Then force exit before Advance's next instruction, without replacing IPC.
+    auto Gate=std::filesystem::u8path(Root)/"gl050.wait";
+    { std::ofstream File(Gate); if (!File) return false; File << "wait"; }
+    Work Item;
+    ++Slots; Item.OwnSlot=true;
+    Request Input; Input.Root=Root; Input.Leaf="ds_GL050_Race.json";
+    Input.Op=Operation::Compare; Input.Exists=false; Input.Data="37";
+    Item.Op=Input.Op; Item.Input=Encode(Input); Item.Deadline=Now()+5000;
+    bool Interleaved=false;
+    Item.AfterEmptyReceive=[&] {
+        if (Interleaved || Item.Sent!=Item.Input.size()) return;
+        std::error_code Error; std::filesystem::remove(Gate,Error);
+        while (!Item.Child->Finished() && Now()<Item.Deadline)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        Interleaved=Item.Child->Finished();
+    };
+    do { Item.Advance(); } while (!Item.Done && Now()<Item.Deadline);
+    std::error_code Error; std::filesystem::remove(Gate,Error);
+    std::ifstream File(std::filesystem::u8path(Root)/Input.Leaf);
+    std::string Committed((std::istreambuf_iterator<char>(File)),{});
+    return Interleaved && Item.Done && !Item.Error && Item.Answer.Code==Status::Ok && Committed=="37";
+}
+#endif
 int GLDataStoreManager::Begin(lua_State* Thread,GLExecutionDomain* Domain,const std::string& Root,const std::string& Leaf,int Selected,bool Exists,const std::string& Expected,const std::string& Value) {
     Reap();
     auto Owner=GLGetOwner(Thread);

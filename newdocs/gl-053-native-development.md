@@ -491,3 +491,31 @@ debugger, persistence or qualification-framework redesign to hide that gap.
 The known Debug dispatch increase and deferred API families stay visible in the
 [qualification record](gl-053-native-qualification.md). Leave the feature branch
 unmerged and keep release/updater distribution disabled.
+
+## Owner-authorized completion and main integration follow-up
+
+The owner now authorizes completing the remaining issues, qualifying and normally
+merging into main, preserving history and disabled distribution. Start from clean
+feature HEAD `7201afa` and fetched main `16e8597`. Existing passing evidence remains
+valid within its scope; new native changes need focused measurements and CI.
+
+Replace property lookup's repeated native class-name reflection/UTF-8 conversion
+with a bounded query-name descriptor index. Candidate descriptors remain derived
+before base and are checked against the live native type on every query. No object
+pointer, caller string, authority decision or native identity is cached. Method/
+signal lookup and all owner/lifetime/resource checks remain unchanged. Measure
+before claiming the dispatch regression resolved. Investigate GL-050 separately
+with a controlled real-helper exit/reply interleaving; do not conflate it with the
+earlier unproven close-save failure.
+
+Desktop access recovered on the same isolated Windows editor project. Actual UI
+actions now pass UI-profile scene creation, native preview/node inspection,
+independent snapshot save, highlighted Luau editing, inline syntax diagnostics
+and recovery, approved enum completion, source save/re-preview, Play/Stop, native
+keyboard input and Apply callback, followed by editor exit 0. Retained captures:
+`gl053-followup-20261112/interactive-ui-preview.jpg` and `interactive-ui-play.jpg`.
+This replaces the access blocker within the unchanged editor implementation's
+scope; it does not relabel the earlier failed attempt. The embedded UI starter's
+non-ASCII status separators render incorrectly in this Windows build. Replace
+those two cosmetic separators with ASCII pipes in its source and generated copy;
+verify the corrected starter on the new adapter and reopen the saved project.

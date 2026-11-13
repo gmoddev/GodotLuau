@@ -19,6 +19,6 @@ if not __IS_CLIENT then return end
 Scope:Connect(Apply,"Pressed",function()
     local Selection = Scope:Call(Quality,"GetSelectedItems")
     local Preset = #Selection > 0 and Scope:Call(Quality,"GetItemText",Selection[1]) or "Balanced"
-    Status.Text = string.format("%s • %s • volume %d",Name.Text,Preset,Volume.Value)
+    Status.Text = string.format("%s | %s | volume %d",Name.Text,Preset,Volume.Value)
 end)
 Scope:Call(Name,"GrabFocus")

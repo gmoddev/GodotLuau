@@ -10,6 +10,13 @@ local S=Scene.new(script.Parent)
 local Rendered=__GL053_RENDERED__
 S.Name='ExpansionScope'
 local V=Scene.Value
+-- Shared property names must resolve against each live native type.
+local Spatial=S:New('Node3D',{Position=Vector3.new(1,2,3)})
+local Planar=S:New('Node2D',{Position={X=4,Y=5}})
+local Widget=S:New('Control',{Position={X=6,Y=7}})
+assert(Spatial.Position.Z==3 and Planar.Position.X==4 and Widget.Position.Y==7)
+assert(not pcall(function() Spatial.Position={X=9,Y=10} end))
+assert(Spatial.Position.Z==3 and Planar.Position.X==4 and Widget.Position.Y==7)
 local X,Y,Z=Vector3.new(1,0,0),Vector3.new(0,1,0),Vector3.new(0,0,1)
 local Basis={X=X,Y=Y,Z=Z}
 local Values={
