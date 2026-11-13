@@ -459,7 +459,16 @@ def Generate(Policy, Api):
             Get.append(f'(self: NativeSceneScope, Target: Native{P["Class"]}, Property: "{P["Name"]}") -> {Type(P)}')
     for M in D['Methods']:
         Args = D['Arguments'][M['FirstArgument']:M['FirstArgument'] + M['Arguments']]
-        Tail = ''.join(', ' + A['Name'] + ': ' + Type(A) + ('?' if I >= M['Required'] else '') for I, A in enumerate(Args))
+        def ArgumentType(A):
+            Element=A.get('Element')
+            if Element in ByName and ByName[Element]['Resource']:
+                # The pinned frontend treats array element classes invariantly.
+                # Admit exact mutable array shapes without erasing element types
+                # or granting mutation of the referenced resource handles.
+                Shapes=['{Native'+Element+'}']+['{MutableNative'+C['Name']+'}' for C in D['Classes'] if C['Construct'] and C['Resource'] and Inherits(C['Name'],Element)]
+                return '('+' | '.join(Shapes)+')'
+            return Type(A)
+        Tail = ''.join(', ' + A['Name'] + ': ' + ArgumentType(A) + ('?' if I >= M['Required'] else '') for I, A in enumerate(Args))
         if ByName[M['Class']]['Resource'] and M['Mutates']:
             Receivers=['MutableNative'+C['Name'] for C in D['Classes'] if C['Construct'] and C['Resource'] and Inherits(C['Name'],M['Class'])]
             Require(bool(Receivers),'No approved mutable receiver for '+M['Name'])

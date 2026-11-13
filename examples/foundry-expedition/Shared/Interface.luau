@@ -19,6 +19,7 @@ function Interface.Build(Parent,Send)
  local Title=S:New('Label',{Name='Title',Text='Restore the three sectors',FontSize=26},Box)
  S:New('Label',{Text='WASD / left stick: move • Space / A: jump\nShift / LB: dash • F / RB: pulse\nE / X: extract • Escape / Start: pause',FontSize=16},Box)
  local Start=S:New('Button',{Name='Start',Text='Start expedition',MinSize={X=420,Y=42}},Box)
+ local Restart=S:New('Button',{Name='Restart',Text='Restart expedition',MinSize={X=420,Y=32},Visible=false},Box)
  S:New('Label',{Text='Field of view'},Box)
  local Fov=S:New('HSlider',{Name='Fov',MinValue=55,MaxValue=90,Value=65,Step=1,MinSize={X=420,Y=26}},Box)
  S:New('Label',{Text='Sound volume'},Box)
@@ -27,6 +28,7 @@ function Interface.Build(Parent,Send)
  local Pause=S:New('Button',{Name='Pause',Text='Pause / settings',Position={X=900,Y=20},MinSize={X=170,Y=36}},Layer)
  local Current='Loading'
  S:Connect(Start,'Pressed',function() Send(Current=='Paused' and 'Pause' or 'Start') end)
+ S:Connect(Restart,'Pressed',function() Send('Restart') end)
  S:Connect(Pause,'Pressed',function() Send('Pause') end)
  S:Connect(Save,'Pressed',function() Send('Save') end)
  S:Connect(Fov,'ValueChanged',function(Value) game:SetAttribute('FoundryFov',Value) end)
@@ -37,6 +39,7 @@ function Interface.Build(Parent,Send)
   Panel.Visible=Current~='Active'
   Pause.Visible=Current=='Active' or Current=='Paused'
   Start.Disabled=Current=='Loading'
+  Restart.Visible=Current=='Paused'
   Start.Text=Current=='Paused' and 'Resume expedition' or 'Start expedition'
   Title.Text=Current=='Dead' and 'Expedition lost' or Current=='Complete' and 'Foundry restored' or Current=='Paused' and 'Paused / settings' or 'Restore the three sectors'
   Health.Text=string.format('%s • Health %d • Energy %d • Cells %d / 3 • Guards %d',State.Room,State.Health,State.Energy,State.Cells,State.Remaining)

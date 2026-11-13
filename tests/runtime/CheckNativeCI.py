@@ -232,6 +232,7 @@ def Main():
         'AnimationAuthority': AnimationAuthority,
         'PresentationNative': Presentation,
         'PerformanceNative': {'Actors': 1, 'Graphical': False, 'Counts': [1,16], 'Profiles': len(Profiles), 'SpeedGate': False},
+        'FoundryNative': Foundry,
         'Godot': json.loads(Args.godot_evidence.read_text()), 'Groups': Groups,
         'HarnessHashes': {File.name: hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for File in sorted(Path(__file__).parent.iterdir()) if File.suffix in ['.gd', '.py', '.pem', '.cpp'] or File.name in ['CMakeLists.txt', 'GodotDistribution.json']} | {'PlayerController.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/player-controller/PlayerController.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), 'Controller.luau': hashlib.sha256((Path(__file__).resolve().parents[2]/'examples/input-controller/Controller.luau').read_bytes().replace(b'\r\n', b'\n')).hexdigest()} | {File.relative_to(Path(__file__).resolve().parents[2]).as_posix(): hashlib.sha256(File.read_bytes().replace(b'\r\n', b'\n')).hexdigest() for Folder in ('examples/native-foundation','GodotLuau/DefaultScripts/NativeAuthoring') for File in sorted((Path(__file__).resolve().parents[2]/Folder).rglob('*')) if File.is_file() and File.suffix in ('.luau','.tres','.gdshader')},
         'Processes': sum(len(Results) for Results in Groups.values()),

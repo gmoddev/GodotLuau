@@ -3758,7 +3758,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: (MutableNativeImageTexture), Method: "SetImage", image: NativeImage?) -> ()) &
         ((self: NativeSceneScope, Target: (MutableNativeImageTexture), Method: "Update", image: NativeImage?) -> ()) &
         ((self: NativeSceneScope, Target: NativeTexture2D, Method: "GetImage") -> NativeImage?) &
-        ((self: NativeSceneScope, Target: (MutableNativeTexture2DArray), Method: "CreateFromImages", images: {NativeImage}) -> number) &
+        ((self: NativeSceneScope, Target: (MutableNativeTexture2DArray), Method: "CreateFromImages", images: ({NativeImage} | {MutableNativeImage})) -> number) &
         ((self: NativeSceneScope, Target: NativeCodeEdit, Method: "GetStringDelimiters") -> {string}) &
         ((self: NativeSceneScope, Target: NativeCodeEdit, Method: "GetCommentDelimiters") -> {string}) &
         ((self: NativeSceneScope, Target: NativeCodeEdit, Method: "GetLineLengthGuidelines") -> {number}) &

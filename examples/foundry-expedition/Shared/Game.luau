@@ -38,6 +38,7 @@ function Game.Step(Delta)
  Game.DamageClock=math.max(0,Game.DamageClock-Delta)
  Game.SaveClock=math.max(0,Game.SaveClock-Delta)
  if Game.Command('Start') and (Game.Phase=='Menu' or Game.Phase=='Dead' or Game.Phase=='Complete') then Game.Start(1) end
+ if Game.Command('Restart') and (Game.Phase=='Paused' or Game.Phase=='Dead' or Game.Phase=='Complete') then Game.Start(1) end
  if Game.Command('Pause') and Game.World and (Game.Phase=='Active' or Game.Phase=='Paused') then Game.Phase=Game.Phase=='Active' and 'Paused' or 'Active' end
  if Game.Command('Save') then Game.SaveClock=0;Progress.Attempts=0 end
  if Progress.Dirty and not Progress.Busy and Game.SaveClock==0 then Game.SaveClock=2;task.spawn(Progress.Save) end

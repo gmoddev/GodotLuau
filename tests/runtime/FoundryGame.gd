@@ -3,6 +3,7 @@ extends SceneTree
 var Game: Node
 var Checks: Array[String]=[]
 var Passed := true
+var Measurements: Dictionary={}
 
 func Check(Value: bool,Message: String) -> void:
     Checks.append(Message)
@@ -57,6 +58,24 @@ func Run() -> void:
     var World=Game.get_node('ExpeditionWorld')
     var Body=World.get_node('Explorer') as CharacterBody3D
     Check((World.get_node('Cargo') as MeshInstance3D).mesh is ArrayMesh,'Project-local imported OBJ reaches the native rendering resource')
+    var Samples: Array[int]=[]
+    var Objects=Performance.get_monitor(Performance.OBJECT_COUNT)
+    var Resources=Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)
+    var Started=Time.get_ticks_usec()
+    for Cycle in range(24):
+        var Old=Game.get_node('ExpeditionWorld').get_instance_id()
+        var Revision=Snapshot().Revision
+        (UI.get_node('Pause') as Button).pressed.emit()
+        await Until(func(): return Snapshot().get('Phase','')=='Paused')
+        var CommandAt=Time.get_ticks_usec()
+        (UI.get_node('Menu/Content/Restart') as Button).pressed.emit()
+        await Until(func(): return Snapshot().get('Revision',0)>Revision)
+        await Frames(2)
+        Samples.append(Time.get_ticks_usec()-CommandAt)
+        Check(not is_instance_id_valid(Old) and Game.find_children('*','SceneScope',true,false).size()==2,'Restart retires exact old world without retaining scene scopes, cycle '+str(Cycle))
+    Measurements={'RestartCycles':24,'InputToSnapshotMicroseconds':Samples,'StressMicroseconds':Time.get_ticks_usec()-Started,'ObjectCountDelta':Performance.get_monitor(Performance.OBJECT_COUNT)-Objects,'ResourceCountDelta':Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)-Resources,'ScopeLimitAfterEachCycle':2,'TimingScope':'Includes input dispatch, native construction, asset resolution and snapshot/frame scheduling; not an isolated dispatch benchmark'}
+    World=Game.get_node('ExpeditionWorld')
+    Body=World.get_node('Explorer') as CharacterBody3D
     await Frames(20)
     var Before=Body.position
     Key(KEY_D,true)
@@ -79,7 +98,7 @@ func Run() -> void:
     (UI.get_node('Menu/Content/Start') as Button).pressed.emit()
     await Until(func(): return Snapshot().get('Phase','')=='Active')
     await Frames(3)
-    Check(is_equal_approx((Body.get_node('Camera3D') as Camera3D).fov,80),'Settings signal updates the owned native camera')
+    Check(is_equal_approx((Body.get_node('Camera') as Camera3D).fov,80),'Settings signal updates the owned native camera')
     # Attempt ordinary Client capability writes; rules never consume claimed
     # health/reward values. The direct Scene handle write must also reject.
     var Guest=ClassDB.instantiate('LocalScript')
@@ -130,7 +149,7 @@ func Run() -> void:
 
 func Finish() -> void:
     var File=FileAccess.open('res://foundry-results.json',FileAccess.WRITE)
-    File.store_string(JSON.stringify({'Passed':Passed,'Checks':Checks,'Snapshot':Snapshot()}))
+    File.store_string(JSON.stringify({'Passed':Passed,'Checks':Checks,'Snapshot':Snapshot(),'Measurements':Measurements}))
     File.close()
     print('[Foundry:Qualification] ','PASS' if Passed else 'FAIL')
     quit(0 if Passed else 1)

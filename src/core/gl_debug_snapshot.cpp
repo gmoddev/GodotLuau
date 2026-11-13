@@ -2,6 +2,8 @@
 #include "gl_execution_domain.h"
 #include "lua.h"
 #include <godot_cpp/variant/array.hpp>
+#include <godot_cpp/variant/variant.hpp>
+#include <godot_cpp/variant/string.hpp>
 #include <algorithm>
 #include <cstring>
 #include <cmath>

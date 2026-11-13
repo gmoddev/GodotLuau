@@ -209,3 +209,20 @@ It uses deterministic native spatial setup for combat, not substitute game rules
 that is narrower than human gameplay completion. Headless CI uses the existing
 verified full-featured official host. Graphical/editor/export, stress, performance,
 sanitizer and final Windows/Linux Debug/Release gates remain outstanding.
+
+The snapshot native run 43366364538 found missing direct String/Variant includes
+in the new translation unit; added those includes without changing behavior.
+The new declaration regressions in 43368429635 found a real mutable-resource
+array variance gap: the pinned frontend rejects `{MutableNativeImage}` where an
+invariant `{NativeImage}` is expected. Generated typed-resource inputs now admit
+the exact immutable/mutable array shapes for admitted constructible subclasses,
+without `any`, dropping element checks or changing native permissions. Positive
+and wrong-element cases stay enabled. Pending native run 43368429595 was canceled
+because it contains the same already-diagnosed compile error; rerun the corrected
+head rather than rebuild that known-bad input. Failed attempts remain retained.
+
+Foundry's explicit pause-menu restart now also drives 24 production world rebuilds
+in the external observer. Each checks that the old native identity retires and
+only the UI/current-world scopes remain. It records input-to-snapshot latency and
+native object/resource count deltas, without equating engine cache growth with a
+proven leak or these end-to-end timings with isolated binding dispatch cost.
