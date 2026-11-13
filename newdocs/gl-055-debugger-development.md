@@ -521,6 +521,12 @@ ordinary exact-hit/replay coverage remains required. No million-visit runtime
 reproduction is claimed. The new source identity requires fresh core/native
 checks; declaration and generated policy inputs remain unchanged.
 
+Add one bounded actual million-visit regression to the optional existing Release
+benchmark, without enlarging the fast Debug/core watchdog. It must stop exactly
+once at target 1,000,000 across 1,000,002 visits and retain the capped observation
+count. Execution is pending; this directly checks the discovered product edge,
+not the qualification infrastructure.
+
 Cancel the superseded `43457871556` candidate after its environmental Linux
 Release failure, allowing the final-source candidate to start instead of waiting
 for redundant earlier profiles. Its passing core sanitizer/policy jobs and failed

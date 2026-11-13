@@ -79,5 +79,19 @@ int main() {
         if(Trial>=0)std::printf("{\"Mode\":\"%s\",\"Trial\":%d,\"Operations\":100000,\"WallMicroseconds\":%.3f,\"CpuMicroseconds\":%.3f,\"ExecuteMicroseconds\":%.3f,\"CppAllocations\":%llu,\"CppAllocationBytes\":%llu,\"VmPeakBytes\":%zu,\"Stops\":%llu,\"Inspections\":%llu}\n",Name,Trial,WallMicroseconds,CpuMicroseconds,ExecuteMicroseconds,(unsigned long long)Allocations,(unsigned long long)AllocationBytes,Domain.GetMemoryAccount().Peak,(unsigned long long)Stops,(unsigned long long)Inspections);
         Domain.CancelOwner(Owner);
     }
+#ifdef GL_DEBUGGER_BENCHMARK
+    // Exercise the actual saturated-target defect without extending the fast
+    // Debug/core watchdog or collecting a million stopped-frame snapshots.
+    GLDomainLimits Limits;Limits.ResumeMilliseconds=2000;Limits.MaxSafepoints=32000000;
+    GLExecutionDomain Domain(GLDomainKind::Server,Limits);
+    auto Owner=Domain.CreateOwner(2);auto& Debugger=Domain.EnableDebugger();int Stops=0;
+    Debugger.Attach([&](GLDebugger&){++Stops;return GLDebugAction::Continue;});
+    Debugger.SetBreakpoint("res://Saturated.luau",3,true,1000000);
+    if(!Domain.Execute(Owner,"local Count=0\nfor Index=1,1000002 do\n Count+=1\nend\nassert(Count==1000002)","@res://Saturated.luau") ||
+       Stops!=1 || Debugger.GetBreakpoints()[0].Hits!=1000001) {
+        std::fprintf(stderr,"[Debugger:Benchmark] FAIL maximum exact-hit target repeats or loses its bounded count\n");return 1;
+    }
+    std::puts("[Debugger:Benchmark] PASS maximum exact-hit target fires once across 1000002 visits");
+#endif
     return 0;
 }
