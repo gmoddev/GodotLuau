@@ -174,7 +174,9 @@ func Receive(Message: Array) -> void:
         Check(Data.size() == 5 and Data[0] is String and Data[1] is int and Data[2] is int and Data[4] is String, "Native variable payload")
         if Finished:
             return
-        Variables[Data[0]] = Data[3]
+        # Godot keeps the locals/members/context groups distinct. Preserve that
+        # distinction: the context's State label must not overwrite local State.
+        Variables[("context: " if Data[1] == 2 else "") + Data[0]] = Data[3]
         VariablesLeft -= 1
         if VariablesLeft == 0:
             AfterVariables()
