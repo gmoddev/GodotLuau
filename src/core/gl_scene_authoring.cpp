@@ -58,6 +58,7 @@
 #include <cmath>
 #include <cstring>
 #include <array>
+#include <string_view>
 #include <unordered_set>
 
 using namespace godot;
@@ -158,7 +159,7 @@ const Property* FindProperty(Object* Target, const char* Key) {
     // target class name on each read/write. Derived entries precede their bases;
     // unrelated classes retain policy order. Every query still checks the live type.
     static const auto Index=[] {
-        std::unordered_map<std::string,std::vector<const Property*>> Result;
+        std::unordered_map<std::string_view,std::vector<const Property*>> Result;
         for(const auto& Item:Properties) {
             auto& Candidates=Result[Item.Name];
             auto Position=std::find_if(Candidates.begin(),Candidates.end(),[&](const Property* Previous) {
@@ -1219,5 +1220,7 @@ bool GLSceneWrite(lua_State* Thread, Node* Target, const char* Key) {
     if (!Scope->CanUse(Thread)) luaL_error(Thread,"[Scene:Authority] Scene write requires its live execution owner");
     const Property* Item=FindProperty(Target,Key);
     if (!Item || Item->ReadOnly) luaL_error(Thread,"[Scene:Property] Unsupported or read-only property %s",Key);
-    Variant Value=ReadValue(Thread,Scope,*Item,3);PreviewProperty(Thread,*Item,Value); ValidateEffects(Thread,Target,{{Item,Value}}); Apply(Target,{{Item,Value}}); return true;
+    Variant Value=ReadValue(Thread,Scope,*Item,3);PreviewProperty(Thread,*Item,Value);
+    const std::vector<Assignment> Batch{{Item,Value}};
+    ValidateEffects(Thread,Target,Batch); Apply(Target,Batch); return true;
 }

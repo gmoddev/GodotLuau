@@ -1,12 +1,35 @@
 # GL-053 native expansion qualification
 
-Status: supported native/headless/rendered/export scope qualified; interactive
-editor acceptance blocked by desktop access. Branch `feature/gl-053-native-api-expansion` remains
-unmerged. Main baseline is `16e8597cb342a1bbc888f190680c678ecf9ba055`.
+Status: final corrections and integration qualification in progress. The owner
+authorizes normal merge after checks. Branch `feature/gl-053-native-api-expansion`
+remains unmerged; main baseline is `16e8597cb342a1bbc888f190680c678ecf9ba055`.
 The [journal](gl-053-native-development.md) preserves failed attempts and fixes;
 the [API contract](gl-053-native-api.md) describes implemented bounds, not parity.
 The [versioned receipt](evidence/gl053-native/qualification-20261112.json)
 retains source/package identities, current measurements and application evidence.
+
+## Final correction cohort
+
+`b7297fbd17e739fa52f70782022aa4f35dba3669` replaces property class-name
+reflection with an immutable descriptor-name index and live type checks. It also
+snapshots helper exit before reply draining (GL-050) and uses ASCII status
+separators in the embedded UI starter after actual Windows observation exposed
+incorrect text encoding. Existing authority, ownership, wait/deadline, protocol
+and durability contracts remain unchanged. Native fingerprint:
+`6258fc8b1b9f094816da3453b9dd866d9420ea3dcf3e291ab311eb33844af248` (123 files).
+
+Core 43342974083 passes. Native 43342974043, declarations 43342974114,
+full-native sanitizers 43342991768 and non-publishing candidate 43342995846 are
+pending at this checkpoint. Earlier results below remain evidence for their
+recorded inputs, rather than passes for this changed native cohort.
+
+Actual Windows editor interaction now passes UI-profile creation, preview, native
+node inspection, independent scene saving, highlighted Luau editing, inline
+syntax diagnostics/recovery, approved enum completion, save/re-preview, Play/Stop,
+keyboard input and UI callback output, followed by editor exit 0. This uses the
+retained `e2735ec` adapter with unchanged editor implementation; the corrected
+starter and saved-project reopening still need the new adapter. The journal
+retains the earlier desktop access failure and current captures.
 
 ## Source and scope
 

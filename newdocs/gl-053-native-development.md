@@ -519,3 +519,26 @@ scope; it does not relabel the earlier failed attempt. The embedded UI starter's
 non-ASCII status separators render incorrectly in this Windows build. Replace
 those two cosmetic separators with ASCII pipes in its source and generated copy;
 verify the corrected starter on the new adapter and reopen the saved project.
+
+The actual companion barrier reproduces GL-050 with the old exit decision:
+`race-before-datastore` exits 1 at the controlled empty-read/exit check while
+`ds_GL050_Race.json` contains committed value `37`. The corrected `b7297fb`
+adapter passes the identical fixture (including large payloads and BindToClose).
+The barrier and direct driver are CMake-test-only; SCons products expose neither.
+No lock, durability, exit-status, trailing-diagnostic or deadline check is removed.
+
+Same MSVC 19.44.35228 Debug cache and official Windows host, identical seven-trial
+fixture (first trial excluded): `7201afa` dispatch median 65.016 ms; first fix
+52.416 ms. Reusing one validated Assignment batch rather than allocating it twice,
+and indexing immutable descriptor names with string_view, reduces this to
+40.089 ms. Construction median is 0.657 ms for 64 nodes, conversion 11.240 ms for
+2,000 Transform3D values. The retained older `60913fb` dispatch was 42.873 ms;
+the observed regression is removed in this workload, not a universal performance
+claim. Rendered expansion passes including unrelated Node3D/Node2D/Control
+Position dispatch and invalid-write rejection without mutation. One mistaken
+headless invocation correctly rejected this renderer-required fixture; retain
+that environmental attempt alongside its rendered pass.
+
+Supersede the in-flight `b7297fb` native/sanitizer/candidate checks with the final
+allocation correction's cohort. This is a known source change, not a retry of a
+failed product check. Core 43342974083 and declarations 43342974114 passed.
