@@ -77,6 +77,8 @@ public:
     void SetInvalidationHook(InvalidationHook Hook) { InvalidateNative = std::move(Hook); }
     void SetThreadInvalidationHook(InvalidationHook Hook) { InvalidateThread = std::move(Hook); }
     void SetErrorHandler(ErrorHandler Handler) { ReportError = std::move(Handler); }
+    void SetDebugInfo(bool Enabled) { DebugInfo=Enabled; }
+    bool HasDebugInfo() const { return DebugInfo; }
     void SetTimeProvider(std::function<double()> Provider) { GetTime = std::move(Provider); }
     GLExecutionOwner* CreateOwner(uint64_t NativeId);
     GLExecutionOwner* FindOwner(uint64_t NativeId) const;
@@ -188,6 +190,7 @@ private:
     bool AdmissionClosed = false;
     bool Sandboxed = false;
     bool MemoryFailed = false;
+    bool DebugInfo = false; // Trusted host selects full local names for editor runs.
     size_t LiveCoroutines = 1;
     size_t LiveReferences = 0;
     size_t LiveOwners = 0;

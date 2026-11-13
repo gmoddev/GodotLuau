@@ -1,5 +1,12 @@
 # GodotLuau issue ledger
 
+The unmerged [GL-054 engine campaign](gl-054-engine-development.md) tracks typed
+collection/API expansion and editor error inspection with implementation and
+qualification status separated. Historical issue GL-054 remains the already
+resolved transitive-module finding; the campaign name does not reopen it. Live
+breakpoints/stepping remain unsupported for the precise suspension-contract gap
+in the [development contract](gl-054-native-development.md).
+
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
 Historical evidence is preserved below. GL-001/GL-002 are resolved for their

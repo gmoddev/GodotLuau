@@ -135,3 +135,20 @@ official full-featured host, and owner retirement. These tests are implemented b
 not yet reported as passing. The existing admitted lightweight hosts still omit
 navigation; their negative availability evidence remains distinct from full-host
 path qualification. Baseline hosted runs: core 43364130777 and native 43364130679.
+
+Both platform declaration jobs passed for `c628b81` in run 43365508318. The new
+runtime cases remain pending native builds; selections are not yet qualified by
+that type result. Core/native runs 43365508309/43365508357 cover that revision.
+
+## Phase 3 — practical error inspection (qualification pending)
+
+The existing editor debugger transport now supports bounded error-time frame and
+primitive-local snapshots, domain/generation labels, opaque native/table values,
+and explicit project-source frame navigation. Full local-name compilation is
+selected by the trusted editor host, not by gameplay scripts. The
+[native development contract](gl-054-native-development.md) records bounds,
+compatibility, memory-failure handling and the precise live-debugger limitation.
+The actual EditorInterface play/stop fixture now checks real debugger delivery of
+copied locals, opacity, domain identity and source navigation. Signature help also
+retains typed collection elements. These are implementation statements awaiting
+execution; no interactive/graphical debugger pass is claimed yet.

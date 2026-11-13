@@ -482,7 +482,8 @@ bool GLExecutionDomain::Execute(GLExecutionOwner* Owner, const std::string& Sour
     // An owner environment can be reused by several chunks. The pinned sandbox
     // API requires invalidating import optimizations when loading it again.
     lua_setsafeenv(Thread, LUA_GLOBALSINDEX, false);
-    std::string Bytecode = Luau::compile(Source);
+    Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
+    std::string Bytecode = Luau::compile(Source,Options);
     int Status = luau_load(Thread, ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
     if (Status == LUA_OK) Status = Resume(Thread, nullptr, 0);
     else if (!CheckMemoryFailure(Thread, Status)) FinishThread(Task, Status);
@@ -935,7 +936,8 @@ int GLExecutionDomain::BeginRequire(lua_State* Thread) {
             FailModule(Module, "[Runtime:Scheduler] Cannot admit module initializer");
             return PushModuleResult(Thread, Module);
         }
-        std::string Bytecode = Luau::compile(Source.Source);
+        Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
+        std::string Bytecode = Luau::compile(Source.Source,Options);
         int Status = luau_load(Initializer, Source.ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
         if (Status == LUA_OK) Resume(Initializer, nullptr, 0);
         else if (!CheckMemoryFailure(Initializer, Status)) FinishThread(Task, Status);

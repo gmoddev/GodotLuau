@@ -132,19 +132,30 @@ func Run() -> void:
                 # so its normal save-on-play cannot overwrite them with old text.
                 Check(Plugin.call("CreateLuauScene", "res://Failure.tscn").get("Passed", false), "Native authoring creates an independent debug scene")
                 var Failure: Script = load("res://Failure.luau")
-                Failure.source_code = 'local Value=1\nerror("expected editor-run diagnostic")'
+                Failure.source_code = 'local Value=54; local Opaque=game\nerror("expected editor-run diagnostic "..Value)'
                 ResourceSaver.save(Failure)
                 EditorInterface.play_custom_scene("res://Failure.tscn")
                 var Deadline := Time.get_ticks_msec() + 12000
                 var Captured: Array = []
                 while Time.get_ticks_msec() < Deadline:
                     Captured = Plugin.call("GetRuntimeDiagnostics")
-                    if Captured.size() == 3: break
+                    if Captured.size() >= 3: break
                     await get_tree().process_frame
-                Check(Captured.size() == 3 and str(Captured[0]) == "res://Failure.luau" and str(Captured[1]).contains("expected editor-run diagnostic") and str(Captured[1]).contains(":2:"), "Actual editor-run Luau error reaches native debugger capture with source and line")
+                Check(Captured.size() == 4 and str(Captured[0]) == "res://Failure.luau" and str(Captured[1]).contains("expected editor-run diagnostic") and str(Captured[1]).contains(":2:"), "Actual editor-run Luau error reaches native debugger capture with source and line")
+                var LocalFound := false
+                var OpaqueFound := false
+                if Captured.size() == 4:
+                    var Snapshot: Dictionary = Captured[3]
+                    Check(Snapshot.get("Schema",0)==1 and Snapshot.get("Domain","")=="Client" and Snapshot.get("FullDebugInfo",false),"Editor runtime snapshot identifies the execution domain and full debug compilation")
+                    for Frame in Snapshot.get("Frames",[]):
+                        for Local in Frame.get("Locals",[]):
+                            LocalFound=LocalFound or (Local.Name=="Value" and Local.Value==54)
+                            OpaqueFound=OpaqueFound or (Local.Name=="Opaque" and Local.Value=="opaque; no object or table traversal")
+                    Check(Snapshot.get("Frames",[]).size()<=16,"Runtime snapshot retains bounded copied frames")
+                Check(LocalFound and OpaqueFound,"Actual runtime error copies primitive locals and leaves native handles opaque")
                 EditorInterface.stop_playing_scene()
                 for Index in range(10): await get_tree().process_frame
-                if Captured.size() == 3:
+                if Captured.size() >= 3:
                     Plugin.call("OpenRuntimeError")
                     for Index in range(5): await get_tree().process_frame
                     var ErrorCode := EditorInterface.get_script_editor().get_current_editor().get_base_editor() as CodeEdit

@@ -22,6 +22,7 @@ class GLNativeEditorPlugin : public godot::EditorPlugin {
     uint64_t PreviewRoot = 0, PreviewViewport = 0, PreviewPanel = 0;
     uint64_t PreviewTree = 0, StatusLabel = 0, PathDialog = 0;
     uint64_t TemplatePicker = 0;
+    uint64_t RuntimeTree = 0;
     bool SavingPreview = false;
     godot::String PreviewError;
     size_t PreviewLogBytes = 0;
@@ -55,7 +56,8 @@ public:
     void InspectPreviewNode();
     void ReceiveRuntimeError(const godot::Array& Data);
     void OpenRuntimeError();
-    godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(); }
+    void OpenRuntimeFrame();
+    godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(true); }
 };
 
 #endif
