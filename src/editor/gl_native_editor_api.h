@@ -4,7 +4,7 @@
 #include <godot_cpp/variant/dictionary.hpp>
 
 // Shared by the actual Godot language hooks and inspectable Script resource API.
-// No VM, scene execution, filesystem access or mutable native object is involved.
+// No VM execution or native object mutation. Navigation reads bounded project source.
 godot::Dictionary GLInspectNativeCode(const godot::String& Code, const godot::String& Path);
 godot::Dictionary GLNavigateNativeCode(const godot::String& Code, const godot::String& Symbol, const godot::String& Path);
 // Trusted native editor only. Bounded project reads and pure cached AST results.

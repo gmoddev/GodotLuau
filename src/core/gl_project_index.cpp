@@ -91,6 +91,9 @@ godot::Dictionary GLIndexProjectModule(const godot::String& Module,const godot::
     String TargetModule=Module;
     if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id() ||
        !GLProjectResourcePath(TargetModule) || (TargetModule.get_extension()!="luau" && TargetModule.get_extension()!="lua") || Member.is_empty() || Member.utf8().length()>128)return Result;
+    for(int Index=0;Index<Member.length();++Index) {
+        char32_t C=Member[Index];if(!((C>='A'&&C<='Z')||(C>='a'&&C<='z')||C=='_'||(Index>0&&C>='0'&&C<='9')))return Result;
+    }
     const uint64_t Started=Time::get_singleton()->get_ticks_usec();
     std::set<std::string> Files;std::vector<std::pair<String,int>> Directories{{"res://",0}};
     bool Truncated=false;int ScannedDirectories=0;
@@ -100,7 +103,8 @@ godot::Dictionary GLIndexProjectModule(const godot::String& Module,const godot::
         String Checked=Entry.second?Entry.first:String("res://__GodotLuauIndexRoot__");
         if(!GLProjectResourcePath(Checked)){Truncated=true;continue;}
         Ref<DirAccess> Directory=DirAccess::open(Entry.first);if(Directory.is_null()){Truncated=true;continue;}
-        Directory->list_dir_begin();std::vector<std::pair<String,bool>> Names;
+        if(Directory->list_dir_begin()!=OK){Truncated=true;continue;}
+        std::vector<std::pair<String,bool>> Names;
         for(String Name=Directory->get_next();!Name.is_empty();Name=Directory->get_next()) {
             if(Name.begins_with(".") || Directory->is_link(Name))continue;
             if(Names.size()>=2048){Truncated=true;break;}

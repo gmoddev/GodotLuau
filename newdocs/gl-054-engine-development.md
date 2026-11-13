@@ -243,3 +243,10 @@ unsupported dynamic/re-export semantics. The editor-only/main-thread/non-Luau
 gates preserve gameplay capability restrictions. UI navigation remains explicit.
 The actual native editor workflow now checks these behaviors and records cold,
 warm and changed-buffer query timings. No index or graphical pass is claimed yet.
+
+A bounded local MSVC `/Zs` check passed the new index, editor-plugin and snapshot
+translation units using headers generated from the unchanged pinned API and the
+existing pinned Luau headers. It used one process for about four seconds; no
+object/library or sustained local build was produced. This caught source/header
+issues only and is not Windows runtime, target-compiler or cross-platform
+qualification. The checked command is retained under the task's syntax artifacts.
