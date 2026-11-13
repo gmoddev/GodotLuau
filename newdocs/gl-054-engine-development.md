@@ -181,3 +181,31 @@ Four new Color4 properties also lacked explicit 0..1 descriptor bounds; source
 review corrected those before qualification. Non-const native observations now
 carry matching mutation metadata. These are candidate corrections, not passes.
 Core CI also passed the snapshot implementation at 02ef3bc (43366364704).
+
+## Phase 4 — Foundry Expedition (implementation, qualification pending)
+
+Added a new [modular acceptance game](../examples/foundry-expedition/README.md)
+using only Luau game code. Server rules own scene-native movement, health,
+shape-cast combat, navigating guards, collection, three inherited room scenes,
+transitions and transactional progression. Client code owns native UI, keyboard/
+gamepad semantic input and session settings. This is single-process solo: the
+bounded root-attribute input/presentation bridge is not a network protocol.
+Relay Siege remains the multiplayer regression. The Explorer is an independent
+scene-owned CharacterBody3D; Native/Scripted Character V2 defaults are untouched.
+
+Native animation and particles, project-local SVG/OBJ/audio/shader resources,
+procedural UI texture upload and per-room reconstruction exercise the expanded
+surface. GL-009 transforms use bounded server-generated receipts to tolerate
+retry/ambiguous acknowledgments. Up to three receipts are pending; failed saving
+backs off and stops after three attempts until explicitly retried. Unacknowledged
+progress is never labeled durable. Close-hook failure remains explicit.
+
+The existing staging/qualification path gains a Foundry profile, retaining fresh
+directory creation, explicit adapter/candidate identity, owned child processes,
+crash-UI suppression and isolated user-data roots. The external observer drives
+real native input/UI, movement/jump, pause/settings, wrong-owner rejection,
+collection, navigation/combat, transitions and a fresh-process persistence read.
+It uses deterministic native spatial setup for combat, not substitute game rules;
+that is narrower than human gameplay completion. Headless CI uses the existing
+verified full-featured official host. Graphical/editor/export, stress, performance,
+sanitizer and final Windows/Linux Debug/Release gates remain outstanding.

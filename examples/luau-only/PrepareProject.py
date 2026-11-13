@@ -26,11 +26,12 @@ def Main():
     Parser.add_argument('--engine', type=Path)
     Parser.add_argument('--host-manifest', type=Path)
     Parser.add_argument('--output', type=Path, required=True)
-    Parser.add_argument('--profile',choices=['OrbRun','Native2D','Native3D','UI'],default='OrbRun')
+    Parser.add_argument('--profile',choices=['OrbRun','Native2D','Native3D','UI','Foundry'],default='OrbRun')
     Args = Parser.parse_args()
     Source = Path(__file__).resolve().parent
     Repository = Source.parents[1]
     if Args.profile!='OrbRun': Source=Repository/'examples/native-foundation'
+    if Args.profile=='Foundry': Source=Repository/'examples/foundry-expedition'
     Output = Args.output.resolve()
     if Output.exists(): Parser.error('Use a fresh staging directory; existing projects are preserved')
     if bool(Args.engine) != bool(Args.host_manifest): Parser.error('Engine and admitted manifest must be supplied together')
@@ -78,9 +79,9 @@ def Main():
             shutil.copy2(Source/Name,Output/Name)
     else:
         for File in Source.rglob('*'):
-            if File.is_file() and File.suffix in ('.godot','.tscn','.tres','.luau','.gdshader','.md'):
+            if File.is_file() and File.suffix in ('.godot','.tscn','.tres','.luau','.gdshader','.md','.svg','.obj','.wav','.cfg'):
                 Target=Output/File.relative_to(Source);Target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(File,Target)
-        Main={'Native2D':'TwoD','Native3D':'ThreeD','UI':'UI'}[Args.profile]
+        Main={'Native2D':'TwoD','Native3D':'ThreeD','UI':'UI','Foundry':'Main'}[Args.profile]
         Settings=(Output/'project.godot').read_text().replace('res://TwoD.tscn','res://'+Main+'.tscn')
         (Output/'project.godot').write_text(Settings)
     Record['Example']=Args.profile

@@ -51,6 +51,11 @@ def Main():
         raise ValueError('Project dependency reload cases did not complete')
     if '[Runtime:NativeGameplay] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
         raise ValueError('Native gameplay expansion cases did not complete')
+    if '[Runtime:NativeProduction] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
+        raise ValueError('Native production collection/physics cases did not complete')
+    Foundry=json.loads((Args.output/'foundry/results.json').read_text())
+    if not Foundry.get('Passed') or not Foundry.get('Restart',{}).get('Passed') or Foundry.get('Graphical') or Foundry.get('Snapshot',{}).get('Completed')!=3:
+        raise ValueError('Foundry production gameplay and persistence restart incomplete')
     if '[Runtime:NativeAnimation] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):
         raise ValueError('Native animation expansion cases did not complete')
     if '[Authoring:Templates] PASS' not in (Args.output/'regression/integration-0.stdout.log').read_text(errors='replace'):

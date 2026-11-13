@@ -6,6 +6,7 @@ on:
       - "src/**"
       - "tests/runtime/**"
       - "tests/packaging/**"
+      - "examples/foundry-expedition/**"
       - "tools/generar_release.py"
       - "luau"
       - "godot-cpp"
@@ -16,6 +17,7 @@ on:
       - "src/**"
       - "tests/runtime/**"
       - "tests/packaging/**"
+      - "examples/foundry-expedition/**"
       - "tools/generar_release.py"
       - "luau"
       - "godot-cpp"
@@ -189,6 +191,17 @@ jobs:
           python tests/runtime/RunLuauOnly.py \
             --godot "$GODOT_RUNTIME" --extension "build/native/${{ matrix.Library }}" \
             --source "$RUNNER_TEMP/native-ci/source.json" --output "$RUNNER_TEMP/native-ci/luau-game"
+
+      - name: Foundry Expedition Luau-only gameplay assets and persistence restart
+        timeout-minutes: 5
+        env:
+          GL_NATIVE_COVERAGE: '1'
+        run: |
+          python tests/runtime/RunLuauOnly.py \
+            --godot "$RUNNER_TEMP/godot-4.7.1/${{ matrix.Executable }}" \
+            --extension "build/native/${{ matrix.Library }}" \
+            --source "$RUNNER_TEMP/native-ci/source.json" --profile Foundry \
+            --output "$RUNNER_TEMP/native-ci/foundry"
 
       - name: GL-006 and GL-008 existing network regressions
         timeout-minutes: 4
