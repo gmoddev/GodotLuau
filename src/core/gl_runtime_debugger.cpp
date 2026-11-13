@@ -9,6 +9,7 @@
 #include <godot_cpp/classes/engine_debugger.hpp>
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/time.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <algorithm>
 
@@ -39,6 +40,7 @@ void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const St
         Reply["Generation"]=int64_t(Debugger->GetGeneration()); Reply["StopId"]=int64_t(Debugger->GetStopId());
         Reply["CoroutineId"]=int64_t(Debugger->GetCoroutineId());
         auto Thread=Debugger->GetInspectionThread();Reply["StackTruncated"]=Thread && lua_stackdepth(Thread)>64;
+        auto Frames=Debugger->GetFrames();if(!Frames.empty()){Reply["Source"]=String::utf8(Frames[0].Source.c_str());Reply["Line"]=Frames[0].Line;}
         Reply["Reason"]=String::utf8(Debugger->GetReason().c_str());
         Array Breakpoints; size_t Bytes=0;
         for(const auto& Entry:Debugger->GetBreakpoints()) {
@@ -89,6 +91,21 @@ bool GLRuntimeDebuggerAvailable() {
     auto Debugger=EngineDebugger::get_singleton(); auto System=OS::get_singleton();
     return Debugger && Debugger->is_active() && System && System->has_feature("editor") &&
         !Engine::get_singleton()->is_editor_hint() && System->get_thread_caller_id()==System->get_main_thread_id();
+}
+Error GLReloadLuauScripts(const Array& Scripts) {
+    auto System=OS::get_singleton();
+    if(!System || System->get_thread_caller_id()!=System->get_main_thread_id() ||
+        (GLExecutionDomain::IsExecuting() && !Suspended) ||
+        (!Engine::get_singleton()->is_editor_hint() && !GLRuntimeDebuggerAvailable()))return ERR_UNAVAILABLE;
+    Error Result=OK;
+    for(int Index=0;Index<Scripts.size() && Index<256;++Index) {
+        if(Scripts[Index].get_type()!=Variant::OBJECT)continue;
+        Ref<LuauScript> Source=Scripts[Index];if(Source.is_null())continue;
+        Error Status=Source->_reload(false);
+        if(Status!=OK){Result=Status;UtilityFunctions::print("[Debugger:Reload] Source reload failed: ",int(Status));}
+    }
+    if(Scripts.size()>256){Result=ERR_OUT_OF_MEMORY;UtilityFunctions::print("[Debugger:Reload] Selective reload exceeds 256 resources");}
+    return Result;
 }
 GLDebugger* GLGetSuspendedDebugger() { return Suspended && Suspended->GetInspectionThread()?Suspended:nullptr; }
 void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
@@ -160,9 +177,9 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         return true;
     }
     String Source=Request.get("Source",String());
-    if(Op=="Breakpoint" && (Request.get("Source",Variant()).get_type()!=Variant::STRING || Source.utf8().length()>1024 ||
+    if((Op=="Breakpoint" || Op=="Reload") && (Request.get("Source",Variant()).get_type()!=Variant::STRING || Source.utf8().length()>1024 ||
         !GLProjectResourcePath(Source) || (Source.get_extension()!="luau" && Source.get_extension()!="lua") ||
-        Request.get("Line",Variant()).get_type()!=Variant::INT || Request.get("Enabled",Variant()).get_type()!=Variant::BOOL)) {
+        (Op=="Breakpoint" && (Request.get("Line",Variant()).get_type()!=Variant::INT || Request.get("Enabled",Variant()).get_type()!=Variant::BOOL)))) {
         Send(nullptr,"Error",Id,"Invalid project breakpoint");return true;
     }
     if(Op=="Detach" && Selected=="All")Detached=true;
@@ -179,6 +196,17 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         else if(Op=="StepOut") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Out); }
         else if(Op=="Stop") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Stop); }
         else if(Op=="Detach")Debugger->Detach();
+        else if(Op=="Reload") {
+            auto Frames=Debugger->GetFrames();
+            Success=Suspended==Debugger && !Frames.empty() && Source==String::utf8(Frames[0].Source.c_str()) && ResourceLoader::get_singleton()->has_cached(Source);
+            if(Success) {
+                Ref<LuauScript> Resource=ResourceLoader::get_singleton()->load(Source,"LuauScript");
+                if(Resource.is_null())Success=false;
+                else {Array Scripts;Scripts.push_back(Resource);Success=GLReloadLuauScripts(Scripts)==OK;}
+            }
+            Send(Debugger,Success?"Reloaded":"Error",Id,Success?String():String("Saved-source reload failed or is unavailable"));
+            continue;
+        }
         else if(Op=="Watch") {
             if(Suspended!=Debugger || Request.get("Expression",Variant()).get_type()!=Variant::STRING)Send(Debugger,"Error",Id,"Watch requires the selected live suspended domain");
             else {

@@ -6,6 +6,7 @@
 #include "Luau/Compiler.h"
 #include "gl_debugger.h"
 #include "gl_debug_inspection.h"
+#include "gl_runtime_debugger.h"
 #include <godot_cpp/classes/script_language_extension.hpp>
 #include <godot_cpp/classes/resource_format_loader.hpp>
 #include <godot_cpp/classes/resource_format_saver.hpp>
@@ -24,10 +25,11 @@ public:
     LuauLanguage()  { singleton = this; }
     ~LuauLanguage() { if (singleton == this) singleton = nullptr; }
 
-    // Godot 4.4+ exige el virtual _reload_scripts (godot-cpp 4.3 no lo declara,
-    // asi que se registra a mano). No-op: los scripts Luau releen su .lua al
-    // ejecutarse; sin esto el motor imprime un ERROR en cada Play.
-    static void _call_reload_scripts(GDExtensionClassInstancePtr, const GDExtensionConstTypePtr*, GDExtensionTypePtr) {}
+    // Godot 4.4+ adds this virtual beyond the pinned 4.3 generated interface.
+    // Use its actual Array ABI and existing source/generation invalidation.
+    static void _call_reload_scripts(GDExtensionClassInstancePtr, const GDExtensionConstTypePtr* Arguments, GDExtensionTypePtr) {
+        GLReloadLuauScripts(PtrToArg<Array>::convert(Arguments[0]));
+    }
     static void _bind_methods() {
         ClassDB::bind_virtual_method(get_class_static(), "_reload_scripts", _call_reload_scripts);
     }
@@ -86,7 +88,9 @@ public:
     void _thread_enter()     override {}
     void _thread_exit()      override {}
     void _reload_all_scripts() override {}
-    void _reload_tool_script(const Ref<Script>& p_script, bool p_soft_reload) override {}
+    void _reload_tool_script(const Ref<Script>& Source, bool) override {
+        Array Scripts;Scripts.push_back(Source);GLReloadLuauScripts(Scripts);
+    }
 
     bool _handles_global_class_type(const String& p_type) const override { return p_type == "LuauScript"; }
     Dictionary _get_global_class_name(const String& p_path) const override { return Dictionary(); }

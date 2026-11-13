@@ -24,6 +24,14 @@ retain a source step. Separate module/coroutine breakpoints remain supported.
 Detach clears admitted breakpoints/code references and resumes through Godot's
 existing loop. Stop the application through Godot's normal Stop control.
 
+After saving an edit to the stopped source, use the Luau tab's Reload button to
+retire that generation before continuing. It reloads the selected cached file,
+cancels its owned work and rebuilds through the established deferred entry.
+Successful acknowledgment continues; read/path failure leaves the session paused.
+Reload does not preserve script-local state. Saving alone does not replace the
+live suspended frame: Godot's ordinary reload request runs at idle after resume.
+Reload-all remains unsupported; select sources or restart the application.
+
 The game process pauses on its main thread. Server/Client, physics and rendering
 in that process stop together; other peers continue and may time out. This adds
 no gameplay pause protocol. EditorPreview retains historical error snapshots;

@@ -27,7 +27,8 @@ def Main():
     Output.mkdir(parents=True, exist_ok=False)
     if os.name == 'nt':
         ctypes.windll.kernel32.SetErrorMode(0x8003)
-    Fixtures = ['DebuggerMain.luau', 'DebuggerModule.luau', 'DebuggerClient.luau', 'DebuggerPeer.gd', 'DebuggerTarget.gd']
+    Fixtures = ['DebuggerMain.luau', 'DebuggerModule.luau', 'DebuggerClient.luau', 'DebuggerPeer.gd', 'DebuggerTarget.gd',
+                'DebuggerReload.luau', 'DebuggerReloadPeer.gd', 'DebuggerReloadTarget.gd']
     Locations = {}
     for Name in Fixtures[:3]:
         for Line, Text in enumerate(Path(__file__).with_name(Name).read_text(encoding='utf-8').splitlines(), 1):
@@ -36,25 +37,31 @@ def Main():
     Expected = [Locations[Name] for Name in ['Entry', 'Into', 'Over', 'Out', 'Module', 'Client', 'Callback', 'Stale']]
     Breakpoints = ','.join(Item['Source'] + ':' + str(Item['Line']) for Name, Item in Locations.items() if Name in ['Entry', 'Module', 'Client', 'Callback', 'Stale'])
     Results = []
-    for Mode in ['local', 'disconnect', 'running-disconnect']:
+    for Mode in ['local', 'disconnect', 'running-disconnect', 'reload']:
         Case = Output / Mode
         Target, Peer = Case / 'target', Case / 'peer'
         Prepare(Target, Args.extension.resolve())
         (Target / '.godot/extension_list.cfg').write_text('res://godot_luau.gdextension\n')
         Peer.mkdir(parents=True)
         (Peer / 'project.godot').write_text('config_version=5\n[application]\nconfig/name="LuauDebuggerTestPeer"\n[threading]\nworker_pool/max_threads=2\n')
-        for Name in Fixtures[:3]:
+        for Name in [*Fixtures[:3], 'DebuggerReload.luau']:
             shutil.copy2(Path(__file__).with_name(Name), Target / Name)
         shutil.copy2(Path(__file__).with_name('DebuggerPeer.gd'), Peer / 'DebuggerPeer.gd')
+        shutil.copy2(Path(__file__).with_name('DebuggerReloadPeer.gd'), Peer / 'DebuggerReloadPeer.gd')
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as Probe:
             Probe.bind(('127.0.0.1', 0))
             Port = Probe.getsockname()[1]
-        (Peer / 'inputs.json').write_text(json.dumps({'Port': Port, 'Expected': Expected, 'Disconnect': Mode == 'disconnect', 'DisconnectRunning': Mode == 'running-disconnect'}))
+        Stops, Admitted = Expected, Breakpoints
+        if Mode == 'reload':
+            Line = next(Index for Index, Text in enumerate(Path(__file__).with_name('DebuggerReload.luau').read_text().splitlines(), 1) if 'GL055:ReloadOld' in Text)
+            Stops = [{'Source': 'res://DebuggerReload.luau', 'Line': Item, 'Domain': 'Server'} for Item in [Line, 2]]
+            Admitted = 'res://DebuggerReload.luau:' + str(Line)
+        (Peer / 'inputs.json').write_text(json.dumps({'Port': Port, 'Expected': Stops, 'Disconnect': Mode == 'disconnect', 'DisconnectRunning': Mode == 'running-disconnect', 'TargetSource': str(Target / 'DebuggerReload.luau')}))
         Environment = dict(os.environ, GODOT_SILENCE_ROOT_WARNING='1')
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
             Environment[Name] = str(GetProfileFolder(Case, Name))
         Base = [str(Args.godot.resolve()), '--headless', '--disable-crash-handler', '--single-threaded-scene', '--max-fps', '60']
-        PeerCommand = [*Base, '--path', str(Peer), '--script', 'res://DebuggerPeer.gd']
+        PeerCommand = [*Base, '--path', str(Peer), '--script', 'res://' + ('DebuggerReloadPeer.gd' if Mode == 'reload' else 'DebuggerPeer.gd')]
         with (Case / 'peer.stdout.log').open('w') as Stdout, (Case / 'peer.stderr.log').open('w') as Stderr:
             PeerProcess = StartProcess(PeerCommand, Stdout, Stderr, Environment)
         Deadline = time.monotonic() + 10
@@ -62,7 +69,7 @@ def Main():
             time.sleep(.05)
         assert (Peer / 'ready.json').is_file(), 'Native peer did not become ready; inspect peer.stderr.log'
         TargetCommand = [*Base, '--path', str(Target), '--debug', '--remote-debug', f'tcp://127.0.0.1:{Port}',
-                         '--breakpoints', Breakpoints, '--script', 'res://DebuggerTarget.gd']
+                         '--breakpoints', Admitted, '--script', 'res://' + ('DebuggerReloadTarget.gd' if Mode == 'reload' else 'DebuggerTarget.gd')]
         with (Case / 'target.stdout.log').open('w') as Stdout, (Case / 'target.stderr.log').open('w') as Stderr:
             TargetProcess = StartProcess(TargetCommand, Stdout, Stderr, Environment)
         try:

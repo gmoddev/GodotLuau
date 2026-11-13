@@ -15,6 +15,7 @@
 #include <godot_cpp/classes/option_button.hpp>
 #include <godot_cpp/classes/line_edit.hpp>
 #include <godot_cpp/classes/spin_box.hpp>
+#include <cstring>
 
 using namespace godot;
 void GLAuthoringDebugger::_bind_methods() {
@@ -28,8 +29,9 @@ void GLAuthoringDebugger::_setup_session(int32_t Session) {
     auto Buttons=memnew(HBoxContainer); Panel->add_child(Buttons);
     auto Domains=memnew(OptionButton);Domains->add_item("Server");Domains->add_item("Client");Domains->add_item("All domains");
     Domains->connect("item_selected",Callable(this,"SelectDomain").bind(Session));Buttons->add_child(Domains);
-    for(const char* Op:{"Pause","Continue","StepInto","StepOver","StepOut","Status","Detach"}) {
+    for(const char* Op:{"Pause","Continue","StepInto","StepOver","StepOut","Reload","Status","Detach"}) {
         auto ButtonNode=memnew(Button); ButtonNode->set_text(Op);
+        if(!std::strcmp(Op,"Reload"))ButtonNode->set_tooltip_text("Reload the saved stopped source, retire its old generation and continue. Runtime state is rebuilt.");
         ButtonNode->connect("pressed",Callable(this,"Command").bind(Session,String(Op))); Buttons->add_child(ButtonNode);
     }
     auto Status=memnew(Label); Status->set_text("Waiting for an editor-capable Luau runtime; native stack/variables use Godot's Debugger.");
@@ -67,6 +69,10 @@ void GLAuthoringDebugger::Command(int Session,const String& Op) {
         if(Native->is_breaked())Native->send_message(Op=="Continue"?"continue":Op=="StepInto"?"step":"next");
     } else if(Op=="StepOut") {
         if(Native->is_breaked()){Send(Session,Op);Native->send_message("continue");}
+    } else if(Op=="Reload") {
+        auto Found=Views.find(Session);if(Found==Views.end() || !Native->is_breaked())return;
+        Dictionary Fields;Fields["Source"]=Found->second.LastState.get("Source",String());
+        Send(Session,Op,Fields);
     } else {
         Send(Session,Op);
         if(Op=="Detach" && Native->is_breaked())Native->send_message("continue");
@@ -121,6 +127,9 @@ bool GLAuthoringDebugger::_capture(const String& Message,const Array& Data,int32
         if(String(Reply.get("Event",String()))=="Suspending") {
             View.Domain=Reply.get("Domain",String("All"));Dictionary Fields;Fields["StopId"]=Reply.get("StopId",0);
             Send(Session,"AcknowledgeStop",Fields);
+        }
+        if(String(Reply.get("Event",String()))=="Reloaded") {
+            auto Native=get_session(Session);if(Native.is_valid() && Native->is_breaked())Native->send_message("continue");
         }
         if(String(Reply.get("Event",String()))=="Watch")
             if(auto Output=Object::cast_to<Label>(ObjectDB::get_instance(View.WatchResult)))

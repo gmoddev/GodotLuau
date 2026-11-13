@@ -43,6 +43,9 @@ Resuming to Running or Stepping. A new safe stop returns to Suspended. Detachmen
 goes through Disconnected and clears hooks/references; failures enter Faulted;
 shutdown/retirement enters Terminating before cleanup. Never resume a retired
 owner. Invalidation clears admitted code references and live inspection context.
+Explicit stopped-source reload uses the established resource changed signal and
+generation retirement before resuming; replacement entry remains deferred. Failed
+file reload leaves the stop intact. No state-preserving soft reload is promised.
 The break loop must return on disconnect/termination under Godot's existing
 lifecycle. No raw inspection reference survives resume.
 

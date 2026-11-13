@@ -4,6 +4,7 @@
 class GLDomainHost;
 class GLExecutionDomain;
 bool GLRuntimeDebuggerAvailable();
+godot::Error GLReloadLuauScripts(const godot::Array& Scripts);
 void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain);
 void GLRuntimeDebuggerTick(GLDomainHost& Host);
 void GLRuntimeDebuggerShutdown(GLDomainHost& Host);

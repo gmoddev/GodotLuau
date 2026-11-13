@@ -266,3 +266,36 @@ including all seven restricted watch queries. Its separate disconnect case
 retains the observed target errors and therefore fails the overall run. Windows
 artifact admission is pending the original build. Do not relabel this mixed run
 as complete cross-platform qualification.
+
+## Linux native control and navigation qualification
+
+Native 43442668524's Linux job 131943989757 passes at `71e8bfd`: actual local,
+suspended-disconnect and running-disconnect debugger cases, native editor journey,
+all 141 existing native actors, Foundry/restart, networking and production editor
+regressions complete. Windows is still building. Core 43442668486 passes both
+platforms (87 existing/seven debugger cases). This establishes the disconnect
+correction and cached navigation within that Linux Debug profile. It does not
+establish Release, sanitizer, graphical or new selective-reload evidence.
+
+## Selective saved-source reload checkpoint
+
+Godot's newer `_reload_scripts(Array, bool)` virtual was a compatibility no-op.
+Decode its actual Array ABI and use the existing LuauScript reload/source-change
+path, bounded to 256 resources on the trusted main thread. Editor tool reload
+shares it. File reads retain the existing confined project-path/16-MiB limits;
+export/gameplay callers gain no reload capability. Godot queues its ordinary
+reload until idle, so it cannot retire a paused owner before resumption by itself.
+The Luau tab's explicit Reload command therefore reloads only its actual stopped,
+already-cached source through the existing capture. The changed source retires
+the old owner/callbacks/scopes synchronously; only successful acknowledgment
+continues Godot's native loop, and the replacement starts through the existing
+deferred script entry. Failed reload stays paused. There is no state-preserving
+soft reload; unchanged source simply continues. The all-scripts virtual remains
+unsupported; restart or selected source reload is explicit.
+
+Add an actual native reload fixture with a live scope, signal and delayed callback.
+It replaces the isolated saved file at a breakpoint, requires a fresh owner and
+new executable breakpoint, and checks the old instruction/callbacks cannot run
+and native objects are destroyed. Both new GDScript peers parse under verified
+Godot 4.7.1; the three affected C++ units pass bounded syntax checks. Execution
+qualification of reload is pending; no new engine patch or scheduler is added.
