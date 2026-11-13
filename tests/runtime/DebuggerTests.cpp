@@ -81,7 +81,9 @@ int main() {
             Domain.SetErrorHandler([&](lua_State*, const std::string&) { ++Errors; });
             Debugger.Attach([&](GLDebugger&) { Domain.CancelOwner(Owner); return GLDebugAction::Continue; });
             Debugger.SetBreakpoint("res://Retire.luau", 1, true);
-            Check(!Domain.Execute(Owner, "shared.Unexpected=true", "@res://Retire.luau") && !Owner->Alive && Errors==1, "Retired continuation ran");
+            Check(!Domain.Execute(Owner, "shared.Unexpected=true", "@res://Retire.luau"), "Retired execution reported success");
+            Check(!Owner->Alive, "Retired owner remains alive");
+            Check(Errors==0, "Cancellation emitted an ordinary script failure");
             Check(Domain.Bootstrap("assert(shared.Unexpected==nil)", "=Check"), "Mutation after retirement");
             Domain.Tick(0); Check(Debugger.GetChunkCount()==0, "Retired chunks remain");
         });

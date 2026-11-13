@@ -37,8 +37,10 @@ public:
     std::vector<GLDebugBreakpoint> GetBreakpoints() const;
     bool RequestPause();
     void SetPollHandler(std::function<void()> Handler) { Poll = std::move(Handler); }
-    void RegisterChunk(lua_State* Thread, const std::string& Source);
+    void SetSourceHandler(std::function<void(const std::string&,int)> Handler) { SourceLoaded = std::move(Handler); }
+    void RegisterChunk(lua_State* Thread, const std::string& Source, int Lines = 0);
     void RetireOwner(GLExecutionOwner* Owner);
+    void RetireThread(lua_State* Thread);
     void BeginResume(lua_State* Thread);
     void EndResume(lua_State* Thread, int Status);
     void Shutdown();
@@ -64,6 +66,7 @@ private:
     bool Enabled = false, OverrideAction = false, OriginalDebugInfo = false;
     StopHandler Stop;
     std::function<void()> Poll;
+    std::function<void(const std::string&,int)> SourceLoaded;
     std::map<std::pair<std::string,int>, GLDebugBreakpoint> Breakpoints;
     std::vector<Chunk> Chunks;
     lua_State* InspectionThread = nullptr;

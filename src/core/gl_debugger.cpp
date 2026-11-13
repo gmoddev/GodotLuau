@@ -11,7 +11,10 @@ GLDebugger* GetDebugger(lua_State* Thread) {
 GLDebugFrame GetFrame(lua_State* Thread, int Level) {
     lua_Debug Frame{};
     if (!lua_getinfo(Thread, Level, "sln", &Frame)) return {};
-    auto Text = [](const char* Value, size_t Limit) { return Value ? std::string(Value, (std::min)(std::strlen(Value), Limit)) : std::string(); };
+    auto Text = [](const char* Value, size_t Limit) {
+        size_t Length=0; if(Value)while(Length<Limit && Value[Length])++Length;
+        return Value?std::string(Value,Length):std::string();
+    };
     std::string Source = Text(Frame.source, 1024);
     if (!Source.empty() && (Source.front() == '@' || Source.front() == '=')) Source.erase(0, 1);
     return {Source, Text(Frame.name, 128), Frame.currentline};
@@ -105,12 +108,13 @@ void GLDebugger::Refresh(Chunk& Loaded) {
     }
     lua_settop(Anchor, Top);
 }
-void GLDebugger::RegisterChunk(lua_State* Thread, const std::string& SourceName) {
+void GLDebugger::RegisterChunk(lua_State* Thread, const std::string& SourceName, int Lines) {
     auto Owner = GLGetOwner(Thread);
     if (!Enabled || !Owner || !Owner->Alive || !Owner->NativeId || Chunks.size() >= 256 ||
         !lua_isfunction(Thread, -1) || SourceName.size() > 1025) return;
     std::string Source = SourceName;
     if (!Source.empty() && (Source[0] == '@' || Source[0] == '=')) Source.erase(0, 1);
+    if (SourceLoaded) SourceLoaded(Source, Lines);
     struct Context { lua_State* Source; int Reference = LUA_NOREF; } Data{Thread};
     int Status = lua_cpcall(Owner->Anchor, [](lua_State* Anchor) -> int {
         auto& Data = *static_cast<Context*>(lua_touserdata(Anchor, 1));
@@ -153,8 +157,12 @@ void GLDebugger::BeginResume(lua_State* Thread) {
     if (Enabled && State == GLDebugState::Attached) State = GLDebugState::Running;
 }
 void GLDebugger::EndResume(lua_State* Thread, int) {
-    if (StepThread == Thread) { StepThread = nullptr; Step = GLDebugAction::Continue; if (Enabled) State = GLDebugState::Running; }
+    if (StepThread == Thread || !Domain.IsResuming()) { StepThread = nullptr; Step = GLDebugAction::Continue; if (Enabled) State = GLDebugState::Running; }
     if (!Enabled) { lua_singlestep(Thread, false); State = GLDebugState::Detached; }
+}
+void GLDebugger::RetireThread(lua_State* Thread) {
+    if(StepThread==Thread){StepThread=nullptr;Step=GLDebugAction::Continue;}
+    if(InspectionThread==Thread){InspectionThread=nullptr;Generation=0;State=GLDebugState::Faulted;}
 }
 void GLDebugger::OnBreakpoint(lua_State* Thread, lua_Debug*) { if (auto Debugger = GetDebugger(Thread)) Debugger->Hook(Thread, true); }
 void GLDebugger::OnStep(lua_State* Thread, lua_Debug*) { if (auto Debugger = GetDebugger(Thread)) Debugger->Hook(Thread, false); }
@@ -195,7 +203,8 @@ void GLDebugger::Suspend(lua_State* Thread, const char* SelectedReason) {
     Generation = Owner->Token; ++StopId; Reason = SelectedReason;
     OverrideAction = false;
     GLDebugAction Action = GLDebugAction::Continue;
-    Domain.DebuggerPause([&] { Action = Stop(*this); });
+    try { Domain.DebuggerPause([&] { Action = Stop(*this); }); }
+    catch (...) { InspectionThread=nullptr;Generation=0;State=GLDebugState::Faulted;throw; }
     if (OverrideAction) Action = NextAction;
     InspectionThread = nullptr; Generation = 0;
     if (!Owner->Alive || Domain.IsClosing() || Action == GLDebugAction::Stop) {

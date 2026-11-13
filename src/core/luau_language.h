@@ -4,6 +4,8 @@
 #include "luau_script.h"
 #include "luau_autocomplete.h"
 #include "Luau/Compiler.h"
+#include "gl_debugger.h"
+#include "gl_debug_inspection.h"
 #include <godot_cpp/classes/script_language_extension.hpp>
 #include <godot_cpp/classes/resource_format_loader.hpp>
 #include <godot_cpp/classes/resource_format_saver.hpp>
@@ -88,7 +90,45 @@ public:
 
     bool _handles_global_class_type(const String& p_type) const override { return p_type == "LuauScript"; }
     Dictionary _get_global_class_name(const String& p_path) const override { return Dictionary(); }
-    TypedArray<Dictionary> _debug_get_current_stack_info() override { return TypedArray<Dictionary>(); }
+    String _debug_get_error() const override {
+        auto Debugger=GLGetSuspendedDebugger();
+        if(!Debugger)return String();
+        Dictionary Context=GLDebugContext();
+        return String("[Debugger:Luau] ")+String(Context.get("Domain",String()))+" generation "+
+            String::num_uint64(Debugger->GetGeneration())+" - "+String::utf8(Debugger->GetReason().c_str());
+    }
+    int32_t _debug_get_stack_level_count() const override {
+        auto Debugger=GLGetSuspendedDebugger(); return Debugger?int32_t(Debugger->GetFrames().size()):0;
+    }
+    int32_t _debug_get_stack_level_line(int32_t Level) const override {
+        auto Debugger=GLGetSuspendedDebugger(); auto Frames=Debugger?Debugger->GetFrames():std::vector<GLDebugFrame>();
+        return Level>=0 && size_t(Level)<Frames.size()?Frames[Level].Line:0;
+    }
+    String _debug_get_stack_level_source(int32_t Level) const override {
+        auto Debugger=GLGetSuspendedDebugger(); auto Frames=Debugger?Debugger->GetFrames():std::vector<GLDebugFrame>();
+        return Level>=0 && size_t(Level)<Frames.size()?String::utf8(Frames[Level].Source.c_str()):String();
+    }
+    String _debug_get_stack_level_function(int32_t Level) const override {
+        auto Debugger=GLGetSuspendedDebugger(); auto Frames=Debugger?Debugger->GetFrames():std::vector<GLDebugFrame>();
+        return Level>=0 && size_t(Level)<Frames.size()?String::utf8(Frames[Level].Function.c_str()):String();
+    }
+    Dictionary _debug_get_stack_level_locals(int32_t Level,int32_t Items,int32_t Depth) override { return GLDebugVariables(Level,Items,Depth,false); }
+    Dictionary _debug_get_stack_level_members(int32_t Level,int32_t Items,int32_t Depth) override { return GLDebugVariables(Level,Items,Depth,true); }
+    void* _debug_get_stack_level_instance(int32_t) override { return nullptr; }
+    Dictionary _debug_get_globals(int32_t,int32_t) override {
+        Dictionary Result; PackedStringArray Names; Array Values; auto Context=GLDebugContext();
+        for(const Variant& Key:Context.keys()) { Names.push_back(Key); Values.push_back(Context[Key]); }
+        Result["globals"]=Names; Result["values"]=Values; return Result;
+    }
+    String _debug_parse_stack_level_expression(int32_t,const String&,int32_t,int32_t) override { return "Restricted watches are not yet implemented"; }
+    TypedArray<Dictionary> _debug_get_current_stack_info() override {
+        TypedArray<Dictionary> Result; auto Debugger=GLGetSuspendedDebugger();
+        if(Debugger) for(const auto& Frame:Debugger->GetFrames()) {
+            Dictionary Item; Item["file"]=String::utf8(Frame.Source.c_str()); Item["line"]=Frame.Line;
+            Item["func"]=String::utf8(Frame.Function.c_str()); Result.push_back(Item);
+        }
+        return Result;
+    }
     TypedArray<Dictionary> _get_public_functions() const override { return TypedArray<Dictionary>(); }
     Dictionary _get_public_constants() const override { return Dictionary(); }
     TypedArray<Dictionary> _get_public_annotations() const override { return TypedArray<Dictionary>(); }

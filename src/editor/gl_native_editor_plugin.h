@@ -43,6 +43,7 @@ public:
     void _process(double Delta) override;
     void OnScriptChanged(const godot::Ref<godot::Script>& Script);
     void ConfigureEditor();
+    void OnBreakpointToggle(int64_t Line,int64_t Code,const godot::String& Path);
     godot::Dictionary CreateLuauScene(const godot::String& Path,const godot::String& Profile="3D");
     godot::Dictionary PreviewScript(const godot::Ref<LuauScript>& Source);
     void StopPreview();

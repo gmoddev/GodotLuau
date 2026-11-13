@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/variant/callable.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
 #include <memory>
 #include <vector>
 #include <unordered_map>
@@ -53,4 +54,5 @@ bool GLSceneLocal(godot::Node* Target);
 bool GLSceneMutation(lua_State* Thread, godot::Node* Target, bool Clone = false);
 bool GLSceneIndex(lua_State* Thread, godot::Node* Target, const char* Key);
 bool GLSceneWrite(lua_State* Thread, godot::Node* Target, const char* Key);
+godot::Dictionary GLDebugSceneHandle(lua_State* Thread, int Index);
 #endif

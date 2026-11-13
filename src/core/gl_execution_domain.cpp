@@ -364,6 +364,7 @@ void GLExecutionDomain::OnThread(lua_State* Parent, lua_State* Thread) {
         }
     } else {
         GLExecutionOwner* Owner = GLGetOwner(Thread);
+        if(Owner && Owner->Domain->Debugger)Owner->Domain->Debugger->RetireThread(Thread);
         if (Owner && Owner->ThreadCount) { --Owner->ThreadCount; --Owner->Domain->LiveCoroutines; }
     }
 }
@@ -503,7 +504,7 @@ bool GLExecutionDomain::Execute(GLExecutionOwner* Owner, const std::string& Sour
     Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
     std::string Bytecode = Luau::compile(Source,Options);
     int Status = luau_load(Thread, ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
-    if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Thread, ChunkName);
+    if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Thread, ChunkName, int(std::count(Source.begin(),Source.end(),'\n'))+1);
     if (Status == LUA_OK) Status = Resume(Thread, nullptr, 0);
     else if (!CheckMemoryFailure(Thread, Status)) FinishThread(Task, Status);
     lua_unref(State, Root);
@@ -960,7 +961,7 @@ int GLExecutionDomain::BeginRequire(lua_State* Thread) {
         Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
         std::string Bytecode = Luau::compile(Source.Source,Options);
         int Status = luau_load(Initializer, Source.ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
-        if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Initializer, Source.ChunkName);
+        if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Initializer, Source.ChunkName, int(std::count(Source.Source.begin(),Source.Source.end(),'\n'))+1);
         if (Status == LUA_OK) Resume(Initializer, nullptr, 0);
         else if (!CheckMemoryFailure(Initializer, Status)) FinishThread(Task, Status);
         lua_unref(State, Root);

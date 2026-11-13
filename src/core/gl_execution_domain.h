@@ -82,6 +82,7 @@ public:
     bool HasDebugInfo() const { return DebugInfo; }
     GLDebugger& EnableDebugger(); // trusted host only, before gameplay entry
     GLDebugger* GetDebugger() const { return Debugger.get(); }
+    bool IsResuming() const { return ResumeDepth!=0; }
     void DebuggerPause(const std::function<void()>& Wait);
     void SetTimeProvider(std::function<double()> Provider) { GetTime = std::move(Provider); }
     GLExecutionOwner* CreateOwner(uint64_t NativeId);

@@ -95,3 +95,30 @@ platforms. The hit-count scenario incorrectly expects the for-loop setup line to
 execute repeatedly. Separate its comment-to-executable-line admission check from
 the hit target on the actual repeating loop body. Keep the one-stop hit assertion
 and disabled-breakpoint assertions unchanged; retain the failed run.
+
+Run 43426485509 passes real locals/continue, exact stepping, hit-target/remapping
+and coroutine/module stops on both platforms. The retirement scenario's compound
+assertion assumes one error report, whereas existing scheduler cancellation
+deliberately suppresses ordinary script failures for an already retired owner.
+Split the assertions into execution rejection, dead owner, no ordinary error and
+the existing unchanged-mutation sentinel. This preserves inherited cancellation
+semantics. No runtime failure or post-retirement mutation was demonstrated by
+that compound fixture failure.
+
+## Native editor and inspection implementation checkpoint
+
+The next source phase wires the real Godot script_debug loop and LuauLanguage
+stack/local/upvalue hooks, domain-aware native session controls, native breakpoint
+gutter changes/admission feedback and bounded raw table/native-handle projection.
+It requires an active debugger on an editor-capable gameplay host, rejecting
+editor preview and ordinary export templates. Godot owns the game-process pause;
+the scheduler is unchanged. Native wrappers resolve through existing SceneScope
+ownership, and no raw Object Variant or new gameplay capability is returned.
+Custom command envelopes use a crypto-generated connection nonce, monotonic
+request IDs, closed primitive fields and a 32-command/second bound. Editor
+breakpoint updates coalesce and drain under that bound. These changes still need
+actual native compilation, protocol, editor, lifecycle and sanitizer evidence.
+
+Intermediate native rerun 43425256514 is canceled because its native inputs equal
+the original checkpoint, while core-only fixture correction is being established.
+It is not a passing result. No existing acceptance assertion is removed.

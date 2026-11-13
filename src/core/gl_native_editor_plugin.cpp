@@ -1,6 +1,7 @@
 #include "gl_native_editor_plugin.h"
 #include <godot_cpp/classes/code_edit.hpp>
 #include "gl_luau_highlighter.h"
+#include "gl_authoring_debugger.h"
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/script_editor.hpp>
 #include <godot_cpp/classes/script_editor_base.hpp>
@@ -25,6 +26,7 @@ ScriptEditor* GetEditor() {
 void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("OnScriptChanged", "Script"), &GLNativeEditorPlugin::OnScriptChanged);
     ClassDB::bind_method(D_METHOD("ConfigureEditor"), &GLNativeEditorPlugin::ConfigureEditor);
+    ClassDB::bind_method(D_METHOD("OnBreakpointToggle","Line","Code","Path"), &GLNativeEditorPlugin::OnBreakpointToggle);
     ClassDB::bind_method(D_METHOD("CreateLuauScene", "Path","Profile"), &GLNativeEditorPlugin::CreateLuauScene,DEFVAL(String("3D")));
     ClassDB::bind_method(D_METHOD("PreviewScript", "Source"), &GLNativeEditorPlugin::PreviewScript);
     ClassDB::bind_method(D_METHOD("StopPreview"), &GLNativeEditorPlugin::StopPreview);
@@ -44,6 +46,7 @@ void GLNativeEditorPlugin::_bind_methods() {
 }
 
 void GLNativeEditorPlugin::_enter_tree() {
+    set_process(true);
     SetupAuthoring();
     Ref<GLLuauHighlighter> Highlight;Highlight.instantiate();Highlighter=Highlight;
     if (auto Editor = GetEditor()) {
@@ -87,11 +90,21 @@ void GLNativeEditorPlugin::ConfigureEditor() {
     auto Tab = Editor->get_current_editor();
     auto Code = Tab ? Object::cast_to<CodeEdit>(Tab->get_base_editor()) : nullptr;
     if (!Code) return;
+    Code->set_draw_breakpoints_gutter(true);
+    Callable BreakpointHandler=Callable(this,"OnBreakpointToggle").bind(int64_t(Code->get_instance_id()),Script->get_path());
+    if(!Code->is_connected("breakpoint_toggled",BreakpointHandler))Code->connect("breakpoint_toggled",BreakpointHandler);
+    if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))
+        for(int Line:Code->get_breakpointed_lines())Capture->RecordBreakpoint(Script->get_path(),Line+1,true);
     auto Prefixes = Code->get_code_completion_prefixes();
     if (!Prefixes.has(":")) {
         Prefixes.push_back(":");
         Code->set_code_completion_prefixes(Prefixes);
     }
+}
+void GLNativeEditorPlugin::OnBreakpointToggle(int64_t Line,int64_t Identity,const String& Path) {
+    auto Code=Object::cast_to<CodeEdit>(ObjectDB::get_instance(Identity));
+    if(Code && Line>=0 && Line<Code->get_line_count())
+        if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))Capture->RecordBreakpoint(Path,int(Line)+1,Code->is_line_breakpointed(int(Line)));
 }
 Dictionary GLNativeEditorPlugin::IndexProject(const String& Module,const String& Member) {
     Dictionary Buffers;

@@ -1294,6 +1294,40 @@ void GLRetireScenes(lua_State* Anchor) {
     for (uint64_t Id:Snapshot) if (auto Scope=Resolve<SceneScope>(Id)) if (Scope->Anchor==Anchor) Scope->Retire();
 }
 bool GLSceneLocal(Node* Target) { return ScopeOf(Target)!=nullptr; }
+Dictionary GLDebugSceneHandle(lua_State* Thread, int Index) {
+    Dictionary Result; Result["Kind"]="NativeHandle"; Result["State"]="Restricted";
+    Object* Target=nullptr; SceneScope* Scope=nullptr;
+    if (auto Handle=HandleAt(Thread,Index)) {
+        Result["Kind"]="Resource";
+        if(!*Handle || (*Handle)->Value.is_null()) { Result["State"]="Destroyed"; return Result; }
+        Scope=Resolve<SceneScope>((*Handle)->Scope);
+        if(!Scope || !Scope->CanUse(Thread))return Result;
+        Target=(*Handle)->Value.ptr(); Result["ReadOnly"]=(*Handle)->ReadOnly;
+    } else if (_gl_has_metatable(Thread,Index,"GodotObject")) {
+        auto Wrapper=static_cast<GodotObjectWrapper*>(lua_touserdata(Thread,Index));
+        auto Node=gow_node(Wrapper); Result["Kind"]="Node";
+        if(!Node || Node->is_queued_for_deletion()) { Result["State"]="Destroyed"; return Result; }
+        Scope=ScopeOf(Node);
+        if(!Scope || !Scope->CanUse(Thread))return Result;
+        Target=Node;
+    } else { Result["State"]="Unsupported"; return Result; }
+    Result["State"]="Alive"; Result["ClassName"]=Target->get_class();
+    Result["ObjectId"]=int64_t(Target->get_instance_id());
+    Dictionary Values;
+    for(const auto& Item:GLNative::Properties) {
+        if(Values.size()>=8)break;
+        if(!Target->is_class(Item.Class) || FindProperty(Target,Item.Name)!=&Item)continue;
+        if(Item.Type==ResourceValue || Item.Type==NodeValue || Item.Type==VariantValue ||
+           Item.Type==ArrayValue || Item.Type==DictionaryValue)continue;
+        Variant Value=Target->get(Item.Native);
+        if(Value.get_type()==Variant::OBJECT || Value.get_type()==Variant::CALLABLE || Value.get_type()==Variant::SIGNAL ||
+           Value.get_type()==Variant::RID || Value.get_type()>=Variant::DICTIONARY)continue;
+        if(Value.get_type()==Variant::STRING || Value.get_type()==Variant::STRING_NAME)Value=String(Value).left(128);
+        else if(Value.get_type()>Variant::STRING)Value=String(Value).left(128);
+        Values[Item.Name]=Value;
+    }
+    Result["Properties"]=Values; return Result;
+}
 bool GLSceneMutation(lua_State* Thread, Node* Target, bool Clone) {
     if (auto Scope=ScopeOf(Target)) if (Clone || !Scope->CanUse(Thread)) return false;
     for (uint64_t Id:Scopes) if (auto Scope=Resolve<SceneScope>(Id))

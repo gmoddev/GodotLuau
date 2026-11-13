@@ -154,6 +154,7 @@ void GLNativeEditorPlugin::OnPreviewSourceChanged() {
     StopPreview(); ShowStatus("Source changed; use Preview Luau to reconstruct before saving");
 }
 void GLNativeEditorPlugin::_process(double) {
+    if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))Capture->Flush();
     if (!PreviewDomain || PreviewDomain->IsClosing()) return;
     if (PreviewDomain->GetPendingTaskCount()) { StopPreview(); ShowStatus("Preview callbacks cannot yield or retain tasks"); }
     else PreviewDomain->Tick(0);
