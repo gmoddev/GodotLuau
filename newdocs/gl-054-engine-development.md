@@ -549,3 +549,20 @@ unchanged. Local before/after artifacts are relevance-release-barrier-before/aft
 they reuse the actual retained Release DLL, not mocked networking. GL-059 records
 the fixture finding. The queued diagnostic-only native rerun 43385930638 was
 canceled as redundant; the corrected fixture now needs its actual cohort.
+
+Corrected cohort 43387294744 uses immutable `6784696` and the same 128-input
+native fingerprint. Its Linux Debug/Release jobs fail before project compilation:
+the selected signed Ubuntu archive at mirrors.edge.kernel.org times out during
+APT index/package downloads. Retained per-job logs distinguish this provisioning
+failure from the reconnect fixture defect. Another current Linux native job
+passes that same provisioning step. Windows production jobs continue; GitHub
+rejects rerunning individual failed jobs while the containing workflow is still
+active. Retry only the provisioning failures after it completes, without changing
+packages, compilers, host admission or signature verification.
+
+The fixture-expanded native run 43382538838 passes both platforms at `f9c4119`,
+including graphical-readiness barrier handling in the normal editor profile and
+the additional texture/area calls. The atomic marker follow-up has its own current
+native run 43387293637. Ordinary export templates do not execute an external
+observer through --script in the bounded CLI probe; retain the explicit standalone
+startup/restart scope rather than inventing exported full-game test evidence.
