@@ -33,6 +33,11 @@ See the [current integration record](shared-domains-validation.md#gl-019-main-in
 
 ## Start here
 
+The unmerged [GL-055 native debugger campaign](gl-055-debugger-development.md)
+extends the integrated authoring foundation. [ADR-018](adr-018-native-luau-debugger.md)
+defines live suspension and inspection; the journal separates implementation and
+actual qualification from planned phases. Historical GL-055 remains resolved.
+
 For a new project, use the [native Luau quick start](luau-project-start.md) for
 editor actions, scopes/modules, debugging limits, example profiles and export.
 

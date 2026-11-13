@@ -1,4 +1,5 @@
 #include "gl_execution_domain.h"
+#include "gl_debugger.h"
 #include "Luau/Compiler.h"
 #include <algorithm>
 #include <cmath>
@@ -149,6 +150,21 @@ bool GLExecutionDomain::IsClientExecution() {
 }
 bool GLExecutionDomain::IsExecuting() { return GLActiveBudget != nullptr; }
 
+GLDebugger& GLExecutionDomain::EnableDebugger() {
+    if (!Debugger) Debugger = std::make_unique<GLDebugger>(*this);
+    return *Debugger;
+}
+void GLExecutionDomain::DebuggerPause(const std::function<void()>& Wait) {
+    struct PauseScope {
+        std::chrono::steady_clock::time_point Start = std::chrono::steady_clock::now();
+        ~PauseScope() {
+            auto Duration = std::chrono::steady_clock::now() - Start;
+            for (auto Scope = GLActiveBudget; Scope; Scope = Scope->BudgetParent) Scope->ExecutionDeadline += Duration;
+        }
+    } Pause;
+    Wait();
+}
+
 GLExecutionDomain::BudgetScope::BudgetScope(GLExecutionDomain& Selected) : Domain(Selected) {
     if (Domain.BudgetDepth++ == 0) {
         Pushed = true;
@@ -257,6 +273,7 @@ GLExecutionDomain::GLExecutionDomain(GLDomainKind SelectedKind, GLDomainLimits S
 }
 GLExecutionDomain::~GLExecutionDomain() {
     Shutdown();
+    Debugger.reset(); // release debug references while VM and owners still exist
     if (State) {
         // The host must never destroy the domain from inside one of its resumes.
         // Shutdown itself is reentrant-safe and only invalidates/cancels admission.
@@ -427,6 +444,7 @@ GLExecutionOwner* GLExecutionDomain::FindOwner(uint64_t NativeId) const {
 void GLExecutionDomain::CancelOwner(GLExecutionOwner* Owner) {
     if (!Owner || Owner->Domain != this || !Owner->Alive) return;
     Owner->Alive = false; // denial precedes callbacks, registry release, and cancellation
+    if (Debugger) Debugger->RetireOwner(Owner);
     if (Owner != BootstrapOwner) --LiveOwners;
     if (InvalidateNative) InvalidateNative(Owner->Anchor);
     auto Found = ActiveOwners.find(Owner->NativeId);
@@ -485,6 +503,7 @@ bool GLExecutionDomain::Execute(GLExecutionOwner* Owner, const std::string& Sour
     Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
     std::string Bytecode = Luau::compile(Source,Options);
     int Status = luau_load(Thread, ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
+    if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Thread, ChunkName);
     if (Status == LUA_OK) Status = Resume(Thread, nullptr, 0);
     else if (!CheckMemoryFailure(Thread, Status)) FinishThread(Task, Status);
     lua_unref(State, Root);
@@ -568,8 +587,10 @@ int GLExecutionDomain::Resume(lua_State* Thread, lua_State* From, int Arguments,
         return LUA_ERRRUN;
     }
     ++ResumeDepth;
+    if (Debugger) Debugger->BeginResume(Thread);
     int Status = RaiseError ? lua_resumeerror(Thread, From) : lua_resume(Thread, From, Arguments);
     --ResumeDepth;
+    if (Debugger) Debugger->EndResume(Thread, Status);
     Task->Running = false;
     if (CheckMemoryFailure(Thread, Status)) return LUA_ERRMEM;
     if (CheckExecutionBudget()) {
@@ -939,6 +960,7 @@ int GLExecutionDomain::BeginRequire(lua_State* Thread) {
         Luau::CompileOptions Options;Options.debugLevel=DebugInfo?2:1;
         std::string Bytecode = Luau::compile(Source.Source,Options);
         int Status = luau_load(Initializer, Source.ChunkName.c_str(), Bytecode.data(), Bytecode.size(), 0);
+        if (Status == LUA_OK && Debugger) Debugger->RegisterChunk(Initializer, Source.ChunkName);
         if (Status == LUA_OK) Resume(Initializer, nullptr, 0);
         else if (!CheckMemoryFailure(Initializer, Status)) FinishThread(Task, Status);
         lua_unref(State, Root);
@@ -1154,6 +1176,7 @@ void GLExecutionDomain::AddCloseCallback(lua_State* Thread, int Reference) {
 }
 void GLExecutionDomain::Shutdown() {
     if (Closing) return;
+    if (Debugger) Debugger->Shutdown();
     BudgetScope Budget(*this); // one aggregate deadline for the entire hook snapshot
     Closing = true;
     StopAdmission();
