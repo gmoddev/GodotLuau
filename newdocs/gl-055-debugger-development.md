@@ -210,3 +210,31 @@ continue using the established invalidation path. Extend the actual native edito
 fixture for types/functions/imports/lexical definitions and navigation latency.
 Three changed native units pass bounded MSVC syntax checks; runtime/editor
 execution remains pending. Dynamic/global/type resolution is not claimed.
+## First actual native stop and protocol correction
+
+Native 43437162267 compiles on Linux and reaches a real, continuable Luau stop,
+returning its stack and variable count. The peer rejects the first variable
+payload: the admitted Godot 4.7.1 host appends a fifth type-hint field, unlike the
+four-field 4.3 source originally consulted. Its actual upstream
+`core/debugger/debugger_marshalls.cpp` confirms this wire shape. Correct the peer
+to require the five typed fields; retain all value/authority/stepping assertions.
+The fixture-only qualification branch reuses the exact `1e46bc5` native adapter
+through the existing focused workflow, avoiding a duplicate native build. This
+is partial execution evidence, not a passing debugger result.
+
+GitHub cannot manually dispatch the new focused workflow before it exists on
+default main. Use its push trigger on this qualification-only branch with the
+explicit original adapter run, retaining exact native-source admission. Cancel
+43440700078/43440700081: the fixture repair changes no native/core implementation.
+No default-branch modification or additional native rebuild is needed for it.
+
+Focused 43441210614 exposes a peer-only grouping bug: context `State` overwrites
+the script local of the same name when the peer flattens Godot's separate groups.
+Keep context names separate. Focused 43441438055 then passes actual cyclic/native
+inspection, all seven restricted watches, into/over/out, module, Client and signal
+callback stops. Its final pure local alias has no instruction (requested line 25
+correctly remaps to executable 26); place that fixture marker on the actual assert.
+Retain the destroyed-handle assertion. The unexpected-disconnect attempt also
+shows a product issue: Godot's `is_active()` remains true after losing the peer,
+so later Luau stops invoke an unavailable native session. Keep its no-error gate
+and fix the product lifecycle separately; no full debugger pass is claimed.
