@@ -1,4 +1,4 @@
-name: Repackage qualified GL-052 profiles (no publication)
+name: Repackage qualified profiles (no publication)
 on:
   push:
     branches: [feature/gl-052-luau-authoring-workflow]

@@ -323,7 +323,10 @@ def Smoke(Engine, Package, Directory, Selected):
             if os.name != 'nt': Require(os.access(Worker, os.X_OK), 'Extracted companion is not executable')
             (Project/'project.godot').write_text('config_version=5\n[application]\nconfig/use_custom_user_dir=true\nconfig/custom_user_dir_name="GodotLuauCandidate"\n[threading]\nworker_pool/max_threads=2\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n')
             (Project/'.godot').mkdir(); (Project/'.godot/global_script_class_cache.cfg').write_text('list=[]\n')
-            shutil.copy2(Source/'tests/runtime/DatastoreIntegration.gd', Project/'DatastoreIntegration.gd')
+            # A bounded repackage repair may update the startup checker while
+            # retaining the immutable source and products recorded by profiles.
+            Fixture=Path(__file__).resolve().parents[1]/'tests/runtime/DatastoreIntegration.gd'
+            shutil.copy2(Fixture, Project/'DatastoreIntegration.gd')
             if Configuration == 'Release':
                 # The official test host has debug features. Redirect its debug
                 # selection to the packaged Release library in this copy only.
@@ -336,7 +339,7 @@ def Smoke(Engine, Package, Directory, Selected):
             Child = Start(Engine, Project, 'DatastoreIntegration.gd', Label, [], Environment)
             Result = Check(Child, time.monotonic()+60, Project, Label, '[Persistence:DataStore] PASS prototype')
             LibraryName = Names(Selected, Configuration)[0]
-            Actors.append({'Configuration': Configuration, **Result, 'ExtensionSHA256': Hash(Project/'GodotLuau/bin'/LibraryName), 'CompanionSHA256': Hash(Worker), 'Logs': {Name: Hash(Project/(Label+'.'+Name+'.log')) for Name in ['stdout', 'stderr']}})
+            Actors.append({'Configuration': Configuration, **Result, 'FixtureSHA256': Hash(Fixture), 'ExtensionSHA256': Hash(Project/'GodotLuau/bin'/LibraryName), 'CompanionSHA256': Hash(Worker), 'Logs': {Name: Hash(Project/(Label+'.'+Name+'.log')) for Name in ['stdout', 'stderr']}})
     finally: StopAll()
     return Actors
 

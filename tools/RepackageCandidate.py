@@ -1,4 +1,4 @@
-"""Repackage unchanged qualified products after the bounded GL-052 layout repair.
+"""Repackage unchanged qualified products with a bounded package/checker repair.
 
 No compilation or publication. All original profile, source, hash, native,
 sanitizer and extracted-startup checks remain in ReleaseCandidate.
@@ -45,8 +45,8 @@ def Main():
     Candidate.Require(not subprocess.check_output(['git','-C',str(Current),'status','--porcelain','--untracked-files=all'],text=True).strip(), 'Dirty repair-tool checkout')
     ToolRevision=subprocess.check_output(['git','-C',str(Current),'rev-parse','HEAD'],text=True).strip()
     Changed=subprocess.check_output(['git','-C',str(Current),'diff','--name-only',Args.revision,ToolRevision],text=True).splitlines()
-    Allowed={'tools/ReleaseCandidate.py','tools/RepackageCandidate.py','tests/release/ReleaseCandidateTests.py','.github/workflows/repackage-candidate.yml'}
-    Candidate.Require(all(Name in Allowed or Name.startswith('newdocs/') for Name in Changed), 'Repair revision changes qualified runtime, fixture or package inputs')
+    Allowed={'tools/ReleaseCandidate.py','tools/RepackageCandidate.py','tests/release/ReleaseCandidateTests.py','.github/workflows/repackage-candidate.yml','tests/runtime/DatastoreIntegration.gd'}
+    Candidate.Require(all(Name in Allowed or Name.startswith('newdocs/') for Name in Changed), 'Repair revision changes qualified runtime or unreviewed inputs')
     Gates=OriginalGates(Args.repository,Args.run,Args.revision)
     Candidate.Source=Args.source.resolve()
     Candidate.Require(Candidate.Hash(Current/'tools/ReleaseCandidatePolicy.json')==Candidate.Hash(Candidate.Source/'tools/ReleaseCandidatePolicy.json'), 'Candidate policy changed')
@@ -65,7 +65,8 @@ def Main():
             Candidate.Package(Args)
         Candidate.Save(Args.output/'repair.json',{'SourceRun':Args.run,'SourceRevision':Args.revision,'ToolRevision':ToolRevision,
             'ToolSHA256':hashlib.sha256((Current/'tools/ReleaseCandidate.py').read_bytes()).hexdigest(),
-            'NativeSource':Expected['NativeSource'],'OriginalGates':Gates,'Repair':'Move only unrecorded supplementary game evidence in extracted copies; original profile artifacts unchanged'})
+            'StartupFixtureSHA256':Candidate.Hash(Current/'tests/runtime/DatastoreIntegration.gd'),
+            'NativeSource':Expected['NativeSource'],'OriginalGates':Gates,'Repair':'Bounded package/startup-checker repair; original qualified source, profile artifacts and products unchanged'})
     finally:Candidate.StopAll()
 
 

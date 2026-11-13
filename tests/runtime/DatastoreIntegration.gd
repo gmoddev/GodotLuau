@@ -77,12 +77,13 @@ game:SetAttribute('Done',true)
     if not Game.has_meta("Done") or not Game.has_meta("ClientDone"): Failed=true
     print("[Persistence:DataStore] Small-operation elapsed milliseconds=",Time.get_ticks_msec()-Started," peak frame gap=",Gap)
     if Gap>=0.25: Failed=true
-    var ExitRacePassed := false
     for Child in Game.get_children():
-        if Child.is_class("GLDomainHost"):
-            ExitRacePassed=Child.has_method("_gl_test_datastore_exit") and Child.call("_gl_test_datastore_exit",ProjectSettings.globalize_path("user://").trim_suffix("/"))
-    if not ExitRacePassed: Failed=true
-    print("[Persistence:DataStore] ","PASS" if ExitRacePassed else "FAIL"," controlled empty-read/exit reply")
+        if Child.is_class("GLDomainHost") and Child.has_method("_gl_test_reset_domain"):
+            # CMake test adapters must exercise the real companion barrier.
+            # SCons production libraries intentionally expose no test methods.
+            var ExitRacePassed: bool=Child.has_method("_gl_test_datastore_exit") and Child.call("_gl_test_datastore_exit",ProjectSettings.globalize_path("user://").trim_suffix("/"))
+            if not ExitRacePassed: Failed=true
+            print("[Persistence:DataStore] ","PASS" if ExitRacePassed else "FAIL"," controlled empty-read/exit reply")
     Gap=0.0; Started=Time.get_ticks_msec()
     Script("Large","""
 local Store=game:GetService('DataStoreService'):GetDataStore('GL009')

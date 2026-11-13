@@ -610,3 +610,19 @@ ordinary persistence/BindToClose. Artifact 14003528598 has archive SHA256
 `82bf6d8e9257ccc4ae4ccf22a31176c59011484fe7237518d244774460059f6a`.
 Retain GL-018's Windows sanitizer/LSan limits. Only final non-publishing candidate
 build/package/extracted-startup acceptance remains before the normal merge.
+
+All four source-built profiles in 43346831705 pass, but both extracted-package
+checks fail at the newly added controlled race assertion. SCons production
+libraries correctly omit the CMake-only test methods; the shared basic fixture
+incorrectly required one. Correct its scope: the existing CMake reset-domain
+marker identifies a test adapter, where the race method remains mandatory.
+Ordinary service, large-payload, authority and BindToClose assertions stay active
+for both products. No production code or companion packaging changes are needed.
+
+Reuse these exact four qualified products and the passed core sanitizer through
+the existing repackage workflow. Its bounded repair allowlist additionally names
+this one startup fixture. Smoke uses the reviewed checker checkout and records
+its actual fixture hash; product/source identities, all profile checks, archive
+checks, extracted startup and acceptance remain enforced. Preserve original
+profile/fixture identities in provenance and the repair revision separately.
+This avoids rebuilding unchanged products for a demonstrated fixture-scope error.
