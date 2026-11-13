@@ -65,6 +65,9 @@ func AfterVariables() -> void:
     if Finished:
         return
     var ExpectedStop: Dictionary = Expected[Stops]
+    var Snapshot = FileAccess.open("res://variables-%d.json" % Stops, FileAccess.WRITE)
+    Snapshot.store_string(JSON.stringify(Variables, "  "))
+    Snapshot.close()
     Check(CurrentSource == ExpectedStop.Source and CurrentLine == ExpectedStop.Line, "Real source stop %d: %s:%d" % [Stops, CurrentSource, CurrentLine])
     Check(CurrentDomain == ExpectedStop.Domain, "Execution-domain label at stop %d" % Stops)
     if Finished:
