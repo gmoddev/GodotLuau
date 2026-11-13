@@ -330,6 +330,8 @@ void initialize_luau_module(ModuleInitializationLevel p_level) {
     }
 }
 
+// Coverage is optional and absent from production SCons products.
+#include "gl_native_coverage.h"
 void uninitialize_luau_module(ModuleInitializationLevel p_level) {
     if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
         EditorPlugins::remove_by_type<GLNativeEditorPlugin>();
@@ -337,6 +339,7 @@ void uninitialize_luau_module(ModuleInitializationLevel p_level) {
     if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
         if (auto Host = GLGetDomainHost()) Host->Shutdown();
         GLDataStoreManager::StopAll();
+        GLDumpNativeTrace();
         if (Engine::get_singleton()->has_meta("_godotluau_wm"))
             Engine::get_singleton()->remove_meta("_godotluau_wm");
         // Caches estaticos de materiales: se sueltan AQUI, mientras el

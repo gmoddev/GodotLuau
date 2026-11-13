@@ -5,6 +5,7 @@
 #include "luau_variant_bindings.h"
 #include "gl_native_registry.gen.h"
 #include "gl_native_values.h"
+#include "gl_native_coverage.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/font.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
@@ -271,7 +272,7 @@ std::vector<Assignment> Validate(lua_State* Thread, SceneScope* Scope, Object* T
     });
     return Batch;
 }
-void Apply(Object* Target, const std::vector<Assignment>& Batch) {
+void Apply(Object* Target, const std::vector<Assignment>& Batch, lua_State* Thread) {
     const uint64_t Id=Target->get_instance_id();
     Ref<Resource> KeepAlive=Object::cast_to<Resource>(Target);
     for (const auto& Entry:Batch) {
@@ -285,6 +286,7 @@ void Apply(Object* Target, const std::vector<Assignment>& Batch) {
             if (bool(Entry.Value)) Object::cast_to<Control>(Target)->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
             else Object::cast_to<Control>(Target)->set_anchors_preset(Control::PRESET_TOP_LEFT);
         } else Target->set(Key,Entry.Value);
+        GLTraceNative(Thread,"Write",Entry.Item->Class,Entry.Item->Name);
     }
 }
 const GLNative::Class* FindClass(const char* Name) {
@@ -332,14 +334,15 @@ void PushProperty(lua_State* Thread, SceneScope* Scope, Object* Target, const ch
     if (Item->Type>Void) {
         if (!ValidNative(*Item,Value)) luaL_error(Thread,"[Scene:Type] Unsupported native property result");
         PushValue(Thread,Scope,Value,Item->Type);
+        GLTraceNative(Thread,"Read",Item->Class,Item->Name);
         return;
     }
-    if (Item->Type==Text) { String Text=Value; lua_pushstring(Thread,Text.utf8().get_data()); return; }
-    if (Item->Type==ResourceValue) { PushResource(Thread,Scope,Ref<Resource>(Value),true); return; }
+    if (Item->Type==Text) { String Text=Value; lua_pushstring(Thread,Text.utf8().get_data()); GLTraceNative(Thread,"Read",Item->Class,Item->Name);return; }
+    if (Item->Type==ResourceValue) { PushResource(Thread,Scope,Ref<Resource>(Value),true);GLTraceNative(Thread,"Read",Item->Class,Item->Name);return; }
     if (Value.get_type()==Variant::VECTOR2) {
-        Vector2 Point=Value; lua_newtable(Thread); lua_pushnumber(Thread,Point.x); lua_setfield(Thread,-2,"X"); lua_pushnumber(Thread,Point.y); lua_setfield(Thread,-2,"Y"); return;
+        Vector2 Point=Value; lua_newtable(Thread); lua_pushnumber(Thread,Point.x); lua_setfield(Thread,-2,"X"); lua_pushnumber(Thread,Point.y); lua_setfield(Thread,-2,"Y");GLTraceNative(Thread,"Read",Item->Class,Item->Name);return;
     }
-    if (!gl_variant_to_luau(Thread,Value)) lua_pushnil(Thread);
+    if (gl_variant_to_luau(Thread,Value)) GLTraceNative(Thread,"Read",Item->Class,Item->Name); else lua_pushnil(Thread);
 }
 int New(lua_State* Thread) {
     SceneScope* Scope=ScopeAt(Thread);
@@ -352,23 +355,24 @@ int New(lua_State* Thread) {
     int Depth=0; for (Node* Item=Parent;Item && Item!=Scope;Item=Item->get_parent()) ++Depth;
     if (Depth>=32) luaL_error(Thread,"[Scene:Limit] Hierarchy depth limit");
     if (Ref<Resource> Resource=CreateResource(Class); Resource.is_valid()) {
-        auto Batch=Validate(Thread,Scope,Resource.ptr(),3); Apply(Resource.ptr(),Batch); PushResource(Thread,Scope,Resource); return 1;
+        auto Batch=Validate(Thread,Scope,Resource.ptr(),3); Apply(Resource.ptr(),Batch,Thread); PushResource(Thread,Scope,Resource);
+        GLTraceNative(Thread,"Construct",Class,"new");return 1;
     }
     auto Delete=[](Node* Target){if(Target) memdelete(Target);};
     std::unique_ptr<Node,decltype(Delete)> Target(CreateNode(Class),Delete);
     if (!Target) luaL_error(Thread,"[Scene:Type] Unsupported class %s",Class);
-    auto Batch=Validate(Thread,Scope,Target.get(),3); Apply(Target.get(),Batch);
+    auto Batch=Validate(Thread,Scope,Target.get(),3); Apply(Target.get(),Batch,Thread);
     uint64_t Id=Target->get_instance_id(); uint64_t ScopeId=Scope->get_instance_id();
     Scope->Nodes.push_back(Id);
     Node* Added=Target.release(); Parent->add_child(Added);
     Scope=Resolve<SceneScope>(ScopeId);
     Added=Resolve<Node>(Id);
     if (!Scope || !Scope->CanUse(Thread) || !Added || Added->is_queued_for_deletion()) luaL_error(Thread,"[Scene:Lifetime] Construction was retired by a callback");
-    PushNode(Thread,Added); return 1;
+    PushNode(Thread,Added); GLTraceNative(Thread,"Construct",Class,"new");return 1;
 }
 int Configure(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); Object* Target=TargetAt(Thread,Scope,2,true);
-    auto Batch=Validate(Thread,Scope,Target,3); Apply(Target,Batch); return 0;
+    auto Batch=Validate(Thread,Scope,Target,3); Apply(Target,Batch,Thread); return 0;
 }
 int Get(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); Object* Target=TargetAt(Thread,Scope,2,false);
@@ -651,11 +655,11 @@ int Call(lua_State* Thread) {
         if(int64_t(Result)!=OK)luaL_error(Thread,"[Scene:Animation] Native library attachment failed");
         Scope->SealedAnimations.insert(AnimationSeal.begin(),AnimationSeal.end());
     }
-    if (Item->Return==Void) return 0;
+    if (Item->Return==Void) {GLTraceNative(Thread,"Call",Item->Class,Item->Name);return 0;}
     Property Expected{"",Name,Item->Native,Item->Return,-1e12,1e12,Item->ReturnClass};
     if (Item->Return==Text) { Expected.Min=0; Expected.Max=8192; }
     if (!ValidNative(Expected,Result)) luaL_error(Thread,"[Scene:Type] %s returned an unsupported or nonfinite value",Name);
-    PushValue(Thread,Scope,Result,Item->Return); return 1;
+    PushValue(Thread,Scope,Result,Item->Return);GLTraceNative(Thread,"Call",Item->Class,Item->Name);return 1;
 }
 int BuildMesh(lua_State* Thread) {
     auto Scope=ScopeAt(Thread); auto Primitive=Object::cast_to<PrimitiveMesh>(TargetAt(Thread,Scope,2,false));
@@ -1153,6 +1157,7 @@ void SceneScope::OnSignal(int Reference, int Signature, const std::vector<Varian
         const auto& Item=GLNative::Signals[Signature];
         for (int Index=0;Index<Item.Arguments;++Index)
             PushValue(Thread,Scope,Values[Index],GLNative::Arguments[Item.FirstArgument+Index].Type);
+        GLTraceNative(Thread,"Signal",Item.Class,Item.Name);
         return Item.Arguments;
     }); // callback may destroy this scope; never touch it after dispatch
 }
@@ -1170,6 +1175,7 @@ void GLRegisterScene(lua_State* Thread) {
         Property Item{"Value",Name,Name,Type,-1e12,1e12};
         if (Type==Void || Type==VariantValue || !GLReadNativeValue(State,Item,2,Value)) luaL_error(State,"[Scene:Value] Invalid bounded native value %s",Name);
         if (!GLPushNativeValue(State,Value)) luaL_error(State,"[Scene:Value] Unsupported native value %s",Name);
+        GLTraceNative(State,"Value","Variant",Name);
         return 1;
     }),"NativeValue");lua_setfield(Thread,-2,"Value");
     lua_pushstring(Thread,GLNative::PolicySHA256); lua_setfield(Thread,-2,"PolicySHA256");
@@ -1222,5 +1228,5 @@ bool GLSceneWrite(lua_State* Thread, Node* Target, const char* Key) {
     if (!Item || Item->ReadOnly) luaL_error(Thread,"[Scene:Property] Unsupported or read-only property %s",Key);
     Variant Value=ReadValue(Thread,Scope,*Item,3);PreviewProperty(Thread,*Item,Value);
     const std::vector<Assignment> Batch{{Item,Value}};
-    ValidateEffects(Thread,Target,Batch); Apply(Target,Batch); return true;
+    ValidateEffects(Thread,Target,Batch); Apply(Target,Batch,Thread); return true;
 }
