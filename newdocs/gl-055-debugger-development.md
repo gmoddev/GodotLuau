@@ -358,3 +358,9 @@ driver fails waiting for the Watch response before native variables settle. The
 displayed-stack/variable-ready fixture is included in the next revision; retain
 that failed attempt. Core 43446023196 passes Windows/Linux at `24dd94b`; native
 43446022999 is building that selective-reload checkpoint.
+
+Core 43448830124 executes all eight debugger/profiler scenarios successfully on
+both platforms, but the existing outer runner still requires the old seven-case
+summary. Update that final summary gate to eight, matching the already-updated
+distinct-case verifier. Preserve its watchdog and all 87 prior cases. This is a
+runner synchronization correction; the native implementation is unchanged.
