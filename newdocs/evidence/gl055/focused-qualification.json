@@ -1,5 +1,5 @@
 {
-  "Status": "Final implementation focused native/rendered/performance PASS; hosted full-profile gates pending",
+  "Status": "Final implementation focused native/rendered/performance PASS; completed hosted profiles retained in hosted-qualification.json",
   "Baseline": "b5389f0ff08c50e38bc11d868dbe12729a293535",
   "Branch": "feature/gl-055-native-debugger",
   "NativeImplementation": "fd86f83223ae4bb3c87b333b875cdd6307903a12",

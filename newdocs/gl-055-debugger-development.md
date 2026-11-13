@@ -624,3 +624,24 @@ Retain the [hosted summary](evidence/gl055/hosted-qualification.json). This
 qualifies a Release-built extension under the admitted editor host, not an
 interactive exported release-template host. Windows full-native retry remains
 the only pending profile; releases/updater remain disabled and main unchanged.
+
+## Qualification closure
+
+Windows-only full-native 43468940617 passes all 27 groups, detection controls,
+87 original core/eight debugger scenarios, the complete native actor suite,
+all 23 DataStore actors and all six debugger cases. There are no unexpected
+sanitizer reports. The explicit-release barrier preserves the original lock
+contention/timing/frame-progress assertions and does not change persistence
+production code. Retain the prior Windows failed attempt and successful Linux
+ASan/LSan 43461776259 separately; Linux's additional group is its supported leak
+control. Windows LSan remains unavailable.
+
+The [qualification record](gl-055-debugger-qualification.md) and committed JSON/
+rendered receipts now cover final native inputs, source-built Debug/Release
+products, packages, actual native/editor/ENet/reload/ownership behavior and the
+available sanitizer scopes. Primary debugging and the supported bounded index/
+profiler subset are qualified for review/integration. GL-065's engine-editor
+cleanup, synchronous large-index latency, missing physical/Linux graphical
+coverage and the explicitly unsupported/deferred features remain visible.
+Main remains `b5389f0ff08c50e38bc11d868dbe12729a293535`; this feature is left
+unmerged with Native default, Scripted opt-in and distribution disabled.

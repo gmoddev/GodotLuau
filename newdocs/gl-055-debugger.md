@@ -1,10 +1,10 @@
 # Native Luau debugger
 
-Implementation on `feature/gl-055-native-debugger`, unmerged. Core execution
-control passes the recorded Windows/Linux scenarios; native protocol, editor,
-cross-profile and sanitizer qualification remains in progress. Consult the
-[journal](gl-055-debugger-development.md) for actual results. This guide describes
-the implemented interface, not a completed qualification claim.
+Implementation on `feature/gl-055-native-debugger`, unmerged. The supported
+debugger, bounded navigation/profiling subset, production Debug/Release products
+and available Windows/Linux sanitizer profiles pass within the
+[qualification record](gl-055-debugger-qualification.md). Consult its limits and
+the [journal](gl-055-debugger-development.md) for failed attempts and corrections.
 
 ## Starting and controlling a session
 
@@ -140,5 +140,7 @@ Only time actually spent in debugger suspension/handshake is excluded from activ
 wall-clock execution deadlines. Allocation, safepoint and admission bounds
 remain enforced. Attached execution uses the pinned VM's debug interpreter;
 disabled execution keeps its original interpreter. Attached/disabled overhead
-and profiling/indexing overhead need their own recorded measurements.
+and profiling/indexing measurements are recorded separately in the qualification
+record. Large navigation can occupy the main thread for about its 250-ms soft
+deadline and return explicit partial results; it is not an instantaneous index.
 Releases and updater distribution remain disabled.

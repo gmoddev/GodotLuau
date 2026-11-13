@@ -5,7 +5,9 @@ live Luau execution control through Godot's supported debugger loop under
 [ADR-018](adr-018-native-luau-debugger.md). Windows/Linux native protocol/editor
 journeys pass within their [recorded source scopes](gl-055-debugger-qualification.md),
 including selective reload, opt-in profiling and weak ownership diagnostics.
-Final corrected native/profile qualification remains pending. This does not change the
+Final core/native, production Debug/Release, candidate/package and available
+Windows/Linux sanitizer profiles pass within those scopes. External engine-editor
+cleanup and synchronous large-index latency remain explicit limits. This does not change the
 integrated-main qualification claims below or turn error snapshots into live state.
 
 The normally [merged GL-054 campaign](gl-054-main-integration.md) extends the

@@ -1,5 +1,5 @@
 {
-  "Status": "Core/native/candidate/production Release debugger/Linux full-native sanitizer PASS; Windows retry pending",
+  "Status": "Core/native/candidate/production Release debugger and Windows/Linux full-native sanitizer PASS within documented limits",
   "NativeSource": {
     "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
     "Files": 136,
@@ -366,7 +366,79 @@
     "Failure": "Existing fixed-duration DataStore contention holder expired; no unexpected sanitizer finding; all six debugger cases passed",
     "CorrectedFixtureCommit": "1673225e61b823887e22a1558c5433e0eb257f34",
     "RetryRun": 43468940617,
-    "RetryStatus": "Pending"
+    "RetryStatus": "PASS",
+    "Result": "PASS",
+    "FullQualification": true,
+    "ControlsPassed": true,
+    "UnexpectedReports": [],
+    "PassedGroups": [
+      "standalone-clean",
+      "standalone-uaf",
+      "engine-only",
+      "minimal-reload",
+      "host-uaf",
+      "production-registration",
+      "production-vm-reload",
+      "suite-luau-game",
+      "remote-host-qualification",
+      "suite-regression",
+      "suite-security",
+      "suite-animation",
+      "suite-remote",
+      "suite-characters",
+      "suite-input",
+      "suite-controller",
+      "suite-resources",
+      "suite-filesystem",
+      "suite-http",
+      "suite-httpservice",
+      "suite-callers",
+      "suite-datastore",
+      "suite-presentation",
+      "suite-performance",
+      "suite-core",
+      "suite-debugger",
+      "strict-native-check"
+    ],
+    "ReceiptSHA256": "572d6244bfcdd58ad313c90385d7823037e50ef2039d08fe9fbe3c41885798a7",
+    "NativeSource": {
+      "SHA256": "ad749d8f7db2bf367e07eb35255d08056384797a2b185a98436a731992819b83",
+      "Files": 136,
+      "Newlines": "LF normalized"
+    },
+    "DebuggerCases": [
+      {
+        "Case": "local",
+        "Stops": 8,
+        "Passed": true
+      },
+      {
+        "Case": "disconnect",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "running-disconnect",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "reload",
+        "Stops": 2,
+        "Passed": true
+      },
+      {
+        "Case": "network",
+        "Stops": 1,
+        "Passed": true
+      },
+      {
+        "Case": "no-opt-in",
+        "Stops": 0,
+        "Passed": true
+      }
+    ],
+    "WindowsLSanSupported": false
   },
   "Declarations": {
     "Run": 43448955594,

@@ -1,6 +1,8 @@
 # GL-055 qualification
 
-Status: unmerged implementation; final native/profile qualification in progress.
+Status: qualified within the recorded scopes on `feature/gl-055-native-debugger`;
+unmerged. Core, native, production Debug/Release, nonpublishing packages and
+available Windows/Linux sanitizer profiles pass. Limits below remain explicit.
 The [journal](gl-055-debugger-development.md) preserves attempts, corrections and
 their original identities. The [guide](gl-055-debugger.md) describes the supported
 interface and [ADR-018](adr-018-native-luau-debugger.md) defines its authority and
@@ -47,7 +49,7 @@ gameplay authority, persistence protocol or distribution channel is introduced.
 | [Candidate 43461782730](https://github.com/gmoddev/GodotLuau/actions/runs/43461782730) | PASS all four source-built Debug/Release profiles, Linux core ASan/LSan, both extracted packages/startup and aggregate acceptance; final native implementation |
 | [Production Release debugger 43470730266](https://github.com/gmoddev/GodotLuau/actions/runs/43470730266) | Windows/Linux PASS real five-case protocol and native editor journey using the exact SCons production Release libraries from that candidate |
 | [Sanitizers 43461776259](https://github.com/gmoddev/GodotLuau/actions/runs/43461776259) | Linux ASan/LSan PASS; Windows FAIL on the existing timed DataStore holder. Both platforms pass all six debugger cases; no unexpected sanitizer reports |
-| [Windows sanitizer 43468940617](https://github.com/gmoddev/GodotLuau/actions/runs/43468940617) | Pending explicit-release contention fixture; final native inputs unchanged |
+| [Windows sanitizer 43468940617](https://github.com/gmoddev/GodotLuau/actions/runs/43468940617) | PASS all 27 groups, controls, core/native and six debugger cases with explicit-release contention fixture; no unexpected sanitizer reports; final native inputs unchanged |
 
 Final native 43461738974 now passes Windows/Linux. Full-native 43461776259 passes
 Linux ASan/LSan with all 28 groups and six debugger cases. Windows also passes all
@@ -55,7 +57,11 @@ six debugger cases and reports no unexpected sanitizer finding, but its existing
 DataStore contention fixture loses its fixed-duration lock holder; the overall
 Windows profile fails. The [explicit-release fixture correction](evidence/gl055/barrier-qualification.json)
 passes all 23 ordinary Windows DataStore actors. The Windows-only full-profile
-retry is [43468940617](https://github.com/gmoddev/GodotLuau/actions/runs/43468940617).
+retry [43468940617](https://github.com/gmoddev/GodotLuau/actions/runs/43468940617)
+now passes all 27 groups, including all 23 DataStore actors and six debugger
+cases. Its receipt is separate from the retained failed attempt. Linux has 28
+groups because its admitted leak-detection control is supported; Windows LSan
+remains unsupported.
 
 The existing native suite includes Foundry Expedition persistence restart,
 Relay Siege solo/listen/dedicated, Character/animation/network authority,
@@ -102,8 +108,8 @@ truncation. DockerPC's final native protocol records stack/variables medians
 16.134/37.340 ms and native-property Watch 24.856 ms, including process polling
 and Godot transport. These are measured scopes, not hard latency guarantees or
 large-project benchmarks. Both final native/editor receipts and actual rendered
-state corrections pass; only the corrected Windows full-native sanitizer retry
-remains pending.
+state corrections and all required hosted profiles pass within their recorded
+input scopes.
 
 The separate [large-index observation](evidence/gl055/index-qualification.json)
 uses 256 generated modules / 661,760 bytes. Four sequential main-thread queries
@@ -151,6 +157,9 @@ Limits are explicit rather than simulated compatibility:
   sanitizer scope is separate.
 
 Native remains the default Character controller and Scripted remains opt-in.
-Main, release publication and updater distribution remain unchanged. Integration
-readiness requires the outstanding final native/profile receipts above; this
-campaign does not authorize a merge.
+Main, release publication and updater distribution remain unchanged. The primary
+debugger and the documented bounded navigation/profiling subset are ready for
+review and normal integration within these limits. GL-065 remains an external
+engine-editor issue; large navigation retains its measured synchronous deadline.
+Arbitrary evaluation/function CPU profiling and the other explicitly unsupported
+features are not qualification claims. This campaign does not authorize a merge.
