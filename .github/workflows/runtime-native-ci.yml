@@ -5,6 +5,7 @@ on:
     paths:
       - "src/**"
       - "tests/runtime/**"
+      - "tests/editor/**"
       - "tests/packaging/**"
       - "examples/foundry-expedition/**"
       - "tools/generar_release.py"
@@ -16,6 +17,7 @@ on:
     paths:
       - "src/**"
       - "tests/runtime/**"
+      - "tests/editor/**"
       - "tests/packaging/**"
       - "examples/foundry-expedition/**"
       - "tools/generar_release.py"

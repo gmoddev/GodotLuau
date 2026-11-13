@@ -19,8 +19,8 @@ func Run(Runner,Plugin) -> void:
     Runner.Check(Uses.all(func(Use): return Use.Path=='res://IndexConsumer.luau' and Use.SourceSHA256.length()==64),'Project references retain source identity and locations')
     var Second: Dictionary=Plugin.call('IndexProject','res://IndexModule.luau','Build')
     Runner.Check(Second.get('ParsedFiles',-1)==0 and Second.get('CachedFiles',0)>0 and Second.get('References',[]).size()==3,'Repeated project query reuses unchanged parsed source results')
-    var Script: Script=load('res://IndexConsumer.luau')
-    EditorInterface.edit_script(Script,-1,0,true)
+    var Resource: Script=load('res://IndexConsumer.luau')
+    EditorInterface.edit_script(Resource,-1,0,true)
     for Index in range(5): await Runner.get_tree().process_frame
     var Code=EditorInterface.get_script_editor().get_current_editor().get_base_editor() as CodeEdit
     if Code:

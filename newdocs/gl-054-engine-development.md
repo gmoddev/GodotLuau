@@ -314,3 +314,17 @@ artifacts and are not final plain-root qualification. Control-02 nevertheless
 completed 24 restarts with zero measured native object/resource count delta and
 exactly two live scopes after each cycle; these scoped observations do not imply
 sanitizer leak freedom or a passing overall attempt.
+
+The index-era native runs reached an actual fixture parse error: a GDScript local
+named Script shadowed its type annotation in ProjectIndex.gd. Renamed that local
+without relaxing assertions. A focused Windows run then passes 52 real editor
+workflow checks plus seven fresh-process reopen checks, including the index and
+error-local snapshots, using the retained 7f431a2 adapter (DLL
+`ed93abe52b35f888271f22eec5eb3d0c7e0660b7f71dd9d82ea27734db429d38`).
+Its unchanged editor implementation is the tested leaf; later root/ancestor fixes
+still need their own native run. For 22 files, measured cold/warm/changed-buffer
+queries are 38.688/28.047/27.978 ms, with no truncation and only the changed file
+reparsed. Twenty existing preview cycles take 142.61 ms; native static-memory
+counts increase by 198,958 bytes in that observed editor window, not a leak-free
+claim. The native workflow now includes tests/editor path changes so this fixture
+correction receives hosted checks as well. Preserve prior failed attempts.
