@@ -1,7 +1,7 @@
 {
   "Schema": 1,
   "Campaign": "GL-053 main integration",
-  "Status": "INTEGRATED_AWAITING_FRESH_MAIN_CI",
+  "Status": "INTEGRATED_AND_VERIFIED_WITH_RETAINED_LIMITATIONS",
   "MainBaseline": "16e8597cb342a1bbc888f190680c678ecf9ba055",
   "MergeCommit": "47bbb6d05e8e71c5042dcb22370f7815d3cfda95",
   "FeatureBranch": "feature/gl-053-native-api-expansion",
@@ -62,7 +62,38 @@
     "Reuse": "Exact qualified native products and source profile receipts. Package startup checker repair recorded separately; no runtime or dependency change."
   },
   "PostMergeCI": {
-    "Status": "PENDING"
+    "Status": "PASS",
+    "TestedRevision": "502bcbe495a07ca2419e78761963731a8fb2a54c",
+    "Core": {
+      "Run":43356044244,"Status":"PASS","CasesPerPlatform":87,
+      "WindowsArtifact":14005154653,"LinuxArtifact":14005548326
+    },
+    "Declarations": {
+      "Run":43356044238,"Status":"PASS",
+      "WindowsArtifact":14005673220,"LinuxArtifact":14005214757
+    },
+    "Native": {
+      "Run":43356044217,
+      "Status":"PASS",
+      "Linux": {
+        "Result":"PASS",
+        "NativeActors":141,
+        "GL050ControlledInterleaving":"PASS",
+        "Artifact":14007625077,
+        "ArchiveSHA256":"9f53f78890eaf366b9195360e581c4b0df9b30019314f86dd9e0eaccfc8624b6",
+        "NativeSummarySHA256":"16176a409dbb90f85d2b8c34eb702ea19d1597f9818f0a40723689fc45727fb1"
+      },
+      "Windows": {
+        "Result":"PASS",
+        "NativeActors":141,
+        "GL050ControlledInterleaving":"PASS",
+        "Artifact":14008475160,
+        "ArchiveSHA256":"9f3ad7ff3aabf4bad7b0fd4854f59012313803c666cf040b8075029a8e85be56",
+        "NativeSummarySHA256":"a82f3c404a29d9d757c278f729f9cdc0ca7a6246aa3dbecf7a2dac639e4a0253"
+      }
+    },
+    "SupersededBranchRun":43355305605,
+    "SupersededReason":"Fresh main CI tests identical runtime and fixture inputs; branch job was still running without a failure when cancelled."
   },
   "NativeDefaultScriptedOptIn": true,
   "ReleasesEnabled": false,

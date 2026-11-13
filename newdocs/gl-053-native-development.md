@@ -650,3 +650,28 @@ notes update documentation only. Keep the feature and correction receipts
 unchanged, push the normal merge and notes, then verify fresh main core/native/
 definitions CI. The [integration record](gl-053-main-integration.md) and receipt
 track post-merge results separately. Release/updater admission remains disabled.
+
+Normal merge and notes are pushed at main `502bcbe`, matching the remote ref.
+Fresh main core 43356044244 passes Windows/Linux; declarations 43356044238 and
+native 43356044217 are running. Cancel the still-running branch native job
+43355305605 because main tests identical runtime/fixture inputs. There was no
+failed branch result to discard. Keep all accepted branch/source/package receipts
+and original failures; verify fresh main native/types before closing integration.
+
+Fresh main declarations 43356044238 pass Windows/Linux. Native 43356044217 passes
+Linux at exact main `502bcbe`, with 141 actors and the expected fingerprint.
+Its basic persistence log explicitly passes the controlled race and prototype.
+Retained artifact 14007625077 has archive SHA256
+`9f53f78890eaf366b9195360e581c4b0df9b30019314f86dd9e0eaccfc8624b6`.
+Windows native CI is the only outstanding integration check.
+
+Fresh main native 43356044217 now passes Windows and Linux at `502bcbe`:
+141 required actors each and exact native fingerprint `fda36b81...6b1cb2`.
+Both explicitly pass the controlled GL-050 reply/exit marker and ordinary
+persistence. Windows artifact 14008475160 has archive SHA256
+`9f3ad7ff3aabf4bad7b0fd4854f59012313803c666cf040b8075029a8e85be56`.
+Core 43356044244 and declarations 43356044238 also pass both platforms. All
+required integration gates are established. Close with documentation only,
+verify clean working trees and the remote main ref, and preserve all 30 feature
+commits and both earlier evidence receipts. Native remains default; Scripted
+remains opt-in. Releases and updater distribution remain disabled.

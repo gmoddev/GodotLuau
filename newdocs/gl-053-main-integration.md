@@ -1,6 +1,6 @@
 # GL-053 native expansion main integration
 
-Status: integrated by normal merge; fresh main CI pending.
+Status: **INTEGRATED AND VERIFIED WITH RETAINED LIMITATIONS**.
 
 Merge `47bbb6d05e8e71c5042dcb22370f7815d3cfda95` has parents
 `16e8597cb342a1bbc888f190680c678ecf9ba055` (verified main) and
@@ -68,7 +68,26 @@ controlled receive/exit defect.
 ## Integration and post-merge verification
 
 All pre-merge gates are established and exact-tree/history checks pass.
-Fresh core/native/declarations CI will verify the integrated main revision.
+The normal merge and initial documentation notes are pushed to main at
+`502bcbe495a07ca2419e78761963731a8fb2a54c`, verified against the remote ref.
+Fresh core [43356044244](https://github.com/gmoddev/GodotLuau/actions/runs/43356044244)
+passes Windows/Linux. Declarations
+[43356044238](https://github.com/gmoddev/GodotLuau/actions/runs/43356044238) also
+pass both platforms. Native
+[43356044217](https://github.com/gmoddev/GodotLuau/actions/runs/43356044217) passes
+Windows/Linux with 141 required actors each, the expected native fingerprint and
+the controlled GL-050 marker. Native editor, authoring, fresh-process reopen,
+official-host pathfinding, authority, lifetime, persistence fault/recovery and
+controller checks pass. All three workflows identify that exact main revision.
+Closing integration notes change documentation only; native and fixture inputs
+remain those tested at `502bcbe`. The still-running source-branch native
+run 43355305605 was superseded by fresh main CI with identical runtime/fixture
+inputs; no failed result was hidden or retried.
 The feature/native/sanitizer/candidate receipts remain unchanged. No release
 workflow or updater channel is enabled. Native stays the default Character
 controller; Scripted remains explicit opt-in.
+
+Retained limits remain explicit: no Windows LSan or Linux graphical/device claim,
+no broad Godot API parity/full debugger claim, and no admission of navigation on
+the reduced headless/renderer hosts. Neither earlier failed attempts nor qualified
+archives are relabeled. Main and source-branch receipts retain their own identities.
