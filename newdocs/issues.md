@@ -7,9 +7,9 @@ resolved transitive-module finding; the campaign name does not reopen it. Live
 breakpoints/stepping remain absent from integrated main as recorded in the
 [GL-054 contract](gl-054-native-development.md). The distinct unmerged
 [GL-055 debugger campaign](gl-055-debugger-development.md) implements live
-control/inspection and restricted watches; core passes Windows/Linux and the Linux
-Debug native suite passes. Windows editor/selective reload and the new profiling
-boundary remain in qualification. It does not reopen historical GL-055.
+control/inspection and restricted watches. Windows/Linux core, protocol/editor,
+selective reload and profiling pass within [recorded source scopes](gl-055-debugger-qualification.md);
+final corrected native/profile gates remain pending. It does not reopen historical GL-055.
 
 Initial triage: 2026-10-26. Source baseline:
 `7044a11c1bcc2eac2a91155e829a5821d92ab66e` / v1.16.12.
@@ -145,6 +145,7 @@ four successful workflows and independently checked artifacts.
 | [GL-061](gl-055-debugger-development.md#disconnect-lifecycle-correction) | P2 | Fixed on unmerged GL-055 branch at `71e8bfd`; Linux full-native and Windows protocol checks pass | Initialized Godot debugger flag survives peer disconnect, so later experimental Luau stops enter an unavailable native session |
 | [GL-062](gl-055-debugger-development.md#rendered-editor-evidence-and-actual-state-corrections) | P2 | Corrected on unmerged GL-055 branch; verification pending | Identical editor breakpoint replay resets the already-hit breakpoint's counter |
 | [GL-063](gl-055-debugger-development.md#rendered-editor-evidence-and-actual-state-corrections) | P2 | Corrected on unmerged GL-055 branch; verification pending | Debugger text presents a previous live Watch/profile result across resume or a fresh runtime session |
+| [GL-064](gl-055-debugger-development.md#final-bounded-counter-review) | P2 | Source-corrected on unmerged GL-055 branch at `fd86f83`; ordinary hit regression pending | Maximum exact-hit target repeats after the observation counter saturates at that same value |
 
 ## GL-061: Experimental debugger connection retirement
 

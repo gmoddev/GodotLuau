@@ -1,5 +1,10 @@
 # GodotLuau fork documentation
 
+The unmerged GL-055 debugger has a [user guide](gl-055-debugger.md),
+[qualification record](gl-055-debugger-qualification.md) and
+[development journal](gl-055-debugger-development.md). Results retain their
+source/configuration identities; pending gates are not passing claims.
+
 Public fork: [gmoddev/GodotLuau](https://github.com/gmoddev/GodotLuau).
 Upstream: [Pimpoli/GodotLuau](https://github.com/Pimpoli/GodotLuau).
 

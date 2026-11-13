@@ -511,6 +511,8 @@ the strict native fingerprint check remains. This covers interactive development
 debugging using a Release-built extension under the verified editor host, not
 enabling debugging in an exported release-template host.
 
+## Final bounded-counter review
+
 Final bounded-counter review finds a source-verified edge: the observation
 counter saturated at the maximum admitted exact-hit target (1,000,000), making
 that target match again on every subsequent visit. Saturate one observation
@@ -518,3 +520,10 @@ beyond the largest target instead. This is a two-line policy-preserving fix;
 ordinary exact-hit/replay coverage remains required. No million-visit runtime
 reproduction is claimed. The new source identity requires fresh core/native
 checks; declaration and generated policy inputs remain unchanged.
+
+Cancel the superseded `43457871556` candidate after its environmental Linux
+Release failure, allowing the final-source candidate to start instead of waiting
+for redundant earlier profiles. Its passing core sanitizer/policy jobs and failed
+mirror logs remain retained. Final implementation runs are native 43461738974,
+candidate 43461782730 and full-native sanitizers 43461776259. No test or product
+input is relabeled as a newer identity.

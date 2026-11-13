@@ -2,11 +2,10 @@
 
 The unmerged [GL-055 debugger campaign](gl-055-debugger-development.md) implements
 live Luau execution control through Godot's supported debugger loop under
-[ADR-018](adr-018-native-luau-debugger.md). Core control passes Windows/Linux;
-Linux Debug native control, inspection, watches, disconnect and cached navigation
-pass alongside the existing native suite. Windows protocol passes; its corrected
-editor fixture and selective reload are in qualification. Opt-in bounded profiling
-and weak ownership diagnostics are implemented with qualification pending. It does not change the
+[ADR-018](adr-018-native-luau-debugger.md). Windows/Linux native protocol/editor
+journeys pass within their [recorded source scopes](gl-055-debugger-qualification.md),
+including selective reload, opt-in profiling and weak ownership diagnostics.
+Final corrected native/profile qualification remains pending. This does not change the
 integrated-main qualification claims below or turn error snapshots into live state.
 
 The normally [merged GL-054 campaign](gl-054-main-integration.md) extends the
