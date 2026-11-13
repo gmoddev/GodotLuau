@@ -5,12 +5,17 @@ on:
       NativeRun:
         description: "Native CI run providing an adapter with the identical native source fingerprint"
         type: string
-        required: true
+        required: false
+      MeasurePerformance:
+        description: "Measure baseline/current production-core debugger modes in Release"
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
 jobs:
   Debugger:
+    if: ${{ inputs.NativeRun != '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -78,3 +83,45 @@ jobs:
             ${{ runner.temp }}/debugger/**/*.log
             ${{ runner.temp }}/debugger-editor/**/*.json
             ${{ runner.temp }}/debugger-editor/**/*.log
+  Performance:
+    if: ${{ inputs.MeasurePerformance }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Platform: Windows
+            Runner: windows-2022
+            Generator: Visual Studio 17 2022
+          - Platform: Linux
+            Runner: ubuntu-24.04
+            Generator: Ninja
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build baseline and candidate against identical pinned Luau
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/baseline" b5389f0ff08c50e38bc11d868dbe12729a293535
+          cmake -S tests/runtime -B build/debugger-perf -G "${{ matrix.Generator }}" -DCMAKE_BUILD_TYPE=Release -DGL_BUILD_CORE_TESTS=OFF -DGL_BUILD_GODOT_ADAPTER=OFF -DGL_BUILD_DEBUGGER_BENCHMARKS=ON -DGL_BASELINE_SOURCE_ROOT="$RUNNER_TEMP/baseline"
+          cmake --build build/debugger-perf --config Release --target DebuggerBenchmarkCandidate DebuggerBenchmarkBaseline --parallel 2
+      - name: Measure actual production-core execution modes
+        run: |
+          mkdir -p "$RUNNER_TEMP/debugger-perf"
+          if [[ "$RUNNER_OS" == Windows ]]; then Prefix=build/debugger-perf/Release; Suffix=.exe; else Prefix=build/debugger-perf; Suffix=; fi
+          "$Prefix/DebuggerBenchmarkBaseline$Suffix" > "$RUNNER_TEMP/debugger-perf/baseline.jsonl"
+          "$Prefix/DebuggerBenchmarkCandidate$Suffix" > "$RUNNER_TEMP/debugger-perf/candidate.jsonl"
+          git rev-parse HEAD > "$RUNNER_TEMP/debugger-perf/revision.txt"
+          python tests/runtime/SourceFingerprint.py . > "$RUNNER_TEMP/debugger-perf/source.json"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: debugger-performance-${{ matrix.Platform }}
+          retention-days: 14
+          path: ${{ runner.temp }}/debugger-perf/*

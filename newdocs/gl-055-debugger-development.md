@@ -441,3 +441,25 @@ with no live generation/coroutine/source, rather than the still-stacked Suspende
 state before the native callback returns. These are bounded state corrections;
 new compilation/runtime verification is required. No source identity or previous
 rendered evidence is relabeled as containing them.
+
+## Performance measurement preparation
+
+Add an opt-in production-core benchmark target to the existing runtime CMake
+project. Baseline `b5389f0` and current code share the identical pinned Luau build,
+Release compiler/configuration and 100,000-operation Lua/native-observation
+workload. Retain warmup plus five measured trials for disabled, attached,
+breakpoint, stepping, stack/local inspection and profiling modes, with wall/CPU
+time, complete Execute duration, C++ new counts/bytes and VM peak bytes. The
+baseline supports the common disabled workload; this avoids inventing baseline
+debugger behavior. Core measurements exclude Godot transport/rendering and do not
+stand in for native IPC/graphical latency. The focused workflow offers this
+optional Windows/Linux measurement without running unrelated native rebuilds.
+The benchmark syntax-checks with MSVC; measurements are pending.
+
+Candidate 43450118761 passes all four production profiles and extracted packages
+at `37bba2f`, including Linux core ASan/LSan, 87 core/eight debugger cases and all
+141 native actors per profile. That receipt predates the small presentation/hit
+corrections; fresh candidate 43457871556 is running for those changed inputs.
+Sanitizer 43455004645 is now running its Linux production/detection suite; the
+newer 43457876059 separately covers the corrected product. Native/controller,
+storage, network, dependency and publication contracts remain unchanged.
