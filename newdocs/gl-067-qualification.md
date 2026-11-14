@@ -1,13 +1,11 @@
 # GL-067 platform qualification
 
-Status: final native/core/editor/index phases pass at `b11347b`, including the
-installed declaration-file correction. Final production profiles/packages remain
-running; earlier package receipts retain their original identities.
-The preceding `533e108` checkpoint also passes
-production packages/export within the scopes below; its binaries retain their
-own identity.
-Branch `feature/gl-067-development-platform`
-remains unmerged. The [journal](gl-067-development.md) preserves failed attempts
+Status: the implemented multi-phase checkpoint is qualified at `b11347b`,
+including both reproduced editor corrections, final production profiles/packages
+and actual SCons Release authoring. Earlier game/render/export receipts retain
+their original identities and unchanged implementation scopes.
+Branch `feature/gl-067-development-platform` remains unmerged; the wider
+expansion remains open under the limits below. The [journal](gl-067-development.md) preserves failed attempts
 and corrections; the [guide](gl-067-editor-api.md) defines supported behavior.
 This is substantial multi-subsystem expansion, not complete Godot API parity.
 
@@ -49,7 +47,8 @@ and the established GL-018/GL-029 patches. No dependency or host change is made.
 | [Final core 43611375744](https://github.com/gmoddev/GodotLuau/actions/runs/43611375744) | Windows/Linux pass all 87 original and eight debugger/profiler scenarios at `b11347b` |
 | [Final index 43611375891](https://github.com/gmoddev/GodotLuau/actions/runs/43611375891) | Windows/Linux Release and Linux ASan/LSan pass both reproduced index corrections and the established semantic/lifetime/scale checks |
 | [Final native 43611375892](https://github.com/gmoddev/GodotLuau/actions/runs/43611375892) | Windows/Linux pass 141 actors each, seven debugger modes, actual 73-check authoring/reload/recovery workflow with shipped declarations and fresh scene reopen |
-| [Final candidate 43611376440](https://github.com/gmoddev/GodotLuau/actions/runs/43611376440) | Production source profiles/packages are running |
+| [Final candidate 43611376440](https://github.com/gmoddev/GodotLuau/actions/runs/43611376440) | All four SCons source profiles, Linux core sanitizers, both extracted packages/companion startup and aggregate nonpublishing acceptance pass |
+| [Final production Release 43617455444](https://github.com/gmoddev/GodotLuau/actions/runs/43617455444) | Both actual SCons Release libraries pass seven protocol modes, 36 debugger-editor checks, 73 authoring/semantic-index/reload/recovery checks and saved-scene reopen, with shipped declarations present |
 
 The [compact hosted record](evidence/gl067/ci-qualified.json) retains source,
 product and summary identities. [Rendered editor](evidence/gl067/graphical-debugger.json),
@@ -67,6 +66,13 @@ and [actual native editor](evidence/gl067/definition-files-native.json) receipts
 with the [shipped-file reproduction](evidence/gl067/definition-files-baseline.json)
 kept separately. Definition-only files are excluded from module discovery and
 open-buffer capture; native globals use the embedded definition authority.
+The [final production receipt](evidence/gl067/final-production-qualified.json)
+retains the accepted source tree, pins, native fingerprint, archive/product and
+summary hashes, extracted companion startup and actual Release authoring results.
+Windows/Linux archives hash to `1cca1f0c62b3335429e7232d6e7114212097add17b6016bb266be8725817f7b6`
+and `d825128557e5ddbb2a33d2608147bb1f456ef79fd7ea9ec988346dddc63e2f62`.
+The optional hosted performance job was intentionally off; the paired retained
+benchmark is the performance evidence, not a passing claim for a skipped job.
 
 ## Implemented and measured behavior
 
@@ -116,10 +122,11 @@ are not substituted for assertion or application correctness.
 
 ## Limits and readiness
 
-Qualified phases are available for review on the feature branch. The final
-editor corrections pass current core/index/native CI; fresh production source/
-package qualification remains running. Preceding package/export receipts retain
-their original identity.
+The implemented phases are ready for integration review within these limits.
+Core, native, index, declarations, appropriate sanitizer scopes, production
+source/package and actual Release authoring gates pass. Preceding rendered/game/
+export receipts retain their original identity and unchanged behavior scopes.
+No unverified runtime or distribution channel is inferred from this checkpoint.
 Main is unchanged, Native remains the
 default controller, Scripted stays opt-in, and releases/updater stay disabled.
 

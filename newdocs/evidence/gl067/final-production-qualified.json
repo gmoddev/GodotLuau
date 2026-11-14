@@ -1,0 +1,214 @@
+{
+  "Schema": 1,
+  "CandidateRun": 43611376440,
+  "CandidateResult": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+  "AcceptedSummarySHA256": "e569979667a94e28d84f071f95c7157297135cd55e37db4b6ee501d498e74ae5",
+  "Source": {
+    "Revision": "b11347b21f1bae19c98be78014a2aa68a090ce3d",
+    "Tree": "f9a8891d3bf807ac9880e1c1feb2bab9b9d7c0dd",
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    },
+    "NativeSource": {
+      "SHA256": "320853995024f3809d849d5fda742f41f84d4dfef060a8efbc53d3577fe68124",
+      "Files": 139,
+      "Newlines": "LF normalized"
+    }
+  },
+  "Jobs": {
+    "Policy": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Profiles": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Sanitizer": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Packages": {
+      "result": "success",
+      "outputs": {}
+    }
+  },
+  "Packages": [
+    {
+      "Platform": "Windows",
+      "Result": "PASS",
+      "Archive": {
+        "File": "GodotLuau-Windows.zip",
+        "SHA256": "1cca1f0c62b3335429e7232d6e7114212097add17b6016bb266be8725817f7b6",
+        "Bytes": 11704334
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+          "ExtensionSHA256": "842dea5619b6ea911a7b2b356d713363803f09da6c6dfd698236308d57a7ff91",
+          "CompanionSHA256": "582b7907b5bf6c6e10eb5292e9329d3347d8ce59c076a5a08292aab2bafdfaa8",
+          "Logs": {
+            "stdout": "2cebfb8b46b23ecce3d76e972e1812827d13d919c046ea89d683be71f90a6115",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+          "ExtensionSHA256": "8b581dd1c79da745a7271d1eb81cf93b39d00fca79df5c491fa577bb246cf1ed",
+          "CompanionSHA256": "582b7907b5bf6c6e10eb5292e9329d3347d8ce59c076a5a08292aab2bafdfaa8",
+          "Logs": {
+            "stdout": "ddc19c64088f327238eb43a87d1a9d64b378ea83dcd34fecc4fe969963c58187",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    },
+    {
+      "Platform": "Linux",
+      "Result": "PASS",
+      "Archive": {
+        "File": "GodotLuau-Linux.zip",
+        "SHA256": "d825128557e5ddbb2a33d2608147bb1f456ef79fd7ea9ec988346dddc63e2f62",
+        "Bytes": 16286753
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+          "ExtensionSHA256": "d67c7fae557ace63daf93503c0babe667d9d3be0ff9a0021766d2f338e150b08",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "c5ca2f6955a14a74da9a9beeb9142873b066472e67dade36de672add6bf40ea1",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+          "ExtensionSHA256": "ad5555a73583cde6deff4523ababb6b7a8bafb834d30cd0baf1f3abf5a8488a2",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "436f6b2b651602612f1aa9bb83eb24fa505c9d29ed8d734882d260e42a77da2c",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    }
+  ],
+  "ReleaseQualification": {
+    "Run": 43617455444,
+    "Platforms": {
+      "Linux": {
+        "authoring-editor": {
+          "Passed": true,
+          "Checks": 73,
+          "AllChecksPassed": true,
+          "ExtensionSHA256": "ad5555a73583cde6deff4523ababb6b7a8bafb834d30cd0baf1f3abf5a8488a2",
+          "SummarySHA256": "7bf292fc93412f59dfc2d42df32e33ce0a84c6ff26fe50c875482bce50b0b7c0",
+          "ReopenPassed": true,
+          "ProjectIndex": {
+            "ChangedMicroseconds": 2745,
+            "ColdMicroseconds": 72035,
+            "Files": 25,
+            "NavigationMicroseconds": 2197,
+            "Truncated": false,
+            "WarmMicroseconds": 2150
+          }
+        },
+        "Protocol": {
+          "Passed": true,
+          "NativeSource": {
+            "SHA256": "320853995024f3809d849d5fda742f41f84d4dfef060a8efbc53d3577fe68124",
+            "Files": 139,
+            "Newlines": "LF normalized"
+          },
+          "ExtensionSHA256": "ad5555a73583cde6deff4523ababb6b7a8bafb834d30cd0baf1f3abf5a8488a2",
+          "Stops": [
+            8,
+            1,
+            1,
+            2,
+            1,
+            3,
+            2
+          ],
+          "SummarySHA256": "30a2377fefc8b61374814124d64f77d8bf18caa281ee657e2a52b73ffa401c43"
+        },
+        "debugger-editor": {
+          "Passed": true,
+          "Checks": 36,
+          "AllChecksPassed": true,
+          "ExtensionSHA256": "ad5555a73583cde6deff4523ababb6b7a8bafb834d30cd0baf1f3abf5a8488a2",
+          "SummarySHA256": "2a67bc37aa738baa37129c8620347e08efc32df6add21f4049f86afefa9ac8d7"
+        }
+      },
+      "Windows": {
+        "authoring-editor": {
+          "Passed": true,
+          "Checks": 73,
+          "AllChecksPassed": true,
+          "ExtensionSHA256": "8b581dd1c79da745a7271d1eb81cf93b39d00fca79df5c491fa577bb246cf1ed",
+          "SummarySHA256": "afbfd3a220cbe1d67ecbf3b8a3fdf96b25cba3c566c0d14b87094b60f5810a01",
+          "ReopenPassed": true,
+          "ProjectIndex": {
+            "ChangedMicroseconds": 6627,
+            "ColdMicroseconds": 72672,
+            "Files": 25,
+            "NavigationMicroseconds": 5730,
+            "Truncated": false,
+            "WarmMicroseconds": 7233
+          }
+        },
+        "Protocol": {
+          "Passed": true,
+          "NativeSource": {
+            "SHA256": "320853995024f3809d849d5fda742f41f84d4dfef060a8efbc53d3577fe68124",
+            "Files": 139,
+            "Newlines": "LF normalized"
+          },
+          "ExtensionSHA256": "8b581dd1c79da745a7271d1eb81cf93b39d00fca79df5c491fa577bb246cf1ed",
+          "Stops": [
+            8,
+            1,
+            1,
+            2,
+            1,
+            3,
+            2
+          ],
+          "SummarySHA256": "bb525f03914a535296a14183babf7d7bbd59120610e11f8e3456d58f43f571ad"
+        },
+        "debugger-editor": {
+          "Passed": true,
+          "Checks": 36,
+          "AllChecksPassed": true,
+          "ExtensionSHA256": "8b581dd1c79da745a7271d1eb81cf93b39d00fca79df5c491fa577bb246cf1ed",
+          "SummarySHA256": "6e0372e925b996bd05ed35bfbbff581db97578480e0644395f7cd44df74b4ee6"
+        }
+      }
+    }
+  },
+  "Artifacts": {
+    "Accepted": "sha256:353f390497d74b5228f2266bd412452c93475c3e8fe86e997eef056c48712cef",
+    "CandidateWindows": "sha256:33ddca6384d9530f06a0f5ee90c4ca3ed0b9e3b289bc1cdcde4a63af192c5baa",
+    "CandidateLinux": "sha256:4f38dc77b9db1af8964eef40dfaa4acac511a012a21feabc76a6c83bb7cd4bb1",
+    "ReleaseWindows": "sha256:28f1ae880df7a53e54c36ce65d01953b939506391bbe0043b916ed90ff3cea5c",
+    "ReleaseLinux": "sha256:31470638aa62565e94f387dbd610e555c3f458b5dfb52c8f4ea09325205c2fc1"
+  },
+  "Scope": "Final native implementation b11347b: four SCons profiles, both extracted packages/companion starts and source-matched production Release debugger plus authoring/semantic index/reload/reopen. Performance job intentionally off; paired retained measurements remain separate. No publication/updater authorization."
+}

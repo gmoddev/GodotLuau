@@ -482,3 +482,33 @@ shipped declarations. [Both corrected native products](evidence/gl067/definition
 retain their source and summary identities. No additional runtime correction was
 needed. Production profile/package and actual SCons Release authoring remain
 the only pending gates at this entry.
+
+## Final qualified checkpoint
+
+All remaining gates now pass at native implementation `b11347b`, tree
+`f9a8891d3bf807ac9880e1c1feb2bab9b9d7c0dd`, fingerprint `320853995024f3809d849d5fda742f41f84d4dfef060a8efbc53d3577fe68124`.
+[`43611376440`](https://github.com/gmoddev/GodotLuau/actions/runs/43611376440)
+passes all four source-built SCons profiles, Linux core sanitizers, both extracted
+packages/Debug/Release companion starts and aggregate nonpublishing acceptance.
+Windows/Linux archive SHA256 values are
+`1cca1f0c62b3335429e7232d6e7114212097add17b6016bb266be8725817f7b6` /
+`d825128557e5ddbb2a33d2608147bb1f456ef79fd7ea9ec988346dddc63e2f62`.
+
+[`43617455444`](https://github.com/gmoddev/GodotLuau/actions/runs/43617455444)
+uses those exact production Release libraries on both platforms. Seven debugger
+modes, 36 debugger-editor checks, 73 authoring/semantic-index/reload/recovery
+checks and saved-scene reopen all pass with actual shipped declarations present.
+The [final producer/consumer receipt](evidence/gl067/final-production-qualified.json)
+retains identities and artifact digests. Its small 25-file production-editor
+queries measure Windows/Linux cold 72.672/72.035 ms, warm 7.233/2.150 ms,
+changed-buffer 6.627/2.745 ms and navigation 5.730/2.197 ms, without truncation.
+Those worker intervals are separate from the retained large-project main-thread
+measurements. The optional performance job is intentionally skipped, reusing the
+paired measured benchmark rather than inventing a pass for an unrun job.
+
+No further product correction was needed. The
+[qualification record](gl-067-qualification.md) defines readiness of the delivered
+phases and remaining larger campaign work. Historical pending entries above
+remain chronological records, superseded by these completed results. Main stays
+unchanged, Native remains default, Scripted stays opt-in, and release publication/
+runtime updater admission remain disabled. The branch is left unmerged.

@@ -6,8 +6,9 @@ Its [qualification record](gl-067-qualification.md) separates completed phase
 evidence, pending production acceptance and remaining expansion limitations.
 Its [editor/API guide](gl-067-editor-api.md) describes the asynchronous queries,
 conditional breakpoints, manual reattachment, reload and native styling limits.
-[ADR-019](adr-019-incremental-editor-index.md) defines its worker boundary;
-planned acceptance is distinct from completed qualification.
+[ADR-019](adr-019-incremental-editor-index.md) defines its worker boundary.
+The delivered checkpoint passes final production and actual Release-editor gates;
+broader engine expansion and unsupported profiles remain explicitly open.
 
 The integrated GL-055 debugger has a [user guide](gl-055-debugger.md),
 [qualification record](gl-055-debugger-qualification.md) and
