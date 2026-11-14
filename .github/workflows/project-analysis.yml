@@ -1,0 +1,46 @@
+name: Incremental Luau project analysis
+on:
+  push:
+    paths: ['src/core/gl_project_indexer.cpp', 'src/editor/gl_project_indexer.h', 'tests/runtime/ProjectIndexTests.cpp', 'tests/runtime/CMakeLists.txt', '.github/workflows/project-analysis.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  Index:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - Runner: windows-2022
+            Generator: Visual Studio 17 2022
+            Platform: Windows
+          - Runner: ubuntu-24.04
+            Generator: Ninja
+            Platform: Linux
+    runs-on: ${{ matrix.Runner }}
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Configure pinned frontend and production index
+        run: cmake -S tests/runtime -B build/index -G "${{ matrix.Generator }}" -DCMAKE_BUILD_TYPE=Release -DGL_BUILD_PROJECT_INDEX_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=OFF
+      - name: Build production worker tests
+        run: cmake --build build/index --config Release --target ProjectIndexTests --parallel 2
+      - name: Qualify incremental semantics and large-project behavior
+        run: ctest --test-dir build/index -C Release -R '^ProjectIndex$' --output-on-failure --output-junit index-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: project-analysis-${{ matrix.Platform }}
+          path: |
+            build/index/index-results.xml
+            build/index/Testing/Temporary/LastTest.log
+          if-no-files-found: error

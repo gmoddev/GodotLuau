@@ -85,3 +85,15 @@ debugger waits, plus domain allocator live bytes at interval exit and lifetime
 peak bytes. These observations are explicitly domain-wide, not per-function or
 per-owner allocations. Existing record caps, opt-in behavior and epoch handling
 remain. Function sampling and native-only dispatch timing are not implemented.
+
+The `86a8600` Windows build and both CTests passed (87 existing core scenarios,
+eight debugger/profiler scenarios and index checks). Its actual editor attempt
+`editor-03` hit a fixture parse error from a newly shadowed `File` variable and
+timed out; stderr retained. The diagnostic fixture now uses distinct names.
+No product crash is inferred from this fixture failure.
+
+Interactive completion/definition/rename now reuse the discovered source
+snapshot, updating supplied buffers first; explicit `Refresh` requests rescan
+disk. Full symbol/reference/diagnostic queries still refresh saved files. The
+snapshot contract is visible rather than implying disk freshness without a
+scan. Cross-platform Release worker checks are in `project-analysis.yml`.

@@ -168,6 +168,7 @@ struct GLProjectIndexer::State {
     Sources Resolver;Luau::NullConfigResolver Config;
     std::unique_ptr<Luau::Frontend> Frontend;
     std::string Root,Definitions;
+    bool Scanned=false,DiscoveryIncomplete=false;
     State(){Worker=std::thread([this]{Run();});}
     bool Cancelled(uint64_t Generation)const{return Latest.load()!=Generation;}
     void ResetFrontend(const Request& Value) {
@@ -198,11 +199,13 @@ struct GLProjectIndexer::State {
         }
     }
     void Analyze(const Request& Value,Result& Report) {
-        if(Root!=Value.Root || Definitions!=Value.Definitions)Resolver.Files.clear();
+        if(Root!=Value.Root || Definitions!=Value.Definitions){Resolver.Files.clear();Scanned=false;}
         if(!Frontend || Root!=Value.Root || Definitions!=Value.Definitions)ResetFrontend(Value);
         auto Generation=Report.Generation;
         std::error_code Error;auto Base=std::filesystem::absolute(std::filesystem::u8path(Value.Root),Error);
         if(Error || Base.empty()){Report.Error="Invalid project root";return;}
+        bool Interactive=Scanned && !Value.Refresh && (Value.Query=="Complete" || Value.Query=="Definition" || Value.Query=="Rename");
+        if(Interactive)Report.Incomplete=DiscoveryIncomplete;
         auto Ancestor=Base.root_path();for(const auto& Part:Base.relative_path()){Ancestor/=Part;if(Linked(Ancestor)){Report.Error="Linked project root refused";return;}}
         std::set<std::string> Discovered;std::vector<std::string> Order;
         auto Add=[&](const std::string& Name) {
@@ -212,7 +215,9 @@ struct GLProjectIndexer::State {
         };
         if(!Value.Active.empty())Add(Value.Active);
         for(const auto& Buffer:Value.Buffers)Add(Buffer.first);
-        std::filesystem::recursive_directory_iterator It(Base,std::filesystem::directory_options::none,Error),End;
+        if(Interactive)for(const auto& Pair:Resolver.Files)Add(Pair.first);
+        std::filesystem::recursive_directory_iterator It,End;
+        if(!Interactive)It=std::filesystem::recursive_directory_iterator(Base,std::filesystem::directory_options::none,Error);
         size_t Visited=0;
         while(!Error && It!=End && !Cancelled(Generation)) {
             auto Path=It->path();bool Skip=It.depth()>16 || Path.filename().u8string().front()=='.' || Linked(Path);
@@ -224,7 +229,7 @@ struct GLProjectIndexer::State {
         if(Cancelled(Generation))return;
         if(Error)Report.Incomplete=true;
         // Don't evict entries merely because discovery was bounded or interrupted.
-        if(!Report.Incomplete)for(auto File=Resolver.Files.begin();File!=Resolver.Files.end();) {
+        if(!Interactive && !Report.Incomplete)for(auto File=Resolver.Files.begin();File!=Resolver.Files.end();) {
             if(!Discovered.count(File->first)){Frontend->markDirty(File->first);File=Resolver.Files.erase(File);}else ++File;
         }
         std::vector<std::string> Changed;
@@ -234,6 +239,7 @@ struct GLProjectIndexer::State {
             std::string Source;auto Buffer=Value.Buffers.find(Name);
             if(Buffer!=Value.Buffers.end())Source=Buffer->second;
             else {
+                if(Interactive) {auto Found=Resolver.Files.find(Name);if(Found!=Resolver.Files.end()){++Report.Files;++Report.Cached;Report.Bytes+=Found->second.Source.size();}continue;}
                 auto Path=Base/std::filesystem::u8path(Name.substr(6));
                 bool Unsafe=false;auto PartPath=Base;for(const auto& Part:std::filesystem::u8path(Name.substr(6))){PartPath/=Part;if(Linked(PartPath)){Unsafe=true;break;}}
                 if(Unsafe){Report.Incomplete=true;Frontend->markDirty(Name);Resolver.Files.erase(Name);continue;}
@@ -251,6 +257,7 @@ struct GLProjectIndexer::State {
             RetainedBytes=RetainedBytes-Previous+Source.size();
             auto& Doc=Resolver.Files[Name];Doc.Source=std::move(Source);Doc.Revision=Generation;Parse(Doc);Changed.push_back(Name);++Report.Parsed;
         }
+        if(!Interactive){Scanned=true;DiscoveryIncomplete=Report.Incomplete;}
         // markDirty uses the pinned frontend's reverse dependency graph.
         std::set<std::string> Invalidated;
         for(const auto& Name:Changed){std::vector<std::string> Dirty;Frontend->markDirty(Name,&Dirty);Invalidated.insert(Dirty.begin(),Dirty.end());}

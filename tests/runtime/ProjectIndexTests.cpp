@@ -51,8 +51,12 @@ int main(int Count,char** Arguments)try {
     Request.Offset=256;auto Page=Wait(Index,Index.Submit(Request));Check(Page->Entries.size()==256 && Page->Parsed==0,"Next page reuses complete document index");
     Request.Offset=0;auto Obsolete=Index.Submit(Request);Request.Query="Search";Request.Member="Economy";auto Current=Index.Submit(Request);
     auto Latest=Wait(Index,Current);Check(!Index.Poll(Obsolete) && Latest->Generation==Current,"Obsolete request cannot publish over current generation");
+    Request.Query="Complete";Request.Active="res://Consumer.luau";Request.Line=2;Request.Column=12;Request.Member="Bu";
+    Request.Buffers[Request.Active]="local M=require('res://Module.luau')\nreturn M.Build(1)\n";
+    auto Interactive=Wait(Index,Index.Submit(Request));
+    Check(!Interactive->Entries.empty() && Interactive->Entries[0].Name=="Build" && Interactive->Parsed==1,"Active-buffer completion reuses project snapshot and prioritizes one changed document");
     Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
     Index.Cancel();
-    std::cout<<"[Editor:Index] MEASURE SubmitMicroseconds="<<SubmitUs<<" ColdWorkerMicroseconds="<<Cold->Microseconds<<" WarmWorkerMicroseconds="<<Cached->Microseconds<<" Files="<<Cold->Files<<" Bytes="<<Cold->Bytes<<'\n';
+    std::cout<<"[Editor:Index] MEASURE SubmitMicroseconds="<<SubmitUs<<" ColdWorkerMicroseconds="<<Cold->Microseconds<<" WarmWorkerMicroseconds="<<Cached->Microseconds<<" CompletionWorkerMicroseconds="<<Interactive->Microseconds<<" Files="<<Cold->Files<<" Bytes="<<Cold->Bytes<<'\n';
     return 0;
 }catch(const std::exception& Error){std::cerr<<"[Editor:Index] FAIL "<<Error.what()<<'\n';return 1;}

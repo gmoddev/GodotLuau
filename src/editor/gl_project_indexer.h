@@ -19,6 +19,7 @@ public:
         std::map<std::string,std::string> Buffers;
         int Line=1, Column=1;
         size_t Offset=0;
+        bool Refresh=false;
     };
     struct Result {
         uint64_t Generation=0, Microseconds=0;
