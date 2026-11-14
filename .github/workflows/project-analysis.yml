@@ -14,9 +14,15 @@ jobs:
           - Runner: windows-2022
             Generator: Visual Studio 17 2022
             Platform: Windows
+            Sanitize: false
           - Runner: ubuntu-24.04
             Generator: Ninja
             Platform: Linux
+            Sanitize: false
+          - Runner: ubuntu-24.04
+            Generator: Ninja
+            Platform: Linux-ASan
+            Sanitize: true
     runs-on: ${{ matrix.Runner }}
     timeout-minutes: 25
     defaults:
@@ -31,10 +37,24 @@ jobs:
         with:
           python-version: '3.12'
       - name: Configure pinned frontend and production index
+        if: ${{ !matrix.Sanitize }}
         run: cmake -S tests/runtime -B build/index -G "${{ matrix.Generator }}" -DCMAKE_BUILD_TYPE=Release -DGL_BUILD_PROJECT_INDEX_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=OFF
+      - name: Prepare existing Linux sanitizer toolchain
+        if: matrix.Sanitize
+        run: bash tools/PrepareLinuxCompiler.sh --sanitizers
+      - name: Configure instrumented production index and pinned frontend
+        if: matrix.Sanitize
+        run: >-
+          cmake -S tests/runtime -B build/index -G Ninja
+          -DCMAKE_BUILD_TYPE=Release -DGL_BUILD_PROJECT_INDEX_TESTS=ON -DGL_BUILD_GODOT_ADAPTER=OFF
+          -DCMAKE_CXX_COMPILER=clang++-19
+          '-DCMAKE_CXX_FLAGS=-fsanitize=address -fno-omit-frame-pointer -g'
+          -DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address
       - name: Build production worker tests
         run: cmake --build build/index --config Release --target ProjectIndexTests --parallel 2
       - name: Qualify incremental semantics and large-project behavior
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
         run: ctest --test-dir build/index -C Release -R '^ProjectIndex$' --output-on-failure --output-junit index-results.xml
       - uses: actions/upload-artifact@v4
         if: always()

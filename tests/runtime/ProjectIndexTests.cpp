@@ -88,7 +88,7 @@ int main(int Count,char** Arguments)try {
     Request.Buffers[Request.Active]="type function Forever(T) while true do end end\ntype Result=Forever<number>\nreturn 1\n";
     auto TypeFunction=Wait(Index,Index.Submit(Request));bool Refused=false;
     for(const auto& Item:TypeFunction->Diagnostics)Refused|=Item.Kind=="UnsupportedTypeFunction" && Item.Path==Request.Active;
-    Check(TypeFunction->Incomplete && Refused,"Analysis refuses user type-function execution without starting a compiler VM");
+    Check(TypeFunction->Incomplete && Refused,"Analysis refuses user type-function execution with an explicit limitation");
     Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
     Index.Cancel();
     uint64_t PeakProcessBytes=0;
