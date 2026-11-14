@@ -14,6 +14,7 @@
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/script_editor.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
+#include <godot_cpp/classes/h_flow_container.hpp>
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/sub_viewport.hpp>
@@ -71,7 +72,7 @@ void GLNativeEditorPlugin::ShowStatus(const String& Text) {
 void GLNativeEditorPlugin::SetupAuthoring() {
     auto Panel=memnew(VBoxContainer); PreviewPanel=Panel->get_instance_id();
     Panel->set_custom_minimum_size(Vector2(600,260));
-    auto Buttons=memnew(HBoxContainer); Panel->add_child(Buttons);
+    auto Buttons=memnew(HFlowContainer); Panel->add_child(Buttons);
     auto Profiles=memnew(OptionButton);TemplatePicker=Profiles->get_instance_id();
     for(const char* Name:{"3D","2D","UI","Empty"})Profiles->add_item(Name);
     Profiles->set_tooltip_text("Template for a new Luau scene; existing projects are preserved");Buttons->add_child(Profiles);

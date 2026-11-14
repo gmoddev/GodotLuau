@@ -46,3 +46,10 @@ controllers, network protocols, native authority, releases or updater admission.
 Luau analysis adds no dependency revision: use the already pinned Analysis and
 Config components. Memory/time limits and actual behavior require
 focused qualification before declaring this phase complete.
+
+User-defined type functions are excluded from semantic admission. Source review
+finds that pinned Luau executes them in a compiler VM whose allocator directly
+uses C++ new/delete, outside the editor source bounds. The pinned lexer detects
+their declarations even in incomplete source; syntax navigation marks the
+limitation explicitly. No engine/dependency patch or alternate VM is introduced.
+The worker does not evaluate project Luau, including type functions.

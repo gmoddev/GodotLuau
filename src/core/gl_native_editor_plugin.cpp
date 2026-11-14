@@ -170,6 +170,8 @@ Dictionary GLNativeEditorPlugin::QueryProject(const Dictionary& Options) {
             Ref<Script> Script=Scripts[Index];
             auto Source=Script.is_valid()?Object::cast_to<LuauScript>(Script.ptr()):nullptr;
             if(Source) {
+                auto Path=Source->get_path();
+                if(!Path.begins_with("res://") || Path.contains("::") || (Path.get_extension()!="luau" && Path.get_extension()!="lua"))continue;
                 if(Source->_get_source_code().length()>256*1024)continue;
                 auto Buffer=Text(Source->_get_source_code());Bytes+=Buffer.size();
                 if(Buffer.size()<=256*1024 && Bytes<=8*1024*1024)Request.Buffers[Text(Source->get_path())]=std::move(Buffer);
@@ -178,8 +180,11 @@ Dictionary GLNativeEditorPlugin::QueryProject(const Dictionary& Options) {
         Ref<Script> Current=Editor->get_current_script();auto Tab=Editor->get_current_editor();
         auto Code=Tab?Object::cast_to<CodeEdit>(Tab->get_base_editor()):nullptr;
         if(Current.is_valid() && Current->is_class("LuauScript") && Code) {
-            Request.Active=Text(Current->get_path());String Source=Code->get_text();
-            if(Source.length()<=256*1024){auto Buffer=Text(Source);if(Buffer.size()<=256*1024)Request.Buffers[Request.Active]=std::move(Buffer);}
+            auto Path=Current->get_path();
+            if(Path.begins_with("res://") && !Path.contains("::") && (Path.get_extension()=="luau" || Path.get_extension()=="lua")) {
+                Request.Active=Text(Path);String Source=Code->get_text();
+                if(Source.length()<=256*1024){auto Buffer=Text(Source);if(Buffer.size()<=256*1024)Request.Buffers[Request.Active]=std::move(Buffer);}
+            }
         }
     }
     if(!ProjectIndex)ProjectIndex=std::make_unique<GLProjectIndexer>();

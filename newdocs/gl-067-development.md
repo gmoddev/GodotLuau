@@ -190,3 +190,22 @@ locations for static scalar members. Dynamic table/metatable cases remain
 unresolved or explicitly labelled candidates. Type display uses Luau's bounded
 stringifier options. Source/runtime/declaration identity and qualification remain
 separate from these implementation notes.
+
+## Final admission/bounds review
+
+Dependency pagination now caps total returned edges at 256, including its copied
+graph projection, rather than allowing 256 nodes each to return 128 edges.
+Static imports account for compound and named-function reassignment. Diagnostics
+deduplicate repeated dependency errors. Embedded/unsaved built-in Script resources
+without a project module path are skipped by buffer collection. Semantic locations
+only target indexed project modules and carry their source revision. The native
+authoring toolbar wraps controls instead of stretching one horizontal row.
+
+Pinned Luau source (`TypeFunctionRuntime.cpp` allocator,
+`UserDefinedTypeFunction.cpp` execution) shows user type functions execute in a
+compiler VM. Cancellation/deadlines are installed, but its new/delete allocator
+has no quota. The index now rejects those declarations before semantic source
+admission using the pinned lexer (also for incomplete source or a truncated AST
+walk). It reports this unsupported profile explicitly and never evaluates that
+project code. No OOM, crash or exploit was reproduced or claimed. This focused
+source-backed exclusion preserves the worker's no-project-execution contract.

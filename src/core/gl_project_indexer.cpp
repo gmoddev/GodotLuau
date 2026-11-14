@@ -2,6 +2,7 @@
 #include "gl_native_declarations.gen.h"
 #include "Luau/Ast.h"
 #include "Luau/Parser.h"
+#include "Luau/Lexer.h"
 #include "Luau/Frontend.h"
 #include "Luau/Cancellation.h"
 #include "Luau/ConfigResolver.h"
@@ -72,14 +73,22 @@ std::string Import(const Luau::AstExpr* Expr) {
     if(!Global || std::string(Global->name.value)!="require" || Call->args.size!=1)return {};
     auto Name=Literal(Call->args.data[0]);return ModulePath(Name)?Name:std::string();
 }
-struct Document { std::string Source;std::vector<Entry> Entries;std::vector<std::string> Dependencies;uint64_t Revision=0;bool Incomplete=false; };
+struct Document { std::string Source;std::vector<Entry> Entries;std::vector<std::string> Dependencies;uint64_t Revision=0;bool Incomplete=false,TypeFunctions=false; };
 struct Writes:Luau::AstVisitor {
     std::set<const Luau::AstLocal*> Assigned;size_t Nodes=0;
+    bool TypeFunctions=false;
     bool visit(Luau::AstNode*) override{return ++Nodes<100000;}
     bool visit(Luau::AstStatAssign* Node) override {
         for(auto Expr:Node->vars)if(auto Local=Expr->as<Luau::AstExprLocal>())Assigned.insert(Local->local);
         return ++Nodes<100000;
     }
+    bool visit(Luau::AstStatCompoundAssign* Node) override {
+        if(auto Local=Node->var->as<Luau::AstExprLocal>())Assigned.insert(Local->local);return ++Nodes<100000;
+    }
+    bool visit(Luau::AstStatFunction* Node) override {
+        if(auto Local=Node->name->as<Luau::AstExprLocal>())Assigned.insert(Local->local);return ++Nodes<100000;
+    }
+    bool visit(Luau::AstStatTypeFunction*) override {TypeFunctions=true;return false;}
 };
 struct Symbols:Luau::AstVisitor {
     Document& Doc;const Writes& Mutations;
@@ -123,10 +132,13 @@ struct Symbols:Luau::AstVisitor {
         return Next();
     }
     bool visit(Luau::AstStatTypeAlias* Node) override {Add(Node->name.value,Node->exported?"ExportedType":"Type",Node->nameLocation);return Next();}
+    bool visit(Luau::AstStatTypeFunction* Node) override {Add(Node->name.value,"UnsupportedTypeFunction",Node->nameLocation);return false;}
     bool visit(Luau::AstExprCall* Node) override {
         auto Path=Import(Node);if(!Path.empty()) {
             Add("require","Import",Node->location,Path);
-            if(Doc.Dependencies.size()<128)Doc.Dependencies.push_back(Path);else Doc.Incomplete=true;
+            if(std::find(Doc.Dependencies.begin(),Doc.Dependencies.end(),Path)==Doc.Dependencies.end()) {
+                if(Doc.Dependencies.size()<128)Doc.Dependencies.push_back(Path);else Doc.Incomplete=true;
+            }
         }
         return Next();
     }
@@ -141,19 +153,30 @@ struct Symbols:Luau::AstVisitor {
     bool visit(Luau::AstExprGlobal* Node) override {Add(Node->name.value,"SyntacticGlobal",Node->location);return Next();}
 };
 void Parse(Document& Doc) {
-    Doc.Entries.clear();Doc.Dependencies.clear();Doc.Incomplete=false;
+    Doc.Entries.clear();Doc.Dependencies.clear();Doc.Incomplete=false;Doc.TypeFunctions=false;
     Luau::Allocator Allocator;Luau::AstNameTable Names(Allocator);
+    // The pinned frontend may execute user-defined type functions in its own
+    // compiler VM. Its allocator has no quota. Refuse those before semantic
+    // admission, including incomplete source beyond the AST navigation budget.
+    Luau::Lexer Lexer(Doc.Source.data(),Doc.Source.size(),Names);bool TypeKeyword=false;
+    for(size_t Count=0;Count<=Doc.Source.size();++Count) {
+        const auto& Token=Lexer.next();if(Token.type==Luau::Lexeme::Eof)break;
+        if(TypeKeyword && Token.type==Luau::Lexeme::ReservedFunction)Doc.TypeFunctions=true;
+        TypeKeyword=Token.type==Luau::Lexeme::Name && std::string(Token.name)=="type";
+    }
     auto Parsed=Luau::Parser::parse(Doc.Source.data(),Doc.Source.size(),Names,Allocator);
-    if(!Parsed.root || !Parsed.errors.empty()){Doc.Incomplete=true;return;}
+    if(!Parsed.root){Doc.Incomplete=true;return;}
     Writes Mutations;Parsed.root->visit(&Mutations);
-    if(Mutations.Nodes>=100000){Doc.Incomplete=true;return;}
+    Doc.TypeFunctions|=Mutations.TypeFunctions;
+    if(Mutations.Nodes>=100000 || !Parsed.errors.empty()){Doc.Incomplete=true;return;}
+    Doc.Incomplete=Doc.TypeFunctions;
     Symbols Visitor(Doc,Mutations);Parsed.root->visit(&Visitor);
 }
 struct Sources:Luau::FileResolver {
     std::map<std::string,Document> Files;
     std::set<std::string> Semantic;
     std::optional<Luau::SourceCode> readSource(const Luau::ModuleName& Name) override {
-        auto It=Files.find(Name);if(It==Files.end() || !Semantic.count(Name))return {};
+        auto It=Files.find(Name);if(It==Files.end() || It->second.TypeFunctions || !Semantic.count(Name))return {};
         return Luau::SourceCode{It->second.Source,Luau::SourceCode::Module};
     }
     std::optional<Luau::ModuleInfo> resolveModule(const Luau::ModuleInfo*,Luau::AstExpr* Expr,const Luau::TypeCheckLimits&) override {
@@ -278,6 +301,11 @@ struct GLProjectIndexer::State {
         while(!ToCheck.empty()) {
             auto Name=ToCheck.back();ToCheck.pop_back();auto Found=Resolver.Files.find(Name);
             if(Found==Resolver.Files.end() || Needed.count(Name))continue;
+            if(Found->second.TypeFunctions) {
+                Report.Incomplete=true;
+                if(Report.Diagnostics.size()<256){Entry Item;Item.Path=Name;Item.Name="User-defined type functions are not evaluated by the editor worker";Item.Kind="UnsupportedTypeFunction";Item.Line=1;Item.Column=1;Report.Diagnostics.push_back(std::move(Item));}
+                continue;
+            }
             if(Needed.size()>=256 || SemanticBytes+Found->second.Source.size()>4*1024*1024){Report.Incomplete=true;continue;}
             Needed.insert(Name);SemanticBytes+=Found->second.Source.size();
             ToCheck.insert(ToCheck.end(),Found->second.Dependencies.begin(),Found->second.Dependencies.end());
@@ -290,13 +318,17 @@ struct GLProjectIndexer::State {
         auto Options=Frontend->options;Options.cancellationToken=Cancellation;
         // Analysis is demand-driven for active buffers; project diagnostics check
         // all discovered modules with a bounded total request time.
+        std::set<std::string> DiagnosticKeys;
         auto Check=[&](const std::string& Name) {
             auto Checked=Frontend->check(Name,Options);
             if(!Checked.timeoutHits.empty())Report.Incomplete=true;
             for(const auto& Diagnostic:Checked.errors) {
-                if(Report.Diagnostics.size()>=256){Report.Incomplete=true;break;}
                 Entry Item;Item.Path=Diagnostic.moduleName;Item.Kind="Diagnostic";Item.Name=Luau::toString(Diagnostic).substr(0,2048);
                 Item.Line=int(Diagnostic.location.begin.line)+1;Item.Column=int(Diagnostic.location.begin.column)+1;
+                auto Key=Item.Path+":"+std::to_string(Item.Line)+":"+std::to_string(Item.Column)+":"+Item.Name;
+                if(DiagnosticKeys.count(Key))continue;
+                if(Report.Diagnostics.size()>=256){Report.Incomplete=true;break;}
+                DiagnosticKeys.insert(std::move(Key));
                 Report.Diagnostics.push_back(std::move(Item));
             }
         };
@@ -324,19 +356,19 @@ struct GLProjectIndexer::State {
         if(Value.Query=="Definition" && Needed.count(Value.Active)) {
             auto Source=Frontend->getSourceModule(Value.Active);auto Module=Frontend->moduleResolverForAutocomplete.getModule(Value.Active);
             if(Source && Module)if(auto Type=Luau::findTypeAtPosition(*Module,*Source,Luau::Position(unsigned(std::max(1,Value.Line)-1),unsigned(std::max(1,Value.Column)-1))))
-                if(auto Function=Luau::get<Luau::FunctionType>(Luau::follow(*Type));Function && Function->definition && Function->definition->definitionModuleName) {
+                if(auto Function=Luau::get<Luau::FunctionType>(Luau::follow(*Type));Function && Function->definition && Function->definition->definitionModuleName && Resolver.Files.count(*Function->definition->definitionModuleName)) {
                     Entry Item;Item.Name=Selected?Selected->Name:Value.Member;Item.Kind="Definition";Item.Path=*Function->definition->definitionModuleName;
                     Item.Line=int(Function->definition->originalNameLocation.begin.line)+1;Item.Column=int(Function->definition->originalNameLocation.begin.column)+1;
-                    Emit(std::move(Item));return;
+                    Item.Revision=Resolver.Files.at(Item.Path).Revision;Emit(std::move(Item));return;
                 }
             if(Selected && Selected->Kind=="ImportedMember") {
                 auto Imported=Frontend->moduleResolverForAutocomplete.getModule(Selected->Target);
                 if(Imported && Imported->returnType)if(auto First=Luau::first(Imported->returnType))
                     if(auto Table=Luau::get<Luau::TableType>(Luau::follow(*First))) {
                         auto Property=Table->props.find(Selected->Name);
-                        if(Property!=Table->props.end() && Property->second.location && !Table->definitionModuleName.empty()) {
+                        if(Property!=Table->props.end() && Property->second.location && Resolver.Files.count(Table->definitionModuleName)) {
                             Entry Item;Item.Name=Selected->Name;Item.Kind="Definition";Item.Path=Table->definitionModuleName;
-                            Item.Line=int(Property->second.location->begin.line)+1;Item.Column=int(Property->second.location->begin.column)+1;Emit(std::move(Item));return;
+                            Item.Line=int(Property->second.location->begin.line)+1;Item.Column=int(Property->second.location->begin.column)+1;Item.Revision=Resolver.Files.at(Item.Path).Revision;Emit(std::move(Item));return;
                         }
                     }
             }
@@ -349,14 +381,18 @@ struct GLProjectIndexer::State {
             for(const auto& Item:Current->second.Entries)if(Item.Name==Value.Replacement) {Report.Error="Rename could capture another binding";return;}
             Report.Revisions[Value.Active]=Current->second.Source;
         }
-        size_t DependencyIndex=0;
         for(const auto& Pair:Resolver.Files) {
             if(Cancelled(Generation))return;
             const auto& Name=Pair.first;const auto& Doc=Pair.second;
             Report.Incomplete|=Doc.Incomplete;
             if(Value.Query=="Dependencies") {
-                if(DependencyIndex++>=Value.Offset && Report.Dependencies.size()<PageSize)Report.Dependencies[Name]=Doc.Dependencies;
-                Report.More=DependencyIndex>Value.Offset+PageSize;continue;
+                auto Edge=[&](const std::string& Target) {
+                    Entry Item;Item.Kind="Dependency";Item.Path=Name;Item.Target=Target;Item.Revision=Doc.Revision;
+                    auto Before=Report.Entries.size();Emit(std::move(Item));
+                    if(Report.Entries.size()!=Before){auto& Links=Report.Dependencies[Name];if(!Target.empty())Links.push_back(Target);}
+                };
+                if(Doc.Dependencies.empty())Edge({});else for(const auto& Target:Doc.Dependencies)Edge(Target);
+                continue;
             }
             for(auto Item:Doc.Entries) {
                 Item.Path=Name;Item.Revision=Doc.Revision;

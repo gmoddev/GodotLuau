@@ -31,10 +31,12 @@ int main(int Count,char** Arguments)try {
     Write("Consumer.luau","local M=require('res://Module.luau')\nlocal Answer=M.Build(2)\nlocal Alias=M.Build\nAlias(3)\nreturn Answer\n");
     Write("Shadow.luau","local M=require('res://Module.luau')\ndo local M={Build=function() end}; M.Build() end\nreturn M\n");
     Write("Assigned.luau","local M=require('res://Module.luau')\nM={Build=function() end}\nM.Build()\nreturn M\n");
+    Write("AssignedFunction.luau","local M=require('res://Module.luau')\nfunction M() return 1 end\nM.Build()\nreturn M\n");
+    Write("AssignedCompound.luau","local M=require('res://Module.luau')\nM ..= 'changed'\nM.Build()\nreturn M\n");
     GLProjectIndexer Index;GLProjectIndexer::Request Request;Request.Root=Root.u8string();Request.Query="References";Request.Module="res://Module.luau";Request.Member="Build";
     auto First=Wait(Index,Index.Submit(Request));
     Check(First->Error.empty() && First->Entries.size()==3,"Exact static module references preserve aliases, shadowing and reassignment");
-    auto Warm=Wait(Index,Index.Submit(Request));Check(Warm->Parsed==0 && Warm->Cached==4,"Warm index retains all unchanged documents");
+    auto Warm=Wait(Index,Index.Submit(Request));Check(Warm->Parsed==0 && Warm->Cached==First->Files,"Warm index retains all unchanged documents");
     Request.Active="res://Consumer.luau";Request.Query="Definition";Request.Line=2;Request.Column=17;
     auto Definition=Wait(Index,Index.Submit(Request));
     Check(Definition->Entries.size()==1 && Definition->Entries[0].Path=="res://Module.luau" && Definition->Entries[0].Kind=="Definition","Pinned Luau resolves cross-module function definition");
@@ -60,6 +62,10 @@ int main(int Count,char** Arguments)try {
     auto Cold=Wait(Index,Generation);Check(Cold->Files>=1203 && Cold->More && Cold->Entries.size()==256,"Thousands-scale workload is indexed with bounded result pages");
     auto Cached=Wait(Index,Index.Submit(Request));Check(Cached->Parsed==0 && Cached->Files==Cold->Files,"Fully warm large cache is not evicted by result pagination");
     Request.Offset=256;auto Page=Wait(Index,Index.Submit(Request));Check(Page->Entries.size()==256 && Page->Parsed==0,"Next page reuses complete document index");
+    Request.Query="Dependencies";Request.Offset=0;auto Graph=Wait(Index,Index.Submit(Request));
+    size_t Edges=0;for(const auto& Pair:Graph->Dependencies)Edges+=Pair.second.size();
+    Check(Graph->More && Graph->Entries.size()==256 && Edges<=256,"Dependency pages bound total edges as well as document count");
+    Request.Query="Symbols";
     Request.Offset=0;auto Obsolete=Index.Submit(Request);Request.Query="Search";Request.Member="Economy";auto Current=Index.Submit(Request);
     auto Latest=Wait(Index,Current);Check(!Index.Poll(Obsolete) && Latest->Generation==Current,"Obsolete request cannot publish over current generation");
     Request.Query="Complete";Request.Active="res://Consumer.luau";Request.Line=2;Request.Column=12;Request.Member="Bu";
@@ -78,6 +84,11 @@ int main(int Count,char** Arguments)try {
     Request.Buffers[Request.Active]="local M=require('res://Settings.luau')\nreturn M.Maximum\n";
     auto Scalar=Wait(Index,Index.Submit(Request));
     Check(Scalar->Entries.size()==1 && Scalar->Entries[0].Kind=="Definition" && Scalar->Entries[0].Path=="res://Settings.luau","Pinned Luau exported-table metadata resolves a scalar member definition");
+    Request.Query="Diagnostics";Request.Active="res://TypeFunction.luau";Request.Buffers.clear();
+    Request.Buffers[Request.Active]="type function Forever(T) while true do end end\ntype Result=Forever<number>\nreturn 1\n";
+    auto TypeFunction=Wait(Index,Index.Submit(Request));bool Refused=false;
+    for(const auto& Item:TypeFunction->Diagnostics)Refused|=Item.Kind=="UnsupportedTypeFunction" && Item.Path==Request.Active;
+    Check(TypeFunction->Incomplete && Refused,"Analysis refuses user type-function execution without starting a compiler VM");
     Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
     Index.Cancel();
     uint64_t PeakProcessBytes=0;
