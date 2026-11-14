@@ -8,8 +8,10 @@ struct lua_State;
 
 GLDebugger* GLGetSuspendedDebugger();
 godot::Dictionary GLDebugVariables(int Level, int MaxItems, int MaxDepth, bool Upvalues);
+godot::Dictionary GLDebugFrameVariables(GLDebugger* Debugger,int Level,int MaxItems,int MaxDepth,bool Upvalues);
 godot::Dictionary GLDebugContext();
 godot::Dictionary GLDebugEvaluate(int Level, const godot::String& Expression);
+godot::Dictionary GLDebugFrameEvaluate(GLDebugger* Debugger,int Level,const godot::String& Expression);
 godot::Variant GLDebugCopyValue(lua_State* Thread, int Index, int MaxItems = 32, int MaxDepth = 3);
 godot::Dictionary GLDebugSceneHandle(lua_State* Thread, int Index);
 bool GLDebugText(const char* Value, size_t Length, size_t Maximum, godot::String& Result);

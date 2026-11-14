@@ -135,3 +135,22 @@ retain previous active modules up to the existing 256-module/4 MiB limit before
 rebuilding, avoiding frontend recreation when switching between nearby modules.
 New tests exercise native Theme authoring through that frontend, warm completion
 and process peak-working-set measurements. Qualification is pending.
+
+## Conditional debugger breakpoints — qualification pending
+
+Breakpoint requests may now supply the existing bounded `Expression` field.
+The exact same restricted Watch parser and copied local/upvalue/native-property
+projection evaluate it before notifying the editor. Lua truthiness applies;
+false/nil predicates skip the stop, while failed evaluation stops explicitly as
+`ConditionError`. Hit counters count visits before the condition. Identical
+condition replay preserves hits; editing the condition resets that record.
+Multiple remapped breakpoints at one executable line combine as OR, with an
+unconditional matching record taking precedence. No arbitrary Lua calls,
+metamethods, mutation or gameplay capabilities are added.
+
+The native debugger panel can set/clear a condition on the stopped source line.
+It retains conditions when gutter state is replayed and erases them on breakpoint
+removal. The original five real debugger modes remain mandatory; a sixth mode
+checks false visits, a true live local and forbidden-call failure without a
+gameplay side effect. Core checks extend an existing scenario without dropping
+its original assertions. Actual protocol/editor qualification is pending.

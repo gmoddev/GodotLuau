@@ -117,8 +117,10 @@ struct Evaluation {
 };
 }
 Dictionary GLDebugEvaluate(int Level,const String& Expression) {
+    return GLDebugFrameEvaluate(GLGetSuspendedDebugger(),Level,Expression);
+}
+Dictionary GLDebugFrameEvaluate(GLDebugger* Active,int Level,const String& Expression) {
     Dictionary Result;Result["Ok"]=false;Result["Frame"]=Level;
-    auto Active=GLGetSuspendedDebugger();
     if(!Active || !Active->IsFrameInspectable(Active->GetInspectionThread(),Level) || Expression.is_empty() || Expression.length()>1024 || Expression.utf8().length()>1024) {
         Result["Error"]="A live suspended frame and an expression of at most 1024 bytes are required";return Result;
     }
@@ -129,7 +131,7 @@ Dictionary GLDebugEvaluate(int Level,const String& Expression) {
     if(!Parsed.errors.empty() || !Return || Return->list.size!=1){Result["Error"]="Expected one restricted expression";return Result;}
     Evaluation Evaluate;
     for(bool Upvalues:{true,false}) {
-        Dictionary Frame=GLDebugVariables(Level,32,3,Upvalues);
+        Dictionary Frame=GLDebugFrameVariables(Active,Level,32,3,Upvalues);
         PackedStringArray Keys=Frame.get(Upvalues?"members":"locals",PackedStringArray());Array Values=Frame.get("values",Array());
         for(int Index=0;Index<Keys.size() && Index<Values.size();++Index) {
             String Name=Keys[Index];if(Upvalues && Name.begins_with("upvalue: "))Name=Name.substr(9);

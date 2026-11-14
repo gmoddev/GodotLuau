@@ -76,6 +76,7 @@ void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const St
             if((Bytes+=Entry.Source.size())>32768 || Breakpoints.size()>=128){Reply["Truncated"]=true;break;}
             Dictionary Item; Item["Source"]=String::utf8(Entry.Source.c_str()); Item["Line"]=Entry.Line;
             Item["Enabled"]=Entry.Enabled; Item["Hits"]=int64_t(Entry.Hits); Item["BreakOnHit"]=int64_t(Entry.BreakOnHit);
+            Item["Expression"]=String::utf8(Entry.Condition.c_str());
             Array Actual; for(int Line:Entry.AdmittedLines)if(Actual.size()<16)Actual.push_back(Line);
             Item["AdmittedLines"]=Actual; Breakpoints.push_back(Item);
         }
@@ -175,6 +176,12 @@ void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
     }
     if(HostId!=uint64_t(Host.get_instance_id()))return;
     auto& Debugger=Domain.EnableDebugger(); Debugger.Attach(Stop); Debugger.SetPollHandler([]{Poll();});
+    Debugger.SetConditionHandler([](GLDebugger& Debug,const std::string& Expression)->std::optional<bool> {
+        Dictionary Result=GLDebugFrameEvaluate(&Debug,0,String::utf8(Expression.c_str()));
+        if(!bool(Result.get("Ok",false)))return std::nullopt;
+        Variant Value=Result.get("Value",Variant());
+        return Value.get_type()!=Variant::NIL && !(Value.get_type()==Variant::BOOL && !bool(Value));
+    });
     Debugger.SetSourceHandler([&Debugger](const std::string& Source,int Lines) {
         String Path=String::utf8(Source.c_str()); if(!GLProjectResourcePath(Path))return;
         Poll(true); auto EngineDebug=EngineDebugger::get_singleton();
@@ -246,7 +253,8 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         Matched=true; bool Success=true;
         if(Op=="Breakpoint") {
             int64_t Line=Request["Line"],Hit=Request.get("BreakOnHit",0);
-            Success=Line>0 && Line<=1000000 && Hit>=0 && Hit<=1000000 && Debugger->SetBreakpoint(Source.utf8().get_data(),int(Line),bool(Request["Enabled"]),uint32_t(Hit));
+            String Condition=Request.get("Expression",String());
+            Success=Line>0 && Line<=1000000 && Hit>=0 && Hit<=1000000 && Debugger->SetBreakpoint(Source.utf8().get_data(),int(Line),bool(Request["Enabled"]),uint32_t(Hit),Condition.utf8().get_data());
         } else if(Op=="ClearBreakpoints")Debugger->ClearBreakpoints();
         else if(Op=="Pause")Success=Debugger->RequestPause();
         else if(Op=="StepOut") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Out); }
