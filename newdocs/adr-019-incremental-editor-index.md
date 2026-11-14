@@ -1,7 +1,9 @@
 # ADR-019 — Incremental editor project analysis
 
-Status: accepted for implementation on the unmerged GL-067 branch; qualification
-pending. Builds on ADR-015–018 without changing gameplay authority or execution.
+Status: implemented on the unmerged GL-067 branch; Windows/Linux worker, native
+editor and Linux ASan/LSan qualification passes within the
+[recorded scope](gl-067-development.md#final-index-lifetime-and-hosted-native-records).
+Builds on ADR-015–018 without changing gameplay authority or execution.
 
 ## Decision
 
@@ -44,8 +46,8 @@ This does not alter runtime require caching, persistent data, Character
 controllers, network protocols, native authority, releases or updater admission.
 
 Luau analysis adds no dependency revision: use the already pinned Analysis and
-Config components. Memory/time limits and actual behavior require
-focused qualification before declaring this phase complete.
+Config components. Input/complexity limits and observed process-memory/latency
+measurements are documented separately; they do not establish a hard RSS quota.
 
 User-defined type functions are excluded from semantic admission. Source review
 finds that pinned Luau executes them in a compiler VM whose allocator directly

@@ -312,6 +312,15 @@ not substituted for the game assertions. Inventory now reports 920 metadata
 classes, 114 constructible classes, 391 properties, 238 methods, 41 signals and
 51 constants. It remains partial engine coverage.
 
+The combined [native invocation inventory](evidence/gl067/native-invocations.json)
+joins 30 logs from the two accepted native CI cohorts: 617 distinct domain/member
+pairs. Its `ProductionExamples` section separately retains the three Foundry
+logs/127 pairs. Metadata denominators, approved policy, declarations, available
+host checks and successful invocations remain separate from assertion coverage.
+Counts aggregate the named log receipts and are not a percentage of Godot API
+correctness. Reproduce with `tools/NativeCoverageReport.py --logs <native logs>
+--application-logs <Foundry logs> --output <report.json>`.
+
 ## Outstanding qualification and broader campaign scope
 
 Full-native Windows ASan and Linux ASan/LSan pass in `43599608700`, including

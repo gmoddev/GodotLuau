@@ -1,0 +1,113 @@
+# GL-067 platform qualification
+
+Status: implemented phases qualify within the scopes below; final production
+package/export gates are running. Branch `feature/gl-067-development-platform`
+remains unmerged. The [journal](gl-067-development.md) preserves failed attempts
+and corrections; the [guide](gl-067-editor-api.md) defines supported behavior.
+This is substantial multi-subsystem expansion, not complete Godot API parity.
+
+## Source identity
+
+Baseline main: `f54aa44265ae36b98fccfbc0622c4b61c4f6db06`.
+Native implementation: `533e108680cc394296b622a9e04f8d6ef113e019`, tree
+`a2abbb2ecb3aac4898a457579af97b532f64c823`.
+The 139-file LF-normalized native fingerprint is
+`556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6`.
+Later commits extend tests, reports and documentation without changing those
+native inputs. Final index lifetime tests have separate evidence at `f83d98b`.
+
+Pins remain godot-cpp `d5cc777a89d899665fb61f1650ef0dc0cf6488c4` and Luau
+`9e2984fd0334414a2ef62ceede0c06dab7574d55`. Official editor/templates and existing
+admitted hosts retain Godot 4.7.1 `a13da4feb8d8aefc283c3763d33a2f170a18d541`
+and the established GL-018/GL-029 patches. No dependency or host change is made.
+
+## Evidence and its scope
+
+| Boundary | Result |
+| --- | --- |
+| [Core 43603467149](https://github.com/gmoddev/GodotLuau/actions/runs/43603467149) | Windows/Linux pass all 87 original and eight debugger/profiler scenarios at `f83d98b` |
+| [Declarations 43594486137](https://github.com/gmoddev/GodotLuau/actions/runs/43594486137) | Windows/Linux policy, five generated outputs and actual pinned Luau type checks pass; declaration/policy inputs unchanged afterward |
+| [Index 43603467132](https://github.com/gmoddev/GodotLuau/actions/runs/43603467132) | Windows/Linux Release and Linux ASan/LSan pass actual production service: typed imports, definitions, completion, diagnostics, lexical rename, cache/edit/delete, pagination, cancellation, type-function exclusion and disposal/recovery |
+| [Native 43598864037](https://github.com/gmoddev/GodotLuau/actions/runs/43598864037) | Windows/Linux pass 141 required actor results, native bindings/lifetime/authority, actual editor workflows, Foundry/restart and seven debugger protocol modes |
+| [Full-native sanitizers 43599608700](https://github.com/gmoddev/GodotLuau/actions/runs/43599608700) | Windows ASan and Linux ASan/LSan pass detection controls, production VM reload, core, 141 actors and actual debugger cases; no unexpected reports |
+| Windows rendered editor | Matching Debug adapter passes actual breakpoint, native stack/locals, stepping and saved-source reload; four retained captures inspected |
+| Windows rendered Foundry | Matching Debug adapter passes 44 checks plus persistence restart; menu/world/completion captures inspected |
+| [Candidate 43599606392](https://github.com/gmoddev/GodotLuau/actions/runs/43599606392) | Pending; completed profiles and outstanding gates are tracked in the journal |
+
+The [compact hosted record](evidence/gl067/ci-qualified.json) retains source,
+product and summary identities. [Rendered editor](evidence/gl067/graphical-debugger.json),
+[Foundry](evidence/gl067/foundry-rendered.json), [index timing](evidence/gl067/editor-index.json)
+and [focused debugger](evidence/gl067/debugger-focused.json) receipts remain
+separate from CI. Existing qualified infrastructure is reused without another
+test layer around its artifact checks.
+
+## Implemented and measured behavior
+
+The worker indexes up to 4,096 files/32 MiB, returns 256-entry pages, cancels stale
+generations, prioritizes active buffers and uses the existing pinned Luau
+frontend/generated native declarations. Semantic working sets are bounded to
+256 modules/4 MiB with 50 ms per-module limits. User type functions are excluded
+because their compiler VM allocator has no project quota. Dynamic names remain
+unresolved candidates. Rename is a source-preconditioned lexical preview only.
+Filesystem cancellation occurs between bounded file operations; it does not
+preempt a stalled operating-system read or establish a hard RSS limit.
+
+On the retained 256-module/661,760-byte editor workload plus 14 auxiliary modules,
+main-thread submit calls take 0.073–0.374 ms and maximum polls 1.248–1.316 ms.
+Frames continue while cold analysis takes 1,431.403 ms on the worker. The previous
+GL-055 observation occupied the main thread for approximately 250 ms and did not
+fully warm its scan. This establishes responsiveness, not faster total analysis.
+The separate 1,205-file typed catalog measures cross-module/cache behavior; it is
+not relabelled as a thousand-module production game. Hosted Release process
+peaks are approximately 53 MiB Windows / 60 MiB Linux; ASan measurements are
+reported separately in the journal.
+
+Read-only breakpoint conditions share Watch restrictions. False/nil skips a
+stop; invalid evaluation stops as ConditionError. Manual detach/attach on the
+same live transport rotates session identity, retires old inspection roots and
+admits new/reloaded generations. Physical disconnect still fails closed.
+Inclusive callback/require timing and domain allocator observations extend the
+existing opt-in profiler. Paired DockerPC MSVC Release disabled medians are
+2,682.2 / 2,742.9 us for 100,000 operations (+2.3%), with zero counted C++
+allocations and identical VM peaks. This short synthetic comparison is not a
+general gameplay speed claim.
+
+Saved-source reload validates the entire bounded batch before publishing any
+revision. Failed compile/file validation preserves previous source/generations;
+success publishes those exact snapshots through existing dependent-module and
+owner retirement. Repeated reload/preview and failure recovery pass. Runtime
+side-effect rollback and automatic state migration are not promised.
+
+Native Theme styling, RichTextLabel parsed text, Skeleton3D traversal and bounded
+navigation-obstacle configuration expand the existing owned-resource/scene
+dispatcher. Inventory grows from 113/384/225 to 114 constructible classes,
+391 properties and 238 methods; signals/constants remain 41/51. The
+[machine report](evidence/gl067/native-invocations.json) separates metadata,
+admitted/generated surface, host availability, 617 invoked domain/member pairs
+in native fixture logs and 127 pairs in actual Foundry logs. Invocation counts
+are not substituted for assertion or application correctness.
+
+## Limits and readiness
+
+Qualified phases are available for review on the feature branch; production
+package/export acceptance remains pending. Main is unchanged, Native remains the
+default controller, Scripted stays opt-in, and releases/updater stay disabled.
+
+The wider campaign remains open. Foundry is the real acceptance game, with its
+existing scene inheritance, animation, navigation, resources, transactional
+progress and generation reconstruction. A hundreds-module runtime game is not
+qualified: the existing loader retains a 64-path-per-domain admission limit.
+Editor scale measurements do not raise that runtime resource contract.
+
+Unrestricted AnimationTree target graphs, raw Callable/Signal/RID authority,
+privileged viewports/windows, function sampling and automatic state-migrating
+reload remain unimplemented. Physical debugger reconnection/editor restart cannot
+reuse the pinned public Godot transport factory; same-transport manual Attach
+does not claim that capability. These need additional ownership/compatibility
+contracts rather than superficial registry entries.
+
+GL-065 retains the external engine editor's eight leaked TreeItem/TextParagraph
+objects at rendered debugger exit, with reproducible source/verbose evidence.
+No pinned engine patch is introduced. Windows LSan, Linux graphical presentation,
+physical input and universal leak freedom remain unsupported claims. Rendered
+journeys use an isolated non-input desktop and programmatic native actions.
