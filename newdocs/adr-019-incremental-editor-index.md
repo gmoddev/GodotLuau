@@ -45,6 +45,12 @@ dependencies are supported. Dynamic module expressions are not invented edges.
 This does not alter runtime require caching, persistent data, Character
 controllers, network protocols, native authority, releases or updater admission.
 
+Definition-only `.d.luau` files are excluded from runtime-module discovery and
+open-buffer capture. Native globals load from the exact generated declaration
+snapshot through the frontend's definition-file grammar. Project declaration
+files are not implicitly merged into that authority; custom definition loading
+remains unsupported. This classification does not change runtime require.
+
 Luau analysis adds no dependency revision: use the already pinned Analysis and
 Config components. Input/complexity limits and observed process-memory/latency
 measurements are documented separately; they do not establish a hard RSS quota.

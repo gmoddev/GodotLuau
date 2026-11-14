@@ -475,3 +475,10 @@ retain the 1,206-module workload. Native `43611375892` and four-profile/package
 `43611376440` are running; the existing focused Release authoring workflow will
 use those actual products once available. Full-native sanitizers and unchanged
 game/export inputs retain their earlier scoped evidence.
+
+Final native `43611375892` passes Windows/Linux: 141 required actors each, all
+seven debugger modes and actual 73-check authoring/reload/recovery/reopen with
+shipped declarations. [Both corrected native products](evidence/gl067/definition-files-native.json)
+retain their source and summary identities. No additional runtime correction was
+needed. Production profile/package and actual SCons Release authoring remain
+the only pending gates at this entry.
