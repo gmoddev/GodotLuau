@@ -7,6 +7,7 @@
 godot::Dictionary GLNativeEditorPlugin::PollProject(int64_t Generation) {
     using namespace godot;
     Dictionary Report;Report["result"]=ERR_UNAVAILABLE;Report["Pending"]=false;
+    Report["Stale"]=Generation>0 && uint64_t(Generation)!=ProjectGeneration;
     if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id() || Generation<=0 || uint64_t(Generation)!=ProjectGeneration || !ProjectIndex)return Report;
     auto Result=ProjectIndex->Poll(uint64_t(Generation));Report["result"]=OK;Report["Generation"]=Generation;Report["Pending"]=!Result;
     if(!Result)return Report;

@@ -10,6 +10,7 @@
 #include "Luau/ToString.h"
 #include "Luau/Error.h"
 #include "Luau/AstQuery.h"
+#include "Luau/TypePack.h"
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -312,7 +313,7 @@ struct GLProjectIndexer::State {
             for(const auto& Pair:Sorted) {
                 if(Pair.first.find(Value.Member)!=0)continue;
                 Entry Item;Item.Name=Pair.first;Item.Kind="Completion";
-                if(Pair.second.type)Item.Type=Luau::toString(*Pair.second.type).substr(0,2048);Emit(std::move(Item));
+                if(Pair.second.type){Luau::ToStringOptions Display;Display.maxTypeLength=2048;Display.maxTableLength=1024;Item.Type=Luau::toString(*Pair.second.type,Display).substr(0,2048);}Emit(std::move(Item));
             }
             return;
         }
@@ -328,6 +329,17 @@ struct GLProjectIndexer::State {
                     Item.Line=int(Function->definition->originalNameLocation.begin.line)+1;Item.Column=int(Function->definition->originalNameLocation.begin.column)+1;
                     Emit(std::move(Item));return;
                 }
+            if(Selected && Selected->Kind=="ImportedMember") {
+                auto Imported=Frontend->moduleResolverForAutocomplete.getModule(Selected->Target);
+                if(Imported && Imported->returnType)if(auto First=Luau::first(Imported->returnType))
+                    if(auto Table=Luau::get<Luau::TableType>(Luau::follow(*First))) {
+                        auto Property=Table->props.find(Selected->Name);
+                        if(Property!=Table->props.end() && Property->second.location && !Table->definitionModuleName.empty()) {
+                            Entry Item;Item.Name=Selected->Name;Item.Kind="Definition";Item.Path=Table->definitionModuleName;
+                            Item.Line=int(Property->second.location->begin.line)+1;Item.Column=int(Property->second.location->begin.column)+1;Emit(std::move(Item));return;
+                        }
+                    }
+            }
         }
         if(Value.Query=="Rename" && (!Selected || !Identifier(Value.Replacement) || Current->second.Incomplete)) {Report.Error="Rename requires a complete lexical binding and an identifier";return;}
         int DefinitionLine=Selected?(Selected->DefinitionLine?Selected->DefinitionLine:Selected->Line):0;

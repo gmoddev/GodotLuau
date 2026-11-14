@@ -73,6 +73,11 @@ int main(int Count,char** Arguments)try {
     Check(NativeTypes->Error.empty(),"Embedded native declaration frontend initializes");
     bool NativeError=false;for(const auto& Item:NativeTypes->Diagnostics)NativeError|=Item.Path==Request.Active;
     Check(!NativeError,"Actual scoped native authoring resolves against the shipped declaration snapshot");
+    Request.Query="Definition";Request.Active="res://Consumer.luau";Request.Line=2;Request.Column=12;
+    Request.Buffers.clear();Request.Buffers["res://Settings.luau"]="return {Maximum=42}\n";
+    Request.Buffers[Request.Active]="local M=require('res://Settings.luau')\nreturn M.Maximum\n";
+    auto Scalar=Wait(Index,Index.Submit(Request));
+    Check(Scalar->Entries.size()==1 && Scalar->Entries[0].Kind=="Definition" && Scalar->Entries[0].Path=="res://Settings.luau","Pinned Luau exported-table metadata resolves a scalar member definition");
     Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
     Index.Cancel();
     uint64_t PeakProcessBytes=0;

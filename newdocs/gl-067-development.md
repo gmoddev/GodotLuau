@@ -163,3 +163,30 @@ numbers, correctly rejected by the existing integer-only protocol. The peer now
 casts those fields to integers and checks zero command errors. A focused case
 selector permits rerunning that actual failed case without repeating unchanged
 verified modes. The default CI run still requires all six modes.
+
+The integer-corrected attempt `debugger-07-conditional` and diagnostic attempt
+`debugger-08-conditional` show the true condition stopping at Index=3, with zero
+protocol errors. Their unused-local probe lines emitted no distinct executable
+instructions, so expecting them before the true stop was incorrect. The fixture
+now uses observable native attribute writes for those two probes and requires
+both to complete all five iterations. The implementation's executable-line
+remapping contract and conditional assertions are preserved.
+
+## Native editor semantic actions
+
+The native authoring panel now exposes definition, completion, diagnostics,
+symbol search and next-page actions backed by the worker. CodeEdit changes and
+the existing EditorFileSystem change signal cancel obsolete work and debounce a
+new snapshot request by 150 ms. Explicit polling reports stale generations,
+allowing tools to retry after source changes. The editor fixture follows this
+normal cancellation contract. Requests accept only the documented bounded
+primitive fields; no arbitrary objects enter retained options or the worker.
+The synchronous single-buffer language hooks remain their existing syntax/native
+metadata implementation. These actions do not claim to replace every ScriptEditor
+completion popup with asynchronous whole-project types.
+
+Semantic definition additionally uses pinned Luau exported-table property
+locations for static scalar members. Dynamic table/metatable cases remain
+unresolved or explicitly labelled candidates. Type display uses Luau's bounded
+stringifier options. Source/runtime/declaration identity and qualification remain
+separate from these implementation notes.

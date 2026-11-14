@@ -4,7 +4,9 @@ var Reason=''
 
 func AfterVariables() -> void:
     if Finished: return
-    Check(Stops<Expected.size() and CurrentSource==Expected[Stops].Source and CurrentLine==Expected[Stops].Line,'Conditional source stop matches expected executable line')
+    if not Measurements.has('ConditionalObservations'): Measurements.ConditionalObservations=[]
+    Measurements.ConditionalObservations.append({'Stop':Stops,'Source':CurrentSource,'Line':CurrentLine,'Reason':Reason,'Index':Value('Index')})
+    Check(Stops<Expected.size() and CurrentSource==Expected[Stops].Source and CurrentLine==Expected[Stops].Line,'Conditional source stop '+str(Stops)+' matches expected executable line; actual '+CurrentSource+':'+str(CurrentLine)+' reason '+Reason)
     if Finished: return
     if Stops==0:
         for Probe in [

@@ -12,6 +12,8 @@
 #include "gl_project_indexer.h"
 #include "gl_runtime_debugger.h"
 #include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/classes/editor_file_system.hpp>
+#include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/tree.hpp>
@@ -49,6 +51,12 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("QueryProject","Options"), &GLNativeEditorPlugin::QueryProject);
     ClassDB::bind_method(D_METHOD("PollProject","Generation"), &GLNativeEditorPlugin::PollProject);
     ClassDB::bind_method(D_METHOD("ReloadScripts","Scripts"), &GLNativeEditorPlugin::ReloadScripts);
+    ClassDB::bind_method(D_METHOD("OnProjectChanged"), &GLNativeEditorPlugin::OnProjectChanged);
+    ClassDB::bind_method(D_METHOD("ShowProjectDefinition"), &GLNativeEditorPlugin::ShowProjectDefinition);
+    ClassDB::bind_method(D_METHOD("ShowProjectCompletion"), &GLNativeEditorPlugin::ShowProjectCompletion);
+    ClassDB::bind_method(D_METHOD("ShowProjectDiagnostics"), &GLNativeEditorPlugin::ShowProjectDiagnostics);
+    ClassDB::bind_method(D_METHOD("ShowProjectSearch"), &GLNativeEditorPlugin::ShowProjectSearch);
+    ClassDB::bind_method(D_METHOD("ShowNextProjectPage"), &GLNativeEditorPlugin::ShowNextProjectPage);
     ClassDB::bind_method(D_METHOD("FindProjectUses"), &GLNativeEditorPlugin::FindProjectUses);
     ClassDB::bind_method(D_METHOD("ShowProjectSymbols"), &GLNativeEditorPlugin::ShowProjectSymbols);
 }
@@ -62,10 +70,16 @@ void GLNativeEditorPlugin::_enter_tree() {
         Editor->connect("editor_script_changed", Callable(this, "OnScriptChanged"));
     }
     OnScriptChanged(Ref<Script>());
+    if(auto Interface=EditorInterface::get_singleton())if(auto Files=Interface->get_resource_filesystem()) {
+        Callable Changed(this,"OnProjectChanged");if(!Files->is_connected("filesystem_changed",Changed))Files->connect("filesystem_changed",Changed);
+    }
 }
 
 void GLNativeEditorPlugin::_exit_tree() {
-    ProjectIndex.reset();ProjectGeneration=0;
+    ProjectIndex.reset();ProjectGeneration=0;ProjectDirty=false;ProjectUiGeneration=0;LastProjectOptions.clear();
+    if(auto Interface=EditorInterface::get_singleton())if(auto Files=Interface->get_resource_filesystem()) {
+        Callable Changed(this,"OnProjectChanged");if(Files->is_connected("filesystem_changed",Changed))Files->disconnect("filesystem_changed",Changed);
+    }
     StopPreview();
     if (Debugger.is_valid()) { remove_debugger_plugin(Debugger);Debugger.unref(); }
     if (auto Panel=Object::cast_to<Control>(ObjectDB::get_instance(PreviewPanel))) {
@@ -99,6 +113,7 @@ void GLNativeEditorPlugin::ConfigureEditor() {
     auto Tab = Editor->get_current_editor();
     auto Code = Tab ? Object::cast_to<CodeEdit>(Tab->get_base_editor()) : nullptr;
     if (!Code) return;
+    Callable Changed(this,"OnProjectChanged");if(!Code->is_connected("text_changed",Changed))Code->connect("text_changed",Changed);
     Code->set_draw_breakpoints_gutter(true);
     Callable BreakpointHandler=Callable(this,"OnBreakpointToggle").bind(int64_t(Code->get_instance_id()),Script->get_path());
     if(!Code->is_connected("breakpoint_toggled",BreakpointHandler))Code->connect("breakpoint_toggled",BreakpointHandler);
@@ -130,6 +145,16 @@ int64_t GLNativeEditorPlugin::ReloadScripts(const Array& Scripts) {
 }
 Dictionary GLNativeEditorPlugin::QueryProject(const Dictionary& Options) {
     if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id())return Dictionary();
+    if(Options.size()>8)return Dictionary();
+    const auto Keys=Options.keys();
+    for(int Index=0;Index<Keys.size();++Index) {
+        if(Keys[Index].get_type()!=Variant::STRING)return Dictionary();
+        String Key=Keys[Index];Variant Value=Options[Keys[Index]];
+        bool Numeric=Key=="Line" || Key=="Column" || Key=="Offset";
+        bool Flag=Key=="Refresh";
+        bool Textual=Key=="Query" || Key=="Module" || Key=="Member" || Key=="Replacement";
+        if((!Numeric && !Flag && !Textual) || (Numeric && Value.get_type()!=Variant::INT) || (Flag && Value.get_type()!=Variant::BOOL) || (Textual && (Value.get_type()!=Variant::STRING || String(Value).length()>4096)))return Dictionary();
+    }
     GLProjectIndexer::Request Request;
     auto Text=[](const String& Value){return std::string(Value.utf8().get_data());};
     Request.Root=Text(ProjectSettings::get_singleton()->globalize_path("res://"));
@@ -159,8 +184,34 @@ Dictionary GLNativeEditorPlugin::QueryProject(const Dictionary& Options) {
     }
     if(!ProjectIndex)ProjectIndex=std::make_unique<GLProjectIndexer>();
     ProjectGeneration=ProjectIndex->Submit(std::move(Request));
+    const Dictionary Snapshot=Options.duplicate();LastProjectOptions=Snapshot;ProjectDirty=false;
     Dictionary Report;Report["result"]=ProjectGeneration?OK:ERR_INVALID_PARAMETER;
     Report["Generation"]=int64_t(ProjectGeneration);Report["Pending"]=bool(ProjectGeneration);return Report;
+}
+void GLNativeEditorPlugin::OnProjectChanged() {
+    if(!is_inside_tree() || !ProjectIndex || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id())return;
+    ProjectIndex->Cancel();ProjectGeneration=0;ProjectDirty=true;
+    ProjectRefreshAt=Time::get_singleton()->get_ticks_msec()+150;
+}
+void GLNativeEditorPlugin::ProjectAction(const String& Query) {
+    auto Editor=GetEditor();Ref<Script> Current=Editor?Editor->get_current_script():Ref<Script>();
+    auto Tab=Editor?Editor->get_current_editor():nullptr;auto Code=Tab?Object::cast_to<CodeEdit>(Tab->get_base_editor()):nullptr;
+    if(Current.is_null() || !Current->is_class("LuauScript") || !Code){ShowStatus("Open a Luau source for semantic project tools");return;}
+    Dictionary Options;Options["Query"]=Query;Options["Member"]=Query=="Diagnostics"?String():Code->get_word_under_caret();
+    Options["Line"]=Code->get_caret_line()+1;
+    Options["Column"]=Code->get_line(Code->get_caret_line()).substr(0,Code->get_caret_column()).utf8().length()+1;
+    Dictionary Submission=QueryProject(Options);
+    if(int(Submission.get("result",ERR_UNAVAILABLE))!=OK){ShowStatus("Project query is unavailable");return;}
+    ProjectUiGeneration=ProjectGeneration;ProjectUiTitle=Query+" project snapshot";ShowStatus("Analyzing active Luau buffer in background");
+}
+void GLNativeEditorPlugin::ShowProjectDefinition(){ProjectAction("Definition");}
+void GLNativeEditorPlugin::ShowProjectCompletion(){ProjectAction("Complete");}
+void GLNativeEditorPlugin::ShowProjectDiagnostics(){ProjectAction("Diagnostics");}
+void GLNativeEditorPlugin::ShowProjectSearch(){ProjectAction("Search");}
+void GLNativeEditorPlugin::ShowNextProjectPage() {
+    if(LastProjectOptions.is_empty())return;
+    Dictionary Options=LastProjectOptions.duplicate();Options["Offset"]=int64_t(Options.get("Offset",0))+256;
+    if(int(QueryProject(Options).get("result",ERR_UNAVAILABLE))==OK)ProjectUiGeneration=ProjectGeneration;
 }
 void GLNativeEditorPlugin::FindProjectUses() {
     auto Editor=GetEditor();Ref<Script> Current=Editor?Editor->get_current_script():Ref<Script>();
@@ -184,6 +235,11 @@ void GLNativeEditorPlugin::ShowProjectSymbols() {
     ShowStatus("Indexing project symbols in background");
 }
 void GLNativeEditorPlugin::FlushProjectQuery() {
+    if(ProjectDirty) {
+        if(Time::get_singleton()->get_ticks_msec()<ProjectRefreshAt)return;
+        bool Visible=ProjectUiGeneration!=0;Dictionary Options=LastProjectOptions.duplicate();Options["Offset"]=0;Options["Refresh"]=true;
+        QueryProject(Options);if(Visible)ProjectUiGeneration=ProjectGeneration;
+    }
     if(!ProjectUiGeneration)return;
     if(ProjectUiGeneration!=ProjectGeneration){ProjectUiGeneration=0;return;}
     Dictionary Report=PollProject(int64_t(ProjectUiGeneration));
@@ -195,9 +251,10 @@ void GLNativeEditorPlugin::FlushProjectQuery() {
     TreeNode->clear();TreeNode->show();auto Root=TreeNode->create_item();Root->set_text(0,ProjectUiTitle);
     Root->set_text(1,bool(Report["Truncated"])?"Bounded result page; more or incomplete results":"Worker index snapshot");
     Array Uses=Report["Entries"];
+    if(String(LastProjectOptions.get("Query",String()))=="Diagnostics")Uses=Report["Diagnostics"];
     for(int Index=0;Index<Uses.size();++Index) {
         Dictionary Use=Uses[Index];auto Row=TreeNode->create_item(Root);
-        Row->set_text(0,String(Use["Path"])+":"+String::num_int64(int(Use["Line"]))+" "+String(Use["Name"]));Row->set_text(1,Use["Kind"]);Row->set_metadata(0,Use);
+        Row->set_text(0,String(Use["Path"])+":"+String::num_int64(int(Use["Line"]))+" "+String(Use["Name"]));Row->set_text(1,String(Use["Kind"])+" "+String(Use.get("Type",String())));Row->set_metadata(0,Use);
     }
     ShowStatus(String::num_int64(int(Report["Matches"]))+" matches across "+String::num_int64(int(Report["ScannedFiles"]))+" Luau files; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
 }

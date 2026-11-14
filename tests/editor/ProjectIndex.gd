@@ -7,6 +7,10 @@ func Report(Runner, Plugin, Module: String, Member: String, Offset: int=0) -> Di
     var Deadline=Time.get_ticks_msec()+30000
     while Time.get_ticks_msec()<Deadline:
         var Result: Dictionary=Plugin.call('PollProject',Submission.Generation)
+        if Result.get('Stale',false):
+            Submission=Plugin.call('QueryProject',{'Query':'Symbols' if Module.is_empty() else 'References','Module':Module,'Member':Member,'Offset':Offset})
+            await Runner.get_tree().process_frame
+            continue
         if not Result.get('Pending',false): return Result
         await Runner.get_tree().process_frame
     return {'result':ERR_TIMEOUT}

@@ -21,7 +21,11 @@ class GLNativeEditorPlugin : public godot::EditorPlugin {
     uint64_t ProjectGeneration=0;
     uint64_t ProjectUiGeneration=0;
     godot::String ProjectUiTitle;
+    godot::Dictionary LastProjectOptions;
+    uint64_t ProjectRefreshAt=0;
+    bool ProjectDirty=false;
     void FlushProjectQuery();
+    void ProjectAction(const godot::String& Query);
     std::unique_ptr<GLExecutionDomain> PreviewDomain;
     std::unique_ptr<GLProjectModules> PreviewModules;
     GLExecutionOwner* PreviewOwner = nullptr;
@@ -68,6 +72,12 @@ public:
     godot::Dictionary QueryProject(const godot::Dictionary& Options);
     godot::Dictionary PollProject(int64_t Generation);
     int64_t ReloadScripts(const godot::Array& Scripts);
+    void OnProjectChanged();
+    void ShowProjectDefinition();
+    void ShowProjectCompletion();
+    void ShowProjectDiagnostics();
+    void ShowProjectSearch();
+    void ShowNextProjectPage();
     void FindProjectUses();
     void ShowProjectSymbols();
     godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(true); }
