@@ -1,7 +1,7 @@
 name: Incremental Luau project analysis
 on:
   push:
-    paths: ['src/core/gl_project_indexer.cpp', 'src/editor/gl_project_indexer.h', 'tests/runtime/ProjectIndexTests.cpp', 'tests/runtime/CMakeLists.txt', '.github/workflows/project-analysis.yml']
+    paths: ['src/core/gl_project_indexer.cpp', 'src/editor/gl_project_indexer.h', 'src/editor/gl_native_declarations.gen.h', 'bindings/**', 'tools/GenerateNativeBindings.py', 'tests/runtime/ProjectIndexTests.cpp', 'tests/runtime/CMakeLists.txt', '.github/workflows/project-analysis.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -43,4 +43,5 @@ jobs:
           path: |
             build/index/index-results.xml
             build/index/Testing/Temporary/LastTest.log
+            build/index/project-index-workload/**/results.json
           if-no-files-found: error

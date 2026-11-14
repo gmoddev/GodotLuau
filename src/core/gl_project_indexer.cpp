@@ -1,4 +1,5 @@
 #include "gl_project_indexer.h"
+#include "gl_native_declarations.gen.h"
 #include "Luau/Ast.h"
 #include "Luau/Parser.h"
 #include "Luau/Frontend.h"
@@ -17,6 +18,7 @@
 #include <fstream>
 #include <mutex>
 #include <set>
+#include <stdexcept>
 #include <thread>
 #ifdef _WIN32
 #ifndef NOMINMAX
@@ -175,9 +177,15 @@ struct GLProjectIndexer::State {
         Resolver.Semantic.clear();Config.defaultConfig.mode=Luau::Mode::Strict;
         Luau::FrontendOptions Options;Options.retainFullTypeGraphs=true;Options.forAutocomplete=true;Options.moduleTimeLimitSec=0.05;
         Frontend=std::make_unique<Luau::Frontend>(&Resolver,&Config,Options);
+        std::string DeclarationSource=Value.Definitions;
+        if(DeclarationSource.empty()) {
+            for(const char* Part:GLNative::EditorDeclarations)DeclarationSource+=Part;
+            DeclarationSource+="\ndeclare script: {Parent: NativeNode}\ndeclare game: any\ndeclare __IS_CLIENT: boolean\n";
+        }
         for(auto Globals:{&Frontend->globals,&Frontend->globalsForAutocomplete}) {
             Luau::unfreeze(Globals->globalTypes);Luau::registerBuiltinGlobals(*Frontend,*Globals);
-            if(!Value.Definitions.empty())Frontend->loadDefinitionFile(*Globals,Globals->globalScope,Value.Definitions,"GodotLuauNative",false,Globals==&Frontend->globalsForAutocomplete);
+            auto Loaded=Frontend->loadDefinitionFile(*Globals,Globals->globalScope,DeclarationSource,"GodotLuauNative",false,Globals==&Frontend->globalsForAutocomplete);
+            if(!Loaded.success)throw std::runtime_error("Embedded native declarations could not be loaded");
             Luau::freeze(Globals->globalTypes);
         }
         Root=Value.Root;Definitions=Value.Definitions;
@@ -264,8 +272,8 @@ struct GLProjectIndexer::State {
         Report.Invalidated=Invalidated.size();
         std::set<std::string> Needed;size_t SemanticBytes=0;
         std::vector<std::string> ToCheck;
-        if(ModulePath(Value.Active))ToCheck.push_back(Value.Active);
         if(Value.Query=="Diagnostics")ToCheck.insert(ToCheck.end(),Order.begin(),Order.end());
+        if(ModulePath(Value.Active))ToCheck.push_back(Value.Active);
         while(!ToCheck.empty()) {
             auto Name=ToCheck.back();ToCheck.pop_back();auto Found=Resolver.Files.find(Name);
             if(Found==Resolver.Files.end() || Needed.count(Name))continue;
@@ -273,8 +281,11 @@ struct GLProjectIndexer::State {
             Needed.insert(Name);SemanticBytes+=Found->second.Source.size();
             ToCheck.insert(ToCheck.end(),Found->second.Dependencies.begin(),Found->second.Dependencies.end());
         }
-        if(Needed!=Resolver.Semantic)ResetFrontend(Value);
-        Resolver.Semantic=Needed;
+        auto Allowed=Resolver.Semantic;Allowed.insert(Needed.begin(),Needed.end());
+        size_t RetainedSemanticBytes=0;for(const auto& Name:Allowed){auto Found=Resolver.Files.find(Name);if(Found!=Resolver.Files.end())RetainedSemanticBytes+=Found->second.Source.size();}
+        if(Allowed.size()>256 || RetainedSemanticBytes>4*1024*1024){ResetFrontend(Value);Allowed=Needed;}
+        bool Expanded=Allowed!=Resolver.Semantic;Resolver.Semantic=std::move(Allowed);
+        if(Expanded && Needed.count(Value.Active))Frontend->markDirty(Value.Active);
         auto Options=Frontend->options;Options.cancellationToken=Cancellation;
         // Analysis is demand-driven for active buffers; project diagnostics check
         // all discovered modules with a bounded total request time.

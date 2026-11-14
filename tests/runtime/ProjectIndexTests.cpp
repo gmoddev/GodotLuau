@@ -5,6 +5,14 @@
 #include <iostream>
 #include <stdexcept>
 #include <thread>
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#include <psapi.h>
+#pragma comment(lib,"psapi.lib")
+#else
+#include <sys/resource.h>
+#endif
 using Clock=std::chrono::steady_clock;
 void Check(bool Value,const char* Message) {if(!Value)throw std::runtime_error(Message);std::cout<<"[Editor:Index] PASS "<<Message<<'\n';}
 std::shared_ptr<const GLProjectIndexer::Result> Wait(GLProjectIndexer& Index,uint64_t Generation) {
@@ -13,6 +21,9 @@ std::shared_ptr<const GLProjectIndexer::Result> Wait(GLProjectIndexer& Index,uin
     throw std::runtime_error("Index request deadline expired");
 }
 int main(int Count,char** Arguments)try {
+#ifdef _WIN32
+    SetErrorMode(SEM_FAILCRITICALERRORS|SEM_NOGPFAULTERRORBOX|SEM_NOOPENFILEERRORBOX);
+#endif
     if(Count!=2)return 2;
     auto Root=std::filesystem::absolute(Arguments[1])/("run-"+std::to_string(Clock::now().time_since_epoch().count()));std::filesystem::create_directories(Root);
     auto Write=[&](const std::string& Name,const std::string& Source){std::ofstream File(Root/Name,std::ios::binary);File<<Source;if(!File)throw std::runtime_error("Write failed");};
@@ -55,8 +66,24 @@ int main(int Count,char** Arguments)try {
     Request.Buffers[Request.Active]="local M=require('res://Module.luau')\nreturn M.Build(1)\n";
     auto Interactive=Wait(Index,Index.Submit(Request));
     Check(!Interactive->Entries.empty() && Interactive->Entries[0].Name=="Build" && Interactive->Parsed==1,"Active-buffer completion reuses project snapshot and prioritizes one changed document");
+    auto InteractiveWarm=Wait(Index,Index.Submit(Request));Check(InteractiveWarm->Parsed==0 && !InteractiveWarm->Entries.empty(),"Warm semantic completion retains frontend state");
+    Request.Active="res://NativeAuthoring.luau";Request.Buffers.clear();Request.Buffers[Request.Active]="local S=Scene.new(script.Parent)\nlocal Style=S:New('Theme',{})\nS:Call(Style,'SetFontSize','font_size','Label',20)\nreturn Style\n";
+    Request.Query="Diagnostics";
+    auto NativeTypes=Wait(Index,Index.Submit(Request));
+    Check(NativeTypes->Error.empty(),"Embedded native declaration frontend initializes");
+    bool NativeError=false;for(const auto& Item:NativeTypes->Diagnostics)NativeError|=Item.Path==Request.Active;
+    Check(!NativeError,"Actual scoped native authoring resolves against the shipped declaration snapshot");
     Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
     Index.Cancel();
-    std::cout<<"[Editor:Index] MEASURE SubmitMicroseconds="<<SubmitUs<<" ColdWorkerMicroseconds="<<Cold->Microseconds<<" WarmWorkerMicroseconds="<<Cached->Microseconds<<" CompletionWorkerMicroseconds="<<Interactive->Microseconds<<" Files="<<Cold->Files<<" Bytes="<<Cold->Bytes<<'\n';
+    uint64_t PeakProcessBytes=0;
+#ifdef _WIN32
+    PROCESS_MEMORY_COUNTERS Counters{};Counters.cb=sizeof(Counters);
+    if(GetProcessMemoryInfo(GetCurrentProcess(),&Counters,sizeof(Counters)))PeakProcessBytes=Counters.PeakWorkingSetSize;
+#else
+    rusage Usage{};if(getrusage(RUSAGE_SELF,&Usage)==0)PeakProcessBytes=uint64_t(Usage.ru_maxrss)*1024;
+#endif
+    std::ofstream Metrics(Root/"results.json");
+    Metrics<<"{\"Files\":"<<Cold->Files<<",\"SourceBytes\":"<<Cold->Bytes<<",\"SubmitMicroseconds\":"<<SubmitUs<<",\"ColdWorkerMicroseconds\":"<<Cold->Microseconds<<",\"WarmWorkerMicroseconds\":"<<Cached->Microseconds<<",\"CompletionMicroseconds\":"<<Interactive->Microseconds<<",\"WarmCompletionMicroseconds\":"<<InteractiveWarm->Microseconds<<",\"PeakProcessWorkingSetBytes\":"<<PeakProcessBytes<<"}\n";
+    std::cout<<"[Editor:Index] MEASURE SubmitMicroseconds="<<SubmitUs<<" ColdWorkerMicroseconds="<<Cold->Microseconds<<" WarmWorkerMicroseconds="<<Cached->Microseconds<<" CompletionWorkerMicroseconds="<<Interactive->Microseconds<<" WarmCompletionWorkerMicroseconds="<<InteractiveWarm->Microseconds<<" Files="<<Cold->Files<<" Bytes="<<Cold->Bytes<<'\n';
     return 0;
 }catch(const std::exception& Error){std::cerr<<"[Editor:Index] FAIL "<<Error.what()<<'\n';return 1;}

@@ -506,8 +506,15 @@ def Generate(Policy, Api):
     D['PolicySHA256'] = PolicyHash
     D['ApiSHA256'] = Policy['ApiSHA256']
     D['ScopeOperations'] = [{'Name':N,'Signature':S} for N,S in ScopeOperations]
+    Definitions='\n'.join(T)+'\n'
+    # Embed exactly the shipped declarations for the editor worker. This avoids
+    # project-disk access and a second independently maintained type model.
+    EditorDefinitions='#pragma once\nnamespace GLNative {\ninline constexpr const char* EditorDeclarations[]={\n'
+    EditorDefinitions+=''.join(json.dumps(Definitions[I:I+12000])+',\n' for I in range(0,len(Definitions),12000))
+    EditorDefinitions+='};\n}\n'
     return {'src/core/gl_native_registry.gen.h': '\n'.join(H) + '\n',
-            'GodotLuau/Types/Native.d.luau': '\n'.join(T) + '\n',
+            'src/editor/gl_native_declarations.gen.h': EditorDefinitions,
+            'GodotLuau/Types/Native.d.luau': Definitions,
             'bindings/NativeCatalog.json': json.dumps(D, indent=2) + '\n',
             'bindings/NativeCoverage.json': json.dumps(Coverage(Policy, Api, D), indent=2) + '\n'}
 

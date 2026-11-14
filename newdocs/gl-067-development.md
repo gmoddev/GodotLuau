@@ -124,3 +124,14 @@ construction and unrestricted AnimationTree target paths are not admitted by
 these changes. Those need a coherent lifetime/authority design, not extra names
 in the policy. Fifteen generator/policy checks and drift verification pass;
 native/type/application qualification is pending.
+
+## Declaration-backed semantic snapshots
+
+The generator now embeds the exact shipped Native.d.luau text as editor-only
+data, so the worker uses one declaration authority without main-thread project
+reads or a second type model. Existing Lua gameplay facades remain dynamically
+typed; this does not invent static schemas for their APIs. Semantic working sets
+retain previous active modules up to the existing 256-module/4 MiB limit before
+rebuilding, avoiding frontend recreation when switching between nearby modules.
+New tests exercise native Theme authoring through that frontend, warm completion
+and process peak-working-set measurements. Qualification is pending.
