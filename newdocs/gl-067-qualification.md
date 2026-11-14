@@ -1,9 +1,9 @@
 # GL-067 platform qualification
 
-Status: implemented phases qualify at the `533e108` checkpoint within the scopes
-below, including completed production packages/export. The final import-navigation
-correction `d8090a0` has focused/current CI and new source profiles running; its
-new binaries are not inferred from the preceding checkpoint.
+Status: current native/core/editor/index phases pass at `d8090a0`. Fresh production
+profiles/packages are running. The preceding `533e108` checkpoint also passes
+production packages/export within the scopes below; its binaries retain their
+own identity.
 Branch `feature/gl-067-development-platform`
 remains unmerged. The [journal](gl-067-development.md) preserves failed attempts
 and corrections; the [guide](gl-067-editor-api.md) defines supported behavior.
@@ -12,12 +12,13 @@ This is substantial multi-subsystem expansion, not complete Godot API parity.
 ## Source identity
 
 Baseline main: `f54aa44265ae36b98fccfbc0622c4b61c4f6db06`.
-Native implementation: `533e108680cc394296b622a9e04f8d6ef113e019`, tree
-`a2abbb2ecb3aac4898a457579af97b532f64c823`.
+Native implementation: `d8090a0696a2d46ff36efee6813c5a1b55cdcfff`, tree
+`83af576e444ed39a3ca15f1050c9d335819fdfb4`.
 The 139-file LF-normalized native fingerprint is
-`556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6`.
+`558733a683b0fc3f1ef6e4e1d88bba3bcaef233e2fa4982032913af9886acb90`.
 Later commits extend tests, reports and documentation without changing those
-native inputs. Final index lifetime tests have separate evidence at `f83d98b`.
+native inputs. Earlier receipts identify `533e108` and its `556013c8…` fingerprint;
+only editor literal-import navigation changes between those native checkpoints.
 
 Pins remain godot-cpp `d5cc777a89d899665fb61f1650ef0dc0cf6488c4` and Luau
 `9e2984fd0334414a2ef62ceede0c06dab7574d55`. Official editor/templates and existing
@@ -29,15 +30,19 @@ and the established GL-018/GL-029 patches. No dependency or host change is made.
 | Boundary | Result |
 | --- | --- |
 | [Core 43603467149](https://github.com/gmoddev/GodotLuau/actions/runs/43603467149) | Windows/Linux pass all 87 original and eight debugger/profiler scenarios at `f83d98b` |
+| [Current core 43606301059](https://github.com/gmoddev/GodotLuau/actions/runs/43606301059) | Windows/Linux pass all 87 original and eight debugger/profiler scenarios at `d8090a0` |
 | [Declarations 43594486137](https://github.com/gmoddev/GodotLuau/actions/runs/43594486137) | Windows/Linux policy, five generated outputs and actual pinned Luau type checks pass; declaration/policy inputs unchanged afterward |
 | [Index 43603467132](https://github.com/gmoddev/GodotLuau/actions/runs/43603467132) | Windows/Linux Release and Linux ASan/LSan pass actual production service: typed imports, definitions, completion, diagnostics, lexical rename, cache/edit/delete, pagination, cancellation, type-function exclusion and disposal/recovery |
+| [Current index 43606301119](https://github.com/gmoddev/GodotLuau/actions/runs/43606301119) | Same three profiles pass with the empty-module import regression at `d8090a0` |
 | [Native 43598864037](https://github.com/gmoddev/GodotLuau/actions/runs/43598864037) | Windows/Linux pass 141 required actor results, native bindings/lifetime/authority, actual editor workflows, Foundry/restart and seven debugger protocol modes |
+| [Current native 43606301218](https://github.com/gmoddev/GodotLuau/actions/runs/43606301218) | Windows/Linux pass all 141 actor results, seven debugger modes and actual 72-check authoring/reload/recovery workflow, including the corrected import case and fresh scene reopen |
 | [Full-native sanitizers 43599608700](https://github.com/gmoddev/GodotLuau/actions/runs/43599608700) | Windows ASan and Linux ASan/LSan pass detection controls, production VM reload, core, 141 actors and actual debugger cases; no unexpected reports |
 | Windows rendered editor | Matching Debug adapter passes actual breakpoint, native stack/locals, stepping and saved-source reload; four retained captures inspected |
 | Windows rendered Foundry | Matching Debug adapter passes 44 checks plus persistence restart; menu/world/completion captures inspected |
 | [Candidate 43599606392](https://github.com/gmoddev/GodotLuau/actions/runs/43599606392) | All four SCons profiles, Linux core sanitizers, both extracted packages/companion startup and aggregate acceptance pass at `533e108` |
 | [Production debugger 43605411113](https://github.com/gmoddev/GodotLuau/actions/runs/43605411113) | Windows/Linux SCons Release products pass all seven protocol cases and actual 36-check native editor journey |
 | [Game/export 43605497766](https://github.com/gmoddev/GodotLuau/actions/runs/43605497766) | Windows/Linux Foundry Debug/Release standalone export/restart and Windows Relay Siege solo/recovery/listen/dedicated pass |
+| [Current candidate 43606352703](https://github.com/gmoddev/GodotLuau/actions/runs/43606352703) | Fresh profiles/packages for the corrected source are running |
 
 The [compact hosted record](evidence/gl067/ci-qualified.json) retains source,
 product and summary identities. [Rendered editor](evidence/gl067/graphical-debugger.json),
@@ -45,6 +50,11 @@ product and summary identities. [Rendered editor](evidence/gl067/graphical-debug
 and [focused debugger](evidence/gl067/debugger-focused.json) receipts remain
 separate from CI. Existing qualified infrastructure is reused without another
 test layer around its artifact checks.
+The correction has separate [current worker](evidence/gl067/import-navigation-index.json)
+and [actual native editor](evidence/gl067/import-navigation-native.json) receipts,
+paired with its [reproduced baseline failure](evidence/gl067/import-navigation-baseline.json).
+The unchanged runtime/authority/lifetime paths retain prior full-native sanitizer
+evidence; the changed worker path passes its current Linux ASan/LSan profile.
 
 ## Implemented and measured behavior
 

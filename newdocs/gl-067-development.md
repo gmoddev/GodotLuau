@@ -427,3 +427,9 @@ exercises the added SCons Analysis/Config linkage and actual worker/editor bridg
 including the import regression, through the production library on both platforms.
 It reuses the established fixture and source admission; no new harness or relaxed
 assertions are introduced. Its completed outcome will be recorded separately.
+
+`43606301218` now passes both platforms at the corrected `d8090a0` source:
+141 actors per platform, all seven debugger cases and the actual 72-check editor
+workflow/reopen, including the originally failing import. The
+[current native receipt](evidence/gl067/import-navigation-native.json) retains
+both products and summaries. Four-profile/package `43606352703` is still running.

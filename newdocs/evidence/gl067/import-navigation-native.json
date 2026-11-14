@@ -1,0 +1,61 @@
+{
+  "Schema": 1,
+  "Revision": "d8090a0696a2d46ff36efee6813c5a1b55cdcfff",
+  "Run": 43606301218,
+  "Platforms": {
+    "Linux": {
+      "Processes": 141,
+      "SummarySHA256": "76b7fbd29a7e97ee4c43ad957cf3f3fb43b23f42258413af12739b15b44af962",
+      "ExtensionSHA256": "ce99261bec9bc8d035886a6f1b061a4974385ac8a8672aa49440994c27f41328",
+      "DataStoreWorkerSHA256": "c43a28765307a69a6aab15a7c5835e8a7ae24c6247e0ed83e7b375b5617e7304",
+      "DebuggerPassed": true,
+      "DebuggerStops": [
+        8,
+        1,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "AuthoringChecks": 72,
+      "AuthoringPassed": true,
+      "ImportCheck": {
+        "Message": "Import navigation opens a module with no indexed symbols",
+        "Passed": true
+      },
+      "ReopenPassed": true,
+      "FoundryPassed": true
+    },
+    "Windows": {
+      "Processes": 141,
+      "SummarySHA256": "d3e86ebd39ebd54d5197959b524805affd61610c7c5d0f3c497c65e080b5debb",
+      "ExtensionSHA256": "8f27f1846e392a026381322824522121637d27b190a83c98113199e7c9bf21a8",
+      "DataStoreWorkerSHA256": "d6ce7d0ee363239960a7e9a008c2bb7efba9b82c03c848138f9b03bbc5694269",
+      "DebuggerPassed": true,
+      "DebuggerStops": [
+        8,
+        1,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "AuthoringChecks": 72,
+      "AuthoringPassed": true,
+      "ImportCheck": {
+        "Message": "Import navigation opens a module with no indexed symbols",
+        "Passed": true
+      },
+      "ReopenPassed": true,
+      "FoundryPassed": true
+    }
+  },
+  "NativeSource": {
+    "SHA256": "558733a683b0fc3f1ef6e4e1d88bba3bcaef233e2fa4982032913af9886acb90",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "Scope": "Current corrected implementation passes full Windows/Linux native CI, including the real editor import regression, source reload/recovery/reopen and unchanged authority/lifetime regressions."
+}
