@@ -20,6 +20,7 @@ def Main():
     Parser.add_argument('--source', type=Path, required=True)
     Parser.add_argument('--output', type=Path, required=True)
     Parser.add_argument('--development-host', action='store_true', help='Explicitly opt a debug template host into the existing debugger connection')
+    Parser.add_argument('--case', action='append', choices=['local','disconnect','running-disconnect','reload','network','conditional','no-opt-in'], help='Focused rerun of an actual failed case; default runs every admitted mode')
     Args = Parser.parse_args()
     Repository = Path(__file__).resolve().parents[2]
     NativeSource = json.loads(Args.source.read_text(encoding='utf-8'))
@@ -41,6 +42,9 @@ def Main():
     Breakpoints = ','.join(Item['Source'] + ':' + str(Item['Line']) for Name, Item in Locations.items() if Name in ['Entry', 'Module', 'Client', 'Callback', 'Stale'])
     Results = []
     Modes = ['local', 'disconnect', 'running-disconnect', 'reload', 'network', 'conditional'] + (['no-opt-in'] if Args.development_host else [])
+    if Args.case:
+        if any(Name not in Modes for Name in Args.case): Parser.error('Selected case requires a different host admission profile')
+        Modes=[Name for Name in Modes if Name in Args.case]
     for Mode in Modes:
         Case = Output / Mode
         Target, Peer = Case / 'target', Case / 'peer'

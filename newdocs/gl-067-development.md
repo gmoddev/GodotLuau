@@ -154,3 +154,12 @@ removal. The original five real debugger modes remain mandatory; a sixth mode
 checks false visits, a true live local and forbidden-call failure without a
 gameplay side effect. Core checks extend an existing scenario without dropping
 its original assertions. Actual protocol/editor qualification is pending.
+
+Windows `5112d26` compiles and passes all 87+8 core cases. Its real debugger
+attempt `debugger-06` passes the original five modes, including reload, ENet
+timeout/reconnect, and both disconnect cases. The new conditional case fails
+after its setup stop: the test peer sent three JSON-derived floating-point line
+numbers, correctly rejected by the existing integer-only protocol. The peer now
+casts those fields to integers and checks zero command errors. A focused case
+selector permits rerunning that actual failed case without repeating unchanged
+verified modes. The default CI run still requires all six modes.
