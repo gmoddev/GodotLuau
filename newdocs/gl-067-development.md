@@ -209,3 +209,22 @@ admission using the pinned lexer (also for incomplete source or a truncated AST
 walk). It reports this unsupported profile explicitly and never evaluates that
 project code. No OOM, crash or exploit was reproduced or claimed. This focused
 source-backed exclusion preserves the worker's no-project-execution contract.
+
+## Manual debugger reattachment — qualification pending
+
+The existing Godot transport can re-admit a manually detached running session
+with `Attach` for All domains. It requires the current envelope/nonce, rejects
+suspended or shutting-down domains, rotates the cryptographic nonce and starts a
+new request sequence. Old-session commands cannot mutate the new attachment.
+Profile collection stays off. Retired code roots and inspection state stay
+retired: source inspection/breakpoints require new or reloaded generations.
+The new capability is advertised; the editor action stays inert for older
+runtimes that do not advertise it. No protocol field is reinterpreted.
+
+This is same-transport recovery without a new Play session. A physical transport
+disconnect fails closed; the pinned public EngineDebugger API does not expose a
+connection factory for safely reconnecting an editor restart. That remains a
+specific external transport limitation, not an indefinite suspended state or a
+second listener. The seventh native mode checks manual detach, running progress,
+nonce rotation, suspended/stale-command rejection, a newly admitted generation
+and old-owner native cleanup. Original debugger modes remain required.

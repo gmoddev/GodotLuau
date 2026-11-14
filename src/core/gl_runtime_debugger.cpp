@@ -22,7 +22,7 @@ namespace {
 uint64_t HostId=0, CommandWindow=0, LastRequest=0;
 unsigned Commands=0;
 std::string Session; // Godot built-in objects cannot initialize before extension binding.
-bool Polling=false, Detached=false;
+bool Polling=false, Detached=false,ManualDetached=false;
 uint64_t AwaitingStop=0;
 bool StopAcknowledged=false;
 GLDebugger* Suspended=nullptr;
@@ -63,6 +63,7 @@ void Poll(bool Immediate=false) {
 void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const String& Error={},const Dictionary& Extra={}) {
     if(!GLRuntimeDebuggerAvailable())return;
     Dictionary Reply; Reply["Schema"]=1; Reply["Session"]=String::utf8(Session.c_str()); Reply["Event"]=Event; Reply["Request"]=Request;
+    Reply["SupportsAttach"]=true;
     if(!Error.is_empty())Reply["Error"]=Error.left(256);
     if(Debugger) {
         Reply["Domain"]=DomainName(Debugger->GetDomain()); Reply["State"]=GLDebugger::StateName(Debugger->GetState());
@@ -99,7 +100,7 @@ GLDebugAction Stop(GLDebugger& Debugger) {
     }
     AwaitingStop=0;
     auto Disconnect=[] {
-        Detached=true;
+        Detached=true;ManualDetached=false;
         if(auto Host=Object::cast_to<GLDomainHost>(ObjectDB::get_instance(HostId)))
             for(bool Client:{false,true})if(auto Domain=Host->GetExistingDomain(Client)) {
                 if(auto Current=Domain->GetDebugger())Current->Detach();
@@ -166,7 +167,7 @@ Error GLReloadLuauScripts(const Array& Scripts) {
 }
 GLDebugger* GLGetSuspendedDebugger() { return Suspended && Suspended->GetInspectionThread()?Suspended:nullptr; }
 void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
-    if(!GLRuntimeDebuggerAvailable() || Domain.GetKind()==GLDomainKind::EditorPreview || Detached)return;
+    if(!GLRuntimeDebuggerAvailable() || Domain.GetKind()==GLDomainKind::EditorPreview || Domain.IsClosing() || Detached)return;
     auto EngineDebug=EngineDebugger::get_singleton();
     if(!HostId) {
         Ref<Crypto> Provider; Provider.instantiate(); auto Bytes=Provider->generate_random_bytes(16);
@@ -199,7 +200,7 @@ void GLRuntimeDebuggerTick(GLDomainHost& Host) {
 void GLRuntimeDebuggerShutdown(GLDomainHost& Host) {
     if(HostId!=uint64_t(Host.get_instance_id()))return;
     if(auto Debugger=EngineDebugger::get_singleton())if(Debugger->has_capture("godotluau"))Debugger->unregister_message_capture("godotluau");
-    HostId=0; Session.clear(); LastRequest=0; Detached=false;AwaitingStop=0;StopAcknowledged=false;
+    HostId=0; Session.clear(); LastRequest=0; Detached=false;ManualDetached=false;AwaitingStop=0;StopAcknowledged=false;
 }
 bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const Array& Data) {
     if(Message!="command")return false;
@@ -233,6 +234,19 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
     LastRequest=uint64_t(Id);
     String Op=Request["Op"]; String Selected=Request.get("Domain",String("All"));
     if(Op.length()>32 || (Selected!="All" && Selected!="Server" && Selected!="Client")){Send(nullptr,"Error",Id,"Unsupported command or domain");return true;}
+    if(Op=="Attach") {
+        // Only re-admit a manually detached runtime over its existing trusted
+        // transport. This is not a connection factory or physical reconnect.
+        if(!Detached || !ManualDetached || Suspended || Selected!="All") {Send(nullptr,"Error",Id,"Attach requires a running manually detached session and All domains");return true;}
+        bool Live=false;for(bool Client:{false,true})if(auto Domain=Host.GetExistingDomain(Client))Live|=!Domain->IsClosing();
+        if(!Live){Send(nullptr,"Error",Id,"No live execution domains to attach");return true;}
+        Ref<Crypto> Provider;Provider.instantiate();auto Bytes=Provider->generate_random_bytes(16);
+        if(Bytes.size()!=16){Send(nullptr,"Error",Id,"Session identity generation failed");return true;}
+        Session=Bytes.hex_encode().utf8().get_data();LastRequest=0;Detached=false;ManualDetached=false;
+        AwaitingStop=0;StopAcknowledged=false;
+        for(bool Client:{false,true})if(auto Domain=Host.GetExistingDomain(Client))GLConfigureRuntimeDebugger(Host,*Domain);
+        Send(nullptr,"Attached",Id);return true;
+    }
     if(Op=="AcknowledgeStop") {
         if(Suspended && AwaitingStop && Request.get("StopId",Variant()).get_type()==Variant::INT &&
             int64_t(Request["StopId"])==int64_t(AwaitingStop) && Selected==DomainName(Suspended->GetDomain()))StopAcknowledged=true;
@@ -245,7 +259,7 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         (Op=="Breakpoint" && (Request.get("Line",Variant()).get_type()!=Variant::INT || Request.get("Enabled",Variant()).get_type()!=Variant::BOOL)))) {
         Send(nullptr,"Error",Id,"Invalid project breakpoint");return true;
     }
-    if(Op=="Detach" && Selected=="All")Detached=true;
+    if(Op=="Detach" && Selected=="All"){Detached=true;ManualDetached=true;}
     bool Matched=false;
     for(bool Client:{false,true}) {
         auto Domain=Host.GetExistingDomain(Client); auto Debugger=Domain?Domain->GetDebugger():nullptr;

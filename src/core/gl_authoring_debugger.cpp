@@ -32,9 +32,10 @@ void GLAuthoringDebugger::_setup_session(int32_t Session) {
     auto Buttons=memnew(HBoxContainer); Panel->add_child(Buttons);
     auto Domains=memnew(OptionButton);Domains->add_item("Server");Domains->add_item("Client");Domains->add_item("All domains");
     Domains->connect("item_selected",Callable(this,"SelectDomain").bind(Session));Buttons->add_child(Domains);
-    for(const char* Op:{"Pause","Continue","StepInto","StepOver","StepOut","Reload","Status","Detach"}) {
+    for(const char* Op:{"Pause","Continue","StepInto","StepOver","StepOut","Reload","Status","Detach","Attach"}) {
         auto ButtonNode=memnew(Button); ButtonNode->set_text(Op);
         if(!std::strcmp(Op,"Reload"))ButtonNode->set_tooltip_text("Reload the saved stopped source, retire its old generation and continue. Runtime state is rebuilt.");
+        if(!std::strcmp(Op,"Attach"))ButtonNode->set_tooltip_text("Reattach a manually detached connected runtime with a new session identity. Source inspection requires new/reloaded generations; no transport reconnect.");
         ButtonNode->connect("pressed",Callable(this,"Command").bind(Session,String(Op))); Buttons->add_child(ButtonNode);
     }
     auto Status=memnew(Label); Status->set_text("Waiting for an editor-capable Luau runtime; native stack/variables use Godot's Debugger.");
@@ -63,7 +64,7 @@ void GLAuthoringDebugger::Send(int Session,const String& Op,const Dictionary& Fi
     if(Found==Views.end() || Native.is_null() || !Native->is_active() || Found->second.Nonce.is_empty())return;
     auto& View=Found->second; Dictionary Request=Fields.duplicate();
     Request["Schema"]=1; Request["Session"]=View.Nonce; Request["Request"]=++View.Request;
-    Request["Op"]=Op; Request["Domain"]=Op=="Breakpoint" || Op=="Detach"?String("All"):Op=="Pause"?View.PauseDomain:View.Domain;
+    Request["Op"]=Op; Request["Domain"]=Op=="Breakpoint" || Op=="Detach" || Op=="Attach"?String("All"):Op=="Pause"?View.PauseDomain:View.Domain;
     Array Data;Data.push_back(Request);Native->send_message("godotluau:command",Data);
 }
 void GLAuthoringDebugger::SelectDomain(int Index,int Session) {
@@ -71,6 +72,7 @@ void GLAuthoringDebugger::SelectDomain(int Index,int Session) {
 }
 void GLAuthoringDebugger::Command(int Session,const String& Op) {
     auto Native=get_session(Session); if(Native.is_null() || !Native->is_active())return;
+    if(Op=="Attach") {auto Found=Views.find(Session);if(Found==Views.end() || !bool(Found->second.LastState.get("SupportsAttach",false)))return;}
     if(Op=="CopyProfile") {
         auto Found=Views.find(Session);if(Found!=Views.end() && !Found->second.LastProfile.is_empty())
             DisplayServer::get_singleton()->clipboard_set(JSON::stringify(Found->second.LastProfile,"  "));
