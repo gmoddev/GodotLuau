@@ -387,6 +387,10 @@ Siege solo/recovery/listen/dedicated workloads pass in
 The [retained production receipt](evidence/gl067/production-qualified.json)
 identifies those immutable packages and products; it is not evidence for a
 later changed binary.
+The separate [game/export receipt](evidence/gl067/game-export-qualified.json)
+retains each standalone configuration and solo/recovery/four-player actor
+outcome. Linux export finalizes the verified companion from mode 0644 to 0755
+under the existing GL-060 procedure, then both starts succeed.
 
 Final source review finds that literal import navigation emits its target only
 while iterating that target's symbols. An empty-table/constant-return module has
@@ -395,10 +399,20 @@ editor: precisely the new import-navigation assertion fails, while the other
 71 authoring/reload/navigation/recovery checks pass. The captured fixture and
 stderr remain under the local GL-067 artifact root. This is an editor product
 defect, not a test infrastructure failure.
+The [baseline receipt](evidence/gl067/import-navigation-baseline.json) retains
+the exact failed assertion, original source identity and logs/fixture hashes.
 
 The correction emits a single validated target location directly, independently
 of target symbols. Missing targets remain absent. Production-index and actual
 editor regression fixtures cover the empty module. No gameplay, ABI, declaration,
 dependency, host, packaging policy or native authority changes. Its native
-fingerprint is `dd64bd1592b5dc7ef523eaca28a40ad31d88916473d94d2c55454e80afe644ce`
-(139 inputs); qualification of that correction is pending at this entry.
+fingerprint is `558733a683b0fc3f1ef6e4e1d88bba3bcaef233e2fa4982032913af9886acb90`
+(139 inputs). Windows/Linux Release and Linux ASan/LSan pass the new production-
+index case in [`43606301119`](https://github.com/gmoddev/GodotLuau/actions/runs/43606301119);
+current core passes both platforms in
+[`43606301059`](https://github.com/gmoddev/GodotLuau/actions/runs/43606301059).
+Fresh native/editor CI `43606301218` and four-profile/package `43606352703` are
+running. Existing full-native sanitizer and game/export evidence is retained
+within unchanged runtime/authority/lifetime/packaging scopes; the changed editor
+analysis path has its own current Linux sanitizer coverage. No old binary is
+relabeled with the new fingerprint.

@@ -1,0 +1,151 @@
+{
+  "Schema": 1,
+  "Run": 43605497766,
+  "ConsumerRevision": "eda52d14076b5ae9ddd82c5d316e1051609e56c4",
+  "ImplementationRevision": "533e108680cc394296b622a9e04f8d6ef113e019",
+  "FoundryExports": {
+    "Linux-Debug": {
+      "Passed": true,
+      "SummarySHA256": "776bc656b7e4fea5b93caa287eac5ad0a18d382c528ce18a13866c2f662b51fd",
+      "Configuration": "Debug",
+      "CompanionModes": {
+        "Staged": 493,
+        "ExportedBeforeFinalization": 420,
+        "Final": 493
+      },
+      "StandaloneFiles": {
+        "godot_luau.linux.template_debug.x86_64.so": "77ab8ef7afe0c7789efd2bd6752dec05e2a03889d677d5c5e5b64d03cfd1ef30",
+        "Foundry.sh": "f800560295780443e91a01fcc6ab773042bec9389906937fce4f68dfe1098142",
+        "godot_luau_store_worker": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+        "Foundry.x86_64": "c566714a54e1e66cb0c966c7a159e0f042c9cee5b4e6a745daf245f02b088887"
+      },
+      "Scope": "Standalone entrypoint, native library/companion packaging and clean restart; not exported interactive gameplay"
+    },
+    "Linux-Release": {
+      "Passed": true,
+      "SummarySHA256": "61fb0da686bb212f34776168f384e522b24aa731718e7f50673d82d5c0bc7acc",
+      "Configuration": "Release",
+      "CompanionModes": {
+        "Staged": 493,
+        "ExportedBeforeFinalization": 420,
+        "Final": 493
+      },
+      "StandaloneFiles": {
+        "godot_luau.linux.template_release.x86_64.so": "cd434eea80d582b1410768f7c1c4c01267748d7a7885fbe6530b162fb372dc1b",
+        "godot_luau_store_worker": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+        "Foundry.x86_64": "8d927390df09ca77372b75103412f79a4b8218c65e2754b46b85708ad357918a"
+      },
+      "Scope": "Standalone entrypoint, native library/companion packaging and clean restart; not exported interactive gameplay"
+    },
+    "Windows-Debug": {
+      "Passed": true,
+      "SummarySHA256": "b74e1993dc4f2d344378eef383bb090a3e6b52dfbc7577a069a8960d522a6f20",
+      "Configuration": "Debug",
+      "CompanionModes": null,
+      "StandaloneFiles": {
+        "Foundry.exe": "9158ae6c69713813ff0f2621f3d4cfe837bcf3031750c976d8dba6ef1991e594",
+        "godot_luau.windows.template_debug.x86_64.dll": "d6d5fe3d8830d68be653455aa0dcc456fc799f445566e5a950f2b3de2e354156",
+        "godot_luau_store_worker.exe": "27915ec607cfb6cd9b3a01438132898f2508cb4a4710c557825ab0325feb8b5b"
+      },
+      "Scope": "Standalone entrypoint, native library/companion packaging and clean restart; not exported interactive gameplay"
+    },
+    "Windows-Release": {
+      "Passed": true,
+      "SummarySHA256": "70db57e5dc918a0d3c6c42dc1c34555e384f15cf0538e9064d611eed5522d761",
+      "Configuration": "Release",
+      "CompanionModes": null,
+      "StandaloneFiles": {
+        "Foundry.exe": "d82b28b2dc0f0bb54b8128ff6fbfd4e34f6d000af5a575e08bf28b0113c4c241",
+        "godot_luau.windows.template_release.x86_64.dll": "c72f7b566c351683f17bdcef83439fa7f5a76497d68c39abbe1d2f6ba16549e6",
+        "godot_luau_store_worker.exe": "27915ec607cfb6cd9b3a01438132898f2508cb4a4710c557825ab0325feb8b5b"
+      },
+      "Scope": "Standalone entrypoint, native library/companion packaging and clean restart; not exported interactive gameplay"
+    }
+  },
+  "RelaySiegeSessions": [
+    {
+      "Dedicated": true,
+      "Graphical": false,
+      "SummarySHA256": "09c45ee0269a16256d6de0a520063fe94a505b5f4a410bb992b40248400730ec",
+      "Actors": [
+        {
+          "Actor": "server",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 2
+        },
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 27
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 9
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 9
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 9
+        }
+      ]
+    },
+    {
+      "Dedicated": false,
+      "Graphical": false,
+      "SummarySHA256": "26005610e657025d8b75a728f8acb20ee78a6057377967458515903a1771bdd1",
+      "Actors": [
+        {
+          "Actor": "leader",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 27
+        },
+        {
+          "Actor": "observer1",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 9
+        },
+        {
+          "Actor": "observer2",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 9
+        },
+        {
+          "Actor": "latejoin",
+          "Exit": 0,
+          "Failures": 0,
+          "Cases": 9
+        }
+      ]
+    }
+  ],
+  "RelaySiegeSolo": [
+    {
+      "Scenario": "relay-solo",
+      "Failures": 0,
+      "Cases": 26,
+      "Graphical": false,
+      "SummarySHA256": "a0f85ebf049d2bd8c681996e47a75b7b192301d7ca5a91d56631797d456d77bf"
+    },
+    {
+      "Scenario": "relay-recovery",
+      "Failures": 0,
+      "Cases": 7,
+      "Graphical": false,
+      "SummarySHA256": "e27198c0bbec3e63bd75c148b0676c57fd248c30f0b763c42d7a99895a85a697"
+    }
+  ]
+}

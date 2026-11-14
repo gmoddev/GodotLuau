@@ -1,7 +1,10 @@
 # GL-067 platform qualification
 
-Status: implemented phases qualify within the scopes below; final production
-package/export gates are running. Branch `feature/gl-067-development-platform`
+Status: implemented phases qualify at the `533e108` checkpoint within the scopes
+below, including completed production packages/export. The final import-navigation
+correction `d8090a0` has focused/current CI and new source profiles running; its
+new binaries are not inferred from the preceding checkpoint.
+Branch `feature/gl-067-development-platform`
 remains unmerged. The [journal](gl-067-development.md) preserves failed attempts
 and corrections; the [guide](gl-067-editor-api.md) defines supported behavior.
 This is substantial multi-subsystem expansion, not complete Godot API parity.
@@ -32,7 +35,9 @@ and the established GL-018/GL-029 patches. No dependency or host change is made.
 | [Full-native sanitizers 43599608700](https://github.com/gmoddev/GodotLuau/actions/runs/43599608700) | Windows ASan and Linux ASan/LSan pass detection controls, production VM reload, core, 141 actors and actual debugger cases; no unexpected reports |
 | Windows rendered editor | Matching Debug adapter passes actual breakpoint, native stack/locals, stepping and saved-source reload; four retained captures inspected |
 | Windows rendered Foundry | Matching Debug adapter passes 44 checks plus persistence restart; menu/world/completion captures inspected |
-| [Candidate 43599606392](https://github.com/gmoddev/GodotLuau/actions/runs/43599606392) | Pending; completed profiles and outstanding gates are tracked in the journal |
+| [Candidate 43599606392](https://github.com/gmoddev/GodotLuau/actions/runs/43599606392) | All four SCons profiles, Linux core sanitizers, both extracted packages/companion startup and aggregate acceptance pass at `533e108` |
+| [Production debugger 43605411113](https://github.com/gmoddev/GodotLuau/actions/runs/43605411113) | Windows/Linux SCons Release products pass all seven protocol cases and actual 36-check native editor journey |
+| [Game/export 43605497766](https://github.com/gmoddev/GodotLuau/actions/runs/43605497766) | Windows/Linux Foundry Debug/Release standalone export/restart and Windows Relay Siege solo/recovery/listen/dedicated pass |
 
 The [compact hosted record](evidence/gl067/ci-qualified.json) retains source,
 product and summary identities. [Rendered editor](evidence/gl067/graphical-debugger.json),
@@ -89,8 +94,10 @@ are not substituted for assertion or application correctness.
 
 ## Limits and readiness
 
-Qualified phases are available for review on the feature branch; production
-package/export acceptance remains pending. Main is unchanged, Native remains the
+Qualified phases are available for review on the feature branch. The final
+empty-module import correction is under current CI and fresh source/package
+qualification; preceding package/export receipts retain their original identity.
+Main is unchanged, Native remains the
 default controller, Scripted stays opt-in, and releases/updater stay disabled.
 
 The wider campaign remains open. Foundry is the real acceptance game, with its

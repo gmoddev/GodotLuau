@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "ImplementationRevision": "533e108680cc394296b622a9e04f8d6ef113e019",
+  "NativeSource": {
+    "SHA256": "556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "ExpectedFailure": "Import navigation opens a module with no indexed symbols",
+  "ChecksPassed": 71,
+  "ChecksTotal": 72,
+  "FailedChecks": [
+    {
+      "Message": "Import navigation opens a module with no indexed symbols",
+      "Passed": false
+    }
+  ],
+  "Files": {
+    "editor-results.json": "851bec336e51dadb946042bdc0606dc8c2004bb737ffa90fd7c65ed7d0befeb3",
+    "editor.stdout.log": "76dc0a68f6f2c6cbf011775549a6b0aa7f5b46882f4fed3e829e8ca8aa23bddc",
+    "editor.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ProjectIndex.gd": "8cee24e3a722f7ef5f316bbc40bf867fb55b6c3b365bf35fc49cb0e7724720cc"
+  },
+  "Scope": "Actual native editor baseline; all original checks pass and precisely the new import-navigation regression fails. Not a product crash."
+}
