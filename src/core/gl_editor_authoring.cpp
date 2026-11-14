@@ -5,6 +5,7 @@
 #include "luau_value_bindings.h"
 #include "gl_runtime.h"
 #include "gl_project_modules.h"
+#include "gl_project_indexer.h"
 #include "gl_authoring_debugger.h"
 #include "gl_debug_snapshot.h"
 #include <godot_cpp/classes/button.hpp>
@@ -154,6 +155,7 @@ void GLNativeEditorPlugin::OnPreviewSourceChanged() {
     StopPreview(); ShowStatus("Source changed; use Preview Luau to reconstruct before saving");
 }
 void GLNativeEditorPlugin::_process(double) {
+    FlushProjectQuery();
     if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))Capture->Flush();
     if (!PreviewDomain || PreviewDomain->IsClosing()) return;
     if (PreviewDomain->GetPendingTaskCount()) { StopPreview(); ShowStatus("Preview callbacks cannot yield or retain tasks"); }

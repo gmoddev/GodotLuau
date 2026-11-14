@@ -1,0 +1,58 @@
+#include "gl_project_indexer.h"
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <thread>
+using Clock=std::chrono::steady_clock;
+void Check(bool Value,const char* Message) {if(!Value)throw std::runtime_error(Message);std::cout<<"[Editor:Index] PASS "<<Message<<'\n';}
+std::shared_ptr<const GLProjectIndexer::Result> Wait(GLProjectIndexer& Index,uint64_t Generation) {
+    auto Deadline=Clock::now()+std::chrono::seconds(60);
+    while(Clock::now()<Deadline) {if(auto Result=Index.Poll(Generation))return Result;std::this_thread::sleep_for(std::chrono::milliseconds(1));}
+    throw std::runtime_error("Index request deadline expired");
+}
+int main(int Count,char** Arguments)try {
+    if(Count!=2)return 2;
+    auto Root=std::filesystem::absolute(Arguments[1]);std::filesystem::create_directories(Root);
+    auto Write=[&](const std::string& Name,const std::string& Source){std::ofstream File(Root/Name,std::ios::binary);File<<Source;if(!File)throw std::runtime_error("Write failed");};
+    Write("Module.luau","local function Build(Value: number): number return Value+1 end\nreturn {Build=Build}\n");
+    Write("Consumer.luau","local M=require('res://Module.luau')\nlocal Answer=M.Build(2)\nlocal Alias=M.Build\nAlias(3)\nreturn Answer\n");
+    Write("Shadow.luau","local M=require('res://Module.luau')\ndo local M={Build=function() end}; M.Build() end\nreturn M\n");
+    Write("Assigned.luau","local M=require('res://Module.luau')\nM={Build=function() end}\nM.Build()\nreturn M\n");
+    GLProjectIndexer Index;GLProjectIndexer::Request Request;Request.Root=Root.u8string();Request.Query="References";Request.Module="res://Module.luau";Request.Member="Build";
+    auto First=Wait(Index,Index.Submit(Request));
+    Check(First->Error.empty() && First->Entries.size()==3,"Exact static module references preserve aliases, shadowing and reassignment");
+    auto Warm=Wait(Index,Index.Submit(Request));Check(Warm->Parsed==0 && Warm->Cached==4,"Warm index retains all unchanged documents");
+    Request.Active="res://Consumer.luau";Request.Query="Definition";Request.Line=2;Request.Column=17;
+    auto Definition=Wait(Index,Index.Submit(Request));
+    Check(Definition->Entries.size()==1 && Definition->Entries[0].Path=="res://Module.luau" && Definition->Entries[0].Kind=="Definition","Pinned Luau resolves cross-module function definition");
+    Request.Query="Complete";Request.Line=2;Request.Column=18;Request.Member="Bu";
+    auto Completion=Wait(Index,Index.Submit(Request));
+    Check(!Completion->Entries.empty() && Completion->Entries[0].Name=="Build" && !Completion->Entries[0].Type.empty(),"Type-aware completion includes imported function signature");
+    Request.Query="Diagnostics";Request.Buffers[Request.Active]="local M=require('res://Module.luau')\nreturn M.Build('bad')\n";
+    auto Errors=Wait(Index,Index.Submit(Request));Check(!Errors->Diagnostics.empty() && Errors->Parsed==1,"Changed buffer receives cross-module diagnostics and only one syntax reparse");
+    Request.Active="res://Module.luau";Request.Buffers.clear();Request.Query="Rename";Request.Line=1;Request.Column=17;Request.Replacement="Construct";
+    auto Rename=Wait(Index,Index.Submit(Request));Check(Rename->Error.empty() && Rename->Entries.size()==2 && Rename->Revisions.count(Request.Active),"Rename preview contains exact lexical definition/reference and source precondition");
+    Request.Replacement="Value";auto Collision=Wait(Index,Index.Submit(Request));Check(!Collision->Error.empty() && Collision->Entries.empty(),"Rename refuses potential binding capture");
+    Request.Query="References";Request.Active.clear();Request.Module="res://Module.luau";Request.Member="Build";
+    Write("Consumer.luau","local M=require('res://Module.luau')\nreturn M.Build(1)\n");
+    auto Changed=Wait(Index,Index.Submit(Request));Check(Changed->Entries.size()==1,"Saved edit invalidates removed references");
+    std::filesystem::remove(Root/"Consumer.luau");auto Deleted=Wait(Index,Index.Submit(Request));Check(Deleted->Entries.empty(),"Completed discovery evicts deleted documents");
+    for(int I=0;I<1200;++I) {
+        // A schema/configuration workload: independently typed item records plus
+        // a deterministic shared economy dependency, not empty padding modules.
+        Write("Item"+std::to_string(I)+".luau","local Economy=require('res://Module.luau')\nexport type Item={Id:number,Price:number,Weight:number}\nlocal Item:Item={Id="+std::to_string(I)+",Price=Economy.Build("+std::to_string(I%97)+"),Weight="+std::to_string(I%13+1)+"}\nreturn Item\n");
+    }
+    Request.Query="Symbols";Request.Member.clear();auto Start=Clock::now();auto Generation=Index.Submit(Request);
+    auto SubmitUs=std::chrono::duration_cast<std::chrono::microseconds>(Clock::now()-Start).count();
+    auto Cold=Wait(Index,Generation);Check(Cold->Files>=1203 && Cold->More && Cold->Entries.size()==256,"Thousands-scale workload is indexed with bounded result pages");
+    auto Cached=Wait(Index,Index.Submit(Request));Check(Cached->Parsed==0 && Cached->Files==Cold->Files,"Fully warm large cache is not evicted by result pagination");
+    Request.Offset=256;auto Page=Wait(Index,Index.Submit(Request));Check(Page->Entries.size()==256 && Page->Parsed==0,"Next page reuses complete document index");
+    Request.Offset=0;auto Obsolete=Index.Submit(Request);Request.Query="Search";Request.Member="Economy";auto Current=Index.Submit(Request);
+    auto Latest=Wait(Index,Current);Check(!Index.Poll(Obsolete) && Latest->Generation==Current,"Obsolete request cannot publish over current generation");
+    Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
+    Index.Cancel();
+    std::cout<<"[Editor:Index] MEASURE SubmitMicroseconds="<<SubmitUs<<" ColdWorkerMicroseconds="<<Cold->Microseconds<<" WarmWorkerMicroseconds="<<Cached->Microseconds<<" Files="<<Cold->Files<<" Bytes="<<Cold->Bytes<<'\n';
+    return 0;
+}catch(const std::exception& Error){std::cerr<<"[Editor:Index] FAIL "<<Error.what()<<'\n';return 1;}

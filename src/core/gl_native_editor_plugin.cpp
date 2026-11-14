@@ -9,6 +9,8 @@
 #include "luau_script.h"
 #include "gl_native_editor_api.h"
 #include "gl_execution_domain.h"
+#include "gl_project_indexer.h"
+#include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/tree.hpp>
@@ -43,6 +45,8 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("GetRuntimeDiagnostics"), &GLNativeEditorPlugin::GetRuntimeDiagnostics);
     ClassDB::bind_method(D_METHOD("GetDebuggerSessions"), &GLNativeEditorPlugin::GetDebuggerSessions);
     ClassDB::bind_method(D_METHOD("IndexProject","Module","Member"), &GLNativeEditorPlugin::IndexProject);
+    ClassDB::bind_method(D_METHOD("QueryProject","Options"), &GLNativeEditorPlugin::QueryProject);
+    ClassDB::bind_method(D_METHOD("PollProject","Generation"), &GLNativeEditorPlugin::PollProject);
     ClassDB::bind_method(D_METHOD("FindProjectUses"), &GLNativeEditorPlugin::FindProjectUses);
     ClassDB::bind_method(D_METHOD("ShowProjectSymbols"), &GLNativeEditorPlugin::ShowProjectSymbols);
 }
@@ -59,6 +63,7 @@ void GLNativeEditorPlugin::_enter_tree() {
 }
 
 void GLNativeEditorPlugin::_exit_tree() {
+    ProjectIndex.reset();ProjectGeneration=0;
     StopPreview();
     if (Debugger.is_valid()) { remove_debugger_plugin(Debugger);Debugger.unref(); }
     if (auto Panel=Object::cast_to<Control>(ObjectDB::get_instance(PreviewPanel))) {
@@ -113,20 +118,41 @@ Array GLNativeEditorPlugin::GetDebuggerSessions() {
     auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr());return Capture?Capture->DescribeSessions():Array();
 }
 Dictionary GLNativeEditorPlugin::IndexProject(const String& Module,const String& Member) {
-    Dictionary Buffers;
+    Dictionary Options;Options["Module"]=Module;Options["Member"]=Member;
+    Options["Query"]=Module.is_empty() && Member.is_empty()?"Symbols":"References";
+    return QueryProject(Options);
+}
+Dictionary GLNativeEditorPlugin::QueryProject(const Dictionary& Options) {
     if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id())return Dictionary();
+    GLProjectIndexer::Request Request;
+    auto Text=[](const String& Value){return std::string(Value.utf8().get_data());};
+    Request.Root=Text(ProjectSettings::get_singleton()->globalize_path("res://"));
+    Request.Query=Text(Options.get("Query","Symbols"));Request.Module=Text(Options.get("Module",String()));
+    Request.Member=Text(Options.get("Member",String()));Request.Replacement=Text(Options.get("Replacement",String()));
+    Request.Line=Options.get("Line",1);Request.Column=Options.get("Column",1);
+    int64_t Offset=Options.get("Offset",0);Request.Offset=Offset<0?0:size_t(Offset);
+    size_t Bytes=0;
     if(auto Editor=GetEditor()) {
         auto Scripts=Editor->get_open_scripts();
         for(int Index=0;Index<Scripts.size() && Index<64;++Index) {
             Ref<Script> Script=Scripts[Index];
             auto Source=Script.is_valid()?Object::cast_to<LuauScript>(Script.ptr()):nullptr;
-            if(Source && Source->_get_source_code().utf8().length()<=256*1024)Buffers[Source->get_path()]=Source->_get_source_code();
+            if(Source) {
+                auto Buffer=Text(Source->_get_source_code());Bytes+=Buffer.size();
+                if(Buffer.size()<=256*1024 && Bytes<=8*1024*1024)Request.Buffers[Text(Source->get_path())]=std::move(Buffer);
+            }
         }
         Ref<Script> Current=Editor->get_current_script();auto Tab=Editor->get_current_editor();
         auto Code=Tab?Object::cast_to<CodeEdit>(Tab->get_base_editor()):nullptr;
-        if(Current.is_valid() && Current->is_class("LuauScript") && Code && Code->get_text().utf8().length()<=256*1024)Buffers[Current->get_path()]=Code->get_text();
+        if(Current.is_valid() && Current->is_class("LuauScript") && Code) {
+            Request.Active=Text(Current->get_path());auto Buffer=Text(Code->get_text());
+            if(Buffer.size()<=256*1024)Request.Buffers[Request.Active]=std::move(Buffer);
+        }
     }
-    return GLIndexProjectModule(Module,Member,Buffers);
+    if(!ProjectIndex)ProjectIndex=std::make_unique<GLProjectIndexer>();
+    ProjectGeneration=ProjectIndex->Submit(std::move(Request));
+    Dictionary Report;Report["result"]=ProjectGeneration?OK:ERR_INVALID_PARAMETER;
+    Report["Generation"]=int64_t(ProjectGeneration);Report["Pending"]=bool(ProjectGeneration);return Report;
 }
 void GLNativeEditorPlugin::FindProjectUses() {
     auto Editor=GetEditor();Ref<Script> Current=Editor?Editor->get_current_script():Ref<Script>();
@@ -140,32 +166,30 @@ void GLNativeEditorPlugin::FindProjectUses() {
     String Module=Target.get("script_path",Current->get_path());
     Dictionary Report=IndexProject(Module,Symbol);
     if(int(Report.get("result",ERR_UNAVAILABLE))!=OK){ShowStatus("This selection has no supported static module reference index");return;}
-    auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(RuntimeTree));if(!TreeNode)return;
-    TreeNode->clear();TreeNode->show();auto Root=TreeNode->create_item();Root->set_text(0,Module+" :: "+Symbol);
-    Root->set_text(1,bool(Report["Truncated"])?"Partial bounded index":"Static import uses");
-    Array Uses=Report["References"];
-    for(int Index=0;Index<Uses.size();++Index) {
-        Dictionary Use=Uses[Index];auto Row=TreeNode->create_item(Root);
-        Row->set_text(0,String(Use["Path"])+":"+String::num_int64(int(Use["Line"])));Row->set_text(1,"Module member reference");Row->set_metadata(0,Use);
-    }
-    ShowStatus(String::num_int64(Uses.size())+" static uses across "+String::num_int64(int(Report["ScannedFiles"]))+" Luau files; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
+    ProjectUiGeneration=ProjectGeneration;ProjectUiTitle=Module+" :: "+Symbol;
+    ShowStatus("Indexing static project uses in background");
 }
 void GLNativeEditorPlugin::ShowProjectSymbols() {
     Dictionary Report=IndexProject("","");
     if(int(Report.get("result",ERR_UNAVAILABLE))!=OK)return;
+    ProjectUiGeneration=ProjectGeneration;ProjectUiTitle="Project symbols and static imports";
+    ShowStatus("Indexing project symbols in background");
+}
+void GLNativeEditorPlugin::FlushProjectQuery() {
+    if(!ProjectUiGeneration)return;
+    if(ProjectUiGeneration!=ProjectGeneration){ProjectUiGeneration=0;return;}
+    Dictionary Report=PollProject(int64_t(ProjectUiGeneration));
+    if(bool(Report.get("Pending",false)))return;
+    ProjectUiGeneration=0;
+    if(int(Report.get("result",ERR_UNAVAILABLE))!=OK){ShowStatus("Project query retired");return;}
+    if(!String(Report.get("Error",String())).is_empty()){ShowStatus(Report["Error"]);return;}
     auto TreeNode=Object::cast_to<Tree>(ObjectDB::get_instance(RuntimeTree));if(!TreeNode)return;
-    TreeNode->clear();TreeNode->show();auto Root=TreeNode->create_item();Root->set_text(0,"Project symbols and static imports");
-    Root->set_text(1,bool(Report["Truncated"])?"Partial bounded index":"Syntactic navigation; not whole-program types");
-    Array Documents=Report.get("Documents",Array());
-    for(int Index=0;Index<Documents.size();++Index) {
-        Dictionary Document=Documents[Index];String Path=Document["Path"];Array Entries=Document["Entries"];TreeItem* Group=nullptr;
-        for(int Entry=0;Entry<Entries.size();++Entry) {
-            Dictionary Item=Entries[Entry];String Kind=Item["Kind"];
-            if(Kind!="Function" && Kind!="Type" && Kind!="ExportedType" && Kind!="Import" && Kind!="NativeClassCandidate")continue;
-            if(!Group){Group=TreeNode->create_item(Root);Group->set_text(0,Path);}
-            auto Row=TreeNode->create_item(Group);Row->set_text(0,String(Item["Name"])+":"+String::num_int64(int(Item["Line"])));
-            Row->set_text(1,Kind+" "+String(Item.get("Target",String())));Item["Path"]=Path;Row->set_metadata(0,Item);
-        }
+    TreeNode->clear();TreeNode->show();auto Root=TreeNode->create_item();Root->set_text(0,ProjectUiTitle);
+    Root->set_text(1,bool(Report["Truncated"])?"Bounded result page; more or incomplete results":"Worker index snapshot");
+    Array Uses=Report["Entries"];
+    for(int Index=0;Index<Uses.size();++Index) {
+        Dictionary Use=Uses[Index];auto Row=TreeNode->create_item(Root);
+        Row->set_text(0,String(Use["Path"])+":"+String::num_int64(int(Use["Line"]))+" "+String(Use["Name"]));Row->set_text(1,Use["Kind"]);Row->set_metadata(0,Use);
     }
-    ShowStatus(String::num_int64(int(Report["ScannedFiles"]))+" indexed Luau files; "+String::num_int64(int(Report["ParsedFiles"]))+" parsed; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
+    ShowStatus(String::num_int64(int(Report["Matches"]))+" matches across "+String::num_int64(int(Report["ScannedFiles"]))+" Luau files; "+String::num_int64(int(Report["CachedFiles"]))+" cached. "+String(Report["Scope"]));
 }

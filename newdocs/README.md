@@ -1,5 +1,10 @@
 # GodotLuau fork documentation
 
+The unmerged [GL-067 development platform campaign](gl-067-development.md)
+tracks incremental editor analysis and subsequent runtime/editor phases.
+[ADR-019](adr-019-incremental-editor-index.md) defines its worker boundary;
+planned acceptance is distinct from completed qualification.
+
 The integrated GL-055 debugger has a [user guide](gl-055-debugger.md),
 [qualification record](gl-055-debugger-qualification.md) and
 [development journal](gl-055-debugger-development.md). Results retain their
