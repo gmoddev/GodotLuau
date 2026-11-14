@@ -461,3 +461,17 @@ Native fingerprint is
 (139 inputs); current qualification is pending. No further source expansion is
 planned in this acceptance phase; remaining work is qualification and actual
 failures, preserving all preceding evidence.
+
+The preceding import-fix candidate `43606352703` subsequently passes all four
+source profiles, both packages/companion starts and aggregate acceptance; its
+[immutable package receipt](evidence/gl067/import-navigation-packages.json)
+retains the original fingerprint and archive hashes. That acceptance predates
+the newly reproduced declaration-file case.
+
+For final source `b11347b`, Windows/Linux core passes in `43611375744` and all
+three worker profiles pass in `43611375891`, including discovery rejection and
+definition-only buffer bounds. [Current worker measurements](evidence/gl067/definition-files-index.json)
+retain the 1,206-module workload. Native `43611375892` and four-profile/package
+`43611376440` are running; the existing focused Release authoring workflow will
+use those actual products once available. Full-native sanitizers and unchanged
+game/export inputs retain their earlier scoped evidence.

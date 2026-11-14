@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Revision": "b11347b21f1bae19c98be78014a2aa68a090ce3d",
+  "NativeSource": {
+    "SHA256": "320853995024f3809d849d5fda742f41f84d4dfef060a8efbc53d3577fe68124",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "IndexRun": 43611375891,
+  "CoreRun": 43611375744,
+  "Profiles": {
+    "Linux": {
+      "Metrics": {
+        "Files": 1206,
+        "SourceBytes": 203552,
+        "SubmitMicroseconds": 10,
+        "ColdWorkerMicroseconds": 44932,
+        "WarmWorkerMicroseconds": 23811,
+        "CompletionMicroseconds": 1210,
+        "WarmCompletionMicroseconds": 994,
+        "MaxTeardownMicroseconds": 68789,
+        "PeakProcessWorkingSetBytes": 63676416
+      },
+      "SummarySHA256": "ef5133f2d7d5a1928ef42f5ab29871eb019901debafed4e75c60402a26b7107d"
+    },
+    "Linux-ASan": {
+      "Metrics": {
+        "Files": 1206,
+        "SourceBytes": 203552,
+        "SubmitMicroseconds": 15,
+        "ColdWorkerMicroseconds": 142766,
+        "WarmWorkerMicroseconds": 60017,
+        "CompletionMicroseconds": 3640,
+        "WarmCompletionMicroseconds": 2828,
+        "MaxTeardownMicroseconds": 235061,
+        "PeakProcessWorkingSetBytes": 671084544
+      },
+      "SummarySHA256": "9972bd4e0fdd44e0e7947b6b6c154c05b24a3bd316155d9d889ad6e89260ebb7"
+    },
+    "Windows": {
+      "Metrics": {
+        "Files": 1206,
+        "SourceBytes": 203552,
+        "SubmitMicroseconds": 23,
+        "ColdWorkerMicroseconds": 90742,
+        "WarmWorkerMicroseconds": 74200,
+        "CompletionMicroseconds": 1819,
+        "WarmCompletionMicroseconds": 1527,
+        "MaxTeardownMicroseconds": 75597,
+        "PeakProcessWorkingSetBytes": 55353344
+      },
+      "SummarySHA256": "918599bd9520c832ac13dd1e4e0fbb7101534184a70e13917a5a38ccb54df619"
+    }
+  },
+  "Scope": "Windows/Linux Release and Linux ASan/LSan production worker, including literal import and definition-only source/buffer regressions; core 87/eight also passes. Native/editor/package outcomes are separate gates."
+}
