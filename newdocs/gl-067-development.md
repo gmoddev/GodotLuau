@@ -420,3 +420,10 @@ The [current worker receipt](evidence/gl067/import-navigation-index.json)
 retains all three profiles and their 1,206-file measurements. The actual Linux
 clean-project editor workflow also passes the corrected case in `43606301218`;
 its remaining native regressions and the Windows cohort are still running.
+
+The existing focused Release workflow also runs the existing clean-project
+authoring/reopen fixture when supplied production candidate products. This
+exercises the added SCons Analysis/Config linkage and actual worker/editor bridge,
+including the import regression, through the production library on both platforms.
+It reuses the established fixture and source admission; no new harness or relaxed
+assertions are introduced. Its completed outcome will be recorded separately.
