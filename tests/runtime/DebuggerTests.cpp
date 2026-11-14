@@ -140,6 +140,16 @@ int main() {
             Check(!Domain.GetProfiler() && GLNativeProfileCollectors==0,"Profiler enabled by default");
             auto& Profile=Domain.EnableProfiler();Profile.Start();
             auto Baseline=Domain.GetReferenceCount();
+            auto Observed=Domain.CreateOwner(999);
+            Domain.SetModuleResolver([](lua_State*,int,GLModuleSource& Source){Source={998,"return 7","@res://ProfileModule.luau"};return true;});
+            Check(Domain.Execute(Observed,"assert(require(998)==7)\nshared.ProfileCallback=function() local Values={} for I=1,100 do Values[I]=I end end","@res://ProfileCallbacks.luau"),"Profile workload failed");
+            lua_getglobal(Observed->Anchor,"shared");lua_getfield(Observed->Anchor,-1,"ProfileCallback");
+            int Callback=GLReference(Observed->Anchor,-1);lua_pop(Observed->Anchor,2);
+            Check(Domain.Dispatch(Callback,[](lua_State*){return 0;})==LUA_OK,"Profiled callback failed");
+            auto Observations=Profile.GetScripts().at(Observed->Token);
+            Check(Observations.Callbacks==1 && Observations.CallbackNanoseconds>0 && Observations.Requires==1 && Observations.RequireNanoseconds>0,"Callback/require timing missing");
+            Check(Observations.DomainLiveBytes>0 && Observations.DomainPeakBytes>=Observations.DomainLiveBytes,"Domain allocator observation missing");
+            GLUnreference(Observed->Anchor,Callback);Domain.CancelOwner(Observed);Domain.InvalidateModule(998);Domain.Tick(0);
             for(uint64_t Index=0;Index<140;++Index) {
                 auto Owner=Domain.CreateOwner(1000+Index);
                 Check(Domain.Execute(Owner,"shared.ProfileCount=(shared.ProfileCount or 0)+1", "@res://Profile.luau"),"Profiler changed execution");

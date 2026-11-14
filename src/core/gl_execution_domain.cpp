@@ -35,6 +35,7 @@ struct GLProfileOperation {
         uint64_t Elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-Start).count();
         uint64_t Waiting=Domain.GetDebuggerPauseNanoseconds()-Paused;
         Profile->Record(Generation,NativeId,Event,Elapsed>Waiting?Elapsed-Waiting:0);
+        const auto& Memory=Domain.GetMemoryAccount();Profile->ObserveMemory(Generation,Memory.Live,Memory.Peak);
     }
 };
 const char* GLFailureText(lua_State* Thread, const char* Fallback) {
@@ -677,7 +678,7 @@ int GLExecutionDomain::ProtectedCall(lua_State* Thread, int Arguments, int Resul
 int GLExecutionDomain::Dispatch(int Reference, const std::function<int(lua_State*)>& Marshal) {
     lua_State* Anchor = GLReferenceState(Reference);
     if (!Anchor || GLGetOwner(Anchor)->Domain != this || IsClosing()) return LUA_OK;
-    if(Profiler)Profiler->Record(GLGetOwner(Anchor)->Token,GLGetOwner(Anchor)->NativeId,GLProfileEvent::Callback);
+    GLProfileOperation Profile(*this,GLGetOwner(Anchor),GLProfileEvent::Callback);
     BudgetScope Budget(*this); // argument conversion may invoke gameplay constructors
     int Root = LUA_NOREF;
     lua_State* Thread = CreateThread(GLGetOwner(Anchor), Root);
@@ -929,7 +930,7 @@ int GLExecutionDomain::PushModuleResult(lua_State* Thread, const std::shared_ptr
 int GLExecutionDomain::BeginRequire(lua_State* Thread) {
     GLExecutionOwner* Caller = GLGetOwner(Thread);
     if (!Caller || !Caller->Alive) luaL_error(Thread, "[Runtime:Require] Inactive execution owner");
-    if(Profiler)Profiler->Record(Caller->Token,Caller->NativeId,GLProfileEvent::Require);
+    GLProfileOperation Profile(*this,Caller,GLProfileEvent::Require);
     GLModuleSource Source;
     if (!ResolveModule || !ResolveModule(Thread, 1, Source) || !Source.Identity)
         luaL_error(Thread, "[Runtime:Require] Expected a live ModuleScript");

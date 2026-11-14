@@ -43,6 +43,6 @@ dependencies are supported. Dynamic module expressions are not invented edges.
 This does not alter runtime require caching, persistent data, Character
 controllers, network protocols, native authority, releases or updater admission.
 
-Luau analysis adds no dependency revision: use the already pinned Analysis,
-Config and EqSat components. Memory/time limits and actual behavior require
+Luau analysis adds no dependency revision: use the already pinned Analysis and
+Config components. Memory/time limits and actual behavior require
 focused qualification before declaring this phase complete.

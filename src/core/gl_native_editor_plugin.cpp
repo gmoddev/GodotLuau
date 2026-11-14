@@ -10,6 +10,7 @@
 #include "gl_native_editor_api.h"
 #include "gl_execution_domain.h"
 #include "gl_project_indexer.h"
+#include "gl_runtime_debugger.h"
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/os.hpp>
@@ -47,6 +48,7 @@ void GLNativeEditorPlugin::_bind_methods() {
     ClassDB::bind_method(D_METHOD("IndexProject","Module","Member"), &GLNativeEditorPlugin::IndexProject);
     ClassDB::bind_method(D_METHOD("QueryProject","Options"), &GLNativeEditorPlugin::QueryProject);
     ClassDB::bind_method(D_METHOD("PollProject","Generation"), &GLNativeEditorPlugin::PollProject);
+    ClassDB::bind_method(D_METHOD("ReloadScripts","Scripts"), &GLNativeEditorPlugin::ReloadScripts);
     ClassDB::bind_method(D_METHOD("FindProjectUses"), &GLNativeEditorPlugin::FindProjectUses);
     ClassDB::bind_method(D_METHOD("ShowProjectSymbols"), &GLNativeEditorPlugin::ShowProjectSymbols);
 }
@@ -121,6 +123,10 @@ Dictionary GLNativeEditorPlugin::IndexProject(const String& Module,const String&
     Dictionary Options;Options["Module"]=Module;Options["Member"]=Member;
     Options["Query"]=Module.is_empty() && Member.is_empty()?"Symbols":"References";
     return QueryProject(Options);
+}
+int64_t GLNativeEditorPlugin::ReloadScripts(const Array& Scripts) {
+    if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting())return ERR_UNAVAILABLE;
+    return GLReloadLuauScripts(Scripts);
 }
 Dictionary GLNativeEditorPlugin::QueryProject(const Dictionary& Options) {
     if(!Engine::get_singleton()->is_editor_hint() || GLExecutionDomain::IsExecuting() || OS::get_singleton()->get_thread_caller_id()!=OS::get_singleton()->get_main_thread_id())return Dictionary();

@@ -39,3 +39,49 @@ they occur. This entry does not claim the campaign is implemented or qualified.
 The editor worker is development tooling, not a gameplay scheduler or a VM.
 No gameplay native capability, Godot object, Lua thread or AST pointer crosses
 the boundary. Runtime modules and existing Server/Client execution stay intact.
+
+## First implementation and focused Windows evidence
+
+`acf57b9` implements a persistent pure-C++ worker using the pinned Luau parser
+and Analysis frontend, copied open buffers, static require dependencies and
+lexical references. Query kinds include symbols, references, search, dependency
+pages, diagnostics, type-aware completion, function definition resolution and
+conservative lexical rename previews. Dynamic member definitions are labelled
+candidates rather than semantic proof. No rename applies project writes.
+
+DockerPC reused the same-project MSVC Debug/dependency cache, two build jobs,
+host-local worker lease generation 125. `ProjectIndexTests` passed 14 acceptance
+checks against the production service. A 1,203-file typed item/economy workload
+measured 22 us submission, 505,080 us cold worker processing and 274,417 us warm
+worker processing (203,388 bytes). This is not a Godot frame-time or production
+gameplay measurement. The worker still traverses and reads unchanged saved files;
+syntax reparse count is zero when warm. Source/index bounds are 4,096 files,
+32 MiB source, 256 KiB/file, 512 syntax entries/file, 256 result entries/page.
+Semantic graphs are demand-driven and bounded to 256 modules/4 MiB source, with
+50 ms per-module frontend limits. These are input/complexity bounds, not a hard
+process-RSS limit.
+
+The first actual official-Godot headless editor workflow failed one navigation
+assertion. Investigation retained `editor-01` and `editor-02` under the worker's
+`Artifacts/GodotLuau/gl067`: 22 files and 2,268 matches exceeded the first
+256-entry page, occupied by Controller.luau. The legacy fixture expected every
+document in a synchronous response. It now explicitly follows result pages;
+the result-window bound is unchanged. This is a consumer migration, not a claim
+that the failed attempts qualified editor navigation.
+
+## Saved-source reload and profiler extension — qualification pending
+
+Selective reload now stages and compiles every saved candidate before emitting
+any source-change notification. An invalid candidate rejects the entire batch,
+preserving previous source revisions and live generations. A successful batch
+publishes those exact validated snapshots through existing generation/module
+invalidation. Bounds are 256 resources, 1 MiB/file and 16 MiB aggregate. Built-in
+resources remain unchanged. This is compile-validation rollback; it does not
+promise rollback of runtime side effects after a valid script executes, scene
+state migration, or preservation of old native handles after successful reload.
+
+Profiling adds inclusive synchronous callback/require durations, excluding known
+debugger waits, plus domain allocator live bytes at interval exit and lifetime
+peak bytes. These observations are explicitly domain-wide, not per-function or
+per-owner allocations. Existing record caps, opt-in behavior and epoch handling
+remain. Function sampling and native-only dispatch timing are not implemented.

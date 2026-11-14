@@ -14,6 +14,7 @@ enum class GLProfileEvent { Resume, ProtectedCall, Compile, ModuleCompile, Callb
 struct GLScriptProfile {
     uint64_t Generation=0,NativeId=0,Resumes=0,ProtectedCalls=0,ExecutionNanoseconds=0;
     uint64_t Compilations=0,CompileNanoseconds=0,ModuleCompilations=0,Callbacks=0,Requires=0,Coroutines=0;
+    uint64_t CallbackNanoseconds=0,RequireNanoseconds=0,DomainLiveBytes=0,DomainPeakBytes=0;
     std::string Source;
     bool Retired=false;
 };
@@ -60,12 +61,16 @@ public:
             case GLProfileEvent::ProtectedCall:Add(Row->ProtectedCalls);Add(Row->ExecutionNanoseconds,Nanoseconds);break;
             case GLProfileEvent::Compile:Add(Row->Compilations);Add(Row->CompileNanoseconds,Nanoseconds);break;
             case GLProfileEvent::ModuleCompile:Add(Row->Compilations);Add(Row->ModuleCompilations);Add(Row->CompileNanoseconds,Nanoseconds);break;
-            case GLProfileEvent::Callback:Add(Row->Callbacks);break;
-            case GLProfileEvent::Require:Add(Row->Requires);break;
+            case GLProfileEvent::Callback:Add(Row->Callbacks);Add(Row->CallbackNanoseconds,Nanoseconds);break;
+            case GLProfileEvent::Require:Add(Row->Requires);Add(Row->RequireNanoseconds,Nanoseconds);break;
             case GLProfileEvent::Coroutine:Add(Row->Coroutines);break;
         }
     }
     void Retire(uint64_t Generation){if(Enabled){auto Found=Scripts.find(Generation);if(Found!=Scripts.end())Found->second.Retired=true;}}
+    void ObserveMemory(uint64_t Generation,uint64_t Live,uint64_t Peak) {
+        if(!Enabled)return;auto Found=Scripts.find(Generation);if(Found==Scripts.end())return;
+        Found->second.DomainLiveBytes=Live;Found->second.DomainPeakBytes=Peak;
+    }
     void NativeCall(const char* Category,const char* Class,const char* Member) {
         if(!Enabled || !Native)return;
         size_t Bytes=2;

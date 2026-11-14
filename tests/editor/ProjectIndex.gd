@@ -1,8 +1,8 @@
 @tool
 extends RefCounted
 
-func Report(Runner, Plugin, Module: String, Member: String) -> Dictionary:
-    var Submission: Dictionary=Plugin.call('IndexProject',Module,Member)
+func Report(Runner, Plugin, Module: String, Member: String, Offset: int=0) -> Dictionary:
+    var Submission: Dictionary=Plugin.call('QueryProject',{'Query':'Symbols' if Module.is_empty() else 'References','Module':Module,'Member':Member,'Offset':Offset})
     if Submission.get('result',ERR_UNAVAILABLE)!=OK: return Submission
     var Deadline=Time.get_ticks_msec()+30000
     while Time.get_ticks_msec()<Deadline:
@@ -12,6 +12,30 @@ func Report(Runner, Plugin, Module: String, Member: String) -> Dictionary:
     return {'result':ERR_TIMEOUT}
 
 func Run(Runner,Plugin) -> void:
+    var Old='local Scope=Scene.new(script.Parent)\nScope:New("Node3D",{Name="BeforeReload"})\n'
+    for Name in ['ReloadA','ReloadB']:
+        var File=FileAccess.open('res://'+Name+'.luau',FileAccess.WRITE)
+        File.store_string(Old)
+        File.close()
+    var A: Script=load('res://ReloadA.luau')
+    var B: Script=load('res://ReloadB.luau')
+    Runner.Check(Plugin.call('PreviewScript',A).get('Passed',false),'Reload baseline constructs actual native preview')
+    var File=FileAccess.open('res://ReloadA.luau',FileAccess.WRITE)
+    var Next=Old.replace('BeforeReload','AfterReload')
+    File.store_string(Next)
+    File.close()
+    File=FileAccess.open('res://ReloadB.luau',FileAccess.WRITE)
+    File.store_string('local = invalid syntax')
+    File.close()
+    Runner.Check(Plugin.call('ReloadScripts',[A,B])==ERR_PARSE_ERROR and A.source_code==Old and B.source_code==Old,'Failed batch reload preserves every prior source generation')
+    File=FileAccess.open('res://ReloadB.luau',FileAccess.WRITE)
+    File.store_string(Next)
+    File.close()
+    Runner.Check(Plugin.call('ReloadScripts',[A,B])==OK and A.source_code==Next and B.source_code==Next,'Corrected batch reload publishes exact validated source snapshots')
+    for Cycle in range(6):
+        Runner.Check(Plugin.call('PreviewScript',A).get('Passed',false),'Preview reconstructs after validated reload cycle '+str(Cycle))
+        Runner.Check(Plugin.call('ReloadScripts',[A,B])==OK,'Repeated unchanged reload succeeds without new generation '+str(Cycle))
+    Plugin.call('StopPreview')
     var Sources={
         'IndexModule.luau':'export type Product = {Value: number}\nlocal function Build(Value: number): Product return {Value=Value} end\nreturn {Build=Build}\n',
         'IndexOther.luau':'return {Build=function() return 55 end}\n',
@@ -31,6 +55,16 @@ func Run(Runner,Plugin) -> void:
     Runner.Check(Second.get('ParsedFiles',-1)==0 and Second.get('CachedFiles',0)>0 and Second.get('References',[]).size()==3,'Repeated project query reuses unchanged parsed source results')
     var Navigation: Dictionary=await Report(Runner,Plugin,'','')
     var Documents: Array=Navigation.get('Documents',[])
+    Runner.Measurements.ProjectNavigation={'Result':Navigation.get('result',ERR_UNAVAILABLE),'Files':Navigation.get('ScannedFiles',0),'Matches':Navigation.get('Matches',0),'More':Navigation.get('More',false),'Paths':Documents.map(func(Item): return Item.Path)}
+    var Offset=256
+    var Page=Navigation
+    while Page.get('More',false) and Offset<8192:
+        Page=await Report(Runner,Plugin,'','',Offset)
+        for Document in Page.get('Documents',[]):
+            var Existing=Documents.filter(func(Item): return Item.Path==Document.Path)
+            if Existing.is_empty(): Documents.append(Document)
+            else: Existing[0].Entries.append_array(Document.Entries)
+        Offset+=256
     var Module=Documents.filter(func(Item): return Item.Path=='res://IndexModule.luau')
     var Consumer=Documents.filter(func(Item): return Item.Path=='res://IndexConsumer.luau')
     Runner.Check(Navigation.get('result',ERR_UNAVAILABLE)==OK and Module.size()==1 and Consumer.size()==1,'Project navigation shares the bounded cached module scan')

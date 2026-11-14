@@ -67,6 +67,7 @@ public:
     godot::Dictionary IndexProject(const godot::String& Module,const godot::String& Member);
     godot::Dictionary QueryProject(const godot::Dictionary& Options);
     godot::Dictionary PollProject(int64_t Generation);
+    int64_t ReloadScripts(const godot::Array& Scripts);
     void FindProjectUses();
     void ShowProjectSymbols();
     godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(true); }

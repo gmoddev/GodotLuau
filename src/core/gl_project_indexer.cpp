@@ -367,7 +367,7 @@ uint64_t GLProjectIndexer::Submit(Request Value) {
     Data->Wake.notify_one();return Generation;
 }
 std::shared_ptr<const GLProjectIndexer::Result> GLProjectIndexer::Poll(uint64_t Generation)const {
-    std::lock_guard<std::mutex> Lock(Data->Mutex);return Data->Ready && Data->Ready->Generation==Generation?Data->Ready:nullptr;
+    std::lock_guard<std::mutex> Lock(Data->Mutex);return Generation==Data->Latest.load() && Data->Ready && Data->Ready->Generation==Generation?Data->Ready:nullptr;
 }
 void GLProjectIndexer::Cancel() {
     std::lock_guard<std::mutex> Lock(Data->Mutex);++Data->Latest;Data->Queued=false;if(Data->Cancellation)Data->Cancellation->cancel();

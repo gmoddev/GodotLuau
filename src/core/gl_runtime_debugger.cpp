@@ -13,6 +13,7 @@
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <algorithm>
 
@@ -42,6 +43,8 @@ Dictionary ProfileSnapshot(const GLExecutionDomain& Domain) {
             Item["InclusiveExecutionMicroseconds"]=int64_t(Row.ExecutionNanoseconds/1000);
             Item["CompileMicroseconds"]=int64_t(Row.CompileNanoseconds/1000);Item["Compilations"]=int64_t(Row.Compilations);
             Item["ModuleCompilations"]=int64_t(Row.ModuleCompilations);Item["Callbacks"]=int64_t(Row.Callbacks);
+            Item["CallbackMicroseconds"]=int64_t(Row.CallbackNanoseconds/1000);Item["RequireMicroseconds"]=int64_t(Row.RequireNanoseconds/1000);
+            Item["DomainLiveBytesAtExit"]=int64_t(Row.DomainLiveBytes);Item["DomainLifetimePeakBytes"]=int64_t(Row.DomainPeakBytes);
             Item["Requires"]=int64_t(Row.Requires);Item["Coroutines"]=int64_t(Row.Coroutines);Item["Retired"]=Row.Retired;Rows.push_back(Item);
         }
         for(const auto& Entry:Profile->GetNativeCalls()){if(Native.size()>=64)break;Native[String::utf8(Entry.first.c_str())]=int64_t(Entry.second);}
@@ -132,15 +135,33 @@ Error GLReloadLuauScripts(const Array& Scripts) {
     if(!System || System->get_thread_caller_id()!=System->get_main_thread_id() ||
         (GLExecutionDomain::IsExecuting() && !Suspended) ||
         (!Engine::get_singleton()->is_editor_hint() && !GLRuntimeDebuggerAvailable()))return ERR_UNAVAILABLE;
-    Error Result=OK;
-    for(int Index=0;Index<Scripts.size() && Index<256;++Index) {
+    if(Scripts.size()>256)return ERR_OUT_OF_MEMORY;
+    // Validate every saved candidate before publishing any source revision.
+    // A failed compile leaves live owners/callbacks and prior source untouched.
+    std::vector<std::pair<Ref<LuauScript>,String>> Candidates;
+    size_t Bytes=0;
+    for(int Index=0;Index<Scripts.size();++Index) {
         if(Scripts[Index].get_type()!=Variant::OBJECT)continue;
         Ref<LuauScript> Source=Scripts[Index];if(Source.is_null())continue;
-        Error Status=Source->_reload(false);
-        if(Status!=OK){Result=Status;UtilityFunctions::print("[Debugger:Reload] Source reload failed: ",int(Status));}
+        if(std::any_of(Candidates.begin(),Candidates.end(),[&](const auto& Item){return Item.first==Source;}))continue;
+        String Path=Source->get_path();if(Path.is_empty())continue;
+        if(!GLProjectResourcePath(Path))return ERR_INVALID_PARAMETER;
+        Ref<FileAccess> File=FileAccess::open(Path,FileAccess::READ);
+        if(File.is_null())return ERR_CANT_OPEN;
+        if(File->get_length()>1024*1024 || (Bytes+=size_t(File->get_length()))>16*1024*1024)return ERR_OUT_OF_MEMORY;
+        String Candidate=File->get_as_text();auto Encoded=Candidate.utf8();
+        if(Encoded.length()>1024*1024)return ERR_OUT_OF_MEMORY;
+        auto Bytecode=Luau::compile(std::string(Encoded.get_data(),Encoded.length()));
+        if(Bytecode.empty() || Bytecode[0]==0) {
+            UtilityFunctions::print("[Debugger:Reload] Saved source failed compilation; live generations preserved: ",Path);
+            return ERR_PARSE_ERROR;
+        }
+        Candidates.emplace_back(Source,Candidate);
     }
-    if(Scripts.size()>256){Result=ERR_OUT_OF_MEMORY;UtilityFunctions::print("[Debugger:Reload] Selective reload exceeds 256 resources");}
-    return Result;
+    // Existing source-change notification retires module dependents and exact
+    // script generations. Apply these exact snapshots, never reread after check.
+    for(const auto& Candidate:Candidates)Candidate.first->_set_source_code(Candidate.second);
+    return OK;
 }
 GLDebugger* GLGetSuspendedDebugger() { return Suspended && Suspended->GetInspectionThread()?Suspended:nullptr; }
 void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
