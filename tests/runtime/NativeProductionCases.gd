@@ -20,6 +20,33 @@ func Run(Runner, Game: Node, NavigationAvailable := false) -> void:
 local S=Scene.new(script.Parent)
 S.Name='ProductionScope'
 local V2=function(X,Y) return {X=X,Y=Y} end
+local Style=S:New('Theme',{DefaultFontSize=20,DefaultBaseScale=1.25})
+S:Call(Style,'SetColor','font_color','Label',{R=0.2,G=0.4,B=0.8,A=0.5})
+S:Call(Style,'SetConstant','outline_size','Label',2)
+S:Call(Style,'SetFontSize','font_size','Label',24)
+assert(S:Call(Style,'HasColor','font_color','Label') and S:Call(Style,'HasConstant','outline_size','Label') and S:Call(Style,'HasFontSize','font_size','Label'))
+assert(S:Call(Style,'GetColor','font_color','Label').A==0.5 and S:Call(Style,'GetConstant','outline_size','Label')==2 and S:Call(Style,'GetFontSize','font_size','Label')==24)
+local Styled=S:New('Label',{Name='Styled',Text='Native theme',Theme=Style})
+assert(S:Get(Styled,'Theme') and #S:Call(Style,'GetTypes')==1)
+assert(not pcall(function() S:Call(Style,'GetColor','missing','Label') end))
+assert(not pcall(function() S:Call(Style,'SetFontSize','font_size','Label',0/0) end))
+assert(S:Call(Style,'GetFontSize','font_size','Label')==24)
+for I=1,63 do S:Call(Style,'SetConstant','Item'..I,'Label',I) end
+assert(not pcall(function() S:Call(Style,'SetConstant','TooMany','Label',1) end))
+S:Call(Style,'SetConstant','outline_size','Label',3)
+assert(S:Call(Style,'GetConstant','outline_size','Label')==3)
+for I=1,15 do S:Call(Style,'SetFontSize','font_size','Type'..I,16) end
+assert(not pcall(function() S:Call(Style,'SetFontSize','font_size','OverflowType',16) end))
+local Rich=S:New('RichTextLabel',{Text='[b]Expedition[/b]',BbcodeEnabled=true,Theme=Style})
+assert(S:Call(Rich,'GetParsedText')=='Expedition')
+local Obstacle=S:New('NavigationObstacle3D',{Height=2.5,Use3DAvoidance=true,AffectNavigationMesh=true,CarveNavigationMesh=false})
+assert(S:Get(Obstacle,'Height')==2.5 and S:Get(Obstacle,'Use3DAvoidance'))
+local Skeleton=S:New('Skeleton3D',{})
+S:Call(Skeleton,'AddBone','Root')
+S:Call(Skeleton,'AddBone','Child')
+S:Call(Skeleton,'SetBoneParent',1,0)
+assert(S:Call(Skeleton,'GetBoneChildren',0)[1]==1 and S:Call(Skeleton,'GetParentlessBones')[1]==0)
+assert(not pcall(function() S:Call(Skeleton,'GetBoneChildren',2) end))
 local Edit=S:New('CodeEdit',{Name='Code',Text='local Value = 1'})
 S:Call(Edit,'SetStringDelimiters',{'" "'})
 S:Call(Edit,'SetCommentDelimiters',{'--'})
@@ -134,7 +161,7 @@ Connection=game:GetService('RunService').Stepped:Connect(function()
  Connection:Disconnect()
  game:SetAttribute('ProductionPhysics',true)
 end)
-shared.Production={Scope=S,Call=S.Call,Image=Image,Texture=Texture}
+shared.Production={Scope=S,Call=S.Call,Image=Image,Texture=Texture,Style=Style}
 game:SetAttribute('ProductionReady',true)
 """.replace("__NAVIGATION__","true" if NavigationAvailable else "false"),Game)
     if not await Runner.Until("ProductionReady"):
@@ -145,6 +172,8 @@ game:SetAttribute('ProductionReady',true)
     Runner.CreateScript("ServerScript","ProductionWrongOwner","""
 local P=shared.Production
 assert(not pcall(function() P.Call(P.Scope,P.Texture,'SetImage',P.Image) end))
+assert(not pcall(function() P.Call(P.Scope,P.Style,'SetFontSize','font_size','Label',99) end))
+assert(not pcall(function() P.Call(P.Scope,P.Style,'GetFontSize','font_size','Label') end))
 game:SetAttribute('ProductionWrongOwnerRejected',true)
 """,Game)
     await Runner.Until("ProductionWrongOwnerRejected")

@@ -97,3 +97,30 @@ snapshot, updating supplied buffers first; explicit `Refresh` requests rescan
 disk. Full symbol/reference/diagnostic queries still refresh saved files. The
 snapshot contract is visible rather than implying disk freshness without a
 scan. Cross-platform Release worker checks are in `project-analysis.yml`.
+
+`1908a79` passes the actual official-Godot Windows headless authoring workflow
+and native-scene restart (`editor-04`). Both Windows/Linux Release worker jobs
+pass in hosted run `43593686285`; both core jobs pass in `43593686220`. These
+results do not establish graphical/physical editor interaction. The revised
+Windows workload measured 23 us submission, 505,747 us cold, 270,226 us warm,
+and 87,770 us for the first interactive completion (including frontend setup).
+Warm interactive latency and native UI frame impact remain to be measured.
+
+## Native family extension — qualification pending
+
+Theme construction, default font settings and color/constant/font-size methods
+use the existing scoped resource boundary. Native dispatch restricts keys/types
+to bounded identifiers, 16 types/theme and 64 items/category/type. Existing
+items can still be updated at capacity. Missing observational keys return a
+bounded Luau error before Godot dispatch, rather than native error output.
+Loaded immutable themes remain immutable and foreign owners cannot read/write
+their handles. Foundry's Client-owned interface uses one reusable theme for
+inherited native control styling; no Server authority or input protocol changes.
+
+The metadata extension also adds RichTextLabel parsed-text observation,
+Skeleton3D child/root traversal and obstacle height/3D-avoidance/navigation-mesh
+configuration. New raw Callable/Signal/RID access, privileged PopupMenu/Viewport
+construction and unrestricted AnimationTree target paths are not admitted by
+these changes. Those need a coherent lifetime/authority design, not extra names
+in the policy. Fifteen generator/policy checks and drift verification pass;
+native/type/application qualification is pending.

@@ -14,7 +14,7 @@ std::shared_ptr<const GLProjectIndexer::Result> Wait(GLProjectIndexer& Index,uin
 }
 int main(int Count,char** Arguments)try {
     if(Count!=2)return 2;
-    auto Root=std::filesystem::absolute(Arguments[1]);std::filesystem::create_directories(Root);
+    auto Root=std::filesystem::absolute(Arguments[1])/("run-"+std::to_string(Clock::now().time_since_epoch().count()));std::filesystem::create_directories(Root);
     auto Write=[&](const std::string& Name,const std::string& Source){std::ofstream File(Root/Name,std::ios::binary);File<<Source;if(!File)throw std::runtime_error("Write failed");};
     Write("Module.luau","local function Build(Value: number): number return Value+1 end\nreturn {Build=Build}\n");
     Write("Consumer.luau","local M=require('res://Module.luau')\nlocal Answer=M.Build(2)\nlocal Alias=M.Build\nAlias(3)\nreturn Answer\n");

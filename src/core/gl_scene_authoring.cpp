@@ -56,6 +56,7 @@
 #include <godot_cpp/classes/standard_material3d.hpp>
 #include <godot_cpp/classes/static_body3d.hpp>
 #include <godot_cpp/classes/texture2d.hpp>
+#include <godot_cpp/classes/theme.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/world_environment.hpp>
 #include <godot_cpp/core/memory.hpp>
@@ -721,6 +722,22 @@ int Call(lua_State* Thread) {
             if((Existing==Scope->ShaderParameters.end() && Scope->ShaderParameters.size()>=MaxResources) ||
                 (Existing!=Scope->ShaderParameters.end() && Existing->second.size()>=256 && !Existing->second.count(ShaderName)))
                 luaL_error(Thread,"[Scene:Limit] Shader parameter lifetime budget exceeded");
+        }
+    }
+    if(auto Style=Object::cast_to<Theme>(Target)) {
+        String Operation=Item->Native;
+        if(Operation.begins_with("set_") || Operation.begins_with("get_") || Operation.begins_with("has_")) {
+            String Family=Operation.substr(4);
+            if(Family=="color" || Family=="constant" || Family=="font_size") {
+                String Key=Values[0],Type=Values[1];
+                if(!AnimationName(Key) || !AnimationName(Type))luaL_error(Thread,"[Scene:Theme] Theme keys/types require bounded identifiers");
+                bool Exists=Family=="color"?Style->has_color(Key,Type):Family=="constant"?Style->has_constant(Key,Type):Style->has_font_size(Key,Type);
+                if(Operation.begins_with("set_")) {
+                    auto Types=Style->get_type_list();
+                    auto Names=Family=="color"?Style->get_color_list(Type):Family=="constant"?Style->get_constant_list(Type):Style->get_font_size_list(Type);
+                    if((Types.size()>=16 && !Types.has(Type)) || (!Exists && Names.size()>=64))luaL_error(Thread,"[Scene:Limit] Theme type/item capacity reached");
+                } else if(Operation.begins_with("get_") && !Exists)luaL_error(Thread,"[Scene:Theme] Requested theme item is absent");
+            }
         }
     }
     if (Item->KeyQuery) {

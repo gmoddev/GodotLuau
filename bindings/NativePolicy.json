@@ -679,9 +679,22 @@
       "Kind": "Resource",
       "Construct": true,
       "Authority": "OwnedScene"
+    },
+    {
+      "Name": "Theme",
+      "Kind": "Resource",
+      "Construct": true,
+      "Authority": "OwnedScene"
     }
   ],
   "Properties": [
+    {"Class":"Theme","Name":"DefaultFontSize","Native":"default_font_size","Kind":"Integer","Min":1,"Max":256,"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"DefaultBaseScale","Native":"default_base_scale","Kind":"Number","Min":0.1,"Max":8,"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"DefaultFont","Native":"default_font","Kind":"ResourceValue","ResourceClass":"Font","Authority":"OwnedScene"},
+    {"Class":"NavigationObstacle3D","Name":"Height","Native":"height","Kind":"Number","Min":0,"Max":1000,"Authority":"OwnedScene"},
+    {"Class":"NavigationObstacle3D","Name":"Use3DAvoidance","Native":"use_3d_avoidance","Kind":"Boolean","Authority":"OwnedScene"},
+    {"Class":"NavigationObstacle3D","Name":"AffectNavigationMesh","Native":"affect_navigation_mesh","Kind":"Boolean","Authority":"OwnedScene"},
+    {"Class":"NavigationObstacle3D","Name":"CarveNavigationMesh","Native":"carve_navigation_mesh","Kind":"Boolean","Authority":"OwnedScene"},
     {
       "Class": "Node",
       "Name": "Name",
@@ -4094,6 +4107,19 @@
     }
   ],
   "Methods": [
+    {"Class":"Theme","Name":"SetColor","Native":"set_color","Mutates":true,"Bounds":{"name":[1,64],"theme_type":[1,64]},"ArgumentKinds":{"color":"Colour4"},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"GetColor","Native":"get_color","Mutates":false,"Bounds":{"name":[1,64],"theme_type":[1,64]},"ReturnKind":"Colour4","Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"HasColor","Native":"has_color","Mutates":false,"Bounds":{"name":[1,64],"theme_type":[1,64]},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"SetConstant","Native":"set_constant","Mutates":true,"Bounds":{"name":[1,64],"theme_type":[1,64],"constant":[-4096,4096]},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"GetConstant","Native":"get_constant","Mutates":false,"Bounds":{"name":[1,64],"theme_type":[1,64]},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"HasConstant","Native":"has_constant","Mutates":false,"Bounds":{"name":[1,64],"theme_type":[1,64]},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"SetFontSize","Native":"set_font_size","Mutates":true,"Bounds":{"name":[1,64],"theme_type":[1,64],"font_size":[1,256]},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"GetFontSize","Native":"get_font_size","Mutates":false,"Bounds":{"name":[1,64],"theme_type":[1,64]},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"HasFontSize","Native":"has_font_size","Mutates":false,"Bounds":{"name":[1,64],"theme_type":[1,64]},"Authority":"OwnedScene"},
+    {"Class":"Theme","Name":"GetTypes","Native":"get_type_list","Mutates":false,"Authority":"OwnedScene"},
+    {"Class":"RichTextLabel","Name":"GetParsedText","Native":"get_parsed_text","Mutates":false,"Authority":"OwnedScene"},
+    {"Class":"Skeleton3D","Name":"GetBoneChildren","Native":"get_bone_children","Mutates":false,"Bounds":{"bone_idx":[0,255]},"Validation":{"Index":{"Argument":"bone_idx","Query":"get_bone_count"}},"Authority":"OwnedScene"},
+    {"Class":"Skeleton3D","Name":"GetParentlessBones","Native":"get_parentless_bones","Mutates":false,"Authority":"OwnedScene"},
     {
       "Class": "Node3D",
       "Name": "GetGlobalPosition",
