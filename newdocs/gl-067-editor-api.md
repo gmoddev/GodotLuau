@@ -55,6 +55,10 @@ it does not apply writes. It refuses incomplete bindings, potential capture and
 cross-module/dynamic field rename. Any external consumer applying a preview must
 first compare its complete source precondition and refuse a stale edit.
 
+For literal import navigation, place the caret on `require` and choose Definition.
+An existing target opens at line one even when it returns only an empty table or
+constant and has no indexed declarations. Missing targets remain unresolved.
+
 ## Debugging
 
 The existing Watch restrictions also govern breakpoint conditions. In the Luau

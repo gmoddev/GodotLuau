@@ -416,3 +416,7 @@ running. Existing full-native sanitizer and game/export evidence is retained
 within unchanged runtime/authority/lifetime/packaging scopes; the changed editor
 analysis path has its own current Linux sanitizer coverage. No old binary is
 relabeled with the new fingerprint.
+The [current worker receipt](evidence/gl067/import-navigation-index.json)
+retains all three profiles and their 1,206-file measurements. The actual Linux
+clean-project editor workflow also passes the corrected case in `43606301218`;
+its remaining native regressions and the Windows cohort are still running.

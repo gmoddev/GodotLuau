@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Revision": "d8090a0696a2d46ff36efee6813c5a1b55cdcfff",
+  "NativeSource": {
+    "SHA256": "558733a683b0fc3f1ef6e4e1d88bba3bcaef233e2fa4982032913af9886acb90",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "IndexRun": 43606301119,
+  "CoreRun": 43606301059,
+  "Profiles": {
+    "Linux": {
+      "Metrics": {
+        "Files": 1206,
+        "SourceBytes": 203552,
+        "SubmitMicroseconds": 7,
+        "ColdWorkerMicroseconds": 30221,
+        "WarmWorkerMicroseconds": 12572,
+        "CompletionMicroseconds": 1112,
+        "WarmCompletionMicroseconds": 758,
+        "MaxTeardownMicroseconds": 79756,
+        "PeakProcessWorkingSetBytes": 62910464
+      },
+      "SummarySHA256": "b13bf7bc614b896bf30d140ef59c2e9f8764c7a43b33f037bb52b8547082ee9e"
+    },
+    "Linux-ASan": {
+      "Metrics": {
+        "Files": 1206,
+        "SourceBytes": 203552,
+        "SubmitMicroseconds": 10,
+        "ColdWorkerMicroseconds": 102785,
+        "WarmWorkerMicroseconds": 48092,
+        "CompletionMicroseconds": 2599,
+        "WarmCompletionMicroseconds": 2022,
+        "MaxTeardownMicroseconds": 185984,
+        "PeakProcessWorkingSetBytes": 671019008
+      },
+      "SummarySHA256": "487c53d7452cffc6f95b1dc9e41fa9e1668cf1d1d76246a156605e8638fd96a1"
+    },
+    "Windows": {
+      "Metrics": {
+        "Files": 1206,
+        "SourceBytes": 203552,
+        "SubmitMicroseconds": 25,
+        "ColdWorkerMicroseconds": 88328,
+        "WarmWorkerMicroseconds": 69509,
+        "CompletionMicroseconds": 1171,
+        "WarmCompletionMicroseconds": 979,
+        "MaxTeardownMicroseconds": 54824,
+        "PeakProcessWorkingSetBytes": 56053760
+      },
+      "SummarySHA256": "dbee5c31775a580074a23347c95713124119eaa59abfa368b47e9a59cd97d00c"
+    }
+  },
+  "Scope": "Production index worker including the empty-module import correction. All three index profiles and Windows/Linux core pass; actual native editor and new package qualification are separate gates."
+}
