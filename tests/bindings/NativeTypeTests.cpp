@@ -60,7 +60,7 @@ int main(int Count, char** Arguments) {
         {"scoped native themes",R"(local S=Scene.new(Parent)
 local Style=S:New("Theme",{DefaultFontSize=20,DefaultBaseScale=1.25})
 S:Call(Style,"SetColor","font_color","Label",{R=0.2,G=0.4,B=0.8,A=0.5})
-local Color:NativeValueColor=S:Call(Style,"GetColor","font_color","Label")
+local Color:NativeColor4=S:Call(Style,"GetColor","font_color","Label")
 local Label=S:New("Label",{Theme=Style})
 S:Call(Style,"SetFontSize","font_size","Label",24)
 local Size:number=S:Call(Style,"GetFontSize","font_size","Label")
