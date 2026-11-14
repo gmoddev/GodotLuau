@@ -286,6 +286,11 @@ allocations. The maximum-hit regression still stops once across 1,000,002 visits
 These short synthetic intervals do not prove a general gameplay performance
 improvement or measure every signal/require path.
 
+Retained benchmark JSONL files are UTF-8 normalized from the original Windows
+capture without changing measured records (five baseline, thirty candidate).
+The candidate's non-JSON [maximum-hit marker](evidence/gl067/core-candidate-marker.txt)
+is retained separately so every JSONL line is machine-readable.
+
 ## Rendered editor and production application
 
 The existing actual editor journey passes on MainPC using the matching Windows
@@ -309,10 +314,13 @@ classes, 114 constructible classes, 391 properties, 238 methods, 41 signals and
 
 ## Outstanding qualification and broader campaign scope
 
-Full-native Linux ASan/LSan passes in `43599608700`; Windows and the four-profile
-candidate/package workflow `43599606392` are pending at this entry. The latter
-already passes policy/retention checks, Linux core ASan/LSan and Linux Debug.
-These pending results are not success claims. Superseded native runs
+Full-native Windows ASan and Linux ASan/LSan pass in `43599608700`, including
+detection controls, production VM reload, 87 core/eight debugger scenarios and
+141 native actors on each platform. Both summaries report no unexpected
+sanitizer reports. Windows LSan remains unsupported. The four-profile candidate/
+package workflow `43599606392` is pending at this entry: policy/retention, Linux
+core ASan/LSan, both Linux profiles and Windows Debug pass; Windows Release is
+still running. Pending package/export results are not success claims. Superseded native runs
 `43596406686`, `43597466314` and `43598297392` were cancelled after a concrete
 pinned-SDK compile correction; their attempted inputs/history remain visible.
 
@@ -328,3 +336,29 @@ a much larger game. Linux graphical, Windows LSan and physical-input limitations
 remain. GL-065 and physical transport reconnection remain external limitations.
 The overall expansion campaign stays open; do not infer complete engine parity
 or integration readiness from this focused phase record.
+
+## Final index lifetime and hosted native records
+
+`f83d98b` extends the existing production-index workload with three queued/early-
+analysis editor worker disposal cycles and an independent live-index recovery.
+It does not claim deterministic interruption inside a particular frontend phase.
+DockerPC Debug passes; Windows/Linux Release and Linux ASan/LSan pass in
+[`43603467132`](https://github.com/gmoddev/GodotLuau/actions/runs/43603467132).
+Release process peak working sets are 55,623,680 / 63,102,976 bytes on hosted
+Windows/Linux; teardown maxima are 75,557 / 74,778 us. Linux ASan observes
+669,458,432 peak bytes and 235,515 us teardown. Instrumented memory and host-speed
+differences are not comparable performance regressions. These are observed
+bounded workloads, not guaranteed shutdown latency or hard RSS quotas.
+
+The matching native implementation `533e108` passes both platforms in
+[`43598864037`](https://github.com/gmoddev/GodotLuau/actions/runs/43598864037).
+Each accepted summary records 141 required process results and all seven debugger
+modes with stop counts `[8,1,1,2,1,3,2]`, actual editor navigation/reload, native
+authorization and Foundry plus restart. Full-native sanitizer evidence is
+[`43599608700`](https://github.com/gmoddev/GodotLuau/actions/runs/43599608700).
+The [compact retained record](evidence/gl067/ci-qualified.json) links source,
+product and summary hashes and index measurements; full logs remain workflow
+artifacts. Subsequent documentation/test/report-only changes retain native
+fingerprint `556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6`
+(139 LF-normalized inputs). The final worker lifetime extension has its own
+current index CI rather than being inferred from an earlier native adapter.

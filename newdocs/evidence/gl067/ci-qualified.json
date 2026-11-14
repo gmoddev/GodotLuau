@@ -1,0 +1,134 @@
+{
+  "Schema": 1,
+  "ImplementationRevision": "533e108680cc394296b622a9e04f8d6ef113e019",
+  "RecordedBranchRevision": "f83d98bf080baf774fa3071cd7bb9b3f920fa003",
+  "NativeSource": {
+    "SHA256": "556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "NativeCI": {
+    "Run": 43598864037,
+    "Platforms": {
+      "Linux": {
+        "SummarySHA256": "5c1959838b0a0b352b65145d7b8d526f4700ff62a8bdd1d702f218702f5e1dc1",
+        "Revision": "533e108680cc394296b622a9e04f8d6ef113e019",
+        "Processes": 141,
+        "ExtensionSHA256": "2c148db7b34099c784c6a932b304d3210582abee35e4ba69f9f10d0c7ee34dd8",
+        "DataStoreWorkerSHA256": "c43a28765307a69a6aab15a7c5835e8a7ae24c6247e0ed83e7b375b5617e7304",
+        "DataStoreNative": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        },
+        "DebuggerStops": [
+          8,
+          1,
+          1,
+          2,
+          1,
+          3,
+          2
+        ],
+        "DebuggerPassed": true,
+        "FoundryPassed": true,
+        "FoundryChecks": 44
+      },
+      "Windows": {
+        "SummarySHA256": "b03fac55fa42374505112c24c1420a10fd5c5b966ba94155b1fee3796e002ed7",
+        "Revision": "533e108680cc394296b622a9e04f8d6ef113e019",
+        "Processes": 141,
+        "ExtensionSHA256": "3f0c44eac3f782948b079a694f71b1701849a69dd5f6bc806c662219ed04d8dd",
+        "DataStoreWorkerSHA256": "9a313a5f5121eec289c4fcdc5109ea1d8993498c845626899a83403ce93c5843",
+        "DataStoreNative": {
+          "FaultStages": 4,
+          "KillStages": 4,
+          "IndependentIncrements": 40,
+          "PowerLossTest": false
+        },
+        "DebuggerStops": [
+          8,
+          1,
+          1,
+          2,
+          1,
+          3,
+          2
+        ],
+        "DebuggerPassed": true,
+        "FoundryPassed": true,
+        "FoundryChecks": 44
+      }
+    }
+  },
+  "Sanitizers": {
+    "Run": 43599608700,
+    "Platforms": {
+      "Linux": {
+        "SummarySHA256": "6c9ede3e0e8a6ff74afabd85c091977ea18f39ac6e83e4549d25a7a1a6df407c",
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "CoreCases": 87,
+        "DebuggerCases": 8,
+        "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:log_path=\"/home/runner/work/_temp/native-sanitizer-evidence/suite-core/asan-report\"",
+        "LeakDetection": true,
+        "ProductionVMReloadExit": 0
+      },
+      "Windows": {
+        "SummarySHA256": "1dee2e65097b65e3b3db1c53d88da2cb426ce12fc01bf006f27d6aeb2a45d93f",
+        "Result": "PASS",
+        "FullQualification": true,
+        "ControlsPassed": true,
+        "UnexpectedReports": [],
+        "CoreCases": 87,
+        "DebuggerCases": 8,
+        "ASAN_OPTIONS": "halt_on_error=1:log_path=\"D:/a/_temp/native-sanitizer-evidence/suite-core/asan-report\"",
+        "LeakDetection": false,
+        "ProductionVMReloadExit": 0
+      }
+    }
+  },
+  "ProjectIndex": {
+    "Run": 43603467132,
+    "Revision": "f83d98bf080baf774fa3071cd7bb9b3f920fa003",
+    "Profiles": {
+      "Linux": {
+        "Files": 1205,
+        "SourceBytes": 203542,
+        "SubmitMicroseconds": 23,
+        "ColdWorkerMicroseconds": 41637,
+        "WarmWorkerMicroseconds": 24332,
+        "CompletionMicroseconds": 1205,
+        "WarmCompletionMicroseconds": 1048,
+        "MaxTeardownMicroseconds": 74778,
+        "PeakProcessWorkingSetBytes": 63102976
+      },
+      "Linux-ASan": {
+        "Files": 1205,
+        "SourceBytes": 203542,
+        "SubmitMicroseconds": 13,
+        "ColdWorkerMicroseconds": 142048,
+        "WarmWorkerMicroseconds": 58750,
+        "CompletionMicroseconds": 3511,
+        "WarmCompletionMicroseconds": 2711,
+        "MaxTeardownMicroseconds": 235515,
+        "PeakProcessWorkingSetBytes": 669458432
+      },
+      "Windows": {
+        "Files": 1205,
+        "SourceBytes": 203542,
+        "SubmitMicroseconds": 25,
+        "ColdWorkerMicroseconds": 74613,
+        "WarmWorkerMicroseconds": 57468,
+        "CompletionMicroseconds": 1617,
+        "WarmCompletionMicroseconds": 1370,
+        "MaxTeardownMicroseconds": 75557,
+        "PeakProcessWorkingSetBytes": 55623680
+      }
+    }
+  },
+  "Scope": "Native CMake adapter, core, sanitizer and production project-index evidence. Four-profile SCons/package/export acceptance is recorded separately. No physical-input, Windows LSan, Linux graphical or general leak-freedom claim."
+}
