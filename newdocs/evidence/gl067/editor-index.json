@@ -1,0 +1,69 @@
+{
+  "Checks": [
+    {
+      "Message": "Actual editor advances frames while the worker indexes the retained 256-module dataset with bounded submission and polling",
+      "Passed": true
+    }
+  ],
+  "Measurements": {
+    "Cached": {
+      "CachedFiles": 270,
+      "Entries": 256,
+      "FramesWhilePending": 28,
+      "GodotStaticMemoryAfter": 411268810,
+      "GodotStaticMemoryBefore": 411268810,
+      "MainSubmissionMicroseconds": 85,
+      "MaxFrameGapMicroseconds": 7624,
+      "MaxMainPollMicroseconds": 1316,
+      "ParsedFiles": 0,
+      "ScannedFiles": 270,
+      "Truncated": true,
+      "WorkerMicroseconds": 184580
+    },
+    "Cold": {
+      "CachedFiles": 0,
+      "Entries": 256,
+      "FramesWhilePending": 210,
+      "GodotStaticMemoryAfter": 411265102,
+      "GodotStaticMemoryBefore": 410722506,
+      "MainSubmissionMicroseconds": 374,
+      "MaxFrameGapMicroseconds": 8674,
+      "MaxMainPollMicroseconds": 1274,
+      "ParsedFiles": 270,
+      "ScannedFiles": 270,
+      "Truncated": true,
+      "WorkerMicroseconds": 1431403
+    },
+    "GeneratedBytes": 661760,
+    "GeneratedModules": 256,
+    "Warm": {
+      "CachedFiles": 270,
+      "Entries": 256,
+      "FramesWhilePending": 27,
+      "GodotStaticMemoryAfter": 411267574,
+      "GodotStaticMemoryBefore": 411267574,
+      "MainSubmissionMicroseconds": 73,
+      "MaxFrameGapMicroseconds": 7628,
+      "MaxMainPollMicroseconds": 1248,
+      "ParsedFiles": 0,
+      "ScannedFiles": 270,
+      "Truncated": true,
+      "WorkerMicroseconds": 184689
+    },
+    "Warming": {
+      "CachedFiles": 270,
+      "Entries": 256,
+      "FramesWhilePending": 28,
+      "GodotStaticMemoryAfter": 411266338,
+      "GodotStaticMemoryBefore": 411266338,
+      "MainSubmissionMicroseconds": 75,
+      "MaxFrameGapMicroseconds": 8593,
+      "MaxMainPollMicroseconds": 1326,
+      "ParsedFiles": 0,
+      "ScannedFiles": 270,
+      "Truncated": true,
+      "WorkerMicroseconds": 186404
+    }
+  },
+  "Passed": true
+}

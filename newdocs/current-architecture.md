@@ -13,6 +13,13 @@ before publishing any source revisions. Rejection preserves previous live
 generations; success uses existing retirement and module-dependency invalidation.
 State migration and rollback of later runtime side effects are not implemented.
 
+That branch also adds read-only breakpoint conditions and same-transport manual
+reattachment with fresh session identity; old code roots remain retired and new
+generations regain inspection. Physical reconnect is not supported. Scoped
+Theme styling and bounded traversal/obstacle APIs use the existing capability
+registry. The [API guide](gl-067-editor-api.md) and campaign journal distinguish
+implemented/qualified behavior from the broader unfinished expansion scope.
+
 The normally [merged GL-055 debugger campaign](gl-055-main-integration.md) implements
 live Luau execution control through Godot's supported debugger loop under
 [ADR-018](adr-018-native-luau-debugger.md). Windows/Linux native protocol/editor

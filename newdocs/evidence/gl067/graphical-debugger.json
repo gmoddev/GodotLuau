@@ -1,0 +1,210 @@
+{
+  "Label": "editor",
+  "Exit": 0,
+  "Diagnostics": "WARNING: PDB file 'C:/Users/aiden/.codex/artifacts/godotluau/gl067/graphical-533e108-01/godot_luau.pdb' for library 'C:/Users/aiden/.codex/artifacts/godotluau/gl067/graphical-533e108-01/~godot_luau.dll' was not found, skipping copy/rename.\n   at: copy_and_rename_pdb (platform/windows/windows_utils.cpp:159)\nWARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2536)",
+  "Captures": {
+    "debugger-breakpoint.png": "28bc68747181c4ef2c1dac9d9915e8ca6cfee04625fc5c41ae339ba149615e32",
+    "debugger-reload.png": "10cb7c3c180e68784e7ec276575e09c0ebe1a5ea2857385eff75085569fbb39d",
+    "debugger-stack.png": "483547674e1077e76e9196314a0cfa91c2ba345de406e24b9fdcf039cd418a43",
+    "debugger-stepping.png": "00e1d5dd48f118d83e21297ce49a72b80082f8b6ca9e9017467e2e8a54e394b1"
+  },
+  "Checks": [
+    {
+      "Label": "Actual native editor plugin loaded",
+      "Passed": true
+    },
+    {
+      "Label": "Luau opens in the actual native CodeEdit",
+      "Passed": true
+    },
+    {
+      "Label": "Entrypoint breakpoint source exists",
+      "Passed": true
+    },
+    {
+      "Label": "Actual ScriptEditor breakpoint gutter is set",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native stack and variables are ready for stop 1",
+      "Passed": true
+    },
+    {
+      "Label": "Actual editor session pauses with live owner and coroutine identity",
+      "Passed": true
+    },
+    {
+      "Label": "Runtime admits the actual gutter breakpoint",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: ProfileStart",
+      "Passed": true
+    },
+    {
+      "Label": "Actual editor profiler Start is acknowledged",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native restricted Watch input",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: Watch",
+      "Passed": true
+    },
+    {
+      "Label": "Native editor Watch resolves the owned live Godot node",
+      "Passed": true
+    },
+    {
+      "Label": "Editor breakpoint replay preserves the displayed first hit",
+      "Passed": true
+    },
+    {
+      "Label": "Actual rendered debugger image: breakpoint",
+      "Passed": true
+    },
+    {
+      "Label": "Saved debugger capture: breakpoint",
+      "Passed": true
+    },
+    {
+      "Label": "Actual rendered debugger image: stack",
+      "Passed": true
+    },
+    {
+      "Label": "Saved debugger capture: stack",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: StepInto",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native stack and variables are ready for stop 2",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: StepOver",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native stack and variables are ready for stop 3",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: StepOut",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native stack and variables are ready for stop 4",
+      "Passed": true
+    },
+    {
+      "Label": "Actual rendered debugger image: stepping",
+      "Passed": true
+    },
+    {
+      "Label": "Saved debugger capture: stepping",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: Continue",
+      "Passed": true
+    },
+    {
+      "Label": "Continue leaves the debugger stop and keeps the application running",
+      "Passed": true
+    },
+    {
+      "Label": "Native editor invalidates the previous live Watch display on resume",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: ProfileStop",
+      "Passed": true
+    },
+    {
+      "Label": "Actual editor profiler reports resumed Luau execution",
+      "Passed": true
+    },
+    {
+      "Label": "Native Stop terminates the debugging application",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native stack and variables are ready for stop 1",
+      "Passed": true
+    },
+    {
+      "Label": "A fresh native debugger connection admits the retained gutter breakpoint",
+      "Passed": true
+    },
+    {
+      "Label": "Fresh native session clears the previous profiler and Watch display",
+      "Passed": true
+    },
+    {
+      "Label": "Save the actual stopped Luau source through its native resource saver",
+      "Passed": true
+    },
+    {
+      "Label": "Native breakpoint update arrives before saved-source reload",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: Reload",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native stack and variables are ready for stop 2",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native Reload retires the old owner and admits the saved source at its moved breakpoint",
+      "Passed": true
+    },
+    {
+      "Label": "Actual rendered debugger image: reload",
+      "Passed": true
+    },
+    {
+      "Label": "Saved debugger capture: reload",
+      "Passed": true
+    },
+    {
+      "Label": "Actual native debugger control: Detach",
+      "Passed": true
+    },
+    {
+      "Label": "Detach resumes the stopped application without terminating it",
+      "Passed": true
+    },
+    {
+      "Label": "Native editor breakpoint removal",
+      "Passed": true
+    }
+  ],
+  "Graphical": true,
+  "Passed": true,
+  "PhysicalInput": false,
+  "Command": [
+    "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl055\\godot-official\\Godot_v4.7.1-stable_win64.exe",
+    "--headless",
+    "--disable-crash-handler",
+    "--single-threaded-scene",
+    "--editor",
+    "--path",
+    "C:\\Users\\aiden\\.codex\\artifacts\\godotluau\\gl067\\graphical-533e108-01"
+  ],
+  "ExtensionSHA256": "4943d133d5578eaac6edd3e54d39f66aa5ca5b5ad2859681142fcc78f237ca82",
+  "NativeSource": {
+    "SHA256": "556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "IsolatedDesktop": true,
+  "Scope": "Existing actual native editor journey rendered on a non-input desktop; no desktop switch or input injection",
+  "FixtureSHA256": "0ecfd72a1eb6755564aa31c2810cdac6d1bf6c4e4ee3d459da9390014b46093c"
+}

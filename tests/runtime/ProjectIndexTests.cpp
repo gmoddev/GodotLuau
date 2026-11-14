@@ -91,6 +91,18 @@ int main(int Count,char** Arguments)try {
     Check(TypeFunction->Incomplete && Refused,"Analysis refuses user type-function execution with an explicit limitation");
     Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
     Index.Cancel();
+    uint64_t MaxTeardownMicroseconds=0;
+    for(int Cycle=0;Cycle<3;++Cycle) {
+        auto Transient=std::make_unique<GLProjectIndexer>();GLProjectIndexer::Request Pending;Pending.Root=Root.u8string();
+        Check(Transient->Submit(std::move(Pending))!=0,"Transient editor owns a bounded pending project request");
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        auto Closing=Clock::now();Transient.reset();
+        auto Elapsed=uint64_t(std::chrono::duration_cast<std::chrono::microseconds>(Clock::now()-Closing).count());
+        if(Elapsed>MaxTeardownMicroseconds)MaxTeardownMicroseconds=Elapsed;
+    }
+    GLProjectIndexer::Request Recovery;Recovery.Root=Root.u8string();Recovery.Query="Search";Recovery.Member="Economy";
+    auto Recovered=Wait(Index,Index.Submit(std::move(Recovery)));
+    Check(Recovered->Error.empty() && Recovered->Matches>=1200,"Queued/early-analysis editor teardown preserves an independent live index");
     uint64_t PeakProcessBytes=0;
 #ifdef _WIN32
     PROCESS_MEMORY_COUNTERS Counters{};Counters.cb=sizeof(Counters);
@@ -99,7 +111,7 @@ int main(int Count,char** Arguments)try {
     rusage Usage{};if(getrusage(RUSAGE_SELF,&Usage)==0)PeakProcessBytes=uint64_t(Usage.ru_maxrss)*1024;
 #endif
     std::ofstream Metrics(Root/"results.json");
-    Metrics<<"{\"Files\":"<<Cold->Files<<",\"SourceBytes\":"<<Cold->Bytes<<",\"SubmitMicroseconds\":"<<SubmitUs<<",\"ColdWorkerMicroseconds\":"<<Cold->Microseconds<<",\"WarmWorkerMicroseconds\":"<<Cached->Microseconds<<",\"CompletionMicroseconds\":"<<Interactive->Microseconds<<",\"WarmCompletionMicroseconds\":"<<InteractiveWarm->Microseconds<<",\"PeakProcessWorkingSetBytes\":"<<PeakProcessBytes<<"}\n";
+    Metrics<<"{\"Files\":"<<Cold->Files<<",\"SourceBytes\":"<<Cold->Bytes<<",\"SubmitMicroseconds\":"<<SubmitUs<<",\"ColdWorkerMicroseconds\":"<<Cold->Microseconds<<",\"WarmWorkerMicroseconds\":"<<Cached->Microseconds<<",\"CompletionMicroseconds\":"<<Interactive->Microseconds<<",\"WarmCompletionMicroseconds\":"<<InteractiveWarm->Microseconds<<",\"MaxTeardownMicroseconds\":"<<MaxTeardownMicroseconds<<",\"PeakProcessWorkingSetBytes\":"<<PeakProcessBytes<<"}\n";
     std::cout<<"[Editor:Index] MEASURE SubmitMicroseconds="<<SubmitUs<<" ColdWorkerMicroseconds="<<Cold->Microseconds<<" WarmWorkerMicroseconds="<<Cached->Microseconds<<" CompletionWorkerMicroseconds="<<Interactive->Microseconds<<" WarmCompletionWorkerMicroseconds="<<InteractiveWarm->Microseconds<<" Files="<<Cold->Files<<" Bytes="<<Cold->Bytes<<'\n';
     return 0;
 }catch(const std::exception& Error){std::cerr<<"[Editor:Index] FAIL "<<Error.what()<<'\n';return 1;}

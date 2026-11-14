@@ -148,7 +148,7 @@ four successful workflows and independently checked artifacts.
 | [GL-064](gl-055-debugger-development.md#final-bounded-counter-review) | P2 | Resolved at `fd86f83`, integrated by `9ecfc9e`; Windows/Linux 43463127788 requires one stop across 1,000,002 visits | Maximum exact-hit target repeats after the observation counter saturates at that same value |
 | [GL-065](gl-055-debugger-development.md#gl-065-godot-editor-breakpoint-row-cleanup) | P2 | Open external engine-editor limitation; verbose identities and pinned Godot source retained | Godot breakpoint removal detaches TreeItems without freeing their text/layout objects; rendered editor exit reports retained UI objects |
 | [GL-066](gl-055-debugger-development.md#windows-sanitizer-contention-barrier) | P2 | Resolved fixture reliability finding at `1673225`, integrated by `9ecfc9e`; 23 ordinary actors and Windows full-native 43468940617 pass | Fixed ten-second lock-holder sleep can expire before the instrumented DataStore contention actor attempts its read |
-| [GL-067](gl-067-development.md) | P2 | Active on dedicated branch; implementation and qualification pending | Development platform expansion: synchronous bounded project indexing stalls the editor and limits large-project tooling |
+| [GL-067](gl-067-development.md) | P2 | Active, unmerged; worker/core/declaration/native/rendered phases pass in recorded scopes; final sanitizer/package gates pending and broader expansion remains open | Development platform expansion: asynchronous semantic tooling, iteration/debugger recovery and native family coverage |
 
 ## GL-061: Experimental debugger connection retirement
 

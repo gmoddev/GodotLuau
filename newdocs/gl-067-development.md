@@ -233,3 +233,98 @@ The first combined Windows build (`build-09.log`) finds one pinned-SDK overload
 ambiguity in the new action title (`String + const char[]`). An explicit String
 operand corrects it; the existing worker dependency/native caches are preserved.
 No runtime result is claimed for that failed compile.
+
+## Qualified implementation identity and measured results
+
+The current native implementation is `533e108680cc394296b622a9e04f8d6ef113e019`,
+139 LF-normalized inputs, fingerprint
+`556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6`.
+Subsequent documentation, receipt reporting, optional baseline-target support and
+worker-test changes preserve that native fingerprint. Both hosted native jobs
+pass in [43598864037](https://github.com/gmoddev/GodotLuau/actions/runs/43598864037),
+including all seven debugger modes, 141 existing actors, editor workflow and
+Foundry restart. Both core jobs pass in
+[43598864041](https://github.com/gmoddev/GodotLuau/actions/runs/43598864041).
+The generated declaration pair passed at the same generated policy/declaration
+inputs in [43594486137](https://github.com/gmoddev/GodotLuau/actions/runs/43594486137).
+
+The Windows/Linux Release worker checks and Linux ASan/LSan worker check pass in
+[43600199530](https://github.com/gmoddev/GodotLuau/actions/runs/43600199530).
+The later focused lifetime extension exercises repeated queued/early-analysis
+editor disposal and recovery of an independent live service; its result is
+recorded separately rather than retroactively attributed to that run.
+
+The actual Windows official-editor index measurement retains the same 256
+generated modules/661,760 bytes as GL-055, plus 14 fixture modules. It fully
+warms all 270 files while returning bounded 256-entry pages:
+
+| Query | Main submission | Max main poll | Worker time | Frames while pending | Max observed frame gap |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Cold | 0.374 ms | 1.274 ms | 1,431.403 ms | 210 | 8.674 ms |
+| Warm | 0.073 ms | 1.248 ms | 184.689 ms | 27 | 7.628 ms |
+| Cached | 0.085 ms | 1.316 ms | 184.580 ms | 28 | 7.624 ms |
+
+The retained GL-055 observation spent approximately 250 ms synchronously and did
+not fully warm its bounded scan. This comparison establishes the changed main-
+thread behavior, not a claim that total cold analysis is faster. Result pages
+and per-file navigation caps remain explicit. Godot static-memory counters do
+not include all C++ worker memory.
+
+The 1,205-file/203,542-byte typed catalog workload on DockerPC Debug measured
+21 us submission, 519,526 us cold, 275,014 us warm, 14,019 us first completion,
+13,049 us warm completion and 89,784,320 bytes peak process working set. It is a
+scale/semantic fixture, not a claim of a thousand-module production game.
+
+Paired MSVC Release core measurements reuse the existing debugger benchmark,
+one warm-up and five measured trials on DockerPC with two build jobs. The exact
+GL-055 main baseline `f54aa44` and current candidate share pinned Luau and compiler
+settings. Disabled medians are 2,682.2 / 2,742.9 us (+2.3%) for 100,000 operations,
+with zero counted C++ allocations and 504,336 VM peak bytes in both. Candidate
+attached/breakpoint/step/inspection/profile medians are 9,490.2 / 35,775.5 /
+126,431.1 / 60,248.0 / 5,378.2 us. Profiling retains two initial native-key
+allocations. The maximum-hit regression still stops once across 1,000,002 visits.
+These short synthetic intervals do not prove a general gameplay performance
+improvement or measure every signal/require path.
+
+## Rendered editor and production application
+
+The existing actual editor journey passes on MainPC using the matching Windows
+Debug adapter and verified official 4.7.1 editor. It renders on a separate,
+non-input Windows desktop, without switching desktops or injecting user input.
+All four [retained captures](evidence/gl067/graphical-debugger.json) were inspected:
+breakpoint, native stack/locals, stepping and saved-source reload. The condition
+and Attach controls fit the Luau panel. This is rendered programmatic evidence,
+not physical interaction. GL-065 still reports the known eight leaked engine
+editor objects at exit; no new engine patch or universal leak-free claim is made.
+
+Foundry's matching rendered run passes all 44 checks and persistence restart.
+Menu, active world and completion captures were inspected and retained. Its
+Client-owned theme styling stays within the native resource scope. The separate
+[application invocation report](evidence/gl067/foundry-invocations.json) records
+127 domain/member pairs across three logs, including actual Client Theme
+construction, property writes and color/constant/font-size calls. Invocation is
+not substituted for the game assertions. Inventory now reports 920 metadata
+classes, 114 constructible classes, 391 properties, 238 methods, 41 signals and
+51 constants. It remains partial engine coverage.
+
+## Outstanding qualification and broader campaign scope
+
+Full-native Linux ASan/LSan passes in `43599608700`; Windows and the four-profile
+candidate/package workflow `43599606392` are pending at this entry. The latter
+already passes policy/retention checks, Linux core ASan/LSan and Linux Debug.
+These pending results are not success claims. Superseded native runs
+`43596406686`, `43597466314` and `43598297392` were cancelled after a concrete
+pinned-SDK compile correction; their attempted inputs/history remain visible.
+
+The delivered phases cover incremental indexing, semantic editor actions,
+conditional/manual-recovery debugging, profiling observations, reload preflight,
+scoped native styling/traversal and real application qualification. Broader
+AnimationTree target authority, raw Callable/Signal/RID ownership, privileged
+viewport/window APIs, full state-migrating reload and function sampling are not
+implemented by this slice. The existing 64-path runtime project-module admission
+bound is preserved; editor scale evidence does not override it. Foundry remains
+the real production acceptance project; the catalog fixture is not relabelled as
+a much larger game. Linux graphical, Windows LSan and physical-input limitations
+remain. GL-065 and physical transport reconnection remain external limitations.
+The overall expansion campaign stays open; do not infer complete engine parity
+or integration readiness from this focused phase record.

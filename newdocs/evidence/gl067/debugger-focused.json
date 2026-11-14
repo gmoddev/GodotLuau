@@ -1,0 +1,957 @@
+{
+  "Passed": true,
+  "NativeSource": {
+    "SHA256": "556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "ExtensionSHA256": "4943d133d5578eaac6edd3e54d39f66aa5ca5b5ad2859681142fcc78f237ca82",
+  "Fixtures": {
+    "DebuggerMain.luau": "12f5a8fe202e2ce3b380a32beafe340217673ccb5ccf2ce637caca5ef48e04ad",
+    "DebuggerModule.luau": "535f6b57665c690e3b6cfad8fa26063c7553aed6a70d5038ef1e0331bbd80df8",
+    "DebuggerClient.luau": "83cc759a7bb45edca0dfaecc85af22b7de1b96af953ccebe044e83b6598efaea",
+    "DebuggerPeer.gd": "3254e98895cad4014dd63647349e3dd2465bba432b5d70fb95725c6bdeee2fda",
+    "DebuggerTarget.gd": "1720b4ce7135ab81052013793879ae3284273ff7a8a4339f9fb0e9a05949e8df",
+    "DebuggerReload.luau": "22a2491b2e9c45618a188c6c128704ae5195096072d8b23c7e176237313bcad7",
+    "DebuggerReloadPeer.gd": "fbf4119bb16ec5913356420b6a9d3b0fd16d70c979593ea2c8a8a9ab3c2c8fb7",
+    "DebuggerReloadTarget.gd": "c579aa98f3b52225e3ac6c5e64bb8c0cc501e39a134627190966ef177003096c",
+    "DebuggerNetwork.luau": "f84cb60a3058009439e54d7b43e903b84042389641406b5f2931780f4ba71d85",
+    "DebuggerNetworkPeer.gd": "3dd2559dd2df713583b9419f9de66fa55ee2e458800073ff81f869dcf61ecd43",
+    "DebuggerNetworkTarget.gd": "8c8e113a915daa8ec93303434ec2c9ddf3a09401a3b5504ab7999b0b977672f6",
+    "DebuggerNetworkClient.gd": "223cda4b3f0c3c1c42b4d1a085cd306612aec2152d38cdd86316cf3348477eac",
+    "DebuggerConditional.luau": "d9851ee40263e1ae5480fe8cb42f4c33ab9a17fcdf56a42c18d83104e7736b2d",
+    "DebuggerConditionalPeer.gd": "4396db75471c5d0e4e6147477723c6e3894b366b7253896dcb09a4e2cb2976c7",
+    "DebuggerConditionalTarget.gd": "644b15441131da134a7a9b6117ac3d1ab258eb5de1f0da67885ff70da421cfbc",
+    "DebuggerReattachOld.luau": "9d61352b493dd106a8c6e07348c266a69dffa1bec71847caf609dd9ef7ce8127",
+    "DebuggerReattachNew.luau": "58bcd8bef00cba66c1a5791608620e7cb92efe111741ef56232191198ab5c287",
+    "DebuggerReattachPeer.gd": "33d7ff5431c33b2dbb4c4fa271d7335f252e23d8ca001ccb22179daf222bbf1a",
+    "DebuggerReattachTarget.gd": "f1db554658b6ea098d072f92a239dc42c9cb3c72d3b60559dc9a93db7bcecbe5"
+  },
+  "Graphical": false,
+  "DevelopmentHostOptIn": false,
+  "Cases": [
+    {
+      "Checks": [
+        {
+          "Label": "Loopback-only test editor listener",
+          "Passed": true
+        },
+        {
+          "Label": "Atomic test-peer readiness",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Godot enters a continuable live Luau stack",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native stack dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_frame_vars",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native variable count",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Conditional source stop 0 matches expected executable line; actual res://DebuggerConditional.luau:2 reason Breakpoint",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: continue",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Godot enters a continuable live Luau stack",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native stack dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_frame_vars",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native variable count",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Conditional source stop 1 matches expected executable line; actual res://DebuggerConditional.luau:6 reason ConditionError",
+          "Passed": true
+        },
+        {
+          "Label": "Forbidden condition pauses with an explicit error without executing its call",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: continue",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Godot enters a continuable live Luau stack",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native stack dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_frame_vars",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native variable count",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Conditional source stop 2 matches expected executable line; actual res://DebuggerConditional.luau:4 reason Breakpoint",
+          "Passed": true
+        },
+        {
+          "Label": "True condition observes the actual live local after false visits",
+          "Passed": true
+        },
+        {
+          "Label": "Closed typed conditional commands are admitted without protocol errors",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: continue",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Every expected breakpoint step import callback and stale-handle stop executed",
+          "Passed": true
+        }
+      ],
+      "ErrorsRejected": 0,
+      "Graphical": false,
+      "Measurements": {
+        "ConditionalObservations": [
+          {
+            "Index": null,
+            "Line": 2,
+            "Reason": "Breakpoint",
+            "Source": "res://DebuggerConditional.luau",
+            "Stop": 0
+          },
+          {
+            "Index": 1.0,
+            "Line": 6,
+            "Reason": "ConditionError",
+            "Source": "res://DebuggerConditional.luau",
+            "Stop": 1
+          },
+          {
+            "Index": 3.0,
+            "Line": 4,
+            "Reason": "Breakpoint",
+            "Source": "res://DebuggerConditional.luau",
+            "Stop": 2
+          }
+        ],
+        "StackRoundTripMicroseconds": [
+          15733,
+          16000,
+          15976
+        ],
+        "VariablesRoundTripMicroseconds": [
+          38877,
+          37629,
+          37929
+        ],
+        "WatchRoundTrips": []
+      },
+      "Passed": true,
+      "Stops": 3,
+      "Target": {
+        "Label": "target",
+        "Exit": 0,
+        "Diagnostics": ""
+      },
+      "Peer": {
+        "Label": "peer",
+        "Exit": 0,
+        "Diagnostics": ""
+      },
+      "TargetCommand": [
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl055-fd86f83\\godot\\Godot_v4.7.1-stable_win64.exe",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--max-fps",
+        "60",
+        "--path",
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl067\\debugger-10-focused\\conditional\\target",
+        "--debug",
+        "--remote-debug",
+        "tcp://127.0.0.1:56428",
+        "--breakpoints",
+        "res://DebuggerConditional.luau:2",
+        "--script",
+        "res://DebuggerConditionalTarget.gd"
+      ],
+      "PeerCommand": [
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl055-fd86f83\\godot\\Godot_v4.7.1-stable_win64.exe",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--max-fps",
+        "60",
+        "--path",
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl067\\debugger-10-focused\\conditional\\peer",
+        "--script",
+        "res://DebuggerConditionalPeer.gd"
+      ],
+      "Case": "conditional"
+    },
+    {
+      "Checks": [
+        {
+          "Label": "Loopback-only test editor listener",
+          "Passed": true
+        },
+        {
+          "Label": "Atomic test-peer readiness",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Godot enters a continuable live Luau stack",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native stack dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_frame_vars",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native variable count",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Reattached source stop belongs to its expected admitted generation",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: continue",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Fresh generation starts only after native breakpoint admission",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: godotluau:command",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Godot enters a continuable live Luau stack",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native stack dump",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: get_stack_frame_vars",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Bounded native variable count",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native variable payload",
+          "Passed": true
+        },
+        {
+          "Label": "Reattached source stop belongs to its expected admitted generation",
+          "Passed": true
+        },
+        {
+          "Label": "Reattachment rotates session identity, rejects stale commands and inspects the fresh generation",
+          "Passed": true
+        },
+        {
+          "Label": "Native debugger command accepted: continue",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Native protocol envelope",
+          "Passed": true
+        },
+        {
+          "Label": "Every expected breakpoint step import callback and stale-handle stop executed",
+          "Passed": true
+        }
+      ],
+      "ErrorsRejected": 2,
+      "Graphical": false,
+      "Measurements": {
+        "StackRoundTripMicroseconds": [
+          15721,
+          16115
+        ],
+        "VariablesRoundTripMicroseconds": [
+          20673,
+          20432
+        ],
+        "WatchRoundTrips": []
+      },
+      "Passed": true,
+      "Stops": 2,
+      "Target": {
+        "Label": "target",
+        "Exit": 0,
+        "Diagnostics": ""
+      },
+      "Peer": {
+        "Label": "peer",
+        "Exit": 0,
+        "Diagnostics": ""
+      },
+      "TargetCommand": [
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl055-fd86f83\\godot\\Godot_v4.7.1-stable_win64.exe",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--max-fps",
+        "60",
+        "--path",
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl067\\debugger-10-focused\\reattach\\target",
+        "--debug",
+        "--remote-debug",
+        "tcp://127.0.0.1:56430",
+        "--breakpoints",
+        "res://DebuggerReattachOld.luau:4",
+        "--script",
+        "res://DebuggerReattachTarget.gd"
+      ],
+      "PeerCommand": [
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl055-fd86f83\\godot\\Godot_v4.7.1-stable_win64.exe",
+        "--headless",
+        "--disable-crash-handler",
+        "--single-threaded-scene",
+        "--max-fps",
+        "60",
+        "--path",
+        "C:\\Sandbox\\Codex\\Artifacts\\GodotLuau\\gl067\\debugger-10-focused\\reattach\\peer",
+        "--script",
+        "res://DebuggerReattachPeer.gd"
+      ],
+      "Case": "reattach"
+    }
+  ]
+}
