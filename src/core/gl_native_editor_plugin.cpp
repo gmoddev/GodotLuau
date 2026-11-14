@@ -207,7 +207,7 @@ void GLNativeEditorPlugin::ProjectAction(const String& Query) {
     Options["Column"]=Code->get_line(Code->get_caret_line()).substr(0,Code->get_caret_column()).utf8().length()+1;
     Dictionary Submission=QueryProject(Options);
     if(int(Submission.get("result",ERR_UNAVAILABLE))!=OK){ShowStatus("Project query is unavailable");return;}
-    ProjectUiGeneration=ProjectGeneration;ProjectUiTitle=Query+" project snapshot";ShowStatus("Analyzing active Luau buffer in background");
+    ProjectUiGeneration=ProjectGeneration;ProjectUiTitle=Query+String(" project snapshot");ShowStatus("Analyzing active Luau buffer in background");
 }
 void GLNativeEditorPlugin::ShowProjectDefinition(){ProjectAction("Definition");}
 void GLNativeEditorPlugin::ShowProjectCompletion(){ProjectAction("Complete");}

@@ -228,3 +228,8 @@ specific external transport limitation, not an indefinite suspended state or a
 second listener. The seventh native mode checks manual detach, running progress,
 nonce rotation, suspended/stale-command rejection, a newly admitted generation
 and old-owner native cleanup. Original debugger modes remain required.
+
+The first combined Windows build (`build-09.log`) finds one pinned-SDK overload
+ambiguity in the new action title (`String + const char[]`). An explicit String
+operand corrects it; the existing worker dependency/native caches are preserved.
+No runtime result is claimed for that failed compile.
