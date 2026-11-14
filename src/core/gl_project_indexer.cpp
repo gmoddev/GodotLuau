@@ -36,6 +36,8 @@ constexpr size_t MaxFiles=4096, MaxBytes=32*1024*1024, MaxFileBytes=256*1024, Pa
 using Clock=std::chrono::steady_clock;
 bool ModulePath(const std::string& Name) {
     if(Name.size()>1024 || Name.compare(0,6,"res://") || Name.size()<7)return false;
+    // Definitions use a separate frontend grammar and are not runtime modules.
+    if(Name.compare(Name.size()-7,7,".d.luau")==0)return false;
     auto Relative=Name.substr(6);
     if(Relative.find_first_of("\\:\0",0,3)!=std::string::npos || Relative.find("//")!=std::string::npos || Relative.back()=='/')return false;
     for(unsigned char C:Relative)if(C<32 || C==127)return false;

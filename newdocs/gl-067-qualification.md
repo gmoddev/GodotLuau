@@ -1,7 +1,8 @@
 # GL-067 platform qualification
 
-Status: current native/core/editor/index phases pass at `d8090a0`. Fresh production
-profiles/packages are running. The preceding `533e108` checkpoint also passes
+Status: native/core/editor/index phases pass at `d8090a0`. The installed
+definition-file correction has new qualification pending; earlier native/package
+receipts do not cover that changed filter. The preceding `533e108` checkpoint also passes
 production packages/export within the scopes below; its binaries retain their
 own identity.
 Branch `feature/gl-067-development-platform`
@@ -12,7 +13,7 @@ This is substantial multi-subsystem expansion, not complete Godot API parity.
 ## Source identity
 
 Baseline main: `f54aa44265ae36b98fccfbc0622c4b61c4f6db06`.
-Native implementation: `d8090a0696a2d46ff36efee6813c5a1b55cdcfff`, tree
+Qualified import-fix checkpoint: `d8090a0696a2d46ff36efee6813c5a1b55cdcfff`, tree
 `83af576e444ed39a3ca15f1050c9d335819fdfb4`.
 The 139-file LF-normalized native fingerprint is
 `558733a683b0fc3f1ef6e4e1d88bba3bcaef233e2fa4982032913af9886acb90`.

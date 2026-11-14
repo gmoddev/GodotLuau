@@ -46,6 +46,11 @@ limited to 4,096 files/32 MiB, 256 KiB/file. Syntax navigation retains at most
 512 entries/file. Semantic working sets retain at most 256 modules/4 MiB, with
 50 ms frontend limits per module. There is no hard process-RSS quota.
 
+Definition-only `.d.luau` files are excluded from runtime-module discovery and
+buffer capture, including when one is open in the editor. Shipped native globals
+come from the exact embedded generated declarations. Custom declaration-file
+loading is not implemented by this service. Runtime `require` behavior is unchanged.
+
 Static literal requires, lexical locals/arguments, imported functions and exported
 table properties are supported. Dynamic module expressions, arbitrary metatables
 and reflective names are not invented definitions. User-defined type functions

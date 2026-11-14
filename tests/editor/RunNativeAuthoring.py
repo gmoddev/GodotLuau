@@ -32,6 +32,9 @@ def Main():
     Prepare(Output, Args.extension.resolve())
     if Args.workflow and not Args.baseline:
         Example=Path(__file__).resolve().parents[2]/"examples/luau-only"
+        Types=Output/'GodotLuau/Types'
+        Types.mkdir(parents=True,exist_ok=True)
+        shutil.copy2(Path(__file__).resolve().parents[2]/'GodotLuau/Types/Native.d.luau',Types/'Native.d.luau')
         for Name in ("World.luau","Marker.tscn","Pattern.tres"):
             shutil.copy2(Example/Name,Output/Name)
         shutil.copy2(Example/"Main.luau",Output/"OrbRun.luau")

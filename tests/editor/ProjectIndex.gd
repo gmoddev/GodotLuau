@@ -44,6 +44,7 @@ func Run(Runner,Plugin) -> void:
         'IndexModule.luau':'export type Product = {Value: number}\nlocal function Build(Value: number): Product return {Value=Value} end\nreturn {Build=Build}\n',
         'IndexOther.luau':'return {Build=function() return 55 end}\n',
         'IndexEmpty.luau':'return {}\n',
+        'IndexDefinitions.d.luau':'declare ProjectValue: number\n',
         'IndexConsumer.luau':"local M=require('res://IndexModule.luau')\nM.Build()\nlocal Alias=M.Build\nAlias()\n",
         'IndexUnrelated.luau':"local M=require('res://IndexOther.luau')\nM.Build()\n",
         'IndexShadow.luau':"local M=require('res://IndexModule.luau')\ndo local M={Build=function() end}; M.Build() end\n",
@@ -102,4 +103,8 @@ func Run(Runner,Plugin) -> void:
         var Targets: Array=ImportTarget.get('Entries',[])
         Runner.Check(Targets.size()==1 and Targets[0].Path=='res://IndexEmpty.luau' and Targets[0].Line==1,'Import navigation opens a module with no indexed symbols')
         Code.text=Sources['IndexConsumer.luau']
+        EditorInterface.edit_script(load('res://IndexDefinitions.d.luau'),-1,0,true)
+        for Frame in range(3): await Runner.get_tree().process_frame
+        var WithDefinitions: Dictionary=await Report(Runner,Plugin,'res://IndexModule.luau','Build')
+        Runner.Check(WithDefinitions.get('result',ERR_UNAVAILABLE)==OK and not WithDefinitions.get('Incomplete',true),'An open definition-only buffer preserves runtime project navigation')
     else: Runner.Check(false,'Project index can observe the actual Luau CodeEdit')

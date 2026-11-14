@@ -29,6 +29,7 @@ int main(int Count,char** Arguments)try {
     auto Write=[&](const std::string& Name,const std::string& Source){std::ofstream File(Root/Name,std::ios::binary);File<<Source;if(!File)throw std::runtime_error("Write failed");};
     Write("Module.luau","local function Build(Value: number): number return Value+1 end\nreturn {Build=Build}\n");
     Write("Empty.luau","return {}\n");
+    Write("Library.d.luau","declare ProjectValue: number\n");
     Write("Consumer.luau","local M=require('res://Module.luau')\nlocal Answer=M.Build(2)\nlocal Alias=M.Build\nAlias(3)\nreturn Answer\n");
     Write("Shadow.luau","local M=require('res://Module.luau')\ndo local M={Build=function() end}; M.Build() end\nreturn M\n");
     Write("Assigned.luau","local M=require('res://Module.luau')\nM={Build=function() end}\nM.Build()\nreturn M\n");
@@ -37,6 +38,7 @@ int main(int Count,char** Arguments)try {
     GLProjectIndexer Index;GLProjectIndexer::Request Request;Request.Root=Root.u8string();Request.Query="References";Request.Module="res://Module.luau";Request.Member="Build";
     auto First=Wait(Index,Index.Submit(Request));
     Check(First->Error.empty() && First->Entries.size()==3,"Exact static module references preserve aliases, shadowing and reassignment");
+    Check(First->Files==7 && !First->Incomplete,"Definition-only sources do not enter runtime module discovery");
     auto Warm=Wait(Index,Index.Submit(Request));Check(Warm->Parsed==0 && Warm->Cached==First->Files,"Warm index retains all unchanged documents");
     Request.Active="res://Consumer.luau";Request.Query="Definition";Request.Line=2;Request.Column=17;
     auto Definition=Wait(Index,Index.Submit(Request));
@@ -94,6 +96,9 @@ int main(int Count,char** Arguments)try {
     auto TypeFunction=Wait(Index,Index.Submit(Request));bool Refused=false;
     for(const auto& Item:TypeFunction->Diagnostics)Refused|=Item.Kind=="UnsupportedTypeFunction" && Item.Path==Request.Active;
     Check(TypeFunction->Incomplete && Refused,"Analysis refuses user type-function execution with an explicit limitation");
+    Request.Buffers["res://Library.d.luau"]="declare ProjectValue: number\n";
+    Check(Index.Submit(Request)==0,"Definition-only buffers are refused by the runtime module worker");
+    Request.Buffers.erase("res://Library.d.luau");
     Request.Buffers["res://../escape.luau"]="return 1";Check(Index.Submit(Request)==0,"Traversal buffers are refused before enqueue");
     Index.Cancel();
     uint64_t MaxTeardownMicroseconds=0;

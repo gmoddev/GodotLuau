@@ -433,3 +433,31 @@ assertions are introduced. Its completed outcome will be recorded separately.
 workflow/reopen, including the originally failing import. The
 [current native receipt](evidence/gl067/import-navigation-native.json) retains
 both products and summaries. Four-profile/package `43606352703` is still running.
+
+## Installed declaration-file correction
+
+The normal shipped `Native.d.luau` explicitly requires definition-file grammar;
+the ordinary module parser defaults `allowDeclarationSyntax=false`. The index
+previously discovered `.d.luau` as executable modules, making navigation reports
+incomplete even in an otherwise valid installed project. Merely opening such a
+buffer also preserved that incorrect incomplete state.
+
+Actual native editor `editor-declarations-baseline-01` reproduces this with a
+small project definition. `editor-declarations-baseline-02` additionally stages
+the actual 196,985-byte shipped Native.d.luau. Exactly two checks fail: the
+existing complete-reference assertion and the new open-definition-buffer check;
+71 other authoring/reload/recovery/import checks pass, with empty stderr. The
+[baseline receipt](evidence/gl067/definition-files-baseline.json) preserves
+source, fixture, actual declaration and log identities. No crash is claimed.
+
+The smallest correction excludes `.d.luau` from runtime-module discovery and
+from editor buffer/active-module collection. Pinned native definitions still
+load through their dedicated embedded frontend authority. Runtime require,
+declaration generation and custom-definition loading behavior are unchanged.
+The existing actual editor fixture now stages shipped declarations, while the
+production worker fixture checks discovery and rejected definition-only buffers.
+Native fingerprint is
+`320853995024f3809d849d5fda742f41f84d4dfef060a8efbc53d3577fe68124`
+(139 inputs); current qualification is pending. No further source expansion is
+planned in this acceptance phase; remaining work is qualification and actual
+failures, preserving all preceding evidence.
