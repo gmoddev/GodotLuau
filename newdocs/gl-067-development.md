@@ -371,3 +371,34 @@ artifacts. Subsequent documentation/test/report-only changes retain native
 fingerprint `556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6`
 (139 LF-normalized inputs). The final worker lifetime extension has its own
 current index CI rather than being inferred from an earlier native adapter.
+
+## Final acceptance and import navigation correction
+
+The `533e108` implementation passes every production gate in candidate
+[`43599606392`](https://github.com/gmoddev/GodotLuau/actions/runs/43599606392):
+all four SCons profiles, Linux core sanitizers, both extracted packages/companion
+starts and aggregate nonpublishing acceptance. Its actual production Release
+libraries pass all seven debugger cases plus the 36-check native editor journey
+on both platforms in
+[`43605411113`](https://github.com/gmoddev/GodotLuau/actions/runs/43605411113).
+Foundry Debug/Release exports/restarts on Windows/Linux and the Windows Relay
+Siege solo/recovery/listen/dedicated workloads pass in
+[`43605497766`](https://github.com/gmoddev/GodotLuau/actions/runs/43605497766).
+The [retained production receipt](evidence/gl067/production-qualified.json)
+identifies those immutable packages and products; it is not evidence for a
+later changed binary.
+
+Final source review finds that literal import navigation emits its target only
+while iterating that target's symbols. An empty-table/constant-return module has
+none. `editor-import-baseline-01` reproduces this on the actual `533e108` native
+editor: precisely the new import-navigation assertion fails, while the other
+71 authoring/reload/navigation/recovery checks pass. The captured fixture and
+stderr remain under the local GL-067 artifact root. This is an editor product
+defect, not a test infrastructure failure.
+
+The correction emits a single validated target location directly, independently
+of target symbols. Missing targets remain absent. Production-index and actual
+editor regression fixtures cover the empty module. No gameplay, ABI, declaration,
+dependency, host, packaging policy or native authority changes. Its native
+fingerprint is `dd64bd1592b5dc7ef523eaca28a40ad31d88916473d94d2c55454e80afe644ce`
+(139 inputs); qualification of that correction is pending at this entry.

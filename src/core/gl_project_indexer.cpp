@@ -381,6 +381,13 @@ struct GLProjectIndexer::State {
             for(const auto& Item:Current->second.Entries)if(Item.Name==Value.Replacement) {Report.Error="Rename could capture another binding";return;}
             Report.Revisions[Value.Active]=Current->second.Source;
         }
+        if(Value.Query=="Definition" && Selected && Selected->Kind=="Import") {
+            if(Resolver.Files.count(Selected->Target)) {
+                Entry Item;Item.Kind="Import";Item.Name="require";Item.Path=Selected->Target;Item.Line=1;Item.Column=1;
+                Item.Revision=Resolver.Files.at(Item.Path).Revision;Emit(std::move(Item));
+            }
+            return;
+        }
         for(const auto& Pair:Resolver.Files) {
             if(Cancelled(Generation))return;
             const auto& Name=Pair.first;const auto& Doc=Pair.second;
@@ -406,7 +413,6 @@ struct GLProjectIndexer::State {
                 }
                 if(Value.Query=="Definition") {
                     if(!Selected)continue;
-                    if(Selected->Kind=="Import") {if(Name!=Selected->Target)continue;Item.Line=1;Item.Column=1;Emit(Item);return;}
                     if(Selected->Kind=="ImportedMember") {
                         if(Name!=Selected->Target || Item.Name!=Selected->Name || (Item.Kind!="Function" && Item.Kind!="MemberFunction"))continue;
                         // A named table member is a candidate, not proof it is exported.

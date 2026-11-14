@@ -28,6 +28,7 @@ int main(int Count,char** Arguments)try {
     auto Root=std::filesystem::absolute(Arguments[1])/("run-"+std::to_string(Clock::now().time_since_epoch().count()));std::filesystem::create_directories(Root);
     auto Write=[&](const std::string& Name,const std::string& Source){std::ofstream File(Root/Name,std::ios::binary);File<<Source;if(!File)throw std::runtime_error("Write failed");};
     Write("Module.luau","local function Build(Value: number): number return Value+1 end\nreturn {Build=Build}\n");
+    Write("Empty.luau","return {}\n");
     Write("Consumer.luau","local M=require('res://Module.luau')\nlocal Answer=M.Build(2)\nlocal Alias=M.Build\nAlias(3)\nreturn Answer\n");
     Write("Shadow.luau","local M=require('res://Module.luau')\ndo local M={Build=function() end}; M.Build() end\nreturn M\n");
     Write("Assigned.luau","local M=require('res://Module.luau')\nM={Build=function() end}\nM.Build()\nreturn M\n");
@@ -43,6 +44,10 @@ int main(int Count,char** Arguments)try {
     Request.Query="Complete";Request.Line=2;Request.Column=18;Request.Member="Bu";
     auto Completion=Wait(Index,Index.Submit(Request));
     Check(!Completion->Entries.empty() && Completion->Entries[0].Name=="Build" && !Completion->Entries[0].Type.empty(),"Type-aware completion includes imported function signature");
+    Request.Query="Definition";Request.Line=1;Request.Column=10;
+    Request.Buffers[Request.Active]="local M=require('res://Empty.luau')\nreturn M\n";
+    auto ImportTarget=Wait(Index,Index.Submit(Request));
+    Check(ImportTarget->Entries.size()==1 && ImportTarget->Entries[0].Path=="res://Empty.luau" && ImportTarget->Entries[0].Line==1,"Literal import navigation does not require an indexed target symbol");
     Request.Query="Diagnostics";Request.Buffers[Request.Active]="local M=require('res://Module.luau')\nreturn M.Build('bad')\n";
     auto Errors=Wait(Index,Index.Submit(Request));Check(!Errors->Diagnostics.empty() && Errors->Parsed==1,"Changed buffer receives cross-module diagnostics and only one syntax reparse");
     Request.Active="res://Module.luau";Request.Buffers.clear();Request.Query="Rename";Request.Line=1;Request.Column=17;Request.Replacement="Construct";

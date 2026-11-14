@@ -43,6 +43,7 @@ func Run(Runner,Plugin) -> void:
     var Sources={
         'IndexModule.luau':'export type Product = {Value: number}\nlocal function Build(Value: number): Product return {Value=Value} end\nreturn {Build=Build}\n',
         'IndexOther.luau':'return {Build=function() return 55 end}\n',
+        'IndexEmpty.luau':'return {}\n',
         'IndexConsumer.luau':"local M=require('res://IndexModule.luau')\nM.Build()\nlocal Alias=M.Build\nAlias()\n",
         'IndexUnrelated.luau':"local M=require('res://IndexOther.luau')\nM.Build()\n",
         'IndexShadow.luau':"local M=require('res://IndexModule.luau')\ndo local M={Build=function() end}; M.Build() end\n",
@@ -88,4 +89,17 @@ func Run(Runner,Plugin) -> void:
         Runner.Check(FileAccess.get_file_as_string('res://IndexConsumer.luau')==Sources['IndexConsumer.luau'],'Reference indexing preserves saved source')
         Code.text=Sources['IndexConsumer.luau']
         Runner.Measurements.ProjectIndex={'ColdMicroseconds':First.get('Microseconds',0),'WarmMicroseconds':Second.get('Microseconds',0),'ChangedMicroseconds':Changed.get('Microseconds',0),'NavigationMicroseconds':Navigation.get('Microseconds',0),'Files':First.get('ScannedFiles',0),'Truncated':Changed.get('Truncated',true)}
+        Code.text="local M=require('res://IndexEmpty.luau')\nreturn M\n"
+        var Options={'Query':'Definition','Line':1,'Column':10}
+        var Submission: Dictionary=Plugin.call('QueryProject',Options)
+        var ImportTarget: Dictionary={}
+        var Deadline=Time.get_ticks_msec()+30000
+        while Time.get_ticks_msec()<Deadline:
+            ImportTarget=Plugin.call('PollProject',Submission.get('Generation',0))
+            if ImportTarget.get('Stale',false): Submission=Plugin.call('QueryProject',Options)
+            elif not ImportTarget.get('Pending',false): break
+            await Runner.get_tree().process_frame
+        var Targets: Array=ImportTarget.get('Entries',[])
+        Runner.Check(Targets.size()==1 and Targets[0].Path=='res://IndexEmpty.luau' and Targets[0].Line==1,'Import navigation opens a module with no indexed symbols')
+        Code.text=Sources['IndexConsumer.luau']
     else: Runner.Check(false,'Project index can observe the actual Luau CodeEdit')
