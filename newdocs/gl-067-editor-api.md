@@ -1,6 +1,7 @@
 # GL-067 editor and iteration guide
 
-Applies to the unmerged `feature/gl-067-development-platform` branch. See the
+Applies to the normally [integrated GL-067 checkpoint](gl-067-main-integration.md).
+The original `feature/gl-067-development-platform` branch is preserved. See the
 [development/qualification journal](gl-067-development.md) and
 [worker decision](adr-019-incremental-editor-index.md). Native remains the default
 Character controller; Scripted remains opt-in. Releases/updater remain disabled.

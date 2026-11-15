@@ -128,7 +128,9 @@ Core, native, index, declarations, appropriate sanitizer scopes, production
 source/package and actual Release authoring gates pass. Preceding rendered/game/
 export receipts retain their original identity and unchanged behavior scopes.
 No unverified runtime or distribution channel is inferred from this checkpoint.
-Main is unchanged, Native remains the
+Those feature checks left main unchanged; the subsequent
+[normal integration](gl-067-main-integration.md) records fresh main verification.
+Native remains the
 default controller, Scripted stays opt-in, and releases/updater stay disabled.
 
 The wider campaign remains open. Foundry is the real acceptance game, with its

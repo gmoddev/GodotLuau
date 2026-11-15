@@ -1,0 +1,61 @@
+{
+  "Schema": 1,
+  "Merge": "e8dfee7c3f7fd7302fa0dcef9b4756d70f19d5a6",
+  "TestedMain": "1fe0083286a3c79f9b4b9f23f8405c508c2e1db7",
+  "Feature": "2df900ba5b7b0d09eab730ccbe4d21504c682c25",
+  "PreservedCommits": 26,
+  "Runs": {
+    "Core": 43670569229,
+    "Native": 43670569223,
+    "Declarations": 43670569272,
+    "Index": 43670569309
+  },
+  "Platforms": {
+    "Linux": {
+      "Revision": "1fe0083286a3c79f9b4b9f23f8405c508c2e1db7",
+      "Processes": 141,
+      "SummarySHA256": "4fb98d9c8a0d5778bc534ec24cd0d74361044ad55a9bb1f01e720ce1a184ba5b",
+      "ExtensionSHA256": "2d0dab523fb91bf3fe0f6b3920ffb0778008dd0adfaec0fba32c0118bb58bbb3",
+      "CompanionSHA256": "c43a28765307a69a6aab15a7c5835e8a7ae24c6247e0ed83e7b375b5617e7304",
+      "DebuggerStops": [
+        8,
+        1,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "AuthoringChecks": 73,
+      "AuthoringPassed": true,
+      "ReopenPassed": true,
+      "FoundryPassed": true
+    },
+    "Windows": {
+      "Revision": "1fe0083286a3c79f9b4b9f23f8405c508c2e1db7",
+      "Processes": 141,
+      "SummarySHA256": "e6fb720a45d984ba50e426b718fac6c0c913d1167b4d617151756c2eceb0b889",
+      "ExtensionSHA256": "7cb94c8863c023f1ee831df9959dc19eb7fb672b0df262019ab73fd5888d4355",
+      "CompanionSHA256": "538962e2e00f9813a4f97db0c6e432413a601d5c2d4e45e0cfcb874e9555bf2e",
+      "DebuggerStops": [
+        8,
+        1,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "AuthoringChecks": 73,
+      "AuthoringPassed": true,
+      "ReopenPassed": true,
+      "FoundryPassed": true
+    }
+  },
+  "NativeSource": {
+    "SHA256": "320853995024f3809d849d5fda742f41f84d4dfef060a8efbc53d3577fe68124",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "Retry": "Index attempt 1 Linux ASan failed Ubuntu mirror provisioning before build/tests (exit 100); only failed job rerun. Attempt 2 passes unchanged source/assertions/toolchain policy."
+}
