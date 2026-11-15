@@ -24,6 +24,31 @@ are pending. Their actual run identities, results and native artifact summaries
 will be recorded here; pending checks are not passing claims. No runtime fix or
 additional qualification infrastructure is planned for this integration.
 
+Core `43670569229` passes Windows/Linux at integrated revision `1fe0083`.
+Index `43670569309` initially passes Windows/Linux Release but fails Linux ASan
+during compiler provisioning: mirrors.edge.kernel.org times out fetching Ubuntu
+packages (exit 100), before configuration/build/tests. The missing-artifact failure
+is consequent to that provisioning failure. Only failed job `132679460150` is
+retried, with source, assertions and toolchain policy unchanged. That failed
+attempt remains part of the record; it is not a sanitizer/product test result.
+
+## Completed main verification
+
+All four workflows pass at `1fe0083286a3c79f9b4b9f23f8405c508c2e1db7`:
+
+| Boundary | Run | Result |
+| --- | --- | --- |
+| Core | [43670569229](https://github.com/gmoddev/GodotLuau/actions/runs/43670569229) | Windows/Linux pass 87 original and eight debugger scenarios |
+| Native | [43670569223](https://github.com/gmoddev/GodotLuau/actions/runs/43670569223) | Windows/Linux pass 141 actors each, seven debugger modes, 73 editor checks/reopen and Foundry/restart |
+| Declarations | [43670569272](https://github.com/gmoddev/GodotLuau/actions/runs/43670569272) | Windows/Linux policy/generator/type checks pass |
+| Project analysis | [43670569309](https://github.com/gmoddev/GodotLuau/actions/runs/43670569309) | Windows/Linux Release and Linux ASan/LSan pass; provisioning-only failed job retry recorded above |
+
+The [integration receipt](evidence/gl067/main-integration.json) records actual
+native product, companion and summary hashes and the expected source identity.
+No product, fixture, assertion, dependency or host-policy correction was needed.
+Closing documentation changes only Markdown/receipts; qualified source and
+tested inputs remain unchanged and do not require redundant rebuilds.
+
 ## Preserved boundaries
 
 Native remains the default Character controller and Scripted remains explicit
