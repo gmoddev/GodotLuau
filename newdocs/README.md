@@ -1,9 +1,11 @@
 # GodotLuau fork documentation
 
-The unmerged [GL-067 development platform campaign](gl-067-development.md)
+The normally [integrated GL-067 checkpoint](gl-067-main-integration.md)
+preserves all 26 commits and the [development campaign](gl-067-development.md)
 tracks incremental editor analysis and subsequent runtime/editor phases.
 Its [qualification record](gl-067-qualification.md) separates completed phase
-evidence, pending production acceptance and remaining expansion limitations.
+evidence and remaining expansion limitations. The integration record separates
+fresh main checks from retained qualification.
 Its [editor/API guide](gl-067-editor-api.md) describes the asynchronous queries,
 conditional breakpoints, manual reattachment, reload and native styling limits.
 [ADR-019](adr-019-incremental-editor-index.md) defines its worker boundary.

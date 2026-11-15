@@ -1,6 +1,6 @@
 # Current architecture
 
-The unmerged [GL-067 branch](gl-067-development.md) adds an editor-owned index
+The normally [integrated GL-067 checkpoint](gl-067-main-integration.md) adds an editor-owned index
 worker under [ADR-019](adr-019-incremental-editor-index.md). Project calls submit
 copied buffers and poll bounded pages; discovery, disk reads and pinned Luau
 analysis execute off the Godot thread. Interactive completion/definition/rename
@@ -8,12 +8,12 @@ reuse the last project snapshot unless `Refresh` is requested. Saved-file scans
 refresh that snapshot. This is not a gameplay scheduler. Qualification status and
 limits are recorded separately in the journal.
 
-On that branch selective saved-source reload compiles a bounded complete batch
+Selective saved-source reload compiles a bounded complete batch
 before publishing any source revisions. Rejection preserves previous live
 generations; success uses existing retirement and module-dependency invalidation.
 State migration and rollback of later runtime side effects are not implemented.
 
-That branch also adds read-only breakpoint conditions and same-transport manual
+The checkpoint also adds read-only breakpoint conditions and same-transport manual
 reattachment with fresh session identity; old code roots remain retired and new
 generations regain inspection. Physical reconnect is not supported. Scoped
 Theme styling and bounded traversal/obstacle APIs use the existing capability

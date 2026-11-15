@@ -1,6 +1,6 @@
 # ADR-019 — Incremental editor project analysis
 
-Status: implemented on the unmerged GL-067 branch; Windows/Linux worker, native
+Status: implemented and normally [integrated](gl-067-main-integration.md); Windows/Linux worker, native
 editor and Linux ASan/LSan qualification passes within the
 [recorded scope](gl-067-development.md#final-index-lifetime-and-hosted-native-records).
 Builds on ADR-015–018 without changing gameplay authority or execution.

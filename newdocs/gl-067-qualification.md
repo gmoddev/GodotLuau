@@ -4,7 +4,8 @@ Status: the implemented multi-phase checkpoint is qualified at `b11347b`,
 including both reproduced editor corrections, final production profiles/packages
 and actual SCons Release authoring. Earlier game/render/export receipts retain
 their original identities and unchanged implementation scopes.
-Branch `feature/gl-067-development-platform` remains unmerged; the wider
+Branch `feature/gl-067-development-platform` is preserved by the normal
+[main integration](gl-067-main-integration.md); the wider
 expansion remains open under the limits below. The [journal](gl-067-development.md) preserves failed attempts
 and corrections; the [guide](gl-067-editor-api.md) defines supported behavior.
 This is substantial multi-subsystem expansion, not complete Godot API parity.
