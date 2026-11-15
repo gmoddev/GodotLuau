@@ -28,15 +28,30 @@ func Run() -> void:
         for Mode in ["Cold", "Warming", "Warm", "Cached"]:
             var Before = OS.get_static_memory_usage()
             var Started = Time.get_ticks_usec()
-            var Report: Dictionary = Plugins[0].call("IndexProject", "", "")
+            var Submission: Dictionary = Plugins[0].call("IndexProject", "", "")
             var Elapsed = Time.get_ticks_usec() - Started
+            var Report: Dictionary = Submission
+            var LastFrame=Time.get_ticks_usec()
+            var MaxFrameGap=0
+            var MaxPoll=0
+            var Frames=0
+            var Deadline=Time.get_ticks_msec()+30000
+            while Report.get('Pending',false) and Time.get_ticks_msec()<Deadline:
+                await get_tree().process_frame
+                var Now=Time.get_ticks_usec()
+                MaxFrameGap=maxi(MaxFrameGap,Now-LastFrame)
+                LastFrame=Now
+                Frames+=1
+                var PollStarted=Time.get_ticks_usec()
+                Report=Plugins[0].call('PollProject',Submission.Generation)
+                MaxPoll=maxi(MaxPoll,Time.get_ticks_usec()-PollStarted)
             var Entries = 0
             for Document in Report.get("Documents", []):
                 Entries += Document.get("Entries", []).size()
-            Measurements[Mode] = {"ElapsedMicroseconds": Elapsed, "NativeMicroseconds": Report.get("Microseconds", 0), "ScannedFiles": Report.get("ScannedFiles", 0), "ParsedFiles": Report.get("ParsedFiles", 0), "CachedFiles": Report.get("CachedFiles", 0), "Entries": Entries, "Truncated": Report.get("Truncated", false), "StaticMemoryBefore": Before, "StaticMemoryAfter": OS.get_static_memory_usage()}
-            Passed = Passed and Report.get("result", ERR_UNAVAILABLE) == OK and Report.get("ScannedFiles", 0) <= 256 and Entries <= 4096 and Report.get("Truncated", false)
+            Measurements[Mode] = {"MainSubmissionMicroseconds": Elapsed, "WorkerMicroseconds": Report.get("Microseconds", 0), "MaxMainPollMicroseconds":MaxPoll,"MaxFrameGapMicroseconds":MaxFrameGap,"FramesWhilePending":Frames,"ScannedFiles": Report.get("ScannedFiles", 0), "ParsedFiles": Report.get("ParsedFiles", 0), "CachedFiles": Report.get("CachedFiles", 0), "Entries": Entries, "Truncated": Report.get("Truncated", false), "GodotStaticMemoryBefore": Before, "GodotStaticMemoryAfter": OS.get_static_memory_usage()}
+            Passed = Passed and Report.get("result", ERR_UNAVAILABLE) == OK and not Report.get('Pending',true) and Report.get("ScannedFiles", 0)>=256 and Entries<=256 and Frames>0 and Elapsed<50000 and MaxPoll<50000
     var File = FileAccess.open("res://editor-results.json", FileAccess.WRITE)
-    File.store_string(JSON.stringify({"Passed": Passed, "Checks": [{"Passed": Passed, "Message": "Actual bounded native index returns explicit truncation for the generated large-project workload"}], "Measurements": Measurements}, "  "))
+    File.store_string(JSON.stringify({"Passed": Passed, "Checks": [{"Passed": Passed, "Message": "Actual editor advances frames while the worker indexes the retained 256-module dataset with bounded submission and polling"}], "Measurements": Measurements}, "  "))
     File.close()
     print("[Bindings:EditorIntegration] %s large-project native index measurement" % ("PASS" if Passed else "FAIL"))
     get_tree().quit(0 if Passed else 1)

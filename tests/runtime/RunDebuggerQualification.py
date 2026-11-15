@@ -20,6 +20,7 @@ def Main():
     Parser.add_argument('--source', type=Path, required=True)
     Parser.add_argument('--output', type=Path, required=True)
     Parser.add_argument('--development-host', action='store_true', help='Explicitly opt a debug template host into the existing debugger connection')
+    Parser.add_argument('--case', action='append', choices=['local','disconnect','running-disconnect','reload','network','conditional','reattach','no-opt-in'], help='Focused rerun of changed/failed behavior; default runs every admitted mode')
     Args = Parser.parse_args()
     Repository = Path(__file__).resolve().parents[2]
     NativeSource = json.loads(Args.source.read_text(encoding='utf-8'))
@@ -30,7 +31,9 @@ def Main():
         ctypes.windll.kernel32.SetErrorMode(0x8003)
     Fixtures = ['DebuggerMain.luau', 'DebuggerModule.luau', 'DebuggerClient.luau', 'DebuggerPeer.gd', 'DebuggerTarget.gd',
                 'DebuggerReload.luau', 'DebuggerReloadPeer.gd', 'DebuggerReloadTarget.gd',
-                'DebuggerNetwork.luau', 'DebuggerNetworkPeer.gd', 'DebuggerNetworkTarget.gd', 'DebuggerNetworkClient.gd']
+                'DebuggerNetwork.luau', 'DebuggerNetworkPeer.gd', 'DebuggerNetworkTarget.gd', 'DebuggerNetworkClient.gd',
+                'DebuggerConditional.luau', 'DebuggerConditionalPeer.gd', 'DebuggerConditionalTarget.gd',
+                'DebuggerReattachOld.luau','DebuggerReattachNew.luau','DebuggerReattachPeer.gd','DebuggerReattachTarget.gd']
     Locations = {}
     for Name in Fixtures[:3]:
         for Line, Text in enumerate(Path(__file__).with_name(Name).read_text(encoding='utf-8').splitlines(), 1):
@@ -39,7 +42,10 @@ def Main():
     Expected = [Locations[Name] for Name in ['Entry', 'Into', 'Over', 'Out', 'Module', 'Client', 'Callback', 'Stale']]
     Breakpoints = ','.join(Item['Source'] + ':' + str(Item['Line']) for Name, Item in Locations.items() if Name in ['Entry', 'Module', 'Client', 'Callback', 'Stale'])
     Results = []
-    Modes = ['local', 'disconnect', 'running-disconnect', 'reload', 'network'] + (['no-opt-in'] if Args.development_host else [])
+    Modes = ['local', 'disconnect', 'running-disconnect', 'reload', 'network', 'conditional', 'reattach'] + (['no-opt-in'] if Args.development_host else [])
+    if Args.case:
+        if any(Name not in Modes for Name in Args.case): Parser.error('Selected case requires a different host admission profile')
+        Modes=[Name for Name in Modes if Name in Args.case]
     for Mode in Modes:
         Case = Output / Mode
         Target, Peer = Case / 'target', Case / 'peer'
@@ -49,11 +55,13 @@ def Main():
         (Peer / '.godot').mkdir()
         (Peer / '.godot/global_script_class_cache.cfg').write_text('list=[]\n')
         (Peer / 'project.godot').write_text('config_version=5\n[application]\nconfig/name="LuauDebuggerTestPeer"\n[threading]\nworker_pool/max_threads=2\n')
-        for Name in [*Fixtures[:3], 'DebuggerReload.luau', 'DebuggerNetwork.luau']:
+        for Name in [*Fixtures[:3], 'DebuggerReload.luau', 'DebuggerNetwork.luau', 'DebuggerConditional.luau','DebuggerReattachOld.luau','DebuggerReattachNew.luau']:
             shutil.copy2(Path(__file__).with_name(Name), Target / Name)
         shutil.copy2(Path(__file__).with_name('DebuggerPeer.gd'), Peer / 'DebuggerPeer.gd')
         shutil.copy2(Path(__file__).with_name('DebuggerReloadPeer.gd'), Peer / 'DebuggerReloadPeer.gd')
         shutil.copy2(Path(__file__).with_name('DebuggerNetworkPeer.gd'), Peer / 'DebuggerNetworkPeer.gd')
+        shutil.copy2(Path(__file__).with_name('DebuggerConditionalPeer.gd'), Peer / 'DebuggerConditionalPeer.gd')
+        shutil.copy2(Path(__file__).with_name('DebuggerReattachPeer.gd'), Peer / 'DebuggerReattachPeer.gd')
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as Probe:
             Probe.bind(('127.0.0.1', 0))
             Port = Probe.getsockname()[1]
@@ -64,6 +72,17 @@ def Main():
             Stops = [{'Source': 'res://DebuggerReload.luau', 'Line': Item, 'Domain': 'Server'} for Item in [Line, 2]]
             Admitted = 'res://DebuggerReload.luau:' + str(Line)
         Inputs = {'Port': Port, 'Expected': Stops, 'Disconnect': Mode == 'disconnect', 'DisconnectRunning': Mode == 'running-disconnect', 'TargetSource': str(Target / 'DebuggerReload.luau')}
+        if Mode == 'conditional':
+            Lines = {Text.split('GL067:',1)[1].strip(): Line for Line,Text in enumerate(Path(__file__).with_name('DebuggerConditional.luau').read_text().splitlines(),1) if 'GL067:' in Text}
+            Inputs.update(Lines=Lines,Expected=[{'Source':'res://DebuggerConditional.luau','Line':Lines[Name],'Domain':'Server'} for Name in ['Setup','Error','True']])
+            Admitted='res://DebuggerConditional.luau:'+str(Lines['Setup'])
+        if Mode == 'reattach':
+            Shared=Case/'coordination';Shared.mkdir()
+            Names=['DebuggerReattachOld.luau','DebuggerReattachNew.luau']
+            Lines=[next(Line for Line,Text in enumerate(Path(__file__).with_name(Name).read_text().splitlines(),1) if 'GL067:' in Text) for Name in Names]
+            Inputs.update(Coordination=str(Shared),NewLine=Lines[1],Expected=[{'Source':'res://'+Name,'Line':Line,'Domain':'Server'} for Name,Line in zip(Names,Lines)])
+            Admitted='res://DebuggerReattachOld.luau:'+str(Lines[0])
+            (Target/'inputs.json').write_text(json.dumps(Inputs))
         if Mode == 'network':
             Shared = Case / 'coordination'
             Shared.mkdir()
@@ -86,7 +105,7 @@ def Main():
         for Name in ['APPDATA', 'LOCALAPPDATA', 'XDG_CONFIG_HOME', 'XDG_DATA_HOME', 'XDG_CACHE_HOME']:
             Environment[Name] = str(GetProfileFolder(Case, Name))
         Base = [str(Args.godot.resolve()), '--headless', '--disable-crash-handler', '--single-threaded-scene', '--max-fps', '60']
-        PeerScript = {'reload': 'DebuggerReloadPeer.gd', 'network': 'DebuggerNetworkPeer.gd'}.get(Mode, 'DebuggerPeer.gd')
+        PeerScript = {'reload': 'DebuggerReloadPeer.gd', 'network': 'DebuggerNetworkPeer.gd', 'conditional':'DebuggerConditionalPeer.gd', 'reattach':'DebuggerReattachPeer.gd'}.get(Mode, 'DebuggerPeer.gd')
         PeerCommand = [*Base, '--path', str(Peer), '--script', 'res://' + PeerScript]
         with (Case / 'peer.stdout.log').open('w') as Stdout, (Case / 'peer.stderr.log').open('w') as Stderr:
             PeerProcess = StartProcess(PeerCommand, Stdout, Stderr, Environment)
@@ -99,7 +118,7 @@ def Main():
             ClientCommand = [*Base, '--path', str(Client), '--script', 'res://DebuggerNetworkClient.gd']
             with (Case / 'client.stdout.log').open('w') as Stdout, (Case / 'client.stderr.log').open('w') as Stderr:
                 ClientProcess = StartProcess(ClientCommand, Stdout, Stderr, Environment)
-        TargetScript = {'reload': 'DebuggerReloadTarget.gd', 'network': 'DebuggerNetworkTarget.gd'}.get(Mode, 'DebuggerTarget.gd')
+        TargetScript = {'reload': 'DebuggerReloadTarget.gd', 'network': 'DebuggerNetworkTarget.gd', 'conditional':'DebuggerConditionalTarget.gd', 'reattach':'DebuggerReattachTarget.gd'}.get(Mode, 'DebuggerTarget.gd')
         TargetCommand = [*Base, '--path', str(Target), '--debug', '--remote-debug', f'tcp://127.0.0.1:{Port}',
                          '--breakpoints', Admitted, '--script', 'res://' + TargetScript]
         if Args.development_host and Mode != 'no-opt-in': TargetCommand += ['--', '--gl-luau-debugger']

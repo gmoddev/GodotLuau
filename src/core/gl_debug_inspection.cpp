@@ -98,8 +98,11 @@ Variant GLDebugCopyValue(lua_State* Thread, int Index, int MaxItems, int MaxDept
     return Read.Copy(Thread,Index);
 }
 Dictionary GLDebugVariables(int Level, int MaxItems, int MaxDepth, bool Upvalues) {
+    return GLDebugFrameVariables(GLGetSuspendedDebugger(),Level,MaxItems,MaxDepth,Upvalues);
+}
+Dictionary GLDebugFrameVariables(GLDebugger* Debugger,int Level,int MaxItems,int MaxDepth,bool Upvalues) {
     Dictionary Result; PackedStringArray Names; Array Values;
-    auto Debugger=GLGetSuspendedDebugger(); auto Thread=Debugger?Debugger->GetInspectionThread():nullptr;
+    auto Thread=Debugger?Debugger->GetInspectionThread():nullptr;
     const char* Key=Upvalues?"members":"locals";
     Result[Key]=Names; Result["values"]=Values;
     if (!Thread || !Debugger->IsFrameInspectable(Thread,Level) || !lua_checkstack(Thread,32)) return Result;

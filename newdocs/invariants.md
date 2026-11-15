@@ -7,6 +7,17 @@ the inherited runtime already satisfies them. Baseline gaps link to
 
 ## Native identity and lifetime
 
+GL-067 editor analysis workers hold copied project sources/coordinates only;
+Godot objects, Lua states, native handles and AST pointers cannot cross the
+worker boundary. Obsolete generations cannot publish or be polled as current.
+Result pagination does not evict unreached documents. Rename previews must bind
+edits to exact source revisions and refuse ambiguous bindings/capture.
+
+Selective development reload must validate all saved candidates before retiring
+any existing generation. Compilation rejection preserves every prior source;
+successful replacement retains the existing stale-handle/callback retirement
+rules. This does not guarantee preservation of gameplay state after reload.
+
 SceneScope authoring follows [ADR-014](adr-014-native-scene-authoring.md): exact
 execution-generation ownership, approved native families/properties, separate typed
 resource handles, bounded construction, and owner retirement before reuse.

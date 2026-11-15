@@ -13,6 +13,7 @@
 #include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <algorithm>
 
@@ -21,7 +22,7 @@ namespace {
 uint64_t HostId=0, CommandWindow=0, LastRequest=0;
 unsigned Commands=0;
 std::string Session; // Godot built-in objects cannot initialize before extension binding.
-bool Polling=false, Detached=false;
+bool Polling=false, Detached=false,ManualDetached=false;
 uint64_t AwaitingStop=0;
 bool StopAcknowledged=false;
 GLDebugger* Suspended=nullptr;
@@ -42,6 +43,8 @@ Dictionary ProfileSnapshot(const GLExecutionDomain& Domain) {
             Item["InclusiveExecutionMicroseconds"]=int64_t(Row.ExecutionNanoseconds/1000);
             Item["CompileMicroseconds"]=int64_t(Row.CompileNanoseconds/1000);Item["Compilations"]=int64_t(Row.Compilations);
             Item["ModuleCompilations"]=int64_t(Row.ModuleCompilations);Item["Callbacks"]=int64_t(Row.Callbacks);
+            Item["CallbackMicroseconds"]=int64_t(Row.CallbackNanoseconds/1000);Item["RequireMicroseconds"]=int64_t(Row.RequireNanoseconds/1000);
+            Item["DomainLiveBytesAtExit"]=int64_t(Row.DomainLiveBytes);Item["DomainLifetimePeakBytes"]=int64_t(Row.DomainPeakBytes);
             Item["Requires"]=int64_t(Row.Requires);Item["Coroutines"]=int64_t(Row.Coroutines);Item["Retired"]=Row.Retired;Rows.push_back(Item);
         }
         for(const auto& Entry:Profile->GetNativeCalls()){if(Native.size()>=64)break;Native[String::utf8(Entry.first.c_str())]=int64_t(Entry.second);}
@@ -60,6 +63,7 @@ void Poll(bool Immediate=false) {
 void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const String& Error={},const Dictionary& Extra={}) {
     if(!GLRuntimeDebuggerAvailable())return;
     Dictionary Reply; Reply["Schema"]=1; Reply["Session"]=String::utf8(Session.c_str()); Reply["Event"]=Event; Reply["Request"]=Request;
+    Reply["SupportsAttach"]=true;
     if(!Error.is_empty())Reply["Error"]=Error.left(256);
     if(Debugger) {
         Reply["Domain"]=DomainName(Debugger->GetDomain()); Reply["State"]=GLDebugger::StateName(Debugger->GetState());
@@ -73,6 +77,7 @@ void Send(GLDebugger* Debugger, const String& Event, int64_t Request=0, const St
             if((Bytes+=Entry.Source.size())>32768 || Breakpoints.size()>=128){Reply["Truncated"]=true;break;}
             Dictionary Item; Item["Source"]=String::utf8(Entry.Source.c_str()); Item["Line"]=Entry.Line;
             Item["Enabled"]=Entry.Enabled; Item["Hits"]=int64_t(Entry.Hits); Item["BreakOnHit"]=int64_t(Entry.BreakOnHit);
+            Item["Expression"]=String::utf8(Entry.Condition.c_str());
             Array Actual; for(int Line:Entry.AdmittedLines)if(Actual.size()<16)Actual.push_back(Line);
             Item["AdmittedLines"]=Actual; Breakpoints.push_back(Item);
         }
@@ -95,7 +100,7 @@ GLDebugAction Stop(GLDebugger& Debugger) {
     }
     AwaitingStop=0;
     auto Disconnect=[] {
-        Detached=true;
+        Detached=true;ManualDetached=false;
         if(auto Host=Object::cast_to<GLDomainHost>(ObjectDB::get_instance(HostId)))
             for(bool Client:{false,true})if(auto Domain=Host->GetExistingDomain(Client)) {
                 if(auto Current=Domain->GetDebugger())Current->Detach();
@@ -132,19 +137,37 @@ Error GLReloadLuauScripts(const Array& Scripts) {
     if(!System || System->get_thread_caller_id()!=System->get_main_thread_id() ||
         (GLExecutionDomain::IsExecuting() && !Suspended) ||
         (!Engine::get_singleton()->is_editor_hint() && !GLRuntimeDebuggerAvailable()))return ERR_UNAVAILABLE;
-    Error Result=OK;
-    for(int Index=0;Index<Scripts.size() && Index<256;++Index) {
+    if(Scripts.size()>256)return ERR_OUT_OF_MEMORY;
+    // Validate every saved candidate before publishing any source revision.
+    // A failed compile leaves live owners/callbacks and prior source untouched.
+    std::vector<std::pair<Ref<LuauScript>,String>> Candidates;
+    size_t Bytes=0;
+    for(int Index=0;Index<Scripts.size();++Index) {
         if(Scripts[Index].get_type()!=Variant::OBJECT)continue;
         Ref<LuauScript> Source=Scripts[Index];if(Source.is_null())continue;
-        Error Status=Source->_reload(false);
-        if(Status!=OK){Result=Status;UtilityFunctions::print("[Debugger:Reload] Source reload failed: ",int(Status));}
+        if(std::any_of(Candidates.begin(),Candidates.end(),[&](const auto& Item){return Item.first==Source;}))continue;
+        String Path=Source->get_path();if(Path.is_empty())continue;
+        if(!GLProjectResourcePath(Path))return ERR_INVALID_PARAMETER;
+        Ref<FileAccess> File=FileAccess::open(Path,FileAccess::READ);
+        if(File.is_null())return ERR_CANT_OPEN;
+        if(File->get_length()>1024*1024 || (Bytes+=size_t(File->get_length()))>16*1024*1024)return ERR_OUT_OF_MEMORY;
+        String Candidate=File->get_as_text();auto Encoded=Candidate.utf8();
+        if(Encoded.length()>1024*1024)return ERR_OUT_OF_MEMORY;
+        auto Bytecode=Luau::compile(std::string(Encoded.get_data(),Encoded.length()));
+        if(Bytecode.empty() || Bytecode[0]==0) {
+            UtilityFunctions::print("[Debugger:Reload] Saved source failed compilation; live generations preserved: ",Path);
+            return ERR_PARSE_ERROR;
+        }
+        Candidates.emplace_back(Source,Candidate);
     }
-    if(Scripts.size()>256){Result=ERR_OUT_OF_MEMORY;UtilityFunctions::print("[Debugger:Reload] Selective reload exceeds 256 resources");}
-    return Result;
+    // Existing source-change notification retires module dependents and exact
+    // script generations. Apply these exact snapshots, never reread after check.
+    for(const auto& Candidate:Candidates)Candidate.first->_set_source_code(Candidate.second);
+    return OK;
 }
 GLDebugger* GLGetSuspendedDebugger() { return Suspended && Suspended->GetInspectionThread()?Suspended:nullptr; }
 void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
-    if(!GLRuntimeDebuggerAvailable() || Domain.GetKind()==GLDomainKind::EditorPreview || Detached)return;
+    if(!GLRuntimeDebuggerAvailable() || Domain.GetKind()==GLDomainKind::EditorPreview || Domain.IsClosing() || Detached)return;
     auto EngineDebug=EngineDebugger::get_singleton();
     if(!HostId) {
         Ref<Crypto> Provider; Provider.instantiate(); auto Bytes=Provider->generate_random_bytes(16);
@@ -154,6 +177,12 @@ void GLConfigureRuntimeDebugger(GLDomainHost& Host, GLExecutionDomain& Domain) {
     }
     if(HostId!=uint64_t(Host.get_instance_id()))return;
     auto& Debugger=Domain.EnableDebugger(); Debugger.Attach(Stop); Debugger.SetPollHandler([]{Poll();});
+    Debugger.SetConditionHandler([](GLDebugger& Debug,const std::string& Expression)->std::optional<bool> {
+        Dictionary Result=GLDebugFrameEvaluate(&Debug,0,String::utf8(Expression.c_str()));
+        if(!bool(Result.get("Ok",false)))return std::nullopt;
+        Variant Value=Result.get("Value",Variant());
+        return Value.get_type()!=Variant::NIL && !(Value.get_type()==Variant::BOOL && !bool(Value));
+    });
     Debugger.SetSourceHandler([&Debugger](const std::string& Source,int Lines) {
         String Path=String::utf8(Source.c_str()); if(!GLProjectResourcePath(Path))return;
         Poll(true); auto EngineDebug=EngineDebugger::get_singleton();
@@ -171,7 +200,7 @@ void GLRuntimeDebuggerTick(GLDomainHost& Host) {
 void GLRuntimeDebuggerShutdown(GLDomainHost& Host) {
     if(HostId!=uint64_t(Host.get_instance_id()))return;
     if(auto Debugger=EngineDebugger::get_singleton())if(Debugger->has_capture("godotluau"))Debugger->unregister_message_capture("godotluau");
-    HostId=0; Session.clear(); LastRequest=0; Detached=false;AwaitingStop=0;StopAcknowledged=false;
+    HostId=0; Session.clear(); LastRequest=0; Detached=false;ManualDetached=false;AwaitingStop=0;StopAcknowledged=false;
 }
 bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const Array& Data) {
     if(Message!="command")return false;
@@ -205,6 +234,19 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
     LastRequest=uint64_t(Id);
     String Op=Request["Op"]; String Selected=Request.get("Domain",String("All"));
     if(Op.length()>32 || (Selected!="All" && Selected!="Server" && Selected!="Client")){Send(nullptr,"Error",Id,"Unsupported command or domain");return true;}
+    if(Op=="Attach") {
+        // Only re-admit a manually detached runtime over its existing trusted
+        // transport. This is not a connection factory or physical reconnect.
+        if(!Detached || !ManualDetached || Suspended || Selected!="All") {Send(nullptr,"Error",Id,"Attach requires a running manually detached session and All domains");return true;}
+        bool Live=false;for(bool Client:{false,true})if(auto Domain=Host.GetExistingDomain(Client))Live|=!Domain->IsClosing();
+        if(!Live){Send(nullptr,"Error",Id,"No live execution domains to attach");return true;}
+        Ref<Crypto> Provider;Provider.instantiate();auto Bytes=Provider->generate_random_bytes(16);
+        if(Bytes.size()!=16){Send(nullptr,"Error",Id,"Session identity generation failed");return true;}
+        Session=Bytes.hex_encode().utf8().get_data();LastRequest=0;Detached=false;ManualDetached=false;
+        AwaitingStop=0;StopAcknowledged=false;
+        for(bool Client:{false,true})if(auto Domain=Host.GetExistingDomain(Client))GLConfigureRuntimeDebugger(Host,*Domain);
+        Send(nullptr,"Attached",Id);return true;
+    }
     if(Op=="AcknowledgeStop") {
         if(Suspended && AwaitingStop && Request.get("StopId",Variant()).get_type()==Variant::INT &&
             int64_t(Request["StopId"])==int64_t(AwaitingStop) && Selected==DomainName(Suspended->GetDomain()))StopAcknowledged=true;
@@ -217,7 +259,7 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         (Op=="Breakpoint" && (Request.get("Line",Variant()).get_type()!=Variant::INT || Request.get("Enabled",Variant()).get_type()!=Variant::BOOL)))) {
         Send(nullptr,"Error",Id,"Invalid project breakpoint");return true;
     }
-    if(Op=="Detach" && Selected=="All")Detached=true;
+    if(Op=="Detach" && Selected=="All"){Detached=true;ManualDetached=true;}
     bool Matched=false;
     for(bool Client:{false,true}) {
         auto Domain=Host.GetExistingDomain(Client); auto Debugger=Domain?Domain->GetDebugger():nullptr;
@@ -225,7 +267,8 @@ bool GLCaptureDebuggerCommand(GLDomainHost& Host, const String& Message, const A
         Matched=true; bool Success=true;
         if(Op=="Breakpoint") {
             int64_t Line=Request["Line"],Hit=Request.get("BreakOnHit",0);
-            Success=Line>0 && Line<=1000000 && Hit>=0 && Hit<=1000000 && Debugger->SetBreakpoint(Source.utf8().get_data(),int(Line),bool(Request["Enabled"]),uint32_t(Hit));
+            String Condition=Request.get("Expression",String());
+            Success=Line>0 && Line<=1000000 && Hit>=0 && Hit<=1000000 && Debugger->SetBreakpoint(Source.utf8().get_data(),int(Line),bool(Request["Enabled"]),uint32_t(Hit),Condition.utf8().get_data());
         } else if(Op=="ClearBreakpoints")Debugger->ClearBreakpoints();
         else if(Op=="Pause")Success=Debugger->RequestPause();
         else if(Op=="StepOut") { Success=Suspended==Debugger; if(Success)Debugger->SetNextAction(GLDebugAction::Out); }

@@ -1,0 +1,148 @@
+{
+  "Schema": 1,
+  "CandidateRun": 43599606392,
+  "CandidateResult": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+  "AcceptedSummarySHA256": "538006d7d39755b9cb2544291970e88b36c49821e2aaf27664275d64caeb28ae",
+  "Jobs": {
+    "Policy": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Profiles": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Sanitizer": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Packages": {
+      "result": "success",
+      "outputs": {}
+    }
+  },
+  "Source": {
+    "Revision": "533e108680cc394296b622a9e04f8d6ef113e019",
+    "Tree": "a2abbb2ecb3aac4898a457579af97b532f64c823",
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    },
+    "NativeSource": {
+      "SHA256": "556013c8418100aff18c55cb34a3d3989af16b140125002d722bb3c00193aab6",
+      "Files": 139,
+      "Newlines": "LF normalized"
+    }
+  },
+  "Packages": {
+    "Linux": {
+      "Result": "PASS",
+      "SummarySHA256": "f2c667acb278ce59aa27ccff81f6540cdae6f098ae61c0cea75a3160a3ad6cfe",
+      "Archive": {
+        "File": "GodotLuau-Linux.zip",
+        "SHA256": "e218d5df8e7187d618fdca84afbb949ee7690c543e16cf5979f8a3f76781c49e",
+        "Bytes": 16284260
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+          "ExtensionSHA256": "77ab8ef7afe0c7789efd2bd6752dec05e2a03889d677d5c5e5b64d03cfd1ef30",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "394f52548a329435fdec25583c550283c106abbbeb994b62d280080fa7ed6c86",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+          "ExtensionSHA256": "cd434eea80d582b1410768f7c1c4c01267748d7a7885fbe6530b162fb372dc1b",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "3f08a8b7c4578ad1a239fad00a502766353544ce92295fc9fa5d4fd8dfb25341",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    },
+    "Windows": {
+      "Result": "PASS",
+      "SummarySHA256": "5417c9a567cac7157c8cc0017a8962bb9b200b272e51d4c5d3d622ce6494eea2",
+      "Archive": {
+        "File": "GodotLuau-Windows.zip",
+        "SHA256": "d85dacfdc3ea45b254123c8aba00c0f37f548732c3cc0165caae61cd4a49adcd",
+        "Bytes": 11704018
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+          "ExtensionSHA256": "d6d5fe3d8830d68be653455aa0dcc456fc799f445566e5a950f2b3de2e354156",
+          "CompanionSHA256": "27915ec607cfb6cd9b3a01438132898f2508cb4a4710c557825ab0325feb8b5b",
+          "Logs": {
+            "stdout": "4c15ae3db44e30dfe09030a7387a17dc6c17b81ddbf0504f4289dff778fcf411",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+          "ExtensionSHA256": "c72f7b566c351683f17bdcef83439fa7f5a76497d68c39abbe1d2f6ba16549e6",
+          "CompanionSHA256": "27915ec607cfb6cd9b3a01438132898f2508cb4a4710c557825ab0325feb8b5b",
+          "Logs": {
+            "stdout": "422c2cf279901005d8c89f6777a6c5422f81a819e0e46e75a8b614e4365215e9",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    }
+  },
+  "ReleaseDebugger": {
+    "Run": 43605411113,
+    "ConsumerRevision": "eda52d1",
+    "Platforms": {
+      "Linux": {
+        "Passed": true,
+        "ExtensionSHA256": "cd434eea80d582b1410768f7c1c4c01267748d7a7885fbe6530b162fb372dc1b",
+        "Stops": [
+          8,
+          1,
+          1,
+          2,
+          1,
+          3,
+          2
+        ],
+        "SummarySHA256": "bf87074a097fa814ad2ccc6d846b3788ee4728955468e7b00167783ed5c13a58"
+      },
+      "Windows": {
+        "Passed": true,
+        "ExtensionSHA256": "c72f7b566c351683f17bdcef83439fa7f5a76497d68c39abbe1d2f6ba16549e6",
+        "Stops": [
+          8,
+          1,
+          1,
+          2,
+          1,
+          3,
+          2
+        ],
+        "SummarySHA256": "3afd5f40632da14a5afeb9c468efe93d74e77b8fc51737cae376f5b081c6f1ca"
+      }
+    }
+  },
+  "Scope": "Source-built SCons production products, nonpublishing packages with extracted companion startup and actual seven-mode Release debugger plus native editor journey. Export/game results are recorded separately. No release/updater authorization."
+}

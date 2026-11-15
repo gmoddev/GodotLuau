@@ -64,15 +64,15 @@ void GLDebugger::Shutdown() {
     InspectionThread = nullptr; Generation = 0;
     State = GLDebugState::Detached;
 }
-bool GLDebugger::SetBreakpoint(const std::string& Source, int Line, bool Active, uint32_t BreakOnHit) {
+bool GLDebugger::SetBreakpoint(const std::string& Source, int Line, bool Active, uint32_t BreakOnHit,const std::string& Condition) {
     if (!Enabled || Source.empty() || Source.size() > 1024 || Source.find('\0') != std::string::npos ||
-        Line < 1 || Line > 1000000 || BreakOnHit > 1000000) return false;
+        Line < 1 || Line > 1000000 || BreakOnHit > 1000000 || Condition.size()>1024 || Condition.find('\0')!=std::string::npos || (!Condition.empty() && !EvaluateCondition)) return false;
     auto Key = std::make_pair(Source, Line);
     auto Found = Breakpoints.find(Key);
     if (Found == Breakpoints.end() && Breakpoints.size() >= 128) return false;
-    if(Found!=Breakpoints.end() && Found->second.Enabled==Active && Found->second.BreakOnHit==BreakOnHit)return true;
+    if(Found!=Breakpoints.end() && Found->second.Enabled==Active && Found->second.BreakOnHit==BreakOnHit && Found->second.Condition==Condition)return true;
     GLDebugBreakpoint Entry; Entry.Source = Source; Entry.Line = Line;
-    Entry.Enabled = Active; Entry.BreakOnHit = BreakOnHit;
+    Entry.Enabled = Active; Entry.BreakOnHit = BreakOnHit;Entry.Condition=Condition;
     Breakpoints[Key] = std::move(Entry);
     for (auto& Loaded : Chunks) if (Loaded.Source == Source) Refresh(Loaded);
     return true;
@@ -183,7 +183,7 @@ void GLDebugger::Hook(lua_State* Thread, bool IsBreakpoint) {
     if (State == GLDebugState::PauseRequested) { Suspend(Thread, "Pause"); return; }
     if (IsBreakpoint) {
         auto Frame = GetFrame(Thread, 0);
-        bool Admitted = false;
+        bool Admitted = false,Unconditional=false;std::vector<std::string> Conditions;
         for (auto& Item : Breakpoints) {
             auto& Entry = Item.second;
             if (!Entry.Enabled || Entry.Source != Frame.Source) continue;
@@ -194,9 +194,15 @@ void GLDebugger::Hook(lua_State* Thread, bool IsBreakpoint) {
             }
             // Retain one observation beyond the largest exact-hit target so
             // saturation cannot repeatedly fire that target on later visits.
-            if (Matches) { if (Entry.Hits < 1000001) ++Entry.Hits; Admitted |= !Entry.BreakOnHit || Entry.Hits == Entry.BreakOnHit; }
+            if (Matches) {
+                if (Entry.Hits < 1000001) ++Entry.Hits;
+                if(!Entry.BreakOnHit || Entry.Hits==Entry.BreakOnHit) {
+                    Admitted=true;
+                    if(Entry.Condition.empty())Unconditional=true;else Conditions.push_back(Entry.Condition);
+                }
+            }
         }
-        if (Admitted) Suspend(Thread, "Breakpoint");
+        if (Admitted) Suspend(Thread, "Breakpoint",Unconditional?std::vector<std::string>():Conditions);
         return;
     }
     if (StepThread != Thread || Step == GLDebugAction::Continue) return;
@@ -207,11 +213,21 @@ void GLDebugger::Hook(lua_State* Thread, bool IsBreakpoint) {
         (Step == GLDebugAction::Over && Depth <= StepDepth) || (Step == GLDebugAction::Out && Depth < StepDepth)))
         Suspend(Thread, "Step");
 }
-void GLDebugger::Suspend(lua_State* Thread, const char* SelectedReason) {
+void GLDebugger::Suspend(lua_State* Thread, const char* SelectedReason,const std::vector<std::string>& Conditions) {
     auto Owner = GLGetOwner(Thread);
     if (!Stop || !Owner || !Owner->Alive) return;
-    State = GLDebugState::Suspended; InspectionThread = Thread;
-    Generation = Owner->Token; ++StopId; Reason = SelectedReason;
+    auto PreviousState=State;State = GLDebugState::Suspended; InspectionThread = Thread;
+    Generation = Owner->Token;Reason=SelectedReason;
+    bool Admit=Conditions.empty();
+    try {
+        for(const auto& Condition:Conditions) {
+            auto Value=EvaluateCondition?EvaluateCondition(*this,Condition):std::nullopt;
+            if(!Value){Reason="ConditionError";Admit=true;break;}
+            if(*Value){Admit=true;break;}
+        }
+    }catch(...){InspectionThread=nullptr;Generation=0;State=GLDebugState::Faulted;throw;}
+    if(!Admit){InspectionThread=nullptr;Generation=0;State=PreviousState;return;}
+    ++StopId;
     if(!CoroutineIds.count(Thread) && CoroutineIds.size()<1024)CoroutineIds[Thread]=NextCoroutineId++;
     auto Identity=CoroutineIds.find(Thread);CoroutineId=Identity==CoroutineIds.end()?0:Identity->second;
     OverrideAction = false;

@@ -10,12 +10,22 @@ class GLExecutionDomain;
 struct GLExecutionOwner;
 class LuauScript;
 class GLProjectModules;
+class GLProjectIndexer;
 
 // Configure the existing Godot editor through public APIs, without owning tabs,
 // Script resources or CodeEdit pointers beyond each callback.
 class GLNativeEditorPlugin : public godot::EditorPlugin {
     GDCLASS(GLNativeEditorPlugin, godot::EditorPlugin);
     bool Pending = false;
+    std::unique_ptr<GLProjectIndexer> ProjectIndex;
+    uint64_t ProjectGeneration=0;
+    uint64_t ProjectUiGeneration=0;
+    godot::String ProjectUiTitle;
+    godot::Dictionary LastProjectOptions;
+    uint64_t ProjectRefreshAt=0;
+    bool ProjectDirty=false;
+    void FlushProjectQuery();
+    void ProjectAction(const godot::String& Query);
     std::unique_ptr<GLExecutionDomain> PreviewDomain;
     std::unique_ptr<GLProjectModules> PreviewModules;
     GLExecutionOwner* PreviewOwner = nullptr;
@@ -59,6 +69,15 @@ public:
     void OpenRuntimeError();
     void OpenRuntimeFrame();
     godot::Dictionary IndexProject(const godot::String& Module,const godot::String& Member);
+    godot::Dictionary QueryProject(const godot::Dictionary& Options);
+    godot::Dictionary PollProject(int64_t Generation);
+    int64_t ReloadScripts(const godot::Array& Scripts);
+    void OnProjectChanged();
+    void ShowProjectDefinition();
+    void ShowProjectCompletion();
+    void ShowProjectDiagnostics();
+    void ShowProjectSearch();
+    void ShowNextProjectPage();
     void FindProjectUses();
     void ShowProjectSymbols();
     godot::Array GetRuntimeDiagnostics() const { return LastRuntimeError.duplicate(true); }

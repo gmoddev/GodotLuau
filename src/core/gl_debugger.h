@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <functional>
 #include <map>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -14,6 +15,7 @@ enum class GLDebugAction { Continue, Into, Over, Out, Detach, Stop };
 struct GLDebugFrame { std::string Source, Function; int Line = 0; };
 struct GLDebugBreakpoint {
     std::string Source;
+    std::string Condition;
     int Line = 0;
     bool Enabled = true;
     uint32_t BreakOnHit = 0, Hits = 0;
@@ -32,7 +34,9 @@ public:
     bool IsAttached() const { return Enabled; }
     GLDebugState GetState() const { return State; }
     static const char* StateName(GLDebugState State);
-    bool SetBreakpoint(const std::string& Source, int Line, bool Enabled, uint32_t BreakOnHit = 0);
+    bool SetBreakpoint(const std::string& Source, int Line, bool Enabled, uint32_t BreakOnHit = 0, const std::string& Condition = {});
+    using ConditionHandler=std::function<std::optional<bool>(GLDebugger&,const std::string&)>;
+    void SetConditionHandler(ConditionHandler Handler){EvaluateCondition=std::move(Handler);}
     void ClearBreakpoints();
     std::vector<GLDebugBreakpoint> GetBreakpoints() const;
     bool RequestPause();
@@ -68,6 +72,7 @@ private:
     GLDebugState State = GLDebugState::Detached;
     bool Enabled = false, OverrideAction = false, OriginalDebugInfo = false;
     StopHandler Stop;
+    ConditionHandler EvaluateCondition;
     std::function<void()> Poll;
     std::function<void(const std::string&,int)> SourceLoaded;
     std::map<std::pair<std::string,int>, GLDebugBreakpoint> Breakpoints;
@@ -84,7 +89,7 @@ private:
     static void OnBreakpoint(lua_State* Thread, lua_Debug* Frame);
     static void OnStep(lua_State* Thread, lua_Debug* Frame);
     void Hook(lua_State* Thread, bool Breakpoint);
-    void Suspend(lua_State* Thread, const char* Reason);
+    void Suspend(lua_State* Thread, const char* Reason,const std::vector<std::string>& Conditions = {});
     void Refresh(Chunk& Loaded);
     void Release(Chunk& Loaded);
 };

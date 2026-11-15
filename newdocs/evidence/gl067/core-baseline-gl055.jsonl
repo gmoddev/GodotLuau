@@ -1,0 +1,5 @@
+{"Mode":"Disabled","Trial":0,"Operations":100000,"WallMicroseconds":2682.200,"CpuMicroseconds":3000.000,"ExecuteMicroseconds":2696.600,"CppAllocations":0,"CppAllocationBytes":0,"VmPeakBytes":504336,"Stops":0,"Inspections":0}
+{"Mode":"Disabled","Trial":1,"Operations":100000,"WallMicroseconds":2649.400,"CpuMicroseconds":3000.000,"ExecuteMicroseconds":2662.300,"CppAllocations":0,"CppAllocationBytes":0,"VmPeakBytes":504336,"Stops":0,"Inspections":0}
+{"Mode":"Disabled","Trial":2,"Operations":100000,"WallMicroseconds":2684.500,"CpuMicroseconds":2000.000,"ExecuteMicroseconds":2696.900,"CppAllocations":0,"CppAllocationBytes":0,"VmPeakBytes":504336,"Stops":0,"Inspections":0}
+{"Mode":"Disabled","Trial":3,"Operations":100000,"WallMicroseconds":2728.200,"CpuMicroseconds":3000.000,"ExecuteMicroseconds":2741.100,"CppAllocations":0,"CppAllocationBytes":0,"VmPeakBytes":504336,"Stops":0,"Inspections":0}
+{"Mode":"Disabled","Trial":4,"Operations":100000,"WallMicroseconds":2678.100,"CpuMicroseconds":3000.000,"ExecuteMicroseconds":2690.600,"CppAllocations":0,"CppAllocationBytes":0,"VmPeakBytes":504336,"Stops":0,"Inspections":0}

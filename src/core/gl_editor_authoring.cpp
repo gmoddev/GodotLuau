@@ -5,6 +5,7 @@
 #include "luau_value_bindings.h"
 #include "gl_runtime.h"
 #include "gl_project_modules.h"
+#include "gl_project_indexer.h"
 #include "gl_authoring_debugger.h"
 #include "gl_debug_snapshot.h"
 #include <godot_cpp/classes/button.hpp>
@@ -13,6 +14,7 @@
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/script_editor.hpp>
 #include <godot_cpp/classes/h_box_container.hpp>
+#include <godot_cpp/classes/h_flow_container.hpp>
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/sub_viewport.hpp>
@@ -70,13 +72,14 @@ void GLNativeEditorPlugin::ShowStatus(const String& Text) {
 void GLNativeEditorPlugin::SetupAuthoring() {
     auto Panel=memnew(VBoxContainer); PreviewPanel=Panel->get_instance_id();
     Panel->set_custom_minimum_size(Vector2(600,260));
-    auto Buttons=memnew(HBoxContainer); Panel->add_child(Buttons);
+    auto Buttons=memnew(HFlowContainer); Panel->add_child(Buttons);
     auto Profiles=memnew(OptionButton);TemplatePicker=Profiles->get_instance_id();
     for(const char* Name:{"3D","2D","UI","Empty"})Profiles->add_item(Name);
     Profiles->set_tooltip_text("Template for a new Luau scene; existing projects are preserved");Buttons->add_child(Profiles);
     for (auto Entry : {std::pair<const char*,const char*>("New Luau Scene","NewSceneDialog"),
         {"Preview Luau","PreviewSelected"},{"Clear Preview","StopPreview"},{"Save Preview As","SavePreviewDialog"},
-        {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"},{"Project Uses","FindProjectUses"},{"Project Symbols","ShowProjectSymbols"}}) {
+        {"Reset Context","ResetPreviewContext"},{"Open Runtime Error","OpenRuntimeError"},{"Project Uses","FindProjectUses"},{"Project Symbols","ShowProjectSymbols"},
+        {"Definition","ShowProjectDefinition"},{"Completion","ShowProjectCompletion"},{"Diagnostics","ShowProjectDiagnostics"},{"Symbol Search","ShowProjectSearch"},{"Next Page","ShowNextProjectPage"}}) {
         auto ButtonNode=memnew(Button); ButtonNode->set_text(Entry.first);
         ButtonNode->connect("pressed",Callable(this,Entry.second)); Buttons->add_child(ButtonNode);
     }
@@ -154,6 +157,7 @@ void GLNativeEditorPlugin::OnPreviewSourceChanged() {
     StopPreview(); ShowStatus("Source changed; use Preview Luau to reconstruct before saving");
 }
 void GLNativeEditorPlugin::_process(double) {
+    FlushProjectQuery();
     if(auto Capture=Object::cast_to<GLAuthoringDebugger>(Debugger.ptr()))Capture->Flush();
     if (!PreviewDomain || PreviewDomain->IsClosing()) return;
     if (PreviewDomain->GetPendingTaskCount()) { StopPreview(); ShowStatus("Preview callbacks cannot yield or retain tasks"); }

@@ -32,9 +32,10 @@ void GLAuthoringDebugger::_setup_session(int32_t Session) {
     auto Buttons=memnew(HBoxContainer); Panel->add_child(Buttons);
     auto Domains=memnew(OptionButton);Domains->add_item("Server");Domains->add_item("Client");Domains->add_item("All domains");
     Domains->connect("item_selected",Callable(this,"SelectDomain").bind(Session));Buttons->add_child(Domains);
-    for(const char* Op:{"Pause","Continue","StepInto","StepOver","StepOut","Reload","Status","Detach"}) {
+    for(const char* Op:{"Pause","Continue","StepInto","StepOver","StepOut","Reload","Status","Detach","Attach"}) {
         auto ButtonNode=memnew(Button); ButtonNode->set_text(Op);
         if(!std::strcmp(Op,"Reload"))ButtonNode->set_tooltip_text("Reload the saved stopped source, retire its old generation and continue. Runtime state is rebuilt.");
+        if(!std::strcmp(Op,"Attach"))ButtonNode->set_tooltip_text("Reattach a manually detached connected runtime with a new session identity. Source inspection requires new/reloaded generations; no transport reconnect.");
         ButtonNode->connect("pressed",Callable(this,"Command").bind(Session,String(Op))); Buttons->add_child(ButtonNode);
     }
     auto Status=memnew(Label); Status->set_text("Waiting for an editor-capable Luau runtime; native stack/variables use Godot's Debugger.");
@@ -49,6 +50,9 @@ void GLAuthoringDebugger::_setup_session(int32_t Session) {
     auto WatchResult=memnew(RichTextLabel);WatchResult->set_custom_minimum_size(Vector2(600,140));WatchResult->set_scroll_active(true);
     WatchResult->set_text("Read-only locals/upvalues, raw table projections and approved native properties. Calls are forbidden.");Panel->add_child(WatchResult);
     View.WatchInput=Expression->get_instance_id();View.WatchFrame=Frame->get_instance_id();View.WatchResult=WatchResult->get_instance_id();
+    auto Conditional=memnew(HBoxContainer);Panel->add_child(Conditional);
+    auto Condition=memnew(LineEdit);Condition->set_placeholder("Condition at stopped line; empty clears condition");Condition->set_max_length(1024);Condition->set_custom_minimum_size(Vector2(360,0));Conditional->add_child(Condition);
+    auto Apply=memnew(Button);Apply->set_text("Set Condition");Apply->connect("pressed",Callable(this,"Command").bind(Session,String("Condition")));Conditional->add_child(Apply);View.ConditionInput=Condition->get_instance_id();
     auto Profiling=memnew(HBoxContainer);Panel->add_child(Profiling);
     for(const char* Op:{"ProfileStart","ProfileStop","Profile","CopyProfile"}) {
         auto Control=memnew(Button);Control->set_text(Op);Control->connect("pressed",Callable(this,"Command").bind(Session,String(Op)));Profiling->add_child(Control);
@@ -60,7 +64,7 @@ void GLAuthoringDebugger::Send(int Session,const String& Op,const Dictionary& Fi
     if(Found==Views.end() || Native.is_null() || !Native->is_active() || Found->second.Nonce.is_empty())return;
     auto& View=Found->second; Dictionary Request=Fields.duplicate();
     Request["Schema"]=1; Request["Session"]=View.Nonce; Request["Request"]=++View.Request;
-    Request["Op"]=Op; Request["Domain"]=Op=="Breakpoint" || Op=="Detach"?String("All"):Op=="Pause"?View.PauseDomain:View.Domain;
+    Request["Op"]=Op; Request["Domain"]=Op=="Breakpoint" || Op=="Detach" || Op=="Attach"?String("All"):Op=="Pause"?View.PauseDomain:View.Domain;
     Array Data;Data.push_back(Request);Native->send_message("godotluau:command",Data);
 }
 void GLAuthoringDebugger::SelectDomain(int Index,int Session) {
@@ -68,12 +72,22 @@ void GLAuthoringDebugger::SelectDomain(int Index,int Session) {
 }
 void GLAuthoringDebugger::Command(int Session,const String& Op) {
     auto Native=get_session(Session); if(Native.is_null() || !Native->is_active())return;
+    if(Op=="Attach") {auto Found=Views.find(Session);if(Found==Views.end() || !bool(Found->second.LastState.get("SupportsAttach",false)))return;}
     if(Op=="CopyProfile") {
         auto Found=Views.find(Session);if(Found!=Views.end() && !Found->second.LastProfile.is_empty())
             DisplayServer::get_singleton()->clipboard_set(JSON::stringify(Found->second.LastProfile,"  "));
         return;
     }
-    if(Op=="Watch") {
+    if(Op=="Condition") {
+        auto Found=Views.find(Session);if(Found==Views.end() || !Native->is_breaked())return;
+        auto Input=Object::cast_to<LineEdit>(ObjectDB::get_instance(Found->second.ConditionInput));if(!Input)return;
+        String Source=Found->second.LastState.get("Source",String());int Line=Found->second.LastState.get("Line",0);
+        if(Source.is_empty() || Line<1)return;
+        Location Key{Source.utf8().get_data(),Line};String Expression=Input->get_text();
+        if(Expression.utf8().length()>1024)return;
+        if(Expression.is_empty())Conditions.erase(Key);else Conditions[Key]=Expression;
+        RecordBreakpoint(Source,Line,true);
+    } else if(Op=="Watch") {
         auto Found=Views.find(Session);if(Found==Views.end() || !Native->is_breaked())return;
         auto Text=Object::cast_to<LineEdit>(ObjectDB::get_instance(Found->second.WatchInput));
         auto Frame=Object::cast_to<SpinBox>(ObjectDB::get_instance(Found->second.WatchFrame));
@@ -96,7 +110,7 @@ void GLAuthoringDebugger::RecordBreakpoint(const String& Source,int Line,bool En
     if(Path.length()>1024 || !GLProjectResourcePath(Path) || Line<1 || Line>1000000 || Path.utf8().length()>1024)return;
     Location Key{Path.utf8().get_data(),Line};
     if(Enabled) {if(Breakpoints.size()>=128 && !Breakpoints.count(Key))return;Breakpoints[Key]=true;}
-    else Breakpoints.erase(Key);
+    else {Breakpoints.erase(Key);Conditions.erase(Key);}
     for(auto& Entry:Views)if(Entry.second.Pending.size()<256 || Entry.second.Pending.count(Key))Entry.second.Pending[Key]=Enabled;
 }
 void GLAuthoringDebugger::_breakpoint_set_in_tree(const Ref<Script>& Script,int32_t Line,bool Enabled) {
@@ -112,6 +126,7 @@ void GLAuthoringDebugger::Flush() {
         for(int Count=0;Count<2 && !Entry.second.Pending.empty();++Count) {
             auto Pending=Entry.second.Pending.begin(); Dictionary Fields;
             Fields["Source"]=String::utf8(Pending->first.first.c_str());Fields["Line"]=Pending->first.second;Fields["Enabled"]=Pending->second;
+            auto Condition=Conditions.find(Pending->first);Fields["Expression"]=Condition==Conditions.end()?String():Condition->second;
             Send(Entry.first,"Breakpoint",Fields);Entry.second.Pending.erase(Pending);
         }
     }

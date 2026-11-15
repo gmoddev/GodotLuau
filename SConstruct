@@ -39,6 +39,8 @@ env.Append(CPPPATH=[
     "luau/VM/include",
     "luau/Compiler/include",
     "luau/Ast/include",
+    "luau/Analysis/include",
+    "luau/Config/include",
     "luau/Common/include"
 ])
 
@@ -50,6 +52,8 @@ sources += Glob("luau/VM/src/*.cpp")
 sources += Glob("luau/Compiler/src/*.cpp")
 sources += Glob("luau/Ast/src/*.cpp")
 sources += Glob("luau/Common/src/*.cpp")
+sources += Glob("luau/Analysis/src/*.cpp")
+sources += Glob("luau/Config/src/*.cpp")
 
 # 4. Forzamos el nombre de la libreria para que Godot la detecte.
 #    Sin prefijo "lib" en Linux: godot_luau.gdextension espera

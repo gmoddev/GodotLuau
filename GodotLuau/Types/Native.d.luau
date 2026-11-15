@@ -1,5 +1,5 @@
 -- Generated approved native definitions. Load as a definitions file, never require it.
--- Policy SHA256: c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace
+-- Policy SHA256: 0a857f2696142ae2f4af07991dfa67b939e144e434fddecf3675500ff4d4a952
 export type NativeVector2 = { X: number, Y: number }
 declare class NativeVector3
     X: number
@@ -193,6 +193,10 @@ end
 declare class MutableNativeNavigationMesh extends NativeNavigationMesh
 end
 declare class NativeNavigationObstacle3D extends NativeNode3D
+    Height: number
+    Use3DAvoidance: boolean
+    AffectNavigationMesh: boolean
+    CarveNavigationMesh: boolean
     Radius: number
     Velocity: NativeVector3
     AvoidanceEnabled: boolean
@@ -850,7 +854,7 @@ export type NativeAspectRatioContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
     Ratio: (number)?,
     StretchMode: (number)?,
@@ -923,7 +927,7 @@ export type NativeBaseButtonProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeBaseMaterial3DProperties = {
@@ -958,7 +962,7 @@ export type NativeBoxContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeBoxMeshProperties = {
@@ -998,7 +1002,7 @@ export type NativeButtonProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeCPUParticles2DProperties = {
@@ -1125,7 +1129,7 @@ export type NativeCenterContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeCharacterBody2DProperties = {
@@ -1203,7 +1207,7 @@ export type NativeCheckBoxProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeCheckButtonProperties = {
@@ -1237,7 +1241,7 @@ export type NativeCheckButtonProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeCircleShape2DProperties = {
@@ -1269,7 +1273,7 @@ export type NativeCodeEditProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
     Text: (string)?,
     Editable: (boolean)?,
@@ -1355,7 +1359,7 @@ export type NativeColorRectProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeContainerProperties = {
@@ -1384,7 +1388,7 @@ export type NativeContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeControlProperties = {
@@ -1413,7 +1417,7 @@ export type NativeControlProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeCylinderMeshProperties = {
@@ -1526,7 +1530,7 @@ export type NativeGridContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeHBoxContainerProperties = {
@@ -1556,7 +1560,7 @@ export type NativeHBoxContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeHSeparatorProperties = {
@@ -1585,7 +1589,7 @@ export type NativeHSeparatorProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeHSliderProperties = {
@@ -1618,7 +1622,7 @@ export type NativeHSliderProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeHSplitContainerProperties = {
@@ -1647,7 +1651,7 @@ export type NativeHSplitContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeImageProperties = {
@@ -1682,7 +1686,7 @@ export type NativeItemListProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
     SelectMode: (number)?,
     AllowReselect: (boolean)?,
@@ -1719,7 +1723,7 @@ export type NativeLabelProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeLabel3DProperties = {
@@ -1790,7 +1794,7 @@ export type NativeLineEditProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeMarginContainerProperties = {
@@ -1819,7 +1823,7 @@ export type NativeMarginContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeMaterialProperties = {
@@ -1909,6 +1913,10 @@ export type NativeNavigationObstacle2DProperties = {
     AvoidanceLayers: (number)?,
 }
 export type NativeNavigationObstacle3DProperties = {
+    Height: (number)?,
+    Use3DAvoidance: (boolean)?,
+    AffectNavigationMesh: (boolean)?,
+    CarveNavigationMesh: (boolean)?,
     Name: (string)?,
     Position: (NativeVector3)?,
     RotationDegrees: (NativeVector3)?,
@@ -2013,7 +2021,7 @@ export type NativePanelProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativePanelContainerProperties = {
@@ -2042,7 +2050,7 @@ export type NativePanelContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativePhysicsBody2DProperties = {
@@ -2132,7 +2140,7 @@ export type NativeProgressBarProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeQuadMeshProperties = {
@@ -2168,7 +2176,7 @@ export type NativeRangeProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeRayCast2DProperties = {
@@ -2239,7 +2247,7 @@ export type NativeRichTextLabelProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
     Text: (string)?,
     BbcodeEnabled: (boolean)?,
@@ -2313,7 +2321,7 @@ export type NativeScrollContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeSegmentShape2DProperties = {
@@ -2346,7 +2354,7 @@ export type NativeSeparatorProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeShaderProperties = {
@@ -2434,7 +2442,7 @@ export type NativeSliderProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeSoftBody3DProperties = {
@@ -2485,7 +2493,7 @@ export type NativeSplitContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeSpotLight3DProperties = {
@@ -2646,7 +2654,7 @@ export type NativeTabContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
     CurrentTab: nil,
     TabsVisible: (boolean)?,
@@ -2677,7 +2685,7 @@ export type NativeTextEditProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
     Text: (string)?,
     Editable: (boolean)?,
@@ -2722,7 +2730,7 @@ export type NativeTextureProgressBarProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
     TextureUnder: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D | MutableNativeImageTexture)?,
     TextureOver: (NativeTexture2D? | MutableNativeGradientTexture1D | MutableNativeGradientTexture2D | MutableNativeImageTexture)?,
@@ -2761,10 +2769,13 @@ export type NativeTextureRectProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeThemeProperties = {
+    DefaultFontSize: (number)?,
+    DefaultBaseScale: (number)?,
+    DefaultFont: (NativeFont?)?,
 }
 export type NativeTileMapLayerProperties = {
     Name: (string)?,
@@ -2823,7 +2834,7 @@ export type NativeVBoxContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeVSeparatorProperties = {
@@ -2852,7 +2863,7 @@ export type NativeVSeparatorProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeVSliderProperties = {
@@ -2885,7 +2896,7 @@ export type NativeVSliderProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeVSplitContainerProperties = {
@@ -2914,7 +2925,7 @@ export type NativeVSplitContainerProperties = {
     ClipContents: (boolean)?,
     ModulateRGBA: (NativeColor4)?,
     SelfModulateRGBA: (NativeColor4)?,
-    Theme: (NativeTheme?)?,
+    Theme: (NativeTheme? | MutableNativeTheme)?,
     TooltipText: (string)?,
 }
 export type NativeVisualInstance3DProperties = {
@@ -3033,6 +3044,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Class: "Texture2DArray", Properties: NativeTexture2DArrayProperties, Parent: NativeNode?) -> MutableNativeTexture2DArray) &
         ((self: NativeSceneScope, Class: "TextureProgressBar", Properties: NativeTextureProgressBarProperties, Parent: NativeNode?) -> NativeTextureProgressBar) &
         ((self: NativeSceneScope, Class: "TextureRect", Properties: NativeTextureRectProperties, Parent: NativeNode?) -> NativeTextureRect) &
+        ((self: NativeSceneScope, Class: "Theme", Properties: NativeThemeProperties, Parent: NativeNode?) -> MutableNativeTheme) &
         ((self: NativeSceneScope, Class: "TileMapLayer", Properties: NativeTileMapLayerProperties, Parent: NativeNode?) -> NativeTileMapLayer) &
         ((self: NativeSceneScope, Class: "TileMapPattern", Properties: NativeTileMapPatternProperties, Parent: NativeNode?) -> MutableNativeTileMapPattern) &
         ((self: NativeSceneScope, Class: "TileSet", Properties: NativeTileSetProperties, Parent: NativeNode?) -> MutableNativeTileSet) &
@@ -3146,6 +3158,7 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: MutableNativeTexture2DArray, Properties: NativeTexture2DArrayProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeTextureProgressBar, Properties: NativeTextureProgressBarProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeTextureRect, Properties: NativeTextureRectProperties) -> ()) &
+        ((self: NativeSceneScope, Target: MutableNativeTheme, Properties: NativeThemeProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeTileMapLayer, Properties: NativeTileMapLayerProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeTileMapPattern, Properties: NativeTileMapPatternProperties) -> ()) &
         ((self: NativeSceneScope, Target: MutableNativeTileSet, Properties: NativeTileSetProperties) -> ()) &
@@ -3155,7 +3168,14 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeVSlider, Properties: NativeVSliderProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeVSplitContainer, Properties: NativeVSplitContainerProperties) -> ()) &
         ((self: NativeSceneScope, Target: NativeWorldEnvironment, Properties: NativeWorldEnvironmentProperties) -> ())
-    Get: ((self: NativeSceneScope, Target: NativeNode, Property: "Name") -> string) &
+    Get: ((self: NativeSceneScope, Target: NativeTheme, Property: "DefaultFontSize") -> number) &
+        ((self: NativeSceneScope, Target: NativeTheme, Property: "DefaultBaseScale") -> number) &
+        ((self: NativeSceneScope, Target: NativeTheme, Property: "DefaultFont") -> NativeFont?) &
+        ((self: NativeSceneScope, Target: NativeNavigationObstacle3D, Property: "Height") -> number) &
+        ((self: NativeSceneScope, Target: NativeNavigationObstacle3D, Property: "Use3DAvoidance") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNavigationObstacle3D, Property: "AffectNavigationMesh") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNavigationObstacle3D, Property: "CarveNavigationMesh") -> boolean) &
+        ((self: NativeSceneScope, Target: NativeNode, Property: "Name") -> string) &
         ((self: NativeSceneScope, Target: NativeNode3D, Property: "Position") -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeNode3D, Property: "RotationDegrees") -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeNode3D, Property: "Scale") -> NativeVector3) &
@@ -3538,7 +3558,20 @@ declare class NativeSceneScope extends NativeNode3D
         ((self: NativeSceneScope, Target: NativeLight2D, Property: "ShadowEnabled") -> boolean) &
         ((self: NativeSceneScope, Target: NativePointLight2D, Property: "Texture") -> NativeTexture2D?) &
         ((self: NativeSceneScope, Target: NativePointLight2D, Property: "TextureScale") -> number)
-    Call: ((self: NativeSceneScope, Target: NativeNode3D, Method: "GetGlobalPosition") -> NativeVector3) &
+    Call: ((self: NativeSceneScope, Target: (MutableNativeTheme), Method: "SetColor", name: string, theme_type: string, color: NativeColor4) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTheme, Method: "GetColor", name: string, theme_type: string) -> NativeColor4) &
+        ((self: NativeSceneScope, Target: NativeTheme, Method: "HasColor", name: string, theme_type: string) -> boolean) &
+        ((self: NativeSceneScope, Target: (MutableNativeTheme), Method: "SetConstant", name: string, theme_type: string, constant: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTheme, Method: "GetConstant", name: string, theme_type: string) -> number) &
+        ((self: NativeSceneScope, Target: NativeTheme, Method: "HasConstant", name: string, theme_type: string) -> boolean) &
+        ((self: NativeSceneScope, Target: (MutableNativeTheme), Method: "SetFontSize", name: string, theme_type: string, font_size: number) -> ()) &
+        ((self: NativeSceneScope, Target: NativeTheme, Method: "GetFontSize", name: string, theme_type: string) -> number) &
+        ((self: NativeSceneScope, Target: NativeTheme, Method: "HasFontSize", name: string, theme_type: string) -> boolean) &
+        ((self: NativeSceneScope, Target: NativeTheme, Method: "GetTypes") -> {string}) &
+        ((self: NativeSceneScope, Target: NativeRichTextLabel, Method: "GetParsedText") -> string) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetBoneChildren", bone_idx: number) -> {number}) &
+        ((self: NativeSceneScope, Target: NativeSkeleton3D, Method: "GetParentlessBones") -> {number}) &
+        ((self: NativeSceneScope, Target: NativeNode3D, Method: "GetGlobalPosition") -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeControl, Method: "GetGlobalPosition") -> NativeVector2) &
         ((self: NativeSceneScope, Target: NativeNode3D, Method: "ToLocal", global_point: NativeVector3) -> NativeVector3) &
         ((self: NativeSceneScope, Target: NativeNode3D, Method: "ToGlobal", local_point: NativeVector3) -> NativeVector3) &

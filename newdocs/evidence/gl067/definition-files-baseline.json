@@ -1,0 +1,29 @@
+{
+  "Schema": 1,
+  "Revision": "d8090a0696a2d46ff36efee6813c5a1b55cdcfff",
+  "NativeSource": {
+    "SHA256": "558733a683b0fc3f1ef6e4e1d88bba3bcaef233e2fa4982032913af9886acb90",
+    "Files": 139,
+    "Newlines": "LF normalized"
+  },
+  "ChecksTotal": 73,
+  "ChecksPassed": 71,
+  "FailedChecks": [
+    {
+      "Message": "Project index resolves exact static module and function aliases while excluding shadowed reassigned and unrelated imports",
+      "Passed": false
+    },
+    {
+      "Message": "An open definition-only buffer preserves runtime project navigation",
+      "Passed": false
+    }
+  ],
+  "Files": {
+    "editor-results.json": "49c1de730c911bcd1edf3ffc01360f7a450a0a22a3e47da5253d61a2106da627",
+    "editor.stdout.log": "86ec9e5c600440841940d30706ae881d7ad1174887f0c384117a489cdce52f82",
+    "editor.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ProjectIndex.gd": "68cad90585c64157bd44617c9adc537b7db7d1e3fb3800cf26a8c9f3ebbabd19",
+    "GodotLuau/Types/Native.d.luau": "45951dcafec8fe0e9807648f554bb11bd80f49645aaa2f13db4758f286cf0509"
+  },
+  "Scope": "Actual native editor with the actual shipped Native.d.luau snapshot and a small project declaration. Existing navigation completeness and open-definition-buffer checks fail; 71 other checks pass, stderr is empty. No crash or gameplay defect claimed."
+}

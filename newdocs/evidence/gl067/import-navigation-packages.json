@@ -1,0 +1,114 @@
+{
+  "Schema": 1,
+  "Run": 43606352703,
+  "Result": "ACCEPTED_NONPUBLISHING_CANDIDATE",
+  "Source": {
+    "Revision": "d8090a0696a2d46ff36efee6813c5a1b55cdcfff",
+    "Tree": "83af576e444ed39a3ca15f1050c9d335819fdfb4",
+    "Dependencies": {
+      "godot-cpp": "d5cc777a89d899665fb61f1650ef0dc0cf6488c4",
+      "luau": "9e2984fd0334414a2ef62ceede0c06dab7574d55"
+    },
+    "NativeSource": {
+      "SHA256": "558733a683b0fc3f1ef6e4e1d88bba3bcaef233e2fa4982032913af9886acb90",
+      "Files": 139,
+      "Newlines": "LF normalized"
+    }
+  },
+  "Jobs": {
+    "Policy": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Profiles": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Sanitizer": {
+      "result": "success",
+      "outputs": {}
+    },
+    "Packages": {
+      "result": "success",
+      "outputs": {}
+    }
+  },
+  "SummarySHA256": "c50a410471aa9a79be10fef69a0aa753ef28d2933133ba108bb4550ab8480617",
+  "Packages": [
+    {
+      "Platform": "Windows",
+      "Result": "PASS",
+      "Archive": {
+        "File": "GodotLuau-Windows.zip",
+        "SHA256": "35658094f3bb8466a60633453cd5eec55451bf724e4a89e7174d72f24c7aa4dd",
+        "Bytes": 11703823
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+          "ExtensionSHA256": "c015d026649eed60df180d2d14ef97fbad0c1287ee5c051fbd3cb75efbab672e",
+          "CompanionSHA256": "399e1d1cd2f6e556e6b8172d76e3befade85426613fd834b7dd98e310afa9297",
+          "Logs": {
+            "stdout": "b54991b90f4bc47ad29607ba292c7e854f855c7fd32c43b224effbc400ec700e",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "e6dc45dd0a407ed1656e2e0268018dd3de1da7a497571d1a76f743277e4ab3e1",
+          "ExtensionSHA256": "5c75d76f6ce326e70738ed28bd0dd3aef284f168a5ee8be384b30685a8fc73d4",
+          "CompanionSHA256": "399e1d1cd2f6e556e6b8172d76e3befade85426613fd834b7dd98e310afa9297",
+          "Logs": {
+            "stdout": "45afef6a1c4071bcaebe350bc356d950cf0e2ef7fd1158a48374a6d6269f9ea3",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    },
+    {
+      "Platform": "Linux",
+      "Result": "PASS",
+      "Archive": {
+        "File": "GodotLuau-Linux.zip",
+        "SHA256": "8c29789d11a527946144c969dda6be9aaab75b1018c39f06e30ccf795ad48a80",
+        "Bytes": 16285347
+      },
+      "Startup": [
+        {
+          "Configuration": "Debug",
+          "Label": "package-Debug",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+          "ExtensionSHA256": "3e76bbc2fe9afe0c8f65788d4630fb1dccd4f0e32b619f841658f8588a9b3c4a",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "9d8071bc682c29c4464ef388fe6eae0500d9455393a3c8a91063b166a5c5caa3",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "Configuration": "Release",
+          "Label": "package-Release",
+          "Exit": 0,
+          "Diagnostics": "",
+          "FixtureSHA256": "cdf2846eb28f43cdc65d42fe902da6ed5baaf609a3bffae1020cb314a1348ec2",
+          "ExtensionSHA256": "b10d3e47dd71779e5bd6b153f04f312d48a35e3145c2fae6991d0bfa34462dde",
+          "CompanionSHA256": "68db3cf606bd48e037231f1707a71d9ceb1cfd40aac0d5d9fbbd6ee00a389bd0",
+          "Logs": {
+            "stdout": "f1cd2d53477d5d10033459cf829b1ca6f0bc307f5a3fd80570bcb5a44e5a3013",
+            "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    }
+  ],
+  "Scope": "Accepted original four-profile/package gates at the import-fix checkpoint. Subsequent declaration-file correction has its own source identity and qualification; this does not relabel these products."
+}

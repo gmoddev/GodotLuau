@@ -68,10 +68,16 @@ def Main():
     Parser.add_argument('--catalog', type=Path, default=Root/'bindings/NativeCatalog.json')
     Parser.add_argument('--inventory', type=Path, default=Root/'bindings/NativeCoverage.json')
     Parser.add_argument('--logs', type=Path)
+    Parser.add_argument('--application-logs', type=Path, help='Separately identify actual production-example invocation receipts')
     Parser.add_argument('--output', type=Path, required=True)
     Args = Parser.parse_args()
     Result = Report(json.loads(Args.catalog.read_text()), json.loads(Args.inventory.read_text()),
                     Args.logs.rglob('*.log') if Args.logs else [])
+    if Args.application_logs:
+        Application = Report(json.loads(Args.catalog.read_text()), json.loads(Args.inventory.read_text()), Args.application_logs.rglob('*.log'))
+        Result['ProductionExamples'] = {Key: Application[Key] for Key in ('InvocationsByDomain','Counts','Receipts','Interpretation')}
+    else:
+        Result['ProductionExamples'] = {'Status':'Not measured; supply separately scoped application logs'}
     Args.output.parent.mkdir(parents=True, exist_ok=True)
     Args.output.write_text(json.dumps(Result, indent=2) + '\n', encoding='utf-8')
     print('[Bindings:Coverage] Recorded', len(Result['Receipts']), 'logs;', len(Result['Counts']), 'domain/member pairs')

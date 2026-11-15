@@ -57,6 +57,14 @@ int main(int Count, char** Arguments) {
     Luau::freeze(Frontend.globals.globalTypes);
     struct Case { const char* Name; const char* Source; bool Valid; };
     const Case Cases[]={
+        {"scoped native themes",R"(local S=Scene.new(Parent)
+local Style=S:New("Theme",{DefaultFontSize=20,DefaultBaseScale=1.25})
+S:Call(Style,"SetColor","font_color","Label",{R=0.2,G=0.4,B=0.8,A=0.5})
+local Color:NativeColor4=S:Call(Style,"GetColor","font_color","Label")
+local Label=S:New("Label",{Theme=Style})
+S:Call(Style,"SetFontSize","font_size","Label",24)
+local Size:number=S:Call(Style,"GetFontSize","font_size","Label")
+)",true},
         {"typed primitive and scoped resource collections",R"(local S=Scene.new(Parent)
 local Editor=S:New("CodeEdit",{})
 S:Call(Editor,"SetLineLengthGuidelines",{80,120})

@@ -10,7 +10,7 @@
     "version_full_name": "Godot Engine v4.3.stable.official"
   },
   "ApiSHA256": "dfd54f071d53ef63d9c1be51150b38f5c55abdd68eb8b2caa357abeab4086a0f",
-  "PolicySHA256": "c47c8e9f8a634510278c5ec30ce47850b7898b969399790cbb5c5adab9231ace",
+  "PolicySHA256": "0a857f2696142ae2f4af07991dfa67b939e144e434fddecf3675500ff4d4a952",
   "Interpretation": "Declared members; inheritance follows Base. Catalog specifies exact receivers, aliases, bounds and runtime permissions. Metadata existence is not host availability or qualification.",
   "Runtime": {
     "Domains": [
@@ -28,9 +28,9 @@
   },
   "Summary": {
     "MetadataClasses": 920,
-    "ConstructibleClasses": 113,
-    "SelectedProperties": 384,
-    "SelectedMethods": 225,
+    "ConstructibleClasses": 114,
+    "SelectedProperties": 391,
+    "SelectedMethods": 238,
     "SelectedSignals": 41,
     "SelectedConstants": 51,
     "DeclaredMembers": {
@@ -19784,16 +19784,16 @@
         "properties": {
           "Supported": [
             "radius",
-            "avoidance_enabled",
-            "velocity",
-            "avoidance_layers"
-          ],
-          "Unsupported": [
             "height",
-            "vertices",
             "affect_navigation_mesh",
             "carve_navigation_mesh",
+            "avoidance_enabled",
+            "velocity",
+            "avoidance_layers",
             "use_3d_avoidance"
+          ],
+          "Unsupported": [
+            "vertices"
           ]
         },
         "signals": {},
@@ -29159,11 +29159,11 @@
       "Members": {
         "methods": {
           "Supported": [
+            "get_parsed_text",
             "clear",
             "get_total_character_count"
           ],
           "Unsupported": [
-            "get_parsed_text",
             "add_text",
             "set_text",
             "add_image",
@@ -30851,6 +30851,8 @@
             "get_bone_parent",
             "set_bone_parent",
             "get_bone_count",
+            "get_bone_children",
+            "get_parentless_bones",
             "get_bone_rest",
             "set_bone_rest",
             "get_bone_global_rest",
@@ -30868,8 +30870,6 @@
             "get_concatenated_bone_names",
             "get_version",
             "unparent_bone_and_rest",
-            "get_bone_children",
-            "get_parentless_bones",
             "create_skin_from_rest_transforms",
             "localize_rests",
             "clear_bones",
@@ -34934,14 +34934,26 @@
       "Name": "Theme",
       "Base": "Resource",
       "Status": "Partial",
-      "Constructible": false,
-      "ConstructionStatus": "Not admitted",
+      "Constructible": true,
+      "ConstructionStatus": "Supported",
       "Loadable": true,
       "GeneratedHandle": true,
       "Permission": "Exact live SceneScope owner",
       "Editor": "Policy analysis and restricted explicit preview",
       "Members": {
         "methods": {
+          "Supported": [
+            "set_font_size",
+            "get_font_size",
+            "has_font_size",
+            "set_color",
+            "get_color",
+            "has_color",
+            "set_constant",
+            "get_constant",
+            "has_constant",
+            "get_type_list"
+          ],
           "Unsupported": [
             "set_icon",
             "get_icon",
@@ -34964,23 +34976,14 @@
             "clear_font",
             "get_font_list",
             "get_font_type_list",
-            "set_font_size",
-            "get_font_size",
-            "has_font_size",
             "rename_font_size",
             "clear_font_size",
             "get_font_size_list",
             "get_font_size_type_list",
-            "set_color",
-            "get_color",
-            "has_color",
             "rename_color",
             "clear_color",
             "get_color_list",
             "get_color_type_list",
-            "set_constant",
-            "get_constant",
-            "has_constant",
             "rename_constant",
             "clear_constant",
             "get_constant_list",
@@ -35008,13 +35011,12 @@
             "get_type_variation_list",
             "add_type",
             "remove_type",
-            "get_type_list",
             "merge_with",
             "clear"
           ]
         },
         "properties": {
-          "Unsupported": [
+          "Supported": [
             "default_base_scale",
             "default_font",
             "default_font_size"

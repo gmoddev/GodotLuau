@@ -67,6 +67,25 @@ int main() {
             Debugger.SetBreakpoint("res://Loop.luau", 4, false);
             Check(Domain.Execute(Owner, "local Value=0\n\nValue+=1", "@res://Loop.luau") && Hits == 1, "Disabled breakpoint hit");
             Debugger.ClearBreakpoints(); Check(Debugger.GetBreakpoints().empty(), "Removal failed");
+            Check(!Debugger.SetBreakpoint("res://Conditional.luau",3,true,0,"Index==3"),"Conditional breakpoint admitted without a restricted evaluator");
+            Debugger.SetConditionHandler([](GLDebugger& Debug,const std::string& Expression)->std::optional<bool> {
+                if(Expression!="Index==3")return std::nullopt;
+                auto Thread=Debug.GetInspectionThread();
+                for(int I=1;I<=16;++I) {
+                    const char* Name=lua_getlocal(Thread,0,I);if(!Name)break;
+                    bool Match=std::string(Name)=="Index";bool Value=lua_isnumber(Thread,-1) && lua_tonumber(Thread,-1)==3;lua_pop(Thread,1);
+                    if(Match)return Value;
+                }
+                return false;
+            });
+            Check(Debugger.SetBreakpoint("res://Conditional.luau",3,true,0,"Index==3"),"Conditional breakpoint rejected");
+            Hits=0;
+            Check(Domain.Execute(Owner,"local Sum=0\nfor Index=1,5 do\n Sum+=Index\nend\nassert(Sum==15)","@res://Conditional.luau") && Hits==1,"Conditional stop changed execution or ignored a false predicate");
+            Check(Debugger.GetBreakpoints()[0].Hits==5,"Conditions changed visit accounting");
+            Check(Debugger.SetBreakpoint("res://Conditional.luau",3,true,0,"Index==3") && Debugger.GetBreakpoints()[0].Hits==5,"Identical condition reset hits");
+            Debugger.Attach([&](GLDebugger& Debug){++Hits;Check(Debug.GetReason()=="ConditionError","Condition error silently hid a stop");return GLDebugAction::Continue;});
+            Check(Debugger.SetBreakpoint("res://ConditionalError.luau",1,true,0,"forbidden()"),"Bounded condition rejected before evaluation");
+            Check(Domain.Execute(Owner,"local Value=1","@res://ConditionalError.luau") && Hits==2,"Condition failure did not preserve execution");
         });
         Run("coroutine and module callbacks use their own live stacks", [] {
             GLExecutionDomain Domain(GLDomainKind::Server); auto Owner = Domain.CreateOwner(4);
@@ -140,6 +159,16 @@ int main() {
             Check(!Domain.GetProfiler() && GLNativeProfileCollectors==0,"Profiler enabled by default");
             auto& Profile=Domain.EnableProfiler();Profile.Start();
             auto Baseline=Domain.GetReferenceCount();
+            auto Observed=Domain.CreateOwner(999);
+            Domain.SetModuleResolver([](lua_State*,int,GLModuleSource& Source){Source={998,"return 7","@res://ProfileModule.luau"};return true;});
+            Check(Domain.Execute(Observed,"assert(require(998)==7)\nshared.ProfileCallback=function() local Values={} for I=1,100 do Values[I]=I end end","@res://ProfileCallbacks.luau"),"Profile workload failed");
+            lua_getglobal(Observed->Anchor,"shared");lua_getfield(Observed->Anchor,-1,"ProfileCallback");
+            int Callback=GLReference(Observed->Anchor,-1);lua_pop(Observed->Anchor,2);
+            Check(Domain.Dispatch(Callback,[](lua_State*){return 0;})==LUA_OK,"Profiled callback failed");
+            auto Observations=Profile.GetScripts().at(Observed->Token);
+            Check(Observations.Callbacks==1 && Observations.CallbackNanoseconds>0 && Observations.Requires==1 && Observations.RequireNanoseconds>0,"Callback/require timing missing");
+            Check(Observations.DomainLiveBytes>0 && Observations.DomainPeakBytes>=Observations.DomainLiveBytes,"Domain allocator observation missing");
+            GLUnreference(Observed->Anchor,Callback);Domain.CancelOwner(Observed);Domain.InvalidateModule(998);Domain.Tick(0);
             for(uint64_t Index=0;Index<140;++Index) {
                 auto Owner=Domain.CreateOwner(1000+Index);
                 Check(Domain.Execute(Owner,"shared.ProfileCount=(shared.ProfileCount or 0)+1", "@res://Profile.luau"),"Profiler changed execution");
