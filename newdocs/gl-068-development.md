@@ -51,3 +51,18 @@ once the module contract and qualified implementation support them.
 
 No runtime change, larger admitted capacity, bytecode-cache improvement or
 large-game qualification is claimed by this preparation record.
+
+## Executed native admission baseline
+
+`capacity-baseline-01` uses the existing isolated native fixture/process helpers,
+verified official Windows 4.7.1 host and retained Debug adapter from native run
+`43606301218` (native fingerprint `558733a6…`). Its runtime module implementation
+is identical to current main; later GL-067 changes affect editor indexing only.
+The controlled probe creates 65 typed item/configuration modules, validates
+their returned fields and catches the first rejected import. Exactly 64 load;
+the 65th reports `DomainRequire:5: [Runtime:Require] Expected a live ModuleScript`.
+The process exits zero under the explicit baseline expectation of 64, with empty
+stderr. `tests/runtime/ModuleCapacity.gd` retains the reproducible workload.
+Raw logs/result are under the local `gl068/capacity-baseline-01` artifact root.
+This is a synthetic admission reproduction, not a 65-module production game,
+new-capacity qualification or compile/memory performance measurement.
